@@ -111,6 +111,35 @@ executable. The explicit oracle tests cover both directions: official compressio
 decoded in Rust, and Rust compression decoded by the official implementation.
 Fixture generation and provenance are in [tests/fixtures](tests/fixtures/README.md).
 
+The official test migration includes exact golden and inline fixtures, the
+upstream testcard, deterministic fuzzer inputs, FSE/Huffman oracle vectors,
+and generated decoder corpora. The normal suite is offline; its inventory and
+fixture-integrity checks require Python 3.10 or newer with only the standard
+library. The complete source/case catalog is in
+[the upstream test inventory](docs/upstream-test-inventory.md), with executable
+coverage and measured runs in [the validation report](docs/upstream-test-validation.md).
+Streaming, dictionary, CLI, legacy, advanced encoder, and other unavailable API
+contracts remain explicitly unported. A successful normal test run does not
+mean every official test has been migrated.
+
+```sh
+# Requires an external pinned source tree, static library, CLI with legacy
+# support 4, and decodecorpus generator. Also runs the 30,000-cycle stress test.
+ZSTD_UPSTREAM=/path/to/zstd-v1.5.7 sh scripts/check_upstream_oracles.sh
+
+# Download and verify separately pinned external corpus snapshots.
+python3 scripts/fetch_upstream_corpora.py --cache /path/outside/the/repository
+
+# This deliberately fails while any required upstream test contract is open.
+python3 scripts/audit_upstream_tests.py --require-complete
+```
+
+The external corpora are rolling release snapshots, independently hashed and
+kept outside the repository. Replay commands and exact API limitations are in
+[FUZZ-TARGETS.md](tests/upstream/FUZZ-TARGETS.md),
+[REGRESSION.md](tests/upstream/REGRESSION.md), and
+[the entropy corpus notes](tests/upstream/entropy-data/README.md).
+
 ## Measuring backend performance
 
 ```sh

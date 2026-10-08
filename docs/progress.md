@@ -1,4 +1,4 @@
-# Completed modules
+# Development progress
 
 Detailed completed work items are preserved in Git history. `TODO.md` contains
 only active module checklists and the remaining roadmap.
@@ -60,3 +60,27 @@ unchanged. Raw data, ranges, and limitations are recorded in
 
 The initial working codec milestone is complete. Streaming, dictionaries,
 advanced compression, custom allocators, and full upstream parity are not.
+
+## Official test migration (in progress)
+
+The pinned upstream tree now has a complete source inventory and 615 named
+case-group anchors. Exact golden, inline, testcard, kernel, entropy, and
+decodecorpus fixtures have reproducible imports and offline integrity checks.
+The executable Rust adaptations include the deterministic upstream generators,
+one-shot regressions, four public fuzz targets, entropy decoder targets, and
+external regression-data content checks.
+
+The suite now has 140 ordinary passing tests and nine explicit opt-in/pending
+tests. Extended checks include 30,000 one-shot fuzz cycles, 4,096 independently
+generated frames, 15,804 fuzz corpus files, and all 512 selected Silesia/GitHub
+regression input files. See [the validation report](upstream-test-validation.md)
+for the exact distinction between a test, a fixture, and a corpus execution.
+
+This module remains open. Of the 418 test-related source units, 11 are ported,
+25 partial, three planned, 162 blocked by missing capabilities, and 217 are
+support/build metadata or C-specific details. These are source dispositions,
+not an assertion-coverage percentage. The strict completion gate rejects the
+190 unfinished behavioral source units and incomplete external target coverage.
+The full-legacy desired-success test still fails with `InvalidMagic` when
+explicitly run. `TODO.md` retains the required capability and test work;
+completed migration checkpoints are not cleared as a completed major module.
