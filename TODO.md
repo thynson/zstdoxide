@@ -9,7 +9,7 @@
 - [x] Generate pinned FSE/Huffman oracle vectors with exact expected metadata.
 - [x] Port entropy decoder fuzz contracts and bounded arbitrary-input checks.
 - [x] Port supported one-shot fuzzer cases and deterministic data generation.
-- [ ] Preserve exact inline binary regression fixtures and legacy expectations.
+- [x] Preserve exact inline binary regression fixtures and legacy expectations.
 - [ ] Replay current-format inline regressions and retain the failing legacy contract.
 - [ ] Port bounded public fuzz-target properties and external corpus replay.
 - [x] Generate and verify reproducible decodecorpus compatibility fixtures.
