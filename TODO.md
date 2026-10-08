@@ -59,7 +59,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
 - [ ] Port every applicable official streaming/context test with explicit source mapping.
 - [x] Generate pinned official near-window sequence fixtures for window logs 10–29.
-- [ ] Replay the full window-distance sweep with bounded streaming output.
+- [x] Replay the full window-distance sweep with bounded streaming output.
 - [ ] Port malformed streaming-input and randomized directive fuzz campaigns.
 - [ ] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.
 - [ ] Measure retained memory and safe/unsafe throughput; document stream limits.
