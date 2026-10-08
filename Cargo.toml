@@ -26,3 +26,7 @@ missing_safety_doc = "deny"
 [profile.release]
 overflow-checks = true
 
+[[bench]]
+name = "backends"
+harness = false
+required-features = ["std"]

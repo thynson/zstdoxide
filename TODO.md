@@ -13,7 +13,7 @@
 - [x] Verify Rust encoder output with the official decoder.
 - [ ] Exercise malformed input, feature combinations, and no_std builds.
 - [x] Add maximum-depth Huffman and malformed table regression cases.
-- [ ] Add a reproducible per-backend benchmark harness.
+- [x] Add a reproducible per-backend benchmark harness.
 - [ ] Benchmark each data structure backend and whole-codec workloads.
 - [ ] Document measured results, supported features, and remaining scope.
 
