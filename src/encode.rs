@@ -5,7 +5,11 @@ use alloc::vec::Vec;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
 use crate::fse::FseTable;
 use crate::matchfinder::MatchTable;
-use crate::{Error, Result, frame::MAX_BLOCK_SIZE, xxhash};
+use crate::{Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash};
+
+/// Predefined offset tables provide symbols 0..=28. Larger dictionaries remain
+/// valid, but the initial encoder searches only this addressable suffix.
+const MAX_DICTIONARY_DISTANCE: usize = (1 << 29) - 4;
 
 /// Compresses input into one checksummed Zstandard frame with known content size.
 ///
@@ -40,6 +44,10 @@ pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
 /// `ZSTD_CCtx`; input references never survive an `encode` call.
 pub(crate) struct BlockEncoder {
     match_table: Option<MatchTable>,
+    dictionary_seed: Option<MatchTable>,
+    active_dictionary: Option<SharedDictionary>,
+    frame_position: u64,
+    window_size: u64,
     entropy_tables: Option<EncodingTables>,
     literals: Vec<u8>,
     sequences: Vec<Sequence>,
@@ -51,6 +59,10 @@ impl BlockEncoder {
     pub(crate) const fn new() -> Self {
         Self {
             match_table: None,
+            dictionary_seed: None,
+            active_dictionary: None,
+            frame_position: 0,
+            window_size: MAX_BLOCK_SIZE as u64,
             entropy_tables: None,
             literals: Vec::new(),
             sequences: Vec::new(),
@@ -59,8 +71,58 @@ impl BlockEncoder {
         }
     }
 
+    /// Prepare an independently owned frame dictionary and its indexed seeds.
+    ///
+    /// Corresponds to the dictionary hash preparation in `ZSTD_compressBegin`.
+    /// The shared handle keeps every candidate's immutable source allocation
+    /// alive; only indices enter the hash table. Reusing this workspace for a
+    /// different dictionary always rebuilds its seed indices before publication.
+    pub(crate) fn start_frame(
+        &mut self,
+        dictionary: Option<SharedDictionary>,
+        window_size: u64,
+    ) -> Result<()> {
+        if let Some(dictionary) = dictionary.as_deref()
+            && dictionary.content().len() >= 4
+        {
+            let seed = match self.dictionary_seed.as_mut() {
+                Some(seed) => seed,
+                None => self.dictionary_seed.insert(MatchTable::new()?),
+            };
+            seed.reset();
+            let content = dictionary.content();
+            let start = content.len().saturating_sub(MAX_DICTIONARY_DISTANCE);
+            for position in start..=content.len() - 4 {
+                seed.replace(word_at(content, position), position);
+            }
+        } else if let Some(seed) = &mut self.dictionary_seed {
+            seed.reset();
+        }
+        self.active_dictionary = dictionary;
+        self.frame_position = 0;
+        self.window_size = window_size;
+        Ok(())
+    }
+
+    /// Drop active-frame ownership while retaining reusable workspace storage.
+    pub(crate) fn reset(&mut self) {
+        self.active_dictionary = None;
+        self.frame_position = 0;
+        self.window_size = MAX_BLOCK_SIZE as u64;
+    }
+
     /// Append exactly one bounded raw, RLE, or compressed block.
     pub(crate) fn encode(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
+        let next = self
+            .frame_position
+            .checked_add(block.len() as u64)
+            .ok_or(Error::ResourceLimit)?;
+        self.encode_block(block, last, output)?;
+        self.frame_position = next;
+        Ok(())
+    }
+
+    fn encode_block(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
         if block.len() > MAX_BLOCK_SIZE {
             return Err(Error::ResourceLimit);
         }
@@ -82,11 +144,16 @@ impl BlockEncoder {
         Ok(())
     }
 
-    /// Heap capacity owned by the block workspace, excluding this value record.
+    /// Heap capacity owned by the block workspace, excluding this value record
+    /// and shared dictionary storage already reported by the owning context.
     pub(crate) fn retained_capacity(&self) -> usize {
         self.match_table
             .as_ref()
             .map_or(0, MatchTable::retained_capacity)
+            + self
+                .dictionary_seed
+                .as_ref()
+                .map_or(0, MatchTable::retained_capacity)
             + self.entropy_tables.as_ref().map_or(0, |tables| {
                 tables.literals.retained_capacity()
                     + tables.matches.retained_capacity()
@@ -474,7 +541,72 @@ impl BitWriter {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::Dictionary;
     use alloc::vec;
+
+    #[test]
+    fn frame_dictionary_seed_owns_its_source_and_reset_retains_only_workspace() {
+        let first = Dictionary::raw(b"dictionary seed content")
+            .unwrap()
+            .into_shared();
+        let second = Dictionary::raw(b"replacement source bytes")
+            .unwrap()
+            .into_shared();
+        let mut encoder = BlockEncoder::new();
+        encoder
+            .start_frame(Some(SharedDictionary::clone(&first)), 1024)
+            .unwrap();
+        assert_eq!(SharedDictionary::strong_count(&first), 2);
+        assert_eq!(encoder.window_size, 1024);
+        let capacity = encoder.retained_capacity();
+        assert!(capacity > 0);
+        let mut working = MatchTable::new().unwrap();
+        working.reset_from(encoder.dictionary_seed.as_ref().unwrap());
+        assert_eq!(working.replace(*b"dict", first.content().len()), Some(0));
+        encoder.reset();
+        assert_eq!(SharedDictionary::strong_count(&first), 1);
+        assert!(encoder.active_dictionary.is_none());
+        assert_eq!(encoder.frame_position, 0);
+        assert_eq!(encoder.retained_capacity(), capacity);
+
+        encoder
+            .start_frame(Some(SharedDictionary::clone(&second)), 4096)
+            .unwrap();
+        assert_eq!(SharedDictionary::strong_count(&second), 2);
+        working.reset_from(encoder.dictionary_seed.as_ref().unwrap());
+        assert_eq!(working.replace(*b"repl", second.content().len()), Some(0));
+        assert_eq!(working.replace(*b"dict", second.content().len()), None);
+        assert_eq!(encoder.retained_capacity(), capacity);
+        encoder.start_frame(None, 128 * 1024).unwrap();
+        assert_eq!(SharedDictionary::strong_count(&second), 1);
+        working.reset_from(encoder.dictionary_seed.as_ref().unwrap());
+        assert_eq!(working.replace(*b"repl", 100), None);
+    }
+
+    #[test]
+    fn frame_position_advances_for_every_block_kind_and_checks_overflow() {
+        let mut encoder = BlockEncoder::new();
+        let mut output = Vec::new();
+        for block in [
+            &b"abc"[..],
+            &b"xxxxxxxx"[..],
+            &b"pattern pattern pattern pattern"[..],
+        ] {
+            let before = encoder.frame_position;
+            encoder.encode(block, false, &mut output).unwrap();
+            assert_eq!(encoder.frame_position, before + block.len() as u64);
+        }
+        encoder.start_frame(None, 1024).unwrap();
+        assert_eq!(encoder.frame_position, 0);
+        encoder.frame_position = u64::MAX;
+        let length = output.len();
+        assert_eq!(
+            encoder.encode(b"x", true, &mut output),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(output.len(), length);
+        assert_eq!(encoder.frame_position, u64::MAX);
+    }
 
     #[test]
     fn empty_frame_has_a_final_empty_block_and_checksum() {

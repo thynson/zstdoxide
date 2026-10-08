@@ -31,6 +31,14 @@ impl MatchTable {
         self.positions.fill(EMPTY);
     }
 
+    /// Copy a prepared dictionary's candidate indices into working storage.
+    ///
+    /// Both vectors have the same fixed initialized length. The owned working
+    /// allocation is retained and no reference to the seed table is stored.
+    pub(crate) fn reset_from(&mut self, seed: &Self) {
+        self.positions.copy_from_slice(&seed.positions);
+    }
+
     /// Owned allocation size in bytes, excluding the inline vector handle.
     pub(crate) fn retained_capacity(&self) -> usize {
         self.positions.capacity() * core::mem::size_of::<usize>()
@@ -91,5 +99,23 @@ mod tests {
         let mut table = MatchTable::new().unwrap();
         assert_eq!(table.replace([255; 4], usize::MAX), None);
         assert_eq!(table.replace([255; 4], usize::MAX), None);
+    }
+
+    #[test]
+    fn copying_seed_indices_retains_independent_working_storage() {
+        let mut seed = MatchTable::new().unwrap();
+        let mut working = MatchTable::new().unwrap();
+        seed.replace(*b"seed", 7);
+        working.replace(*b"seed", 19);
+        let capacity = working.retained_capacity();
+        working.reset_from(&seed);
+        assert_eq!(working.replace(*b"seed", 23), Some(7));
+        assert_eq!(seed.replace(*b"seed", 31), Some(7));
+        working.reset_from(&seed);
+        assert_eq!(working.replace(*b"seed", 43), Some(31));
+        assert_eq!(working.retained_capacity(), capacity);
+        seed.reset();
+        working.reset_from(&seed);
+        assert_eq!(working.replace(*b"seed", 47), None);
     }
 }
