@@ -43,8 +43,8 @@ one-shot adaptations do not complete the upstream test migration.
 ## Module 6: bounded streaming and reusable contexts
 
 - [x] Specify input/output progress, completion, reset, and error contracts.
-- [ ] Analyze ring-history ownership, wraparound indices, and backend invariants.
-- [ ] Implement and test safe bounded ring history independently of frame logic.
+- [x] Analyze ring-history ownership, wraparound indices, and backend invariants.
+- [x] Implement and test safe bounded ring history independently of frame logic.
 - [ ] Add an independently gated unsafe ring-history backend and compare it.
 - [ ] Implement incremental XXH64 state with arbitrary update boundaries.
 - [ ] Generalize sequence execution through a bounded history/output sink.

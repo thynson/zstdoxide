@@ -38,6 +38,8 @@ mod fse;
 mod history;
 mod huffman;
 mod matchfinder;
+#[cfg(test)]
+mod ring_history;
 mod sequences;
 mod xxhash;
 
