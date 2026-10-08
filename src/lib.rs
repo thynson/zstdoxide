@@ -19,5 +19,6 @@
 extern crate alloc;
 
 mod error;
+mod bitstream;
 
 pub use error::{Error, Result};
