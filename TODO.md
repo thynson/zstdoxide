@@ -38,8 +38,9 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Add reusable dictionary seed tables and an owned encoder dictionary lifecycle.
 - [ ] Extend indexed match search to dictionary content and first-block crossing.
 - [ ] Extend indexed match search to retained output history across blocks.
-- [ ] Write dictionary frame IDs and interoperable raw/prepared dictionary compression.
-- [ ] Add dictionary-aware encoding, reset, and single-use prefix configuration.
+- [x] Write dictionary frame IDs with explicit omission and smallest field widths.
+- [ ] Produce interoperable raw/prepared dictionary compression.
+- [x] Add dictionary-aware encoding context, reset, and single-use prefix configuration.
 - [ ] Analyze sample selection and decompose dictionary training before implementation.
 - [ ] Implement bounded training sample selection and dictionary-content construction.
 - [ ] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.

@@ -6,12 +6,12 @@ use core::fmt;
 use crate::encode::BlockEncoder;
 use crate::frame::{MAGIC, MAX_BLOCK_SIZE};
 use crate::xxhash::XxHash64;
-use crate::{EndDirective, Error, Progress, Result, StreamStatus};
+use crate::{EndDirective, Error, Progress, Result, SharedDictionary, StreamStatus};
 
 /// Frame settings for an [`Encoder`].
 ///
 /// Corresponds to the supported frame/window subset of `ZSTD_CCtx_params`.
-/// Compression levels, dictionaries, and advanced match strategies are not
+/// Compression levels and advanced match strategies are not
 /// exposed by this initial independent greedy encoder.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct EncoderOptions {
@@ -25,6 +25,9 @@ pub struct EncoderOptions {
     pub pledged_size: Option<u64>,
     /// Include a supplied pledge in the frame header (default true).
     pub include_content_size: bool,
+    /// Include a selected formatted dictionary's nonzero ID (default true).
+    /// Omitting the ID does not disable dictionary content or entropy usage.
+    pub include_dictionary_id: bool,
 }
 
 impl EncoderOptions {
@@ -43,6 +46,7 @@ impl Default for EncoderOptions {
             checksum: true,
             pledged_size: None,
             include_content_size: true,
+            include_dictionary_id: true,
         }
     }
 }
@@ -81,6 +85,9 @@ pub struct Encoder {
     header_started: bool,
     phase: Phase,
     latched: Option<LatchedDirective>,
+    dictionary: Option<SharedDictionary>,
+    prefix: Option<SharedDictionary>,
+    active_dictionary: Option<SharedDictionary>,
 }
 
 impl Encoder {
@@ -93,6 +100,46 @@ impl Encoder {
     /// Validate options and create a fresh frame without allocating.
     pub fn with_options(options: EncoderOptions) -> Result<Self> {
         Ok(Self::from_options(options.validate()?))
+    }
+
+    /// Create a context with a persistent dictionary for each new frame.
+    pub fn with_dictionary(options: EncoderOptions, dictionary: SharedDictionary) -> Result<Self> {
+        let mut encoder = Self::with_options(options)?;
+        encoder.dictionary = Some(dictionary);
+        Ok(encoder)
+    }
+
+    /// Replace the persistent dictionary and clear any unclaimed prefix.
+    ///
+    /// Call before the first process operation or after reset. An active,
+    /// finished or failed frame rejects configuration without changing state.
+    /// Corresponds to `ZSTD_CCtx_refCDict` with immutable shared ownership.
+    pub fn set_dictionary(&mut self, dictionary: Option<SharedDictionary>) -> Result<()> {
+        self.check_configuration_boundary()?;
+        self.dictionary = dictionary;
+        self.prefix = None;
+        Ok(())
+    }
+
+    /// Replace the persistent dictionary with a prefix for one frame.
+    ///
+    /// The first process call that starts a header claims this handle. Reset
+    /// preserves an unclaimed prefix and drops a claimed one. For raw prefixes,
+    /// construct the handle with [`crate::Dictionary::raw`]. Corresponds to
+    /// `ZSTD_CCtx_refPrefix_advanced` with owned lifetime.
+    pub fn set_prefix(&mut self, prefix: SharedDictionary) -> Result<()> {
+        self.check_configuration_boundary()?;
+        self.dictionary = None;
+        self.prefix = Some(prefix);
+        Ok(())
+    }
+
+    fn check_configuration_boundary(&self) -> Result<()> {
+        if self.phase == Phase::Active && !self.header_started {
+            Ok(())
+        } else {
+            Err(Error::InvalidState)
+        }
     }
 
     fn from_options(options: EncoderOptions) -> Self {
@@ -108,6 +155,9 @@ impl Encoder {
             header_started: false,
             phase: Phase::Active,
             latched: None,
+            dictionary: None,
+            prefix: None,
+            active_dictionary: None,
         }
     }
 
@@ -126,15 +176,25 @@ impl Encoder {
         self.total_output
     }
 
-    /// Owned heap capacity in bytes, excluding inline state and caller buffers.
+    /// Reachable heap capacity, excluding inline state and caller buffers.
+    /// Shared dictionary allocations are counted once for this context.
     pub fn retained_capacity(&self) -> usize {
-        self.block.capacity() + self.pending.capacity() + self.workspace.retained_capacity()
+        self.block.capacity()
+            + self.pending.capacity()
+            + self.workspace.retained_capacity()
+            + self
+                .active_dictionary
+                .as_ref()
+                .or(self.dictionary.as_ref())
+                .or(self.prefix.as_ref())
+                .map_or(0, |dictionary| dictionary.retained_capacity())
     }
 
     /// Start another frame, retaining allocations and persistent frame settings.
     ///
     /// The per-frame source pledge is cleared. This also recovers a context
     /// poisoned by a processing error; corresponds to session-only `ZSTD_CCtx_reset`.
+    /// Persistent dictionaries and unclaimed prefixes remain configured.
     pub fn reset(&mut self) {
         self.options.pledged_size = None;
         self.clear_frame();
@@ -158,6 +218,8 @@ impl Encoder {
         self.header_started = false;
         self.phase = Phase::Active;
         self.latched = None;
+        self.active_dictionary = None;
+        self.workspace.reset();
     }
 
     /// Accept a source prefix and write an encoded output prefix.
@@ -278,6 +340,8 @@ impl Encoder {
             if self.phase == Phase::Finishing {
                 self.phase = Phase::Finished;
                 self.latched = None;
+                self.active_dictionary = None;
+                self.workspace.reset();
                 return Ok(Progress {
                     consumed,
                     produced,
@@ -321,9 +385,25 @@ impl Encoder {
     /// Writes the non-single-segment form of `ZSTD_writeFrameHeader`.
     fn start_header(&mut self) -> Result<()> {
         self.pending
-            .try_reserve_exact(14)
+            .try_reserve_exact(18)
             .map_err(|_| Error::AllocationFailed)?;
         self.pending.extend_from_slice(&MAGIC.to_le_bytes());
+        self.active_dictionary = self.prefix.take().or_else(|| self.dictionary.clone());
+        self.workspace.start_frame(
+            self.active_dictionary.clone(),
+            1_u64 << self.options.window_log,
+        )?;
+        let dictionary_id = self
+            .active_dictionary
+            .as_ref()
+            .filter(|_| self.options.include_dictionary_id)
+            .map_or(0, |dictionary| dictionary.id());
+        let (dictionary_flag, dictionary_bytes) = match dictionary_id {
+            0 => (0, 0),
+            1..=255 => (1, 1),
+            256..=65535 => (2, 2),
+            _ => (3, 4),
+        };
         let size = self
             .options
             .pledged_size
@@ -335,8 +415,10 @@ impl Encoder {
             Some(size) => (3, size, 8),
         };
         self.pending
-            .push((flag << 6) | (u8::from(self.options.checksum) << 2));
+            .push((flag << 6) | (u8::from(self.options.checksum) << 2) | dictionary_flag);
         self.pending.push((self.options.window_log - 10) << 3);
+        self.pending
+            .extend_from_slice(&dictionary_id.to_le_bytes()[..dictionary_bytes]);
         self.pending
             .extend_from_slice(&value.to_le_bytes()[..count]);
         self.header_started = true;
@@ -392,6 +474,99 @@ mod tests {
     use super::*;
     use crate::{FrameHeader, decompress};
     use alloc::vec;
+
+    #[test]
+    fn dictionary_header_widths_and_omission_preserve_dictionary_configuration() {
+        let bytes = include_bytes!("../tests/upstream/dictionaries/formatted.dict");
+        for id in [0_u32, 1, 255, 256, 65535, 65536, u32::MAX] {
+            let mut bytes = bytes.to_vec();
+            bytes[4..8].copy_from_slice(&id.to_le_bytes());
+            let dictionary = crate::Dictionary::from_bytes(&bytes).unwrap().into_shared();
+            for include_dictionary_id in [false, true] {
+                let mut encoder = Encoder::with_dictionary(
+                    EncoderOptions {
+                        include_dictionary_id,
+                        pledged_size: Some(3),
+                        ..EncoderOptions::default()
+                    },
+                    dictionary.clone(),
+                )
+                .unwrap();
+                let encoded = finish(&mut encoder, b"abc", 1);
+                let header = FrameHeader::parse(&encoded).unwrap().0;
+                assert_eq!(
+                    header.dictionary_id,
+                    if include_dictionary_id { id } else { 0 }
+                );
+                assert_eq!(
+                    encoded[4] & 3,
+                    match header.dictionary_id {
+                        0 => 0,
+                        1..=255 => 1,
+                        256..=65535 => 2,
+                        _ => 3,
+                    }
+                );
+                assert_eq!(
+                    crate::decompress_with_dictionary(
+                        &encoded,
+                        &dictionary,
+                        crate::DecodeOptions::new(3)
+                    )
+                    .unwrap(),
+                    b"abc"
+                );
+                assert!(encoder.dictionary.is_some());
+                encoder.reset();
+                assert!(encoder.dictionary.is_some());
+                assert_eq!(encoder.options.include_dictionary_id, include_dictionary_id);
+            }
+        }
+    }
+
+    #[test]
+    fn prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state() {
+        let dictionary = crate::Dictionary::from_bytes(include_bytes!(
+            "../tests/upstream/dictionaries/formatted.dict"
+        ))
+        .unwrap()
+        .into_shared();
+        let mut encoder = Encoder::new();
+        encoder.set_prefix(dictionary.clone()).unwrap();
+        encoder.reset();
+        assert!(encoder.prefix.is_some());
+        let encoded = finish(&mut encoder, b"", 1);
+        assert_eq!(
+            FrameHeader::parse(&encoded).unwrap().0.dictionary_id,
+            dictionary.id()
+        );
+        assert!(encoder.prefix.is_none());
+        assert!(encoder.active_dictionary.is_none());
+        assert_eq!(
+            encoder.set_dictionary(Some(dictionary.clone())),
+            Err(Error::InvalidState)
+        );
+        encoder.reset();
+        assert_eq!(
+            FrameHeader::parse(&finish(&mut encoder, b"", 1))
+                .unwrap()
+                .0
+                .dictionary_id,
+            0
+        );
+        encoder.reset();
+        encoder.set_dictionary(Some(dictionary.clone())).unwrap();
+        encoder
+            .process(b"abc", &mut [], EndDirective::Continue)
+            .unwrap();
+        assert_eq!(encoder.set_dictionary(None), Err(Error::InvalidState));
+        assert_eq!(encoder.set_prefix(dictionary), Err(Error::InvalidState));
+        assert!(encoder.dictionary.is_some());
+        assert_eq!(encoder.total_input(), 3);
+        encoder.reset();
+        encoder.set_dictionary(None).unwrap();
+        assert!(encoder.dictionary.is_none());
+    }
 
     fn finish(encoder: &mut Encoder, source: &[u8], output_chunk: usize) -> Vec<u8> {
         let mut position = 0;
@@ -479,6 +654,7 @@ mod tests {
                         checksum: false,
                         pledged_size: pledge,
                         include_content_size,
+                        include_dictionary_id: true,
                     })
                     .unwrap();
                     let mut output = [0; 18];
