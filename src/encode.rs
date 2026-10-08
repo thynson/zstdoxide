@@ -2,6 +2,9 @@
 
 use alloc::vec::Vec;
 
+use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
+use crate::fse::FseTable;
+use crate::matchfinder::MatchTable;
 use crate::{Error, Result, frame::MAX_BLOCK_SIZE, xxhash};
 
 /// Compresses input into one checksummed Zstandard frame with known content size.
@@ -23,13 +26,27 @@ pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
     if input.is_empty() {
         write_block_header(&mut output, 0, 0, true);
     }
+    let mut match_table = None;
+    let mut entropy_tables = None;
     for (index, block) in input.chunks(MAX_BLOCK_SIZE).enumerate() {
         let last = index + 1 == blocks;
         let repeated = block.len() > 1 && block.iter().all(|&byte| byte == block[0]);
-        write_block_header(&mut output, block.len(), u8::from(repeated), last);
         if repeated {
+            write_block_header(&mut output, block.len(), 1, last);
             output.push(block[0]);
         } else {
+            if block.len() >= 8 {
+                let table = match match_table.as_mut() {
+                    Some(table) => table,
+                    None => match_table.insert(MatchTable::new()?),
+                };
+                if let Some(compressed) = compress_block(block, table, &mut entropy_tables)? {
+                    write_block_header(&mut output, compressed.len(), 2, last);
+                    output.extend_from_slice(&compressed);
+                    continue;
+                }
+            }
+            write_block_header(&mut output, block.len(), 0, last);
             output.extend_from_slice(block);
         }
     }
@@ -59,6 +76,333 @@ fn write_frame_header(output: &mut Vec<u8>, content_size: usize) {
 fn write_block_header(output: &mut Vec<u8>, size: usize, kind: u8, last: bool) {
     let header = ((size as u32) << 3) | (u32::from(kind) << 1) | u32::from(last);
     output.extend_from_slice(&header.to_le_bytes()[..3]);
+}
+
+/// A plain sequence; lengths and distance are bounded by one 128 KiB block.
+#[derive(Clone, Copy, Debug)]
+struct Sequence {
+    literal_length: u32,
+    match_length: u32,
+    distance: u32,
+}
+
+/// Selects matches greedily and encodes them with predefined entropy tables.
+///
+/// Fulfills the block-compression role of `ZSTD_compressBlock_internal`, using
+/// an independent greedy parser and table inversion instead of C table layout.
+fn compress_block(
+    block: &[u8],
+    match_table: &mut MatchTable,
+    entropy_tables: &mut Option<EncodingTables>,
+) -> Result<Option<Vec<u8>>> {
+    match_table.reset();
+    let mut literals = Vec::new();
+    literals
+        .try_reserve_exact(block.len())
+        .map_err(|_| Error::AllocationFailed)?;
+    let mut sequences = Vec::new();
+    sequences
+        .try_reserve_exact(block.len() / 4)
+        .map_err(|_| Error::AllocationFailed)?;
+    let mut position = 0;
+    let mut literal_start = 0;
+    while position + 4 <= block.len() {
+        let candidate = match_table.replace(word_at(block, position), position);
+        if let Some(previous) = candidate
+            && block[previous..previous + 4] == block[position..position + 4]
+        {
+            let mut match_length = 4;
+            while position + match_length < block.len()
+                && block[previous + match_length] == block[position + match_length]
+            {
+                match_length += 1;
+            }
+            literals.extend_from_slice(&block[literal_start..position]);
+            sequences.push(Sequence {
+                literal_length: (position - literal_start) as u32,
+                match_length: match_length as u32,
+                distance: (position - previous) as u32,
+            });
+            let match_end = position + match_length;
+            position += 1;
+            while position < match_end && position + 4 <= block.len() {
+                match_table.replace(word_at(block, position), position);
+                position += 1;
+            }
+            position = match_end;
+            literal_start = position;
+        } else {
+            position += 1;
+        }
+    }
+    if sequences.is_empty() {
+        return Ok(None);
+    }
+    literals.extend_from_slice(&block[literal_start..]);
+    let tables = match entropy_tables.as_ref() {
+        Some(tables) => tables,
+        None => entropy_tables.insert(EncodingTables::new()?),
+    };
+    let stream = encode_sequences(&sequences, tables)?;
+    let capacity = literals
+        .len()
+        .checked_add(stream.len())
+        .and_then(|size| size.checked_add(7))
+        .ok_or(Error::ResourceLimit)?;
+    let mut payload = Vec::new();
+    payload
+        .try_reserve_exact(capacity)
+        .map_err(|_| Error::AllocationFailed)?;
+    write_literal_header(&mut payload, literals.len());
+    payload.extend_from_slice(&literals);
+    write_sequence_count(&mut payload, sequences.len());
+    payload.push(0); // All three symbol distributions are predefined.
+    payload.extend_from_slice(&stream);
+    Ok((payload.len() < block.len()).then_some(payload))
+}
+
+/// Reads a four-byte match key from a previously bounded position.
+fn word_at(block: &[u8], position: usize) -> [u8; 4] {
+    [
+        block[position],
+        block[position + 1],
+        block[position + 2],
+        block[position + 3],
+    ]
+}
+
+/// Writes a raw-literal header; corresponds to the raw branch of
+/// `ZSTD_compressLiterals`.
+fn write_literal_header(output: &mut Vec<u8>, length: usize) {
+    let (header, count) = if length < 32 {
+        ((length as u32) << 3, 1)
+    } else if length < 4096 {
+        (((length as u32) << 4) | 4, 2)
+    } else {
+        (((length as u32) << 4) | 12, 3)
+    };
+    output.extend_from_slice(&header.to_le_bytes()[..count]);
+}
+
+/// Writes the variable-width count used by `ZSTD_encodeSequences`.
+fn write_sequence_count(output: &mut Vec<u8>, count: usize) {
+    if count < 128 {
+        output.push(count as u8);
+    } else if count < 0x7f00 {
+        output.extend_from_slice(&[(128 + (count >> 8)) as u8, count as u8]);
+    } else {
+        output.push(255);
+        output.extend_from_slice(&((count - 0x7f00) as u16).to_le_bytes());
+    }
+}
+
+/// One inverse transition. The numeric value/bit count encode a forward
+/// decoding step from `state` to the requested successor state.
+#[derive(Clone, Copy, Default)]
+struct EncodingTransition {
+    state: u16,
+    value: u16,
+    bits: u8,
+}
+
+/// Typed, initialized inverse transitions indexed by symbol and next state.
+struct EncodingTable {
+    transitions: Vec<EncodingTransition>,
+    initial: Vec<u16>,
+    state_count: usize,
+    table_log: u8,
+}
+
+impl EncodingTable {
+    /// Inverts the public decoding relation instead of adopting `FSE_CTable`'s
+    /// packed representation. Each symbol partitions the successor state set.
+    fn new(counts: &[i16], table_log: u8) -> Result<Self> {
+        let decoding = FseTable::from_normalized(counts, table_log)?;
+        let state_count = 1_usize << table_log;
+        let mut transitions = Vec::new();
+        transitions
+            .try_reserve_exact(counts.len() * state_count)
+            .map_err(|_| Error::AllocationFailed)?;
+        transitions.resize(counts.len() * state_count, EncodingTransition::default());
+        let mut initial = Vec::new();
+        initial
+            .try_reserve_exact(counts.len())
+            .map_err(|_| Error::AllocationFailed)?;
+        initial.resize(counts.len(), u16::MAX);
+        for state in 0..state_count {
+            let entry = decoding.entry(state)?;
+            let symbol = usize::from(entry.symbol);
+            if initial[symbol] == u16::MAX {
+                initial[symbol] = state as u16;
+            }
+            for value in 0..(1_u16 << entry.bits) {
+                let next = usize::from(entry.base + value);
+                transitions[symbol * state_count + next] = EncodingTransition {
+                    state: state as u16,
+                    value,
+                    bits: entry.bits,
+                };
+            }
+        }
+        Ok(Self {
+            transitions,
+            initial,
+            state_count,
+            table_log,
+        })
+    }
+
+    fn initial(&self, symbol: usize) -> Result<u16> {
+        self.initial
+            .get(symbol)
+            .copied()
+            .filter(|&state| state != u16::MAX)
+            .ok_or(Error::CorruptData)
+    }
+
+    fn transition(&self, symbol: usize, next: u16) -> Result<EncodingTransition> {
+        if usize::from(next) >= self.state_count || symbol >= self.initial.len() {
+            return Err(Error::CorruptData);
+        }
+        let index = symbol * self.state_count + usize::from(next);
+        #[cfg(not(feature = "unsafe-fse"))]
+        let transition = self.transitions[index];
+        #[cfg(feature = "unsafe-fse")]
+        // SAFETY: construction creates initial.len() * state_count initialized
+        // transitions, and both dimensions are checked above. Thus index is
+        // within the live owned vector, whose length and allocation never
+        // change after construction. Vec supplies proper alignment and this
+        // shared copied read neither aliases a mutable reference nor escapes.
+        let transition = unsafe { *self.transitions.get_unchecked(index) };
+        Ok(transition)
+    }
+}
+
+struct EncodingTables {
+    literals: EncodingTable,
+    matches: EncodingTable,
+    offsets: EncodingTable,
+}
+
+impl EncodingTables {
+    fn new() -> Result<Self> {
+        Ok(Self {
+            literals: EncodingTable::new(&LL_DEFAULT, 6)?,
+            matches: EncodingTable::new(&ML_DEFAULT, 6)?,
+            offsets: EncodingTable::new(&OF_DEFAULT, 5)?,
+        })
+    }
+}
+
+/// Finds the code whose interval includes a previously bounded length.
+fn length_code(length: u32, bases: &[u32]) -> usize {
+    bases.partition_point(|&base| base <= length) - 1
+}
+
+/// Writes sequences backward so their symbols and extra fields decode forward.
+/// Corresponds to the format contract of `ZSTD_encodeSequences`.
+fn encode_sequences(sequences: &[Sequence], tables: &EncodingTables) -> Result<Vec<u8>> {
+    let mut writer = BitWriter::new();
+    let (mut literal_state, mut match_state, mut offset_state) = (0, 0, 0);
+    for (index, sequence) in sequences.iter().rev().enumerate() {
+        let literal_code = length_code(sequence.literal_length, &LL_BASE);
+        let match_code = length_code(sequence.match_length, &ML_BASE);
+        let offset_value = sequence.distance + 3;
+        let offset_code = (31 - offset_value.leading_zeros()) as usize;
+        if index == 0 {
+            literal_state = tables.literals.initial(literal_code)?;
+            match_state = tables.matches.initial(match_code)?;
+            offset_state = tables.offsets.initial(offset_code)?;
+        } else {
+            // Decoder updates LL, ML, then OF. Write their inverse transitions
+            // in the opposite order, before this sequence's extra fields.
+            let offset = tables.offsets.transition(offset_code, offset_state)?;
+            let matches = tables.matches.transition(match_code, match_state)?;
+            let literals = tables.literals.transition(literal_code, literal_state)?;
+            writer.write(u32::from(offset.value), offset.bits)?;
+            writer.write(u32::from(matches.value), matches.bits)?;
+            writer.write(u32::from(literals.value), literals.bits)?;
+            offset_state = offset.state;
+            match_state = matches.state;
+            literal_state = literals.state;
+        }
+        // Decoder consumes OF, ML, then LL extra fields.
+        writer.write(
+            sequence.literal_length - LL_BASE[literal_code],
+            LL_BITS[literal_code],
+        )?;
+        writer.write(
+            sequence.match_length - ML_BASE[match_code],
+            ML_BITS[match_code],
+        )?;
+        writer.write(offset_value - (1_u32 << offset_code), offset_code as u8)?;
+    }
+    writer.write(u32::from(match_state), tables.matches.table_log)?;
+    writer.write(u32::from(offset_state), tables.offsets.table_log)?;
+    writer.write(u32::from(literal_state), tables.literals.table_log)?;
+    writer.finish()
+}
+
+/// A forward writer for fields consumed by `ReverseBits` in reverse order.
+/// Storage is owned; unsafe-bitstream optionally initializes spare capacity
+/// directly before increasing the length. Reservoir arithmetic stays shared.
+struct BitWriter {
+    bytes: Vec<u8>,
+    pending: u64,
+    used: u8,
+}
+
+impl BitWriter {
+    fn new() -> Self {
+        Self {
+            bytes: Vec::new(),
+            pending: 0,
+            used: 0,
+        }
+    }
+
+    fn write(&mut self, value: u32, count: u8) -> Result<()> {
+        if count > 32 || u64::from(value) >= (1_u64 << count) {
+            return Err(Error::CorruptData);
+        }
+        // used < 8 and count <= 32, so at most four bytes will be emitted.
+        self.bytes
+            .try_reserve(4)
+            .map_err(|_| Error::AllocationFailed)?;
+        self.pending |= u64::from(value) << self.used;
+        self.used += count;
+        let emitted = usize::from(self.used / 8);
+        #[cfg(not(feature = "unsafe-bitstream"))]
+        for _ in 0..emitted {
+            self.bytes.push(self.pending as u8);
+            self.pending >>= 8;
+        }
+        #[cfg(feature = "unsafe-bitstream")]
+        {
+            let previous_length = self.bytes.len();
+            for slot in self.bytes.spare_capacity_mut().iter_mut().take(emitted) {
+                slot.write(self.pending as u8);
+                self.pending >>= 8;
+            }
+            // SAFETY: used was below 8 before adding count <= 32, so emitted
+            // is at most four. try_reserve(4) succeeded above, proving enough
+            // spare capacity and no usize overflow in previous_length + 4.
+            // The loop writes exactly emitted initialized u8 values, and its
+            // exclusive spare-capacity borrow has ended. The original prefix
+            // remains initialized; the new length is at most the capacity.
+            unsafe { self.bytes.set_len(previous_length + emitted) };
+        }
+        self.used %= 8;
+        Ok(())
+    }
+
+    fn finish(mut self) -> Result<Vec<u8>> {
+        self.write(1, 1)?;
+        if self.used != 0 {
+            self.bytes.push(self.pending as u8);
+        }
+        Ok(self.bytes)
+    }
 }
 
 #[cfg(test)]
@@ -125,5 +469,83 @@ mod tests {
         let output = compress(b"abcdef").unwrap();
         assert_eq!(&output[6..9], &[49, 0, 0]);
         assert_eq!(&output[9..15], b"abcdef");
+    }
+
+    #[test]
+    fn periodic_input_uses_real_compressed_blocks() {
+        let input: Vec<_> = (0..MAX_BLOCK_SIZE * 2 + 31)
+            .map(|index| b"periodic-pattern"[index % 16])
+            .collect();
+        let output = compress(&input).unwrap();
+        assert!(output.len() < input.len() / 100);
+        let (_, header_size) = crate::frame::FrameHeader::parse(&output).unwrap();
+        assert_eq!((output[header_size] >> 1) & 3, 2);
+        assert_eq!(crate::decompress(&output, input.len()).unwrap(), input);
+    }
+
+    #[test]
+    fn inverse_entropy_transitions_recover_every_successor() {
+        for (counts, log) in [
+            (&LL_DEFAULT[..], 6),
+            (&ML_DEFAULT[..], 6),
+            (&OF_DEFAULT[..], 5),
+        ] {
+            let encoding = EncodingTable::new(counts, log).unwrap();
+            let decoding = FseTable::from_normalized(counts, log).unwrap();
+            for symbol in 0..counts.len() {
+                for next in 0..1_u16 << log {
+                    let transition = encoding.transition(symbol, next).unwrap();
+                    let entry = decoding.entry(usize::from(transition.state)).unwrap();
+                    assert_eq!(usize::from(entry.symbol), symbol);
+                    assert_eq!(entry.bits, transition.bits);
+                    assert_eq!(entry.base + transition.value, next);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn reverse_fields_preserve_zero_and_full_width_values() {
+        let fields = [(0, 0), (5, 3), (u32::MAX, 32), (0x1234_5678, 29), (1, 1)];
+        let mut writer = BitWriter::new();
+        assert!(writer.write(1, 0).is_err());
+        assert!(writer.write(8, 3).is_err());
+        assert!(writer.write(0, 33).is_err());
+        for &(value, count) in &fields {
+            writer.write(value, count).unwrap();
+        }
+        let stream = writer.finish().unwrap();
+        let mut reader = crate::bitstream::ReverseBits::new(&stream).unwrap();
+        for &(value, count) in fields.iter().rev() {
+            assert_eq!(reader.read_bits(count).unwrap(), value);
+        }
+        assert_eq!(reader.remaining(), 0);
+    }
+
+    #[test]
+    fn sequence_count_boundaries_and_overlapping_expansion_round_trip() {
+        let tables = EncodingTables::new().unwrap();
+        for count in [1, 127, 128, 255, 256, 0x7eff, 0x7f00] {
+            let mut sequences = vec![
+                Sequence {
+                    literal_length: 0,
+                    match_length: 4,
+                    distance: 1
+                };
+                count
+            ];
+            sequences[0].literal_length = 1;
+            let mut section = Vec::new();
+            write_sequence_count(&mut section, count);
+            section.push(0);
+            section.extend_from_slice(&encode_sequences(&sequences, &tables).unwrap());
+            let length = count * 4 + 1;
+            let mut history = crate::history::History::new(length);
+            history.start_frame(length);
+            crate::sequences::SequenceState::new()
+                .decode(&section, b"x", &mut history, MAX_BLOCK_SIZE)
+                .unwrap();
+            assert_eq!(history.into_bytes(), vec![b'x'; length]);
+        }
     }
 }

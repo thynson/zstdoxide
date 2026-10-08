@@ -36,8 +36,15 @@ exploit cross-block matches.
 Sequences are plain literal length, match length, and offset records. The encoder
 uses explicit offset values rather than repeat-offset optimization. Each record
 consumes literals followed by a match, and remaining literals finish the block.
-An owned initialized bit writer appends little-endian fields to a byte vector and
-adds the terminal one bit. Its inverse reader consumes fields in reverse order.
+An owned bit writer appends little-endian fields to a byte vector and adds the
+terminal one bit. Its inverse reader consumes fields in reverse order. The safe
+writer uses `Vec::push`. Under `unsafe-bitstream`, the writer reserves capacity,
+initializes exactly the emitted bytes through `spare_capacity_mut`, and then
+raises the length with `set_len`. The reservoir holds fewer than eight bits
+between calls; adding at most 32 bits emits at most four bytes. Successful
+reservation establishes both the capacity and arithmetic bounds for the new
+length. No uninitialized byte enters the vector's initialized prefix, and the
+exclusive spare-capacity borrow ends before changing the length.
 
 Predefined FSE distributions are shared with the decoder. For each symbol and
 next state, an inverse transition identifies the earlier decode-table state and
@@ -45,6 +52,15 @@ the bits that lead to the requested next state. Constructing typed inverse
 tables avoids reproducing C's packed encoding-table representation. The last
 sequence selects states carrying its symbols without adding nonexistent final
 state transitions. All preceding sequences are encoded in reverse order.
+
+`EncodingTable` owns initialized inverse-transition entries and initial-state
+indices. Its vector length is `symbol_count * state_count`; both dimensions are
+bounded by validated predefined distributions. Safe lookups use slice indexing.
+`unsafe-fse` selects unchecked lookup only after checking the symbol and successor
+state dimensions. The table cannot resize after construction, so the checked
+index refers to a live, aligned, initialized entry for the entire shared read.
+Small transition records, sequences, and accumulator fields remain shared plain
+values; features replace access and initialization operations.
 
 Raw fallback bounds compressed-block expansion and preserves interoperability
 when a predefined entropy distribution is a poor fit. This encoder is an initial

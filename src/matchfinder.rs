@@ -42,14 +42,16 @@ impl MatchTable {
         #[cfg(not(feature = "unsafe-match-table"))]
         let previous = core::mem::replace(&mut self.positions[index], position);
         #[cfg(feature = "unsafe-match-table")]
-        // SAFETY: HASH_BITS is 16, so shifting the u32 hash right by 16 proves
-        // index < 2^16 = TABLE_SIZE. Construction initializes exactly TABLE_SIZE
-        // properly aligned usize entries; no method changes the vector length
-        // or allocation. The exclusive self borrow grants unique access to the
-        // element for this call. The temporary reference cannot escape, and
-        // neither operation reallocates or reads uninitialized storage.
-        let previous =
-            unsafe { core::mem::replace(self.positions.get_unchecked_mut(index), position) };
+        let previous = {
+            // SAFETY: HASH_BITS is 16, so shifting the u32 hash right by 16 proves
+            // index < 2^16 = TABLE_SIZE. Construction initializes TABLE_SIZE
+            // properly aligned usize entries; no method changes the vector
+            // length or allocation. The exclusive self borrow grants unique
+            // access to the element for this call. The temporary reference
+            // cannot escape; neither operation reallocates or reads
+            // uninitialized storage.
+            unsafe { core::mem::replace(self.positions.get_unchecked_mut(index), position) }
+        };
         (previous != EMPTY && previous < position).then_some(previous)
     }
 }
