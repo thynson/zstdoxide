@@ -24,3 +24,21 @@ XXH64 verification, concatenation, and skippable frames are implemented. Output
 and advertised-window limits are explicit. Twelve checked-in official v1.5.7
 fixtures and 56 runtime oracle cases pass. This milestone excludes dictionaries,
 legacy frames, and resumable streaming; full upstream parity remains open.
+
+## Initial compressor
+
+Checksummed frames select raw, RLE, or greedy LZ-compressed blocks. Matches use
+position indices, raw literals, explicit offsets, and predefined FSE tables.
+Encoding transitions are constructed by inverting the decoding relation.
+Thirty-one independent official-decoder cases pass; compression ratio and speed
+have not been tuned to match upstream levels. Adaptive entropy, Huffman encoding,
+and cross-block matching are still open.
+
+## Project rename
+
+The project is named `zstdoxide`. On 2026-10-08, all 25 existing commits were
+rebased from the root to correct the package name, crate references, and script
+variables throughout history. All 612 historical file snapshots were checked
+against the originals: only the intended textual name changed, and commit
+boundaries were preserved. A local recovery branch
+`codex/before-zstdoxide-rename` retains the previous history.

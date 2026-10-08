@@ -2,6 +2,15 @@
 //!
 //! The core supports `no_std` with `alloc`. Unsafe optimization features are
 //! independent opt-ins and do not change the format or error contracts.
+//!
+//! ```
+//! use zstdoxide::{compress, decompress};
+//!
+//! let input = b"safe Rust, safe Rust, safe Rust";
+//! let encoded = compress(input)?;
+//! assert_eq!(decompress(&encoded, 1024)?, input);
+//! # Ok::<(), zstdoxide::Error>(())
+//! ```
 
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(
@@ -18,21 +27,21 @@
 
 extern crate alloc;
 
-mod error;
 mod bitstream;
-mod cursor;
-mod frame;
-mod history;
-mod fse;
-mod huffman;
-mod xxhash;
 mod constants;
-mod sequences;
+mod cursor;
 mod decode;
 mod encode;
+mod error;
+mod frame;
+mod fse;
+mod history;
+mod huffman;
 mod matchfinder;
+mod sequences;
+mod xxhash;
 
-pub use error::{Error, Result};
-pub use frame::FrameHeader;
 pub use decode::{DecodeOptions, decompress, decompress_with_options};
 pub use encode::compress;
+pub use error::{Error, Result};
+pub use frame::FrameHeader;

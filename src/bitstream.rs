@@ -57,10 +57,12 @@ impl<'a> ReverseBits<'a> {
             .get(first_byte..first_byte + byte_count)
             .ok_or(Error::UnexpectedEof)?;
         let mut word = 0_u64;
+        #[cfg(not(feature = "unsafe-bitstream"))]
+        for (index, &byte) in bytes.iter().enumerate() {
+            word |= u64::from(byte) << (index * 8);
+        }
+        #[cfg(feature = "unsafe-bitstream")]
         for index in 0..bytes.len() {
-            #[cfg(not(feature = "unsafe-bitstream"))]
-            let byte = bytes[index];
-            #[cfg(feature = "unsafe-bitstream")]
             // SAFETY: `index` is produced by `0..bytes.len()`, so it addresses
             // an initialized u8 in the live shared slice. u8 has alignment one,
             // the read does not mutate or retain a reference, and shared reads

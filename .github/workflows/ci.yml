@@ -1,0 +1,26 @@
+name: Rust codec
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.89.0
+        with:
+          components: rustfmt, clippy
+      - run: sh scripts/check.sh
+  miri:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: miri
+      - run: cargo +nightly miri test --lib --all-features history::tests
+      - run: cargo +nightly miri test --lib --all-features bitstream::tests
+      - run: cargo +nightly miri test --lib --all-features fse::tests
+      - run: cargo +nightly miri test --lib --all-features cursor::tests
+      - run: cargo +nightly miri test --lib --all-features matchfinder::tests
+      - run: cargo +nightly miri test --lib --all-features huffman::tests::mixed_lengths_decode_short_final_code
+      - run: cargo +nightly miri test --lib --all-features encode::tests::reverse_fields_preserve_zero_and_full_width_values
+      - run: cargo +nightly miri test --lib --all-features encode::tests::inverse_entropy_transitions_recover_every_successor

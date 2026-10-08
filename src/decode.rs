@@ -119,7 +119,7 @@ mod tests {
             0xb5,
             0x2f,
             0xfd,
-            0x20 | u8::from(checksum_flag) * 4,
+            0x20 | (u8::from(checksum_flag) * 4),
             input.len() as u8,
         ];
         let block_header = ((input.len() as u32) << 3) | 1;
