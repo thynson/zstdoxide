@@ -8,7 +8,7 @@
 - [x] Expose validated FSE count metadata for exact upstream parser assertions.
 - [ ] Generate pinned FSE/Huffman oracle vectors with exact expected metadata.
 - [ ] Port entropy decoder fuzz contracts and bounded arbitrary-input checks.
-- [ ] Port supported one-shot fuzzer cases and deterministic data generation.
+- [x] Port supported one-shot fuzzer cases and deterministic data generation.
 - [ ] Port decoder regression vectors and fuzz-target properties.
 - [x] Generate and verify reproducible decodecorpus compatibility fixtures.
 - [ ] Replay decodecorpus fixtures and configurable official generator campaigns.
