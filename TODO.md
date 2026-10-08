@@ -57,12 +57,16 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Retain bounded block-encoding scratch allocations across stream calls.
 - [x] Add a streaming encoder with bounded block staging and finish semantics.
 - [x] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
+- [x] Make post-EOF decoder misuse consistently poison the context.
 - [ ] Port every applicable official streaming/context test with explicit source mapping.
 - [x] Generate pinned official near-window sequence fixtures for window logs 10–29.
 - [x] Replay the full window-distance sweep with bounded streaming output.
 - [ ] Port malformed streaming-input and randomized directive fuzz campaigns.
 - [ ] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.
 - [ ] Measure retained memory and safe/unsafe throughput; document stream limits.
+- [ ] Document public streaming usage and lifecycle examples.
+- [ ] Run the complete backend/no_std matrix and add streaming CI coverage.
+- [ ] Pin and replay official external streaming fuzz corpora.
 
 Completed foundation, entropy, one-shot decoding, initial encoding, and validation
 checklists were cleared at their module boundaries. See `docs/progress.md` and

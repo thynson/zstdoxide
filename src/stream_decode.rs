@@ -93,6 +93,7 @@ impl Decoder {
     /// slice positions and requires reset before reuse.
     pub fn process(&mut self, input: &[u8], output: &mut [u8]) -> Result<Progress> {
         if matches!(self.phase, Phase::Ended | Phase::Failed) {
+            self.phase = Phase::Failed;
             return Err(Error::InvalidState);
         }
         let mut consumed = 0;
@@ -633,5 +634,22 @@ mod tests {
             assert_eq!(actual, b"abc");
             decoder.finish().unwrap();
         }
+    }
+
+    #[test]
+    fn processing_after_eof_poisoning_requires_reset() {
+        let empty = [0x28, 0xb5, 0x2f, 0xfd, 0x20, 0, 1, 0, 0];
+        let mut decoder = Decoder::new(DecodeOptions::new(0));
+        decoder.process(&empty, &mut []).unwrap();
+        decoder.finish().unwrap();
+        decoder.finish().unwrap();
+        assert_eq!(decoder.process(&[], &mut []), Err(Error::InvalidState));
+        assert_eq!(decoder.finish(), Err(Error::InvalidState));
+        decoder.reset();
+        assert_eq!(
+            decoder.process(&empty, &mut []).unwrap().status,
+            StreamStatus::FrameFinished
+        );
+        decoder.finish().unwrap();
     }
 }
