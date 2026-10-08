@@ -9,7 +9,7 @@
 - [x] Add a reproducible per-backend benchmark harness.
 - [x] Record compressed sizes and full-output digests outside benchmark timing.
 - [x] Benchmark each data structure backend and whole-codec workloads.
-- [ ] Document measured results, supported features, and remaining scope.
+- [x] Document measured results, supported features, and remaining scope.
 
 ## Roadmap
 

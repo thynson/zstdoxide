@@ -84,12 +84,12 @@ unchanged. Do not bake global allocation assumptions into table lookup or match
 execution. Allocations must be released with the allocator that created them;
 resizing must preserve initialized regions and invalidate saved addresses.
 
-Rust 1.100's eventual `Allocator` availability and exact API are not assumed by
-this design. No unstable feature is needed for the initial version. Record the
-actual supported toolchain in the crate, then verify the relevant Rust release
-documentation before adopting allocator-aware standard collections. An internal
-allocation boundary is preparation, not a claim that custom allocation already
-works.
+The installed nightly standard-library source marks `Allocator`, `Vec<T, A>`,
+and `Vec::new_in` stable since Rust 1.100. The initial version uses Rust 1.89.0
+without unstable features. [The allocator plan](allocators.md) records that
+source evidence and the required migration and validation work. Explicit
+allocation boundaries are preparation, not a claim that custom allocation
+already works or that a Rust 1.100 build has been tested.
 
 ## Incremental implementation order
 

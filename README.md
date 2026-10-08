@@ -1,0 +1,137 @@
+# zstdoxide
+
+An independent, safe-first Rust implementation of the Zstandard format. The
+codec has no dependencies and does not call the C library or another Rust codec.
+The pinned reference and test oracle is [facebook/zstd v1.5.7](https://github.com/facebook/zstd/tree/v1.5.7),
+commit `f8745da6ff1ad1e7bab384bd1f9d742439278e99`.
+
+This is an initial working codec milestone, **not full parity with upstream
+zstd**. Its one-shot decoder handles non-dictionary standard frames. Its encoder
+uses an initial greedy compression strategy; upstream compression levels and
+compression ratios are not reproduced.
+
+## Using the library
+
+```rust
+use zstdoxide::{compress, decompress, DecodeOptions, decompress_with_options};
+
+let input = b"checked Rust, checked Rust, checked Rust";
+let encoded = compress(input)?;
+let decoded = decompress(&encoded, 1024)?;
+assert_eq!(decoded, input);
+
+// Output and advertised-window limits are independent. No advertised window
+// is allocated eagerly; the one-shot decoder retains its complete output.
+let options = DecodeOptions {
+    max_output_size: 8 * 1024 * 1024,
+    max_window_size: 8 * 1024 * 1024,
+};
+assert_eq!(decompress_with_options(&encoded, options)?, input);
+# Ok::<(), zstdoxide::Error>(())
+```
+
+`decompress` requires an explicit combined-output limit and uses a 128 MiB
+advertised-window limit. Use `decompress_with_options` for another window limit.
+`FrameHeader::parse` exposes validated metadata without decoding the frame.
+Allocation failures and corrupt, truncated, or over-limit input return `Error`.
+The encoder writes one checksummed single-segment frame, so its advertised window
+equals its content size; adjust decoder limits for inputs larger than 128 MiB.
+
+## Current support
+
+| Area | Implemented |
+| --- | --- |
+| Frames | Standard magic, every content-size width, unknown sizes, checksums, concatenated frames, all sixteen skippable magic values |
+| Blocks | Raw, RLE, and compressed blocks; block/window/output bounds |
+| Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
+| Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
+| Compression | Greedy four-byte hash matching, raw literals, predefined FSE sequence encoding, raw/RLE fallback |
+| Portability | Rust 2024, tested with Rust 1.89.0; `no_std` plus `alloc` core |
+
+Remaining work includes streaming, raw/prepared dictionaries, dictionary training,
+Huffman literal encoding, adaptive FSE encoding, repeat-offset selection during
+compression, cross-block match search, advanced compression strategies and
+levels, long-distance matching, threading, legacy formats, C ABI, and CLI parity.
+There is no command-line compressor yet. Nonzero dictionary IDs return
+`DictionaryRequired`; frames with an implicit external dictionary are also
+unsupported and may fail history or entropy validation.
+
+The implementation is new and has not completed a long-running fuzz campaign or
+cross-platform release qualification. The checked-in tests, oracle checks, and
+Miri runs establish the tested cases, not universal compatibility.
+
+## Safe and unsafe data structures
+
+Default builds enforce `forbid(unsafe_code)`. Slice borrows and indices replace
+non-owning pointers; `Vec` owns growable storage. Fixed/shared future structures
+use `Box`/`Arc` where appropriate. An opt-in feature selects an alternative access
+implementation for exactly one data structure family, preserving its checked API.
+
+| Feature | Data structure family |
+| --- | --- |
+| `unsafe-byte-cursor` | Validated byte ranges |
+| `unsafe-bitstream` | Reverse/forward bit readers and initialized spare-capacity bit writer |
+| `unsafe-history` | Overlapping LZ match expansion |
+| `unsafe-fse` | FSE decoding and inverse encoding tables |
+| `unsafe-huffman` | Huffman lookup table |
+| `unsafe-match-table` | Hash-indexed prior-position table |
+
+Plain scalar records share a representation; they have no pointer access to
+replace. Every unsafe block has a local proof, and no unsafe operation is exposed
+through the public API. The current implementation has no `unsafe fn`; any added
+later must document a full `# Safety` contract. Neither malformed input nor a
+release-only assumption may bypass range checks.
+
+Read [the data structure inventory](docs/data-structures.md),
+[architecture](docs/architecture.md), and module design documents before adding
+another backend. Allocation boundaries use fallible reservation and are explicit
+to support future allocator parameterization. Custom allocators are not currently
+supported. [The allocator plan](docs/allocators.md) maps these boundaries to the
+Rust 1.100 allocator API and records the remaining implementation and test work.
+
+## Building and checking
+
+The checked-in toolchain file selects the tested Rust 1.89.0 toolchain.
+
+```sh
+cargo test
+cargo check --no-default-features
+sh scripts/check.sh
+
+# Independent official v1.5.7 interoperability; optional external test oracle.
+ZSTD_BIN=/path/to/zstd cargo test --test interop -- --ignored
+
+# All unsafe families enabled, with release overflow checks still active.
+cargo test --release --all-features
+cargo +nightly miri test --lib --all-features history::tests
+```
+
+The normal tests use checked-in official-codec fixtures and need no external
+executable. The explicit oracle tests cover both directions: official compression
+decoded in Rust, and Rust compression decoded by the official implementation.
+Fixture generation and provenance are in [tests/fixtures](tests/fixtures/README.md).
+
+## Measuring backend performance
+
+```sh
+bash scripts/benchmark.sh
+```
+
+The benchmark runs the safe build, each feature independently, and all features
+on identical deterministic inputs. It verifies output fingerprints and refuses
+to combine builds if source files change during a run. Timing uses five samples
+per workload and reports medians and ranges. See
+[benchmark design](docs/benchmark-design.md) and [recorded measurements](docs/benchmarks.md).
+Unsafe implementations remain opt-in even when a benchmark favors them.
+
+## Development workflow
+
+[AGENTS.md](AGENTS.md) defines English project language, safety documentation,
+module decomposition, and small verified commits. [TODO.md](TODO.md) contains
+active work; completed module summaries live in [docs/progress.md](docs/progress.md).
+Each work item is checked in its implementation commit, and completed module
+checklists are cleared at module boundaries.
+
+The project is BSD-3-Clause licensed. [NOTICE](NOTICE) and
+[LICENSE.zstd](LICENSE.zstd) retain upstream attribution for algorithms and
+format tables. [LICENSE](LICENSE) covers project contributions.

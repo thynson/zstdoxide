@@ -42,3 +42,21 @@ variables throughout history. All 612 historical file snapshots were checked
 against the originals: only the intended textual name changed, and commit
 boundaries were preserved. A local recovery branch
 `codex/before-zstdoxide-rename` retains the previous history.
+
+## Validation and measurement
+
+The safe build, six individual backends, all backends, release mode, and no_std
+matrix passed. Targeted Miri checks cover every unsafe access family. The local
+suite contains 53 unit tests, five regular interoperability tests, two malformed
+input tests, one documentation example, and two separately executed oracle tests.
+See [validation.md](validation.md) for exact evidence and remaining gaps.
+
+Every backend and whole-codec workload was measured with five timed samples on
+the same source and input. Complete output sizes and FNV-1a checksums match in
+all configurations. Isolated unsafe history showed 1.646x throughput; all-feature
+text-fixture decompression showed 1.305x while compression was essentially
+unchanged. Raw data, ranges, and limitations are recorded in
+[benchmarks.md](benchmarks.md). Default builds remain entirely safe.
+
+The initial working codec milestone is complete. Streaming, dictionaries,
+advanced compression, custom allocators, and full upstream parity are not.
