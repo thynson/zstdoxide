@@ -23,35 +23,62 @@ pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
         .try_reserve_exact(capacity)
         .map_err(|_| Error::AllocationFailed)?;
     write_frame_header(&mut output, input.len());
+    let mut encoder = BlockEncoder::new();
     if input.is_empty() {
-        write_block_header(&mut output, 0, 0, true);
+        encoder.encode(&[], true, &mut output)?;
     }
-    let mut match_table = None;
-    let mut entropy_tables = None;
     for (index, block) in input.chunks(MAX_BLOCK_SIZE).enumerate() {
-        let last = index + 1 == blocks;
-        let repeated = block.len() > 1 && block.iter().all(|&byte| byte == block[0]);
-        if repeated {
-            write_block_header(&mut output, block.len(), 1, last);
-            output.push(block[0]);
-        } else {
-            if block.len() >= 8 {
-                let table = match match_table.as_mut() {
-                    Some(table) => table,
-                    None => match_table.insert(MatchTable::new()?),
-                };
-                if let Some(compressed) = compress_block(block, table, &mut entropy_tables)? {
-                    write_block_header(&mut output, compressed.len(), 2, last);
-                    output.extend_from_slice(&compressed);
-                    continue;
-                }
-            }
-            write_block_header(&mut output, block.len(), 0, last);
-            output.extend_from_slice(block);
-        }
+        encoder.encode(block, index + 1 == blocks, &mut output)?;
     }
     output.extend_from_slice(&(xxhash::checksum(input) as u32).to_le_bytes());
     Ok(output)
+}
+
+/// Reusable block-local match and predefined-entropy state.
+///
+/// Corresponds to the independently owned block-compression workspace of
+/// `ZSTD_CCtx`; input references never survive an `encode` call.
+pub(crate) struct BlockEncoder {
+    match_table: Option<MatchTable>,
+    entropy_tables: Option<EncodingTables>,
+}
+
+impl BlockEncoder {
+    pub(crate) const fn new() -> Self {
+        Self {
+            match_table: None,
+            entropy_tables: None,
+        }
+    }
+
+    /// Append exactly one bounded raw, RLE, or compressed block.
+    pub(crate) fn encode(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
+        if block.len() > MAX_BLOCK_SIZE {
+            return Err(Error::ResourceLimit);
+        }
+        output
+            .try_reserve(block.len() + 3)
+            .map_err(|_| Error::AllocationFailed)?;
+        if block.len() > 1 && block.iter().all(|&byte| byte == block[0]) {
+            write_block_header(output, block.len(), 1, last);
+            output.push(block[0]);
+            return Ok(());
+        }
+        if block.len() >= 8 {
+            let table = match self.match_table.as_mut() {
+                Some(table) => table,
+                None => self.match_table.insert(MatchTable::new()?),
+            };
+            if let Some(compressed) = compress_block(block, table, &mut self.entropy_tables)? {
+                write_block_header(output, compressed.len(), 2, last);
+                output.extend_from_slice(&compressed);
+                return Ok(());
+            }
+        }
+        write_block_header(output, block.len(), 0, last);
+        output.extend_from_slice(block);
+        Ok(())
+    }
 }
 
 /// Writes a single-segment frame header; corresponds to `ZSTD_writeFrameHeader`.

@@ -53,7 +53,8 @@ one-shot adaptations do not complete the upstream test migration.
 - [ ] Stream raw/RLE/skippable payloads before a complete block is available.
 - [ ] Resume block decoding with caller-provided output slices and bounded history.
 - [ ] Preserve entropy/repeat state and checksums across input/output exhaustion.
-- [ ] Extract reusable block-encoding state without changing one-shot output.
+- [x] Extract reusable block-encoding state without changing one-shot output.
+- [ ] Retain bounded block-encoding scratch allocations across stream calls.
 - [ ] Add a streaming encoder with bounded block staging and finish semantics.
 - [ ] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
 - [ ] Port every applicable official streaming/context test with explicit source mapping.
