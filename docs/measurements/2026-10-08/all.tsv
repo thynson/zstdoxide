@@ -1,0 +1,19 @@
+META	seed	5eedd15c0dec2026
+META	samples	5
+META	sample_ms	150
+META	features	unsafe-byte-cursor,unsafe-bitstream,unsafe-fse,unsafe-huffman,unsafe-history,unsafe-match-table
+COLUMNS	case	unit	units_per_iteration	median_ns_per_unit	minimum_ns_per_unit	maximum_ns_per_unit	fingerprint
+RESULT	byte_cursor	byte	65536	0.5011	0.4878	0.5076	d8e92bce820bb24f
+RESULT	reverse_bits	byte	65536	1.3943	1.3934	1.3961	5db079f320c83ea2
+RESULT	fse_lookup	transition	65536	0.7485	0.7472	0.7595	0de56ad491b65048
+RESULT	huffman_decode	byte	65536	6.2585	6.1445	6.3305	ee42899df300a132
+RESULT	history_overlap	byte	65536	0.3746	0.3742	0.3846	9c8a5a2754c9d995
+RESULT	match_table	candidate	32768	1.0338	1.0206	1.0503	ee75d847654343c6
+META	compress_original_bytes	99328
+META	compress_encoded_bytes	1339
+META	compress_output_fnv1a64	b6ec9854a7bed506
+RESULT	compress	byte	99328	1.7200	1.6674	2.5146	1624ef6861d8a410
+META	decompress_encoded_bytes	7124
+META	decompress_decoded_bytes	370326
+META	decompress_output_fnv1a64	4b678f26bb5708b9
+RESULT	decompress	byte	370326	0.9136	0.9011	0.9165	d7ede7e257fa75c4

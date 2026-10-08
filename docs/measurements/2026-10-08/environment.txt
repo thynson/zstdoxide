@@ -1,0 +1,16 @@
+Timestamp: 2026-10-08 08:27:28 UTC
+rustc 1.89.0 (29483883e 2025-08-04)
+binary: rustc
+commit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2
+commit-date: 2025-08-04
+host: aarch64-apple-darwin
+release: 1.89.0
+LLVM version: 20.1.7
+Darwin MacBook-Air-2.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:18:13 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_ARM64_T8132 arm64
+0712a828751fc42d4f1d979c7e2081e289d84e8f
+ M docs/architecture.md
+?? LICENSE
+?? README.md
+?? docs/allocators.md
+?? docs/measurements/
+CPU model unavailable under current permissions.

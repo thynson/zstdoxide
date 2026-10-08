@@ -1,0 +1,55 @@
+# Recorded backend comparison
+
+Measured on 2026-10-08 with Rust 1.89.0, `aarch64-apple-darwin`, release settings,
+and overflow checks enabled. Each workload used five samples of at least 150 ms;
+the tables report medians. The safe build, each of six features alone, and all
+features used identical input and compiler settings. Exact CPU-model access was
+unavailable under the local permissions; host/target metadata is retained.
+
+| Data structure feature alone | Safe ns/unit | Feature ns/unit | Relative throughput |
+| --- | ---: | ---: | ---: |
+| `unsafe-byte-cursor` | 0.4924 | 0.5149 | 0.956x |
+| `unsafe-bitstream` | 1.3950 | 1.4308 | 0.975x |
+| `unsafe-fse` | 0.7471 | 0.7491 | 0.997x |
+| `unsafe-huffman` | 6.0675 | 6.2373 | 0.973x |
+| `unsafe-history` | 0.6258 | 0.3801 | 1.646x |
+| `unsafe-match-table` | 1.0374 | 1.0119 | 1.025x |
+
+Units are bytes except FSE transitions and match-table candidates. Tables are
+constructed outside lookup timings; history/Huffman output allocation is
+included. See [the benchmark design](benchmark-design.md) for exact workloads.
+
+| Complete operation / all features | Safe ns/byte | All features ns/byte | Relative throughput |
+| --- | ---: | ---: | ---: |
+| Compression, mixed deterministic input | 1.7035 | 1.7200 | 0.990x |
+| Decompression, official text fixture | 1.1925 | 0.9136 | 1.305x |
+| Overlapping history expansion | 0.6258 | 0.3746 | 1.671x |
+
+The compression input was 99,328 bytes and encoded to 1,339 bytes in every
+configuration. The decompression workload uses an official 7,124-byte frame
+containing 370,326 decoded bytes. These are deliberately specified workloads,
+not a general compression-ratio comparison with upstream zstd.
+
+The history backend showed the clearest benefit. Other isolated differences are
+small, and several unsafe paths were slower in this run. All features improved
+text-fixture decompression while compression was effectively unchanged. The safe
+implementation remains the default. No upstream C throughput measurement or
+general performance-parity claim is made.
+
+The run contains outliers: all-feature compression ranged from 1.6674 to 2.5146
+ns/byte; FSE lookup with only `unsafe-huffman` ranged from 0.7472 to 1.1698
+ns/transition. Unrelated feature effects should not be inferred from those
+samples. The sequential workstation run establishes observations on these
+inputs, not statistically controlled universal speedups.
+
+The script verified source stability and matching workload sizes, sampled
+fingerprints, and full-output FNV-1a checksums across all configurations. The full
+checksums and compression roundtrip occur outside timing. Noncryptographic
+checksums supplement the independent full-output interoperability tests.
+
+Reproduce with `bash scripts/benchmark.sh`. The measured source revision was
+`0712a828751fc42d4f1d979c7e2081e289d84e8f`; its source SHA-256 was
+`365a5ce09602eb5bf58dea6b06d8ca2cacf36f2ddf55846c9d638c89103d3459`.
+
+Raw medians, sample ranges, workload sizes, checksums, compiler metadata, and
+the generated summary are in [measurements/2026-10-08](measurements/2026-10-08/summary.md).
