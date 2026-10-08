@@ -1,6 +1,18 @@
 # Tasks
 
-## Module 5: bounded streaming and reusable contexts
+## Module 5: official v1.5.7 test migration
+
+- [ ] Inventory every official test file, entry point, asset, and API dependency.
+- [ ] Import all official golden assets with exact hashes and provenance.
+- [ ] Port golden decoding, error rejection, and adapted compression tests.
+- [ ] Port supported one-shot fuzzer cases and deterministic data generation.
+- [ ] Port decoder regression vectors and fuzz-target properties.
+- [ ] Integrate reproducible decodecorpus-generated compatibility cases.
+- [ ] Map CLI, streaming, dictionary, threading, legacy, and build-test contracts.
+- [ ] Audit test coverage and keep unimplemented contracts explicitly open.
+- [ ] Run migrated tests across safe/unsafe backends and document exact results.
+
+## Module 6: bounded streaming and reusable contexts
 
 - [ ] Specify input/output progress, completion, reset, and error contracts.
 - [ ] Analyze ring-history ownership, wraparound indices, and backend invariants.
