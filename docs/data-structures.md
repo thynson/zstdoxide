@@ -115,3 +115,7 @@ ends, invalid entropy tables, invalid distances, overlapping matches, and trunca
 input. Run release tests as well as debug tests. Miri and fuzzing add evidence for
 unsafe code when the relevant toolchain is available; absence of either is a
 reported limitation, never a passing result.
+
+Dictionary training ownership, bounded sample ranges, candidate heap ordering,
+and the separate safe/unsafe frequency-table family are specified in
+[dictionary-training.md](dictionary-training.md).
