@@ -24,6 +24,7 @@ mod cursor;
 mod frame;
 mod history;
 mod fse;
+mod huffman;
 
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
