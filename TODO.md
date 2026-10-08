@@ -58,7 +58,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Add a streaming encoder with bounded block staging and finish semantics.
 - [x] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
 - [ ] Port every applicable official streaming/context test with explicit source mapping.
-- [ ] Generate pinned official near-window sequence fixtures for window logs 10–29.
+- [x] Generate pinned official near-window sequence fixtures for window logs 10–29.
 - [ ] Replay the full window-distance sweep with bounded streaming output.
 - [ ] Port malformed streaming-input and randomized directive fuzz campaigns.
 - [ ] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.

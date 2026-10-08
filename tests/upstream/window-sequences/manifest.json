@@ -1,0 +1,253 @@
+{
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "source_group": "tests/zstreamtest.c:1652",
+  "generator": "scripts/oracles/window_sequences.c",
+  "generator_sha256": "94c69e57973a614f0c22349cbf6425bf29654e2ebaaad8a8ecaa23a6ac667a64",
+  "source_sha256": {
+    "tests/zstreamtest.c": "ad409d3017fab12a889320d2de5354f23e0b8a998f44ad37f3b50f14d0e6682a",
+    "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b",
+    "lib/compress/zstd_compress.c": "10c315ae609d49b2fc431521aa95908086e69fd917991c5ed9a875af3d1208e8"
+  },
+  "fixtures": {
+    "window-10.zst": {
+      "size": 20105,
+      "sha256": "e8b08df3b7d2af1f7cf5bccb3bda68fa8ac4d436dee2fff39f875ff88db7886c",
+      "window_log": 10,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 101014,
+        "sha256": "4a4d2c6f2195b4868d16cb33f9c7bd874c09493befd9e5cd515ab2fc58f4843d"
+      }
+    },
+    "window-11.zst": {
+      "size": 19831,
+      "sha256": "aad0f1ddbde54a244c4925431f8ec2e78509aa2e2d6848765e0f38c53eca7fd9",
+      "window_log": 11,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 102038,
+        "sha256": "c3109a0c2f5d36af4da4933df261ecec4402076eabbd103f443f6693dc91c43a"
+      }
+    },
+    "window-12.zst": {
+      "size": 20120,
+      "sha256": "9c165fc2487a5c56b44803430a775b400f5c5eb07540b93e4d7701f8b5d3fb88",
+      "window_log": 12,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 104086,
+        "sha256": "24ec97b5adb3ff48b941a126b2e8b51e8080ae7ece20d4eb3e34cb04cd9b78c2"
+      }
+    },
+    "window-13.zst": {
+      "size": 20602,
+      "sha256": "62434432fd61929ee1e7594ef82c39a5d2d0d042ac38d462051f5d945d009e7b",
+      "window_log": 13,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 108182,
+        "sha256": "f6a3cd1d0e84b3a820147fb80860f6946b8c63cb3620d726a18c782debbddbfd"
+      }
+    },
+    "window-14.zst": {
+      "size": 21237,
+      "sha256": "54886a4fe9ac9451505990ea64614f2ec2a749ae0bb2fe686203d34312e4a9fc",
+      "window_log": 14,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 116374,
+        "sha256": "8f20f0f1560c4490713ba04ad53414d8f591ed2a0771407e12cab3b072c298ec"
+      }
+    },
+    "window-15.zst": {
+      "size": 21935,
+      "sha256": "4c42a743e6ce9da6d0cab7839ce88a81f79e1ddf582e0e29e90c37941e070265",
+      "window_log": 15,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 132758,
+        "sha256": "d0a85f1ca50a63b61baa0c6ac1414e52354c9105f53fdb385d892aed68e3ba80"
+      }
+    },
+    "window-16.zst": {
+      "size": 22672,
+      "sha256": "9a69d41c2a27dc0f8ca49719474346940386331229323c066b9661dbaf1741d5",
+      "window_log": 16,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 165526,
+        "sha256": "69849597b3934b042e39d4831b5ca6b2baed6a8eba10058b49e4dfeff096836e"
+      }
+    },
+    "window-17.zst": {
+      "size": 23433,
+      "sha256": "fd4464ad5770f98069b9abaae203c3a1246d66e0c942d13405c318c5ac47e42b",
+      "window_log": 17,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 231062,
+        "sha256": "2d4d0f6fe52c511a81ebb7a8a8d36286eb61e7f7c328304e5a201ff9ba2cda00"
+      }
+    },
+    "window-18.zst": {
+      "size": 24234,
+      "sha256": "00049f24ab862b2c4816faff62d71bd8e7cee9c4916fe73a5fbf40aaad268c34",
+      "window_log": 18,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 362134,
+        "sha256": "93d60760ee5d0265ffb682a391c79ead71453f60b66f649c86d46ff18e798b55"
+      }
+    },
+    "window-19.zst": {
+      "size": 25038,
+      "sha256": "56cbcccfb29d23b0a1c6d65bcf814cfdafbfea697e33b7dccbf42b9c0486a3bd",
+      "window_log": 19,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 624278,
+        "sha256": "2d79f435b96000a4153482e9da9739d578ca85c6be78560138bf399aba676a5f"
+      }
+    },
+    "window-20.zst": {
+      "size": 25851,
+      "sha256": "1b6722e69e2e8cc0ec7cf0ce0e33e37bd82cdcddec88840e5c647312bcebff47",
+      "window_log": 20,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 1148566,
+        "sha256": "f6da4de428138bf4f9ebbdf2157cbb00138d3bf8ec6a29eb89dc7c8d024d50c9"
+      }
+    },
+    "window-21.zst": {
+      "size": 26679,
+      "sha256": "99a3fdd058699f899590ced04fb1c04dcac9bcacc6093d960a62971f81ca8a7b",
+      "window_log": 21,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 2197142,
+        "sha256": "0f4128081d3bfd48c7b9e73e5fcad66fd9d1bff9ca8095c5858067be7104fcc7"
+      }
+    },
+    "window-22.zst": {
+      "size": 27540,
+      "sha256": "d536a0f9c9e52b638d68ce9f430c575ce271eb8195fd0a7a5c610b9f8c8e3d3c",
+      "window_log": 22,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 4294294,
+        "sha256": "95faee81bac64f3fe0f80daa39a52262755bc659a913c354f5971c8c5431e214"
+      }
+    },
+    "window-23.zst": {
+      "size": 28464,
+      "sha256": "1ff8781f9236fc8c8440e3afbe717d1815a0b9704ca86ed2f64babac206a636e",
+      "window_log": 23,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 8488598,
+        "sha256": "b399d7e2852726c02ee0b76048046e6a0354db4ce6f9e65b8a1c6b19a1c42d2f"
+      }
+    },
+    "window-24.zst": {
+      "size": 29517,
+      "sha256": "ecaa323e5531c087557de608e55722ae969863ba85b060a4dda2c822565c6929",
+      "window_log": 24,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 16877206,
+        "sha256": "e0316b1101ddaa3da21a20af8aacacdb1ed56bdc53d0c3654c9dc524d583f18d"
+      }
+    },
+    "window-25.zst": {
+      "size": 30826,
+      "sha256": "1b07ba7c92fd63deb0d3282e28e61df88745f703203c8a55ac0676b1418c0a57",
+      "window_log": 25,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 33654422,
+        "sha256": "8eedfb24ce029bf767efa2c9699622627819be6971d175ceb8b3e22e0f8a7a1d"
+      }
+    },
+    "window-26.zst": {
+      "size": 32647,
+      "sha256": "2e4083433b0ac2ae11247e0841226db33fb17fcbb3b2c6d841d63d0a1f2df863",
+      "window_log": 26,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 67208854,
+        "sha256": "efc0ef3d0e782ba122538bbb065ea4665f1773eeed7e548fa997aa34d98c6b32"
+      }
+    },
+    "window-27.zst": {
+      "size": 35491,
+      "sha256": "2ca892820bf8f28bc760e4211e8dd7d2e545e092ca274d29ed93ef44c604f149",
+      "window_log": 27,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 134317718,
+        "sha256": "f955bfc7c3c2f54258702c143feba793d37fa4575c1c2050eed0a00c091f7b62"
+      }
+    },
+    "window-28.zst": {
+      "size": 40384,
+      "sha256": "4187fdc43564d25fe490a79b4094bc79c527b04673a2232f9cb384edbb7c2226",
+      "window_log": 28,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 268535446,
+        "sha256": "fb1a1e29df70c90a126654dcb7a4c63c71b5ea118ec7d9ff836c7adc4cdabe09"
+      }
+    },
+    "window-29.zst": {
+      "size": 49372,
+      "sha256": "f52a87d57360fb99ecb5e0ef7b4e8161773870d1d4c6c34d4481482df233478d",
+      "window_log": 29,
+      "sequence_count": 10000,
+      "seed": 305419896,
+      "expected_output": {
+        "repeat_byte": 0,
+        "size": 536970902,
+        "sha256": "a32819ac3d4652984131be81822ece37ff09433c0eaaa283e2ab8a8251696644"
+      }
+    }
+  }
+}
