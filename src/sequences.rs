@@ -4,7 +4,7 @@ use crate::bitstream::ReverseBits;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
 use crate::cursor::ByteCursor;
 use crate::fse::FseTable;
-use crate::history::History;
+use crate::history::SequenceOutput;
 use crate::{Error, Result};
 
 pub(crate) struct SequenceState {
@@ -28,11 +28,11 @@ impl SequenceState {
     ///
     /// Corresponds to `ZSTD_decodeSeqHeaders`, `ZSTD_decodeSequence`, and
     /// `ZSTD_execSequence`, with indices replacing C pointer state.
-    pub(crate) fn decode(
+    pub(crate) fn decode<O: SequenceOutput>(
         &mut self,
         input: &[u8],
         literals: &[u8],
-        history: &mut History,
+        history: &mut O,
         max_block: usize,
     ) -> Result<()> {
         let mut cursor = ByteCursor::new(input);
@@ -196,6 +196,7 @@ fn resolve_offset(repeat: &mut [usize; 3], value: usize, literal_length: usize) 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::history::History;
 
     #[test]
     fn executes_rle_symbols_and_overlapping_matches() {

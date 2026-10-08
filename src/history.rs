@@ -3,6 +3,17 @@
 use crate::{Error, Result};
 use alloc::vec::Vec;
 
+/// The checked operations needed by sequence execution, independent of storage.
+///
+/// A sink reports its current block/output position and validates capacity and
+/// backward distances before writes. Streaming sinks retain bounded ring
+/// history; one-shot history owns the complete result.
+pub(crate) trait SequenceOutput {
+    fn len(&self) -> usize;
+    fn append(&mut self, bytes: &[u8]) -> Result<()>;
+    fn copy_match(&mut self, offset: usize, length: usize) -> Result<()>;
+}
+
 pub(crate) struct History {
     output: Vec<u8>,
     limit: usize,
@@ -93,6 +104,20 @@ impl History {
             }
         }
         Ok(())
+    }
+}
+
+impl SequenceOutput for History {
+    fn len(&self) -> usize {
+        History::len(self)
+    }
+
+    fn append(&mut self, bytes: &[u8]) -> Result<()> {
+        History::append(self, bytes)
+    }
+
+    fn copy_match(&mut self, offset: usize, length: usize) -> Result<()> {
+        History::copy_match(self, offset, length)
     }
 }
 
