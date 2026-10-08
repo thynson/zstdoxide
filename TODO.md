@@ -7,7 +7,7 @@
 - [x] Port golden decoding, error rejection, and adapted compression tests.
 - [x] Expose validated FSE count metadata for exact upstream parser assertions.
 - [x] Generate pinned FSE/Huffman oracle vectors with exact expected metadata.
-- [ ] Port entropy decoder fuzz contracts and bounded arbitrary-input checks.
+- [x] Port entropy decoder fuzz contracts and bounded arbitrary-input checks.
 - [x] Port supported one-shot fuzzer cases and deterministic data generation.
 - [ ] Preserve exact inline binary regression fixtures and legacy expectations.
 - [ ] Replay current-format inline regressions and retain the failing legacy contract.

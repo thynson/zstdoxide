@@ -41,6 +41,10 @@ mod matchfinder;
 mod sequences;
 mod xxhash;
 
+#[cfg(test)]
+#[path = "../tests/upstream/entropy.rs"]
+mod upstream_entropy_tests;
+
 pub use decode::{DecodeOptions, decompress, decompress_with_options};
 pub use encode::compress;
 pub use error::{Error, Result};
