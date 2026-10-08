@@ -67,8 +67,10 @@ sink, reusable block encoder, and incremental checksum described in
 and use indices for all resumptions. Ring access has the independent
 `unsafe-ring-history` feature; scalar progress/phase/checksum state is shared.
 
-These are planned designs. Future feature names below are reservations, not
-currently supported Cargo features.
+Module 7 dictionary ownership, immutable prepared entropy, independent content
+access, indexed two-region history, and prefix lifetime are specified in
+[dictionary-design.md](dictionary-design.md). The remaining rows below describe
+planned families; their features are reservations until implemented.
 
 | Family and upstream counterpart | Safe ownership and indexing design | Unsafe comparison boundary and key obligations |
 | --- | --- | --- |

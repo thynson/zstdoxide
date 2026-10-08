@@ -22,7 +22,7 @@ one-shot adaptations do not complete the upstream test migration.
 
 ## Module 7: dictionaries, prefixes, and training
 
-- [ ] Record dictionary ownership, entropy initialization, lifetime boundaries, and API contracts.
+- [x] Record dictionary ownership, entropy initialization, lifetime boundaries, and API contracts.
 - [ ] Parse raw/auto/formatted dictionaries and validate IDs, table limits, and repeat offsets.
 - [ ] Add a separately gated unsafe dictionary-content accessor with complete proofs.
 - [ ] Generate pinned dictionary/prefix interoperability and boundary fixtures.
