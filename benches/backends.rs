@@ -145,6 +145,17 @@ fn main() {
     );
 
     let original = compression_input(&input);
+    let compressed = zstdoxide::compress(&original).unwrap();
+    assert_eq!(
+        zstdoxide::decompress(&compressed, original.len()).unwrap(),
+        original
+    );
+    println!("META\tcompress_original_bytes\t{}", original.len());
+    println!("META\tcompress_encoded_bytes\t{}", compressed.len());
+    println!(
+        "META\tcompress_output_fnv1a64\t{:016x}",
+        full_checksum(&compressed)
+    );
     measure(&settings, "compress", "byte", original.len(), || {
         fingerprint(&zstdoxide::compress(black_box(&original)).unwrap())
     });
@@ -152,6 +163,12 @@ fn main() {
     let frame = include_bytes!("../tests/fixtures/text-3.zst");
     let expected = zstdoxide::decompress(frame, 370_326).unwrap();
     assert_eq!(expected.len(), 370_326);
+    println!("META\tdecompress_encoded_bytes\t{}", frame.len());
+    println!("META\tdecompress_decoded_bytes\t{}", expected.len());
+    println!(
+        "META\tdecompress_output_fnv1a64\t{:016x}",
+        full_checksum(&expected)
+    );
     measure(&settings, "decompress", "byte", expected.len(), || {
         fingerprint(&zstdoxide::decompress(black_box(frame), 370_326).unwrap())
     });
@@ -203,6 +220,14 @@ fn fingerprint(bytes: &[u8]) -> u64 {
         }
     }
     digest
+}
+
+/// Hash every byte outside the timed region using the standard FNV-1a recurrence.
+/// This is a reproducibility checksum, not a cryptographic digest.
+fn full_checksum(bytes: &[u8]) -> u64 {
+    bytes.iter().fold(0xcbf2_9ce4_8422_2325, |hash, &byte| {
+        (hash ^ u64::from(byte)).wrapping_mul(0x0000_0100_0000_01b3)
+    })
 }
 
 fn deterministic_bytes(length: usize) -> Vec<u8> {

@@ -7,6 +7,7 @@
 - [x] Exercise malformed input, feature combinations, and no_std builds.
 - [x] Add maximum-depth Huffman and malformed table regression cases.
 - [x] Add a reproducible per-backend benchmark harness.
+- [x] Record compressed sizes and full-output digests outside benchmark timing.
 - [ ] Benchmark each data structure backend and whole-codec workloads.
 - [ ] Document measured results, supported features, and remaining scope.
 

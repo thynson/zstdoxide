@@ -37,8 +37,13 @@ public contracts return owned storage. Inputs and outputs cross compiler
 optimization barriers. Each operation returns a deterministic fingerprint;
 all invocations are checked against the initial value, and the script compares
 fingerprints across feature configurations. Byte-output fingerprints sample
-64 positions; full-output correctness is established separately by unit and
-interoperability tests, not inferred from this sampling.
+64 positions. Outside the timed region, whole-codec workloads also report their
+original/decoded and compressed byte sizes and hash every output byte with
+FNV-1a. The comparison script checks that sizes and full-output checksums agree
+across all builds. The compression workload's complete output is also decoded
+and checked against its input before timing. These noncryptographic checksums
+supplement the complete byte comparisons in unit and interoperability tests;
+correctness is not inferred from sampled fingerprints.
 
 By default each case runs five samples of at least 150 ms each, then reports the
 median throughput and minimum/maximum sample durations per work unit. This is
