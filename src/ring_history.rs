@@ -82,6 +82,77 @@ impl RingHistory {
         self.bytes.capacity()
     }
 
+    /// Read an absolute position in the active frame's retained history.
+    ///
+    /// Positions must precede `frame_len()` and be no older than `available()`
+    /// bytes. The returned value owns no borrow, and this method changes no
+    /// history state. Corresponds to reading the retained prefix in upstream
+    /// `ZSTD_execSequence`, with checked frame indices replacing pointers.
+    pub(crate) fn byte_at(&self, frame_position: u64) -> Result<u8> {
+        if frame_position >= self.produced {
+            return Err(Error::CorruptData);
+        }
+        let distance =
+            usize::try_from(self.produced - frame_position).map_err(|_| Error::CorruptData)?;
+        if distance > self.bytes.len() {
+            return Err(Error::CorruptData);
+        }
+        let source = if distance <= self.head {
+            self.head - distance
+        } else {
+            self.window - (distance - self.head)
+        };
+        #[cfg(not(feature = "unsafe-ring-history"))]
+        let byte = self.bytes[source];
+        #[cfg(feature = "unsafe-ring-history")]
+        let byte = {
+            // SAFETY: frame_position < produced makes distance positive, and
+            // conversion plus the explicit length check prove 1 <= distance
+            // <= len. Before filling, head == len, so source == len - distance
+            // < len. Once full, len == window and head < window: the first
+            // branch subtracts into 0..len; the second has
+            // 1 <= distance - head <= window and also yields 0..len.
+            // The Vec owns its live allocation, aligned for u8, and every
+            // element below len is initialized. The shared borrow of self
+            // prevents mutation or reallocation for this read and permits no
+            // conflicting exclusive alias. Pointer arithmetic stays inside
+            // this allocation; read copies one byte without retaining a
+            // reference or pointer beyond this expression.
+            unsafe { self.bytes.as_ptr().add(source).read() }
+        };
+        Ok(byte)
+    }
+
+    /// Commit complete staged output without copying to another output slice.
+    ///
+    /// Checks the entire logical advancement before mutation. Empty input is
+    /// accepted even with a zero window; a nonempty commit requires an active
+    /// window. Corresponds to retaining decoded block content in the upstream
+    /// `ZSTD_DCtx` prefix after block execution.
+    pub(crate) fn commit(&mut self, input: &[u8]) -> Result<()> {
+        let produced = self.checked_advance(input.len())?;
+        for &byte in input {
+            #[cfg(not(feature = "unsafe-ring-history"))]
+            self.store(byte);
+            #[cfg(feature = "unsafe-ring-history")]
+            {
+                // SAFETY: this loop executes only for nonempty input, so the
+                // complete checked_advance proved window > 0 before mutation.
+                // start_frame bounded window by maximum_window and reserved
+                // capacity >= window. Constructors and every store preserve
+                // initialized len <= window, head == len before filling, and
+                // head < window once full. All metadata and byte are initialized.
+                // self exclusively owns the live Vec allocation, correctly
+                // aligned for u8; no history references or pointers escape.
+                // The exclusive borrow prevents conflicting access, including
+                // input aliasing this allocation, and no reallocation occurs.
+                unsafe { self.store_unchecked(byte) };
+            }
+        }
+        self.produced = produced;
+        Ok(())
+    }
+
     /// Emit the literal prefix that fits in `output`, returning its length.
     ///
     /// The caller resumes with `input[written..]`. Errors leave both buffers
@@ -150,6 +221,9 @@ impl RingHistory {
     /// even for an empty output slice. Repeating this call with the same
     /// distance and a reduced `remaining` resumes the same LZ match.
     /// Corresponds to the match-copy part of upstream `ZSTD_execSequence`.
+    // Retained for direct history tests and backend benchmarks; compressed
+    // block decoding now reads immutable history and commits staged output.
+    #[cfg_attr(not(test), allow(dead_code))]
     pub(crate) fn copy_match(
         &mut self,
         distance: usize,
@@ -287,6 +361,128 @@ mod tests {
         let mut output = vec![0; bytes.len()];
         assert_eq!(history.append(bytes, &mut output).unwrap(), bytes.len());
         assert_eq!(output, bytes);
+    }
+
+    #[test]
+    fn deferred_lookup_covers_partial_and_wrapped_retained_intervals() {
+        for window in 1..=19 {
+            let mut history = RingHistory::new(window);
+            history.start_frame(window).unwrap();
+            let capacity = history.retained_capacity();
+            assert_eq!(history.byte_at(0), Err(Error::CorruptData));
+            let mut expected = Vec::new();
+            for index in 0..window * 4 + 3 {
+                let byte = (index * 37) as u8;
+                history.commit(&[byte]).unwrap();
+                expected.push(byte);
+                let start = expected.len().saturating_sub(window);
+                for (position, &value) in expected.iter().enumerate().skip(start) {
+                    assert_eq!(history.byte_at(position as u64).unwrap(), value);
+                }
+                if start != 0 {
+                    assert_eq!(history.byte_at((start - 1) as u64), Err(Error::CorruptData));
+                }
+                assert_eq!(
+                    history.byte_at(expected.len() as u64),
+                    Err(Error::CorruptData)
+                );
+                assert_eq!(history.byte_at(u64::MAX), Err(Error::CorruptData));
+                assert_eq!(history.retained_capacity(), capacity);
+            }
+            history.start_frame(window).unwrap();
+            assert_eq!(history.byte_at(0), Err(Error::CorruptData));
+            history.commit(b"x").unwrap();
+            assert_eq!(history.byte_at(0).unwrap(), b'x');
+            assert_eq!(history.byte_at(1), Err(Error::CorruptData));
+        }
+    }
+
+    #[test]
+    fn deferred_lookup_uses_wide_logical_positions_and_independent_ring_head() {
+        let mut history = RingHistory::new(7);
+        history.start_frame(7).unwrap();
+        history.commit(b"abcdefghijk").unwrap();
+        history.produced = u64::from(u32::MAX) + 91;
+        let start = history.frame_len() - 7;
+        for (index, &byte) in b"efghijk".iter().enumerate() {
+            assert_eq!(history.byte_at(start + index as u64).unwrap(), byte);
+        }
+        for position in [0, start - 1, history.frame_len(), u64::MAX] {
+            assert_eq!(history.byte_at(position), Err(Error::CorruptData));
+        }
+        history.commit(b"LMN").unwrap();
+        assert_eq!(history.byte_at(start), Err(Error::CorruptData));
+        for (index, &byte) in b"hijkLMN".iter().enumerate() {
+            assert_eq!(history.byte_at(start + 3 + index as u64).unwrap(), byte);
+        }
+        history.produced = u64::MAX;
+        for (index, &byte) in b"hijkLMN".iter().enumerate() {
+            assert_eq!(history.byte_at(u64::MAX - 7 + index as u64).unwrap(), byte);
+        }
+        assert_eq!(history.byte_at(u64::MAX), Err(Error::CorruptData));
+    }
+
+    #[test]
+    fn deferred_commit_checks_entire_advancement_before_mutation() {
+        let mut history = RingHistory::new(3);
+        assert_eq!(history.commit(b"x"), Err(Error::CorruptData));
+        history.commit(&[]).unwrap();
+        history.start_frame(3).unwrap();
+        history.commit(b"abc").unwrap();
+        history.produced = u64::MAX - 2;
+        let bytes = history.bytes.clone();
+        let head = history.head;
+        let capacity = history.retained_capacity();
+        assert_eq!(history.commit(b"xyz"), Err(Error::ResourceLimit));
+        assert_eq!(history.bytes, bytes);
+        assert_eq!(history.head, head);
+        assert_eq!(history.frame_len(), u64::MAX - 2);
+        assert_eq!(history.window_size(), 3);
+        assert_eq!(history.retained_capacity(), capacity);
+        history.commit(b"XY").unwrap();
+        assert_eq!(history.frame_len(), u64::MAX);
+        for (index, &byte) in b"cXY".iter().enumerate() {
+            assert_eq!(history.byte_at(u64::MAX - 3 + index as u64).unwrap(), byte);
+        }
+        history.commit(&[]).unwrap();
+        assert_eq!(history.commit(b"Z"), Err(Error::ResourceLimit));
+        assert_eq!(history.byte_at(u64::MAX - 1).unwrap(), b'Y');
+        history.clear();
+        history.commit(&[]).unwrap();
+        assert_eq!(history.commit(b"x"), Err(Error::CorruptData));
+        assert_eq!(history.available(), 0);
+        assert_eq!(history.frame_len(), 0);
+        assert_eq!(history.byte_at(0), Err(Error::CorruptData));
+        assert_eq!(history.retained_capacity(), capacity);
+    }
+
+    #[test]
+    fn deferred_block_reads_previous_prefix_before_commit_evicts_it() {
+        let mut history = RingHistory::new(8);
+        history.start_frame(8).unwrap();
+        seed(&mut history, b"abcdef");
+        let bytes = history.bytes.clone();
+        let head = history.head;
+        // A dictionary match at P=6, distance=10, length=8 emits four
+        // dictionary bytes, then frame[0..4]. Immediate ring writes would
+        // evict frame[0] at output position 8 before reading it at position 10.
+        let mut pending = b"1234".to_vec();
+        for position in 0..4 {
+            pending.push(history.byte_at(position).unwrap());
+        }
+        assert_eq!(pending, b"1234abcd");
+        assert_eq!(history.bytes, bytes);
+        assert_eq!(history.head, head);
+        assert_eq!(history.frame_len(), 6);
+        history.commit(&pending).unwrap();
+        assert_eq!(history.frame_len(), 14);
+        assert_eq!(history.byte_at(0), Err(Error::CorruptData));
+        for (index, &byte) in pending.iter().enumerate() {
+            assert_eq!(history.byte_at(6 + index as u64).unwrap(), byte);
+        }
+        let mut output = [0; 8];
+        history.copy_match(4, 8, &mut output).unwrap();
+        assert_eq!(&output, b"abcdabcd");
     }
 
     #[test]

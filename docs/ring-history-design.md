@@ -59,6 +59,46 @@ representation in both backends; they do not need artificial unsafe variants.
   to the streaming decoder; the history object enforces its window and arithmetic
   contracts independently.
 
+## Absolute reads and deferred block commits
+
+Dictionary-to-frame matches can need early frame bytes after their output would
+overwrite those bytes in the ring. Module 7 therefore decodes a compressed block
+against unchanged previous-block history and the block's own pending output,
+then commits the complete block. Dictionary content remains separate from this
+ring and is never counted as produced frame output.
+
+`byte_at(frame_position)` returns a copied byte from an absolute `u64` frame
+position. Its valid interval is `[produced - bytes.len(), produced)`. The method
+first rejects the current/future positions, then converts the positive backward
+distance to `usize` and checks it against initialized history length. Only this
+validated distance determines the physical slot using the existing head mapping;
+the absolute position is never narrowed or reduced modulo the window. Reads
+borrow the ring immutably, allocate nothing, and leave every field unchanged.
+Expired positions and positions in an empty or cleared frame are corrupt input.
+
+`commit(input)` records every input byte without copying to a caller output
+slice. It checks advancement of the entire logical count before writing any
+byte, then uses the existing safe or independently selected unsafe store. It
+does not allocate: frame initialization already reserved the active window.
+Empty input succeeds even for a zero window or exhausted logical counter;
+nonempty input with a zero window fails without mutation. Counter overflow also
+leaves the whole history unchanged, rather than committing a partial prefix.
+
+This extends the existing `unsafe-ring-history` family. Absolute unsafe reads
+require the same initialized-slot and live shared-owner proof as relative match
+reads. Deferred unsafe stores retain the existing exclusive-owner, capacity,
+alignment and initialization contract. Neither operation creates a new pointer
+field, borrow stored across calls, or unsafe family.
+
+The extension is decomposed into these focused items, coordinated in `TODO.md`:
+
+1. Record the absolute retained interval and atomic deferred-commit contract.
+2. Implement checked lookup and commit with equivalent safe/unsafe access.
+3. Verify interval endpoints, partial/full rings, repeated wraps, old positions,
+   counts above `u32::MAX`, zero windows, and failure without partial mutation.
+4. Verify immutable source reads before committing a block that evicts them.
+5. Run focused safe/unsafe/all-feature, no_std, Clippy and Miri checks.
+
 ## Backend boundary
 
 The default implementation uses indexed vector access only. The independent
@@ -115,3 +155,20 @@ blocked at this checkpoint by the independently added incremental checksum
 object not yet having a non-test consumer; this is recorded separately from
 the ring result. Integrated streaming validation, Miri, and comparative
 throughput remain coordinator-owned checks before the streaming milestone.
+
+The Module 7 extension adds four tests, bringing the focused ring suite to
+fourteen. It verifies each retained position over partial fills and multiple
+wraps, both retained-interval endpoints, absolute positions above `u32::MAX`
+and near `u64::MAX`, commit overflow without partial mutation, empty commits
+with zero windows, and immutable reads before a staged block evicts the old
+prefix. The spanning-match test also verifies that committed output remains
+usable through the existing resumable match API.
+
+All fourteen tests passed in safe, independently enabled unsafe-ring-history,
+all-feature, safe no-default-feature, and unsafe no-default-feature builds.
+The four new deferred-history tests passed nightly Miri with unsafe-ring-history
+enabled. Standalone safe/unsafe Clippy test harnesses passed with warnings denied
+and the unsafe-operation, safety-documentation and unsafe-block lints enabled.
+The preserved `copy_match` API remains covered by tests and backend benchmarks;
+a documented non-test dead-code allowance keeps it available while production
+compressed-block execution uses immutable reads followed by bulk commits.

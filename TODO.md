@@ -26,6 +26,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [ ] Parse raw/auto/formatted dictionaries and validate IDs, table limits, and repeat offsets.
 - [ ] Add a separately gated unsafe dictionary-content accessor with complete proofs.
 - [ ] Generate pinned dictionary/prefix interoperability and boundary fixtures.
+- [x] Extend bounded ring history with immutable absolute reads and deferred commits.
 - [ ] Read compressed-block history from immutable prior history plus pending output.
 - [ ] Initialize first-block Huffman/FSE tables and repeat offsets from prepared dictionaries.
 - [ ] Decode raw dictionary references beyond the ordinary frame window.
