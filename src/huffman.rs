@@ -333,6 +333,50 @@ mod tests {
     }
 
     #[test]
+    fn maximum_eleven_bit_tree_decodes_long_and_short_codes() {
+        // Explicit weights [1, 1, 2, ..., 10] imply final weight 11.
+        // Symbol 0 has eleven zero bits; symbol 11 has the one-bit code 1.
+        let (table, consumed) =
+            HuffmanTable::read(&[138, 0x11, 0x23, 0x45, 0x67, 0x89, 0xa0]).unwrap();
+        assert_eq!(consumed, 7);
+        assert_eq!(table.table_log, 11);
+        assert_eq!(table.entries.len(), 2048);
+        assert_eq!(table.decode_stream(&[0x01, 0x10], 2).unwrap(), [0, 11]);
+        assert_eq!(table.decode_stream(&[0, 0x08], 1).unwrap(), [0]);
+        assert_eq!(table.decode_stream(&[3], 1).unwrap(), [11]);
+        assert!(table.decode_stream(&[0, 0x04], 1).is_err());
+        assert!(table.lookup(2048).is_err());
+    }
+
+    #[test]
+    fn malformed_tree_fixtures_reject_excess_depth_and_missing_fse_marker() {
+        // Every explicit weight is individually legal, but their distribution
+        // would require a forbidden twelve-bit tree and implicit weight 12.
+        let too_deep = [139, 0x11, 0x23, 0x45, 0x67, 0x89, 0xab];
+        assert!(matches!(
+            HuffmanTable::read(&too_deep),
+            Err(Error::CorruptData)
+        ));
+        // The FSE normalized distribution is complete, but its stream has no
+        // terminating marker. A previous table must not hide a bad new table.
+        let broken_fse = [4, 0x10, 0x3f, 3, 0];
+        assert!(HuffmanTable::read(&broken_fse).is_err());
+        let (old, _) = HuffmanTable::read(&[128, 0x10]).unwrap();
+        let mut previous = Some(old);
+        let malformed = compressed_literals(&broken_fse, 2, 0, 2);
+        assert!(decode_literals(&malformed, &mut previous, 2).is_err());
+        assert_eq!(
+            previous.unwrap().decode_stream(&[0x16], 4).unwrap(),
+            [0, 1, 1, 0]
+        );
+        // A four-stream jump table cannot describe ranges beyond its payload,
+        // even when each individual encoded length fits its u16 field.
+        let huge_jumps = [128, 0x10, 255, 255, 255, 255, 255, 255, 1, 1, 1, 1];
+        let malformed = compressed_literals(&huge_jumps, 8, 1, 2);
+        assert!(decode_literals(&malformed, &mut None, 8).is_err());
+    }
+
+    #[test]
     fn invalid_weights_and_truncation_are_rejected() {
         for input in [
             &[][..],
