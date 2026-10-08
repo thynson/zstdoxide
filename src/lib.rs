@@ -42,6 +42,7 @@ mod matchfinder;
 #[cfg(test)]
 mod ring_history;
 mod sequences;
+mod stream;
 mod xxhash;
 
 #[cfg(test)]
@@ -52,3 +53,4 @@ pub use decode::{DecodeOptions, decompress, decompress_with_options};
 pub use encode::compress;
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
+pub use stream::{EndDirective, Progress, StreamStatus};

@@ -3,6 +3,10 @@ use core::fmt;
 /// A checked codec operation failed.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Error {
+    /// An option is outside the supported range.
+    InvalidParameter,
+    /// An operation is incompatible with the context phase; reset is required.
+    InvalidState,
     /// The input ended before a complete value could be read.
     UnexpectedEof,
     /// A frame magic number is not recognized.
@@ -29,6 +33,8 @@ pub type Result<T> = core::result::Result<T, Error>;
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(match self {
+            Self::InvalidParameter => "invalid codec parameter",
+            Self::InvalidState => "invalid codec context state",
             Self::UnexpectedEof => "unexpected end of input",
             Self::InvalidMagic => "invalid frame magic",
             Self::CorruptData => "corrupt Zstandard data",

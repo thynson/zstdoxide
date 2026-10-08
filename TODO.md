@@ -48,7 +48,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Add and verify an independently gated unsafe ring-history backend.
 - [x] Implement incremental XXH64 state with arbitrary update boundaries.
 - [x] Generalize sequence execution through a bounded history/output sink.
-- [ ] Add public progress/directive records and explicit invalid-state handling.
+- [x] Add public progress/directive records and explicit invalid-state handling.
 - [ ] Parse partial frame/block headers with bounded staging and explicit phases.
 - [ ] Stream raw/RLE/skippable payloads before a complete block is available.
 - [ ] Resume block decoding with caller-provided output slices and bounded history.
