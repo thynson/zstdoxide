@@ -39,10 +39,10 @@ mod fse;
 mod history;
 mod huffman;
 mod matchfinder;
-#[cfg(test)]
 mod ring_history;
 mod sequences;
 mod stream;
+mod stream_decode;
 mod xxhash;
 
 #[cfg(test)]
@@ -54,3 +54,4 @@ pub use encode::compress;
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
 pub use stream::{EndDirective, Progress, StreamStatus};
+pub use stream_decode::Decoder;

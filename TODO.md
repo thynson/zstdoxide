@@ -49,8 +49,8 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Implement incremental XXH64 state with arbitrary update boundaries.
 - [x] Generalize sequence execution through a bounded history/output sink.
 - [x] Add public progress/directive records and explicit invalid-state handling.
-- [ ] Parse partial frame/block headers with bounded staging and explicit phases.
-- [ ] Stream raw/RLE/skippable payloads before a complete block is available.
+- [x] Parse partial frame/block headers with bounded staging and explicit phases.
+- [x] Stream raw/RLE/skippable payloads before a complete block is available.
 - [ ] Resume block decoding with caller-provided output slices and bounded history.
 - [ ] Preserve entropy/repeat state and checksums across input/output exhaustion.
 - [x] Extract reusable block-encoding state without changing one-shot output.
