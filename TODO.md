@@ -6,12 +6,14 @@
 - [x] Import all official golden assets with exact hashes and provenance.
 - [x] Port golden decoding, error rejection, and adapted compression tests.
 - [x] Expose validated FSE count metadata for exact upstream parser assertions.
-- [ ] Generate pinned FSE/Huffman oracle vectors with exact expected metadata.
+- [x] Generate pinned FSE/Huffman oracle vectors with exact expected metadata.
 - [ ] Port entropy decoder fuzz contracts and bounded arbitrary-input checks.
 - [x] Port supported one-shot fuzzer cases and deterministic data generation.
-- [ ] Port decoder regression vectors and fuzz-target properties.
+- [ ] Preserve exact inline binary regression fixtures and legacy expectations.
+- [ ] Replay current-format inline regressions and retain the failing legacy contract.
+- [ ] Port bounded public fuzz-target properties and external corpus replay.
 - [x] Generate and verify reproducible decodecorpus compatibility fixtures.
-- [ ] Replay decodecorpus fixtures and configurable official generator campaigns.
+- [x] Replay decodecorpus fixtures and configurable official generator campaigns.
 - [ ] Map CLI, streaming, dictionary, threading, legacy, and build-test contracts.
 - [ ] Audit test coverage and keep unimplemented contracts explicitly open.
 - [ ] Run migrated tests across safe/unsafe backends and document exact results.
