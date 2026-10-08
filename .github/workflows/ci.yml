@@ -9,6 +9,24 @@ jobs:
         with:
           components: rustfmt, clippy
       - run: sh scripts/check.sh
+  upstream-oracles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.89.0
+      - name: Build pinned external test oracles
+        run: |
+          reference="$RUNNER_TEMP/zstd-v1.5.7"
+          git clone --quiet --depth 1 --branch v1.5.7 https://github.com/facebook/zstd.git "$reference"
+          test "$(git -C "$reference" rev-parse HEAD)" = f8745da6ff1ad1e7bab384bd1f9d742439278e99
+          make -C "$reference/lib" -j2 libzstd.a
+          make -C "$reference/programs" -j2 ZSTD_LEGACY_SUPPORT=4 zstd
+          make -C "$reference/tests" -j2 decodecorpus
+      - name: Regenerate fixtures and run independent compatibility checks
+        env:
+          ZSTDOXIDE_FUZZ_CYCLES: "30000"
+          ZSTDOXIDE_FUZZ_SEED: "305419896"
+        run: ZSTD_UPSTREAM="$RUNNER_TEMP/zstd-v1.5.7" sh scripts/check_upstream_oracles.sh
   miri:
     runs-on: ubuntu-latest
     steps:

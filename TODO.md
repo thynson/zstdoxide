@@ -22,7 +22,7 @@
 - [x] Verify all checked-in fixture hashes in the offline CI audit.
 - [ ] Audit test coverage and keep unimplemented contracts explicitly open.
 - [ ] Run migrated tests across safe/unsafe backends and document exact results.
-- [ ] Add a reproducible pinned-upstream oracle job alongside the offline CI matrix.
+- [x] Add a reproducible pinned-upstream oracle job alongside the offline CI matrix.
 
 ### Required for complete migration
 
