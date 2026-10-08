@@ -32,6 +32,7 @@ mod bitstream;
 mod constants;
 mod cursor;
 mod decode;
+mod dictionary;
 mod encode;
 mod error;
 mod frame;
@@ -51,6 +52,7 @@ mod xxhash;
 mod upstream_entropy_tests;
 
 pub use decode::{DecodeOptions, decompress, decompress_with_options};
+pub use dictionary::{Dictionary, DictionaryMode, SharedDictionary};
 pub use encode::compress;
 pub use error::{Error, Result};
 pub use frame::FrameHeader;

@@ -33,6 +33,13 @@ impl FseTable {
     ///
     /// Corresponds to upstream `FSE_buildDTable_internal`.
     pub(crate) fn from_normalized(counts: &[i16], table_log: u8) -> Result<Self> {
+        Self::build_normalized(counts, table_log, false)
+    }
+
+    /// Build prepared dictionary transitions, which may have one symbol while
+    /// retaining a nonzero state width. Ordinary weights/sequence constructors
+    /// retain their existing multi-symbol validation boundary.
+    fn build_normalized(counts: &[i16], table_log: u8, dictionary: bool) -> Result<Self> {
         if !(5..=12).contains(&table_log) || counts.is_empty() || counts.len() > 256 {
             return Err(Error::CorruptData);
         }
@@ -46,7 +53,7 @@ impl FseTable {
             total += usize::from(count.unsigned_abs());
             present += usize::from(count != 0);
         }
-        if total != table_size || present < 2 {
+        if total != table_size || present == 0 || (present == 1 && !dictionary) {
             return Err(Error::CorruptData);
         }
         let mut entries = Vec::new();
@@ -105,6 +112,19 @@ impl FseTable {
     pub(crate) fn read(data: &[u8], max_symbol: usize, max_log: u8) -> Result<(Self, usize)> {
         let parsed = read_normalized_counts(data, max_symbol, max_log)?;
         let table = Self::from_normalized(&parsed.counts[..parsed.symbols], parsed.table_log)?;
+        Ok((table, parsed.bytes_read))
+    }
+
+    /// Read a formatted dictionary distribution, including a single-symbol
+    /// table with its original state width. Corresponds to `ZSTD_loadDEntropy`.
+    pub(crate) fn read_dictionary(
+        data: &[u8],
+        max_symbol: usize,
+        max_log: u8,
+    ) -> Result<(Self, usize)> {
+        let parsed = read_normalized_counts(data, max_symbol, max_log)?;
+        let table =
+            Self::build_normalized(&parsed.counts[..parsed.symbols], parsed.table_log, true)?;
         Ok((table, parsed.bytes_read))
     }
 

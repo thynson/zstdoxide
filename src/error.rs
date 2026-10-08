@@ -13,8 +13,12 @@ pub enum Error {
     InvalidMagic,
     /// A field, state, or stream violates the Zstandard format.
     CorruptData,
-    /// The frame requires a dictionary, which this decoder does not yet accept.
+    /// The frame requires a dictionary that the caller has not supplied.
     DictionaryRequired,
+    /// A formatted dictionary contains invalid or incomplete metadata.
+    InvalidDictionary,
+    /// The supplied dictionary ID does not match the frame's nonzero ID.
+    DictionaryMismatch,
     /// A valid format feature is not implemented yet.
     UnsupportedFeature,
     /// Decoding would exceed the caller's resource limit.
@@ -39,6 +43,8 @@ impl fmt::Display for Error {
             Self::InvalidMagic => "invalid frame magic",
             Self::CorruptData => "corrupt Zstandard data",
             Self::DictionaryRequired => "a dictionary is required",
+            Self::InvalidDictionary => "invalid Zstandard dictionary",
+            Self::DictionaryMismatch => "dictionary ID mismatch",
             Self::UnsupportedFeature => "unsupported Zstandard feature",
             Self::ResourceLimit => "resource limit exceeded",
             Self::AllocationFailed => "allocation failed",

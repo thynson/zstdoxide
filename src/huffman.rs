@@ -9,7 +9,7 @@ use crate::bitstream::ReverseBits;
 use crate::fse::decode_weights;
 use crate::{Error, Result};
 
-const MAX_TABLE_LOG: u8 = 11;
+const MAX_TABLE_LOG: u8 = 12;
 const MAX_SYMBOLS: usize = 256;
 
 /// A plain initialized value; both table backends share its representation.
@@ -36,6 +36,17 @@ impl HuffmanTable {
     /// Corresponds to upstream `HUF_readStats` and `HUF_readDTableX1_wksp`.
     /// The returned count includes the one-byte weights header.
     pub(crate) fn read(input: &[u8]) -> Result<(Self, usize)> {
+        Self::read_with_limit(input, 11)
+    }
+
+    /// Prepared dictionaries produced by the reference may use a twelve-bit
+    /// table (including the official HTTP dictionary). Ordinary literal trees
+    /// retain the frame decoder's eleven-bit construction limit.
+    pub(crate) fn read_dictionary(input: &[u8]) -> Result<(Self, usize)> {
+        Self::read_with_limit(input, MAX_TABLE_LOG)
+    }
+
+    fn read_with_limit(input: &[u8], maximum_log: u8) -> Result<(Self, usize)> {
         let header = usize::from(*input.first().ok_or(Error::UnexpectedEof)?);
         let (mut weights, consumed) = if header >= 128 {
             let count = header - 127;
@@ -65,7 +76,7 @@ impl HuffmanTable {
         let mut weight_total = 0usize;
         let mut rank_counts = [0usize; MAX_TABLE_LOG as usize + 1];
         for &weight in &weights {
-            if weight > MAX_TABLE_LOG {
+            if weight > maximum_log {
                 return Err(Error::CorruptData);
             }
             rank_counts[usize::from(weight)] += 1;
@@ -77,7 +88,7 @@ impl HuffmanTable {
             return Err(Error::CorruptData);
         }
         let table_log = (usize::BITS - weight_total.leading_zeros()) as u8;
-        if table_log > MAX_TABLE_LOG {
+        if table_log > maximum_log {
             return Err(Error::CorruptData);
         }
         let table_size = 1usize << table_log;
@@ -187,6 +198,17 @@ pub(crate) fn decode_literals(
     previous: &mut Option<HuffmanTable>,
     max_output: usize,
 ) -> Result<(Vec<u8>, usize)> {
+    decode_literals_with_dictionary(input, previous, max_output, None)
+}
+
+/// A prepared dictionary supplies the initial table until this frame replaces
+/// it. Borrowed immutable tables never become self-references in frame state.
+pub(crate) fn decode_literals_with_dictionary(
+    input: &[u8],
+    previous: &mut Option<HuffmanTable>,
+    max_output: usize,
+    initial: Option<&HuffmanTable>,
+) -> Result<(Vec<u8>, usize)> {
     let first = *input.first().ok_or(Error::UnexpectedEof)?;
     let kind = first & 3;
     let size_format = (first >> 2) & 3;
@@ -240,7 +262,7 @@ pub(crate) fn decode_literals(
         *previous = Some(table);
         output
     } else {
-        let table = previous.as_ref().ok_or(Error::CorruptData)?;
+        let table = previous.as_ref().or(initial).ok_or(Error::CorruptData)?;
         decode_streams(table, encoded, regenerated, four_streams)?
     };
     Ok((output, header_len + compressed))

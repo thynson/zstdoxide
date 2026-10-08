@@ -16,7 +16,8 @@ untrusted bytes through fallible reservation and validates before publication.
 `DictionaryMode` is a plain enum: Auto, Raw, or Formatted. Auto treats short or
 nonmatching magic as raw, but matching magic commits to formatted parsing and
 never falls back after an error. Forced raw mode never interprets a header.
-Forced formatted mode requires the magic and complete validated metadata.
+Auto's short-buffer threshold is eight bytes, even when a shorter buffer begins
+with the magic. Forced formatted mode requires the magic and complete validated metadata.
 Short raw buffers, including empty content, remain accepted for compatibility
 with the reference loader, despite the format prose's eight-byte recommendation.
 
