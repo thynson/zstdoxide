@@ -6,9 +6,12 @@
 - [x] Import all official golden assets with exact hashes and provenance.
 - [x] Port golden decoding, error rejection, and adapted compression tests.
 - [x] Expose validated FSE count metadata for exact upstream parser assertions.
+- [ ] Generate pinned FSE/Huffman oracle vectors with exact expected metadata.
+- [ ] Port entropy decoder fuzz contracts and bounded arbitrary-input checks.
 - [ ] Port supported one-shot fuzzer cases and deterministic data generation.
 - [ ] Port decoder regression vectors and fuzz-target properties.
-- [ ] Integrate reproducible decodecorpus-generated compatibility cases.
+- [x] Generate and verify reproducible decodecorpus compatibility fixtures.
+- [ ] Replay decodecorpus fixtures and configurable official generator campaigns.
 - [ ] Map CLI, streaming, dictionary, threading, legacy, and build-test contracts.
 - [ ] Audit test coverage and keep unimplemented contracts explicitly open.
 - [ ] Run migrated tests across safe/unsafe backends and document exact results.

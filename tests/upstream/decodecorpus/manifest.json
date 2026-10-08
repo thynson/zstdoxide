@@ -1,0 +1,4194 @@
+{
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "generator_source": "tests/decodecorpus.c",
+  "generator_source_sha256": "8c9c86d7f520f832242e734ebb5992c109a9496a495b8b89c36593903a824cb7",
+  "frames_per_mode": 12,
+  "modes": [
+    {
+      "name": "mixed",
+      "arguments": [
+        "-s101",
+        "-n12",
+        "--max-block-size-log=17",
+        "--max-content-size-log=16"
+      ]
+    },
+    {
+      "name": "known-size",
+      "arguments": [
+        "-s202",
+        "-n12",
+        "--max-block-size-log=17",
+        "--max-content-size-log=16",
+        "--content-size"
+      ]
+    },
+    {
+      "name": "raw",
+      "arguments": [
+        "-s303",
+        "-n12",
+        "--max-block-size-log=17",
+        "--max-content-size-log=16",
+        "--block-type=0"
+      ]
+    },
+    {
+      "name": "rle",
+      "arguments": [
+        "-s404",
+        "-n12",
+        "--max-block-size-log=17",
+        "--max-content-size-log=16",
+        "--block-type=1",
+        "--content-size"
+      ]
+    },
+    {
+      "name": "compressed",
+      "arguments": [
+        "-s505",
+        "-n12",
+        "--max-block-size-log=17",
+        "--max-content-size-log=16",
+        "--block-type=2"
+      ]
+    },
+    {
+      "name": "small-blocks",
+      "arguments": [
+        "-s606",
+        "-n12",
+        "--max-block-size-log=10",
+        "--max-content-size-log=16"
+      ]
+    },
+    {
+      "name": "small-content",
+      "arguments": [
+        "-s707",
+        "-n12",
+        "--max-block-size-log=10",
+        "--max-content-size-log=10"
+      ]
+    },
+    {
+      "name": "large-content",
+      "arguments": [
+        "-s808",
+        "-n12",
+        "--max-block-size-log=17",
+        "--max-content-size-log=18",
+        "--content-size"
+      ]
+    }
+  ],
+  "frames": [
+    {
+      "name": "mixed-00",
+      "encoded_size": 18316,
+      "encoded_sha256": "5463c8ae0b737ccc916691900ccc5378a0737d2300ce99595846efc605df1141",
+      "original_size": 27572,
+      "original_sha256": "570650436693ba5d07e1c104c0c6a1cc16e8174a773b82ccd0979fb9d3b0a731",
+      "header_size": 10,
+      "window_size": 49152,
+      "content_size": 27572,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 17951
+        },
+        {
+          "kind": 2,
+          "size": 345
+        }
+      ]
+    },
+    {
+      "name": "mixed-01",
+      "encoded_size": 530,
+      "encoded_sha256": "d60ecbc714af4bc59eb15cec30ca64036d75621a2f82f9bdfa72fa51e6c4af6f",
+      "original_size": 1455,
+      "original_sha256": "abeed02596ea3e5fa04f8f5b00af9cdc735bb4285c6d7f76ffc347407ba2764b",
+      "header_size": 8,
+      "window_size": 114688,
+      "content_size": 1455,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 143
+        },
+        {
+          "kind": 2,
+          "size": 253
+        },
+        {
+          "kind": 2,
+          "size": 85
+        },
+        {
+          "kind": 0,
+          "size": 15
+        },
+        {
+          "kind": 2,
+          "size": 3
+        },
+        {
+          "kind": 1,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "mixed-02",
+      "encoded_size": 13486,
+      "encoded_sha256": "3a76112a78ea6b963bb02b6872c886957f627f3349e79a9eb940acbe57c84bdd",
+      "original_size": 42113,
+      "original_sha256": "a4b0648ee1e3cd3a27609416663a0babe5897f8719258e7b30b623a591022546",
+      "header_size": 8,
+      "window_size": 245760,
+      "content_size": 42113,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 4037
+        },
+        {
+          "kind": 1,
+          "size": 8484
+        },
+        {
+          "kind": 2,
+          "size": 1800
+        },
+        {
+          "kind": 2,
+          "size": 7621
+        }
+      ]
+    },
+    {
+      "name": "mixed-03",
+      "encoded_size": 37,
+      "encoded_sha256": "92fb7ed08149bca3968bf87752b5b540bf4eb36f7f35526658a0bf7d8237e501",
+      "original_size": 2,
+      "original_sha256": "020baca1c0785437011afa103bc4a97243ba3eb689f5ea0263e2f38306217ef9",
+      "header_size": 10,
+      "window_size": 294912,
+      "content_size": 2,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 1
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 1
+        },
+        {
+          "kind": 0,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "mixed-04",
+      "encoded_size": 6004,
+      "encoded_sha256": "bcfb9eb871beee0f46f4f1eb03c83cbdd7916649771bed7ce21b86fc2aa07e00",
+      "original_size": 16934,
+      "original_sha256": "70e096ec949e395445633d6ecc6a0f5471cb9f0775bb304f66c2b8c55ce7ce54",
+      "header_size": 6,
+      "window_size": 57344,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 2584
+        },
+        {
+          "kind": 2,
+          "size": 2108
+        },
+        {
+          "kind": 2,
+          "size": 1251
+        },
+        {
+          "kind": 0,
+          "size": 24
+        },
+        {
+          "kind": 1,
+          "size": 1
+        },
+        {
+          "kind": 0,
+          "size": 4
+        },
+        {
+          "kind": 1,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "mixed-05",
+      "encoded_size": 238,
+      "encoded_sha256": "7ae1c31f0a34af8355c7d78986f8f90d91b777f2cfcabd05d606533e92cbfef5",
+      "original_size": 222,
+      "original_sha256": "4630248b243be3906948da2b8956ef83410336557b9ca67d619ccfa5aeab86f1",
+      "header_size": 6,
+      "window_size": 2097152,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 81
+        },
+        {
+          "kind": 0,
+          "size": 141
+        }
+      ]
+    },
+    {
+      "name": "mixed-06",
+      "encoded_size": 4716,
+      "encoded_sha256": "3a471f11598547e7f2511fd0e878d59d2c9e10360330ee3890ec8e612f63f164",
+      "original_size": 8995,
+      "original_sha256": "86f870d4ba7925d2bf45225e338c1232820add1cdee05b56a84d4e0425ae3091",
+      "header_size": 6,
+      "window_size": 1835008,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 1025
+        },
+        {
+          "kind": 0,
+          "size": 3603
+        },
+        {
+          "kind": 2,
+          "size": 47
+        },
+        {
+          "kind": 2,
+          "size": 19
+        }
+      ]
+    },
+    {
+      "name": "mixed-07",
+      "encoded_size": 20,
+      "encoded_sha256": "eb1c7fb3f4341111f2369950dd2dd9122c15f3d8795fb3831084534467481b3e",
+      "original_size": 273,
+      "original_sha256": "8c727d9a5837437b4a9cbceae1afea160ce73d481accb6f0672a0e9810d9a9d9",
+      "header_size": 8,
+      "window_size": 53248,
+      "content_size": 273,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 193
+        },
+        {
+          "kind": 1,
+          "size": 80
+        }
+      ]
+    },
+    {
+      "name": "mixed-08",
+      "encoded_size": 24,
+      "encoded_sha256": "08ca7450ec71c6c019ee8d3be5850b8ad1e763c4e9a833b87b4704a357145413",
+      "original_size": 2422,
+      "original_sha256": "13942df8d3fc59f69cc9fa40c83d05b05602bacdddee88954fc617c25b2bc753",
+      "header_size": 8,
+      "window_size": 45056,
+      "content_size": 2422,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 1081
+        },
+        {
+          "kind": 1,
+          "size": 650
+        },
+        {
+          "kind": 1,
+          "size": 691
+        }
+      ]
+    },
+    {
+      "name": "mixed-09",
+      "encoded_size": 3742,
+      "encoded_sha256": "4e065253089e1b7ae6b0e399334717c4ea55818ae916b0ef96fa8419d165cab3",
+      "original_size": 8110,
+      "original_sha256": "a010557607da009d81405f884244e884c507d5886fd607893d32de80a75324d0",
+      "header_size": 8,
+      "window_size": 2097152,
+      "content_size": 8110,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 2814
+        },
+        {
+          "kind": 2,
+          "size": 910
+        }
+      ]
+    },
+    {
+      "name": "mixed-10",
+      "encoded_size": 3496,
+      "encoded_sha256": "4a7ed7bed20f0f5425a10407cc16cce47be979514099edd8bebdbfaa7d453556",
+      "original_size": 6557,
+      "original_sha256": "abf5785e7a956300f7bde87a7b5c0596ce66213e7d0e1c2e96063ba3eade4504",
+      "header_size": 14,
+      "window_size": 57344,
+      "content_size": 6557,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 3023
+        },
+        {
+          "kind": 2,
+          "size": 413
+        },
+        {
+          "kind": 0,
+          "size": 26
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "mixed-11",
+      "encoded_size": 10465,
+      "encoded_sha256": "1f51b65525ac1372982c74382b8824b1395d582c58f02cd21c4797f46245eaf5",
+      "original_size": 22016,
+      "original_sha256": "23bc92eeb932b126cf152c9446b135408b542959e5719d8afbd9da67e80adc9c",
+      "header_size": 6,
+      "window_size": 4096,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 304
+        },
+        {
+          "kind": 2,
+          "size": 1785
+        },
+        {
+          "kind": 2,
+          "size": 1516
+        },
+        {
+          "kind": 0,
+          "size": 2189
+        },
+        {
+          "kind": 2,
+          "size": 1213
+        },
+        {
+          "kind": 2,
+          "size": 1154
+        },
+        {
+          "kind": 2,
+          "size": 559
+        },
+        {
+          "kind": 2,
+          "size": 321
+        },
+        {
+          "kind": 2,
+          "size": 282
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 1099
+        }
+      ]
+    },
+    {
+      "name": "known-size-00",
+      "encoded_size": 5792,
+      "encoded_sha256": "8ac314c76cda9680d7bea6851630b3d90739d9340f260ded9e3048430470c821",
+      "original_size": 13047,
+      "original_sha256": "5d24ea94a7d3c7bf2c9c49d00ae7f37423b7584fdd0626f13e0d8ccfb70890a7",
+      "header_size": 8,
+      "window_size": 2816,
+      "content_size": 13047,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 529
+        },
+        {
+          "kind": 1,
+          "size": 101
+        },
+        {
+          "kind": 2,
+          "size": 122
+        },
+        {
+          "kind": 2,
+          "size": 268
+        },
+        {
+          "kind": 2,
+          "size": 1170
+        },
+        {
+          "kind": 2,
+          "size": 468
+        },
+        {
+          "kind": 2,
+          "size": 508
+        },
+        {
+          "kind": 2,
+          "size": 590
+        },
+        {
+          "kind": 2,
+          "size": 83
+        },
+        {
+          "kind": 2,
+          "size": 324
+        },
+        {
+          "kind": 2,
+          "size": 47
+        },
+        {
+          "kind": 2,
+          "size": 360
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 1268
+        }
+      ]
+    },
+    {
+      "name": "known-size-01",
+      "encoded_size": 398,
+      "encoded_sha256": "c70cb1b6e08a46c0793f1cf16bbe78f15847f8df92b7506d9db46f6d1664ea14",
+      "original_size": 540,
+      "original_sha256": "9adb48e681ff784f40b85cfefc2390cd2c0be94ef29e17dc2ebe85db62123d78",
+      "header_size": 9,
+      "window_size": 540,
+      "content_size": 540,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": true,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 230
+        },
+        {
+          "kind": 0,
+          "size": 149
+        }
+      ]
+    },
+    {
+      "name": "known-size-02",
+      "encoded_size": 167,
+      "encoded_sha256": "3440207f8b34450c133d0004944104ed7957ca9a4fa056232948be5a4f92b71a",
+      "original_size": 1284,
+      "original_sha256": "cea7b0200517e732bbb08e1f8a48e4d749e1fe13f64530f9be70ee543cdd501d",
+      "header_size": 8,
+      "window_size": 10240,
+      "content_size": 1284,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 79
+        },
+        {
+          "kind": 1,
+          "size": 64
+        },
+        {
+          "kind": 2,
+          "size": 66
+        }
+      ]
+    },
+    {
+      "name": "known-size-03",
+      "encoded_size": 18,
+      "encoded_sha256": "8886e865e28effc4fb13a52742dc91a2ab86654cf404a6daa56dad96a68d75e9",
+      "original_size": 200,
+      "original_sha256": "0a43815d8befe5ea10c38fc3840bf12632b2b546640f3c9c3515c39d7395b5c5",
+      "header_size": 10,
+      "window_size": 2621440,
+      "content_size": 200,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 200
+        }
+      ]
+    },
+    {
+      "name": "known-size-04",
+      "encoded_size": 18,
+      "encoded_sha256": "1bafac12b241c889ea79c807199e424181571ffadbf231554df6d014af6b758d",
+      "original_size": 1,
+      "original_sha256": "af193a8cdcd0e3fb39e71147e59efa5cad40763d2611f5beff34a274f514362f",
+      "header_size": 10,
+      "window_size": 163840,
+      "content_size": 1,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "known-size-05",
+      "encoded_size": 13101,
+      "encoded_sha256": "55463fb4edd0e729c20503ad83ede077d0d5a311db2a784e5f2c0be8b3b58126",
+      "original_size": 27420,
+      "original_sha256": "18a7d8ecb79c36af53f73becd9ad3819547b09517fd85732712b23f7bd3b0e2f",
+      "header_size": 14,
+      "window_size": 3840,
+      "content_size": 27420,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 125
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 226
+        },
+        {
+          "kind": 2,
+          "size": 738
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 1252
+        },
+        {
+          "kind": 2,
+          "size": 729
+        },
+        {
+          "kind": 2,
+          "size": 869
+        },
+        {
+          "kind": 2,
+          "size": 201
+        },
+        {
+          "kind": 2,
+          "size": 356
+        },
+        {
+          "kind": 2,
+          "size": 575
+        },
+        {
+          "kind": 2,
+          "size": 1617
+        },
+        {
+          "kind": 0,
+          "size": 3695
+        },
+        {
+          "kind": 2,
+          "size": 833
+        },
+        {
+          "kind": 2,
+          "size": 406
+        },
+        {
+          "kind": 0,
+          "size": 1075
+        },
+        {
+          "kind": 2,
+          "size": 266
+        },
+        {
+          "kind": 1,
+          "size": 129
+        },
+        {
+          "kind": 0,
+          "size": 8
+        },
+        {
+          "kind": 2,
+          "size": 9
+        },
+        {
+          "kind": 0,
+          "size": 38
+        }
+      ]
+    },
+    {
+      "name": "known-size-06",
+      "encoded_size": 158,
+      "encoded_sha256": "e7bfcae2013d5fe0f44872ce277c079fe1166fcb08b04af29b227910b351c797",
+      "original_size": 245,
+      "original_sha256": "9becb6d7fd1162850fdfda6dc67462768fec3c5073d1439a6c736c097dd6883d",
+      "header_size": 10,
+      "window_size": 13312,
+      "content_size": 245,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 135
+        },
+        {
+          "kind": 2,
+          "size": 3
+        }
+      ]
+    },
+    {
+      "name": "known-size-07",
+      "encoded_size": 6028,
+      "encoded_sha256": "dcf0209ff2aaeb1d9f51d02b8eab3912e7bd6c29913f2e703a54da3e4e17738c",
+      "original_size": 8041,
+      "original_sha256": "e9f469a29bf29214c55e8559906af1be3104bd94d69a115fc828965eb9ade765",
+      "header_size": 10,
+      "window_size": 16384,
+      "content_size": 8041,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 5722
+        },
+        {
+          "kind": 2,
+          "size": 286
+        }
+      ]
+    },
+    {
+      "name": "known-size-08",
+      "encoded_size": 94,
+      "encoded_sha256": "0e3e242acb3d98044bd4e9bb2af2431f62470a6f9163fd3bf691eb38a15b4b6d",
+      "original_size": 128,
+      "original_sha256": "a23efc67eccc7329e0ff60fc3e87abcf0cde3f078b3a7cf292ff87bee6524a00",
+      "header_size": 10,
+      "window_size": 16384,
+      "content_size": 128,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 46
+        },
+        {
+          "kind": 2,
+          "size": 59
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 5
+        },
+        {
+          "kind": 0,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "known-size-09",
+      "encoded_size": 859,
+      "encoded_sha256": "2389d24b8c8edf4693105c12275a76ca49501fb763270828e012a03f8be85f5c",
+      "original_size": 2415,
+      "original_sha256": "c61b9739d558e1d404f2a51e6246fca76ca89d850efb40eb1e2967de674cfc90",
+      "header_size": 8,
+      "window_size": 2560,
+      "content_size": 2415,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 700
+        },
+        {
+          "kind": 2,
+          "size": 141
+        }
+      ]
+    },
+    {
+      "name": "known-size-10",
+      "encoded_size": 1187,
+      "encoded_sha256": "131d488fdbe2ed049b19761a73c2d1db3aaa13ed0efd25f09c03378271ad0a97",
+      "original_size": 1839,
+      "original_sha256": "8f65689948b06c273233d90816edc8e8cf8d717802861fc913992d7fa11b5adc",
+      "header_size": 14,
+      "window_size": 2883584,
+      "content_size": 1839,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 1160
+        }
+      ]
+    },
+    {
+      "name": "known-size-11",
+      "encoded_size": 657,
+      "encoded_sha256": "9653e9eb34ce01f8c197a6f8c60534ba9ec93fd925474bdbe25e8bd0d05f5e04",
+      "original_size": 636,
+      "original_sha256": "56e40470520bdcad0857729dae1ec2092697e3019326eeb979b2623299b5d8f2",
+      "header_size": 14,
+      "window_size": 458752,
+      "content_size": 636,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 636
+        }
+      ]
+    },
+    {
+      "name": "raw-00",
+      "encoded_size": 3783,
+      "encoded_sha256": "25ddc130b133b8a3ecad0644fc53b81904ca5cb6deb3d8cd42a1e3a9d264ea5b",
+      "original_size": 3754,
+      "original_sha256": "beccd9209f8dce0cd49dc897797b719f24e97cad596ca6dc6f102926c479e177",
+      "header_size": 10,
+      "window_size": 2816,
+      "content_size": 3754,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 714
+        },
+        {
+          "kind": 0,
+          "size": 1734
+        },
+        {
+          "kind": 0,
+          "size": 1278
+        },
+        {
+          "kind": 0,
+          "size": 13
+        },
+        {
+          "kind": 0,
+          "size": 15
+        }
+      ]
+    },
+    {
+      "name": "raw-01",
+      "encoded_size": 1619,
+      "encoded_sha256": "ec71cfb2ea66c11e879671c1e82feecdfd64ce10432b35fbecaa1852c9fdb2f0",
+      "original_size": 1574,
+      "original_sha256": "481cd5dba2a42ad628232c7ab560aa31709cf5b566db7ab061893fc56358ef68",
+      "header_size": 14,
+      "window_size": 786432,
+      "content_size": 1574,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 1068
+        },
+        {
+          "kind": 0,
+          "size": 50
+        },
+        {
+          "kind": 0,
+          "size": 324
+        },
+        {
+          "kind": 0,
+          "size": 17
+        },
+        {
+          "kind": 0,
+          "size": 24
+        },
+        {
+          "kind": 0,
+          "size": 22
+        },
+        {
+          "kind": 0,
+          "size": 62
+        },
+        {
+          "kind": 0,
+          "size": 6
+        },
+        {
+          "kind": 0,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "raw-02",
+      "encoded_size": 2420,
+      "encoded_sha256": "dc8114b7ccd36b4d21183c09ae0c03b9ffaa59272688a7475419b1967d273b7a",
+      "original_size": 2400,
+      "original_sha256": "7fff3b4a75c5c8f5d4295c0943a1cc998629a56e97e525270c787252eb709c94",
+      "header_size": 7,
+      "window_size": 2400,
+      "content_size": 2400,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": true,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 2361
+        },
+        {
+          "kind": 0,
+          "size": 30
+        },
+        {
+          "kind": 0,
+          "size": 9
+        }
+      ]
+    },
+    {
+      "name": "raw-03",
+      "encoded_size": 26544,
+      "encoded_sha256": "20a17b45fa3f039f7985506b0ce55fa82d0f807c86ea78ac124a5db871bb21db",
+      "original_size": 26519,
+      "original_sha256": "7f8c4d471462ecd758c4afa01a252f6ec42f6a43684cb271f9a5e2747e0fcbf8",
+      "header_size": 6,
+      "window_size": 262144,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 22140
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 2713
+        },
+        {
+          "kind": 0,
+          "size": 272
+        },
+        {
+          "kind": 0,
+          "size": 1394
+        }
+      ]
+    },
+    {
+      "name": "raw-04",
+      "encoded_size": 710,
+      "encoded_sha256": "fa92314a27f26d2fa7ca3bfd4642e43e4d551d266bd81ff7ed793664e9148273",
+      "original_size": 676,
+      "original_sha256": "05b9f3199f7552351e8295fcaeb6bbea4f8c7ae19c4a02ebbdcd4bcfa1c038b4",
+      "header_size": 6,
+      "window_size": 73728,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 375
+        },
+        {
+          "kind": 0,
+          "size": 263
+        },
+        {
+          "kind": 0,
+          "size": 5
+        },
+        {
+          "kind": 0,
+          "size": 10
+        },
+        {
+          "kind": 0,
+          "size": 19
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 4
+        }
+      ]
+    },
+    {
+      "name": "raw-05",
+      "encoded_size": 5812,
+      "encoded_sha256": "3fe4aa5b3d96961bace373ddf6db260756b082411d6fe608c9d01ba500fdc14f",
+      "original_size": 5795,
+      "original_sha256": "c5cdd18d6ab123dcbcb6e5901c593282c91b7e37f9a9071c4c977a4a808f7eaf",
+      "header_size": 10,
+      "window_size": 8192,
+      "content_size": 5795,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 5795
+        }
+      ]
+    },
+    {
+      "name": "raw-06",
+      "encoded_size": 26,
+      "encoded_sha256": "88d2bd78fd30ec554dbb2be461c2a6baceca3b10c55b3b39edd8994f3efd2140",
+      "original_size": 2,
+      "original_sha256": "6d6baf8ce98479ae176aa4ecc3d5001dd776a8025814b271b9e995ea168fcc67",
+      "header_size": 14,
+      "window_size": 6656,
+      "content_size": 2,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 2
+        }
+      ]
+    },
+    {
+      "name": "raw-07",
+      "encoded_size": 405,
+      "encoded_sha256": "ab5ca7b7ba22a2f9354920e2d4213484809c934f1728471c01079a8b127fca1b",
+      "original_size": 373,
+      "original_sha256": "220306aeeb4f55d65b637289e747d19c5d5bf165acbba4775916ae3cd850304e",
+      "header_size": 10,
+      "window_size": 1408,
+      "content_size": 373,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 182
+        },
+        {
+          "kind": 0,
+          "size": 64
+        },
+        {
+          "kind": 0,
+          "size": 48
+        },
+        {
+          "kind": 0,
+          "size": 9
+        },
+        {
+          "kind": 0,
+          "size": 63
+        },
+        {
+          "kind": 0,
+          "size": 7
+        }
+      ]
+    },
+    {
+      "name": "raw-08",
+      "encoded_size": 27890,
+      "encoded_sha256": "e101cbbeeae2b3219f99f1698f8ff2a39c6d27286958fea1dba7fde357389fe6",
+      "original_size": 27871,
+      "original_sha256": "fabaf593877068d5418a57e8d06aab8a653b5ed464aaa0326cfb848b27c5d33f",
+      "header_size": 6,
+      "window_size": 1179648,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 26155
+        },
+        {
+          "kind": 0,
+          "size": 1463
+        },
+        {
+          "kind": 0,
+          "size": 253
+        }
+      ]
+    },
+    {
+      "name": "raw-09",
+      "encoded_size": 566,
+      "encoded_sha256": "6519a10cdbe75fef7c1fd5b367ca0a5005a2436253d776e18b23eb024251cf90",
+      "original_size": 549,
+      "original_sha256": "3570888f6b20d448ae897f423b3d4ce9350c1f679b4b9bb0ee63325f78d21cd1",
+      "header_size": 10,
+      "window_size": 53248,
+      "content_size": 549,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 549
+        }
+      ]
+    },
+    {
+      "name": "raw-10",
+      "encoded_size": 553,
+      "encoded_sha256": "4db6a145e62013c093f2e94f3f5c477b9389a8f66d9d947a750b4140ad2e52a0",
+      "original_size": 538,
+      "original_sha256": "ee96e98edcfaf3c9907949a08855f5c1d15adb1a4ebe0cc2006dc588d1d7d0f3",
+      "header_size": 8,
+      "window_size": 180224,
+      "content_size": 538,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 538
+        }
+      ]
+    },
+    {
+      "name": "raw-11",
+      "encoded_size": 8080,
+      "encoded_sha256": "ca7888c6dc4873eb26c8d95f90d32d23406095b825e5776393bfb1b101c55ea6",
+      "original_size": 8035,
+      "original_sha256": "e4859a35658217970ca218dff171bd5b0dca64688f047817d4c78aab509b3c02",
+      "header_size": 14,
+      "window_size": 114688,
+      "content_size": 8035,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 7508
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 249
+        },
+        {
+          "kind": 0,
+          "size": 74
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 157
+        },
+        {
+          "kind": 0,
+          "size": 30
+        },
+        {
+          "kind": 0,
+          "size": 6
+        },
+        {
+          "kind": 0,
+          "size": 11
+        }
+      ]
+    },
+    {
+      "name": "rle-00",
+      "encoded_size": 16,
+      "encoded_sha256": "962daf21d4d6553147b678bea59289ed5b3befa8106439a34f4b646b75b165be",
+      "original_size": 930,
+      "original_sha256": "fe851c658cc251c732bf434c42788853ae6806e1aaac8259d02b442cafeeeb3c",
+      "header_size": 8,
+      "window_size": 851968,
+      "content_size": 930,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 930
+        }
+      ]
+    },
+    {
+      "name": "rle-01",
+      "encoded_size": 22,
+      "encoded_sha256": "1847da80cc2da6e6872676f40f9663d285d0ce394dbcd8244e03a7ac079dc8e4",
+      "original_size": 42,
+      "original_sha256": "d7307f0e5af252f99a8c6fca8cb149cbb7143c453c9745e9bbb71e674097ac1e",
+      "header_size": 10,
+      "window_size": 10240,
+      "content_size": 42,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 26
+        },
+        {
+          "kind": 1,
+          "size": 16
+        }
+      ]
+    },
+    {
+      "name": "rle-02",
+      "encoded_size": 30,
+      "encoded_sha256": "b2378cc7412e55d3e69f0d00dcee861c60a9dafb5cfb150c740ccb592fde9e4a",
+      "original_size": 476,
+      "original_sha256": "d0900d426ddab56853eada67ecef62e36e1828ccbde43a6ea3961385921d682e",
+      "header_size": 14,
+      "window_size": 163840,
+      "content_size": 476,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 18
+        },
+        {
+          "kind": 1,
+          "size": 79
+        },
+        {
+          "kind": 1,
+          "size": 379
+        }
+      ]
+    },
+    {
+      "name": "rle-03",
+      "encoded_size": 46,
+      "encoded_sha256": "09af7229f1ed54b226ef4a37c392214277e29534187518477f2b794d8f28819f",
+      "original_size": 2993,
+      "original_sha256": "4f8af953a1dd14db39fd8ccc4066bc70d5517e7e0a0c8fd2b8b8066a399376bd",
+      "header_size": 10,
+      "window_size": 1664,
+      "content_size": 2993,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 168
+        },
+        {
+          "kind": 1,
+          "size": 244
+        },
+        {
+          "kind": 1,
+          "size": 617
+        },
+        {
+          "kind": 1,
+          "size": 5
+        },
+        {
+          "kind": 1,
+          "size": 1166
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 389
+        },
+        {
+          "kind": 1,
+          "size": 404
+        }
+      ]
+    },
+    {
+      "name": "rle-04",
+      "encoded_size": 26,
+      "encoded_sha256": "5435baad09248b1efbfa01956c16a55b5f0d3c6e90ba98c815255d9f4add5e22",
+      "original_size": 221,
+      "original_sha256": "77bce7021841cbea05d391b55bbf3d510862af54c89d1cdff40567043ca706dd",
+      "header_size": 10,
+      "window_size": 851968,
+      "content_size": 221,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 132
+        },
+        {
+          "kind": 1,
+          "size": 21
+        },
+        {
+          "kind": 1,
+          "size": 68
+        }
+      ]
+    },
+    {
+      "name": "rle-05",
+      "encoded_size": 58,
+      "encoded_sha256": "ef4802a0c69087edbe6f095a4671b9d4b32d8a9c5b7154175dfb0a99ec6738f8",
+      "original_size": 241,
+      "original_sha256": "099f8fd1cd464772608e3173fceeb715e4c1244320960a7a60e9d978f4d0f82b",
+      "header_size": 14,
+      "window_size": 2560,
+      "content_size": 241,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 177
+        },
+        {
+          "kind": 1,
+          "size": 30
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 10
+        },
+        {
+          "kind": 1,
+          "size": 22
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 2
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "rle-06",
+      "encoded_size": 28,
+      "encoded_sha256": "717d47947bb811e818bef2c3db8a936eb35cccf14c9635e15360ffcab9505ead",
+      "original_size": 3629,
+      "original_sha256": "da7e5283b9ae88f2ce25cce8e5fdf4209df2918a52633b12fae5b659d9bc0af0",
+      "header_size": 8,
+      "window_size": 393216,
+      "content_size": 3629,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 1835
+        },
+        {
+          "kind": 1,
+          "size": 1025
+        },
+        {
+          "kind": 1,
+          "size": 655
+        },
+        {
+          "kind": 1,
+          "size": 114
+        }
+      ]
+    },
+    {
+      "name": "rle-07",
+      "encoded_size": 50,
+      "encoded_sha256": "93de0d4c287bba12394bd3b22c78707bb4deffc88563fb3e59414c4c871ef01c",
+      "original_size": 2611,
+      "original_sha256": "1acdef748867b72c8cf0a182c586ab6cc2c439774986a8f4b4fb642ba6689955",
+      "header_size": 14,
+      "window_size": 1536,
+      "content_size": 2611,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 575
+        },
+        {
+          "kind": 1,
+          "size": 490
+        },
+        {
+          "kind": 1,
+          "size": 1434
+        },
+        {
+          "kind": 1,
+          "size": 112
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "rle-08",
+      "encoded_size": 22,
+      "encoded_sha256": "958c9618ce85cc95636643376457f947d63d465bb92218f30ac11624cc804f28",
+      "original_size": 564,
+      "original_sha256": "fb249b35636c865cca96a02c684e13b77c198dbadbe840188cb7ad0ddea80bb8",
+      "header_size": 14,
+      "window_size": 212992,
+      "content_size": 564,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 564
+        }
+      ]
+    },
+    {
+      "name": "rle-09",
+      "encoded_size": 26,
+      "encoded_sha256": "6b26d7000a4c5ad816c2f037d539b676b3315094dac193850f53cf5f026d271c",
+      "original_size": 3141,
+      "original_sha256": "a4dd89697d18755ceb3618c0d6cf4188fbbfd8cc99d7d9d2bb307c33412716f1",
+      "header_size": 10,
+      "window_size": 6656,
+      "content_size": 3141,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 909
+        },
+        {
+          "kind": 1,
+          "size": 1050
+        },
+        {
+          "kind": 1,
+          "size": 1182
+        }
+      ]
+    },
+    {
+      "name": "rle-10",
+      "encoded_size": 22,
+      "encoded_sha256": "5a5d1e53193e9ea2e9b1b07adc10f08cc41403bbc2cb10d82c2cde70a5ff692b",
+      "original_size": 268,
+      "original_sha256": "210a7ad4a094091cdb71b0eb8eb7037ea66033c9b5c3c34d6eac5a17b0cd9a22",
+      "header_size": 10,
+      "window_size": 1048576,
+      "content_size": 268,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 268
+        }
+      ]
+    },
+    {
+      "name": "rle-11",
+      "encoded_size": 38,
+      "encoded_sha256": "0fb48623b39cafcc675fc487f1fc1cb9c57eddd124cffb3fc81fd6c70b4782fd",
+      "original_size": 338,
+      "original_sha256": "95f31a4adcc4ecfb4b125b9ef7a6a6056d43aa076269bfa4eeec3b18984bfa1b",
+      "header_size": 10,
+      "window_size": 1920,
+      "content_size": 338,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 329
+        },
+        {
+          "kind": 1,
+          "size": 6
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 3
+        }
+      ]
+    },
+    {
+      "name": "compressed-00",
+      "encoded_size": 25,
+      "encoded_sha256": "2db09162ae0a3615ba3d10c83b7d74b7553c85b407cc37a1fb6cad405fe0fd6a",
+      "original_size": 15,
+      "original_sha256": "62c33efe12afd695365835f093e1445bb11a913b52a86632044fa0c922e33782",
+      "header_size": 10,
+      "window_size": 720896,
+      "content_size": 15,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "name": "compressed-01",
+      "encoded_size": 39,
+      "encoded_sha256": "bed98e90f63c6da3f1f8131f555348d891cfc77056ae65c84b996611c4b5d582",
+      "original_size": 6,
+      "original_sha256": "0290ebcb71bba36aa393147fc70047a371a055dc0e869117c830a055bdd0b1eb",
+      "header_size": 14,
+      "window_size": 20480,
+      "content_size": 6,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 2
+        },
+        {
+          "kind": 2,
+          "size": 5
+        },
+        {
+          "kind": 2,
+          "size": 5
+        }
+      ]
+    },
+    {
+      "name": "compressed-02",
+      "encoded_size": 83,
+      "encoded_sha256": "22dac9bdcf9cb0a054199c8371e4cf500ae960aef1511188ca1213eeb1eb486b",
+      "original_size": 135,
+      "original_sha256": "ded967ccd3d36f0a7571e7ed3add63fcc6f847cd390a5cc3f27bb98bf87d7926",
+      "header_size": 10,
+      "window_size": 3584,
+      "content_size": 135,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 66
+        }
+      ]
+    },
+    {
+      "name": "compressed-03",
+      "encoded_size": 3693,
+      "encoded_sha256": "73a6960d4395d05731d9c91f0e56c5ec4ead4301582976c3c0ca4829579ea980",
+      "original_size": 10962,
+      "original_sha256": "737137f09f069966c6d66bcf9cb26930d7a6c0b1e4b220bf0aed4c1327c71cc4",
+      "header_size": 6,
+      "window_size": 1792,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 140
+        },
+        {
+          "kind": 2,
+          "size": 406
+        },
+        {
+          "kind": 2,
+          "size": 64
+        },
+        {
+          "kind": 2,
+          "size": 295
+        },
+        {
+          "kind": 2,
+          "size": 306
+        },
+        {
+          "kind": 2,
+          "size": 785
+        },
+        {
+          "kind": 2,
+          "size": 787
+        },
+        {
+          "kind": 2,
+          "size": 29
+        },
+        {
+          "kind": 2,
+          "size": 217
+        },
+        {
+          "kind": 2,
+          "size": 611
+        },
+        {
+          "kind": 2,
+          "size": 10
+        }
+      ]
+    },
+    {
+      "name": "compressed-04",
+      "encoded_size": 1512,
+      "encoded_sha256": "1b1f04b48950f053e2fb9c3fbffa0f114d09dc609394aeb50c33b20fcdaa7767",
+      "original_size": 6210,
+      "original_sha256": "d9a0645bd3641afa6f522db452b5bce8619bde148f521a19177e0034f265a920",
+      "header_size": 14,
+      "window_size": 6144,
+      "content_size": 6210,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 1044
+        },
+        {
+          "kind": 2,
+          "size": 444
+        }
+      ]
+    },
+    {
+      "name": "compressed-05",
+      "encoded_size": 460,
+      "encoded_sha256": "fbb59dc02335c205dddd493db4335c1529d1738b558c77b85a9b91153f0faef2",
+      "original_size": 1337,
+      "original_sha256": "e4613ea47631743378b31a1a9c693074663d2f056ed7880c2a80df7c53d7a603",
+      "header_size": 6,
+      "window_size": 106496,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 447
+        }
+      ]
+    },
+    {
+      "name": "compressed-06",
+      "encoded_size": 4682,
+      "encoded_sha256": "034d4d09e8e85bce07a961a7432736e75ab0311f581f1cbf0c8734ca5dded634",
+      "original_size": 17576,
+      "original_sha256": "f43d87674b50726ad0a01ddbcde2951e6dda2f5679db7637bc9ae1bd15c37505",
+      "header_size": 14,
+      "window_size": 24576,
+      "content_size": 17576,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 806
+        },
+        {
+          "kind": 2,
+          "size": 1274
+        },
+        {
+          "kind": 2,
+          "size": 2575
+        }
+      ]
+    },
+    {
+      "name": "compressed-07",
+      "encoded_size": 1001,
+      "encoded_sha256": "7ffe13edf4b50e5bf0144b196e292e64208db1166466dbbf012ddf8b698d98d3",
+      "original_size": 2280,
+      "original_sha256": "603848c955e79c6d894f5f2e4361677b7ebcebafc0adc2197602520ae9ce2eb9",
+      "header_size": 6,
+      "window_size": 114688,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 688
+        },
+        {
+          "kind": 2,
+          "size": 9
+        },
+        {
+          "kind": 2,
+          "size": 285
+        }
+      ]
+    },
+    {
+      "name": "compressed-08",
+      "encoded_size": 11864,
+      "encoded_sha256": "9a9638261274597de7b296b02adaba3ee98440049c72e3f229b57af700fd9870",
+      "original_size": 23149,
+      "original_sha256": "78811827b7ec22001463310c1d8599fd124fd99c7c0098dee73a0ce328196265",
+      "header_size": 6,
+      "window_size": 90112,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 11851
+        }
+      ]
+    },
+    {
+      "name": "compressed-09",
+      "encoded_size": 9887,
+      "encoded_sha256": "40d5bc07f38f88ff1655318682a8569022f98d693e9c562fdaaf19c7c0f60262",
+      "original_size": 31427,
+      "original_sha256": "bb438a9b350c6176102e9a859a91e10104cafd6ea5c942c51a5a879f108edc83",
+      "header_size": 10,
+      "window_size": 10240,
+      "content_size": 31427,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 1159
+        },
+        {
+          "kind": 2,
+          "size": 1862
+        },
+        {
+          "kind": 2,
+          "size": 5498
+        },
+        {
+          "kind": 2,
+          "size": 973
+        },
+        {
+          "kind": 2,
+          "size": 366
+        }
+      ]
+    },
+    {
+      "name": "compressed-10",
+      "encoded_size": 303,
+      "encoded_sha256": "6f68ee27a3436c5fd8d4ec6c53eacc4e3c6f7abac38fbcdc236f76726431512f",
+      "original_size": 763,
+      "original_sha256": "79166e682a276dc767955877b9ed54aaa5accd1f68fde839060d8dbb2d92f496",
+      "header_size": 10,
+      "window_size": 13312,
+      "content_size": 763,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 286
+        }
+      ]
+    },
+    {
+      "name": "compressed-11",
+      "encoded_size": 1048,
+      "encoded_sha256": "3a850e2741f5ea55b92959eeb3326b20f8187347ed0800f3d84bb4f181611ecd",
+      "original_size": 1741,
+      "original_sha256": "eae8a46ae251d57e1140f5991554adfe05279cf58995fd9c54362a1f4392e8ad",
+      "header_size": 6,
+      "window_size": 20480,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 577
+        },
+        {
+          "kind": 2,
+          "size": 103
+        },
+        {
+          "kind": 2,
+          "size": 349
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-00",
+      "encoded_size": 13556,
+      "encoded_sha256": "c5ca936034ec050143ee4d8aa6100c94bc95503a03d8f4b4f334116e1d6a98a9",
+      "original_size": 31856,
+      "original_sha256": "c333465cd3a718b60bc871d939f83b3c3a7ce2595223de195c2199f96418d13f",
+      "header_size": 10,
+      "window_size": 49152,
+      "content_size": 31856,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 193
+        },
+        {
+          "kind": 2,
+          "size": 312
+        },
+        {
+          "kind": 0,
+          "size": 423
+        },
+        {
+          "kind": 2,
+          "size": 113
+        },
+        {
+          "kind": 2,
+          "size": 423
+        },
+        {
+          "kind": 0,
+          "size": 113
+        },
+        {
+          "kind": 2,
+          "size": 399
+        },
+        {
+          "kind": 2,
+          "size": 260
+        },
+        {
+          "kind": 2,
+          "size": 87
+        },
+        {
+          "kind": 2,
+          "size": 183
+        },
+        {
+          "kind": 2,
+          "size": 226
+        },
+        {
+          "kind": 2,
+          "size": 178
+        },
+        {
+          "kind": 2,
+          "size": 201
+        },
+        {
+          "kind": 1,
+          "size": 440
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 508
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 190
+        },
+        {
+          "kind": 1,
+          "size": 552
+        },
+        {
+          "kind": 2,
+          "size": 137
+        },
+        {
+          "kind": 2,
+          "size": 295
+        },
+        {
+          "kind": 0,
+          "size": 44
+        },
+        {
+          "kind": 1,
+          "size": 372
+        },
+        {
+          "kind": 0,
+          "size": 666
+        },
+        {
+          "kind": 2,
+          "size": 465
+        },
+        {
+          "kind": 2,
+          "size": 298
+        },
+        {
+          "kind": 2,
+          "size": 205
+        },
+        {
+          "kind": 2,
+          "size": 146
+        },
+        {
+          "kind": 1,
+          "size": 151
+        },
+        {
+          "kind": 2,
+          "size": 175
+        },
+        {
+          "kind": 2,
+          "size": 88
+        },
+        {
+          "kind": 1,
+          "size": 870
+        },
+        {
+          "kind": 2,
+          "size": 299
+        },
+        {
+          "kind": 0,
+          "size": 522
+        },
+        {
+          "kind": 2,
+          "size": 180
+        },
+        {
+          "kind": 2,
+          "size": 460
+        },
+        {
+          "kind": 2,
+          "size": 179
+        },
+        {
+          "kind": 2,
+          "size": 328
+        },
+        {
+          "kind": 2,
+          "size": 176
+        },
+        {
+          "kind": 1,
+          "size": 222
+        },
+        {
+          "kind": 2,
+          "size": 302
+        },
+        {
+          "kind": 2,
+          "size": 129
+        },
+        {
+          "kind": 1,
+          "size": 257
+        },
+        {
+          "kind": 2,
+          "size": 137
+        },
+        {
+          "kind": 2,
+          "size": 420
+        },
+        {
+          "kind": 2,
+          "size": 152
+        },
+        {
+          "kind": 2,
+          "size": 123
+        },
+        {
+          "kind": 2,
+          "size": 166
+        },
+        {
+          "kind": 1,
+          "size": 174
+        },
+        {
+          "kind": 2,
+          "size": 167
+        },
+        {
+          "kind": 0,
+          "size": 988
+        },
+        {
+          "kind": 0,
+          "size": 44
+        },
+        {
+          "kind": 2,
+          "size": 270
+        },
+        {
+          "kind": 0,
+          "size": 11
+        },
+        {
+          "kind": 2,
+          "size": 466
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 375
+        },
+        {
+          "kind": 2,
+          "size": 221
+        },
+        {
+          "kind": 2,
+          "size": 327
+        },
+        {
+          "kind": 1,
+          "size": 624
+        },
+        {
+          "kind": 2,
+          "size": 92
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 341
+        },
+        {
+          "kind": 2,
+          "size": 126
+        },
+        {
+          "kind": 2,
+          "size": 9
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-01",
+      "encoded_size": 97,
+      "encoded_sha256": "cdc6b45f8e4758ca2e759c4362216da0e4eb7e07260e410f6e0302fd796a636f",
+      "original_size": 98,
+      "original_sha256": "bdd7dd903a3801f859c4e0b534f832c53f88bb0675cfe83b3395114c6bf820f5",
+      "header_size": 6,
+      "window_size": 229376,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 53
+        },
+        {
+          "kind": 0,
+          "size": 21
+        },
+        {
+          "kind": 0,
+          "size": 4
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-02",
+      "encoded_size": 9110,
+      "encoded_sha256": "6724bb6029fe641edebe1a586b79200edefc622e5b5a813c2c53bfe8efe53aba",
+      "original_size": 21426,
+      "original_sha256": "9a8067e135ca7cf234cd58ac26c040c61b17ff90ff6c3f26f0796ab926798737",
+      "header_size": 10,
+      "window_size": 9216,
+      "content_size": 21426,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 197
+        },
+        {
+          "kind": 2,
+          "size": 216
+        },
+        {
+          "kind": 2,
+          "size": 275
+        },
+        {
+          "kind": 2,
+          "size": 216
+        },
+        {
+          "kind": 0,
+          "size": 141
+        },
+        {
+          "kind": 2,
+          "size": 16
+        },
+        {
+          "kind": 2,
+          "size": 559
+        },
+        {
+          "kind": 2,
+          "size": 276
+        },
+        {
+          "kind": 2,
+          "size": 496
+        },
+        {
+          "kind": 2,
+          "size": 196
+        },
+        {
+          "kind": 2,
+          "size": 196
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 169
+        },
+        {
+          "kind": 2,
+          "size": 162
+        },
+        {
+          "kind": 2,
+          "size": 432
+        },
+        {
+          "kind": 2,
+          "size": 312
+        },
+        {
+          "kind": 2,
+          "size": 131
+        },
+        {
+          "kind": 2,
+          "size": 383
+        },
+        {
+          "kind": 2,
+          "size": 374
+        },
+        {
+          "kind": 2,
+          "size": 85
+        },
+        {
+          "kind": 1,
+          "size": 959
+        },
+        {
+          "kind": 2,
+          "size": 259
+        },
+        {
+          "kind": 2,
+          "size": 134
+        },
+        {
+          "kind": 0,
+          "size": 384
+        },
+        {
+          "kind": 2,
+          "size": 236
+        },
+        {
+          "kind": 2,
+          "size": 376
+        },
+        {
+          "kind": 2,
+          "size": 567
+        },
+        {
+          "kind": 0,
+          "size": 707
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 203
+        },
+        {
+          "kind": 2,
+          "size": 141
+        },
+        {
+          "kind": 2,
+          "size": 52
+        },
+        {
+          "kind": 1,
+          "size": 926
+        },
+        {
+          "kind": 2,
+          "size": 265
+        },
+        {
+          "kind": 2,
+          "size": 425
+        },
+        {
+          "kind": 1,
+          "size": 856
+        },
+        {
+          "kind": 2,
+          "size": 203
+        },
+        {
+          "kind": 1,
+          "size": 206
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 133
+        },
+        {
+          "kind": 2,
+          "size": 48
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-03",
+      "encoded_size": 1320,
+      "encoded_sha256": "79dc9d008c5a0db4a7cfdb99b6d2176dbf484f5276858e6b74b091d028748e89",
+      "original_size": 3383,
+      "original_sha256": "f6d235c65f855f7a545fa84d1691b8158679d5d7a5b492bc9ecbb394f16aa76b",
+      "header_size": 14,
+      "window_size": 10240,
+      "content_size": 3383,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 310
+        },
+        {
+          "kind": 2,
+          "size": 96
+        },
+        {
+          "kind": 0,
+          "size": 16
+        },
+        {
+          "kind": 2,
+          "size": 323
+        },
+        {
+          "kind": 2,
+          "size": 425
+        },
+        {
+          "kind": 2,
+          "size": 27
+        },
+        {
+          "kind": 2,
+          "size": 84
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-04",
+      "encoded_size": 4611,
+      "encoded_sha256": "702ad9f3cdd18bf025d639711b0628ee986f9757d582a9377909789e536f5cde",
+      "original_size": 7701,
+      "original_sha256": "1ec86e9e6e36f7bb5218258803bcb62e3e3b75c7036edaa4b2a8c159813375d7",
+      "header_size": 8,
+      "window_size": 65536,
+      "content_size": 7701,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 162
+        },
+        {
+          "kind": 2,
+          "size": 407
+        },
+        {
+          "kind": 0,
+          "size": 580
+        },
+        {
+          "kind": 2,
+          "size": 527
+        },
+        {
+          "kind": 2,
+          "size": 349
+        },
+        {
+          "kind": 2,
+          "size": 272
+        },
+        {
+          "kind": 2,
+          "size": 317
+        },
+        {
+          "kind": 0,
+          "size": 772
+        },
+        {
+          "kind": 2,
+          "size": 484
+        },
+        {
+          "kind": 2,
+          "size": 269
+        },
+        {
+          "kind": 2,
+          "size": 74
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 92
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 55
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 93
+        },
+        {
+          "kind": 0,
+          "size": 39
+        },
+        {
+          "kind": 0,
+          "size": 39
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-05",
+      "encoded_size": 220,
+      "encoded_sha256": "91cc3f80b794e1862fb7ec4ac7c9161a5eba16df48a365488d4983fc5a566384",
+      "original_size": 506,
+      "original_sha256": "be06af58f89d1091322ea270fbd0b20696a24466ef7dcd1cb60ffd2573574a7e",
+      "header_size": 6,
+      "window_size": 2097152,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 207
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-06",
+      "encoded_size": 979,
+      "encoded_sha256": "4d92c583bbb4adb29317d2326cb81566684e85c64c7ac6d6b031ac048737b3cf",
+      "original_size": 2782,
+      "original_sha256": "e22fb85d7ffaa80a92e4e9c5d2818d5c6f60d2d74e78d651a2b60b09f278986b",
+      "header_size": 14,
+      "window_size": 49152,
+      "content_size": 2782,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 947
+        },
+        {
+          "kind": 0,
+          "size": 167
+        },
+        {
+          "kind": 1,
+          "size": 397
+        },
+        {
+          "kind": 2,
+          "size": 351
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 73
+        },
+        {
+          "kind": 0,
+          "size": 30
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 113
+        },
+        {
+          "kind": 2,
+          "size": 72
+        },
+        {
+          "kind": 0,
+          "size": 21
+        },
+        {
+          "kind": 2,
+          "size": 16
+        },
+        {
+          "kind": 0,
+          "size": 58
+        },
+        {
+          "kind": 0,
+          "size": 16
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-07",
+      "encoded_size": 519,
+      "encoded_sha256": "8a667e9967f013f08436ca332f522fec6c8dae6e6bbfda2fb60dee16c7ab86f2",
+      "original_size": 801,
+      "original_sha256": "0e6f51d961e3571dc7a8eb468cfa9865ef3375b6e8141f7ec988c72c655864ea",
+      "header_size": 14,
+      "window_size": 3328,
+      "content_size": 801,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 335
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 94
+        },
+        {
+          "kind": 1,
+          "size": 73
+        },
+        {
+          "kind": 2,
+          "size": 52
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-08",
+      "encoded_size": 4790,
+      "encoded_sha256": "1dbbdbcf0f4159bacd15a3b5be182a9a0e643dd0c4d28a4805dd7ca79127adca",
+      "original_size": 8619,
+      "original_sha256": "5fd0f9c285612fdc84fc3b5597de9b767dfd8bdd093c09b0b24471ab1e8086af",
+      "header_size": 6,
+      "window_size": 26624,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 145
+        },
+        {
+          "kind": 0,
+          "size": 774
+        },
+        {
+          "kind": 2,
+          "size": 183
+        },
+        {
+          "kind": 2,
+          "size": 83
+        },
+        {
+          "kind": 0,
+          "size": 678
+        },
+        {
+          "kind": 0,
+          "size": 901
+        },
+        {
+          "kind": 2,
+          "size": 87
+        },
+        {
+          "kind": 1,
+          "size": 866
+        },
+        {
+          "kind": 2,
+          "size": 259
+        },
+        {
+          "kind": 0,
+          "size": 853
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 507
+        },
+        {
+          "kind": 2,
+          "size": 34
+        },
+        {
+          "kind": 2,
+          "size": 233
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-09",
+      "encoded_size": 19800,
+      "encoded_sha256": "f9ef5974e11c33c14bab683d8dd247b4995f14590aad204dd677e235f379f2f4",
+      "original_size": 44186,
+      "original_sha256": "d8234f10cef16cae0f876ba723b8514cdf8ac4674d23cea1b9a4301bb6cd1e96",
+      "header_size": 8,
+      "window_size": 262144,
+      "content_size": 44186,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 267
+        },
+        {
+          "kind": 2,
+          "size": 202
+        },
+        {
+          "kind": 2,
+          "size": 538
+        },
+        {
+          "kind": 0,
+          "size": 956
+        },
+        {
+          "kind": 2,
+          "size": 134
+        },
+        {
+          "kind": 2,
+          "size": 178
+        },
+        {
+          "kind": 2,
+          "size": 28
+        },
+        {
+          "kind": 0,
+          "size": 775
+        },
+        {
+          "kind": 2,
+          "size": 94
+        },
+        {
+          "kind": 2,
+          "size": 216
+        },
+        {
+          "kind": 2,
+          "size": 225
+        },
+        {
+          "kind": 1,
+          "size": 429
+        },
+        {
+          "kind": 2,
+          "size": 481
+        },
+        {
+          "kind": 2,
+          "size": 62
+        },
+        {
+          "kind": 2,
+          "size": 577
+        },
+        {
+          "kind": 2,
+          "size": 61
+        },
+        {
+          "kind": 2,
+          "size": 195
+        },
+        {
+          "kind": 0,
+          "size": 286
+        },
+        {
+          "kind": 2,
+          "size": 523
+        },
+        {
+          "kind": 1,
+          "size": 1015
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 218
+        },
+        {
+          "kind": 2,
+          "size": 239
+        },
+        {
+          "kind": 0,
+          "size": 870
+        },
+        {
+          "kind": 0,
+          "size": 921
+        },
+        {
+          "kind": 1,
+          "size": 207
+        },
+        {
+          "kind": 0,
+          "size": 284
+        },
+        {
+          "kind": 2,
+          "size": 698
+        },
+        {
+          "kind": 0,
+          "size": 570
+        },
+        {
+          "kind": 2,
+          "size": 512
+        },
+        {
+          "kind": 2,
+          "size": 880
+        },
+        {
+          "kind": 0,
+          "size": 299
+        },
+        {
+          "kind": 1,
+          "size": 828
+        },
+        {
+          "kind": 1,
+          "size": 394
+        },
+        {
+          "kind": 2,
+          "size": 481
+        },
+        {
+          "kind": 2,
+          "size": 439
+        },
+        {
+          "kind": 2,
+          "size": 310
+        },
+        {
+          "kind": 2,
+          "size": 190
+        },
+        {
+          "kind": 2,
+          "size": 474
+        },
+        {
+          "kind": 2,
+          "size": 144
+        },
+        {
+          "kind": 0,
+          "size": 848
+        },
+        {
+          "kind": 1,
+          "size": 174
+        },
+        {
+          "kind": 2,
+          "size": 172
+        },
+        {
+          "kind": 1,
+          "size": 764
+        },
+        {
+          "kind": 2,
+          "size": 68
+        },
+        {
+          "kind": 1,
+          "size": 1024
+        },
+        {
+          "kind": 2,
+          "size": 79
+        },
+        {
+          "kind": 2,
+          "size": 288
+        },
+        {
+          "kind": 2,
+          "size": 128
+        },
+        {
+          "kind": 2,
+          "size": 159
+        },
+        {
+          "kind": 2,
+          "size": 68
+        },
+        {
+          "kind": 1,
+          "size": 720
+        },
+        {
+          "kind": 1,
+          "size": 245
+        },
+        {
+          "kind": 2,
+          "size": 224
+        },
+        {
+          "kind": 2,
+          "size": 39
+        },
+        {
+          "kind": 2,
+          "size": 303
+        },
+        {
+          "kind": 2,
+          "size": 249
+        },
+        {
+          "kind": 2,
+          "size": 9
+        },
+        {
+          "kind": 2,
+          "size": 114
+        },
+        {
+          "kind": 2,
+          "size": 182
+        },
+        {
+          "kind": 2,
+          "size": 181
+        },
+        {
+          "kind": 2,
+          "size": 556
+        },
+        {
+          "kind": 2,
+          "size": 385
+        },
+        {
+          "kind": 2,
+          "size": 144
+        },
+        {
+          "kind": 2,
+          "size": 268
+        },
+        {
+          "kind": 2,
+          "size": 426
+        },
+        {
+          "kind": 2,
+          "size": 198
+        },
+        {
+          "kind": 2,
+          "size": 316
+        },
+        {
+          "kind": 2,
+          "size": 239
+        },
+        {
+          "kind": 2,
+          "size": 261
+        },
+        {
+          "kind": 0,
+          "size": 40
+        },
+        {
+          "kind": 2,
+          "size": 275
+        },
+        {
+          "kind": 0,
+          "size": 4
+        },
+        {
+          "kind": 0,
+          "size": 1
+        },
+        {
+          "kind": 0,
+          "size": 2
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-10",
+      "encoded_size": 705,
+      "encoded_sha256": "dab6d7c3c40b98a7d135e70aa2caa59e2f2162dc77ad3f1e449441f1fe85f222",
+      "original_size": 1416,
+      "original_sha256": "dab261bd7c295a989d29e8919f3dd67131739c115835cf7bd846713b86c1c42e",
+      "header_size": 13,
+      "window_size": 1416,
+      "content_size": 1416,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": true,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 509
+        },
+        {
+          "kind": 2,
+          "size": 71
+        },
+        {
+          "kind": 0,
+          "size": 11
+        },
+        {
+          "kind": 2,
+          "size": 62
+        },
+        {
+          "kind": 1,
+          "size": 62
+        },
+        {
+          "kind": 2,
+          "size": 16
+        }
+      ]
+    },
+    {
+      "name": "small-blocks-11",
+      "encoded_size": 1542,
+      "encoded_sha256": "2f87b1d7e7421b850efd62911ba0128cb640c108a874a37fa377dcbecf2581e5",
+      "original_size": 3041,
+      "original_sha256": "f8bda0d0d16f6c13ee27279bd91f276a1eb0601384dfeb2fe113cb71f107ff2b",
+      "header_size": 10,
+      "window_size": 2883584,
+      "content_size": 3041,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 449
+        },
+        {
+          "kind": 2,
+          "size": 63
+        },
+        {
+          "kind": 2,
+          "size": 72
+        },
+        {
+          "kind": 2,
+          "size": 83
+        },
+        {
+          "kind": 2,
+          "size": 353
+        },
+        {
+          "kind": 2,
+          "size": 92
+        },
+        {
+          "kind": 2,
+          "size": 127
+        },
+        {
+          "kind": 2,
+          "size": 76
+        },
+        {
+          "kind": 2,
+          "size": 94
+        },
+        {
+          "kind": 0,
+          "size": 68
+        },
+        {
+          "kind": 0,
+          "size": 2
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "small-content-00",
+      "encoded_size": 498,
+      "encoded_sha256": "a6985aea8f6bf9f8cd83678250fc9c8421f7194f36bae91002c48761c46edd32",
+      "original_size": 988,
+      "original_sha256": "1d48f5a6df5509d1192f5fd0f26967505b1efa58148ecadd84a14fd0dac48e1b",
+      "header_size": 6,
+      "window_size": 45056,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 328
+        },
+        {
+          "kind": 1,
+          "size": 216
+        },
+        {
+          "kind": 2,
+          "size": 112
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 23
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "small-content-01",
+      "encoded_size": 176,
+      "encoded_sha256": "7cd38da52c4a8a68ebde1bda74bbce16dc4e8c2395c0140d83f56bc09c113d58",
+      "original_size": 258,
+      "original_sha256": "592af602054c0c888328b3df0bdb3ca96814efc5e65f12b6f0440991bfc4e99f",
+      "header_size": 10,
+      "window_size": 6656,
+      "content_size": 258,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 152
+        },
+        {
+          "kind": 0,
+          "size": 4
+        }
+      ]
+    },
+    {
+      "name": "small-content-02",
+      "encoded_size": 125,
+      "encoded_sha256": "077947e884a2b612158b3cf57d4527f7687f2d300ec29be6c0bb403319ef3149",
+      "original_size": 234,
+      "original_sha256": "c6bb67ae22bd30f13c525e6e7b9212395171561f1a7a9b10d34e998d00adccb0",
+      "header_size": 10,
+      "window_size": 458752,
+      "content_size": 234,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 146
+        },
+        {
+          "kind": 2,
+          "size": 83
+        },
+        {
+          "kind": 1,
+          "size": 1
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 1
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 1,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "small-content-03",
+      "encoded_size": 279,
+      "encoded_sha256": "e8c0cda1d07f219100503a13ea92b88a2275636a6c5407369ab13107dc75a13e",
+      "original_size": 437,
+      "original_sha256": "57d1e4526581b1a9bcb37cc6f73ff2e6ccb350f60d31c862bf71b6ce19d47067",
+      "header_size": 6,
+      "window_size": 32768,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 244
+        },
+        {
+          "kind": 2,
+          "size": 16
+        }
+      ]
+    },
+    {
+      "name": "small-content-04",
+      "encoded_size": 16,
+      "encoded_sha256": "7b880c0de541657e1498268f7ce8de191a89354516ae0d2f11a8568a1bece1df",
+      "original_size": 561,
+      "original_sha256": "f97b9571029f6d26ed788b4554234c445a69c5d60cf6fda9b51b6018f86f4190",
+      "header_size": 8,
+      "window_size": 262144,
+      "content_size": 561,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 561
+        }
+      ]
+    },
+    {
+      "name": "small-content-05",
+      "encoded_size": 243,
+      "encoded_sha256": "1a28f93a6a7e9dc6d563376efb7d124eb4a4496b1e4d84bb4c602c88da47b01c",
+      "original_size": 506,
+      "original_sha256": "420e8b9448bd4755242194660c04087a716ab29cf80bd85ac00aa8fa4e88cb16",
+      "header_size": 6,
+      "window_size": 45056,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 71
+        },
+        {
+          "kind": 2,
+          "size": 71
+        },
+        {
+          "kind": 2,
+          "size": 42
+        },
+        {
+          "kind": 2,
+          "size": 37
+        }
+      ]
+    },
+    {
+      "name": "small-content-06",
+      "encoded_size": 29,
+      "encoded_sha256": "bb2ea2a4d24202ce531a65f20462745b56177646ea4ffe5514e73732ba8ac371",
+      "original_size": 388,
+      "original_sha256": "2f932a85015c71267047cbc1fd096d46158e1b47012f40fabe461f514054b35f",
+      "header_size": 8,
+      "window_size": 12288,
+      "content_size": 388,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 14
+        }
+      ]
+    },
+    {
+      "name": "small-content-07",
+      "encoded_size": 929,
+      "encoded_sha256": "f987b974d6dd23e62a1a35310d844f96c77ae164dbb5523e141ccfe18ef66986",
+      "original_size": 947,
+      "original_sha256": "b9b4b22a220ae7009c5a48f9fcb1a2fcfda8d1a2f21851ea8e0c1ef4aa9ef49d",
+      "header_size": 10,
+      "window_size": 3584,
+      "content_size": 947,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 860
+        },
+        {
+          "kind": 2,
+          "size": 24
+        },
+        {
+          "kind": 2,
+          "size": 18
+        },
+        {
+          "kind": 1,
+          "size": 3
+        }
+      ]
+    },
+    {
+      "name": "small-content-08",
+      "encoded_size": 73,
+      "encoded_sha256": "f673c24bed00ec155cc5d054041421d5885916d22c66c7e418c86dd72e3f211c",
+      "original_size": 184,
+      "original_sha256": "ede5693113f3c8f68a4f7ee0ddf6fdb6830f68d624eab57fa01283b997f5624b",
+      "header_size": 10,
+      "window_size": 524288,
+      "content_size": 184,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 56
+        }
+      ]
+    },
+    {
+      "name": "small-content-09",
+      "encoded_size": 288,
+      "encoded_sha256": "745a6058ec85fffc0cb48127b1e7bf96858025cb9eebf25f65dc8df3aeaba640",
+      "original_size": 421,
+      "original_sha256": "a80466304a2e062731f9635aedec525df05d7bcc56bd0d2ebeda739bca1e438b",
+      "header_size": 13,
+      "window_size": 421,
+      "content_size": 421,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": true,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 163
+        },
+        {
+          "kind": 0,
+          "size": 237
+        },
+        {
+          "kind": 0,
+          "size": 16
+        },
+        {
+          "kind": 0,
+          "size": 5
+        }
+      ]
+    },
+    {
+      "name": "small-content-10",
+      "encoded_size": 148,
+      "encoded_sha256": "65ccc2f27249aeaeea460e1133ff1d75469604d71eaa9c5a574519cf46f0d644",
+      "original_size": 299,
+      "original_sha256": "574811a93e9d153ba16f3d2fccf87444fe094532cc949e66c608c79ae70691ea",
+      "header_size": 6,
+      "window_size": 61440,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 13
+        },
+        {
+          "kind": 1,
+          "size": 63
+        },
+        {
+          "kind": 2,
+          "size": 71
+        },
+        {
+          "kind": 2,
+          "size": 41
+        }
+      ]
+    },
+    {
+      "name": "small-content-11",
+      "encoded_size": 158,
+      "encoded_sha256": "709742350088b7738e235a21770c9e76777ee6d8530fa3a596419444622ddee7",
+      "original_size": 186,
+      "original_sha256": "cd898beb837d553eef07a61ea153319055c7ff402074ef2abb17b1f7c64ae774",
+      "header_size": 6,
+      "window_size": 18432,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 5
+        },
+        {
+          "kind": 2,
+          "size": 85
+        },
+        {
+          "kind": 0,
+          "size": 49
+        }
+      ]
+    },
+    {
+      "name": "large-content-00",
+      "encoded_size": 804,
+      "encoded_sha256": "32c5c03d5fdcc4f99ceb8118decd04c124df213adad6d26b4d3ee2aee983d542",
+      "original_size": 1943,
+      "original_sha256": "b618df20bcce70e4bb8e1f9a73b91fbc82ce5ff99a5c89329fdf2b577257b81b",
+      "header_size": 10,
+      "window_size": 45056,
+      "content_size": 1943,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 536
+        },
+        {
+          "kind": 2,
+          "size": 47
+        },
+        {
+          "kind": 2,
+          "size": 198
+        }
+      ]
+    },
+    {
+      "name": "large-content-01",
+      "encoded_size": 54333,
+      "encoded_sha256": "533bb9d45a4286b2ed0d754e16af52de67ef1ed9f840b473e84ebea17b584190",
+      "original_size": 107098,
+      "original_sha256": "71119534f5246714af7089efc4a81a07f8467310b3e5adc804535248503da38f",
+      "header_size": 14,
+      "window_size": 851968,
+      "content_size": 107098,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 44368
+        },
+        {
+          "kind": 2,
+          "size": 9941
+        }
+      ]
+    },
+    {
+      "name": "large-content-02",
+      "encoded_size": 533,
+      "encoded_sha256": "bee6b3518978ce34f7553b115c12c78b4373bf4d8639b052a65c4021b549df9f",
+      "original_size": 1703,
+      "original_sha256": "b2fc2aa6812d6fa763548d1d7c91ec149cc55a345e1d660c6841bd675d62b707",
+      "header_size": 14,
+      "window_size": 2048,
+      "content_size": 1703,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 261
+        },
+        {
+          "kind": 2,
+          "size": 248
+        }
+      ]
+    },
+    {
+      "name": "large-content-03",
+      "encoded_size": 201,
+      "encoded_sha256": "bee4197d3acd6e11977273673aacd0c3ed2865083c0cfd4b64422b1b069b53b4",
+      "original_size": 204,
+      "original_sha256": "ba7b941468b4ce39cbf31660b26b86ae05daeba02bdbe5de595db9be62482841",
+      "header_size": 10,
+      "window_size": 3670016,
+      "content_size": 204,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 70
+        },
+        {
+          "kind": 2,
+          "size": 52
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 29
+        },
+        {
+          "kind": 0,
+          "size": 21
+        }
+      ]
+    },
+    {
+      "name": "large-content-04",
+      "encoded_size": 459,
+      "encoded_sha256": "26e1b7ead2c5c70c0c6db3d3d929caa4842500dc2c24397b21422e8a87874579",
+      "original_size": 1010,
+      "original_sha256": "b31a8bb940cd5a3a2f92d7e58e97c3bb7073b8fe841f3ee1c6f8142563b6afc5",
+      "header_size": 10,
+      "window_size": 2304,
+      "content_size": 1010,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 390
+        },
+        {
+          "kind": 2,
+          "size": 20
+        },
+        {
+          "kind": 0,
+          "size": 22
+        },
+        {
+          "kind": 1,
+          "size": 574
+        }
+      ]
+    },
+    {
+      "name": "large-content-05",
+      "encoded_size": 22163,
+      "encoded_sha256": "04514c1895140fe21e8bc58dca2696968bab2d7a19a3e0491278d177083824d6",
+      "original_size": 33106,
+      "original_sha256": "d9f18ad6c570a7a519ecef36d4cebcd0530a40d50e36e6ef1e5da4eb64f537fa",
+      "header_size": 14,
+      "window_size": 30720,
+      "content_size": 33106,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 12194
+        },
+        {
+          "kind": 2,
+          "size": 4102
+        },
+        {
+          "kind": 2,
+          "size": 3470
+        },
+        {
+          "kind": 2,
+          "size": 1426
+        },
+        {
+          "kind": 1,
+          "size": 201
+        },
+        {
+          "kind": 2,
+          "size": 934
+        }
+      ]
+    },
+    {
+      "name": "large-content-06",
+      "encoded_size": 8015,
+      "encoded_sha256": "71188fadf120adf54a1914a464cf6dae75ea88dc3fdef3007e6c3fc28bcd6ed3",
+      "original_size": 7997,
+      "original_sha256": "1167bbf0f93010dceb23a06eda2403bfa6cf659df5ccbb97ddd1c67b7a506943",
+      "header_size": 8,
+      "window_size": 327680,
+      "content_size": 7997,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 4513
+        },
+        {
+          "kind": 0,
+          "size": 3484
+        }
+      ]
+    },
+    {
+      "name": "large-content-07",
+      "encoded_size": 4332,
+      "encoded_sha256": "33b968a33f6bea2a5bdc7f12283ecdd46a3ef44ae451adda122bf74a0fb2c57e",
+      "original_size": 5303,
+      "original_sha256": "f79a526b9f8cd554b19dbf1b93b2c5c00c07783a6be2946d11563a2e86209b31",
+      "header_size": 8,
+      "window_size": 61440,
+      "content_size": 5303,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 550
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 0,
+          "size": 3255
+        },
+        {
+          "kind": 2,
+          "size": 503
+        }
+      ]
+    },
+    {
+      "name": "large-content-08",
+      "encoded_size": 438,
+      "encoded_sha256": "af9b29a23544754717d484cc6744bf3918da71d8a22c384bff05eaebfdbce6ab",
+      "original_size": 1457,
+      "original_sha256": "b86b25d2d14862601f0e8786fd381ff7bad6939f26b8404ec7d9404f99d7113a",
+      "header_size": 10,
+      "window_size": 6144,
+      "content_size": 1457,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 418
+        }
+      ]
+    },
+    {
+      "name": "large-content-09",
+      "encoded_size": 92,
+      "encoded_sha256": "3363649688aec68e97fc3ae7dd3f6fc8b981755977640d9a84f110daa40af8ce",
+      "original_size": 204,
+      "original_sha256": "76b8605bb01d43c49a569d251af8595e16ba5180568dab06c3a55101abb0614b",
+      "header_size": 10,
+      "window_size": 491520,
+      "content_size": 204,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 71
+        },
+        {
+          "kind": 1,
+          "size": 52
+        }
+      ]
+    },
+    {
+      "name": "large-content-10",
+      "encoded_size": 743,
+      "encoded_sha256": "d4a07eb8f59a9f92a1eaafe4e10a34a087994aad94fc42875c7f16382b1353a4",
+      "original_size": 2892,
+      "original_sha256": "7cee664f0d36073b3a3ea91f29b791c6dd0ea92b34530d4c4946c2762cbd3155",
+      "header_size": 10,
+      "window_size": 65536,
+      "content_size": 2892,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false,
+      "blocks": [
+        {
+          "kind": 1,
+          "size": 1347
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 478
+        },
+        {
+          "kind": 2,
+          "size": 139
+        },
+        {
+          "kind": 2,
+          "size": 58
+        },
+        {
+          "kind": 0,
+          "size": 0
+        },
+        {
+          "kind": 2,
+          "size": 32
+        }
+      ]
+    },
+    {
+      "name": "large-content-11",
+      "encoded_size": 116,
+      "encoded_sha256": "f869963d1e77d07b7693d1f38c670d4706991ef165225527ee13efec80f78984",
+      "original_size": 158,
+      "original_sha256": "a5d0b2eb598511a903c386c3e0bb9d01b01c14f6497960f80a5d4da4e249ab67",
+      "header_size": 9,
+      "window_size": 158,
+      "content_size": 158,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": true,
+      "blocks": [
+        {
+          "kind": 2,
+          "size": 100
+        }
+      ]
+    }
+  ],
+  "headers": [
+    {
+      "name": "header-01",
+      "arguments": [
+        "-s1",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "788d7a96964842b7a5ffa00b4bf914350c804facb44143064e69fff6ea42c1b7",
+      "header_size": 14,
+      "window_size": 294912,
+      "content_size": 251,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-02",
+      "arguments": [
+        "-s2",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "4a433d9db504f90740b6f946f6def250cdc995eb1dda92595d3776ec854f5a5e",
+      "header_size": 6,
+      "window_size": 114688,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-03",
+      "arguments": [
+        "-s3",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "bcc07787dccc3a5cb23062c2dcd7fc1874d160a0b8e9e9c01d056bf938c7eda0",
+      "header_size": 8,
+      "window_size": 1408,
+      "content_size": 507,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-04",
+      "arguments": [
+        "-s4",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "8087d36d5f1e6d4e17fccf53f235ff96b0150f5eed88fcf5a0d59e7fbf86e623",
+      "header_size": 14,
+      "window_size": 1048576,
+      "content_size": 171,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-05",
+      "arguments": [
+        "-s5",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "9d8db2208316f586e8f8189032c670fa0c59c41da394280d779f67a3263da379",
+      "header_size": 6,
+      "window_size": 3328,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-06",
+      "arguments": [
+        "-s6",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "6bbf16ad73b58c1765f398e3b184565bb26b8d465069249bb10bdbba3b747455",
+      "header_size": 6,
+      "window_size": 180224,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-07",
+      "arguments": [
+        "-s7",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "b461a226ce85490ec2a3ddefe42a975840e2fb71ca52e40ce2be3abb8772fa70",
+      "header_size": 6,
+      "window_size": 61440,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-08",
+      "arguments": [
+        "-s8",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "f51681c961d98035562b69e3b62583021cd8c941d2571aa7394cdf7c3ba586c7",
+      "header_size": 6,
+      "window_size": 3932160,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-09",
+      "arguments": [
+        "-s9",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "32c0f3ee424d291839f2d2fcc3a27e7a09aec32f1fa11664274ebbed2afb1298",
+      "header_size": 6,
+      "window_size": 49152,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-10",
+      "arguments": [
+        "-s10",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "3b8dfeb0cc54b6ae681372b5e0ade60e1d60823be1e998ec8532b1c9b283c197",
+      "header_size": 6,
+      "window_size": 1152,
+      "content_size": null,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-11",
+      "arguments": [
+        "-s11",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "05885fc340443cd683b8ebc1118ac2236beb333eedfc6d3199ed772c5ccee460",
+      "header_size": 10,
+      "window_size": 114688,
+      "content_size": 2988,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-12",
+      "arguments": [
+        "-s12",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "44d6e1bdf079cc46729e197bc37b11d25e9207e29f66ed07a07dc9b9823ec910",
+      "header_size": 14,
+      "window_size": 22528,
+      "content_size": 4,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-13",
+      "arguments": [
+        "-s13",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "4050b75fca71291deea14e5722284a7472b83fd712b51508e5557409637e2415",
+      "header_size": 10,
+      "window_size": 1179648,
+      "content_size": 6056,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-14",
+      "arguments": [
+        "-s14",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "c1a48e8dee4ee78b1814a3d9b9d90308896527516a60505059a31097c3b2c811",
+      "header_size": 14,
+      "window_size": 28672,
+      "content_size": 4619,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-15",
+      "arguments": [
+        "-s15",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "40d2fdf2ab7f7c34fbc9fb5fb1f832bb0bb7955fd39ab41191a5d58c652bbfa3",
+      "header_size": 10,
+      "window_size": 2883584,
+      "content_size": 413,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    },
+    {
+      "name": "header-16",
+      "arguments": [
+        "-s16",
+        "--frame-header-only",
+        "--max-content-size-log=16"
+      ],
+      "sha256": "9359e9f6abc8e11403175c5cb940b732b46c55661fe19a94c656f5cb8621c79b",
+      "header_size": 10,
+      "window_size": 32768,
+      "content_size": 13073,
+      "dictionary_id": 0,
+      "checksum": true,
+      "single_segment": false
+    }
+  ]
+}
