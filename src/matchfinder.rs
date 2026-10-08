@@ -31,6 +31,11 @@ impl MatchTable {
         self.positions.fill(EMPTY);
     }
 
+    /// Owned allocation size in bytes, excluding the inline vector handle.
+    pub(crate) fn retained_capacity(&self) -> usize {
+        self.positions.capacity() * core::mem::size_of::<usize>()
+    }
+
     /// Records the current position and returns an earlier candidate, if any.
     ///
     /// A returned candidate only denotes a hash collision; the caller must

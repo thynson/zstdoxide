@@ -41,6 +41,10 @@ pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
 pub(crate) struct BlockEncoder {
     match_table: Option<MatchTable>,
     entropy_tables: Option<EncodingTables>,
+    literals: Vec<u8>,
+    sequences: Vec<Sequence>,
+    payload: Vec<u8>,
+    writer: BitWriter,
 }
 
 impl BlockEncoder {
@@ -48,6 +52,10 @@ impl BlockEncoder {
         Self {
             match_table: None,
             entropy_tables: None,
+            literals: Vec::new(),
+            sequences: Vec::new(),
+            payload: Vec::new(),
+            writer: BitWriter::new(),
         }
     }
 
@@ -64,20 +72,30 @@ impl BlockEncoder {
             output.push(block[0]);
             return Ok(());
         }
-        if block.len() >= 8 {
-            let table = match self.match_table.as_mut() {
-                Some(table) => table,
-                None => self.match_table.insert(MatchTable::new()?),
-            };
-            if let Some(compressed) = compress_block(block, table, &mut self.entropy_tables)? {
-                write_block_header(output, compressed.len(), 2, last);
-                output.extend_from_slice(&compressed);
-                return Ok(());
-            }
+        if block.len() >= 8 && self.compress_block(block)? {
+            write_block_header(output, self.payload.len(), 2, last);
+            output.extend_from_slice(&self.payload);
+            return Ok(());
         }
         write_block_header(output, block.len(), 0, last);
         output.extend_from_slice(block);
         Ok(())
+    }
+
+    /// Heap capacity owned by the block workspace, excluding this value record.
+    pub(crate) fn retained_capacity(&self) -> usize {
+        self.match_table
+            .as_ref()
+            .map_or(0, MatchTable::retained_capacity)
+            + self.entropy_tables.as_ref().map_or(0, |tables| {
+                tables.literals.retained_capacity()
+                    + tables.matches.retained_capacity()
+                    + tables.offsets.retained_capacity()
+            })
+            + self.literals.capacity()
+            + self.sequences.capacity() * core::mem::size_of::<Sequence>()
+            + self.payload.capacity()
+            + self.writer.bytes.capacity()
     }
 }
 
@@ -117,75 +135,81 @@ struct Sequence {
 ///
 /// Fulfills the block-compression role of `ZSTD_compressBlock_internal`, using
 /// an independent greedy parser and table inversion instead of C table layout.
-fn compress_block(
-    block: &[u8],
-    match_table: &mut MatchTable,
-    entropy_tables: &mut Option<EncodingTables>,
-) -> Result<Option<Vec<u8>>> {
-    match_table.reset();
-    let mut literals = Vec::new();
-    literals
-        .try_reserve_exact(block.len())
-        .map_err(|_| Error::AllocationFailed)?;
-    let mut sequences = Vec::new();
-    sequences
-        .try_reserve_exact(block.len() / 4)
-        .map_err(|_| Error::AllocationFailed)?;
-    let mut position = 0;
-    let mut literal_start = 0;
-    while position + 4 <= block.len() {
-        let candidate = match_table.replace(word_at(block, position), position);
-        if let Some(previous) = candidate
-            && block[previous..previous + 4] == block[position..position + 4]
-        {
-            let mut match_length = 4;
-            while position + match_length < block.len()
-                && block[previous + match_length] == block[position + match_length]
+impl BlockEncoder {
+    fn compress_block(&mut self, block: &[u8]) -> Result<bool> {
+        let match_table = match self.match_table.as_mut() {
+            Some(table) => table,
+            None => self.match_table.insert(MatchTable::new()?),
+        };
+        match_table.reset();
+        let literals = &mut self.literals;
+        literals.clear();
+        literals
+            .try_reserve_exact(block.len())
+            .map_err(|_| Error::AllocationFailed)?;
+        let sequences = &mut self.sequences;
+        sequences.clear();
+        sequences
+            .try_reserve_exact(block.len() / 4)
+            .map_err(|_| Error::AllocationFailed)?;
+        let mut position = 0;
+        let mut literal_start = 0;
+        while position + 4 <= block.len() {
+            let candidate = match_table.replace(word_at(block, position), position);
+            if let Some(previous) = candidate
+                && block[previous..previous + 4] == block[position..position + 4]
             {
-                match_length += 1;
-            }
-            literals.extend_from_slice(&block[literal_start..position]);
-            sequences.push(Sequence {
-                literal_length: (position - literal_start) as u32,
-                match_length: match_length as u32,
-                distance: (position - previous) as u32,
-            });
-            let match_end = position + match_length;
-            position += 1;
-            while position < match_end && position + 4 <= block.len() {
-                match_table.replace(word_at(block, position), position);
+                let mut match_length = 4;
+                while position + match_length < block.len()
+                    && block[previous + match_length] == block[position + match_length]
+                {
+                    match_length += 1;
+                }
+                literals.extend_from_slice(&block[literal_start..position]);
+                sequences.push(Sequence {
+                    literal_length: (position - literal_start) as u32,
+                    match_length: match_length as u32,
+                    distance: (position - previous) as u32,
+                });
+                let match_end = position + match_length;
+                position += 1;
+                while position < match_end && position + 4 <= block.len() {
+                    match_table.replace(word_at(block, position), position);
+                    position += 1;
+                }
+                position = match_end;
+                literal_start = position;
+            } else {
                 position += 1;
             }
-            position = match_end;
-            literal_start = position;
-        } else {
-            position += 1;
         }
+        if sequences.is_empty() {
+            return Ok(false);
+        }
+        literals.extend_from_slice(&block[literal_start..]);
+        let tables = match self.entropy_tables.as_ref() {
+            Some(tables) => tables,
+            None => self.entropy_tables.insert(EncodingTables::new()?),
+        };
+        encode_sequences(sequences, tables, &mut self.writer)?;
+        let stream = &self.writer.bytes;
+        let capacity = literals
+            .len()
+            .checked_add(stream.len())
+            .and_then(|size| size.checked_add(7))
+            .ok_or(Error::ResourceLimit)?;
+        let payload = &mut self.payload;
+        payload.clear();
+        payload
+            .try_reserve_exact(capacity)
+            .map_err(|_| Error::AllocationFailed)?;
+        write_literal_header(payload, literals.len());
+        payload.extend_from_slice(literals);
+        write_sequence_count(payload, sequences.len());
+        payload.push(0); // All three symbol distributions are predefined.
+        payload.extend_from_slice(stream);
+        Ok(payload.len() < block.len())
     }
-    if sequences.is_empty() {
-        return Ok(None);
-    }
-    literals.extend_from_slice(&block[literal_start..]);
-    let tables = match entropy_tables.as_ref() {
-        Some(tables) => tables,
-        None => entropy_tables.insert(EncodingTables::new()?),
-    };
-    let stream = encode_sequences(&sequences, tables)?;
-    let capacity = literals
-        .len()
-        .checked_add(stream.len())
-        .and_then(|size| size.checked_add(7))
-        .ok_or(Error::ResourceLimit)?;
-    let mut payload = Vec::new();
-    payload
-        .try_reserve_exact(capacity)
-        .map_err(|_| Error::AllocationFailed)?;
-    write_literal_header(&mut payload, literals.len());
-    payload.extend_from_slice(&literals);
-    write_sequence_count(&mut payload, sequences.len());
-    payload.push(0); // All three symbol distributions are predefined.
-    payload.extend_from_slice(&stream);
-    Ok((payload.len() < block.len()).then_some(payload))
 }
 
 /// Reads a four-byte match key from a previously bounded position.
@@ -241,6 +265,11 @@ struct EncodingTable {
 }
 
 impl EncodingTable {
+    fn retained_capacity(&self) -> usize {
+        self.transitions.capacity() * core::mem::size_of::<EncodingTransition>()
+            + self.initial.capacity() * core::mem::size_of::<u16>()
+    }
+
     /// Inverts the public decoding relation instead of adopting `FSE_CTable`'s
     /// packed representation. Each symbol partitions the successor state set.
     fn new(counts: &[i16], table_log: u8) -> Result<Self> {
@@ -328,8 +357,12 @@ fn length_code(length: u32, bases: &[u32]) -> usize {
 
 /// Writes sequences backward so their symbols and extra fields decode forward.
 /// Corresponds to the format contract of `ZSTD_encodeSequences`.
-fn encode_sequences(sequences: &[Sequence], tables: &EncodingTables) -> Result<Vec<u8>> {
-    let mut writer = BitWriter::new();
+fn encode_sequences(
+    sequences: &[Sequence],
+    tables: &EncodingTables,
+    writer: &mut BitWriter,
+) -> Result<()> {
+    writer.reset();
     let (mut literal_state, mut match_state, mut offset_state) = (0, 0, 0);
     for (index, sequence) in sequences.iter().rev().enumerate() {
         let literal_code = length_code(sequence.literal_length, &LL_BASE);
@@ -380,12 +413,18 @@ struct BitWriter {
 }
 
 impl BitWriter {
-    fn new() -> Self {
+    const fn new() -> Self {
         Self {
             bytes: Vec::new(),
             pending: 0,
             used: 0,
         }
+    }
+
+    fn reset(&mut self) {
+        self.bytes.clear();
+        self.pending = 0;
+        self.used = 0;
     }
 
     fn write(&mut self, value: u32, count: u8) -> Result<()> {
@@ -423,12 +462,12 @@ impl BitWriter {
         Ok(())
     }
 
-    fn finish(mut self) -> Result<Vec<u8>> {
+    fn finish(&mut self) -> Result<()> {
         self.write(1, 1)?;
         if self.used != 0 {
             self.bytes.push(self.pending as u8);
         }
-        Ok(self.bytes)
+        Ok(())
     }
 }
 
@@ -511,6 +550,29 @@ mod tests {
     }
 
     #[test]
+    fn block_workspace_reuses_capacity_without_preserving_previous_matches() {
+        let block: Vec<_> = (0..MAX_BLOCK_SIZE)
+            .map(|index| b"periodic-pattern"[index % 16])
+            .collect();
+        let mut encoder = BlockEncoder::new();
+        let mut encoded = Vec::new();
+        encoder.encode(&block, true, &mut encoded).unwrap();
+        let expected = encoded.clone();
+        let capacity = encoder.retained_capacity();
+        assert!(capacity > MAX_BLOCK_SIZE);
+        for _ in 0..8 {
+            encoded.clear();
+            encoder
+                .encode(b"a different preceding block", false, &mut encoded)
+                .unwrap();
+            encoded.clear();
+            encoder.encode(&block, true, &mut encoded).unwrap();
+            assert_eq!(encoded, expected);
+            assert_eq!(encoder.retained_capacity(), capacity);
+        }
+    }
+
+    #[test]
     fn inverse_entropy_transitions_recover_every_successor() {
         for (counts, log) in [
             (&LL_DEFAULT[..], 6),
@@ -541,8 +603,8 @@ mod tests {
         for &(value, count) in &fields {
             writer.write(value, count).unwrap();
         }
-        let stream = writer.finish().unwrap();
-        let mut reader = crate::bitstream::ReverseBits::new(&stream).unwrap();
+        writer.finish().unwrap();
+        let mut reader = crate::bitstream::ReverseBits::new(&writer.bytes).unwrap();
         for &(value, count) in fields.iter().rev() {
             assert_eq!(reader.read_bits(count).unwrap(), value);
         }
@@ -565,7 +627,9 @@ mod tests {
             let mut section = Vec::new();
             write_sequence_count(&mut section, count);
             section.push(0);
-            section.extend_from_slice(&encode_sequences(&sequences, &tables).unwrap());
+            let mut writer = BitWriter::new();
+            encode_sequences(&sequences, &tables, &mut writer).unwrap();
+            section.extend_from_slice(&writer.bytes);
             let length = count * 4 + 1;
             let mut history = crate::history::History::new(length);
             history.start_frame(length);
