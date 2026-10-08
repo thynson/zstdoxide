@@ -66,7 +66,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Measure retained memory and safe/unsafe throughput; document stream limits.
 - [x] Document public streaming usage and lifecycle examples.
 - [x] Run the complete backend/no_std matrix and add streaming CI coverage.
-- [ ] Pin and replay official external streaming fuzz corpora.
+- [x] Pin and replay official external streaming fuzz corpora.
 
 Completed foundation, entropy, one-shot decoding, initial encoding, and validation
 checklists were cleared at their module boundaries. See `docs/progress.md` and

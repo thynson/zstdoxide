@@ -582,7 +582,17 @@ fn streaming_fuzz_case(frame: &[u8], parameters: &[u8]) -> Vec<u8> {
 
 /// Buffered-output branch of `tests/fuzz/stream_decompress.c:68`.
 fn stream_decompression_target(decoder: &mut Decoder, input: &[u8]) {
-    assert!(input.len() <= 65536);
+    stream_decompression_target_with_limits(decoder, input, 65536, 1024 * 1024, 8 * 1024 * 1024);
+}
+
+fn stream_decompression_target_with_limits(
+    decoder: &mut Decoder,
+    input: &[u8],
+    max_input: usize,
+    max_output: usize,
+    max_window: u64,
+) {
+    assert!(input.len() <= max_input);
     let mut producer = fuzz_support::DataProducer::new(input);
     let source_size = producer.reserve_prefix();
     let source = &input[..source_size];
@@ -590,8 +600,8 @@ fn stream_decompression_target(decoder: &mut Decoder, input: &[u8]) {
     // Consume the original selector even though stable-output mode is pending.
     let _stable_output_requested = producer.unsigned_range(0, 10) == 5;
     decoder.reset_with_options(DecodeOptions {
-        max_output_size: 1024 * 1024,
-        max_window_size: 8 * 1024 * 1024,
+        max_output_size: max_output,
+        max_window_size: max_window,
     });
     let mut output = vec![0xa5; buffer_size + 8];
     let mut output_size = if producer.is_empty() {
@@ -647,7 +657,7 @@ fn stream_decompression_target(decoder: &mut Decoder, input: &[u8]) {
             }
             chunk_position += progress.consumed;
             output_position += progress.produced;
-            assert!(decoder.total_output() <= 1024 * 1024);
+            assert!(decoder.total_output() <= max_output as u64);
             if output_position == output_size {
                 output_position = 0;
                 output_size = if producer.is_empty() {
@@ -663,7 +673,7 @@ fn stream_decompression_target(decoder: &mut Decoder, input: &[u8]) {
     }
     // Unlike temporary input exhaustion, EOF may expose an incomplete frame.
     let _ = decoder.finish();
-    assert!(decoder.retained_capacity() <= 10 * 1024 * 1024);
+    assert!(decoder.retained_capacity() <= max_window as usize + 2 * 1024 * 1024);
 }
 
 /// Safe arbitrary-input branch, with explicit test resource caps.
@@ -1397,4 +1407,221 @@ fn official_codec_accepts_streamed_frames_and_stream_decoder_accepts_official_fr
             assert_eq!(boundaries, [official.len()]);
         }
     }
+}
+
+/// Supported-parameter adapter of `tests/fuzz/stream_round_trip.c:59`.
+fn stream_round_trip_target(encoder: &mut Encoder, decoder: &mut Decoder, input: &[u8]) {
+    assert!(input.len() <= 2 * 1024 * 1024);
+    let mut producer = fuzz_support::DataProducer::new(input);
+    let source_size = producer.reserve_prefix();
+    let source = &input[..source_size];
+    // ZSTD_COMPRESSBOUND from v1.5.7, used only to reproduce the C test's
+    // selected output capacities. It is not a production compression API.
+    let bound = source_size
+        + (source_size >> 8)
+        + if source_size < 128 * 1024 {
+            (128 * 1024 - source_size) >> 11
+        } else {
+            0
+        };
+    let capacity = bound * 15;
+    let mut scratch = vec![0xa5; capacity + 8];
+    let mut encoded = Vec::new();
+    let mut position = 0;
+    let mut calls = 0;
+    let call_limit = 32 * (input.len() + 1) + 1024;
+    encoder
+        .reset_with_options(EncoderOptions::default())
+        .unwrap();
+    // FUZZ_setRandomParameters and external sequence producers are not
+    // invoked: the Rust API exposes only its documented initial strategy.
+    while position < source_size {
+        let length = producer.unsigned_range(1, (source_size - position) as u32) as usize;
+        let end = position + length;
+        let mut mode = None;
+        while position < end || mode.is_some() {
+            calls += 1;
+            assert!(
+                calls <= call_limit,
+                "round-trip fuzz target exceeded its progress budget"
+            );
+            assert!(
+                encoded.len() < capacity,
+                "original fuzz compression bound exhausted"
+            );
+            let output_size =
+                producer.unsigned_range(1, (capacity - encoded.len()) as u32) as usize;
+            let selected = *mode.get_or_insert_with(|| producer.unsigned_range(0, 9));
+            let directive = match selected {
+                0..=2 => EndDirective::Flush,
+                3 => EndDirective::Finish,
+                _ => EndDirective::Continue,
+            };
+            if selected == 4 {
+                let progress = encoder
+                    .process(&[], &mut [], EndDirective::Continue)
+                    .unwrap();
+                assert_eq!(progress.consumed, 0);
+                assert_eq!(progress.produced, 0);
+            }
+            scratch[..output_size + 8].fill(0xa5);
+            let progress = encoder
+                .process(
+                    &source[position..end],
+                    &mut scratch[..output_size],
+                    directive,
+                )
+                .unwrap();
+            assert!(progress.consumed <= end - position);
+            assert!(progress.produced <= output_size);
+            assert!(
+                scratch[progress.produced..output_size + 8]
+                    .iter()
+                    .all(|&byte| byte == 0xa5)
+            );
+            position += progress.consumed;
+            encoded.extend_from_slice(&scratch[..progress.produced]);
+            assert!(
+                progress.consumed > 0
+                    || progress.produced > 0
+                    || matches!(
+                        progress.status,
+                        StreamStatus::Flushed | StreamStatus::FrameFinished
+                    )
+            );
+            match directive {
+                EndDirective::Continue => mode = None,
+                EndDirective::Flush => {
+                    if progress.status == StreamStatus::Flushed {
+                        mode = None;
+                    }
+                }
+                EndDirective::Finish => {
+                    if progress.status == StreamStatus::FrameFinished {
+                        encoder.reset();
+                        // Preserve the branch selector; its unsupported
+                        // random-parameter function is deliberately omitted.
+                        let _change_parameters = producer.unsigned_range(0, 7) == 0;
+                        mode = None;
+                    }
+                }
+            }
+        }
+    }
+    loop {
+        calls += 1;
+        assert!(calls <= call_limit);
+        assert!(encoded.len() < capacity);
+        let output_size = producer.unsigned_range(1, (capacity - encoded.len()) as u32) as usize;
+        scratch[..output_size + 8].fill(0xa5);
+        let progress = encoder
+            .process(&[], &mut scratch[..output_size], EndDirective::Finish)
+            .unwrap();
+        assert_eq!(progress.consumed, 0);
+        assert!(progress.produced <= output_size);
+        assert!(
+            scratch[progress.produced..output_size + 8]
+                .iter()
+                .all(|&byte| byte == 0xa5)
+        );
+        encoded.extend_from_slice(&scratch[..progress.produced]);
+        if progress.status == StreamStatus::FrameFinished {
+            break;
+        }
+        assert_eq!(progress.status, StreamStatus::NeedOutput);
+        assert!(progress.produced > 0);
+    }
+    // The original helper consumes this selector for optional maxBlockSize.
+    let _set_max_block_size = producer.unsigned_range(0, 1);
+    decoder.reset_with_options(DecodeOptions::new(source.len()));
+    let mut recovered = vec![0; source.len()];
+    let mut consumed = 0;
+    let mut produced = 0;
+    while consumed < encoded.len() {
+        let progress = decoder
+            .process(&encoded[consumed..], &mut recovered[produced..])
+            .unwrap();
+        assert!(progress.consumed <= encoded.len() - consumed);
+        assert!(progress.produced <= recovered.len() - produced);
+        assert_eq!(progress.status, StreamStatus::FrameFinished);
+        assert!(progress.consumed > 0);
+        consumed += progress.consumed;
+        produced += progress.produced;
+    }
+    decoder.finish().unwrap();
+    assert_eq!(produced, source.len());
+    assert_eq!(recovered, source);
+}
+
+#[test]
+#[ignore = "requires ZSTDOXIDE_STREAM_CORPUS and ZSTDOXIDE_STREAM_TARGET; see streaming conformance plan"]
+fn external_official_streaming_corpus() {
+    use std::path::PathBuf;
+    let paths = std::env::var_os("ZSTDOXIDE_STREAM_CORPUS")
+        .expect("ZSTDOXIDE_STREAM_CORPUS must name files/directories");
+    let target = std::env::var("ZSTDOXIDE_STREAM_TARGET")
+        .expect("ZSTDOXIDE_STREAM_TARGET must be stream_decompress or stream_round_trip");
+    assert!(matches!(
+        target.as_str(),
+        "stream_decompress" | "stream_round_trip"
+    ));
+    let mut pending: Vec<(PathBuf, usize)> = std::env::split_paths(&paths)
+        .map(|path| (path, 0))
+        .collect();
+    let mut files = Vec::new();
+    while let Some((path, depth)) = pending.pop() {
+        assert!(depth <= 64, "corpus directory depth limit exceeded");
+        let metadata = std::fs::symlink_metadata(&path).unwrap();
+        assert!(
+            !metadata.file_type().is_symlink(),
+            "corpus symlinks are not followed: {}",
+            path.display()
+        );
+        if metadata.is_dir() {
+            for entry in std::fs::read_dir(&path).unwrap() {
+                pending.push((entry.unwrap().path(), depth + 1));
+            }
+        } else {
+            assert!(
+                metadata.is_file(),
+                "unsupported corpus file type: {}",
+                path.display()
+            );
+            assert!(
+                metadata.len() <= 2 * 1024 * 1024,
+                "corpus input exceeds 2 MiB: {}",
+                path.display()
+            );
+            files.push(path);
+            assert!(files.len() <= 65536, "corpus file count exceeds 65,536");
+        }
+    }
+    files.sort();
+    assert!(!files.is_empty(), "empty corpus selection");
+    let mut decoder = Decoder::new(DecodeOptions::new(0));
+    let mut encoder = Encoder::new();
+    let mut total_bytes = 0;
+    for (index, path) in files.iter().enumerate() {
+        let input = std::fs::read(path).unwrap();
+        assert!(input.len() <= 2 * 1024 * 1024);
+        total_bytes += input.len();
+        if target == "stream_decompress" {
+            stream_decompression_target_with_limits(
+                &mut decoder,
+                &input,
+                2 * 1024 * 1024,
+                10 * 1024 * 1024,
+                128 * 1024 * 1024,
+            );
+        } else {
+            stream_round_trip_target(&mut encoder, &mut decoder, &input);
+        }
+        if (index + 1) % 1000 == 0 {
+            eprintln!("{target}: {} / {} files", index + 1, files.len());
+        }
+    }
+    eprintln!(
+        "{target}: replayed {} files, {total_bytes} bytes; no skipped inputs",
+        files.len()
+    );
 }

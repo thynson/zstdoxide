@@ -220,21 +220,68 @@
         "verified": true
       },
       "output_name": "github.dict"
+    },
+    {
+      "id": "stream_decompress",
+      "format": "zip",
+      "name": "stream_decompress_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/stream_decompress_seed_corpus.zip",
+      "compressed_bytes": 14873750,
+      "sha256": "7434eba13e322a2a9b504ddb57217cf3568d360df309e3c9003956bd449e1de8",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "14873750",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A26B11F932\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:48 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 12463,
+      "file_count": 12462,
+      "unpacked_bytes": 80339212,
+      "largest_member_bytes": 1048575,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/stream_decompress.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "stream_round_trip",
+      "format": "zip",
+      "name": "stream_round_trip_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/stream_round_trip_seed_corpus.zip",
+      "compressed_bytes": 103490444,
+      "sha256": "f966c49e0f425ceb614411d8e470cd1e08248f11d53dc22d121fac14b63e6705",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "103490444",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A25F3675F2\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:28 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 24224,
+      "file_count": 24223,
+      "unpacked_bytes": 469442481,
+      "largest_member_bytes": 1048688,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/stream_round_trip.c",
+      "upstream_checksum_pin": null
     }
   ],
   "reproduction": {
     "fetch": "python3 scripts/fetch_upstream_corpora.py --cache /path/to/external-cache",
     "verify_cached": "python3 scripts/fetch_upstream_corpora.py --cache /path/to/external-cache --offline",
-    "selection": "Repeat --target ID to select archives. Default selects all eight.",
+    "selection": "Repeat --target ID to select archives. Default selects all ten.",
     "bounds": "--max-unpacked-bytes limits aggregate extracted bytes and must be at most 1073741824. All members must be regular files or directories; symbolic/hard links, special files, traversal names, duplicate files, and oversized expansion are rejected."
   },
   "validation": {
-    "archive_pins_verified": 8,
-    "compressed_bytes": 39182154,
-    "extracted_bytes": 261416343,
-    "offline_reextraction_and_existing_directory_comparison": "passed",
+    "archive_pins_verified": 10,
+    "compressed_bytes": 157546348,
+    "extracted_bytes": 811198036,
+    "offline_reextraction_and_existing_directory_comparison": "passed for all ten archives",
     "malicious_zip_and_tar_cases_rejected": 12,
     "fresh_network_fetch_test": "fse_read_ncount passed in a fresh external cache",
-    "official_regression_xxhash64_checks": "all three pins passed using an external verifier built against upstream xxhash.h; no verifier or C dependency is part of the Rust library"
+    "official_regression_xxhash64_checks": "all three pins passed using an external verifier built against upstream xxhash.h; no verifier or C dependency is part of the Rust library",
+    "streaming_corpora_network_fetch": "stream_decompress and stream_round_trip passed exact release-size downloads, SHA-256 verification, bounded extraction, ZIP CRC/member validation, and offline re-extraction comparison"
   }
 }

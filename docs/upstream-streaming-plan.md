@@ -198,8 +198,8 @@ streaming, incremental raw output, Flush visibility, or persistent context state
 ## Initial Rust test mapping
 
 All entries below live in `tests/upstream_streaming.rs`. The focused default
-test run passed 39 tests (including five shared data-producer tests), with one
-external-oracle test ignored by default. The ignored official v1.5.7 oracle
+test run passed 39 tests (including five shared data-producer tests). Two
+external-oracle/corpus tests are ignored by default. The official v1.5.7 oracle
 test passed separately with `ZSTD_BIN` set to the pinned checkout's executable.
 The same 39 tests passed with all features enabled. Clippy with `-D warnings`
 also passed. Additional Rust lifecycle tests
@@ -272,3 +272,60 @@ every window logarithm from 10 through 29. The default small-window/tiny-output
 tests and optional large-window sweep passed; the full sweep passed with safe
 and all-features release builds. This covers the original decoder contract
 without claiming that Rust exposes `ZSTD_compressSequences`.
+
+## External streaming corpus replay
+
+The ignored `external_official_streaming_corpus` test accepts files or directory
+trees through `ZSTDOXIDE_STREAM_CORPUS` (platform path-list syntax), and requires
+`ZSTDOXIDE_STREAM_TARGET=stream_decompress` or `stream_round_trip`. It reads every
+selected regular file, sorts paths, and rejects unsupported or oversized input
+instead of silently skipping it. Limits are 65,536 files, 64 directory levels,
+and 2 MiB per input file. Symbolic links are not followed. The round-trip
+archive's largest file is 1,048,688 bytes, slightly larger than 1 MiB.
+
+The external decoder adapter reuses the ordinary tail-driven input/output
+driver with a 10 MiB cumulative output limit and a 128 MiB advertised-window
+limit. Its output working buffer remains `max(10 * prefix_size, 128 KiB)`.
+Resource errors are legal malformed-input outcomes, and errors must poison the
+context until reset. These explicit limits bound fuzzing; they do not establish
+that every input accepted by the unbounded upstream target is accepted here.
+
+The round-trip adapter preserves `reserveDataPrefix`, the original inclusive
+input/output chunk selectors, the ten-way directive selector, empty Continue,
+Finish/reset, repeated Flush/Finish, and the `15 * ZSTD_COMPRESSBOUND` test output
+capacity. It also consumes the later parameter-change and decoder-block-size
+selectors. It fixes compression parameters to the supported Rust defaults and
+does **not** consume `FUZZ_setRandomParameters` or sequence-producer parameters.
+Consequently its later tail positions and schedules differ from a full original
+target execution. Every accepted source prefix must still round-trip exactly
+through the selected directive schedule and concatenated frames. In-place
+decoding and stable-buffer modes remain absent.
+
+For example, after the separately pinned archives have been fetched and
+extracted by `scripts/fetch_upstream_corpora.py`:
+
+```sh
+ZSTDOXIDE_STREAM_TARGET=stream_decompress \
+ZSTDOXIDE_STREAM_CORPUS=/path/to/extracted/stream_decompress \
+cargo test --release --test upstream_streaming \
+  external_official_streaming_corpus -- --ignored --nocapture
+
+ZSTDOXIDE_STREAM_TARGET=stream_round_trip \
+ZSTDOXIDE_STREAM_CORPUS=/path/to/extracted/stream_round_trip \
+cargo test --release --all-features --test upstream_streaming \
+  external_official_streaming_corpus -- --ignored --nocapture
+```
+
+Both entire pinned archives passed the safe and all-features release adapters:
+
+| Target | Files | Total input bytes | Largest input | Safe release | All-features release |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `stream_decompress` | 12,462 | 80,339,212 | 1,048,575 | 3.14 s | 2.78 s |
+| `stream_round_trip` | 24,223 | 469,442,481 | 1,048,688 | 19.87 s | 18.04 s |
+
+No files were skipped in any run. Durations describe this validation run,
+excluding compilation; they are not stable benchmark claims. The independently
+downloaded release snapshots and their SHA-256 hashes are recorded in
+`tests/upstream/external-corpora.json`; the snapshots are not claimed to
+originate from the v1.5.7 source tag. Both target mappings remain partial because
+the adapters explicitly omit the unsupported branches described above.

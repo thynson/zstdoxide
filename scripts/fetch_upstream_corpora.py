@@ -186,7 +186,7 @@ def directory_inventory(directory):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache", required=True, type=Path, help="external cache, outside this repository")
-    parser.add_argument("--target", action="append", help="manifest ID; repeat to choose multiple (default: all eight)")
+    parser.add_argument("--target", action="append", help="manifest ID; repeat to choose multiple (default: every pinned archive)")
     parser.add_argument("--offline", action="store_true", help="require cached archives; never access the network")
     parser.add_argument("--max-unpacked-bytes", type=int, default=MAX_UNPACKED, help="aggregate extraction limit, at most 1 GiB")
     parser.add_argument("--zstd", default=os.environ.get("ZSTD_BIN", "zstd"), help="official v1.5.7 archive decoder")

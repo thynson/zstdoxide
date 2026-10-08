@@ -16,10 +16,11 @@
       "url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/",
       "manifest": "tests/upstream/external-corpora.json",
       "status": "partial",
-      "reason": "Five rolling fuzz archives are independently SHA-256 pinned. Release all-feature Rust adapters replayed every selected simple_decompress (11631), zstd_frame_info (2395), too-small destination (1173), and huf_decompress (605, both parameter-consumption modes) input without skips. The 79-input FSE archive is pinned but its writer-based target is not ported/replayed; other upstream target families require missing APIs. The archives are not asserted to originate from the v1.5.7 tag.",
+      "reason": "Seven rolling fuzz archives are independently SHA-256 pinned. Release all-feature adapters replayed every selected simple_decompress (11631), zstd_frame_info (2395), too-small destination (1173), huf_decompress (605, both parameter-consumption modes), stream_decompress (12462), and stream_round_trip (24223) input without skips. Both streaming adapters also passed safe release; their stable-buffer/random-parameter/in-place branches remain partial. The 79-input FSE archive is pinned but its writer-based target is not ported/replayed. Other target families require missing APIs; snapshots are not asserted to originate from the v1.5.7 tag.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#external_file_corpus",
-        "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus"
+        "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus",
+        "tests/upstream_streaming.rs#external_official_streaming_corpus"
       ]
     },
     {
@@ -1506,7 +1507,7 @@
       "suite": "freestanding_kernel",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
+      "reason": "Contains streaming roundtrips with 4,096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Bounded streaming exists; the original level/workspace/stack instrumentation interfaces and complete kernel-specific driver remain unported.",
       "rust_tests": [],
       "line_count": 229,
       "cases": [
@@ -1517,7 +1518,7 @@
           "line_end": 55,
           "label": "free_test_data",
           "status": "non_applicable",
-          "reason": "Tests a generated Linux C API, C macro removal, or kernel shim ABI; those implementation-specific interfaces are not part of this Rust crate.",
+          "reason": "Contains streaming roundtrips with 4,096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Bounded streaming exists; the original level/workspace/stack instrumentation interfaces and complete kernel-specific driver remain unported.",
           "rust_tests": []
         },
         {
@@ -1527,7 +1528,7 @@
           "line_end": 144,
           "label": "test_btrfs",
           "status": "blocked",
-          "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
+          "reason": "Contains streaming roundtrips with 4,096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Bounded streaming exists; the original level/workspace/stack instrumentation interfaces and complete kernel-specific driver remain unported.",
           "rust_tests": []
         },
         {
@@ -1537,7 +1538,7 @@
           "line_end": 175,
           "label": "test_decompress_unzstd",
           "status": "blocked",
-          "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
+          "reason": "Contains streaming roundtrips with 4,096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Bounded streaming exists; the original level/workspace/stack instrumentation interfaces and complete kernel-specific driver remain unported.",
           "rust_tests": []
         },
         {
@@ -1547,7 +1548,7 @@
           "line_end": 211,
           "label": "test_f2fs",
           "status": "blocked",
-          "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
+          "reason": "Contains streaming roundtrips with 4,096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Bounded streaming exists; the original level/workspace/stack instrumentation interfaces and complete kernel-specific driver remain unported.",
           "rust_tests": []
         },
         {
@@ -1557,7 +1558,7 @@
           "line_end": 229,
           "label": "test_stack_usage",
           "status": "blocked",
-          "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
+          "reason": "Contains streaming roundtrips with 4,096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Bounded streaming exists; the original level/workspace/stack instrumentation interfaces and complete kernel-specific driver remain unported.",
           "rust_tests": []
         }
       ]
@@ -2518,7 +2519,7 @@
       "suite": "examples",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+      "reason": "Bounded encoder contexts and reset exist; this example's multi-file CLI driver, original compression-level selection, and file-operation behavior have not been ported.",
       "rust_tests": [],
       "line_count": 133,
       "cases": []
@@ -2554,7 +2555,7 @@
       "suite": "examples",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+      "reason": "Bounded Encoder progress and Finish are implemented; this example's std file/CLI driver and original compression-level setting remain unported.",
       "rust_tests": [],
       "line_count": 146,
       "cases": []
@@ -2566,7 +2567,7 @@
       "suite": "examples",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+      "reason": "Bounded single-threaded Encoder progress exists; thread-pool ownership/sharing, worker settings, and the example file/CLI driver remain unimplemented.",
       "rust_tests": [],
       "line_count": 180,
       "cases": []
@@ -2578,7 +2579,7 @@
       "suite": "examples",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+      "reason": "Bounded Decoder progress and EOF validation are implemented; this example's std file/CLI driver and original file-operation behavior remain unported.",
       "rust_tests": [],
       "line_count": 100,
       "cases": []
@@ -2590,7 +2591,7 @@
       "suite": "examples",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+      "reason": "Streaming retained_capacity accounting exists; the original C size estimators, level/parameter matrix and example command-line reporting remain unported.",
       "rust_tests": [],
       "line_count": 137,
       "cases": []
@@ -4335,7 +4336,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Exact tail-driven source/limit selection asserts empty input success and ResourceLimit for nonempty insufficient destinations. Level selection, reusable contexts, caller destination canaries, and sequence-producer setup remain absent. The separately pinned official rolling corpus passed all 1173 files in a release all-feature run with no skipped files.",
+      "reason": "Exact tail-driven source/limit selection asserts empty input success and ResourceLimit for nonempty insufficient destinations. This one-shot adapter does not cover original level selection, reusable one-shot context variants, caller destination canaries, or sequence-producer setup. The separately pinned official rolling corpus passed all 1173 files in a release all-feature run with no skipped files.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#too_small_destination_deterministic_corpus",
         "tests/upstream_fuzz_targets.rs#external_file_corpus"
@@ -4349,7 +4350,7 @@
           "line_end": 74,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Exact tail-driven source/limit selection asserts empty input success and ResourceLimit for nonempty insufficient destinations. Level selection, reusable contexts, caller destination canaries, and sequence-producer setup remain absent. The separately pinned official rolling corpus passed all 1173 files in a release all-feature run with no skipped files.",
+          "reason": "Exact tail-driven source/limit selection asserts empty input success and ResourceLimit for nonempty insufficient destinations. This one-shot adapter does not cover original level selection, reusable one-shot context variants, caller destination canaries, or sequence-producer setup. The separately pinned official rolling corpus passed all 1173 files in a release all-feature run with no skipped files.",
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#too_small_destination_deterministic_corpus",
             "tests/upstream_fuzz_targets.rs#external_file_corpus"
@@ -4818,7 +4819,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "blocked",
-      "reason": "The defining random insufficient compression-output-capacity contract requires a caller-buffer encoder API. The allocating Rust encoder cannot express it; compression levels/context reuse are also absent.",
+      "reason": "The defining random insufficient compression-output-capacity contract requires a caller-buffer encoder API. Streaming output exhaustion is resumable rather than the atomic one-shot failure required here; compression-level and one-shot context variants also remain absent.",
       "rust_tests": [],
       "line_count": 60,
       "cases": [
@@ -4829,7 +4830,7 @@
           "line_end": 60,
           "label": "LLVMFuzzerTestOneInput",
           "status": "blocked",
-          "reason": "The defining random insufficient compression-output-capacity contract requires a caller-buffer encoder API. The allocating Rust encoder cannot express it; compression levels/context reuse are also absent.",
+          "reason": "The defining random insufficient compression-output-capacity contract requires a caller-buffer encoder API. Streaming output exhaustion is resumable rather than the atomic one-shot failure required here; compression-level and one-shot context variants also remain absent.",
           "rust_tests": []
         }
       ]
@@ -4841,7 +4842,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Exact tail-driven prefix and output-limit selection, panic-free bounded decoding, and successful known/unknown/concatenated size checks run. A test-only scanner supplies metadata assertions; production scanning and reusable decoder contexts remain absent. The separately pinned official rolling corpus passed all 11631 files in a release all-feature run with no skipped files.",
+      "reason": "Exact tail-driven prefix and output-limit selection, panic-free bounded decoding, and successful known/unknown/concatenated size checks run. A test-only scanner supplies metadata assertions; production frame scanning and this adapter's original reusable one-shot-context branch remain unported. The separately pinned official rolling corpus passed all 11631 files in a release all-feature run with no skipped files.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#simple_decompress_deterministic_corpus",
         "tests/upstream_fuzz_targets.rs#successful_decode_checks_known_unknown_and_concatenated_sizes",
@@ -4856,7 +4857,7 @@
           "line_end": 59,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Exact tail-driven prefix and output-limit selection, panic-free bounded decoding, and successful known/unknown/concatenated size checks run. A test-only scanner supplies metadata assertions; production scanning and reusable decoder contexts remain absent. The separately pinned official rolling corpus passed all 11631 files in a release all-feature run with no skipped files.",
+          "reason": "Exact tail-driven prefix and output-limit selection, panic-free bounded decoding, and successful known/unknown/concatenated size checks run. A test-only scanner supplies metadata assertions; production frame scanning and this adapter's original reusable one-shot-context branch remain unported. The separately pinned official rolling corpus passed all 11631 files in a release all-feature run with no skipped files.",
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#simple_decompress_deterministic_corpus",
             "tests/upstream_fuzz_targets.rs#successful_decode_checks_known_unknown_and_concatenated_sizes",
@@ -4872,7 +4873,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Random parameters/levels, smaller encoded destinations, context reuse, max-block settings, sequence producers, and overlapping in-place buffers remain absent.",
+      "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Original random parameters/levels, atomic smaller-output destinations, one-shot-context variants, max-block settings, sequence producers, and overlapping in-place buffers remain unported.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
       ],
@@ -4885,7 +4886,7 @@
           "line_end": 140,
           "label": "roundTripTest",
           "status": "partial",
-          "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Random parameters/levels, smaller encoded destinations, context reuse, max-block settings, sequence producers, and overlapping in-place buffers remain absent.",
+          "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Original random parameters/levels, atomic smaller-output destinations, one-shot-context variants, max-block settings, sequence producers, and overlapping in-place buffers remain unported.",
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
           ]
@@ -4897,7 +4898,7 @@
           "line_end": 182,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Random parameters/levels, smaller encoded destinations, context reuse, max-block settings, sequence producers, and overlapping in-place buffers remain absent.",
+          "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Original random parameters/levels, atomic smaller-output destinations, one-shot-context variants, max-block settings, sequence producers, and overlapping in-place buffers remain unported.",
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
           ]
@@ -4911,9 +4912,10 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Tail-driven prefix reservation, zero-inclusive input/output sizing, context reset, checked progress, and bounded malformed-input handling are implemented. Stable-output mode is only consumed as a selector, not implemented; explicit 65,536-byte input/1 MiB output/8 MiB window caps bound this adapter.",
+      "reason": "Tail-driven prefix reservation, zero-inclusive input/output sizing, context reset, checked progress and malformed-input handling run. The complete independently pinned rolling corpus passed safe and all-feature release adapters: 12,462 files/80,339,212 bytes, no skips. Stable-output mode remains absent. Normal inputs use 65,536-byte/1 MiB-output/8 MiB-window caps; external replay uses 2 MiB-input/10 MiB-output/128 MiB-window caps.",
       "rust_tests": [
-        "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics"
+        "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics",
+        "tests/upstream_streaming.rs#external_official_streaming_corpus"
       ],
       "line_count": 119,
       "cases": [
@@ -4924,9 +4926,10 @@
           "line_end": 119,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Tail-driven prefix reservation, zero-inclusive input/output sizing, context reset, checked progress, and bounded malformed-input handling are implemented. Stable-output mode is only consumed as a selector, not implemented; explicit 65,536-byte input/1 MiB output/8 MiB window caps bound this adapter.",
+          "reason": "Tail-driven prefix reservation, zero-inclusive input/output sizing, context reset, checked progress and malformed-input handling run. The complete independently pinned rolling corpus passed safe and all-feature release adapters: 12,462 files/80,339,212 bytes, no skips. Stable-output mode remains absent. Normal inputs use 65,536-byte/1 MiB-output/8 MiB-window caps; external replay uses 2 MiB-input/10 MiB-output/128 MiB-window caps.",
           "rust_tests": [
-            "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics"
+            "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics",
+            "tests/upstream_streaming.rs#external_official_streaming_corpus"
           ]
         }
       ]
@@ -4938,11 +4941,12 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Supported streaming directives, repeated Flush/Finish, unconsumed-input retention, context reset, concatenated-frame comparison and 128 seeded schedules are implemented. Full tail-driven random parameter selection, external sequence producers, max-block controls, and in-place decode remain absent.",
+      "reason": "Source-derived prefix reservation, input/output selectors, repeated Continue/Flush/Finish, unconsumed-input retention, reset, and exact concatenated output run with supported default parameters. Both safe and all-feature release adapters replayed all 24,223 pinned rolling inputs (469,442,481 bytes) with no skips. FUZZ_setRandomParameters consumption, external sequence producers, max-block controls and in-place decode remain absent; later parameter-tail positions therefore differ from a full C target execution. External input cap is 2 MiB.",
       "rust_tests": [
         "tests/upstream_streaming.rs#mixed_directive_schedules_produce_exact_concatenated_frames",
         "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
-        "tests/upstream_streaming.rs#finish_resubmits_unconsumed_source_until_every_output_byte_is_drained"
+        "tests/upstream_streaming.rs#finish_resubmits_unconsumed_source_until_every_output_byte_is_drained",
+        "tests/upstream_streaming.rs#external_official_streaming_corpus"
       ],
       "line_count": 218,
       "cases": [
@@ -4953,11 +4957,12 @@
           "line_end": 218,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Supported streaming directives, repeated Flush/Finish, unconsumed-input retention, context reset, concatenated-frame comparison and 128 seeded schedules are implemented. Full tail-driven random parameter selection, external sequence producers, max-block controls, and in-place decode remain absent.",
+          "reason": "Source-derived prefix reservation, input/output selectors, repeated Continue/Flush/Finish, unconsumed-input retention, reset, and exact concatenated output run with supported default parameters. Both safe and all-feature release adapters replayed all 24,223 pinned rolling inputs (469,442,481 bytes) with no skips. FUZZ_setRandomParameters consumption, external sequence producers, max-block controls and in-place decode remain absent; later parameter-tail positions therefore differ from a full C target execution. External input cap is 2 MiB.",
           "rust_tests": [
             "tests/upstream_streaming.rs#mixed_directive_schedules_produce_exact_concatenated_frames",
             "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
-            "tests/upstream_streaming.rs#finish_resubmits_unconsumed_source_until_every_output_byte_is_drained"
+            "tests/upstream_streaming.rs#finish_resubmits_unconsumed_source_until_every_output_byte_is_drained",
+            "tests/upstream_streaming.rs#external_official_streaming_corpus"
           ]
         }
       ]
@@ -5022,9 +5027,11 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Named one-shot/frame regressions and deterministic fuzzer corpora run in Rust; contexts, dictionaries, parameters, streaming, long tests, and threading remain unimplemented.",
+      "reason": "Named one-shot/frame regressions, deterministic fuzzer corpora, empty streaming Flush/Finish, and supported-strategy encoder reset determinism run in Rust. Dictionary/advanced-parameter, remaining one-shot context variants, long tests, and threading assertions remain unimplemented or unported.",
       "rust_tests": [
-        "tests/upstream_fuzzer.rs"
+        "tests/upstream_fuzzer.rs",
+        "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame",
+        "tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically"
       ],
       "line_count": 5147,
       "cases": [
@@ -5733,7 +5740,7 @@
           "line_end": 1636,
           "label": "test%3d : reuse CCtx with expanding block size :",
           "status": "blocked",
-          "reason": "Reusable encoder context/reset state and associated parameter controls absent.",
+          "reason": "Bounded streaming encoder/reset APIs exist, but this group's parameterized context assertions are unported and its original level/advanced-parameter controls remain absent.",
           "rust_tests": []
         },
         {
@@ -9933,7 +9940,7 @@
       "suite": "compression_regression",
       "role": "test_suite",
       "status": "partial",
-      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. Original C context reuse, compression levels/strategies, dictionaries, streams, CLI/tar variants, and results.csv matrix remain absent.",
+      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. The regression adapter has not yet implemented the original C-context method matrix, compression levels/strategies, dictionaries, streaming method variants, CLI/tar variants, or results.csv baselines.",
       "rust_tests": [
         "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
       ],
@@ -9971,7 +9978,7 @@
       "suite": "compression_regression",
       "role": "test_suite",
       "status": "partial",
-      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. Original C context reuse, compression levels/strategies, dictionaries, streams, CLI/tar variants, and results.csv matrix remain absent.",
+      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. The regression adapter has not yet implemented the original C-context method matrix, compression levels/strategies, dictionaries, streaming method variants, CLI/tar variants, or results.csv baselines.",
       "rust_tests": [
         "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
       ],
@@ -10033,7 +10040,7 @@
       "suite": "compression_regression",
       "role": "test_suite",
       "status": "partial",
-      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. Original C context reuse, compression levels/strategies, dictionaries, streams, CLI/tar variants, and results.csv matrix remain absent.",
+      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. The regression adapter has not yet implemented the original C-context method matrix, compression levels/strategies, dictionaries, streaming method variants, CLI/tar variants, or results.csv baselines.",
       "rust_tests": [
         "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
       ],
@@ -10072,7 +10079,7 @@
           "line_end": 241,
           "label": "cctxParamRoundTripTest",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "This named group has not been ported to the available bounded streaming contexts; any original raw-block, dictionary, or C-specific context contract remains unimplemented.",
           "rust_tests": []
         }
       ]
