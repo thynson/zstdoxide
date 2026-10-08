@@ -2,7 +2,7 @@
 
 ## Module 5: official v1.5.7 test migration
 
-- [ ] Inventory every official test file, entry point, asset, and API dependency.
+- [x] Inventory every official test file, entry point, asset, and API dependency.
 - [x] Import all official golden assets with exact hashes and provenance.
 - [x] Port golden decoding, error rejection, and adapted compression tests.
 - [x] Expose validated FSE count metadata for exact upstream parser assertions.
