@@ -4,6 +4,8 @@
 use alloc::vec::Vec;
 
 use crate::fse::{FseTable, read_normalized_counts};
+#[cfg(feature = "std")]
+use crate::huffman::decode_streams;
 use crate::huffman::{HuffmanTable, decode_literals};
 
 struct Records<'a> {
@@ -183,4 +185,74 @@ fn arbitrary_entropy_inputs_keep_outputs_bounded() {
         }
     }
     assert!(table_successes > 900);
+}
+
+/// File replay of `huf_decompress.c`, including both CPU-flag consumption paths.
+/// The decoder's Zstandard table-log cap remains 11; upstream's standalone
+/// entropy API can additionally accept log 12 and has X1/X2/CPU variants.
+#[cfg(feature = "std")]
+#[test]
+#[ignore = "requires pinned extracted huf_decompress corpus in ZSTDOXIDE_HUF_CORPUS"]
+fn replays_official_huffman_decoder_corpus() {
+    use std::fs;
+    use std::path::PathBuf;
+
+    // FUZZ_dataProducer_uint32Range consumes bytes from the input tail.
+    fn parameter(data: &[u8], remaining: &mut usize, minimum: u32, maximum: u32) -> u32 {
+        let range = maximum - minimum;
+        let mut rolling = range;
+        let mut result = 0_u32;
+        while rolling != 0 && *remaining != 0 {
+            *remaining -= 1;
+            result = (result << 8) | u32::from(data[*remaining]);
+            rolling >>= 8;
+        }
+        minimum + result % (range + 1)
+    }
+
+    let directory =
+        PathBuf::from(std::env::var_os("ZSTDOXIDE_HUF_CORPUS").expect("set ZSTDOXIDE_HUF_CORPUS"));
+    let mut paths = Vec::new();
+    for entry in fs::read_dir(&directory).unwrap() {
+        assert!(paths.len() < 65536, "corpus file-count limit");
+        paths.push(entry.unwrap().path());
+    }
+    paths.sort();
+    assert!(!paths.is_empty(), "empty corpus");
+    let mut parsed = 0;
+    for path in &paths {
+        std::eprintln!("huf_decompress: {}", path.display());
+        let metadata = fs::symlink_metadata(path).unwrap();
+        assert!(metadata.is_file(), "corpus must contain regular files only");
+        assert!(metadata.len() <= 1024 * 1024, "corpus input limit");
+        let data = fs::read(path).unwrap();
+        assert!(data.len() <= 1024 * 1024, "corpus input limit");
+        for bmi2 in [false, true] {
+            let mut remaining = data.len();
+            let four_streams = parameter(&data, &mut remaining, 0, 1) != 0;
+            let _symbol_variant = parameter(&data, &mut remaining, 0, 1);
+            if bmi2 {
+                let _flag = parameter(&data, &mut remaining, 0, 1);
+            }
+            for _ in 0..5 {
+                let _flag = parameter(&data, &mut remaining, 0, 1);
+            }
+            let maximum =
+                parameter(&data, &mut remaining, 0, (8 * data.len() + 500) as u32) as usize;
+            let _table_log = parameter(&data, &mut remaining, 1, 12);
+            let payload = &data[..remaining];
+            if let Ok((table, _consumed)) = HuffmanTable::read(payload) {
+                parsed += 1;
+                // The upstream target passes the whole input, including
+                // table bytes, to the usingDTable decoder. Preserve that.
+                if let Ok(output) = decode_streams(&table, payload, maximum, four_streams) {
+                    assert_eq!(output.len(), maximum);
+                }
+            }
+        }
+    }
+    std::eprintln!(
+        "replayed {} Huffman inputs with both flag-consumption paths; {parsed} tables parsed",
+        paths.len()
+    );
 }

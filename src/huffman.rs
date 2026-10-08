@@ -263,7 +263,7 @@ fn validate_literals_size(regenerated: usize, limit: usize) -> Result<()> {
 }
 
 /// Decode independent quarter-sized streams using checked jump-table ranges.
-fn decode_streams(
+pub(crate) fn decode_streams(
     table: &HuffmanTable,
     input: &[u8],
     output_len: usize,

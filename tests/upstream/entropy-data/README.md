@@ -29,3 +29,26 @@ sources. Run `python3 scripts/generate_upstream_entropy.py /path/to/zstd`
 after building that checkout's `lib/libzstd.a`; append `--check` to reproduce
 and verify bytes without changing files. Derived fixture data uses the BSD
 license option recorded in root `LICENSE.zstd`.
+
+## External Huffman input replay
+
+The opt-in `replays_official_huffman_decoder_corpus` test consumes parameters
+from the input tail in the order used by `huf_decompress.c`. It exercises both
+CPU-flag byte-consumption paths, then decodes the original remaining input as
+one or four streams. It deliberately preserves the upstream target's use of
+the whole remaining payload, including table bytes, as the stream input.
+Input files are limited to 1 MiB and output to `8 * input_size + 500` bytes.
+Rust still uses its own table representation and Zstandard table-log cap 11;
+upstream's independent X1/X2 engines, CPU flags, caller workspace, and maximum
+table-log setting are not implemented by this adaptation.
+
+```sh
+ZSTDOXIDE_HUF_CORPUS=/external/cache/extracted/huf_decompress \
+    cargo test --release --all-features --lib \
+    replays_official_huffman_decoder_corpus -- --ignored --nocapture
+```
+
+All 605 files in the separately hashed 2026-10-08 rolling corpus snapshot
+passed with both parameter-consumption paths; 604 paths produced valid tables.
+That snapshot is not part of the pinned v1.5.7 Git tree. The corpus fetcher and
+`tests/upstream/external-corpora.json` preserve its separate provenance.
