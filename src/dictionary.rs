@@ -138,7 +138,23 @@ impl Dictionary {
     /// Invalid history positions are corrupt compressed data, independently of
     /// whether the configured dictionary itself is formatted or raw.
     pub fn content_byte(&self, index: usize) -> Result<u8> {
-        self.content().get(index).copied().ok_or(Error::CorruptData)
+        let content = self.content();
+        if index >= content.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-dictionary"))]
+        let byte = content[index];
+        #[cfg(feature = "unsafe-dictionary")]
+        // SAFETY: the runtime check above proves index < content.len(), so the
+        // read is inside this initialized slice. Construction proves that the
+        // content range lies inside the owned Vec, and neither bytes nor the
+        // start index can change after publication. The shared self borrow
+        // keeps that allocation alive and forbids mutation throughout this
+        // read, including when ownership is shared through Arc or Rc. Vec's
+        // u8 storage is properly aligned; copying this byte neither exposes a
+        // pointer/reference nor creates mutable aliases or moves owned data.
+        let byte = unsafe { *content.get_unchecked(index) };
+        Ok(byte)
     }
 
     pub(crate) fn entropy(&self) -> Option<&DictionaryEntropy> {

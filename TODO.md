@@ -24,7 +24,7 @@ one-shot adaptations do not complete the upstream test migration.
 
 - [x] Record dictionary ownership, entropy initialization, lifetime boundaries, and API contracts.
 - [x] Parse raw/auto/formatted dictionaries and validate IDs, table limits, and repeat offsets.
-- [ ] Add a separately gated unsafe dictionary-content accessor with complete proofs.
+- [x] Add a separately gated unsafe dictionary-content accessor with complete proofs.
 - [x] Generate pinned raw-dictionary boundary fixtures with independent and C oracles.
 - [ ] Generate prepared dictionary, prefix, and entropy-reuse interoperability fixtures.
 - [x] Extend bounded ring history with immutable absolute reads and deferred commits.

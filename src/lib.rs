@@ -21,7 +21,8 @@
         feature = "unsafe-ring-history",
         feature = "unsafe-fse",
         feature = "unsafe-huffman",
-        feature = "unsafe-match-table"
+        feature = "unsafe-match-table",
+        feature = "unsafe-dictionary"
     )),
     forbid(unsafe_code)
 )]
