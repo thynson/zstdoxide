@@ -4073,10 +4073,11 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Official seed-fixed frame/header generation is replayed through Rust with exact original outputs, plus a configurable fresh generator run. Streaming, dictionary, raw-block, and magicless APIs remain absent.",
+      "reason": "Official seed-fixed frame/header generation is replayed through one-shot and bounded streaming Rust APIs with exact outputs, plus a configurable fresh one-shot generator run. Dictionary, raw-block, and magicless modes remain absent.",
       "rust_tests": [
         "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
-        "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run"
+        "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run",
+        "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
       ],
       "line_count": 1998,
       "cases": [
@@ -4099,9 +4100,11 @@
           "line_start": 1388,
           "line_end": 1426,
           "label": "testDecodeStreaming",
-          "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "All 96 official dictionary-free generated frames decode through bounded borrowed input/output slices with exact original output and exact frame completion under two schedules; the original streaming decoder comparison contract is preserved.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
+          ]
         },
         {
           "id": "tests/decodecorpus.c:1427",
@@ -4140,9 +4143,10 @@
           "line_end": 1572,
           "label": "runFrameTest",
           "status": "partial",
-          "reason": "The generated dictionary-free one-shot frame branch runs against Rust; streaming and dictionary branches remain absent.",
+          "reason": "Generated dictionary-free frames run through both one-shot and bounded streaming Rust decoders; dictionary, raw-block and magicless branches remain absent.",
           "rust_tests": [
-            "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte"
+            "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
+            "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
           ]
         },
         {
@@ -4152,10 +4156,11 @@
           "line_end": 1998,
           "label": "runTestMode",
           "status": "partial",
-          "reason": "Bounded seed-fixed and configurable fresh generated frame campaigns run; timed, raw-block, streaming, and dictionary driver modes are not implemented.",
+          "reason": "Bounded seed-fixed one-shot/streaming and configurable fresh one-shot frame campaigns run; timed campaigns, fresh streaming oracle generation, raw-block and dictionary modes remain absent.",
           "rust_tests": [
             "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
-            "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run"
+            "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run",
+            "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
           ]
         }
       ]
@@ -4905,9 +4910,11 @@
       "sha256": "482017deccb6afc608529f95e0177d5d8315258ef22c465ae388baa22d53c180",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "blocked",
-      "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Tail-driven prefix reservation, zero-inclusive input/output sizing, context reset, checked progress, and bounded malformed-input handling are implemented. Stable-output mode is only consumed as a selector, not implemented; explicit 65,536-byte input/1 MiB output/8 MiB window caps bound this adapter.",
+      "rust_tests": [
+        "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics"
+      ],
       "line_count": 119,
       "cases": [
         {
@@ -4916,9 +4923,11 @@
           "line_start": 68,
           "line_end": 119,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Tail-driven prefix reservation, zero-inclusive input/output sizing, context reset, checked progress, and bounded malformed-input handling are implemented. Stable-output mode is only consumed as a selector, not implemented; explicit 65,536-byte input/1 MiB output/8 MiB window caps bound this adapter.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics"
+          ]
         }
       ]
     },
@@ -4928,9 +4937,13 @@
       "sha256": "1e5f96469bd65d8df84c486366975331e3f047051b9b337160b76e0973aa21f8",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "blocked",
-      "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Supported streaming directives, repeated Flush/Finish, unconsumed-input retention, context reset, concatenated-frame comparison and 128 seeded schedules are implemented. Full tail-driven random parameter selection, external sequence producers, max-block controls, and in-place decode remain absent.",
+      "rust_tests": [
+        "tests/upstream_streaming.rs#mixed_directive_schedules_produce_exact_concatenated_frames",
+        "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
+        "tests/upstream_streaming.rs#finish_resubmits_unconsumed_source_until_every_output_byte_is_drained"
+      ],
       "line_count": 218,
       "cases": [
         {
@@ -4939,9 +4952,13 @@
           "line_start": 156,
           "line_end": 218,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Supported streaming directives, repeated Flush/Finish, unconsumed-input retention, context reset, concatenated-frame comparison and 128 seeded schedules are implemented. Full tail-driven random parameter selection, external sequence producers, max-block controls, and in-place decode remain absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#mixed_directive_schedules_produce_exact_concatenated_frames",
+            "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
+            "tests/upstream_streaming.rs#finish_resubmits_unconsumed_source_until_every_output_byte_is_drained"
+          ]
         }
       ]
     },
@@ -5703,9 +5720,10 @@
           "line_end": 1619,
           "label": "test%3d : decompress empty frame into NULL :",
           "status": "partial",
-          "reason": "Known/unknown-size empty one-shot frames; streaming subcase absent.",
+          "reason": "Known/unknown-size empty one-shot frames and the unknown-size empty Flush/Finish streaming branch pass; the original level-selection API is not reproduced.",
           "rust_tests": [
-            "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames"
+            "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames",
+            "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame"
           ]
         },
         {
@@ -5724,9 +5742,11 @@
           "line_start": 1637,
           "line_end": 1680,
           "label": "test%3d : re-using a CCtx should compress the same :",
-          "status": "blocked",
-          "reason": "Reusable encoder context/reset state and associated parameter controls absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The exact 20 unique bytes plus repeated first 10 source is reused with deterministic identical streaming schedules; the original levels 1..19 and all C one-shot/context/stream entry points remain absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically"
+          ]
         },
         {
           "id": "tests/fuzzer.c:1681",
@@ -10123,9 +10143,19 @@
       "sha256": "ad409d3017fab12a889320d2de5354f23e0b8a998f44ad37f3b50f14d0e6682a",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Bounded Decoder/Encoder contexts now cover ordinary fragmented progress, raw/RLE output, checksums, flush/finish, pledge errors, reset, two exact regressions, and deterministic campaigns. Dictionaries, stable-buffer modes, allocation-size C APIs, advanced parameters, sequence producers, workers, and magicless modes remain absent.",
+      "rust_tests": [
+        "tests/upstream_streaming.rs#exact_small_sequence_sections_survive_every_chunk_boundary",
+        "tests/upstream_streaming.rs#exact_history_overwrite_regression_survives_output_fragmentation",
+        "tests/upstream_streaming.rs#raw_block_outputs_immediately_under_ten_byte_backpressure",
+        "tests/upstream_streaming.rs#empty_encoder_accepts_zero_capacity_continue_and_finish",
+        "tests/upstream_streaming.rs#encoder_enforces_pledges_even_when_content_size_is_not_written",
+        "tests/upstream_streaming.rs#flush_exposes_all_source_to_a_live_decoder_before_finish",
+        "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
+        "tests/upstream_window.rs#near_window_distances_cover_every_small_window_and_tiny_output",
+        "tests/upstream_window.rs#near_window_distances_cover_the_complete_large_window_sweep"
+      ],
       "line_count": 3467,
       "cases": [
         {
@@ -10134,9 +10164,11 @@
           "line_start": 263,
           "line_end": 304,
           "label": "basicUnitTests",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Only the explicitly mapped named groups have Rust tests; this large driver also contains dictionary, stable-buffer, parameter, sequence, worker, and workspace groups.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:305",
@@ -10144,9 +10176,11 @@
           "line_start": 305,
           "line_end": 324,
           "label": "test%3i : compress %u bytes :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Ordinary chunked compression/finish and exact round trips are tested using the supported strategy; the original level-1 setup and full original RDG workload are not reproduced.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:325",
@@ -10155,7 +10189,7 @@
           "line_end": 344,
           "label": "test%3i : skipframe + compress %u bytes :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10165,7 +10199,7 @@
           "line_end": 354,
           "label": "test%3i : estimate CStream size :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group asserts upstream context-size estimators or C object allocation accounting; retained_capacity alone does not implement these contracts.",
           "rust_tests": []
         },
         {
@@ -10175,7 +10209,7 @@
           "line_end": 367,
           "label": "test%3i : estimate CStream size using CCtxParams :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group asserts upstream context-size estimators or C object allocation accounting; retained_capacity alone does not implement these contracts.",
           "rust_tests": []
         },
         {
@@ -10185,7 +10219,7 @@
           "line_end": 374,
           "label": "test%3i : check actual CStream size :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group asserts upstream context-size estimators or C object allocation accounting; retained_capacity alone does not implement these contracts.",
           "rust_tests": []
         },
         {
@@ -10195,7 +10229,7 @@
           "line_end": 384,
           "label": "test%3i : use bad compression parameters with ZSTD_initCStream_advanced :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10204,9 +10238,11 @@
           "line_start": 385,
           "line_end": 401,
           "label": "test%3i : decompress skippable frame :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Skippable frame boundaries and zero output are tested; the original surrounding dictionary-backed context setup is not reproduced.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#empty_and_skippable_frames_finish_with_zero_output"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:402",
@@ -10214,9 +10250,11 @@
           "line_start": 402,
           "line_end": 411,
           "label": "test%3i : decompress %u bytes :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Ordinary frame completion, exact output, and compressed byte consumption are checked across official fixtures; this original group uses a dictionary-backed frame.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:412",
@@ -10224,9 +10262,11 @@
           "line_start": 412,
           "line_end": 420,
           "label": "test%3i : decompress again without init (reuse previous settings):",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "A Decoder accepts concatenated ordinary/skippable frames without reset; original dictionary settings reuse remains absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#concatenated_frames_report_each_boundary_before_the_next_magic"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:421",
@@ -10234,9 +10274,11 @@
           "line_start": 421,
           "line_end": 428,
           "label": "test%3i : check decompressed result :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Exact output comparisons run for ordinary official frames; the original dictionary-backed output cannot yet be tested.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:429",
@@ -10244,9 +10286,11 @@
           "line_start": 429,
           "line_end": 437,
           "label": "test%3i : early decompression error if first bytes are incorrect :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The original impossible three-zero-byte prefix is rejected before a full magic value is present; Rust error poisoning and reset recovery are additionally checked.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#invalid_magic_prefix_errors_early_and_requires_reset"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:438",
@@ -10255,7 +10299,7 @@
           "line_end": 450,
           "label": "test%3i : estimate DStream size :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group asserts upstream context-size estimators or C object allocation accounting; retained_capacity alone does not implement these contracts.",
           "rust_tests": []
         },
         {
@@ -10265,7 +10309,7 @@
           "line_end": 457,
           "label": "test%3i : check actual DStream size :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group asserts upstream context-size estimators or C object allocation accounting; retained_capacity alone does not implement these contracts.",
           "rust_tests": []
         },
         {
@@ -10274,9 +10318,12 @@
           "line_start": 458,
           "line_end": 494,
           "label": "test%3i : decompress byte-by-byte :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Input/output fragmentation including zero capacities, skippable frames, and exact output are tested; the original dictionary-backed normal frame remains unavailable.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#concatenated_frames_report_each_boundary_before_the_next_magic",
+            "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:495",
@@ -10284,9 +10331,11 @@
           "line_start": 495,
           "line_end": 502,
           "label": "test%3i : check decompressed result :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Exact decoded content is checked under bytewise schedules; the original dictionary-backed fixture is not used.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:503",
@@ -10294,9 +10343,11 @@
           "line_start": 503,
           "line_end": 525,
           "label": "test%3i : generate error when ZSTD_decompressStream() doesn't progress :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Rust reports explicit NeedOutput and can be resumed after zero-capacity calls; it intentionally does not reproduce the C error-after-100-stalls policy.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#rle_output_drains_without_more_payload_input"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:526",
@@ -10304,9 +10355,11 @@
           "line_start": 526,
           "line_end": 553,
           "label": "test%3i : NULL output and NULL input :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Empty Continue/Finish with no output is accepted, Finish retries drain the entire frame, and the resulting empty frame decodes with zero output capacity.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#empty_encoder_accepts_zero_capacity_continue_and_finish"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:554",
@@ -10314,9 +10367,11 @@
           "line_start": 554,
           "line_end": 583,
           "label": "test%3i : NULL output buffer with non-NULL input :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The original two-byte source is fully accepted by Continue with zero output; Finish can be retried, and nonempty decoder input with zero output is legal.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#encoder_accepts_two_source_bytes_before_any_output_is_available"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:584",
@@ -10324,9 +10379,11 @@
           "line_start": 584,
           "line_end": 606,
           "label": "test%3i : compress_srcSize %u bytes :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Correct pledged size is emitted independently of checksum/window settings and chunk schedules; the original compression-level selection/full RDG workload is not reproduced.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#encoder_header_reports_pledge_window_and_checksum_options"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:607",
@@ -10334,9 +10391,11 @@
           "line_start": 607,
           "line_end": 624,
           "label": "test%3i : too large srcSize : %u bytes :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Insufficient source for a pledge errors at Finish; the original level/full RDG setup is not reproduced.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#encoder_enforces_pledges_even_when_content_size_is_not_written"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:625",
@@ -10344,9 +10403,11 @@
           "line_start": 625,
           "line_end": 640,
           "label": "test%3i : too small srcSize : %u bytes :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Excess source for a pledge errors on Continue; the original level/full RDG setup is not reproduced.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#encoder_enforces_pledges_even_when_content_size_is_not_written"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:641",
@@ -10354,9 +10415,11 @@
           "line_start": 641,
           "line_end": 656,
           "label": "test%3i : wrong srcSize !contentSizeFlag : %u bytes :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Pledge violations are enforced with content-size emission disabled as well as enabled; the original level/full RDG workload is not reproduced.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#encoder_enforces_pledges_even_when_content_size_is_not_written"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:657",
@@ -10364,9 +10427,11 @@
           "line_start": 657,
           "line_end": 701,
           "label": "test%3i : context reuse :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The original 513/1025-byte frame reuse sizes, pledge clearing, supported option retention and reconfiguration are tested; level-19 parameter recalculation is absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#reset_clears_pledge_and_frame_state_but_retains_supported_options"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:702",
@@ -10374,9 +10439,11 @@
           "line_start": 702,
           "line_end": 724,
           "label": "test%3i : ZSTD_decompressStream() single pass on empty frame :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Empty frames finish in one call with zero output; stable-output mode and the original no-allocation assertion remain absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#empty_and_skippable_frames_finish_with_zero_output"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:725",
@@ -10385,7 +10452,7 @@
           "line_end": 797,
           "label": "test%3i : maxBlockSize = 2KB :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10395,7 +10462,7 @@
           "line_end": 810,
           "label": "test%3i : ZSTD_decompressStream() single pass :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10405,7 +10472,7 @@
           "line_end": 824,
           "label": "test%3i : ZSTD_decompressStream() stable out buffer :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10415,7 +10482,7 @@
           "line_end": 837,
           "label": "test%3i : ZSTD_decompressStream() stable out buffer too small :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10425,7 +10492,7 @@
           "line_end": 853,
           "label": "test%3i : ZSTD_decompressStream() stable out buffer modified :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10434,9 +10501,11 @@
           "line_start": 854,
           "line_end": 883,
           "label": "test%3i : ZSTD_decompressStream() buffered output :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Ordinary buffered decoding with tiny input/output chunks is tested; stable-output mode switching and C context allocation-size comparison remain absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:884",
@@ -10445,7 +10514,7 @@
           "line_end": 914,
           "label": "test%3i : ZSTD_compress2() uses stable input and output :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10455,7 +10524,7 @@
           "line_end": 931,
           "label": "test%3i : ZSTD_compress2() doesn't modify user parameters :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10465,7 +10534,7 @@
           "line_end": 941,
           "label": "test%3i : ZSTD_compressStream2() with ZSTD_c_stableInBuffer and ZSTD_c_stableOutBuffer :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10475,7 +10544,7 @@
           "line_end": 947,
           "label": "test%3i : ZSTD_compressStream2() ZSTD_c_stableInBuffer and ZSTD_c_stableOutBuffer allocated size :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10485,7 +10554,7 @@
           "line_end": 963,
           "label": "test%3i : ZSTD_compressStream2() with ZSTD_c_stableInBuffer only :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10495,7 +10564,7 @@
           "line_end": 977,
           "label": "test%3i : ZSTD_compressStream2() ZSTD_c_stableInBuffer modify buffer :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10504,9 +10573,11 @@
           "line_start": 978,
           "line_end": 1007,
           "label": "test%3i : ZSTD_c_stableInBuffer compatibility with compressStream, flushStream and endStream :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Continue/Flush/Continue/Finish preserves original source ranges and provides all pre-Flush plaintext to a live decoder; stable-input mode and the legacy C entry points are absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#flush_exposes_all_source_to_a_live_decoder_before_finish"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1008",
@@ -10514,9 +10585,11 @@
           "line_start": 1008,
           "line_end": 1036,
           "label": "test%3i : ZSTD_c_stableInBuffer compatibility with compressStream2, using different end directives :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Original source ranges 18..100,100..200,200..518 and directive order are preserved; stable-input pointer/position contracts remain absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#flush_exposes_all_source_to_a_live_decoder_before_finish"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1037",
@@ -10525,7 +10598,7 @@
           "line_end": 1045,
           "label": "test%3i : ZSTD_compressStream2() with ZSTD_c_stableInBuffer: context size :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10535,7 +10608,7 @@
           "line_end": 1060,
           "label": "test%3i : ZSTD_compressStream2() with ZSTD_c_stableOutBuffer only :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10545,7 +10618,7 @@
           "line_end": 1071,
           "label": "test%3i : ZSTD_compressStream2() ZSTD_c_stableOutBuffer modify buffer :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10555,7 +10628,7 @@
           "line_end": 1083,
           "label": "test%3i : ZSTD_compressStream2() with ZSTD_c_stableOutBuffer: context size :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
           "rust_tests": []
         },
         {
@@ -10565,7 +10638,7 @@
           "line_end": 1106,
           "label": "test%3i : digested dictionary :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10575,7 +10648,7 @@
           "line_end": 1112,
           "label": "test%3i : check CStream size :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group asserts upstream context-size estimators or C object allocation accounting; retained_capacity alone does not implement these contracts.",
           "rust_tests": []
         },
         {
@@ -10585,7 +10658,7 @@
           "line_end": 1119,
           "label": "test%3i : check Dictionary ID :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10595,7 +10668,7 @@
           "line_end": 1138,
           "label": "test%3i : decompress %u bytes with digested dictionary :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10604,9 +10677,11 @@
           "line_start": 1139,
           "line_end": 1152,
           "label": "test%3i : maxWindowSize < frame requirement :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "A frame above the window limit is rejected and explicit option reset recovers decoding; original dictionary setup and generic C parameter-reset API remain absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#window_limit_rejection_and_reconfiguration_are_explicit"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1153",
@@ -10615,7 +10690,7 @@
           "line_end": 1197,
           "label": "test%3i : dictionary source size and level :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10625,7 +10700,7 @@
           "line_end": 1239,
           "label": "test%3i : ZSTD_decompressStream() with dictionary :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10635,7 +10710,7 @@
           "line_end": 1268,
           "label": "test%3i : ZSTD_resetDStream() with dictionary :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10645,7 +10720,7 @@
           "line_end": 1298,
           "label": "test%3i : ZSTD_decompressStream() with ddict :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10655,7 +10730,7 @@
           "line_end": 1319,
           "label": "test%3i : ZSTD_decompressDCtx() with prefix :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10665,7 +10740,7 @@
           "line_end": 1343,
           "label": "test%3i : ZSTD_initDStream*() with dictionary :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10675,7 +10750,7 @@
           "line_end": 1364,
           "label": "test%3i : ZSTD_initCStream_usingCDict_advanced with masked dictID :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10685,7 +10760,7 @@
           "line_end": 1370,
           "label": "test%3i : try retrieving dictID from frame :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10695,7 +10770,7 @@
           "line_end": 1376,
           "label": "test%3i : decompress without dictionary :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10705,7 +10780,7 @@
           "line_end": 1389,
           "label": "test%3i : compress with ZSTD_CCtx_refPrefix :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10715,7 +10790,7 @@
           "line_end": 1402,
           "label": "test%3i : decompress with ZSTD_DCtx_refPrefix :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10725,7 +10800,7 @@
           "line_end": 1408,
           "label": "test%3i : decompress without dictionary (should fail):",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10735,7 +10810,7 @@
           "line_end": 1420,
           "label": "test%3i : compress again with ZSTD_compressStream2 :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10745,7 +10820,7 @@
           "line_end": 1425,
           "label": "test%3i : decompress without dictionary (should work):",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10755,7 +10830,7 @@
           "line_end": 1442,
           "label": "test%3i : ZSTD_initCStream_advanced with pledgedSrcSize=0 and dict :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10764,9 +10839,12 @@
           "line_start": 1443,
           "line_end": 1473,
           "label": "test%3i : pledgedSrcSize == 0 behaves properly with ZSTD_initCStream_advanced :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Some(0) emits an empty known-size frame, differs from unknown size, and rejects nonempty input; C advanced initialization and compression-level selection are not exposed.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#zero_pledge_accepts_only_an_empty_frame",
+            "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1474",
@@ -10775,7 +10853,7 @@
           "line_end": 1504,
           "label": "test%3i : compress %u bytes with multiple threads :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires multithreaded compression and worker settings, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10785,7 +10863,7 @@
           "line_end": 1530,
           "label": "test%3i : compress %u bytes with multiple threads + dictionary :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10795,7 +10873,7 @@
           "line_end": 1550,
           "label": "test%3i : decompress large frame created from multiple threads + dictionary :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10805,7 +10883,7 @@
           "line_end": 1598,
           "label": "test%3i : check dictionary FSE tables can represent every code :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10815,7 +10893,7 @@
           "line_end": 1610,
           "label": "test%3i : ZSTD_initCStream_srcSize sets requestedParams :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10825,7 +10903,7 @@
           "line_end": 1620,
           "label": "test%3i : ZSTD_initCStream_advanced sets requestedParams :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10835,7 +10913,7 @@
           "line_end": 1630,
           "label": "test%3i : ZSTD_c_srcSizeHint bounds :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10845,7 +10923,7 @@
           "line_end": 1651,
           "label": "test%3i : ZSTD_lazy compress with hashLog = 29 and searchLog = 4 :",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10854,9 +10932,12 @@
           "line_start": 1652,
           "line_end": 1709,
           "label": "test%3i : Test offset == windowSize :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Twenty oracle-generated frames preserve the original 10,000-sequence construction and FUZ_rand distance choices across every window logarithm 10..29. Official streaming decoding verified the all-zero expected outputs before import; Rust normal/tiny-output and optional large-window sweeps pass, including the full 10..29 range with safe and all-features release builds.",
+          "rust_tests": [
+            "tests/upstream_window.rs#near_window_distances_cover_every_small_window_and_tiny_output",
+            "tests/upstream_window.rs#near_window_distances_cover_the_complete_large_window_sweep"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1710",
@@ -10864,9 +10945,11 @@
           "line_start": 1710,
           "line_end": 1742,
           "label": "test%3i : wildcopy doesn't overwrite potential match data :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Exact 47-byte upstream three-block history-overwrite fixture decodes into all 1,063 oracle-verified bytes under five output fragmentation schedules.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#exact_history_overwrite_regression_survives_output_fragmentation"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1743",
@@ -10874,9 +10957,11 @@
           "line_start": 1743,
           "line_end": 1793,
           "label": "test%3i : decompress blocks with small sequences section :",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Exact 51-byte upstream frame decodes into exact 60-byte upstream output under 25 input/output schedules, preserving repeat entropy tables across tiny sequence sections.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#exact_small_sequence_sections_survive_every_chunk_boundary"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1794",
@@ -10884,9 +10969,11 @@
           "line_start": 1794,
           "line_end": 1830,
           "label": "test%3i : raw block can be streamed:",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Original 100-byte input availability/10-byte output progress contract passes for a 10,000-byte raw block; direct raw-frame construction replaces the negative-level encoder setup.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#raw_block_outputs_immediately_under_ten_byte_backpressure"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1831",
@@ -10895,7 +10982,7 @@
           "line_end": 1883,
           "label": "test%3i : dictionary + uncompressible block + reusing tables checks offset table validity:",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10905,7 +10992,7 @@
           "line_end": 1920,
           "label": "test%3i : dictionary + small blocks + reusing tables checks offset table validity:",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10915,7 +11002,7 @@
           "line_end": 2067,
           "label": "test%3i : Block-Level External Sequence Producer API:",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires external sequence production, sequence validation, or associated parameter/workspace APIs, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10925,7 +11012,7 @@
           "line_end": 2165,
           "label": "test%3i : Testing maxBlockSize PR#3418:",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10935,7 +11022,7 @@
           "line_end": 2300,
           "label": "test%3i : Testing sequence validation:",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires external sequence production, sequence validation, or associated parameter/workspace APIs, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10945,7 +11032,7 @@
           "line_end": 2359,
           "label": "test%3i : Testing large offset with small window size:",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
           "rust_tests": []
         },
         {
@@ -10955,7 +11042,7 @@
           "line_end": 2411,
           "label": "test%3i : Testing external sequence producer with static CCtx (one-shot):",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires external sequence production, sequence validation, or associated parameter/workspace APIs, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10965,7 +11052,7 @@
           "line_end": 2470,
           "label": "test%3i : Testing external sequence producer with static CCtx (streaming):",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "The original group requires external sequence production, sequence validation, or associated parameter/workspace APIs, which remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10975,7 +11062,7 @@
           "line_end": 2479,
           "label": "test%3i : Decoder should reject invalid frame header on legacy frames:",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "Legacy frame-header validation requires the legacy decoder; rejecting all legacy magic is not that implementation.",
           "rust_tests": []
         },
         {
@@ -10985,7 +11072,7 @@
           "line_end": 2578,
           "label": "test%3i : Test single-shot fallback for magicless mode:",
           "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
+          "reason": "Magicless frame encoding/decoding and its single-shot fallback remain unimplemented.",
           "rust_tests": []
         },
         {
@@ -10994,9 +11081,12 @@
           "line_start": 2579,
           "line_end": 2846,
           "label": "fuzzerTests",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "128 seeded directive/context campaigns use five deterministic content profiles, exact output/consumption, reset, mutation and truncation checks; original RDG selection, dictionaries, levels and extended timed campaign remain absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
+            "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:2847",
@@ -11004,9 +11094,11 @@
           "line_start": 2847,
           "line_end": 2916,
           "label": "fuzzerTests_newAPI",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Each of 128 supported-option schedules is repeated twice for byte-identical encoding and independently fragmented exact decoding; original opaque parameters, dictionaries, workers and algorithm choices remain absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:2917",
@@ -11014,9 +11106,11 @@
           "line_start": 2917,
           "line_end": 3467,
           "label": "***  Test %u  *** \\n",
-          "status": "blocked",
-          "reason": "Incremental input/output progress, stream reset, and reusable streaming contexts are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The supported-option subset of the enclosing new-API randomized driver is covered; its full dictionaries, opaque parameters, worker and strategy matrix is absent.",
+          "rust_tests": [
+            "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism"
+          ]
         }
       ]
     },
