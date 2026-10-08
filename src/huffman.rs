@@ -174,6 +174,136 @@ impl HuffmanTable {
     }
 }
 
+/// Decode one literals section, preserving the preceding table on failure.
+///
+/// Corresponds to upstream `ZSTD_decodeLiteralsBlock`. The returned byte count
+/// includes the literals header, tree description, jump table, and all streams.
+pub(crate) fn decode_literals(
+    input: &[u8],
+    previous: &mut Option<HuffmanTable>,
+    max_output: usize,
+) -> Result<(Vec<u8>, usize)> {
+    let first = *input.first().ok_or(Error::UnexpectedEof)?;
+    let kind = first & 3;
+    let size_format = (first >> 2) & 3;
+    if kind <= 1 {
+        let header_len = match size_format {
+            0 | 2 => 1,
+            1 => 2,
+            3 => 3,
+            _ => unreachable!(),
+        };
+        let header = read_header(input, header_len)?;
+        let regenerated = (header >> if header_len == 1 { 3 } else { 4 }) as usize;
+        validate_literals_size(regenerated, max_output)?;
+        let encoded_len = if kind == 0 { regenerated } else { 1 };
+        let encoded = input
+            .get(header_len..header_len + encoded_len)
+            .ok_or(Error::UnexpectedEof)?;
+        let mut output = Vec::new();
+        output
+            .try_reserve_exact(regenerated)
+            .map_err(|_| Error::AllocationFailed)?;
+        if kind == 0 {
+            output.extend_from_slice(encoded);
+        } else {
+            output.resize(regenerated, encoded[0]);
+        }
+        return Ok((output, header_len + encoded_len));
+    }
+
+    let (header_len, size_bits) = match size_format {
+        0 | 1 => (3usize, 10u8),
+        2 => (4, 14),
+        3 => (5, 18),
+        _ => unreachable!(),
+    };
+    let header = read_header(input, header_len)?;
+    let regenerated = ((header >> 4) & ((1u64 << size_bits) - 1)) as usize;
+    let compressed = (header >> (4 + size_bits)) as usize;
+    validate_literals_size(regenerated, max_output)?;
+    let four_streams = size_format != 0;
+    if four_streams && regenerated < 6 {
+        return Err(Error::CorruptData);
+    }
+    let encoded = input
+        .get(header_len..header_len + compressed)
+        .ok_or(Error::UnexpectedEof)?;
+    let output = if kind == 2 {
+        let (table, table_size) = HuffmanTable::read(encoded)?;
+        let streams = encoded.get(table_size..).ok_or(Error::UnexpectedEof)?;
+        let output = decode_streams(&table, streams, regenerated, four_streams)?;
+        *previous = Some(table);
+        output
+    } else {
+        let table = previous.as_ref().ok_or(Error::CorruptData)?;
+        decode_streams(table, encoded, regenerated, four_streams)?
+    };
+    Ok((output, header_len + compressed))
+}
+
+fn read_header(input: &[u8], bytes: usize) -> Result<u64> {
+    let encoded = input.get(..bytes).ok_or(Error::UnexpectedEof)?;
+    let mut header = 0u64;
+    for (index, &byte) in encoded.iter().enumerate() {
+        header |= u64::from(byte) << (index * 8);
+    }
+    Ok(header)
+}
+
+fn validate_literals_size(regenerated: usize, limit: usize) -> Result<()> {
+    // A literals section belongs to a block, whose format maximum is 128 KiB.
+    if regenerated > 128 * 1024 {
+        return Err(Error::CorruptData);
+    }
+    if regenerated > limit {
+        return Err(Error::ResourceLimit);
+    }
+    Ok(())
+}
+
+/// Decode independent quarter-sized streams using checked jump-table ranges.
+fn decode_streams(
+    table: &HuffmanTable,
+    input: &[u8],
+    output_len: usize,
+    four_streams: bool,
+) -> Result<Vec<u8>> {
+    if !four_streams {
+        return table.decode_stream(input, output_len);
+    }
+    if input.len() < 10 || output_len < 6 {
+        return Err(Error::CorruptData);
+    }
+    let segment_len = output_len.div_ceil(4);
+    let final_len = output_len
+        .checked_sub(3 * segment_len)
+        .ok_or(Error::CorruptData)?;
+    let lengths = [
+        usize::from(u16::from_le_bytes([input[0], input[1]])),
+        usize::from(u16::from_le_bytes([input[2], input[3]])),
+        usize::from(u16::from_le_bytes([input[4], input[5]])),
+    ];
+    let final_start = 6 + lengths.iter().sum::<usize>();
+    if final_start >= input.len() || lengths.contains(&0) {
+        return Err(Error::CorruptData);
+    }
+    let mut output = Vec::new();
+    output
+        .try_reserve_exact(output_len)
+        .map_err(|_| Error::AllocationFailed)?;
+    let mut start = 6;
+    for length in lengths {
+        let end = start + length;
+        let stream = input.get(start..end).ok_or(Error::CorruptData)?;
+        table.append_stream(stream, segment_len, &mut output)?;
+        start = end;
+    }
+    let stream = input.get(start..).ok_or(Error::CorruptData)?;
+    table.append_stream(stream, final_len, &mut output)?;
+    Ok(output)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -183,6 +313,15 @@ mod tests {
         let (table, consumed) = HuffmanTable::read(&[128, 0x10, 99]).unwrap();
         assert_eq!(consumed, 2);
         assert_eq!(table.decode_stream(&[0x16], 4).unwrap(), [0, 1, 1, 0]);
+    }
+
+    #[test]
+    fn fse_weights_build_a_huffman_table() {
+        // An FSE distribution [16, 16] yields explicit weights [0, 1].
+        // The implicit final weight is 1, so only byte values 1 and 2 occur.
+        let (table, consumed) = HuffmanTable::read(&[4, 0x10, 0x3f, 3, 4]).unwrap();
+        assert_eq!(consumed, 5);
+        assert_eq!(table.decode_stream(&[0x16], 4).unwrap(), [1, 2, 2, 1]);
     }
 
     #[test]
@@ -215,5 +354,126 @@ mod tests {
         assert!(table.decode_stream(&[], 0).is_err());
         assert_eq!(table.decode_stream(&[1], 0).unwrap(), []);
         assert!(table.lookup(2).is_err());
+    }
+
+    fn compressed_literals(payload: &[u8], output_len: usize, format: u8, kind: u8) -> Vec<u8> {
+        let size_bits = match format {
+            0 | 1 => 10,
+            2 => 14,
+            3 => 18,
+            _ => panic!("bad test format"),
+        };
+        let header_len = match format {
+            0 | 1 => 3,
+            2 => 4,
+            3 => 5,
+            _ => unreachable!(),
+        };
+        let header = u64::from(kind)
+            | (u64::from(format) << 2)
+            | ((output_len as u64) << 4)
+            | ((payload.len() as u64) << (4 + size_bits));
+        let mut encoded = header.to_le_bytes()[..header_len].to_vec();
+        encoded.extend_from_slice(payload);
+        encoded
+    }
+
+    #[test]
+    fn raw_and_rle_literals_cover_header_widths() {
+        for size in [0usize, 1, 31, 32, 255, 4095, 4096, 131072] {
+            let (header_len, format, shift) = if size < 32 {
+                (1, 0u32, 3)
+            } else if size < 4096 {
+                (2, 4, 4)
+            } else {
+                (3, 12, 4)
+            };
+            for kind in 0..=1 {
+                let header = ((size as u32) << shift) | format | kind;
+                let mut encoded = header.to_le_bytes()[..header_len].to_vec();
+                encoded.resize(encoded.len() + if kind == 0 { size } else { 1 }, b'x');
+                let consumed = encoded.len();
+                encoded.push(0xff); // The following sequences section is not consumed.
+                let (decoded, read) = decode_literals(&encoded, &mut None, size).unwrap();
+                assert_eq!(decoded.len(), size);
+                assert!(decoded.iter().all(|&byte| byte == b'x'));
+                assert_eq!(read, consumed);
+            }
+        }
+    }
+
+    #[test]
+    fn compressed_and_treeless_literals_reuse_table() {
+        let encoded = compressed_literals(&[128, 0x10, 0x16], 4, 0, 2);
+        let mut previous = None;
+        let (decoded, consumed) = decode_literals(&encoded, &mut previous, 4).unwrap();
+        assert_eq!(decoded, [0, 1, 1, 0]);
+        assert_eq!(consumed, encoded.len());
+        let repeated = compressed_literals(&[0x19], 4, 0, 3);
+        assert_eq!(
+            decode_literals(&repeated, &mut previous, 4).unwrap().0,
+            [1, 0, 0, 1]
+        );
+        assert!(decode_literals(&repeated, &mut None, 4).is_err());
+        decode_literals(&[0], &mut previous, 0).unwrap();
+        assert!(previous.is_some(), "raw literals must preserve the table");
+        decode_literals(&[1, 0], &mut previous, 0).unwrap();
+        assert!(previous.is_some(), "RLE literals must preserve the table");
+    }
+
+    #[test]
+    fn four_stream_literals_cover_compressed_header_widths() {
+        let payload = [128, 0x10, 1, 0, 1, 0, 1, 0, 5, 6, 4, 7];
+        for format in 1..=3 {
+            let encoded = compressed_literals(&payload, 8, format, 2);
+            let (decoded, consumed) = decode_literals(&encoded, &mut None, 8).unwrap();
+            assert_eq!(decoded, [0, 1, 1, 0, 0, 0, 1, 1]);
+            assert_eq!(consumed, encoded.len());
+        }
+        // Six literals split as 2/2/2/0; the last stream has only its marker.
+        let payload = [128, 0x10, 1, 0, 1, 0, 1, 0, 5, 6, 4, 1];
+        let encoded = compressed_literals(&payload, 6, 1, 2);
+        assert_eq!(
+            decode_literals(&encoded, &mut None, 6).unwrap().0,
+            [0, 1, 1, 0, 0, 0]
+        );
+    }
+
+    #[test]
+    fn literals_reject_limits_truncation_and_bad_jump_tables() {
+        assert_eq!(
+            decode_literals(&[0x10, 1, 2], &mut None, 1).unwrap_err(),
+            Error::ResourceLimit
+        );
+        assert!(decode_literals(&[0x10, 1], &mut None, 2).is_err());
+        assert!(decode_literals(&[1], &mut None, 0).is_err());
+        let encoded = compressed_literals(&[128, 0x10, 0x16], 4, 0, 2);
+        for end in 0..encoded.len() {
+            assert!(decode_literals(&encoded[..end], &mut None, 4).is_err());
+        }
+        for first_length in [0, 5, 255] {
+            let payload = [128, 0x10, first_length, 0, 1, 0, 1, 0, 5, 6, 4, 7];
+            let encoded = compressed_literals(&payload, 8, 1, 2);
+            assert!(decode_literals(&encoded, &mut None, 8).is_err());
+        }
+        let encoded = compressed_literals(&[128, 0x10], 5, 1, 2);
+        assert!(decode_literals(&encoded, &mut None, 5).is_err());
+        let invalid_size = ((131073u32 << 4) | 12).to_le_bytes();
+        assert_eq!(
+            decode_literals(&invalid_size[..3], &mut None, usize::MAX).unwrap_err(),
+            Error::CorruptData
+        );
+    }
+
+    #[test]
+    fn failed_compressed_literals_preserve_previous_table() {
+        let (table, _) = HuffmanTable::read(&[128, 0x10]).unwrap();
+        let mut previous = Some(table);
+        let broken = compressed_literals(&[130, 0x11, 0x20, 0], 1, 0, 2);
+        assert!(decode_literals(&broken, &mut previous, 1).is_err());
+        assert_eq!(
+            previous.unwrap().decode_stream(&[0x16], 4).unwrap(),
+            [0, 1, 1, 0]
+        );
     }
 }

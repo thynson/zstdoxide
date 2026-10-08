@@ -7,7 +7,7 @@
 - [x] Implement FSE normalized-count parsing and decoding tables with unsafe-fse.
 - [x] Implement two-state FSE decoding of Huffman weights.
 - [x] Implement Huffman table construction and safe/unsafe-huffman decoding.
-- [ ] Implement raw, RLE, compressed, and treeless literal sections.
+- [x] Implement raw, RLE, compressed, and treeless literal sections.
 
 ## Module 2: frames and sequence execution
 
