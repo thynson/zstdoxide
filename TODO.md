@@ -27,7 +27,8 @@
 
 ## Module 4: validation and performance
 
-- [ ] Add independent official zstd interoperability fixtures and tests.
+- [x] Add independent official zstd interoperability fixtures and tests.
+- [ ] Verify Rust encoder output with the official decoder.
 - [ ] Exercise malformed input, feature combinations, and no_std builds.
 - [ ] Benchmark each data structure backend and whole-codec workloads.
 - [ ] Document measured results, supported features, and remaining scope.
