@@ -8,7 +8,7 @@
 
 ## Module 1: entropy primitives
 
-- [ ] Document entropy structure invariants and module work decomposition.
+- [x] Document entropy structure invariants and module work decomposition.
 - [ ] Implement checked reverse bitstreams and the unsafe-bitstream alternative.
 - [ ] Implement FSE normalized-count parsing and decoding tables with unsafe-fse.
 - [ ] Implement two-state FSE decoding of Huffman weights.
