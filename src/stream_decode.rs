@@ -3,7 +3,7 @@
 use crate::cursor::ByteCursor;
 use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
 use crate::history::SequenceOutput;
-use crate::huffman::{HuffmanTable, decode_literals};
+use crate::huffman::{HuffmanTable, decode_literals_with_dictionary};
 use crate::ring_history::RingHistory;
 use crate::sequences::SequenceState;
 use crate::xxhash::XxHash64;
@@ -354,6 +354,12 @@ impl Decoder {
                     // in this session. Avoid reserving unreachable window bytes.
                     self.history.start_frame(window.min(budget as usize))?;
                     self.max_block = window.min(MAX_BLOCK_SIZE);
+                    self.sequences = SequenceState::with_repeat(
+                        self.active_dictionary
+                            .as_deref()
+                            .and_then(Dictionary::entropy)
+                            .map_or([1, 4, 8], |entropy| entropy.repeat),
+                    );
                     self.frame = Some(header);
                     self.checksum.reset();
                     self.filled = 0;
@@ -424,10 +430,15 @@ impl Decoder {
                     }
                     let budget =
                         (self.options.max_output_size as u64 - self.decoded_total) as usize;
-                    let (literals, offset) = decode_literals(
+                    let initial = self
+                        .active_dictionary
+                        .as_deref()
+                        .and_then(Dictionary::entropy);
+                    let (literals, offset) = decode_literals_with_dictionary(
                         &self.encoded,
                         &mut self.huffman,
                         self.max_block.min(budget),
+                        initial.map(|entropy| &entropy.huffman),
                     )?;
                     self.pending.clear();
                     self.pending
@@ -444,11 +455,12 @@ impl Decoder {
                         frame_remaining,
                         max_block: self.max_block,
                     };
-                    self.sequences.decode(
+                    self.sequences.decode_with_dictionary(
                         &self.encoded[offset..],
                         &literals,
                         &mut sink,
                         self.max_block,
+                        initial,
                     )?;
                     self.history.commit(&self.pending)?;
                     self.decoded_total += self.pending.len() as u64;

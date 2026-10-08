@@ -3,6 +3,7 @@
 use crate::bitstream::ReverseBits;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
 use crate::cursor::ByteCursor;
+use crate::dictionary::DictionaryEntropy;
 use crate::fse::FseTable;
 use crate::history::SequenceOutput;
 use crate::{Error, Result};
@@ -24,11 +25,15 @@ impl SequenceState {
     }
 
     pub(crate) fn new() -> Self {
+        Self::with_repeat([1, 4, 8])
+    }
+
+    pub(crate) fn with_repeat(repeat: [usize; 3]) -> Self {
         Self {
             literal_lengths: None,
             offsets: None,
             match_lengths: None,
-            repeat: [1, 4, 8],
+            repeat,
         }
     }
 
@@ -42,6 +47,18 @@ impl SequenceState {
         literals: &[u8],
         history: &mut O,
         max_block: usize,
+    ) -> Result<()> {
+        self.decode_with_dictionary(input, literals, history, max_block, None)
+    }
+
+    /// Use immutable prepared tables until a block overrides each distribution.
+    pub(crate) fn decode_with_dictionary<O: SequenceOutput>(
+        &mut self,
+        input: &[u8],
+        literals: &[u8],
+        history: &mut O,
+        max_block: usize,
+        initial: Option<&DictionaryEntropy>,
     ) -> Result<()> {
         let mut cursor = ByteCursor::new(input);
         let count = match cursor.byte()? {
@@ -66,32 +83,44 @@ impl SequenceState {
             &mut cursor,
             modes >> 6,
             &mut self.literal_lengths,
+            initial.map(|tables| &tables.literal_lengths),
             &LL_DEFAULT,
             6,
-            35,
-            9,
+            (35, 9),
         )?;
         read_table(
             &mut cursor,
             (modes >> 4) & 3,
             &mut self.offsets,
+            initial.map(|tables| &tables.offsets),
             &OF_DEFAULT,
             5,
-            31,
-            8,
+            (31, 8),
         )?;
         read_table(
             &mut cursor,
             (modes >> 2) & 3,
             &mut self.match_lengths,
+            initial.map(|tables| &tables.match_lengths),
             &ML_DEFAULT,
             6,
-            52,
-            9,
+            (52, 9),
         )?;
-        let ll = self.literal_lengths.as_ref().ok_or(Error::CorruptData)?;
-        let of = self.offsets.as_ref().ok_or(Error::CorruptData)?;
-        let ml = self.match_lengths.as_ref().ok_or(Error::CorruptData)?;
+        let ll = self
+            .literal_lengths
+            .as_ref()
+            .or(initial.map(|tables| &tables.literal_lengths))
+            .ok_or(Error::CorruptData)?;
+        let of = self
+            .offsets
+            .as_ref()
+            .or(initial.map(|tables| &tables.offsets))
+            .ok_or(Error::CorruptData)?;
+        let ml = self
+            .match_lengths
+            .as_ref()
+            .or(initial.map(|tables| &tables.match_lengths))
+            .ok_or(Error::CorruptData)?;
         let mut bits = ReverseBits::new(cursor.remaining())?;
         let mut literal_state = bits.read_bits(ll.table_log())? as usize;
         let mut offset_state = bits.read_bits(of.table_log())? as usize;
@@ -152,11 +181,12 @@ fn read_table(
     cursor: &mut ByteCursor<'_>,
     mode: u8,
     previous: &mut Option<FseTable>,
+    initial: Option<&FseTable>,
     default: &[i16],
     default_log: u8,
-    max_symbol: usize,
-    max_log: u8,
+    limits: (usize, u8),
 ) -> Result<()> {
+    let (max_symbol, max_log) = limits;
     let table = match mode {
         0 => FseTable::from_normalized(default, default_log)?,
         1 => {
@@ -171,7 +201,13 @@ fn read_table(
             cursor.take(consumed)?;
             table
         }
-        3 => return previous.as_ref().map(|_| ()).ok_or(Error::CorruptData),
+        3 => {
+            return previous
+                .as_ref()
+                .or(initial)
+                .map(|_| ())
+                .ok_or(Error::CorruptData);
+        }
         _ => return Err(Error::CorruptData),
     };
     *previous = Some(table);
@@ -205,6 +241,38 @@ fn resolve_offset(repeat: &mut [usize; 3], value: usize, literal_length: usize) 
 mod tests {
     use super::*;
     use crate::history::History;
+
+    #[test]
+    fn prepared_tables_and_repcodes_are_borrowed_until_each_table_is_replaced() {
+        let entropy = DictionaryEntropy {
+            huffman: crate::huffman::HuffmanTable::read(&[128, 0x10]).unwrap().0,
+            offsets: FseTable::rle(0),
+            literal_lengths: FseTable::rle(0),
+            match_lengths: FseTable::rle(0),
+            repeat: [8, 4, 1],
+        };
+        let mut state = SequenceState::with_repeat(entropy.repeat);
+        let mut output = History::new(32);
+        output.start_frame(32);
+        output.append(b"abcdefgh").unwrap();
+        state
+            .decode_with_dictionary(&[1, 0xfc, 1], b"", &mut output, 32, Some(&entropy))
+            .unwrap();
+        assert!(state.offsets.is_none());
+        assert_eq!(state.repeat, [4, 8, 1]);
+        // Replace only OF with an explicit distance-one code, retaining LL/ML.
+        state
+            .decode_with_dictionary(&[1, 0xdc, 2, 4], b"", &mut output, 32, Some(&entropy))
+            .unwrap();
+        state
+            .decode_with_dictionary(&[1, 0xfc, 4], b"", &mut output, 32, Some(&entropy))
+            .unwrap();
+        assert!(state.offsets.is_some());
+        assert!(state.literal_lengths.is_none());
+        assert!(state.match_lengths.is_none());
+        assert_eq!(entropy.repeat, [8, 4, 1]);
+        assert_eq!(output.into_bytes(), b"abcdefghefggggggg");
+    }
 
     #[test]
     fn executes_rle_symbols_and_overlapping_matches() {

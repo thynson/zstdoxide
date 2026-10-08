@@ -492,6 +492,29 @@ mod tests {
     }
 
     #[test]
+    fn prepared_literal_table_is_borrowed_without_populating_owned_frame_state() {
+        let (initial, _) = HuffmanTable::read_dictionary(&[128, 0x10]).unwrap();
+        let encoded = compressed_literals(&[0x19], 4, 0, 3);
+        let mut previous = None;
+        for _ in 0..2 {
+            assert_eq!(
+                decode_literals_with_dictionary(&encoded, &mut previous, 4, Some(&initial))
+                    .unwrap()
+                    .0,
+                [1, 0, 0, 1]
+            );
+            assert!(previous.is_none());
+        }
+        let replacement = compressed_literals(&[128, 0x10, 0x16], 4, 0, 2);
+        decode_literals_with_dictionary(&replacement, &mut previous, 4, Some(&initial)).unwrap();
+        assert!(previous.is_some());
+        assert_eq!(
+            decode_literals(&encoded, &mut previous, 4).unwrap().0,
+            [1, 0, 0, 1]
+        );
+    }
+
+    #[test]
     fn four_stream_literals_cover_compressed_header_widths() {
         let payload = [128, 0x10, 1, 0, 1, 0, 1, 0, 5, 6, 4, 7];
         for format in 1..=3 {
