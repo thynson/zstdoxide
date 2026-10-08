@@ -42,15 +42,21 @@ one-shot adaptations do not complete the upstream test migration.
 
 ## Module 6: bounded streaming and reusable contexts
 
-- [ ] Specify input/output progress, completion, reset, and error contracts.
+- [x] Specify input/output progress, completion, reset, and error contracts.
 - [ ] Analyze ring-history ownership, wraparound indices, and backend invariants.
 - [ ] Implement and test safe bounded ring history independently of frame logic.
 - [ ] Add an independently gated unsafe ring-history backend and compare it.
 - [ ] Implement incremental XXH64 state with arbitrary update boundaries.
+- [ ] Generalize sequence execution through a bounded history/output sink.
+- [ ] Add public progress/directive records and explicit invalid-state handling.
 - [ ] Parse partial frame/block headers with bounded staging and explicit phases.
+- [ ] Stream raw/RLE/skippable payloads before a complete block is available.
 - [ ] Resume block decoding with caller-provided output slices and bounded history.
 - [ ] Preserve entropy/repeat state and checksums across input/output exhaustion.
+- [ ] Extract reusable block-encoding state without changing one-shot output.
 - [ ] Add a streaming encoder with bounded block staging and finish semantics.
+- [ ] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
+- [ ] Port every applicable official streaming/context test with explicit source mapping.
 - [ ] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.
 - [ ] Measure retained memory and safe/unsafe throughput; document stream limits.
 
@@ -59,6 +65,10 @@ checklists were cleared at their module boundaries. See `docs/progress.md` and
 the small work-item commits for completed work.
 
 ## Roadmap
+
+Execution order requested on 2026-10-08: finish Module 6, migrate its related
+official tests, then implement and validate every following roadmap module in
+order. Decompose each module before implementation and preserve small commits.
 
 1. Bounded streaming and reusable contexts.
 2. Raw and prepared dictionaries, dictionary IDs, and training.

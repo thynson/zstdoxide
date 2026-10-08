@@ -61,6 +61,12 @@ positions to physical indices.
 
 ## Structures required for broader upstream parity
 
+Module 6 implements the streaming state, bounded ring history, shared sequence
+sink, reusable block encoder, and incremental checksum described in
+[streaming-design.md](streaming-design.md). These types own their allocations
+and use indices for all resumptions. Ring access has the independent
+`unsafe-ring-history` feature; scalar progress/phase/checksum state is shared.
+
 These are planned designs. Future feature names below are reservations, not
 currently supported Cargo features.
 
