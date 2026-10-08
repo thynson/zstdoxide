@@ -30,8 +30,8 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Extend bounded ring history with immutable absolute reads and deferred commits.
 - [x] Read compressed-block history from immutable prior history plus pending output.
 - [x] Initialize first-block Huffman/FSE tables and repeat offsets from prepared dictionaries.
-- [ ] Decode raw dictionary references beyond the ordinary frame window.
-- [ ] Handle dictionary-to-frame spanning matches without evicting source bytes.
+- [x] Decode raw dictionary references beyond the ordinary frame window.
+- [x] Handle dictionary-to-frame spanning matches without evicting source bytes.
 - [x] Add persistent dictionary and single-use prefix context configuration.
 - [x] Enforce nonzero frame dictionary IDs while supporting omitted IDs.
 - [ ] Add one-shot dictionary decode helpers using the same streaming core.

@@ -450,6 +450,8 @@ impl Decoder {
                         .map(|size| size.saturating_sub(self.history.frame_len()));
                     let mut sink = BlockSink {
                         history: &self.history,
+                        dictionary: self.active_dictionary.as_deref(),
+                        window: self.frame.ok_or(Error::InvalidState)?.window_size,
                         output: &mut self.pending,
                         budget,
                         frame_remaining,
@@ -597,6 +599,8 @@ impl Decoder {
 /// Vector growth is checked before mutation and never exceeds one block.
 struct BlockSink<'a> {
     history: &'a RingHistory,
+    dictionary: Option<&'a Dictionary>,
+    window: u64,
     output: &'a mut Vec<u8>,
     budget: usize,
     frame_remaining: Option<u64>,
@@ -655,17 +659,47 @@ impl SequenceOutput for BlockSink<'_> {
             .frame_len()
             .checked_add(self.output.len() as u64)
             .ok_or(Error::ResourceLimit)?;
-        if distance == 0 || distance > self.history.window_size() || distance as u64 > position {
+        if distance == 0 {
             return Err(Error::CorruptData);
         }
-        let source = position - distance as u64;
-        if length != 0 {
-            self.frame_byte(source, self.output.len())?;
-        }
-        let start = self.extend(length)?;
-        for offset in 0..length {
-            let byte = self.frame_byte(source + offset as u64, start + offset)?;
-            self.output[start + offset] = byte;
+        if distance as u64 <= position {
+            if distance as u64 > self.window {
+                return Err(Error::CorruptData);
+            }
+            let source = position - distance as u64;
+            if length != 0 {
+                self.frame_byte(source, self.output.len())?;
+            }
+            let start = self.extend(length)?;
+            for offset in 0..length {
+                let byte = self.frame_byte(source + offset as u64, start + offset)?;
+                self.output[start + offset] = byte;
+            }
+        } else {
+            // Dictionary content is a separate logical region ending at frame
+            // position zero. Its initial distances may exceed Window_Size.
+            // The format permits access while produced <= Window_Size; see
+            // docs/dictionary-design.md for the reference assertion discrepancy.
+            if position > self.window {
+                return Err(Error::CorruptData);
+            }
+            let dictionary = self.dictionary.ok_or(Error::CorruptData)?;
+            let before_frame =
+                usize::try_from(distance as u64 - position).map_err(|_| Error::CorruptData)?;
+            let source = dictionary
+                .content()
+                .len()
+                .checked_sub(before_frame)
+                .ok_or(Error::CorruptData)?;
+            let start = self.extend(length)?;
+            for offset in 0..length {
+                let byte = if offset < before_frame {
+                    dictionary.content_byte(source + offset)?
+                } else {
+                    self.frame_byte((offset - before_frame) as u64, start + offset)?
+                };
+                self.output[start + offset] = byte;
+            }
         }
         Ok(())
     }
