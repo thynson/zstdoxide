@@ -370,7 +370,7 @@ impl Decoder {
                         .and_then(|frame| frame.content_size)
                         .map(|size| size.saturating_sub(self.history.frame_len()));
                     let mut sink = BlockSink {
-                        history: &mut self.history,
+                        history: &self.history,
                         output: &mut self.pending,
                         budget,
                         frame_remaining,
@@ -382,6 +382,7 @@ impl Decoder {
                         &mut sink,
                         self.max_block,
                     )?;
+                    self.history.commit(&self.pending)?;
                     self.decoded_total += self.pending.len() as u64;
                     self.checksum.update(&self.pending);
                     self.pending_position = 0;
@@ -509,11 +510,12 @@ impl Decoder {
     }
 }
 
-/// A single compressed block stages output while committing its bytes to the
-/// ring in order. Distances can reach previous blocks or overlap this block.
+/// A compressed block reads unchanged prior history plus its own pending bytes.
+/// The complete block is committed only after sequence execution succeeds.
+/// Keeping old history unchanged also preserves dictionary-to-frame sources.
 /// Vector growth is checked before mutation and never exceeds one block.
 struct BlockSink<'a> {
-    history: &'a mut RingHistory,
+    history: &'a RingHistory,
     output: &'a mut Vec<u8>,
     budget: usize,
     frame_remaining: Option<u64>,
@@ -539,6 +541,20 @@ impl BlockSink<'_> {
         self.output.resize(end, 0);
         Ok(start)
     }
+
+    /// Read already-produced frame data without changing the previous window.
+    fn frame_byte(&self, position: u64, initialized: usize) -> Result<u8> {
+        let base = self.history.frame_len();
+        if position < base {
+            self.history.byte_at(position)
+        } else {
+            let offset = usize::try_from(position - base).map_err(|_| Error::CorruptData)?;
+            if offset >= initialized {
+                return Err(Error::CorruptData);
+            }
+            self.output.get(offset).copied().ok_or(Error::CorruptData)
+        }
+    }
 }
 
 impl SequenceOutput for BlockSink<'_> {
@@ -548,17 +564,28 @@ impl SequenceOutput for BlockSink<'_> {
 
     fn append(&mut self, bytes: &[u8]) -> Result<()> {
         let start = self.extend(bytes.len())?;
-        self.history.append(bytes, &mut self.output[start..])?;
+        self.output[start..].copy_from_slice(bytes);
         Ok(())
     }
 
     fn copy_match(&mut self, distance: usize, length: usize) -> Result<()> {
-        if distance == 0 || distance > self.history.available() {
+        let position = self
+            .history
+            .frame_len()
+            .checked_add(self.output.len() as u64)
+            .ok_or(Error::ResourceLimit)?;
+        if distance == 0 || distance > self.history.window_size() || distance as u64 > position {
             return Err(Error::CorruptData);
         }
+        let source = position - distance as u64;
+        if length != 0 {
+            self.frame_byte(source, self.output.len())?;
+        }
         let start = self.extend(length)?;
-        self.history
-            .copy_match(distance, length, &mut self.output[start..])?;
+        for offset in 0..length {
+            let byte = self.frame_byte(source + offset as u64, start + offset)?;
+            self.output[start + offset] = byte;
+        }
         Ok(())
     }
 }
