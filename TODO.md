@@ -16,7 +16,7 @@
 - [x] Implement bounded history and safe/unsafe-history match expansion.
 - [x] Implement XXH64 content checksum with published vectors.
 - [x] Implement sequence decoding and repeat-offset updates.
-- [ ] Integrate frame decoding, concatenation, and skippable frames.
+- [x] Integrate frame decoding, concatenation, and skippable frames.
 
 ## Module 3: initial compressor
 

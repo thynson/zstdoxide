@@ -28,6 +28,8 @@ mod huffman;
 mod xxhash;
 mod constants;
 mod sequences;
+mod decode;
 
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
+pub use decode::{DecodeOptions, decompress, decompress_with_options};
