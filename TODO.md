@@ -5,7 +5,7 @@
 - [ ] Inventory every official test file, entry point, asset, and API dependency.
 - [x] Import all official golden assets with exact hashes and provenance.
 - [x] Port golden decoding, error rejection, and adapted compression tests.
-- [ ] Expose validated FSE count metadata for exact upstream parser assertions.
+- [x] Expose validated FSE count metadata for exact upstream parser assertions.
 - [ ] Port supported one-shot fuzzer cases and deterministic data generation.
 - [ ] Port decoder regression vectors and fuzz-target properties.
 - [ ] Integrate reproducible decodecorpus-generated compatibility cases.

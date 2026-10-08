@@ -99,63 +99,9 @@ impl FseTable {
     ///
     /// `max_symbol` is inclusive. Corresponds to upstream `FSE_readNCount`.
     pub(crate) fn read(data: &[u8], max_symbol: usize, max_log: u8) -> Result<(Self, usize)> {
-        if max_symbol > 255 || !(5..=12).contains(&max_log) {
-            return Err(Error::CorruptData);
-        }
-        let mut bits = ForwardBits { data, position: 0 };
-        let table_log = bits.read(4)? as u8 + 5;
-        if table_log > max_log {
-            return Err(Error::CorruptData);
-        }
-        let mut counts = [0_i16; 256];
-        let mut remaining = (1_i32 << table_log) + 1;
-        let mut threshold = 1_i32 << table_log;
-        let mut width = table_log + 1;
-        let mut symbol = 0;
-        let mut previous_zero = false;
-        while remaining > 1 {
-            if previous_zero {
-                loop {
-                    let repeat = bits.read(2)? as usize;
-                    symbol += repeat;
-                    if symbol > max_symbol {
-                        return Err(Error::CorruptData);
-                    }
-                    if repeat != 3 {
-                        break;
-                    }
-                }
-            }
-            if symbol > max_symbol {
-                return Err(Error::CorruptData);
-            }
-            let cutoff = 2 * threshold - 1 - remaining;
-            let low = bits.read(width - 1)? as i32;
-            let encoded = if low < cutoff {
-                low
-            } else {
-                let full = low + ((bits.read(1)? as i32) << (width - 1));
-                if full >= threshold {
-                    full - cutoff
-                } else {
-                    full
-                }
-            };
-            let count = encoded - 1;
-            if count < -1 || count.abs() >= remaining {
-                return Err(Error::CorruptData);
-            }
-            counts[symbol] = count as i16;
-            symbol += 1;
-            remaining -= count.abs();
-            previous_zero = count == 0;
-            while remaining > 1 && remaining < threshold {
-                threshold >>= 1;
-                width -= 1;
-            }
-        }
-        let table = Self::from_normalized(&counts[..symbol], table_log)?;
-        Ok((table, bits.position.div_ceil(8)))
+        let parsed = read_normalized_counts(data, max_symbol, max_log)?;
+        let table = Self::from_normalized(&parsed.counts[..parsed.symbols], parsed.table_log)?;
+        Ok((table, parsed.bytes_read))
     }
 
     pub(crate) fn rle(symbol: u8) -> Self {
@@ -195,6 +141,86 @@ impl FseTable {
         let entry = unsafe { *self.entries.get_unchecked(state) };
         Ok(entry)
     }
+}
+
+/// Validated normalized-count metadata, independent of a decoding table.
+pub(crate) struct NormalizedCounts {
+    pub(crate) counts: [i16; 256],
+    pub(crate) symbols: usize,
+    pub(crate) table_log: u8,
+    pub(crate) bytes_read: usize,
+}
+
+/// Parse the exact outputs of upstream `FSE_readNCount`.
+///
+/// Single-symbol distributions are valid metadata; compressed decoding tables
+/// still reject them through `FseTable::from_normalized`.
+pub(crate) fn read_normalized_counts(
+    data: &[u8],
+    max_symbol: usize,
+    max_log: u8,
+) -> Result<NormalizedCounts> {
+    if max_symbol > 255 || !(5..=12).contains(&max_log) {
+        return Err(Error::CorruptData);
+    }
+    let mut bits = ForwardBits { data, position: 0 };
+    let table_log = bits.read(4)? as u8 + 5;
+    if table_log > max_log {
+        return Err(Error::CorruptData);
+    }
+    let mut counts = [0_i16; 256];
+    let mut remaining = (1_i32 << table_log) + 1;
+    let mut threshold = 1_i32 << table_log;
+    let mut width = table_log + 1;
+    let mut symbol = 0;
+    let mut previous_zero = false;
+    while remaining > 1 {
+        if previous_zero {
+            loop {
+                let repeat = bits.read(2)? as usize;
+                symbol += repeat;
+                if symbol > max_symbol {
+                    return Err(Error::CorruptData);
+                }
+                if repeat != 3 {
+                    break;
+                }
+            }
+        }
+        if symbol > max_symbol {
+            return Err(Error::CorruptData);
+        }
+        let cutoff = 2 * threshold - 1 - remaining;
+        let low = bits.read(width - 1)? as i32;
+        let encoded = if low < cutoff {
+            low
+        } else {
+            let full = low + ((bits.read(1)? as i32) << (width - 1));
+            if full >= threshold {
+                full - cutoff
+            } else {
+                full
+            }
+        };
+        let count = encoded - 1;
+        if count < -1 || count.abs() >= remaining {
+            return Err(Error::CorruptData);
+        }
+        counts[symbol] = count as i16;
+        symbol += 1;
+        remaining -= count.abs();
+        previous_zero = count == 0;
+        while remaining > 1 && remaining < threshold {
+            threshold >>= 1;
+            width -= 1;
+        }
+    }
+    Ok(NormalizedCounts {
+        counts,
+        symbols: symbol,
+        table_log,
+        bytes_read: bits.position.div_ceil(8),
+    })
 }
 
 /// A setup-only forward bit cursor for normalized-frequency descriptions.
@@ -269,6 +295,20 @@ pub(crate) fn decode_weights(data: &[u8]) -> Result<Vec<u8>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn normalized_metadata_preserves_single_symbol_and_consumed_size() {
+        for data in [&[0xf0, 0x03][..], &[0xf0, 0x03, 0xff, 0xff][..]] {
+            let parsed = read_normalized_counts(data, 255, 12).unwrap();
+            assert_eq!(parsed.table_log, 5);
+            assert_eq!(parsed.symbols, 1);
+            assert_eq!(parsed.counts[0], 32);
+            assert!(parsed.counts[1..].iter().all(|&count| count == 0));
+            assert_eq!(parsed.bytes_read, 2);
+        }
+        assert!(read_normalized_counts(&[0xf0], 255, 12).is_err());
+        assert!(FseTable::read(&[0xf0, 0x03], 255, 12).is_err());
+    }
 
     #[test]
     fn reads_balanced_distribution_header() {

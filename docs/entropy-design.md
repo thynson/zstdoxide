@@ -14,6 +14,7 @@ independent Rust; algorithms and wire-format constants follow that reference.
 | `FseTable` | `FSE_DTable` | Owns a `Vec<FseEntry>` populated after fallible allocation. A table contains exactly `1 << table_log` initialized entries. Symbols fit in `u8`; transitions remain in that table after adding the specified number of input bits. RLE is represented inline to avoid an infallible allocation. |
 | `FseEntry` | `FSE_decode_t` | Plain copied value containing a symbol, transition bit count, and base state. Shared between safe and unsafe builds because it has no pointers or memory-access operations. |
 | Normalized counts and next-state counters | `normalizedCounter`, `symbolNext` | Stack arrays indexed by symbols, bounded by 256 entries. Counts are either -1, zero, or positive and absolute frequencies sum to the table size. Plain fixed ownership needs no alternate representation. |
+| `NormalizedCounts` parser result | `FSE_readNCount` outputs | Owns `[i16; 256]`, symbol count, table logarithm, and consumed-byte count. Parsing metadata is separate from decoding-table construction so single-symbol headers can be validated without accepting them as compressed sequence tables. This is a pointer-free value record shared by both feature modes. |
 | Huffman weight output | `FSE_decompress_usingDTable_generic` output | Owns a fallibly reserved `Vec<u8>` limited to 255 explicit weights. Two integer states alternate, and the terminal state symbols are emitted according to the FSE bitstream termination rule. |
 
 ## Safe and unsafe selection
