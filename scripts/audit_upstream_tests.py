@@ -22,6 +22,8 @@ import sys
 REVISION = "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
 TRACKED_FILES = 639
 PATH_CATALOG_SHA256 = "3de4268a350f7a885b119df304e8b8f140f9ee316bf2aa5fac4e1e80486dfa25"
+CASE_GROUPS = 615
+CASE_CATALOG_SHA256 = "2ba77bf77f04cf15b2e75f5c83ac2d0e9e96d81bc6c3783ca0e90df28079ad66"
 STATUSES = {"ported", "partial", "planned", "blocked", "non_applicable"}
 ROLES = {"test_suite", "test_case", "fuzz_target", "fixture", "support", "entrypoint", "documentation"}
 ROOT = Path(__file__).resolve().parents[1]
@@ -96,7 +98,7 @@ def extract_cases(path: str, data: bytes) -> list[dict]:
         if re.search(r"(?:DISPLAY(?:LEVEL)?|printf)\s*\(", line):
             strings = re.findall(r'"((?:[^"\\]|\\.)*)"', line)
             label = " ".join(strings)
-            if re.search(r"(?:^|\s)(?:test%|Test %|test\s*:|thread pool test)", label):
+            if re.search(r"(?:^|\s)(?:test%|longtest%|Test %|test\s*:|thread pool test\s*:)", label):
                 markers[index] = ("diagnostic_group", label.strip())
         google = re.match(r"\s*(TEST(?:_F|_P)?)\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)", line)
         if google:
@@ -136,7 +138,11 @@ def check_reference(reference: str, errors: list[str], context: str) -> None:
         errors.append(f"{context}: missing or invalid local target {reference}")
     elif symbol:
         pattern = (r"\bfn\s+" if path.endswith(".rs") else r"\b") + re.escape(symbol) + r"\b"
-        if not re.search(pattern, (ROOT / path).read_text()):
+        contents = (ROOT / path).read_text()
+        generated_test = path.endswith(".rs") and re.search(
+            r"!\s*\(\s*" + re.escape(symbol) + r"\s*[,)]", contents
+        )
+        if not re.search(pattern, contents) and not generated_test:
             errors.append(f"{context}: local target function does not exist: {reference}")
 
 
@@ -212,6 +218,9 @@ def audit(manifest: dict, upstream: Path | None, require_complete: bool) -> list
             errors.append(f"{record['path']}: test-related source incorrectly excluded")
         if len(record.get("reason", "")) < 12:
             errors.append(f"{record['path']}: missing exclusion reason")
+    case_digest = hashlib.sha256("\n".join(sorted(case_ids)).encode()).hexdigest()
+    if len(case_ids) != CASE_GROUPS or case_digest != CASE_CATALOG_SHA256:
+        errors.append("Named case catalog changed or has omissions relative to pinned v1.5.7")
     for corpus in manifest.get("external_corpora", []):
         if corpus.get("source") not in paths or corpus.get("status") not in STATUSES:
             errors.append("External corpus has an invalid source or status")

@@ -14,9 +14,27 @@
 - [ ] Port bounded public fuzz-target properties and external corpus replay.
 - [x] Generate and verify reproducible decodecorpus compatibility fixtures.
 - [x] Replay decodecorpus fixtures and configurable official generator campaigns.
-- [ ] Map CLI, streaming, dictionary, threading, legacy, and build-test contracts.
+- [x] Map CLI, streaming, dictionary, threading, legacy, and build-test contracts.
+- [ ] Import and replay the exact standalone testcard and kernel empty-frame tests.
+- [ ] Pin available external corpus snapshots and provide bounded replay tools.
+- [ ] Verify all checked-in fixture hashes in the offline CI audit.
 - [ ] Audit test coverage and keep unimplemented contracts explicitly open.
 - [ ] Run migrated tests across safe/unsafe backends and document exact results.
+
+### Required for complete migration
+
+- [ ] Port reusable-context and streaming assertions after those APIs exist.
+- [ ] Port raw/prepared dictionary, training, and prefix assertions.
+- [ ] Port encoder level/parameter, entropy encoder, and sequence-producer tests.
+- [ ] Port caller-owned output, in-place, allocator, and workspace contracts.
+- [ ] Port long-distance, multithreading, thread-pool, and large-index stress tests.
+- [ ] Port the CLI, gzip/zlib, seekable, and file-operation behavior suites.
+- [ ] Make the preserved legacy v0.4-v0.7 success assertions pass.
+- [ ] Run all external fuzz/regression corpora with their matching API adapters.
+- [ ] Satisfy `scripts/audit_upstream_tests.py --require-complete`.
+
+The required items remain open. A complete inventory and passing available
+one-shot adaptations do not complete the upstream test migration.
 
 ## Module 6: bounded streaming and reusable contexts
 

@@ -4,7 +4,7 @@
     "repository": "https://github.com/facebook/zstd",
     "tag": "v1.5.7",
     "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
-    "license": "BSD-3-Clause (selected from upstream dual-license terms)",
+    "license": "Root source uses the BSD-3-Clause option of upstream dual-license terms; third-party files retain their individual notices (including gzip GPL and zlib examples). Metadata does not relicense source files.",
     "tracked_file_count": 639,
     "path_catalog_sha256": "3de4268a350f7a885b119df304e8b8f140f9ee316bf2aa5fac4e1e80486dfa25"
   },
@@ -977,9 +977,9 @@
       "git_blob": "10dae86899a7faf8a885f419be31b1cda133c296",
       "sha256": "a3a9cc2c49b24b4199b73a7f3e00afb1cec4092be520a988aa87dcc18a027539",
       "suite": "single_file_build",
-      "role": "entrypoint",
-      "status": "non_applicable",
-      "reason": "C source amalgamation/build smoke test; the project ships a Cargo crate and does not generate a C amalgamation.",
+      "role": "test_suite",
+      "status": "planned",
+      "reason": "Contains an executable decoder or roundtrip behavior check using the exact DXT1 testcard corpus; behavioral assertions must be migrated separately from C amalgamation or Emscripten packaging.",
       "rust_tests": [],
       "line_count": 340,
       "cases": []
@@ -989,9 +989,9 @@
       "git_blob": "b228de88e63b1f47dd4ddffb3ae93b743952bd03",
       "sha256": "5dc2d98e34599fbcab8015252d195d2b89a5e44dec4d14cc1b56b67c9122d92f",
       "suite": "single_file_build",
-      "role": "entrypoint",
-      "status": "non_applicable",
-      "reason": "C source amalgamation/build smoke test; the project ships a Cargo crate and does not generate a C amalgamation.",
+      "role": "test_suite",
+      "status": "planned",
+      "reason": "Contains an executable decoder or roundtrip behavior check using the exact DXT1 testcard corpus; behavioral assertions must be migrated separately from C amalgamation or Emscripten packaging.",
       "rust_tests": [],
       "line_count": 83,
       "cases": []
@@ -1013,9 +1013,9 @@
       "git_blob": "ee63416a6e561e9768b8078e16f5022f222118aa",
       "sha256": "3ecd6e56d47babf600ba889e86950ee1e1260051f98a7acf698022cebfa6f03b",
       "suite": "single_file_build",
-      "role": "entrypoint",
-      "status": "non_applicable",
-      "reason": "C source amalgamation/build smoke test; the project ships a Cargo crate and does not generate a C amalgamation.",
+      "role": "test_suite",
+      "status": "planned",
+      "reason": "Contains an executable decoder or roundtrip behavior check using the exact DXT1 testcard corpus; behavioral assertions must be migrated separately from C amalgamation or Emscripten packaging.",
       "rust_tests": [],
       "line_count": 75,
       "cases": []
@@ -1026,8 +1026,8 @@
       "sha256": "22c257809b135888cb528082fc5b880214e21bc08fc329ca41b8b5b63520b232",
       "suite": "single_file_build",
       "role": "fixture",
-      "status": "non_applicable",
-      "reason": "Image/source fixture for the C amalgamation example; the amalgamation-specific build checks have no Rust counterpart.",
+      "status": "planned",
+      "reason": "Exact DXT1/raw or compressed byte fixture for executable decoder/roundtrip assertions; preserving the behavioral test requires importing and replaying these bytes.",
       "rust_tests": [],
       "line_count": 2731,
       "cases": []
@@ -1038,8 +1038,8 @@
       "sha256": "020bcbbbfd66dff33821e11f6428d0d0e3a58f2eefea566398f678e7a63de7be",
       "suite": "single_file_build",
       "role": "fixture",
-      "status": "non_applicable",
-      "reason": "Image/source fixture for the C amalgamation example; the amalgamation-specific build checks have no Rust counterpart.",
+      "status": "planned",
+      "reason": "Exact DXT1/raw or compressed byte fixture for executable decoder/roundtrip assertions; preserving the behavioral test requires importing and replaying these bytes.",
       "rust_tests": [],
       "line_count": 261,
       "cases": []
@@ -1051,7 +1051,7 @@
       "suite": "single_file_build",
       "role": "fixture",
       "status": "non_applicable",
-      "reason": "Image/source fixture for the C amalgamation example; the amalgamation-specific build checks have no Rust counterpart.",
+      "reason": "Original source image for the DXT1 byte fixtures; the tests decode the included DXT1 bytes, not PNG data. The image itself has no codec assertion.",
       "rust_tests": [],
       "line_count": 83,
       "cases": []
@@ -1457,8 +1457,8 @@
       "sha256": "8e779264cec731f77bc272085e72512195e3e6488da58001635447e9e186e7c5",
       "suite": "freestanding_kernel",
       "role": "test_suite",
-      "status": "non_applicable",
-      "reason": "Tests a generated Linux C API, C macro removal, or kernel shim ABI; those implementation-specific interfaces are not part of this Rust crate.",
+      "status": "planned",
+      "reason": "Contains an exact checksummed empty-frame successful decode assertion that can be expressed by the Rust one-shot API; kernel workspace construction is separate.",
       "rust_tests": [],
       "line_count": 52,
       "cases": [
@@ -1468,8 +1468,8 @@
           "line_start": 31,
           "line_end": 52,
           "label": "test_decompress_unzstd",
-          "status": "non_applicable",
-          "reason": "Tests a generated Linux C API, C macro removal, or kernel shim ABI; those implementation-specific interfaces are not part of this Rust crate.",
+          "status": "planned",
+          "reason": "Contains an exact checksummed empty-frame successful decode assertion that can be expressed by the Rust one-shot API; kernel workspace construction is separate.",
           "rust_tests": []
         }
       ]
@@ -1480,8 +1480,8 @@
       "sha256": "41f6e37c149fcfbd4923e7961447472767643521083369f5c9239dc20f1e623a",
       "suite": "freestanding_kernel",
       "role": "test_suite",
-      "status": "non_applicable",
-      "reason": "Tests a generated Linux C API, C macro removal, or kernel shim ABI; those implementation-specific interfaces are not part of this Rust crate.",
+      "status": "blocked",
+      "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
       "rust_tests": [],
       "line_count": 229,
       "cases": [
@@ -1501,8 +1501,8 @@
           "line_start": 56,
           "line_end": 144,
           "label": "test_btrfs",
-          "status": "non_applicable",
-          "reason": "Tests a generated Linux C API, C macro removal, or kernel shim ABI; those implementation-specific interfaces are not part of this Rust crate.",
+          "status": "blocked",
+          "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
           "rust_tests": []
         },
         {
@@ -1511,8 +1511,8 @@
           "line_start": 145,
           "line_end": 175,
           "label": "test_decompress_unzstd",
-          "status": "non_applicable",
-          "reason": "Tests a generated Linux C API, C macro removal, or kernel shim ABI; those implementation-specific interfaces are not part of this Rust crate.",
+          "status": "blocked",
+          "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
           "rust_tests": []
         },
         {
@@ -1521,8 +1521,8 @@
           "line_start": 176,
           "line_end": 211,
           "label": "test_f2fs",
-          "status": "non_applicable",
-          "reason": "Tests a generated Linux C API, C macro removal, or kernel shim ABI; those implementation-specific interfaces are not part of this Rust crate.",
+          "status": "blocked",
+          "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
           "rust_tests": []
         },
         {
@@ -1531,8 +1531,8 @@
           "line_start": 212,
           "line_end": 229,
           "label": "test_stack_usage",
-          "status": "non_applicable",
-          "reason": "Tests a generated Linux C API, C macro removal, or kernel shim ABI; those implementation-specific interfaces are not part of this Rust crate.",
+          "status": "blocked",
+          "reason": "Contains behavioral streaming roundtrips with 4096-byte chunks, level-range contracts, caller-owned workspace sizing, and stack-budget checks. Required streaming, level, allocator/workspace, and stack instrumentation interfaces are absent.",
           "rust_tests": []
         }
       ]
@@ -2372,8 +2372,8 @@
       "sha256": "419d644613881903fc4f7e91163107b38e91bb8a2d46dfa661335827950a4fd0",
       "suite": "educational_decoder",
       "role": "test_suite",
-      "status": "planned",
-      "reason": "Example/harness assertions require a Rust adaptation; dictionary, streaming, and parameter-dependent portions remain unsupported.",
+      "status": "blocked",
+      "reason": "The educational decoder harness tests dictionary-aware file decompression, output-capacity fallback, and filesystem behavior; the dictionary/file harness APIs have not been ported.",
       "rust_tests": [],
       "line_count": 119,
       "cases": []
@@ -2660,9 +2660,12 @@
       "sha256": "fdc1e21f374f7ce3d45f26702583ed2c606f9b5b7124c673bb3a4cbb09a62397",
       "suite": "data_generation",
       "role": "support",
-      "status": "non_applicable",
-      "reason": "Upstream harness support or C/C++ helper implementation; observable tests are tracked separately and Rust helpers own their buffers.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Rust noise generation preserves RDG_genBuffer RNG, literal distribution, match/overlap and probability behavior with independent upstream vectors. RDG_genStdout chunked output and its retained prefix workflow remain unported.",
+      "rust_tests": [
+        "tests/upstream/support/mod.rs#noise",
+        "tests/upstream/support/mod.rs#noise_matches_upstream_generated_vectors"
+      ],
       "line_count": 186,
       "cases": []
     },
@@ -3284,9 +3287,11 @@
       "sha256": "e47f55225ce6412a80adb623722207337905dc7751061f74601d53dc1ca0ef85",
       "suite": "cli",
       "role": "test_case",
-      "status": "blocked",
-      "reason": "A Rust CLI with the relevant arguments, filesystem behavior, and diagnostics is not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "All four corpus inputs roundtrip in Rust and interoperate with the oracle; output-directory CLI handling, target block size, level 19, and mml=7 controls remain absent.",
+      "rust_tests": [
+        "tests/upstream_golden.rs"
+      ],
       "line_count": 16,
       "cases": []
     },
@@ -3512,9 +3517,11 @@
       "sha256": "005f48c9b6ca92ff71f732feea8da99396c100f29cfc24a9f5538ee3dd9f4074",
       "suite": "cli",
       "role": "test_case",
-      "status": "blocked",
-      "reason": "A Rust CLI with the relevant arguments, filesystem behavior, and diagnostics is not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "All referenced successful golden frame contents are validated by Rust; recursive CLI file traversal and test-mode behavior require a Rust frontend.",
+      "rust_tests": [
+        "tests/upstream_golden.rs"
+      ],
       "line_count": 7,
       "cases": []
     },
@@ -4040,9 +4047,12 @@
       "sha256": "8c9c86d7f520f832242e734ebb5992c109a9496a495b8b89c36593903a824cb7",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "planned",
-      "reason": "Whole-file migration includes named groups plus unlabelled randomized drivers; supported one-shot tests need exact Rust mappings.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Official seed-fixed frame/header generation is replayed through Rust with exact original outputs, plus a configurable fresh generator run. Streaming, dictionary, raw-block, and magicless APIs remain absent.",
+      "rust_tests": [
+        "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
+        "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run"
+      ],
       "line_count": 1998,
       "cases": [
         {
@@ -4051,9 +4061,12 @@
           "line_start": 1372,
           "line_end": 1387,
           "label": "testDecodeSimple",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Every complete generated frame is decoded by the Rust one-shot API and compared with the independent original bytes and size.",
+          "rust_tests": [
+            "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
+            "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run"
+          ]
         },
         {
           "id": "tests/decodecorpus.c:1388",
@@ -4081,8 +4094,8 @@
           "line_start": 1494,
           "line_end": 1514,
           "label": "testDecodeRawBlock",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Raw-block context initialization and block decoding APIs are not implemented; complete-frame replay does not replace this mode.",
           "rust_tests": []
         },
         {
@@ -4091,8 +4104,8 @@
           "line_start": 1515,
           "line_end": 1540,
           "label": "runBlockTest",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Raw-block context initialization and block decoding APIs are not implemented; complete-frame replay does not replace this mode.",
           "rust_tests": []
         },
         {
@@ -4101,9 +4114,11 @@
           "line_start": 1541,
           "line_end": 1572,
           "label": "runFrameTest",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The generated dictionary-free one-shot frame branch runs against Rust; streaming and dictionary branches remain absent.",
+          "rust_tests": [
+            "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte"
+          ]
         },
         {
           "id": "tests/decodecorpus.c:1573",
@@ -4111,9 +4126,12 @@
           "line_start": 1573,
           "line_end": 1998,
           "label": "runTestMode",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Bounded seed-fixed and configurable fresh generated frame campaigns run; timed, raw-block, streaming, and dictionary driver modes are not implemented.",
+          "rust_tests": [
+            "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
+            "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run"
+          ]
         }
       ]
     },
@@ -4411,9 +4429,12 @@
       "sha256": "084826e95e0280a21cf95091cc5daab018a283a6d99a096a1e356605757a7c96",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "planned",
-      "reason": "Fuzz intent can be adapted to Rust; preserve input bounds, deterministic seeds, and assertions before marking implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "512 independently verified upstream-written normalized-count headers preserve decoded values, maximum symbol, table log, exact consumption and appended suffix behavior; 4096 arbitrary-input checks cover parser invariants. Dynamic Rust normalized-count writing and the full upstream randomized writer campaign remain absent.",
+      "rust_tests": [
+        "tests/upstream/entropy.rs#normalized_counts_match_all_official_vectors_and_suffixes",
+        "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded"
+      ],
       "line_count": 100,
       "cases": [
         {
@@ -4422,9 +4443,12 @@
           "line_start": 28,
           "line_end": 100,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "512 independently verified upstream-written normalized-count headers preserve decoded values, maximum symbol, table log, exact consumption and appended suffix behavior; 4096 arbitrary-input checks cover parser invariants. Dynamic Rust normalized-count writing and the full upstream randomized writer campaign remain absent.",
+          "rust_tests": [
+            "tests/upstream/entropy.rs#normalized_counts_match_all_official_vectors_and_suffixes",
+            "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded"
+          ]
         }
       ]
     },
@@ -4551,9 +4575,12 @@
       "sha256": "099d43a49a4f07a394ccbe981dd87f95b67a9da211b6a5996dbc799d6d8ae4e0",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "planned",
-      "reason": "Fuzz intent can be adapted to Rust; preserve input bounds, deterministic seeds, and assertions before marking implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Official Huffman tables and 1/4-stream outputs, reuse/truncation/output size assertions, and arbitrary-input bounded decoding run in Rust. C X1/X2, CPU/assembly flags, and workspace selection have no matching control APIs.",
+      "rust_tests": [
+        "tests/upstream/entropy.rs#huffman_one_and_four_streams_match_official_encoder",
+        "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded"
+      ],
       "line_count": 68,
       "cases": [
         {
@@ -4562,9 +4589,12 @@
           "line_start": 25,
           "line_end": 68,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Official Huffman tables and 1/4-stream outputs, reuse/truncation/output size assertions, and arbitrary-input bounded decoding run in Rust. C X1/X2, CPU/assembly flags, and workspace selection have no matching control APIs.",
+          "rust_tests": [
+            "tests/upstream/entropy.rs#huffman_one_and_four_streams_match_official_encoder",
+            "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded"
+          ]
         }
       ]
     },
@@ -4744,8 +4774,8 @@
       "sha256": "eae2235fd92c5b5d3593ab76efdfd331b9844ac4625d142e3198e17de05861b7",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "planned",
-      "reason": "Fuzz intent can be adapted to Rust; preserve input bounds, deterministic seeds, and assertions before marking implemented.",
+      "status": "blocked",
+      "reason": "The defining random insufficient compression-output-capacity contract requires a caller-buffer encoder API. The allocating Rust encoder cannot express it; compression levels/context reuse are also absent.",
       "rust_tests": [],
       "line_count": 60,
       "cases": [
@@ -4755,8 +4785,8 @@
           "line_start": 29,
           "line_end": 60,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "The defining random insufficient compression-output-capacity contract requires a caller-buffer encoder API. The allocating Rust encoder cannot express it; compression levels/context reuse are also absent.",
           "rust_tests": []
         }
       ]
@@ -4916,9 +4946,11 @@
       "sha256": "dedcfca725c18810ccb8fce1d2b9995f14f8fb879c8b277158a8316ac2cf690c",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "planned",
-      "reason": "Whole-file migration includes named groups plus unlabelled randomized drivers; supported one-shot tests need exact Rust mappings.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Named one-shot/frame regressions and deterministic fuzzer corpora run in Rust; contexts, dictionaries, parameters, streaming, long tests, and threading remain unimplemented.",
+      "rust_tests": [
+        "tests/upstream_fuzzer.rs"
+      ],
       "line_count": 5147,
       "cases": [
         {
@@ -4987,8 +5019,8 @@
           "line_start": 495,
           "line_end": 496,
           "label": "test_compressBound",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound queries are not implemented.",
           "rust_tests": []
         },
         {
@@ -4997,8 +5029,8 @@
           "line_start": 497,
           "line_end": 516,
           "label": "test%3u : compressBound :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -5007,8 +5039,8 @@
           "line_start": 517,
           "line_end": 518,
           "label": "test_decompressBound",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound queries are not implemented.",
           "rust_tests": []
         },
         {
@@ -5017,8 +5049,8 @@
           "line_start": 519,
           "line_end": 569,
           "label": "test%3u : decompressBound :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -5038,7 +5070,7 @@
           "line_end": 589,
           "label": "test%3u : ZSTD_CCtx_setCParams :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5058,7 +5090,7 @@
           "line_end": 649,
           "label": "test%3i : Check block splitter doesn't oversplit incompressible data (seed %u):",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent.",
           "rust_tests": []
         },
         {
@@ -5067,9 +5099,11 @@
           "line_start": 650,
           "line_end": 669,
           "label": "basicUnitTests",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Named one-shot groups are mapped separately; contexts, dictionaries, streaming, parameters, and allocation hooks remain absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs"
+          ]
         },
         {
           "id": "tests/fuzzer.c:670",
@@ -5078,7 +5112,7 @@
           "line_end": 674,
           "label": "test%3u : ZSTD_getErrorName :",
           "status": "non_applicable",
-          "reason": "This named group checks C symbol/error-code/version or assembly-dispatch behavior without a matching Rust interface.",
+          "reason": "C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version.",
           "rust_tests": []
         },
         {
@@ -5088,7 +5122,7 @@
           "line_end": 679,
           "label": "test%3u : ZSTD_getErrorName with wrong value :",
           "status": "non_applicable",
-          "reason": "This named group checks C symbol/error-code/version or assembly-dispatch behavior without a matching Rust interface.",
+          "reason": "C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version.",
           "rust_tests": []
         },
         {
@@ -5098,7 +5132,7 @@
           "line_end": 684,
           "label": "test%3u : min compression level :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5108,7 +5142,7 @@
           "line_end": 690,
           "label": "test%3u : default compression level :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5118,7 +5152,7 @@
           "line_end": 701,
           "label": "test%3u : ZSTD_versionNumber :",
           "status": "non_applicable",
-          "reason": "This named group checks C symbol/error-code/version or assembly-dispatch behavior without a matching Rust interface.",
+          "reason": "C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version.",
           "rust_tests": []
         },
         {
@@ -5128,7 +5162,7 @@
           "line_end": 714,
           "label": "test%3u : ZSTD_adjustCParams :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5137,9 +5171,11 @@
           "line_start": 715,
           "line_end": 722,
           "label": "test%3u : compress %u bytes :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Original 5-MiB RDG input and full output comparison; level 1/context selection pending.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
+          ]
         },
         {
           "id": "tests/fuzzer.c:723",
@@ -5148,7 +5184,7 @@
           "line_end": 729,
           "label": "test%3i : size of cctx for level 1 :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5157,9 +5193,12 @@
           "line_start": 730,
           "line_end": 737,
           "label": "test%3i : decompress skippable frame -8 size :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Exact malformed eight-byte input; rejects its overflowing declared payload.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#skippable_frame_minus_eight_size",
+            "tests/upstream_inline_regressions.rs#rejects_exact_fuzzer_skippable_size_minus_eight"
+          ]
         },
         {
           "id": "tests/fuzzer.c:738",
@@ -5167,9 +5206,11 @@
           "line_start": 738,
           "line_end": 743,
           "label": "test%3i : ZSTD_getFrameContentSize test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Declared content-size value via FrameHeader::parse.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#frame_content_size"
+          ]
         },
         {
           "id": "tests/fuzzer.c:744",
@@ -5177,9 +5218,11 @@
           "line_start": 744,
           "line_end": 749,
           "label": "test%3i : ZSTD_getDecompressedSize test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Deprecated size-query behavior expressed through typed header metadata.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#frame_content_size"
+          ]
         },
         {
           "id": "tests/fuzzer.c:750",
@@ -5187,9 +5230,11 @@
           "line_start": 750,
           "line_end": 755,
           "label": "test%3i : ZSTD_findDecompressedSize test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Single-frame size is covered; a general concatenated-size scanning API is absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#frame_content_size"
+          ]
         },
         {
           "id": "tests/fuzzer.c:756",
@@ -5197,8 +5242,8 @@
           "line_start": 756,
           "line_end": 762,
           "label": "test%3i : tight ZSTD_decompressBound test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -5207,8 +5252,8 @@
           "line_start": 763,
           "line_end": 769,
           "label": "test%3i : ZSTD_decompressBound test with invalid srcSize :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -5217,9 +5262,11 @@
           "line_start": 770,
           "line_end": 774,
           "label": "test%3i : decompress %u bytes :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Original 5-MiB one-shot output and length.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
+          ]
         },
         {
           "id": "tests/fuzzer.c:775",
@@ -5227,9 +5274,11 @@
           "line_start": 775,
           "line_end": 785,
           "label": "test%3i : decompress %u bytes with Huffman assembly disabled :",
-          "status": "non_applicable",
-          "reason": "This named group checks C symbol/error-code/version or assembly-dispatch behavior without a matching Rust interface.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Byte-correct decoding covered; Rust has no assembly-selection parameter.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
+          ]
         },
         {
           "id": "tests/fuzzer.c:786",
@@ -5237,9 +5286,11 @@
           "line_start": 786,
           "line_end": 792,
           "label": "test%3i : check decompressed result :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Every decompressed byte compared.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
+          ]
         },
         {
           "id": "tests/fuzzer.c:793",
@@ -5248,7 +5299,7 @@
           "line_end": 803,
           "label": "test%3u : invalid endDirective :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Streaming end-directive/pledged-source-size API absent.",
           "rust_tests": []
         },
         {
@@ -5258,7 +5309,7 @@
           "line_end": 810,
           "label": "test%3i : ZSTD_checkCParams :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5268,7 +5319,7 @@
           "line_end": 819,
           "label": "test%3i : ZSTD_createDCtx_advanced and ZSTD_sizeof_DCtx:",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5278,7 +5329,7 @@
           "line_end": 860,
           "label": "test%3i : misc unaccounted for zstd symbols :",
           "status": "non_applicable",
-          "reason": "This named group checks C symbol/error-code/version or assembly-dispatch behavior without a matching Rust interface.",
+          "reason": "C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version.",
           "rust_tests": []
         },
         {
@@ -5287,9 +5338,11 @@
           "line_start": 861,
           "line_end": 872,
           "label": "test%3i : decompress with null dict :",
-          "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "No-dictionary behavior covered; explicit dictionary-context API absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
+          ]
         },
         {
           "id": "tests/fuzzer.c:873",
@@ -5297,9 +5350,11 @@
           "line_start": 873,
           "line_end": 884,
           "label": "test%3i : decompress with null DDict :",
-          "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "No-dictionary behavior covered; prepared-dictionary API absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
+          ]
         },
         {
           "id": "tests/fuzzer.c:885",
@@ -5307,9 +5362,11 @@
           "line_start": 885,
           "line_end": 890,
           "label": "test%3i : decompress with 1 missing byte :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Truncated source rejected with UnexpectedEof.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#decompress_with_one_missing_byte"
+          ]
         },
         {
           "id": "tests/fuzzer.c:891",
@@ -5317,9 +5374,11 @@
           "line_start": 891,
           "line_end": 896,
           "label": "test%3i : decompress with 1 too much byte :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "One trailing byte rejected with UnexpectedEof.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#decompress_with_one_extra_byte"
+          ]
         },
         {
           "id": "tests/fuzzer.c:897",
@@ -5327,9 +5386,11 @@
           "line_start": 897,
           "line_end": 902,
           "label": "test%3i : decompress too large input :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Overlong source rejected; deterministic zero tail replaces uninitialized C capacity.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#decompress_with_large_trailing_input"
+          ]
         },
         {
           "id": "tests/fuzzer.c:903",
@@ -5337,9 +5398,11 @@
           "line_start": 903,
           "line_end": 908,
           "label": "test%3i : decompress into NULL buffer :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Explicit zero output limit expresses the C zero-capacity contract.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#decompress_into_zero_output_limit"
+          ]
         },
         {
           "id": "tests/fuzzer.c:909",
@@ -5347,9 +5410,11 @@
           "line_start": 909,
           "line_end": 947,
           "label": "test%3i : decompress with corrupted checksum :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "All four checksum-byte corruptions rejected; forceIgnoreChecksum API absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#decompress_with_corrupted_checksum"
+          ]
         },
         {
           "id": "tests/fuzzer.c:948",
@@ -5357,8 +5422,8 @@
           "line_start": 948,
           "line_end": 967,
           "label": "test%3i : ZSTD_decompressBound test with content size missing :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -5368,7 +5433,7 @@
           "line_end": 1014,
           "label": "test%3d: check DCtx size is reduced after many oversized calls :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5378,7 +5443,7 @@
           "line_end": 1019,
           "label": "test%3i : ZSTD_compressCCtx() doesn't use advanced parameters",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5388,7 +5453,7 @@
           "line_end": 1024,
           "label": "test%3i : ZSTD_compress_usingDict() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -5398,7 +5463,7 @@
           "line_end": 1029,
           "label": "test%3i : ZSTD_compress_usingCDict() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -5408,7 +5473,7 @@
           "line_end": 1034,
           "label": "test%3i : ZSTD_compress_advanced() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5418,7 +5483,7 @@
           "line_end": 1043,
           "label": "test%3i : ZSTD_compress_usingCDict_advanced() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -5427,8 +5492,8 @@
           "line_start": 1044,
           "line_end": 1062,
           "label": "test%3i : maxBlockSize = 2K",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent.",
           "rust_tests": []
         },
         {
@@ -5438,7 +5503,7 @@
           "line_end": 1085,
           "label": "test%3i : ldm fill dict out-of-bounds check",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -5448,7 +5513,7 @@
           "line_end": 1112,
           "label": "test%3i : testing dict compression with enableLdm and forceMaxWindow :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -5458,7 +5523,7 @@
           "line_end": 1156,
           "label": "test%3i : testing dict compression for determinism :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -5468,7 +5533,7 @@
           "line_end": 1198,
           "label": "test%3i : LDM + opt parser with small uncompressible block",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Long-distance matching and optimal parser configuration/size comparison absent.",
           "rust_tests": []
         },
         {
@@ -5478,7 +5543,7 @@
           "line_end": 1276,
           "label": "test%3i : testing ldm dictionary gets invalidated :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -5488,7 +5553,7 @@
           "line_end": 1343,
           "label": "test%3i : testing refPrefx vs refPrefx + ldm (size comparison) :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -5497,8 +5562,8 @@
           "line_start": 1344,
           "line_end": 1368,
           "label": "test%3i : in-place decompression :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Caller-owned overlapping input/output and decompression-margin API absent.",
           "rust_tests": []
         },
         {
@@ -5507,8 +5572,8 @@
           "line_start": 1369,
           "line_end": 1397,
           "label": "test%3i : in-place decompression with 2 frames :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Caller-owned overlapping input/output and decompression-margin API absent.",
           "rust_tests": []
         },
         {
@@ -5518,7 +5583,7 @@
           "line_end": 1466,
           "label": "test%3i : Check block splitter with 64K literal length :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent.",
           "rust_tests": []
         },
         {
@@ -5527,8 +5592,8 @@
           "line_start": 1467,
           "line_end": 1515,
           "label": "test%3d : superblock uncompressible data: too many nocompress superblocks :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent.",
           "rust_tests": []
         },
         {
@@ -5537,8 +5602,8 @@
           "line_start": 1516,
           "line_end": 1541,
           "label": "test%3d: superblock with no literals :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent.",
           "rust_tests": []
         },
         {
@@ -5547,8 +5612,8 @@
           "line_start": 1542,
           "line_end": 1553,
           "label": "test%3d: superblock enough room for checksum :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent.",
           "rust_tests": []
         },
         {
@@ -5557,9 +5622,11 @@
           "line_start": 1554,
           "line_end": 1566,
           "label": "test%3i : compress a NULL input with each level :",
-          "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Empty input encoded; every-level parameter sweep absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames"
+          ]
         },
         {
           "id": "tests/fuzzer.c:1567",
@@ -5568,7 +5635,7 @@
           "line_end": 1576,
           "label": "test%3d : check CCtx size after compressing empty input :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5577,9 +5644,11 @@
           "line_start": 1577,
           "line_end": 1619,
           "label": "test%3d : decompress empty frame into NULL :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Known/unknown-size empty one-shot frames; streaming subcase absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames"
+          ]
         },
         {
           "id": "tests/fuzzer.c:1620",
@@ -5588,7 +5657,7 @@
           "line_end": 1636,
           "label": "test%3d : reuse CCtx with expanding block size :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable encoder context/reset state and associated parameter controls absent.",
           "rust_tests": []
         },
         {
@@ -5598,7 +5667,7 @@
           "line_end": 1680,
           "label": "test%3d : re-using a CCtx should compress the same :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable encoder context/reset state and associated parameter controls absent.",
           "rust_tests": []
         },
         {
@@ -5607,8 +5676,8 @@
           "line_start": 1681,
           "line_end": 1720,
           "label": "test%3d : btultra2 & 1st block :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent.",
           "rust_tests": []
         },
         {
@@ -5618,7 +5687,7 @@
           "line_end": 1763,
           "label": "test%3d : ZSTD_CCtx_getParameter() :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5628,7 +5697,7 @@
           "line_end": 1807,
           "label": "test%3d : ZSTD_CCtx_setCParams() :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5638,7 +5707,7 @@
           "line_end": 1831,
           "label": "test%3d : ZSTD_CCtx_setFParams() :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5648,7 +5717,7 @@
           "line_end": 1890,
           "label": "test%3d : ZSTD_CCtx_setParams() :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5658,7 +5727,7 @@
           "line_end": 1911,
           "label": "test%3d : ldm conditionally enabled by default doesn't change cctx params:",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Long-distance matching and optimal parser configuration/size comparison absent.",
           "rust_tests": []
         },
         {
@@ -5667,8 +5736,8 @@
           "line_start": 1912,
           "line_end": 1928,
           "label": "test%3d : overflow protection with large windowLog :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -5678,7 +5747,7 @@
           "line_end": 1963,
           "label": "test%3d : size down context :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5688,7 +5757,7 @@
           "line_end": 1987,
           "label": "test%3i : create static CCtx for level %u :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5698,7 +5767,7 @@
           "line_end": 1994,
           "label": "test%3i : compress small input with small static CCtx :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5708,7 +5777,7 @@
           "line_end": 2002,
           "label": "test%3i : compress large input with small static CCtx (must fail) :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5718,7 +5787,7 @@
           "line_end": 2008,
           "label": "test%3i : resize context to full CCtx size :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5728,7 +5797,7 @@
           "line_end": 2015,
           "label": "test%3i : compress large input with static CCtx :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5738,7 +5807,7 @@
           "line_end": 2027,
           "label": "test%3i : compress small input often enough to trigger context reduce :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5748,7 +5817,7 @@
           "line_end": 2031,
           "label": "test%3i : init CCtx for level %u :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5758,7 +5827,7 @@
           "line_end": 2038,
           "label": "test%3i : compression again with static CCtx :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5768,7 +5837,7 @@
           "line_end": 2045,
           "label": "test%3i : simple decompression test with static DCtx :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5777,8 +5846,8 @@
           "line_start": 2046,
           "line_end": 2049,
           "label": "test%3i : check decompressed result :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5788,7 +5857,7 @@
           "line_end": 2054,
           "label": "test%3i : init CCtx for too large level (must fail) :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5798,7 +5867,7 @@
           "line_end": 2058,
           "label": "test%3i : init CCtx for small level %u (should work again) :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5808,7 +5877,7 @@
           "line_end": 2067,
           "label": "test%3i : use CStream on CCtx-sized static context (should fail) :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5818,7 +5887,7 @@
           "line_end": 2077,
           "label": "test%3i : resize context to CStream size, then stream compress :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5828,7 +5897,7 @@
           "line_end": 2085,
           "label": "test%3i : CStream for small level %u :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5838,7 +5907,7 @@
           "line_end": 2090,
           "label": "test%3i : init static CStream with dictionary (should fail) :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5848,7 +5917,7 @@
           "line_end": 2099,
           "label": "test%3i : use DStream on DCtx-sized static context (should fail) :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5858,7 +5927,7 @@
           "line_end": 2141,
           "label": "test%3i : test estimation functions with default cctx params :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5867,8 +5936,8 @@
           "line_start": 2142,
           "line_end": 2191,
           "label": "test%3i : test estimation functions with maxBlockSize = 0 :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5878,7 +5947,7 @@
           "line_end": 2204,
           "label": "test%3i : Static context sizes for negative levels :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -5888,7 +5957,7 @@
           "line_end": 2215,
           "label": "test%3i : create ZSTDMT CCtx :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5898,7 +5967,7 @@
           "line_end": 2221,
           "label": "test%3u : compress %u bytes with 2 threads :",
           "status": "blocked",
-          "reason": "This named group requires a worker pool or multi-threaded compression.",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5907,8 +5976,8 @@
           "line_start": 2222,
           "line_end": 2229,
           "label": "test%3i : decompressed size test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5917,8 +5986,8 @@
           "line_start": 2230,
           "line_end": 2234,
           "label": "test%3i : decompress %u bytes :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5927,8 +5996,8 @@
           "line_start": 2235,
           "line_end": 2241,
           "label": "test%3i : check decompressed result :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5937,8 +6006,8 @@
           "line_start": 2242,
           "line_end": 2250,
           "label": "test%3i : compress -T2 with checksum :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5947,8 +6016,8 @@
           "line_start": 2251,
           "line_end": 2258,
           "label": "test%3i : decompress %u bytes :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5957,8 +6026,8 @@
           "line_start": 2259,
           "line_end": 2280,
           "label": "test%3u : compress empty string and decompress with small window log :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Streaming decoder with configurable window-log/reset context absent.",
           "rust_tests": []
         },
         {
@@ -5967,8 +6036,8 @@
           "line_start": 2281,
           "line_end": 2289,
           "label": "test%3i : compress with block splitting :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent.",
           "rust_tests": []
         },
         {
@@ -5977,8 +6046,8 @@
           "line_start": 2290,
           "line_end": 2304,
           "label": "test%3i : compress -T2 with/without literals compression :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5988,7 +6057,7 @@
           "line_end": 2317,
           "label": "test%3i : Multithreaded ZSTD_compress2() with rsyncable :",
           "status": "blocked",
-          "reason": "This named group requires a worker pool or multi-threaded compression.",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -5998,7 +6067,7 @@
           "line_end": 2344,
           "label": "test%3i : setting multithreaded parameters :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
@@ -6007,9 +6076,11 @@
           "line_start": 2345,
           "line_end": 2375,
           "label": "test%3i : compress multiple frames :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Original segment sizes/order and 129-KiB skip; compression level selection absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#decompress_multiple_frames_with_skippable_frame"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2376",
@@ -6017,8 +6088,8 @@
           "line_start": 2376,
           "line_end": 2380,
           "label": "test%3i : get decompressed size of multiple frames :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -6027,8 +6098,8 @@
           "line_start": 2381,
           "line_end": 2385,
           "label": "test%3i : get tight decompressed bound of multiple frames :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -6037,9 +6108,11 @@
           "line_start": 2386,
           "line_end": 2390,
           "label": "test%3i : decompress multiple frames :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Whole concatenation decoded and combined output limit checked.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#decompress_multiple_frames_with_skippable_frame"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2391",
@@ -6047,9 +6120,11 @@
           "line_start": 2391,
           "line_end": 2395,
           "label": "test%3i : check decompressed result :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Every byte in the concatenated output compared.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#decompress_multiple_frames_with_skippable_frame"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2396",
@@ -6057,9 +6132,11 @@
           "line_start": 2396,
           "line_end": 2419,
           "label": "test%3i : read/write a skippable frame :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "All sixteen variants decoded; library write/extract APIs absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#skippable_frames_with_all_magic_variants"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2420",
@@ -6067,9 +6144,11 @@
           "line_start": 2420,
           "line_end": 2442,
           "label": "test%3i : read/write an empty skippable frame :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "All sixteen empty variants decoded; library write/extract APIs absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#skippable_frames_with_all_magic_variants"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2443",
@@ -6078,7 +6157,7 @@
           "line_end": 2447,
           "label": "test%3i : copy context too soon :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6088,7 +6167,7 @@
           "line_end": 2452,
           "label": "test%3i : load dictionary into context :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6098,7 +6177,7 @@
           "line_end": 2460,
           "label": "test%3i : compress with flat dictionary :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6108,7 +6187,7 @@
           "line_end": 2468,
           "label": "test%3i : frame built with flat dictionary should be decompressible :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6118,7 +6197,7 @@
           "line_end": 2479,
           "label": "test%3i : compress with duplicated context :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6128,7 +6207,7 @@
           "line_end": 2487,
           "label": "test%3i : frame built with duplicated context should be decompressible :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6138,7 +6217,7 @@
           "line_end": 2495,
           "label": "test%3i : decompress with DDict :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6148,7 +6227,7 @@
           "line_end": 2507,
           "label": "test%3i : decompress with static DDict :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6158,7 +6237,7 @@
           "line_end": 2553,
           "label": "test%3i : check content size on duplicated context :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6168,7 +6247,7 @@
           "line_end": 2664,
           "label": "test%3i : flat-dictionary efficiency test : \\n",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6178,7 +6257,7 @@
           "line_end": 2674,
           "label": "test%3i : dictBuilder on cyclic data :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6188,7 +6267,7 @@
           "line_end": 2681,
           "label": "test%3i : dictBuilder :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6198,7 +6277,7 @@
           "line_end": 2695,
           "label": "test%3i : Multithreaded COVER dictBuilder :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6208,7 +6287,7 @@
           "line_end": 2711,
           "label": "test%3i : COVER dictBuilder with shrinkDict:",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6218,7 +6297,7 @@
           "line_end": 2725,
           "label": "test%3i : Multithreaded FASTCOVER dictBuilder :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6228,7 +6307,7 @@
           "line_end": 2741,
           "label": "test%3i : FASTCOVER dictBuilder with shrinkDict:",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6238,7 +6317,7 @@
           "line_end": 2746,
           "label": "test%3i : check dictID :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6248,7 +6327,7 @@
           "line_end": 2751,
           "label": "test%3i : check dict header size no error :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6258,7 +6337,7 @@
           "line_end": 2757,
           "label": "test%3i : check dict header size correctness :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6268,7 +6347,7 @@
           "line_end": 2764,
           "label": "test%3i : compress with dictionary :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6278,7 +6357,7 @@
           "line_end": 2770,
           "label": "test%3i : retrieve dictID from dictionary :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6288,7 +6367,7 @@
           "line_end": 2776,
           "label": "test%3i : retrieve dictID from frame :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6298,7 +6377,7 @@
           "line_end": 2787,
           "label": "test%3i : frame built with dictionary should be decompressible :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6308,7 +6387,7 @@
           "line_end": 2793,
           "label": "test%3i : estimate CDict size :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6318,7 +6397,7 @@
           "line_end": 2808,
           "label": "test%3i : compress with CDict",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6328,7 +6407,7 @@
           "line_end": 2814,
           "label": "test%3i : retrieve dictID from frame :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6338,7 +6417,7 @@
           "line_end": 2825,
           "label": "test%3i : frame built with dictionary should be decompressible :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6348,7 +6427,7 @@
           "line_end": 2853,
           "label": "test%3i : compress with static CDict :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6358,7 +6437,7 @@
           "line_end": 2867,
           "label": "test%3i : ZSTD_compress_usingCDict_advanced, no contentSize, no dictID :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6367,8 +6446,8 @@
           "line_start": 2868,
           "line_end": 2873,
           "label": "test%3i : try retrieving contentSize from frame :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6378,7 +6457,7 @@
           "line_end": 2885,
           "label": "test%3i : frame built without dictID should be decompressible :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6388,7 +6467,7 @@
           "line_end": 2895,
           "label": "test%3i : ZSTD_compress_advanced, no dictID :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6398,7 +6477,7 @@
           "line_end": 2906,
           "label": "test%3i : frame built without dictID should be decompressible :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6408,7 +6487,7 @@
           "line_end": 2919,
           "label": "test%3i : dictionary containing only header should return error :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6418,7 +6497,7 @@
           "line_end": 2940,
           "label": "test%3d : bufferless api with cdict :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6428,7 +6507,7 @@
           "line_end": 2948,
           "label": "test%3i : Building cdict w/ ZSTD_dct_fullDict on a good dictionary :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6438,7 +6517,7 @@
           "line_end": 2962,
           "label": "test%3i : Building cdict w/ ZSTD_dct_fullDict on a rawContent (must fail) :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6448,7 +6527,7 @@
           "line_end": 2975,
           "label": "test%3i : Loading rawContent starting with dict header w/ ZSTD_dct_auto should fail :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6458,7 +6537,7 @@
           "line_end": 2986,
           "label": "test%3i : Loading rawContent starting with dict header w/ ZSTD_dct_rawContent should pass :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6468,7 +6547,7 @@
           "line_end": 3000,
           "label": "test%3i : Testing non-attached CDict with ZSTD_dct_rawContent :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6478,7 +6557,7 @@
           "line_end": 3012,
           "label": "test%3i : ZSTD_CCtx_refCDict() then set parameters :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6488,7 +6567,7 @@
           "line_end": 3031,
           "label": "test%3i : Loading dictionary before setting parameters is the same as loading after :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6498,7 +6577,7 @@
           "line_end": 3039,
           "label": "test%3i : Loading a dictionary clears the prefix :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6508,7 +6587,7 @@
           "line_end": 3049,
           "label": "test%3i : Loading a dictionary clears the cdict :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6518,7 +6597,7 @@
           "line_end": 3059,
           "label": "test%3i : Loading a cdict clears the prefix :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6528,7 +6607,7 @@
           "line_end": 3069,
           "label": "test%3i : Loading a cdict clears the dictionary :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6538,7 +6617,7 @@
           "line_end": 3077,
           "label": "test%3i : Loading a prefix clears the dictionary :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6548,7 +6627,7 @@
           "line_end": 3087,
           "label": "test%3i : Loading a prefix clears the cdict :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6558,7 +6637,7 @@
           "line_end": 3103,
           "label": "test%3i : Loaded dictionary persists across reset session :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6568,7 +6647,7 @@
           "line_end": 3123,
           "label": "test%3i : Loaded dictionary is cleared after resetting parameters :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6578,7 +6657,7 @@
           "line_end": 3145,
           "label": "test%3i : ZSTD_decompressDCtx() with dictionary :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6588,7 +6667,7 @@
           "line_end": 3165,
           "label": "test%3i : ZSTD_decompressDCtx() with ddict :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6598,7 +6677,7 @@
           "line_end": 3180,
           "label": "test%3i : ZSTD_decompressDCtx() with prefix :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6608,7 +6687,7 @@
           "line_end": 3207,
           "label": "test%3i : ZSTD_fast attach dictionary with hashLog = 25 and chainLog = 25 :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6618,7 +6697,7 @@
           "line_end": 3234,
           "label": "test%3i : ZSTD_dfast attach dictionary with hashLog = 25 and chainLog = 25 :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6628,7 +6707,7 @@
           "line_end": 3264,
           "label": "test%3i : ZSTD_lazy attach dictionary with hashLog = 29 and searchLog = 4 :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6638,7 +6717,7 @@
           "line_end": 3311,
           "label": "test%3i : Dictionary with non-default repcodes :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6648,7 +6727,7 @@
           "line_end": 3403,
           "label": "test%3i : ZSTD_decompressDCtx() with multiple ddicts :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6658,7 +6737,7 @@
           "line_end": 3414,
           "label": "test%3i : ZDICT_trainFromBuffer_cover :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6668,7 +6747,7 @@
           "line_end": 3419,
           "label": "test%3i : check dictID :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6678,7 +6757,7 @@
           "line_end": 3428,
           "label": "test%3i : ZDICT_optimizeTrainFromBuffer_cover :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6688,7 +6767,7 @@
           "line_end": 3439,
           "label": "test%3i : check dictID :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -6697,9 +6776,11 @@
           "line_start": 3440,
           "line_end": 3445,
           "label": "test%3i : Check input length for magic number :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Every source length below four is rejected.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#check_input_length_for_magic_number"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3446",
@@ -6707,9 +6788,11 @@
           "line_start": 3446,
           "line_end": 3452,
           "label": "test%3i : Check magic Number :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Original corrupted first magic byte rejected.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#check_magic_number"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3453",
@@ -6717,8 +6800,8 @@
           "line_start": 3453,
           "line_end": 3468,
           "label": "test%3i : Content size verification :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Streaming end-directive/pledged-source-size API absent.",
           "rust_tests": []
         },
         {
@@ -6728,7 +6811,7 @@
           "line_end": 3495,
           "label": "test%3i : negative compression level :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -6738,7 +6821,7 @@
           "line_end": 3512,
           "label": "test%3i : parameters in order :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -6748,7 +6831,7 @@
           "line_end": 3532,
           "label": "test%3i : parameters disordered :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
           "rust_tests": []
         },
         {
@@ -6758,7 +6841,7 @@
           "line_end": 3538,
           "label": "test%3i : get dParameter bounds",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Decoder parameter bound/query/reset API absent.",
           "rust_tests": []
         },
         {
@@ -6768,7 +6851,7 @@
           "line_end": 3547,
           "label": "test%3i : wrong dParameter :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Decoder parameter bound/query/reset API absent.",
           "rust_tests": []
         },
         {
@@ -6778,7 +6861,7 @@
           "line_end": 3567,
           "label": "test%3i : out of bound dParameter :",
           "status": "blocked",
-          "reason": "This named group requires encoder parameter, strategy, or sequence-producer controls absent from the initial Rust encoder.",
+          "reason": "Decoder parameter bound/query/reset API absent.",
           "rust_tests": []
         },
         {
@@ -6787,8 +6870,8 @@
           "line_start": 3568,
           "line_end": 3578,
           "label": "test%3i : magic-less format test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Magicless encoding/decoding and its format-selection API absent.",
           "rust_tests": []
         },
         {
@@ -6797,8 +6880,8 @@
           "line_start": 3579,
           "line_end": 3584,
           "label": "test%3i : decompress normally (should fail) :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Magicless encoding/decoding and its format-selection API absent.",
           "rust_tests": []
         },
         {
@@ -6807,8 +6890,8 @@
           "line_start": 3585,
           "line_end": 3607,
           "label": "test%3i : decompress of magic-less frame :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Magicless encoding/decoding and its format-selection API absent.",
           "rust_tests": []
         },
         {
@@ -6817,8 +6900,8 @@
           "line_start": 3608,
           "line_end": 3618,
           "label": "test%3i : empty magic-less format test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Magicless encoding/decoding and its format-selection API absent.",
           "rust_tests": []
         },
         {
@@ -6827,8 +6910,8 @@
           "line_start": 3619,
           "line_end": 3640,
           "label": "test%3i : decompress of empty magic-less frame :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Magicless encoding/decoding and its format-selection API absent.",
           "rust_tests": []
         },
         {
@@ -6838,7 +6921,7 @@
           "line_end": 3677,
           "label": "test%3i : Decompression parameter reset test :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Decoder parameter bound/query/reset API absent.",
           "rust_tests": []
         },
         {
@@ -6847,8 +6930,8 @@
           "line_start": 3678,
           "line_end": 3683,
           "label": "test%3i : Block compression test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public raw-block/bufferless streaming compression and decompression API absent.",
           "rust_tests": []
         },
         {
@@ -6857,8 +6940,8 @@
           "line_start": 3684,
           "line_end": 3690,
           "label": "test%3i : Block decompression test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public raw-block/bufferless streaming compression and decompression API absent.",
           "rust_tests": []
         },
         {
@@ -6868,7 +6951,7 @@
           "line_end": 3704,
           "label": "test%3i : Huge block streaming compression test :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Public raw-block/bufferless streaming compression and decompression API absent.",
           "rust_tests": []
         },
         {
@@ -6878,7 +6961,7 @@
           "line_end": 3715,
           "label": "test%3i : Dictionary Block compression test :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6888,7 +6971,7 @@
           "line_end": 3732,
           "label": "test%3i : Dictionary Block decompression test :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6898,7 +6981,7 @@
           "line_end": 3748,
           "label": "test%3i : Block compression with CDict :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -6907,9 +6990,11 @@
           "line_start": 3749,
           "line_end": 3763,
           "label": "test%3i : RLE detection test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Original B/A runs, roundtrip, and <=46-byte compressed-size bound retained.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#rle_detection_workload"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3764",
@@ -6917,8 +7002,8 @@
           "line_start": 3764,
           "line_end": 3796,
           "label": "test%3i : ZSTD_generateSequences decode from sequences test :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public sequence generation/external-sequence compression API absent.",
           "rust_tests": []
         },
         {
@@ -6927,8 +7012,8 @@
           "line_start": 3797,
           "line_end": 3821,
           "label": "test%3i : ZSTD_generateSequences too small output buffer :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public sequence generation/external-sequence compression API absent.",
           "rust_tests": []
         },
         {
@@ -6937,8 +7022,8 @@
           "line_start": 3822,
           "line_end": 3880,
           "label": "test%3i : ZSTD_getSequences followed by ZSTD_compressSequences :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public sequence generation/external-sequence compression API absent.",
           "rust_tests": []
         },
         {
@@ -6947,8 +7032,8 @@
           "line_start": 3881,
           "line_end": 3984,
           "label": "test%3i : ZSTD_compressSequencesAndLiterals :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public sequence generation/external-sequence compression API absent.",
           "rust_tests": []
         },
         {
@@ -6957,9 +7042,11 @@
           "line_start": 3985,
           "line_end": 3989,
           "label": "test%3i : compress %u zeroes :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Original 1,000,000 zero bytes compressed.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#multiple_blocks_of_zeroes"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3990",
@@ -6967,9 +7054,11 @@
           "line_start": 3990,
           "line_end": 3996,
           "label": "test%3i : decompress %u zeroes :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Original 1,000,000-byte output compared.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#multiple_blocks_of_zeroes"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3997",
@@ -6977,9 +7066,11 @@
           "line_start": 3997,
           "line_end": 4001,
           "label": "test%3i : compress %u zeroes :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Original 100 zero bytes compressed.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#all_zeroes_issue_137"
+          ]
         },
         {
           "id": "tests/fuzzer.c:4002",
@@ -6987,9 +7078,11 @@
           "line_start": 4002,
           "line_end": 4031,
           "label": "test%3i : decompress %u zeroes :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Original 100-byte output compared.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#all_zeroes_issue_137"
+          ]
         },
         {
           "id": "tests/fuzzer.c:4032",
@@ -6997,9 +7090,11 @@
           "line_start": 4032,
           "line_end": 4049,
           "label": "test%3i : growing nbSeq :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Original counts and triple corpus retained; context reuse and level 19 absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#growing_sequence_count"
+          ]
         },
         {
           "id": "tests/fuzzer.c:4050",
@@ -7007,9 +7102,11 @@
           "line_start": 4050,
           "line_end": 4054,
           "label": "test%3i : compress lots 3-bytes sequences :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Exact 131,000-byte seeded triple corpus; level 19 selection absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#many_three_byte_sequences"
+          ]
         },
         {
           "id": "tests/fuzzer.c:4055",
@@ -7017,9 +7114,11 @@
           "line_start": 4055,
           "line_end": 4060,
           "label": "test%3i : decompress lots 3-bytes sequence :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Complete triple-corpus output comparison.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#many_three_byte_sequences"
+          ]
         },
         {
           "id": "tests/fuzzer.c:4061",
@@ -7027,9 +7126,11 @@
           "line_start": 4061,
           "line_end": 4078,
           "label": "test%3i : growing literals buffer :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Original literal profile and full 1..5-MiB schedule; context reuse absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#growing_literals_buffer"
+          ]
         },
         {
           "id": "tests/fuzzer.c:4079",
@@ -7038,7 +7139,7 @@
           "line_end": 4116,
           "label": "test%3i : incompressible data and ill suited dictionary :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
           "rust_tests": []
         },
         {
@@ -7047,8 +7148,8 @@
           "line_start": 4117,
           "line_end": 4120,
           "label": "test%3i : ZSTD_findFrameCompressedSize on skippable frame :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -7057,8 +7158,8 @@
           "line_start": 4121,
           "line_end": 4124,
           "label": "test%3i : ZSTD_getFrameContentSize on skippable frame :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -7067,8 +7168,8 @@
           "line_start": 4125,
           "line_end": 4139,
           "label": "test%3i : ZSTD_getFrameHeader on skippable frame :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
           "rust_tests": []
         },
         {
@@ -7077,8 +7178,8 @@
           "line_start": 4140,
           "line_end": 4148,
           "label": "test%3i : testing ZSTD error code strings :",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "non_applicable",
+          "reason": "C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version.",
           "rust_tests": []
         },
         {
@@ -7088,7 +7189,7 @@
           "line_end": 4171,
           "label": "test%3i : testing ZSTD dictionary sizes :",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -7097,8 +7198,8 @@
           "line_start": 4172,
           "line_end": 4189,
           "label": "test%3i : testing FSE_normalizeCount() PR#1255:",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "FSE normalized-count encoding/normalization API not implemented; decoder alone does not cover it.",
           "rust_tests": []
         },
         {
@@ -7107,8 +7208,8 @@
           "line_start": 4190,
           "line_end": 4205,
           "label": "test%3i : testing FSE_writeNCount() PR#2779:",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "FSE normalized-count encoding/normalization API not implemented; decoder alone does not cover it.",
           "rust_tests": []
         },
         {
@@ -7117,8 +7218,8 @@
           "line_start": 4206,
           "line_end": 4274,
           "label": "test%3i : testing bitwise intrinsics PR#3045:",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "non_applicable",
+          "reason": "C compiler-intrinsic implementation regression; Rust uses language integer operations.",
           "rust_tests": []
         },
         {
@@ -7128,7 +7229,7 @@
           "line_end": 4304,
           "label": "test%3i : passing wrong full dict should fail on compressStream2 refPrefix",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -7138,7 +7239,7 @@
           "line_end": 4331,
           "label": "test%3i : small dictionary with multithreading and LDM",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -7148,7 +7249,7 @@
           "line_end": 4345,
           "label": "test%3i : ZSTD_getCParams() + dictionary",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -7158,7 +7259,7 @@
           "line_end": 4356,
           "label": "test%3i : ZSTD_adjustCParams() + dictionary",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -7168,7 +7269,7 @@
           "line_end": 4372,
           "label": "test%3i : check compression mem usage monotonicity over levels for estimateCCtxSize() :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
@@ -7178,37 +7279,57 @@
           "line_end": 4394,
           "label": "test%3i : check estimateCCtxSize() always larger or equal to ZSTD_estimateCCtxSize_usingCParams() :",
           "status": "blocked",
-          "reason": "This named group requires reusable C-style contexts or incremental stream/block APIs absent from the Rust public API.",
+          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
           "rust_tests": []
         },
         {
           "id": "tests/fuzzer.c:4395",
           "kind": "diagnostic_group",
           "line_start": 4395,
-          "line_end": 4401,
+          "line_end": 4417,
           "label": "test%3i : thread pool API tests : \\n",
           "status": "blocked",
-          "reason": "This named group requires a worker pool or multi-threaded compression.",
-          "rust_tests": []
-        },
-        {
-          "id": "tests/fuzzer.c:4402",
-          "kind": "diagnostic_group",
-          "line_start": 4402,
-          "line_end": 4417,
-          "label": "thread pool tests OK \\n",
-          "status": "blocked",
-          "reason": "This named group requires a worker pool or multi-threaded compression.",
+          "reason": "Multithreaded compressor and shared thread-pool API absent.",
           "rust_tests": []
         },
         {
           "id": "tests/fuzzer.c:4418",
           "kind": "test_function",
           "line_start": 4418,
-          "line_end": 4664,
+          "line_end": 4437,
           "label": "longUnitTests",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
+          "status": "blocked",
+          "reason": "Long-running index-reduction, LDM, optimal-parser, and dictionary-attachment strategies are not implemented.",
+          "rust_tests": []
+        },
+        {
+          "id": "tests/fuzzer.c:4438",
+          "kind": "diagnostic_group",
+          "line_start": 4438,
+          "line_end": 4506,
+          "label": "longtest%3i : table cleanliness through index reduction :",
+          "status": "blocked",
+          "reason": "Persistent streaming match-table index reduction and static context APIs absent.",
+          "rust_tests": []
+        },
+        {
+          "id": "tests/fuzzer.c:4507",
+          "kind": "diagnostic_group",
+          "line_start": 4507,
+          "line_end": 4543,
+          "label": "longtest%3i : testing ldm no regressions in size for opt parser :",
+          "status": "blocked",
+          "reason": "Long-distance matching and optimal parser configuration/size comparison absent.",
+          "rust_tests": []
+        },
+        {
+          "id": "tests/fuzzer.c:4544",
+          "kind": "diagnostic_group",
+          "line_start": 4544,
+          "line_end": 4664,
+          "label": "longtest%3i : testing cdict compression with different attachment strategies :",
+          "status": "blocked",
+          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
           "rust_tests": []
         },
         {
@@ -7217,9 +7338,12 @@
           "line_start": 4665,
           "line_end": 5147,
           "label": "fuzzerTests",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "RNG/noise/profile/sample/mutation algorithms and bounded one-shot checks run with deterministic seeds; original parameter, dictionary, reusable-context, and compression-level paths remain absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#deterministic_fuzzer_one_shot_cycles",
+            "tests/upstream_fuzzer.rs#intensive_fuzzer_one_shot_cycles"
+          ]
         }
       ]
     },
@@ -7229,9 +7353,13 @@
       "sha256": "1ca04564ed658653f314ac6847c511a259d3b58d6315a7f7daf0f697a1514942",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Original corpus is preserved; Rust roundtrip, default-level official frame decoding, output bounds, and official decoding of Rust output run. Upstream specialized block-size, level, and strategy settings remain absent.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#rust_encoder_round_trip",
+        "tests/upstream_golden.rs#decodes_official_compression",
+        "tests/upstream_golden.rs#official_decoder_accepts_rust_compression_of_all_golden_inputs"
+      ],
       "line_count": 1,
       "cases": []
     },
@@ -7241,9 +7369,13 @@
       "sha256": "ff02112301c842932531648f21911d6a47896df1c7bf484e8e2e5fec34fa91be",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Original corpus is preserved; Rust roundtrip, default-level official frame decoding, output bounds, and official decoding of Rust output run. Upstream specialized block-size, level, and strategy settings remain absent.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#rust_encoder_round_trip",
+        "tests/upstream_golden.rs#decodes_official_compression",
+        "tests/upstream_golden.rs#official_decoder_accepts_rust_compression_of_all_golden_inputs"
+      ],
       "line_count": 1,
       "cases": []
     },
@@ -7253,9 +7385,13 @@
       "sha256": "46f9f62efa91681b9bcb5cdd390bbe540fb565c0ed0ab2c65a86eb575116d3fc",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Original corpus is preserved; Rust roundtrip, default-level official frame decoding, output bounds, and official decoding of Rust output run. Upstream specialized block-size, level, and strategy settings remain absent.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#rust_encoder_round_trip",
+        "tests/upstream_golden.rs#decodes_official_compression",
+        "tests/upstream_golden.rs#official_decoder_accepts_rust_compression_of_all_golden_inputs"
+      ],
       "line_count": 1,
       "cases": []
     },
@@ -7265,9 +7401,13 @@
       "sha256": "abadcf3096be26e7df4e6dd18c818606092b5493948050c409bc7104abd02415",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Original corpus is preserved; Rust roundtrip, default-level official frame decoding, output bounds, and official decoding of Rust output run. Upstream specialized block-size, level, and strategy settings remain absent.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#rust_encoder_round_trip",
+        "tests/upstream_golden.rs#decodes_official_compression",
+        "tests/upstream_golden.rs#official_decoder_accepts_rust_compression_of_all_golden_inputs"
+      ],
       "line_count": 1045,
       "cases": []
     },
@@ -7289,9 +7429,11 @@
       "sha256": "144e2f029389c67c361bd3879ac142671592802f01f805a6c0c2b3e564d8022c",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Original malformed fixture bytes are preserved and the Rust decoder rejects the frame.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#rejects_zero_offset"
+      ],
       "line_count": 1,
       "cases": []
     },
@@ -7301,9 +7443,11 @@
       "sha256": "c91a09d8824609d0643291803cbfb04b14213c02c890d5637bc3aed18e8a24f8",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Original malformed fixture bytes are preserved and the Rust decoder rejects the frame.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#rejects_truncated_huffman_state"
+      ],
       "line_count": 1,
       "cases": []
     },
@@ -7313,9 +7457,11 @@
       "sha256": "85d7b2010abde2ff96ab8e6798b422d3cb78f8dd2108f83dbdd488da7056a6db",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Original malformed fixture bytes are preserved and the Rust decoder rejects the frame.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#rejects_extraneous_zero_sequence_bytes"
+      ],
       "line_count": 2,
       "cases": []
     },
@@ -7325,9 +7471,11 @@
       "sha256": "6a226ab40e6abcfc4a36baa04bf48f7ee56f166b8a26fbe2adb8fe771dceccba",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Original fixture bytes are preserved and Rust decoding compares the complete independently verified expected output.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#block_at_128k_encoded_size_limit_decodes"
+      ],
       "line_count": 1,
       "cases": []
     },
@@ -7337,9 +7485,11 @@
       "sha256": "ab5463fa31429bf81ced9f05e99b96b2fe88b1da37235a233f6bc96242332fbc",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Original fixture bytes are preserved and Rust decoding compares the complete independently verified expected output.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#empty_block_decodes_to_empty_output"
+      ],
       "line_count": 1,
       "cases": []
     },
@@ -7349,9 +7499,11 @@
       "sha256": "dd31b3fa6bb8601710cbde2c625660763bf38adc5255501e3d3a681cc0e4e1a4",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Original fixture bytes are preserved and Rust decoding compares the complete independently verified expected output.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#rle_first_block_decodes_to_one_mebibyte_of_zeros"
+      ],
       "line_count": 1,
       "cases": []
     },
@@ -7361,9 +7513,11 @@
       "sha256": "8505867ac00fb49eb455da1b1e44e7cba5126f03114a72fb195170f7c95f2ca7",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Pinned corpus asset identified; migrate its corresponding executable assertion and verify the oracle output.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Original fixture bytes are preserved and Rust decoding compares the complete independently verified expected output.",
+      "rust_tests": [
+        "tests/upstream_golden.rs#zero_sequence_count_with_two_byte_encoding_decodes"
+      ],
       "line_count": 2,
       "cases": []
     },
@@ -7685,9 +7839,12 @@
       "sha256": "8777219624109da3b1c1332e2a6dd3f20ed84f64054cbbef144594fae5627e9d",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "Legacy Zstandard versions and cross-release C API compatibility are not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Exact official legacy fixture bytes are preserved and their v0.8 current-format component decodes successfully. The full five-frame desired-success test is present but ignored and fails until legacy v0.4-v0.7 support exists; legacy streaming and frame scanning remain absent.",
+      "rust_tests": [
+        "tests/upstream_inline_regressions.rs#decodes_current_format_component_of_official_legacy_fixture",
+        "tests/upstream_inline_regressions.rs#decodes_all_five_official_legacy_frames"
+      ],
       "line_count": 260,
       "cases": [
         {
@@ -7697,8 +7854,10 @@
           "line_end": 75,
           "label": "testSimpleAPI",
           "status": "blocked",
-          "reason": "Legacy Zstandard versions and cross-release C API compatibility are not implemented.",
-          "rust_tests": []
+          "reason": "The complete original desired-success assertion exists as an ignored Rust test but fails with InvalidMagic until v0.4-v0.7 decoders exist. Passing the v0.8 component is not full legacy compatibility.",
+          "rust_tests": [
+            "tests/upstream_inline_regressions.rs#decodes_all_five_official_legacy_frames"
+          ]
         },
         {
           "id": "tests/legacy.c:76",
@@ -7717,7 +7876,7 @@
           "line_end": 260,
           "label": "testFrameDecoding",
           "status": "blocked",
-          "reason": "Legacy Zstandard versions and cross-release C API compatibility are not implemented.",
+          "reason": "Legacy decompression-bound and concatenated frame-size scanning APIs are not implemented.",
           "rust_tests": []
         }
       ]
@@ -7740,9 +7899,11 @@
       "sha256": "cf401cacc41d77c5384cf33aecc24be62179fbfd19b6fcbb5d2b8363b97c0a70",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "Multi-gigabyte streaming matches and long-distance compression settings are not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Original 256-KiB source shape and duplicated 63-byte marker roundtrip in Rust; the defining continuous 8-GiB streaming/index-overflow regression is blocked.",
+      "rust_tests": [
+        "tests/upstream_fuzzer.rs#long_match_input_layout"
+      ],
       "line_count": 102,
       "cases": []
     },
@@ -7799,9 +7960,11 @@
       "sha256": "3e5cbc7c81ef12835369fc8236c5a382eaf5306ed9ff8a8a1b7be154b3d7af08",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "The shell suite tests the upstream CLI, dictionaries, levels, threads, and external formats; no Rust CLI exists.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Golden codec checks run as Rust tests. Filesystem/terminal CLI behavior, levels, dictionaries, threads, external formats, and the remaining shell test groups require missing interfaces.",
+      "rust_tests": [
+        "tests/upstream_golden.rs"
+      ],
       "line_count": 1925,
       "cases": [
         {
@@ -8450,9 +8613,11 @@
           "line_start": 520,
           "line_end": 537,
           "label": "\\n===>  decompression only tests",
-          "status": "blocked",
-          "reason": "The shell suite tests the upstream CLI, dictionaries, levels, threads, and external formats; no Rust CLI exists.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "RLE-first, empty, noncanonical zero-sequence and malformed extraneous-sequence frames are tested in Rust. CLI file creation, -o, and -t behavior remains absent.",
+          "rust_tests": [
+            "tests/upstream_golden.rs"
+          ]
         },
         {
           "id": "tests/playTests.sh:538",
@@ -9100,9 +9265,11 @@
           "line_start": 1287,
           "line_end": 1293,
           "label": "\\n===>  golden files tests",
-          "status": "blocked",
-          "reason": "The shell suite tests the upstream CLI, dictionaries, levels, threads, and external formats; no Rust CLI exists.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Golden decoding and the no-dictionary compression corpus are covered by Rust tests. Dictionary roundtrip and recursive CLI orchestration remain absent.",
+          "rust_tests": [
+            "tests/upstream_golden.rs"
+          ]
         },
         {
           "id": "tests/playTests.sh:1294",
@@ -9795,9 +9962,11 @@
       "sha256": "a16fddf17fea95ae10df411935fd743fbad304627556d0526b61be8576c093a9",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "planned",
-      "reason": "Whole-file migration includes named groups plus unlabelled randomized drivers; supported one-shot tests need exact Rust mappings.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "One-shot corpora preserve complete size/content comparisons; XXH32-derived compression-level selection, CCtxParams, and multithreading paths remain absent.",
+      "rust_tests": [
+        "tests/upstream_fuzzer.rs#round_trip_crash_corpora"
+      ],
       "line_count": 241,
       "cases": [
         {
@@ -9806,9 +9975,11 @@
           "line_start": 63,
           "line_end": 80,
           "label": "roundTripTest",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "One-shot content/size roundtrips run with deterministic corpora; original compression-level and reusable context configuration is absent.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#round_trip_crash_corpora"
+          ]
         },
         {
           "id": "tests/roundTripCrash.c:81",
@@ -9864,8 +10035,8 @@
       "sha256": "9fc7d5778afaf0c2205b1528d5010e5516915e7d750ee8d5c01ae406c42abfab",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "non_applicable",
-      "reason": "Checks the upstream C library build variants, visibility/link symbols, release tag, or binary size rather than the Rust crate API.",
+      "status": "blocked",
+      "reason": "C symbol checks have no direct counterpart, but this script also asserts variant-specific CLI help and executable compression/decompression behavior; those Rust binaries are not implemented.",
       "rust_tests": [],
       "line_count": 115,
       "cases": []
