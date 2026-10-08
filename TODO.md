@@ -10,7 +10,7 @@
 ## Module 4: validation and performance
 
 - [x] Add independent official zstd interoperability fixtures and tests.
-- [ ] Verify Rust encoder output with the official decoder.
+- [x] Verify Rust encoder output with the official decoder.
 - [ ] Exercise malformed input, feature combinations, and no_std builds.
 - [ ] Add maximum-depth Huffman and malformed table regression cases.
 - [ ] Add a reproducible per-backend benchmark harness.

@@ -23,8 +23,9 @@ Alternatively set `ZSTD_BIN` to an absolute executable path. The generator
 verifies that the oracle reports v1.5.7 and round-trips the checksum-bearing
 fixtures with the official decoder.
 
-The checked-in tests require no CLI. Additional differential tests generate 56
-frames at runtime using the external oracle:
+The checked-in tests require no CLI. Additional differential tests decode 56 frames generated at runtime by the
+external oracle, and ask it to decode 31 Rust-produced frames covering the same
+corpora and sizes around content-size and 128 KiB block boundaries:
 
 ```sh
 cargo test --test interop -- --ignored

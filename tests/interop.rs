@@ -206,3 +206,52 @@ fn differential_decode_against_official_cli() {
         }
     }
 }
+
+#[test]
+fn rust_encoder_roundtrips_deterministic_corpora() {
+    for name in [
+        "empty", "tiny", "runs", "random", "skewed", "text", "history",
+    ] {
+        let source = corpus(name);
+        let encoded = zstdoxide::compress(&source).unwrap();
+        assert_eq!(
+            decompress(&encoded, source.len()).unwrap(),
+            source,
+            "{name}"
+        );
+    }
+}
+
+#[test]
+#[ignore = "requires the external official zstd v1.5.7 test oracle"]
+fn differential_encode_against_official_cli() {
+    let version = oracle(&["--version".into()], &[]);
+    assert!(String::from_utf8_lossy(&version).contains("v1.5.7"));
+    let arguments = ["-q".into(), "-d".into(), "-c".into()];
+    for name in [
+        "empty", "tiny", "runs", "random", "skewed", "text", "history",
+    ] {
+        let source = corpus(name);
+        let encoded = zstdoxide::compress(&source).unwrap();
+        assert_eq!(oracle(&arguments, &encoded), source, "{name}");
+    }
+    for length in [
+        0, 1, 2, 3, 255, 256, 65535, 65536, 131071, 131072, 131073, 262144,
+    ] {
+        for random in [false, true] {
+            let source: Vec<_> = if random {
+                random_values(length)
+                    .map(|value| (value >> 24) as u8)
+                    .collect()
+            } else {
+                (0..length).map(|index| b"abcd1234"[index % 8]).collect()
+            };
+            let encoded = zstdoxide::compress(&source).unwrap();
+            assert_eq!(
+                oracle(&arguments, &encoded),
+                source,
+                "length={length}, random={random}"
+            );
+        }
+    }
+}
