@@ -43,6 +43,7 @@ mod ring_history;
 mod sequences;
 mod stream;
 mod stream_decode;
+mod stream_encode;
 mod xxhash;
 
 #[cfg(test)]
@@ -55,3 +56,4 @@ pub use error::{Error, Result};
 pub use frame::FrameHeader;
 pub use stream::{EndDirective, Progress, StreamStatus};
 pub use stream_decode::Decoder;
+pub use stream_encode::{Encoder, EncoderOptions};

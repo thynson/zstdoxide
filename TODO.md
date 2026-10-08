@@ -55,8 +55,8 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Preserve entropy/repeat state and checksums across input/output exhaustion.
 - [x] Extract reusable block-encoding state without changing one-shot output.
 - [x] Retain bounded block-encoding scratch allocations across stream calls.
-- [ ] Add a streaming encoder with bounded block staging and finish semantics.
-- [ ] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
+- [x] Add a streaming encoder with bounded block staging and finish semantics.
+- [x] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
 - [ ] Port every applicable official streaming/context test with explicit source mapping.
 - [ ] Generate pinned official near-window sequence fixtures for window logs 10–29.
 - [ ] Replay the full window-distance sweep with bounded streaming output.
