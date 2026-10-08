@@ -32,8 +32,8 @@ one-shot adaptations do not complete the upstream test migration.
 - [ ] Initialize first-block Huffman/FSE tables and repeat offsets from prepared dictionaries.
 - [ ] Decode raw dictionary references beyond the ordinary frame window.
 - [ ] Handle dictionary-to-frame spanning matches without evicting source bytes.
-- [ ] Add persistent dictionary and single-use prefix context configuration.
-- [ ] Enforce nonzero frame dictionary IDs while supporting omitted IDs.
+- [x] Add persistent dictionary and single-use prefix context configuration.
+- [x] Enforce nonzero frame dictionary IDs while supporting omitted IDs.
 - [ ] Add one-shot dictionary decode helpers using the same streaming core.
 - [ ] Extend indexed match search to retained dictionary/history prefixes.
 - [ ] Write dictionary frame IDs and interoperable raw/prepared dictionary compression.

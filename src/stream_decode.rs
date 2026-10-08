@@ -7,7 +7,9 @@ use crate::huffman::{HuffmanTable, decode_literals};
 use crate::ring_history::RingHistory;
 use crate::sequences::SequenceState;
 use crate::xxhash::XxHash64;
-use crate::{DecodeOptions, Error, FrameHeader, Progress, Result, StreamStatus};
+use crate::{
+    DecodeOptions, Dictionary, Error, FrameHeader, Progress, Result, SharedDictionary, StreamStatus,
+};
 use alloc::vec::Vec;
 
 #[derive(Clone, Copy, Eq, PartialEq)]
@@ -54,6 +56,9 @@ pub struct Decoder {
     input_total: u64,
     output_total: u64,
     completed_frames: u64,
+    dictionary: Option<SharedDictionary>,
+    prefix: Option<SharedDictionary>,
+    active_dictionary: Option<SharedDictionary>,
 }
 
 impl Decoder {
@@ -82,6 +87,51 @@ impl Decoder {
             input_total: 0,
             output_total: 0,
             completed_frames: 0,
+            dictionary: None,
+            prefix: None,
+            active_dictionary: None,
+        }
+    }
+
+    /// Create a context with a persistent immutable dictionary for every frame.
+    pub fn with_dictionary(options: DecodeOptions, dictionary: SharedDictionary) -> Self {
+        let mut decoder = Self::new(options);
+        decoder.dictionary = Some(dictionary);
+        decoder
+    }
+
+    /// Replace the persistent dictionary and clear an unclaimed prefix.
+    ///
+    /// Configure only at a clean frame boundary, before any next header byte
+    /// has been accepted. Limits and counters remain unchanged. Rejection leaves
+    /// the context unchanged; a failed or sealed context must first be reset.
+    /// Corresponds to `ZSTD_DCtx_refDDict` with shared, owned lifetime.
+    pub fn set_dictionary(&mut self, dictionary: Option<SharedDictionary>) -> Result<()> {
+        self.check_configuration_boundary()?;
+        self.dictionary = dictionary;
+        self.prefix = None;
+        Ok(())
+    }
+
+    /// Configure a prefix for the next standard frame and clear the dictionary.
+    ///
+    /// Skippable frames do not claim this handle. Once a standard frame claims
+    /// it, completion or reset releases it. Reset preserves an unclaimed prefix.
+    /// Configuration is accepted only at a clean boundary, as for
+    /// [`Self::set_dictionary`]. Use [`Dictionary::raw`] for uninterpreted bytes.
+    /// Corresponds to `ZSTD_DCtx_refPrefix_advanced` with owned lifetime.
+    pub fn set_prefix(&mut self, prefix: SharedDictionary) -> Result<()> {
+        self.check_configuration_boundary()?;
+        self.dictionary = None;
+        self.prefix = Some(prefix);
+        Ok(())
+    }
+
+    fn check_configuration_boundary(&self) -> Result<()> {
+        if self.phase == Phase::Header && self.filled == 0 {
+            Ok(())
+        } else {
+            Err(Error::InvalidState)
         }
     }
 
@@ -145,10 +195,13 @@ impl Decoder {
     }
 
     /// Clear the session while retaining its limits and reusable allocation.
+    /// Persistent dictionaries and unclaimed prefixes are preserved; an active
+    /// single-use prefix is released along with its partial frame.
     pub fn reset(&mut self) {
         self.phase = Phase::Header;
         self.filled = 0;
         self.frame = None;
+        self.active_dictionary = None;
         self.max_block = 0;
         self.last_block = false;
         self.remaining = 0;
@@ -188,7 +241,9 @@ impl Decoder {
     pub fn total_output(&self) -> u64 {
         self.output_total
     }
-    /// Owned heap capacity in bytes, excluding inline state and caller buffers.
+    /// Reachable heap capacity, excluding inline state and caller buffers.
+    /// Shared dictionary allocations are included once for this context, even
+    /// when another context holds the same dictionary.
     pub fn retained_capacity(&self) -> usize {
         self.history.retained_capacity()
             + self.encoded.capacity()
@@ -198,6 +253,12 @@ impl Decoder {
                 .as_ref()
                 .map_or(0, HuffmanTable::retained_capacity)
             + self.sequences.retained_capacity()
+            + self
+                .active_dictionary
+                .as_ref()
+                .or(self.dictionary.as_ref())
+                .or(self.prefix.as_ref())
+                .map_or(0, |dictionary| dictionary.retained_capacity())
     }
     /// Initialized bytes currently available for backward references.
     pub fn history_size(&self) -> usize {
@@ -270,8 +331,15 @@ impl Decoder {
                         return Ok(StreamStatus::NeedInput);
                     }
                     let (header, _) = FrameHeader::parse(&self.scratch[..size])?;
+                    self.active_dictionary = self.prefix.take().or_else(|| self.dictionary.clone());
                     if header.dictionary_id != 0 {
-                        return Err(Error::DictionaryRequired);
+                        let dictionary = self
+                            .active_dictionary
+                            .as_ref()
+                            .ok_or(Error::DictionaryRequired)?;
+                        if dictionary.id() != header.dictionary_id {
+                            return Err(Error::DictionaryMismatch);
+                        }
                     }
                     if header.window_size > self.options.max_window_size {
                         return Err(Error::ResourceLimit);
@@ -503,6 +571,7 @@ impl Decoder {
         self.phase = Phase::Header;
         self.filled = 0;
         self.frame = None;
+        self.active_dictionary = None;
         self.history.clear();
         self.huffman = None;
         self.sequences = SequenceState::new();
@@ -593,6 +662,72 @@ impl SequenceOutput for BlockSink<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn dictionary_configuration_is_transactional_and_prefix_claims_only_standard_frames() {
+        let dictionary = Dictionary::raw(b"dictionary").unwrap().into_shared();
+        let mut decoder = Decoder::with_dictionary(DecodeOptions::new(0), dictionary.clone());
+        decoder.process(&[0x28], &mut []).unwrap();
+        assert_eq!(decoder.set_dictionary(None), Err(Error::InvalidState));
+        assert_eq!(
+            decoder.set_prefix(dictionary.clone()),
+            Err(Error::InvalidState)
+        );
+        assert!(decoder.dictionary.is_some());
+        assert_eq!(decoder.total_input(), 1);
+        decoder.reset();
+        assert!(decoder.dictionary.is_some());
+        decoder.set_prefix(dictionary).unwrap();
+        decoder.reset();
+        assert!(decoder.prefix.is_some());
+        assert!(decoder.dictionary.is_none());
+        let skip = [0x50, 0x2a, 0x4d, 0x18, 0, 0, 0, 0];
+        decoder.process(&skip, &mut []).unwrap();
+        assert!(decoder.prefix.is_some());
+        decoder
+            .process(&[0x28, 0xb5, 0x2f, 0xfd, 0x20, 0], &mut [])
+            .unwrap();
+        assert!(decoder.prefix.is_none());
+        assert!(decoder.active_dictionary.is_some());
+        decoder.reset();
+        assert!(decoder.prefix.is_none());
+        assert!(decoder.active_dictionary.is_none());
+        decoder.process(&skip, &mut []).unwrap();
+        decoder.finish().unwrap();
+        assert_eq!(decoder.set_dictionary(None), Err(Error::InvalidState));
+    }
+
+    #[test]
+    fn explicit_dictionary_ids_are_checked_before_block_processing() {
+        let dictionary = Dictionary::from_bytes(include_bytes!(
+            "../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols"
+        ))
+        .unwrap()
+        .into_shared();
+        let mut frame = alloc::vec![0x28, 0xb5, 0x2f, 0xfd, 0x23];
+        frame.extend_from_slice(&dictionary.id().to_le_bytes());
+        frame.extend_from_slice(&[0, 1, 0, 0]);
+        let mut decoder = Decoder::new(DecodeOptions::new(0));
+        assert_eq!(
+            decoder.process(&frame, &mut []),
+            Err(Error::DictionaryRequired)
+        );
+        decoder.reset();
+        decoder
+            .set_dictionary(Some(Dictionary::raw(b"wrong").unwrap().into_shared()))
+            .unwrap();
+        assert_eq!(
+            decoder.process(&frame, &mut []),
+            Err(Error::DictionaryMismatch)
+        );
+        decoder.reset();
+        decoder.set_dictionary(Some(dictionary)).unwrap();
+        assert_eq!(
+            decoder.process(&frame, &mut []).unwrap().status,
+            StreamStatus::FrameFinished
+        );
+    }
+
     #[test]
     fn headers_raw_and_rle_resume_at_single_byte_boundaries() {
         for (encoded, expected) in [
