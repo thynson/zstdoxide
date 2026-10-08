@@ -14,13 +14,22 @@
     {
       "source": "tests/fuzz/Makefile",
       "url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/",
-      "status": "blocked",
-      "reason": "Release-hosted fuzz corpora are not pinned by v1.5.7 Git; input archives must be downloaded and separately hashed before a reproducible full corpus run."
+      "manifest": "tests/upstream/external-corpora.json",
+      "status": "partial",
+      "reason": "Five rolling fuzz archives are independently SHA-256 pinned. Release all-feature Rust adapters replayed every selected simple_decompress (11631), zstd_frame_info (2395), too-small destination (1173), and huf_decompress (605, both parameter-consumption modes) input without skips. The 79-input FSE archive is pinned but its writer-based target is not ported/replayed; other upstream target families require missing APIs. The archives are not asserted to originate from the v1.5.7 tag.",
+      "rust_tests": [
+        "tests/upstream_fuzz_targets.rs#external_file_corpus",
+        "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus"
+      ]
     },
     {
       "source": "tests/regression/data.c",
-      "status": "blocked",
-      "reason": "The regression runner downloads external corpora and compares C compression-ratio baselines for strategies not implemented by this Rust encoder."
+      "manifest": "tests/upstream/external-corpora.json",
+      "status": "partial",
+      "reason": "Silesia, GitHub files, and GitHub dictionary archives are independently SHA-256 pinned and checked against upstream XXH64 constants. All 512 selected Silesia/GitHub files (12407963 bytes) passed Rust content/size roundtrips in a release all-feature run. Dictionary usage and original method/level/strategy/context/stream/CLI/results.csv regression matrices remain unimplemented.",
+      "rust_tests": [
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
+      ]
     }
   ],
   "sources": [
@@ -978,9 +987,11 @@
       "sha256": "a3a9cc2c49b24b4199b73a7f3e00afb1cec4092be520a988aa87dcc18a027539",
       "suite": "single_file_build",
       "role": "test_suite",
-      "status": "planned",
-      "reason": "Contains an executable decoder or roundtrip behavior check using the exact DXT1 testcard corpus; behavioral assertions must be migrated separately from C amalgamation or Emscripten packaging.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "The embedded compressed DXT1 decoding/size contract is covered with exact bytes. Emscripten/WebGL texture upload and interactive rendering are outside the current Rust library interfaces.",
+      "rust_tests": [
+        "tests/upstream_testcard.rs#decodes_single_file_example_testcard_exactly"
+      ],
       "line_count": 340,
       "cases": []
     },
@@ -990,9 +1001,11 @@
       "sha256": "5dc2d98e34599fbcab8015252d195d2b89a5e44dec4d14cc1b56b67c9122d92f",
       "suite": "single_file_build",
       "role": "test_suite",
-      "status": "planned",
-      "reason": "Contains an executable decoder or roundtrip behavior check using the exact DXT1 testcard corpus; behavioral assertions must be migrated separately from C amalgamation or Emscripten packaging.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Exact DXT1 source roundtrips with full size/content comparisons in Rust. Upstream ZSTD_maxCLevel selection is absent from the initial encoder.",
+      "rust_tests": [
+        "tests/upstream_testcard.rs#round_trips_single_file_example_testcard"
+      ],
       "line_count": 83,
       "cases": []
     },
@@ -1014,9 +1027,11 @@
       "sha256": "3ecd6e56d47babf600ba889e86950ee1e1260051f98a7acf698022cebfa6f03b",
       "suite": "single_file_build",
       "role": "test_suite",
-      "status": "planned",
-      "reason": "Contains an executable decoder or roundtrip behavior check using the exact DXT1 testcard corpus; behavioral assertions must be migrated separately from C amalgamation or Emscripten packaging.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Exact upstream compressed DXT1 fixture decodes to the complete original bytes and length. C amalgamation compilation is separate build metadata.",
+      "rust_tests": [
+        "tests/upstream_testcard.rs#decodes_single_file_example_testcard_exactly"
+      ],
       "line_count": 75,
       "cases": []
     },
@@ -1026,9 +1041,11 @@
       "sha256": "22c257809b135888cb528082fc5b880214e21bc08fc329ca41b8b5b63520b232",
       "suite": "single_file_build",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Exact DXT1/raw or compressed byte fixture for executable decoder/roundtrip assertions; preserving the behavioral test requires importing and replaying these bytes.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Exact source bytes are extracted with pinned source hashes, attributed under CC0, and compared by the Rust decoder test.",
+      "rust_tests": [
+        "tests/upstream_testcard.rs#decodes_single_file_example_testcard_exactly"
+      ],
       "line_count": 2731,
       "cases": []
     },
@@ -1038,9 +1055,11 @@
       "sha256": "020bcbbbfd66dff33821e11f6428d0d0e3a58f2eefea566398f678e7a63de7be",
       "suite": "single_file_build",
       "role": "fixture",
-      "status": "planned",
-      "reason": "Exact DXT1/raw or compressed byte fixture for executable decoder/roundtrip assertions; preserving the behavioral test requires importing and replaying these bytes.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "Exact source bytes are extracted with pinned source hashes, attributed under CC0, and compared by the Rust decoder test.",
+      "rust_tests": [
+        "tests/upstream_testcard.rs#decodes_single_file_example_testcard_exactly"
+      ],
       "line_count": 261,
       "cases": []
     },
@@ -1457,9 +1476,12 @@
       "sha256": "8e779264cec731f77bc272085e72512195e3e6488da58001635447e9e186e7c5",
       "suite": "freestanding_kernel",
       "role": "test_suite",
-      "status": "planned",
-      "reason": "Contains an exact checksummed empty-frame successful decode assertion that can be expressed by the Rust one-shot API; kernel workspace construction is separate.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Exact 13-byte checksummed empty frame succeeds at zero output budget and a changed checksum fails. Kernel caller-owned workspace construction and sizing APIs remain absent.",
+      "rust_tests": [
+        "tests/upstream_testcard.rs#decodes_kernel_empty_frame_with_zero_output_budget",
+        "tests/upstream_testcard.rs#kernel_empty_frame_still_validates_checksum"
+      ],
       "line_count": 52,
       "cases": [
         {
@@ -1468,9 +1490,12 @@
           "line_start": 31,
           "line_end": 52,
           "label": "test_decompress_unzstd",
-          "status": "planned",
-          "reason": "Contains an exact checksummed empty-frame successful decode assertion that can be expressed by the Rust one-shot API; kernel workspace construction is separate.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Exact 13-byte checksummed empty frame succeeds at zero output budget and a changed checksum fails. Kernel caller-owned workspace construction and sizing APIs remain absent.",
+          "rust_tests": [
+            "tests/upstream_testcard.rs#decodes_kernel_empty_frame_with_zero_output_budget",
+            "tests/upstream_testcard.rs#kernel_empty_frame_still_validates_checksum"
+          ]
         }
       ]
     },
@@ -4304,9 +4329,12 @@
       "sha256": "d82c60f7fa7661d4be5ac0fbf519711281059177c71362626e28cb7419cf6e14",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "planned",
-      "reason": "Fuzz intent can be adapted to Rust; preserve input bounds, deterministic seeds, and assertions before marking implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Exact tail-driven source/limit selection asserts empty input success and ResourceLimit for nonempty insufficient destinations. Level selection, reusable contexts, caller destination canaries, and sequence-producer setup remain absent. The separately pinned official rolling corpus passed all 1173 files in a release all-feature run with no skipped files.",
+      "rust_tests": [
+        "tests/upstream_fuzz_targets.rs#too_small_destination_deterministic_corpus",
+        "tests/upstream_fuzz_targets.rs#external_file_corpus"
+      ],
       "line_count": 74,
       "cases": [
         {
@@ -4315,9 +4343,12 @@
           "line_start": 30,
           "line_end": 74,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Exact tail-driven source/limit selection asserts empty input success and ResourceLimit for nonempty insufficient destinations. Level selection, reusable contexts, caller destination canaries, and sequence-producer setup remain absent. The separately pinned official rolling corpus passed all 1173 files in a release all-feature run with no skipped files.",
+          "rust_tests": [
+            "tests/upstream_fuzz_targets.rs#too_small_destination_deterministic_corpus",
+            "tests/upstream_fuzz_targets.rs#external_file_corpus"
+          ]
         }
       ]
     },
@@ -4482,9 +4513,14 @@
       "sha256": "9d5b2085b1d56b982659ac931f0c7ce0c154decb0e93b0be4819063fbc370cf6",
       "suite": "libfuzzer",
       "role": "support",
-      "status": "non_applicable",
-      "reason": "Upstream harness support or C/C++ helper implementation; observable tests are tracked separately and Rust helpers own their buffers.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "All portable 32-bit scalar selection, tail consumption, exhaustion, prefix reservation, contraction, and rollback semantics are expressed with checked Rust slice indices and verified against independent upstream vectors. Rust borrowing replaces allocation/free without changing selected bytes.",
+      "rust_tests": [
+        "tests/upstream/fuzz_support.rs#ranges_consume_tail_in_upstream_order",
+        "tests/upstream/fuzz_support.rs#prefix_reservation_matches_independent_upstream_vectors",
+        "tests/upstream/fuzz_support.rs#contraction_and_rollback_preserve_the_selected_tail",
+        "tests/upstream/fuzz_support.rs#signed_full_width_is_well_defined"
+      ],
       "line_count": 95,
       "cases": []
     },
@@ -4576,10 +4612,11 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Official Huffman tables and 1/4-stream outputs, reuse/truncation/output size assertions, and arbitrary-input bounded decoding run in Rust. C X1/X2, CPU/assembly flags, and workspace selection have no matching control APIs.",
+      "reason": "Official Huffman tables and 1/4-stream outputs, reuse/truncation/output size assertions, and arbitrary-input bounded decoding run in Rust. C X1/X2, CPU/assembly flags, and workspace selection have no matching control APIs. All 605 separately pinned official Huffman corpus files passed both parameter-consumption modes in a release all-feature run; 604 table parses succeeded across both parameter-consumption modes.",
       "rust_tests": [
         "tests/upstream/entropy.rs#huffman_one_and_four_streams_match_official_encoder",
-        "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded"
+        "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded",
+        "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus"
       ],
       "line_count": 68,
       "cases": [
@@ -4590,10 +4627,11 @@
           "line_end": 68,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Official Huffman tables and 1/4-stream outputs, reuse/truncation/output size assertions, and arbitrary-input bounded decoding run in Rust. C X1/X2, CPU/assembly flags, and workspace selection have no matching control APIs.",
+          "reason": "Official Huffman tables and 1/4-stream outputs, reuse/truncation/output size assertions, and arbitrary-input bounded decoding run in Rust. C X1/X2, CPU/assembly flags, and workspace selection have no matching control APIs. All 605 separately pinned official Huffman corpus files passed both parameter-consumption modes in a release all-feature run; 604 table parses succeeded across both parameter-consumption modes.",
           "rust_tests": [
             "tests/upstream/entropy.rs#huffman_one_and_four_streams_match_official_encoder",
-            "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded"
+            "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded",
+            "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus"
           ]
         }
       ]
@@ -4797,9 +4835,13 @@
       "sha256": "311e6f5dff574cdcb51cb36202af2acada0b6c505115cb35bbd1d4833ab7a61a",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "planned",
-      "reason": "Fuzz intent can be adapted to Rust; preserve input bounds, deterministic seeds, and assertions before marking implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Exact tail-driven prefix and output-limit selection, panic-free bounded decoding, and successful known/unknown/concatenated size checks run. A test-only scanner supplies metadata assertions; production scanning and reusable decoder contexts remain absent. The separately pinned official rolling corpus passed all 11631 files in a release all-feature run with no skipped files.",
+      "rust_tests": [
+        "tests/upstream_fuzz_targets.rs#simple_decompress_deterministic_corpus",
+        "tests/upstream_fuzz_targets.rs#successful_decode_checks_known_unknown_and_concatenated_sizes",
+        "tests/upstream_fuzz_targets.rs#external_file_corpus"
+      ],
       "line_count": 59,
       "cases": [
         {
@@ -4808,9 +4850,13 @@
           "line_start": 28,
           "line_end": 59,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Exact tail-driven prefix and output-limit selection, panic-free bounded decoding, and successful known/unknown/concatenated size checks run. A test-only scanner supplies metadata assertions; production scanning and reusable decoder contexts remain absent. The separately pinned official rolling corpus passed all 11631 files in a release all-feature run with no skipped files.",
+          "rust_tests": [
+            "tests/upstream_fuzz_targets.rs#simple_decompress_deterministic_corpus",
+            "tests/upstream_fuzz_targets.rs#successful_decode_checks_known_unknown_and_concatenated_sizes",
+            "tests/upstream_fuzz_targets.rs#external_file_corpus"
+          ]
         }
       ]
     },
@@ -4820,9 +4866,11 @@
       "sha256": "f33eebadcc96ada06f58dd6c1065e9b659612bc59e4706950470503b98515412",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "planned",
-      "reason": "Fuzz intent can be adapted to Rust; preserve input bounds, deterministic seeds, and assertions before marking implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Random parameters/levels, smaller encoded destinations, context reuse, max-block settings, sequence producers, and overlapping in-place buffers remain absent.",
+      "rust_tests": [
+        "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
+      ],
       "line_count": 182,
       "cases": [
         {
@@ -4831,9 +4879,11 @@
           "line_start": 52,
           "line_end": 140,
           "label": "roundTripTest",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Random parameters/levels, smaller encoded destinations, context reuse, max-block settings, sequence producers, and overlapping in-place buffers remain absent.",
+          "rust_tests": [
+            "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
+          ]
         },
         {
           "id": "tests/fuzz/simple_round_trip.c:141",
@@ -4841,9 +4891,11 @@
           "line_start": 141,
           "line_end": 182,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Random parameters/levels, smaller encoded destinations, context reuse, max-block settings, sequence producers, and overlapping in-place buffers remain absent.",
+          "rust_tests": [
+            "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
+          ]
         }
       ]
     },
@@ -4899,9 +4951,12 @@
       "sha256": "12372e3453678ec1cb86575fdc3b236543ae05324c6e25a3f9c412f10cee5eea",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "planned",
-      "reason": "Fuzz intent can be adapted to Rust; preserve input bounds, deterministic seeds, and assertions before marking implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Arbitrary public header parsing checks metadata, exact consumed prefixes, and truncated prefixes. Production frame scanning, compressed/decompressed bounds, isFrame, and magicless variants remain absent. The separately pinned official rolling corpus passed all 2395 files in a release all-feature run with no skipped files.",
+      "rust_tests": [
+        "tests/upstream_fuzz_targets.rs#frame_information_deterministic_corpus",
+        "tests/upstream_fuzz_targets.rs#external_file_corpus"
+      ],
       "line_count": 43,
       "cases": [
         {
@@ -4910,9 +4965,12 @@
           "line_start": 22,
           "line_end": 43,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "planned",
-          "reason": "Named upstream group identified; compare its full assertions with the corresponding Rust test before claiming migration.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Arbitrary public header parsing checks metadata, exact consumed prefixes, and truncated prefixes. Production frame scanning, compressed/decompressed bounds, isFrame, and magicless variants remain absent. The separately pinned official rolling corpus passed all 2395 files in a release all-feature run with no skipped files.",
+          "rust_tests": [
+            "tests/upstream_fuzz_targets.rs#frame_information_deterministic_corpus",
+            "tests/upstream_fuzz_targets.rs#external_file_corpus"
+          ]
         }
       ]
     },
@@ -9854,9 +9912,11 @@
       "sha256": "c4b87a4b9a1cd93e15306fbcf42c281e55b1646d097ca87a3e1c800e22548eb0",
       "suite": "compression_regression",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "Upstream performance/ratio baselines span compression levels and strategies absent from the initial Rust encoder.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. Original C context reuse, compression levels/strategies, dictionaries, streams, CLI/tar variants, and results.csv matrix remain absent.",
+      "rust_tests": [
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
+      ],
       "line_count": 631,
       "cases": []
     },
@@ -9890,9 +9950,11 @@
       "sha256": "affd3b16d2baafb748110aafbb0f70dcac9e631201bc984cce17598be693d446",
       "suite": "compression_regression",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "Upstream performance/ratio baselines span compression levels and strategies absent from the initial Rust encoder.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. Original C context reuse, compression levels/strategies, dictionaries, streams, CLI/tar variants, and results.csv matrix remain absent.",
+      "rust_tests": [
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
+      ],
       "line_count": 701,
       "cases": []
     },
@@ -9950,9 +10012,11 @@
       "sha256": "0f68f9094e435a89e307074ac4efde0fd10b23e659021a821675a013513e2193",
       "suite": "compression_regression",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "Upstream performance/ratio baselines span compression levels and strategies absent from the initial Rust encoder.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. Original C context reuse, compression levels/strategies, dictionaries, streams, CLI/tar variants, and results.csv matrix remain absent.",
+      "rust_tests": [
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
+      ],
       "line_count": 362,
       "cases": []
     },

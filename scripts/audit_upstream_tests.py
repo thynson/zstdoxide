@@ -226,6 +226,10 @@ def audit(manifest: dict, upstream: Path | None, require_complete: bool) -> list
             errors.append("External corpus has an invalid source or status")
         if len(corpus.get("reason", "")) < 12:
             errors.append("External corpus requires a reproducibility explanation")
+        if "manifest" in corpus:
+            check_reference(corpus["manifest"], errors, corpus["source"])
+        for reference in corpus.get("rust_tests", []):
+            check_reference(reference, errors, corpus["source"])
     if upstream is not None:
         entries = tree_entries(upstream)
         if set(paths) != set(entries):
@@ -265,7 +269,7 @@ def audit(manifest: dict, upstream: Path | None, require_complete: bool) -> list
             errors.append(f"Migration incomplete: {len(unfinished)} source units remain unported")
         if any(corpus["status"] not in {"ported", "non_applicable"}
                for corpus in manifest.get("external_corpora", [])):
-            errors.append("Migration incomplete: external upstream corpora are not fully pinned and exercised")
+            errors.append("Migration incomplete: external upstream corpus target coverage remains partial or blocked")
     return errors
 
 

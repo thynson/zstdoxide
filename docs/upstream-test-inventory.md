@@ -111,7 +111,10 @@ existence of a local file.
 | Named fuzzer cases and randomized driver | `tests/upstream_fuzzer.rs` | Exact RNG/noise workload and supported one-shot cases; full label mapping in `tests/upstream/FUZZER.md` |
 | Generated complete frames and standalone headers | `tests/upstream_decodecorpus.rs` | Official generated inputs, original bytes, and bounded fresh-generator replay; stream/dictionary/raw-block modes remain missing |
 | Inline legacy and skippable regression bytes | `tests/upstream_inline_regressions.rs` | Modern component runs; the full legacy desired-success assertion remains blocked |
+| Four public one-shot fuzz targets | `tests/upstream_fuzz_targets.rs` | Exact tail-selected input contracts with bounded deterministic inputs and a configurable external file runner; contexts/parameters/in-place and production scanner APIs remain missing |
+| Regression directory corpora | `tests/upstream_regression_corpora.rs` | Exact Silesia/GitHub inputs and full size/content roundtrips; the original method, strategy, level, dictionary, and CSV comparison matrix remains missing |
 | FSE normalized-count and Huffman decoding fuzz intent | `tests/upstream/entropy.rs` | Independent official vectors and arbitrary bounded inputs; encoder and specialized C control paths remain missing |
+| Single-file DXT1 and kernel empty-frame fixtures | `tests/upstream_testcard.rs` | Exact original bytes and output contracts; maximum-level selection, browser rendering, and kernel workspace APIs remain missing |
 
 An ignored test may contain a complete desired-success assertion while still
 being `blocked` because the implementation cannot pass it. In particular,
@@ -125,6 +128,37 @@ Remaining `blocked` suites need streaming, dictionary, compression-parameter,
 legacy, raw-block, seekable, threaded, CLI, or external-format interfaces. Their
 paths and reasons remain in the machine-readable inventory so future modules
 can enable actual assertions without losing the upstream correspondence.
+
+## External corpus snapshots
+
+`tests/upstream/external-corpora.json` separately pins eight rolling release
+archives: five fuzz target corpora and three regression inputs. They are
+external release snapshots observed on 2026-10-08, not files proven to belong
+to the v1.5.7 tag. Archives and extracted inputs remain in an external cache.
+Their original source notices are independent of the codec's root license.
+
+The following complete selected fuzz corpora passed the Rust adapters in
+release builds with all unsafe features enabled and no skipped files:
+
+| Corpus | Inputs | Tested contract |
+| --- | ---: | --- |
+| `simple_decompress` | 11,631 | Tail-selected compressed input, bounded decode, and successful content-size agreement |
+| `zstd_frame_info` | 2,395 | Public frame-header parsing and metadata bounds |
+| `decompress_dstSize_tooSmall` | 1,173 | Empty input success and nonempty insufficient output failure |
+| `huf_decompress` | 605 | Both BMI-dependent parameter-consumption layouts; 604 successful table parses across both layouts |
+
+These are partial adapters for the original C targets because their missing
+API/control paths remain absent. The 79-input FSE corpus is downloaded and
+pinned; the upstream writer-based target has not been replayed. The source
+inventory keeps those distinctions even when all inputs in a selected
+supported adapter pass.
+
+The selected regression-directory adapter also passed all **512** Silesia and
+GitHub inputs (**12,407,963 bytes**) in a release build with all unsafe features.
+The separately pinned GitHub dictionary is not consumed as a dictionary. This
+run preserves complete input/output comparisons, while C compression method,
+level, context, streaming, CLI, dictionary, and historical CSV baseline
+comparisons remain unimplemented.
 
 ## Reproducible audit
 
@@ -165,8 +199,8 @@ python3 scripts/audit_upstream_tests.py --require-complete
 ```
 
 This command must fail while any source test unit is partial, planned, or
-blocked. It must also fail until upstream's external fuzz and regression
-corpora have been separately pinned and exercised. Those downloaded archives
-are not in the v1.5.7 Git tree and have no archive hashes pinned by that tag;
-the manifest records this limitation instead of silently counting them as
-migrated. An ordinary `cargo test` cannot imply those corpora were run.
+blocked. It must also fail while external target coverage remains partial or
+blocked, even after selected archives have been separately pinned and their
+supported adapters pass. Downloaded archives are not in the v1.5.7 Git tree;
+independent snapshot pins do not establish tag membership. An ordinary
+`cargo test` cannot imply that optional external corpora were run.

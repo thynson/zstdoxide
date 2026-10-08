@@ -21,7 +21,7 @@
 - [x] Replay external Huffman decoder inputs with upstream parameter consumption.
 - [x] Verify all checked-in fixture hashes in the offline CI audit.
 - [x] Prevent temporary-directory collisions between concurrent corpus tests.
-- [ ] Audit test coverage and keep unimplemented contracts explicitly open.
+- [x] Audit test coverage and keep unimplemented contracts explicitly open.
 - [ ] Run migrated tests across safe/unsafe backends and document exact results.
 - [x] Add a reproducible pinned-upstream oracle job alongside the offline CI matrix.
 
