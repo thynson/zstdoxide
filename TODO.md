@@ -1,15 +1,22 @@
 # Tasks
 
-## Module 4: validation and performance
+## Module 5: bounded streaming and reusable contexts
 
-- [x] Add independent official zstd interoperability fixtures and tests.
-- [x] Verify Rust encoder output with the official decoder.
-- [x] Exercise malformed input, feature combinations, and no_std builds.
-- [x] Add maximum-depth Huffman and malformed table regression cases.
-- [x] Add a reproducible per-backend benchmark harness.
-- [x] Record compressed sizes and full-output digests outside benchmark timing.
-- [x] Benchmark each data structure backend and whole-codec workloads.
-- [x] Document measured results, supported features, and remaining scope.
+- [ ] Specify input/output progress, completion, reset, and error contracts.
+- [ ] Analyze ring-history ownership, wraparound indices, and backend invariants.
+- [ ] Implement and test safe bounded ring history independently of frame logic.
+- [ ] Add an independently gated unsafe ring-history backend and compare it.
+- [ ] Implement incremental XXH64 state with arbitrary update boundaries.
+- [ ] Parse partial frame/block headers with bounded staging and explicit phases.
+- [ ] Resume block decoding with caller-provided output slices and bounded history.
+- [ ] Preserve entropy/repeat state and checksums across input/output exhaustion.
+- [ ] Add a streaming encoder with bounded block staging and finish semantics.
+- [ ] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.
+- [ ] Measure retained memory and safe/unsafe throughput; document stream limits.
+
+Completed foundation, entropy, one-shot decoding, initial encoding, and validation
+checklists were cleared at their module boundaries. See `docs/progress.md` and
+the small work-item commits for completed work.
 
 ## Roadmap
 
