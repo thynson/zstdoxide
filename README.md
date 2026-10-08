@@ -6,7 +6,7 @@ The pinned reference and test oracle is [facebook/zstd v1.5.7](https://github.co
 commit `f8745da6ff1ad1e7bab384bd1f9d742439278e99`.
 
 This is an initial working codec milestone, **not full parity with upstream
-zstd**. Its one-shot decoder handles non-dictionary standard frames. Its encoder
+zstd**. Its one-shot and streaming decoders handle non-dictionary standard frames. Its encoder
 uses an initial greedy compression strategy; upstream compression levels and
 compression ratios are not reproduced.
 
@@ -37,6 +37,12 @@ Allocation failures and corrupt, truncated, or over-limit input return `Error`.
 The encoder writes one checksummed single-segment frame, so its advertised window
 equals its content size; adjust decoder limits for inputs larger than 128 MiB.
 
+`Encoder` and `Decoder` provide bounded streaming with caller-owned slices and
+reusable allocations. `Progress` reports exact input/output prefixes and whether
+more input, more output space, or a frame boundary was reached. See
+[streaming usage and lifecycle contracts](docs/streaming-usage.md) for complete
+examples, Flush/Finish retry rules, pledged sizes, reset, and EOF validation.
+
 ## Current support
 
 | Area | Implemented |
@@ -46,9 +52,10 @@ equals its content size; adjust decoder limits for inputs larger than 128 MiB.
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
 | Compression | Greedy four-byte hash matching, raw literals, predefined FSE sequence encoding, raw/RLE fallback |
+| Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Portability | Rust 2024, tested with Rust 1.89.0; `no_std` plus `alloc` core |
 
-Remaining work includes streaming, raw/prepared dictionaries, dictionary training,
+Remaining work includes raw/prepared dictionaries, dictionary training,
 Huffman literal encoding, adaptive FSE encoding, repeat-offset selection during
 compression, cross-block match search, advanced compression strategies and
 levels, long-distance matching, threading, legacy formats, C ABI, and CLI parity.
@@ -72,14 +79,15 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-byte-cursor` | Validated byte ranges |
 | `unsafe-bitstream` | Reverse/forward bit readers and initialized spare-capacity bit writer |
 | `unsafe-history` | Overlapping LZ match expansion |
+| `unsafe-ring-history` | Bounded wraparound history reads and stores |
 | `unsafe-fse` | FSE decoding and inverse encoding tables |
 | `unsafe-huffman` | Huffman lookup table |
 | `unsafe-match-table` | Hash-indexed prior-position table |
 
 Plain scalar records share a representation; they have no pointer access to
 replace. Every unsafe block has a local proof, and no unsafe operation is exposed
-through the public API. The current implementation has no `unsafe fn`; any added
-later must document a full `# Safety` contract. Neither malformed input nor a
+through the public API. Private unsafe helpers document full `# Safety`
+contracts, including the ring's initialized prefix and capacity invariants. Neither malformed input nor a
 release-only assumption may bypass range checks.
 
 Read [the data structure inventory](docs/data-structures.md),
@@ -118,8 +126,9 @@ fixture-integrity checks require Python 3.10 or newer with only the standard
 library. The complete source/case catalog is in
 [the upstream test inventory](docs/upstream-test-inventory.md), with executable
 coverage and measured runs in [the validation report](docs/upstream-test-validation.md).
-Streaming, dictionary, CLI, legacy, advanced encoder, and other unavailable API
-contracts remain explicitly unported. A successful normal test run does not
+Streaming contracts now have direct incremental tests and near-window oracle
+fixtures. Dictionary, CLI, legacy, advanced encoder, and other unavailable API
+contracts remain explicitly open. A successful normal test run does not
 mean every official test has been migrated.
 
 ```sh

@@ -52,7 +52,7 @@ name corresponding C functions without copying their shape.
 ## Safe defaults and backend selection
 
 Cargo features independently select `unsafe-byte-cursor`, `unsafe-bitstream`,
-`unsafe-history`, `unsafe-fse`, `unsafe-huffman`, and `unsafe-match-table` as those
+`unsafe-history`, `unsafe-ring-history`, `unsafe-fse`, `unsafe-huffman`, and `unsafe-match-table` as those
 families are implemented. No unsafe feature is enabled by default. A backend is
 private and presents the same safe interface as its safe counterpart. Composite
 contexts reuse selected backends rather than duplicating the complete codec.
