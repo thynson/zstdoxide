@@ -18,6 +18,7 @@
         feature = "unsafe-byte-cursor",
         feature = "unsafe-bitstream",
         feature = "unsafe-history",
+        feature = "unsafe-ring-history",
         feature = "unsafe-fse",
         feature = "unsafe-huffman",
         feature = "unsafe-match-table"

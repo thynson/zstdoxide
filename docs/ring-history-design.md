@@ -61,8 +61,8 @@ representation in both backends; they do not need artificial unsafe variants.
 
 ## Backend boundary
 
-The first implementation uses indexed vector access only. The subsequent
-`unsafe-ring-history` feature will replace byte reads and stores with equivalent
+The default implementation uses indexed vector access only. The independent
+`unsafe-ring-history` feature replaces byte reads and stores with equivalent
 unchecked access after the same validation. The entire vector length remains
 initialized. Pointer arithmetic, lifetime, aliasing, and overlap obligations
 must be justified at each unsafe block; unchecked access may not depend on
@@ -79,3 +79,39 @@ starting a frame, before any transient pointer exists.
 5. Add the independently gated equivalent backend with complete local proofs.
 6. Run matching safe/unsafe correctness, no_std, Clippy, Miri where available,
    and deterministic throughput comparisons integrated by the coordinator.
+
+
+## Implemented API and validation checkpoints
+
+`new(maximum_window)` allocates nothing. `start_frame(window)` validates and
+fallibly reserves; `clear()` resets active-frame state while retaining capacity.
+`frame_len()` returns the checked `u64` count, `available()` returns initialized
+history length, `window_size()` reports the active bound, and
+`retained_capacity()` exposes the allocation high-water mark for measurement.
+`append`, `repeat`, and `copy_match` implement the slice progress contract above.
+
+The safe checkpoint was committed before introducing unsafe operations. Ten
+unit tests cover literal/RLE partial output, every match distance in windows
+1 through 19, whole-window matches, distance-one overlap, partially initialized
+windows, irregular resumes including zero-size output, clear/reset reuse,
+invalid distances/windows, zero windows, allocation failure preserving state,
+logical counts above `u32::MAX`, atomic `u64` overflow, and bounded retained
+storage over thousands of chunks.
+
+The unchecked helper is an `unsafe fn` with an explicit `# Safety` contract
+covering nonzero window, capacity, initialized prefix, indices, ownership,
+alignment, aliasing, and lifetime. Every caller is inside a nonempty emission
+loop after complete count validation. A local proof accompanies every call,
+every raw match read, and the combined raw store/vector-length update. Growing
+stores initialize exactly one new slot before extending the vector length;
+full stores overwrite an existing initialized byte.
+
+The ten tests passed in default, independently enabled `unsafe-ring-history`,
+all-feature, no-default-feature plus unsafe-ring-history, and optimized unsafe
+builds. The safe no-default-feature tests also passed before the unsafe change.
+A standalone Clippy test harness with warnings denied and both unsafe lints
+enabled passed for this module. The workspace-wide Clippy invocation was
+blocked at this checkpoint by the independently added incremental checksum
+object not yet having a non-test consumer; this is recorded separately from
+the ring result. Integrated streaming validation, Miri, and comparative
+throughput remain coordinator-owned checks before the streaming milestone.

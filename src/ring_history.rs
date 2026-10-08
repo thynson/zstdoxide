@@ -91,7 +91,20 @@ impl RingHistory {
         let count = input.len().min(output.len());
         let produced = self.checked_advance(count)?;
         for (destination, &byte) in output[..count].iter_mut().zip(&input[..count]) {
+            #[cfg(not(feature = "unsafe-ring-history"))]
             self.store(byte);
+            #[cfg(feature = "unsafe-ring-history")]
+            {
+                // SAFETY: this loop is entered only when count > 0, so
+                // checked_advance proved window > 0 before any mutation.
+                // start_frame bounded window by maximum_window and reserved
+                // capacity >= window; constructors and stores preserve
+                // len <= window and the head invariant.
+                // The owned Vec remains live and uniquely borrowed by self;
+                // no history references escape. Its u8 prefix is initialized,
+                // and the byte value is initialized. No reallocation occurs.
+                unsafe { self.store_unchecked(byte) };
+            }
             *destination = byte;
         }
         self.produced = produced;
@@ -111,7 +124,20 @@ impl RingHistory {
         let count = remaining.min(output.len());
         let produced = self.checked_advance(count)?;
         for destination in &mut output[..count] {
+            #[cfg(not(feature = "unsafe-ring-history"))]
             self.store(byte);
+            #[cfg(feature = "unsafe-ring-history")]
+            {
+                // SAFETY: this loop is entered only when count > 0, so
+                // checked_advance proved window > 0 before any mutation.
+                // start_frame bounded window by maximum_window and reserved
+                // capacity >= window; constructors and stores preserve
+                // len <= window and the head invariant.
+                // The owned Vec remains live and uniquely borrowed by self;
+                // no history references escape. Its u8 prefix is initialized,
+                // and the byte value is initialized. No reallocation occurs.
+                unsafe { self.store_unchecked(byte) };
+            }
             *destination = byte;
         }
         self.produced = produced;
@@ -143,8 +169,35 @@ impl RingHistory {
             };
             // Read before overwriting: at distance == window the source and
             // destination ring slots coincide, and the old byte is required.
+            #[cfg(not(feature = "unsafe-ring-history"))]
             let byte = self.bytes[source];
+            #[cfg(feature = "unsafe-ring-history")]
+            let byte = {
+                // SAFETY: distance was checked in 1..=bytes.len(). Before the
+                // ring fills, head == len, so source == len - distance < len.
+                // Once full, len == window and head < window. For distance <=
+                // head, subtraction yields source < len; otherwise
+                // 1 <= distance - head <= window, so window minus that value
+                // lies in 0..len. Stores preserve these invariants each turn.
+                // The Vec's initialized u8 prefix is live, aligned for u8, and
+                // owned by self. This read copies the byte and leaves no borrow
+                // or pointer alive across the following exclusive store.
+                unsafe { self.bytes.as_ptr().add(source).read() }
+            };
+            #[cfg(not(feature = "unsafe-ring-history"))]
             self.store(byte);
+            #[cfg(feature = "unsafe-ring-history")]
+            {
+                // SAFETY: this loop is entered only when count > 0, so
+                // checked_advance proved window > 0 before any mutation.
+                // start_frame bounded window by maximum_window and reserved
+                // capacity >= window; constructors and stores preserve
+                // len <= window and the head invariant.
+                // The owned Vec remains live and uniquely borrowed by self;
+                // no history references escape. Its u8 prefix is initialized,
+                // and the byte value is initialized. No reallocation occurs.
+                unsafe { self.store_unchecked(byte) };
+            }
             *destination = byte;
         }
         self.produced = produced;
@@ -161,6 +214,7 @@ impl RingHistory {
     }
 
     /// Store one byte after an emitting method has validated a nonzero window.
+    #[cfg(not(feature = "unsafe-ring-history"))]
     fn store(&mut self, byte: u8) {
         if self.bytes.len() < self.window {
             // start_frame reserved the complete active window; push cannot
@@ -170,6 +224,53 @@ impl RingHistory {
             self.bytes[self.head] = byte;
         }
         // head < window before this step, so head + 1 <= window cannot overflow.
+        self.head += 1;
+        if self.head == self.window {
+            self.head = 0;
+        }
+    }
+
+    /// Store one byte without repeating vector bounds checks.
+    ///
+    /// # Safety
+    ///
+    /// - The active window must be nonzero and no greater than the owned Vec's
+    ///   capacity or the configured maximum window.
+    /// - The initialized vector length must be at most the window. If it is
+    ///   smaller, `head` must equal that length; otherwise `head < window`.
+    /// - `self` and its Vec allocation must remain live and exclusively owned
+    ///   for this call. No other reference or pointer may access that allocation
+    ///   during the write. The vector's existing prefix and `byte` must be fully
+    ///   initialized; any unused capacity need not be initialized.
+    /// - The allocation must be the Vec's own valid u8 allocation, with its
+    ///   required alignment (one). All struct fields must be initialized.
+    ///
+    /// These requirements put the write inside the allocation. For a growing
+    /// prefix, the newly initialized byte is immediately included in its length.
+    /// Scalar metadata uses ordinary checked-invariant arithmetic in both
+    /// backends; this helper does not advance the logical frame counter.
+    #[cfg(feature = "unsafe-ring-history")]
+    unsafe fn store_unchecked(&mut self, byte: u8) {
+        let growing = self.bytes.len() < self.window;
+        let pointer = self.bytes.as_mut_ptr();
+        // SAFETY: the contract gives capacity >= window > 0. If growing,
+        // head == len < window <= capacity; otherwise head < window == len.
+        // Thus pointer.add(head) addresses one writable u8 inside this live
+        // allocation, with alignment one, and write initializes that byte.
+        // Exclusive ownership excludes conflicting access or aliases. The
+        // pointer is temporary and no allocation or reallocation occurs.
+        // In the growing case, len + 1 <= window <= capacity, cannot overflow,
+        // and every element below the new length is initialized: the previous
+        // prefix already was, and write just initialized the additional byte.
+        // Therefore set_len exposes no uninitialized memory. The nongrowing
+        // case overwrites a Copy byte and does not change initialized length.
+        unsafe {
+            pointer.add(self.head).write(byte);
+            if growing {
+                self.bytes.set_len(self.bytes.len() + 1);
+            }
+        }
+        // head < window at entry, hence incrementing cannot overflow usize.
         self.head += 1;
         if self.head == self.window {
             self.head = 0;
