@@ -10,7 +10,7 @@
 
 - [x] Document entropy structure invariants and module work decomposition.
 - [x] Implement checked reverse bitstreams and the unsafe-bitstream alternative.
-- [ ] Implement FSE normalized-count parsing and decoding tables with unsafe-fse.
+- [x] Implement FSE normalized-count parsing and decoding tables with unsafe-fse.
 - [ ] Implement two-state FSE decoding of Huffman weights.
 - [ ] Implement Huffman table construction and safe/unsafe-huffman decoding.
 - [ ] Implement raw, RLE, compressed, and treeless literal sections.
