@@ -15,7 +15,7 @@
 - [x] Generate and verify reproducible decodecorpus compatibility fixtures.
 - [x] Replay decodecorpus fixtures and configurable official generator campaigns.
 - [x] Map CLI, streaming, dictionary, threading, legacy, and build-test contracts.
-- [ ] Import and replay the exact standalone testcard and kernel empty-frame tests.
+- [x] Import and replay the exact standalone testcard and kernel empty-frame tests.
 - [ ] Pin available external corpus snapshots and provide bounded replay tools.
 - [ ] Verify all checked-in fixture hashes in the offline CI audit.
 - [ ] Audit test coverage and keep unimplemented contracts explicitly open.

@@ -1,0 +1,15 @@
+The testcard fixtures are derived from facebook/zstd v1.5.7:
+  build/single_file_libs/examples/testcard-dxt1.inl
+  build/single_file_libs/examples/testcard-zstd.inl
+
+The including examples simple.c, roundtrip.c, and emscripten.c state:
+  author Carl Woffenden, Numfum GmbH (released under a CC0 license)
+
+CC0 1.0 Universal:
+https://creativecommons.org/publicdomain/zero/1.0/
+https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+The empty-frame fixture is derived from:
+  contrib/linux-kernel/test/static_test.c
+Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+The upstream BSD license is retained in LICENSE.zstd at the repository root.

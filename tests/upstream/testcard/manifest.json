@@ -1,0 +1,41 @@
+{
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "fixtures": [
+    {
+      "path": "testcard.dxt1",
+      "source": "build/single_file_libs/examples/testcard-dxt1.inl",
+      "source_lines": [
+        1,
+        2731
+      ],
+      "source_sha256": "22c257809b135888cb528082fc5b880214e21bc08fc329ca41b8b5b63520b232",
+      "size": 32768,
+      "sha256": "2b1bf893b3a8fb7db248948d73346cdd05f46420a5740eb1fab22e4c1a79574b",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "testcard.zst",
+      "source": "build/single_file_libs/examples/testcard-zstd.inl",
+      "source_lines": [
+        1,
+        261
+      ],
+      "source_sha256": "020bcbbbfd66dff33821e11f6428d0d0e3a58f2eefea566398f678e7a63de7be",
+      "size": 3127,
+      "sha256": "1941784d09e7fd96c181dc4d5068f4d048d0c33e3697340c74bf43b4dcf0e668",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "kernel-empty.zst",
+      "source": "contrib/linux-kernel/test/static_test.c",
+      "source_lines": [
+        27,
+        29
+      ],
+      "source_sha256": "8e779264cec731f77bc272085e72512195e3e6488da58001635447e9e186e7c5",
+      "size": 13,
+      "sha256": "f96deff1816083fdff8bc3e46c3fe6ca46a6bb49f4d5a00627616c13237a512c",
+      "license": "BSD-3-Clause"
+    }
+  ]
+}
