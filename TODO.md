@@ -21,7 +21,7 @@
 ## Module 3: initial compressor
 
 - [x] Document encoder structures and work decomposition.
-- [ ] Encode standard checksummed frames using raw and RLE blocks.
+- [x] Encode standard checksummed frames using raw and RLE blocks.
 - [ ] Implement indexed match tables with safe/unsafe-match-table backends.
 - [ ] Encode greedy LZ sequences with predefined FSE tables and raw fallback.
 

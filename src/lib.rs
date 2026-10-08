@@ -29,7 +29,9 @@ mod xxhash;
 mod constants;
 mod sequences;
 mod decode;
+mod encode;
 
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
 pub use decode::{DecodeOptions, decompress, decompress_with_options};
+pub use encode::compress;
