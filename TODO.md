@@ -65,7 +65,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.
 - [x] Measure retained memory and safe/unsafe throughput; document stream limits.
 - [x] Document public streaming usage and lifecycle examples.
-- [ ] Run the complete backend/no_std matrix and add streaming CI coverage.
+- [x] Run the complete backend/no_std matrix and add streaming CI coverage.
 - [ ] Pin and replay official external streaming fuzz corpora.
 
 Completed foundation, entropy, one-shot decoding, initial encoding, and validation

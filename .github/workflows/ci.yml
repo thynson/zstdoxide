@@ -35,6 +35,8 @@ jobs:
         with:
           components: miri
       - run: cargo +nightly miri test --lib --all-features history::tests
+      - run: cargo +nightly miri test --lib --all-features ring_history::tests
+      - run: cargo +nightly miri test --lib --all-features stream_decode::tests
       - run: cargo +nightly miri test --lib --all-features bitstream::tests
       - run: cargo +nightly miri test --lib --all-features fse::tests
       - run: cargo +nightly miri test --lib --all-features cursor::tests

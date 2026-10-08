@@ -13,6 +13,7 @@ python3 scripts/import_upstream_regressions.py "$ZSTD_UPSTREAM" --check
 python3 scripts/import_upstream_testcard.py "$ZSTD_UPSTREAM" --check
 python3 scripts/generate_upstream_decodecorpus.py "$ZSTD_UPSTREAM" --check
 python3 scripts/generate_upstream_entropy.py "$ZSTD_UPSTREAM" --check
+python3 scripts/generate_upstream_windows.py "$ZSTD_UPSTREAM" --check
 python3 scripts/check_upstream_fixtures.py
 
 # Select oracle tests explicitly: legacy success assertions remain blocked.
@@ -20,3 +21,5 @@ cargo test --release --all-features --test interop -- --ignored
 cargo test --release --all-features --test upstream_golden -- --ignored
 cargo test --release --all-features --test upstream_decodecorpus -- --ignored
 cargo test --release --all-features --test upstream_fuzzer intensive_fuzzer_one_shot_cycles -- --ignored
+cargo test --release --all-features --test upstream_streaming official_codec_accepts_streamed_frames_and_stream_decoder_accepts_official_frames -- --ignored
+cargo test --release --all-features --test upstream_window -- --ignored
