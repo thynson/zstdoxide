@@ -34,7 +34,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Handle dictionary-to-frame spanning matches without evicting source bytes.
 - [x] Add persistent dictionary and single-use prefix context configuration.
 - [x] Enforce nonzero frame dictionary IDs while supporting omitted IDs.
-- [ ] Add one-shot dictionary decode helpers using the same streaming core.
+- [x] Add one-shot dictionary decode helpers using the same streaming core.
 - [x] Add reusable dictionary seed tables and an owned encoder dictionary lifecycle.
 - [ ] Extend indexed match search to dictionary content and first-block crossing.
 - [ ] Extend indexed match search to retained output history across blocks.

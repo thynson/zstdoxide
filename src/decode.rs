@@ -6,7 +6,7 @@ use crate::history::History;
 use crate::huffman::decode_literals;
 use crate::sequences::SequenceState;
 use crate::xxhash::checksum;
-use crate::{Error, FrameHeader, Result};
+use crate::{Decoder, Error, FrameHeader, Result, SharedDictionary, StreamStatus};
 use alloc::vec::Vec;
 
 /// Resource limits shared by one-shot and incremental decompression.
@@ -32,14 +32,47 @@ impl DecodeOptions {
 
 /// Decompress standard and skippable Zstandard frames with an explicit limit.
 ///
-/// Concatenated frames are supported. Nonzero dictionary IDs are rejected;
-/// prepared/raw dictionaries and legacy formats are not implemented. Optional
-/// content checksums are always verified. Empty input is an incomplete stream.
+/// Concatenated frames are supported. Use [`decompress_with_dictionary`] for
+/// frames requiring raw or prepared dictionaries. Legacy formats are unsupported.
+/// Content checksums are always verified. Empty input is an incomplete stream.
 /// This is a whole-buffer API, not a streaming API.
 ///
 /// Corresponds to the one-shot behavior of upstream `ZSTD_decompress`.
 pub fn decompress(input: &[u8], max_output_size: usize) -> Result<Vec<u8>> {
     decompress_with_options(input, DecodeOptions::new(max_output_size))
+}
+
+/// Decompress concatenated frames using one persistent prepared or raw dictionary.
+///
+/// Uses the incremental decoder's dictionary, checksum, and resource contracts.
+/// The returned allocation contains only frame output; dictionary content never
+/// counts toward its size or output limit. The supplied shared handle remains
+/// usable after success or failure. Corresponds to `ZSTD_decompress_usingDDict`.
+pub fn decompress_with_dictionary(
+    input: &[u8],
+    dictionary: &SharedDictionary,
+    options: DecodeOptions,
+) -> Result<Vec<u8>> {
+    let mut decoder = Decoder::with_dictionary(options, dictionary.clone());
+    let mut output = Vec::new();
+    let mut consumed = 0;
+    let mut scratch = [0_u8; 4096];
+    loop {
+        let progress = decoder.process(&input[consumed..], &mut scratch)?;
+        consumed += progress.consumed;
+        output
+            .try_reserve(progress.produced)
+            .map_err(|_| Error::AllocationFailed)?;
+        output.extend_from_slice(&scratch[..progress.produced]);
+        match progress.status {
+            StreamStatus::FrameFinished | StreamStatus::NeedInput if consumed == input.len() => {
+                decoder.finish()?;
+                return Ok(output);
+            }
+            StreamStatus::Flushed => return Err(Error::InvalidState),
+            _ => {}
+        }
+    }
 }
 
 /// Decompress frames with explicit output and advertised-window limits.

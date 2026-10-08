@@ -52,7 +52,7 @@ mod xxhash;
 #[path = "../tests/upstream/entropy.rs"]
 mod upstream_entropy_tests;
 
-pub use decode::{DecodeOptions, decompress, decompress_with_options};
+pub use decode::{DecodeOptions, decompress, decompress_with_dictionary, decompress_with_options};
 pub use dictionary::{Dictionary, DictionaryMode, SharedDictionary};
 pub use encode::compress;
 pub use error::{Error, Result};
