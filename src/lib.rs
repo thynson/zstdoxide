@@ -20,5 +20,8 @@ extern crate alloc;
 
 mod error;
 mod bitstream;
+mod cursor;
+mod frame;
 
 pub use error::{Error, Result};
+pub use frame::FrameHeader;

@@ -18,7 +18,7 @@
 ## Module 2: frames and sequence execution
 
 - [x] Document frame, cursor, history, and sequence invariants.
-- [ ] Implement checked frame headers and safe/unsafe-byte-cursor access.
+- [x] Implement checked frame headers and safe/unsafe-byte-cursor access.
 - [ ] Implement bounded history and safe/unsafe-history match expansion.
 - [ ] Implement XXH64 content checksum with published vectors.
 - [ ] Implement sequence decoding and repeat-offset updates.
