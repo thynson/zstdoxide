@@ -26,6 +26,8 @@ mod history;
 mod fse;
 mod huffman;
 mod xxhash;
+mod constants;
+mod sequences;
 
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
