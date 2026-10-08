@@ -1,0 +1,28 @@
+[package]
+name = "zstdoxide"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+description = "An incremental, safe-first Rust implementation of Zstandard"
+license = "BSD-3-Clause"
+
+[features]
+default = ["std"]
+std = []
+unsafe-byte-cursor = []
+unsafe-bitstream = []
+unsafe-history = []
+unsafe-fse = []
+unsafe-huffman = []
+unsafe-match-table = []
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+undocumented_unsafe_blocks = "deny"
+missing_safety_doc = "deny"
+
+[profile.release]
+overflow-checks = true
+
