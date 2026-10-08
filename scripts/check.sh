@@ -1,6 +1,9 @@
 #!/bin/sh
 set -eu
 
+python3 scripts/audit_upstream_tests.py
+python3 scripts/check_upstream_fixtures.py
+
 # Each backend alone must compile without std and pass the same test suite.
 cargo fmt --all -- --check
 cargo test

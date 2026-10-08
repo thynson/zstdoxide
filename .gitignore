@@ -1,3 +1,4 @@
 /target/
 /benchmark-results/
 *.profraw
+__pycache__/
