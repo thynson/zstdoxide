@@ -99,6 +99,25 @@ be tested and benchmarked independently, not enabled as an implicit dependency.
 
 ## Compression and training work boundaries
 
+The first encoding checkpoint caches an indexed dictionary seed table and copies
+it into the working match table for eligible blocks. `BlockEncoder` owns a shared
+handle alongside cached indices, preventing indices from being paired with a
+different same-length buffer. It tracks the produced frame position separately
+from dictionary/current-block coordinates and advances for raw/RLE blocks too.
+Reset drops the active handle while retaining fixed table allocations. Context
+memory accounting includes shared dictionary storage only once.
+
+The initial predefined offset distribution supports symbols through 28, so
+search ignores distances above `(1 << 29) - 4`; larger dictionaries remain
+accepted and their addressable suffix remains usable. Explicit wire offset
+values are `distance + 3` and therefore greater than three, independent of
+prepared repeat offsets. Their entropy symbol may still be two. First-block
+dictionary matches may cross into frame output; later-block crossing initially
+stops at the dictionary end until retained output history is implemented in
+the next separately tracked checkpoint. Ordinary dictionary-free encoding must
+retain its existing deterministic bytes through these foundational changes.
+
+
 Dictionary compression extends indexed match search over an explicit retained
 prefix plus the current block. Candidate indices are validated against source
 bytes and the permitted dictionary/output history intervals. Frames advertise
