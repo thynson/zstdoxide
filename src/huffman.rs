@@ -27,6 +27,10 @@ pub(crate) struct HuffmanTable {
 }
 
 impl HuffmanTable {
+    pub(crate) fn retained_capacity(&self) -> usize {
+        self.entries.capacity() * core::mem::size_of::<DecodeEntry>()
+    }
+
     /// Read weights and build a complete decoding table.
     ///
     /// Corresponds to upstream `HUF_readStats` and `HUF_readDTableX1_wksp`.

@@ -15,6 +15,14 @@ pub(crate) struct SequenceState {
 }
 
 impl SequenceState {
+    pub(crate) fn retained_capacity(&self) -> usize {
+        [&self.literal_lengths, &self.offsets, &self.match_lengths]
+            .into_iter()
+            .filter_map(Option::as_ref)
+            .map(FseTable::retained_capacity)
+            .sum()
+    }
+
     pub(crate) fn new() -> Self {
         Self {
             literal_lengths: None,

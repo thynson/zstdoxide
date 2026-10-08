@@ -25,6 +25,10 @@ pub(crate) struct FseTable {
 }
 
 impl FseTable {
+    pub(crate) fn retained_capacity(&self) -> usize {
+        self.entries.capacity() * core::mem::size_of::<FseEntry>()
+    }
+
     /// Build a decoding table from a validated normalized distribution.
     ///
     /// Corresponds to upstream `FSE_buildDTable_internal`.

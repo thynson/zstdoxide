@@ -51,13 +51,16 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Add public progress/directive records and explicit invalid-state handling.
 - [x] Parse partial frame/block headers with bounded staging and explicit phases.
 - [x] Stream raw/RLE/skippable payloads before a complete block is available.
-- [ ] Resume block decoding with caller-provided output slices and bounded history.
-- [ ] Preserve entropy/repeat state and checksums across input/output exhaustion.
+- [x] Resume block decoding with caller-provided output slices and bounded history.
+- [x] Preserve entropy/repeat state and checksums across input/output exhaustion.
 - [x] Extract reusable block-encoding state without changing one-shot output.
 - [x] Retain bounded block-encoding scratch allocations across stream calls.
 - [ ] Add a streaming encoder with bounded block staging and finish semantics.
 - [ ] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
 - [ ] Port every applicable official streaming/context test with explicit source mapping.
+- [ ] Generate pinned official near-window sequence fixtures for window logs 10–29.
+- [ ] Replay the full window-distance sweep with bounded streaming output.
+- [ ] Port malformed streaming-input and randomized directive fuzz campaigns.
 - [ ] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.
 - [ ] Measure retained memory and safe/unsafe throughput; document stream limits.
 

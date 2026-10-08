@@ -47,7 +47,7 @@ implied by streaming support. Blocks never exceed the smaller of window and
 | Decoder phase | Value enum, header `[u8; 18]`, filled/required indices, block and skip counters | `ZSTD_dStage`, `ZSTD_dStreamStage` |
 | Raw/RLE transfer | Remaining block length and optional repeated byte; emits directly into caller slices as input/output arrive | Raw block `ZSTD_decompressStream` shortcut, RLE block decoding |
 | Compressed block staging | Owned input `Vec<u8>` at most 128 KiB; decoded pending block at most 128 KiB plus bounded literals | Buffered compressed-block branch of `ZSTD_decompressStream` |
-| Ring history | Owned initialized bytes, physical write index, available count and checked logical frame length; keeps only the declared window | `ZSTD_DCtx` prefix/history fields |
+| Ring history | Owned initialized bytes, physical write index, available count and checked logical frame length; retains at most the declared window, capped by the remaining session output allowance when starting a frame | `ZSTD_DCtx` prefix/history fields |
 | Sequence sink | Borrowed ring plus bounded owned pending output, shared execution contract with one-shot history | `ZSTD_execSequence` output/history operations |
 | Entropy/repeat state | Owned Huffman/FSE tables and three repeat offsets; survive blocks, reset at a frame boundary | `ZSTD_entropyDTables_t`, `rep[]` |
 | Incremental checksum | Four lanes, checked-independent hash length modulo 2^64, 32-byte tail and index | `XXH64_state_t` |
@@ -78,3 +78,19 @@ Dictionary, legacy, parameter-control, threading, and C ABI cases remain
 explicitly open until their later roadmap modules exist. Streaming tests must
 exercise partial processing, context reset, and bounded memory rather than
 wrapping whole-frame `compress`/`decompress` in superficial chunking.
+
+## Near-window sequence regression fixtures
+
+The complete `tests/zstreamtest.c:1652` distance sweep needs offsets near the
+window size through log 29. A pinned C oracle emits its 10,000-sequence shape:
+one 32-byte literal prefix followed by a match filling the first window, then
+9,999 ten-byte literal/match groups whose offsets span window minus 0..7.
+A recorded deterministic seed replaces the source's accumulated test seed.
+Only encoded frames are stored; expected output is a known all-zero length.
+Rust replays these through the real streaming decoder into a fixed output slice,
+including tiny slices around wraparound. Default tests cover logs 10–20; an
+explicit extended test covers 21–29 to make its roughly 512 MiB peak window
+allocation visible. Oracle generation verifies each frame with C streaming
+decoding before preserving it. The fixture manifest records source/generator
+hashes, compressed hashes, source sizes, and zero-output hashes. Neither test
+nor implementation binds to the C codec.

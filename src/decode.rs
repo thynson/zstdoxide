@@ -9,13 +9,14 @@ use crate::xxhash::checksum;
 use crate::{Error, FrameHeader, Result};
 use alloc::vec::Vec;
 
-/// Resource limits for one-shot decompression.
+/// Resource limits shared by one-shot and incremental decompression.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct DecodeOptions {
     /// Maximum combined output of all concatenated frames.
     pub max_output_size: usize,
-    /// Maximum window advertised by any frame. The decoder retains whole output
-    /// but does not allocate an advertised window eagerly.
+    /// Maximum window advertised by any frame. One-shot decoding retains whole
+    /// output. Streaming retains at most the validated window, bounded further
+    /// by the remaining output allowance.
     pub max_window_size: u64,
 }
 

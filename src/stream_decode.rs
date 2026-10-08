@@ -2,10 +2,12 @@
 
 use crate::cursor::ByteCursor;
 use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
+use crate::history::SequenceOutput;
+use crate::huffman::{HuffmanTable, decode_literals};
 use crate::ring_history::RingHistory;
+use crate::sequences::SequenceState;
 use crate::xxhash::XxHash64;
 use crate::{DecodeOptions, Error, FrameHeader, Progress, Result, StreamStatus};
-#[cfg(test)]
 use alloc::vec::Vec;
 
 #[derive(Clone, Copy, Eq, PartialEq)]
@@ -15,6 +17,8 @@ enum Phase {
     Raw,
     RleByte,
     Rle,
+    Compressed,
+    Drain,
     SkipLength,
     Skip,
     Checksum,
@@ -40,6 +44,11 @@ pub struct Decoder {
     remaining: usize,
     rle_byte: u8,
     history: RingHistory,
+    huffman: Option<HuffmanTable>,
+    sequences: SequenceState,
+    encoded: Vec<u8>,
+    pending: Vec<u8>,
+    pending_position: usize,
     checksum: XxHash64,
     decoded_total: u64,
     input_total: u64,
@@ -63,6 +72,11 @@ impl Decoder {
             history: RingHistory::new(
                 usize::try_from(options.max_window_size).unwrap_or(usize::MAX),
             ),
+            huffman: None,
+            sequences: SequenceState::new(),
+            encoded: Vec::new(),
+            pending: Vec::new(),
+            pending_position: 0,
             checksum: XxHash64::new(),
             decoded_total: 0,
             input_total: 0,
@@ -139,6 +153,11 @@ impl Decoder {
         self.remaining = 0;
         self.rle_byte = 0;
         self.history.clear();
+        self.huffman = None;
+        self.sequences = SequenceState::new();
+        self.encoded.clear();
+        self.pending.clear();
+        self.pending_position = 0;
         self.checksum.reset();
         self.decoded_total = 0;
         self.input_total = 0;
@@ -171,6 +190,13 @@ impl Decoder {
     /// Owned heap capacity in bytes, excluding inline state and caller buffers.
     pub fn retained_capacity(&self) -> usize {
         self.history.retained_capacity()
+            + self.encoded.capacity()
+            + self.pending.capacity()
+            + self
+                .huffman
+                .as_ref()
+                .map_or(0, HuffmanTable::retained_capacity)
+            + self.sequences.retained_capacity()
     }
     /// Initialized bytes currently available for backward references.
     pub fn history_size(&self) -> usize {
@@ -278,7 +304,13 @@ impl Decoder {
                     self.phase = match block.kind {
                         BlockKind::Raw => Phase::Raw,
                         BlockKind::Rle => Phase::RleByte,
-                        BlockKind::Compressed => return Err(Error::UnsupportedFeature),
+                        BlockKind::Compressed => {
+                            self.encoded.clear();
+                            self.encoded
+                                .try_reserve_exact(block.size)
+                                .map_err(|_| Error::AllocationFailed)?;
+                            Phase::Compressed
+                        }
                     };
                 }
                 Phase::Raw | Phase::Rle => {
@@ -311,6 +343,65 @@ impl Decoder {
                     self.decoded_total += count as u64;
                     *produced += count;
                     self.remaining -= count;
+                }
+                Phase::Compressed => {
+                    let count = self.remaining.min(input.len() - *consumed);
+                    self.encoded
+                        .extend_from_slice(&input[*consumed..*consumed + count]);
+                    *consumed += count;
+                    self.remaining -= count;
+                    if self.remaining != 0 {
+                        return Ok(StreamStatus::NeedInput);
+                    }
+                    let budget =
+                        (self.options.max_output_size as u64 - self.decoded_total) as usize;
+                    let (literals, offset) = decode_literals(
+                        &self.encoded,
+                        &mut self.huffman,
+                        self.max_block.min(budget),
+                    )?;
+                    self.pending.clear();
+                    self.pending
+                        .try_reserve_exact(self.max_block.min(budget))
+                        .map_err(|_| Error::AllocationFailed)?;
+                    let frame_remaining = self
+                        .frame
+                        .and_then(|frame| frame.content_size)
+                        .map(|size| size.saturating_sub(self.history.frame_len()));
+                    let mut sink = BlockSink {
+                        history: &mut self.history,
+                        output: &mut self.pending,
+                        budget,
+                        frame_remaining,
+                        max_block: self.max_block,
+                    };
+                    self.sequences.decode(
+                        &self.encoded[offset..],
+                        &literals,
+                        &mut sink,
+                        self.max_block,
+                    )?;
+                    self.decoded_total += self.pending.len() as u64;
+                    self.checksum.update(&self.pending);
+                    self.pending_position = 0;
+                    self.phase = Phase::Drain;
+                }
+                Phase::Drain => {
+                    let count =
+                        (self.pending.len() - self.pending_position).min(output.len() - *produced);
+                    output[*produced..*produced + count].copy_from_slice(
+                        &self.pending[self.pending_position..self.pending_position + count],
+                    );
+                    self.pending_position += count;
+                    *produced += count;
+                    if self.pending_position != self.pending.len() {
+                        return Ok(StreamStatus::NeedOutput);
+                    }
+                    self.pending.clear();
+                    self.pending_position = 0;
+                    if self.end_block()? {
+                        return Ok(StreamStatus::FrameFinished);
+                    }
                 }
                 Phase::RleByte => {
                     let Some(&byte) = input.get(*consumed) else {
@@ -411,6 +502,62 @@ impl Decoder {
         self.filled = 0;
         self.frame = None;
         self.history.clear();
+        self.huffman = None;
+        self.sequences = SequenceState::new();
+        Ok(())
+    }
+}
+
+/// A single compressed block stages output while committing its bytes to the
+/// ring in order. Distances can reach previous blocks or overlap this block.
+/// Vector growth is checked before mutation and never exceeds one block.
+struct BlockSink<'a> {
+    history: &'a mut RingHistory,
+    output: &'a mut Vec<u8>,
+    budget: usize,
+    frame_remaining: Option<u64>,
+    max_block: usize,
+}
+
+impl BlockSink<'_> {
+    fn extend(&mut self, count: usize) -> Result<usize> {
+        let start = self.output.len();
+        let end = start.checked_add(count).ok_or(Error::ResourceLimit)?;
+        if end > self.max_block {
+            return Err(Error::CorruptData);
+        }
+        if end > self.budget {
+            return Err(Error::ResourceLimit);
+        }
+        if self.frame_remaining.is_some_and(|size| end as u64 > size) {
+            return Err(Error::ContentSizeMismatch);
+        }
+        self.output
+            .try_reserve_exact(count)
+            .map_err(|_| Error::AllocationFailed)?;
+        self.output.resize(end, 0);
+        Ok(start)
+    }
+}
+
+impl SequenceOutput for BlockSink<'_> {
+    fn len(&self) -> usize {
+        self.output.len()
+    }
+
+    fn append(&mut self, bytes: &[u8]) -> Result<()> {
+        let start = self.extend(bytes.len())?;
+        self.history.append(bytes, &mut self.output[start..])?;
+        Ok(())
+    }
+
+    fn copy_match(&mut self, distance: usize, length: usize) -> Result<()> {
+        if distance == 0 || distance > self.history.available() {
+            return Err(Error::CorruptData);
+        }
+        let start = self.extend(length)?;
+        self.history
+            .copy_match(distance, length, &mut self.output[start..])?;
         Ok(())
     }
 }
