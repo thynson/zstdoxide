@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "snapshot_kind": "rolling external release assets, independently hash-pinned",
+  "observed_date": "2026-10-08",
+  "target_source_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "provenance_note": "The release archives are maintained independently of tagged zstd source. Observation and SHA-256 pinning do not establish that these bytes belong to v1.5.7.",
+  "license_note": "The code repository BSD/GPL licenses describe upstream test harness source. The external release pages do not declare separate licenses for each corpus input. In particular Silesia and GitHub content must not be assumed to inherit the codec source license. Archives stay in an external cache and are not redistributed in this repository.",
+  "license_sources": [
+    "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/LICENSE",
+    "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/COPYING",
+    "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/README.md",
+    "https://github.com/facebook/zstd/releases/tag/fuzz-corpora",
+    "https://github.com/facebook/zstd/releases/tag/regression-data",
+    "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/regression/data.c"
+  ],
+  "max_unpacked_bytes": 1073741824,
+  "archives": [
+    {
+      "id": "simple_decompress",
+      "format": "zip",
+      "name": "simple_decompress_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/simple_decompress_seed_corpus.zip",
+      "compressed_bytes": 20811769,
+      "sha256": "0fdfe2fe5717ec09202a88d16c37b2abc5aaaa8c2cacaa4127bd9949369d8181",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "20811769",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A2626EE034\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:33 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 11632,
+      "file_count": 11631,
+      "unpacked_bytes": 145026141,
+      "largest_member_bytes": 1048575,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/simple_decompress.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "zstd_frame_info",
+      "format": "zip",
+      "name": "zstd_frame_info_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/zstd_frame_info_seed_corpus.zip",
+      "compressed_bytes": 2652648,
+      "sha256": "e19d9089772d352a98d4ef457be8578d833bec4381dbf66a70594a83d1408f83",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "2652648",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A2703FF60D\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:56 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 2396,
+      "file_count": 2395,
+      "unpacked_bytes": 56626119,
+      "largest_member_bytes": 1048576,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/zstd_frame_info.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "decompress_dstSize_tooSmall",
+      "format": "zip",
+      "name": "decompress_dstSize_tooSmall_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/decompress_dstSize_tooSmall_seed_corpus.zip",
+      "compressed_bytes": 11208398,
+      "sha256": "2ad245fd1f679882ceac61745c1c05cb33515c747f807bca60559ca8e1fd6b9d",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "11208398",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A26EA9DA8A\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:54 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 1173,
+      "file_count": 1173,
+      "unpacked_bytes": 47165505,
+      "largest_member_bytes": 244842,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/decompress_dstSize_tooSmall.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "fse_read_ncount",
+      "format": "zip",
+      "name": "fse_read_ncount_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/fse_read_ncount_seed_corpus.zip",
+      "compressed_bytes": 16940,
+      "sha256": "b4a005f0d52d74105ad2c647e5294a4c545615a82a022f54dc1fb8e3d0a5d2ae",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "16940",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A274EEC382\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:56:04 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 79,
+      "file_count": 79,
+      "unpacked_bytes": 908,
+      "largest_member_bytes": 132,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/fse_read_ncount.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "huf_decompress",
+      "format": "zip",
+      "name": "huf_decompress_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/huf_decompress_seed_corpus.zip",
+      "compressed_bytes": 161669,
+      "sha256": "115214d0a8f53e72ec29ee2441b448ea05b9ceca1978a326815f3894f0a2e56b",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "161669",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A267B284B7\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:42 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 605,
+      "file_count": 605,
+      "unpacked_bytes": 77067,
+      "largest_member_bytes": 8131,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/huf_decompress.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "silesia",
+      "format": "tar.zst",
+      "name": "silesia.tar.zst",
+      "release": "regression-data",
+      "source_url": "https://github.com/facebook/zstd/releases/download/regression-data/silesia.tar.zst",
+      "compressed_bytes": 4288008,
+      "sha256": "c9e5947e2f869c4fb4612944251801d086be6d42174db4c70608cd57b44fc0b9",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "4288008",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A26052B888\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:30 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "decoded_bytes": 12021760,
+      "member_count": 13,
+      "file_count": 12,
+      "unpacked_bytes": 12000000,
+      "largest_member_bytes": 1000000,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/regression/data.c",
+      "upstream_checksum_pin": {
+        "algorithm": "XXH64",
+        "seed": 0,
+        "hex": "48a199f92f93e977",
+        "scope": "compressed archive bytes",
+        "verified": true
+      }
+    },
+    {
+      "id": "github",
+      "format": "tar.zst",
+      "name": "github.tar.zst",
+      "release": "regression-data",
+      "source_url": "https://github.com/facebook/zstd/releases/download/regression-data/github.tar.zst",
+      "compressed_bytes": 33575,
+      "sha256": "aa3a49084cfaff5b3ada174fef43bf57d2f480448598be53e7351177dea03162",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "33575",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A264DE4BBE\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:37 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "decoded_bytes": 757760,
+      "member_count": 501,
+      "file_count": 500,
+      "unpacked_bytes": 407963,
+      "largest_member_bytes": 963,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/regression/data.c",
+      "upstream_checksum_pin": {
+        "algorithm": "XXH64",
+        "seed": 0,
+        "hex": "a9b1b44b020df292",
+        "scope": "compressed archive bytes",
+        "verified": true
+      }
+    },
+    {
+      "id": "github_dictionary",
+      "format": "zst",
+      "name": "github.dict.zst",
+      "release": "regression-data",
+      "source_url": "https://github.com/facebook/zstd/releases/download/regression-data/github.dict.zst",
+      "compressed_bytes": 9147,
+      "sha256": "1232682fc32888765e7e5e1d662466379d91e2ecbee610dabb6f683dbaa839d5",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "9147",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A2613555F1\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:31 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "decoded_bytes": 112640,
+      "member_count": 1,
+      "file_count": 1,
+      "unpacked_bytes": 112640,
+      "largest_member_bytes": 112640,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/regression/data.c",
+      "upstream_checksum_pin": {
+        "algorithm": "XXH64",
+        "seed": 0,
+        "hex": "1eddc6f737d3cb53",
+        "scope": "compressed archive bytes",
+        "verified": true
+      },
+      "output_name": "github.dict"
+    }
+  ],
+  "reproduction": {
+    "fetch": "python3 scripts/fetch_upstream_corpora.py --cache /path/to/external-cache",
+    "verify_cached": "python3 scripts/fetch_upstream_corpora.py --cache /path/to/external-cache --offline",
+    "selection": "Repeat --target ID to select archives. Default selects all eight.",
+    "bounds": "--max-unpacked-bytes limits aggregate extracted bytes and must be at most 1073741824. All members must be regular files or directories; symbolic/hard links, special files, traversal names, duplicate files, and oversized expansion are rejected."
+  },
+  "validation": {
+    "archive_pins_verified": 8,
+    "compressed_bytes": 39182154,
+    "extracted_bytes": 261416343,
+    "offline_reextraction_and_existing_directory_comparison": "passed",
+    "malicious_zip_and_tar_cases_rejected": 12,
+    "fresh_network_fetch_test": "fse_read_ncount passed in a fresh external cache",
+    "official_regression_xxhash64_checks": "all three pins passed using an external verifier built against upstream xxhash.h; no verifier or C dependency is part of the Rust library"
+  }
+}

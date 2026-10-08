@@ -16,7 +16,8 @@
 - [x] Replay decodecorpus fixtures and configurable official generator campaigns.
 - [x] Map CLI, streaming, dictionary, threading, legacy, and build-test contracts.
 - [x] Import and replay the exact standalone testcard and kernel empty-frame tests.
-- [ ] Pin available external corpus snapshots and provide bounded replay tools.
+- [x] Pin available external corpus snapshots and provide bounded replay tools.
+- [ ] Replay official Silesia/GitHub regression data through one-shot Rust APIs.
 - [x] Replay external Huffman decoder inputs with upstream parameter consumption.
 - [x] Verify all checked-in fixture hashes in the offline CI audit.
 - [ ] Audit test coverage and keep unimplemented contracts explicitly open.
