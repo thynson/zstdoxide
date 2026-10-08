@@ -63,7 +63,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Replay the full window-distance sweep with bounded streaming output.
 - [ ] Port malformed streaming-input and randomized directive fuzz campaigns.
 - [ ] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.
-- [ ] Measure retained memory and safe/unsafe throughput; document stream limits.
+- [x] Measure retained memory and safe/unsafe throughput; document stream limits.
 - [ ] Document public streaming usage and lifecycle examples.
 - [ ] Run the complete backend/no_std matrix and add streaming CI coverage.
 - [ ] Pin and replay official external streaming fuzz corpora.

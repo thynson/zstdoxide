@@ -1,0 +1,56 @@
+META	seed	5eedd15c0dec2026
+META	samples	5
+META	sample_ms	150
+META	features	unsafe-match-table
+COLUMNS	case	unit	units_per_iteration	median_ns_per_unit	minimum_ns_per_unit	maximum_ns_per_unit	fingerprint
+RESULT	byte_cursor	byte	65536	0.5047	0.4940	0.6224	d8e92bce820bb24f
+RESULT	reverse_bits	byte	65536	1.4241	1.3942	1.4832	5db079f320c83ea2
+RESULT	fse_lookup	transition	65536	0.7494	0.7491	0.7644	0de56ad491b65048
+RESULT	huffman_decode	byte	65536	6.1925	6.1558	6.3811	ee42899df300a132
+RESULT	history_overlap	byte	65536	0.6268	0.6250	0.8626	9c8a5a2754c9d995
+META	ring_window_bytes	4096
+META	ring_output_chunk_bytes	1024
+META	ring_retained_bytes	4096
+META	ring_output_fnv1a64	cc8c2ee508b01e16
+RESULT	ring_overlap	byte	65536	0.9544	0.9442	0.9937	9c8a5a2754c9d995
+RESULT	match_table	candidate	32768	1.0192	1.0114	1.0315	ee75d847654343c6
+META	compress_original_bytes	99328
+META	compress_encoded_bytes	1339
+META	compress_output_fnv1a64	b6ec9854a7bed506
+RESULT	compress	byte	99328	1.7874	1.7191	1.8336	1624ef6861d8a410
+META	decompress_encoded_bytes	7124
+META	decompress_decoded_bytes	370326
+META	decompress_output_fnv1a64	4b678f26bb5708b9
+RESULT	decompress	byte	370326	1.2038	1.1849	1.2387	d7ede7e257fa75c4
+META	stream_decode_input_chunk_bytes	257
+META	stream_decode_output_chunk_bytes	4096
+META	stream_encode_input_chunk_bytes	4096
+META	stream_encode_output_chunk_bytes	1024
+META	stream_decompress_encoded_bytes	7124
+META	stream_decompress_decoded_bytes	370326
+META	stream_decompress_output_fnv1a64	4b678f26bb5708b9
+META	stream_decompress_peak_retained_bytes	509902
+META	stream_decompress_reset_retained_bytes	504270
+RESULT	stream_decompress	byte	370326	1.6854	1.5929	1.8435	d7ede7e257fa75c4
+META	stream_compress_original_bytes	99328
+META	stream_compress_encoded_bytes	1336
+META	stream_compress_output_fnv1a64	5bc47910249df5af
+META	stream_compress_reset_retained_bytes	1193569
+RESULT	stream_compress	byte	99328	1.6266	1.6248	1.6296	bed99ff87f8227b6
+META	stream_decompress_memory_short_frames	4
+META	stream_decompress_memory_long_frames	64
+META	stream_decompress_memory_output_bytes	23700864
+META	stream_decompress_peak_retained_bytes_4_frames	509902
+META	stream_decompress_peak_retained_bytes_64_frames	509902
+META	stream_decompress_single_frame_short_bytes	524288
+META	stream_decompress_single_frame_long_bytes	8388608
+META	stream_decompress_single_frame_short_retained_bytes	264107
+META	stream_decompress_single_frame_long_retained_bytes	264107
+META	stream_compress_memory_block_bytes	131072
+META	stream_compress_memory_short_blocks	4
+META	stream_compress_memory_long_blocks	64
+META	stream_compress_memory_input_bytes	8388608
+META	stream_compress_memory_encoded_bytes	84874
+META	stream_compress_memory_output_fnv1a64	8b8b992d3414e9ff
+META	stream_compress_peak_retained_bytes_4_blocks	1352289
+META	stream_compress_peak_retained_bytes_64_blocks	1352289

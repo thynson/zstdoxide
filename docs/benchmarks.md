@@ -1,4 +1,43 @@
-# Recorded backend comparison
+# Recorded backend comparisons
+
+## Module 6 streaming measurements
+
+The streaming run on 2026-10-08 used Rust 1.89.0 on `aarch64-apple-darwin`,
+release overflow checks, five samples of at least 150 ms, nine configurations,
+and eleven workloads. All output fingerprints, full-output FNV checksums,
+lengths, and retained-capacity metadata matched across configurations. The
+[complete summary and raw measurements](measurements/2026-10-08-streaming/summary.md)
+include ranges, environment, and the source fingerprint.
+
+| Workload | Safe ns/byte | Selected unsafe ns/byte | Relative throughput |
+| --- | ---: | ---: | ---: |
+| Ring overlap, ring feature alone | 0.9486 | 1.0033 | 0.945x |
+| Ring overlap, all features | 0.9486 | 0.7690 | 1.234x |
+| Streaming decode, all features | 1.6338 | 1.4634 | 1.116x |
+| Streaming encode, all features | 1.7546 | 1.6325 | 1.075x |
+
+The independent ring feature was slightly slower in this run. Other feature
+interactions and workstation noise prevent assigning all-feature gains to that
+one data structure. Every unsafe backend remains opt-in. Streaming measurements
+reuse contexts and caller buffers; one-shot timings include their ordinary
+allocation, so differences between those workloads are not backend speedups.
+
+Retained decoder capacity stayed at 264,107 bytes while one frame grew from
+524,288 to 8,388,608 output bytes. Concatenated-frame trials retained 509,902 bytes
+for both four and 64 frames (23,700,864 bytes of output). The encoder retained
+1,352,289 bytes after both four and 64 blocks (8,388,608 input bytes). These
+measurements count owned context capacities after calls; they exclude temporary
+literal/table construction, inline state, caller buffers, and allocator overhead.
+
+The measurement source SHA-256 was
+`e191c5778952b1be18cd584b05fd4235508ddd8986aa35079503a5cadab56df5`,
+with parent commit `c94efe4` and the recorded benchmark additions present.
+A subsequent fix only changes rejection of decoder processing after sealed EOF;
+that error path was not exercised by the benchmark's timed operations. Results
+belong to the recorded snapshot, not a claim of an identical later source hash.
+
+## Earlier one-shot milestone
+
 
 Measured on 2026-10-08 with Rust 1.89.0, `aarch64-apple-darwin`, release settings,
 and overflow checks enabled. Each workload used five samples of at least 150 ms;

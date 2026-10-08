@@ -1,0 +1,19 @@
+Timestamp: 2026-10-08 09:29:06 UTC
+rustc 1.89.0 (29483883e 2025-08-04)
+binary: rustc
+commit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2
+commit-date: 2025-08-04
+host: aarch64-apple-darwin
+release: 1.89.0
+LLVM version: 20.1.7
+Darwin MacBook-Air-2.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:18:13 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_ARM64_T8132 arm64
+c94efe4eb693a85a5c223fae263873587e31df74
+ M .github/workflows/ci.yml
+ M benches/backends.rs
+ M docs/stream-encoder-design.md
+ M scripts/benchmark.sh
+ M scripts/check.sh
+ M scripts/check_upstream_oracles.sh
+?? docs/upstream-streaming-plan.md
+?? tests/upstream_streaming.rs
+CPU model unavailable under current permissions.

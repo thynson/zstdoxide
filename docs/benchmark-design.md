@@ -26,9 +26,12 @@ invariants are in `data-structures.md` and the linked module design documents.
 | fse_lookup | Checked state lookups in a sparse normalized table | Transition |
 | huffman_decode | Decode mixed-length codes into an allocated output | Output byte |
 | history_overlap | Allocate history and expand offset-7 overlapping matches | Output byte |
+| ring_overlap | Reuse a 4 KiB ring and expand offset-7 matches across wraparound | Output byte |
 | match_table | Reset and replace candidates in the four-byte hash table | Four-byte candidate |
 | compress | Compress deterministic mixed text and byte patterns | Original byte |
 | decompress | Decode an official zstd fixture when present | Decoded byte |
+| stream_compress | Reuse an encoder with 4 KiB input and 1 KiB output slices | Original byte |
+| stream_decompress | Reuse a decoder with 257-byte input and 4 KiB output slices | Decoded byte |
 
 A fixed xorshift generator and seed construct inputs once outside the timed
 region. FSE and Huffman tables are constructed outside the timed region.
@@ -47,9 +50,19 @@ correctness is not inferred from sampled fingerprints.
 
 By default each case runs five samples of at least 150 ms each, then reports the
 median throughput and minimum/maximum sample durations per work unit. This is
-about six seconds per complete feature configuration, excluding compilation.
+about nine seconds per complete feature configuration, excluding compilation.
 Environment overrides permit longer measurements. Wall-clock measurements on a
 shared workstation include noise and should not imply universal speedups.
+
+Streaming checks outside timing compare every decoded byte, exact encoded
+fingerprints, and context-owned retained capacity. A decoder is measured after
+four and 64 concatenated frames and within one growing frame. An encoder is
+measured after four and 64 blocks of a single frame. Their fixed caller buffers
+and transient per-call allocations are excluded from `retained_capacity()`;
+bounded retained capacity is not a measurement of allocator-call count or peak
+process memory. Each streaming operation resets logical state while retaining
+its allocated primary buffers. All nine feature configurations must report
+identical workload/output/capacity metadata before throughput is compared.
 
 ## Entropy safety review
 

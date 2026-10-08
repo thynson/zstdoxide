@@ -7,7 +7,7 @@ extern crate alloc;
 
 use std::hint::black_box;
 use std::time::{Duration, Instant};
-use zstdoxide::{Error, Result};
+use zstdoxide::{DecodeOptions, Decoder, Encoder, EndDirective, Error, Result, StreamStatus};
 
 #[path = "../src/bitstream.rs"]
 mod bitstream;
@@ -21,6 +21,8 @@ mod history;
 mod huffman;
 #[path = "../src/matchfinder.rs"]
 mod matchfinder;
+#[path = "../src/ring_history.rs"]
+mod ring_history;
 
 const SEED: u64 = 0x5eed_d15c_0dec_2026;
 const INPUT_SIZE: usize = 64 * 1024;
@@ -123,6 +125,8 @@ fn main() {
         fingerprint(output.frame_bytes())
     });
 
+    measure_ring_history(&settings, &input);
+
     let mut table = matchfinder::MatchTable::new().unwrap();
     let words: Vec<[u8; 4]> = input
         .chunks_exact(4)
@@ -172,6 +176,347 @@ fn main() {
     measure(&settings, "decompress", "byte", expected.len(), || {
         fingerprint(&zstdoxide::decompress(black_box(frame), 370_326).unwrap())
     });
+
+    measure_streaming(&settings, &original, frame, &expected);
+}
+
+/// Reuse a small ring across frames while emitting much more than its window.
+/// Full output remains observable; this workload wraps at distance seven.
+fn measure_ring_history(settings: &Settings, input: &[u8]) {
+    const WINDOW: usize = 4096;
+    const OUTPUT_CHUNK: usize = 1024;
+    let prefix = &input[..7];
+    let mut ring = ring_history::RingHistory::new(WINDOW);
+    let mut output = vec![0; INPUT_SIZE];
+    {
+        let mut run = || {
+            ring.start_frame(WINDOW).unwrap();
+            let mut position = ring.append(black_box(prefix), &mut output).unwrap();
+            while position < output.len() {
+                let end = (position + OUTPUT_CHUNK).min(output.len());
+                let count = ring
+                    .copy_match(7, output.len() - position, &mut output[position..end])
+                    .unwrap();
+                position += count;
+            }
+            fingerprint(&output)
+        };
+        run();
+    }
+    let expected: Vec<_> = prefix.iter().copied().cycle().take(INPUT_SIZE).collect();
+    assert_eq!(output, expected);
+    println!("META\tring_window_bytes\t{WINDOW}");
+    println!("META\tring_output_chunk_bytes\t{OUTPUT_CHUNK}");
+    println!("META\tring_retained_bytes\t{}", ring.retained_capacity());
+    println!("META\tring_output_fnv1a64\t{:016x}", full_checksum(&output));
+    measure(settings, "ring_overlap", "byte", INPUT_SIZE, || {
+        ring.start_frame(WINDOW).unwrap();
+        let mut position = ring.append(black_box(prefix), &mut output).unwrap();
+        while position < output.len() {
+            let end = (position + OUTPUT_CHUNK).min(output.len());
+            let count = ring
+                .copy_match(7, output.len() - position, &mut output[position..end])
+                .unwrap();
+            position += count;
+        }
+        fingerprint(&output)
+    });
+}
+
+const DECODE_INPUT_CHUNK: usize = 257;
+const DECODE_OUTPUT_CHUNK: usize = 4096;
+const ENCODE_INPUT_CHUNK: usize = 4096;
+const ENCODE_OUTPUT_CHUNK: usize = 1024;
+
+/// Decode exactly one frame without sealing the context, allowing concatenation.
+/// Returns delivered bytes and the largest observed retained context capacity.
+fn decode_stream_frame(decoder: &mut Decoder, input: &[u8], output: &mut [u8]) -> (usize, usize) {
+    let mut consumed = 0;
+    let mut produced = 0;
+    let mut retained = decoder.retained_capacity();
+    loop {
+        let input_end = (consumed + DECODE_INPUT_CHUNK).min(input.len());
+        let output_end = (produced + DECODE_OUTPUT_CHUNK).min(output.len());
+        let progress = decoder
+            .process(
+                &input[consumed..input_end],
+                &mut output[produced..output_end],
+            )
+            .unwrap();
+        assert!(progress.consumed <= input_end - consumed);
+        assert!(progress.produced <= output_end - produced);
+        consumed += progress.consumed;
+        produced += progress.produced;
+        retained = retained.max(decoder.retained_capacity());
+        if progress.status == StreamStatus::FrameFinished {
+            assert_eq!(consumed, input.len());
+            return (produced, retained);
+        }
+        assert!(
+            progress.consumed != 0 || progress.produced != 0,
+            "decoder stalled"
+        );
+    }
+}
+
+/// Encode a frame using a reusable context and a fixed caller-owned destination.
+fn encode_stream_frame(encoder: &mut Encoder, input: &[u8], output: &mut [u8]) -> usize {
+    let mut consumed = 0;
+    let mut produced = 0;
+    loop {
+        let input_end = (consumed + ENCODE_INPUT_CHUNK).min(input.len());
+        let output_end = (produced + ENCODE_OUTPUT_CHUNK).min(output.len());
+        let directive = if input_end == input.len() {
+            EndDirective::Finish
+        } else {
+            EndDirective::Continue
+        };
+        let progress = encoder
+            .process(
+                &input[consumed..input_end],
+                &mut output[produced..output_end],
+                directive,
+            )
+            .unwrap();
+        assert!(progress.consumed <= input_end - consumed);
+        assert!(progress.produced <= output_end - produced);
+        consumed += progress.consumed;
+        produced += progress.produced;
+        if progress.status == StreamStatus::FrameFinished {
+            assert_eq!(consumed, input.len());
+            return produced;
+        }
+        assert!(
+            progress.consumed != 0 || progress.produced != 0,
+            "encoder stalled"
+        );
+    }
+}
+
+fn measure_streaming(settings: &Settings, original: &[u8], frame: &[u8], expected: &[u8]) {
+    println!("META\tstream_decode_input_chunk_bytes\t{DECODE_INPUT_CHUNK}");
+    println!("META\tstream_decode_output_chunk_bytes\t{DECODE_OUTPUT_CHUNK}");
+    println!("META\tstream_encode_input_chunk_bytes\t{ENCODE_INPUT_CHUNK}");
+    println!("META\tstream_encode_output_chunk_bytes\t{ENCODE_OUTPUT_CHUNK}");
+    let mut decoder = Decoder::new(DecodeOptions::new(expected.len()));
+    let mut decoded = vec![0; expected.len()];
+    let (size, peak) = decode_stream_frame(&mut decoder, frame, &mut decoded);
+    decoder.finish().unwrap();
+    assert_eq!(size, expected.len());
+    assert_eq!(decoded, expected);
+    let retained = decoder.retained_capacity();
+    decoder.reset();
+    assert_eq!(decoder.retained_capacity(), retained);
+    println!("META\tstream_decompress_encoded_bytes\t{}", frame.len());
+    println!("META\tstream_decompress_decoded_bytes\t{}", expected.len());
+    println!(
+        "META\tstream_decompress_output_fnv1a64\t{:016x}",
+        full_checksum(&decoded)
+    );
+    println!("META\tstream_decompress_peak_retained_bytes\t{peak}");
+    println!("META\tstream_decompress_reset_retained_bytes\t{retained}");
+    measure(
+        settings,
+        "stream_decompress",
+        "byte",
+        expected.len(),
+        || {
+            decoder.reset();
+            let (size, _) = decode_stream_frame(&mut decoder, black_box(frame), &mut decoded);
+            decoder.finish().unwrap();
+            assert_eq!(size, expected.len());
+            fingerprint(&decoded)
+        },
+    );
+
+    let mut encoder = Encoder::new();
+    // Generous fixed destination for this selected workload. It remains caller
+    // memory and is excluded from the context's retained-capacity measurement.
+    let mut encoded = vec![0; original.len() * 2 + 1024];
+    let size = encode_stream_frame(&mut encoder, original, &mut encoded);
+    assert_eq!(
+        zstdoxide::decompress(&encoded[..size], original.len()).unwrap(),
+        original
+    );
+    let retained = encoder.retained_capacity();
+    encoder.reset();
+    assert_eq!(encoder.retained_capacity(), retained);
+    println!("META\tstream_compress_original_bytes\t{}", original.len());
+    println!("META\tstream_compress_encoded_bytes\t{size}");
+    println!(
+        "META\tstream_compress_output_fnv1a64\t{:016x}",
+        full_checksum(&encoded[..size])
+    );
+    println!("META\tstream_compress_reset_retained_bytes\t{retained}");
+    measure(settings, "stream_compress", "byte", original.len(), || {
+        encoder.reset();
+        let produced = encode_stream_frame(&mut encoder, black_box(original), &mut encoded);
+        assert_eq!(produced, size);
+        fingerprint(&encoded[..produced])
+    });
+
+    // These exact-byte and retained-memory checks are outside timed regions.
+    decoder_memory_plateau(frame, expected);
+    encoder_memory_plateau(original);
+}
+
+/// Compare context high-water capacity after four and sixty-four whole frames.
+fn decoder_memory_plateau(frame: &[u8], expected: &[u8]) {
+    let mut decoder = Decoder::new(DecodeOptions::new(expected.len() * 64));
+    let mut output = vec![0; expected.len()];
+    let mut peak = 0;
+    let mut short_peak = 0;
+    for frame_index in 0..64 {
+        let (size, retained) = decode_stream_frame(&mut decoder, frame, &mut output);
+        assert_eq!(size, expected.len());
+        assert_eq!(output, expected);
+        peak = peak.max(retained);
+        if frame_index == 3 {
+            short_peak = peak;
+        }
+    }
+    decoder.finish().unwrap();
+    assert_eq!(
+        short_peak, peak,
+        "decoder retained memory grew with completed frames"
+    );
+    println!("META\tstream_decompress_memory_short_frames\t4");
+    println!("META\tstream_decompress_memory_long_frames\t64");
+    println!(
+        "META\tstream_decompress_memory_output_bytes\t{}",
+        expected.len() * 64
+    );
+    println!("META\tstream_decompress_peak_retained_bytes_4_frames\t{short_peak}");
+    println!("META\tstream_decompress_peak_retained_bytes_64_frames\t{peak}");
+}
+
+/// Feed the same full block repeatedly into one frame and compare capacity.
+/// Caller-collected output is used for correctness, not counted as codec state.
+fn encoder_memory_plateau(original: &[u8]) {
+    let block: Vec<_> = original.iter().copied().cycle().take(128 * 1024).collect();
+    let mut encoder = Encoder::new();
+    let mut scratch = [0; ENCODE_OUTPUT_CHUNK];
+    let mut encoded = Vec::new();
+    let mut peak = 0;
+    let mut short_peak = 0;
+    for block_index in 0..64 {
+        let mut consumed = 0;
+        loop {
+            let end = (consumed + ENCODE_INPUT_CHUNK).min(block.len());
+            let directive = if block_index == 63 && end == block.len() {
+                EndDirective::Finish
+            } else {
+                EndDirective::Continue
+            };
+            let progress = encoder
+                .process(&block[consumed..end], &mut scratch, directive)
+                .unwrap();
+            assert!(progress.consumed <= end - consumed);
+            assert!(progress.produced <= scratch.len());
+            consumed += progress.consumed;
+            encoded.extend_from_slice(&scratch[..progress.produced]);
+            peak = peak.max(encoder.retained_capacity());
+            if progress.status == StreamStatus::FrameFinished {
+                assert_eq!(block_index, 63);
+                assert_eq!(consumed, block.len());
+                break;
+            }
+            if consumed == block.len() && progress.status == StreamStatus::NeedInput {
+                assert!(block_index < 63);
+                break;
+            }
+            assert!(
+                progress.consumed != 0 || progress.produced != 0,
+                "memory trial stalled"
+            );
+        }
+        if block_index == 3 {
+            short_peak = peak;
+        }
+    }
+    assert_eq!(
+        short_peak, peak,
+        "encoder retained memory grew with delivered input"
+    );
+    let expected: Vec<_> = block
+        .iter()
+        .copied()
+        .cycle()
+        .take(block.len() * 64)
+        .collect();
+    assert_eq!(
+        zstdoxide::decompress(&encoded, expected.len()).unwrap(),
+        expected
+    );
+    decoder_single_frame_memory_plateau(&encoded, &expected, block.len() * 4);
+    println!("META\tstream_compress_memory_block_bytes\t{}", block.len());
+    println!("META\tstream_compress_memory_short_blocks\t4");
+    println!("META\tstream_compress_memory_long_blocks\t64");
+    println!(
+        "META\tstream_compress_memory_input_bytes\t{}",
+        expected.len()
+    );
+    println!(
+        "META\tstream_compress_memory_encoded_bytes\t{}",
+        encoded.len()
+    );
+    println!(
+        "META\tstream_compress_memory_output_fnv1a64\t{:016x}",
+        full_checksum(&encoded)
+    );
+    println!("META\tstream_compress_peak_retained_bytes_4_blocks\t{short_peak}");
+    println!("META\tstream_compress_peak_retained_bytes_64_blocks\t{peak}");
+}
+
+/// Decode one long frame into a small reused caller buffer. The prefix and full
+/// frame use the same window, so retained capacity must not track frame length.
+fn decoder_single_frame_memory_plateau(encoded: &[u8], expected: &[u8], short_size: usize) {
+    let mut decoder = Decoder::new(DecodeOptions::new(expected.len()));
+    let mut scratch = [0; DECODE_OUTPUT_CHUNK];
+    let mut consumed = 0;
+    let mut produced = 0;
+    let mut peak = 0;
+    let mut short_peak = None;
+    loop {
+        let end = (consumed + DECODE_INPUT_CHUNK).min(encoded.len());
+        let progress = decoder
+            .process(&encoded[consumed..end], &mut scratch)
+            .unwrap();
+        assert!(progress.consumed <= end - consumed);
+        assert!(progress.produced <= scratch.len());
+        assert_eq!(
+            scratch[..progress.produced],
+            expected[produced..produced + progress.produced]
+        );
+        consumed += progress.consumed;
+        produced += progress.produced;
+        peak = peak.max(decoder.retained_capacity());
+        if produced >= short_size && short_peak.is_none() {
+            short_peak = Some(peak);
+        }
+        if progress.status == StreamStatus::FrameFinished {
+            assert_eq!(consumed, encoded.len());
+            assert_eq!(produced, expected.len());
+            break;
+        }
+        assert!(
+            progress.consumed != 0 || progress.produced != 0,
+            "single-frame memory trial stalled"
+        );
+    }
+    decoder.finish().unwrap();
+    let short_peak = short_peak.unwrap();
+    assert_eq!(
+        short_peak, peak,
+        "decoder retained memory grew with one frame's delivered output"
+    );
+    println!("META\tstream_decompress_single_frame_short_bytes\t{short_size}");
+    println!(
+        "META\tstream_decompress_single_frame_long_bytes\t{}",
+        expected.len()
+    );
+    println!("META\tstream_decompress_single_frame_short_retained_bytes\t{short_peak}");
+    println!("META\tstream_decompress_single_frame_long_retained_bytes\t{peak}");
 }
 
 fn measure(
@@ -283,6 +628,7 @@ fn enabled_features() -> String {
         ("unsafe-fse", cfg!(feature = "unsafe-fse")),
         ("unsafe-huffman", cfg!(feature = "unsafe-huffman")),
         ("unsafe-history", cfg!(feature = "unsafe-history")),
+        ("unsafe-ring-history", cfg!(feature = "unsafe-ring-history")),
         ("unsafe-match-table", cfg!(feature = "unsafe-match-table")),
     ];
     let selected: Vec<_> = features
