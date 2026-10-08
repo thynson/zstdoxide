@@ -1,0 +1,194 @@
+{
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "upstream_version": "1.5.7",
+  "files": [
+    {
+      "path": "golden-decompression/block-128k.zst",
+      "size": 131081,
+      "sha256": "6a226ab40e6abcfc4a36baa04bf48f7ee56f166b8a26fbe2adb8fe771dceccba",
+      "origin": "tests/golden-decompression/block-128k.zst",
+      "expected_output": {
+        "size": 131068,
+        "sha256": "672003418993584239ec5c79232de911699178ad820cd3ca9779abbfe7f7ba7d",
+        "repeat_byte": 0
+      }
+    },
+    {
+      "path": "golden-decompression/empty-block.zst",
+      "size": 11,
+      "sha256": "ab5463fa31429bf81ced9f05e99b96b2fe88b1da37235a233f6bc96242332fbc",
+      "origin": "tests/golden-decompression/empty-block.zst",
+      "expected_output": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repeat_byte": 0
+      }
+    },
+    {
+      "path": "golden-decompression/rle-first-block.zst",
+      "size": 45,
+      "sha256": "dd31b3fa6bb8601710cbde2c625660763bf38adc5255501e3d3a681cc0e4e1a4",
+      "origin": "tests/golden-decompression/rle-first-block.zst",
+      "expected_output": {
+        "size": 1048576,
+        "sha256": "30e14955ebf1352266dc2ff8067e68104607e750abb9d3b36582b8af909fcb58",
+        "repeat_byte": 0
+      }
+    },
+    {
+      "path": "golden-decompression/zeroSeq_2B.zst",
+      "size": 25,
+      "sha256": "8505867ac00fb49eb455da1b1e44e7cba5126f03114a72fb195170f7c95f2ca7",
+      "origin": "tests/golden-decompression/zeroSeq_2B.zst",
+      "expected_output": {
+        "size": 13,
+        "sha256": "03ba204e50d126e4674c005e04d82e84c21366780af1f43bd54a37816b6ab340",
+        "hex": "48656c6c6f20576f726c64210a"
+      }
+    },
+    {
+      "path": "golden-decompression-errors/off0.bin.zst",
+      "size": 17,
+      "sha256": "144e2f029389c67c361bd3879ac142671592802f01f805a6c0c2b3e564d8022c",
+      "origin": "tests/golden-decompression-errors/off0.bin.zst",
+      "expected_error": "corrupt input"
+    },
+    {
+      "path": "golden-decompression-errors/truncated_huff_state.zst",
+      "size": 19,
+      "sha256": "c91a09d8824609d0643291803cbfb04b14213c02c890d5637bc3aed18e8a24f8",
+      "origin": "tests/golden-decompression-errors/truncated_huff_state.zst",
+      "expected_error": "corrupt input"
+    },
+    {
+      "path": "golden-decompression-errors/zeroSeq_extraneous.zst",
+      "size": 27,
+      "sha256": "85d7b2010abde2ff96ab8e6798b422d3cb78f8dd2108f83dbdd488da7056a6db",
+      "origin": "tests/golden-decompression-errors/zeroSeq_extraneous.zst",
+      "expected_error": "corrupt input"
+    },
+    {
+      "path": "golden-compression/PR-3517-block-splitter-corruption-test",
+      "size": 262144,
+      "sha256": "1ca04564ed658653f314ac6847c511a259d3b58d6315a7f7daf0f697a1514942",
+      "origin": "tests/golden-compression/PR-3517-block-splitter-corruption-test"
+    },
+    {
+      "path": "generated/PR-3517-block-splitter-corruption-test.zst",
+      "size": 191644,
+      "sha256": "2367c251b78eaa6c949824c64d70078d8a78cb96df9bbff9bd4f635a72ce1b66",
+      "derived_from": "golden-compression/PR-3517-block-splitter-corruption-test",
+      "oracle_arguments": [
+        "-q",
+        "-c",
+        "-3",
+        "--single-thread",
+        "--check",
+        "--stream-size=262144"
+      ],
+      "expected_output": {
+        "size": 262144,
+        "sha256": "1ca04564ed658653f314ac6847c511a259d3b58d6315a7f7daf0f697a1514942"
+      }
+    },
+    {
+      "path": "golden-compression/http",
+      "size": 1189,
+      "sha256": "ff02112301c842932531648f21911d6a47896df1c7bf484e8e2e5fec34fa91be",
+      "origin": "tests/golden-compression/http"
+    },
+    {
+      "path": "generated/http.zst",
+      "size": 447,
+      "sha256": "5afbe4a36fac439115bc0865adecbe005423d27b28f98a9ef5935be953279f03",
+      "derived_from": "golden-compression/http",
+      "oracle_arguments": [
+        "-q",
+        "-c",
+        "-3",
+        "--single-thread",
+        "--check",
+        "--stream-size=1189"
+      ],
+      "expected_output": {
+        "size": 1189,
+        "sha256": "ff02112301c842932531648f21911d6a47896df1c7bf484e8e2e5fec34fa91be"
+      }
+    },
+    {
+      "path": "golden-compression/huffman-compressed-larger",
+      "size": 143,
+      "sha256": "46f9f62efa91681b9bcb5cdd390bbe540fb565c0ed0ab2c65a86eb575116d3fc",
+      "origin": "tests/golden-compression/huffman-compressed-larger"
+    },
+    {
+      "path": "generated/huffman-compressed-larger.zst",
+      "size": 156,
+      "sha256": "92e399fcf5dca9edc5c71314d7e74c40a38e79813502802791d6e38a6ba47aed",
+      "derived_from": "golden-compression/huffman-compressed-larger",
+      "oracle_arguments": [
+        "-q",
+        "-c",
+        "-3",
+        "--single-thread",
+        "--check",
+        "--stream-size=143"
+      ],
+      "expected_output": {
+        "size": 143,
+        "sha256": "46f9f62efa91681b9bcb5cdd390bbe540fb565c0ed0ab2c65a86eb575116d3fc"
+      }
+    },
+    {
+      "path": "golden-compression/large-literal-and-match-lengths",
+      "size": 199998,
+      "sha256": "abadcf3096be26e7df4e6dd18c818606092b5493948050c409bc7104abd02415",
+      "origin": "tests/golden-compression/large-literal-and-match-lengths"
+    },
+    {
+      "path": "generated/large-literal-and-match-lengths.zst",
+      "size": 70106,
+      "sha256": "97319ebf044f8f826509ac36b0284f9a2bf49fe9f2e272e57260f906769a76f4",
+      "derived_from": "golden-compression/large-literal-and-match-lengths",
+      "oracle_arguments": [
+        "-q",
+        "-c",
+        "-3",
+        "--single-thread",
+        "--check",
+        "--stream-size=199998"
+      ],
+      "expected_output": {
+        "size": 199998,
+        "sha256": "abadcf3096be26e7df4e6dd18c818606092b5493948050c409bc7104abd02415"
+      }
+    },
+    {
+      "path": "golden-dictionaries/http-dict-missing-symbols",
+      "size": 1000,
+      "sha256": "f4c25620fc0fb4fd60b2a9e4834e822772bf795ce5dcaa99b8985315ac24ad8b",
+      "origin": "tests/golden-dictionaries/http-dict-missing-symbols"
+    },
+    {
+      "path": "generated/http-dictionary.zst",
+      "size": 427,
+      "sha256": "0ae318a2add9bb60d87bfacc10d579bb898f2bb2e93b9a1965a2aa452a0d3710",
+      "derived_from": "golden-compression/http",
+      "dictionary": "golden-dictionaries/http-dict-missing-symbols",
+      "oracle_arguments": [
+        "-q",
+        "-c",
+        "-3",
+        "--single-thread",
+        "--check",
+        "--stream-size=1189",
+        "-D",
+        "UPSTREAM/tests/golden-dictionaries/http-dict-missing-symbols"
+      ],
+      "expected_output": {
+        "size": 1189,
+        "sha256": "ff02112301c842932531648f21911d6a47896df1c7bf484e8e2e5fec34fa91be"
+      }
+    }
+  ]
+}

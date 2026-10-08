@@ -32,6 +32,12 @@ performance is measured through the storage or accessor backend that uses them.
 Detailed module proofs and decompositions are in [entropy-design.md](entropy-design.md),
 [huffman-design.md](huffman-design.md), and [frame-design.md](frame-design.md).
 
+Official-test descriptors, source inventories, and expected-data records are
+test-only plain metadata with owned strings/vectors and borrowed immutable
+fixture slices. The test generator owns scalar PRNG state and uses indices for
+repetitions. They introduce no unsafe access family; see
+[the test migration design](upstream-test-port.md) and its linked inventories.
+
 | Structure and upstream counterpart | Safe representation | Opt-in unsafe alternative | Invariants and focused comparison |
 | --- | --- | --- | --- |
 | Byte reader/writer; `MEM_readLE*`, `MEM_writeLE*`, `ZSTD_inBuffer`, `ZSTD_outBuffer` | Slice plus `usize` position; checked subranges and `from_le_bytes` / `to_le_bytes` | `unsafe-byte-cursor`: unchecked access or unaligned loads only after one complete range validation | `position <= len`; checked position arithmetic; no hidden padding. Compare tiny headers, full words, tails, and unaligned subslices. |
