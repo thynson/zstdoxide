@@ -5,6 +5,7 @@
 
 use alloc::vec::Vec;
 
+use crate::bitstream::ReverseBits;
 use crate::{Error, Result};
 
 /// One initialized FSE transition; a plain value shared by both feature modes.
@@ -230,8 +231,39 @@ impl ForwardBits<'_> {
 }
 
 /// Decode explicit Huffman weights from a two-state FSE stream.
-pub(crate) fn decode_weights(_data: &[u8]) -> Result<Vec<u8>> {
-    Err(Error::UnsupportedFeature)
+///
+/// Corresponds to upstream `FSE_decompress_usingDTable_generic`. The weight
+/// stream has its own termination rule: after emitting a symbol whose state
+/// update would exceed the bitstream, emit the other state's final symbol.
+pub(crate) fn decode_weights(data: &[u8]) -> Result<Vec<u8>> {
+    let (table, header_size) = FseTable::read(data, 255, 6)?;
+    let mut bits = ReverseBits::new(data.get(header_size..).ok_or(Error::UnexpectedEof)?)?;
+    // Both initial states must be completely present, even for a terminal pair.
+    let mut states = [
+        bits.read_bits(table.table_log())? as usize,
+        bits.read_bits(table.table_log())? as usize,
+    ];
+    let mut weights = Vec::new();
+    weights
+        .try_reserve_exact(255)
+        .map_err(|_| Error::AllocationFailed)?;
+    let mut current = 0;
+    loop {
+        let entry = table.entry(states[current])?;
+        if weights.len() == 255 {
+            return Err(Error::CorruptData);
+        }
+        weights.push(entry.symbol);
+        if usize::from(entry.bits) > bits.remaining() {
+            if weights.len() == 255 {
+                return Err(Error::CorruptData);
+            }
+            weights.push(table.entry(states[current ^ 1])?.symbol);
+            return Ok(weights);
+        }
+        states[current] = usize::from(entry.base) + bits.read_bits(entry.bits)? as usize;
+        current ^= 1;
+    }
 }
 
 #[cfg(test)]
@@ -313,16 +345,49 @@ mod tests {
                 let entry = table.entry(state).unwrap();
                 if usize::from(entry.symbol) == symbol {
                     occurrences += 1;
-                    for next in usize::from(entry.base)..usize::from(entry.base) + (1 << entry.bits)
-                    {
-                        assert!(!covered[next]);
-                        covered[next] = true;
+                    let start = usize::from(entry.base);
+                    let end = start + (1 << entry.bits);
+                    for next in &mut covered[start..end] {
+                        assert!(!*next);
+                        *next = true;
                     }
                 }
             }
             assert_eq!(occurrences, count.unsigned_abs() as usize);
             assert!(covered.iter().all(|&covered| covered == (count != 0)));
         }
+    }
+
+    #[test]
+    fn weight_stream_emits_terminal_pair() {
+        // The header describes counts [16, 16]. Initial states 0 and 3
+        // select symbols 0 and 1, with no transition bits before the marker.
+        assert_eq!(decode_weights(&[0x10, 0x3f, 3, 4]).unwrap(), [0, 1]);
+        // Two zero transition bits precede the initial states. Both states
+        // become zero before the final pair is emitted.
+        assert_eq!(decode_weights(&[0x10, 0x3f, 12, 16]).unwrap(), [0, 1, 0, 0]);
+    }
+
+    #[test]
+    fn weight_stream_rejects_missing_initial_states_and_marker() {
+        for input in [
+            &[0x10, 0x3f][..],
+            &[0x10, 0x3f, 0][..],
+            &[0x10, 0x3f, 1][..],
+            &[0x10, 0x3f, 0, 1][..],
+        ] {
+            assert!(decode_weights(input).is_err(), "input: {input:?}");
+        }
+    }
+
+    #[test]
+    fn weight_output_is_bounded_at_255_symbols() {
+        // Each transition consumes one bit. The two terminal symbols make
+        // this 254-bit transition payload exceed the weight alphabet limit.
+        let mut data = alloc::vec![0x10, 0x3f];
+        data.extend_from_slice(&[0; 33]);
+        data.push(1);
+        assert_eq!(decode_weights(&data), Err(Error::CorruptData));
     }
 
     #[test]
