@@ -1,5 +1,20 @@
 # Upstream test migration validation
 
+## Module 6 update
+
+Bounded streaming and reusable contexts now have direct conformance tests,
+independent window-distance fixtures, exact progress/lifecycle regressions,
+and official interoperability checks. See [the streaming validation report](streaming-validation.md)
+for the completed 207-test backend matrix, no_std/Miri checks, memory and timing
+evidence, and [the source mapping](upstream-streaming-plan.md) for precise scope.
+The source/case inventory remains partial because later dictionaries, parameters,
+allocators, workers, legacy and adapters are still required. The strict complete
+migration gate continues to reject 190 behavioral source units.
+
+The sections below record the earlier one-shot migration checkpoint. Their
+140-test totals and eight external archives are historical, not the current
+streaming suite's totals.
+
 Reference source: facebook/zstd v1.5.7, revision
 `f8745da6ff1ad1e7bab384bd1f9d742439278e99`. Validation was performed on
 2026-10-08 on macOS/aarch64 with the pinned Rust 1.89.0 toolchain. The official

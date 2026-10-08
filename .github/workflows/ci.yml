@@ -37,6 +37,8 @@ jobs:
       - run: cargo +nightly miri test --lib --all-features history::tests
       - run: cargo +nightly miri test --lib --all-features ring_history::tests
       - run: cargo +nightly miri test --lib --all-features stream_decode::tests
+      - run: cargo +nightly miri test --test upstream_streaming --all-features exact_history_overwrite_regression_survives_output_fragmentation
+      - run: cargo +nightly miri test --test upstream_streaming --all-features exact_small_sequence_sections_survive_every_chunk_boundary
       - run: cargo +nightly miri test --lib --all-features bitstream::tests
       - run: cargo +nightly miri test --lib --all-features fse::tests
       - run: cargo +nightly miri test --lib --all-features cursor::tests

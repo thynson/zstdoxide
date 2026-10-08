@@ -1,33 +1,13 @@
 # Tasks
 
-## Module 5: official v1.5.7 test migration
+## Official test migration: remaining work
 
-- [x] Inventory every official test file, entry point, asset, and API dependency.
-- [x] Import all official golden assets with exact hashes and provenance.
-- [x] Port golden decoding, error rejection, and adapted compression tests.
-- [x] Expose validated FSE count metadata for exact upstream parser assertions.
-- [x] Generate pinned FSE/Huffman oracle vectors with exact expected metadata.
-- [x] Port entropy decoder fuzz contracts and bounded arbitrary-input checks.
-- [x] Port supported one-shot fuzzer cases and deterministic data generation.
-- [x] Preserve exact inline binary regression fixtures and legacy expectations.
-- [x] Replay current-format inline regressions and retain the failing legacy contract.
-- [x] Port bounded public fuzz-target properties and external corpus replay.
-- [x] Generate and verify reproducible decodecorpus compatibility fixtures.
-- [x] Replay decodecorpus fixtures and configurable official generator campaigns.
-- [x] Map CLI, streaming, dictionary, threading, legacy, and build-test contracts.
-- [x] Import and replay the exact standalone testcard and kernel empty-frame tests.
-- [x] Pin available external corpus snapshots and provide bounded replay tools.
-- [x] Replay official Silesia/GitHub regression data through one-shot Rust APIs.
-- [x] Replay external Huffman decoder inputs with upstream parameter consumption.
-- [x] Verify all checked-in fixture hashes in the offline CI audit.
-- [x] Prevent temporary-directory collisions between concurrent corpus tests.
-- [x] Audit test coverage and keep unimplemented contracts explicitly open.
-- [x] Run migrated tests across safe/unsafe backends and document exact results.
-- [x] Add a reproducible pinned-upstream oracle job alongside the offline CI matrix.
+Completed one-shot and streaming checkpoints are recorded in `docs/progress.md`
+and the validation reports. The complete upstream migration remains open.
 
 ### Required for complete migration
 
-- [ ] Port reusable-context and streaming assertions after those APIs exist.
+- [ ] Port advanced context reset, stable-buffer, and parameter assertions.
 - [ ] Port raw/prepared dictionary, training, and prefix assertions.
 - [ ] Port encoder level/parameter, entropy encoder, and sequence-producer tests.
 - [ ] Port caller-owned output, in-place, allocator, and workspace contracts.
@@ -40,37 +20,32 @@
 The required items remain open. A complete inventory and passing available
 one-shot adaptations do not complete the upstream test migration.
 
-## Module 6: bounded streaming and reusable contexts
+## Module 7: dictionaries, prefixes, and training
 
-- [x] Specify input/output progress, completion, reset, and error contracts.
-- [x] Analyze ring-history ownership, wraparound indices, and backend invariants.
-- [x] Implement and test safe bounded ring history independently of frame logic.
-- [x] Add and verify an independently gated unsafe ring-history backend.
-- [x] Implement incremental XXH64 state with arbitrary update boundaries.
-- [x] Generalize sequence execution through a bounded history/output sink.
-- [x] Add public progress/directive records and explicit invalid-state handling.
-- [x] Parse partial frame/block headers with bounded staging and explicit phases.
-- [x] Stream raw/RLE/skippable payloads before a complete block is available.
-- [x] Resume block decoding with caller-provided output slices and bounded history.
-- [x] Preserve entropy/repeat state and checksums across input/output exhaustion.
-- [x] Extract reusable block-encoding state without changing one-shot output.
-- [x] Retain bounded block-encoding scratch allocations across stream calls.
-- [x] Add a streaming encoder with bounded block staging and finish semantics.
-- [x] Enforce pledged sizes, flush/finish draining, poisoned errors, and reset reuse.
-- [x] Make post-EOF decoder misuse consistently poison the context.
-- [x] Port applicable official streaming/context assertions with explicit source mapping.
-- [x] Generate pinned official near-window sequence fixtures for window logs 10–29.
-- [x] Replay the full window-distance sweep with bounded streaming output.
-- [x] Port malformed streaming-input and randomized directive fuzz campaigns.
-- [x] Test arbitrary chunk sizes, concatenation, truncation, reset, and oracle parity.
-- [x] Measure retained memory and safe/unsafe throughput; document stream limits.
-- [x] Document public streaming usage and lifecycle examples.
-- [x] Run the complete backend/no_std matrix and add streaming CI coverage.
-- [x] Pin and replay official external streaming fuzz corpora.
+- [ ] Record dictionary ownership, entropy initialization, lifetime boundaries, and API contracts.
+- [ ] Parse raw/auto/formatted dictionaries and validate IDs, table limits, and repeat offsets.
+- [ ] Add a separately gated unsafe dictionary-content accessor with complete proofs.
+- [ ] Generate pinned dictionary/prefix interoperability and boundary fixtures.
+- [ ] Read compressed-block history from immutable prior history plus pending output.
+- [ ] Initialize first-block Huffman/FSE tables and repeat offsets from prepared dictionaries.
+- [ ] Decode raw dictionary references beyond the ordinary frame window.
+- [ ] Handle dictionary-to-frame spanning matches without evicting source bytes.
+- [ ] Add persistent dictionary and single-use prefix context configuration.
+- [ ] Enforce nonzero frame dictionary IDs while supporting omitted IDs.
+- [ ] Add one-shot dictionary decode helpers using the same streaming core.
+- [ ] Extend indexed match search to retained dictionary/history prefixes.
+- [ ] Write dictionary frame IDs and interoperable raw/prepared dictionary compression.
+- [ ] Add dictionary-aware encoding, reset, and single-use prefix configuration.
+- [ ] Analyze sample selection and decompose dictionary training before implementation.
+- [ ] Implement bounded training sample selection and dictionary-content construction.
+- [ ] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.
+- [ ] Port applicable official dictionary, prefix, preparation, and training assertions.
+- [ ] Replay matching external dictionary corpora with explicit coverage mappings.
+- [ ] Compare safe/unsafe dictionary throughput and memory; run backend/no_std/oracle/Miri checks.
 
-Completed foundation, entropy, one-shot decoding, initial encoding, and validation
-checklists were cleared at their module boundaries. See `docs/progress.md` and
-the small work-item commits for completed work.
+Completed Module 6 work is recorded in `docs/streaming-validation.md`, including
+all applicable ordinary streaming assertions and both external streaming corpora.
+Its detailed completed checklist is preserved in Git history.
 
 ## Roadmap
 

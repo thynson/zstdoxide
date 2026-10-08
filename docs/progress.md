@@ -43,7 +43,7 @@ against the originals: only the intended textual name changed, and commit
 boundaries were preserved. A local recovery branch
 `codex/before-zstdoxide-rename` retains the previous history.
 
-## Validation and measurement
+## Initial validation and measurement
 
 The safe build, six individual backends, all backends, release mode, and no_std
 matrix passed. Targeted Miri checks cover every unsafe access family. The local
@@ -70,13 +70,13 @@ The executable Rust adaptations include the deterministic upstream generators,
 one-shot regressions, four public fuzz targets, entropy decoder targets, and
 external regression-data content checks.
 
-The suite now has 140 ordinary passing tests and nine explicit opt-in/pending
+At the pre-streaming checkpoint, the suite had 140 ordinary passing tests and nine explicit opt-in/pending
 tests. Extended checks include 30,000 one-shot fuzz cycles, 4,096 independently
 generated frames, 15,804 fuzz corpus files, and all 512 selected Silesia/GitHub
 regression input files. See [the validation report](upstream-test-validation.md)
 for the exact distinction between a test, a fixture, and a corpus execution.
 
-This module remains open. Of the 418 test-related source units, 11 are ported,
+This module remains open. At the pre-streaming checkpoint, of the 418 test-related source units, 11 were ported,
 25 partial, three planned, 162 blocked by missing capabilities, and 217 are
 support/build metadata or C-specific details. These are source dispositions,
 not an assertion-coverage percentage. The strict completion gate rejects the
@@ -84,3 +84,33 @@ not an assertion-coverage percentage. The strict completion gate rejects the
 The full-legacy desired-success test still fails with `InvalidMagic` when
 explicitly run. `TODO.md` retains the required capability and test work;
 completed migration checkpoints are not cleared as a completed major module.
+
+
+## Module 6: bounded streaming and reusable contexts
+
+Completed on 2026-10-08. Encoder and decoder contexts now accept caller slices,
+report exact progress and frame boundaries, retain bounded block/window storage,
+and support incremental checksums, Flush/Finish, pledged sizes, poisoned errors,
+and reset reuse. Raw output is incremental before the complete block arrives.
+The ring history has an independent safe/unsafe backend and full local proofs.
+One-shot encoded bytes remained unchanged through workspace extraction/reuse.
+
+All applicable ordinary streaming/context assertions were ported with exact
+source mappings, including the two inline regressions and the full near-window
+sweep through log 29. Both entire external streaming corpora passed safe and
+all-feature release replay: 12,462 decompression and 24,223 round-trip inputs,
+with no skipped files. Missing dictionary/parameter/stable-buffer/worker branches
+remain explicitly assigned to later work rather than counted as covered.
+
+The full local matrix passed 207 tests in each of ten runs, all nine no_std
+configurations, formatting, strict Clippy, source/fixture audits, and independent
+oracle checks. Targeted Miri and all-feature compressed streaming regressions
+passed. The final external runner was verified separately after the matrix;
+the ordinary count remains 207, with 12 deliberate ignored entry points.
+Retained-memory plateaus and all nine performance configurations are recorded
+in [streaming-validation.md](streaming-validation.md) and [benchmarks.md](benchmarks.md).
+Unsafe ring access was slightly slower in isolation and remains opt-in.
+
+The source inventory still has 190 incomplete behavioral source units; completing
+streaming does not complete the full upstream migration. Module 7 is decomposed
+in `TODO.md` before dictionary implementation begins.
