@@ -1,0 +1,10 @@
+zstdoxide is an independent Rust implementation of the Zstandard format.
+
+Format constants, default distributions, and algorithms are based on
+facebook/zstd v1.5.7, commit f8745da6ff1ad1e7bab384bd1f9d742439278e99.
+Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+The upstream BSD license is retained in LICENSE.zstd.
+
+XXH64 constants and algorithm are based on xxHash as bundled by that release.
+Copyright (c) Yann Collet - Meta Platforms, Inc.
+The bundled implementation uses the same BSD license in LICENSE.zstd.

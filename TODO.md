@@ -3,7 +3,7 @@
 ## Module 0: project foundation
 
 - [x] Establish project instructions and incremental delivery workflow.
-- [ ] Analyze upstream data structures and document the architecture.
+- [x] Analyze upstream data structures and document the architecture.
 - [x] Create a dependency-free Rust crate with no_std and feature boundaries.
 
 ## Module 1: entropy primitives
