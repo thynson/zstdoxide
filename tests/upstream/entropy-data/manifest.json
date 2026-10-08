@@ -1,0 +1,24 @@
+{
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "generator": "scripts/oracles/entropy_vectors.c",
+  "generator_sha256": "23a468e364e6f1e9854977fe0d1772d0313cc914561efe0b694e6eb8ef179709",
+  "source_sha256": {
+    "tests/fuzz/fse_read_ncount.c": "084826e95e0280a21cf95091cc5daab018a283a6d99a096a1e356605757a7c96",
+    "tests/fuzz/huf_decompress.c": "099d43a49a4f07a394ccbe981dd87f95b67a9da211b6a5996dbc799d6d8ae4e0",
+    "tests/fuzz/huf_round_trip.c": "fe383918833e6f3b791827d6d828436830c479977d87990b8b5d292f6529ed18",
+    "lib/common/entropy_common.c": "7dfce29c6bc807645b1f0c373dad94bbb49603b175a84e72d1739bf9df65feb8",
+    "lib/compress/fse_compress.c": "5070807a489757b87c1e1f50332b099e8ffe22971228218111eef64d3321ae82",
+    "lib/compress/huf_compress.c": "0be78471f5175e49bbacb898d8b107bb8f7e13adc84780e0625be5861f016086",
+    "lib/decompress/huf_decompress.c": "710a88d877d5dc5c83a4f839392996f337ec81cf38006c4a5be6042de5b54828"
+  },
+  "fixtures": {
+    "fse.bin": {
+      "size": 82920,
+      "sha256": "5e1862eebf3e6f5e7d5184062672a761aba126f2b491718dd3b96aee8d5e910e"
+    },
+    "huffman.bin": {
+      "size": 656779,
+      "sha256": "3033e495f394e8ad3e23c3407c7c34d0b7d5e9e5f6f7b57da99ce3ac293def80"
+    }
+  }
+}
