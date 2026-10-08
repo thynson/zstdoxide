@@ -19,7 +19,7 @@
 
 - [x] Document frame, cursor, history, and sequence invariants.
 - [x] Implement checked frame headers and safe/unsafe-byte-cursor access.
-- [ ] Implement bounded history and safe/unsafe-history match expansion.
+- [x] Implement bounded history and safe/unsafe-history match expansion.
 - [ ] Implement XXH64 content checksum with published vectors.
 - [ ] Implement sequence decoding and repeat-offset updates.
 - [ ] Integrate frame decoding, concatenation, and skippable frames.

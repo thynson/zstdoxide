@@ -22,6 +22,7 @@ mod error;
 mod bitstream;
 mod cursor;
 mod frame;
+mod history;
 
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
