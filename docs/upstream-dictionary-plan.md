@@ -131,3 +131,59 @@ After fixtures are stable, map actual passing Rust tests into the main source
 inventory. Keep training, dictionary wire validity, content matches, prepared
 entropy use, selection lifetime, and resource boundaries distinct so one
 passing assertion cannot hide an unimplemented contract.
+
+## Reproducible prepared-dictionary witnesses
+
+Run `python3 scripts/generate_upstream_dictionaries.py /path/to/pinned/zstd`
+to generate this collection, then repeat with `--check`. Both runs compile the
+oracle from clean pinned C sources in temporary directories; an existing static
+library is not trusted. The assertions-only boundary build omits compression and
+training, while the production oracle includes their pinned sources. The manifest
+hashes both generator files and every compiled source plus relevant format/API
+definitions. Expected outputs remain ordinary local files covered by the generic
+fixture auditor.
+
+`training-samples.bin` contains 256 deterministic 512-byte records. Each record
+combines a varying JSON-like request with sparse xorshift32 bytes and its sample
+index. `trained.dict` is the exact result of `ZDICT_trainFromBuffer` with a
+2,048-byte capacity. `formatted.dict` comes from `ZDICT_finalizeDictionary` with
+the complete `boundary-dictionary.raw` content, level 3 statistics, and explicit
+ID `0x12345678`. The manifest exposes the independently C-parsed Huffman weights,
+FSE normalized counts, section offsets, header length, content length, and repeat
+offsets for each generated dictionary. This is oracle data for Rust construction
+and interoperability tests; it does not require Rust training to be byte-identical
+to the official trainer.
+
+`duplicate-reps.dict` changes the formatted dictionary's three offsets to
+`[10, 10, 10]` and its final eight bytes to `x`, retaining the setup of
+`tests/fuzzer.c:3265-3309`. `duplicate-reps.zst` compresses 1,024 `x` bytes at
+level 19. Because compressor choices alone cannot prove which repeat offset was
+used, `duplicate-reps-initial.zst` independently supplies a zero-literal sequence
+with offset code zero. Its first match must use dictionary rep2=10; restoring the
+ordinary rep2=4 produces different bytes. C decoding verifies the exact three-byte
+expected output of that explicit witness.
+
+| Fixture stem | Independently verified contract |
+| --- | --- |
+| `raw-small-window`, `formatted-id` | The first match uses a 2,048-byte dictionary despite a 256-byte frame window. Raw and formatted loading both restore the exact original source. |
+| `formatted-omitted-id` | The frame omits the dictionary ID but still requires selected dictionary content; decoding without it fails. |
+| `trained-sample` | C training output is usable; its first block uses treeless literals and all three dictionary FSE tables. |
+| `dictionary-treeless-literals`, `dictionary-treeless-four-streams` | Explicit first-block 1X/4X treeless Huffman payloads require prepared dictionary entropy, with 768 literals and zero sequences. |
+| `dictionary-repeat-sequences` | The first deterministic trained sample for which C chooses LL/OF/ML repeat mode is retained; independent wire inspection requires all three mode values to equal three. |
+| `persistent-concatenation` | Repeating a formatted-dictionary frame decodes both frames with a persistent dictionary. |
+| `prefix-first`, `prefix-second` | A reused C compressor uses its raw prefix for the first frame, then drops it; first-frame decoding requires the prefix, while the second succeeds without it. |
+| `prefix-once-concatenation` | One prefix plus the first and second frames restores both source copies. |
+| `prefix-reused-concatenation` | Repeating the dictionary-dependent first frame succeeds with a persistent dictionary and fails on the second frame with a one-use prefix. |
+
+All fixture names above have `.zst` and `.expected` files. The last case's
+`rust_expectation` describes persistent selection; the separate prefix-stream
+oracle result records its intended rejection. Each generated frame is independently
+checked using direct and prepared decoding and one-byte input with output chunks
+1, 7, and 1,024. Prefix cases additionally run one-byte-input prefix streaming.
+`first_block` metadata is parsed by Python directly from frame bytes, not inferred
+from successful C decode. Compression source buffers do not overlap dictionary
+storage, because the C compressor can discard an overlapping history region.
+
+Levels in the manifest reproduce C fixture construction only. Passing these
+decoder fixtures does not claim equivalent Rust level selection, dictionary
+training algorithms, automatic dictionary maps, static workspaces, or workers.
