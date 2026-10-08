@@ -30,6 +30,7 @@ mod constants;
 mod sequences;
 mod decode;
 mod encode;
+mod matchfinder;
 
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
