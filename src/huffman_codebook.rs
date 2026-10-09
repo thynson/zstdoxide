@@ -3,6 +3,7 @@
 //! Codewords are plain initialized values. The codebook owns its fixed alphabet
 //! inline; it stores neither source pointers nor references into decoding tables.
 
+use alloc::alloc::{Allocator, Global};
 use alloc::vec::Vec;
 
 use crate::bitwriter::BitWriter;
@@ -95,7 +96,7 @@ impl HuffmanCodebook {
 
     /// Copy the canonical relation from a validated immutable decoding table.
     /// No borrow survives the call; dictionary tables may retain twelve-bit codes.
-    pub(crate) fn from_decoding_table(table: &HuffmanTable) -> Result<Self> {
+    pub(crate) fn from_decoding_table<A: Allocator>(table: &HuffmanTable<A>) -> Result<Self> {
         Self::from_lengths(&table.code_lengths(), DICTIONARY_MAX_LOG)
     }
 
@@ -250,24 +251,28 @@ impl HuffmanCodebook {
 /// A new inline table and the exact bytes that establish its codes for decoding.
 /// Private fields prevent replacement of one half without revalidating the pair.
 #[derive(Debug)]
-pub(crate) struct BuiltLiteralTable {
+pub(crate) struct BuiltLiteralTable<A: Allocator = Global> {
     codebook: HuffmanCodebook,
-    description: Vec<u8>,
+    description: Vec<u8, A>,
 }
 
-impl BuiltLiteralTable {
+impl<A: Allocator> BuiltLiteralTable<A> {
     /// Validate and own one complete inline description, with no trailing bytes.
     ///
     /// Reconstructing from the selected description keeps fallback trees paired
     /// with their actual codes. `HuffmanTable::read` enforces the inline limit of
     /// eleven bits and performs fallible setup allocation. Dictionary reuse uses
     /// `HuffmanCodebook::from_decoding_table` instead of publishing a new header.
-    pub(crate) fn from_description(description: Vec<u8>) -> Result<Self> {
-        let (table, consumed) = HuffmanTable::read(&description)?;
-        if consumed != description.len() {
-            return Err(Error::CorruptData);
-        }
-        let codebook = HuffmanCodebook::from_decoding_table(&table)?;
+    /// Validation borrows the retained allocator temporarily; its scratch drops
+    /// before the description moves, so even a non-Clone owner is supported.
+    pub(crate) fn from_description(description: Vec<u8, A>) -> Result<Self> {
+        let codebook = {
+            let (table, consumed) = HuffmanTable::read_in(&description, description.allocator())?;
+            if consumed != description.len() {
+                return Err(Error::CorruptData);
+            }
+            HuffmanCodebook::from_decoding_table(&table)?
+        };
         Ok(Self {
             codebook,
             description,
@@ -293,22 +298,27 @@ impl BuiltLiteralTable {
 /// This separate type cannot be supplied where an inline literal table is needed.
 #[cfg(test)]
 #[derive(Debug)]
-pub(crate) struct BuiltStandaloneTable {
+pub(crate) struct BuiltStandaloneTable<A: Allocator = Global> {
     codebook: HuffmanCodebook,
-    description: Vec<u8>,
+    description: Vec<u8, A>,
 }
 
 #[cfg(test)]
-impl BuiltStandaloneTable {
+impl<A: Allocator> BuiltStandaloneTable<A> {
     /// Own exactly one checked standalone description with no trailing bytes.
     /// The dictionary reader shares standalone Huffman's twelve-bit tree limit;
     /// the inline `BuiltLiteralTable` constructor keeps its eleven-bit limit.
-    pub(crate) fn from_description(description: Vec<u8>) -> Result<Self> {
-        let (table, consumed) = HuffmanTable::read_dictionary(&description)?;
-        if consumed != description.len() {
-            return Err(Error::CorruptData);
-        }
-        let codebook = HuffmanCodebook::from_decoding_table(&table)?;
+    /// The validation table borrows the description's allocator and is dropped
+    /// before ownership moves, preserving the exact owner without cloning it.
+    pub(crate) fn from_description(description: Vec<u8, A>) -> Result<Self> {
+        let codebook = {
+            let (table, consumed) =
+                HuffmanTable::read_dictionary_in(&description, description.allocator())?;
+            if consumed != description.len() {
+                return Err(Error::CorruptData);
+            }
+            HuffmanCodebook::from_decoding_table(&table)?
+        };
         Ok(Self {
             codebook,
             description,
@@ -328,6 +338,123 @@ impl BuiltStandaloneTable {
 mod tests {
     use super::*;
     use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, NonCloneAllocator, TrackingAllocator};
+
+    fn owned_description(
+        bytes: &[u8],
+    ) -> (
+        Vec<u8, NonCloneAllocator>,
+        zstdoxide_test_allocator::AllocationMonitor,
+    ) {
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = owner.monitor();
+        let mut description = Vec::new_in(owner);
+        description.try_reserve_exact(bytes.len()).unwrap();
+        for &byte in bytes {
+            description.push(byte);
+        }
+        (description, monitor)
+    }
+
+    #[test]
+    fn custom_paired_descriptions_validate_with_borrowed_non_clone_owners() {
+        for bytes in [&[128, 0x10][..], &[4, 0x10, 0x3f, 3, 4][..]] {
+            let (description, monitor) = owned_description(bytes);
+            let pointer = description.as_ptr();
+            let identity = description.allocator().identity();
+            let paired = BuiltLiteralTable::from_description(description).unwrap();
+            assert_eq!(paired.description(), bytes);
+            assert_eq!(paired.description.as_ptr(), pointer);
+            assert_eq!(paired.description.allocator().identity(), identity);
+            let (global, _) = HuffmanTable::read(bytes).unwrap();
+            assert_eq!(
+                paired.codebook(),
+                &HuffmanCodebook::from_decoding_table(&global).unwrap()
+            );
+            assert_eq!(monitor.snapshot().identities_created, 1);
+            // Validation scratch is gone; only the original description remains.
+            assert_eq!(monitor.snapshot().live_blocks, 1);
+            let codes = paired.into_codebook();
+            monitor.assert_released();
+            assert_eq!(
+                codes,
+                HuffmanCodebook::from_decoding_table(&global).unwrap()
+            );
+        }
+        let twelve = [139, 0x11, 0x23, 0x45, 0x67, 0x89, 0xab];
+        let (description, monitor) = owned_description(&twelve);
+        let pointer = description.as_ptr();
+        let paired = BuiltStandaloneTable::from_description(description).unwrap();
+        assert_eq!(paired.description.as_ptr(), pointer);
+        assert_eq!(paired.description(), twelve);
+        assert_eq!(paired.codebook().table_log(), 12);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(paired);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_paired_validation_releases_description_and_scratch_at_every_failure() {
+        fn validate<A: Allocator>(description: Vec<u8, A>, standalone: bool) -> Result<()> {
+            if standalone {
+                BuiltStandaloneTable::from_description(description).map(drop)
+            } else {
+                BuiltLiteralTable::from_description(description).map(drop)
+            }
+        }
+        for (bytes, standalone) in [
+            (&[128, 0x10][..], false),
+            (&[4, 0x10, 0x3f, 3, 4][..], false),
+            (&[139, 0x11, 0x23, 0x45, 0x67, 0x89, 0xab][..], true),
+        ] {
+            let (description, monitor) = owned_description(bytes);
+            let before = monitor.snapshot().attempts;
+            validate(description, standalone).unwrap();
+            let requests = monitor.snapshot().attempts - before;
+            assert!(requests >= 2);
+            monitor.assert_released();
+            for ordinal in 1..=requests {
+                let (description, monitor) = owned_description(bytes);
+                let before = monitor.snapshot().attempts;
+                monitor.set_fail_at(NonZeroU64::new(before + ordinal));
+                assert_eq!(
+                    validate(description, standalone),
+                    Err(Error::AllocationFailed)
+                );
+                assert_eq!(monitor.snapshot().attempts, before + ordinal);
+                assert_eq!(monitor.snapshot().identities_created, 1);
+                monitor.assert_released();
+            }
+        }
+    }
+
+    #[test]
+    fn custom_paired_descriptions_reject_trailing_malformed_and_inline_twelve_bit_trees() {
+        for bytes in [
+            &[][..],
+            &[128][..],
+            &[128, 0][..],
+            &[128, 0x10, 99][..],
+            &[4, 0x10, 0x3f, 3, 0][..],
+        ] {
+            let (description, monitor) = owned_description(bytes);
+            assert!(BuiltLiteralTable::from_description(description).is_err());
+            monitor.assert_released();
+            let (description, monitor) = owned_description(bytes);
+            assert!(BuiltStandaloneTable::from_description(description).is_err());
+            monitor.assert_released();
+        }
+        let (description, monitor) = owned_description(&[139, 0x11, 0x23, 0x45, 0x67, 0x89, 0xab]);
+        assert!(matches!(
+            BuiltLiteralTable::from_description(description),
+            Err(Error::CorruptData)
+        ));
+        monitor.assert_released();
+    }
 
     #[test]
     fn standalone_pair_accepts_twelve_bits_without_relaxing_inline_validation() {

@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "checkpoint": "Module 9 allocator-aware Huffman decoding and paired descriptions",
+  "date": "2026-10-09",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "repository": "/Users/lanxingcan/Workspace/zstdoxize",
+  "sources": {
+    "src/huffman.rs": "98f0c08317f5144307112323383d966385072d3ec3a75fe7eb16cb64d3a1ed72",
+    "src/huffman_codebook.rs": "a83d5cf4ef2586c92aca252689b93360e30806d026939db958ab24d122d9acc0",
+    "src/fse.rs": "2466b8db35a82a3e9e37ebd00fac65bb1a7041314c74caa58d7614a9275d76cb"
+  },
+  "source_scope": {
+    "src/huffman.rs": "Generic table, fallible independent copies/output/literals, 8 new allocator tests.",
+    "src/huffman_codebook.rs": "Generic from_decoding_table and paired description ownership/validation; 3 new allocator tests. No stream algorithms changed.",
+    "src/fse.rs": "Only cfg(test) added to now-test-only Global decode_weights wrapper; caller search and benchmark check verified."
+  },
+  "checks": [
+    {
+      "name": "safe",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo test --locked --lib huffman",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-safe.log",
+      "log_sha256": "06244a04ba65748e0737b1b77a7589464d11f2144997f45f2c8f4f87849eddc3",
+      "summaries": [
+        "test result: ok. 71 passed; 0 failed; 10 ignored; 0 measured; 275 filtered out; finished in 0.71s"
+      ]
+    },
+    {
+      "name": "unsafe-huffman",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo test --locked --lib --features unsafe-huffman huffman",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-unsafe-huffman.log",
+      "log_sha256": "d351b16bb28085d17f8e9d70e517f95fdf2864e55077433db088f50376a94973",
+      "summaries": [
+        "test result: ok. 71 passed; 0 failed; 10 ignored; 0 measured; 285 filtered out; finished in 0.67s"
+      ]
+    },
+    {
+      "name": "unsafe-fse",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo test --locked --lib --features unsafe-fse huffman",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-unsafe-fse.log",
+      "log_sha256": "c73522b670709873fe52d0323f61428bb35323d5def9380c7648fb1a6adb88e6",
+      "summaries": [
+        "test result: ok. 71 passed; 0 failed; 10 ignored; 0 measured; 285 filtered out; finished in 0.72s"
+      ]
+    },
+    {
+      "name": "unsafe-codebook",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo test --locked --lib --features unsafe-huffman-codebook huffman",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-unsafe-codebook.log",
+      "log_sha256": "5bb6ae4f19eaabcecee16ae3fc94a73b7fddc0cc2a2dbc599347679ccc9b27eb",
+      "summaries": [
+        "test result: ok. 71 passed; 0 failed; 10 ignored; 0 measured; 285 filtered out; finished in 0.75s"
+      ]
+    },
+    {
+      "name": "all",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo test --locked --lib --all-features huffman",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-all.log",
+      "log_sha256": "f7a5f3967af68034c35e0d4cae90a74972de63b7f39e9d6b654e5ced80f926d3",
+      "summaries": [
+        "test result: ok. 71 passed; 0 failed; 10 ignored; 0 measured; 285 filtered out; finished in 0.80s"
+      ]
+    },
+    {
+      "name": "no-default",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo test --locked --lib --no-default-features huffman",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-no-default.log",
+      "log_sha256": "97c071e54facd5eb4dc8dfd8bc8c0fba886f00565febb8f81347215fcf107d3e",
+      "summaries": [
+        "test result: ok. 70 passed; 0 failed; 0 ignored; 0 measured; 276 filtered out; finished in 0.77s"
+      ]
+    },
+    {
+      "name": "no-default-all",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo test --locked --lib --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training huffman",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-no-default-all.log",
+      "log_sha256": "c80d7199102d68efe4a09c48ecd079d6a69896c88d233af082bb2669a3a2ee67",
+      "summaries": [
+        "test result: ok. 70 passed; 0 failed; 0 ignored; 0 measured; 276 filtered out; finished in 0.80s"
+      ]
+    },
+    {
+      "name": "clippy",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo clippy --locked --lib --tests --all-features -- -D warnings",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-clippy.log",
+      "log_sha256": "f508762347410cc61897d8bfc51ad0d75bf14e38753e1b3cdc80010556b72e68",
+      "summaries": []
+    },
+    {
+      "name": "nostd-check",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo check --locked --lib --no-default-features",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-nostd-check.log",
+      "log_sha256": "d0ae362f71c026a4f321c47b6504c8b03e3e7705b825b8fe71336387986580b7",
+      "summaries": []
+    },
+    {
+      "name": "nostd-all-check",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo check --locked --lib --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-nostd-all-check.log",
+      "log_sha256": "4c1c5f946ce4b13a91b58f4485ae21f2b51f54a8d620ac061a244bc0c17203dc",
+      "summaries": []
+    },
+    {
+      "name": "bench-check",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-target cargo check --locked --bench backends --all-features",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-bench-check.log",
+      "log_sha256": "7058e15ec33011fd9b7aad5ddaceedc175387a76e821616125449a83d1e35f07",
+      "summaries": []
+    },
+    {
+      "name": "miri-tables",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --all-features huffman::tests::custom_table_construction_and_copy_release_every_failed_request",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-miri-tables.log",
+      "log_sha256": "3cc383f8dc72aea05780535e94f4ae67c72c8b8ae9c6a939ea761ee1744bb1f3",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 365 filtered out; finished in 26.15s"
+      ]
+    },
+    {
+      "name": "miri-owners",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --all-features huffman::tests::custom_tables_and_fallible_copies_keep_distinct_non_clone_owners",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-miri-owners.log",
+      "log_sha256": "40d277e2c83f04ff24d8dba23317792fbb6a3c8a114cfe83163210d355a4f937",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 370 filtered out; finished in 9.22s"
+      ]
+    },
+    {
+      "name": "miri-publication",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --all-features huffman::tests::custom_literal_allocation_failures_do_not_publish_replacement_tables",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-miri-publication.log",
+      "log_sha256": "6ac2f77455533519d921fa04d25461f87c497109a6aa5227d7b79f1d9e5f3c30",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 370 filtered out; finished in 27.72s"
+      ]
+    },
+    {
+      "name": "miri-paired-failures",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --all-features huffman_codebook::tests::custom_paired_validation_releases_description_and_scratch_at_every_failure",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-miri-paired-failures.log",
+      "log_sha256": "4cbedafb8c5d5dac9261998f74194b06e538328046ad716c832ac498ca4e9e65",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 370 filtered out; finished in 16.86s"
+      ]
+    },
+    {
+      "name": "miri-paired-owners",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-huffman-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --all-features huffman_codebook::tests::custom_paired_descriptions_validate_with_borrowed_non_clone_owners",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-miri-paired-owners.log",
+      "log_sha256": "30ff344a69d7f6866b5fb297f5ffb431d32d2bc98a0e74c01679615383eb6230",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 370 filtered out; finished in 7.77s"
+      ]
+    },
+    {
+      "name": "format",
+      "command": "rustfmt --edition 2024 --check src/huffman.rs src/huffman_codebook.rs",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": []
+    },
+    {
+      "name": "diff-check",
+      "command": "git diff --check -- src/huffman.rs src/huffman_codebook.rs src/fse.rs",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-huffman-allocator-diff-check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": []
+    }
+  ],
+  "qualifications": [
+    "Five std configurations each passed 71 tests with 10 explicitly ignored live-oracle/external-corpus tests; no ignored test was claimed as executed. Two no_std test configurations each passed 70 tests with no ignored tests.",
+    "The normal custom-allocator fixture test decodes all 30 stored official table descriptions and both their one-stream and four-stream outputs, including truncation and bounds checks. No new live C or external corpus run was needed or claimed for this allocation-only checkpoint.",
+    "Read construction accepts Allocator + Clone; clones are used only as fresh owners and are not assumed interchangeable. Borrowed NonCloneAllocator references are tested. Paired-description validation itself needs only Allocator.",
+    "All tests use the pinned nightly-2026-10-08 compiler shown above, not a released Rust 1.100 toolchain.",
+    "Other agents modified unrelated shared-workspace modules during checks. Filtered-out test totals changed, but the selected Huffman test counts remained identical. Source hashes freeze only the listed owned files."
+  ]
+}

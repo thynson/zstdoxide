@@ -182,6 +182,25 @@ coordinates. Seed copies from a different allocator type leave source storage
 independent and destination ownership intact; swaps move all four heads/node
 allocator values with their allocations.
 
+`HuffmanTable<A>`, literal output, and paired serialized descriptions now retain
+explicit allocator owners. The [Huffman evidence](evidence/2026-10-09-allocator-huffman.json)
+records 71 selected tests passing in each of safe, unsafe-Huffman, unsafe-FSE,
+unsafe-codebook, and all-feature builds; ten live-oracle/corpus tests remain
+explicitly ignored in each. Both no_std test configurations passed 70 tests.
+Five exact strict-provenance Miri cases, two no_std builds, strict Clippy,
+benchmark compilation, formatting, and diff checks passed. Frozen source
+hashes were checked again before committing.
+
+Custom storage decoded all 30 stored official descriptions and their one- and
+four-stream fixtures. Failure injection covers every observed table, output,
+and paired-validation request, retaining the existing rule that a replacement
+literal table is published only after successful stream decoding. Different
+allocator types may supply dictionary tables and output; neither is converted
+or copied solely to reconcile ownership. A paired description validates with
+a temporary borrow of its own non-Clone allocator and retains its original
+pointer and owner. This checkpoint does not claim a new live C or full external
+corpus run, nor a public allocator-aware decoder.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

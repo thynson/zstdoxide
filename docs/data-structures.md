@@ -241,3 +241,10 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   that allocated it. `Candidates<'_, A>` borrows the complete chain without
   allocation or source-byte ownership. Seed copying accepts an independently
   allocated `MatchChain<B>` and preserves all checked slot/tag ordering.
+- `HuffmanTable<A>` uses explicit owners for entries and weight scratch. A
+  borrowed table and decoded `Vec<u8, B>` may use different allocator types;
+  fallible table copies retain independent ownership. Literal replacement
+  remains unpublished until all streams succeed. `BuiltLiteralTable<A>` and
+  test-only `BuiltStandaloneTable<A>` retain their exact serialized allocation;
+  validation borrows its allocator temporarily and drops scratch before moving
+  the description. Inline canonical codes remain plain values.

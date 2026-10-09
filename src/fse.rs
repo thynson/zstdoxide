@@ -362,6 +362,7 @@ impl ForwardBits<'_> {
 /// Corresponds to upstream `FSE_decompress_usingDTable_generic`. The weight
 /// stream has its own termination rule: after emitting a symbol whose state
 /// update would exceed the bitstream, emit the other state's final symbol.
+#[cfg(test)]
 pub(crate) fn decode_weights(data: &[u8]) -> Result<Vec<u8>> {
     decode_weights_in(data, Global)
 }
