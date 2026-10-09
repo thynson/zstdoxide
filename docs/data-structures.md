@@ -219,3 +219,9 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   windows, emission, wraparound, and reset reuse the same allocation. Owned and
   borrowed non-Clone cases preserve the existing logical-position and unsafe
   store invariants, including failed growth after wraparound.
+- `BitWriter<A>` and `EntropyBits<A>` each retain one allocator-bearing byte
+  vector without cloning it. Normalized-count serialization returns that vector
+  directly. Reservation precedes reservoir/position changes and initialized
+  pushes; failed writes preserve the complete old state. The const Global
+  forward-writer constructor remains for existing const contexts, while its
+  generic runtime constructor awaits those contexts' migration.

@@ -125,6 +125,24 @@ requests, and compare fragmented overlap output for every distance in windows
 and history unchanged. This checkpoint preserves the public streaming API's
 Global default; allocator-aware streaming integration remains a separate item.
 
+The forward bit writer and normalized-count writer now own `Vec<u8, A>` without
+requiring allocator Clone. Their [focused evidence](evidence/2026-10-09-allocator-writers.json)
+records six bit-writer tests and 20 entropy tests passing in each of safe,
+`unsafe-bitstream`, all-feature, and no-default configurations. One existing
+live C entropy oracle remains explicitly ignored. The custom count writer
+matched all 512 committed independent C headers. Strict-provenance Miri passed
+all six bit-writer tests and five exact count-writer tests, including that full
+header corpus. no_std compilation, strict all-target/all-feature Clippy, and
+owned-file formatting passed.
+
+Failure injection covers each observed allocation ordinal, writer close/write
+state, reservoir and bit position, reset reuse, and complete cleanup. Distinct
+allocator instances remain paired with their buffers across moves and swaps.
+Normalization and weight-encoding bodies were unchanged in this checkpoint.
+The generic `BitWriter::new_in` has a narrow temporary dead-code expectation
+until allocator-aware contexts call it; its const Global constructor remains
+available to the existing const context constructors.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

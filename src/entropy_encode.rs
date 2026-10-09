@@ -4,7 +4,8 @@
 //! `lib/compress/fse_compress.c::FSE_writeNCount`. This module inverts the checked
 //! Rust format reader rather than adopting C's word buffers or pointer layout.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 use crate::fse::FseTable;
 use crate::{Error, Result};
@@ -15,15 +16,21 @@ use crate::{Error, Result};
 /// Reservation and length arithmetic finish before mutation. This plain owned
 /// buffer has no unsafe alternative: performance-sensitive FSE table access
 /// reuses the existing independent backend instead of inventing unchecked setup.
-struct EntropyBits {
-    bytes: Vec<u8>,
+struct EntropyBits<A: Allocator = Global> {
+    bytes: Vec<u8, A>,
     position: usize,
 }
 
-impl EntropyBits {
+impl EntropyBits<Global> {
     fn new() -> Self {
+        Self::new_in(Global)
+    }
+}
+
+impl<A: Allocator> EntropyBits<A> {
+    fn new_in(allocator: A) -> Self {
         Self {
-            bytes: Vec::new(),
+            bytes: Vec::new_in(allocator),
             position: 0,
         }
     }
@@ -40,7 +47,11 @@ impl EntropyBits {
         self.bytes
             .try_reserve(bytes - self.bytes.len())
             .map_err(|_| Error::AllocationFailed)?;
-        self.bytes.resize(bytes, 0);
+        // Reservation proved that every push fits the existing capacity. No
+        // allocator clone or infallible allocation is hidden in initialization.
+        while self.bytes.len() < bytes {
+            self.bytes.push(0);
+        }
         for offset in 0..usize::from(width) {
             let position = self.position + offset;
             self.bytes[position / 8] |= ((value >> offset) as u8 & 1) << (position % 8);
@@ -49,7 +60,7 @@ impl EntropyBits {
         Ok(())
     }
 
-    fn into_bytes(self) -> Vec<u8> {
+    fn into_bytes(self) -> Vec<u8, A> {
         self.bytes
     }
 }
@@ -61,6 +72,17 @@ impl EntropyBits {
 /// in `5..=12`. Trailing zero symbols are omitted by the wire format. Invalid
 /// parameters fail before allocation. Corresponds to upstream `FSE_writeNCount`.
 pub(crate) fn write_normalized_counts(counts: &[i16], table_log: u8) -> Result<Vec<u8>> {
+    write_normalized_counts_in(counts, table_log, Global)
+}
+
+/// Serialize the same normalized header using one owned allocator, without a
+/// Clone bound. Invalid parameters are rejected before any allocation request.
+/// Returned bytes retain their allocator; no allocation changes owner identity.
+pub(crate) fn write_normalized_counts_in<A: Allocator>(
+    counts: &[i16],
+    table_log: u8,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
     if !(5..=12).contains(&table_log) || counts.is_empty() || counts.len() > 256 {
         return Err(Error::InvalidParameter);
     }
@@ -80,7 +102,7 @@ pub(crate) fn write_normalized_counts(counts: &[i16], table_log: u8) -> Result<V
     if mass != table_size {
         return Err(Error::InvalidParameter);
     }
-    let mut bits = EntropyBits::new();
+    let mut bits = EntropyBits::new_in(allocator);
     bits.push(u32::from(table_log - 5), 4)?;
     let mut remaining = table_size + 1;
     let mut threshold = table_size;
@@ -278,6 +300,16 @@ fn inverse_transition(table: &FseTable, symbol: u8, next: usize) -> Result<(usiz
 mod tests {
     use super::*;
     use crate::fse::read_normalized_counts;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 4,
+            fail_at: None,
+        })
+        .unwrap()
+    }
 
     /// Exact bytes generated independently with v1.5.7 FSE_writeNCount,
     /// revision f8745da6ff1ad1e7bab384bd1f9d742439278e99. Constants are used
@@ -362,9 +394,15 @@ mod tests {
 
     #[test]
     fn normalized_headers_reject_invalid_inputs_before_writing() {
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
         for log in [0, 4, 13, 255] {
             assert_eq!(
                 write_normalized_counts(&[32], log),
+                Err(Error::InvalidParameter)
+            );
+            assert_eq!(
+                write_normalized_counts_in(&[32], log, &allocator),
                 Err(Error::InvalidParameter)
             );
         }
@@ -382,7 +420,13 @@ mod tests {
                 write_normalized_counts(counts, 5),
                 Err(Error::InvalidParameter)
             );
+            assert_eq!(
+                write_normalized_counts_in(counts, 5, &allocator),
+                Err(Error::InvalidParameter)
+            );
         }
+        assert_eq!(monitor.snapshot().attempts, 0);
+        monitor.assert_released();
     }
 
     #[test]
@@ -398,6 +442,125 @@ mod tests {
         assert_eq!(bits.position, 35);
         bits.push(1, 1).unwrap();
         assert_eq!(bits.into_bytes(), [0xc5, 0xb3, 0xa2, 0x91, 0x08]);
+    }
+
+    #[test]
+    fn custom_normalized_counts_match_all_512_official_headers() {
+        fn take<'a>(input: &mut &'a [u8], count: usize) -> &'a [u8] {
+            let (head, tail) = input.split_at(count);
+            *input = tail;
+            head
+        }
+        // The existing frozen corpus contains independent v1.5.7 FSE_writeNCount
+        // results; see tests/upstream/entropy-data/README.md and root LICENSE.zstd.
+        let mut input = &include_bytes!("../tests/upstream/entropy-data/fse.bin")[..];
+        assert_eq!(take(&mut input, 8), b"ZFSE0001");
+        let cases = u32::from_le_bytes(take(&mut input, 4).try_into().unwrap());
+        assert_eq!(cases, 512);
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        for case in 0..cases {
+            let log = take(&mut input, 1)[0];
+            let symbols = usize::from(take(&mut input, 1)[0]) + 1;
+            let size = usize::from(u16::from_le_bytes(take(&mut input, 2).try_into().unwrap()));
+            let mut counts = [0_i16; 256];
+            for (count, bytes) in counts[..symbols]
+                .iter_mut()
+                .zip(take(&mut input, symbols * 2).as_chunks::<2>().0)
+            {
+                *count = i16::from_le_bytes(*bytes);
+            }
+            let expected = take(&mut input, size);
+            let actual = write_normalized_counts_in(&counts[..symbols], log, &allocator).unwrap();
+            assert_eq!(actual, expected, "independent C header {case}");
+        }
+        assert!(input.is_empty());
+        assert!(monitor.snapshot().attempts >= u64::from(cases));
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn setup_bits_failure_preserves_position_storage_and_owned_allocator() {
+        let allocator = allocator().into_non_clone();
+        let identity = allocator.identity();
+        let monitor = allocator.monitor();
+        let mut bits = EntropyBits::new_in(allocator);
+        bits.push(5, 3).unwrap();
+        while bits.bytes.capacity() - bits.bytes.len() >= 4 {
+            bits.push(u32::MAX, 32).unwrap();
+        }
+        let before = bits.bytes.to_vec();
+        let position = bits.position;
+        let pointer = bits.bytes.as_ptr();
+        let capacity = bits.bytes.capacity();
+        assert!(monitor.fail_next());
+        assert_eq!(bits.push(u32::MAX, 32), Err(Error::AllocationFailed));
+        assert_eq!(bits.bytes, before);
+        assert_eq!(bits.position, position);
+        assert_eq!(bits.bytes.as_ptr(), pointer);
+        assert_eq!(bits.bytes.capacity(), capacity);
+        assert_eq!(bits.bytes.allocator().identity(), identity);
+        monitor.clear_failure();
+        bits.push(u32::MAX, 32).unwrap();
+        assert_eq!(bits.position, position + 32);
+        let output = bits.into_bytes();
+        assert_eq!(output.allocator().identity(), identity);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(output);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn normalized_count_results_keep_distinct_allocator_owners_without_cloning() {
+        let original = allocator();
+        let monitor = original.monitor();
+        let first = original.clone().into_non_clone();
+        let second = original.clone().into_non_clone();
+        let first_id = first.identity();
+        let second_id = second.identity();
+        let mut left = write_normalized_counts_in(&[16, 16], 5, first).unwrap();
+        let mut right = write_normalized_counts_in(&[31, -1], 5, second).unwrap();
+        drop(original);
+        core::mem::swap(&mut left, &mut right);
+        assert_eq!(left.allocator().identity(), second_id);
+        assert_eq!(right.allocator().identity(), first_id);
+        assert_eq!(left, [0xe0, 0x03]);
+        assert_eq!(right, [0x10, 0x3f]);
+        drop(left);
+        drop(right);
+        assert_eq!(monitor.snapshot().identities_created, 3);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn every_normalized_writer_allocation_failure_releases_partial_storage() {
+        let mut counts = [0_i16; 256];
+        counts[255] = 32;
+        let baseline = allocator().into_non_clone();
+        let monitor = baseline.monitor();
+        let encoded = write_normalized_counts_in(&counts, 5, &baseline).unwrap();
+        assert_eq!(encoded, write_normalized_counts(&counts, 5).unwrap());
+        let attempts = monitor.snapshot().attempts;
+        assert!(attempts > 1);
+        drop(encoded);
+        monitor.assert_released();
+        for ordinal in 1..=attempts {
+            let allocator = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 4,
+                fail_at: NonZeroU64::new(ordinal),
+            })
+            .unwrap()
+            .into_non_clone();
+            let monitor = allocator.monitor();
+            assert_eq!(
+                write_normalized_counts_in(&counts, 5, allocator),
+                Err(Error::AllocationFailed)
+            );
+            assert_eq!(monitor.snapshot().attempts, ordinal);
+            assert_eq!(monitor.snapshot().failures, 1);
+            monitor.assert_released();
+        }
     }
 
     #[test]

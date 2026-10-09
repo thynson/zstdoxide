@@ -1,0 +1,408 @@
+{
+  "date": "2026-10-09",
+  "scope": "src/bitwriter.rs plus EntropyBits/write_normalized_counts and related tests in src/entropy_encode.rs",
+  "toolchain": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "source_files": {
+    "src/bitwriter.rs": "e45ab72d4d1abed0313b80ff18e411130768827e23f785f9f0e86e03a09386ca",
+    "src/entropy_encode.rs": "24d5a2487a39cb58864301a330b29744ca3b0a3410dd2cd4aeddca726af5219a"
+  },
+  "unchanged_normalization_and_weights_region_sha256": "796661b52029c867d2a8a7e3930834a9439485cf96faaf13594d93f095b10ea9",
+  "checks": [
+    {
+      "config": "default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "bitwriter::tests"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-bitwriter-default.log",
+      "exit_code": 0,
+      "sha256": "4aded397e0946fd4cd58b2b45779b1361474d4d5ab07d2dd5adcdc4bab64c9c3",
+      "test_counts": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "config": "default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-writer-default.log",
+      "exit_code": 0,
+      "sha256": "b6dff0749b56d3ab9b587feb3a2425651fb5cdc0c316e80316a777b3043bcb72",
+      "test_counts": {
+        "passed": 20,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": true
+    },
+    {
+      "config": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "bitwriter::tests",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-bitwriter-unsafe-bitstream.log",
+      "exit_code": 0,
+      "sha256": "c47665fe60ce5c8e777d088374ffc43af65adc2aa49ad14ba9f632b4eab5b7e7",
+      "test_counts": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "config": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-writer-unsafe-bitstream.log",
+      "exit_code": 0,
+      "sha256": "98180252535470ac79622bdcab0c3446c4faeff85d262cf6b8908cc04d5a4015",
+      "test_counts": {
+        "passed": 20,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": true
+    },
+    {
+      "config": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "bitwriter::tests",
+        "--all-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-bitwriter-all.log",
+      "exit_code": 0,
+      "sha256": "778dd8aab024140e302d3df3b3778d04e5017d96eb0d8aecd61380927fe8262e",
+      "test_counts": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "config": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests",
+        "--all-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-writer-all.log",
+      "exit_code": 0,
+      "sha256": "62097e639cb9adf91948cba1d13d79e66a1016d090095334c9af5c3ecec9a166",
+      "test_counts": {
+        "passed": 20,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": true
+    },
+    {
+      "config": "no-default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "bitwriter::tests",
+        "--no-default-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-bitwriter-no-default.log",
+      "exit_code": 0,
+      "sha256": "91a97bbad780663ec3433b0052321bb726d5e4a681ba599de2aba45bc0009445",
+      "test_counts": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "config": "no-default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests",
+        "--no-default-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-writer-no-default.log",
+      "exit_code": 0,
+      "sha256": "dba204c8f75213f0aeb1b18b9c1fd82c66a7cc1c4fe8fe4bf5c8c0a36555ae27",
+      "test_counts": {
+        "passed": 20,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "config": "no_std_build",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--no-default-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-writers-no-std.log",
+      "exit_code": 0,
+      "sha256": "a437a006a3d276a55309fc81696feba638b7c3d3af6bf1db98c6e365fb417d43",
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "entropy_encode::tests::custom_normalized_counts_match_all_512_official_headers",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-miri-custom_normalized_counts_match_all_512_official_headers.log",
+      "exit_code": 0,
+      "sha256": "79ebec1a6feae5ab35be4bf6c17b6a907e866f582cd5c90713c8ef12378ba70a",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "entropy_encode::tests::setup_bits_failure_preserves_position_storage_and_owned_allocator",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-miri-setup_bits_failure_preserves_position_storage_and_owned_allocator.log",
+      "exit_code": 0,
+      "sha256": "99eaac02cc689a737e9d3912b543cc849a792d7551f839bea917a473fa16b0b6",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "entropy_encode::tests::normalized_count_results_keep_distinct_allocator_owners_without_cloning",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-miri-normalized_count_results_keep_distinct_allocator_owners_without_cloning.log",
+      "exit_code": 0,
+      "sha256": "e935e47387c186cfbfd17237c691af51f3a82261975ac6869a0ae2fc395f2dd4",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "entropy_encode::tests::every_normalized_writer_allocation_failure_releases_partial_storage",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-miri-every_normalized_writer_allocation_failure_releases_partial_storage.log",
+      "exit_code": 0,
+      "sha256": "725a3b4442132480e5c6fffec4b9fccfc4dc1553a00532ad4e5c75437b74b655",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "entropy_encode::tests::normalized_headers_reject_invalid_inputs_before_writing",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-count-miri-normalized_headers_reject_invalid_inputs_before_writing.log",
+      "exit_code": 0,
+      "sha256": "4c87e6ed78c6321707dbadb4bc375166c0513757f0c510dce9c074f3a1cd1ae6",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "bitwriter::tests"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-bitwriter-miri.log",
+      "exit_code": 0,
+      "sha256": "06713b3fc0e1b6ff41b7fcce552877f99f6f3d558af1fce4b5c10e8b0dd4bd5d",
+      "test_counts": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-writer-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-writers-clippy.log",
+      "exit_code": 0,
+      "sha256": "5db81e0c35349235670854b1d3b7dd8de22ffe0f0c1ed4481010984174ce611d",
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/bitwriter.rs",
+        "src/entropy_encode.rs"
+      ],
+      "log": "/tmp/zstdoxide-allocator-writers-fmt.log",
+      "exit_code": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "warnings_present": false
+    }
+  ],
+  "qualifications": [
+    "6 BitWriter and 20 entropy tests passed in each default/unsafe-bitstream/all/no-default configuration; one pre-existing live C entropy oracle remains ignored in these normal runs.",
+    "All 512 frozen C normalized-count headers match custom-allocator output, including one full strict-provenance Miri replay.",
+    "Miri ran 6 BitWriter tests and 5 exact entropy selectors, all with all-features and strict provenance.",
+    "Some Miri logs include an unrelated concurrently introduced fse.rs::try_clone_in dead_code warning; the final strict all-target/all-feature Clippy run is clean.",
+    "Global BitWriter::new remains const; its allocator-aware new_in has a temporary non-test dead_code expectation until allocator-aware context migration.",
+    "No new unsafe code, no root manifest/docs/TODO edits, no commits."
+  ]
+}
