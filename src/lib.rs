@@ -76,6 +76,10 @@ mod upstream_entropy_tests;
 #[path = "../tests/upstream/huffman_encode.rs"]
 mod upstream_huffman_encode_tests;
 
+#[cfg(test)]
+#[path = "../tests/upstream/huffman_round_trip.rs"]
+mod upstream_huffman_round_trip_tests;
+
 pub use decode::{DecodeOptions, decompress, decompress_with_dictionary, decompress_with_options};
 pub use dictionary::{Dictionary, DictionaryMode, SharedDictionary};
 pub use dictionary_train::{DictionaryTrainingOptions, finalize_dictionary, train_dictionary};

@@ -11,7 +11,7 @@ use crate::huffman::{HuffmanTable, decode_literals};
 
 #[path = "fuzz_support.rs"]
 #[allow(dead_code)] // The shared producer also serves the other upstream adapters.
-mod fuzz_support;
+pub(super) mod fuzz_support;
 
 use fuzz_support::DataProducer;
 

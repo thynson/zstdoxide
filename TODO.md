@@ -41,7 +41,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Verify treeless lifetime, dictionary replacement, and fragmented output with C.
 - [x] Map verified Huffman/FSE encoder contracts and decompose remaining entropy fuzz assertions.
 - [x] Pin the official Huffman corpus independently and verify archive metadata without claiming replay.
-- [ ] Preserve exact Huffman tail selectors with independent C parameter vectors for both BMI layouts.
+- [x] Preserve exact Huffman tail selectors with independent C parameter vectors for both BMI layouts.
 - [ ] Build standalone Huffman trees with explicit requested depths through twelve and meaningful optimal-depth selection.
 - [ ] Encode standalone Huffman sources through 256 KiB with checked four-stream jump limits.
 - [ ] Implement caller-owned standalone entropy output bounds and zero-result contracts.
@@ -62,7 +62,9 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
 - [ ] Expose Lazy through the shared dictionary/history path and verify public ratio/lifetime contracts.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.
-- [ ] Extend backend/strategy benchmarks and validation; record remaining upstream gaps.
+- [ ] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.
+- [ ] Run the backend/strategy benchmark matrix and preserve comparable output fingerprints and memory measurements.
+- [ ] Run final feature, no_std, Miri, interoperability, and migration checks; record remaining upstream gaps.
 
 ## Roadmap
 
