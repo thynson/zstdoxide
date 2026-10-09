@@ -110,7 +110,7 @@ impl MatchChain {
     pub(crate) fn insert(&mut self, word: [u8; 4], position: u64) -> Result<()> {
         let tag = self.last_tag.checked_add(1).ok_or(Error::ResourceLimit)?;
         let bucket = hash(word);
-        let older = *self.heads.get(bucket).ok_or(Error::CorruptData)?;
+        let older = self.head(bucket)?;
         let slot = self.next_slot;
         if slot >= self.nodes.len() {
             return Err(Error::CorruptData);
@@ -120,12 +120,18 @@ impl MatchChain {
         } else {
             slot + 1
         };
-        self.nodes[slot] = Node {
-            position,
-            tag,
-            older,
-        };
-        self.heads[bucket] = Link { slot, tag };
+        // Both indices have already been checked, and the exclusive borrow
+        // prevents either initialized vector length from changing between these
+        // writes. Their checked accessors therefore cannot fail after mutation.
+        self.set_node(
+            slot,
+            Node {
+                position,
+                tag,
+                older,
+            },
+        )?;
+        self.set_head(bucket, Link { slot, tag })?;
         self.last_tag = tag;
         self.next_slot = next_slot;
         Ok(())
@@ -147,7 +153,7 @@ impl MatchChain {
         if visit_budget > MAX_VISITS {
             return Err(Error::InvalidParameter);
         }
-        let next = *self.heads.get(hash(word)).ok_or(Error::CorruptData)?;
+        let next = self.head(hash(word))?;
         Ok(Candidates {
             chain: self,
             next,
@@ -161,6 +167,89 @@ impl MatchChain {
     pub(crate) fn retained_capacity(&self) -> usize {
         self.heads.capacity() * core::mem::size_of::<Link>()
             + self.nodes.capacity() * core::mem::size_of::<Node>()
+    }
+
+    fn head(&self, index: usize) -> Result<Link> {
+        if index >= self.heads.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-match-chain"))]
+        let head = self.heads[index];
+        #[cfg(feature = "unsafe-match-chain")]
+        // SAFETY: The runtime check proves index is in the initialized prefix
+        // of the owned Vec<Link>, not merely within its capacity. Its allocation
+        // is live and properly aligned. The shared self borrow prevents mutation
+        // or reallocation for the access, so get_unchecked returns a valid shared
+        // reference with no mutable alias. Link is an initialized Copy value;
+        // the dereference copies it without moving ownership. No reference or
+        // pointer escapes the block, and the link's tag/index is still validated
+        // before a candidate node can be accepted.
+        let head = unsafe { *self.heads.get_unchecked(index) };
+        Ok(head)
+    }
+
+    fn node(&self, index: usize) -> Result<Node> {
+        if index >= self.nodes.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-match-chain"))]
+        let node = self.nodes[index];
+        #[cfg(feature = "unsafe-match-chain")]
+        // SAFETY: The checked index lies within the fully initialized owned
+        // Vec<Node>. Construction, reset and replacement keep every element a
+        // valid aligned Node. The shared self borrow keeps storage alive and
+        // excludes mutation/reallocation; the candidate iterator holds that
+        // borrow throughout traversal. get_unchecked therefore returns a valid
+        // shared reference, and dereferencing copies the plain initialized Node
+        // without ownership transfer or escaping references. Tag equality and
+        // descending-link validation follow identically in both backends before
+        // its source coordinate is returned; neither is assumed by this read.
+        let node = unsafe { *self.nodes.get_unchecked(index) };
+        Ok(node)
+    }
+
+    fn set_head(&mut self, index: usize, head: Link) -> Result<()> {
+        if index >= self.heads.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-match-chain"))]
+        {
+            self.heads[index] = head;
+        }
+        #[cfg(feature = "unsafe-match-chain")]
+        // SAFETY: The runtime bound places index within the initialized owned
+        // Vec<Link>, whose elements and allocation are valid and aligned. The
+        // exclusive self borrow provides unique access, with no iterator or
+        // other element reference alive. get_unchecked_mut creates only this
+        // temporary mutable reference; assignment replaces one initialized Copy
+        // record with another, without allocation, drop effects or overlapping
+        // access. No pointer/reference escapes, and vector length is unchanged.
+        unsafe {
+            *self.heads.get_unchecked_mut(index) = head;
+        }
+        Ok(())
+    }
+
+    fn set_node(&mut self, index: usize, node: Node) -> Result<()> {
+        if index >= self.nodes.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-match-chain"))]
+        {
+            self.nodes[index] = node;
+        }
+        #[cfg(feature = "unsafe-match-chain")]
+        // SAFETY: The explicit runtime guard proves index addresses an existing
+        // initialized Node in the live, aligned owned vector. The exclusive self
+        // borrow excludes candidate iterators, mutable aliases, and concurrent
+        // reallocation. get_unchecked_mut's reference is confined to this block;
+        // assignment replaces exactly one valid Copy record with the supplied
+        // initialized value. It changes neither allocation nor length and has
+        // no ownership/drop effects. No other head/node reference overlaps it.
+        unsafe {
+            *self.nodes.get_unchecked_mut(index) = node;
+        }
+        Ok(())
     }
 }
 
@@ -199,7 +288,7 @@ impl Iterator for Candidates<'_> {
             if link.tag > self.chain.last_tag {
                 return None;
             }
-            let node = self.chain.nodes.get(link.slot)?;
+            let node = self.chain.node(link.slot).ok()?;
             if node.tag != link.tag || (node.older.tag != 0 && node.older.tag >= node.tag) {
                 return None;
             }
@@ -237,6 +326,45 @@ mod tests {
                 >= HEAD_COUNT * core::mem::size_of::<Link>()
                     + MAX_NODES * core::mem::size_of::<Node>()
         );
+    }
+
+    #[test]
+    fn checked_accessors_cover_extreme_indices_and_reject_invalid_writes() {
+        let mut chain = MatchChain::new(2).unwrap();
+        let head = Link {
+            slot: 1,
+            tag: u64::MAX,
+        };
+        let node = Node {
+            position: u64::MAX,
+            tag: u64::MAX,
+            older: Link::default(),
+        };
+        for index in [0, HEAD_COUNT - 1] {
+            chain.set_head(index, head).unwrap();
+            assert_eq!(chain.head(index), Ok(head));
+        }
+        for index in [0, 1] {
+            chain.set_node(index, node).unwrap();
+            assert_eq!(chain.node(index), Ok(node));
+        }
+        for index in [HEAD_COUNT, usize::MAX] {
+            assert_eq!(chain.head(index), Err(Error::CorruptData));
+            assert_eq!(
+                chain.set_head(index, Link::default()),
+                Err(Error::CorruptData)
+            );
+        }
+        for index in [2, usize::MAX] {
+            assert_eq!(chain.node(index), Err(Error::CorruptData));
+            assert_eq!(
+                chain.set_node(index, Node::default()),
+                Err(Error::CorruptData)
+            );
+        }
+        assert_eq!(chain.head(0), Ok(head));
+        assert_eq!(chain.head(HEAD_COUNT - 1), Ok(head));
+        assert!(chain.nodes.iter().all(|&value| value == node));
     }
 
     #[test]

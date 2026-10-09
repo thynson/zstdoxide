@@ -47,7 +47,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Select adaptive per-channel distributions with deterministic complete cost comparisons.
 - [ ] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
 - [x] Add bounded multi-candidate storage with checked stale-link and tag validation.
-- [ ] Add unsafe-match-chain with equivalent candidate order and search limits.
+- [x] Add unsafe-match-chain with equivalent candidate order and search limits.
 - [ ] Implement bounded multi-candidate greedy matching with documented budgets.
 - [ ] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.

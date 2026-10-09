@@ -18,6 +18,7 @@ unsafe-fse-encoder = []
 unsafe-huffman = []
 unsafe-huffman-codebook = []
 unsafe-match-table = []
+unsafe-match-chain = []
 unsafe-dictionary = []
 unsafe-training = []
 

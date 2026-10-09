@@ -24,6 +24,7 @@
         feature = "unsafe-huffman",
         feature = "unsafe-huffman-codebook",
         feature = "unsafe-match-table",
+        feature = "unsafe-match-chain",
         feature = "unsafe-dictionary",
         feature = "unsafe-training"
     )),
