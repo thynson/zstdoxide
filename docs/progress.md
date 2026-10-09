@@ -495,3 +495,35 @@ comparing 1,208,638 source bytes exactly. All 16 focused commands pass; no
 production or stored-default fixture change was needed. Original applicable
 search lifecycle assertions, final platform/matrix validation and benchmark
 harness/measurement remain before Module 11 completion.
+
+
+## Module 11 completed: configurable named match search
+
+The supported scope now includes checked search dimensions, exact-width keys,
+concrete Chain/Lazy effort, retained-history control and public lifecycle APIs,
+while the independent pre-change default frames remain unchanged. Supported
+source-backed dictionary/search ordering and reset assertions are ported; the
+numeric-level and attachment gaps remain explicit.
+
+The immutable final correctness snapshot passes fifteen full suites, each with
+842 tests passed, zero failed and 54 explicitly ignored. All fourteen no_std
+library configurations, strict Clippy safe/all, formatting and 36 registered
+example executions pass. Pinned C independently decodes 66 complete configured
+frames with exact byte comparisons. Fifty-six focused Miri executions across
+explicit foundation/leaf/public snapshots and four final thumb compilation/
+caller-code-generation checks cover the documented platform boundaries; these
+are not native foreign-platform execution.
+
+The frozen timing campaign records fourteen configurations, 27 rows each and
+five samples per row, with task compilation/tests/Miri finished before clocks.
+All 378 non-timing records agree, and normal/optimized archive replay passes.
+The 1,890 samples show workload-specific memory, compressed-size and speed
+tradeoffs; all-feature safe/selected median ratios span 0.918–1.099. They do not
+establish a universal unsafe speedup. Full evidence, scope qualifications and
+reproduction commands are in [validation](match-search-validation.md) and
+[measurements](match-search-benchmarks.md).
+
+The Module 11 checklist is cleared; Module 12's reviewed reference-Fast design
+and decomposition are retained. The upstream inventory still reports 188
+unfinished source units. Neither full official-test migration nor roadmap
+completion is claimed.

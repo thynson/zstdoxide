@@ -1,8 +1,11 @@
 # Configurable named match-search validation
 
-Module 11 is in progress. The [design](match-search-design.md) defines the
-operational controls and resource boundaries. These checkpoints do not add
-numeric reference strategies or complete the upstream test migration.
+Module 11 is complete within the configurable named-search scope. The
+[design](match-search-design.md) defines its operational controls and resource
+boundaries. The immutable final correctness matrix and
+[frozen measurements](match-search-benchmarks.md) validate the supported scope.
+Numeric reference strategies and the complete upstream test migration remain
+separate work. Earlier sections preserve each checkpoint's original scope.
 
 ## Independent default compatibility inputs
 
@@ -460,5 +463,22 @@ from this snapshot was rechecked byte for byte before packaging.
 [Final matrix evidence](evidence/2026-10-09-match-search-final-matrix.json) and its
 [archive](evidence/2026-10-09-match-search-final-matrix.tar.gz) preserve commands,
 logs, manifests, actual compiler, original helper diagnostic and reproduction
-runners. No timed result is inferred from test durations. The frozen timed
-comparison is the remaining Module 11 checkpoint.
+runners. No timed result is inferred from test durations.
+
+## Frozen measurements and module completion
+
+The completed [measurement report](match-search-benchmarks.md) records fourteen
+backend configurations, 27 deterministic workload/profile/policy rows each and
+five elapsed samples per row: 378 rows and 1,890 samples. Every row agrees on all
+non-timing fields across backends. The source footprint matches the final
+correctness inputs. All task compilation, tests and Miri finished before clocks;
+normal and optimized Python replay validate the complete recorded campaign.
+Allocation surveys remain separate from elapsed measurements.
+
+The measured memory, size and speed tradeoffs depend on the selected workload.
+All-feature safe/selected median ratios span 0.918–1.099; this fixed-order host
+campaign does not establish a universal unsafe-backend speedup or a C throughput
+comparison. Unsafe access remains opt-in. With correctness, platform checks and
+measurements recorded, the completed checklist is archived in Git history.
+The next module introduces bounded reference Fast execution; the current
+complete-migration gate still reports 188 unfinished source units.
