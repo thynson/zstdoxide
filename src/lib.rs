@@ -41,6 +41,8 @@ mod frame;
 mod fse;
 mod history;
 mod huffman;
+#[cfg(test)]
+mod huffman_encode;
 mod matchfinder;
 mod ring_history;
 mod sequences;

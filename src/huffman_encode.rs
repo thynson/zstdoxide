@@ -1,0 +1,221 @@
+//! Bounded literal-tree construction for independently trained dictionaries.
+//!
+//! Frequency and parent records are plain values, with all links represented by
+//! indices. Dynamic heap storage is reserved fallibly before insertion. This
+//! module initially builds metadata; hot-path literal encoding follows later.
+
+use alloc::collections::BinaryHeap;
+use core::cmp::Reverse;
+
+use crate::{Error, Result};
+
+const SYMBOLS: usize = 256;
+const MAX_DEPTH: u8 = 11;
+
+/// Construct a complete full-alphabet tree with one pseudocount per symbol.
+///
+/// Corresponds to the tree-construction role of `HUF_buildCTable_wksp`, using
+/// indexed parents and deterministic heap ties. A weighted partition bounds
+/// depth for distributions whose unconstrained Huffman tree is too deep.
+pub(crate) fn literal_lengths(observed: &[u64; SYMBOLS]) -> Result<[u8; SYMBOLS]> {
+    let mut frequencies = [0_u64; SYMBOLS];
+    let mut total = 0_u64;
+    for (frequency, &count) in frequencies.iter_mut().zip(observed) {
+        *frequency = count.checked_add(1).ok_or(Error::ResourceLimit)?;
+        total = total.checked_add(*frequency).ok_or(Error::ResourceLimit)?;
+    }
+    let mut heap = BinaryHeap::new();
+    heap.try_reserve(SYMBOLS)
+        .map_err(|_| Error::AllocationFailed)?;
+    for (symbol, &weight) in frequencies.iter().enumerate() {
+        heap.push(Reverse((weight, symbol, symbol)));
+    }
+    let mut parents = [usize::MAX; SYMBOLS * 2 - 1];
+    let mut next = SYMBOLS;
+    while heap.len() > 1 {
+        let Reverse((left_weight, left_symbol, left)) = heap.pop().ok_or(Error::InvalidState)?;
+        let Reverse((right_weight, right_symbol, right)) = heap.pop().ok_or(Error::InvalidState)?;
+        let weight = left_weight
+            .checked_add(right_weight)
+            .ok_or(Error::ResourceLimit)?;
+        parents[left] = next;
+        parents[right] = next;
+        heap.push(Reverse((weight, left_symbol.min(right_symbol), next)));
+        next += 1;
+    }
+    let mut lengths = [0_u8; SYMBOLS];
+    for (symbol, length) in lengths.iter_mut().enumerate() {
+        let mut node = symbol;
+        while parents[node] != usize::MAX {
+            *length += 1; // A binary tree with 256 leaves has depth at most 255.
+            node = parents[node];
+        }
+    }
+    if lengths.iter().any(|&length| length > MAX_DEPTH) {
+        let mut symbols: [usize; SYMBOLS] = core::array::from_fn(|index| index);
+        symbols.sort_unstable_by_key(|&symbol| (Reverse(frequencies[symbol]), symbol));
+        partition_lengths(&symbols, &frequencies, total, 0, &mut lengths);
+    }
+    if lengths.iter().all(|&length| length == 8) {
+        lengths = near_flat_lengths(&frequencies);
+    }
+    Ok(lengths)
+}
+
+/// Partition into complete subtrees while reserving enough leaves per level.
+/// The maximum recursion depth is eleven; no source-dependent stack growth.
+fn partition_lengths(
+    symbols: &[usize],
+    frequencies: &[u64; SYMBOLS],
+    total: u64,
+    depth: u8,
+    lengths: &mut [u8; SYMBOLS],
+) {
+    if symbols.len() == 1 {
+        lengths[symbols[0]] = depth;
+        return;
+    }
+    let child_capacity = 1_usize << (MAX_DEPTH - depth - 1);
+    let minimum = symbols.len().saturating_sub(child_capacity).max(1);
+    let maximum = (symbols.len() - 1).min(child_capacity);
+    let mut prefix = 0_u64;
+    let mut best = (u128::MAX, minimum, 0_u64);
+    for (position, &symbol) in symbols.iter().take(maximum).enumerate() {
+        prefix += frequencies[symbol]; // Disjoint partial sum is <= checked total.
+        let split = position + 1;
+        if split >= minimum {
+            let difference = (u128::from(prefix) * 2).abs_diff(u128::from(total));
+            if difference < best.0 {
+                best = (difference, split, prefix);
+            }
+        }
+    }
+    let (_, split, left_total) = best;
+    partition_lengths(
+        &symbols[..split],
+        frequencies,
+        left_total,
+        depth + 1,
+        lengths,
+    );
+    partition_lengths(
+        &symbols[split..],
+        frequencies,
+        total - left_total,
+        depth + 1,
+        lengths,
+    );
+}
+
+/// Avoid a single repeated explicit weight, which is not an FSE weight stream.
+/// The Kraft mass is 1/128 + 253/256 + 2/512 = 1.
+pub(crate) fn near_flat_lengths(frequencies: &[u64; SYMBOLS]) -> [u8; SYMBOLS] {
+    let mut symbols: [usize; SYMBOLS] = core::array::from_fn(|index| index);
+    symbols.sort_unstable_by_key(|&symbol| (Reverse(frequencies[symbol]), symbol));
+    let mut lengths = [8; SYMBOLS];
+    lengths[symbols[0]] = 7;
+    lengths[symbols[SYMBOLS - 2]] = 9;
+    lengths[symbols[SYMBOLS - 1]] = 9;
+    lengths
+}
+
+/// Convert a complete tree to explicit weights, leaving the last one implicit.
+pub(crate) fn explicit_weights(lengths: &[u8; SYMBOLS]) -> Result<[u8; SYMBOLS - 1]> {
+    let maximum = lengths
+        .iter()
+        .copied()
+        .max()
+        .ok_or(Error::InvalidParameter)?;
+    if maximum > MAX_DEPTH || lengths.contains(&0) {
+        return Err(Error::InvalidParameter);
+    }
+    let mass: usize = lengths
+        .iter()
+        .map(|&length| 1_usize << (maximum - length))
+        .sum();
+    if mass != 1 << maximum {
+        return Err(Error::InvalidParameter);
+    }
+    Ok(core::array::from_fn(|symbol| maximum + 1 - lengths[symbol]))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn check_tree(lengths: &[u8; SYMBOLS]) {
+        assert!(
+            lengths
+                .iter()
+                .all(|&length| (1..=MAX_DEPTH).contains(&length))
+        );
+        let mass: u32 = lengths
+            .iter()
+            .map(|&length| 1_u32 << (MAX_DEPTH - length))
+            .sum();
+        assert_eq!(mass, 1 << MAX_DEPTH);
+        let weights = explicit_weights(lengths).unwrap();
+        let maximum = *lengths.iter().max().unwrap();
+        let known: u32 = weights.iter().map(|&weight| 1_u32 << (weight - 1)).sum();
+        assert_eq!((1 << maximum) - known, 1_u32 << (maximum - lengths[255]));
+    }
+
+    #[test]
+    fn flat_alphabets_form_a_complete_nonconstant_weight_tree() {
+        for count in [0, 1, 1000, u32::MAX as u64] {
+            let lengths = literal_lengths(&[count; SYMBOLS]).unwrap();
+            check_tree(&lengths);
+            assert_eq!(lengths[0], 7);
+            assert_eq!(lengths[254..], [9, 9]);
+            let weights = explicit_weights(&lengths).unwrap();
+            assert!(weights.iter().any(|&weight| weight != weights[0]));
+        }
+    }
+
+    #[test]
+    fn extreme_distributions_keep_every_symbol_and_bound_tree_depth() {
+        let mut frequencies = [0; SYMBOLS];
+        frequencies[137] = 1 << 50;
+        let lengths = literal_lengths(&frequencies).unwrap();
+        check_tree(&lengths);
+        assert_eq!(lengths[137], 1);
+        for (index, frequency) in frequencies.iter_mut().enumerate().take(60) {
+            *frequency = 1 << index;
+        }
+        check_tree(&literal_lengths(&frequencies).unwrap());
+    }
+
+    #[test]
+    fn randomized_distributions_are_complete_and_deterministic() {
+        let mut state = 0x12345678_u64;
+        for trial in 0..128 {
+            let frequencies = core::array::from_fn(|symbol| {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                if trial % 2 == 0 {
+                    state & 255
+                } else {
+                    (state & 1023) << (symbol % 32)
+                }
+            });
+            let first = literal_lengths(&frequencies).unwrap();
+            check_tree(&first);
+            assert_eq!(first, literal_lengths(&frequencies).unwrap());
+        }
+    }
+
+    #[test]
+    fn counter_overflow_and_invalid_kraft_mass_are_rejected() {
+        let mut frequencies = [0; SYMBOLS];
+        frequencies[0] = u64::MAX;
+        assert_eq!(literal_lengths(&frequencies), Err(Error::ResourceLimit));
+        assert_eq!(
+            literal_lengths(&[u64::MAX / 128; SYMBOLS]),
+            Err(Error::ResourceLimit)
+        );
+        for lengths in [[0; SYMBOLS], [7; SYMBOLS], [9; SYMBOLS], [12; SYMBOLS]] {
+            assert_eq!(explicit_weights(&lengths), Err(Error::InvalidParameter));
+        }
+    }
+}
