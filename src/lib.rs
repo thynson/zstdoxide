@@ -47,6 +47,8 @@ mod huffman;
 mod huffman_encode;
 mod matchfinder;
 mod ring_history;
+#[cfg(test)]
+mod sequence_plan;
 mod sequences;
 mod stream;
 mod stream_decode;
