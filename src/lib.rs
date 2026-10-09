@@ -42,6 +42,8 @@ mod entropy_encode;
 mod error;
 mod frame;
 mod fse;
+#[cfg(test)]
+mod fse_encode;
 mod history;
 mod huffman;
 mod huffman_encode;
