@@ -5137,7 +5137,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Named one-shot/streaming regressions, deterministic corpora, prepared dictionary parsing, dictionary/prefix encode/decode and independent raw/formatted training run. Pure reference parameter validation/query/adjustment groups and qualified supported-options lifecycle assertions are mapped separately; detached profiles do not configure compression. Dictionary/options/reset adapters retain original dimensions with a declared RDG corpus and explicit Rust reset/default semantics. Operational numeric compression levels and remaining advanced live controls, COVER/fastCover optimization, randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
+      "reason": "Named one-shot/streaming regressions, deterministic corpora, prepared dictionary parsing, dictionary/prefix encode/decode and independent raw/formatted training run. Pure reference parameter validation/query/adjustment groups and qualified supported-options lifecycle assertions are mapped separately; detached profiles do not configure compression. Dictionary/options/reset adapters retain original dimensions with a declared RDG corpus and explicit Rust reset/default semantics. Bounded live hash/search settings now cover getter/reset and dictionary-attachment/order subsets; operational numeric compression levels and remaining advanced live controls, COVER/fastCover optimization, randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
       "rust_tests": [
         "tests/upstream_fuzzer.rs",
         "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame",
@@ -5185,7 +5185,8 @@
         "tests/upstream_allocator.rs#custom_context_counters_exclude_caller_buffers_and_balance_for_each_strategy",
         "tests/upstream_allocator.rs#original_custom_context_source_campaign_has_complete_byte_comparisons",
         "tests/upstream_parameters.rs",
-        "tests/upstream_parameter_lifecycle.rs"
+        "tests/upstream_parameter_lifecycle.rs",
+        "tests/upstream_search_lifecycle.rs"
       ],
       "line_count": 5147,
       "cases": [
@@ -5944,13 +5945,14 @@
           "line_end": 1763,
           "label": "test%3d : ZSTD_CCtx_getParameter() :",
           "status": "partial",
-          "reason": "Detached request getters preserve default level/hash auto, explicit hashLog 6 across a level-seven change, and restoration by Default. Supported live settings remain unchanged through partial headers, input, Flush, Finish and rejected configuration, and session/parameter resets are exercised separately. Numeric level/hash getters are not attached to live compression, and Rust retains its explicit Finished/reset protocol and checksum/pledge defaults.",
+          "reason": "Detached reference request getters preserve default level/hash auto, explicit hashLog 6 across level-seven changes, and restoration by Default. A separate live search test follows the original getter/start/session-reset/parameter-reset sequence for all three named policies without allocation or owner cloning. Live Rust hash controls have concrete default 16/minimum 10, unlike C automatic 0/minimum 6; numeric levels remain inspection only. Other supported live settings survive partial headers, input, Flush, Finish and rejected configuration. Rust retains its explicit Finished/reset protocol and checksum/pledge defaults.",
           "rust_tests": [
             "tests/upstream_parameters.rs#requested_hash_override_survives_level_changes_and_default_replacement",
             "tests/upstream_parameters.rs#explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values",
             "tests/upstream_parameters.rs#request_resolution_preserves_the_two_pass_empty_source_chain_witness",
             "tests/upstream_parameter_lifecycle.rs#settings_survive_partial_output_flush_finish_and_rejected_configuration",
-            "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it"
+            "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it",
+            "tests/upstream_search_lifecycle.rs#original_getter_start_session_reset_and_parameter_reset_sequence"
           ]
         },
         {
@@ -6942,11 +6944,12 @@
           "line_end": 3012,
           "label": "test%3i : ZSTD_CCtx_refCDict() then set parameters :",
           "status": "partial",
-          "reason": "A shared raw dictionary can be selected before supported options are installed; a separate pinned formatted dictionary follows the same configuration path and its emitted frames are independently C-decoded. The original compression-profile-specific CDict, level-one/hashLog-12 controls and C attachment-parameter inheritance are not implemented.",
+          "reason": "Operational hashLog 12 is installed and read on both sides of dictionary attachment for raw/formatted dictionaries, shared/borrowed handles and all three named policies. Each flow verifies complete decoding and byte-identical session reuse. Earlier supported-options frames are separately C-decoded. The original profile-specific CDict, numeric level one and C attachment-parameter inheritance remain unimplemented.",
           "rust_tests": [
             "tests/upstream_parameter_lifecycle.rs#dictionary_and_supported_options_order_produce_identical_complete_frames",
             "tests/upstream_parameter_lifecycle.rs#frame_flags_and_invalid_windows_preserve_atomic_supported_configuration",
-            "tests/upstream_parameter_lifecycle.rs#official_codec_decodes_configured_session_and_parameter_reset_frames"
+            "tests/upstream_parameter_lifecycle.rs#official_codec_decodes_configured_session_and_parameter_reset_frames",
+            "tests/upstream_search_lifecycle.rs#original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment"
           ]
         },
         {
@@ -6956,10 +6959,12 @@
           "line_end": 3031,
           "label": "test%3i : Loading dictionary before setting parameters is the same as loading after :",
           "status": "partial",
-          "reason": "Both dictionary/options installation orders produce identical complete frames and exact decoding for Greedy, Chain and Lazy. Original 10 KiB dictionary/100 KiB source dimensions are retained using declared RDG(0.5,0.0,seed 0) data and its first 10 KiB, not the inherited mutable C CNBuffer. Operational level seven and C-specific dictionary preparation remain unported.",
+          "reason": "Both dictionary/options installation orders produce identical complete frames for Greedy, Chain and Lazy, including a nondefault six-field operational search profile. Original 10 KiB dictionary/100 KiB source dimensions use declared RDG(0.5,0.0,seed 0) data and its first 10 KiB, rather than inherited mutable C CNBuffer. The six configured order frames are independently C-decoded in safe/all builds. Operational level seven and C-specific dictionary preparation remain unported.",
           "rust_tests": [
             "tests/upstream_parameter_lifecycle.rs#dictionary_and_supported_options_order_produce_identical_complete_frames",
-            "tests/upstream_parameter_lifecycle.rs#official_codec_decodes_configured_session_and_parameter_reset_frames"
+            "tests/upstream_parameter_lifecycle.rs#official_codec_decodes_configured_session_and_parameter_reset_frames",
+            "tests/upstream_search_lifecycle.rs#original_dictionary_options_order_with_nondefault_search_preserves_complete_frames",
+            "tests/upstream_search_lifecycle.rs#official_codec_decodes_both_original_dictionary_orders_for_each_named_policy"
           ]
         },
         {

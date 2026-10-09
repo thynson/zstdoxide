@@ -1,0 +1,522 @@
+{
+  "scope": "Supported source-backed live search getter/reset and dictionary/configuration-order subsets; no upstream numeric execution or CDict attachment-mode equivalence.",
+  "head": "b1d95af4d4f12033c0522f0b5bbf7bab437a4eed",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "source_before": "16bc5e65e99df9f337d2c93842b5fdf421fa72feacebd09ac74fe9a71e68d9e9",
+  "input_hashes_before": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "0fd0cf08eb2c8dd08f4cc527ee49b761185dd0171808868e176b00d60aad2d9b",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a",
+    "src/literal_encode.rs": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/match_parse.rs": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818",
+    "src/match_search.rs": "14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/upstream/dictionaries/formatted.dict": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281",
+    "tests/upstream/support/mod.rs": "78ec1663c4873dba095a6ba24e5787d545a1ccffccb95b3edfd940c7142c3d2a",
+    "tests/upstream_parameter_lifecycle.rs": "1d3bd0e88c4b659b2a3dea0d671da226347ab151d3ce13a8231513bcb1d4659b"
+  },
+  "upstream": {
+    "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+    "tests/fuzzer.c_sha256": "dedcfca725c18810ccb8fce1d2b9995f14f8fb879c8b277158a8316ac2cf690c",
+    "anchors": [
+      "tests/fuzzer.c:1721-1763",
+      "tests/fuzzer.c:3001-3012",
+      "tests/fuzzer.c:3013-3031"
+    ],
+    "coverage": "Partial supported assertions only. C automatic hash0/min6/numeric3/7 remain detached inspection assertions, not concrete Rust live settings; default16/min10 and named independent policies are explicit. Original level1/7 and CDict strategy/attachment behavior remain unimplemented."
+  },
+  "initial_diagnostics": [
+    {
+      "path": "/tmp/zstdoxide-upstream-search-initial.log",
+      "sha256": "7f72f15531fd3403906403ada02e685b6874d1b23f8f0a077e8d9eebc42eba7b",
+      "exit_code": 101,
+      "qualification": "Test helper initially used SharedDictionary-only convenience decoder with DictionaryView; corrected to existing generic allocator-last decoder with Global. No production change.",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle -- --nocapture",
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-upstream-search"
+      },
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "build_scope": "Before the later Cargo search-benchmark registration. The final matrix below captured the completed registration before its first command.",
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nerror[E0308]: mismatched types\n   --> tests/upstream_search_lifecycle.rs:129:43\n    |\n129 |         decompress_with_dictionary(frame, &dictionary, DecodeOptions::new(input.len())).unwrap(),\n    |         --------------------------        ^^^^^^^^^^^ expected `&Arc<Dictionary>`, found `&DictionaryView<'_>`\n    |         |\n    |         arguments to this function are incorrect\n    |\n    = note: expected reference `&Arc<Dictionary>`\n               found reference `&DictionaryView<'_>`\nnote: function defined here\n   --> src/decode.rs:70:8\n    |\n 70 | pub fn decompress_with_dictionary(\n    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nFor more information about this error, try `rustc --explain E0308`.\nerror: could not compile `zstdoxide` (test \"upstream_search_lifecycle\") due to 1 previous error\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-upstream-search-after-api-fix.log",
+      "sha256": "6a3fb8f65253778e897e2b2e709a700a53ff0c2d5293bf04ba8289e192304a3e",
+      "exit_code": 0,
+      "counts": "5 passed/1 ignored",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle -- --nocapture",
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-upstream-search"
+      },
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "build_scope": "Before the later Cargo search-benchmark registration. The final matrix below captured the completed registration before its first command.",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.72s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/2da29f23cc590f54/out/upstream_search_lifecycle-2da29f23cc590f54)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\noriginal search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.55s\n\n"
+    }
+  ],
+  "records": [
+    {
+      "label": "lifecycle-safe",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle -- --nocapture --test-threads=1",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.6214,
+      "test_results": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/lifecycle-safe.log",
+      "sha256": "c3b0aab52e5205879de00a898e1dbcaf78bf0978240a8790f2274aa8856e2f67",
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/2da29f23cc590f54/out/upstream_search_lifecycle-2da29f23cc590f54)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... original search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\nok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.56s\n\n"
+    },
+    {
+      "label": "lifecycle-table",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle --features unsafe-match-table -- --nocapture --test-threads=1",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 3.0564,
+      "test_results": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/lifecycle-table.log",
+      "sha256": "bc1d587cba3655d046276d6f6e5b6c121e7e1cc3fae912347e494b4f711a2db9",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.57s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/e708f258c7d546ff/out/upstream_search_lifecycle-e708f258c7d546ff)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... original search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\nok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.96s\n\n"
+    },
+    {
+      "label": "lifecycle-chain",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle --features unsafe-match-chain -- --nocapture --test-threads=1",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.8464,
+      "test_results": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/lifecycle-chain.log",
+      "sha256": "b866bb9fd378808351ce4eb13bc9bef678d04ef7cf3a2622bfa97759e0d5a697",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.85s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/7c401dbc898eccd7/out/upstream_search_lifecycle-7c401dbc898eccd7)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... original search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\nok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.66s\n\n"
+    },
+    {
+      "label": "lifecycle-ring",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle --features unsafe-ring-history -- --nocapture --test-threads=1",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.5548,
+      "test_results": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/lifecycle-ring.log",
+      "sha256": "cb5a78b0590ccb548a9bc53d4ef4d98d86e335aee91cf621eb1843aa0561215b",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.48s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/3b9c1b7e3d26a8d0/out/upstream_search_lifecycle-3b9c1b7e3d26a8d0)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... original search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\nok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.77s\n\n"
+    },
+    {
+      "label": "lifecycle-dictionary",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle --features unsafe-dictionary -- --nocapture --test-threads=1",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.4292,
+      "test_results": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/lifecycle-dictionary.log",
+      "sha256": "eaa2068027e9215ed48932622a8e62020450fb8935c47eedf4fa3dc209f9f107",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.46s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/9675052f672fcb77/out/upstream_search_lifecycle-9675052f672fcb77)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... original search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\nok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.65s\n\n"
+    },
+    {
+      "label": "lifecycle-all",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle --all-features -- --nocapture --test-threads=1",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.3778,
+      "test_results": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/lifecycle-all.log",
+      "sha256": "e90e3d13f086378424f753cc6dd58d16ec66b6b5c124d54421ad2bc70cb3d20b",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.43s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/be54044d7a73fc41/out/upstream_search_lifecycle-be54044d7a73fc41)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... original search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\nok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.63s\n\n"
+    },
+    {
+      "label": "lifecycle-no-std",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle --no-default-features -- --nocapture --test-threads=1",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.6696,
+      "test_results": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/lifecycle-no-std.log",
+      "sha256": "556557f1f8befe35ec9c50f6692e95243122e80ef36e4349beb2c56e135565b4",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.66s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/59f0c864f4759135/out/upstream_search_lifecycle-59f0c864f4759135)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... original search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\nok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.69s\n\n"
+    },
+    {
+      "label": "lifecycle-no-std-all",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test upstream_search_lifecycle --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training -- --nocapture --test-threads=1",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.4902,
+      "test_results": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/lifecycle-no-std-all.log",
+      "sha256": "262373fb60cd2378452d57ec38fc153a435639f329eab674a0369725e088765e",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.51s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/debug/build/zstdoxide/82aabf5c300cd47f/out/upstream_search_lifecycle-82aabf5c300cd47f)\n\nrunning 6 tests\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; decodes six complete dictionary/order frames\ntest original_dictionary_options_order_with_nondefault_search_preserves_complete_frames ... original search/dictionary ordering: Greedy, 10240-byte dictionary, 102400-byte source, 33571-byte frame\noriginal search/dictionary ordering: Chain, 10240-byte dictionary, 102400-byte source, 46746-byte frame\noriginal search/dictionary ordering: Lazy, 10240-byte dictionary, 102400-byte source, 46668-byte frame\nok\ntest original_getter_start_session_reset_and_parameter_reset_sequence ... ok\ntest original_hash_twelve_before_and_after_raw_formatted_shared_and_borrowed_attachment ... ok\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\n\ntest result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.66s\n\n"
+    },
+    {
+      "label": "clippy-safe",
+      "command": "cargo +nightly-2026-10-08 clippy --offline --locked --test upstream_search_lifecycle -- -D warnings",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.8058,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/clippy-safe.log",
+      "sha256": "dab50c4b8f1e9f6a582aa5901a49f27dfe00c6ae0c98f4acf181ed8635521871",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.74s\n"
+    },
+    {
+      "label": "oracle-safe",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --release --test upstream_search_lifecycle official_codec_decodes_both_original_dictionary_orders_for_each_named_policy -- --exact --ignored --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.1618,
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 5
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/oracle-safe.log",
+      "sha256": "83ce1f8a2a8339c32fa0f5812ffd570d0298927f6526568c1e5ce0962dccd40c",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Finished `release` profile [optimized] target(s) in 2.79s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/release/build/zstdoxide/3ab7433b4e1d90a0/out/upstream_search_lifecycle-3ab7433b4e1d90a0)\n\nrunning 1 test\nofficial v1.5.7 source-backed search lifecycle: 6 frames/614400 source bytes\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.07s\n\n"
+    },
+    {
+      "label": "clippy-all",
+      "command": "cargo +nightly-2026-10-08 clippy --offline --locked --test upstream_search_lifecycle --all-features -- -D warnings",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.3725,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/clippy-all.log",
+      "sha256": "0012603f10028048f3f07a580ae73aa5748e351da5c01d4ef99323da3549b339",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s\n"
+    },
+    {
+      "label": "oracle-all",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --release --test upstream_search_lifecycle --all-features official_codec_decodes_both_original_dictionary_orders_for_each_named_policy -- --exact --ignored --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 2.755,
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 5
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/oracle-all.log",
+      "sha256": "e09d166d4a4bf69e973df26608c5407bd9d57b33ced598508d833a829f982ae4",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 2.39s\n     Running tests/upstream_search_lifecycle.rs (target/module11-upstream-search/release/build/zstdoxide/dcebd19bd012fae8/out/upstream_search_lifecycle-dcebd19bd012fae8)\n\nrunning 1 test\nofficial v1.5.7 source-backed search lifecycle: 6 frames/614400 source bytes\ntest official_codec_decodes_both_original_dictionary_orders_for_each_named_policy ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.06s\n\n"
+    },
+    {
+      "label": "check-no-std",
+      "command": "cargo +nightly-2026-10-08 check --offline --locked --lib --no-default-features",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.5146,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/check-no-std.log",
+      "sha256": "d247b0ee89caf2ddbdf83f218ffd9c83a7bdf2696289121d1732b42e37bc7b3d",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.49s\n"
+    },
+    {
+      "label": "check-no-std-all",
+      "command": "cargo +nightly-2026-10-08 check --offline --locked --lib --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.53,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/check-no-std-all.log",
+      "sha256": "dbbd3dfd8e5f0ba8ebc946b03fdc797e2f9422195da72aede58a520e7360d3b4",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.51s\n"
+    },
+    {
+      "label": "format",
+      "command": "rustfmt +nightly-2026-10-08 --edition 2024 --check tests/upstream_search_lifecycle.rs",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.041,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "label": "diff-check",
+      "command": "git diff --check -- tests/upstream_search_lifecycle.rs",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-upstream-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.0083,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-upstream-search-validation/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "source_after": "16bc5e65e99df9f337d2c93842b5fdf421fa72feacebd09ac74fe9a71e68d9e9",
+  "input_hashes_after": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "0fd0cf08eb2c8dd08f4cc527ee49b761185dd0171808868e176b00d60aad2d9b",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a",
+    "src/literal_encode.rs": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/match_parse.rs": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818",
+    "src/match_search.rs": "14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/upstream/dictionaries/formatted.dict": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281",
+    "tests/upstream/support/mod.rs": "78ec1663c4873dba095a6ba24e5787d545a1ccffccb95b3edfd940c7142c3d2a",
+    "tests/upstream_parameter_lifecycle.rs": "1d3bd0e88c4b659b2a3dea0d671da226347ab151d3ce13a8231513bcb1d4659b"
+  },
+  "cli": {
+    "path": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+    "sha256": "eb20e7f4cb5c93836d7b1a8508dad08d1ced73762ca8f8abb9d8dc1e5df7b5b2",
+    "version": "*** Zstandard CLI (64-bit) v1.5.7, by Yann Collet ***"
+  },
+  "runner": {
+    "path": "/tmp/zstdoxide-module11-upstream-search-checks.py",
+    "sha256": "9228c5beb55fb06919d940fe09bf71cb0f1debc6fcefcec2d69a329e7f12dafa",
+    "source_text": "import hashlib, json, os, pathlib, re, shlex, subprocess, time\nroot = pathlib.Path('/Users/lanxingcan/Workspace/zstdoxize')\nout = pathlib.Path('/tmp/zstdoxide-module11-upstream-search-validation'); out.mkdir(exist_ok=True)\nsha = lambda p: hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()\nsource = root/'tests/upstream_search_lifecycle.rs'\nenv = dict(os.environ, CARGO_TARGET_DIR=str(root/'target/module11-upstream-search'), CARGO_TERM_COLOR='never')\nfeatures = ','.join(re.findall(r'^(unsafe-[\\w-]+) =', (root/'Cargo.toml').read_text(), re.M))\ninputs = sorted([p for p in (root/'src').rglob('*.rs')] + [p for p in (root/'test-support/allocator').rglob('*.rs') if 'target' not in p.parts] + [root/p for p in ['Cargo.toml','Cargo.lock','rust-toolchain.toml','tests/upstream/support/mod.rs','tests/upstream/dictionaries/formatted.dict','tests/upstream_parameter_lifecycle.rs']])\ninput_hashes=lambda:{str(p.relative_to(root)):sha(p) for p in inputs}\ne={'scope':'Supported source-backed live search getter/reset and dictionary/configuration-order subsets; no upstream numeric execution or CDict attachment-mode equivalence.', 'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(), 'compiler':subprocess.check_output(['rustc','+nightly-2026-10-08','-Vv'],cwd=root,text=True), 'source_before':sha(source), 'input_hashes_before':input_hashes(), 'upstream':{'revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd='/tmp/zstdoxize-upstream-1.5.7',text=True).strip(),'tests/fuzzer.c_sha256':sha('/tmp/zstdoxize-upstream-1.5.7/tests/fuzzer.c'),'anchors':['tests/fuzzer.c:1721-1763','tests/fuzzer.c:3001-3012','tests/fuzzer.c:3013-3031'],'coverage':'Partial supported assertions only. C automatic hash0/min6/numeric3/7 remain detached inspection assertions, not concrete Rust live settings; default16/min10 and named independent policies are explicit. Original level1/7 and CDict strategy/attachment behavior remain unimplemented.'},'initial_diagnostics':[{'path':'/tmp/zstdoxide-upstream-search-initial.log','sha256':sha('/tmp/zstdoxide-upstream-search-initial.log'),'exit_code':101,'qualification':'Test helper initially used SharedDictionary-only convenience decoder with DictionaryView; corrected to existing generic allocator-last decoder with Global. No production change.'},{'path':'/tmp/zstdoxide-upstream-search-after-api-fix.log','sha256':sha('/tmp/zstdoxide-upstream-search-after-api-fix.log'),'exit_code':0,'counts':'5 passed/1 ignored'}], 'records':[]}\ndef save(): (out/'evidence.json').write_text(json.dumps(e,indent=2)+'\\n')\ndef run(label,cmd,passed=None,ignored=0,extra=None):\n log=out/(label+'.log');selected=dict(env);selected.update(extra or {});start=time.monotonic()\n with log.open('wb') as f:r=subprocess.run(cmd,cwd=root,env=selected,stdout=f,stderr=subprocess.STDOUT)\n text=log.read_text();counts=[dict(zip(['passed','failed','ignored','measured','filtered'],map(int,x))) for x in re.findall(r'test result: ok\\. (\\d+) passed; (\\d+) failed; (\\d+) ignored; (\\d+) measured; (\\d+) filtered out',text)]\n record={'label':label,'command':shlex.join(cmd),'cwd':str(root),'environment':{'CARGO_TARGET_DIR':selected['CARGO_TARGET_DIR'],'CARGO_TERM_COLOR':'never',**(extra or {})},'exit_code':r.returncode,'seconds':round(time.monotonic()-start,4),'test_results':counts,'log':str(log),'sha256':sha(log)}\n e['records'].append(record);save();print(json.dumps(record),flush=True)\n if r.returncode:raise RuntimeError((label,text[-5000:]))\n if passed is not None and not(len(counts)==1 and counts[0]['passed']==passed and counts[0]['failed']==0 and counts[0]['ignored']==ignored):raise RuntimeError((label,counts))\nbase=['cargo','+nightly-2026-10-08']\nconfigs=[('safe',[]),('table',['--features','unsafe-match-table']),('chain',['--features','unsafe-match-chain']),('ring',['--features','unsafe-ring-history']),('dictionary',['--features','unsafe-dictionary']),('all',['--all-features']),('no-std',['--no-default-features']),('no-std-all',['--no-default-features','--features',features])]\nfor label,flags in configs:run('lifecycle-'+label,base+['test','--offline','--locked','--test','upstream_search_lifecycle',*flags,'--','--nocapture','--test-threads=1'],5,1)\nfor label,flags in [configs[0],configs[5]]:\n run('clippy-'+label,base+['clippy','--offline','--locked','--test','upstream_search_lifecycle',*flags,'--','-D','warnings'])\n run('oracle-'+label,base+['test','--offline','--locked','--release','--test','upstream_search_lifecycle',*flags,'official_codec_decodes_both_original_dictionary_orders_for_each_named_policy','--','--exact','--ignored','--nocapture'],1,extra={'ZSTD_BIN':'/tmp/zstdoxize-upstream-1.5.7/programs/zstd'})\nfor label,flags in configs[-2:]:run('check-'+label,base+['check','--offline','--locked','--lib',*flags])\nrun('format',['rustfmt','+nightly-2026-10-08','--edition','2024','--check','tests/upstream_search_lifecycle.rs'])\nrun('diff-check',['git','diff','--check','--','tests/upstream_search_lifecycle.rs'])\ne['source_after']=sha(source);e['input_hashes_after']=input_hashes()\nif e['source_before']!=e['source_after'] or e['input_hashes_before']!=e['input_hashes_after']:raise RuntimeError('source/input changed during final validation')\nfor r in e['records']:\n if r['label'].startswith('oracle-') and '6 frames/614400 source bytes' not in pathlib.Path(r['log']).read_text():raise RuntimeError('missing exact C source/frame counts')\ne['cli']={'path':'/tmp/zstdoxize-upstream-1.5.7/programs/zstd','sha256':sha('/tmp/zstdoxize-upstream-1.5.7/programs/zstd'),'version':subprocess.check_output(['/tmp/zstdoxize-upstream-1.5.7/programs/zstd','--version'],text=True).strip()}\ne['runner']={'path':'/tmp/zstdoxide-module11-upstream-search-checks.py','sha256':sha('/tmp/zstdoxide-module11-upstream-search-checks.py')}\ne['summary']={'commands':len(e['records']),'normal_configurations':8,'new_source_backed_tests_per_configuration':3,'shared_generator_tests_per_configuration':2,'normal_passed_executions':40,'ordinary_ignored_oracle_executions':8,'normal_complete_attachment_frames_per_configuration':24,'normal_complete_order_frames_per_configuration':6,'explicit_oracle_passed_executions':2,'explicit_C_frames_per_configuration':6,'explicit_C_source_bytes_per_configuration':614400,'explicit_C_configurations':['safe','all'],'explicit_C_total_frame_comparisons':12,'explicit_C_total_source_bytes':1228800,'total_passed_test_executions':42,'all_passed':True,'qualification':'This six-frame original-order oracle is separate from the earlier 27-frame general control oracle. No source inventory status is changed or implied. Neither Miri nor timing benchmarks are run in this checkpoint.'}\nsave();print('COMPLETE evidence SHA256 '+sha(out/'evidence.json'),flush=True)\n"
+  },
+  "summary": {
+    "commands": 16,
+    "normal_configurations": 8,
+    "new_source_backed_tests_per_configuration": 3,
+    "shared_generator_tests_per_configuration": 2,
+    "normal_passed_executions": 40,
+    "ordinary_ignored_oracle_executions": 8,
+    "normal_complete_attachment_frames_per_configuration": 24,
+    "normal_complete_order_frames_per_configuration": 6,
+    "explicit_oracle_passed_executions": 2,
+    "explicit_C_frames_per_configuration": 6,
+    "explicit_C_source_bytes_per_configuration": 614400,
+    "explicit_C_configurations": [
+      "safe",
+      "all"
+    ],
+    "explicit_C_total_frame_comparisons": 12,
+    "explicit_C_total_source_bytes": 1228800,
+    "total_passed_test_executions": 42,
+    "all_passed": true,
+    "qualification": "This six-frame original-order oracle is separate from the earlier 27-frame general control oracle. No source inventory status is changed or implied. Neither Miri nor timing benchmarks are run in this checkpoint.",
+    "order_frame_lengths_bytes": {
+      "Greedy": 33571,
+      "Chain": 46746,
+      "Lazy": 46668
+    },
+    "input_hashes_immutable": true,
+    "input_hash_count": 48
+  },
+  "additional_preflight": {
+    "command": "cargo +nightly-2026-10-08 clippy --offline --locked --test upstream_search_lifecycle --all-features -- -D warnings",
+    "environment": {
+      "CARGO_TARGET_DIR": "target/module11-upstream-search"
+    },
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-upstream-search-clippy-preflight.log",
+    "sha256": "21c7bef9c303c4d085496614bf22d469d2b2f78d9ce98d31cebe7eabb5cbde8c",
+    "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.77s\n"
+  },
+  "original_evidence": {
+    "path": "/tmp/zstdoxide-module11-upstream-search-validation/evidence.json",
+    "sha256": "36bea84c3cb753e9b056f19abd9efecb47c8907311bc5a924d145ae0830b79ba"
+  }
+}

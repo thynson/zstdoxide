@@ -53,3 +53,7 @@ cargo test --release --all-features --test upstream_entropy_lifetimes -- --ignor
 # Module 10 supported configuration/reset frames; reference scalar profiles
 # remain inspection values and do not enable numeric compression execution.
 cargo test --release --all-features --test upstream_parameter_lifecycle official_codec_decodes_configured_session_and_parameter_reset_frames -- --ignored --exact
+
+# Module 11 operational named search controls and source-backed ordering subsets.
+cargo test --release --all-features --test match_search_options official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames -- --ignored --exact
+cargo test --release --all-features --test upstream_search_lifecycle official_codec_decodes_both_original_dictionary_orders_for_each_named_policy -- --ignored --exact

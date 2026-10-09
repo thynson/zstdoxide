@@ -374,3 +374,33 @@ The final measured scope includes API-driver bounds/progress assertions, reset,
 seeding and history rebuilding; full decoding, byte comparisons, fingerprints
 and the separate tracking allocator survey remain outside clocks. Individual
 features may affect only untimed decoding or paths absent from these workloads.
+
+## Supported official live-search lifecycle subsets
+
+Three tests adapt the precise `fuzzer.c:1721–1763`, `3001–3012` and `3013–3031`
+assertion sequences. Getter/start/session-reset/parameter-reset checks use actual
+live settings without allocating or cloning workspace owners. Operational hash
+log twelve is set on either side of raw/formatted, shared/borrowed dictionary
+attachment for all three policies. Each attachment produces a complete decoded
+frame and identical session reuse. The original 10-KiB dictionary / 100-KiB source
+ordering dimensions use the declared RDG corpus and a nondefault six-field search
+profile; both installation orders produce identical complete frames.
+
+All sixteen final commands pass with 48 unchanged input hashes. Eight native
+feature/std/release configurations each pass the three new source-backed tests
+and two shared generator checks, leaving one explicit C oracle ignored. Each
+configuration covers 24 attachment frames and six ordering frames. Safe/all
+release oracle runs independently decode those six ordering frames each with
+pinned C: twelve complete comparisons and 1,228,800 source bytes. This is separate
+from the earlier 54-frame general-control campaign. Scoped strict Clippy,
+no_std compilation and formatting pass.
+
+[Lifecycle evidence](evidence/2026-10-09-match-search-upstream-lifecycle.json)
+embeds exact commands, logs and source hashes, including the initial test-only
+shared-versus-borrowed decoder helper correction. The three inventory groups
+remain partial: concrete Rust hash default sixteen/minimum ten differ from C's
+automatic zero/minimum six; numeric levels and CDict attachment inheritance are
+still unsupported. The inventory audit verifies all 418 source files and 615
+case anchors against pinned upstream without changing completion counts. Both
+new public-control and source-backed C runners are registered in the oracle
+script. No additional Miri or timing execution is attributed to this checkpoint.
