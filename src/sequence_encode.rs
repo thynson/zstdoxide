@@ -1,5 +1,7 @@
 //! Supplied-table sequence bit output, without changing emitted frame state.
 
+use core::alloc::Allocator;
+
 use crate::bitwriter::BitWriter;
 use crate::constants::{LL_BASE, LL_BITS, ML_BASE, ML_BITS};
 use crate::frame::MAX_BLOCK_SIZE;
@@ -18,12 +20,15 @@ use crate::{Error, Result};
 ///
 /// Contextual repeat correctness belongs to forward planning: this function
 /// neither validates the incoming repeat triple nor publishes `next_repeat`.
-pub(crate) fn encode_sequences(
+/// Table storage and writer storage may belong to independent allocators. No
+/// owner is cloned or transferred, and neither allocator needs to implement
+/// Clone. The only allocation requests come from the supplied writer.
+pub(crate) fn encode_sequences<T: Allocator, W: Allocator>(
     sequences: &[PlannedSequence],
-    literal_lengths: &FseEncodingTable,
-    offsets: &FseEncodingTable,
-    match_lengths: &FseEncodingTable,
-    writer: &mut BitWriter,
+    literal_lengths: &FseEncodingTable<T>,
+    offsets: &FseEncodingTable<T>,
+    match_lengths: &FseEncodingTable<T>,
+    writer: &mut BitWriter<W>,
 ) -> Result<()> {
     if sequences.is_empty() {
         return Err(Error::CorruptData);
@@ -116,8 +121,170 @@ mod tests {
     use crate::fse::FseTable;
     use crate::history::History;
     use crate::sequences::SequenceState;
+    use alloc::alloc::Global;
     use alloc::vec;
     use alloc::vec::Vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 16,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    fn predefined_in<A: Allocator + Clone>(allocator: A) -> [FseEncodingTable<A>; 3] {
+        [
+            FseEncodingTable::new_in(&LL_DEFAULT, 6, allocator.clone()).unwrap(),
+            FseEncodingTable::new_in(&OF_DEFAULT, 5, allocator.clone()).unwrap(),
+            FseEncodingTable::new_in(&ML_DEFAULT, 6, allocator).unwrap(),
+        ]
+    }
+
+    // This helper deliberately has no Clone bounds, independently checking the
+    // emitter's read-only table and single-owner writer requirements.
+    fn encode_in<T: Allocator, W: Allocator>(
+        sequences: &[PlannedSequence],
+        tables: &[FseEncodingTable<T>; 3],
+        allocator: W,
+    ) -> Result<BitWriter<W>> {
+        let mut writer = BitWriter::new_in(allocator);
+        encode_sequences(sequences, &tables[0], &tables[1], &tables[2], &mut writer)?;
+        Ok(writer)
+    }
+
+    #[test]
+    fn allocator_independent_tables_and_owned_nonclone_writer_preserve_exact_bits() {
+        let specifications: Vec<_> = (0..64)
+            .map(|index| (1 + index % 19, 3 + index % 37, 1 + index % 17))
+            .collect();
+        let sequences = plans(&specifications, [1, 4, 8]);
+        let plans_before = sequences.clone();
+        let expected = encode_in(&sequences, &predefined_in(Global), Global).unwrap();
+        let table_owner = allocator();
+        let table_monitor = table_owner.monitor();
+        let tables = predefined_in(table_owner);
+        let table_before = table_monitor.snapshot();
+        assert_eq!(table_before.live_blocks, 6);
+        assert!(table_before.identities_created > table_before.live_blocks);
+
+        let writer_owner = allocator().into_non_clone();
+        let writer_monitor = writer_owner.monitor();
+        let writer = encode_in(&sequences, &tables, writer_owner).unwrap();
+        assert_eq!(writer.as_bytes(), expected.as_bytes());
+        assert_eq!(sequences, plans_before);
+        assert_eq!(table_monitor.snapshot(), table_before);
+        assert_eq!(writer_monitor.snapshot().identities_created, 1);
+        assert_eq!(writer_monitor.snapshot().live_blocks, 1);
+        assert_eq!(
+            writer_monitor.snapshot().live_bytes,
+            writer.retained_capacity() as u128
+        );
+
+        // The result owns only its output; neither table nor input lifetime is
+        // retained. Moving the complete writer also retains its exact owner.
+        drop(tables);
+        table_monitor.assert_released();
+        drop(sequences);
+        let moved = writer;
+        assert_eq!(moved.as_bytes(), expected.as_bytes());
+        drop(moved);
+        writer_monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_borrowed_nonclone_tables_validate_before_touching_closed_writer() {
+        let owner = allocator().into_non_clone();
+        let source_monitor = owner.monitor();
+        let tables = predefined_in(&owner);
+        let source_before = source_monitor.snapshot();
+        let writer_owner = allocator().into_non_clone();
+        let monitor = writer_owner.monitor();
+        let mut writer = BitWriter::new_in(&writer_owner);
+        writer.write(0xab, 8).unwrap();
+        writer.finish().unwrap();
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        let sequence = PlannedSequence::new(1, 3, 1, [1, 4, 8]).unwrap();
+        let mut malformed = sequence;
+        malformed.offset_code = 32;
+        let missing_symbol = FseEncodingTable::rle_in(2, &owner);
+        for (sequences, literal_table) in [
+            (&[][..], &tables[0]),
+            (&[malformed][..], &tables[0]),
+            (&[sequence][..], &missing_symbol),
+        ] {
+            assert_eq!(
+                encode_sequences(
+                    sequences,
+                    literal_table,
+                    &tables[1],
+                    &tables[2],
+                    &mut writer
+                ),
+                Err(Error::CorruptData)
+            );
+            assert_eq!(writer.as_bytes(), [0xab, 1]);
+            assert_eq!(writer.write(0, 0), Err(Error::CorruptData));
+            assert_eq!(monitor.snapshot(), before);
+            assert_eq!(source_monitor.snapshot(), source_before);
+        }
+        monitor.clear_failure();
+        encode_sequences(&[sequence], &tables[0], &tables[1], &tables[2], &mut writer).unwrap();
+        let expected = encode_in(&[sequence], &predefined_in(Global), Global).unwrap();
+        assert_eq!(writer.as_bytes(), expected.as_bytes());
+        drop(writer);
+        monitor.assert_released();
+        drop(missing_symbol);
+        drop(tables);
+        source_monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_every_writer_failure_releases_output_and_preserves_reusable_tables() {
+        let specifications: Vec<_> = (0..64)
+            .map(|index| (1 + index % 23, 3 + index % 41, 1 + index % 19))
+            .collect();
+        let sequences = plans(&specifications, [1, 4, 8]);
+        let plans_before = sequences.clone();
+        let source_owner = allocator().into_non_clone();
+        let source_monitor = source_owner.monitor();
+        let tables = predefined_in(&source_owner);
+        let source_before = source_monitor.snapshot();
+        let baseline = allocator().into_non_clone();
+        let monitor = baseline.monitor();
+        let expected = encode_in(&sequences, &tables, baseline).unwrap();
+        let attempts = monitor.snapshot().attempts;
+        assert!(attempts > 1);
+        for ordinal in 1..=attempts {
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 4,
+                fail_at: NonZeroU64::new(ordinal),
+            })
+            .unwrap()
+            .into_non_clone();
+            let failed_monitor = owner.monitor();
+            assert!(matches!(
+                encode_in(&sequences, &tables, owner),
+                Err(Error::AllocationFailed)
+            ));
+            assert_eq!(failed_monitor.snapshot().attempts, ordinal);
+            assert_eq!(failed_monitor.snapshot().failures, 1);
+            failed_monitor.assert_released();
+            assert_eq!(source_monitor.snapshot(), source_before);
+            assert_eq!(sequences, plans_before);
+
+            // A failed sink cannot alter a source table's later emitted bits.
+            let retry = encode_in(&sequences, &tables, Global).unwrap();
+            assert_eq!(retry.as_bytes(), expected.as_bytes());
+        }
+        drop(expected);
+        monitor.assert_released();
+        drop(tables);
+        source_monitor.assert_released();
+    }
 
     struct Table {
         encoding: FseEncodingTable,

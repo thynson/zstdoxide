@@ -262,3 +262,39 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   guard and right-child bounds check. Tree nodes remain fixed inline arrays.
   Full/sparse description builders retain the requested output owner through
   fallback; standalone selection moves the entire winning candidate owner.
+
+### Aggregate refinement before implementation
+
+Table owners will expose private-field `FseTableView<'a>` and
+`HuffmanTableView<'a>` records made of initialized shared slices and copied
+metadata. Their lifetimes come from immutable owner borrows, with no retained
+allocator reference or raw-pointer erasure. Checked lookup and existing unsafe
+access backends live on the view; owner methods delegate to the same algorithm.
+Inline FSE RLE remains distinct from normalized singleton tables with nonzero
+state width. These Copy views have no owning allocation or additional unsafe
+representation.
+
+`Dictionary<A>` and `DictionaryEntropy<A>` retain bytes and prepared tables;
+`DictionaryView<'a>` exposes validated slices and immutable entropy views
+independently of the original allocator type. A shared `Arc`/`Rc<Dictionary<A>>`
+continues to allocate its counts and entire inline object through Global. A
+borrowed view allocates nothing and cannot outlive its owner. Reachable-capacity
+metadata stays separate from ownership accounting. Constructors clone allocator
+values only to create fresh owners; formatted parsing must include weight
+scratch and all four tables before publication.
+
+`SequenceState<A>` owns frame overrides, repeats, and an allocator used only for
+fresh tables. Prepared entropy views are passed per call and never stored.
+Reset drops overrides while retaining the allocator. Existing partial-error
+semantics are preserved: earlier channel tables or repeats can already change
+before a later parse/allocation/output error. The surrounding decoder must
+remain poisoned until reset; this migration promises no transactional decode.
+
+`LiteralEncoder<A>` owns its writer, stream bytes, and complete section with
+fresh allocator values. Candidate building uses a fresh clone, while a selected
+inline codebook remains a plain value. Writer and section allocation failures
+cannot publish a candidate table. `SequenceEncoder<A>` retains default/current/
+spare tables, symbols, plans, writer and section as complete owners. Dictionary
+inverse tables are constructed before start-frame state changes; prepare errors
+preserve committed tables/repeats and expose no partial section. Global const
+constructors remain available; custom aggregate constructors run at runtime.

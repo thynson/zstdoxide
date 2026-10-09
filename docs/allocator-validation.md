@@ -243,6 +243,18 @@ allocator through fallback; standalone search moves the complete winning
 candidate owner. This is a focused builder checkpoint, not a new full-corpus
 or complete-codec validation.
 
+Supplied-table sequence emission now accepts independent table and writer
+allocator types, requiring neither to implement Clone. Its
+[emission evidence](evidence/2026-10-09-allocator-sequence-emission.json) records
+ten tests passing in each of six configurations (safe, each relevant FSE or
+bit-writer flag, all features, and no default features), plus three exact
+all-feature strict-provenance Miri tests. The optional C oracle was separately
+executed for safe and all-feature builds: each decoded 27 frames containing
+54 supplied-table/repeat sections. Safe/unsafe no_std checks, strict all-target
+Clippy, and formatting passed. Source and output owners remain independent
+across moves; malformed plans preserve a closed writer, and every observed
+writer allocation failure preserves source tables and permits exact retry.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

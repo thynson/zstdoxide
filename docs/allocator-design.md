@@ -391,3 +391,22 @@ preserve the convenient Global shared handle and separately add a caller-owned
 prepared view for fully controlled allocation, each with its own checkpoint.
 The current 1.100 HTTP 404 remains a recorded verification gap; the successful
 1.101 no-feature compiler probe does not test the unavailable compiler.
+
+## Aggregate integration refinement
+
+Before implementing dictionary/context integration, use immutable slice-backed
+FSE/Huffman views to erase only allocator type from borrowed prepared tables.
+No owner allocation changes allocator, and no table copy is needed merely to
+select frame-owned versus dictionary-owned decoding tables. Dictionary views
+contain private validated fields and are tied to the owner's lifetime.
+
+The public streaming integration may use a defaulted dictionary-handle type
+parameter alongside allocator `A`, preserving existing type spellings. A small
+sealed statically dispatched handle contract can support Global Arc/Rc handles
+of `Dictionary<B>` and caller-owned `DictionaryView<'d>` independently of `A`.
+Exact constructors and exports belong to the integration checkpoint. Persistent,
+prefix and active fields must store complete handles; temporary views must
+never be stored as references into an adjacent field. Prefix claim, skippable
+frames, and reset semantics remain unchanged. Switching handle representations
+may require a new context; clearing a borrowed handle does not promise to
+shorten the context type's compile-time lifetime.
