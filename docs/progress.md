@@ -470,3 +470,11 @@ vectors. Eight new tests pass in seven configurations; safe/all default replay,
 eight existing ownership/entropy executions, no_std and strict Clippy pass.
 All 22 checks succeed, with 78 passing test executions. The selected history
 horizon and public boundary remain the next separately committed consumers.
+
+The selected output-history horizon now controls the real ring reservation,
+capped by the frame window, while empty frames allocate no ring and defaults
+retain existing bytes/capacities. Seven new tests pass in eight configurations,
+including tiny wrapped tails, all-policy distance-196,608 witnesses, independent
+dictionary eligibility, exact-owner growth failure/recovery and nonpublication
+after output failure. All 23 checks pass with 92 test executions. Public search
+configuration is the remaining context integration checkpoint.

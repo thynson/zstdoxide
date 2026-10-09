@@ -21,7 +21,7 @@ const MAX_CHAIN_LOG: u8 = 19;
 const MIN_KEY_BYTES: u8 = 4;
 const MAX_KEY_BYTES: u8 = 8;
 const MAX_VISITS: u8 = 64;
-const MAX_HISTORY_BYTES: u32 = 1 << 20;
+pub(crate) const MAX_HISTORY_BYTES: u32 = 1 << 20;
 const MAX_SEED_NODES: usize = 1 << 16;
 const MAX_REQUESTED_STORAGE_BYTES: usize = 32 * 1024 * 1024;
 

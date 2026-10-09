@@ -1,0 +1,794 @@
+{
+  "schema_version": 1,
+  "scope": "Module 11 selected encoder history horizon, wire-window cap and fallible exact-owner reuse",
+  "repository_head_at_freeze": "a9fa074e07fb3066e1d7879bce47c40f56c47f36",
+  "owned_changed_files": [
+    "src/encode.rs",
+    "src/match_search.rs"
+  ],
+  "source_sha256": {
+    "src/encode.rs": "60ad26ceaeec7f49c0219a79684310c09e20d52174e357da8d3a64f34099bec1",
+    "src/match_search.rs": "2bb3292d85587181810522e26f9bc7764b14277bd6055e5d697ef8cffbaa37a1",
+    "src/match_parse.rs": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/lib.rs": "51d023b26da4c403f64785a86782dfdc67d4e4cecbfe18b2fa33a40b07dff878",
+    "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a"
+  },
+  "source_hashes_after_checks": {
+    "src/encode.rs": "60ad26ceaeec7f49c0219a79684310c09e20d52174e357da8d3a64f34099bec1",
+    "src/match_search.rs": "2bb3292d85587181810522e26f9bc7764b14277bd6055e5d697ef8cffbaa37a1",
+    "src/match_parse.rs": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/lib.rs": "51d023b26da4c403f64785a86782dfdc67d4e4cecbfe18b2fa33a40b07dff878",
+    "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a"
+  },
+  "source_unchanged_during_final_checks": true,
+  "base_checkpoint": "6f04a16",
+  "base_encode_sha256": "2e635f6e049d05bb6c9d374657cb32a9ec062a3eef1a260e745a17a3eebca04c",
+  "contracts": [
+    "Only MAX_HISTORY_BYTES visibility changes in match_search.rs. No other plain-record, hash or leaf implementation change.",
+    "encode retains its preflight SearchShape. Ring metadata admits the shared 1 MiB bound without eager payload allocation; only the first nonempty block reserves min(configured history, actual frame window). Empty one-shot window zero creates no ring.",
+    "No new unsafe operation or feature. Ring read/write operations compose the existing independently selected unsafe-ring-history implementation; exact retained owners and no_std behavior are preserved.",
+    "Tiny horizons 1/2/7/8 and width8 keys cross short and empty block/Flush boundaries under Greedy/Chain/Lazy, with or without a three-byte dictionary. Every retained suffix byte and absolute counter is verified; no missing bytes are padded.",
+    "All three named strategies find a >=60000-byte match at distance196608 with that retained horizon and window262144. The witness disappears with history131072 or with a requested1MiB horizon capped by window131072.",
+    "A one-byte horizon evicts frame zero but leaves complete dictionary-only matching eligible independently; subsequent frame positions beyond the advertised window remove dictionary eligibility.",
+    "Borrowed NonClone owner reservations grow1,2,7,8,131073,1048576 then shrink/regrow without new allocation within high-water capacity; one owner identity persists.",
+    "Every one of the six positive ring growth requests is independently failed, leaving caller output, literal state, logical history, retained allocation and frame counter unchanged; reset/retry succeeds while preserving selected options and the exact ring owner.",
+    "If output allocation fails after successful history reservation, payload capacity remains reusable but no history/input is committed. Reset recovery reuses the reservation with its allocator failure armed.",
+    "Both archived default replays preserve all76 frame fingerprints and capacities. Requested maximum metadata alone does not change default ring allocation sizes or allocation failure schedules."
+  ],
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::search_history_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.989,
+      "log": "/tmp/zstdoxide-module11-history-safe.log",
+      "sha256": "737a134da21d9d7a36dc2829e93c25ddf0e0a8ac108250b700128fc1bf3248fc",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.9
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 7 tests\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 1.90s\n\n"
+    },
+    {
+      "name": "ring",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-ring-history",
+        "encode::tests::search_history_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 6.376,
+      "log": "/tmp/zstdoxide-module11-history-ring.log",
+      "sha256": "950ac1b99f268649a87d2ff47870af938e0ce4ea3ca8757c108302157c9e1a07",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.94
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.99s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/559ca3778fa79c65/out/zstdoxide-559ca3778fa79c65)\n\nrunning 7 tests\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 1.94s\n\n"
+    },
+    {
+      "name": "table",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "encode::tests::search_history_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 4.003,
+      "log": "/tmp/zstdoxide-module11-history-table.log",
+      "sha256": "785909985a289ddef66c1eeb0a9ccc6347423ffebb4ce6d97190b9826e3f190d",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.93
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.62s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/fbd7fa6c50597489/out/zstdoxide-fbd7fa6c50597489)\n\nrunning 7 tests\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 1.93s\n\n"
+    },
+    {
+      "name": "chain",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-chain",
+        "encode::tests::search_history_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 3.95,
+      "log": "/tmp/zstdoxide-module11-history-chain.log",
+      "sha256": "7b3cab2f7bb705de0ab244b1e4a2e1558069ac1b7bf5bb8c8fed646f25af30c2",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.97
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.51s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ef32ef0c462b872c/out/zstdoxide-ef32ef0c462b872c)\n\nrunning 7 tests\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 1.97s\n\n"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::search_history_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 3.881,
+      "log": "/tmp/zstdoxide-module11-history-all.log",
+      "sha256": "9b0297403699d1879aec74c034308c5d626b5058030961808e6bd9c8d5b4fbbd",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.89
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.54s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 7 tests\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 1.89s\n\n"
+    },
+    {
+      "name": "nostd",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "encode::tests::search_history_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 3.85,
+      "log": "/tmp/zstdoxide-module11-history-nostd.log",
+      "sha256": "ac7aecce24d1d842783d1f1e36e9e76be6798862d9a36b30b4cce1fe39b897e4",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.99
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.40s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 7 tests\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 538 filtered out; finished in 1.99s\n\n"
+    },
+    {
+      "name": "nostd-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "encode::tests::search_history_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 4.012,
+      "log": "/tmp/zstdoxide-module11-history-nostd-all.log",
+      "sha256": "1c793d2adda2f6e19630e45f6161a50a077c53020597ad95c398206df97ea88b",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 2.07
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.48s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 7 tests\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 538 filtered out; finished in 2.07s\n\n"
+    },
+    {
+      "name": "release-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--release",
+        "--all-features",
+        "encode::tests::search_history_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 8.633,
+      "log": "/tmp/zstdoxide-module11-history-release-all.log",
+      "sha256": "ecffd59baf4c11383fbda3e86609369964f0f27daa8ea51a5be23b792340df07",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.12
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 8.08s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/release/build/zstdoxide/8fca094558319608/out/zstdoxide-8fca094558319608)\n\nrunning 7 tests\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 0.12s\n\n"
+    },
+    {
+      "name": "defaults-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "match_search_defaults"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 5.938,
+      "log": "/tmp/zstdoxide-module11-history-defaults-safe.log",
+      "sha256": "460397bf8a634bd9e1c743cf962515637d76c66f617afe79e9f5e8c82b51b8ac",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 5.02
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.53s\n     Running tests/match_search_defaults.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/8e248037f9ed31d7/out/match_search_defaults-8e248037f9ed31d7)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.02s\n\n"
+    },
+    {
+      "name": "defaults-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--test",
+        "match_search_defaults"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 6.333,
+      "log": "/tmp/zstdoxide-module11-history-defaults-all.log",
+      "sha256": "e0f006fb556ab37e4bbf8060c86e01b9569f07475fc9f2cf9675874e64fbf160",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 5.42
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s\n     Running tests/match_search_defaults.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/037ece48e3eddc9f/out/match_search_defaults-037ece48e3eddc9f)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.42s\n\n"
+    },
+    {
+      "name": "storage-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.06,
+      "log": "/tmp/zstdoxide-module11-history-storage-safe.log",
+      "sha256": "9d577e497be6ac93fc3233b065f42c50aa57ca3a84098a3cca4432a9452c8bf2",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.02
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.02s\n\n"
+    },
+    {
+      "name": "existing-safe-commit",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::history_commits_every_block_kind_and_reset_reuses_bounded_storage",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.034,
+      "log": "/tmp/zstdoxide-module11-history-existing-safe-commit.log",
+      "sha256": "9437dea0768ea96f0db942a48195a88df617bcca4acd4ca9d937e895ec610e7a",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::history_commits_every_block_kind_and_reset_reuses_bounded_storage ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-safe-old-output",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::old_output_is_not_searched_after_a_full_horizon_of_other_input",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.075,
+      "log": "/tmp/zstdoxide-module11-history-existing-safe-old-output.log",
+      "sha256": "e14139a1b73cd25d01aaecde9fea00f4c8205976e4cfb06865a962123401cd52",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.04
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::old_output_is_not_searched_after_a_full_horizon_of_other_input ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.04s\n\n"
+    },
+    {
+      "name": "existing-safe-setupfail",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.319,
+      "log": "/tmp/zstdoxide-module11-history-existing-safe-setupfail.log",
+      "sha256": "bdf07903014c5bb13a30060c80f3a6a5ae80431ddbc92c60b0b9b9c4303644f0",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.29
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 1.29s\n\n"
+    },
+    {
+      "name": "storage-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.068,
+      "log": "/tmp/zstdoxide-module11-history-storage-all.log",
+      "sha256": "94de4e5d208e26e7ae48259e90a923620e4b64bdcf3ce428b6c9c9f828bbd84a",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.03
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.03s\n\n"
+    },
+    {
+      "name": "existing-all-commit",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::history_commits_every_block_kind_and_reset_reuses_bounded_storage",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.037,
+      "log": "/tmp/zstdoxide-module11-history-existing-all-commit.log",
+      "sha256": "0305dd8122425b8348c53ffcb77fc1175eb15eec3c51aa81dc77f965556109e0",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::history_commits_every_block_kind_and_reset_reuses_bounded_storage ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-all-old-output",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::old_output_is_not_searched_after_a_full_horizon_of_other_input",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.082,
+      "log": "/tmp/zstdoxide-module11-history-existing-all-old-output.log",
+      "sha256": "af6f8f8c39ba35db44d043b22cf060d2956578494e10ca865fbe2a8620b21c45",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.05
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::old_output_is_not_searched_after_a_full_horizon_of_other_input ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.05s\n\n"
+    },
+    {
+      "name": "existing-all-setupfail",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.326,
+      "log": "/tmp/zstdoxide-module11-history-existing-all-setupfail.log",
+      "sha256": "48889005ae96bf4cb68ee8b95e44678472c655b953f64ba75718224cf9f6a05d",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.29
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 1.29s\n\n"
+    },
+    {
+      "name": "nostd-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.173,
+      "log": "/tmp/zstdoxide-module11-history-nostd-lib.log",
+      "sha256": "b788b363f703d494108e2faf0085f7790694e83e3c786059c4e506665f1bc120",
+      "test_summaries": [],
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.14s\n"
+    },
+    {
+      "name": "nostd-all-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.178,
+      "log": "/tmp/zstdoxide-module11-history-nostd-all-lib.log",
+      "sha256": "2d5a487d910d6f6640b33b3303ea177e504e299cb4575d76bc262c903cee663a",
+      "test_summaries": [],
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.15s\n"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.118,
+      "log": "/tmp/zstdoxide-module11-history-clippy.log",
+      "sha256": "99f71393b9903dca098310bb446022a4bdee195ea9996f351a787195555210a6",
+      "test_summaries": [],
+      "log_text": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/encode.rs",
+        "src/match_search.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.054,
+      "log": "/tmp/zstdoxide-module11-history-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": [],
+      "log_text": ""
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/encode.rs",
+        "src/match_search.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.008,
+      "log": "/tmp/zstdoxide-module11-history-diff.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": [],
+      "log_text": ""
+    }
+  ],
+  "checks_count": 23,
+  "passed_test_executions": 92,
+  "checks_by_group": {
+    "history_configurations": {
+      "count": 8,
+      "tests_each": 7,
+      "modes": [
+        "safe",
+        "unsafe-ring-history",
+        "unsafe-match-table",
+        "unsafe-match-chain",
+        "all-features",
+        "no-default",
+        "no-default with all12 unsafe features",
+        "release all-features"
+      ]
+    },
+    "default_archive_replays": {
+      "configurations": 2,
+      "tests_each": 7,
+      "frames_each": 76
+    },
+    "storage_regressions": {
+      "configurations": 2,
+      "tests_each": 8
+    },
+    "exact_existing_history_and_failure_regressions": {
+      "configurations": 2,
+      "tests_each": 3
+    },
+    "non_test_checks": 5
+  },
+  "initial_diagnostics": [
+    "Test compilation initially called unwrap on fail_next(), which returns bool; changed only those test calls to assert!.",
+    "First native run passed6/7 tests. The only failure was a hard-coded total owner identity count7; nested scratch constructors correctly create14 initial identities, then one ring owner. The assertion now records the constructor baseline and verifies exactly one added owner across all growth/reset attempts. Production unchanged.",
+    "Corrected initial run and initial strict Clippy passed before the final frozen matrix."
+  ],
+  "qualifications": [
+    "This checkpoint activates internal BlockEncoder controls only. Public Encoder search setters/export remain a separate work item.",
+    "No native C oracle process was run for these new nondefault configurations here. Each configured frame campaign decodes through Rust; archived default fingerprints were independently C-validated in the earlier baseline checkpoint.",
+    "No new Miri run in this aggregate checkpoint. Root and the platform-review agent will select narrow cases at module closure; the large-history native campaign is not claimed as interpreted validation.",
+    "Test harness durations are recorded for reproducibility, not performance comparisons. No benchmark run or throughput claim."
+  ],
+  "environment": {
+    "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+    "cargo": "cargo 1.101.0-nightly (f3865b2a4 2026-09-29)"
+  },
+  "extra_evidence": [
+    {
+      "path": "/tmp/zstdoxide-module11-history-initial.log",
+      "sha256": "bb8fd0362e925f76ffb99a4e68c00c9cfd951fe0078c83b3cda92abadc88dd28",
+      "bytes": 1419,
+      "text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nerror[E0599]: no method named `unwrap` found for type `bool` in the current scope\n    --> src/encode.rs:3611:29\n     |\n3611 |         monitor.fail_next().unwrap();\n     |                             ^^^^^^ method not found in `bool`\n\nerror[E0599]: no method named `unwrap` found for type `bool` in the current scope\n    --> src/encode.rs:3663:37\n     |\n3663 |                 monitor.fail_next().unwrap();\n     |                                     ^^^^^^ method not found in `bool`\n\nerror[E0599]: no method named `unwrap` found for type `bool` in the current scope\n    --> src/encode.rs:3702:33\n     |\n3702 |             monitor.fail_next().unwrap();\n     |                                 ^^^^^^ method not found in `bool`\n\nerror[E0599]: no method named `unwrap` found for type `bool` in the current scope\n    --> src/encode.rs:3757:36\n     |\n3757 |         output_monitor.fail_next().unwrap();\n     |                                    ^^^^^^ method not found in `bool`\n\nerror[E0599]: no method named `unwrap` found for type `bool` in the current scope\n    --> src/encode.rs:3771:29\n     |\n3771 |         monitor.fail_next().unwrap();\n     |                             ^^^^^^ method not found in `bool`\n\nFor more information about this error, try `rustc --explain E0599`.\nerror: could not compile `zstdoxide` (lib test) due to 5 previous errors\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-module11-history-initial-run.log",
+      "sha256": "9df26d9053e514a4d9eccdc4136735b89b772511a7f230fbe6535b96411b7466",
+      "bytes": 1726,
+      "text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.77s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 7 tests\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... FAILED\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\nfailures:\n\n---- encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner stdout ----\n\nthread 'encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner' (123986046) panicked at src/encode.rs:3736:9:\nassertion `left == right` failed\n  left: 15\n right: 7\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner\n\ntest result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 563 filtered out; finished in 2.02s\n\nerror: test failed, to rerun pass `--lib`\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-module11-history-corrected.log",
+      "sha256": "384abd7f8473815d80554b40f4eb55a3b03c86010ed51ce33a664779a8fce793",
+      "bytes": 1134,
+      "text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.39s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 7 tests\ntest encode::tests::search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable ... ok\ntest encode::tests::search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation ... ok\ntest encode::tests::search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity ... ok\ntest encode::tests::search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner ... ok\ntest encode::tests::search_history_dictionary_only_matches_survive_frame_zero_eviction ... ok\ntest encode::tests::search_history_tiny_horizons_wrap_across_width_eight_flush_tails ... ok\ntest encode::tests::search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 2.14s\n\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-module11-history-initial-clippy.log",
+      "sha256": "1d86956f70de23b8ab9a344eb4ade249f6768dd8961743c616d7c0b66b838ed6",
+      "bytes": 142,
+      "text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.96s\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-module11-history-checks.py",
+      "sha256": "92eb3861b67cfff6a9edf447b86d7b713c56fd1ae989f99f66d2b56a2a0172b3",
+      "bytes": 3137,
+      "text": "import os,subprocess,json,pathlib,hashlib,time,re\nroot=pathlib.Path('/Users/lanxingcan/Workspace/zstdoxize');base='/tmp/zstdoxide-module11-history'\nenv=os.environ.copy();env['CARGO_TARGET_DIR']='/tmp/zstdoxide-module11-storage-target';env['CARGO_TERM_COLOR']='never'\nfeatures='unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training'\nchecks=[]\nfor name,flags in [('safe',[]),('ring',['--features','unsafe-ring-history']),('table',['--features','unsafe-match-table']),('chain',['--features','unsafe-match-chain']),('all',['--all-features']),('nostd',['--no-default-features']),('nostd-all',['--no-default-features','--features',features]),('release-all',['--release','--all-features'])]:\n checks.append((name,['cargo','test','--locked','--lib',*flags,'encode::tests::search_history_'],7))\nfor name,flags in [('defaults-safe',[]),('defaults-all',['--all-features'])]:\n checks.append((name,['cargo','test','--locked',*flags,'--test','match_search_defaults'],7))\nfor mode,flags in [('safe',[]),('all',['--all-features'])]:\n checks.append(('storage-'+mode,['cargo','test','--locked','--lib',*flags,'encode::tests::search_storage_'],8))\n for short,name in [('commit','history_commits_every_block_kind_and_reset_reuses_bounded_storage'),('old-output','old_output_is_not_searched_after_a_full_horizon_of_other_input'),('setupfail','allocator_block_every_setup_and_encode_failure_recovers_after_reset')]:\n  checks.append(('existing-'+mode+'-'+short,['cargo','test','--locked','--lib',*flags,'encode::tests::'+name,'--','--exact'],1))\nchecks.extend([('nostd-lib',['cargo','check','--locked','--no-default-features','--lib'],None),('nostd-all-lib',['cargo','check','--locked','--no-default-features','--features',features,'--lib'],None),('clippy',['cargo','clippy','--locked','--all-targets','--all-features','--','-D','warnings'],None),('format',['rustfmt','+nightly-2026-10-08','--edition','2024','--check','src/encode.rs','src/match_search.rs'],None),('diff',['git','diff','--check','--','src/encode.rs','src/match_search.rs'],None)])\nresults=[]\nfor name,command,count in checks:\n path=pathlib.Path(base+'-'+name+'.log');start=time.monotonic()\n with path.open('wb') as out:r=subprocess.run(command,cwd=root,env=env,stdout=out,stderr=subprocess.STDOUT)\n result={'name':name,'command':command,'env':{k:env[k] for k in ['CARGO_TARGET_DIR','CARGO_TERM_COLOR']},'exit_code':r.returncode,'seconds':round(time.monotonic()-start,3),'log':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}\n if count is not None and r.returncode==0:\n  found=re.findall(r'test result: ok\\. (\\d+) passed; (\\d+) failed; (\\d+) ignored;',path.read_text());assert found==[(str(count),'0','0')],found;result['passed']=count\n results.append(result);pathlib.Path(base+'-checks.json').write_text(json.dumps(results,indent=2)+'\\n');print(name,r.returncode,flush=True)\n if r.returncode:print(path.read_text()[-6000:],flush=True);break\nassert len(results)==len(checks) and all(r['exit_code']==0 for r in results)\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-module11-history-checks.json",
+      "sha256": "e60b55f9ce4c2645958499d7d080da5e9ef249a2aa6f8f64ab4425cb56bc92ef",
+      "bytes": 12494,
+      "text": "[\n  {\n    \"name\": \"safe\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"encode::tests::search_history_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 1.989,\n    \"log\": \"/tmp/zstdoxide-module11-history-safe.log\",\n    \"sha256\": \"737a134da21d9d7a36dc2829e93c25ddf0e0a8ac108250b700128fc1bf3248fc\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"ring\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--features\",\n      \"unsafe-ring-history\",\n      \"encode::tests::search_history_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 6.376,\n    \"log\": \"/tmp/zstdoxide-module11-history-ring.log\",\n    \"sha256\": \"950ac1b99f268649a87d2ff47870af938e0ce4ea3ca8757c108302157c9e1a07\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"table\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--features\",\n      \"unsafe-match-table\",\n      \"encode::tests::search_history_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 4.003,\n    \"log\": \"/tmp/zstdoxide-module11-history-table.log\",\n    \"sha256\": \"785909985a289ddef66c1eeb0a9ccc6347423ffebb4ce6d97190b9826e3f190d\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"chain\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--features\",\n      \"unsafe-match-chain\",\n      \"encode::tests::search_history_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 3.95,\n    \"log\": \"/tmp/zstdoxide-module11-history-chain.log\",\n    \"sha256\": \"7b3cab2f7bb705de0ab244b1e4a2e1558069ac1b7bf5bb8c8fed646f25af30c2\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"all\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--all-features\",\n      \"encode::tests::search_history_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 3.881,\n    \"log\": \"/tmp/zstdoxide-module11-history-all.log\",\n    \"sha256\": \"9b0297403699d1879aec74c034308c5d626b5058030961808e6bd9c8d5b4fbbd\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"nostd\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--no-default-features\",\n      \"encode::tests::search_history_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 3.85,\n    \"log\": \"/tmp/zstdoxide-module11-history-nostd.log\",\n    \"sha256\": \"ac7aecce24d1d842783d1f1e36e9e76be6798862d9a36b30b4cce1fe39b897e4\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"nostd-all\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--no-default-features\",\n      \"--features\",\n      \"unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training\",\n      \"encode::tests::search_history_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 4.012,\n    \"log\": \"/tmp/zstdoxide-module11-history-nostd-all.log\",\n    \"sha256\": \"1c793d2adda2f6e19630e45f6161a50a077c53020597ad95c398206df97ea88b\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"release-all\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--release\",\n      \"--all-features\",\n      \"encode::tests::search_history_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 8.633,\n    \"log\": \"/tmp/zstdoxide-module11-history-release-all.log\",\n    \"sha256\": \"ecffd59baf4c11383fbda3e86609369964f0f27daa8ea51a5be23b792340df07\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"defaults-safe\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--test\",\n      \"match_search_defaults\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 5.938,\n    \"log\": \"/tmp/zstdoxide-module11-history-defaults-safe.log\",\n    \"sha256\": \"460397bf8a634bd9e1c743cf962515637d76c66f617afe79e9f5e8c82b51b8ac\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"defaults-all\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--all-features\",\n      \"--test\",\n      \"match_search_defaults\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 6.333,\n    \"log\": \"/tmp/zstdoxide-module11-history-defaults-all.log\",\n    \"sha256\": \"e0f006fb556ab37e4bbf8060c86e01b9569f07475fc9f2cf9675874e64fbf160\",\n    \"passed\": 7\n  },\n  {\n    \"name\": \"storage-safe\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"encode::tests::search_storage_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.06,\n    \"log\": \"/tmp/zstdoxide-module11-history-storage-safe.log\",\n    \"sha256\": \"9d577e497be6ac93fc3233b065f42c50aa57ca3a84098a3cca4432a9452c8bf2\",\n    \"passed\": 8\n  },\n  {\n    \"name\": \"existing-safe-commit\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"encode::tests::history_commits_every_block_kind_and_reset_reuses_bounded_storage\",\n      \"--\",\n      \"--exact\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.034,\n    \"log\": \"/tmp/zstdoxide-module11-history-existing-safe-commit.log\",\n    \"sha256\": \"9437dea0768ea96f0db942a48195a88df617bcca4acd4ca9d937e895ec610e7a\",\n    \"passed\": 1\n  },\n  {\n    \"name\": \"existing-safe-old-output\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"encode::tests::old_output_is_not_searched_after_a_full_horizon_of_other_input\",\n      \"--\",\n      \"--exact\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.075,\n    \"log\": \"/tmp/zstdoxide-module11-history-existing-safe-old-output.log\",\n    \"sha256\": \"e14139a1b73cd25d01aaecde9fea00f4c8205976e4cfb06865a962123401cd52\",\n    \"passed\": 1\n  },\n  {\n    \"name\": \"existing-safe-setupfail\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset\",\n      \"--\",\n      \"--exact\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 1.319,\n    \"log\": \"/tmp/zstdoxide-module11-history-existing-safe-setupfail.log\",\n    \"sha256\": \"bdf07903014c5bb13a30060c80f3a6a5ae80431ddbc92c60b0b9b9c4303644f0\",\n    \"passed\": 1\n  },\n  {\n    \"name\": \"storage-all\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--all-features\",\n      \"encode::tests::search_storage_\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.068,\n    \"log\": \"/tmp/zstdoxide-module11-history-storage-all.log\",\n    \"sha256\": \"94de4e5d208e26e7ae48259e90a923620e4b64bdcf3ce428b6c9c9f828bbd84a\",\n    \"passed\": 8\n  },\n  {\n    \"name\": \"existing-all-commit\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--all-features\",\n      \"encode::tests::history_commits_every_block_kind_and_reset_reuses_bounded_storage\",\n      \"--\",\n      \"--exact\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.037,\n    \"log\": \"/tmp/zstdoxide-module11-history-existing-all-commit.log\",\n    \"sha256\": \"0305dd8122425b8348c53ffcb77fc1175eb15eec3c51aa81dc77f965556109e0\",\n    \"passed\": 1\n  },\n  {\n    \"name\": \"existing-all-old-output\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--all-features\",\n      \"encode::tests::old_output_is_not_searched_after_a_full_horizon_of_other_input\",\n      \"--\",\n      \"--exact\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.082,\n    \"log\": \"/tmp/zstdoxide-module11-history-existing-all-old-output.log\",\n    \"sha256\": \"af6f8f8c39ba35db44d043b22cf060d2956578494e10ca865fbe2a8620b21c45\",\n    \"passed\": 1\n  },\n  {\n    \"name\": \"existing-all-setupfail\",\n    \"command\": [\n      \"cargo\",\n      \"test\",\n      \"--locked\",\n      \"--lib\",\n      \"--all-features\",\n      \"encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset\",\n      \"--\",\n      \"--exact\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 1.326,\n    \"log\": \"/tmp/zstdoxide-module11-history-existing-all-setupfail.log\",\n    \"sha256\": \"48889005ae96bf4cb68ee8b95e44678472c655b953f64ba75718224cf9f6a05d\",\n    \"passed\": 1\n  },\n  {\n    \"name\": \"nostd-lib\",\n    \"command\": [\n      \"cargo\",\n      \"check\",\n      \"--locked\",\n      \"--no-default-features\",\n      \"--lib\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.173,\n    \"log\": \"/tmp/zstdoxide-module11-history-nostd-lib.log\",\n    \"sha256\": \"b788b363f703d494108e2faf0085f7790694e83e3c786059c4e506665f1bc120\"\n  },\n  {\n    \"name\": \"nostd-all-lib\",\n    \"command\": [\n      \"cargo\",\n      \"check\",\n      \"--locked\",\n      \"--no-default-features\",\n      \"--features\",\n      \"unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training\",\n      \"--lib\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.178,\n    \"log\": \"/tmp/zstdoxide-module11-history-nostd-all-lib.log\",\n    \"sha256\": \"2d5a487d910d6f6640b33b3303ea177e504e299cb4575d76bc262c903cee663a\"\n  },\n  {\n    \"name\": \"clippy\",\n    \"command\": [\n      \"cargo\",\n      \"clippy\",\n      \"--locked\",\n      \"--all-targets\",\n      \"--all-features\",\n      \"--\",\n      \"-D\",\n      \"warnings\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.118,\n    \"log\": \"/tmp/zstdoxide-module11-history-clippy.log\",\n    \"sha256\": \"99f71393b9903dca098310bb446022a4bdee195ea9996f351a787195555210a6\"\n  },\n  {\n    \"name\": \"format\",\n    \"command\": [\n      \"rustfmt\",\n      \"+nightly-2026-10-08\",\n      \"--edition\",\n      \"2024\",\n      \"--check\",\n      \"src/encode.rs\",\n      \"src/match_search.rs\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.054,\n    \"log\": \"/tmp/zstdoxide-module11-history-format.log\",\n    \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n  },\n  {\n    \"name\": \"diff\",\n    \"command\": [\n      \"git\",\n      \"diff\",\n      \"--check\",\n      \"--\",\n      \"src/encode.rs\",\n      \"src/match_search.rs\"\n    ],\n    \"env\": {\n      \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-storage-target\",\n      \"CARGO_TERM_COLOR\": \"never\"\n    },\n    \"exit_code\": 0,\n    \"seconds\": 0.008,\n    \"log\": \"/tmp/zstdoxide-module11-history-diff.log\",\n    \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n  }\n]\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-module11-history-sources.json",
+      "sha256": "5ba998475efeaf2629e67e117e03473096db1f13b522c9fa969f4423cf25d8c9",
+      "bytes": 818,
+      "text": "{\n  \"src/encode.rs\": \"60ad26ceaeec7f49c0219a79684310c09e20d52174e357da8d3a64f34099bec1\",\n  \"src/match_search.rs\": \"2bb3292d85587181810522e26f9bc7764b14277bd6055e5d697ef8cffbaa37a1\",\n  \"src/match_parse.rs\": \"f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818\",\n  \"src/match_key.rs\": \"32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2\",\n  \"src/matchchain.rs\": \"a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22\",\n  \"src/matchfinder.rs\": \"88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb\",\n  \"src/ring_history.rs\": \"6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2\",\n  \"src/lib.rs\": \"51d023b26da4c403f64785a86782dfdc67d4e4cecbfe18b2fa33a40b07dff878\",\n  \"benches/backends.rs\": \"fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a\"\n}\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-module11-history-package.py",
+      "sha256": "0bdb3903d7b34350ece07e208feac318408c68f91f87b939f122be68b2ead60d",
+      "bytes": 6360,
+      "text": "from pathlib import Path\nimport hashlib,json,subprocess,platform,tarfile,shutil,re\nroot=Path('/Users/lanxingcan/Workspace/zstdoxize'); prefix=Path('/tmp/zstdoxide-module11-history'); h=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()\nchecks=json.loads(Path(str(prefix)+'-checks.json').read_text());assert len(checks)==23 and all(r['exit_code']==0 for r in checks); assert sum(r.get('passed',0) for r in checks)==92\nbefore=json.loads(Path(str(prefix)+'-sources.json').read_text());after={k:h(root/k) for k in before};assert before==after\nfor r in checks:\n assert h(r['log'])==r['sha256']\n r['test_summaries']=[{'passed':int(a),'failed':int(b),'ignored':int(c),'harness_seconds':float(d)} for a,b,c,d in re.findall(r'test result: ok\\. (\\d+) passed; (\\d+) failed; (\\d+) ignored;[^\\n]*finished in ([0-9.]+)s',Path(r['log']).read_text())]\nextra=[Path(str(prefix)+suffix) for suffix in ['-initial.log','-initial-run.log','-corrected.log','-initial-clippy.log','-checks.py','-checks.json','-sources.json','-package.py']]\ndata={'schema_version':1,'scope':'Module 11 selected encoder history horizon, wire-window cap and fallible exact-owner reuse','repository_head_at_freeze':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'owned_changed_files':['src/encode.rs','src/match_search.rs'],'source_sha256':before,'source_hashes_after_checks':after,'source_unchanged_during_final_checks':True,'base_checkpoint':'6f04a16','base_encode_sha256':'2e635f6e049d05bb6c9d374657cb32a9ec062a3eef1a260e745a17a3eebca04c','contracts':[\n'Only MAX_HISTORY_BYTES visibility changes in match_search.rs. No other plain-record, hash or leaf implementation change.',\n'encode retains its preflight SearchShape. Ring metadata admits the shared 1 MiB bound without eager payload allocation; only the first nonempty block reserves min(configured history, actual frame window). Empty one-shot window zero creates no ring.',\n'No new unsafe operation or feature. Ring read/write operations compose the existing independently selected unsafe-ring-history implementation; exact retained owners and no_std behavior are preserved.',\n'Tiny horizons 1/2/7/8 and width8 keys cross short and empty block/Flush boundaries under Greedy/Chain/Lazy, with or without a three-byte dictionary. Every retained suffix byte and absolute counter is verified; no missing bytes are padded.',\n'All three named strategies find a >=60000-byte match at distance196608 with that retained horizon and window262144. The witness disappears with history131072 or with a requested1MiB horizon capped by window131072.',\n'A one-byte horizon evicts frame zero but leaves complete dictionary-only matching eligible independently; subsequent frame positions beyond the advertised window remove dictionary eligibility.',\n'Borrowed NonClone owner reservations grow1,2,7,8,131073,1048576 then shrink/regrow without new allocation within high-water capacity; one owner identity persists.',\n'Every one of the six positive ring growth requests is independently failed, leaving caller output, literal state, logical history, retained allocation and frame counter unchanged; reset/retry succeeds while preserving selected options and the exact ring owner.',\n'If output allocation fails after successful history reservation, payload capacity remains reusable but no history/input is committed. Reset recovery reuses the reservation with its allocator failure armed.',\n'Both archived default replays preserve all76 frame fingerprints and capacities. Requested maximum metadata alone does not change default ring allocation sizes or allocation failure schedules.'\n],'checks':checks,'checks_count':23,'passed_test_executions':92,'checks_by_group':{'history_configurations':{'count':8,'tests_each':7,'modes':['safe','unsafe-ring-history','unsafe-match-table','unsafe-match-chain','all-features','no-default','no-default with all12 unsafe features','release all-features']},'default_archive_replays':{'configurations':2,'tests_each':7,'frames_each':76},'storage_regressions':{'configurations':2,'tests_each':8},'exact_existing_history_and_failure_regressions':{'configurations':2,'tests_each':3},'non_test_checks':5},'initial_diagnostics':[\n'Test compilation initially called unwrap on fail_next(), which returns bool; changed only those test calls to assert!.',\n'First native run passed6/7 tests. The only failure was a hard-coded total owner identity count7; nested scratch constructors correctly create14 initial identities, then one ring owner. The assertion now records the constructor baseline and verifies exactly one added owner across all growth/reset attempts. Production unchanged.',\n'Corrected initial run and initial strict Clippy passed before the final frozen matrix.'\n],'qualifications':[\n'This checkpoint activates internal BlockEncoder controls only. Public Encoder search setters/export remain a separate work item.',\n'No native C oracle process was run for these new nondefault configurations here. Each configured frame campaign decodes through Rust; archived default fingerprints were independently C-validated in the earlier baseline checkpoint.',\n'No new Miri run in this aggregate checkpoint. Root and the platform-review agent will select narrow cases at module closure; the large-history native campaign is not claimed as interpreted validation.',\n'Test harness durations are recorded for reproducibility, not performance comparisons. No benchmark run or throughput claim.'\n],'environment':{'platform':platform.platform(),'machine':platform.machine(),'compiler':subprocess.check_output(['rustc','--version','--verbose'],cwd=root,text=True),'cargo':subprocess.check_output(['cargo','--version'],cwd=root,text=True).strip()},'extra_evidence':[{'path':str(p),'sha256':h(p),'bytes':p.stat().st_size} for p in extra]}\np=Path(str(prefix)+'-evidence.json');p.write_text(json.dumps(data,indent=2)+'\\n')\nbundle=Path(str(prefix)+'-bundle');bundle.mkdir(exist_ok=True)\n(bundle/'sources').mkdir(exist_ok=True)\nfor name in before:\n target=bundle/'sources'/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(root/name,target)\nfor q in [p,*extra,*[Path(r['log']) for r in checks]]:shutil.copy2(q,bundle/q.name)\narchive=Path(str(prefix)+'-evidence.tar.gz')\nwith tarfile.open(archive,'w:gz') as tf:tf.add(bundle,arcname=bundle.name)\nfor q in [p,archive]:print(q,h(q),q.stat().st_size)\n"
+    }
+  ],
+  "original_evidence_sha256": "c8a1675a89482ee34673d4c63164a2f21bec6199f6bf42c77e2dc3405cf4a663",
+  "root_verification": {
+    "source_and_log_hashes_verified": true,
+    "review": "Checked deferred effective horizon, unchanged exact ring owner and zero-window behavior, dictionary eligibility independence, full retained-suffix checks, and failure publication. No actionable issue."
+  }
+}

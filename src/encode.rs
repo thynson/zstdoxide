@@ -7,7 +7,7 @@ use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::match_key::MatchKey;
 use crate::match_parse::{parse_chain, parse_lazy_with_budget};
-use crate::match_search::{MatchSearchOptions, SearchKeyLayout, SearchShape};
+use crate::match_search::{MAX_HISTORY_BYTES, MatchSearchOptions, SearchKeyLayout, SearchShape};
 use crate::matchchain::MatchChain;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
@@ -292,7 +292,7 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
     ) -> Result<()> {
         // Direct BlockEncoder users may encode without start_frame. Validate
         // the current default or selected shape before history/output work.
-        SearchShape::new(self.search_options, self.strategy, self.window_size)?;
+        let shape = SearchShape::new(self.search_options, self.strategy, self.window_size)?;
         let next = self
             .frame_position
             .checked_add(block.len() as u64)
@@ -301,12 +301,12 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
             return Err(Error::ResourceLimit);
         }
         if !block.is_empty() {
+            let maximum = usize::try_from(MAX_HISTORY_BYTES).map_err(|_| Error::ResourceLimit)?;
             let history = self
                 .history
-                .get_or_insert_with(|| RingHistory::new_in(MAX_BLOCK_SIZE, self.allocator.clone()));
+                .get_or_insert_with(|| RingHistory::new_in(maximum, self.allocator.clone()));
             if history.window_size() == 0 {
-                let horizon = self.window_size.min(MAX_BLOCK_SIZE as u64) as usize;
-                history.start_frame(horizon)?;
+                history.start_frame(shape.history_bytes())?;
             }
             if history.frame_len() != self.frame_position {
                 return Err(Error::InvalidState);
@@ -3389,5 +3389,398 @@ mod tests {
                 assert_eq!(encoder.sequence_encoder.as_bytes(), committed);
             }
         }
+    }
+
+    /// Encode blocks under an explicit non-single-segment window, checking the
+    /// retained original-input suffix after every short or empty flush boundary.
+    fn search_history_frame<'d, A: Allocator + Clone>(
+        encoder: &mut BlockEncoder<A, DictionaryView<'d>>,
+        dictionary: Option<DictionaryView<'d>>,
+        blocks: &[&[u8]],
+        window_log: u8,
+    ) -> Vec<u8> {
+        assert!((10..=31).contains(&window_log));
+        let source: Vec<_> = blocks
+            .iter()
+            .flat_map(|block| block.iter().copied())
+            .collect();
+        let mut frame = Vec::with_capacity(source.len() + 64);
+        frame.extend_from_slice(&crate::frame::MAGIC.to_le_bytes());
+        let id = dictionary.map_or(0, |view| view.id());
+        let (flag, id_bytes) = dictionary_field(id);
+        frame.push(4 | flag);
+        frame.push((window_log - 10) << 3);
+        frame.extend_from_slice(&id.to_le_bytes()[..id_bytes]);
+        encoder
+            .start_frame(dictionary, 1_u64 << window_log)
+            .unwrap();
+        let horizon = (encoder.search_options().history_bytes() as usize).min(1 << window_log);
+        let mut accepted = 0;
+        for (index, block) in blocks.iter().enumerate() {
+            encoder
+                .encode(block, index + 1 == blocks.len(), &mut frame)
+                .unwrap();
+            accepted += block.len();
+            assert_eq!(encoder.frame_position, accepted as u64);
+            if let Some(history) = encoder.history.as_ref() {
+                assert_eq!(history.frame_len(), accepted as u64);
+                assert_eq!(history.available(), accepted.min(horizon));
+                if accepted != 0 {
+                    assert_eq!(history.window_size(), horizon);
+                    assert!(history.retained_capacity() >= horizon);
+                }
+                let start = accepted.saturating_sub(horizon);
+                for (position, &expected) in source.iter().enumerate().take(accepted).skip(start) {
+                    assert_eq!(history.byte_at(position as u64).unwrap(), expected);
+                }
+                if start != 0 {
+                    assert_eq!(history.byte_at((start - 1) as u64), Err(Error::CorruptData));
+                }
+                assert_eq!(history.byte_at(accepted as u64), Err(Error::CorruptData));
+            } else {
+                assert_eq!(accepted, 0);
+            }
+        }
+        frame.extend_from_slice(&(xxhash::checksum(&source) as u32).to_le_bytes());
+        let decoded = if let Some(dictionary) = dictionary {
+            crate::decompress_with_dictionary_in(
+                &frame,
+                &dictionary,
+                DecodeOptions::new(source.len()),
+                Global,
+            )
+            .unwrap()
+        } else {
+            crate::decompress(&frame, source.len()).unwrap()
+        };
+        assert_eq!(decoded, source);
+        frame
+    }
+
+    #[test]
+    fn search_history_tiny_horizons_wrap_across_width_eight_flush_tails() {
+        let dictionary = Dictionary::raw(b"XYZ").unwrap();
+        let blocks: &[&[u8]] = &[
+            b"",
+            b"a",
+            b"bc",
+            b"def",
+            b"g",
+            b"hijklmno",
+            b"",
+            b"abcdefghabcdefgh",
+            b"pqrstuv",
+            b"wxyzABCDE",
+            b"",
+        ];
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            for horizon in [1, 2, 7, 8] {
+                for dictionary in [None, Some(dictionary.view())] {
+                    let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(Global);
+                    encoder.set_strategy(strategy);
+                    let mut options = search_storage_options(10, 10, 8, 8);
+                    options.set_history_bytes(horizon).unwrap();
+                    encoder.set_search_options(options);
+                    search_history_frame(&mut encoder, dictionary, blocks, 10);
+                    assert_eq!(
+                        encoder.history.as_ref().unwrap().retained_capacity(),
+                        horizon as usize
+                    );
+                    let capacity = encoder.retained_capacity();
+                    encoder.reset();
+                    assert_eq!(encoder.search_options(), options);
+                    search_history_frame(&mut encoder, dictionary, blocks, 10);
+                    assert_eq!(encoder.retained_capacity(), capacity);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn search_history_dictionary_only_matches_survive_frame_zero_eviction() {
+        let dictionary = Dictionary::raw(b"abcdefghIJKLMNOP").unwrap();
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(Global);
+            encoder.set_strategy(strategy);
+            let mut options = search_storage_options(10, 10, 8, 64);
+            options.set_history_bytes(1).unwrap();
+            encoder.set_search_options(options);
+            search_history_frame(
+                &mut encoder,
+                Some(dictionary.view()),
+                &[b"xyz", dictionary.content()],
+                10,
+            );
+            assert_eq!(encoder.sequences.len(), 1);
+            assert_eq!(
+                encoder.sequences[0],
+                LogicalSequence {
+                    literal_length: 0,
+                    match_length: 16,
+                    distance: 19
+                }
+            );
+            assert_eq!(
+                encoder.history.as_ref().unwrap().byte_at(0),
+                Err(Error::CorruptData)
+            );
+
+            // The dictionary's own eligibility is bounded by the frame window,
+            // independently of the selected one-byte output-history horizon.
+            let padding = [b'z'; 1024];
+            encoder.reset();
+            search_history_frame(
+                &mut encoder,
+                Some(dictionary.view()),
+                &[&padding, b"z", dictionary.content()],
+                10,
+            );
+            assert!(encoder.sequences.is_empty());
+        }
+    }
+
+    #[test]
+    fn search_history_larger_horizons_find_distant_sources_but_obey_the_wire_window() {
+        let mut state = 0x8f31_52a9_u32;
+        let source: Vec<u8> = (0..196_608)
+            .map(|_| {
+                state ^= state << 13;
+                state ^= state >> 17;
+                state ^= state << 5;
+                (state >> 24) as u8
+            })
+            .collect();
+        let blocks = [&source[..131_072], &source[131_072..], &source[..65_536]];
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            for (requested, window_log, effective, distant) in [
+                (131_072, 18, 131_072, false),
+                (196_608, 18, 196_608, true),
+                (MAX_HISTORY_BYTES, 17, 131_072, false),
+            ] {
+                let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(Global);
+                encoder.set_strategy(strategy);
+                let mut options = search_storage_options(18, 18, 8, 64);
+                options.set_history_bytes(requested).unwrap();
+                encoder.set_search_options(options);
+                search_history_frame(&mut encoder, None, &blocks, window_log);
+                assert_eq!(encoder.history.as_ref().unwrap().window_size(), effective);
+                assert_eq!(
+                    encoder.history.as_ref().unwrap().retained_capacity(),
+                    effective
+                );
+                let found = encoder.sequences.iter().any(|sequence| {
+                    sequence.distance == 196_608 && sequence.match_length >= 60_000
+                });
+                assert_eq!(
+                    found, distant,
+                    "{strategy:?}, horizon {requested}, window log {window_log}"
+                );
+                if !distant {
+                    assert!(
+                        encoder
+                            .sequences
+                            .iter()
+                            .all(|sequence| sequence.distance <= 131_072)
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn search_history_empty_frames_defer_maximum_metadata_and_small_windows_cap_reservation() {
+        let owner = block_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(&owner);
+        let mut options = search_storage_options(10, 10, 8, 8);
+        options.set_history_bytes(MAX_HISTORY_BYTES).unwrap();
+        encoder.set_search_options(options);
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        encoder.start_frame(None, 0).unwrap();
+        let mut output = Vec::new();
+        encoder.encode(&[], true, &mut output).unwrap();
+        assert_eq!(output, [1, 0, 0]);
+        assert!(encoder.history.is_none());
+        assert_eq!(monitor.snapshot(), before);
+        monitor.clear_failure();
+        for window in [1, 2, 7, 8, 1024] {
+            encoder.reset();
+            encoder.start_frame(None, window).unwrap();
+            output.clear();
+            encoder.encode(b"x", true, &mut output).unwrap();
+            let history = encoder.history.as_ref().unwrap();
+            assert_eq!(history.window_size(), window as usize);
+            assert_eq!(history.retained_capacity(), window as usize);
+            assert_eq!(
+                monitor.snapshot().live_bytes,
+                encoder.retained_capacity() as u128
+            );
+        }
+        drop(encoder);
+        drop(owner);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().identities_created, 1);
+    }
+
+    #[test]
+    fn search_history_borrowed_owner_grows_shrinks_and_regrows_without_changing_identity() {
+        let owner = block_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(&owner);
+        let mut high_water = 0;
+        let mut output = Vec::new();
+        for requested in [
+            1,
+            2,
+            7,
+            8,
+            131_073,
+            MAX_HISTORY_BYTES,
+            7,
+            8,
+            MAX_HISTORY_BYTES,
+        ] {
+            let mut options = search_storage_options(10, 10, 8, 8);
+            options.set_history_bytes(requested).unwrap();
+            encoder.reset();
+            encoder.set_search_options(options);
+            encoder.start_frame(None, 1 << 21).unwrap();
+            let before = monitor.snapshot();
+            if requested as usize <= high_water {
+                assert!(monitor.fail_next());
+            }
+            output.clear();
+            encoder.encode(&[42; 17], true, &mut output).unwrap();
+            assert_eq!(output, [0x8b, 0, 0, 42]);
+            let history = encoder.history.as_ref().unwrap();
+            assert_eq!(history.window_size(), requested as usize);
+            assert_eq!(history.available(), 17.min(requested as usize));
+            let growth = u64::from(requested as usize > high_water);
+            assert_eq!(monitor.snapshot().attempts, before.attempts + growth);
+            high_water = high_water.max(requested as usize);
+            assert_eq!(history.retained_capacity(), high_water);
+            assert_eq!(monitor.snapshot().live_bytes, high_water as u128);
+            assert_eq!(encoder.search_retained_capacity(), high_water);
+            monitor.clear_failure();
+        }
+        drop(encoder);
+        drop(owner);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().identities_created, 1);
+    }
+
+    #[test]
+    fn search_history_every_ring_growth_failure_preserves_output_and_recovers_with_exact_owner() {
+        let owner = block_allocator();
+        let monitor = owner.monitor();
+        let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(owner);
+        let initial_owners = monitor.snapshot().identities_created;
+        let mut lengths = [0; 256];
+        lengths[2] = 1;
+        lengths[3] = 1;
+        let mut capacity = 0;
+        for requested in [1, 2, 7, 8, 131_073, MAX_HISTORY_BYTES] {
+            let mut options = search_storage_options(10, 10, 8, 8);
+            options.set_history_bytes(requested).unwrap();
+            encoder.reset();
+            encoder.set_search_options(options);
+            encoder.start_frame(None, 1 << 21).unwrap();
+            encoder.literal_table = Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
+            let before = monitor.snapshot();
+            assert!(monitor.fail_next());
+            let mut output = vec![0xee, 0x55];
+            assert_eq!(
+                encoder.encode(&[42; 17], true, &mut output),
+                Err(Error::AllocationFailed)
+            );
+            assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
+            assert_eq!(output, [0xee, 0x55]);
+            assert_eq!(encoder.frame_position, 0);
+            assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+            let history = encoder.history.as_ref().unwrap();
+            assert_eq!(history.frame_len(), 0);
+            assert_eq!(history.window_size(), 0);
+            assert_eq!(history.available(), 0);
+            assert_eq!(history.retained_capacity(), capacity);
+            assert_eq!(monitor.snapshot().live_bytes, capacity as u128);
+            monitor.clear_failure();
+            encoder.reset();
+            assert_eq!(encoder.search_options(), options);
+            encoder.start_frame(None, 1 << 21).unwrap();
+            encoder.encode(&[42; 17], true, &mut output).unwrap();
+            assert_eq!(output, [0xee, 0x55, 0x8b, 0, 0, 42]);
+            capacity = requested as usize;
+            assert_eq!(
+                encoder.history.as_ref().unwrap().retained_capacity(),
+                capacity
+            );
+            assert_eq!(
+                monitor.snapshot().live_bytes,
+                encoder.retained_capacity() as u128
+            );
+        }
+        // Only the first attempted block creates the ring's separate owner;
+        // subsequent reserve failures and frame resets keep that same owner.
+        assert_eq!(monitor.snapshot().identities_created, initial_owners + 1);
+        drop(encoder);
+        monitor.assert_released();
+        assert_eq!(
+            monitor.snapshot().identities_created,
+            monitor.snapshot().owners_dropped
+        );
+    }
+
+    #[test]
+    fn search_history_output_failure_keeps_reserved_history_uncommitted_and_reusable() {
+        let owner = block_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let output_owner = block_allocator().into_non_clone();
+        let output_monitor = output_owner.monitor();
+        let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(&owner);
+        let mut options = search_storage_options(10, 10, 8, 8);
+        options.set_history_bytes(196_608).unwrap();
+        encoder.set_search_options(options);
+        encoder.start_frame(None, 1 << 20).unwrap();
+        let mut output = Vec::new_in(&output_owner);
+        assert!(output_monitor.fail_next());
+        assert_eq!(
+            encoder.encode(&[42; 17], true, &mut output),
+            Err(Error::AllocationFailed)
+        );
+        assert!(output.is_empty());
+        assert_eq!(encoder.frame_position, 0);
+        let history = encoder.history.as_ref().unwrap();
+        assert_eq!(history.window_size(), 196_608);
+        assert_eq!(history.retained_capacity(), 196_608);
+        assert_eq!(history.frame_len(), 0);
+        assert_eq!(history.available(), 0);
+        let before = monitor.snapshot();
+        output_monitor.clear_failure();
+        assert!(monitor.fail_next());
+        encoder.reset();
+        encoder.start_frame(None, 1 << 20).unwrap();
+        encoder.encode(&[42; 17], true, &mut output).unwrap();
+        assert_eq!(output, [0x8b, 0, 0, 42]);
+        assert_eq!(monitor.snapshot(), before);
+        assert_eq!(encoder.history.as_ref().unwrap().frame_len(), 17);
+        drop(output);
+        drop(output_owner);
+        output_monitor.assert_released();
+        drop(encoder);
+        drop(owner);
+        monitor.assert_released();
     }
 }

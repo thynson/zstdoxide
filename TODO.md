@@ -40,7 +40,7 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 - [x] Route selected key width and explicit Chain/Lazy effort through parser probes, preserving lookahead, insertion, tie and failure contracts.
 - [x] Add exact-width borrowed dictionary/history/input key extraction, with checked coordinates and explicit incomplete tails before storage integration.
 - [x] Integrate frame-local storage shape with working tables and dictionary seeds, preserving default insertion order and transactional entropy publication.
-- [ ] Integrate selected output-history retention, including width-aware short Flush tails and dictionary/history/input crossings.
+- [x] Integrate selected output-history retention, including width-aware short Flush tails and dictionary/history/input crossings.
 - [ ] Expose meaningful Encoder search configuration and capacity reporting, with existing boundary/reset/allocator contracts and runnable documentation.
 - [ ] Add public default-compatibility and actual-control-effect tests, pinned-C decoding and representative complete allocation-failure campaigns.
 - [x] Define deterministic benchmark profiles, work schedules, ownership accounting and separate harness/measurement checkpoints.

@@ -259,3 +259,31 @@ test recipe accidentally shared the next key too, correctly preventing delay;
 only that recipe was repaired. The reviewed production bytes stayed identical.
 No new C process or maximum-size Miri campaign ran at this integration step;
 leaf Miri and original default-frame C evidence retain their separate scopes.
+
+## Selected output-history horizon
+
+The block encoder now reserves `min(history_bytes, frame_window)` on the first
+nonempty block, using the ring's exact retained allocator. The shared one-MiB
+maximum is constructor metadata only. An empty frame does not construct a ring,
+and defaults keep their 128-KiB bound and existing allocation behavior. Smaller
+subsequent selections reuse earlier high-water capacity. Dictionary eligibility
+still follows the frame window independently from retained output.
+
+Seven new tests pass in eight feature/std/release configurations. Tiny one-,
+two-, seven- and eight-byte horizons wrap across width-eight keys and short
+blocks; every retained suffix is compared byte for byte, including reset reuse.
+All three policies find a distance-196,608 source only when both selected history
+and the wire window permit it. Regular dictionary matches remain available
+after frame-zero eviction, then stop after their independent window boundary.
+Six increasing ring reservations each fail and recover with the same exact
+owner. Borrowed-owner shrink/regrow makes no unnecessary request, and output
+failure leaves reserved history uncommitted.
+
+Safe/all archived defaults still pass all 76 frame/capacity fingerprint cases;
+storage and existing history/failure regressions also pass. Both no_std checks,
+strict all-target/all-feature Clippy and formatting pass. The final 23 commands
+total 92 passing test executions. [History evidence](evidence/2026-10-09-match-search-history.json)
+embeds source hashes, logs and reproduction scripts, retaining initial test-only
+API and owner-count corrections. The production delta never changed after its
+publication. No additional C, Miri or timing execution is claimed here. All
+private search consumers are now operational; public boundary wiring follows.
