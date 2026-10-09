@@ -20,64 +20,37 @@ and the validation reports. The complete upstream migration remains open.
 The required items remain open. A complete inventory and passing available
 one-shot adaptations do not complete the upstream test migration.
 
-## Module 8: entropy encoding and bounded compression strategies
+## Module 9: allocator ownership and platform validation
 
-Design and source counterparts: `docs/entropy-encoder-design.md` and
-`docs/data-structures.md`. Each checked item belongs to its own verified commit.
+Design and source contracts: `docs/allocator-design.md`,
+`docs/data-structures.md`, and `docs/upstream-allocation-plan.md`.
+The Rust 1.100 distribution probe returned HTTP 404; actual 1.101 nightly
+compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 
-- [x] Record entropy encoder ownership, wire boundaries, safety contracts, and ordered checkpoints.
-- [x] Extract the reusable forward bit writer with byte-identical baseline output.
-- [x] Add the checked canonical codebook and exact serialized-description pairing.
-- [x] Add unsafe-huffman-codebook with bounds, missing-symbol, and Miri checks.
-- [x] Add an independent bounded C oracle for exact Huffman tables and streams.
-- [x] Encode one Huffman stream and verify exact C streams, including dictionary log twelve.
-- [x] Encode four streams and checked jump tables, including minimum and size boundaries.
-- [x] Build sparse literal tables while preserving formatted dictionary-training output.
-- [x] Serialize checked raw, RLE, and Huffman literal headers at every field boundary.
-- [x] Select complete raw, RLE, new-Huffman, and reused-Huffman literal sections by serialized cost.
-- [x] Assemble zero-sequence compressed blocks without sequence modes or states.
-- [x] Publish Huffman choices transactionally with emitted and pending entropy state.
-- [x] Verify public literal-only frames and literal size boundaries with independent C decoding.
-- [x] Verify treeless lifetime, dictionary replacement, and fragmented output with C.
-- [x] Map verified Huffman/FSE encoder contracts and decompose remaining entropy fuzz assertions.
-- [x] Pin the official Huffman corpus independently and verify archive metadata without claiming replay.
-- [x] Preserve exact Huffman tail selectors with independent C parameter vectors for both BMI layouts.
-- [x] Admit weight twelve in standalone Huffman descriptions while preserving existing serialized bytes.
-- [x] Build standalone Huffman trees with explicit requested depths through twelve and meaningful optimal-depth selection.
-- [x] Encode standalone Huffman sources through 256 KiB with checked four-stream jump limits.
-- [x] Implement caller-owned standalone entropy output bounds and zero-result contracts.
-- [x] Adapt the complete Huffman target control flow with exact selectors, depth adjustment, and explicit branch outcomes.
-- [x] Replay the complete pinned Huffman corpus through its exact target driver and record every branch outcome.
-- [x] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.
-- [x] Port exact unit-count normalization and sparse normalized-header regressions.
-- [x] Add unsafe-fse-encoder independently from the decoder unsafe-fse backend.
-- [x] Plan repeat-offset values forward with exact triples and checked arithmetic.
-- [x] Encode sequences using supplied predefined, new, reused, and RLE tables.
-- [x] Select adaptive per-channel distributions with deterministic complete cost comparisons.
-- [x] Own pending sequence-table replacements and repeat triples in a resettable transactional context.
-- [x] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
-- [x] Verify adaptive sequence modes, repeat-offset lifetime, and dictionary/reset boundaries through public APIs and C decoding.
-- [x] Add bounded multi-candidate storage with checked stale-link and tag validation.
-- [x] Add unsafe-match-chain with equivalent candidate order and search limits.
-- [x] Add the bounded multi-candidate parser with deterministic ties and source-independent resolution.
-- [x] Integrate bounded chain matching with dictionary/history eligibility and documented budgets.
-- [x] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
-- [x] Expose Lazy through the shared dictionary/history path and verify public ratio/lifetime contracts.
-- [x] Port the original raw-block dictionary entropy lifetime schedule at zstreamtest.c:1831.
-- [x] Include the exact dictionary lifetime fixture and its oracle target in reproducible audits.
-- [x] Port the original six-byte flush and dictionary offset schedule at zstreamtest.c:1884.
-- [x] Port the incremental upstream sequence source generator with independent byte and digest vectors.
-- [x] Run the original 971-case dictionary sequence sweep through all named strategies and independent C decoding.
-- [x] Expose completed named strategies and port supported upstream assertions and corpora.
-- [x] Extend the regression content adapter to every named strategy with reset, output-bound, and full-byte checks.
-- [x] Replay every pinned regression input with each named strategy under safe and all-feature builds.
-- [x] Map complete Huffman and named-strategy corpus evidence while preserving upstream API qualifications.
-- [x] Reconcile current entropy and fuzzer coverage documentation with the completed exact campaigns.
-- [x] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.
-- [x] Include all new entropy and strategy oracle entry points in the reproducible validation script.
-- [x] Run the backend/strategy benchmark matrix and preserve comparable output fingerprints and memory measurements.
-- [x] Refresh CI Miri selectors after module extraction and cover the three new unsafe families.
-- [x] Run final feature, no_std, Miri, interoperability, and migration checks; record remaining upstream gaps.
+- [x] Record every allocation owner, standard API boundaries, failure invariants, and exact upstream allocator/workspace test scope.
+- [ ] Verify and pin the actual implementation compiler, document its minimum-version policy, and check the unchanged codec before generic migration.
+- [ ] Add a separate counting/failing test allocator with layout, lifetime, distinct-clone identity, zero-size, growth, and non-unwinding contracts.
+- [ ] Parameterize complete output history while preserving Global return ownership, overlap behavior, limits, and failed-growth state.
+- [ ] Parameterize ring history and verify wrap, reserve-before-reset, window changes, and retained capacity.
+- [ ] Parameterize forward/count bit writers with identical bits and reservation-failure guarantees.
+- [ ] Parameterize FSE decoding entries and weight scratch, including fallible table copies.
+- [ ] Parameterize inverse FSE tables, normalization, descriptions, and channel-selection temporaries.
+- [ ] Parameterize Huffman decoding, literal buffers, and paired-description validation storage.
+- [ ] Replace the Huffman builder's Global-only priority queue with checked allocator-compatible storage and preserve all tree/tie vectors.
+- [ ] Parameterize transactional literal and sequence contexts, including default/current/spare owners and every temporary.
+- [ ] Expose allocator-aware decoding contexts and collecting output APIs with unchanged framing and poisoned-context recovery.
+- [ ] Parameterize match tables/chains and dictionary seeds with identical safe/unsafe candidate ordering.
+- [ ] Expose allocator-aware block/stream encoding and one-shot output without allocator-changing copies.
+- [ ] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
+- [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
+- [ ] Replace the training priority queue and parameterize sample windows, frequencies, candidates, ranges, and output without changing selection ties.
+- [ ] Parameterize formatted finalization and all validation copies, preserving dictionary bytes, IDs, and C acceptance.
+- [ ] Inject failure at each observed codec allocation, including HUF/FSE candidates, history growth, dictionary preparation, reset, and final drop.
+- [ ] Adapt the original 89,456,640-byte custom-context source campaign with explicit seeds and supported strategy/API qualifications.
+- [ ] Validate standard/custom allocation under safe, each individual unsafe feature, and all features with no_std and independent C checks.
+- [ ] Execute focused 32-bit and big-endian tests, compile a no-pointer-atomics target, and distinguish runner limits from passing execution.
+- [ ] Compare deterministic output, allocation counts, peak live bytes, retained capacity, and time on identical Global/custom workloads.
+- [ ] Record the final compiler/platform evidence, allocator safety review, and remaining static-workspace/estimator/shrinking/1.100 verification gaps.
 
 ## Roadmap
 

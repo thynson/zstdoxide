@@ -151,3 +151,45 @@ The completed checklist is archived in Git history. Module 8 is decomposed in
 `TODO.md` and [entropy-encoder-design.md](entropy-encoder-design.md) before
 implementation. It adds Huffman literals, adaptive/reused FSE, repeat planning,
 and bounded named compression strategies without upstream level-parity claims.
+
+
+## Module 8: entropy encoding and bounded strategies
+
+Completed on 2026-10-09. The encoder now selects raw/RLE/new/reused Huffman
+literals and adaptive predefined/RLE/new/reused sequence distributions, plans
+repeat offsets forward, and publishes entropy only for accepted compressed
+blocks. Greedy, Chain and Lazy share checked dictionary/history resolution;
+Chain searches eight candidates and Lazy up to sixteen at each current/next
+position. Output history remains bounded by 128 KiB. The three new unsafe
+families remain independent opt-ins with release-mode guards and local proofs.
+
+The complete adapted Huffman driver replays every pinned corpus input under
+both BMI layouts and safe/all-feature builds: 3,332 executions with all 1,666
+per-build records identical. All 512 regression inputs pass each named strategy
+under both backends. The original dictionary campaigns preserve both raw-block
+RNG paths, all 43,691 six-byte flushes, and the complete 971-request / 34,639,743-
+byte sequence source, with independent C decoding in both directions. Numeric
+levels, borrowed C dictionary ownership and multithreading remain qualified.
+
+Fifteen full suites each pass 534 tests with 45 explicit ignores; fourteen
+no_std configurations, both strict Clippy checks, formatting, source/fixture
+checks, and five additional usage-document examples pass. The complete oracle
+script selects 35 passing tests, including 30,000 stress cycles. Frozen inputs
+are fingerprinted. Focused Miri covers all three new unsafe families; the CI
+launcher now rejects selectors that execute zero tests. These facts and precise
+limitations are archived in [entropy-encoder-validation.md](entropy-encoder-validation.md).
+
+The fourteen-configuration, twenty-four-workload performance run preserves
+identical outputs and metadata. Isolated unsafe FSE encoding and Huffman
+codebook access were slower; chain access showed a small difference. Safe
+remains the default. Named strategies show workload-specific size/time/memory
+tradeoffs, detailed in [benchmarks.md](benchmarks.md). No upstream throughput
+or numeric-level parity is claimed.
+
+The full migration gate remains open with 188 unfinished behavioral source
+units. Completed Module 8 tasks are archived in Git history. Module 9's
+allocation ownership, API boundaries, failure contracts and exact upstream
+memory schedules are analyzed before implementation, with small items retained
+in TODO. The actual Rust 1.100 distribution was unavailable (HTTP 404); a
+standard-API no_std probe compiled on the installed 1.101 nightly without
+feature gates. The next compiler decision must preserve that distinction.

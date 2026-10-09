@@ -1,5 +1,12 @@
 # Allocator preparation
 
+Module 9 is now decomposed in `TODO.md`. The complete ownership/API design is
+in [allocator-design.md](allocator-design.md), with original test contracts in
+[upstream-allocation-plan.md](upstream-allocation-plan.md). The Rust 1.100
+installation attempt returned HTTP 404 on 2026-10-09; the installed 1.101
+nightly separately compiled a no_std standard-API probe without feature gates.
+The current project pin remains unchanged until the compiler checkpoint.
+
 The initial crate targets Rust 1.89.0 and uses the global allocator through
 `alloc::vec::Vec`. Custom allocators are not implemented yet. This keeps the first
 codec version usable on the tested installed toolchain while leaving a concrete
