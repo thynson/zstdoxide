@@ -654,8 +654,10 @@ All per-owner implementations are now connected through the public codec APIs.
 The final focused platform follow-up is recorded in
 [allocator-platform-validation.md](allocator-platform-validation.md), and the
 [allocator overview](allocators.md) records the final compiler/safety evidence
-and distinct remaining contracts. The full ordinary feature matrix and timed
-allocator comparisons are still pending separate completion records. The
+and distinct remaining contracts. The [final integrated codec matrix](allocator-final-validation.md) now passes
+all 58 recorded commands, including 15 complete suites and 814 independent
+official-codec comparisons. Timed allocator comparisons remain pending their
+separate completion record. The
 [upstream allocation plan](upstream-allocation-plan.md) distinguishes ordinary
 allocator control from static workspaces, shrinking policies, estimators,
 stable buffers, and C numeric compression levels.

@@ -1,7 +1,8 @@
 # Allocator ownership and validation
 
 Module 9 has connected every codec allocation owner to the public allocator APIs.
-Final integrated validation and measurement are tracked in `TODO.md`. The ownership/API design is
+The [final codec matrix](allocator-final-validation.md) is complete; timed
+measurement remains tracked in `TODO.md`. The ownership/API design is
 in [allocator-design.md](allocator-design.md), with original test contracts in
 [upstream-allocation-plan.md](upstream-allocation-plan.md). The Rust 1.100
 installation attempt returned HTTP 404 on 2026-10-09; the installed 1.101
@@ -21,8 +22,8 @@ allocator, with fresh retained clones for separate temporary/table owners.
 Dictionary and context allocation types can differ through `DictionaryHandle`.
 `Dictionary::view()` provides an allocation-free borrowed attachment; standard
 `into_shared()` uses an infallible Global allocation for both reference counts
-and the entire inline dictionary object. Full integrated checks and allocation
-benchmarks remain in the Module 9 checklist. The
+and the entire inline dictionary object. Integrated checks are recorded
+separately; allocator timing remains in the Module 9 checklist. The
 chosen standard `Allocator`/`Vec<T, A>` subset compiles without feature gates
 on the pin. Custom Arc/Rc, allocator-aware BinaryHeap, and fallible Box
 construction still require unstable `allocator_ext` in the inspected library;

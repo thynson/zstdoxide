@@ -59,7 +59,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Parameterize formatted finalization and all validation copies, preserving dictionary bytes, IDs, and C acceptance.
 - [x] Inject failure at each observed codec allocation, including HUF/FSE candidates, history growth, dictionary preparation, reset, and final drop.
 - [x] Adapt the original 89,456,640-byte custom-context source campaign with explicit seeds and supported strategy/API qualifications.
-- [ ] Validate standard/custom allocation under safe, each individual unsafe feature, and all features with no_std and independent C checks.
+- [x] Validate standard/custom allocation under safe, each individual unsafe feature, and all features with no_std and independent C checks.
 - [x] Execute focused 32-bit and big-endian tests, compile a no-pointer-atomics target, and distinguish runner limits from passing execution.
 - [x] Recheck final encoder/trainer public APIs with exact 32-bit/big-endian Miri selectors and no-atomics caller code generation.
 - [x] Build a deterministic allocator benchmark harness and validate every workload and backend without timing.

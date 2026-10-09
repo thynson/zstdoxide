@@ -1,0 +1,4492 @@
+{
+  "revision": "8703ff4d74f9a87b40ab63a491408848de198a0c",
+  "scope": "Complete migrated codec validation at the exact archive of 8703ff4. Concurrent benchmark artifacts are excluded and validated separately.",
+  "source_root": "/tmp/zstdoxide-module9-final-8703ff4/source",
+  "source_archive_sha256": "80658a4e6d6a4e10a5880cc8411b70872559b2fc0ec86ecc5aaa98eb8e67ddd9",
+  "tracked_file_count": 631,
+  "tracked_source_unchanged": true,
+  "generated_files": [
+    "test-support/allocator/Cargo.lock"
+  ],
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "cargo": "cargo 1.101.0-nightly (f3865b2a4 2026-09-29)\nrelease: 1.101.0-nightly\ncommit-hash: f3865b2a4d1acc5276f6b3c67d0e057f4dab3928\ncommit-date: 2026-09-29\nhost: aarch64-apple-darwin\nlibgit2: 1.9.6 (sys:0.21.0 vendored)\nlibcurl: 8.7.1 (sys:0.4.90+curl-8.21.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\nssl: OpenSSL 3.6.3 9 Jun 2026\nos: Mac OS 15.7.7 [64-bit]\n",
+  "official_cli": "*** Zstandard CLI (64-bit) v1.5.7, by Yann Collet ***\n",
+  "source_manifest_before": {
+    "path": "/tmp/zstdoxide-module9-final-8703ff4/source-hashes-before.json",
+    "sha256": "b70b8fc9756f13ef0be1ccc9d9298012470ece0c2e4f2efcb12ece51e63521ac"
+  },
+  "source_manifest_after": {
+    "path": "/tmp/zstdoxide-module9-final-8703ff4/source-hashes-after.json",
+    "sha256": "9d1ca9f7b74a7ede23ad9ebdbf553adec3829839e89341e17ff352f3ba0abb43"
+  },
+  "environment": {
+    "CARGO_TARGET_DIR": "/tmp/zstdoxide-module9-final-8703ff4/target",
+    "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+    "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+    "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+    "ZSTD_DECODECORPUS": "/tmp/zstdoxize-upstream-1.5.7/tests/decodecorpus"
+  },
+  "successful_commands": 58,
+  "full_suite_runs": 15,
+  "full_suite_each": {
+    "passed": 699,
+    "ignored": 50
+  },
+  "full_suite_aggregate": {
+    "passed": 10485,
+    "ignored": 750
+  },
+  "helper_tests_passed": 13,
+  "usage_doc_tests_each_configuration": 10,
+  "usage_doc_configurations": [
+    "safe",
+    "all-features"
+  ],
+  "all_test_command_execution_totals": {
+    "passed": 10538,
+    "failed": 0,
+    "ignored": 750,
+    "filtered_out": 2988
+  },
+  "oracle_comparisons": {
+    "scope": "Per safe or all-feature explicit C-oracle configuration. Counts derive from the exact archived test loop schedules and become validation claims only after the associated command passes.",
+    "groups": [
+      {
+        "name": "interop",
+        "rust_test_functions": 2,
+        "rust_frames_decoded_by_c": 31,
+        "c_frames_decoded_by_rust": 56,
+        "rust_decoding_comparisons": 56,
+        "formula": "7 named sources * 4 C levels * 2 known-size policies = 56 C frames; 7 named Rust sources + 12 lengths * 2 contents = 31 Rust frames"
+      },
+      {
+        "name": "streaming",
+        "rust_test_functions": 1,
+        "rust_frames_decoded_by_c": 20,
+        "c_frames_decoded_by_rust": 10,
+        "rust_decoding_comparisons": 10,
+        "formula": "5 sources * 2 windows * 2 checksum policies = 20 Rust frames; 5 sources * 2 checksum policies = 10 C frames"
+      },
+      {
+        "name": "dictionary",
+        "rust_test_functions": 2,
+        "rust_frames_decoded_by_c": 116,
+        "c_frames_decoded_by_rust": 0,
+        "rust_decoding_comparisons": 0,
+        "formula": "4 dictionaries * 3 sources * 2 windows * 2 checksum policies * 2 ID policies = 96 streaming frames, plus 4 dictionaries * 5 lengths = 20 one-shot frames"
+      },
+      {
+        "name": "raw-training",
+        "rust_test_functions": 1,
+        "rust_frames_decoded_by_c": 16,
+        "c_frames_decoded_by_rust": 16,
+        "rust_decoding_comparisons": 16,
+        "formula": "16 held-out sources in each direction; 16 additional C ordinary-compression size baselines are not counted as decoded-byte comparisons"
+      },
+      {
+        "name": "formatted-training",
+        "rust_test_functions": 1,
+        "rust_frames_decoded_by_c": 36,
+        "c_frames_decoded_by_rust": 36,
+        "rust_decoding_comparisons": 36,
+        "formula": "16 trained held-out + 6 explicit dictionary IDs * 3 sources + 2 empty-content dictionary sources = 36 source cases in each direction; 8 Rust-built dictionaries"
+      },
+      {
+        "name": "allocator-one-shot",
+        "rust_test_functions": 1,
+        "rust_frames_decoded_by_c": 36,
+        "c_frames_decoded_by_rust": 0,
+        "rust_decoding_comparisons": 0,
+        "formula": "12 lengths * 3 dictionary settings, with captured 36-frame byte fingerprint"
+      },
+      {
+        "name": "allocator-stream-encoder",
+        "rust_test_functions": 1,
+        "rust_frames_decoded_by_c": 18,
+        "c_frames_decoded_by_rust": 0,
+        "rust_decoding_comparisons": 0,
+        "formula": "3 dictionary settings * 3 named strategies * 2 dictionary-ID policies"
+      },
+      {
+        "name": "allocator-stream-decoder",
+        "rust_test_functions": 1,
+        "rust_frames_decoded_by_c": 0,
+        "c_frames_decoded_by_rust": 8,
+        "rust_decoding_comparisons": 16,
+        "formula": "2 dictionary policies * 4 lengths = 8 official frames; each decoded through both borrowed and shared custom allocator contexts"
+      }
+    ],
+    "per_configuration": {
+      "rust_test_functions": 10,
+      "rust_frames_decoded_by_c": 273,
+      "distinct_c_frame_cases": 126,
+      "rust_decoding_comparisons": 134,
+      "total_exact_byte_comparisons": 407
+    },
+    "safe_plus_all": {
+      "rust_test_function_executions": 20,
+      "rust_frames_decoded_by_c": 546,
+      "c_frame_case_executions": 252,
+      "rust_decoding_comparisons": 268,
+      "total_exact_byte_comparisons": 814
+    }
+  },
+  "held_out_c_compression_bytes": {
+    "raw": {
+      "ordinary": 2263,
+      "dictionary": 609
+    },
+    "formatted": {
+      "ordinary": 2288,
+      "dictionary": 715
+    },
+    "note": "Same observed totals in safe and all-feature oracle runs; compression sizes, not timing benchmarks."
+  },
+  "inventory_integrity": "Inventory valid: 418 test-related sources, 221 explicit non-test exclusions, 615 named case groups.\nSource migration status: {\"blocked\": 149, \"non_applicable\": 216, \"partial\": 34, \"planned\": 5, \"ported\": 14}\nCase migration status: {\"blocked\": 447, \"non_applicable\": 15, \"partial\": 106, \"ported\": 47}\nUpstream checkout hashes and case anchors verified.\n",
+  "fixture_integrity": "Fixture integrity valid: 312 files in 8 collections; source provenance and recorded expected-output metadata agree.\nNo upstream checkout, C compiler, or codec executable was required.\n",
+  "known_unfulfilled_migration_gate": {
+    "command": [
+      "python3",
+      "scripts/audit_upstream_tests.py",
+      "--upstream",
+      "/tmp/zstdoxize-upstream-1.5.7",
+      "--require-complete"
+    ],
+    "cwd": "/tmp/zstdoxide-module9-final-8703ff4/source",
+    "exit_code": 1,
+    "seconds": 0.587,
+    "log": "/tmp/zstdoxide-module9-final-8703ff4/require-complete-known-gap.log",
+    "sha256": "b4e4f125325272ee5fca76933ecb3ff103e1f43c8c1a6f50d8175d011fb9cba9",
+    "classification": "Known incomplete upstream-test migration gate; distinct from passing inventory integrity and codec correctness matrix.",
+    "output": "ERROR: Migration incomplete: 188 source units remain unported\nERROR: Migration incomplete: external upstream corpus target coverage remains partial or blocked\n"
+  },
+  "commands": [
+    {
+      "name": "compiler",
+      "command": [
+        "rustc",
+        "--version",
+        "--verbose"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.07,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/compiler.log",
+      "sha256": "a4bb13dccabda9ebf5294b8144f22400733afc06744ab8062bcf43b7254e0c03",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "cargo",
+      "command": [
+        "cargo",
+        "--version",
+        "--verbose"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.063,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/cargo.log",
+      "sha256": "6f48d9ad55973094557ef6657e3f9d5db1ff584f076e9f9bdcd2f4dbbe8629c4",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "official-version",
+      "command": [
+        "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+        "--version"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.113,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/official-version.log",
+      "sha256": "f6d344e585f9a9ceb9500ff65355ce23bcc39dec9e4164aceab9da0a5ac3113e",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "inventory",
+      "command": [
+        "python3",
+        "scripts/audit_upstream_tests.py",
+        "--upstream",
+        "/tmp/zstdoxize-upstream-1.5.7"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.878,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/inventory.log",
+      "sha256": "1ad27a19d9b97a3f932afd401b5b9294fa8e4dcb42c26d4f1375e8e274666f8f",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "fixtures",
+      "command": [
+        "python3",
+        "scripts/check_upstream_fixtures.py"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.482,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/fixtures.log",
+      "sha256": "a70dfddf2879381e490b35b0fb092a09013162420933bcc87e9c72637e64a736",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.495,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "allocator-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "test-support/allocator/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.228,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/allocator-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "allocator-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "test-support/allocator/Cargo.toml"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 1.071,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/allocator-tests.log",
+      "sha256": "2af26ce124d6b39ec45c14615bed4318c3e6c8d4e96b5a62996750149c274265",
+      "test_results": [
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 13,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "allocator-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "test-support/allocator/Cargo.toml",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.224,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/allocator-clippy.log",
+      "sha256": "bd7eaf04b49a09ed366289b031a0f26a9373e93953a892e7346e17faeb26487c",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-default",
+      "command": [
+        "cargo",
+        "test",
+        "--locked"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 49.191,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-default.log",
+      "sha256": "5be4072d2f1b0c3f91b3b11db13ff4704d92481dc1deb6bc53d8d03f6307def3",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "usage-default",
+      "command": [
+        "python3",
+        "scripts/check_doc_examples.py"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 1.81,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/usage-default.log",
+      "sha256": "68cd24081658575a24cd5cb0aa2fa173c3bdb4c746b6289ade61180feabd18ad",
+      "test_results": [
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 10,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "clippy-default",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 3.015,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/clippy-default.log",
+      "sha256": "223097dd1bc1c8c44fff767dffe2a800b82898380bbfb7974ed3528f99d7b0d9",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-default",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.461,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-default.log",
+      "sha256": "06898dae78a22cfdcb6e84fb8176b5037b0f6ed4bd9d8e466d752ba738e74f28",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-byte-cursor",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-byte-cursor"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 46.933,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-byte-cursor.log",
+      "sha256": "5f504b889b29f6f083cc07894d9167465f44705f24322864415587c63fac379d",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-byte-cursor",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.381,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-byte-cursor.log",
+      "sha256": "fda6e323e07e03afd6d0c2be33dda9bbe786914cd1d47f60bd42673df840c7c8",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-bitstream",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 45.132,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-bitstream.log",
+      "sha256": "a08caf409f442b886e5653cc7356d28135e88eca23ae98df2fad23d63cf5370c",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-bitstream",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.378,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-bitstream.log",
+      "sha256": "fda6e323e07e03afd6d0c2be33dda9bbe786914cd1d47f60bd42673df840c7c8",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-history",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-history"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 45.51,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-history.log",
+      "sha256": "abbbc141e33bfad9aaff2d08d3ea01454498262968f629178677e0c6229e3e26",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-history",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-history"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.392,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-history.log",
+      "sha256": "79bb1dd91349c6a9d4799ef95fc7645f305123a6a0f2b9595a6746efb306eb1d",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-ring-history",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-ring-history"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 45.62,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-ring-history.log",
+      "sha256": "2fbba4f933ac80007b4d8585d185a38b65b9f4641a2ec1a0fa8f1c58de03f280",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-ring-history",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-ring-history"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.373,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-ring-history.log",
+      "sha256": "4eb8cd82143da7dfd1446b0762df21e372c57476dc1377c3475810b42f0c8578",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-fse",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-fse"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 45.502,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-fse.log",
+      "sha256": "826cd1336b7b23c38fde7d6424392c71f835f260c154315531178c7cb83b0387",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-fse",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-fse"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.374,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-fse.log",
+      "sha256": "4eb8cd82143da7dfd1446b0762df21e372c57476dc1377c3475810b42f0c8578",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-fse-encoder"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 46.251,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-fse-encoder.log",
+      "sha256": "ecddc9d41fa149763e08c3407392327a77e213bd560f37a683b6ce618ce65f62",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-fse-encoder"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.385,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-fse-encoder.log",
+      "sha256": "fda6e323e07e03afd6d0c2be33dda9bbe786914cd1d47f60bd42673df840c7c8",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-huffman",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-huffman"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 49.503,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-huffman.log",
+      "sha256": "8760f93bd2403ab8109bf0f33e5f48a69db2e302052334909cb959b2aa9d3b5b",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-huffman",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-huffman"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.447,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-huffman.log",
+      "sha256": "54582235113e6724caf6c870d015c383332b26c9381c3a564b3446e955bfeb8b",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-huffman-codebook"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 48.088,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-huffman-codebook.log",
+      "sha256": "73e5cc36c3557cf3a6f5041ae0c9ed4133e34bdb5add87e75ff03a45b3d73caa",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-huffman-codebook"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.375,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-huffman-codebook.log",
+      "sha256": "4eb8cd82143da7dfd1446b0762df21e372c57476dc1377c3475810b42f0c8578",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-match-table",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-match-table"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 49.115,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-match-table.log",
+      "sha256": "f95729cd3aaf3e09bb7bd180ac1baebca529b638e938c08d7c2e3e6c7a019353",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-match-table",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-match-table"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.38,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-match-table.log",
+      "sha256": "fda6e323e07e03afd6d0c2be33dda9bbe786914cd1d47f60bd42673df840c7c8",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-match-chain",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-match-chain"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 54.75,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-match-chain.log",
+      "sha256": "73843191fe55f5c861a955d4995c7850d6a15362be65bc63aff0ada557249781",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-match-chain",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-match-chain"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.428,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-match-chain.log",
+      "sha256": "dd8e77c347f741a0725950139a612a3088033d693909bbf49c2c4233e8a31695",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-dictionary",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-dictionary"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 55.407,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-dictionary.log",
+      "sha256": "ea667ee79e262f9b5ed6d5f712b1a56086ef3dec8a275818e28370918019a973",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-dictionary",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-dictionary"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.42,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-dictionary.log",
+      "sha256": "c2e5e5f8c52ca9121d25551cb64456f6b62ba4871132bd15483f160128ae537c",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-unsafe-training",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-training"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 55.253,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-unsafe-training.log",
+      "sha256": "6208b5e703075558ee7725dd68a309da5a6e5b4067a7a72ebbd2b220d290ab37",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-unsafe-training",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-training"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.391,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-unsafe-training.log",
+      "sha256": "79bb1dd91349c6a9d4799ef95fc7645f305123a6a0f2b9595a6746efb306eb1d",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 54.444,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-all.log",
+      "sha256": "d262daa39a867451f593f57572b2feb97c4a44e1de5fcb836ea8e9b50d32939a",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "tests-release-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 23.345,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/tests-release-all.log",
+      "sha256": "84049fafbb0d38355f12ae94129cd400777f6732c94f3dbc5bed9f82052b85f8",
+      "test_results": [
+        {
+          "passed": 449,
+          "failed": 0,
+          "ignored": 23,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 699,
+        "failed": 0,
+        "ignored": 50,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "no-std-all",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 0.425,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/no-std-all.log",
+      "sha256": "dd8e77c347f741a0725950139a612a3088033d693909bbf49c2c4233e8a31695",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "kind": "check",
+      "exit_code": 0,
+      "seconds": 2.156,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/clippy-all.log",
+      "sha256": "b0dda86db486deba28d0aa16dd5365b7c22fbbe26401f2240a277c9a424545d3",
+      "test_results": [],
+      "test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "usage-all",
+      "command": [
+        "python3",
+        "scripts/check_doc_examples.py",
+        "--all-features"
+      ],
+      "kind": "tests",
+      "exit_code": 0,
+      "seconds": 1.858,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/usage-all.log",
+      "sha256": "18bddcca6d14b54988d6736318cd377c7db9cd700576bedf93a08f9716ec8969",
+      "test_results": [
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      ],
+      "test_totals": {
+        "passed": 10,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-interop-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "interop",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 2.205,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-interop-safe.log",
+      "sha256": "c539e0cf238ad0d497d4b9968a65a41a125870add474e1c566dbad3891b7162e",
+      "test_results": [
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 5
+        }
+      ],
+      "test_totals": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 5
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-streaming-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "upstream_streaming",
+        "official_codec_accepts_streamed_frames_and_stream_decoder_accepts_official_frames",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 3.251,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-streaming-safe.log",
+      "sha256": "35dc71511d9c11b28ce8c179d2f1614d221a53c1e10020b54a2b4a2f2187d10c",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 40
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 40
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-dictionary-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "upstream_dictionary_encode",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 1.379,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-dictionary-safe.log",
+      "sha256": "376d51446b02b3d2739cea7d272ec7640ca6db84f517a281337fd2647b545182",
+      "test_results": [
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 24
+        }
+      ],
+      "test_totals": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 24
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-raw-training-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "upstream_training",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.786,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-raw-training-safe.log",
+      "sha256": "d910b3fa21a33884b922dc9a1f88f1fd0557a2d0942b9fdf964bbb514d74a16b",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 4
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 4
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-formatted-training-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "upstream_formatted_training",
+        "official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 1.163,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-formatted-training-safe.log",
+      "sha256": "58f067cbd4995556057bc5f0d54fd60e834ccb57b9de8e3705cdbafe6494f676",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 8
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 8
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-allocator-one-shot-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--lib",
+        "encode::tests::official_codec_decodes_allocator_one_shot_frames",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 8.42,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-allocator-one-shot-safe.log",
+      "sha256": "5b6cd87c9cc09ffd5f78db967a1ccbc66401826ba6317d60c0cb79e6153d9593",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 471
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 471
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-allocator-stream-encoder-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--lib",
+        "stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.158,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-allocator-stream-encoder-safe.log",
+      "sha256": "0b9659644a59c7e15b95eba75fee66ca6f7dc464068d1a856b8829318dc8d037",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 471
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 471
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-allocator-stream-decoder-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--lib",
+        "stream_decode::tests::official_frames_decode_through_custom_shared_and_borrowed_allocators",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.104,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-allocator-stream-decoder-safe.log",
+      "sha256": "7dff5265117d5b01edd8c22373900c3b64b165dfc8a06fa8a53de951cc97629d",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 471
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 471
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-interop-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "interop",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.67,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-interop-all.log",
+      "sha256": "e46ef8beb92a9bed9e2abe9585db9925197c3a9b8ce16f241d0ae0b7e0057caf",
+      "test_results": [
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 5
+        }
+      ],
+      "test_totals": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 5
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-streaming-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "upstream_streaming",
+        "official_codec_accepts_streamed_frames_and_stream_decoder_accepts_official_frames",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 1.285,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-streaming-all.log",
+      "sha256": "033781bbb9176ec4fd6cc6475140b71419f38d135ed50afe10c8d2a517d3db1d",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 40
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 40
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-dictionary-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "upstream_dictionary_encode",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.315,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-dictionary-all.log",
+      "sha256": "ada2e869e065e469e9bd2049c6f941e0f14ec24c3a2306cee743a3c176dcf4c5",
+      "test_results": [
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 24
+        }
+      ],
+      "test_totals": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 24
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-raw-training-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "upstream_training",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.217,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-raw-training-all.log",
+      "sha256": "740691cd8600892e8d6e7c69b40990148332a40a231f2c400ba57c9cbaea98cd",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 4
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 4
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-formatted-training-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "upstream_formatted_training",
+        "official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.319,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-formatted-training-all.log",
+      "sha256": "852ffd6528d2ff74560e0d8baea96e787d9750a11fbe71d3da938a2b4a16c87f",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 8
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 8
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-allocator-one-shot-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--lib",
+        "encode::tests::official_codec_decodes_allocator_one_shot_frames",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.164,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-allocator-one-shot-all.log",
+      "sha256": "a6f21392d9cae89a0ca259261520330e478ca48a796fe0d544cc8fc8049a6067",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 471
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 471
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-allocator-stream-encoder-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--lib",
+        "stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.129,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-allocator-stream-encoder-all.log",
+      "sha256": "bacc149a673a0d4689df88e23da2ebf906241dbb15058add989ff3756c1b2213",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 471
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 471
+      },
+      "source_changed": []
+    },
+    {
+      "name": "oracle-allocator-stream-decoder-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--lib",
+        "stream_decode::tests::official_frames_decode_through_custom_shared_and_borrowed_allocators",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "kind": "oracle",
+      "exit_code": 0,
+      "seconds": 0.084,
+      "log": "/tmp/zstdoxide-module9-final-8703ff4/oracle-allocator-stream-decoder-all.log",
+      "sha256": "57bddb877163cb5c3e51e9d9e0d116b9c3251916633136b19abe746824db01d2",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 471
+        }
+      ],
+      "test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 471
+      },
+      "source_changed": []
+    }
+  ],
+  "excluded_rechecks": [
+    "No new giant Miri run",
+    "No repeated 89,456,640-byte allocation campaign",
+    "No timed benchmarks",
+    "No claim that all upstream source units are ported"
+  ],
+  "all_task_processes_finished": true
+}
