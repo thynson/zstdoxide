@@ -364,3 +364,30 @@ complete-migration gate still reports 188 unfinished source units and partial
 external corpora. Case counts are 53 ported, 117 partial, 430 blocked and
 15 non-applicable. The complete Module 10 feature matrix is the remaining
 validation checkpoint.
+
+## Module 11: design and pre-change compatibility inputs
+
+While the immutable Module 10 matrix runs, the next module's ownership and
+resource design is recorded before implementation. It separates operational
+`MatchSearchOptions` from reference profiles and decomposes dynamic hash/chain
+storage, exact-width keys, actual parser effort, retained history, live context
+integration and verification. Initial limits account for all seven cached search
+vectors. Multi-owner growth preserves logical state on failure while allowing
+earlier capacity growth, and every allocation retains its exact allocator owner.
+An independent design review clarified both width-dependent Chain seed bounds;
+empty one-shot frames explicitly retain zero effective-history behavior.
+
+Default behavior was independently captured at `ba4529c` before any search
+implementation change. Twelve deterministic workloads cover multiple blocks,
+retention/window boundaries, raw seed thresholds, prepared dictionaries and
+short Flush crossings. Each backend produces 36 fresh, 36 reset-reused and four
+strategy-cycle frames. Safe/all output fingerprints and metadata agree; pinned C
+exactly decodes all 152 complete frames. The source snapshot remained unchanged.
+
+[Baseline evidence](evidence/2026-10-09-match-search-baseline.json) links a compact
+archive of original records, source recipes, reproduction programs and logs.
+The archive retains SHA-256 and FNV fingerprints without duplicating 20 MiB of
+encoded bytes. Future offline fingerprint comparisons remain distinct from the
+original complete C byte comparisons. Historical capacity observations include
+all codec and selected dictionary storage; a future search-only metric is not
+inferred from them. This checkpoint implements no new controls or algorithms.

@@ -43,6 +43,29 @@ after oracle capture; each completed item receives its own verified commit.
 - [x] Repair the allocator benchmark formatting found by the integrated matrix and verify the benchmark target before restarting the snapshot checks.
 - [ ] Run the complete safe/individual/all-feature, no_std, Clippy, formatting and oracle matrix; record precise completion and remaining gaps.
 
+## Module 11: configurable named match search
+
+Design: `docs/match-search-design.md` and `docs/data-structures.md`.
+Operational search settings remain separate from reference profile inspection.
+Existing default bytes, ownership and reset semantics are compatibility inputs.
+
+- [x] Record the approved API, ownership/resource formulas, width-aware seed boundaries and independent pre-change default baseline.
+- [ ] Add validated plain search options, key-layout/shape records and checked requested-storage calculations with target-layout tests.
+- [ ] Freeze attributed pinned-C hash vectors and reproduction/provenance checks before implementing the new hash primitives.
+- [ ] Add safe exact-width key extraction and unsalted four-through-eight-byte hashing, preserving current four-byte values and rejecting incomplete keys.
+- [ ] Make MatchTable dimensions and layout configurable, preserving exact owners and logical state on failure, checked seed copying and equivalent safe/unsafe access.
+- [ ] Make MatchChain heads/nodes configurable with compatible seed transfer, bounded tags/visits and allocator-failure/resize coverage in both backends.
+- [ ] Route selected key width and explicit Chain/Lazy effort through parser probes, preserving lookahead, insertion, tie and failure contracts.
+- [ ] Integrate frame-local storage shape with working tables and dictionary seeds, preserving default insertion order and transactional entropy publication.
+- [ ] Integrate selected output-history retention and width-aware dictionary/history/input crossings, including short Flush tails and checked virtual coordinates.
+- [ ] Expose meaningful Encoder search configuration and capacity reporting, with existing boundary/reset/allocator contracts and runnable documentation.
+- [ ] Add public default-compatibility and actual-control-effect tests, pinned-C decoding and representative complete allocation-failure campaigns.
+- [ ] Validate bounds, owners, feature combinations, no_std and target layouts; update relevant official coverage without claiming new reference strategies.
+- [ ] Benchmark identical deterministic default/tuned workloads across safe, individual unsafe and all-feature builds; record ratios, sample ranges, allocation and retained-capacity effects.
+
+Numeric profile execution, additional reference algorithms, long-distance matches,
+threading, static workspaces and the remaining official migration stay open.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

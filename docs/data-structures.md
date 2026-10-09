@@ -385,3 +385,48 @@ Future configurable hash/chain tables, persistent search coordinates, binary
 trees, optimal-parser predecessor arrays, long-distance buckets, stable borrowed
 sessions and worker queues require separate design checkpoints. This scalar
 foundation does not extend their current storage or ownership promises.
+
+## Module 11: configurable named match search
+
+The approved implementation plan is in `match-search-design.md`. It extends the
+existing Greedy, Chain and Lazy consumers; reference profile values remain
+separate inspection records. Default bucket/node sizes, key width, search effort,
+128 KiB retention and encoded bytes are compatibility inputs captured before
+implementation. New controls are exposed only after their consumers exist.
+
+| Structure / reference counterpart | Ownership and safe representation | Equivalent unsafe boundary and invariants |
+| --- | --- | --- |
+| `MatchSearchOptions`; supported role of `ZSTD_CCtx_params` | Private concrete scalar fields: hash/chain logs, key width, separate Chain/Lazy visit budgets, output history limit. Invalid setter input leaves the complete value unchanged. | Shared safe representation; no pointer/owned storage or artificial unsafe feature. Operational ranges differ from reference parameter bounds. |
+| `SearchKeyLayout`, `MatchKey`; `ZSTD_hash4/5/6/7/8` | Copied validated log/width descriptor and initialized little-endian key value carrying its width. Read exactly the selected initialized bytes; incomplete valid tails return None. Checked wrapping hash arithmetic is shared. | No unchecked input load. Key width and live layout must agree before a bucket is used; no zero-padding of missing logical input. |
+| `SearchShape`; storage roles of `ZSTD_MatchState_t` | Immutable scalar dimensions, effective history, effort and checked requested-payload arithmetic. Includes all cached families and actual `size_of`/alignment. | Shared safe values. Requested payload is distinct from retained capacity, allocator growth peak, dictionary ownership and total codec storage. |
+| `MatchTable<A>`; hash table role | One exact retained `Vec<usize,A>` owner, active initialized bucket count and key layout. Non-owning positions remain indices. Reconfiguration reserves before clearing/publishing logical state. | `unsafe-match-table` uses the same key compatibility and runtime index < initialized length guards as safe access. Valid allocation, alignment, initialization and exclusive borrow must be proved locally; capacity alone is insufficient. |
+| `MatchChain<A>`; hash/chain roles | Two independent exact vector owners for heads and tagged cyclic nodes. Positions stay u64; slots/tags, newest-first ordering and examined-link budget remain checked. A borrowed iterator excludes reshape/reset. | `unsafe-match-chain` retains runtime initialized-prefix checks and tag validation. Seed copy requires equal key layout/head shape and seed nodes <= working nodes before mutation. Multi-owner reserve failure preserves logical state but may grow earlier capacities. |
+| `BlockEncoder<A,D>` / `Encoder<A,D>`; context and dictionary match state | Seven potential cached search vectors across working/seed families and history. Attachments retain independent typed D ownership; no pointer into dictionary/input is stored by a table. A frame resolves options before allocation and rebuilds compatible seeds. | Existing family flags remain independently selected. Partial preparation failure follows process poison/reset semantics. Exact A owners stay paired with every allocation through grow/shrink/regrow; clones are not assumed interchangeable. |
+| `MatchSource` and `RingHistory<A>`; window/prefix roles | Temporary immutable dictionary/history/input view with checked usize virtual coordinates and separate u64 frame positions. Ring retention is min(request, wire window), at most 1 MiB; default remains 128 KiB. | Existing dictionary/ring flags and lifetime checks apply. Width-aware dictionary/history crossings require complete keys. Ring commits only after successful block publication; source and dictionary distance eligibility remain distinct. |
+
+Public initial limits are hash log 10..18, chain log 10..19, key widths 4..8,
+Chain/Lazy per-probe visits 1..64, and history 1 byte..1 MiB. Greedy still probes
+one candidate. All seven cached search vectors request at most 31 MiB on the
+current 64-bit Link/Node layout, within the additional 32 MiB logical admission
+ceiling. Use actual layout calculations on each target. Allocator over-allocation,
+transient growth, other codec scratch and dictionary payload are not covered by
+that requested-size ceiling. Empty one-shot frames can resolve zero effective
+history without reserving a ring.
+
+Chain dictionary seeding with content length D, key width W and seed nodes S
+uses D.saturating_sub(S + W - 1)..=D - W when D >= W. Both bounds are width-aware;
+there are exactly min(S, D - W + 1) starts. Greedy keeps its existing separate
+bounded dictionary-distance suffix, including its documented potentially large
+preparation cost. Dictionary-to-frame keys require retained frame byte zero.
+Ordinary output matches obey the wire window; a smaller retention setting does
+not cap matches within the current input block or change dictionary rules.
+
+Configuration replacement remains allocation-free at the fresh pre-header
+boundary. Session/frame-option resets preserve search settings; parameter/full
+resets restore both option records and clear seeds/attachments without replacing
+owners. Deferred preparation can fail and poison processing, and resetting must
+recover it. Tests must exercise real storage/search effects, malformed/mismatched
+keys, every representative allocation failure, default byte fingerprints and
+pinned C decoding. Compare safe and unsafe implementations on identical default
+and tuned deterministic workloads, reporting memory and search-cost differences
+separately from accessor timings.

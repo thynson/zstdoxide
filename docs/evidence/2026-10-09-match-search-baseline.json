@@ -1,0 +1,39 @@
+{
+  "purpose": "Pre-change default compatibility inputs for Module 11; no configurable search implementation yet.",
+  "codec_revision": "ba4529c9e44eee2218209bb660038e42848d11e8",
+  "reference_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "summary": {
+    "workloads": 12,
+    "strategies": [
+      "Greedy",
+      "Chain",
+      "Lazy"
+    ],
+    "frames_per_backend": 76,
+    "fresh_frames_per_backend": 36,
+    "session_reset_frames_per_backend": 36,
+    "strategy_cycle_frames_per_backend": 4,
+    "backends": [
+      "safe",
+      "all12"
+    ],
+    "native_c_exact_decodes": 152,
+    "all_backend_metadata_and_output_fingerprints_identical": true,
+    "reset_reuse_output_fingerprints_identical": true,
+    "case_input_bytes_once": 3408539,
+    "unique_dictionary_serialized_bytes": 198817
+  },
+  "capture_evidence_sha256": "7c54fa58a31f4a28b21422c660e62ee2577cc33f20a7176de13f624ae3521274",
+  "package_manifest_sha256": "7ae84bca7e2f06d25fa5a0c16da734b39b15ac081aaabe613b2f048c2e4f65ac",
+  "expected_tsv_sha256": "c12ee881fd1333e29302a8f8f4b2f475cdf714785587bdd3b72b6510f629a25d",
+  "archive": {
+    "path": "docs/evidence/2026-10-09-match-search-baseline.tar.gz",
+    "sha256": "bc8ad73fd3ea95877dc74d8fe75b7617985656d8350e5d70eff4b2c46678ca6d"
+  },
+  "limits": [
+    "All 152 original C decodes compared complete bytes; future offline length/FNV checks are regression fingerprints, not a mathematical byte-identity proof.",
+    "Capacity observations include selected dictionary storage and all codec payload on the recorded host; the future narrow search metric was not recorded.",
+    "The archive preserves expected records, recipes, complete provenance and reproduction sources; duplicate 20,707,536-byte encoded output data stays external.",
+    "No throughput measurement or numeric compression execution claim."
+  ]
+}
