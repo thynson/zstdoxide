@@ -586,3 +586,31 @@ remains explicitly tied to its original adapters. The bounded module's planned
 numeric/independent-frame assertions are now covered by the separate checked
 commits above. Final feature/platform validation and Fast measurements remain
 required before the module is recorded complete.
+
+
+## Focused final platform boundaries
+
+The production snapshot at `cc09cc9` passes 24 strict-provenance Miri test
+executions: three existing parser tests and three temporary public API tests,
+with safe/all-feature builds on i686 and big-endian s390x. Parser cases cover
+short cleanup, overlap, invalid ranges/scalars and both output-reservation
+failures; public cases cover exact empty output, borrowed non-Clone owners and
+rejection before cloning/allocation. The temporary harness is retained in the
+archive and is not counted as a permanent repository test target. Its three
+tests also passed a native host smoke run.
+
+Four thumbv6m checks pass: safe/all `no_std` library compilation and safe/all
+caller rlib code generation using both allocator-aware entry points. An Rc
+type assertion covers the existing dictionary fallback on a target without
+pointer atomics. These are compile-only checks, not firmware execution, hardware
+memory-fit results or a new Fast dictionary capability.
+
+All 19 recorded commands succeed and the current production/dependency files
+match the frozen snapshot. Cached interpreted sysroots, explicit environment,
+selected test names and logs are hashed. The temporary harness emits the dated
+nightly compiler's partial-stabilization warning for its unnecessary
+`allocator_api` attribute; this does not establish stable Rust 1.100 support.
+The coordinator checked all 29 catalogued archive members and both external
+record/report copies. See [platform evidence](evidence/2026-10-09-fast-platform.json),
+[scope report](evidence/2026-10-09-fast-platform-report.md) and
+[reproduction archive](evidence/2026-10-09-fast-platform.tar.gz).

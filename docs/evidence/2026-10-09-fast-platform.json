@@ -1,0 +1,1584 @@
+{
+  "schema_version": 1,
+  "revision": "cc09cc90a7f4c1cd38b10aeb0371671abb6f0ed1",
+  "snapshot": "/tmp/zstdoxide-module12-platform/snapshot",
+  "source_manifest_sha256": "4d6e8502b912496e661d0c1433f1166a73f8f760f8f9579a3418c8c0d32ee9d9",
+  "runner_sha256": "51f833542380a8529b8f5d2ab9214458b77e91fa65d17294db23d9d747e80ca8",
+  "selected_repository_tests": [
+    "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+    "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+    "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners"
+  ],
+  "selected_temporary_tests": [
+    "public_empty_owned_output_and_failure_have_exact_owners",
+    "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+    "public_unsupported_rejection_precedes_clone_and_allocation"
+  ],
+  "temporary_harness": {
+    "public": "//! Temporary bounded Module 12 portability harness; not a repository test.\n#![feature(allocator_api)]\n#![forbid(unsafe_code)]\nuse std::num::NonZeroU64;\nuse zstdoxide::{\n    CompressionParameterRequest as Request, Error, FrameHeader, ReferenceStrategy,\n    compress_at_level_in, compress_with_parameters_in, decompress,\n};\nuse zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};\nfn owner(fail_at: Option<u64>) -> TrackingAllocator {\n    TrackingAllocator::new(AllocatorConfig {\n        max_live_allocations: 64,\n        fail_at: fail_at.map(|n| NonZeroU64::new(n).unwrap()),\n    })\n    .unwrap()\n}\n#[test]\nfn public_empty_owned_output_and_failure_have_exact_owners() {\n    for by_request in [false, true] {\n        let request = Request::with_level(-1);\n        let allocator = owner(None);\n        let identity = allocator.identity();\n        let monitor = allocator.monitor();\n        let frame = if by_request {\n            compress_with_parameters_in(&[], &request, allocator)\n        } else {\n            compress_at_level_in(&[], -1, allocator)\n        }\n        .unwrap();\n        assert_eq!(frame.as_slice(), [0x28, 0xb5, 0x2f, 0xfd, 0x20, 0, 1, 0, 0]);\n        assert_eq!(frame.allocator().identity(), identity);\n        assert_eq!(monitor.snapshot().attempts, 1);\n        assert_eq!(monitor.snapshot().identities_created, 1);\n        assert_eq!(monitor.snapshot().live_blocks, 1);\n        assert_eq!(decompress(&frame, 0).unwrap(), []);\n        drop(frame);\n        monitor.assert_released();\n        assert_eq!(monitor.snapshot().owners_dropped, 1);\n        let allocator = owner(Some(1));\n        let monitor = allocator.monitor();\n        let failure = if by_request {\n            compress_with_parameters_in(&[], &request, allocator)\n        } else {\n            compress_at_level_in(&[], -1, allocator)\n        }\n        .err();\n        assert_eq!(failure, Some(Error::AllocationFailed));\n        assert_eq!(monitor.snapshot().attempts, 1);\n        assert_eq!(monitor.snapshot().failures, 1);\n        assert_eq!(monitor.snapshot().identities_created, 1);\n        assert_eq!(monitor.snapshot().owners_dropped, 1);\n        monitor.assert_released();\n    }\n}\n#[test]\nfn public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points() {\n    for input in [\n        b\"sixsix\".as_slice(),\n        b\"abcdefg\",\n        b\"aaaaaaaaaaaaaaaa\",\n        b\"abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd\",\n    ] {\n        let allocator = owner(None).into_non_clone();\n        let monitor = allocator.monitor();\n        let request = Request::with_level(-1);\n        let before = request;\n        let simple = compress_at_level_in(input, -1, &allocator).unwrap();\n        let explicit = compress_with_parameters_in(input, &request, &allocator).unwrap();\n        assert_eq!(simple, explicit);\n        assert_eq!(request, before);\n        assert!(std::ptr::eq(*simple.allocator(), &allocator));\n        assert!(std::ptr::eq(*explicit.allocator(), &allocator));\n        assert_eq!(monitor.snapshot().identities_created, 1);\n        assert_eq!(monitor.snapshot().live_blocks, 2);\n        for frame in [&simple, &explicit] {\n            let (header, _) = FrameHeader::parse(frame).unwrap();\n            assert_eq!(header.content_size, Some(input.len() as u64));\n            assert_eq!(header.window_size, input.len() as u64);\n            assert_eq!(header.dictionary_id, 0);\n            assert!(!header.has_checksum);\n            assert_eq!(decompress(frame, input.len()).unwrap(), input);\n        }\n        drop((simple, explicit));\n        monitor.assert_released();\n        assert_eq!(monitor.snapshot().owners_dropped, 0);\n        drop(allocator);\n        assert_eq!(monitor.snapshot().owners_dropped, 1);\n    }\n}\n#[test]\nfn public_unsupported_rejection_precedes_clone_and_allocation() {\n    let mut advanced = Request::with_level(-1);\n    advanced.set_strategy(Some(ReferenceStrategy::DoubleFast));\n    for input in [b\"\".as_slice(), b\"small input\"] {\n        for request in [Request::new(), advanced] {\n            let allocator = owner(Some(1));\n            let monitor = allocator.monitor();\n            let before = monitor.snapshot();\n            let original = request;\n            assert_eq!(\n                compress_with_parameters_in(input, &request, allocator).err(),\n                Some(Error::UnsupportedFeature)\n            );\n            let after = monitor.snapshot();\n            assert_eq!(after.attempts, before.attempts);\n            assert_eq!(after.identities_created, before.identities_created);\n            assert_eq!(after.failures, 0);\n            assert_eq!(after.owners_dropped, 1);\n            assert_eq!(request, original);\n            monitor.assert_released();\n        }\n        let allocator = owner(Some(1));\n        let monitor = allocator.monitor();\n        assert_eq!(\n            compress_at_level_in(input, 0, allocator).err(),\n            Some(Error::UnsupportedFeature)\n        );\n        assert_eq!(monitor.snapshot().attempts, 0);\n        assert_eq!(monitor.snapshot().identities_created, 1);\n        assert_eq!(monitor.snapshot().owners_dropped, 1);\n        monitor.assert_released();\n    }\n}\n",
+    "public_sha256": "2d2d3157baf82b9b05dd75b5bb460944514898e247162f8257b3a6de6cfb1d62",
+    "thumb": "//! Compile/codegen-only caller for the nightly allocator API on thumbv6m.\n#![no_std]\n#![feature(allocator_api)]\n#![forbid(unsafe_code)]\nextern crate alloc;\nuse alloc::{alloc::Global, rc::Rc, vec::Vec};\nuse core::alloc::Allocator;\nuse zstdoxide::{\n    CompressionParameterRequest, Dictionary, Result, SharedDictionary, compress_at_level_in,\n    compress_with_parameters_in,\n};\n#[cfg(target_has_atomic = \"ptr\")]\ncompile_error!(\"This probe requires the no-pointer-atomics target.\");\n// Existing dictionary fallback is checked separately from the new Fast APIs.\npub fn shared_is_rc<A: Allocator>(dictionary: SharedDictionary<A>) -> Rc<Dictionary<A>> {\n    dictionary\n}\n// The outer public function concretely specializes both generic codec calls;\n// the allocator value is borrowed and need not itself implement Clone.\npub fn borrowed<'a>(input: &[u8], allocator: &'a Global) -> Result<Vec<u8, &'a Global>> {\n    let first = compress_at_level_in(input, -1, allocator)?;\n    let request = CompressionParameterRequest::with_level(-1);\n    let second = compress_with_parameters_in(input, &request, allocator)?;\n    drop(first);\n    Ok(second)\n}\n",
+    "thumb_sha256": "6e229d87bdc3e0fd4517dc8f26af0fcca8989e42b0dc483d2512e662205911c6"
+  },
+  "features": [
+    "unsafe-byte-cursor",
+    "unsafe-bitstream",
+    "unsafe-history",
+    "unsafe-ring-history",
+    "unsafe-fse",
+    "unsafe-fse-encoder",
+    "unsafe-huffman",
+    "unsafe-huffman-codebook",
+    "unsafe-match-table",
+    "unsafe-match-chain",
+    "unsafe-dictionary",
+    "unsafe-training"
+  ],
+  "qualification": "i686 and s390x execute under strict-provenance Miri interpretation, not native/QEMU. Thumbv6m performs no_std library compilation and caller rlib code generation only, not runtime, linking firmware, hardware memory-fit or stable Allocator API support. Three public test functions exist only in this temporary snapshot. The Rc alias check exercises the existing no-pointer-atomics dictionary fallback, separately from Fast.",
+  "commands": [
+    {
+      "name": "compiler",
+      "argv": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "-vV"
+      ],
+      "command": "rustc +nightly-2026-10-08 -vV",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/compiler.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.13084983406588435,
+      "log_sha256": "a4bb13dccabda9ebf5294b8144f22400733afc06744ab8062bcf43b7254e0c03",
+      "log_bytes": 210,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "miri-version",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "--version"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri --version",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-version.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.07736570807173848,
+      "log_sha256": "8d87ac0bffd5900b9c516d37c46a1ece5f779b7278561963622909709e57d2c0",
+      "log_bytes": 35,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "cfg-i686-unknown-linux-gnu",
+      "argv": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "--print",
+        "cfg",
+        "--target",
+        "i686-unknown-linux-gnu"
+      ],
+      "command": "rustc +nightly-2026-10-08 --print cfg --target i686-unknown-linux-gnu",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/cfg-i686-unknown-linux-gnu.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.04076204216107726,
+      "log_sha256": "78e5dfe79a40829b69be3b0e0f1fcdd29a6ca5aa998877d7bc0d070644707e0b",
+      "log_bytes": 998,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "cfg-s390x-unknown-linux-gnu",
+      "argv": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "--print",
+        "cfg",
+        "--target",
+        "s390x-unknown-linux-gnu"
+      ],
+      "command": "rustc +nightly-2026-10-08 --print cfg --target s390x-unknown-linux-gnu",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/cfg-s390x-unknown-linux-gnu.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.04067795886658132,
+      "log_sha256": "2064e81ead58ea894cfbf643cc3e5cf767e9f16ac953d2b8a325bfb7e85094fe",
+      "log_bytes": 1043,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "cfg-thumbv6m-none-eabi",
+      "argv": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "--print",
+        "cfg",
+        "--target",
+        "thumbv6m-none-eabi"
+      ],
+      "command": "rustc +nightly-2026-10-08 --print cfg --target thumbv6m-none-eabi",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/cfg-thumbv6m-none-eabi.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.03995508304797113,
+      "log_sha256": "9fa0bdd5bcb5493f15176d348fb82a1514d7a830c6773343150c1af3b86b39b6",
+      "log_bytes": 816,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "native-temporary-harness-smoke",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "module12_platform_temporary",
+        "--",
+        "--exact",
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test module12_platform_temporary -- --exact public_empty_owned_output_and_failure_have_exact_owners public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points public_unsupported_rejection_precedes_clone_and_allocation --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-native-target"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/native-temporary-harness-smoke.log",
+      "expected_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "exit_code": 0,
+      "seconds": 1.8477732080500573,
+      "log_sha256": "ebcefba2770e952c604dab602c2fec1b7a22e74c9bec4169721af3cfe363d780",
+      "log_bytes": 1435,
+      "source_unchanged": true,
+      "actual_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "miri-i686-safe-parser",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "i686-unknown-linux-gnu",
+        "--lib",
+        "--",
+        "--exact",
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --target i686-unknown-linux-gnu --lib -- --exact fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-miri-i686"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-i686-safe-parser.log",
+      "expected_tests": [
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners"
+      ],
+      "exit_code": 0,
+      "seconds": 5.644059041049331,
+      "log_sha256": "18fdbbb94bc3c4ca3f48b8c09c8be0835dc81eaf2e727935695ce8fe05d0869f",
+      "log_bytes": 869,
+      "source_unchanged": true,
+      "actual_tests": [
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners",
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "miri-i686-safe-public",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "i686-unknown-linux-gnu",
+        "--test",
+        "module12_platform_temporary",
+        "--",
+        "--exact",
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --target i686-unknown-linux-gnu --test module12_platform_temporary -- --exact public_empty_owned_output_and_failure_have_exact_owners public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points public_unsupported_rejection_precedes_clone_and_allocation --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-miri-i686"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-i686-safe-public.log",
+      "expected_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "exit_code": 0,
+      "seconds": 12.02364316699095,
+      "log_sha256": "b9c6ef5834cb511a06b164bd2ea58c34c4bea4fcd7a5fe02dd8706f82c5ca0e6",
+      "log_bytes": 1290,
+      "source_unchanged": true,
+      "actual_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "miri-i686-all-parser",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "i686-unknown-linux-gnu",
+        "--lib",
+        "--all-features",
+        "--",
+        "--exact",
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --target i686-unknown-linux-gnu --lib --all-features -- --exact fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-miri-i686"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-i686-all-parser.log",
+      "expected_tests": [
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners"
+      ],
+      "exit_code": 0,
+      "seconds": 5.559364707907662,
+      "log_sha256": "00c47d9e7ef0305e1adee6243c5187ed59dbbea5e14c94528e1515d3934e9752",
+      "log_bytes": 749,
+      "source_unchanged": true,
+      "actual_tests": [
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners",
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "miri-i686-all-public",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "i686-unknown-linux-gnu",
+        "--test",
+        "module12_platform_temporary",
+        "--all-features",
+        "--",
+        "--exact",
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --target i686-unknown-linux-gnu --test module12_platform_temporary --all-features -- --exact public_empty_owned_output_and_failure_have_exact_owners public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points public_unsupported_rejection_precedes_clone_and_allocation --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-miri-i686"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-i686-all-public.log",
+      "expected_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "exit_code": 0,
+      "seconds": 13.04220216604881,
+      "log_sha256": "6ab98f256ca2ed9c5e5a9dc0c282880059d458074a8126a8e426f8d5dfa15ba7",
+      "log_bytes": 1290,
+      "source_unchanged": true,
+      "actual_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "miri-s390x-safe-parser",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "s390x-unknown-linux-gnu",
+        "--lib",
+        "--",
+        "--exact",
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --target s390x-unknown-linux-gnu --lib -- --exact fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-miri-s390x"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-s390x-safe-parser.log",
+      "expected_tests": [
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners"
+      ],
+      "exit_code": 0,
+      "seconds": 5.810592541936785,
+      "log_sha256": "3364e7e2ecdc5119f48b61dd4ee02a0b609d69afbe795dd08a4bb26b5477e65e",
+      "log_bytes": 871,
+      "source_unchanged": true,
+      "actual_tests": [
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners",
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "miri-s390x-safe-public",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "s390x-unknown-linux-gnu",
+        "--test",
+        "module12_platform_temporary",
+        "--",
+        "--exact",
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --target s390x-unknown-linux-gnu --test module12_platform_temporary -- --exact public_empty_owned_output_and_failure_have_exact_owners public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points public_unsupported_rejection_precedes_clone_and_allocation --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-miri-s390x"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-s390x-safe-public.log",
+      "expected_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "exit_code": 0,
+      "seconds": 12.2756776669994,
+      "log_sha256": "70305927c4a9a8a60968eb70cc448dc0d892a7a95eef8e7b2cb02bf727a91556",
+      "log_bytes": 1292,
+      "source_unchanged": true,
+      "actual_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "miri-s390x-all-parser",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "s390x-unknown-linux-gnu",
+        "--lib",
+        "--all-features",
+        "--",
+        "--exact",
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --target s390x-unknown-linux-gnu --lib --all-features -- --exact fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-miri-s390x"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-s390x-all-parser.log",
+      "expected_tests": [
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access",
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners"
+      ],
+      "exit_code": 0,
+      "seconds": 5.531462584156543,
+      "log_sha256": "b28f28a18b55f6194fd4e672f777ab1806ed6662b1e10026afe45a71c5c023a2",
+      "log_bytes": 751,
+      "source_unchanged": true,
+      "actual_tests": [
+        "fast_parse::tests::both_output_reservation_failures_preserve_contents_then_retry_with_exact_owners",
+        "fast_parse::tests::overlapping_repeats_and_seven_byte_cleanup_preserve_wire_state",
+        "fast_parse::tests::range_shape_and_scalar_extremes_are_checked_without_source_access"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "miri-s390x-all-public",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "s390x-unknown-linux-gnu",
+        "--test",
+        "module12_platform_temporary",
+        "--all-features",
+        "--",
+        "--exact",
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation",
+        "--test-threads=1"
+      ],
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --target s390x-unknown-linux-gnu --test module12_platform_temporary --all-features -- --exact public_empty_owned_output_and_failure_have_exact_owners public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points public_unsupported_rejection_precedes_clone_and_allocation --test-threads=1",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-miri-s390x"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/miri-s390x-all-public.log",
+      "expected_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "exit_code": 0,
+      "seconds": 11.906966416165233,
+      "log_sha256": "44dfa8668c23ab860ec2ecf479509e171541b1185f2a20d596c2a18d2d742b77",
+      "log_bytes": 1292,
+      "source_unchanged": true,
+      "actual_tests": [
+        "public_empty_owned_output_and_failure_have_exact_owners",
+        "public_tiny_borrowed_nonclone_owners_roundtrip_both_entry_points",
+        "public_unsupported_rejection_precedes_clone_and_allocation"
+      ],
+      "summaries": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "count_and_names_valid": true,
+      "passed": true
+    },
+    {
+      "name": "thumb-lock",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "generate-lockfile",
+        "--offline"
+      ],
+      "command": "cargo +nightly-2026-10-08 generate-lockfile --offline",
+      "cwd": "/tmp/zstdoxide-module12-platform/thumb-caller",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-thumb-target"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/thumb-lock.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.07503429218195379,
+      "log_sha256": "d659ba5ddc5ab23241a07a6ae5c5e894ab3071aa5bb3a39e9195f7b14b502622",
+      "log_bytes": 74,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "thumb-library-safe",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--offline",
+        "--locked",
+        "-Z",
+        "build-std=core,alloc",
+        "--target",
+        "thumbv6m-none-eabi",
+        "--no-default-features",
+        "--lib"
+      ],
+      "command": "cargo +nightly-2026-10-08 check --offline --locked -Z build-std=core,alloc --target thumbv6m-none-eabi --no-default-features --lib",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-thumb-target"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/thumb-library-safe.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 5.69838016689755,
+      "log_sha256": "fad203ca87c2e1b84e889536da8a38ae5b9d2a0ff0d3d4ae2e76703a643fa485",
+      "log_bytes": 616,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "thumb-library-all",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--offline",
+        "--locked",
+        "-Z",
+        "build-std=core,alloc",
+        "--target",
+        "thumbv6m-none-eabi",
+        "--no-default-features",
+        "--lib",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "command": "cargo +nightly-2026-10-08 check --offline --locked -Z build-std=core,alloc --target thumbv6m-none-eabi --no-default-features --lib --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+      "cwd": "/tmp/zstdoxide-module12-platform/snapshot",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-thumb-target"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/thumb-library-all.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.5566798751242459,
+      "log_sha256": "bf268d19a5deaad1681e71b01f0e1bb4af6487858cfb7b3a933e01c24eb50d41",
+      "log_bytes": 154,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "thumb-caller-safe",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "build",
+        "--offline",
+        "--locked",
+        "-Z",
+        "build-std=core,alloc",
+        "--target",
+        "thumbv6m-none-eabi",
+        "--lib"
+      ],
+      "command": "cargo +nightly-2026-10-08 build --offline --locked -Z build-std=core,alloc --target thumbv6m-none-eabi --lib",
+      "cwd": "/tmp/zstdoxide-module12-platform/thumb-caller",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-thumb-target"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/thumb-caller-safe.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.9288810831494629,
+      "log_sha256": "52d882e4a0a89512f242cd610a5e97017e94919b79c45e091f63a44d583d8a48",
+      "log_bytes": 863,
+      "source_unchanged": true,
+      "passed": true
+    },
+    {
+      "name": "thumb-caller-all",
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "build",
+        "--offline",
+        "--locked",
+        "-Z",
+        "build-std=core,alloc",
+        "--target",
+        "thumbv6m-none-eabi",
+        "--lib",
+        "--features",
+        "zstdoxide/unsafe-byte-cursor,zstdoxide/unsafe-bitstream,zstdoxide/unsafe-history,zstdoxide/unsafe-ring-history,zstdoxide/unsafe-fse,zstdoxide/unsafe-fse-encoder,zstdoxide/unsafe-huffman,zstdoxide/unsafe-huffman-codebook,zstdoxide/unsafe-match-table,zstdoxide/unsafe-match-chain,zstdoxide/unsafe-dictionary,zstdoxide/unsafe-training"
+      ],
+      "command": "cargo +nightly-2026-10-08 build --offline --locked -Z build-std=core,alloc --target thumbv6m-none-eabi --lib --features zstdoxide/unsafe-byte-cursor,zstdoxide/unsafe-bitstream,zstdoxide/unsafe-history,zstdoxide/unsafe-ring-history,zstdoxide/unsafe-fse,zstdoxide/unsafe-fse-encoder,zstdoxide/unsafe-huffman,zstdoxide/unsafe-huffman-codebook,zstdoxide/unsafe-match-table,zstdoxide/unsafe-match-chain,zstdoxide/unsafe-dictionary,zstdoxide/unsafe-training",
+      "cwd": "/tmp/zstdoxide-module12-platform/thumb-caller",
+      "environment": {
+        "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+        "CARGO_TERM_COLOR": "never",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module12-platform-thumb-target"
+      },
+      "log": "/tmp/zstdoxide-module12-platform/thumb-caller-all.log",
+      "expected_tests": null,
+      "exit_code": 0,
+      "seconds": 0.9898283749353141,
+      "log_sha256": "cba9966fe0f6d58d26a654ac68b6e5104b7a50cd8b35f2685efce411e9139965",
+      "log_bytes": 863,
+      "source_unchanged": true,
+      "passed": true
+    }
+  ],
+  "status": "passed",
+  "started": "2026-10-09T09:44:41.684788+00:00",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "miri_version": "miri 0.1.0 (1d81eb4ad9 2026-10-07)\n",
+  "target_cfg": {
+    "i686-unknown-linux-gnu": "debug_assertions\nfmt_debug=\"full\"\noverflow_checks\npanic=\"unwind\"\nrelocation_model=\"pic\"\ntarget_abi=\"\"\ntarget_arch=\"x86\"\ntarget_endian=\"little\"\ntarget_env=\"gnu\"\ntarget_family=\"unix\"\ntarget_feature=\"fxsr\"\ntarget_feature=\"sse\"\ntarget_feature=\"sse2\"\ntarget_feature=\"x87\"\ntarget_has_atomic\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_has_atomic_load_store\ntarget_has_atomic_load_store=\"16\"\ntarget_has_atomic_load_store=\"32\"\ntarget_has_atomic_load_store=\"64\"\ntarget_has_atomic_load_store=\"8\"\ntarget_has_atomic_load_store=\"ptr\"\ntarget_has_atomic_primitive_alignment=\"16\"\ntarget_has_atomic_primitive_alignment=\"32\"\ntarget_has_atomic_primitive_alignment=\"8\"\ntarget_has_atomic_primitive_alignment=\"ptr\"\ntarget_has_reliable_f128\ntarget_has_reliable_f16\ntarget_has_reliable_f16_math\ntarget_has_threads\ntarget_object_format=\"elf\"\ntarget_os=\"linux\"\ntarget_pointer_width=\"32\"\ntarget_thread_local\ntarget_vendor=\"unknown\"\nub_checks\nunix\n",
+    "s390x-unknown-linux-gnu": "debug_assertions\nfmt_debug=\"full\"\noverflow_checks\npanic=\"unwind\"\nrelocation_model=\"pic\"\ntarget_abi=\"\"\ntarget_arch=\"s390x\"\ntarget_endian=\"big\"\ntarget_env=\"gnu\"\ntarget_family=\"unix\"\ntarget_has_atomic\ntarget_has_atomic=\"128\"\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_has_atomic_load_store\ntarget_has_atomic_load_store=\"128\"\ntarget_has_atomic_load_store=\"16\"\ntarget_has_atomic_load_store=\"32\"\ntarget_has_atomic_load_store=\"64\"\ntarget_has_atomic_load_store=\"8\"\ntarget_has_atomic_load_store=\"ptr\"\ntarget_has_atomic_primitive_alignment=\"16\"\ntarget_has_atomic_primitive_alignment=\"32\"\ntarget_has_atomic_primitive_alignment=\"64\"\ntarget_has_atomic_primitive_alignment=\"8\"\ntarget_has_atomic_primitive_alignment=\"ptr\"\ntarget_has_reliable_f128\ntarget_has_reliable_f128_math\ntarget_has_reliable_f16\ntarget_has_reliable_f16_math\ntarget_has_threads\ntarget_object_format=\"elf\"\ntarget_os=\"linux\"\ntarget_pointer_width=\"64\"\ntarget_thread_local\ntarget_vendor=\"unknown\"\nub_checks\nunix\n",
+    "thumbv6m-none-eabi": "debug_assertions\nfmt_debug=\"full\"\noverflow_checks\npanic=\"abort\"\nrelocation_model=\"static\"\ntarget_abi=\"eabi\"\ntarget_arch=\"arm\"\ntarget_endian=\"little\"\ntarget_env=\"\"\ntarget_feature=\"mclass\"\ntarget_feature=\"thumb-mode\"\ntarget_feature=\"v5te\"\ntarget_feature=\"v6\"\ntarget_feature=\"v6m\"\ntarget_has_atomic_load_store\ntarget_has_atomic_load_store=\"16\"\ntarget_has_atomic_load_store=\"32\"\ntarget_has_atomic_load_store=\"8\"\ntarget_has_atomic_load_store=\"ptr\"\ntarget_has_atomic_primitive_alignment=\"16\"\ntarget_has_atomic_primitive_alignment=\"32\"\ntarget_has_atomic_primitive_alignment=\"8\"\ntarget_has_atomic_primitive_alignment=\"ptr\"\ntarget_has_reliable_f128\ntarget_has_reliable_f16\ntarget_has_reliable_f16_math\ntarget_has_threads\ntarget_object_format=\"elf\"\ntarget_os=\"none\"\ntarget_pointer_width=\"32\"\ntarget_vendor=\"unknown\"\nub_checks\n"
+  },
+  "cached_sysroots": {
+    "i686": {
+      "path": "/tmp/zstdoxide-platform-sysroot-i686",
+      "files": {
+        "lib/rustlib/i686-unknown-linux-gnu/.rustc-build-sysroot-hash": {
+          "bytes": 19,
+          "sha256": "fb5bf487fd265dff181b6b341d1036f9815a6a9f8d3ec8e63b92a73496316e95"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/addr2line-5167291e4d59e150.d": {
+          "bytes": 2890,
+          "sha256": "a196235b1ebda038577596cfb5f8d2dec355affb5f5fbcda121b4fc334391d1e"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/adler2-fe3c6ba837540755.d": {
+          "bytes": 1288,
+          "sha256": "41376225489b1ba98a02d7d5f223cd18eb6b6277b98353dd5a431cfcc132e680"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/alloc-d62d2f987835fb33.d": {
+          "bytes": 47526,
+          "sha256": "58a809f8c120ebddcea9a606962e0e6e9e28d2decdb636fa8237377b7a634047"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/cfg_if-5d4e3f45aaf019f6.d": {
+          "bytes": 923,
+          "sha256": "fc5730c94bfd13ad7d75377830e99086c066c5cfb9cdfaa01c51c79db8b15506"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/compiler_builtins-c25358fdbd34c07f.d": {
+          "bytes": 129157,
+          "sha256": "39dd10e3a25feaac290bc6c5a5b793e184f72800c71ef3e4ec4c0406a99b3f05"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/core-5b562bdbb830e554.d": {
+          "bytes": 221941,
+          "sha256": "fb1a700450730fb715eeb92ece92e403b04e18411afd01f461430b40af977ad5"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/custom_local_sysroot-033af9bb280bc7c8.d": {
+          "bytes": 675,
+          "sha256": "977228d62d02ff173f3204c970568e866b0564626b1a73ac6c76ad59d2fb128b"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/getopts-5e94c18b9ec431f4.d": {
+          "bytes": 937,
+          "sha256": "52c782d790e9b50a288aa1de18ca353702e95fc01d91cd695efd381792adfd86"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/gimli-76a04d941dc4a555.d": {
+          "bytes": 12984,
+          "sha256": "f60f4db8d7584c846019bf8e7edf5258370a0f53b07487ce59484ecac23dc89d"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/hashbrown-8c28fe82d7b2021b.d": {
+          "bytes": 7417,
+          "sha256": "c36c877e6cbb0c52b7ea1420051e2e1ca5d059f7649d5a3b12e9dfa54e71230a"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libaddr2line-5167291e4d59e150.rlib": {
+          "bytes": 964,
+          "sha256": "8c8a3ce1461b838f688f1651832b99c06e40ad0c983ab7b49602a5b95064dc26"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libaddr2line-5167291e4d59e150.rmeta": {
+          "bytes": 405572,
+          "sha256": "c1178d8186950c55d2208cc2c5b72084758fce069b9e902e571162d71b534840"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libadler2-fe3c6ba837540755.rlib": {
+          "bytes": 960,
+          "sha256": "8e91fe52256ea1b7465da5dccc1e713c8205ea8429e1c79d968387c9a5d85b9e"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libadler2-fe3c6ba837540755.rmeta": {
+          "bytes": 36967,
+          "sha256": "259aa273c625e42c5a4221a2108e65954134b541a441b5b3b17ef614607ce489"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/liballoc-d62d2f987835fb33.rlib": {
+          "bytes": 956,
+          "sha256": "bd75b7d0b1f11a7ddf0af8f303d07445fd55e0ccbab81374494dede6cf1b593c"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/liballoc-d62d2f987835fb33.rmeta": {
+          "bytes": 7362574,
+          "sha256": "e991d781371278817c9b1538f88b42e0c130b60c42dad9586ba92acc97ae866d"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libc-fdf0febb13d9a994.d": {
+          "bytes": 22118,
+          "sha256": "9b05a9b5c994e43260ee217cc88a8449f9b77401f1b15be388327ecb2a2b911a"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libcfg_if-5d4e3f45aaf019f6.rlib": {
+          "bytes": 960,
+          "sha256": "d22f3eafe6af2fe683569c1422bed0098edd9e1dd886db675967e17a16f7b301"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libcfg_if-5d4e3f45aaf019f6.rmeta": {
+          "bytes": 5630,
+          "sha256": "ba6f7a8f40595cebb811d5abed168ef6f0b2b9eb00151bd46c1f3e915461adf6"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libcompiler_builtins-c25358fdbd34c07f.rlib": {
+          "bytes": 956,
+          "sha256": "fca070347aafb05633536ba3021d0489901e7615a6265893a349b9ff129f9654"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libcompiler_builtins-c25358fdbd34c07f.rmeta": {
+          "bytes": 3225829,
+          "sha256": "b025346a8465038dc24cdb9852dae1bb2f76a187b95a20ed4c4fe6b9a9d8ef36"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libcore-5b562bdbb830e554.rlib": {
+          "bytes": 956,
+          "sha256": "a62c0b4e2e8ce0b124a1c256261bae0c6741705581421db3ad7c639fee399d45"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libcore-5b562bdbb830e554.rmeta": {
+          "bytes": 66873633,
+          "sha256": "cd1767a53adfe3a3140820c89405e487509ea32c6ffc3781d8171266c0e8b5d0"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libcustom_local_sysroot-033af9bb280bc7c8.rlib": {
+          "bytes": 976,
+          "sha256": "70465c8218e8d074dcf6b2089dad1a81d475ac3083ec7c5f298bbb267e6db1c5"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libcustom_local_sysroot-033af9bb280bc7c8.rmeta": {
+          "bytes": 1690,
+          "sha256": "9c4e7d957546f602d94ed66ca955162a830d8b036bb6d658f6fb63eb0f8b3e8b"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libgetopts-5e94c18b9ec431f4.rlib": {
+          "bytes": 960,
+          "sha256": "bb67f05d1b2bb0acd496f8552c78ff66c1deda9816c70642e72cbc42333307ba"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libgetopts-5e94c18b9ec431f4.rmeta": {
+          "bytes": 223080,
+          "sha256": "626bc63f21401a1d3eeb3a255f9683b86b584aa8df645a0007ed65fd77dbb5e7"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libgimli-76a04d941dc4a555.rlib": {
+          "bytes": 960,
+          "sha256": "c77b4c3d3cc49f75733b03cc004dd2846ad93871d553f86fc81ce416567c64e6"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libgimli-76a04d941dc4a555.rmeta": {
+          "bytes": 6101163,
+          "sha256": "a166788914bd73866b66921dd8c40051c877c6a1538d0dda17afb39de017baec"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libhashbrown-8c28fe82d7b2021b.rlib": {
+          "bytes": 964,
+          "sha256": "71821217b64a67d10f747ef013dc9d158a043c769db706ec9b0a34f71a5695f6"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libhashbrown-8c28fe82d7b2021b.rmeta": {
+          "bytes": 1544939,
+          "sha256": "be0d5afa11317d84992747f2cb78b8ad0fcbf8a0acb10e71c2c1ad03de87d15c"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/liblibc-fdf0febb13d9a994.rlib": {
+          "bytes": 972,
+          "sha256": "c16cc19aae63257c0362a98129f41f7b7a96c88287df32154e8b8e21983212dd"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/liblibc-fdf0febb13d9a994.rmeta": {
+          "bytes": 4645440,
+          "sha256": "73e984f45c0d74592c130cf740f4b8c783b529f83a196c174962f7106e2b3943"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libmemchr-221093e7d3262aba.rlib": {
+          "bytes": 960,
+          "sha256": "6b98fe2f592cbec475db98c327b222ac28aee59310ed453bf5b58f24933bbced"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libmemchr-221093e7d3262aba.rmeta": {
+          "bytes": 769105,
+          "sha256": "616376d8340ffcf144bff2cd722a9d412ad9c10f4ff6c1a5225e56191b8daf85"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libminiz_oxide-8111004bcf8a47c2.rlib": {
+          "bytes": 964,
+          "sha256": "93dad097b3b7015d5f3ca12be0dee0e961a1769d680d144315d060636fb00ccc"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libminiz_oxide-8111004bcf8a47c2.rmeta": {
+          "bytes": 316081,
+          "sha256": "22c5bd2393b66cd8fdddf19fe379b7bcd16bef6b2af8136ee0380ece0bc1ab92"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libobject-e13f71036f272f5f.rlib": {
+          "bytes": 960,
+          "sha256": "47d8f870a9c13ba907cc2d053188fb906fe0dc58694f4b41719fba11b6131a18"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libobject-e13f71036f272f5f.rmeta": {
+          "bytes": 8471368,
+          "sha256": "479053228336c78f484ee4a905f2daf297c1903f1f2aa992ebed9a3ceae1876d"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libpanic_abort-c1fc4953751b1fbd.rlib": {
+          "bytes": 956,
+          "sha256": "64d3ae2ed5df17e0f6070abbcca76ce68840a7fcaa361d65c7af0358151ac870"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libpanic_abort-c1fc4953751b1fbd.rmeta": {
+          "bytes": 3676,
+          "sha256": "092ab676b4bac7c8c4bc642a3e6b673ee2b14c31cd11fb6dd43853972fe5d021"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libpanic_unwind-f59427f5775e4989.rlib": {
+          "bytes": 956,
+          "sha256": "72d1353e5ebdea6cce959ecd1c08cb615e0566379f10cf6495ec1c29af7dd861"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libpanic_unwind-f59427f5775e4989.rmeta": {
+          "bytes": 12377,
+          "sha256": "7d3fe5c304c8e48d264664f9e40eb8aa0122192f0eff7b53f309ee0860f88374"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libproc_macro-06b5b1d9bd0deb9f.rlib": {
+          "bytes": 956,
+          "sha256": "0403884e83e9acf02ff8b8dccc462789e5fa0c2c98d517d7b76dd61beaa25f5b"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libproc_macro-06b5b1d9bd0deb9f.rmeta": {
+          "bytes": 1735767,
+          "sha256": "5f84f2e9b9c4040979738bf9f3b67b16d7e6968b21f6597725742ead23cd417a"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_demangle-6f3c5cf8df958f3e.rlib": {
+          "bytes": 968,
+          "sha256": "3bfcf5dcd65b774d4f85a3cac46334a99372979e71328d6b86206d53b20b1cc9"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_demangle-6f3c5cf8df958f3e.rmeta": {
+          "bytes": 394100,
+          "sha256": "b04836dbc20d5f19f9b8d5b150e3a3af64b271f65968a382ba77e564fe244029"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_literal_escaper-37a7a76227d13fc4.rlib": {
+          "bytes": 976,
+          "sha256": "4ec5be65872e8e1c33c64a9e8cffdd79a185622d20c476b41b77f60d23b57f7f"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_literal_escaper-37a7a76227d13fc4.rmeta": {
+          "bytes": 106384,
+          "sha256": "080e87ef7ad5ff581320d6977fe7c336e0a57d6052768d96d13ab580d05ba44a"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_std_workspace_alloc-46f698da0f879c2b.rlib": {
+          "bytes": 980,
+          "sha256": "1251f431edaaeded7993d591fc54da1438a5e9d979587a78b5014e6dde120387"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_std_workspace_alloc-46f698da0f879c2b.rmeta": {
+          "bytes": 2325,
+          "sha256": "45efa3e0236c2b469d448ec8e5db473aa39e6f3cfafd21bfbf9e91333efc25a3"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_std_workspace_core-c8f15148af99bb32.rlib": {
+          "bytes": 980,
+          "sha256": "9cd8eafe08f0dcb750823e301fcdfc0badde61ce31cba5975b96208335002dde"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_std_workspace_core-c8f15148af99bb32.rmeta": {
+          "bytes": 6428,
+          "sha256": "1cb097225ce7ee24c0c9799056d74b0a5040e09d15b3c2e12cafdcc10d578fa2"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_std_workspace_std-f1d67b2b052e0e14.rlib": {
+          "bytes": 976,
+          "sha256": "a1b54a635d235fd08e6c1a7f45286343cff0c568db7836e8ab469ccecb0a53ee"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/librustc_std_workspace_std-f1d67b2b052e0e14.rmeta": {
+          "bytes": 7992,
+          "sha256": "988e3da019ae025239b03bc948ea2c53e5a337e588ea8721cd143b021a1a45b8"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libstd-1d93da297987e604.rlib": {
+          "bytes": 956,
+          "sha256": "bfb628b719e78c1a3717b43cf31fd8a4f61da319aec712add6229d9b1cec3867"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libstd-1d93da297987e604.rmeta": {
+          "bytes": 8750921,
+          "sha256": "885f6633ae06c9c3ba84f629cfed387ca0b03007852191c9661f0a82773fef8f"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libstd_detect-052702d17f4ec1a1.rlib": {
+          "bytes": 964,
+          "sha256": "65be121e66750a569e2c714bbcace3c483f6f00a0cd7b95702c086fe74f65896"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libstd_detect-052702d17f4ec1a1.rmeta": {
+          "bytes": 302534,
+          "sha256": "33911a6ee10b47966635404418c9cee9a8b78b8d3a49029a983b40d834169361"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libsysroot-3aadf81fbab8d995.rlib": {
+          "bytes": 960,
+          "sha256": "985f5e796806b920622070f055b7a9d77c31148da198d56928799274017c9f67"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libsysroot-3aadf81fbab8d995.rmeta": {
+          "bytes": 2108,
+          "sha256": "0e4599372bd18f4507f80e885fe9cb8b4413ab254b6b8b59066d9a6017e84d94"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libtest-92d33687a041b9fc.rlib": {
+          "bytes": 956,
+          "sha256": "5ce85111d3a5b7e5a4f08a61d6ed5f6e3943271a8d695055eb6d40d4adb3d74b"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libtest-92d33687a041b9fc.rmeta": {
+          "bytes": 1240701,
+          "sha256": "048ce6f08092cb7f3e8451b2ca9ef5049cc59a08492cf7b7a49e6aa787bd1a98"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libunwind-cfb5c0351c46e266.rlib": {
+          "bytes": 956,
+          "sha256": "5b8dba497ba35c0d2665e2cac8afa2a43d56b994306310d0e853c7e9ceca913d"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/libunwind-cfb5c0351c46e266.rmeta": {
+          "bytes": 22571,
+          "sha256": "08ee7b9281a2f214419893899235fc557c1288e074943924291ee45f48152b08"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/memchr-221093e7d3262aba.d": {
+          "bytes": 7776,
+          "sha256": "739e4c4e0bc439e3eddec48aa8230cc9920fcc59b1710ee820202e16346bfa1a"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/miniz_oxide-8111004bcf8a47c2.d": {
+          "bytes": 2649,
+          "sha256": "084acfc955311779a36695e4692ac0813a5a3018a1d5ddf1930b1325fbc7254f"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/object-e13f71036f272f5f.d": {
+          "bytes": 27227,
+          "sha256": "7df7e9a3ce825a1f8bfa614364bfd812f98be1fc8e4f977e87505dcbfb2359f0"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/panic_abort-c1fc4953751b1fbd.d": {
+          "bytes": 1109,
+          "sha256": "47112ea1250b722f10f34572ab0459a85e500f531c753f8cc74cd3b4016b371b"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/panic_unwind-f59427f5775e4989.d": {
+          "bytes": 1640,
+          "sha256": "6fed43f0e719de47c11a9faa32cbe08f7e88bcf78ea435a4f95eb425797db50d"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/proc_macro-06b5b1d9bd0deb9f.d": {
+          "bytes": 9895,
+          "sha256": "153dab6699b883ab1b6f6e76f4f3d97b863d44e5c2760892f7b5d7a6deb355fe"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/rustc_demangle-6f3c5cf8df958f3e.d": {
+          "bytes": 1809,
+          "sha256": "895d100e6f791a6735a9a9a90fd9fa21e23fb2d5482bd0a3942cde08b9525c1c"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/rustc_literal_escaper-37a7a76227d13fc4.d": {
+          "bytes": 1073,
+          "sha256": "34e1aa968f4a658b4318113e9e06bdc1787af3511a4557aeda339fb9eee75ec1"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/rustc_std_workspace_alloc-46f698da0f879c2b.d": {
+          "bytes": 1233,
+          "sha256": "72318a0835f863e6e88b70fb62fbc7d06ad2886379d865d255b2e4ed742840e4"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/rustc_std_workspace_core-c8f15148af99bb32.d": {
+          "bytes": 1223,
+          "sha256": "0226768fa57af36dd36a5ca29984c6abeb46bf6678453bb160c4e28ef9d1c809"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/rustc_std_workspace_std-f1d67b2b052e0e14.d": {
+          "bytes": 1213,
+          "sha256": "0a052786fdaa21c5572fb31708bd1c1f7f6212e7089370116a47e8228c6c6687"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/std-1d93da297987e604.d": {
+          "bytes": 135332,
+          "sha256": "534b2d98413f561e64e20fd96bdcf8319c7695978e3c0c5d12739df173ba8eb6"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/std_detect-052702d17f4ec1a1.d": {
+          "bytes": 10127,
+          "sha256": "25326d206c77a105e2b3f6316ff5d512a416d8fc36d66ba6be7952e671714675"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/sysroot-3aadf81fbab8d995.d": {
+          "bytes": 1069,
+          "sha256": "50ea9d7186965c1f9dcfb1a99217ed18dd5bf8c0dbce4aa4b25505aff3be3cad"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/test-92d33687a041b9fc.d": {
+          "bytes": 13130,
+          "sha256": "33264a4b89b6f95b95e2c4dd90eb9d17ef5e8f400ec0b5a44fef5ff01c37f5c3"
+        },
+        "lib/rustlib/i686-unknown-linux-gnu/lib/unwind-cfb5c0351c46e266.d": {
+          "bytes": 2085,
+          "sha256": "59066bfbda860171ff4714c1053eee29941c04d494f247af187e43b3c5ad509f"
+        }
+      }
+    },
+    "s390x": {
+      "path": "/tmp/zstdoxide-platform-sysroot-s390x",
+      "files": {
+        "lib/rustlib/s390x-unknown-linux-gnu/.rustc-build-sysroot-hash": {
+          "bytes": 19,
+          "sha256": "fb5bf487fd265dff181b6b341d1036f9815a6a9f8d3ec8e63b92a73496316e95"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/addr2line-0cc9a26866d5173c.d": {
+          "bytes": 2893,
+          "sha256": "4619bdc187bac1bd9179ced29a8d9376b8d3141bdfccb03ff1f034dc2b6b185e"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/adler2-ae109d4120522cf0.d": {
+          "bytes": 1291,
+          "sha256": "482611e14f6aa203c9b29b383f53f7d23e02ab1da7e0e0efff8f3d89bad6f76c"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/alloc-55ea8bdfa7ba16f1.d": {
+          "bytes": 47529,
+          "sha256": "8e63a9cf1c1ffd8bcc2c9ecdbe4e45efe871963e517831cd47b3397ddf39f238"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/cfg_if-347ed92f5f302350.d": {
+          "bytes": 926,
+          "sha256": "9e98a611f459298f5bb26c77eb8642d59a3cfcb88407040ebd0fc8a55e7d5fc8"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/compiler_builtins-f4236ea5e367de3e.d": {
+          "bytes": 128547,
+          "sha256": "8ab76fe28946739adf270b70b300d01454fddc1c8ef303c703ac6d27ceeadf12"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/core-756ac31ab6856c88.d": {
+          "bytes": 190356,
+          "sha256": "4404befa19d7660c52fc17806ebce1116d732421dc3ac97e2835d8d89c4eddb3"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/custom_local_sysroot-317d19c96e98b0cc.d": {
+          "bytes": 678,
+          "sha256": "9347f5db9dc18d6ed88c18a8015d747e84c8f9333d05e1253abeb966da0537f7"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/getopts-21f3ad5c981930a9.d": {
+          "bytes": 940,
+          "sha256": "7caa1856438d43f1ba2050aee563898e9222e84979b23949147f101e4a556a80"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/gimli-835507422b75e45c.d": {
+          "bytes": 12987,
+          "sha256": "47d041ac7a2dc4f7b23f6957909e584781c3cfa4915318383d929dab90b98454"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/hashbrown-79db422b3bf00af8.d": {
+          "bytes": 7420,
+          "sha256": "492e982aa90e303600d514de783b4e9384d2b96751ab8c16836e2eb93e3b05d4"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libaddr2line-0cc9a26866d5173c.rlib": {
+          "bytes": 1252,
+          "sha256": "9ec75bded4a46055fb4ed5b60ccb63e6eb379433ac7a7d295e7a98faf288614c"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libaddr2line-0cc9a26866d5173c.rmeta": {
+          "bytes": 405723,
+          "sha256": "2a0e60342c42e14e06b626ad56ca2594d10b44c224223b805b9ef5a68181d6d2"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libadler2-ae109d4120522cf0.rlib": {
+          "bytes": 1244,
+          "sha256": "458e125665658990c26f72038c0864158204ff7ff3a4e7c0353cf4b2fe3fe4fa"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libadler2-ae109d4120522cf0.rmeta": {
+          "bytes": 37307,
+          "sha256": "bcb796b626e45cdd817ca72c68873c41262b9618c0824477161c29eaea3ef216"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/liballoc-55ea8bdfa7ba16f1.rlib": {
+          "bytes": 1244,
+          "sha256": "67e89731ece66c60972e1770da79dc01c781fd283ce060a75ba85ddabb24ba2f"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/liballoc-55ea8bdfa7ba16f1.rmeta": {
+          "bytes": 7366879,
+          "sha256": "344d9ff8a40dc9b868e1c9de84130fb283f2d164e722b09276afac4b4105ee16"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libc-c74de07b1925d2c8.d": {
+          "bytes": 22117,
+          "sha256": "204cd172fc3bdcfe70036f6c783d77a7872a0bcd88248ca36525d3fa0c7bbb7d"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libcfg_if-347ed92f5f302350.rlib": {
+          "bytes": 1244,
+          "sha256": "53bf99ee02877f79e310f346ad08b9724b6085178636c25b4a2eed88819ef511"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libcfg_if-347ed92f5f302350.rmeta": {
+          "bytes": 5631,
+          "sha256": "af3eba5245548d76c953e1735b08363ee8b8e0a5a21409550739426b4ee3b174"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libcompiler_builtins-f4236ea5e367de3e.rlib": {
+          "bytes": 1244,
+          "sha256": "657c748c439d97cc0c5de7e5f8d5c6b8f36f3840b1771f8dcfc695aefce3a875"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libcompiler_builtins-f4236ea5e367de3e.rmeta": {
+          "bytes": 3256297,
+          "sha256": "e875ddbfc1df411c3b25e63ba61358e3c6d2e41c3ddf5a44095271824b5e2567"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libcore-756ac31ab6856c88.rlib": {
+          "bytes": 1244,
+          "sha256": "a2e48374db33f1b9314a6c40123d900314d0ac8fbe505d3990b1a95fa3d8af23"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libcore-756ac31ab6856c88.rmeta": {
+          "bytes": 49347491,
+          "sha256": "9bce3143a613abd21ad6177c9f52e4ccbe6e83bd6ce90643923d93ad6cd25a47"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libcustom_local_sysroot-317d19c96e98b0cc.rlib": {
+          "bytes": 1260,
+          "sha256": "ca7e8fef2cfd2f2d4c8289e679179e3c3dd1817c961e6a7e236aac1a17925100"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libcustom_local_sysroot-317d19c96e98b0cc.rmeta": {
+          "bytes": 1691,
+          "sha256": "1fe92764d4e0d8e1c0230730185f55ea048a52d657b73f2c73d29b368b3d17e2"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libgetopts-21f3ad5c981930a9.rlib": {
+          "bytes": 1252,
+          "sha256": "e433962990d0379066435e1019a423a9086ab9736c40b7213d298a089f95c2ee"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libgetopts-21f3ad5c981930a9.rmeta": {
+          "bytes": 223348,
+          "sha256": "54f093d20b138a26f9d53286ea85085cff7d5e3e0ef42c46ead3025e9263fa91"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libgimli-835507422b75e45c.rlib": {
+          "bytes": 1244,
+          "sha256": "08465904c9112c8b9ad158658cc070ae30eb44ffb63a342eb43c5b34129674b1"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libgimli-835507422b75e45c.rmeta": {
+          "bytes": 6102284,
+          "sha256": "749a115c35de2613fc9e8cb361dc152e586889a4c36ddd1b3f31e6d48da2ec10"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libhashbrown-79db422b3bf00af8.rlib": {
+          "bytes": 1252,
+          "sha256": "b8f871a363ffb6cd57fe1374fa025b4530048bea0ff63847f6f11640e096e58e"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libhashbrown-79db422b3bf00af8.rmeta": {
+          "bytes": 1545678,
+          "sha256": "64002abbe2a1c6d8681ea08b8c5d23e2f140bc7ecff469e013f5574e9e2bb9e4"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/liblibc-c74de07b1925d2c8.rlib": {
+          "bytes": 1260,
+          "sha256": "b330510d730a24cc50c0af8508ab04b4a6e8dad607411f32837516083fcda34d"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/liblibc-c74de07b1925d2c8.rmeta": {
+          "bytes": 4558189,
+          "sha256": "80b27450116014111d08b0c9f931b931cd0ff3f2e6f56fac9460a28026070b86"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libmemchr-2398afb6e32f320d.rlib": {
+          "bytes": 1244,
+          "sha256": "acd72da961ecdce71d20c83382a257fed4122f70add105073e1afb7f693dbc47"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libmemchr-2398afb6e32f320d.rmeta": {
+          "bytes": 770190,
+          "sha256": "1b88407c70e78d5ad585c6a37e8a9813fb99a1410c4f86c6a0435d5bd942e3e8"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libminiz_oxide-38f8337a353a2b3d.rlib": {
+          "bytes": 1252,
+          "sha256": "cf38c8a0e60333b94c6c41ebbbaa9e245d37d0d8cc45090dac22491c7924ddf6"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libminiz_oxide-38f8337a353a2b3d.rmeta": {
+          "bytes": 319190,
+          "sha256": "a1c6c2dd4101833883ae478bfb35da02d6b6382f595765df24d7f2f07a32486e"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libobject-5813338901bb3464.rlib": {
+          "bytes": 1244,
+          "sha256": "881e8e00e9d461324403030e6f198acdcc2e53420f684d1e0852c96783dc7c45"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libobject-5813338901bb3464.rmeta": {
+          "bytes": 8474502,
+          "sha256": "77cfc4d4d710b05481a7e40fe777ee050d417508804a1b8f643c388f420fe03d"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libpanic_abort-a71a4851aeeb36da.rlib": {
+          "bytes": 1244,
+          "sha256": "84d8da71b91de345031da97a8c36f1da2bbc7278af4c953bd4959e79f5145fa5"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libpanic_abort-a71a4851aeeb36da.rmeta": {
+          "bytes": 3677,
+          "sha256": "b54ed826e3a9fc42797953bf323d95332dbb4750b02fe64f2a0d93734fe0cba4"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libpanic_unwind-4761b5834da61584.rlib": {
+          "bytes": 1244,
+          "sha256": "95acd580ad02c29d658d8719c6796119e2e455e2b439d28880ca62995ff1a217"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libpanic_unwind-4761b5834da61584.rmeta": {
+          "bytes": 12390,
+          "sha256": "dfd1277eeff80c3c36cfdc079eaca20ab8b1a980bfc729d8390c7c2423206d59"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libproc_macro-4aa3371a77afa054.rlib": {
+          "bytes": 1244,
+          "sha256": "9bca2676306a52f6fb5b3016a9ec557461747a200230996f662fb1ad9d4e9b92"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libproc_macro-4aa3371a77afa054.rmeta": {
+          "bytes": 1733870,
+          "sha256": "ce02106a5a9319f2ff3ac839e837c06afcaebac259cc20f0eb995a06428edf04"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_demangle-b45b39720504a6c5.rlib": {
+          "bytes": 1252,
+          "sha256": "ceaa1a0e0195a19fca7397b2bb478940040be5433d28dde13f3c4ab030b9abfa"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_demangle-b45b39720504a6c5.rmeta": {
+          "bytes": 394674,
+          "sha256": "d0ae1cd3621d448a08fc7e7836b5dbfd7c22d5849da4f106f173996da678052e"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_literal_escaper-df7aa601eaa9a75b.rlib": {
+          "bytes": 1260,
+          "sha256": "3795f5d7da3988492af3469b10ac9d6ddc6c630580923ecd0d505c1feb18eeb2"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_literal_escaper-df7aa601eaa9a75b.rmeta": {
+          "bytes": 106397,
+          "sha256": "d5101bb211de171e56181ef1630845a8a94d0afbdcdf394d870edd89e630cc34"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_std_workspace_alloc-3961a5337386459f.rlib": {
+          "bytes": 1268,
+          "sha256": "87de50f8c1ef58850d0aaf004f509aa5a9bd736b19b9b099e1b0d4691067cc90"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_std_workspace_alloc-3961a5337386459f.rmeta": {
+          "bytes": 2326,
+          "sha256": "a093a4ec8677580ec404abb309ea6f54f6d07567f5699a41d62e00f1e56b5662"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_std_workspace_core-217e7bf3fc6ddcc9.rlib": {
+          "bytes": 1268,
+          "sha256": "966ea56939227474b4e5d11530cea0d09c04015113214092d980a3e51f970e8b"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_std_workspace_core-217e7bf3fc6ddcc9.rmeta": {
+          "bytes": 6425,
+          "sha256": "edee03b260a35e8944e57f5b9d4ee8fc9445f1a1d15073bb9a5f4c77d6f5981f"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_std_workspace_std-37a1e6aaacdc7ac1.rlib": {
+          "bytes": 1268,
+          "sha256": "382a9030004bda00b0104f07963373ee4fd08248a9e1f6745bfc5f7d9be484e1"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/librustc_std_workspace_std-37a1e6aaacdc7ac1.rmeta": {
+          "bytes": 7993,
+          "sha256": "16e05df43ead51bbe4ed496e003f4acc3fbbd8afd5b448bba115fe319e8e1b45"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libstd-5d093144f39ea4c2.rlib": {
+          "bytes": 1244,
+          "sha256": "7febd7d266387be8fe59e1df98db8f84c699406a752497cd2c9afa99f3059bb0"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libstd-5d093144f39ea4c2.rmeta": {
+          "bytes": 8720622,
+          "sha256": "805ff48f2a1d0cdc1b1ddaafc2a412cd7b6aa11d67c9cf7cf774fc26e6f58ccf"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libstd_detect-0dfb93f614c40d92.rlib": {
+          "bytes": 1252,
+          "sha256": "95af8c4681195f7a3e7a13c4b2a1b813d2a5d21a2acf84d29d8ea5c4a41d4cf3"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libstd_detect-0dfb93f614c40d92.rmeta": {
+          "bytes": 261842,
+          "sha256": "2868389d5e16a0fb7b59535a3954ffa89eec6e1b21987944894c9c765792630b"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libsysroot-ef40df816b8b20e5.rlib": {
+          "bytes": 1252,
+          "sha256": "f758f91d7447aa77751ccabe1ea7177f86fa2c10c3e4c979e0099b8d8ef5a8db"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libsysroot-ef40df816b8b20e5.rmeta": {
+          "bytes": 2109,
+          "sha256": "4bc5643a132b2503af96f31c6e3d027c83c0d1c0e2451c451cfa4677aba23dd8"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libtest-3ab39bc8a59d48a1.rlib": {
+          "bytes": 1244,
+          "sha256": "aa448330c6efdcb0589cd3fd20969d1a44d54633a26ad1164541df71bf3adbb1"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libtest-3ab39bc8a59d48a1.rmeta": {
+          "bytes": 1251396,
+          "sha256": "0589e71c9bae723f8312f43235b48e30776ee5494e6fad4c2501f3e455c6791a"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libunwind-e27557ed05bd733a.rlib": {
+          "bytes": 1244,
+          "sha256": "1ba40107a279eb16f86dc4c68ca450937ee052aa066511d5f5a330243b8b6ea8"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/libunwind-e27557ed05bd733a.rmeta": {
+          "bytes": 22617,
+          "sha256": "a787b1cdee220dc1616df6a949b00edc96efe216d983bffa1ddba3baf18482a4"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/memchr-2398afb6e32f320d.d": {
+          "bytes": 7779,
+          "sha256": "6bb278fef4eeca2ece581fc439456f4bdfe535a732f9eaa37edeab976ca11810"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/miniz_oxide-38f8337a353a2b3d.d": {
+          "bytes": 2652,
+          "sha256": "5bef08ec738719931a200b57ac981b57ff258289b3ff8d24f454fa1800dc97b5"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/object-5813338901bb3464.d": {
+          "bytes": 27230,
+          "sha256": "ee8bc16d9be547645e09ca49dc67092f7b98f046575908db4cbc19205c250385"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/panic_abort-a71a4851aeeb36da.d": {
+          "bytes": 1112,
+          "sha256": "4bd0cac0cac4e4fbf44c64ef73830336430932a76a5a4dc841ea08fd5078eb1c"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/panic_unwind-4761b5834da61584.d": {
+          "bytes": 1643,
+          "sha256": "6e79b06647b0b09e572e956f5a65841c53190419a4d6143a5485cc9254974d91"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/proc_macro-4aa3371a77afa054.d": {
+          "bytes": 9898,
+          "sha256": "15d8efb1d0ee39745ca960a8da31429a17f3ea5a581a5adc5c86aa2fbe2dfb7c"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/rustc_demangle-b45b39720504a6c5.d": {
+          "bytes": 1812,
+          "sha256": "241146d9be77536d14e4fb3c32164a9f10f33152ca4dc3ece5258120b4e1ada4"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/rustc_literal_escaper-df7aa601eaa9a75b.d": {
+          "bytes": 1076,
+          "sha256": "6eb31a9f87c4f3e15419d22b3c8cc35d5f037934e764ffa931a59d9780dc07a5"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/rustc_std_workspace_alloc-3961a5337386459f.d": {
+          "bytes": 1236,
+          "sha256": "7104b13d1275bfd108da234873ae76e2dc354c28c7a3a0abba4a4e2e5b42cf9b"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/rustc_std_workspace_core-217e7bf3fc6ddcc9.d": {
+          "bytes": 1226,
+          "sha256": "4c69b2800819a1a6f08affeb613a0b19acd7da48f24b1532367d780c5bff3756"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/rustc_std_workspace_std-37a1e6aaacdc7ac1.d": {
+          "bytes": 1216,
+          "sha256": "44f4294df4e118d98d338030721f548ac07e26210a02072046e26ceaadf844b3"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/std-5d093144f39ea4c2.d": {
+          "bytes": 135337,
+          "sha256": "c9da66e44633993b96a3a6115e1354e358186320db80d65b94c7205fc2a4dfef"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/std_detect-0dfb93f614c40d92.d": {
+          "bytes": 10130,
+          "sha256": "94ab2270527fb9f368a11ed30348ed2c240fb2da7c28c868bbc2aecf58edada3"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/sysroot-ef40df816b8b20e5.d": {
+          "bytes": 1072,
+          "sha256": "a7188fb93c8b86437bc97507da5ee2900e11f500539b2c08d810250311f52da0"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/test-3ab39bc8a59d48a1.d": {
+          "bytes": 13133,
+          "sha256": "a0a3290c47728d4ae6546a2e4fa1511fc2556b72f7a024bb602dd37aaa3f5f20"
+        },
+        "lib/rustlib/s390x-unknown-linux-gnu/lib/unwind-e27557ed05bd733a.d": {
+          "bytes": 2088,
+          "sha256": "186c2dc4b2d33d7e8edb5e8294531670fd325ff93955c4a01fbdd152503a26c5"
+        }
+      }
+    }
+  },
+  "thumb_probe_files": {
+    "Cargo.lock": {
+      "bytes": 258,
+      "sha256": "b229e3325d2f27f0b5ed6e788e91c8dbc124432aa25a2f934c166997cfe75123"
+    },
+    "Cargo.toml": {
+      "bytes": 179,
+      "sha256": "94842eef1a84005592d6316410da516bd46d9496f96866cb35212f4275f167db"
+    },
+    "src/lib.rs": {
+      "bytes": 1139,
+      "sha256": "6e229d87bdc3e0fd4517dc8f26af0fcca8989e42b0dc483d2512e662205911c6"
+    }
+  },
+  "caller_artifacts": {
+    "safe": {
+      "path": "/tmp/zstdoxide-module12-platform-thumb-target/thumbv6m-none-eabi/debug/libzstdoxide_module12_thumb_caller.rlib",
+      "bytes": 2878066,
+      "sha256": "e14452d11e22735f9936a7f19cb0702ff4879060dc2a5d6a5341cbe34ca08b47"
+    },
+    "all": {
+      "path": "/tmp/zstdoxide-module12-platform-thumb-target/thumbv6m-none-eabi/debug/libzstdoxide_module12_thumb_caller.rlib",
+      "bytes": 2876652,
+      "sha256": "7ff2bf2acb5ebd3c74809008d431d58e757c733b0faf34c20cc928411eccbab8"
+    }
+  },
+  "interpreted_test_executions": 24,
+  "native_temporary_smoke_executions": 3,
+  "processes_remaining": 0,
+  "source_unchanged": true,
+  "final_root_source_comparison": {
+    "files": {
+      "Cargo.toml": true,
+      "Cargo.lock": true,
+      "rust-toolchain.toml": true,
+      "src/bitstream.rs": true,
+      "src/bitwriter.rs": true,
+      "src/block_entropy.rs": true,
+      "src/constants.rs": true,
+      "src/cursor.rs": true,
+      "src/decode.rs": true,
+      "src/dictionary.rs": true,
+      "src/dictionary_train.rs": true,
+      "src/encode.rs": true,
+      "src/entropy_encode.rs": true,
+      "src/entropy_output.rs": true,
+      "src/error.rs": true,
+      "src/fast_encode.rs": true,
+      "src/fast_frame.rs": true,
+      "src/fast_parse.rs": true,
+      "src/fast_plan.rs": true,
+      "src/fast_state.rs": true,
+      "src/frame.rs": true,
+      "src/fse.rs": true,
+      "src/fse_encode.rs": true,
+      "src/fse_select.rs": true,
+      "src/heap.rs": true,
+      "src/history.rs": true,
+      "src/huffman.rs": true,
+      "src/huffman_codebook.rs": true,
+      "src/huffman_encode.rs": true,
+      "src/lib.rs": true,
+      "src/literal_encode.rs": true,
+      "src/literal_header.rs": true,
+      "src/match_key.rs": true,
+      "src/match_parse.rs": true,
+      "src/match_search.rs": true,
+      "src/matchchain.rs": true,
+      "src/matchfinder.rs": true,
+      "src/parameters/presets.rs": true,
+      "src/parameters.rs": true,
+      "src/reference_encode.rs": true,
+      "src/ring_history.rs": true,
+      "src/sequence_context.rs": true,
+      "src/sequence_encode.rs": true,
+      "src/sequence_plan.rs": true,
+      "src/sequences.rs": true,
+      "src/strategy.rs": true,
+      "src/stream.rs": true,
+      "src/stream_decode.rs": true,
+      "src/stream_encode.rs": true,
+      "src/training.rs": true,
+      "src/xxhash.rs": true,
+      "test-support/allocator/.gitignore": true,
+      "test-support/allocator/Cargo.toml": true,
+      "test-support/allocator/README.md": true,
+      "test-support/allocator/src/lib.rs": true
+    },
+    "all_equal": true
+  },
+  "diagnostics": {
+    "failures": 0,
+    "legacy_feature_attribute_warning": "The two temporary caller harnesses explicitly enable allocator_api. The dated compiler reports partial stabilization since 1.100.0 and recommends allocator_ext or removing this unneeded attribute. This warning is preserved in successful native/public-Miri/caller-build logs; production files are unchanged. Warning-free temporary compilation and stable-toolchain validation are not claimed."
+  },
+  "validation_counts": {
+    "commands_total": 19,
+    "metadata_and_lock_commands": 6,
+    "native_smoke_commands": 1,
+    "native_temporary_tests": 3,
+    "miri_commands": 8,
+    "miri_repository_test_executions": 12,
+    "miri_temporary_test_executions": 12,
+    "miri_total_test_executions": 24,
+    "thumb_library_checks": 2,
+    "thumb_caller_codegen_builds": 2,
+    "failed_commands": 0
+  }
+}
