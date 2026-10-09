@@ -9,8 +9,10 @@ This is an initial working codec milestone, **not full parity with upstream
 zstd**. Its one-shot and streaming decoders handle standard frames with raw or
 formatted dictionaries. Its encoder provides independent Greedy, Chain and Lazy
 strategies, Huffman literal compression and reuse, and adaptive sequence entropy
-tables. Greedy is the default. These policies do not reproduce upstream numeric
-compression levels or promise its compression ratios.
+tables. Greedy is the default. Separate whole-buffer entry points execute bounded
+reference Fast profiles, including level 1 and negative levels, without a
+dictionary. Their parser follows the pinned sampling and repeat rules; entropy
+choices remain independent, so compressed bytes and ratios may differ from C.
 
 ## Using the library
 
@@ -36,7 +38,7 @@ assert_eq!(decompress_with_options(&encoded, options)?, input);
 advertised-window limit. Use `decompress_with_options` for another window limit.
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
 Allocation failures and corrupt, truncated, or over-limit input return `Error`.
-The encoder writes one checksummed single-segment frame, so its advertised window
+The named `compress` encoder writes one checksummed single-segment frame, so its advertised window
 equals its content size; adjust decoder limits for inputs larger than 128 MiB.
 
 `Encoder` and `Decoder` provide bounded streaming with caller-owned slices and
@@ -66,6 +68,16 @@ rules. These allocation-free queries can describe algorithms not yet implemented
 by the Rust encoder. See [parameter usage](docs/parameter-usage.md) and
 [validation scope](docs/compression-parameters-validation.md).
 
+`compress_at_level` and `compress_with_parameters` execute the profiles whose
+resolved strategy is Fast, with effective windows up to 1 MiB and hash logs up
+to 18. Level 1 and negative levels are supported across all size tiers. Level 2
+rejects inputs larger than 128 KiB and no larger than 256 KiB, whose pinned
+profile requires DoubleFast. Default level 0 resolves to unsupported level 3.
+These APIs write a known-size frame without a checksum and preserve the resolved
+window; they do not change the named APIs or provide live numeric streaming
+settings. See [Fast profile usage](docs/reference-fast-usage.md) for overrides,
+allocator ownership, frame flags, and admission rules.
+
 `Dictionary` prepares owned raw or formatted content for shared reuse. One-shot
 and streaming operations support persistent dictionaries and streaming single-use
 prefixes. `train_raw_dictionary`, `train_dictionary`, and `finalize_dictionary`
@@ -82,6 +94,7 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
 | Compression | Greedy, bounded Chain, and one-byte Lazy matching over dictionary content and up to 1 MiB of configured retained output (128 KiB by default), raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
+| Reference Fast | Known-size, no-dictionary one-shot level/request execution; persistent sampled history, explicit repeat intent, negative-level acceleration/raw literal policy, strict gain and transactional block selection; independent entropy output |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Parameter inspection | Pinned reference presets, scalar bounds, raw adjustment, explicit request overrides, source hints and checked source/dictionary size arithmetic; independent of live numeric execution |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
@@ -132,6 +145,7 @@ Read [the data structure inventory](docs/data-structures.md),
 [architecture](docs/architecture.md), and module design documents before adding
 another backend. Allocation boundaries use fallible reservation. The standard
 `Allocator` is supported by `compress_in`, `compress_with_dictionary_in`,
+`compress_at_level_in`, `compress_with_parameters_in`,
 `decompress_in`, `decompress_with_options_in`,
 `decompress_with_dictionary_in`,
 `Decoder::new_in`, `Decoder::with_dictionary_in`, allocator-aware dictionary

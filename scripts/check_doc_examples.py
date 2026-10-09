@@ -21,6 +21,7 @@ def main() -> int:
     parser.add_argument("documents", nargs="*", default=[
         "docs/dictionary-usage.md", "docs/streaming-usage.md", "docs/allocator-usage.md",
         "docs/parameter-usage.md", "docs/match-search-usage.md",
+        "docs/reference-fast-usage.md",
     ])
     parser.add_argument("--all-features", action="store_true")
     args = parser.parse_args()

@@ -46,7 +46,6 @@ mod entropy_encode;
 #[cfg(test)]
 mod entropy_output;
 mod error;
-#[cfg(test)]
 mod fast_encode;
 mod fast_frame;
 #[cfg(test)]
@@ -55,10 +54,8 @@ mod fast_frame_oracle_fixture;
 #[cfg(test)]
 #[path = "../tests/support/fast_oracle.rs"]
 mod fast_oracle_fixture;
-#[cfg(test)]
 mod fast_parse;
 mod fast_plan;
-#[cfg(test)]
 mod fast_state;
 mod frame;
 mod fse;
@@ -77,6 +74,7 @@ mod match_search;
 mod matchchain;
 mod matchfinder;
 mod parameters;
+mod reference_encode;
 mod ring_history;
 mod sequence_context;
 mod sequence_encode;
@@ -127,6 +125,9 @@ pub use match_search::MatchSearchOptions;
 pub use parameters::{
     CompressionParameterRequest, RawCompressionParameters, ReferenceFrameParameters,
     ReferenceStrategy, ResolvedCompressionParameters, SourceSize, inspect_compression_level,
+};
+pub use reference_encode::{
+    compress_at_level, compress_at_level_in, compress_with_parameters, compress_with_parameters_in,
 };
 pub use strategy::CompressionStrategy;
 pub use stream::{EndDirective, Progress, StreamStatus};
