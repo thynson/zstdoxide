@@ -5,6 +5,7 @@ use alloc::vec::Vec;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
 use crate::fse::FseTable;
 use crate::matchfinder::MatchTable;
+use crate::ring_history::RingHistory;
 use crate::{Dictionary, Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash};
 
 /// Predefined offset tables provide symbols 0..=28. Larger dictionaries remain
@@ -70,6 +71,7 @@ pub(crate) struct BlockEncoder {
     match_table: Option<MatchTable>,
     dictionary_seed: Option<MatchTable>,
     active_dictionary: Option<SharedDictionary>,
+    history: Option<RingHistory>,
     frame_position: u64,
     window_size: u64,
     entropy_tables: Option<EncodingTables>,
@@ -85,6 +87,7 @@ impl BlockEncoder {
             match_table: None,
             dictionary_seed: None,
             active_dictionary: None,
+            history: None,
             frame_position: 0,
             window_size: MAX_BLOCK_SIZE as u64,
             entropy_tables: None,
@@ -123,6 +126,9 @@ impl BlockEncoder {
             seed.reset();
         }
         self.active_dictionary = dictionary;
+        if let Some(history) = &mut self.history {
+            history.clear();
+        }
         self.frame_position = 0;
         self.window_size = window_size;
         Ok(())
@@ -131,6 +137,9 @@ impl BlockEncoder {
     /// Drop active-frame ownership while retaining reusable workspace storage.
     pub(crate) fn reset(&mut self) {
         self.active_dictionary = None;
+        if let Some(history) = &mut self.history {
+            history.clear();
+        }
         self.frame_position = 0;
         self.window_size = MAX_BLOCK_SIZE as u64;
     }
@@ -141,15 +150,34 @@ impl BlockEncoder {
             .frame_position
             .checked_add(block.len() as u64)
             .ok_or(Error::ResourceLimit)?;
+        if block.len() > MAX_BLOCK_SIZE || block.len() as u64 > self.window_size {
+            return Err(Error::ResourceLimit);
+        }
+        if !block.is_empty() {
+            let history = self
+                .history
+                .get_or_insert_with(|| RingHistory::new(MAX_BLOCK_SIZE));
+            if history.window_size() == 0 {
+                let horizon = self.window_size.min(MAX_BLOCK_SIZE as u64) as usize;
+                history.start_frame(horizon)?;
+            }
+            if history.frame_len() != self.frame_position {
+                return Err(Error::InvalidState);
+            }
+        }
         self.encode_block(block, last, output)?;
+        if let Some(history) = &mut self.history {
+            // The matching frame counter, checked complete advancement and
+            // reserved positive window above establish commit's bounds before
+            // encoded output is appended. Commit copies original input for all
+            // block kinds and performs no new allocation.
+            history.commit(block)?;
+        }
         self.frame_position = next;
         Ok(())
     }
 
     fn encode_block(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
-        if block.len() > MAX_BLOCK_SIZE || block.len() as u64 > self.window_size {
-            return Err(Error::ResourceLimit);
-        }
         output
             .try_reserve(block.len() + 3)
             .map_err(|_| Error::AllocationFailed)?;
@@ -187,6 +215,10 @@ impl BlockEncoder {
             + self.sequences.capacity() * core::mem::size_of::<Sequence>()
             + self.payload.capacity()
             + self.writer.bytes.capacity()
+            + self
+                .history
+                .as_ref()
+                .map_or(0, RingHistory::retained_capacity)
     }
 }
 
@@ -708,6 +740,69 @@ mod tests {
     use super::*;
     use crate::{DecodeOptions, Dictionary, decompress_with_dictionary};
     use alloc::vec;
+
+    #[test]
+    fn history_commits_every_block_kind_and_reset_reuses_bounded_storage() {
+        let mut encoder = BlockEncoder::new();
+        encoder.start_frame(None, 1_u64 << 31).unwrap();
+        assert!(encoder.history.is_none());
+        let blocks = [
+            b"abc".to_vec(),
+            vec![42; 37],
+            b"periodic-pattern".repeat(100),
+        ];
+        let mut output = Vec::new();
+        let mut source = Vec::new();
+        for (block, expected_kind) in blocks.iter().zip([0, 1, 2]) {
+            output.clear();
+            encoder.encode(block, false, &mut output).unwrap();
+            assert_eq!((output[0] >> 1) & 3, expected_kind);
+            source.extend_from_slice(block);
+            let history = encoder.history.as_ref().unwrap();
+            assert_eq!(history.window_size(), MAX_BLOCK_SIZE);
+            assert_eq!(history.frame_len(), source.len() as u64);
+            for (position, &byte) in source.iter().enumerate() {
+                assert_eq!(history.byte_at(position as u64).unwrap(), byte);
+            }
+        }
+        let capacity = encoder.retained_capacity();
+        let history_capacity = encoder.history.as_ref().unwrap().retained_capacity();
+        encoder.reset();
+        assert_eq!(encoder.retained_capacity(), capacity);
+        let history = encoder.history.as_ref().unwrap();
+        assert_eq!(history.frame_len(), 0);
+        assert_eq!(history.available(), 0);
+        assert_eq!(history.byte_at(0), Err(Error::CorruptData));
+
+        encoder.start_frame(None, 1024).unwrap();
+        let block: Vec<_> = (0..1024).map(|index| index as u8).collect();
+        encoder.encode(&block, false, &mut output).unwrap();
+        encoder.encode(b"xyz", true, &mut output).unwrap();
+        let history = encoder.history.as_ref().unwrap();
+        assert_eq!(history.window_size(), 1024);
+        assert_eq!(history.available(), 1024);
+        assert_eq!(history.frame_len(), 1027);
+        assert_eq!(history.byte_at(2), Err(Error::CorruptData));
+        assert_eq!(history.byte_at(3).unwrap(), 3);
+        assert_eq!(history.byte_at(1026).unwrap(), b'z');
+        assert_eq!(history.retained_capacity(), history_capacity);
+    }
+
+    #[test]
+    fn rejected_block_bounds_do_not_allocate_or_commit_history() {
+        let mut encoder = BlockEncoder::new();
+        encoder.start_frame(None, 7).unwrap();
+        let mut output = vec![9];
+        assert_eq!(
+            encoder.encode(b"too long", true, &mut output),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(output, [9]);
+        assert!(encoder.history.is_none());
+        assert_eq!(encoder.frame_position, 0);
+        encoder.encode(&[], true, &mut output).unwrap();
+        assert!(encoder.history.is_none());
+    }
 
     #[test]
     fn one_shot_dictionary_header_has_exact_identifier_and_content_size_fields() {
