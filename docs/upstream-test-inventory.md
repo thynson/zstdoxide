@@ -113,20 +113,23 @@ existence of a local file.
 | Inline legacy and skippable regression bytes | `tests/upstream_inline_regressions.rs` | Modern component runs; the full legacy desired-success assertion remains blocked |
 | Four public one-shot fuzz targets | `tests/upstream_fuzz_targets.rs` | Exact tail-selected input contracts with bounded deterministic inputs and a configurable external file runner; contexts/parameters/in-place and production scanner APIs remain missing |
 | Regression directory corpora | `tests/upstream_regression_corpora.rs` | Exact Silesia/GitHub inputs and full size/content roundtrips; the original method, strategy, level, dictionary, and CSV comparison matrix remains missing |
-| FSE normalized-count and Huffman decoding fuzz intent | `tests/upstream/entropy.rs` | Independent official vectors and arbitrary bounded inputs; encoder and specialized C control paths remain missing |
+| FSE normalized-count and Huffman decoding fuzz intent | `tests/upstream/entropy.rs`, `src/entropy_encode.rs` | Official vectors, arbitrary bounded decoding and checked normalized-count writing; the original randomized writer/reader target driver and specialized C controls remain incomplete |
 | Single-file DXT1 and kernel empty-frame fixtures | `tests/upstream_testcard.rs` | Exact original bytes and output contracts; maximum-level selection, browser rendering, and kernel workspace APIs remain missing |
 | Ordinary streaming and context reuse | `tests/upstream_streaming.rs`, `tests/upstream_window.rs` | Bounded fragmented progress, flush/finish/reset, pledge and checksum failures, official window-distance fixtures and matching external adapters; specialized parameter/control paths remain separate |
 | Prepared dictionaries and prefixes | `src/dictionary.rs`, `tests/upstream_dictionary.rs`, `tests/upstream_dictionary_encode.rs` | Exact malformed/prepared metadata, raw/formatted matches, first-block decoding entropy/repeat offsets, IDs, persistent selection, one-use prefixes and resource/state boundaries; original level/strategy and broader random schedules remain incomplete |
-| Raw dictionary training | `tests/upstream_training.rs` | Bounded deterministic raw selection, held-out compression improvement and exact bidirectional C interoperability; formatted training and COVER/fastCover equivalence remain incomplete |
+| Raw and formatted dictionary training | `tests/upstream_training.rs`, `tests/upstream_formatted_training.rs` | Bounded deterministic content selection, generated sample-derived literal metadata, exact cyclic input construction, held-out improvement and bidirectional C interoperability; original CNBuffer, COVER/fastCover, shrink and worker optimization remain incomplete |
 | Dictionary loader and raw roundtrip fuzz targets | `tests/upstream_dictionary_fuzz.rs` | Original tail-selected bytes and supported API assertions; by-reference C lifetimes, advanced random parameters and external sequence producers remain partial |
 
 The dictionary decoder checkpoint runs **40 integration tests** and **11 parser
-unit tests**. The mapped initial dictionary encoder checkpoints add **21 regular
+unit tests**. The mapped dictionary encoder checkpoints add **24 regular
 tests** and two explicitly exercised CLI tests: 96 streamed and 20 one-shot
 frames were independently decoded byte for byte. Raw training adds four regular
 tests and a bidirectional 16-frame official-C check on held-out inputs; this is
-an independent raw selection strategy, not a COVER/fastCover implementation.
-Its fixtures include the original HTTP/fixed-training/invalid
+an independent raw selection strategy. Formatted training adds seven regular
+tests and a separately exercised C check accepting eight Rust-built dictionaries
+and 36 source/dictionary pairs in both directions. Its cyclic assertion preserves
+the exact original 1 MiB sample layout. Neither trainer implements COVER/fastCover
+optimization. The fixtures include the original HTTP/fixed-training/invalid
 dictionaries plus **48** reproducible dictionary-related files backed by **123**
 independent C oracle outcomes. C acceptance and the selected format lifetime rule
 remain separate: dictionary references at P==W are accepted and references at

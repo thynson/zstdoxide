@@ -228,10 +228,34 @@ the existing partial streaming mapping without claiming additional C case parity
 `tests/upstream_training.rs` exercises four regular raw-training contracts and
 16 held-out bidirectional official-C roundtrips. Independent C compression totals
 decreased from 2,263 to 609 bytes with the Rust-selected content. Training maps as
-partial: this bounded deterministic selector does not produce formatted entropy
-metadata or implement COVER/fastCover optimization. C-generated formatted
-dictionaries remain decoder/interoperability fixtures, not evidence of a complete
-Rust formatted trainer.
+partial for the original CNBuffer campaign and COVER/fastCover optimization.
+The raw-only API intentionally emits content; the separate formatted trainer
+constructs its entropy metadata algorithmically as described below.
+
+The formatted-training checkpoint adds seven regular tests in
+`tests/upstream_formatted_training.rs`. The exact `fuzzer.c:2665` cyclic case
+uses 1 MiB of index-modulo-256 bytes, 128 samples of 8 KiB and a 16 KiB output cap;
+it successfully constructs a bounded dictionary with a nonzero ID and a usable
+entropy header. This completes the named construction-success assertion without
+requiring the Rust training algorithm to reproduce C output bytes. The broader
+`fuzzer.c:2675` CNBuffer campaign remains partial. COVER/fastCover, shrink,
+worker and randomized strategy groups remain blocked.
+
+Generated ID and header assertions now exercise both newly built dictionaries
+and the original fixed dictionary. The ID/header groups are tracked separately
+from preceding strategy-specific builders, which they do not complete. Public
+finalization checks cover short-content padding, suffix preservation under the
+complete serialized-size cap, explicit/automatic IDs, sample-prefix budgets,
+malformed parameters, owned lifetimes and held-out usefulness. Independent C
+accepts eight generated dictionaries across 36 source/dictionary pairs in both
+directions; its 16 held-out compression outputs total 715 bytes versus 2,288
+without the dictionary.
+
+Checked normalized-count serialization now matches pinned C headers at every
+supported table log, including zero runs and low-probability counts. Independent
+C readers additionally accept 437 generated FSE weight streams and 68 complete
+Huffman headers. Those foundations do not yet replay `fse_read_ncount.c`'s
+original randomized writer driver or its 79-input external corpus.
 
 The dictionary loader/raw roundtrip adapter preserves the original tail selectors
 and selected source bytes. Loader mode/prefix/loading-method consumption and raw
@@ -243,7 +267,8 @@ parameters and external sequence producers remain explicit omissions. The entire
 roundtrips and 352 expected formatted parse rejections. The raw-target corpus
 also passed both builds with 13,876 exact roundtrips. Neither replay skips files.
 `dictionary_decompress`, trained roundtrip and trained streaming-roundtrip drivers
-still require their original formatted `FUZZ_train` path and parameter schedules.
+still require target adapters for their original `FUZZ_train` sample schedules
+and parameter branches; the independent Rust formatted trainer itself is now available.
 
 External corpus pinning and replay are separate checkpoints. A completed download
 or manifest hash does not change a target's replay status. The structural source
