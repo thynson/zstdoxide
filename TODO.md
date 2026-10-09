@@ -40,7 +40,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Adapt frozen direct observations into a checked dependency-free Rust fixture reader for later parser comparisons.
 - [ ] Corroborate direct candidates through the official sequence collector, retaining its distinct publication, tiny-input and delimiter behavior.
 - [x] Capture ordinary Fast frame publication witnesses across compressed/raw/RLE transitions and full independent decoding before Rust Fast implementation.
-- [ ] Decode every captured complete ordinary Fast C frame in normal Cargo tests with dependency-free fixture access.
+- [x] Decode every captured complete ordinary Fast C frame in normal Cargo tests with dependency-free fixture access.
 - [x] Add a plain checked Fast execution plan using existing known-size request resolution and explicit strategy/resource admission.
 - [x] Extend private small hash layouts and separate checked table lookup/store for persistent sampled Fast state, preserving named bounds and both access backends.
 - [x] Add checked explicit wire-offset value transitions and planning while preserving canonical named plans.

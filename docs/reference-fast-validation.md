@@ -408,3 +408,32 @@ Before any recipe ran, runner fixes excluded an unrelated CRLF package script,
 removed an arbitrary source-count assumption and scoped the deprecation warning
 for deliberately selected APIs. No runtime recipe was changed to force success.
 This establishes ordinary C publication observations, not Rust Fast execution.
+
+## Rust decoding of the captured ordinary frames
+
+`tests/upstream_fast_frames.rs` independently expresses all 23 deterministic
+input recipes in Rust and checks their lengths and previously captured C input
+fingerprints. A bounded consecutive-extent reader borrows frame bytes directly
+from the committed pack; rejected holes, overlaps, empty extents and overflow
+leave its cursor unchanged. No runtime C, Python, JSON or gzip dependency is
+introduced.
+
+The public Rust decoder now reconstructs all 27 completed C frames exactly:
+2,275,346 bytes per configuration and exhaustive consumption of the 1,607,342-byte
+frame pack. Further assertions inspect content size/window metadata, all 64
+nonempty raw/RLE/compressed block kinds and the four specifically captured
+whole-buffer payload equalities. The eleven abandoned header-only observations
+remain excluded from complete-frame decoding.
+
+The immutable `189f37a` plus one test-file overlay passes fourteen commands.
+Four tests in nine configurations produce 36 passes and zero ignores, each
+decoding all 27 frames. Configurations cover safe, five relevant individual
+decode backends, all features and library no_std safe/all. Scoped strict Clippy
+safe/all, no_std library compilation safe/all and owned-file formatting pass.
+All snapshot and test source hashes remain unchanged. These are interoperability
+tests of the existing decoder, not claims about the upcoming Rust Fast encoder.
+
+[Decode evidence](evidence/2026-10-09-fast-frame-rust-decoding.json) and its
+[archive](evidence/2026-10-09-fast-frame-rust-decoding.tar.gz) preserve the frozen
+test, source manifest, exact commands and logs. No new C or Miri campaign is
+attributed to this checkpoint.
