@@ -56,7 +56,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Add unsafe-match-chain with equivalent candidate order and search limits.
 - [x] Add the bounded multi-candidate parser with deterministic ties and source-independent resolution.
 - [ ] Integrate bounded chain matching with dictionary/history eligibility and documented budgets.
-- [ ] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
+- [x] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.
 - [ ] Extend backend/strategy benchmarks and validation; record remaining upstream gaps.
 
