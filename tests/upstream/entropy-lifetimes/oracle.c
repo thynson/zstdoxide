@@ -1,6 +1,6 @@
 /* Offline fixture generator and test oracle; never linked into Rust.
  * Derived from facebook/zstd v1.5.7 tests/zstreamtest.c:145-166, :263-302,
- * :1652-1718, :1831-1881. Copyright (c) Meta Platforms, Inc. and affiliates.
+ * :1652-1718, :1831-1919. Copyright (c) Meta Platforms, Inc. and affiliates.
  * Copyright (c) zstdoxide contributors. BSD-3-Clause; see root LICENSE.zstd.
  */
 #define ZSTD_STATIC_LINKING_ONLY
@@ -18,6 +18,11 @@
 #define DICTIONARY_CAPACITY (48U * 1024U)
 #define BLOCK_SIZE (128U * 1024U)
 #define INPUT_SIZE (2U * BLOCK_SIZE)
+#define FLUSH_SIZE 6U
+#define FLUSH_COUNT ((256U * 1024U + FLUSH_SIZE - 1) / FLUSH_SIZE)
+#define SMALL_BLOCK_INPUT_SIZE (FLUSH_COUNT * FLUSH_SIZE + 9U * 128U)
+/* Same output allocation as basicUnitTests; bounds both original campaigns. */
+#define OUTPUT_CAPACITY (8U + 200U * 1024U + ZSTD_compressBound(TRAINING_SIZE))
 
 static void require(int condition, const char* message) {
     if (!condition) { fprintf(stderr, "%s\n", message); exit(2); }
@@ -151,18 +156,104 @@ static void generate(const char* directory) {
     free(decoded); free(output); free(source); free(dictionary); free(training);
 }
 
+static void small_blocks(const char* dictionary_path, const char* directory) {
+    unsigned char* dictionary = malloc(DICTIONARY_CAPACITY);
+    unsigned char* source = malloc(SMALL_BLOCK_INPUT_SIZE);
+    unsigned char* output = malloc(OUTPUT_CAPACITY);
+    unsigned char* decoded = malloc(SMALL_BLOCK_INPUT_SIZE);
+    unsigned char* boundaries = malloc(4U * (FLUSH_COUNT + 9U));
+    ZSTD_CCtx* compressor = ZSTD_createCCtx();
+    ZSTD_DCtx* decompressor = ZSTD_createDCtx();
+    size_t dictionary_size, regenerated, source_position = 0;
+    unsigned calls = 0, zero_flush_results = 0;
+    int remaining_input = 256 * 1024, offset;
+    ZSTD_compressionParameters parameters;
+    ZSTD_CDict* prepared;
+    ZSTD_outBuffer out;
+    ZSTD_frameHeader frame_header;
+    require(dictionary && source && output && decoded && boundaries && compressor && decompressor,
+            "small-block oracle allocation failed");
+    dictionary_size = load(dictionary_path, dictionary, DICTIONARY_CAPACITY);
+    require(dictionary_size >= 1152, "dictionary does not cover original ranges");
+    parameters = ZSTD_getCParams(3, 0, dictionary_size);
+    prepared = ZSTD_createCDict_advanced(dictionary, dictionary_size, ZSTD_dlm_byRef,
+                                        ZSTD_dct_fullDict, parameters, ZSTD_defaultCMem);
+    require(prepared != NULL, "original full/by-reference CDict creation failed");
+    out.dst = output; out.size = OUTPUT_CAPACITY; out.pos = 0;
+    codec_ok(ZSTD_CCtx_reset(compressor, ZSTD_reset_session_and_parameters));
+    codec_ok(ZSTD_CCtx_refCDict(compressor, prepared));
+    codec_ok(ZSTD_CCtx_setParameter(compressor, ZSTD_c_checksumFlag, 1));
+    while (remaining_input > 0) {
+        unsigned char test_buffer[FLUSH_SIZE] = {0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa};
+        ZSTD_inBuffer in = {test_buffer, sizeof(test_buffer), 0};
+        size_t result = ZSTD_compressStream2(compressor, &out, &in, ZSTD_e_flush);
+        unsigned shift;
+        codec_ok(result);
+        require(in.pos == in.size, "original six-byte flush did not consume input");
+        if (result == 0) ++zero_flush_results;
+        memcpy(source + source_position, test_buffer, sizeof(test_buffer));
+        source_position += sizeof(test_buffer);
+        require(out.pos <= UINT32_MAX, "boundary exceeds u32");
+        for (shift = 0; shift < 4; ++shift)
+            boundaries[4U * calls + shift] = (unsigned char)(out.pos >> (8U * shift));
+        ++calls;
+        remaining_input -= (int)sizeof(test_buffer);
+    }
+    require(calls == FLUSH_COUNT && zero_flush_results == FLUSH_COUNT,
+            "original six-byte flush count or completion differs");
+    for (offset = 1024; offset >= 0; offset -= 128) {
+        ZSTD_inBuffer in = {dictionary + offset, 128, 0};
+        ZSTD_EndDirective directive = offset > 0 ? ZSTD_e_continue : ZSTD_e_end;
+        size_t result = ZSTD_compressStream2(compressor, &out, &in, directive);
+        unsigned shift;
+        codec_ok(result);
+        require(in.pos == in.size, "original dictionary range was not consumed");
+        require(offset > 0 || result == 0, "original final range did not finish frame");
+        memcpy(source + source_position, dictionary + offset, 128);
+        source_position += 128;
+        for (shift = 0; shift < 4; ++shift)
+            boundaries[4U * calls + shift] = (unsigned char)(out.pos >> (8U * shift));
+        ++calls;
+    }
+    require(source_position == SMALL_BLOCK_INPUT_SIZE && calls == FLUSH_COUNT + 9,
+            "original small-block input size differs");
+    require(ZSTD_getFrameHeader(&frame_header, output, out.pos) == 0,
+            "incomplete original small-block header");
+    regenerated = ZSTD_decompress_usingDict(decompressor, decoded, SMALL_BLOCK_INPUT_SIZE,
+                                            output, out.pos, dictionary, dictionary_size);
+    codec_ok(regenerated);
+    require(regenerated == source_position && memcmp(source, decoded, regenerated) == 0,
+            "original zstreamtest:1884 output differs");
+    save(directory, "source-six-byte.bin", source, source_position);
+    save(directory, "original-six-byte.zst", output, out.pos);
+    save(directory, "original-six-byte-boundaries.le32", boundaries, 4U * calls);
+    printf("{\"dictionary_size\":%zu,\"dictionary_id\":%u,\"window_log\":%u,"
+           "\"frame_window\":%llu,\"content_size_unknown\":%s,\"checksum\":%u,"
+           "\"flush_calls\":%u,\"complete_flush_calls\":%u,\"dictionary_ranges\":9,"
+           "\"output_capacity\":%zu,\"source_size\":%zu,\"source_fnv1a\":\"%016llx\","
+           "\"frame_size\":%zu,\"boundary_fnv1a\":\"%016llx\"}\n",
+           dictionary_size, ZDICT_getDictID(dictionary, dictionary_size), parameters.windowLog,
+           (unsigned long long)frame_header.windowSize,
+           frame_header.frameContentSize == ZSTD_CONTENTSIZE_UNKNOWN ? "true" : "false",
+           frame_header.checksumFlag, FLUSH_COUNT, zero_flush_results, OUTPUT_CAPACITY,
+           source_position, (unsigned long long)fnv1a(source, source_position), out.pos,
+           (unsigned long long)fnv1a(boundaries, 4U * calls));
+    ZSTD_freeCDict(prepared); ZSTD_freeCCtx(compressor); ZSTD_freeDCtx(decompressor);
+    free(boundaries); free(decoded); free(output); free(source); free(dictionary);
+}
+
 static void decode(const char* dictionary_path, const char* frame_path, const char* expected_path) {
     unsigned char* dictionary = malloc(DICTIONARY_CAPACITY);
-    unsigned char* frame = malloc(ZSTD_compressBound(INPUT_SIZE));
-    unsigned char* expected = malloc(INPUT_SIZE);
-    unsigned char* output = malloc(INPUT_SIZE);
+    unsigned char* frame = malloc(OUTPUT_CAPACITY);
+    unsigned char* expected = malloc(SMALL_BLOCK_INPUT_SIZE);
+    unsigned char* output = malloc(SMALL_BLOCK_INPUT_SIZE);
     ZSTD_DCtx* context = ZSTD_createDCtx();
     size_t dictionary_size, frame_size, expected_size, decoded;
     require(dictionary && frame && expected && output && context, "decode allocation failed");
     dictionary_size = load(dictionary_path, dictionary, DICTIONARY_CAPACITY);
-    frame_size = load(frame_path, frame, ZSTD_compressBound(INPUT_SIZE));
-    expected_size = load(expected_path, expected, INPUT_SIZE);
-    decoded = ZSTD_decompress_usingDict(context, output, INPUT_SIZE, frame, frame_size,
+    frame_size = load(frame_path, frame, OUTPUT_CAPACITY);
+    expected_size = load(expected_path, expected, SMALL_BLOCK_INPUT_SIZE);
+    decoded = ZSTD_decompress_usingDict(context, output, SMALL_BLOCK_INPUT_SIZE, frame, frame_size,
                                        dictionary, dictionary_size);
     codec_ok(decoded);
     require(decoded == expected_size && memcmp(output, expected, decoded) == 0,
@@ -175,6 +266,7 @@ static void decode(const char* dictionary_path, const char* frame_path, const ch
 int main(int argc, char** argv) {
     require(ZSTD_versionNumber() == 10507, "wrong oracle version");
     if (argc == 3 && !strcmp(argv[1], "generate")) generate(argv[2]);
+    else if (argc == 4 && !strcmp(argv[1], "small-blocks")) small_blocks(argv[2], argv[3]);
     else if (argc == 5 && !strcmp(argv[1], "decode")) decode(argv[2], argv[3], argv[4]);
     else return 1;
     return 0;

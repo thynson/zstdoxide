@@ -1,7 +1,7 @@
 # Original dictionary entropy lifetime input
 
 This fixture preserves the default dictionary used by facebook/zstd v1.5.7
-`tests/zstreamtest.c:1831-1881`, at revision
+`tests/zstreamtest.c:1831-1919`, at revision
 `f8745da6ff1ad1e7bab384bd1f9d742439278e99`. The test and data generator are
 attributed under the BSD-3-Clause option in root `LICENSE.zstd`.
 `provenance.json` records source, generator, dictionary, input and frame hashes.
@@ -63,8 +63,61 @@ its ID, entropy tables and repeat offsets intact.
 
 The optional C oracle regenerates and checks the pinned dictionary, executes
 both original C campaigns, decodes those C frames with Rust, and independently
-decodes six Rust streaming frames plus two one-shot frames. This checkpoint
-does not include the separate six-byte flush campaign at line 1884.
+decodes six Rust streaming frames plus two one-shot frames.
+
+## Six-byte flush campaign at line 1884
+
+The separate small-block case consumes no RNG. Its source and dictionary are
+therefore identical under either preceding window-sweep mode. The C helper
+creates the original level-3, full, by-reference CDict, resets the compression
+context with `ZSTD_reset_session_and_parameters`, references that CDict and
+enables the checksum. It leaves source size unknown.
+
+The source and directive schedule is exact:
+
+1. Start `remainingInput` at 262,144. While it is positive, submit six `0xaa`
+   bytes with `ZSTD_e_flush` and subtract six. This is **43,691** flush calls
+   and **262,146** source bytes, including the original two-byte overshoot.
+2. Submit nine 128-byte serialized dictionary slices at offsets 1,024, 896,
+   768, 640, 512, 384, 256, 128 and zero, in that order. The first eight calls
+   use `Continue`; the last uses `Finish`/`ZSTD_e_end`.
+
+The complete source is 263,298 bytes, with FNV-1a `a3840785d84a0530`. Dictionary
+ranges use serialized offsets, including entropy/header bytes, rather than
+content-relative offsets. The optional oracle compares every C and Rust source
+byte and preserves the original compression output capacity of 10,731,528
+bytes. Its decoded-output allocation is bounded to the exact expected size.
+
+Measured C output has an unknown content size, a checksum, and a **2 MiB**
+window. Its initial CDict parameters still report window log 17; Rust uses log
+21 to preserve the actual advertised window. C emits 43,691 raw six-byte
+blocks, buffers the eight `Continue` ranges without producing output, then
+emits one final compressed block with a 175-byte payload. The complete frame
+is 393,411 bytes. All 43,700 cumulative output positions are saved outside the
+repository as little-endian `u32` values and checked against an independent
+wire inspector. Each original flush completes in its single call with the
+full input consumed and return value zero.
+
+Rust's uniform-byte fast path emits RLE six-byte blocks. All three policies
+still emit exactly one complete block per original flush and buffer all eight
+`Continue` ranges. This representation difference is explicit; C frame-byte
+identity is not required. The final sequence modes make dictionary table
+lifetime observable rather than merely checking a successful roundtrip:
+
+| Encoder | Final sequences | Literal length | Offset | Match length |
+| --- | --- | --- | --- | --- |
+| Original C level 3 | 12 | Repeat | Predefined | Repeat |
+| Rust Greedy | 14 | Repeat | Predefined | Predefined |
+| Rust Chain | 13 | Repeat | Predefined | Predefined |
+| Rust Lazy | 12 | Repeat | New | Predefined |
+
+Normal tests assert every block boundary, all final modes, full decoded bytes,
+counters and output canaries. Changing only dictionary content, while retaining
+its ID and entropy header, must fail decoding or change the result. The optional
+C test decodes the original C frame with Rust and independently decodes all
+three Rust frames with C: 789,894 decoded bytes across those three frames.
+These checks do not implement the missing Rust numeric-level or borrowed-CDict
+API contracts and do not expand the pinned default dictionary training profile.
 
 ## Reproduction
 
@@ -75,7 +128,7 @@ export ZSTD_UPSTREAM=/path/to/zstd-v1.5.7
 cargo test --release --test upstream_entropy_lifetimes -- --ignored --nocapture
 ```
 
-That test compiles the helper and original `programs/datagen.c` into an external
+Each oracle test compiles the helper and original `programs/datagen.c` into an external
 temporary executable. It links C only into that test process, never into the
 Rust codec, and removes its own temporary files. The complete compile and
 generation argument lists are preserved in `provenance.json`.

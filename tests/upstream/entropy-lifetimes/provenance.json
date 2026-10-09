@@ -15,7 +15,7 @@
     "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b"
   },
   "generator": "tests/upstream/entropy-lifetimes/oracle.c",
-  "generator_sha256": "2966b51dd20c1d9730f1d66c7e29c64f674807c74c03c3a67d64811e283d5018",
+  "generator_sha256": "046f04081b47fc079776b2d206749b07efdf7de3f2de6faa52a174b394e9660f",
   "compile_arguments": [
     "cc",
     "-std=c99",
@@ -100,6 +100,18 @@
     "original-big.zst": {
       "size": 233715,
       "sha256": "59034f350e8b653f5dbce3c45f4eb30cd3dea503bb913d49df50274681238d67"
+    },
+    "source-six-byte.bin": {
+      "size": 263298,
+      "sha256": "5daacd4d5274d45f05a7c60c2925f055eeefc7353944f04eeaac5240349c0564"
+    },
+    "original-six-byte.zst": {
+      "size": 393411,
+      "sha256": "9e2802d33a6f0308974e50b6332afe57284a5094b73bea79f1fb1b8365c12301"
+    },
+    "original-six-byte-boundaries.le32": {
+      "size": 174800,
+      "sha256": "8847e453fcf85afc0c760e2f70d315214324bbf7352507df988350eefebd4c13"
     }
   },
   "rust_adaptations": [
@@ -108,5 +120,106 @@
     "Use window_log 18 for the actual 262144-byte original frame window; the initial C CDict parameters report windowLog 17.",
     "The fixture pins the default 50 percent training profile; other upstream -P settings are not implied."
   ],
-  "license": "BSD-3-Clause option; see root LICENSE.zstd"
+  "license": "BSD-3-Clause option; see root LICENSE.zstd",
+  "small_block_campaign": {
+    "case": "tests/zstreamtest.c:1884-1919",
+    "generation_arguments": [
+      "$OUTPUT/oracle",
+      "small-blocks",
+      "tests/upstream/entropy-lifetimes/original-default.dict",
+      "$OUTPUT"
+    ],
+    "rng_draws": 0,
+    "initial_remaining_input": 262144,
+    "flush_input_size": 6,
+    "flush_byte": 170,
+    "flush_directive": "ZSTD_e_flush",
+    "dictionary_ranges": [
+      [
+        1024,
+        1152
+      ],
+      [
+        896,
+        1024
+      ],
+      [
+        768,
+        896
+      ],
+      [
+        640,
+        768
+      ],
+      [
+        512,
+        640
+      ],
+      [
+        384,
+        512
+      ],
+      [
+        256,
+        384
+      ],
+      [
+        128,
+        256
+      ],
+      [
+        0,
+        128
+      ]
+    ],
+    "dictionary_directives": [
+      "ZSTD_e_continue",
+      "ZSTD_e_continue",
+      "ZSTD_e_continue",
+      "ZSTD_e_continue",
+      "ZSTD_e_continue",
+      "ZSTD_e_continue",
+      "ZSTD_e_continue",
+      "ZSTD_e_continue",
+      "ZSTD_e_end"
+    ],
+    "setup": [
+      "ZSTD_createCDict_advanced(full dictionary, by-reference, ZSTD_getCParams(3, 0, dictionary_size))",
+      "ZSTD_CCtx_reset(ZSTD_reset_session_and_parameters)",
+      "ZSTD_CCtx_refCDict",
+      "ZSTD_CCtx_setParameter(ZSTD_c_checksumFlag, 1)"
+    ],
+    "independent_c_result": {
+      "dictionary_size": 49152,
+      "dictionary_id": 2004100296,
+      "window_log": 17,
+      "frame_window": 2097152,
+      "content_size_unknown": true,
+      "checksum": 1,
+      "flush_calls": 43691,
+      "complete_flush_calls": 43691,
+      "dictionary_ranges": 9,
+      "output_capacity": 10731528,
+      "source_size": 263298,
+      "source_fnv1a": "a3840785d84a0530",
+      "frame_size": 393411,
+      "boundary_fnv1a": "1ac5eb482bb6821b"
+    },
+    "c_blocks": {
+      "six_byte_raw": 43691,
+      "final_compressed_payload_size": 175,
+      "final_sequences": 12,
+      "final_modes_ll_of_ml": [
+        3,
+        0,
+        3
+      ]
+    },
+    "rust_adaptations": [
+      "Owned shared full dictionary and independent Greedy/Chain/Lazy policies preserve the source and directive schedule, without claiming numeric level 3 or by-reference storage equivalence.",
+      "Use window_log 21 to match the measured unknown-size original streaming frame window of 2097152, despite CDict initial cParams windowLog 17.",
+      "Rust uniform-byte blocks use RLE while original C emits raw six-byte blocks; all 43691 complete flush boundaries and eight buffered Continue ranges are checked independently.",
+      "C decoded-output storage is bounded to the exact 263298-byte expected source; the original 10731528-byte compression output capacity is preserved."
+    ]
+  }
 }
