@@ -50,7 +50,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Parameterize chain/lazy parser table and output storage while preserving resolver and ordering contracts.
 - [x] Expose allocator-aware block encoding with dictionary handles and transactional entropy publication.
 - [x] Expose allocator-aware stream encoding with independent dictionary handles and unchanged reset/directive contracts.
-- [ ] Add allocator-aware one-shot compression with original output ownership and no allocator-changing copies.
+- [x] Add allocator-aware one-shot compression with original output ownership and no allocator-changing copies.
 - [x] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
 - [x] Define allocation-free borrowed dictionary views and a sealed immutable handle contract.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.

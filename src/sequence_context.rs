@@ -96,6 +96,10 @@ pub(crate) struct SequenceEncoder<A: Allocator = Global> {
 }
 
 impl SequenceEncoder<Global> {
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "const Global convenience for direct callers")
+    )]
     pub(crate) const fn new() -> Self {
         Self {
             defaults: None,

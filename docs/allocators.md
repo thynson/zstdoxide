@@ -11,18 +11,17 @@ The package's conservative version floor is `1.101`; only the exact dated
 compiler is supported by the current verification. Stable 1.100 and stable
 1.101 are not claimed as tested. Module 8 retains its Rust 1.89 evidence.
 
-Custom allocation is being implemented incrementally. Convenience APIs retain
-Global defaults. Public whole-buffer `decompress_in` and
-`decompress_with_options_in` now allocate output and all temporary codec storage
-through the chosen allocator family; streaming and dictionary collection follow
-separately. Dictionary
-construction now exposes `from_bytes_in`, `from_bytes_with_mode_in`, and
-`raw_in`; its payload and prepared tables use the chosen allocator. Standard
-shared handles still allocate the counts and inline dictionary object in Global.
-`Dictionary::view()` provides an allocation-free borrowed alternative; codec
-context integration follows its own checkpoint. Public `train_raw_dictionary_in`
-also owns final content and every selection temporary through the chosen family;
-formatted finalization follows separately. The
+Custom allocation is available across one-shot compression/decompression,
+streaming Encoder/Decoder contexts, raw/formatted dictionary construction and
+raw/formatted training. Convenience APIs retain Global defaults; allocator-last
+`_in` entry points use the chosen allocator family for codec payloads and
+scratch. Returned output and serialized dictionary bytes retain the original
+allocator, with fresh retained clones for separate temporary/table owners.
+Dictionary and context allocation types can differ through `DictionaryHandle`.
+`Dictionary::view()` provides an allocation-free borrowed attachment; standard
+`into_shared()` uses an infallible Global allocation for both reference counts
+and the entire inline dictionary object. Full integrated checks and allocation
+benchmarks remain in the Module 9 checklist. The
 chosen standard `Allocator`/`Vec<T, A>` subset compiles without feature gates
 on the pin. Custom Arc/Rc, allocator-aware BinaryHeap, and fallible Box
 construction still require unstable `allocator_ext` in the inspected library;
@@ -31,7 +30,7 @@ contract instead. No substitute allocator trait is exposed.
 
 ## Existing boundaries
 
-| Owner | Current allocation sites | Planned allocator-aware storage |
+| Owner | Allocation sites | Allocator-aware storage |
 | --- | --- | --- |
 | Decoded output/history | `History::reserve` | `Vec<u8, A>` retained by the output/history owner |
 | FSE decoding tables | `FseTable::from_normalized` | `Vec<FseEntry, A>` with the allocator carried by the table |

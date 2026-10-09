@@ -598,6 +598,27 @@ not reproduce levels 1..6, workers 1..4 or the 60/54/48/24 memtest suffix counts
 The corresponding two inventory anchors advance to partial, not complete.
 Static workspaces, estimators and automatic shrinking remain separate contracts.
 
+`compress_in` and `compress_with_dictionary_in` now retain the original output
+allocator while block workspace owns fresh clones. Their
+[whole-buffer evidence](evidence/2026-10-09-allocator-whole-encode.json) records
+six tests across fifteen configurations, 126 existing encode-related tests per
+safe/all/no-default build, public strategy/dictionary checks, and 36 exact C
+decodes in each safe/all run. The [baseline helper](evidence/2026-10-09-allocator-whole-encode-baseline.rs.gz)
+and [captured output](evidence/2026-10-09-allocator-whole-encode-baseline.log.gz)
+preserve 36 pre-migration frames with FNV64 5968133839619914848, including the
+exact repeating first-48-byte source schedule and content-size/block boundaries.
+
+The allocation campaign fails 106 observed request ordinals in every selected
+configuration: empty no/raw/prepared dictionary paths issue 1/2/8 requests;
+nonempty paths issue 29/26/40. Every failure releases partial result and scratch.
+Tests cover original identity, moved output outliving input/dictionary, owned
+and borrowed non-Clone domains, and reserved emission of every header width.
+Three strict-provenance Miri cases passed (72.566, 11.441 and 1.903 seconds).
+No_std, formatting and strict Clippy passed. A concurrent benchmark lint failure
+was preserved and passed after its owner repaired the benchmark; the isolated
+five-file checkpoint independently passed strict Clippy, no_std, six tests and
+formatting without those concurrent files.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation and the final
 integrated platform matrix remain open. The

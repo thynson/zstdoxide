@@ -109,7 +109,8 @@ release-only assumption may bypass range checks.
 Read [the data structure inventory](docs/data-structures.md),
 [architecture](docs/architecture.md), and module design documents before adding
 another backend. Allocation boundaries use fallible reservation. The standard
-`Allocator` is supported by `decompress_in`, `decompress_with_options_in`,
+`Allocator` is supported by `compress_in`, `compress_with_dictionary_in`,
+`decompress_in`, `decompress_with_options_in`,
 `decompress_with_dictionary_in`,
 `Decoder::new_in`, `Decoder::with_dictionary_in`, allocator-aware dictionary
 construction, `train_raw_dictionary_in`, `train_dictionary_in`, and
@@ -120,7 +121,8 @@ Arc/Rc sharing still uses Global for the counts and inline object; borrowed
 `DictionaryView` values allocate nothing. Custom streaming encoders and decoders accept either
 shared owners or borrowed views independently of their workspace allocator.
 `Encoder::new_in`, `with_options_in`, and `with_dictionary_in` retain workspace
-ownership across frame reset. One-shot compression is being integrated separately.
+ownership across frame reset. One-shot compression retains the original
+allocator in its result and releases all temporary workspace before returning.
 [The allocator plan](docs/allocators.md) records the exact API and validation
 boundaries, including the unavailable Rust 1.100 verification.
 

@@ -27,7 +27,19 @@ const CHAIN_SEED_NODES: usize = 65_536;
 /// Corresponds to the one-shot contract of upstream `ZSTD_compress`, using this
 /// implementation's own block-selection strategy rather than upstream levels.
 pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
-    compress_frame(input, None)
+    compress_in(input, Global)
+}
+
+/// Compresses one frame into the supplied allocator, including all temporary
+/// match, literal, and entropy storage. The returned vector retains the original
+/// allocator value; scratch owns fresh clones and is released before return.
+/// A borrowed non-Clone allocator can be supplied as `&allocator`.
+///
+/// Frame and compression behavior matches [`compress`]. Collection requests are
+/// fallible, and failure releases partial output and scratch. Ordinary allocator
+/// cloning may allocate or panic outside these fallible collection requests.
+pub fn compress_in<A: Allocator + Clone>(input: &[u8], allocator: A) -> Result<Vec<u8, A>> {
+    compress_frame_in::<A, SharedDictionary>(input, None, allocator)
 }
 
 /// Compresses input into a checksummed frame using owned dictionary content.
@@ -39,12 +51,35 @@ pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
 /// forward and published only when their compressed block is emitted.
 /// Corresponds to the one-shot contract of upstream `ZSTD_compress_usingCDict`.
 pub fn compress_with_dictionary(input: &[u8], dictionary: &SharedDictionary) -> Result<Vec<u8>> {
-    compress_frame(input, Some(dictionary))
+    compress_with_dictionary_in(input, dictionary, Global)
 }
 
-fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result<Vec<u8>> {
+/// Compresses one frame using an independently allocated dictionary and output.
+///
+/// Accepts a shared dictionary owner or a borrowed [`DictionaryView`] through the
+/// sealed handle contract. The dictionary remains unchanged. The returned vector
+/// owns the original allocator and compressed bytes; it borrows neither input nor
+/// dictionary. Every temporary uses fresh allocator clones. A borrowed dictionary
+/// view avoids the standard shared handle's Global outer allocation.
+///
+/// Frame behavior matches [`compress_with_dictionary`]. Failure releases partial
+/// output and scratch. Allocator cloning has the caller's own allocation/panic
+/// semantics, as documented for [`compress_in`].
+pub fn compress_with_dictionary_in<A: Allocator + Clone, D: DictionaryHandle>(
+    input: &[u8],
+    dictionary: &D,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    compress_frame_in(input, Some(dictionary), allocator)
+}
+
+fn compress_frame_in<A: Allocator + Clone, D: DictionaryHandle>(
+    input: &[u8],
+    dictionary: Option<&D>,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
     let blocks = input.len().div_ceil(MAX_BLOCK_SIZE).max(1);
-    let dictionary_id = dictionary.map_or(0, |dictionary| dictionary.id());
+    let dictionary_id = dictionary.map_or(0, |dictionary| dictionary.view().id());
     let (_, dictionary_bytes) = dictionary_field(dictionary_id);
     let capacity = blocks
         .checked_mul(3)
@@ -52,12 +87,12 @@ fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result
         .and_then(|overhead| overhead.checked_add(dictionary_bytes))
         .and_then(|overhead| overhead.checked_add(input.len()))
         .ok_or(Error::ResourceLimit)?;
-    let mut output = Vec::new();
+    let mut output = Vec::new_in(allocator);
     output
         .try_reserve_exact(capacity)
         .map_err(|_| Error::AllocationFailed)?;
     write_frame_header(&mut output, input.len(), dictionary_id);
-    let mut encoder = BlockEncoder::new();
+    let mut encoder = BlockEncoder::new_in(output.allocator().clone());
     encoder.start_frame(dictionary.cloned(), input.len() as u64)?;
     if input.is_empty() {
         encoder.encode(&[], true, &mut output)?;
@@ -65,7 +100,11 @@ fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result
     for (index, block) in input.chunks(MAX_BLOCK_SIZE).enumerate() {
         encoder.encode(block, index + 1 == blocks, &mut output)?;
     }
-    output.extend_from_slice(&(xxhash::checksum(input) as u32).to_le_bytes());
+    // The checked raw-block upper bound reserves four checksum bytes in addition
+    // to the largest header and every block. Selected blocks never exceed raw.
+    for byte in (xxhash::checksum(input) as u32).to_le_bytes() {
+        output.push(byte);
+    }
     Ok(output)
 }
 
@@ -94,6 +133,10 @@ pub(crate) struct BlockEncoder<A: Allocator = Global, D: DictionaryHandle = Shar
 }
 
 impl BlockEncoder<Global, SharedDictionary> {
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "const Global convenience constructor")
+    )]
     pub(crate) const fn new() -> Self {
         Self {
             strategy: CompressionStrategy::Greedy,
@@ -121,10 +164,6 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
     /// Give each fresh workspace owner its own allocator value. Clones need
     /// not be equivalent; complete owners move with their actual allocator.
     /// Ordinary Clone may allocate or panic independently of fallible reserves.
-    #[cfg_attr(
-        not(test),
-        allow(dead_code, reason = "private allocator-aware context entry point")
-    )]
     pub(crate) fn new_in(allocator: A) -> Self {
         Self {
             strategy: CompressionStrategy::Greedy,
@@ -348,8 +387,15 @@ impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
 }
 
 /// Writes a single-segment frame header; corresponds to `ZSTD_writeFrameHeader`.
-fn write_frame_header(output: &mut Vec<u8>, content_size: usize, dictionary_id: u32) {
-    output.extend_from_slice(&crate::frame::MAGIC.to_le_bytes());
+/// The caller reserves the complete header before this infallible append.
+fn write_frame_header<A: Allocator>(
+    output: &mut Vec<u8, A>,
+    content_size: usize,
+    dictionary_id: u32,
+) {
+    for byte in crate::frame::MAGIC.to_le_bytes() {
+        output.push(byte);
+    }
     let size = content_size as u64;
     let (descriptor, value, count) = if size < 256 {
         (0x24, size, 1)
@@ -362,8 +408,12 @@ fn write_frame_header(output: &mut Vec<u8>, content_size: usize, dictionary_id: 
     };
     let (dictionary_flag, dictionary_bytes) = dictionary_field(dictionary_id);
     output.push(descriptor | dictionary_flag);
-    output.extend_from_slice(&dictionary_id.to_le_bytes()[..dictionary_bytes]);
-    output.extend_from_slice(&value.to_le_bytes()[..count]);
+    for &byte in &dictionary_id.to_le_bytes()[..dictionary_bytes] {
+        output.push(byte);
+    }
+    for &byte in &value.to_le_bytes()[..count] {
+        output.push(byte);
+    }
 }
 
 fn dictionary_field(dictionary_id: u32) -> (u8, usize) {
@@ -787,6 +837,324 @@ mod tests {
             fail_at: None,
         })
         .unwrap()
+    }
+
+    // The independent pre-migration helper intentionally repeats only the first
+    // 48 bytes, not the entire byte string. Its 36 length/dictionary cases were
+    // captured before this allocator migration (helper SHA-256
+    // dac089eff3f99cb2074afca1fa670b27484eaa15522e27175820640b4c4a1f5d).
+    fn one_shot_baseline_source(length: usize) -> Vec<u8> {
+        (0..length)
+            .map(|index| b"abcaBc0123456789 -- repeated dictionary content --"[index % 48])
+            .collect()
+    }
+
+    fn one_shot_baseline_frames(mut inspect: impl FnMut(&[u8], &[u8], Option<&SharedDictionary>)) {
+        let raw =
+            Dictionary::raw(b"abcaBc0123456789 -- repeated dictionary content -- abcaBc0123456789")
+                .unwrap()
+                .into_shared();
+        let prepared = allocator_dictionary(true).into_shared();
+        let mut digest = 0xcbf2_9ce4_8422_2325_u64;
+        let mut cases = 0;
+        for length in [
+            0, 1, 7, 255, 256, 257, 65_791, 65_792, 65_793, 131_071, 131_072, 131_073,
+        ] {
+            let source = one_shot_baseline_source(length);
+            for dictionary in [None, Some(&raw), Some(&prepared)] {
+                let owner = block_allocator();
+                let identity = owner.identity();
+                let monitor = owner.monitor();
+                let frame = match dictionary {
+                    None => compress_in(&source, owner).unwrap(),
+                    Some(dictionary) => {
+                        compress_with_dictionary_in(&source, dictionary, owner).unwrap()
+                    }
+                };
+                assert_eq!(frame.allocator().identity(), identity);
+                let snapshot = monitor.snapshot();
+                assert_eq!(snapshot.live_blocks, 1);
+                assert_eq!(snapshot.live_bytes, frame.capacity() as u128);
+                assert_eq!(snapshot.owners_dropped + 1, snapshot.identities_created);
+                for byte in (frame.len() as u64)
+                    .to_le_bytes()
+                    .iter()
+                    .chain(frame.iter())
+                {
+                    digest = (digest ^ u64::from(*byte)).wrapping_mul(0x100_0000_01b3);
+                }
+                inspect(&source, &frame, dictionary);
+                drop(frame);
+                monitor.assert_released();
+                cases += 1;
+            }
+        }
+        assert_eq!(cases, 36);
+        assert_eq!(digest, 5_968_133_839_619_914_848);
+    }
+
+    #[test]
+    fn allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner() {
+        one_shot_baseline_frames(|source, frame, dictionary| {
+            let (header, _) = crate::FrameHeader::parse(frame).unwrap();
+            assert_eq!(header.content_size, Some(source.len() as u64));
+            assert_eq!(header.dictionary_id, dictionary.map_or(0, |dict| dict.id()));
+            assert!(header.has_checksum);
+            let decoded = match dictionary {
+                None => crate::decompress(frame, source.len()).unwrap(),
+                Some(dictionary) => {
+                    decompress_with_dictionary(frame, dictionary, DecodeOptions::new(source.len()))
+                        .unwrap()
+                }
+            };
+            assert_eq!(decoded, source);
+        });
+    }
+
+    #[test]
+    fn allocator_one_shot_owned_output_outlives_input_and_independent_dictionary() {
+        for prepared in [false, true] {
+            for shared in [false, true] {
+                let serialized = allocator_dictionary(prepared).as_bytes().to_vec();
+                let dictionary_owner = block_allocator();
+                let dictionary_monitor = dictionary_owner.monitor();
+                let output_owner = block_allocator();
+                let output_identity = output_owner.identity();
+                let output_monitor = output_owner.monitor();
+                let (frame, expected, pointer) = {
+                    let source =
+                        b"a useful raw dictionary pattern abcdefghijklmnopqrstuvwxyz".repeat(4);
+                    let dictionary =
+                        Dictionary::from_bytes_in(&serialized, dictionary_owner).unwrap();
+                    let before = dictionary_monitor.snapshot();
+                    let expected =
+                        compress_with_dictionary_in(&source, &dictionary.view(), Global).unwrap();
+                    let frame = if shared {
+                        let dictionary = dictionary.into_shared();
+                        let frame = compress_with_dictionary_in(&source, &dictionary, output_owner)
+                            .unwrap();
+                        assert_eq!(SharedDictionary::strong_count(&dictionary), 1);
+                        frame
+                    } else {
+                        compress_with_dictionary_in(&source, &dictionary.view(), output_owner)
+                            .unwrap()
+                    };
+                    // Compression never allocates through the dictionary's owner.
+                    assert_eq!(dictionary_monitor.snapshot().attempts, before.attempts);
+                    assert_eq!(frame, expected);
+                    let pointer = frame.as_ptr();
+                    (frame, expected, pointer)
+                };
+                dictionary_monitor.assert_released();
+                assert_eq!(frame.as_ptr(), pointer);
+                assert_eq!(frame, expected);
+                assert_eq!(frame.allocator().identity(), output_identity);
+                let remaining = output_monitor.snapshot();
+                assert_eq!(remaining.live_blocks, 1);
+                assert_eq!(remaining.live_bytes, frame.capacity() as u128);
+                assert_eq!(remaining.owners_dropped + 1, remaining.identities_created);
+                drop(frame);
+                output_monitor.assert_released();
+            }
+        }
+    }
+
+    #[test]
+    fn allocator_one_shot_borrows_nonclone_output_and_dictionary_allocators_independently() {
+        let dictionary_owner = block_allocator().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let output_owner = block_allocator().into_non_clone();
+        let output_monitor = output_owner.monitor();
+        let serialized = allocator_dictionary(true).as_bytes().to_vec();
+        let frame = {
+            let dictionary = Dictionary::from_bytes_in(&serialized, &dictionary_owner).unwrap();
+            let source = b"nonclone allocation owners and unchanged dictionary input".repeat(2);
+            let before = dictionary_monitor.snapshot();
+            let expected =
+                compress_with_dictionary_in(&source, &dictionary.view(), Global).unwrap();
+            let frame =
+                compress_with_dictionary_in(&source, &dictionary.view(), &output_owner).unwrap();
+            assert_eq!(frame, expected);
+            assert_eq!(dictionary_monitor.snapshot(), before);
+            assert!(core::ptr::eq(*frame.allocator(), &output_owner));
+            frame
+        };
+        dictionary_monitor.assert_released();
+        assert_eq!(output_monitor.snapshot().live_blocks, 1);
+        assert_eq!(
+            output_monitor.snapshot().live_bytes,
+            frame.capacity() as u128
+        );
+        assert_eq!(output_monitor.snapshot().identities_created, 1);
+        drop(frame);
+        output_monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_one_shot_shared_raw_dictionary_owns_a_nonclone_allocator() {
+        let dictionary_owner = block_allocator().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let content = b"independent dictionary with an owned nonclone allocator";
+        let dictionary = Dictionary::raw_in(content, dictionary_owner)
+            .unwrap()
+            .into_shared();
+        let before = dictionary_monitor.snapshot();
+        let output_owner = block_allocator();
+        let output_monitor = output_owner.monitor();
+        let source = content.repeat(4);
+        let frame = compress_with_dictionary_in(&source, &dictionary, output_owner).unwrap();
+        assert_eq!(SharedDictionary::strong_count(&dictionary), 1);
+        assert_eq!(dictionary_monitor.snapshot(), before);
+        drop(dictionary);
+        dictionary_monitor.assert_released();
+        assert_eq!(output_monitor.snapshot().live_blocks, 1);
+        assert_eq!(
+            output_monitor.snapshot().live_bytes,
+            frame.capacity() as u128
+        );
+        let reference = Dictionary::raw(content).unwrap().into_shared();
+        assert_eq!(
+            decompress_with_dictionary(&frame, &reference, DecodeOptions::new(source.len()))
+                .unwrap(),
+            source
+        );
+        drop(frame);
+        output_monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_one_shot_every_allocation_failure_releases_partial_output_and_scratch() {
+        for source in [
+            &b""[..],
+            &b"a useful raw dictionary pattern abcdefghijklmnopqrstuvwxyz".repeat(2),
+        ] {
+            for dictionary_kind in 0..3 {
+                let dictionary_owner = block_allocator();
+                let dictionary_monitor = dictionary_owner.monitor();
+                let bytes = allocator_dictionary(dictionary_kind == 2)
+                    .as_bytes()
+                    .to_vec();
+                let dictionary = Dictionary::from_bytes_in(&bytes, dictionary_owner).unwrap();
+                let view = (dictionary_kind != 0).then(|| dictionary.view());
+                let source_before = source.to_vec();
+                let dictionary_before = dictionary_monitor.snapshot();
+                let owner = block_allocator();
+                let monitor = owner.monitor();
+                let expected = compress_frame_in(source, view.as_ref(), owner).unwrap();
+                let attempts = monitor.snapshot().attempts;
+                #[cfg(feature = "std")]
+                std::println!(
+                    "one-shot failure sweep: dictionary kind {dictionary_kind}, source bytes {}, allocation ordinals 1..={attempts}",
+                    source.len()
+                );
+                assert!(attempts > 0);
+                assert_eq!(monitor.snapshot().live_blocks, 1);
+                assert_eq!(monitor.snapshot().live_bytes, expected.capacity() as u128);
+                drop(expected);
+                monitor.assert_released();
+                for ordinal in 1..=attempts {
+                    let owner = block_allocator();
+                    let monitor = owner.monitor();
+                    monitor.set_fail_at(NonZeroU64::new(ordinal));
+                    let result = compress_frame_in(source, view.as_ref(), owner);
+                    assert_eq!(
+                        result.err(),
+                        Some(Error::AllocationFailed),
+                        "dictionary kind {dictionary_kind}, source length {}, ordinal {ordinal}",
+                        source.len()
+                    );
+                    let snapshot = monitor.snapshot();
+                    assert_eq!(snapshot.attempts, ordinal);
+                    assert_eq!(snapshot.failures, 1);
+                    assert_eq!(snapshot.owners_dropped, snapshot.identities_created);
+                    monitor.assert_released();
+                    assert_eq!(dictionary_monitor.snapshot(), dictionary_before);
+                    assert_eq!(dictionary.as_bytes(), bytes);
+                    assert_eq!(source, source_before);
+                }
+                drop(dictionary);
+                dictionary_monitor.assert_released();
+            }
+        }
+    }
+
+    #[test]
+    fn allocator_one_shot_headers_use_all_id_widths_without_allocating_after_reserve() {
+        let mut sizes = vec![0, 255, 256, 65_791, 65_792, u32::MAX as usize];
+        if usize::BITS > 32 {
+            sizes.push((u64::from(u32::MAX) + 1) as usize);
+        }
+        for size in sizes {
+            for id in [0, 1, 255, 256, 65_535, 65_536, u32::MAX] {
+                let owner = block_allocator().into_non_clone();
+                let monitor = owner.monitor();
+                let mut bytes = Vec::new_in(owner);
+                bytes.try_reserve_exact(17).unwrap();
+                let before = monitor.snapshot();
+                assert!(monitor.fail_next());
+                write_frame_header(&mut bytes, size, id);
+                assert_eq!(monitor.snapshot(), before);
+                let (header, consumed) = crate::FrameHeader::parse(&bytes).unwrap();
+                assert_eq!(consumed, bytes.len());
+                assert_eq!(header.content_size, Some(size as u64));
+                assert_eq!(header.dictionary_id, id);
+                assert_eq!((bytes[4] & 3, dictionary_field(id).1), dictionary_field(id));
+                drop(bytes);
+                monitor.assert_released();
+            }
+        }
+    }
+
+    #[cfg(feature = "std")]
+    #[test]
+    #[ignore = "requires official zstd v1.5.7 CLI; set ZSTD_BIN"]
+    fn official_codec_decodes_allocator_one_shot_frames() {
+        use std::io::Write;
+        use std::process::{Command, Stdio};
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        static NEXT: AtomicUsize = AtomicUsize::new(0);
+        let executable = std::env::var_os("ZSTD_BIN").expect("set ZSTD_BIN");
+        let version = Command::new(&executable).arg("--version").output().unwrap();
+        assert!(version.status.success());
+        assert!(std::string::String::from_utf8_lossy(&version.stdout).contains("1.5.7"));
+        struct File(std::path::PathBuf);
+        impl Drop for File {
+            fn drop(&mut self) {
+                let _ = std::fs::remove_file(&self.0);
+            }
+        }
+        let path = File(std::env::temp_dir().join(std::format!(
+            "zstdoxide-allocator-one-shot-{}-{}-{}.dict",
+            std::process::id(),
+            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos(),
+            NEXT.fetch_add(1, Ordering::Relaxed),
+        )));
+        let mut cases = 0;
+        one_shot_baseline_frames(|source, frame, dictionary| {
+            let mut command = Command::new(&executable);
+            command.args(["-q", "-d", "-c"]);
+            if let Some(dictionary) = dictionary {
+                std::fs::write(&path.0, dictionary.as_bytes()).unwrap();
+                command.arg("-D").arg(&path.0);
+            }
+            let mut child = command
+                .stdin(Stdio::piped())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .spawn()
+                .unwrap();
+            child.stdin.take().unwrap().write_all(frame).unwrap();
+            let decoded = child.wait_with_output().unwrap();
+            assert!(
+                decoded.status.success(),
+                "case {cases}: {}",
+                std::string::String::from_utf8_lossy(&decoded.stderr)
+            );
+            assert_eq!(decoded.stdout, source);
+            cases += 1;
+        });
+        assert_eq!(cases, 36);
+        std::println!("official C decoded {cases} allocator-owned one-shot frames exactly");
     }
 
     fn allocator_dictionary(prepared: bool) -> Dictionary {

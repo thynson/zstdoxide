@@ -16,6 +16,10 @@ pub(crate) struct BitWriter<A: Allocator = Global> {
 }
 
 impl BitWriter<Global> {
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "const Global convenience for direct callers")
+    )]
     pub(crate) const fn new() -> Self {
         Self {
             bytes: Vec::new(),
