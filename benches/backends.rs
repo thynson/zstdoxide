@@ -8,20 +8,34 @@ extern crate alloc;
 use std::hint::black_box;
 use std::time::{Duration, Instant};
 use zstdoxide::{
-    DecodeOptions, Decoder, Dictionary, Encoder, EncoderOptions, EndDirective, Error,
-    RawTrainingOptions, Result, StreamStatus, train_raw_dictionary,
+    CompressionStrategy, DecodeOptions, Decoder, Dictionary, Encoder, EncoderOptions, EndDirective,
+    Error, RawTrainingOptions, Result, StreamStatus, train_raw_dictionary,
 };
 
 #[path = "../src/bitstream.rs"]
 mod bitstream;
+#[path = "../src/bitwriter.rs"]
+mod bitwriter;
+#[path = "../src/constants.rs"]
+mod constants;
 #[path = "../src/cursor.rs"]
 mod cursor;
+#[path = "../src/entropy_encode.rs"]
+mod entropy_encode;
+#[path = "../src/frame.rs"]
+mod frame;
 #[path = "../src/fse.rs"]
 mod fse;
+#[path = "../src/fse_encode.rs"]
+mod fse_encode;
 #[path = "../src/history.rs"]
 mod history;
 #[path = "../src/huffman.rs"]
 mod huffman;
+#[path = "../src/huffman_codebook.rs"]
+mod huffman_codebook;
+#[path = "../src/matchchain.rs"]
+mod matchchain;
 #[path = "../src/matchfinder.rs"]
 mod matchfinder;
 #[path = "../src/ring_history.rs"]
@@ -193,6 +207,255 @@ fn main() {
     measure_streaming(&settings, &original, frame, &expected);
     measure_dictionaries(&settings, &input);
     measure_raw_training(&settings);
+
+    // Append new cases so consumers retain the original fifteen-case order.
+    measure_encoder_accessors(&settings, &input);
+    measure_strategies(&settings, &original);
+}
+
+/// Isolate the new checked accessors using prebuilt owned storage. Query tuples
+/// and expected result byte vectors contain scalar values only; they need no
+/// artificial unsafe representation. All complete relation checks precede timing.
+fn measure_encoder_accessors(settings: &Settings, input: &[u8]) {
+    let counts = [0, 5, -1, 17, 9];
+    let decoding = fse::FseTable::from_normalized(&counts, 5).unwrap();
+    let encoding = fse_encode::FseEncodingTable::from_decoding(&decoding).unwrap();
+    for symbol in 1..=4 {
+        for next in 0..32 {
+            let inverse = encoding.transition(symbol, next).unwrap();
+            let entry = decoding.entry(usize::from(inverse.state)).unwrap();
+            assert_eq!(usize::from(entry.symbol), symbol);
+            assert_eq!(entry.bits, inverse.bits);
+            assert_eq!(entry.base + inverse.value, next);
+            assert!(u32::from(inverse.value) < 1 << inverse.bits);
+        }
+    }
+    let queries: Vec<_> = input
+        .chunks_exact(2)
+        .map(|pair| (usize::from(pair[0] & 3) + 1, u16::from(pair[1] & 31)))
+        .collect();
+    let mut complete = Vec::with_capacity(queries.len() * 5);
+    for &(symbol, next) in &queries {
+        let inverse = encoding.transition(symbol, next).unwrap();
+        complete.extend_from_slice(&inverse.state.to_le_bytes());
+        complete.extend_from_slice(&inverse.value.to_le_bytes());
+        complete.push(inverse.bits);
+    }
+    println!("META\tfse_encode_lookup_transitions\t{}", queries.len());
+    println!("META\tfse_encode_lookup_table_log\t5");
+    println!(
+        "META\tfse_encode_lookup_retained_bytes\t{}",
+        encoding.retained_capacity()
+    );
+    println!(
+        "META\tfse_encode_lookup_output_fnv1a64\t{:016x}",
+        full_checksum(&complete)
+    );
+    measure(
+        settings,
+        "fse_encode_lookup",
+        "transition",
+        queries.len(),
+        || {
+            let mut digest = 0_u64;
+            for &(symbol, next) in black_box(&queries) {
+                let inverse = encoding.transition(symbol, next).unwrap();
+                digest = digest.rotate_left(3)
+                    ^ u64::from(inverse.state)
+                    ^ (u64::from(inverse.value) << 16)
+                    ^ (u64::from(inverse.bits) << 32);
+            }
+            digest
+        },
+    );
+
+    // Complete Kraft mass: one 1-bit symbol, one 8-bit symbol, and 254 9-bit
+    // symbols. Independently enumerated canonical ranks exercise all 256 slots.
+    let mut lengths = [9; 256];
+    lengths[0] = 1;
+    lengths[1] = 8;
+    let codebook = huffman_codebook::HuffmanCodebook::from_lengths(&lengths, 9).unwrap();
+    let mut complete = Vec::with_capacity(input.len() * 3);
+    for &symbol in input {
+        let code = codebook.code(symbol).unwrap();
+        let expected = match symbol {
+            0 => (1, 1),
+            1 => (127, 8),
+            _ => (u16::from(symbol) - 2, 9),
+        };
+        assert_eq!((code.value, code.bits), expected);
+        complete.extend_from_slice(&code.value.to_le_bytes());
+        complete.push(code.bits);
+    }
+    println!("META\thuffman_codebook_symbols\t{}", input.len());
+    println!("META\thuffman_codebook_table_log\t9");
+    println!(
+        "META\thuffman_codebook_inline_bytes\t{}",
+        core::mem::size_of_val(&codebook)
+    );
+    println!(
+        "META\thuffman_codebook_output_fnv1a64\t{:016x}",
+        full_checksum(&complete)
+    );
+    measure(settings, "huffman_codebook", "symbol", input.len(), || {
+        let mut digest = 0_u64;
+        for &symbol in black_box(input) {
+            let code = codebook.code(symbol).unwrap();
+            digest = digest.rotate_left(3) ^ u64::from(code.value) ^ (u64::from(code.bits) << 16);
+        }
+        digest
+    });
+
+    // Repeated keys retain sixteen candidates apiece. The independent expected
+    // lists use insertion coordinates only, and the distinct buckets are checked
+    // during setup. This hot traversal includes neither allocation nor insertion.
+    const KEYS: usize = 256;
+    const ROUNDS: usize = 16;
+    const BUDGET: usize = 16;
+    let keys: Vec<_> = (0..KEYS as u32).map(u32::to_le_bytes).collect();
+    let mut buckets = std::collections::BTreeSet::new();
+    for &key in &keys {
+        let bucket = u32::from_le_bytes(key).wrapping_mul(0x9e37_79b1) >> 16;
+        assert!(buckets.insert(bucket), "benchmark keys share a hash bucket");
+    }
+    let mut chain = matchchain::MatchChain::new(KEYS * ROUNDS).unwrap();
+    for round in 0..ROUNDS {
+        for (index, &key) in keys.iter().enumerate() {
+            chain.insert(key, (round * KEYS + index) as u64).unwrap();
+        }
+    }
+    let mut complete = Vec::with_capacity(input.len() * BUDGET * 8);
+    for &index in input {
+        let actual: Vec<_> = chain
+            .candidates(keys[usize::from(index)], u64::MAX, BUDGET)
+            .unwrap()
+            .collect();
+        let expected: Vec<_> = (0..ROUNDS)
+            .rev()
+            .map(|round| (round * KEYS + usize::from(index)) as u64)
+            .collect();
+        assert_eq!(actual, expected);
+        for position in actual {
+            complete.extend_from_slice(&position.to_le_bytes());
+        }
+    }
+    println!("META\tmatch_chain_queries\t{}", input.len());
+    println!("META\tmatch_chain_candidates\t{}", input.len() * BUDGET);
+    println!("META\tmatch_chain_node_limit\t{}", KEYS * ROUNDS);
+    println!("META\tmatch_chain_visit_budget\t{BUDGET}");
+    println!(
+        "META\tmatch_chain_retained_bytes\t{}",
+        chain.retained_capacity()
+    );
+    println!(
+        "META\tmatch_chain_output_fnv1a64\t{:016x}",
+        full_checksum(&complete)
+    );
+    measure(
+        settings,
+        "match_chain",
+        "candidate",
+        input.len() * BUDGET,
+        || {
+            let mut digest = 0_u64;
+            for &index in black_box(input) {
+                for position in chain
+                    .candidates(keys[usize::from(index)], u64::MAX, BUDGET)
+                    .unwrap()
+                {
+                    digest = digest.rotate_left(3) ^ position;
+                }
+            }
+            digest
+        },
+    );
+}
+
+/// Prepare identical sources and optional raw dictionary once per strategy.
+/// Dictionary parsing, first allocation, exact decoding, and complete hashes
+/// stay outside timing; reusable-context reset remains inside each operation.
+fn measure_strategies(settings: &Settings, compressible: &[u8]) {
+    let random = deterministic_bytes(128 * 64);
+    let mut dictionary_bytes = Vec::new();
+    let mut ambiguous = Vec::new();
+    for pattern in random.chunks_exact(64) {
+        dictionary_bytes.push(b'X');
+        dictionary_bytes.extend_from_slice(&pattern[..3]);
+        dictionary_bytes.push(u8::from(pattern[3] == 0));
+        dictionary_bytes.extend_from_slice(pattern);
+        dictionary_bytes.push(0);
+        ambiguous.push(b'X');
+        ambiguous.extend_from_slice(pattern);
+    }
+    let dictionary = Dictionary::raw(&dictionary_bytes).unwrap().into_shared();
+    for (name, strategy) in [
+        ("greedy", CompressionStrategy::Greedy),
+        ("chain", CompressionStrategy::Chain),
+        ("lazy", CompressionStrategy::Lazy),
+    ] {
+        for (source_name, source, selected_dictionary) in [
+            ("compressible", compressible, None),
+            ("ambiguous", ambiguous.as_slice(), Some(&dictionary)),
+        ] {
+            let case = format!("strategy_{name}_{source_name}");
+            let options = EncoderOptions {
+                strategy,
+                ..EncoderOptions::default()
+            };
+            let mut encoder = if let Some(dictionary) = selected_dictionary {
+                Encoder::with_dictionary(options, dictionary.clone()).unwrap()
+            } else {
+                Encoder::with_options(options).unwrap()
+            };
+            let mut encoded = vec![0; source.len() * 2 + 1024];
+            let size = encode_stream_frame(&mut encoder, source, &mut encoded);
+            let expected = encoded[..size].to_vec();
+            let decoded = if let Some(dictionary) = selected_dictionary {
+                zstdoxide::decompress_with_dictionary(
+                    &expected,
+                    dictionary,
+                    DecodeOptions::new(source.len()),
+                )
+                .unwrap()
+            } else {
+                zstdoxide::decompress(&expected, source.len()).unwrap()
+            };
+            assert_eq!(decoded, source);
+            let retained = encoder.retained_capacity();
+            encoder.reset();
+            assert_eq!(encoder.retained_capacity(), retained);
+            assert_eq!(encoder.options().strategy, strategy);
+            assert_eq!(
+                encode_stream_frame(&mut encoder, source, &mut encoded),
+                size
+            );
+            assert_eq!(encoded[..size], expected);
+            let dictionary_source =
+                selected_dictionary.map_or(&[][..], |_| dictionary_bytes.as_slice());
+            println!("META\t{case}_original_bytes\t{}", source.len());
+            println!(
+                "META\t{case}_original_fnv1a64\t{:016x}",
+                full_checksum(source)
+            );
+            println!("META\t{case}_encoded_bytes\t{size}");
+            println!(
+                "META\t{case}_output_fnv1a64\t{:016x}",
+                full_checksum(&expected)
+            );
+            println!("META\t{case}_reset_retained_bytes\t{retained}");
+            println!("META\t{case}_dictionary_bytes\t{}", dictionary_source.len());
+            println!(
+                "META\t{case}_dictionary_fnv1a64\t{:016x}",
+                full_checksum(dictionary_source)
+            );
+            measure(settings, &case, "byte", source.len(), || {
+                encoder.reset();
+                let produced = encode_stream_frame(&mut encoder, black_box(source), &mut encoded);
+                assert_eq!(produced, size);
+                fingerprint(&encoded[..produced])
+            });
+        }
+    }
 }
 
 /// Compare public dictionary operations with shared preparation outside timing.
@@ -881,9 +1144,14 @@ fn enabled_features() -> String {
         ("unsafe-fse", cfg!(feature = "unsafe-fse")),
         ("unsafe-fse-encoder", cfg!(feature = "unsafe-fse-encoder")),
         ("unsafe-huffman", cfg!(feature = "unsafe-huffman")),
+        (
+            "unsafe-huffman-codebook",
+            cfg!(feature = "unsafe-huffman-codebook"),
+        ),
         ("unsafe-history", cfg!(feature = "unsafe-history")),
         ("unsafe-ring-history", cfg!(feature = "unsafe-ring-history")),
         ("unsafe-match-table", cfg!(feature = "unsafe-match-table")),
+        ("unsafe-match-chain", cfg!(feature = "unsafe-match-chain")),
         ("unsafe-dictionary", cfg!(feature = "unsafe-dictionary")),
         ("unsafe-training", cfg!(feature = "unsafe-training")),
     ];

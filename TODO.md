@@ -65,7 +65,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [ ] Port the original raw-block dictionary entropy lifetime schedule at zstreamtest.c:1831.
 - [ ] Port the original six-byte flush and dictionary offset schedule at zstreamtest.c:1884.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.
-- [ ] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.
+- [x] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.
 - [ ] Run the backend/strategy benchmark matrix and preserve comparable output fingerprints and memory measurements.
 - [ ] Run final feature, no_std, Miri, interoperability, and migration checks; record remaining upstream gaps.
 

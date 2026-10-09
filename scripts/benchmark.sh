@@ -44,7 +44,7 @@ printf '%s\n' "$code_fingerprint" > "$output_dir/source.sha256"
     fi
 } > "$output_dir/environment.txt"
 
-for configuration in safe unsafe-byte-cursor unsafe-bitstream unsafe-fse unsafe-huffman unsafe-history unsafe-ring-history unsafe-match-table unsafe-dictionary unsafe-training all; do
+for configuration in safe unsafe-byte-cursor unsafe-bitstream unsafe-fse unsafe-huffman unsafe-history unsafe-ring-history unsafe-match-table unsafe-dictionary unsafe-training unsafe-fse-encoder unsafe-huffman-codebook unsafe-match-chain all; do
     printf 'Benchmarking %s\n' "$configuration"
     case "$configuration" in
         safe)
@@ -78,7 +78,15 @@ configurations = {
     "unsafe-match-table": "match_table",
     "unsafe-dictionary": "dictionary_content",
     "unsafe-training": "raw_training",
+    "unsafe-fse-encoder": "fse_encode_lookup",
+    "unsafe-huffman-codebook": "huffman_codebook",
+    "unsafe-match-chain": "match_chain",
 }
+
+strategies = ("greedy", "chain", "lazy")
+strategy_sources = ("compressible", "ambiguous")
+strategy_cases = tuple(f"strategy_{strategy}_{source}"
+                       for strategy in strategies for source in strategy_sources)
 
 def read(name):
     rows = {}
@@ -112,9 +120,10 @@ def read(name):
                       "history_overlap", "ring_overlap", "match_table", "compress",
                       "decompress", "stream_compress", "stream_decompress",
                       "dictionary_content", "dictionary_compress", "dictionary_decompress",
-                      "raw_training"}
+                      "raw_training", "fse_encode_lookup", "huffman_codebook", "match_chain",
+                      *strategy_cases}
     if rows.keys() != expected_cases:
-        raise SystemExit("Expected all fifteen benchmark cases in " + name)
+        raise SystemExit("Expected all 24 benchmark cases in " + name)
     required = ("mode", "features", "seed", "samples", "sample_ms", "compress_original_bytes",
                 "compress_encoded_bytes", "compress_output_fnv1a64",
                 "decompress_encoded_bytes", "decompress_decoded_bytes",
@@ -144,8 +153,21 @@ def read(name):
                 "raw_training_sample_count", "raw_training_input_bytes", "raw_training_input_fnv1a64",
                 "raw_training_sample_bytes_limit", "raw_training_dictionary_bytes_limit",
                 "raw_training_segment_bytes", "raw_training_output_bytes", "raw_training_output_fnv1a64")
+    required += ("fse_encode_lookup_transitions", "fse_encode_lookup_table_log",
+                 "fse_encode_lookup_retained_bytes", "fse_encode_lookup_output_fnv1a64",
+                 "huffman_codebook_symbols", "huffman_codebook_table_log",
+                 "huffman_codebook_inline_bytes", "huffman_codebook_output_fnv1a64",
+                 "match_chain_queries", "match_chain_candidates", "match_chain_node_limit",
+                 "match_chain_visit_budget", "match_chain_retained_bytes", "match_chain_output_fnv1a64")
+    required += tuple(f"{case}_{field}" for case in strategy_cases for field in (
+        "original_bytes", "original_fnv1a64", "encoded_bytes", "output_fnv1a64",
+        "reset_retained_bytes", "dictionary_bytes", "dictionary_fnv1a64"))
     if any(key not in metadata for key in required):
         raise SystemExit("Missing workload metadata in " + name)
+    for source in strategy_sources:
+        for field in ("original_bytes", "original_fnv1a64", "dictionary_bytes", "dictionary_fnv1a64"):
+            if len({metadata[f"strategy_{strategy}_{source}_{field}"] for strategy in strategies}) != 1:
+                raise SystemExit(f"Strategy inputs differ in {name}: {source} / {field}")
     if metadata["mode"] not in {"smoke", "timed"} or any(row["kind"] != metadata["mode"] for row in rows.values()):
         raise SystemExit("Mixed or invalid measurement modes in " + name)
     expected_features = {"safe"} if name == "safe" else set(configurations) if name == "all" else {name}
@@ -168,8 +190,8 @@ for name, (cases, metadata) in parsed.items():
 
 if reference_metadata["mode"] == "smoke":
     lines = ["# Backend smoke checks", "",
-             "All fifteen deterministic operations and complete workload metadata agree across",
-             "the safe build, nine independent unsafe-feature builds and the combined build.",
+             "All 24 deterministic operations and complete workload metadata agree across",
+             "the safe build, twelve independent unsafe-feature builds and the combined build.",
              "No timing clocks were started and no throughput comparisons were collected.", "",
              "| Case | Unit | Units per operation | Fingerprint |", "| --- | --- | ---: | --- |"]
     for case, row in safe.items():
@@ -183,7 +205,7 @@ if reference_metadata["mode"] == "smoke":
 lines = [
     "# Backend measurements",
     "",
-    "All fifteen cases produced identical deterministic fingerprints in every build.",
+    "All 24 cases produced identical deterministic fingerprints in every build.",
     "Whole-codec output sizes and full-output FNV-1a checksums also match across builds.",
     "These noncryptographic checksums supplement full-output interoperability tests.",
     "Each table entry is the median of the configured timed samples. Higher relative",
@@ -218,6 +240,30 @@ for case, baseline in safe.items():
     optimized = results["all"][case]["median"]
     lines.append(f"| {case} | {baseline['median']:.4f} | {optimized:.4f} | {baseline['median'] / optimized:.3f}x |")
 lines.extend([
+    "",
+    "The named strategies receive identical source bytes within each source group.",
+    "The ambiguous source uses one identical prepared raw dictionary; preparation is",
+    "outside timing, while reset, reused context work, and sampled hashes are included.",
+    "The compressible source has no dictionary. Strategies may produce different frames;",
+    "each strategy's frame bytes, sizes, and context capacities match across all backends.",
+    "These independent Rust policies do not represent upstream compression levels.",
+    "",
+    "| Strategy | Source | Original bytes | Dictionary bytes | Compressed bytes | Compressed/original | Reset retained bytes | Output FNV-1a |",
+    "| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |",
+])
+for strategy in strategies:
+    for source in strategy_sources:
+        key = f"strategy_{strategy}_{source}"
+        original = int(reference_metadata[f"{key}_original_bytes"])
+        encoded = int(reference_metadata[f"{key}_encoded_bytes"])
+        lines.append(f"| {strategy} | {source} | {original} | {reference_metadata[f'{key}_dictionary_bytes']} | {encoded} | {encoded / original:.4%} | {reference_metadata[f'{key}_reset_retained_bytes']} | `{reference_metadata[f'{key}_output_fnv1a64']}` |")
+lines.extend([
+    "",
+    "Inverse-FSE, Huffman-codebook and chain-candidate setup is outside timing.",
+    "Complete inverse relations, canonical ranks and candidate coordinates are checked",
+    "before timing; all result records have full byte hashes in the adjacent TSV files.",
+    "The chain lookup workload has sixteen candidates per key and a sixteen-visit cap;",
+    "its retained-capacity field counts only owned chain storage, excluding input and result vectors.",
     "",
     "Retained memory is the maximum context-reported heap capacity observed after process",
     "calls. It excludes inline state, caller buffers, allocator overhead, and transient scratch.",
