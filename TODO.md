@@ -47,7 +47,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Analyze bounded raw sample selection and dictionary-training ownership.
 - [x] Implement safe bounded frequency scoring and deterministic raw content selection.
 - [x] Add a separately gated unsafe training-frequency accessor with full proofs.
-- [ ] Verify raw training quality, malformed parameters, determinism, and bounded selection.
+- [x] Verify raw training quality, malformed parameters, determinism, and bounded selection.
 - [ ] Decompose entropy construction and formatted dictionary finalization before implementation.
 - [x] Implement bounded training sample selection and raw dictionary-content construction.
 - [ ] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.
