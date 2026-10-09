@@ -113,7 +113,7 @@ existence of a local file.
 | Inline legacy and skippable regression bytes | `tests/upstream_inline_regressions.rs` | Modern component runs; the full legacy desired-success assertion remains blocked |
 | Four public one-shot fuzz targets | `tests/upstream_fuzz_targets.rs` | Exact tail-selected input contracts with bounded deterministic inputs and a configurable external file runner; contexts/parameters/in-place and production scanner APIs remain missing |
 | Regression directory corpora | `tests/upstream_regression_corpora.rs` | Exact Silesia/GitHub inputs and full size/content roundtrips; the original method, strategy, level, dictionary, and CSV comparison matrix remains missing |
-| FSE normalized-count and Huffman decoding fuzz intent | `tests/upstream/entropy.rs`, `src/entropy_encode.rs` | Official vectors, arbitrary bounded decoding and checked normalized-count writing; the original randomized writer/reader target driver and specialized C controls remain incomplete |
+| FSE normalized-count and Huffman decoding fuzz intent | `tests/upstream/entropy.rs`, `src/entropy_encode.rs` | Complete normalized-count target, 512 byte-identical C headers and arbitrary bounded Huffman decoding; Huffman payload encoding and specialized C controls remain incomplete |
 | Single-file DXT1 and kernel empty-frame fixtures | `tests/upstream_testcard.rs` | Exact original bytes and output contracts; maximum-level selection, browser rendering, and kernel workspace APIs remain missing |
 | Ordinary streaming and context reuse | `tests/upstream_streaming.rs`, `tests/upstream_window.rs` | Bounded fragmented progress, flush/finish/reset, pledge and checksum failures, official window-distance fixtures and matching external adapters; specialized parameter/control paths remain separate |
 | Prepared dictionaries and prefixes | `src/dictionary.rs`, `tests/upstream_dictionary.rs`, `tests/upstream_dictionary_encode.rs` | Exact malformed/prepared metadata, raw/formatted matches, first-block decoding entropy/repeat offsets, IDs, persistent selection, one-use prefixes and resource/state boundaries; original level/strategy and broader random schedules remain incomplete |
@@ -176,6 +176,7 @@ release builds with all unsafe features enabled and no skipped files:
 | `zstd_frame_info` | 2,395 | Public frame-header parsing and metadata bounds |
 | `decompress_dstSize_tooSmall` | 1,173 | Empty input success and nonempty insufficient output failure |
 | `huf_decompress` | 605 | Both BMI-dependent parameter-consumption layouts; 604 successful table parses across both layouts |
+| `fse_read_ncount` | 79 | Complete writer/readback target with exact count selectors, random suffix bytes and consumed-header assertions |
 | `stream_decompress` | 12,462 | Tail-selected chunks, bounded streaming progress, dictionary-free output/error parity and complete input replay |
 | `stream_round_trip` | 24,223 | Complete selected source bytes, randomized supported chunk/directive schedules and exact decoded content |
 | `dictionary_loader` | 2,271 | Exact tail-selected load modes; 1,919 exact roundtrips and 352 formatted-dictionary parse rejections |
@@ -184,11 +185,10 @@ release builds with all unsafe features enabled and no skipped files:
 | `dictionary_round_trip` | 30,925 | 30,722 trained dictionaries, 203 expected empty fallbacks; every source roundtrips exactly |
 | `dictionary_stream_round_trip` | 24,223 | 23,821 trained dictionaries, 402 expected empty fallbacks; every adapted directive schedule restores exact content |
 
-These are partial adapters for the original C targets because their missing
-API/control paths remain absent. The 79-input FSE corpus is downloaded and
-pinned; the upstream writer-based target has not been replayed. The source
-inventory keeps those distinctions even when all inputs in a selected
-supported adapter pass. Both streaming corpora and all five dictionary corpora also passed safe release
+The normalized-count target is fully ported. Other targets retain partial
+coverage for their unported API/control paths even when every selected input
+passes. The source inventory records those distinctions. The 79-input FSE
+corpus, both streaming corpora and all five dictionary corpora also passed safe release
 builds; their random C compression parameters, stable-buffer, in-place,
 by-reference and sequence-producer branches are not claimed by the adapters.
 The three trained-target adapters preserve all 100 original sample-range

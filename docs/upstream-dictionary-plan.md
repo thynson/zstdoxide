@@ -258,8 +258,11 @@ without the dictionary.
 Checked normalized-count serialization now matches pinned C headers at every
 supported table log, including zero runs and low-probability counts. Independent
 C readers additionally accept 437 generated FSE weight streams and 68 complete
-Huffman headers. Those foundations do not yet replay `fse_read_ncount.c`'s
-original randomized writer driver or its 79-input external corpus.
+Huffman headers. The complete `fse_read_ncount.c` target now also preserves its
+exact producer/writer/readback/suffix assertions: 10,241 deterministic calls and
+all 79 external inputs (908 bytes) pass. Safe and all-feature corpus replays,
+all 512 byte-identical C headers, and the twelve-configuration focused entropy
+matrix are recorded in [evidence/2026-10-09-fse-target.json](evidence/2026-10-09-fse-target.json).
 
 The dictionary loader/raw roundtrip adapter preserves the original tail selectors
 and selected source bytes. Loader mode/prefix/loading-method consumption and raw

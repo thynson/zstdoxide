@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-10-09",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "upstream_target": "tests/fuzz/fse_read_ncount.c:28-100",
+  "test_references": [
+    "tests/upstream/entropy.rs#normalized_counts_match_all_official_vectors_and_suffixes",
+    "tests/upstream/entropy.rs#normalized_count_producer_preserves_signed_ranges_and_final_symbol_selection",
+    "tests/upstream/entropy.rs#normalized_count_fuzz_target_roundtrips_every_log_and_maximum_symbol",
+    "tests/upstream/entropy.rs#replays_official_normalized_count_corpus"
+  ],
+  "official_byte_identical_headers": 512,
+  "deterministic_target_calls": 10241,
+  "focused_results_manifest_sha256": "ccc3033ae138d804a4b63b1766265ba10ac8d5c87ec8ef01a00f7a869e36ee47",
+  "focused_results": [
+    {
+      "configuration": "safe",
+      "command": "cargo test --lib upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.46s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-safe.log",
+      "sha256": "b6e43ba3d2db545c10567d76af55d660b0722ab738fc0d61d8bb2c9626e66901"
+    },
+    {
+      "configuration": "unsafe-byte-cursor",
+      "command": "cargo test --lib --features unsafe-byte-cursor upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.52s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-byte-cursor.log",
+      "sha256": "766d2eb826a07d1e7a388dc95b0e88e1c62f293e9df5d999d3096c091e99aea2"
+    },
+    {
+      "configuration": "unsafe-bitstream",
+      "command": "cargo test --lib --features unsafe-bitstream upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.19s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-bitstream.log",
+      "sha256": "541e6eb935ba5b95632b087978502dbdd4c5e3a14e577b618562f12470ba5489"
+    },
+    {
+      "configuration": "unsafe-history",
+      "command": "cargo test --lib --features unsafe-history upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.54s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-history.log",
+      "sha256": "6105654af0d31be5423f9aec23f61676bbeea23f00036494b43762d8483201e1"
+    },
+    {
+      "configuration": "unsafe-ring-history",
+      "command": "cargo test --lib --features unsafe-ring-history upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.47s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-ring-history.log",
+      "sha256": "135f7ded3cc493a80b37aaa54c0a34d91ef8506cd051bb433cf5f5baa56a82e2"
+    },
+    {
+      "configuration": "unsafe-fse",
+      "command": "cargo test --lib --features unsafe-fse upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.31s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-fse.log",
+      "sha256": "adcce543a7b9728bd133a12ddc2425b3868dc9b07d5148e5a90026a718448de2"
+    },
+    {
+      "configuration": "unsafe-huffman",
+      "command": "cargo test --lib --features unsafe-huffman upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.27s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-huffman.log",
+      "sha256": "b27d85ea7c1348a8af54d5f250a690c486be1367a1846f1356549adbaf0abac3"
+    },
+    {
+      "configuration": "unsafe-match-table",
+      "command": "cargo test --lib --features unsafe-match-table upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.69s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-match-table.log",
+      "sha256": "52320b49cc93e34103e2318b10927f36ab44a472c0213e2501b3c17563e7038e"
+    },
+    {
+      "configuration": "unsafe-dictionary",
+      "command": "cargo test --lib --features unsafe-dictionary upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.53s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-dictionary.log",
+      "sha256": "130ab54afc7090ed985f2b792056622ab4a2ecd188627d0b26ddae76563b642d"
+    },
+    {
+      "configuration": "unsafe-training",
+      "command": "cargo test --lib --features unsafe-training upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.82s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-unsafe-training.log",
+      "sha256": "e39f1e09ee7c257757b84a66401df16ad34c56f0a43ca94267eda1139b33b4a9"
+    },
+    {
+      "configuration": "all",
+      "command": "cargo test --lib --all-features upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 148 filtered out; finished in 1.32s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-all.log",
+      "sha256": "78219f3502667513c1d9c62a0b9a67578550d9a3874699723807437bc72bc858"
+    },
+    {
+      "configuration": "no-std",
+      "command": "cargo test --lib --no-default-features upstream_entropy_tests::",
+      "status": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 147 filtered out; finished in 1.68s"
+      ],
+      "log": "/tmp/zstdoxide-fse-focused-no-std.log",
+      "sha256": "4e74a27cc5bb4f0dc3b2bc58e227f23d8e828320ac33465b53b255da6fd56f75"
+    }
+  ],
+  "corpus_replays": [
+    {
+      "configuration": "safe",
+      "command": "ZSTDOXIDE_FSE_CORPUS=/tmp/zstdoxide-external-corpora/extracted/fse_read_ncount cargo test --release --lib upstream_entropy_tests::replays_official_normalized_count_corpus -- --ignored --nocapture",
+      "status": 0,
+      "files": 79,
+      "source_bytes": 908,
+      "skipped_files": 0,
+      "log": "/tmp/zstdoxide-fse-corpus-safe.log",
+      "sha256": "d94c9db111e1981d8c0712a2bbc027f83140b1b45c3e240ff1e040e77718289f"
+    },
+    {
+      "configuration": "all",
+      "command": "ZSTDOXIDE_FSE_CORPUS=/tmp/zstdoxide-external-corpora/extracted/fse_read_ncount cargo test --release --all-features --lib upstream_entropy_tests::replays_official_normalized_count_corpus -- --ignored --nocapture",
+      "status": 0,
+      "files": 79,
+      "source_bytes": 908,
+      "skipped_files": 0,
+      "log": "/tmp/zstdoxide-fse-corpus-all.log",
+      "sha256": "853fd2e207ee317bf435f4c8fe597e5b2d1be11030777e809954f4d18356b235"
+    }
+  ],
+  "note": "Logs remain in the external local cache; hashes preserve the recorded evidence. Elapsed test times are not throughput comparisons. No production source changed during these test-only checkpoints."
+}

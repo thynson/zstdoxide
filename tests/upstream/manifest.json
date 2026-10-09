@@ -16,13 +16,14 @@
       "url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/",
       "manifest": "tests/upstream/external-corpora.json",
       "status": "partial",
-      "reason": "Twelve rolling fuzz archives are independently SHA-256 pinned. Every selected simple_decompress(11631),zstd_frame_info(2395),too-small destination(1173) and huf_decompress(605,both parameter modes) input passed all-feature release. Both ordinary streaming targets passed safe/all-feature release:12462 decompression and24223 roundtrip inputs. All five dictionary targets passed safe/all-feature release:2271 loader,13876 raw roundtrip,12063 trained decompression,30925 trained roundtrip and24223 trained streaming inputs; no files skipped. Training/fallback counts and partial parameter/by-reference/fastCover coverage remain explicit in the source records. The 79-input FSE writer-based target is pinned but not yet replayed. Snapshots are independent of the v1.5.7 tag; shared archive bytes do not establish another target's coverage.",
+      "reason": "Twelve rolling fuzz archives are independently SHA-256 pinned. Every selected simple_decompress(11631),zstd_frame_info(2395),too-small destination(1173) and huf_decompress(605,both parameter modes) input passed all-feature release. Both ordinary streaming targets passed safe/all-feature release:12462 decompression and24223 roundtrip inputs. All five dictionary targets passed safe/all-feature release:2271 loader,13876 raw roundtrip,12063 trained decompression,30925 trained roundtrip and24223 trained streaming inputs; no files skipped. Training/fallback counts and partial parameter/by-reference/fastCover coverage remain explicit in the source records. The 79-input/908-byte FSE normalized-count target passed safe/all-feature release with no skips. Snapshots are independent of the v1.5.7 tag; shared archive bytes do not establish another target's coverage.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#external_file_corpus",
         "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus",
         "tests/upstream_streaming.rs#external_official_streaming_corpus",
         "tests/upstream_dictionary_fuzz.rs#external_dictionary_file_corpus",
-        "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
+        "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus",
+        "tests/upstream/entropy.rs#replays_official_normalized_count_corpus"
       ]
     },
     {
@@ -4512,8 +4513,8 @@
       "sha256": "084826e95e0280a21cf95091cc5daab018a283a6d99a096a1e356605757a7c96",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "partial",
-      "reason": "512 independently verified upstream-written normalized-count headers preserve decoded values, maximum symbol, table log, exact consumption and appended suffix behavior; 4096 arbitrary-input checks cover parser invariants. Checked Rust normalized-count writing now matches pinned C bytes across supported logs, cutoff/low-probability values and zero runs. The original randomized writer/reader target driver and 79-input external replay remain pending.",
+      "status": "ported",
+      "reason": "The complete target preserves exact tail-selected logs 5..12, maximum symbols 0..255, signed normalized counts, final-symbol selector, write bound and random suffix length/bytes. Readback checks exact consumed bytes, symbol maximum, log and counts. All 512 C-written headers are byte-identical under Rust writing; 10,241 deterministic target calls and all 79 external inputs/908 bytes pass, including safe/all-feature release replay with no skips. The 10-test entropy suite passes safe, each of nine unsafe features, all features and no-default configurations. This ports this normalized-count target, not unrelated FSE payload APIs.",
       "rust_tests": [
         "tests/upstream/entropy.rs#normalized_counts_match_all_official_vectors_and_suffixes",
         "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded",
@@ -4521,7 +4522,10 @@
         "src/entropy_encode.rs#normalized_headers_match_pinned_c_at_every_supported_log",
         "src/entropy_encode.rs#normalized_header_long_zero_run_and_all_unit_distribution_match_c",
         "src/entropy_encode.rs#zero_run_lengths_and_trailing_zeros_preserve_the_distribution",
-        "src/entropy_encode.rs#normalized_headers_reject_invalid_inputs_before_writing"
+        "src/entropy_encode.rs#normalized_headers_reject_invalid_inputs_before_writing",
+        "tests/upstream/entropy.rs#normalized_count_producer_preserves_signed_ranges_and_final_symbol_selection",
+        "tests/upstream/entropy.rs#normalized_count_fuzz_target_roundtrips_every_log_and_maximum_symbol",
+        "tests/upstream/entropy.rs#replays_official_normalized_count_corpus"
       ],
       "line_count": 100,
       "cases": [
@@ -4531,8 +4535,8 @@
           "line_start": 28,
           "line_end": 100,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "partial",
-          "reason": "512 independently verified upstream-written normalized-count headers preserve decoded values, maximum symbol, table log, exact consumption and appended suffix behavior; 4096 arbitrary-input checks cover parser invariants. Checked Rust normalized-count writing now matches pinned C bytes across supported logs, cutoff/low-probability values and zero runs. The original randomized writer/reader target driver and 79-input external replay remain pending.",
+          "status": "ported",
+          "reason": "The complete target preserves exact tail-selected logs 5..12, maximum symbols 0..255, signed normalized counts, final-symbol selector, write bound and random suffix length/bytes. Readback checks exact consumed bytes, symbol maximum, log and counts. All 512 C-written headers are byte-identical under Rust writing; 10,241 deterministic target calls and all 79 external inputs/908 bytes pass, including safe/all-feature release replay with no skips. The 10-test entropy suite passes safe, each of nine unsafe features, all features and no-default configurations. This ports this normalized-count target, not unrelated FSE payload APIs.",
           "rust_tests": [
             "tests/upstream/entropy.rs#normalized_counts_match_all_official_vectors_and_suffixes",
             "tests/upstream/entropy.rs#arbitrary_entropy_inputs_keep_outputs_bounded",
@@ -4540,7 +4544,10 @@
             "src/entropy_encode.rs#normalized_headers_match_pinned_c_at_every_supported_log",
             "src/entropy_encode.rs#normalized_header_long_zero_run_and_all_unit_distribution_match_c",
             "src/entropy_encode.rs#zero_run_lengths_and_trailing_zeros_preserve_the_distribution",
-            "src/entropy_encode.rs#normalized_headers_reject_invalid_inputs_before_writing"
+            "src/entropy_encode.rs#normalized_headers_reject_invalid_inputs_before_writing",
+            "tests/upstream/entropy.rs#normalized_count_producer_preserves_signed_ranges_and_final_symbol_selection",
+            "tests/upstream/entropy.rs#normalized_count_fuzz_target_roundtrips_every_log_and_maximum_symbol",
+            "tests/upstream/entropy.rs#replays_official_normalized_count_corpus"
           ]
         }
       ]
