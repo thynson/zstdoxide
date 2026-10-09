@@ -55,6 +55,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Map implemented parser/decoder assertions to pinned upstream source groups.
 - [x] Port dictionary encoder lifetime, effectiveness, ID, window, and interoperability assertions.
 - [ ] Port applicable official dictionary preparation and training assertions.
+- [x] Adapt dictionary loader and raw-dictionary fuzz contracts with exact source selectors.
 - [ ] Replay matching external dictionary corpora with explicit coverage mappings.
 - [ ] Compare safe/unsafe dictionary throughput and memory; run backend/no_std/oracle/Miri checks.
 
