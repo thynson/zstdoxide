@@ -29,3 +29,15 @@ cargo test --release --all-features --test upstream_training -- --ignored
 cargo test --release --all-features --test upstream_formatted_training -- --ignored
 cargo test --release --all-features --lib official_fse_and_huffman_readers_accept_generated_headers -- --ignored
 cargo test --release --all-features --test upstream_trained_dictionary_fuzz official_training_sample_loop_matches_every_selected_range -- --ignored
+
+# Module 8 entropy streams, adaptive sequence state and independent strategies.
+# These targets contain explicit C checks only; external corpus entry points
+# remain separately parameterized by their pinned cache paths.
+cargo test --release --all-features --lib upstream_huffman_encode_tests -- --ignored
+cargo test --release --all-features --lib upstream_huffman_round_trip_tests::oracle::official_c_producer_matches_huffman_parameters_for_both_bmi_layouts -- --ignored --exact
+cargo test --release --all-features --lib sequence_encode::tests::official_codec_decodes_every_supplied_table_mode_and_repeat_combination -- --ignored --exact
+cargo test --release --all-features --lib fse_select::tests::official_codec_decodes_automatically_selected_channel_tables -- --ignored --exact
+cargo test --release --all-features --lib sequence_context::tests::official_codec_decodes_transactional_and_dictionary_frames -- --ignored --exact
+cargo test --release --all-features --test entropy_encoding -- --ignored
+cargo test --release --all-features --test sequence_encoding -- --ignored
+cargo test --release --all-features --test compression_strategies -- --ignored

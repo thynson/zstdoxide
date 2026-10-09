@@ -66,7 +66,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [ ] Port the original six-byte flush and dictionary offset schedule at zstreamtest.c:1884.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.
 - [x] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.
-- [ ] Include all new entropy and strategy oracle entry points in the reproducible validation script.
+- [x] Include all new entropy and strategy oracle entry points in the reproducible validation script.
 - [ ] Run the backend/strategy benchmark matrix and preserve comparable output fingerprints and memory measurements.
 - [ ] Run final feature, no_std, Miri, interoperability, and migration checks; record remaining upstream gaps.
 
