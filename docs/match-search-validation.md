@@ -176,3 +176,29 @@ compilation during the neighboring table migration and a runner correction:
 the successful default suite has seven tests, including two shared helper tests,
 which the first driver had incorrectly expected to be five. No passing codec
 run is represented as failed codec behavior or silently rerun for that count.
+
+## Width-aware parser probes and explicit effort
+
+Current-position, Lazy lookahead and consumed-start probes now extract typed
+keys at the table's immutable selected width. Incomplete tails remain literals.
+The verified emitted-match minimum stays four, demonstrated by an eight-byte
+hash collision whose sources agree for only four bytes. The explicit Lazy entry
+point and Chain accept budgets zero through 64; the default Lazy wrapper keeps
+sixteen. Both Lazy probes receive the selected budget. Lookup/insertion order,
+distance-one opportunities, current-match ties, full-tail behavior and once-only
+consumed-start insertion retain their existing contracts.
+
+Thirty-two parser tests pass in five feature/std configurations. Ten public
+strategy regressions pass across safe/all, with one existing C oracle explicitly
+ignored in each. Thirty-six one-shot and 108 streaming default frame fingerprints
+per build remain unchanged. Strict library/test Clippy, no_std compilation and
+formatting pass, as do three exact all-feature strict-provenance Miri tests.
+The checkpoint totals 177 passing executions and two deliberately ignored oracle
+executions across twenty successful commands.
+
+[Parser evidence](evidence/2026-10-09-match-search-parser.json) preserves source
+and dependency hashes and all logs. It explicitly corrects an evidence-summary
+wording error: leaf and parser checkpoints replayed saved default frames in
+Rust; the original independent C capture belongs to `ba4529c`, not a new leaf
+C run. No current configurable public encoder or C strategy equivalence is
+claimed before the remaining context consumers are integrated.

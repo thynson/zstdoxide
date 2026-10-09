@@ -448,3 +448,10 @@ reservation fails, while each allocation keeps its exact owner. Twenty-three
 tests pass in seven configurations, five focused Miri checks pass, and safe/all
 default frames remain unchanged. Seed compatibility, tiny wrapped rings, stale
 links and initialized-length checks are covered before parser integration.
+
+Parser probes now use selected key widths and concrete Chain/Lazy visit budgets.
+Seven new tests demonstrate exact tails, a wider-key/four-byte match collision,
+actual budget-dependent selection, both Lazy probes and preflight failure
+atomicity. Thirty-two tests pass in five configurations, public strategy/default
+fingerprints remain unchanged, and three narrow Miri checks pass. These remain
+private capabilities pending live encoder configuration.

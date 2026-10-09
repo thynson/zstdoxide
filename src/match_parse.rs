@@ -4,12 +4,14 @@ use alloc::vec::Vec;
 use core::alloc::Allocator;
 
 use crate::frame::MAX_BLOCK_SIZE;
+use crate::match_key::MatchKey;
 use crate::matchchain::MatchChain;
 use crate::sequence_context::LogicalSequence;
 use crate::{Error, Result};
 
 const MIN_MATCH: usize = 4;
-const MAX_VISITS: usize = 16;
+const MAX_VISITS: usize = 64;
+const DEFAULT_LAZY_VISITS: usize = 16;
 
 /// Plain search policy values; storage access remains in MatchChain.
 struct ParsePolicy {
@@ -21,7 +23,7 @@ struct ParsePolicy {
 ///
 /// Fulfills the bounded chain-search role of `ZSTD_HcFindBestMatch`, with this
 /// implementation's own policy. The named chain strategy supplies eight visits;
-/// this foundation accepts zero through sixteen. The caller seeds dictionary
+/// this foundation accepts zero through sixty-four. The caller seeds dictionary
 /// and retained-output positions before calling; this function never resets the
 /// chain or owns any source bytes beyond its literal output.
 ///
@@ -31,7 +33,9 @@ struct ParsePolicy {
 /// distance is not inferred by subtracting these coordinates. This parser still
 /// requires a strictly earlier candidate, a positive distance, and a match of at
 /// least four bytes within the remaining block. Wire representability is checked
-/// later by sequence planning.
+/// later by sequence planning. The selected key width only controls probing and
+/// insertion: a shorter tail becomes literals, while byte-verified wider-key
+/// collisions may still emit a four-byte match.
 ///
 /// Invalid block size, coordinate overflow or visit budget is rejected before
 /// changing outputs or table state. Output reservations are fallible and precede
@@ -83,12 +87,37 @@ pub(crate) fn parse_lazy<A: Allocator, L: Allocator, S: Allocator>(
     literals: &mut Vec<u8, L>,
     sequences: &mut Vec<LogicalSequence, S>,
 ) -> Result<()> {
+    parse_lazy_with_budget(
+        input,
+        table,
+        virtual_base,
+        DEFAULT_LAZY_VISITS,
+        resolve,
+        literals,
+        sequences,
+    )
+}
+
+/// Parse lazily with an explicit zero-through-sixty-four examined-link limit.
+///
+/// The same budget applies independently to current and lookahead probes.
+/// Zero preserves every byte as a literal while still inserting complete keys.
+/// All ordering, source-verification and failure rules follow `parse_lazy`.
+pub(crate) fn parse_lazy_with_budget<A: Allocator, L: Allocator, S: Allocator>(
+    input: &[u8],
+    table: &mut MatchChain<A>,
+    virtual_base: u64,
+    budget: usize,
+    resolve: impl FnMut(u64, usize) -> Result<Option<(u32, u32)>>,
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<LogicalSequence, S>,
+) -> Result<()> {
     parse(
         input,
         table,
         virtual_base,
         ParsePolicy {
-            visits: MAX_VISITS,
+            visits: budget,
             look_ahead: true,
         },
         resolve,
@@ -124,15 +153,18 @@ fn parse<A: Allocator, L: Allocator, S: Allocator>(
     literals.clear();
     sequences.clear();
 
+    // The exclusive table borrow prevents outside reconfiguration during this
+    // parse; insertion changes links but preserves this checked key layout.
+    let layout = table.layout();
     let mut position = 0;
     let mut literal_start = 0;
-    while input.len() - position >= MIN_MATCH {
+    while let Some(key) = layout.read_key(&input[position..]) {
         // The complete block-end check above proves every local addition fits.
         let current = virtual_base + position as u64;
-        let word = word_at(input, position);
         let mut best = find_best(
             input,
             table,
+            key,
             virtual_base,
             position,
             policy.visits,
@@ -140,16 +172,17 @@ fn parse<A: Allocator, L: Allocator, S: Allocator>(
         )?;
         // Lookup finishes before current insertion: neither the current source
         // coordinate nor a newly inserted node can consume this search budget.
-        table.insert(word, current)?;
+        table.insert(key, current)?;
         let mut match_start = position;
         if policy.look_ahead
             && let Some((_, length)) = best
             && (length as usize) < input.len() - position
-            && input.len() - position > MIN_MATCH
+            && let Some(next_key) = layout.read_key(&input[position + 1..])
         {
             let next = find_best(
                 input,
                 table,
+                next_key,
                 virtual_base,
                 position + 1,
                 policy.visits,
@@ -178,8 +211,10 @@ fn parse<A: Allocator, L: Allocator, S: Allocator>(
             // Current was inserted before probing. Start at current+1 whether
             // it becomes the delayed match start or part of the current match.
             position += 1;
-            while position < match_end && input.len() - position >= MIN_MATCH {
-                table.insert(word_at(input, position), virtual_base + position as u64)?;
+            while position < match_end
+                && let Some(consumed_key) = layout.read_key(&input[position..])
+            {
+                table.insert(consumed_key, virtual_base + position as u64)?;
                 position += 1;
             }
             position = match_end;
@@ -197,6 +232,7 @@ fn parse<A: Allocator, L: Allocator, S: Allocator>(
 fn find_best<A: Allocator>(
     input: &[u8],
     table: &MatchChain<A>,
+    key: MatchKey,
     virtual_base: u64,
     position: usize,
     budget: usize,
@@ -204,7 +240,7 @@ fn find_best<A: Allocator>(
 ) -> Result<Option<(u32, u32)>> {
     let current = virtual_base + position as u64;
     let mut best: Option<(u32, u32)> = None;
-    for previous in table.candidates(word_at(input, position), current, budget)? {
+    for previous in table.candidates(key, current, budget)? {
         if previous >= current {
             return Err(Error::CorruptData);
         }
@@ -223,6 +259,7 @@ fn find_best<A: Allocator>(
     Ok(best)
 }
 
+#[cfg(test)]
 fn word_at(input: &[u8], position: usize) -> [u8; 4] {
     [
         input[position],
@@ -486,7 +523,7 @@ mod tests {
                 b"same",
                 &mut chain,
                 1,
-                17,
+                65,
                 |_, _| panic!("invalid budget"),
                 &mut literals,
                 &mut sequences
@@ -1138,7 +1175,7 @@ mod tests {
 
     #[test]
     fn visit_budget_includes_future_coordinates_and_never_resolves_the_current_position() {
-        for budget in [0, 1, 2, 8, 16] {
+        for budget in [0, 1, 2, 8, 16, 64] {
             let mut table = MatchChain::new(32).unwrap();
             table.insert(*b"same", 0).unwrap();
             table.insert(*b"same", 100).unwrap();
@@ -1316,7 +1353,7 @@ mod tests {
         for (input, base, budget, expected) in [
             (&oversized[..], 0, 8, Error::ResourceLimit),
             (&b"x"[..], u64::MAX, 8, Error::ResourceLimit),
-            (&b"same"[..], 1, 17, Error::InvalidParameter),
+            (&b"same"[..], 1, 65, Error::InvalidParameter),
             (&b"same"[..], 1, usize::MAX, Error::InvalidParameter),
         ] {
             let mut table = MatchChain::new(8).unwrap();
@@ -1403,5 +1440,393 @@ mod tests {
             ),
             capacities
         );
+    }
+    fn dynamic_chain(width: u8, nodes: usize) -> MatchChain {
+        MatchChain::with_layout_in(
+            crate::match_search::SearchKeyLayout::new(10, width).unwrap(),
+            nodes,
+            alloc::alloc::Global,
+        )
+        .unwrap()
+    }
+
+    fn parse_at_budget<A: Allocator, L: Allocator, S: Allocator>(
+        lazy: bool,
+        input: &[u8],
+        table: &mut MatchChain<A>,
+        base_and_budget: (u64, usize),
+        resolve: impl FnMut(u64, usize) -> Result<Option<(u32, u32)>>,
+        literals: &mut Vec<u8, L>,
+        sequences: &mut Vec<LogicalSequence, S>,
+    ) -> Result<()> {
+        let (base, budget) = base_and_budget;
+        if lazy {
+            parse_lazy_with_budget(input, table, base, budget, resolve, literals, sequences)
+        } else {
+            parse_chain(input, table, base, budget, resolve, literals, sequences)
+        }
+    }
+
+    #[test]
+    fn dynamic_exact_and_short_tails_skip_probes_and_full_tail_skips_lookahead() {
+        for width in [4_u8, 5, 8] {
+            for length in [
+                0,
+                usize::from(width) - 1,
+                usize::from(width),
+                usize::from(width) + 1,
+            ] {
+                for lazy in [false, true] {
+                    // Exact allocation makes an eight-byte physical load from a
+                    // five-byte input observable under Miri, unlike padded data.
+                    let input = vec![b'a'; length].into_boxed_slice();
+                    let mut table = dynamic_chain(width, 16);
+                    let key = table.layout().read_key(&[b'a'; 8]).unwrap();
+                    table.insert(key, 0).unwrap();
+                    let (mut literals, mut sequences) = (Vec::new(), Vec::new());
+                    let mut trace = Vec::new();
+                    parse_at_budget(
+                        lazy,
+                        &input,
+                        &mut table,
+                        (1, 64),
+                        |previous, position| {
+                            trace.push((previous, position));
+                            resolve_bytes(b"a", &input, previous, position)
+                        },
+                        &mut literals,
+                        &mut sequences,
+                    )
+                    .unwrap();
+                    let complete = length >= usize::from(width);
+                    assert_eq!(trace, if complete { vec![(0, 0)] } else { vec![] });
+                    assert_eq!(reconstruct(b"a", &literals, &sequences), &*input);
+                    if complete {
+                        assert!(literals.is_empty());
+                        assert_eq!(sequence_values(&sequences), [(0, length as u32, 1)]);
+                    } else {
+                        assert_eq!(literals, &*input);
+                        assert!(sequences.is_empty());
+                    }
+                    let mut expected = Vec::new();
+                    if complete {
+                        expected.extend(
+                            (0..=length - usize::from(width))
+                                .rev()
+                                .map(|p| 1 + p as u64),
+                        );
+                    }
+                    expected.push(0);
+                    assert_eq!(
+                        table
+                            .candidates(key, u64::MAX, 64)
+                            .unwrap()
+                            .collect::<Vec<_>>(),
+                        expected
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn dynamic_wider_hash_collision_can_emit_a_verified_four_byte_match() {
+        // These distinct eight-byte values share bucket66 at hash log10. Only
+        // their first four bytes agree, so key width must not become minMatch.
+        let prefix = [b'a', b'b', b'c', b'd', 1, 0, 0, 0];
+        let input = [b'a', b'b', b'c', b'd', 0x72, 3, 0, 0];
+        for lazy in [false, true] {
+            let mut table = dynamic_chain(8, 16);
+            let layout = table.layout();
+            let original = layout.read_key(&prefix).unwrap();
+            let probe = layout.read_key(&input).unwrap();
+            assert_ne!(original, probe);
+            assert_eq!(layout.bucket(original), Ok(66));
+            assert_eq!(layout.bucket(probe), Ok(66));
+            table.insert(original, 0).unwrap();
+            let (mut literals, mut sequences) = (Vec::new(), Vec::new());
+            let mut trace = Vec::new();
+            parse_at_budget(
+                lazy,
+                &input,
+                &mut table,
+                (8, 8),
+                |previous, position| {
+                    trace.push((previous, position));
+                    resolve_bytes(&prefix, &input, previous, position)
+                },
+                &mut literals,
+                &mut sequences,
+            )
+            .unwrap();
+            assert_eq!(trace, [(0, 0)]); // Seven-byte next probe is too short.
+            assert_eq!(sequence_values(&sequences), [(0, 4, 8)]);
+            assert_eq!(literals, input[4..]);
+            assert_eq!(reconstruct(&prefix, &literals, &sequences), input);
+            assert_eq!(
+                table
+                    .candidates(probe, u64::MAX, 64)
+                    .unwrap()
+                    .collect::<Vec<_>>(),
+                [8, 0]
+            );
+        }
+    }
+
+    #[test]
+    fn dynamic_zero_effort_inserts_each_complete_key_without_resolving() {
+        for width in [4_u8, 5, 8] {
+            for lazy in [false, true] {
+                let input = [b'a'; 12];
+                let mut table = dynamic_chain(width, 32);
+                let key = table.layout().read_key(&input).unwrap();
+                table.insert(key, 0).unwrap();
+                let (mut literals, mut sequences) = (Vec::new(), Vec::new());
+                parse_at_budget(
+                    lazy,
+                    &input,
+                    &mut table,
+                    (1, 0),
+                    |_, _| panic!("zero effort must never resolve"),
+                    &mut literals,
+                    &mut sequences,
+                )
+                .unwrap();
+                assert_eq!(literals, input);
+                assert!(sequences.is_empty());
+                let expected: Vec<_> = (0..=input.len() - usize::from(width))
+                    .rev()
+                    .map(|p| 1 + p as u64)
+                    .chain([0])
+                    .collect();
+                assert_eq!(
+                    table
+                        .candidates(key, u64::MAX, 64)
+                        .unwrap()
+                        .collect::<Vec<_>>(),
+                    expected
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn dynamic_effort_one_eight_sixteen_sixty_four_changes_verified_selection() {
+        let input: Vec<_> = (0..80).collect();
+        for width in [4_u8, 5, 8] {
+            for budget in [1, 8, 16, 64] {
+                for lazy in [false, true] {
+                    let mut table = dynamic_chain(width, 256);
+                    let layout = table.layout();
+                    let key = layout.read_key(&input).unwrap();
+                    assert_ne!(
+                        layout.bucket(key),
+                        layout.bucket(layout.read_key(&input[1..]).unwrap())
+                    );
+                    let mut prefix = Vec::new();
+                    let mut starts = Vec::new();
+                    // Oldest is longest. Each additional examined predecessor
+                    // exposes one more byte of an independently verified match.
+                    for rank in (0..64).rev() {
+                        let start = prefix.len() as u64;
+                        starts.push(start);
+                        prefix.extend_from_slice(&input[..usize::from(width) + rank]);
+                        prefix.push(0xff);
+                        table.insert(key, start).unwrap();
+                    }
+                    let (mut literals, mut sequences) = (Vec::new(), Vec::new());
+                    let mut first_trace = Vec::new();
+                    parse_at_budget(
+                        lazy,
+                        &input,
+                        &mut table,
+                        (prefix.len() as u64, budget),
+                        |previous, position| {
+                            if position == 0 {
+                                first_trace.push(previous);
+                            }
+                            resolve_bytes(&prefix, &input, previous, position)
+                        },
+                        &mut literals,
+                        &mut sequences,
+                    )
+                    .unwrap();
+                    let expected: Vec<_> = starts.iter().rev().copied().take(budget).collect();
+                    assert_eq!(first_trace, expected);
+                    assert_eq!(sequences[0].literal_length, 0);
+                    assert_eq!(
+                        sequences[0].match_length as usize,
+                        usize::from(width) + budget - 1
+                    );
+                    assert_eq!(
+                        sequences[0].distance as usize,
+                        prefix.len() - expected[budget - 1] as usize
+                    );
+                    assert_eq!(reconstruct(&prefix, &literals, &sequences), input);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn dynamic_lazy_budget_reaches_both_current_and_next_verified_probes() {
+        let input = b"ABCDEFGHIJKLMNOPQRST";
+        for width in [4_u8, 5, 8] {
+            for budget in [1, 8, 16, 64] {
+                let mut table = dynamic_chain(width, 256);
+                let layout = table.layout();
+                let current_key = layout.read_key(input).unwrap();
+                let next_key = layout.read_key(&input[1..]).unwrap();
+                assert_ne!(layout.bucket(current_key), layout.bucket(next_key));
+                let mut prefix = Vec::new();
+                let mut starts = [Vec::new(), Vec::new()];
+                for (position, key) in [current_key, next_key].into_iter().enumerate() {
+                    for _ in 0..64 {
+                        let start = prefix.len() as u64;
+                        starts[position].push(start);
+                        let length = usize::from(width) + 2 * position;
+                        prefix.extend_from_slice(&input[position..position + length]);
+                        prefix.push(0xff);
+                        table.insert(key, start).unwrap();
+                    }
+                }
+                let (mut literals, mut sequences) = (Vec::new(), Vec::new());
+                let mut trace = [Vec::new(), Vec::new()];
+                parse_lazy_with_budget(
+                    input,
+                    &mut table,
+                    prefix.len() as u64,
+                    budget,
+                    |previous, position| {
+                        if position < 2 {
+                            trace[position].push(previous);
+                        }
+                        resolve_bytes(&prefix, input, previous, position)
+                    },
+                    &mut literals,
+                    &mut sequences,
+                )
+                .unwrap();
+                for position in 0..2 {
+                    assert_eq!(
+                        trace[position],
+                        starts[position]
+                            .iter()
+                            .rev()
+                            .copied()
+                            .take(budget)
+                            .collect::<Vec<_>>()
+                    );
+                }
+                assert_eq!(sequences[0].literal_length, 1);
+                assert_eq!(sequences[0].match_length, u32::from(width) + 2);
+                assert_eq!(reconstruct(&prefix, &literals, &sequences), input);
+            }
+        }
+    }
+
+    #[test]
+    fn dynamic_lazy_distance_one_inserts_consumed_starts_once_at_full_coordinates() {
+        for width in [4_u8, 5, 8] {
+            let mut prefix = vec![b'a'; usize::from(width)];
+            prefix.push(b'X');
+            let input = vec![b'a'; usize::from(width) + 4];
+            let origin = u64::MAX - (prefix.len() + input.len()) as u64;
+            let base = origin + prefix.len() as u64;
+            let mut table = dynamic_chain(width, 32);
+            let key = table.layout().read_key(&input).unwrap();
+            table.insert(key, origin).unwrap();
+            let (mut literals, mut sequences) = (Vec::new(), Vec::new());
+            let mut trace = Vec::new();
+            parse_lazy_with_budget(
+                &input,
+                &mut table,
+                base,
+                64,
+                |previous, position| {
+                    trace.push((previous, position));
+                    resolve_bytes(&prefix, &input, previous - origin, position)
+                },
+                &mut literals,
+                &mut sequences,
+            )
+            .unwrap();
+            assert_eq!(trace, [(origin, 0), (base, 1), (origin, 1)]);
+            assert_eq!(
+                sequence_values(&sequences),
+                [(1, input.len() as u32 - 1, 1)]
+            );
+            assert_eq!(literals, b"a");
+            assert_eq!(reconstruct(&prefix, &literals, &sequences), input);
+            let expected: Vec<_> = (0..=4)
+                .rev()
+                .map(|position| base + position)
+                .chain([origin])
+                .collect();
+            assert_eq!(
+                table
+                    .candidates(key, u64::MAX, 64)
+                    .unwrap()
+                    .collect::<Vec<_>>(),
+                expected
+            );
+        }
+    }
+
+    #[test]
+    fn dynamic_invalid_effort_rejects_before_reserve_or_table_output_mutation() {
+        for width in [4_u8, 5, 8] {
+            for budget in [65, usize::MAX] {
+                for lazy in [false, true] {
+                    let owner = allocator().into_non_clone();
+                    let monitor = owner.monitor();
+                    let layout = crate::match_search::SearchKeyLayout::new(10, width).unwrap();
+                    let mut table = MatchChain::with_layout_in(layout, 8, &owner).unwrap();
+                    let input = [b'a'; 12];
+                    let key = layout.read_key(&input).unwrap();
+                    table.insert(key, 0).unwrap();
+                    let mut literals = Vec::new_in(&owner);
+                    literals.try_reserve_exact(1).unwrap();
+                    literals.push(77);
+                    let mut sequences = Vec::new_in(&owner);
+                    sequences.try_reserve_exact(1).unwrap();
+                    sequences.push(LogicalSequence {
+                        literal_length: 1,
+                        match_length: 4,
+                        distance: 9,
+                    });
+                    let before = monitor.snapshot();
+                    let literal_pointer = literals.as_ptr();
+                    let sequence_pointer = sequences.as_ptr();
+                    assert!(monitor.fail_next());
+                    assert_eq!(
+                        parse_at_budget(
+                            lazy,
+                            &input,
+                            &mut table,
+                            (1, budget),
+                            |_, _| panic!("invalid effort must never resolve"),
+                            &mut literals,
+                            &mut sequences,
+                        ),
+                        Err(Error::InvalidParameter)
+                    );
+                    assert_eq!(monitor.snapshot(), before);
+                    assert_eq!(literals, [77]);
+                    assert_eq!(sequence_values(&sequences), [(1, 4, 9)]);
+                    assert_eq!(literal_pointer, literals.as_ptr());
+                    assert_eq!(sequence_pointer, sequences.as_ptr());
+                    assert_eq!(
+                        table
+                            .candidates(key, u64::MAX, 64)
+                            .unwrap()
+                            .collect::<Vec<_>>(),
+                        [0]
+                    );
+                    drop((table, literals, sequences));
+                    monitor.assert_released();
+                }
+            }
+        }
     }
 }
