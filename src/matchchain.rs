@@ -5,7 +5,7 @@
 //! history and advertised window bounds before accepting any candidate.
 
 use alloc::{alloc::Global, vec::Vec};
-use core::alloc::Allocator;
+use core::alloc::{Allocator, Layout};
 
 use crate::{Error, Result};
 
@@ -27,6 +27,30 @@ struct Node {
     position: u64,
     tag: u64,
     older: Link,
+}
+
+/// Requested payload bytes for independently allocated heads and nodes.
+///
+/// Uses the actual private record layouts, including target-specific padding.
+/// This checks allocation-layout limits and addition without creating owners;
+/// constructor/shape callers separately validate their admitted element counts.
+#[cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "search-shape consumer is absent in standalone benchmarks"
+    )
+)]
+pub(crate) fn requested_storage_bytes(heads: usize, nodes: usize) -> Result<usize> {
+    let head_bytes = Layout::array::<Link>(heads)
+        .map_err(|_| Error::ResourceLimit)?
+        .size();
+    let node_bytes = Layout::array::<Node>(nodes)
+        .map_err(|_| Error::ResourceLimit)?
+        .size();
+    head_bytes
+        .checked_add(node_bytes)
+        .ok_or(Error::ResourceLimit)
 }
 
 /// Owned fixed-size heads and initialized cyclic node storage.

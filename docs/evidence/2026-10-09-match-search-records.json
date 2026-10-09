@@ -1,0 +1,407 @@
+{
+  "schema_version": 1,
+  "scope": "Module 11 plain match-search options, key-layout descriptor and immutable requested-storage shape foundation",
+  "repository_head_at_freeze": "f0755d1e3c00ab127d49f0dda7f805bc583400a2",
+  "source_sha256": {
+    "src/match_search.rs": "6998a15614095eab5c230d8d8de845300c09a87bf03ed9ff0ab9488557b6bd92",
+    "src/matchchain.rs": "c4a37973a2368a7eaaa2515e6cf5e1e9951c1f35865dfa54cc35ab4f7104d6cf"
+  },
+  "source_changed_during_cross_miri": false,
+  "new_unsafe_operations": false,
+  "new_allocations": false,
+  "temporary_allowance": "Private module non-test dead_code allowance until live consumers; byte-cost helper allowance also covers standalone benchmark compilation.",
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "match_search::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 0,
+      "seconds": 24.315,
+      "log": "/tmp/zstdoxide-module11-search-records-safe.log",
+      "sha256": "9d48ade09dbc1fb135a9cecd6824769cee8f881ee9b1a0b04131fce3e81dc923",
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.01
+        }
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.79s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-search-records-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 7 tests\ntest match_search::tests::all_invalid_scalar_inputs_preserve_the_complete_nondefault_record ... ok\ntest match_search::tests::all_public_dimensions_have_checked_layout_costs_including_inactive_caches ... ok\ntest match_search::tests::layout_checks_both_fields_and_target_width_before_any_shift ... ok\ntest match_search::tests::cost_arithmetic_rejects_layout_overflow_and_the_aggregate_ceiling ... ok\ntest match_search::tests::defaults_preserve_every_existing_dimension_and_policy_effort ... ok\ntest match_search::tests::effective_history_admits_empty_one_shot_and_clamps_every_other_window ... ok\ntest match_search::tests::policy_effort_uses_separate_concrete_limits_without_changing_storage ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 514 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "match_search::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 0,
+      "seconds": 12.462,
+      "log": "/tmp/zstdoxide-module11-search-records-all.log",
+      "sha256": "93aeb3e19b2d2a74c10b2abad4fc5b23c4a9fd3615d6ebd7dcb456e0c153e0a9",
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.74s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-search-records-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 7 tests\ntest match_search::tests::defaults_preserve_every_existing_dimension_and_policy_effort ... ok\ntest match_search::tests::cost_arithmetic_rejects_layout_overflow_and_the_aggregate_ceiling ... ok\ntest match_search::tests::effective_history_admits_empty_one_shot_and_clamps_every_other_window ... ok\ntest match_search::tests::policy_effort_uses_separate_concrete_limits_without_changing_storage ... ok\ntest match_search::tests::layout_checks_both_fields_and_target_width_before_any_shift ... ok\ntest match_search::tests::all_invalid_scalar_inputs_preserve_the_complete_nondefault_record ... ok\ntest match_search::tests::all_public_dimensions_have_checked_layout_costs_including_inactive_caches ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 514 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "nostd",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "match_search::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 0,
+      "seconds": 10.083,
+      "log": "/tmp/zstdoxide-module11-search-records-nostd.log",
+      "sha256": "2893531b77c770b8b00d9c1aa211c60dc00ea152dc25ebf77754e10e07abc647",
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.56s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-search-records-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 7 tests\ntest match_search::tests::all_invalid_scalar_inputs_preserve_the_complete_nondefault_record ... ok\ntest match_search::tests::defaults_preserve_every_existing_dimension_and_policy_effort ... ok\ntest match_search::tests::policy_effort_uses_separate_concrete_limits_without_changing_storage ... ok\ntest match_search::tests::cost_arithmetic_rejects_layout_overflow_and_the_aggregate_ceiling ... ok\ntest match_search::tests::effective_history_admits_empty_one_shot_and_clamps_every_other_window ... ok\ntest match_search::tests::layout_checks_both_fields_and_target_width_before_any_shift ... ok\ntest match_search::tests::all_public_dimensions_have_checked_layout_costs_including_inactive_caches ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 489 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "nostd-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "match_search::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 0,
+      "seconds": 8.746,
+      "log": "/tmp/zstdoxide-module11-search-records-nostd-all.log",
+      "sha256": "b8a3fcb74b44c910bd7abcbee131c173c7861e101c5e3a96edc52b71eb5b800f",
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.21s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-search-records-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 7 tests\ntest match_search::tests::effective_history_admits_empty_one_shot_and_clamps_every_other_window ... ok\ntest match_search::tests::all_invalid_scalar_inputs_preserve_the_complete_nondefault_record ... ok\ntest match_search::tests::layout_checks_both_fields_and_target_width_before_any_shift ... ok\ntest match_search::tests::defaults_preserve_every_existing_dimension_and_policy_effort ... ok\ntest match_search::tests::cost_arithmetic_rejects_layout_overflow_and_the_aggregate_ceiling ... ok\ntest match_search::tests::all_public_dimensions_have_checked_layout_costs_including_inactive_caches ... ok\ntest match_search::tests::policy_effort_uses_separate_concrete_limits_without_changing_storage ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 489 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "nostd-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 0,
+      "seconds": 1.58,
+      "log": "/tmp/zstdoxide-module11-search-records-nostd-lib.log",
+      "sha256": "74a4518a9f322715f690375cac5af6062405d78c36f4ce7dcda3e5254f80f079",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.53s\n"
+    },
+    {
+      "name": "nostd-all-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 0,
+      "seconds": 1.41,
+      "log": "/tmp/zstdoxide-module11-search-records-nostd-all-lib.log",
+      "sha256": "202c9cb87512018006aa0f7ef878deb1d66ac861560a814a9ea672896d6b3acd",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.34s\n"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 101,
+      "seconds": 13.346,
+      "log": "/tmp/zstdoxide-module11-search-records-clippy.log",
+      "sha256": "633715522773d744073a47091422ab31326fa484c386d312be5858f97a0ab12c",
+      "qualification": "Initial Clippy was blocked by two compile errors in another agent's concurrently developed tests/match_search_defaults.rs (private retained_capacity and moved value). Those tests were fixed by their owner; this foundation did not change. Final all-target Clippy below passed.",
+      "log_text": "    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nerror[E0624]: method `retained_capacity` is private\n   --> tests/match_search_defaults.rs:421:42\n    |\n421 |                 .map_or(0, |value| value.retained_capacity())\n    |                                          ^^^^^^^^^^^^^^^^^ private method\n    |\n   ::: src/dictionary.rs:349:5\n    |\n349 |     pub(crate) fn retained_capacity(&self) -> usize {\n    |     ----------------------------------------------- private method defined here\n\nerror[E0382]: use of moved value: `first_greedy`\n    --> tests/match_search_defaults.rs:493:33\n     |\n 464 |       let mut first_greedy = None;\n     |           ---------------- move occurs because `first_greedy` has type `std::option::Option<std::vec::Vec<u8>>`, which does not implement the `Copy` trait\n 465 | /     for (index, policy) in [\n 466 | |         CompressionStrategy::Greedy,\n 467 | |         CompressionStrategy::Chain,\n 468 | |         CompressionStrategy::Lazy,\n...    |\n 471 | |     .into_iter()\n 472 | |     .enumerate()\n     | |________________- inside of this loop\n...\n 491 |               first_greedy = Some(encoded);\n     |               ------------ this reinitialization might get skipped\n 492 |           } else if index == 3 {\n 493 |               assert_eq!(encoded, first_greedy.unwrap());\n     |                                   ^^^^^^^^^^^^ -------- `first_greedy` moved due to this method call, in previous iteration of loop\n     |\nnote: `std::option::Option::<T>::unwrap` takes ownership of the receiver `self`, which moves `first_greedy`\n    --> /Users/lanxingcan/.rustup/toolchains/nightly-2026-10-08-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/option.rs:1013:25\n     |\n1013 |     pub const fn unwrap(self) -> T {\n     |                         ^^^^\nhelp: you can `clone` the value and consume it, but this might not be your desired behavior\n     |\n 493 |             assert_eq!(encoded, first_greedy.clone().unwrap());\n     |                                             ++++++++\n\nSome errors have detailed explanations: E0382, E0624.\nFor more information about an error, try `rustc --explain E0382`.\nerror: could not compile `zstdoxide` (test \"match_search_defaults\") due to 2 previous errors\nwarning: build failed, waiting for other jobs to finish...\n"
+    },
+    {
+      "name": "clippy-lib",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module11-search-records-clippy-lib.log",
+      "sha256": "23b9a21bbaf189889e08dc27ed8eba521021280c5852db22205f721db08b2c7c",
+      "log_text": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s\n"
+    },
+    {
+      "name": "clippy-final",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module11-search-records-clippy-final.log",
+      "sha256": "71bddf2a58ecc0ccbf65f42af4f37529c677c586d1d5799c0758f45647310138",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.11s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/match_search.rs",
+        "src/matchchain.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.086,
+      "log": "/tmp/zstdoxide-module11-search-records-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/matchchain.rs",
+        "src/match_search.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.104,
+      "log": "/tmp/zstdoxide-module11-search-records-diff.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "name": "compiler",
+      "command": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "-vV"
+      ],
+      "exit_code": 0,
+      "seconds": 0.234,
+      "log": "/tmp/zstdoxide-module11-search-records-compiler.log",
+      "sha256": "a4bb13dccabda9ebf5294b8144f22400733afc06744ab8062bcf43b7254e0c03",
+      "log_text": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n"
+    },
+    {
+      "name": "i686-cfg",
+      "command": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "--print",
+        "cfg",
+        "--target",
+        "i686-unknown-linux-gnu"
+      ],
+      "exit_code": 0,
+      "seconds": 0.094,
+      "log": "/tmp/zstdoxide-module11-search-records-i686-cfg.log",
+      "sha256": "78e5dfe79a40829b69be3b0e0f1fcdd29a6ca5aa998877d7bc0d070644707e0b",
+      "log_text": "debug_assertions\nfmt_debug=\"full\"\noverflow_checks\npanic=\"unwind\"\nrelocation_model=\"pic\"\ntarget_abi=\"\"\ntarget_arch=\"x86\"\ntarget_endian=\"little\"\ntarget_env=\"gnu\"\ntarget_family=\"unix\"\ntarget_feature=\"fxsr\"\ntarget_feature=\"sse\"\ntarget_feature=\"sse2\"\ntarget_feature=\"x87\"\ntarget_has_atomic\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_has_atomic_load_store\ntarget_has_atomic_load_store=\"16\"\ntarget_has_atomic_load_store=\"32\"\ntarget_has_atomic_load_store=\"64\"\ntarget_has_atomic_load_store=\"8\"\ntarget_has_atomic_load_store=\"ptr\"\ntarget_has_atomic_primitive_alignment=\"16\"\ntarget_has_atomic_primitive_alignment=\"32\"\ntarget_has_atomic_primitive_alignment=\"8\"\ntarget_has_atomic_primitive_alignment=\"ptr\"\ntarget_has_reliable_f128\ntarget_has_reliable_f16\ntarget_has_reliable_f16_math\ntarget_has_threads\ntarget_object_format=\"elf\"\ntarget_os=\"linux\"\ntarget_pointer_width=\"32\"\ntarget_thread_local\ntarget_vendor=\"unknown\"\nub_checks\nunix\n"
+    },
+    {
+      "name": "s390x-cfg",
+      "command": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "--print",
+        "cfg",
+        "--target",
+        "s390x-unknown-linux-gnu"
+      ],
+      "exit_code": 0,
+      "seconds": 0.056,
+      "log": "/tmp/zstdoxide-module11-search-records-s390x-cfg.log",
+      "sha256": "2064e81ead58ea894cfbf643cc3e5cf767e9f16ac953d2b8a325bfb7e85094fe",
+      "log_text": "debug_assertions\nfmt_debug=\"full\"\noverflow_checks\npanic=\"unwind\"\nrelocation_model=\"pic\"\ntarget_abi=\"\"\ntarget_arch=\"s390x\"\ntarget_endian=\"big\"\ntarget_env=\"gnu\"\ntarget_family=\"unix\"\ntarget_has_atomic\ntarget_has_atomic=\"128\"\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_has_atomic_load_store\ntarget_has_atomic_load_store=\"128\"\ntarget_has_atomic_load_store=\"16\"\ntarget_has_atomic_load_store=\"32\"\ntarget_has_atomic_load_store=\"64\"\ntarget_has_atomic_load_store=\"8\"\ntarget_has_atomic_load_store=\"ptr\"\ntarget_has_atomic_primitive_alignment=\"16\"\ntarget_has_atomic_primitive_alignment=\"32\"\ntarget_has_atomic_primitive_alignment=\"64\"\ntarget_has_atomic_primitive_alignment=\"8\"\ntarget_has_atomic_primitive_alignment=\"ptr\"\ntarget_has_reliable_f128\ntarget_has_reliable_f128_math\ntarget_has_reliable_f16\ntarget_has_reliable_f16_math\ntarget_has_threads\ntarget_object_format=\"elf\"\ntarget_os=\"linux\"\ntarget_pointer_width=\"64\"\ntarget_thread_local\ntarget_vendor=\"unknown\"\nub_checks\nunix\n"
+    },
+    {
+      "name": "miri-i686",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "i686-unknown-linux-gnu",
+        "--lib",
+        "match_search::tests::",
+        "--",
+        "--test-threads=1"
+      ],
+      "env": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TERM_COLOR": "never",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-miri-i686"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module11-search-records-miri-i686.log",
+      "sha256": "31409d580ace27044788ee7959aa14b8e84cfeb62850d46102b8fb6657f0f47e",
+      "execution": "Miri interpretation with cached sysroot; not native or QEMU",
+      "pointer_width": 32,
+      "endianness": "little",
+      "features": "default safe",
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 6.32
+        }
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.87s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-search-records-miri-i686/miri/i686-unknown-linux-gnu/debug/build/zstdoxide/b692d32578d03506/out/zstdoxide-b692d32578d03506)\n\nrunning 7 tests\ntest match_search::tests::all_invalid_scalar_inputs_preserve_the_complete_nondefault_record ... ok\ntest match_search::tests::all_public_dimensions_have_checked_layout_costs_including_inactive_caches ... ok\ntest match_search::tests::cost_arithmetic_rejects_layout_overflow_and_the_aggregate_ceiling ... ok\ntest match_search::tests::defaults_preserve_every_existing_dimension_and_policy_effort ... ok\ntest match_search::tests::effective_history_admits_empty_one_shot_and_clamps_every_other_window ... ok\ntest match_search::tests::layout_checks_both_fields_and_target_width_before_any_shift ... ok\ntest match_search::tests::policy_effort_uses_separate_concrete_limits_without_changing_storage ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 507 filtered out; finished in 6.32s\n\n"
+    },
+    {
+      "name": "miri-s390x",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--target",
+        "s390x-unknown-linux-gnu",
+        "--lib",
+        "match_search::tests::",
+        "--",
+        "--test-threads=1"
+      ],
+      "env": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TERM_COLOR": "never",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-records-miri-s390x"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module11-search-records-miri-s390x.log",
+      "sha256": "d4ff6ddae4d49cd3b5c13fdfe5562c1429106f734b63e8c8fdb5b9fb58492d12",
+      "execution": "Miri interpretation with cached sysroot; not native or QEMU",
+      "pointer_width": 64,
+      "endianness": "big",
+      "features": "default safe",
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 6.21
+        }
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.88s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-search-records-miri-s390x/miri/s390x-unknown-linux-gnu/debug/build/zstdoxide/352fcbf9ea7fd889/out/zstdoxide-352fcbf9ea7fd889)\n\nrunning 7 tests\ntest match_search::tests::all_invalid_scalar_inputs_preserve_the_complete_nondefault_record ... ok\ntest match_search::tests::all_public_dimensions_have_checked_layout_costs_including_inactive_caches ... ok\ntest match_search::tests::cost_arithmetic_rejects_layout_overflow_and_the_aggregate_ceiling ... ok\ntest match_search::tests::defaults_preserve_every_existing_dimension_and_policy_effort ... ok\ntest match_search::tests::effective_history_admits_empty_one_shot_and_clamps_every_other_window ... ok\ntest match_search::tests::layout_checks_both_fields_and_target_width_before_any_shift ... ok\ntest match_search::tests::policy_effort_uses_separate_concrete_limits_without_changing_storage ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 514 filtered out; finished in 6.21s\n\n"
+    }
+  ],
+  "qualifications": [
+    "This checkpoint does not expose or apply live search settings, implement dynamic hashes or resize any search owner.",
+    "Cost totals use actual target-specific layouts and include inactive cache families; they do not estimate allocator over-allocation, retained peaks, dictionary bytes or other codec scratch.",
+    "Miri only repeats the shared safe scalar representation; no native 32-bit/big-endian or unsafe-backend execution is claimed.",
+    "Concurrent unrelated library test additions changed Miri filtered-out totals; each target executed all seven owned tests against unchanged owned source.",
+    "The initial unrelated Clippy failure is preserved rather than omitted. Final strict all-target/all-feature Clippy passed."
+  ],
+  "summary": {
+    "native_test_configurations": 4,
+    "native_tests_per_configuration": 7,
+    "miri_targets": 2,
+    "miri_tests_per_target": 7,
+    "no_std_library_checks": 2,
+    "final_strict_clippy_checks": 2,
+    "owned_file_format_passed": true,
+    "diff_check_passed": true,
+    "running_sessions": []
+  },
+  "original_evidence_sha256": "488670f1220d3581ab429961e048e40fb7a8ce9466814d61f027f209d8b5e35d",
+  "root_review": "Reviewed every scalar mutation and shape calculation; no findings. Private module registration only; no live search configuration surface.",
+  "registration_source_sha256": "5fe54fe62f5814445168a163a6a4379c6bceaae77216856dc7219b25d8ee9b77"
+}

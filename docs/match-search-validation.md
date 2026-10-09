@@ -43,3 +43,28 @@ recorded C platform is little-endian arm64 macOS with 64-bit `size_t` and
 32-bit `int`. This checkpoint runs no Rust hash implementation and promotes no
 whole upstream test case. C headers and the linked oracle library remain
 outside the repository and are not production dependencies.
+
+## Validated options and storage shape
+
+`MatchSearchOptions` now validates each concrete scalar setting without
+allocation; unsuccessful setters preserve the complete record. The private
+`SearchKeyLayout` validates shifts and key dimensions, while `SearchShape`
+computes effective history, policy effort and all cached requested bytes using
+the actual target layouts. The aggregate admission ceiling is 32 MiB of requested
+payload. It is not a peak-memory, retained-capacity or allocator-overhead limit.
+An empty one-shot frame resolves to zero history. No live setting is exported
+or applied at this foundation checkpoint.
+
+Seven focused tests pass in safe, all-feature, no_std safe and no_std with all
+twelve unsafe features. Both no_std library checks, strict library/all-target
+Clippy with all features, and owned-file formatting pass. All seven tests also
+pass under strict-provenance Miri on i686 and big-endian s390x using cached
+sysroots. These fourteen interpreted executions validate shared safe scalar
+arithmetic and target layouts, not native foreign-platform or unsafe-backend
+execution. The checkpoint adds no unsafe operations or allocations.
+
+[Record evidence](evidence/2026-10-09-match-search-records.json) embeds sixteen
+command logs and the frozen source hashes. It retains the initial all-target
+Clippy failure caused by concurrent baseline-test compilation, and the final
+passing run after that test owner repaired the errors. Search owner resizing,
+hash primitives and actual parser/context consumers remain later items.

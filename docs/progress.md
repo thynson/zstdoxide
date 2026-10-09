@@ -400,3 +400,10 @@ independent generic-audit rejection checks pass. The offline inventory now
 verifies 324 fixtures in ten collections. This is primitive C evidence only;
 the Rust hash implementation and live controls remain separate work items.
 See [match-search validation](match-search-validation.md).
+
+The plain search-record foundation validates every option atomically and derives
+key dimensions, effective history, policy effort and all-cache requested bytes
+without allocation. Seven tests pass in four native feature/std configurations
+and on both i686 and big-endian s390x under Miri; no_std, strict Clippy and
+formatting pass. Costs use actual target layouts with a 32 MiB requested-payload
+ceiling. The records remain private until meaningful consumers are integrated.
