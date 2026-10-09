@@ -8,7 +8,7 @@ and the validation reports. The complete upstream migration remains open.
 ### Required for complete migration
 
 - [ ] Port advanced context reset, stable-buffer, and parameter assertions.
-- [ ] Port raw/prepared dictionary, training, and prefix assertions.
+- [ ] Port remaining dictionary/training controls, optimizations, and prefix parameter assertions.
 - [ ] Port encoder level/parameter, entropy encoder, and sequence-producer tests.
 - [ ] Port caller-owned output, in-place, allocator, and workspace contracts.
 - [ ] Port long-distance, multithreading, thread-pool, and large-index stress tests.
@@ -20,76 +20,32 @@ and the validation reports. The complete upstream migration remains open.
 The required items remain open. A complete inventory and passing available
 one-shot adaptations do not complete the upstream test migration.
 
-## Module 7: dictionaries, prefixes, and training
+## Module 8: entropy encoding and bounded compression strategies
 
-- [x] Record dictionary ownership, entropy initialization, lifetime boundaries, and API contracts.
-- [x] Parse raw/auto/formatted dictionaries and validate IDs, table limits, and repeat offsets.
-- [x] Add a separately gated unsafe dictionary-content accessor with complete proofs.
-- [x] Generate pinned raw-dictionary boundary fixtures with independent and C oracles.
-- [x] Generate prepared dictionary, prefix, and entropy-reuse interoperability fixtures.
-- [x] Extend bounded ring history with immutable absolute reads and deferred commits.
-- [x] Read compressed-block history from immutable prior history plus pending output.
-- [x] Initialize first-block Huffman/FSE tables and repeat offsets from prepared dictionaries.
-- [x] Decode raw dictionary references beyond the ordinary frame window.
-- [x] Handle dictionary-to-frame spanning matches without evicting source bytes.
-- [x] Add persistent dictionary and single-use prefix context configuration.
-- [x] Enforce nonzero frame dictionary IDs while supporting omitted IDs.
-- [x] Add one-shot dictionary decode helpers using the same streaming core.
-- [x] Add reusable dictionary seed tables and an owned encoder dictionary lifecycle.
-- [x] Extend indexed match search to dictionary content and first-block crossing.
-- [x] Retain committed encoder block input in a reusable bounded history ring.
-- [x] Search indexed retained output and cross-boundary dictionary/history matches.
-- [x] Verify encoder history eviction, reset isolation, and independent interoperability.
-- [x] Write dictionary frame IDs with explicit omission and smallest field widths.
-- [x] Produce interoperable raw/prepared dictionary compression.
-- [x] Expose one-shot dictionary compression with known size and minimal ID width.
-- [x] Verify one-shot dictionary compression boundaries and independent C decoding.
-- [x] Add dictionary-aware encoding context, reset, and single-use prefix configuration.
-- [x] Analyze bounded raw sample selection and dictionary-training ownership.
-- [x] Implement safe bounded frequency scoring and deterministic raw content selection.
-- [x] Add a separately gated unsafe training-frequency accessor with full proofs.
-- [x] Verify raw training quality, malformed parameters, determinism, and bounded selection.
-- [x] Decompose entropy construction and formatted dictionary finalization before implementation.
-- [x] Validate formatted-training options and share bounded sample-prefix observation.
-- [x] Serialize normalized FSE counts with checked forward bit output.
-- [x] Normalize sample frequencies deterministically with bounded integer arithmetic.
-- [x] Encode two-state FSE weight streams using checked transition inversion.
-- [x] Build complete full-alphabet literal trees with a bounded maximum depth.
-- [x] Serialize validated dictionary Huffman weights through two-state FSE.
-- [x] Assemble formatted dictionary IDs, sequence priors, repeat offsets, padding, and suffix bounds.
-- [x] Finalize formatted dictionaries with IDs, sequence priors, repeat offsets and bounded content.
-- [x] Implement bounded training sample selection and raw dictionary-content construction.
-- [x] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.
-- [x] Document current dictionary/training APIs and verify runnable usage examples.
-- [x] Port dictionary decoder, prefix lifetime, prepared entropy, and malformed-input assertions.
-- [x] Preserve exact omitted-ID and first-prefix missing-dictionary failure controls.
-- [x] Map implemented parser/decoder assertions to pinned upstream source groups.
-- [x] Port dictionary encoder lifetime, effectiveness, ID, window, and interoperability assertions.
-- [x] Map encoder, raw-training, and dictionary fuzz assertions to pinned upstream groups.
-- [x] Port applicable official dictionary preparation and training assertions.
-- [x] Map generated dictionary metadata and exact cyclic training assertions to upstream.
-- [x] Correct stale capability descriptions without changing unverified coverage statuses.
-- [x] Port the exact generated CNBuffer training sample campaign and roundtrip assertions.
-- [x] Compare normalized-count writing with all 512 independent C header vectors.
-- [x] Preserve the exact normalized-count fuzz producer and random-suffix roundtrip contract.
-- [x] Replay the complete 79-input normalized-count corpus and verify every backend.
-- [x] Record complete normalized-count target coverage and final reproducible evidence.
-- [x] Adapt dictionary loader and raw-dictionary fuzz contracts with exact source selectors.
-- [x] Pin all five dictionary corpora and replay loader/raw targets with safe and unsafe backends.
-- [x] Record trained dictionary fuzz sample ownership, selectors, and adapter boundaries.
-- [x] Preserve the trained fuzz helper's 100 sample ranges, capacity, and failure fallback.
-- [x] Adapt trained dictionary decompression and deterministic roundtrip fuzz assertions.
-- [x] Adapt trained streaming dictionaries with fragmented progress and prefix lifetime assertions.
-- [x] Replay matching external dictionary corpora with explicit coverage mappings.
-- [x] Extend deterministic benchmark workloads for dictionary access, codec contexts, and training.
-- [x] Measure all eleven backend configurations and preserve dictionary/training timing and memory results.
-- [x] Include dictionary and training backends and C oracles in the validation scripts.
-- [x] Add formatted-training, entropy C-oracle, and dictionary documentation checks to validation.
-- [x] Compare safe/unsafe dictionary throughput and memory; run backend/no_std/oracle/Miri checks.
+Design and source counterparts: `docs/entropy-encoder-design.md` and
+`docs/data-structures.md`. Each checked item belongs to its own verified commit.
 
-Completed Module 6 work is recorded in `docs/streaming-validation.md`, including
-all applicable ordinary streaming assertions and both external streaming corpora.
-Its detailed completed checklist is preserved in Git history.
+- [x] Record entropy encoder ownership, wire boundaries, safety contracts, and ordered checkpoints.
+- [ ] Extract the reusable forward bit writer with byte-identical baseline output.
+- [ ] Add the checked canonical codebook and exact serialized-description pairing.
+- [ ] Add unsafe-huffman-codebook with bounds, missing-symbol, and Miri checks.
+- [ ] Encode one Huffman stream and verify exact C streams, including dictionary log twelve.
+- [ ] Encode four streams and checked jump tables, including minimum and size boundaries.
+- [ ] Build sparse literal tables while preserving formatted dictionary-training output.
+- [ ] Add checked literal headers and zero-sequence compressed-block assembly.
+- [ ] Publish Huffman choices transactionally with emitted and pending entropy state.
+- [ ] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.
+- [ ] Add unsafe-fse-encoder independently from the decoder unsafe-fse backend.
+- [ ] Plan repeat-offset values forward with exact triples and checked arithmetic.
+- [ ] Encode sequences using supplied predefined, new, reused, and RLE tables.
+- [ ] Select adaptive per-channel distributions with deterministic complete cost comparisons.
+- [ ] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
+- [ ] Add bounded multi-candidate storage with checked stale-link and tag validation.
+- [ ] Add unsafe-match-chain with equivalent candidate order and search limits.
+- [ ] Implement bounded multi-candidate greedy matching with documented budgets.
+- [ ] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
+- [ ] Expose completed named strategies and port supported upstream assertions and corpora.
+- [ ] Extend backend/strategy benchmarks and validation; record remaining upstream gaps.
 
 ## Roadmap
 

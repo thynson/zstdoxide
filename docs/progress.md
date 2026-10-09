@@ -114,3 +114,40 @@ Unsafe ring access was slightly slower in isolation and remains opt-in.
 The source inventory still has 190 incomplete behavioral source units; completing
 streaming does not complete the full upstream migration. Module 7 is decomposed
 in `TODO.md` before dictionary implementation begins.
+
+
+## Module 7: dictionaries, prefixes, and training
+
+Completed on 2026-10-09. Raw and formatted dictionaries now own validated content
+and entropy metadata, with immutable shared handles, persistent context selection,
+single-use prefixes, exact ID handling, and dictionary-to-frame crossing matches.
+Encoder history retains at most 128 KiB of output for cross-block matching.
+Bounded raw content selection and independent formatted training produce
+interoperable dictionaries with learned literal trees and predefined sequence
+priors. COVER/fastCover and advanced training controls remain later obligations.
+
+The supported official parser, lifetime, ID, window, sample-selection, and training
+contracts have explicit source mappings. All five dictionary corpora passed safe
+and all-feature release replay: 83,358 inputs per backend with no skipped files.
+The exact normalized-count target now includes all 512 byte-identical C headers,
+10,241 deterministic calls, and both complete 79-input corpus replays.
+
+The complete twelve-run test matrix, eleven no_std configurations, formatting,
+strict Clippy, independent C oracles, fixture audits, and targeted Miri passed.
+Test-only normalized-count additions landed during the full matrix; the final
+suite has 376 passing tests and 22 explicit ignores, and a twelve-configuration
+focused follow-up covers every new entropy assertion. Exact per-run counts and
+log hashes are retained in [dictionary-validation.md](dictionary-validation.md).
+Oracle checks include 30,000 stress cycles and all five exact CNBuffer campaigns.
+
+All eleven backend configurations produced identical deterministic benchmark
+outputs. Dictionary access showed a small isolated improvement, while unsafe
+training was slightly slower; both remain opt-in. Throughput, sample ranges,
+source fingerprints, and retained-memory plateaus are in [benchmarks.md](benchmarks.md).
+The full upstream migration remains open: 14 of 418 test-related source units
+are ported, 33 partial, 150 blocked, five planned, and 216 non-applicable.
+
+The completed checklist is archived in Git history. Module 8 is decomposed in
+`TODO.md` and [entropy-encoder-design.md](entropy-encoder-design.md) before
+implementation. It adds Huffman literals, adaptive/reused FSE, repeat planning,
+and bounded named compression strategies without upstream level-parity claims.
