@@ -53,9 +53,7 @@ mod huffman_codebook;
 mod huffman_encode;
 mod literal_encode;
 mod literal_header;
-#[cfg(test)]
 mod match_parse;
-#[cfg(test)]
 mod matchchain;
 mod matchfinder;
 mod ring_history;
@@ -63,6 +61,7 @@ mod sequence_context;
 mod sequence_encode;
 mod sequence_plan;
 mod sequences;
+mod strategy;
 mod stream;
 mod stream_decode;
 mod stream_encode;
@@ -83,6 +82,7 @@ pub use dictionary_train::{DictionaryTrainingOptions, finalize_dictionary, train
 pub use encode::{compress, compress_with_dictionary};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
+pub use strategy::CompressionStrategy;
 pub use stream::{EndDirective, Progress, StreamStatus};
 pub use stream_decode::Decoder;
 pub use stream_encode::{Encoder, EncoderOptions};

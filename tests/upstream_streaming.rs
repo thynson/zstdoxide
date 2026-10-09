@@ -862,6 +862,7 @@ fn encoder_header_reports_pledge_window_and_checksum_options() {
                     pledged_size,
                     include_content_size,
                     include_dictionary_id: true,
+                    ..EncoderOptions::default()
                 };
                 let mut encoder = Encoder::with_options(options).unwrap();
                 let encoded = encode_chunks(&mut encoder, &source, 7, 3);
@@ -1061,6 +1062,7 @@ fn reset_clears_pledge_and_frame_state_but_retains_supported_options() {
         pledged_size: Some(513),
         include_content_size: false,
         include_dictionary_id: true,
+        ..EncoderOptions::default()
     };
     let mut encoder = Encoder::with_options(initial).unwrap();
     let first = vec![b'a'; 513];
@@ -1235,6 +1237,7 @@ fn many_seeded_directive_schedules_preserve_data_and_compression_determinism() {
             pledged_size: None,
             include_content_size: seed & 2 != 0,
             include_dictionary_id: true,
+            ..EncoderOptions::default()
         };
         let schedule_seed = state;
         let mut reference = None;

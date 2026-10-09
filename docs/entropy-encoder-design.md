@@ -303,6 +303,17 @@ Retain allocations across resets, report their high-water capacity, and ensure
 evicted source positions cannot be dereferenced. A longer chain may improve the
 compression ratio, but bounded seed retention remains a search limitation.
 
+The public `CompressionStrategy` value is selected through
+`EncoderOptions::strategy`; Greedy remains the default for streaming and
+one-shot helpers. Chain becomes available when its complete source integration
+is verified, and Lazy is added after its lookahead checkpoint. Reset retains
+the strategy; `reset_with_options` may change it for the next frame. Previously
+allocated storage remains counted and reusable when switching policies.
+On 64-bit targets the working chain owns 9 MiB and its optional dictionary seed
+owns 3 MiB. Entropy, input/output buffers, the bounded ring and shared dictionary
+content add to those figures. Greedy does not allocate a chain unless that
+context previously selected a chain-based strategy.
+
 `Chain` compares a bounded set of candidates at the current position. `Lazy`
 also examines one later input position and chooses using a documented
 deterministic rule accounting for its additional literal. Tentative lookahead

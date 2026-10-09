@@ -269,6 +269,7 @@ pub(crate) struct Candidates<'a> {
 }
 
 impl Candidates<'_> {
+    #[cfg(test)]
     pub(crate) fn visited(&self) -> usize {
         self.visited
     }

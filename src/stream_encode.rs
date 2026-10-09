@@ -6,15 +6,19 @@ use core::fmt;
 use crate::encode::BlockEncoder;
 use crate::frame::{MAGIC, MAX_BLOCK_SIZE};
 use crate::xxhash::XxHash64;
-use crate::{EndDirective, Error, Progress, Result, SharedDictionary, StreamStatus};
+use crate::{
+    CompressionStrategy, EndDirective, Error, Progress, Result, SharedDictionary, StreamStatus,
+};
 
 /// Frame settings for an [`Encoder`].
 ///
 /// Corresponds to the supported frame/window subset of `ZSTD_CCtx_params`.
-/// Compression levels and advanced match strategies are not
-/// exposed by this initial independent greedy encoder.
+/// Named strategies have independent bounded search policies. They do not
+/// correspond to upstream numeric compression levels.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct EncoderOptions {
+    /// Bounded match-search policy (default [`CompressionStrategy::Greedy`]).
+    pub strategy: CompressionStrategy,
     /// Base-two logarithm of the advertised window, in `10..=31` (default 17).
     /// Blocks are at most the smaller of this window and 128 KiB.
     pub window_log: u8,
@@ -42,6 +46,7 @@ impl EncoderOptions {
 impl Default for EncoderOptions {
     fn default() -> Self {
         Self {
+            strategy: CompressionStrategy::Greedy,
             window_log: 17,
             checksum: true,
             pledged_size: None,
@@ -384,6 +389,7 @@ impl Encoder {
 
     /// Writes the non-single-segment form of `ZSTD_writeFrameHeader`.
     fn start_header(&mut self) -> Result<()> {
+        self.workspace.set_strategy(self.options.strategy);
         self.pending
             .try_reserve_exact(18)
             .map_err(|_| Error::AllocationFailed)?;
@@ -655,6 +661,7 @@ mod tests {
                         pledged_size: pledge,
                         include_content_size,
                         include_dictionary_id: true,
+                        ..EncoderOptions::default()
                     })
                     .unwrap();
                     let mut output = [0; 18];

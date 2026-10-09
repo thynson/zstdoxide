@@ -59,7 +59,7 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Blocks | Raw, RLE, and compressed blocks; block/window/output bounds |
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
-| Compression | Greedy four-byte hash matching over dictionary content and up to 128 KiB of retained output, raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
+| Compression | Greedy or bounded eight-candidate Chain matching over dictionary content and up to 128 KiB of retained output, raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
 | Training | Bounded deterministic raw content selection, learned full-alphabet Huffman metadata, predefined sequence priors, custom or automatic IDs, formatted finalization |
@@ -95,7 +95,7 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-huffman` | Huffman decoding table |
 | `unsafe-huffman-codebook` | Validated canonical encoding codebooks |
 | `unsafe-match-table` | Hash-indexed prior-position table |
-| `unsafe-match-chain` | Bounded tagged candidate-chain storage (strategy integration in progress) |
+| `unsafe-match-chain` | Bounded tagged candidate storage for Chain matching |
 | `unsafe-dictionary` | Validated immutable dictionary-content access |
 | `unsafe-training` | Bounded raw-training frequency cells |
 

@@ -44,6 +44,21 @@ keeps the frame open. Finish returns `FrameFinished` only after the final block
 and checksum drain. A repeated empty Finish is idempotent. Start another frame
 with `reset()` or validated `reset_with_options(options)`.
 
+## Selecting bounded match effort
+
+Set `EncoderOptions::strategy` to `CompressionStrategy::Chain` to search up to
+eight candidates at each four-byte key. `Greedy` is the default and searches
+one candidate. Both strategies share entropy coding, dictionary/window checks,
+and the same 128 KiB retained-output horizon. These policies are independent
+of upstream numeric compression levels.
+
+Chain's heads and nodes occupy 9 MiB on 64-bit targets; dictionary preparation
+uses another 3 MiB seed allocation containing at most 65,536 positions.
+`retained_capacity()` includes this storage, other workspaces, and the selected
+shared dictionary. Reset retains allocations and the strategy. Change the
+policy for a new frame using `reset_with_options`; previously allocated chain
+storage remains reusable and counted even after selecting Greedy.
+
 ## Decoding a frame
 
 ```rust

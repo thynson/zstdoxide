@@ -4,15 +4,21 @@ use alloc::vec::Vec;
 
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
+use crate::match_parse::parse_chain;
+use crate::matchchain::MatchChain;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
 use crate::sequence_context::{LogicalSequence, SequenceEncoder};
-use crate::{Dictionary, Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash};
+use crate::{
+    CompressionStrategy, Dictionary, Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash,
+};
 
 /// Dictionary search retains the initial parser's bounded distance policy.
 /// Adaptive tables support wider offset codes, but searching more distant
 /// content is a separate strategy decision; larger dictionaries remain valid.
 const MAX_DICTIONARY_DISTANCE: usize = (1 << 29) - 4;
+const CHAIN_NODES: usize = 262_144;
+const CHAIN_SEED_NODES: usize = 65_536;
 
 /// Compresses input into one checksummed Zstandard frame with known content size.
 ///
@@ -66,8 +72,11 @@ fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result
 /// Corresponds to the independently owned block-compression workspace of
 /// `ZSTD_CCtx`; input references never survive an `encode` call.
 pub(crate) struct BlockEncoder {
+    strategy: CompressionStrategy,
     match_table: Option<MatchTable>,
     dictionary_seed: Option<MatchTable>,
+    chain: Option<MatchChain>,
+    chain_seed: Option<MatchChain>,
     active_dictionary: Option<SharedDictionary>,
     history: Option<RingHistory>,
     frame_position: u64,
@@ -84,8 +93,11 @@ pub(crate) struct BlockEncoder {
 impl BlockEncoder {
     pub(crate) const fn new() -> Self {
         Self {
+            strategy: CompressionStrategy::Greedy,
             match_table: None,
             dictionary_seed: None,
+            chain: None,
+            chain_seed: None,
             active_dictionary: None,
             history: None,
             frame_position: 0,
@@ -98,6 +110,11 @@ impl BlockEncoder {
             sequence_encoder: SequenceEncoder::new(),
             payload: Vec::new(),
         }
+    }
+
+    /// Select the next frame's parser before calling start_frame.
+    pub(crate) fn set_strategy(&mut self, strategy: CompressionStrategy) {
+        self.strategy = strategy;
     }
 
     /// Prepare an independently owned frame dictionary and its indexed seeds.
@@ -119,18 +136,38 @@ impl BlockEncoder {
         if let Some(dictionary) = dictionary.as_deref()
             && dictionary.content().len() >= 4
         {
-            let seed = match self.dictionary_seed.as_mut() {
-                Some(seed) => seed,
-                None => self.dictionary_seed.insert(MatchTable::new()?),
-            };
-            seed.reset();
             let content = dictionary.content();
-            let start = content.len().saturating_sub(MAX_DICTIONARY_DISTANCE);
-            for position in start..=content.len() - 4 {
-                seed.replace(word_at(content, position), position);
+            match self.strategy {
+                CompressionStrategy::Greedy => {
+                    let seed = match self.dictionary_seed.as_mut() {
+                        Some(seed) => seed,
+                        None => self.dictionary_seed.insert(MatchTable::new()?),
+                    };
+                    seed.reset();
+                    let start = content.len().saturating_sub(MAX_DICTIONARY_DISTANCE);
+                    for position in start..=content.len() - 4 {
+                        seed.replace(word_at(content, position), position);
+                    }
+                }
+                CompressionStrategy::Chain => {
+                    let seed = match self.chain_seed.as_mut() {
+                        Some(seed) => seed,
+                        None => self.chain_seed.insert(MatchChain::new(CHAIN_SEED_NODES)?),
+                    };
+                    seed.reset();
+                    let start = content.len().saturating_sub(CHAIN_SEED_NODES + 3);
+                    for position in start..=content.len() - 4 {
+                        seed.insert(word_at(content, position), position as u64)?;
+                    }
+                }
             }
-        } else if let Some(seed) = &mut self.dictionary_seed {
-            seed.reset();
+        } else {
+            if let Some(seed) = &mut self.dictionary_seed {
+                seed.reset();
+            }
+            if let Some(seed) = &mut self.chain_seed {
+                seed.reset();
+            }
         }
         self.sequence_encoder.start_frame(dictionary.as_deref())?;
         self.literal_table = literal_table;
@@ -230,6 +267,11 @@ impl BlockEncoder {
                 .dictionary_seed
                 .as_ref()
                 .map_or(0, MatchTable::retained_capacity)
+            + self.chain.as_ref().map_or(0, MatchChain::retained_capacity)
+            + self
+                .chain_seed
+                .as_ref()
+                .map_or(0, MatchChain::retained_capacity)
             + self.literals.capacity()
             + self.literal_encoder.retained_capacity()
             + self.sequences.capacity() * core::mem::size_of::<LogicalSequence>()
@@ -295,78 +337,38 @@ impl BlockEncoder {
             frame_position: self.frame_position,
             window_size: self.window_size,
         };
-        let match_table = match self.match_table.as_mut() {
-            Some(table) => table,
-            None => self.match_table.insert(MatchTable::new()?),
-        };
-        if dictionary.is_some()
-            && let Some(seed) = &self.dictionary_seed
-        {
-            match_table.reset_from(seed);
-        } else {
-            match_table.reset();
-        }
-        if dictionary.is_some() && source.retains_frame_start() {
-            // Keys may straddle dictionary end and retained frame[0]. This also
-            // makes one-, two-, and three-byte raw prefixes useful.
-            for position in source.dictionary_size.saturating_sub(3)..source.dictionary_size {
-                let word = source.dictionary_boundary_word(position)?;
-                match_table.replace(word, position);
+        match self.strategy {
+            CompressionStrategy::Greedy => {
+                let table = match self.match_table.as_mut() {
+                    Some(table) => table,
+                    None => self.match_table.insert(MatchTable::new()?),
+                };
+                parse_greedy(
+                    &source,
+                    table,
+                    self.dictionary_seed.as_ref(),
+                    &mut self.literals,
+                    &mut self.sequences,
+                )?;
+            }
+            CompressionStrategy::Chain => {
+                let table = match self.chain.as_mut() {
+                    Some(table) => table,
+                    None => self.chain.insert(MatchChain::new(CHAIN_NODES)?),
+                };
+                parse_seeded_chain(
+                    &source,
+                    table,
+                    self.chain_seed.as_ref(),
+                    &mut self.literals,
+                    &mut self.sequences,
+                )?;
             }
         }
-        for position in 0..source.history_size {
-            // Include the final three history positions: their four-byte keys
-            // can cross into current input, which remains borrowed immutably.
-            match_table.replace(
-                source.output_word(position)?,
-                source
-                    .dictionary_size
-                    .checked_add(position)
-                    .ok_or(Error::ResourceLimit)?,
-            );
-        }
-        let literals = &mut self.literals;
-        literals.clear();
-        literals
-            .try_reserve_exact(block.len())
-            .map_err(|_| Error::AllocationFailed)?;
-        let sequences = &mut self.sequences;
-        sequences.clear();
-        sequences
-            .try_reserve_exact(block.len() / 4)
-            .map_err(|_| Error::AllocationFailed)?;
-        let mut position = 0;
-        let mut literal_start = 0;
-        while position + 4 <= block.len() {
-            let virtual_position = source.virtual_position(position)?;
-            let candidate = match_table.replace(word_at(block, position), virtual_position);
-            if let Some(previous) = candidate
-                && let Some((distance, match_length)) = source.find_match(previous, position)?
-            {
-                literals.extend_from_slice(&block[literal_start..position]);
-                sequences.push(LogicalSequence {
-                    literal_length: (position - literal_start) as u32,
-                    match_length: match_length as u32,
-                    distance: distance as u32,
-                });
-                let match_end = position + match_length;
-                position += 1;
-                while position < match_end && position + 4 <= block.len() {
-                    match_table
-                        .replace(word_at(block, position), source.virtual_position(position)?);
-                    position += 1;
-                }
-                position = match_end;
-                literal_start = position;
-            } else {
-                position += 1;
-            }
-        }
-        literals.extend_from_slice(&block[literal_start..]);
         self.pending_literal_table = self
             .literal_encoder
-            .select(literals, self.literal_table.as_ref())?;
-        self.sequence_encoder.prepare(sequences)?;
+            .select(&self.literals, self.literal_table.as_ref())?;
+        self.sequence_encoder.prepare(&self.sequences)?;
         let stream = self.sequence_encoder.as_bytes();
         let section = self.literal_encoder.as_bytes();
         let capacity = section
@@ -382,6 +384,129 @@ impl BlockEncoder {
         payload.extend_from_slice(stream);
         Ok(payload.len() < block.len())
     }
+}
+
+/// Keep the original single-candidate policy independent of chain storage.
+fn parse_greedy(
+    source: &MatchSource<'_>,
+    match_table: &mut MatchTable,
+    seed: Option<&MatchTable>,
+    literals: &mut Vec<u8>,
+    sequences: &mut Vec<LogicalSequence>,
+) -> Result<()> {
+    let block = source.block;
+    if source.dictionary.is_some()
+        && let Some(seed) = seed
+    {
+        match_table.reset_from(seed);
+    } else {
+        match_table.reset();
+    }
+    if source.dictionary.is_some() && source.retains_frame_start() {
+        // Keys may straddle dictionary end and retained frame[0]. This also
+        // makes one-, two-, and three-byte raw prefixes useful.
+        for position in source.dictionary_size.saturating_sub(3)..source.dictionary_size {
+            let word = source.dictionary_boundary_word(position)?;
+            match_table.replace(word, position);
+        }
+    }
+    for position in 0..source.history_size {
+        // Include the final three history positions: their four-byte keys
+        // can cross into current input, which remains borrowed immutably.
+        match_table.replace(
+            source.output_word(position)?,
+            source
+                .dictionary_size
+                .checked_add(position)
+                .ok_or(Error::ResourceLimit)?,
+        );
+    }
+    literals.clear();
+    literals
+        .try_reserve_exact(block.len())
+        .map_err(|_| Error::AllocationFailed)?;
+    sequences.clear();
+    sequences
+        .try_reserve_exact(block.len() / 4)
+        .map_err(|_| Error::AllocationFailed)?;
+    let mut position = 0;
+    let mut literal_start = 0;
+    while position + 4 <= block.len() {
+        let virtual_position = source.virtual_position(position)?;
+        let candidate = match_table.replace(word_at(block, position), virtual_position);
+        if let Some(previous) = candidate
+            && let Some((distance, match_length)) = source.find_match(previous, position)?
+        {
+            literals.extend_from_slice(&block[literal_start..position]);
+            sequences.push(LogicalSequence {
+                literal_length: (position - literal_start) as u32,
+                match_length: match_length as u32,
+                distance: distance as u32,
+            });
+            let match_end = position + match_length;
+            position += 1;
+            while position < match_end && position + 4 <= block.len() {
+                match_table.replace(word_at(block, position), source.virtual_position(position)?);
+                position += 1;
+            }
+            position = match_end;
+            literal_start = position;
+        } else {
+            position += 1;
+        }
+    }
+    literals.extend_from_slice(&block[literal_start..]);
+    Ok(())
+}
+
+/// Seed only live dictionary/history coordinates; every match is verified by
+/// the same source view as Greedy, independently of candidate-storage policy.
+fn parse_seeded_chain(
+    source: &MatchSource<'_>,
+    chain: &mut MatchChain,
+    seed: Option<&MatchChain>,
+    literals: &mut Vec<u8>,
+    sequences: &mut Vec<LogicalSequence>,
+) -> Result<()> {
+    if source.dictionary.is_some()
+        && let Some(seed) = seed
+    {
+        chain.reset_from(seed)?;
+    } else {
+        chain.reset();
+    }
+    if source.dictionary.is_some() && source.retains_frame_start() {
+        for position in source.dictionary_size.saturating_sub(3)..source.dictionary_size {
+            chain.insert(source.dictionary_boundary_word(position)?, position as u64)?;
+        }
+    }
+    for position in 0..source.history_size {
+        let virtual_position = source
+            .dictionary_size
+            .checked_add(position)
+            .ok_or(Error::ResourceLimit)?;
+        chain.insert(source.output_word(position)?, virtual_position as u64)?;
+    }
+    parse_chain(
+        source.block,
+        chain,
+        source.virtual_position(0)? as u64,
+        8,
+        |previous, position| {
+            let previous = usize::try_from(previous).map_err(|_| Error::ResourceLimit)?;
+            source
+                .find_match(previous, position)?
+                .map(|(distance, length)| {
+                    Ok((
+                        u32::try_from(distance).map_err(|_| Error::ResourceLimit)?,
+                        u32::try_from(length).map_err(|_| Error::ResourceLimit)?,
+                    ))
+                })
+                .transpose()
+        },
+        literals,
+        sequences,
+    )
 }
 
 /// A temporary indexed view of dictionary content, retained output, and input.
