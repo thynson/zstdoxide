@@ -492,3 +492,11 @@ supervisor owns only its required sampled table and intent-bearing parser
 buffers; no unused ring or seed storage is constructed. A pure Fast header and
 block-selection record carries checked lengths and flags with shared safe
 representation. See the emission/ownership contract in the Fast design.
+
+The implemented entropy aggregate is assembled with `from_parts` after the named
+workspace constructs its children in the original interleaved clone order.
+It adds no allocator factory or storage owner. Grouping fields changes ordinary
+destruction interleaving, while each child still releases through its exact
+allocator; no old field-drop-order guarantee is introduced. The neutral
+extraction retains named scratch validity rules until the explicit Fast
+preparation contract is integrated.

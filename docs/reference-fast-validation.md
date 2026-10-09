@@ -124,3 +124,39 @@ instrumentation limits. Executable/debug bytes are omitted while their recorded
 hashes remain. Broader direct families, the sequence collector and ordinary
 frame publication are still open prerequisite oracle items before Rust Fast
 parser implementation.
+
+## Shared block entropy ownership
+
+`BlockEntropyEncoder` now owns the existing literal encoder, current/candidate
+Huffman trees, sequence encoder and payload vector. The named workspace retains
+its parser vectors and search/history owners. `from_parts` moves complete child
+owners without a new factory, clone or allocation; the named constructor creates
+locals in the original interleaved order. A focused compatibility witness fixes
+the original allocator identity one, literal-buffer identity two, sequence-buffer
+identity six, thirteen clones/fourteen total owners and zero initial requests.
+A separate test assembles children from three independent allocator domains and
+verifies unchanged snapshots, moved payload address and correct final release.
+
+Dictionary literal validation still precedes seed preparation; fallible sequence
+setup still follows it. Output reservation, early RLE, literal/sequence selection,
+payload reserve/append, compressed publication, fallback and history advancement
+retain their previous order. Default bytes and capacity accounting are unchanged.
+Grouping fields changes their destruction interleaving; exact allocator identity
+and complete release are preserved, without promising the old field-drop order.
+This neutral extraction also preserves internal stale payload/pending scratch
+semantics. The later standalone Fast preparation must enforce the stronger
+candidate-validity/reconstruction contract before exposing its output.
+
+All 23 commands pass across two explicit frozen snapshots. Four encoder-family
+suites each pass 162 tests; safe/all original default replay passes fourteen
+executions and public control/failure campaigns pass twenty. After adding the
+two ownership tests, four configurations pass all eight new executions. The
+aggregate is 690 passes and twelve existing explicit oracle ignores. Strict
+all-target Clippy safe/all, no_std safe/all and formatting pass; the test-only
+supplement also passes strict Clippy/all and formatting. No new C, Miri or
+throughput campaign is attributed to this structural extraction.
+
+[Ownership evidence](evidence/2026-10-09-block-entropy-ownership.json) and its
+[archive](evidence/2026-10-09-block-entropy-ownership.tar.gz) preserve logs, both
+manifests, initial/final owned sources, independent review and runners. Concurrent
+sequence-context work was excluded from both snapshots.

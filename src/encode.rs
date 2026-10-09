@@ -3,6 +3,7 @@
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
+use crate::block_entropy::BlockEntropyEncoder;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::match_key::MatchKey;
@@ -124,12 +125,8 @@ pub(crate) struct BlockEncoder<A: Allocator = Global, D: DictionaryHandle = Shar
     frame_position: u64,
     window_size: u64,
     literals: Vec<u8, A>,
-    literal_encoder: LiteralEncoder<A>,
-    literal_table: Option<HuffmanCodebook>,
-    pending_literal_table: Option<HuffmanCodebook>,
+    entropy: BlockEntropyEncoder<A>,
     sequences: Vec<LogicalSequence, A>,
-    sequence_encoder: SequenceEncoder<A>,
-    payload: Vec<u8, A>,
     allocator: A,
 }
 
@@ -151,12 +148,12 @@ impl BlockEncoder<Global, SharedDictionary> {
             frame_position: 0,
             window_size: MAX_BLOCK_SIZE as u64,
             literals: Vec::new(),
-            literal_encoder: LiteralEncoder::new(),
-            literal_table: None,
-            pending_literal_table: None,
+            entropy: BlockEntropyEncoder::from_parts(
+                LiteralEncoder::new(),
+                SequenceEncoder::new(),
+                Vec::new(),
+            ),
             sequences: Vec::new(),
-            sequence_encoder: SequenceEncoder::new(),
-            payload: Vec::new(),
             allocator: Global,
         }
     }
@@ -167,6 +164,14 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
     /// not be equivalent; complete owners move with their actual allocator.
     /// Ordinary Clone may allocate or panic independently of fallible reserves.
     pub(crate) fn new_in(allocator: A) -> Self {
+        // Preserve the original allocator clone order, including the parser
+        // vectors interleaved between entropy children. Group only after every
+        // independent owner has been constructed with its exact allocator.
+        let literals = Vec::new_in(allocator.clone());
+        let literal_encoder = LiteralEncoder::new_in(allocator.clone());
+        let sequences = Vec::new_in(allocator.clone());
+        let sequence_encoder = SequenceEncoder::new_in(allocator.clone());
+        let payload = Vec::new_in(allocator.clone());
         Self {
             strategy: CompressionStrategy::Greedy,
             search_options: MatchSearchOptions::new(),
@@ -178,13 +183,9 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
             history: None,
             frame_position: 0,
             window_size: MAX_BLOCK_SIZE as u64,
-            literals: Vec::new_in(allocator.clone()),
-            literal_encoder: LiteralEncoder::new_in(allocator.clone()),
-            literal_table: None,
-            pending_literal_table: None,
-            sequences: Vec::new_in(allocator.clone()),
-            sequence_encoder: SequenceEncoder::new_in(allocator.clone()),
-            payload: Vec::new_in(allocator.clone()),
+            literals,
+            entropy: BlockEntropyEncoder::from_parts(literal_encoder, sequence_encoder, payload),
+            sequences,
             allocator,
         }
     }
@@ -268,9 +269,7 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
                 seed.reset();
             }
         }
-        self.sequence_encoder.start_frame_with_entropy(entropy)?;
-        self.literal_table = literal_table;
-        self.pending_literal_table = None;
+        self.entropy.start_frame(entropy, literal_table)?;
         self.active_dictionary = dictionary;
         if let Some(history) = &mut self.history {
             history.clear();
@@ -330,8 +329,7 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
         last: bool,
         output: &mut Vec<u8, O>,
     ) -> Result<()> {
-        self.pending_literal_table = None;
-        self.sequence_encoder.discard();
+        self.entropy.discard();
         output
             .try_reserve(block.len() + 3)
             .map_err(|_| Error::AllocationFailed)?;
@@ -341,21 +339,17 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
             return Ok(());
         }
         if block.len() >= 6 && self.compress_block(block)? {
-            write_block_header(output, self.payload.len(), 2, last);
-            for &byte in &self.payload {
+            write_block_header(output, self.entropy.as_bytes().len(), 2, last);
+            for &byte in self.entropy.as_bytes() {
                 output.push(byte);
             }
             // Output capacity was reserved before candidate construction. This
             // infallible transfer publishes only the tree described by emitted
             // bytes; raw/RLE fallback leaves the previous tree unchanged.
-            if let Some(table) = self.pending_literal_table.take() {
-                self.literal_table = Some(table);
-            }
-            self.sequence_encoder.commit();
+            self.entropy.commit();
             return Ok(());
         }
-        self.pending_literal_table = None;
-        self.sequence_encoder.discard();
+        self.entropy.discard();
         write_block_header(output, block.len(), 0, last);
         for &byte in block {
             output.push(byte);
@@ -406,9 +400,7 @@ impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
     /// Drop active-frame ownership while retaining reusable workspace storage.
     pub(crate) fn reset(&mut self) {
         self.active_dictionary = None;
-        self.literal_table = None;
-        self.pending_literal_table = None;
-        self.sequence_encoder.reset();
+        self.entropy.reset();
         if let Some(history) = &mut self.history {
             history.clear();
         }
@@ -436,10 +428,8 @@ impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
     pub(crate) fn retained_capacity(&self) -> usize {
         self.search_retained_capacity()
             + self.literals.capacity()
-            + self.literal_encoder.retained_capacity()
+            + self.entropy.retained_capacity()
             + self.sequences.capacity() * core::mem::size_of::<LogicalSequence>()
-            + self.sequence_encoder.retained_capacity()
-            + self.payload.capacity()
     }
 }
 
@@ -566,28 +556,9 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
                 )?;
             }
         }
-        self.pending_literal_table = self
-            .literal_encoder
-            .select(&self.literals, self.literal_table.as_ref())?;
-        self.sequence_encoder.prepare(&self.sequences)?;
-        let stream = self.sequence_encoder.as_bytes();
-        let section = self.literal_encoder.as_bytes();
-        let capacity = section
-            .len()
-            .checked_add(stream.len())
-            .ok_or(Error::ResourceLimit)?;
-        let payload = &mut self.payload;
-        payload.clear();
-        payload
-            .try_reserve_exact(capacity)
-            .map_err(|_| Error::AllocationFailed)?;
-        for &byte in section {
-            payload.push(byte);
-        }
-        for &byte in stream {
-            payload.push(byte);
-        }
-        Ok(payload.len() < block.len())
+        self.entropy
+            .prepare_named(&self.literals, &self.sequences)?;
+        Ok(self.entropy.as_bytes().len() < block.len())
     }
 }
 
@@ -1802,13 +1773,13 @@ mod tests {
         encoder.encode(b"abcdabcd", false, &mut output).unwrap();
         assert!(!encoder.sequences.is_empty());
         assert_eq!((output[0] >> 1) & 3, 0);
-        encoder.sequence_encoder.prepare(&probe).unwrap();
-        assert_eq!(encoder.sequence_encoder.as_bytes(), initial_bytes);
+        encoder.entropy.sequence_encoder.prepare(&probe).unwrap();
+        assert_eq!(encoder.entropy.sequence_encoder.as_bytes(), initial_bytes);
         output.clear();
         encoder.encode(&[42; 32], false, &mut output).unwrap();
         assert_eq!((output[0] >> 1) & 3, 1);
-        encoder.sequence_encoder.prepare(&probe).unwrap();
-        assert_eq!(encoder.sequence_encoder.as_bytes(), initial_bytes);
+        encoder.entropy.sequence_encoder.prepare(&probe).unwrap();
+        assert_eq!(encoder.entropy.sequence_encoder.as_bytes(), initial_bytes);
 
         encoder.reset();
         let block = b"abcd".repeat(1024);
@@ -1819,22 +1790,22 @@ mod tests {
         expected.prepare(&encoder.sequences).unwrap();
         expected.commit();
         expected.prepare(&probe).unwrap();
-        encoder.sequence_encoder.prepare(&probe).unwrap();
-        let committed_bytes = encoder.sequence_encoder.as_bytes().to_vec();
+        encoder.entropy.sequence_encoder.prepare(&probe).unwrap();
+        let committed_bytes = encoder.entropy.sequence_encoder.as_bytes().to_vec();
         assert_eq!(committed_bytes, expected.as_bytes());
         assert_ne!(committed_bytes, initial_bytes);
         for block in [&b"xyz"[..], &[9; 32][..]] {
             output.clear();
             encoder.encode(block, false, &mut output).unwrap();
-            encoder.sequence_encoder.prepare(&probe).unwrap();
-            assert_eq!(encoder.sequence_encoder.as_bytes(), committed_bytes);
+            encoder.entropy.sequence_encoder.prepare(&probe).unwrap();
+            assert_eq!(encoder.entropy.sequence_encoder.as_bytes(), committed_bytes);
         }
         encoder.reset();
-        encoder.sequence_encoder.prepare(&probe).unwrap();
-        assert_eq!(encoder.sequence_encoder.as_bytes(), initial_bytes);
+        encoder.entropy.sequence_encoder.prepare(&probe).unwrap();
+        assert_eq!(encoder.entropy.sequence_encoder.as_bytes(), initial_bytes);
         encoder.start_frame(None, 1024).unwrap();
-        encoder.sequence_encoder.prepare(&probe).unwrap();
-        assert_eq!(encoder.sequence_encoder.as_bytes(), initial_bytes);
+        encoder.entropy.sequence_encoder.prepare(&probe).unwrap();
+        assert_eq!(encoder.entropy.sequence_encoder.as_bytes(), initial_bytes);
     }
 
     #[test]
@@ -1843,35 +1814,70 @@ mod tests {
         lengths[2] = 1;
         lengths[3] = 1;
         let mut encoder = BlockEncoder::new();
-        encoder.literal_table = Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
+        encoder.entropy.literal_table = Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
         // The new seven-byte literal section beats its nine-byte raw section,
         // but its zero sequence byte makes the entire eight-byte block a tie.
         let rejected = [0, 0, 0, 0, 1, 0, 0, 1];
         assert!(!encoder.compress_block(&rejected).unwrap());
-        assert!(encoder.pending_literal_table.is_some());
-        assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
-        assert!(!encoder.literal_table.as_ref().unwrap().covers(&[0, 1]));
+        assert!(encoder.entropy.pending_literal_table.is_some());
+        assert!(
+            encoder
+                .entropy
+                .literal_table
+                .as_ref()
+                .unwrap()
+                .covers(&[2, 3])
+        );
+        assert!(
+            !encoder
+                .entropy
+                .literal_table
+                .as_ref()
+                .unwrap()
+                .covers(&[0, 1])
+        );
         let mut encoded = Vec::new();
         encoder.encode(&rejected, false, &mut encoded).unwrap();
         assert_eq!((encoded[0] >> 1) & 3, 0);
-        assert!(encoder.pending_literal_table.is_none());
-        assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+        assert!(encoder.entropy.pending_literal_table.is_none());
+        assert!(
+            encoder
+                .entropy
+                .literal_table
+                .as_ref()
+                .unwrap()
+                .covers(&[2, 3])
+        );
         encoded.clear();
         encoder.encode(&[42; 32], false, &mut encoded).unwrap();
         assert_eq!((encoded[0] >> 1) & 3, 1);
-        assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+        assert!(
+            encoder
+                .entropy
+                .literal_table
+                .as_ref()
+                .unwrap()
+                .covers(&[2, 3])
+        );
 
         encoder.reset();
-        assert!(encoder.literal_table.is_none());
-        assert!(encoder.pending_literal_table.is_none());
+        assert!(encoder.entropy.literal_table.is_none());
+        assert!(encoder.entropy.pending_literal_table.is_none());
         let accepted = [0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1];
         encoded.clear();
         encoder.encode(&accepted, false, &mut encoded).unwrap();
         assert_eq!((encoded[0] >> 1) & 3, 2);
-        assert!(encoder.pending_literal_table.is_none());
-        assert!(encoder.literal_table.as_ref().unwrap().covers(&[0, 1]));
+        assert!(encoder.entropy.pending_literal_table.is_none());
+        assert!(
+            encoder
+                .entropy
+                .literal_table
+                .as_ref()
+                .unwrap()
+                .covers(&[0, 1])
+        );
         encoder.start_frame(None, MAX_BLOCK_SIZE as u64).unwrap();
-        assert!(encoder.literal_table.is_none());
+        assert!(encoder.entropy.literal_table.is_none());
     }
 
     #[test]
@@ -2965,6 +2971,25 @@ mod tests {
     }
 
     #[test]
+    fn entropy_extraction_preserves_independent_constructor_owner_order() {
+        let owner = block_allocator();
+        let monitor = owner.monitor();
+        assert_eq!(owner.identity(), 1);
+        let encoder = BlockEncoder::<_, SharedDictionary>::new_in(owner);
+        // These identities come from the pre-extraction constructor order:
+        // literal vector, literal encoder subtree, sequence vector, sequence
+        // encoder subtree, payload. A grouped child factory changes this order.
+        assert_eq!(encoder.allocator.identity(), 1);
+        assert_eq!(encoder.literals.allocator().identity(), 2);
+        assert_eq!(encoder.sequences.allocator().identity(), 6);
+        assert_eq!(monitor.snapshot().identities_created, 14);
+        assert_eq!(monitor.snapshot().attempts, 0);
+        drop(encoder);
+        assert_eq!(monitor.snapshot().owners_dropped, 14);
+        monitor.assert_released();
+    }
+
+    #[test]
     fn search_storage_options_are_deferred_and_empty_frames_need_no_search_owner() {
         let owner = block_allocator();
         let monitor = owner.monitor();
@@ -3337,19 +3362,34 @@ mod tests {
             encoder.set_strategy(strategy);
             let options = search_storage_options(10, 10, 8, 1);
             encoder.set_search_options(options);
-            encoder.literal_table = Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
+            encoder.entropy.literal_table =
+                Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
             let rejected = [0, 0, 0, 0, 1, 0, 0, 1];
             assert!(!encoder.compress_block(&rejected).unwrap());
-            assert!(encoder.pending_literal_table.is_some());
+            assert!(encoder.entropy.pending_literal_table.is_some());
             let mut encoded = Vec::new();
             encoder.encode(&rejected, false, &mut encoded).unwrap();
             assert_eq!((encoded[0] >> 1) & 3, 0);
-            assert!(encoder.pending_literal_table.is_none());
-            assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+            assert!(encoder.entropy.pending_literal_table.is_none());
+            assert!(
+                encoder
+                    .entropy
+                    .literal_table
+                    .as_ref()
+                    .unwrap()
+                    .covers(&[2, 3])
+            );
             encoded.clear();
             encoder.encode(&[42; 32], false, &mut encoded).unwrap();
             assert_eq!((encoded[0] >> 1) & 3, 1);
-            assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+            assert!(
+                encoder
+                    .entropy
+                    .literal_table
+                    .as_ref()
+                    .unwrap()
+                    .covers(&[2, 3])
+            );
             encoder.reset();
             assert_eq!(encoder.search_options(), options);
             let block = b"abcdefgh".repeat(128);
@@ -3365,14 +3405,14 @@ mod tests {
             expected.prepare(&encoder.sequences).unwrap();
             expected.commit();
             expected.prepare(&probe).unwrap();
-            encoder.sequence_encoder.prepare(&probe).unwrap();
-            let committed = encoder.sequence_encoder.as_bytes().to_vec();
+            encoder.entropy.sequence_encoder.prepare(&probe).unwrap();
+            let committed = encoder.entropy.sequence_encoder.as_bytes().to_vec();
             assert_eq!(committed, expected.as_bytes());
             for raw in [&b"xyz"[..], &[9; 32][..]] {
                 encoded.clear();
                 encoder.encode(raw, false, &mut encoded).unwrap();
-                encoder.sequence_encoder.prepare(&probe).unwrap();
-                assert_eq!(encoder.sequence_encoder.as_bytes(), committed);
+                encoder.entropy.sequence_encoder.prepare(&probe).unwrap();
+                assert_eq!(encoder.entropy.sequence_encoder.as_bytes(), committed);
             }
         }
     }
@@ -3684,7 +3724,8 @@ mod tests {
             encoder.reset();
             encoder.set_search_options(options);
             encoder.start_frame(None, 1 << 21).unwrap();
-            encoder.literal_table = Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
+            encoder.entropy.literal_table =
+                Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
             let before = monitor.snapshot();
             assert!(monitor.fail_next());
             let mut output = vec![0xee, 0x55];
@@ -3695,7 +3736,14 @@ mod tests {
             assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
             assert_eq!(output, [0xee, 0x55]);
             assert_eq!(encoder.frame_position, 0);
-            assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+            assert!(
+                encoder
+                    .entropy
+                    .literal_table
+                    .as_ref()
+                    .unwrap()
+                    .covers(&[2, 3])
+            );
             let history = encoder.history.as_ref().unwrap();
             assert_eq!(history.frame_len(), 0);
             assert_eq!(history.window_size(), 0);

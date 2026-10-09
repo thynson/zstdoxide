@@ -1,0 +1,503 @@
+{
+  "scope": "Module12 neutral parser-independent entropy-owner extraction; no Fast literal policy or standalone Fast candidate-validity strengthening",
+  "base_revision": "7c2e92826c3d732288cffaf3acc7ee8650a742b5",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "archive": {
+    "path": "docs/evidence/2026-10-09-block-entropy-ownership.tar.gz",
+    "size": 150776,
+    "sha256": "dce699a29021d16ae0fe65f0d29080213c365bddb0e99998e2d8507feb256629",
+    "files": 37
+  },
+  "commands": [
+    {
+      "label": "encode-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::"
+      ],
+      "exit": 0,
+      "log": "encode-safe.log",
+      "sha256": "66718d6720a42ab20f672b49243487f24e99548fa559764c7bd8fc6c3da3979d",
+      "test_counts": [
+        [
+          162,
+          0,
+          5
+        ]
+      ]
+    },
+    {
+      "label": "encode-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::"
+      ],
+      "exit": 0,
+      "log": "encode-all.log",
+      "sha256": "50742b1421ebc5b86147c29f1c88c199c93389496e0f50acfde31f428e1ee1b3",
+      "test_counts": [
+        [
+          162,
+          0,
+          5
+        ]
+      ]
+    },
+    {
+      "label": "encode-nostd-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "encode::tests::"
+      ],
+      "exit": 0,
+      "log": "encode-nostd-safe.log",
+      "sha256": "07c40fabe5848e15d74b2d6e0b43d30aee8e02841e7419f0c1a6e00dfed98b7b",
+      "test_counts": [
+        [
+          162,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "encode-nostd-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "encode::tests::"
+      ],
+      "exit": 0,
+      "log": "encode-nostd-all.log",
+      "sha256": "a27174ec8f740dd751eb73e0dbbaaca949e3e76e8a56e4d281fc609628222fc3",
+      "test_counts": [
+        [
+          162,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "defaults-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "match_search_defaults"
+      ],
+      "exit": 0,
+      "log": "defaults-safe.log",
+      "sha256": "24ccb4ecaa2cc971ba778584077b8ae5ee959af7e43cda61bb74b5d7d7243ec9",
+      "test_counts": [
+        [
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "controls-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "match_search_options"
+      ],
+      "exit": 0,
+      "log": "controls-safe.log",
+      "sha256": "6ab25a3bb1b29a1f640848e2c1bd9342829c055bdda91d20998282cc1987cb4a",
+      "test_counts": [
+        [
+          10,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "label": "defaults-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "match_search_defaults",
+        "--all-features"
+      ],
+      "exit": 0,
+      "log": "defaults-all.log",
+      "sha256": "9db57554dbe49786318618a37ac62319eb71cba7ce194bf08dbffb640a4c6fa5",
+      "test_counts": [
+        [
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "controls-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "match_search_options",
+        "--all-features"
+      ],
+      "exit": 0,
+      "log": "controls-all.log",
+      "sha256": "a69abdf031c7d58dcd3af4e6d19698de03acc20bdef7977aec5de550b82bcf5f",
+      "test_counts": [
+        [
+          10,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "label": "clippy-safe",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "clippy-safe.log",
+      "sha256": "666845e3e1d92017e99f5a5606b2d3eacb3d96c5f779c12a4f4e1a416f2a3e10",
+      "test_counts": []
+    },
+    {
+      "label": "clippy-all",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "clippy-all.log",
+      "sha256": "a4f3934fb27839be5bf79bf71c7d1ca9f6031123e3e83f0759c3f8dcfcec5b3d",
+      "test_counts": []
+    },
+    {
+      "label": "nostd-safe",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "log": "nostd-safe.log",
+      "sha256": "5031b3321f12cc0cfe3590005c0e0b67f1296a473c79232e7e7c0bd8b7e20937",
+      "test_counts": []
+    },
+    {
+      "label": "nostd-all",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit": 0,
+      "log": "nostd-all.log",
+      "sha256": "fe3245b54e96665e351af538c9c45c2276623f067fe5200ed86a7fbd844d2cc1",
+      "test_counts": []
+    },
+    {
+      "label": "format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_counts": []
+    },
+    {
+      "label": "owners-safe-encode",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::entropy_extraction_preserves_independent_constructor_owner_order",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "log": "owners-safe-encode.log",
+      "sha256": "284e72645829ee7161c79cf882bdc5fa242223f35aafd083f23695e87a498a44",
+      "test_counts": [
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "owners-safe-block_entropy",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "block_entropy::tests::assembling_independent_domains_moves_complete_owners_without_requests",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "log": "owners-safe-block_entropy.log",
+      "sha256": "5188372b20cb3dbfee00aa944621145d5d92b34c636c9f4facf12f8292e0dcfe",
+      "test_counts": [
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "owners-all-encode",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::entropy_extraction_preserves_independent_constructor_owner_order",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "log": "owners-all-encode.log",
+      "sha256": "00164311322eebf466699c5b03ea991dcf7c33528c28ca6c7e4ceb40176e416e",
+      "test_counts": [
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "owners-all-block_entropy",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "block_entropy::tests::assembling_independent_domains_moves_complete_owners_without_requests",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "log": "owners-all-block_entropy.log",
+      "sha256": "6e90b31a7af6c584d89f5c24c3c08871d73726bfae83ea171a20f7d63d6ee08f",
+      "test_counts": [
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "owners-nostd-safe-encode",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "encode::tests::entropy_extraction_preserves_independent_constructor_owner_order",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "log": "owners-nostd-safe-encode.log",
+      "sha256": "3d88759c034b9e7ed89ee0fb5885fda93be40acbd9750eb47b215a4e56634eab",
+      "test_counts": [
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "owners-nostd-safe-block_entropy",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "block_entropy::tests::assembling_independent_domains_moves_complete_owners_without_requests",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "log": "owners-nostd-safe-block_entropy.log",
+      "sha256": "1611a11aa12484e12c95a877cd8aafc5a4d9276772d9530fc0841aa72c5b35ab",
+      "test_counts": [
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "owners-nostd-all-encode",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "encode::tests::entropy_extraction_preserves_independent_constructor_owner_order",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "log": "owners-nostd-all-encode.log",
+      "sha256": "3526eacc107afaf05b3359238bb5ca665a5908097c43ed73bbaf5dd88e8f7872",
+      "test_counts": [
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "owners-nostd-all-block_entropy",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "block_entropy::tests::assembling_independent_domains_moves_complete_owners_without_requests",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "log": "owners-nostd-all-block_entropy.log",
+      "sha256": "2856d178c36cd7110ddbbd276fbcd350c59e001c6a50e299718d96ccb3c5b663",
+      "test_counts": [
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "supplement-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "supplement-clippy.log",
+      "sha256": "21e1ffad28984fdc4bcf9e0764953374cc8a355c78e8b9695fc49f1c8032c595",
+      "test_counts": []
+    },
+    {
+      "label": "supplement-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "supplement-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_counts": []
+    }
+  ],
+  "summary": {
+    "commands_passed": 23,
+    "initial_encoder_family_suites": {
+      "configurations": 4,
+      "passed_per_configuration": 162,
+      "ignored_per_std_configuration": 5,
+      "ignored_per_nostd_configuration": 0
+    },
+    "safe_all_default_replays": 14,
+    "safe_all_public_control_tests": 20,
+    "public_control_existing_oracle_ignores": 2,
+    "new_constructor_and_move_tests": {
+      "configurations": 4,
+      "passed_executions": 8
+    },
+    "total_passed_executions": 690,
+    "total_ignored_executions": 12
+  },
+  "owned_sha256": {
+    "src/block_entropy.rs": "4d9f267eef42ffdae685c6813a7ef763759463659b74be562b1fbee273064ae3",
+    "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+    "src/lib.rs": "a27c63009fce7063d249ec504b264f02fd30635078f559e765401d756eb2e86f"
+  },
+  "input_qualification": "Initial13 commands froze7c2e928+3owned overlays. Two tests were then added without changing production bodies;10 supplementary commands froze that next snapshot. Both complete manifests, initial owned source and final source are archived. Concurrent context work excluded.",
+  "ownership_review": "Preserves13 clones/14identities and all production reserve/setup/append order. Field aggregation changes destruction interleaving but never allocator identity. Existing pending-scratch/stale-payload semantics remain; standalone Fast preparation must enforce its separately designed stronger contract.",
+  "new_unsafe_operations": 0,
+  "new_allocator_factories": 0,
+  "new_c_or_miri_execution": false,
+  "elapsed_command_seconds_are_not_benchmarks": true
+}

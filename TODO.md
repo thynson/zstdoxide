@@ -45,7 +45,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [ ] Add committed-repeat snapshots and transactional preparation of intent-bearing sequences with complete ownership/failure coverage.
 - [ ] Implement safe single-block Fast sampling, repeat probes, backward/forward matches, tails and acceleration against frozen observations.
 - [ ] Preserve sampled Fast state across blocks with checked whole-source ranges and raw/RLE/compressed transition coverage.
-- [ ] Extract the parser-independent block entropy owner while preserving named bytes, allocator identities, clone/reserve order and capacities.
+- [x] Extract the parser-independent block entropy owner while preserving named bytes, allocator identities, clone/reserve order and capacities.
 - [ ] Integrate Fast literal policy, minimum-gain decisions and truthful source/window headers without altering named output.
 - [ ] Publish allocator-aware level/request one-shot entry points with complete failure-ordinal, ownership and no_std coverage.
 - [ ] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.
