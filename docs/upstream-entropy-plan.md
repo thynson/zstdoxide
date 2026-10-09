@@ -71,6 +71,40 @@ standalone stream into independent frame blocks and call it the same input.
 
 ## Executed evidence
 
+### Standalone driver checkpoint
+
+The exact selector vectors, requested-depth builder, and 256 KiB wire encoder
+are now implemented in separate verified checkpoints. The remaining driver
+first applies the original highest-symbol adjustment:
+`max(requested, ceil(log2(max_symbol + 1)) + 1)`. For the non-optimal branch,
+preserve the scalar `FSE_optimalTableLog_internal(..., 1)` heuristic from
+v1.5.7: limit by `floor(log2(source_len - 1)) - 1`, raise to the lesser of
+`floor(log2(source_len)) + 1` and `floor(log2(max_symbol)) + 2`, then clamp
+to 5 through 12. Handle the two-byte C unsigned-subtraction corner explicitly
+without Rust overflow. The optimal branch uses the independent Rust complete
+description-plus-weighted-bits search under the adjusted cap. Its tree and
+early-stop policy need not match C's; the branch must affect actual selection.
+
+After histogram validation, build and pair a standalone table, copy its exact
+description into the selected guarded destination, read that description back,
+and reuse the same destination for 1X/4X output. This preserves the original
+buffer reuse, including failure branches. Successful streams must reconstruct
+the complete selected source. Record short/RLE exits, unrepresentable tables,
+description-capacity failures, zero stream returns, and successful roundtrips
+as separate outcomes. An error outside those documented outcomes fails the
+test rather than silently skipping input. Normal tests must witness every
+outcome before the corpus run is a separate completed work item.
+
+Replay all 833 files from the pinned `huf_round_trip` archive, in stable path
+order, in both BMI selector layouts with safe and all-feature backends. Compare
+counts, source and output hashes, requested/adjusted/actual depth coverage,
+source/capacity maxima, and zero/skipped accounting. The capacity adapter
+preserves caller bytes on failure, a stronger Rust guarantee than C's internal
+partial writes. The paired-description copy intentionally does not reproduce
+C's destination-dependent raw/FSE serialization choice. CPU flags and X1/X2
+remain qualified engine selectors supported by the independent C checks;
+the corpus run alone does not promote this source to complete migration.
+
 `tests/upstream/huffman_encode.rs` has thirty exact 1X and thirty exact 4X
 fixture comparisons. Its three explicit C tests passed with safe and
 all-feature builds: 85 same-table invocations, 55 sparse-builder invocations,
