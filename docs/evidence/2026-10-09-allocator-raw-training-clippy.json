@@ -1,0 +1,375 @@
+{
+  "schema": 1,
+  "scope": "Allocator-aware raw trainer and five allocation owners; concurrent independent migrations may change other files.",
+  "toolchain": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3",
+  "before": {
+    "time_utc": "2026-10-09T04:44:53.698382+00:00",
+    "git_head": "8e20aca55ef8c09debfd8bef834fcc8a0bed55f7",
+    "owned_files": {
+      "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e"
+    },
+    "all_source_files": [
+      {
+        "path": "src/bitstream.rs",
+        "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+      },
+      {
+        "path": "src/bitwriter.rs",
+        "sha256": "ac8a1969268f61d5c1a976c625aaab05b4a76d377ae381782982d7300b964ccc"
+      },
+      {
+        "path": "src/constants.rs",
+        "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+      },
+      {
+        "path": "src/cursor.rs",
+        "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+      },
+      {
+        "path": "src/decode.rs",
+        "sha256": "e29cdae3367b689d36769484e9ff138e1ffd8d5900225b2a27f8de4bec6d4905"
+      },
+      {
+        "path": "src/dictionary.rs",
+        "sha256": "e04767e6811e4a7fed3bce4780dbfd57ad81f93b06410731285f1616c164c89b"
+      },
+      {
+        "path": "src/dictionary_train.rs",
+        "sha256": "2adc264a06922ba2a43f6fd037a5195bf698cd83b55aa6e680fcf18aa5324053"
+      },
+      {
+        "path": "src/encode.rs",
+        "sha256": "9943e01f939b6185f1554c3dac7964c4d5b681e7d25099578d696653a2ff2073"
+      },
+      {
+        "path": "src/entropy_encode.rs",
+        "sha256": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53"
+      },
+      {
+        "path": "src/entropy_output.rs",
+        "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+      },
+      {
+        "path": "src/error.rs",
+        "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+      },
+      {
+        "path": "src/frame.rs",
+        "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+      },
+      {
+        "path": "src/fse.rs",
+        "sha256": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864"
+      },
+      {
+        "path": "src/fse_encode.rs",
+        "sha256": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68"
+      },
+      {
+        "path": "src/fse_select.rs",
+        "sha256": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3"
+      },
+      {
+        "path": "src/heap.rs",
+        "sha256": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8"
+      },
+      {
+        "path": "src/history.rs",
+        "sha256": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999"
+      },
+      {
+        "path": "src/huffman.rs",
+        "sha256": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc"
+      },
+      {
+        "path": "src/huffman_codebook.rs",
+        "sha256": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b"
+      },
+      {
+        "path": "src/huffman_encode.rs",
+        "sha256": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf"
+      },
+      {
+        "path": "src/lib.rs",
+        "sha256": "11b88acaa8c0823f8c53fcf7854b2460022828dc9b2269ec5249fd778f21aa4f"
+      },
+      {
+        "path": "src/literal_encode.rs",
+        "sha256": "d1e50ba7ba515906fef1c0413e1e8ed4d0ed18ce03cddb62b8bf331e4520c6cf"
+      },
+      {
+        "path": "src/literal_header.rs",
+        "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+      },
+      {
+        "path": "src/match_parse.rs",
+        "sha256": "6178dd023571d9a1d244fc0f40eccf69d986b89f6a48c5bf0057bbe7b978b222"
+      },
+      {
+        "path": "src/matchchain.rs",
+        "sha256": "7128426b2ffb05f12ca5b227166879605469b515efef6009686735f3266fb446"
+      },
+      {
+        "path": "src/matchfinder.rs",
+        "sha256": "816544f36e7abb20546454133de5dd207900fae375d92a8f68b8cd3fa928a2b6"
+      },
+      {
+        "path": "src/ring_history.rs",
+        "sha256": "bde3d9b4f3dfb4a4aeb52caddd654534920fb5bfed041ad2abdd05c2a3385ec9"
+      },
+      {
+        "path": "src/sequence_context.rs",
+        "sha256": "5d6c0a78959f6800ff6aa6ce383b4235fb8ab3140494ac9054222bd9f24fdf58"
+      },
+      {
+        "path": "src/sequence_encode.rs",
+        "sha256": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61"
+      },
+      {
+        "path": "src/sequence_plan.rs",
+        "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+      },
+      {
+        "path": "src/sequences.rs",
+        "sha256": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb"
+      },
+      {
+        "path": "src/strategy.rs",
+        "sha256": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab"
+      },
+      {
+        "path": "src/stream.rs",
+        "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+      },
+      {
+        "path": "src/stream_decode.rs",
+        "sha256": "c4f519baa12dfd6e170b991dd8335c3596f456899c06ae54a56c358be78a88ae"
+      },
+      {
+        "path": "src/stream_encode.rs",
+        "sha256": "e2a266edbbc0775fa0d5b2ded9c6fc82d81192e577ff6b32c136a4de7472d453"
+      },
+      {
+        "path": "src/training.rs",
+        "sha256": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-training",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 1.5476552499458194,
+      "log_path": "/tmp/zstdoxide-module9-training-clippy-00-clippy-safe.log",
+      "log_sha256": "4219180120ff2edac860be887211c4c2549f5911152b3ee0efde21f2fc610233",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-training",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 1.6239360419567674,
+      "log_path": "/tmp/zstdoxide-module9-training-clippy-01-clippy-all.log",
+      "log_sha256": "bf9755891a82a2562219a74f02c3df70b853f4cabc0e0d023fdd6f1a50c3310f",
+      "test_summaries": []
+    }
+  ],
+  "running": false,
+  "after": {
+    "time_utc": "2026-10-09T04:44:56.919272+00:00",
+    "git_head": "8e20aca55ef8c09debfd8bef834fcc8a0bed55f7",
+    "owned_files": {
+      "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e"
+    },
+    "all_source_files": [
+      {
+        "path": "src/bitstream.rs",
+        "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+      },
+      {
+        "path": "src/bitwriter.rs",
+        "sha256": "ac8a1969268f61d5c1a976c625aaab05b4a76d377ae381782982d7300b964ccc"
+      },
+      {
+        "path": "src/constants.rs",
+        "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+      },
+      {
+        "path": "src/cursor.rs",
+        "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+      },
+      {
+        "path": "src/decode.rs",
+        "sha256": "e29cdae3367b689d36769484e9ff138e1ffd8d5900225b2a27f8de4bec6d4905"
+      },
+      {
+        "path": "src/dictionary.rs",
+        "sha256": "e04767e6811e4a7fed3bce4780dbfd57ad81f93b06410731285f1616c164c89b"
+      },
+      {
+        "path": "src/dictionary_train.rs",
+        "sha256": "2adc264a06922ba2a43f6fd037a5195bf698cd83b55aa6e680fcf18aa5324053"
+      },
+      {
+        "path": "src/encode.rs",
+        "sha256": "9943e01f939b6185f1554c3dac7964c4d5b681e7d25099578d696653a2ff2073"
+      },
+      {
+        "path": "src/entropy_encode.rs",
+        "sha256": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53"
+      },
+      {
+        "path": "src/entropy_output.rs",
+        "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+      },
+      {
+        "path": "src/error.rs",
+        "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+      },
+      {
+        "path": "src/frame.rs",
+        "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+      },
+      {
+        "path": "src/fse.rs",
+        "sha256": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864"
+      },
+      {
+        "path": "src/fse_encode.rs",
+        "sha256": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68"
+      },
+      {
+        "path": "src/fse_select.rs",
+        "sha256": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3"
+      },
+      {
+        "path": "src/heap.rs",
+        "sha256": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8"
+      },
+      {
+        "path": "src/history.rs",
+        "sha256": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999"
+      },
+      {
+        "path": "src/huffman.rs",
+        "sha256": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc"
+      },
+      {
+        "path": "src/huffman_codebook.rs",
+        "sha256": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b"
+      },
+      {
+        "path": "src/huffman_encode.rs",
+        "sha256": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf"
+      },
+      {
+        "path": "src/lib.rs",
+        "sha256": "11b88acaa8c0823f8c53fcf7854b2460022828dc9b2269ec5249fd778f21aa4f"
+      },
+      {
+        "path": "src/literal_encode.rs",
+        "sha256": "d1e50ba7ba515906fef1c0413e1e8ed4d0ed18ce03cddb62b8bf331e4520c6cf"
+      },
+      {
+        "path": "src/literal_header.rs",
+        "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+      },
+      {
+        "path": "src/match_parse.rs",
+        "sha256": "6178dd023571d9a1d244fc0f40eccf69d986b89f6a48c5bf0057bbe7b978b222"
+      },
+      {
+        "path": "src/matchchain.rs",
+        "sha256": "7128426b2ffb05f12ca5b227166879605469b515efef6009686735f3266fb446"
+      },
+      {
+        "path": "src/matchfinder.rs",
+        "sha256": "816544f36e7abb20546454133de5dd207900fae375d92a8f68b8cd3fa928a2b6"
+      },
+      {
+        "path": "src/ring_history.rs",
+        "sha256": "bde3d9b4f3dfb4a4aeb52caddd654534920fb5bfed041ad2abdd05c2a3385ec9"
+      },
+      {
+        "path": "src/sequence_context.rs",
+        "sha256": "5d6c0a78959f6800ff6aa6ce383b4235fb8ab3140494ac9054222bd9f24fdf58"
+      },
+      {
+        "path": "src/sequence_encode.rs",
+        "sha256": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61"
+      },
+      {
+        "path": "src/sequence_plan.rs",
+        "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+      },
+      {
+        "path": "src/sequences.rs",
+        "sha256": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb"
+      },
+      {
+        "path": "src/strategy.rs",
+        "sha256": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab"
+      },
+      {
+        "path": "src/stream.rs",
+        "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+      },
+      {
+        "path": "src/stream_decode.rs",
+        "sha256": "c4f519baa12dfd6e170b991dd8335c3596f456899c06ae54a56c358be78a88ae"
+      },
+      {
+        "path": "src/stream_encode.rs",
+        "sha256": "e2a266edbbc0775fa0d5b2ded9c6fc82d81192e577ff6b32c136a4de7472d453"
+      },
+      {
+        "path": "src/training.rs",
+        "sha256": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      }
+    ]
+  },
+  "owned_file_unchanged": true,
+  "seconds": 3.1985018751583993,
+  "all_requested_commands_completed": true,
+  "log_path": "/tmp/zstdoxide-module9-training-clippy.log",
+  "log_sha256": "b74ca86c1af58fa147aeae1b5fc91daa02e7f4d17c3420bd0f43cc1f9628bbda",
+  "exit_code": 0
+}

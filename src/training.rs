@@ -6,6 +6,7 @@
 
 use alloc::alloc::Global;
 use alloc::vec::Vec;
+use core::alloc::Allocator;
 use core::cmp::Ordering;
 
 use crate::heap::MaxHeap;
@@ -60,13 +61,32 @@ impl RawTrainingOptions {
 /// This is raw content selection: it does not create formatted entropy metadata
 /// or implement the original COVER/fastCover strategy-specific contracts.
 pub fn train_raw_dictionary(samples: &[&[u8]], options: RawTrainingOptions) -> Result<Dictionary> {
+    train_raw_dictionary_in(samples, options, Global)
+}
+
+/// Select raw dictionary content using the supplied allocation family.
+///
+/// The returned dictionary retains the original allocator and owns its bytes
+/// directly. Window records, frequency cells, candidates and selected ranges
+/// each retain a fresh allocator clone; clones need not share an allocation
+/// domain. Every failed collection allocation returns [`Error::AllocationFailed`]
+/// and releases completed temporary owners. Allocator cloning itself may have
+/// ordinary user-defined allocation or panic behavior. Passing a reference to
+/// a non-Clone allocator avoids cloning its underlying state; that allocator
+/// must outlive the returned dictionary. No sample borrow escapes this call.
+/// Selection, quotas and tie rules match [`train_raw_dictionary`].
+pub fn train_raw_dictionary_in<A: Allocator + Clone>(
+    samples: &[&[u8]],
+    options: RawTrainingOptions,
+    allocator: A,
+) -> Result<Dictionary<A>> {
     let options = options.validate()?;
-    let windows = select_sample_windows(samples, options.max_sample_bytes)?;
-    let mut frequencies = TrainingFrequencies::new()?;
+    let windows = select_sample_windows_in(samples, options.max_sample_bytes, allocator.clone())?;
+    let mut frequencies = TrainingFrequencies::new_in(allocator.clone())?;
     for window in &windows {
         frequencies.count(&samples[window.sample][..window.length])?;
     }
-    let mut candidates = MaxHeap::new_in(Global);
+    let mut candidates = MaxHeap::new_in(allocator.clone());
     for window in &windows {
         let source = &samples[window.sample][..window.length];
         let length = options.segment_size.min(source.len());
@@ -85,7 +105,7 @@ pub fn train_raw_dictionary(samples: &[&[u8]], options: RawTrainingOptions) -> R
             start = (start + options.segment_size / 2).min(source.len() - length);
         }
     }
-    let mut chosen = Vec::new();
+    let mut chosen = Vec::new_in(allocator.clone());
     let mut length = 0;
     while options.dictionary_size - length >= 8 {
         let Some(mut candidate) = candidates.pop() else {
@@ -111,12 +131,17 @@ pub fn train_raw_dictionary(samples: &[&[u8]], options: RawTrainingOptions) -> R
     if length < 8 {
         return Err(Error::TrainingFailed);
     }
-    let mut content = Vec::new();
+    let mut content = Vec::new_in(allocator);
     content
         .try_reserve_exact(length)
         .map_err(|_| Error::AllocationFailed)?;
     for candidate in chosen.iter().rev() {
-        content.extend_from_slice(&samples[candidate.sample][candidate.start..candidate.end]);
+        // The complete sum of selected range lengths was reserved above.
+        // Individual pushes stay within that proven capacity without relying
+        // on bulk insertion's allocation behavior.
+        for &byte in &samples[candidate.sample][candidate.start..candidate.end] {
+            content.push(byte);
+        }
     }
     Ok(Dictionary::from_raw_owned(content))
 }
@@ -128,8 +153,17 @@ struct SampleWindow {
     length: usize,
 }
 
+#[cfg(test)]
 fn select_sample_windows(samples: &[&[u8]], budget: usize) -> Result<Vec<SampleWindow>> {
-    let mut windows = Vec::new();
+    select_sample_windows_in(samples, budget, Global)
+}
+
+fn select_sample_windows_in<A: Allocator>(
+    samples: &[&[u8]],
+    budget: usize,
+    allocator: A,
+) -> Result<Vec<SampleWindow, A>> {
+    let mut windows = Vec::new_in(allocator);
     visit_sample_prefixes(samples, budget, |sample, bytes| {
         if bytes.len() >= 8 {
             windows
@@ -203,17 +237,27 @@ impl PartialOrd for Candidate {
 }
 
 /// Owned fixed-size frequency cells, independent of borrowed training samples.
-struct TrainingFrequencies {
-    counts: Vec<u32>,
+struct TrainingFrequencies<A: Allocator = Global> {
+    counts: Vec<u32, A>,
 }
 
-impl TrainingFrequencies {
+#[cfg(test)]
+impl TrainingFrequencies<Global> {
     fn new() -> Result<Self> {
-        let mut counts = Vec::new();
+        Self::new_in(Global)
+    }
+}
+
+impl<A: Allocator> TrainingFrequencies<A> {
+    fn new_in(allocator: A) -> Result<Self> {
+        let mut counts = Vec::new_in(allocator);
         counts
             .try_reserve_exact(FREQUENCY_CELLS)
             .map_err(|_| Error::AllocationFailed)?;
-        counts.resize(FREQUENCY_CELLS, 0);
+        // Reserve the complete fixed-size owner before initializing entries.
+        while counts.len() < FREQUENCY_CELLS {
+            counts.push(0);
+        }
         Ok(Self { counts })
     }
 
@@ -285,6 +329,212 @@ impl TrainingFrequencies {
 mod tests {
     use super::*;
     use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 8,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    #[test]
+    fn allocator_leaf_owners_accept_non_clone_values_and_preserve_frequency_cells() {
+        let owner = allocator().into_non_clone();
+        let identity = owner.identity();
+        let monitor = owner.monitor();
+        let samples = [&b"0123456789abcdef"[..], &b"abcdefghijklmnopqrstuvwx"[..]];
+        let windows = select_sample_windows_in(&samples, 23, owner).unwrap();
+        assert_eq!(windows.allocator().identity(), identity);
+        assert_eq!((windows[0].length, windows[1].length), (9, 13));
+        drop(windows);
+        monitor.assert_released();
+
+        let owner = allocator().into_non_clone();
+        let identity = owner.identity();
+        let monitor = owner.monitor();
+        let mut frequencies = TrainingFrequencies::new_in(owner).unwrap();
+        assert_eq!(frequencies.counts.allocator().identity(), identity);
+        assert_eq!(frequencies.counts.len(), FREQUENCY_CELLS);
+        assert!(frequencies.counts.iter().all(|&count| count == 0));
+        frequencies.count(b"xxxxxxxx").unwrap();
+        assert_eq!(frequencies.score(b"xxxx"), 5);
+        frequencies.cover(b"xxxx");
+        assert_eq!(frequencies.score(b"xxxxxxxx"), 0);
+        *frequencies.cell_mut(b"abcd") = u32::MAX;
+        assert_eq!(frequencies.count(b"abcd"), Err(Error::ResourceLimit));
+        assert_eq!(frequencies.score(b"abcd"), u64::from(u32::MAX));
+        drop(frequencies);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        assert_eq!(monitor.snapshot().attempts, 1);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_borrowed_training_matches_global_across_quotas_and_capacities() {
+        let owner = allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let binary: Vec<_> = (0..512).map(|index| (index * 19) as u8).collect();
+        let samples = [&binary[..256], &binary[13..]];
+        for capacity in 8..=99 {
+            for budget in [128, 1024] {
+                let options = RawTrainingOptions {
+                    max_sample_bytes: budget,
+                    ..options(capacity)
+                };
+                let expected = train_raw_dictionary(&samples, options).unwrap();
+                let actual = train_raw_dictionary_in(&samples, options, &owner).unwrap();
+                assert_eq!(actual.as_bytes(), expected.as_bytes());
+                assert_eq!(actual.id(), 0);
+                assert!(!actual.is_formatted());
+                assert_eq!(monitor.snapshot().live_blocks, 1);
+                drop(actual);
+                monitor.assert_released();
+            }
+        }
+        assert_eq!(monitor.snapshot().identities_created, 1);
+    }
+
+    #[test]
+    fn allocator_independent_scratch_domains_release_before_returning_owned_content() {
+        let samples = [
+            b"common prefix, first distinct suffix".to_vec(),
+            b"common prefix, second distinct suffix".to_vec(),
+        ];
+        let views: Vec<_> = samples.iter().map(Vec::as_slice).collect();
+        let expected = train_raw_dictionary(&views, options(64)).unwrap();
+        let owner = allocator();
+        let monitor = owner.monitor();
+        let dictionary = train_raw_dictionary_in(&views, options(64), owner).unwrap();
+        assert_eq!(dictionary.as_bytes(), expected.as_bytes());
+        // Four fresh scratch owners have dropped; the original content owner
+        // alone survives inside the returned dictionary, without a second copy.
+        assert_eq!(monitor.snapshot().identities_created, 5);
+        assert_eq!(monitor.snapshot().owners_dropped, 4);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(views);
+        drop(samples);
+        let pointer = dictionary.as_bytes().as_ptr();
+        let moved = dictionary;
+        assert_eq!(moved.as_bytes().as_ptr(), pointer);
+        assert_eq!(moved.as_bytes(), expected.as_bytes());
+        drop(moved);
+        assert_eq!(monitor.snapshot().owners_dropped, 5);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_invalid_limits_and_empty_quotas_do_not_request_storage() {
+        let owner = allocator().into_non_clone();
+        let monitor = owner.monitor();
+        assert!(matches!(
+            train_raw_dictionary_in(&[b"12345678"], options(7), &owner),
+            Err(Error::InvalidParameter)
+        ));
+        for samples in [&[][..], &[&b"short"[..]][..], &[&b"12345678"[..]; 3][..]] {
+            assert!(matches!(
+                train_raw_dictionary_in(
+                    samples,
+                    RawTrainingOptions {
+                        max_sample_bytes: 8,
+                        ..options(8)
+                    },
+                    &owner
+                ),
+                Err(Error::TrainingFailed)
+            ));
+        }
+        assert_eq!(monitor.snapshot().attempts, 0);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_every_training_allocation_failure_releases_all_partial_owners() {
+        let sources: Vec<Vec<_>> = (0..17)
+            .map(|sample| {
+                (0..64)
+                    .map(|index| (sample * 53 + index * 29 + index * index) as u8)
+                    .collect()
+            })
+            .collect();
+        let views: Vec<_> = sources.iter().map(Vec::as_slice).collect();
+        let options = RawTrainingOptions {
+            max_sample_bytes: 2048,
+            ..options(512)
+        };
+        let expected = train_raw_dictionary(&views, options).unwrap();
+        assert!(expected.content().len() > 64);
+        let owner = allocator();
+        let monitor = owner.monitor();
+        let baseline = train_raw_dictionary_in(&views, options, owner).unwrap();
+        let attempts = monitor.snapshot().attempts;
+        assert!(monitor.snapshot().grow_calls >= 3);
+        assert_eq!(baseline.as_bytes(), expected.as_bytes());
+        drop(baseline);
+        monitor.assert_released();
+        for ordinal in 1..=attempts {
+            let owner = allocator();
+            let monitor = owner.monitor();
+            monitor.set_fail_at(NonZeroU64::new(ordinal));
+            assert!(
+                matches!(
+                    train_raw_dictionary_in(&views, options, owner),
+                    Err(Error::AllocationFailed)
+                ),
+                "allocation {ordinal}"
+            );
+            assert_eq!(monitor.snapshot().failures, 1);
+            monitor.assert_released();
+            assert_eq!(
+                monitor.snapshot().owners_dropped,
+                monitor.snapshot().identities_created
+            );
+        }
+        assert_eq!(
+            train_raw_dictionary(&views, options).unwrap().as_bytes(),
+            expected.as_bytes()
+        );
+    }
+
+    #[test]
+    fn allocator_initial_window_and_frequency_failures_release_prior_storage() {
+        for ordinal in [1, 2] {
+            let owner = allocator();
+            let monitor = owner.monitor();
+            monitor.set_fail_at(NonZeroU64::new(ordinal));
+            assert!(matches!(
+                train_raw_dictionary_in(&[b"0123456789abcdef"], options(16), owner),
+                Err(Error::AllocationFailed)
+            ));
+            assert_eq!(monitor.snapshot().failures, 1);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn allocator_final_content_failure_releases_every_completed_owner() {
+        let samples = [&b"0123456789abcdef"[..]];
+        let owner = allocator();
+        let monitor = owner.monitor();
+        let baseline = train_raw_dictionary_in(&samples, options(16), owner).unwrap();
+        let final_request = monitor.snapshot().attempts;
+        assert_eq!(baseline.content(), samples[0]);
+        drop(baseline);
+        monitor.assert_released();
+        let owner = allocator();
+        let monitor = owner.monitor();
+        monitor.set_fail_at(NonZeroU64::new(final_request));
+        assert!(matches!(
+            train_raw_dictionary_in(&samples, options(16), owner),
+            Err(Error::AllocationFailed)
+        ));
+        assert_eq!(monitor.snapshot().failures, 1);
+        assert_eq!(monitor.snapshot().identities_created, 5);
+        assert_eq!(monitor.snapshot().owners_dropped, 5);
+        monitor.assert_released();
+    }
 
     fn options(capacity: usize) -> RawTrainingOptions {
         RawTrainingOptions {
@@ -534,7 +784,7 @@ mod tests {
         assert_eq!(frequencies.score(b"xxxx"), 5);
         frequencies.cover(b"xxxx");
         assert_eq!(frequencies.score(b"xxxxxxxx"), 0);
-        let index = TrainingFrequencies::index(b"abcd");
+        let index = TrainingFrequencies::<Global>::index(b"abcd");
         frequencies.counts[index] = u32::MAX;
         assert_eq!(frequencies.count(b"abcd"), Err(Error::ResourceLimit));
         assert_eq!(frequencies.counts[index], u32::MAX);

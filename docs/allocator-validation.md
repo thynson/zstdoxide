@@ -402,6 +402,28 @@ failure are covered. Errors release partial output and tables. The live C
 oracle exercises the Global wrapper of the same implementation; custom
 streaming and dictionary collection are separate checkpoints.
 
+Public `train_raw_dictionary_in` now retains the original allocator for final
+content and uses fresh owners for sample windows, frequencies, candidates and
+chosen ranges. Its [training evidence](evidence/2026-10-09-allocator-raw-training.json),
+[original matrix](evidence/2026-10-09-allocator-raw-training-results.json), and
+[Clippy follow-up](evidence/2026-10-09-allocator-raw-training-clippy.json) report
+127 passing test executions. Seventeen training tests passed in five
+configurations; raw/formatted integration and C CLI checks passed in safe/all;
+four strict-provenance Miri cases, no_std builds, and formatting passed. One
+initial shared-workspace lint failure in concurrent formatted finalization is
+preserved; both strict Clippy builds passed after that wrapper-only repair.
+The exported API additionally passed strict Clippy, no_std, and formatting in
+an isolated baseline with no concurrent formatted or streaming changes.
+
+All 144 pre-migration outputs retain their frozen fingerprint, and 184
+custom/Global quota/capacity cases match. Every observed allocation ordinal was
+failed, including growing window, candidate and selected-range collections and
+the final content request. Non-Clone leaf owners and a borrowed non-Clone
+aggregate are covered. Successful return keeps only the final content allocation,
+with no sample borrow or allocator-changing copy. Miri uses bounded ownership,
+frequency, early-failure and final-failure cases; the complete ordinal campaign
+runs in normal builds.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

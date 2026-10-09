@@ -20,7 +20,9 @@ construction now exposes `from_bytes_in`, `from_bytes_with_mode_in`, and
 `raw_in`; its payload and prepared tables use the chosen allocator. Standard
 shared handles still allocate the counts and inline dictionary object in Global.
 `Dictionary::view()` provides an allocation-free borrowed alternative; codec
-context integration follows its own checkpoint. The
+context integration follows its own checkpoint. Public `train_raw_dictionary_in`
+also owns final content and every selection temporary through the chosen family;
+formatted finalization follows separately. The
 chosen standard `Allocator`/`Vec<T, A>` subset compiles without feature gates
 on the pin. Custom Arc/Rc, allocator-aware BinaryHeap, and fallible Box
 construction still require unstable `allocator_ext` in the inspected library;

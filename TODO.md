@@ -54,7 +54,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Define allocation-free borrowed dictionary views and a sealed immutable handle contract.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
 - [x] Replace the training priority queue with checked storage and preserve ties and stale-score ordering.
-- [ ] Parameterize raw-training sample windows, frequencies, candidates, ranges, and output without changing selected bytes.
+- [x] Parameterize raw-training sample windows, frequencies, candidates, ranges, and output without changing selected bytes.
 - [ ] Parameterize formatted finalization and all validation copies, preserving dictionary bytes, IDs, and C acceptance.
 - [ ] Inject failure at each observed codec allocation, including HUF/FSE candidates, history growth, dictionary preparation, reset, and final drop.
 - [ ] Adapt the original 89,456,640-byte custom-context source campaign with explicit seeds and supported strategy/API qualifications.
