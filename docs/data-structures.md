@@ -539,3 +539,17 @@ These test-only records and their safe reader share one representation; they are
 not a performance-sensitive codec data structure and need no unsafe feature.
 The converter revalidates the frozen collection before generating or checking
 the binary; normal Cargo tests need no C/Python process or new crate dependency.
+
+The single-block parser concretizes the borrowed-input role as `FastBlock<'a>`:
+a checked source slice, block range, retained prefix floor, layout, power-of-two
+window and initial paired step. `parse_block` borrows independently owned table,
+literal and intent-bearing sequence vectors without cloning any allocator.
+Before sampling it checks repeat/layout compatibility and reserves both output
+bounds while preserving old logical contents on reservation failure. Success
+includes trailing literals in the output vector and returns a plain
+`FastParseResult` containing the trailing count and separate raw-parser/full-wire
+candidate triples. No committed repeat state is stored. Later internal errors
+may leave scratch/table changes; the enclosing one-shot caller discards them.
+The direct parser admits blocks of at least seven bytes; ordinary tiny blocks
+are handled by the future frame wrapper. The parser itself forbids unsafe code
+and relies on the already independently gated sampled MatchTable accessors.

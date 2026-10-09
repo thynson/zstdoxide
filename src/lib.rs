@@ -50,6 +50,8 @@ mod fast_frame;
 #[cfg(test)]
 #[path = "../tests/support/fast_oracle.rs"]
 mod fast_oracle_fixture;
+#[cfg(test)]
+mod fast_parse;
 mod fast_plan;
 mod frame;
 mod fse;

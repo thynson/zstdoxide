@@ -123,6 +123,14 @@ impl<A: Allocator> MatchTable<A> {
         self.positions.capacity() * core::mem::size_of::<usize>()
     }
 
+    /// Inspect initialized Rust positions for frozen oracle comparisons only.
+    /// `usize::MAX` is invalid; other cells are absolute borrowed-source indices.
+    /// C's valid-index bias of two is applied only by the comparison code.
+    #[cfg(test)]
+    pub(crate) fn test_positions(&self) -> &[usize] {
+        &self.positions
+    }
+
     /// Read a sampled candidate without updating the table or borrowing it.
     ///
     /// A nonempty position is a hash collision, possibly at or beyond the
