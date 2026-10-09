@@ -56,6 +56,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [ ] Encode two-state FSE weight streams using checked transition inversion.
 - [x] Build complete full-alphabet literal trees with a bounded maximum depth.
 - [ ] Serialize validated dictionary Huffman weights through two-state FSE.
+- [x] Assemble formatted dictionary IDs, sequence priors, repeat offsets, padding, and suffix bounds.
 - [ ] Finalize formatted dictionaries with IDs, sequence priors, repeat offsets and bounded content.
 - [x] Implement bounded training sample selection and raw dictionary-content construction.
 - [ ] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.
