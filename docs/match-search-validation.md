@@ -145,3 +145,34 @@ the selected constructor/two-growth campaign. Default replay still verifies all
 the frozen owned source and the integration source hashes shared with the
 candidate-chain validation. Concurrent root commits are recorded accurately;
 this focused checkpoint does not claim an immutable whole-repository matrix.
+
+## Dynamic bounded candidate chain
+
+`MatchChain` now uses the checked layout for its heads and admits up to 524,288
+cyclic nodes. Default constructors preserve the existing key/hash dimensions.
+Traversal accepts up to 64 examined links, including future and stale links;
+zero remains an internal empty traversal. Tagged insertion order and rejection
+of stale or non-descending links are unchanged. Seed transfer validates layout
+and live head lengths, then preserves the exact slot/tag ordering and the
+existing equal-size/larger-destination replacement rules.
+
+Reconfiguration validates both allocation layouts and reserves both retained
+owners before changing logical state. A later reservation failure may leave
+earlier capacity growth, but every initialized record, length, tag and active
+layout remains valid. Success explicitly initializes the new prefixes and starts
+empty traversal state. All unsafe head/node accesses retain runtime bounds
+checks against initialized length and updated alias/lifetime proofs.
+
+Twenty-three tests pass in seven configurations: safe, individual unsafe-chain,
+all features, no_std safe/all and release safe/all. Both no_std library checks,
+strict all-target/all-feature Clippy and owned formatting pass. Five exact
+all-feature strict-provenance Miri checks exercise live bounds, both reservation
+failure points, borrowed owner reuse, incompatible seeds and tiny wrapped rings.
+Safe/all default-frame replays pass all seven tests and all captured frames.
+
+[Chain evidence](evidence/2026-10-09-match-chain-layouts.json) preserves all logs
+and six unchanged integration source hashes. It also retains transient test
+compilation during the neighboring table migration and a runner correction:
+the successful default suite has seven tests, including two shared helper tests,
+which the first driver had incorrectly expected to be five. No passing codec
+run is represented as failed codec behavior or silently rerun for that count.

@@ -1,0 +1,654 @@
+{
+  "schema_version": 1,
+  "scope": "Module 11 dynamic MatchChain leaf, no live Encoder controls",
+  "repository_head_at_freeze": "aab163eff00da8fdf8ed76c6199e513b0c0c8610",
+  "changed_files": [
+    "src/matchchain.rs"
+  ],
+  "source_sha256": {
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/encode.rs": "e4b77657644ccd70f1536f1114c652b6b99e792e4ec61673bdc3c3e4800b5db6",
+    "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a",
+    "src/lib.rs": "51d023b26da4c403f64785a86782dfdc67d4e4cecbfe18b2fa33a40b07dff878"
+  },
+  "integration_source_hashes_after_checks": {
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/encode.rs": "e4b77657644ccd70f1536f1114c652b6b99e792e4ec61673bdc3c3e4800b5db6",
+    "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a",
+    "src/lib.rs": "51d023b26da4c403f64785a86782dfdc67d4e4cecbfe18b2fa33a40b07dff878"
+  },
+  "source_changes_during_frozen_checks": false,
+  "api": [
+    "MatchChain::new(nodes) / new_in(nodes,A) preserve default hash-log16/key-width4",
+    "with_layout_in(SearchKeyLayout,nodes,A)",
+    "layout() -> SearchKeyLayout",
+    "node_limit() -> usize",
+    "reconfigure(layout,nodes) -> Result<()>",
+    "insert/candidates accept impl Into<MatchKey>; incompatible widths rejected before mutation",
+    "reset_from validates equal layout, active head lengths and source nodes <= destination nodes before copying"
+  ],
+  "contracts": [
+    "Node limit 1..=524288; visit limit 0..=64; zero visits permitted privately.",
+    "Every reserve precedes initialized-length/record/metadata publication. A failed second reserve can increase earlier head capacity but preserves every old logical element and traversal tag.",
+    "Retained allocation owners are used for resizing without clones; independent Clone domains and borrowed NonClone ownership are tested.",
+    "Unsafe accessors check the current initialized prefix rather than capacity or only requested metadata; reconfiguration is excluded by the live borrow.",
+    "Default output is compared with archived pre-change frames for all three named policies and strategy reuse."
+  ],
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "matchchain::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 8.45,
+      "log": "/tmp/zstdoxide-module11-chain-safe.log",
+      "sha256": "6df12a7945bacf42831cf40a27bb28382d167ec47f08ffd769398bbf7967619f",
+      "passed": 23,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 23,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.05
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.85s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 23 tests\ntest matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes ... ok\ntest matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity ... ok\ntest matchchain::tests::deliberate_hash_collisions_remain_newest_first_unverified_candidates ... ok\ntest matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record ... ok\ntest matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links ... ok\ntest matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone ... ok\ntest matchchain::tests::custom_chain_swaps_keep_all_four_allocator_owners_paired ... ok\ntest matchchain::tests::custom_setup_failures_drop_each_partial_owner_and_validation_allocates_nothing ... ok\ntest matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing ... ok\ntest matchchain::tests::copying_partial_seeds_preserves_independence_and_reuses_working_storage ... ok\ntest matchchain::tests::dynamic_key_width_mismatch_rejects_before_any_mutation ... ok\ntest matchchain::tests::dynamic_full_visit_budget_counts_future_and_stale_links_exactly ... ok\ntest matchchain::tests::custom_distinct_domains_preserve_candidates_and_move_with_both_vectors ... ok\ntest matchchain::tests::custom_seed_copy_borrows_non_clone_allocator_and_never_adopts_source_storage ... ok\ntest matchchain::tests::copying_wrapped_seeds_preserves_tags_and_both_replacement_policies ... ok\ntest matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order ... ok\ntest matchchain::tests::full_width_coordinates_are_never_truncated_into_storage_indices ... ok\ntest matchchain::tests::future_positions_consume_visits_instead_of_bypassing_the_budget ... ok\ntest matchchain::tests::tag_exhaustion_fails_before_mutation_and_reset_permits_fresh_tags ... ok\ntest matchchain::tests::reset_clears_every_link_and_tag_and_retains_both_allocations ... ok\ntest matchchain::tests::invalid_indices_tags_and_cycles_terminate_without_returning_reused_nodes ... ok\ntest matchchain::tests::construction_bounds_allocation_and_accepts_the_documented_maximum ... ok\ntest matchchain::tests::dynamic_dimensions_initialize_exact_prefixes_and_accept_maximum_shape ... ok\n\ntest result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 518 filtered out; finished in 0.05s\n\n"
+    },
+    {
+      "name": "unsafe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-chain",
+        "matchchain::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 8.156,
+      "log": "/tmp/zstdoxide-module11-chain-unsafe.log",
+      "sha256": "d837a82766d2831dd5ca8a0f6c0470f0c7df899c6f9a22e67219798c31961020",
+      "passed": 23,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 23,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.06
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.39s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-target/debug/build/zstdoxide/ef32ef0c462b872c/out/zstdoxide-ef32ef0c462b872c)\n\nrunning 23 tests\ntest matchchain::tests::deliberate_hash_collisions_remain_newest_first_unverified_candidates ... ok\ntest matchchain::tests::custom_setup_failures_drop_each_partial_owner_and_validation_allocates_nothing ... ok\ntest matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity ... ok\ntest matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes ... ok\ntest matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links ... ok\ntest matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone ... ok\ntest matchchain::tests::copying_partial_seeds_preserves_independence_and_reuses_working_storage ... ok\ntest matchchain::tests::dynamic_full_visit_budget_counts_future_and_stale_links_exactly ... ok\ntest matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record ... ok\ntest matchchain::tests::custom_chain_swaps_keep_all_four_allocator_owners_paired ... ok\ntest matchchain::tests::dynamic_key_width_mismatch_rejects_before_any_mutation ... ok\ntest matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing ... ok\ntest matchchain::tests::custom_seed_copy_borrows_non_clone_allocator_and_never_adopts_source_storage ... ok\ntest matchchain::tests::custom_distinct_domains_preserve_candidates_and_move_with_both_vectors ... ok\ntest matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order ... ok\ntest matchchain::tests::copying_wrapped_seeds_preserves_tags_and_both_replacement_policies ... ok\ntest matchchain::tests::full_width_coordinates_are_never_truncated_into_storage_indices ... ok\ntest matchchain::tests::future_positions_consume_visits_instead_of_bypassing_the_budget ... ok\ntest matchchain::tests::tag_exhaustion_fails_before_mutation_and_reset_permits_fresh_tags ... ok\ntest matchchain::tests::invalid_indices_tags_and_cycles_terminate_without_returning_reused_nodes ... ok\ntest matchchain::tests::reset_clears_every_link_and_tag_and_retains_both_allocations ... ok\ntest matchchain::tests::construction_bounds_allocation_and_accepts_the_documented_maximum ... ok\ntest matchchain::tests::dynamic_dimensions_initialize_exact_prefixes_and_accept_maximum_shape ... ok\n\ntest result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 518 filtered out; finished in 0.06s\n\n"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 9.84,
+      "log": "/tmp/zstdoxide-module11-chain-all.log",
+      "sha256": "3068dfb90a7d59e312b3c55ee419688ab2f73ed79714270d8bd56044423d3ae0",
+      "passed": 23,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 23,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.06
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.13s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 23 tests\ntest matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes ... ok\ntest matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity ... ok\ntest matchchain::tests::deliberate_hash_collisions_remain_newest_first_unverified_candidates ... ok\ntest matchchain::tests::custom_distinct_domains_preserve_candidates_and_move_with_both_vectors ... ok\ntest matchchain::tests::copying_partial_seeds_preserves_independence_and_reuses_working_storage ... ok\ntest matchchain::tests::custom_seed_copy_borrows_non_clone_allocator_and_never_adopts_source_storage ... ok\ntest matchchain::tests::custom_setup_failures_drop_each_partial_owner_and_validation_allocates_nothing ... ok\ntest matchchain::tests::custom_chain_swaps_keep_all_four_allocator_owners_paired ... ok\ntest matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone ... ok\ntest matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links ... ok\ntest matchchain::tests::dynamic_full_visit_budget_counts_future_and_stale_links_exactly ... ok\ntest matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record ... ok\ntest matchchain::tests::dynamic_key_width_mismatch_rejects_before_any_mutation ... ok\ntest matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing ... ok\ntest matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order ... ok\ntest matchchain::tests::copying_wrapped_seeds_preserves_tags_and_both_replacement_policies ... ok\ntest matchchain::tests::future_positions_consume_visits_instead_of_bypassing_the_budget ... ok\ntest matchchain::tests::full_width_coordinates_are_never_truncated_into_storage_indices ... ok\ntest matchchain::tests::tag_exhaustion_fails_before_mutation_and_reset_permits_fresh_tags ... ok\ntest matchchain::tests::reset_clears_every_link_and_tag_and_retains_both_allocations ... ok\ntest matchchain::tests::invalid_indices_tags_and_cycles_terminate_without_returning_reused_nodes ... ok\ntest matchchain::tests::construction_bounds_allocation_and_accepts_the_documented_maximum ... ok\ntest matchchain::tests::dynamic_dimensions_initialize_exact_prefixes_and_accept_maximum_shape ... ok\n\ntest result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 518 filtered out; finished in 0.06s\n\n"
+    },
+    {
+      "name": "nostd",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "matchchain::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 9.57,
+      "log": "/tmp/zstdoxide-module11-chain-nostd.log",
+      "sha256": "b1fbd1fc908c1dec30217542e354c72b986bfcdf5a488caf9cb0b9b3294512c6",
+      "passed": 23,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 23,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.07
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.86s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 23 tests\ntest matchchain::tests::custom_setup_failures_drop_each_partial_owner_and_validation_allocates_nothing ... ok\ntest matchchain::tests::deliberate_hash_collisions_remain_newest_first_unverified_candidates ... ok\ntest matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links ... ok\ntest matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes ... ok\ntest matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity ... ok\ntest matchchain::tests::custom_chain_swaps_keep_all_four_allocator_owners_paired ... ok\ntest matchchain::tests::copying_partial_seeds_preserves_independence_and_reuses_working_storage ... ok\ntest matchchain::tests::custom_seed_copy_borrows_non_clone_allocator_and_never_adopts_source_storage ... ok\ntest matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone ... ok\ntest matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record ... ok\ntest matchchain::tests::custom_distinct_domains_preserve_candidates_and_move_with_both_vectors ... ok\ntest matchchain::tests::dynamic_full_visit_budget_counts_future_and_stale_links_exactly ... ok\ntest matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing ... ok\ntest matchchain::tests::dynamic_key_width_mismatch_rejects_before_any_mutation ... ok\ntest matchchain::tests::copying_wrapped_seeds_preserves_tags_and_both_replacement_policies ... ok\ntest matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order ... ok\ntest matchchain::tests::full_width_coordinates_are_never_truncated_into_storage_indices ... ok\ntest matchchain::tests::future_positions_consume_visits_instead_of_bypassing_the_budget ... ok\ntest matchchain::tests::tag_exhaustion_fails_before_mutation_and_reset_permits_fresh_tags ... ok\ntest matchchain::tests::reset_clears_every_link_and_tag_and_retains_both_allocations ... ok\ntest matchchain::tests::invalid_indices_tags_and_cycles_terminate_without_returning_reused_nodes ... ok\ntest matchchain::tests::construction_bounds_allocation_and_accepts_the_documented_maximum ... ok\ntest matchchain::tests::dynamic_dimensions_initialize_exact_prefixes_and_accept_maximum_shape ... ok\n\ntest result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 493 filtered out; finished in 0.07s\n\n"
+    },
+    {
+      "name": "nostd-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "matchchain::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 11.46,
+      "log": "/tmp/zstdoxide-module11-chain-nostd-all.log",
+      "sha256": "699b51cc794669f9d74f2ad0af051c600c92c13ed62ec4289897426a76e9cbb9",
+      "passed": 23,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 23,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.05
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.82s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 23 tests\ntest matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes ... ok\ntest matchchain::tests::deliberate_hash_collisions_remain_newest_first_unverified_candidates ... ok\ntest matchchain::tests::custom_setup_failures_drop_each_partial_owner_and_validation_allocates_nothing ... ok\ntest matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity ... ok\ntest matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone ... ok\ntest matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record ... ok\ntest matchchain::tests::dynamic_full_visit_budget_counts_future_and_stale_links_exactly ... ok\ntest matchchain::tests::custom_chain_swaps_keep_all_four_allocator_owners_paired ... ok\ntest matchchain::tests::dynamic_key_width_mismatch_rejects_before_any_mutation ... ok\ntest matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing ... ok\ntest matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links ... ok\ntest matchchain::tests::custom_seed_copy_borrows_non_clone_allocator_and_never_adopts_source_storage ... ok\ntest matchchain::tests::copying_partial_seeds_preserves_independence_and_reuses_working_storage ... ok\ntest matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order ... ok\ntest matchchain::tests::custom_distinct_domains_preserve_candidates_and_move_with_both_vectors ... ok\ntest matchchain::tests::future_positions_consume_visits_instead_of_bypassing_the_budget ... ok\ntest matchchain::tests::full_width_coordinates_are_never_truncated_into_storage_indices ... ok\ntest matchchain::tests::copying_wrapped_seeds_preserves_tags_and_both_replacement_policies ... ok\ntest matchchain::tests::tag_exhaustion_fails_before_mutation_and_reset_permits_fresh_tags ... ok\ntest matchchain::tests::reset_clears_every_link_and_tag_and_retains_both_allocations ... ok\ntest matchchain::tests::invalid_indices_tags_and_cycles_terminate_without_returning_reused_nodes ... ok\ntest matchchain::tests::construction_bounds_allocation_and_accepts_the_documented_maximum ... ok\ntest matchchain::tests::dynamic_dimensions_initialize_exact_prefixes_and_accept_maximum_shape ... ok\n\ntest result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 493 filtered out; finished in 0.05s\n\n"
+    },
+    {
+      "name": "release-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--release",
+        "matchchain::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 22.537,
+      "log": "/tmp/zstdoxide-module11-chain-release-safe.log",
+      "sha256": "3c0b674bf3d6cbd3957e6287cfc66c4fa2932ec4e11f7493684b24994789b35e",
+      "passed": 23,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 23,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.02
+        }
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 22.06s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-target/release/build/zstdoxide/e1626a9536adb678/out/zstdoxide-e1626a9536adb678)\n\nrunning 23 tests\ntest matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes ... ok\ntest matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity ... ok\ntest matchchain::tests::deliberate_hash_collisions_remain_newest_first_unverified_candidates ... ok\ntest matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links ... ok\ntest matchchain::tests::custom_setup_failures_drop_each_partial_owner_and_validation_allocates_nothing ... ok\ntest matchchain::tests::copying_partial_seeds_preserves_independence_and_reuses_working_storage ... ok\ntest matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record ... ok\ntest matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone ... ok\ntest matchchain::tests::custom_chain_swaps_keep_all_four_allocator_owners_paired ... ok\ntest matchchain::tests::dynamic_full_visit_budget_counts_future_and_stale_links_exactly ... ok\ntest matchchain::tests::dynamic_key_width_mismatch_rejects_before_any_mutation ... ok\ntest matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing ... ok\ntest matchchain::tests::custom_distinct_domains_preserve_candidates_and_move_with_both_vectors ... ok\ntest matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order ... ok\ntest matchchain::tests::copying_wrapped_seeds_preserves_tags_and_both_replacement_policies ... ok\ntest matchchain::tests::custom_seed_copy_borrows_non_clone_allocator_and_never_adopts_source_storage ... ok\ntest matchchain::tests::full_width_coordinates_are_never_truncated_into_storage_indices ... ok\ntest matchchain::tests::invalid_indices_tags_and_cycles_terminate_without_returning_reused_nodes ... ok\ntest matchchain::tests::future_positions_consume_visits_instead_of_bypassing_the_budget ... ok\ntest matchchain::tests::reset_clears_every_link_and_tag_and_retains_both_allocations ... ok\ntest matchchain::tests::tag_exhaustion_fails_before_mutation_and_reset_permits_fresh_tags ... ok\ntest matchchain::tests::construction_bounds_allocation_and_accepts_the_documented_maximum ... ok\ntest matchchain::tests::dynamic_dimensions_initialize_exact_prefixes_and_accept_maximum_shape ... ok\n\ntest result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 518 filtered out; finished in 0.02s\n\n"
+    },
+    {
+      "name": "release-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--release",
+        "--all-features",
+        "matchchain::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 24.686,
+      "log": "/tmp/zstdoxide-module11-chain-release-all.log",
+      "sha256": "106ec5fdff20791f2bc018c6efc4f64f8c61578c931bbeecc7115bec83fb0f21",
+      "passed": 23,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 23,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.02
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 24.25s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-target/release/build/zstdoxide/8fca094558319608/out/zstdoxide-8fca094558319608)\n\nrunning 23 tests\ntest matchchain::tests::deliberate_hash_collisions_remain_newest_first_unverified_candidates ... ok\ntest matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes ... ok\ntest matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity ... ok\ntest matchchain::tests::custom_chain_swaps_keep_all_four_allocator_owners_paired ... ok\ntest matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record ... ok\ntest matchchain::tests::custom_setup_failures_drop_each_partial_owner_and_validation_allocates_nothing ... ok\ntest matchchain::tests::copying_partial_seeds_preserves_independence_and_reuses_working_storage ... ok\ntest matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone ... ok\ntest matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links ... ok\ntest matchchain::tests::dynamic_full_visit_budget_counts_future_and_stale_links_exactly ... ok\ntest matchchain::tests::custom_seed_copy_borrows_non_clone_allocator_and_never_adopts_source_storage ... ok\ntest matchchain::tests::custom_distinct_domains_preserve_candidates_and_move_with_both_vectors ... ok\ntest matchchain::tests::dynamic_key_width_mismatch_rejects_before_any_mutation ... ok\ntest matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing ... ok\ntest matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order ... ok\ntest matchchain::tests::full_width_coordinates_are_never_truncated_into_storage_indices ... ok\ntest matchchain::tests::invalid_indices_tags_and_cycles_terminate_without_returning_reused_nodes ... ok\ntest matchchain::tests::tag_exhaustion_fails_before_mutation_and_reset_permits_fresh_tags ... ok\ntest matchchain::tests::copying_wrapped_seeds_preserves_tags_and_both_replacement_policies ... ok\ntest matchchain::tests::future_positions_consume_visits_instead_of_bypassing_the_budget ... ok\ntest matchchain::tests::reset_clears_every_link_and_tag_and_retains_both_allocations ... ok\ntest matchchain::tests::construction_bounds_allocation_and_accepts_the_documented_maximum ... ok\ntest matchchain::tests::dynamic_dimensions_initialize_exact_prefixes_and_accept_maximum_shape ... ok\n\ntest result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 518 filtered out; finished in 0.02s\n\n"
+    },
+    {
+      "name": "baseline-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "match_search_defaults"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module11-chain-baseline-safe.log",
+      "sha256": "2dbb54b20cc95f2cc49ca005783910463ca0707afa4bf1cd14572c34808ba5b3",
+      "passed": 7,
+      "qualification": "Five primary baseline tests plus two support tests passed; the initial driver expected five and stopped on its own count assertion after cargo had exited successfully. The passing codec run was retained without repetition.",
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 14.02
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.57s\n     Running tests/match_search_defaults.rs (/tmp/zstdoxide-module11-chain-target/debug/build/zstdoxide/8e248037f9ed31d7/out/match_search_defaults-8e248037f9ed31d7)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.02s\n\n"
+    },
+    {
+      "name": "baseline-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--test",
+        "match_search_defaults"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 24.708,
+      "log": "/tmp/zstdoxide-module11-chain-baseline-all.log",
+      "sha256": "700f70cfb9e98bd77f51fdbc2bd8d7cbb85a5146b8cdb5e77304865c66ae5247",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 16.54
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.56s\n     Running tests/match_search_defaults.rs (/tmp/zstdoxide-module11-chain-target/debug/build/zstdoxide/037ece48e3eddc9f/out/match_search_defaults-037ece48e3eddc9f)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.54s\n\n"
+    },
+    {
+      "name": "nostd-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.423,
+      "log": "/tmp/zstdoxide-module11-chain-nostd-lib.log",
+      "sha256": "0522757c1314f5e74241dff53ec3ec4057392ed7ffc9adb5ac3d49ae7dc24061",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.35s\n"
+    },
+    {
+      "name": "nostd-all-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.313,
+      "log": "/tmp/zstdoxide-module11-chain-nostd-all-lib.log",
+      "sha256": "540999b955fc66b49b53cf00907732c9f352f48d79d38de628405610d97d784a",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.24s\n"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 8.668,
+      "log": "/tmp/zstdoxide-module11-chain-clippy.log",
+      "sha256": "986e5a5bf7ff7cc52ed65bb1040acc318cea0c6ee169b4feb3b52b75c79cd214",
+      "log_text": "    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.51s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/matchchain.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.078,
+      "log": "/tmp/zstdoxide-module11-chain-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/matchchain.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.019,
+      "log": "/tmp/zstdoxide-module11-chain-diff.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "miri": [
+    {
+      "name": "dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity",
+        "--",
+        "--exact",
+        "--test-threads=1"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-miri-target",
+        "CARGO_TERM_COLOR": "never",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 16.451,
+      "log": "/tmp/zstdoxide-module11-chain-miri-1.log",
+      "sha256": "77c5bd2d2f9a8d8b03b96af6d53a9bc55025f2c58f481d574a1db115826191d6",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.56
+        }
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.45s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-miri-target/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest matchchain::tests::dynamic_active_bounds_remain_checked_after_shrink_with_spare_capacity ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 1.56s\n\n"
+    },
+    {
+      "name": "dynamic_custom_reconfiguration_failure_preserves_every_logical_record",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record",
+        "--",
+        "--exact",
+        "--test-threads=1"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-miri-target",
+        "CARGO_TERM_COLOR": "never",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 4.759,
+      "log": "/tmp/zstdoxide-module11-chain-miri-2.log",
+      "sha256": "8a6dcbdf9af5f82f7292f92f7f7675584cdb4b23589af98a124194f5bc61c9e3",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 2.64
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-miri-target/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest matchchain::tests::dynamic_custom_reconfiguration_failure_preserves_every_logical_record ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 2.64s\n\n"
+    },
+    {
+      "name": "dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone",
+        "--",
+        "--exact",
+        "--test-threads=1"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-miri-target",
+        "CARGO_TERM_COLOR": "never",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 8.231,
+      "log": "/tmp/zstdoxide-module11-chain-miri-3.log",
+      "sha256": "2cc1501959feadf4bed7e9651224694081aa786fe2a2bd446f85f992ef1f1899",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 4.37
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-miri-target/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest matchchain::tests::dynamic_borrowed_owner_shrink_regrow_and_validation_do_not_allocate_or_clone ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 4.37s\n\n"
+    },
+    {
+      "name": "dynamic_seed_copy_checks_layout_and_active_heads_before_writing",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing",
+        "--",
+        "--exact",
+        "--test-threads=1"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-miri-target",
+        "CARGO_TERM_COLOR": "never",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 10.871,
+      "log": "/tmp/zstdoxide-module11-chain-miri-4.log",
+      "sha256": "943aa1d906afdf3711b9e4b8d7f140922a853af21dfa44520146184915159667",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 2.85
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-miri-target/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest matchchain::tests::dynamic_seed_copy_checks_layout_and_active_heads_before_writing ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 2.85s\n\n"
+    },
+    {
+      "name": "dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order",
+        "--",
+        "--exact",
+        "--test-threads=1"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-miri-target",
+        "CARGO_TERM_COLOR": "never",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 10.151,
+      "log": "/tmp/zstdoxide-module11-chain-miri-5.log",
+      "sha256": "fa36bfe869a0b42886631f17ab04b6747412c9dbfb52b0867a2e85b9b46b6de1",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 8.02
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-chain-miri-target/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest matchchain::tests::dynamic_tiny_seed_wrap_preserves_equal_and_larger_replacement_order ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 8.02s\n\n"
+    }
+  ],
+  "transient_diagnostics": [
+    {
+      "log": "/tmp/zstdoxide-module11-chain-concurrent-compile-failure.log",
+      "sha256": "575316a371331ad2d472050ce51551515600147607b6174e611d779465677c75",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "matchchain::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-chain-target"
+      },
+      "exit_code": 101,
+      "cause": "Concurrent MatchTable test migration had six compile errors; its owner fixed them before final validation. No MatchChain implementation error was reported.",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nerror[E0599]: no method named `unwrap` found for array `[u8; 4]` in the current scope\n   --> src/matchfinder.rs:171:54\n    |\n171 |         assert_eq!(table.replace(0_u32.to_le_bytes().unwrap(), 1), None);\n    |                                                      ^^^^^^\n    |\nhelp: there is a method `swap` with a similar name, but with different arguments\n   --> /Users/lanxingcan/.rustup/toolchains/nightly-2026-10-08-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/slice/mod.rs:910:5\n    |\n910 |     pub const fn swap(&mut self, a: usize, b: usize) {\n    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror[E0308]: mismatched types\n   --> src/matchfinder.rs:171:68\n    |\n171 |         assert_eq!(table.replace(0_u32.to_le_bytes().unwrap(), 1), None);\n    |                                                                    ^^^^ expected `Result<Option<usize>, Error>`, found `Option<_>`\n    |\n    = note: expected enum `std::result::Result<Option<usize>, error::Error>`\n               found enum `Option<_>`\nhelp: try wrapping the expression in `Ok`\n    |\n171 |         assert_eq!(table.replace(0_u32.to_le_bytes().unwrap(), 1), Ok(None));\n    |                                                                    +++    +\n\nerror[E0599]: no method named `unwrap` found for array `[u8; 4]` in the current scope\n   --> src/matchfinder.rs:172:64\n    |\n172 |         assert_eq!(table.replace(0x0e8b_2f51_u32.to_le_bytes().unwrap(), 5), Some(1));\n    |                                                                ^^^^^^\n    |\nhelp: there is a method `swap` with a similar name, but with different arguments\n   --> /Users/lanxingcan/.rustup/toolchains/nightly-2026-10-08-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/slice/mod.rs:910:5\n    |\n910 |     pub const fn swap(&mut self, a: usize, b: usize) {\n    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror[E0308]: mismatched types\n   --> src/matchfinder.rs:172:78\n    |\n172 |         assert_eq!(table.replace(0x0e8b_2f51_u32.to_le_bytes().unwrap(), 5), Some(1));\n    |                                                                              ^^^^^^^ expected `Result<Option<usize>, Error>`, found `Option<{integer}>`\n    |\n    = note: expected enum `std::result::Result<Option<usize>, error::Error>`\n               found enum `Option<{integer}>`\nhelp: try wrapping the expression in `Ok`\n    |\n172 |         assert_eq!(table.replace(0x0e8b_2f51_u32.to_le_bytes().unwrap(), 5), Ok(Some(1)));\n    |                                                                              +++       +\n\nerror[E0308]: mismatched types\n   --> src/matchfinder.rs:178:57\n    |\n178 |         assert_eq!(table.replace([255; 4], usize::MAX), None);\n    |                                                         ^^^^ expected `Result<Option<usize>, Error>`, found `Option<_>`\n    |\n    = note: expected enum `std::result::Result<Option<usize>, error::Error>`\n               found enum `Option<_>`\nhelp: try wrapping the expression in `Ok`\n    |\n178 |         assert_eq!(table.replace([255; 4], usize::MAX), Ok(None));\n    |                                                         +++    +\n\nerror[E0308]: mismatched types\n   --> src/matchfinder.rs:179:57\n    |\n179 |         assert_eq!(table.replace([255; 4], usize::MAX), None);\n    |                                                         ^^^^ expected `Result<Option<usize>, Error>`, found `Option<_>`\n    |\n    = note: expected enum `std::result::Result<Option<usize>, error::Error>`\n               found enum `Option<_>`\nhelp: try wrapping the expression in `Ok`\n    |\n179 |         assert_eq!(table.replace([255; 4], usize::MAX), Ok(None));\n    |                                                         +++    +\n\nSome errors have detailed explanations: E0308, E0599.\nFor more information about an error, try `rustc --explain E0308`.\nerror: could not compile `zstdoxide` (lib test) due to 6 previous errors\n"
+    },
+    {
+      "cause": "The driver initially expected five baseline tests, overlooking two included support tests. Cargo passed all seven. Only the count guard was corrected; the passing safe baseline was preserved without repetition.",
+      "passing_log": "/tmp/zstdoxide-module11-chain-baseline-safe.log"
+    }
+  ],
+  "qualification": [
+    "No new unsafe operations or feature were introduced; existing unsafe-match-chain proofs now cover dynamic initialized lengths and retained owners.",
+    "Miri executed five exact all-feature tests on the native host interpreter, not the maximum-size native campaigns; each passed 1 test with 0 failures or ignores.",
+    "No C process was invoked in this leaf checkpoint. Offline integration uses independently archived pre-change/C-validated baseline frames.",
+    "Test harness timings are validation durations, not performance measurements.",
+    "Source hashes were captured after the successful safe baseline and before the all-feature baseline and final lint run; parent and leaf owners confirmed these six integration files were frozen. They match the final files exactly."
+  ],
+  "summary": {
+    "leaf_configurations": 7,
+    "leaf_tests_per_configuration": 23,
+    "new_dynamic_tests": 8,
+    "existing_tests": 15,
+    "offline_default_configurations": 2,
+    "offline_default_tests_per_configuration": 7,
+    "offline_default_primary_tests": 5,
+    "offline_default_support_tests": 2,
+    "no_std_library_checks": 2,
+    "all_target_all_feature_strict_clippy": true,
+    "owned_file_format_and_diff": true,
+    "all_feature_strict_provenance_miri_tests": 5,
+    "running_sessions": []
+  },
+  "runners": {
+    "/tmp/zstdoxide-module11-chain-checks.py": "ba69029170f1020fd1780dab4e8ecc92bfb16616443a378650c5b98c22a95bf6",
+    "/tmp/zstdoxide-module11-chain-miri.py": "067c2c175de33f6e69f67f468d0cff1c2431d56f2240627f6edf56c3dfa89679"
+  },
+  "original_evidence_sha256": "162ec45fddb420ebc95b338343311afa56cec81476659cb4098cd6d35e4e1090",
+  "root_review": "Reviewed dynamic validation/reservation order, seed transfer, unchanged cyclic tagging, shared visit accounting and all access proofs; no findings. Integration identities unchanged before committing the checked leaf."
+}

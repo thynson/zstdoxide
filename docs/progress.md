@@ -429,3 +429,10 @@ check live initialized bounds before reading or writing. Fourteen leaf tests
 pass in six configurations; no_std, strict Clippy, release bounds and six narrow
 Miri checks pass. Safe/all default frames still match their original records.
 The public encoder continues using default dimensions until context integration.
+
+The bounded candidate chain now supports dynamic head/node shapes and up to
+64 examined links. Reconfiguration preserves complete logical state if either
+reservation fails, while each allocation keeps its exact owner. Twenty-three
+tests pass in seven configurations, five focused Miri checks pass, and safe/all
+default frames remain unchanged. Seed compatibility, tiny wrapped rings, stale
+links and initialized-length checks are covered before parser integration.
