@@ -17,4 +17,9 @@ pub enum CompressionStrategy {
     /// On 64-bit targets these allocations use 9 MiB plus 3 MiB for a seed;
     /// they are allocated only when used and remain reusable across resets.
     Chain,
+    /// Search up to sixteen candidates at the current and next byte positions.
+    ///
+    /// Delay a match by one literal only when the next match is longer by more
+    /// than one byte; ties keep the current match. Uses Chain's storage bounds.
+    Lazy,
 }

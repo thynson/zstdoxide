@@ -48,9 +48,16 @@ with `reset()` or validated `reset_with_options(options)`.
 
 Set `EncoderOptions::strategy` to `CompressionStrategy::Chain` to search up to
 eight candidates at each four-byte key. `Greedy` is the default and searches
-one candidate. Both strategies share entropy coding, dictionary/window checks,
+one candidate. All strategies share entropy coding, dictionary/window checks,
 and the same 128 KiB retained-output horizon. These policies are independent
 of upstream numeric compression levels.
+
+`CompressionStrategy::Lazy` uses the same bounded chain storage and probes one
+byte ahead, with sixteen candidate visits at each position. It delays only if
+the next match is longer than the current match plus one byte, accounting for
+the extra literal. Ties keep the current match. It can improve ambiguous
+matches at the cost of additional source comparisons; it does not guarantee a
+smaller frame for every input.
 
 Chain's heads and nodes occupy 9 MiB on 64-bit targets; dictionary preparation
 uses another 3 MiB seed allocation containing at most 65,536 positions.

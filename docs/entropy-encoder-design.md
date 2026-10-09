@@ -305,8 +305,7 @@ compression ratio, but bounded seed retention remains a search limitation.
 
 The public `CompressionStrategy` value is selected through
 `EncoderOptions::strategy`; Greedy remains the default for streaming and
-one-shot helpers. Chain becomes available when its complete source integration
-is verified, and Lazy is added after its lookahead checkpoint. Reset retains
+one-shot helpers. Chain and Lazy use the same checked source integration. Reset retains
 the strategy; `reset_with_options` may change it for the next frame. Previously
 allocated storage remains counted and reusable when switching policies.
 On 64-bit targets the working chain owns 9 MiB and its optional dictionary seed
@@ -322,6 +321,17 @@ every subsequent match still enforces `candidate_position < match_start`.
 Dictionary eligibility is evaluated at the actual chosen match start, including
 the exact `position == window` boundary. Source advancement, inserted positions,
 and trailing literals must cover the input exactly once.
+
+Lazy searches the current and next positions with sixteen visits each. It
+inserts the current position before probing the next, enabling distance-one
+overlap, but leaves the next uninserted until selection. It delays only when
+`next_length > current_length + 1`; ties keep the current match. A full-tail
+match skips lookahead. Both choices insert every consumed valid key once.
+The constructed dictionary witness produces frames of 369 bytes with Chain
+and 279 bytes with Lazy on the initial public integration, a reduction of
+about 24.4%. This finite witness demonstrates a benefit, not a general ratio
+guarantee; fixed frame overhead reduces the percentage compared with the
+private parser's complete literal/sequence payload comparison.
 
 `unsafe-match-chain` independently selects head/node access. It does not replace
 the existing `unsafe-match-table` backend. Validate hash, node index, initialized

@@ -72,7 +72,6 @@ pub(crate) fn parse_chain(
 /// each probe's actual position and never change entropy or repeat state here.
 /// Source verification, preflight validation and partial-error behavior follow
 /// `parse_chain`. The caller remains responsible for actual window eligibility.
-#[cfg(test)]
 pub(crate) fn parse_lazy(
     input: &[u8],
     table: &mut MatchChain,

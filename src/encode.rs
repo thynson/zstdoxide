@@ -4,7 +4,7 @@ use alloc::vec::Vec;
 
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
-use crate::match_parse::parse_chain;
+use crate::match_parse::{parse_chain, parse_lazy};
 use crate::matchchain::MatchChain;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
@@ -149,7 +149,7 @@ impl BlockEncoder {
                         seed.replace(word_at(content, position), position);
                     }
                 }
-                CompressionStrategy::Chain => {
+                CompressionStrategy::Chain | CompressionStrategy::Lazy => {
                     let seed = match self.chain_seed.as_mut() {
                         Some(seed) => seed,
                         None => self.chain_seed.insert(MatchChain::new(CHAIN_SEED_NODES)?),
@@ -351,7 +351,7 @@ impl BlockEncoder {
                     &mut self.sequences,
                 )?;
             }
-            CompressionStrategy::Chain => {
+            CompressionStrategy::Chain | CompressionStrategy::Lazy => {
                 let table = match self.chain.as_mut() {
                     Some(table) => table,
                     None => self.chain.insert(MatchChain::new(CHAIN_NODES)?),
@@ -360,6 +360,7 @@ impl BlockEncoder {
                     &source,
                     table,
                     self.chain_seed.as_ref(),
+                    self.strategy,
                     &mut self.literals,
                     &mut self.sequences,
                 )?;
@@ -465,6 +466,7 @@ fn parse_seeded_chain(
     source: &MatchSource<'_>,
     chain: &mut MatchChain,
     seed: Option<&MatchChain>,
+    strategy: CompressionStrategy,
     literals: &mut Vec<u8>,
     sequences: &mut Vec<LogicalSequence>,
 ) -> Result<()> {
@@ -487,26 +489,28 @@ fn parse_seeded_chain(
             .ok_or(Error::ResourceLimit)?;
         chain.insert(source.output_word(position)?, virtual_position as u64)?;
     }
-    parse_chain(
-        source.block,
-        chain,
-        source.virtual_position(0)? as u64,
-        8,
-        |previous, position| {
-            let previous = usize::try_from(previous).map_err(|_| Error::ResourceLimit)?;
-            source
-                .find_match(previous, position)?
-                .map(|(distance, length)| {
-                    Ok((
-                        u32::try_from(distance).map_err(|_| Error::ResourceLimit)?,
-                        u32::try_from(length).map_err(|_| Error::ResourceLimit)?,
-                    ))
-                })
-                .transpose()
-        },
-        literals,
-        sequences,
-    )
+    let resolve = |previous, position| {
+        let previous = usize::try_from(previous).map_err(|_| Error::ResourceLimit)?;
+        source
+            .find_match(previous, position)?
+            .map(|(distance, length)| {
+                Ok((
+                    u32::try_from(distance).map_err(|_| Error::ResourceLimit)?,
+                    u32::try_from(length).map_err(|_| Error::ResourceLimit)?,
+                ))
+            })
+            .transpose()
+    };
+    let base = source.virtual_position(0)? as u64;
+    match strategy {
+        CompressionStrategy::Chain => {
+            parse_chain(source.block, chain, base, 8, resolve, literals, sequences)
+        }
+        CompressionStrategy::Lazy => {
+            parse_lazy(source.block, chain, base, resolve, literals, sequences)
+        }
+        CompressionStrategy::Greedy => Err(Error::InvalidState),
+    }
 }
 
 /// A temporary indexed view of dictionary content, retained output, and input.
