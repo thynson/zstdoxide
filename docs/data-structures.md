@@ -579,3 +579,19 @@ Construction moves complete owners and resets the table once for the borrowed
 source. This composite adds no unsafe representation; table access retains its
 existing individual feature. The later frame emitter requests the next block
 only after publishing the previous block and drops both owners on any error.
+
+`FastEncoderWorkspace<'a, A>` will compose that sampled state with the existing
+`BlockEntropyEncoder<A>` and an emitted-source cursor plus failure/final flags.
+The original allocator belongs to the returned output. After admission and the
+complete raw-frame reservation, fresh clones construct the table, literal and
+intent vectors, literal encoder and sequence encoder; the final workspace
+factory moves into the payload vector. No named tables, chain, source copy or
+ring are built. Empty input needs only its header and final empty raw block.
+For nonempty blocks the wrapper parses before selecting raw/RLE/compressed,
+uses the committed entropy repeat triple, and reserves the complete selected
+block before appending. Only compressed emission commits candidate entropy;
+raw/RLE emission retains search writes but discards candidates. Tiny blocks
+bypass entropy and RLE, and nonfirst uniform blocks use the reference's
+effective candidate-size-below-25 RLE gate. Internal failures invalidate the
+private wrapper; preflight argument errors leave it usable. These composite
+roles introduce no unsafe backend beyond their individually gated children.
