@@ -1,0 +1,138 @@
+{
+  "scope": "Formatting repair only; all string literals retain exact order and bytes. No benchmark rerun or new measurement.",
+  "path": "benches/allocators.rs",
+  "before_sha256": "9d7e7a2244b2d190d8ead52bdd9f35c1cf861a3299c117de94a1bbfd14dca448",
+  "after_sha256": "0034e49471d467cbfafb6c57396b8f99ce172a0d78f6b197155bdc7ef53875b6",
+  "string_literal_sequence_identical": true,
+  "initial_matrix_revision": "e8c2015",
+  "initial_matrix_records": {
+    "external_input_hashes": {
+      "/tmp/zstdoxize-upstream-1.5.7/programs/zstd": "eb20e7f4cb5c93836d7b1a8508dad08d1ced73762ca8f8abb9d8dc1e5df7b5b2",
+      "/tmp/zstdoxide-parameter-review-probe.tsv": "1daaa8df582812c61035873d325b1af347c69cbafd5ae93869a770dbd0a5c671"
+    },
+    "revision": "e8c2015840c9fb8c415abcc3916868c43302fcea",
+    "source_root": "/tmp/zstdoxide-module10-final-e8c2015/source",
+    "source_archive_sha256": "a7d62a1c243bd894a6d1a76d1e86a200e2c41624a0f37993af91d4a7b156b17f",
+    "tracked_file_count": 676,
+    "environment": {
+      "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-final-e8c2015/target",
+      "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+      "CARGO_TERM_COLOR": "never",
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+      "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+      "ZSTDOXIDE_PARAMETER_REVIEW_PROBE": "/tmp/zstdoxide-parameter-review-probe.tsv"
+    },
+    "commands": [
+      {
+        "name": "compiler",
+        "command": [
+          "rustc",
+          "--version",
+          "--verbose"
+        ],
+        "kind": "check",
+        "expected_exit_code": 0,
+        "exit_code": 0,
+        "seconds": 0.329,
+        "log": "/tmp/zstdoxide-module10-final-e8c2015/compiler.log",
+        "sha256": "a4bb13dccabda9ebf5294b8144f22400733afc06744ab8062bcf43b7254e0c03",
+        "test_results": [],
+        "test_totals": {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        "source_changed": []
+      },
+      {
+        "name": "official-version",
+        "command": [
+          "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+          "--version"
+        ],
+        "kind": "check",
+        "expected_exit_code": 0,
+        "exit_code": 0,
+        "seconds": 0.077,
+        "log": "/tmp/zstdoxide-module10-final-e8c2015/official-version.log",
+        "sha256": "f6d344e585f9a9ceb9500ff65355ce23bcc39dec9e4164aceab9da0a5ac3113e",
+        "test_results": [],
+        "test_totals": {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        "source_changed": []
+      },
+      {
+        "name": "format",
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "kind": "check",
+        "expected_exit_code": 0,
+        "exit_code": 1,
+        "seconds": 0.953,
+        "log": "/tmp/zstdoxide-module10-final-e8c2015/format.log",
+        "sha256": "4d94c9ef711ca6bc0e6d02d894f4b5a9315eaab6dcaf5ae920088579865052d8",
+        "test_results": [],
+        "test_totals": {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        "source_changed": []
+      }
+    ],
+    "complete": false
+  },
+  "format_failure_log": "Diff in /private/tmp/zstdoxide-module10-final-e8c2015/source/benches/allocators.rs:638:\n         return \"null\".to_owned();\n     };\n     format!(\n-        concat!(\"{{\\\"allocate_calls\\\":{},\\\"allocate_zeroed_calls\\\":{},\\\"grow_calls\\\":{},\",\n-        \"\\\"grow_zeroed_calls\\\":{},\\\"shrink_calls\\\":{},\\\"deallocate_calls\\\":{},\",\n-        \"\\\"attempts\\\":{},\\\"successes\\\":{},\\\"failures\\\":{},\\\"zero_size_requests\\\":{},\",\n-        \"\\\"requested_bytes\\\":{},\\\"live_blocks\\\":{},\\\"peak_live_blocks\\\":{},\",\n-        \"\\\"live_requested_bytes\\\":{},\\\"peak_requested_bytes\\\":{},\\\"live_bytes\\\":{},\",\n-        \"\\\"peak_bytes\\\":{},\\\"identities_created\\\":{},\\\"owners_dropped\\\":{},\\\"violations\\\":false}}\"),\n+        concat!(\n+            \"{{\\\"allocate_calls\\\":{},\\\"allocate_zeroed_calls\\\":{},\\\"grow_calls\\\":{},\",\n+            \"\\\"grow_zeroed_calls\\\":{},\\\"shrink_calls\\\":{},\\\"deallocate_calls\\\":{},\",\n+            \"\\\"attempts\\\":{},\\\"successes\\\":{},\\\"failures\\\":{},\\\"zero_size_requests\\\":{},\",\n+            \"\\\"requested_bytes\\\":{},\\\"live_blocks\\\":{},\\\"peak_live_blocks\\\":{},\",\n+            \"\\\"live_requested_bytes\\\":{},\\\"peak_requested_bytes\\\":{},\\\"live_bytes\\\":{},\",\n+            \"\\\"peak_bytes\\\":{},\\\"identities_created\\\":{},\\\"owners_dropped\\\":{},\\\"violations\\\":false}}\"\n+        ),\n         s.allocate_calls,\n         s.allocate_zeroed_calls,\n         s.grow_calls,\nDiff in /private/tmp/zstdoxide-module10-final-e8c2015/source/benches/allocators.rs:694:\n         } else {\n             values[middle]\n         };\n-        format!(\"{{\\\"median_ns_per_byte\\\":{median},\\\"minimum_ns_per_byte\\\":{},\\\"maximum_ns_per_byte\\\":{}}}\", values[0], values[values.len()-1])\n+        format!(\n+            \"{{\\\"median_ns_per_byte\\\":{median},\\\"minimum_ns_per_byte\\\":{},\\\"maximum_ns_per_byte\\\":{}}}\",\n+            values[0],\n+            values[values.len() - 1]\n+        )\n     };\n     let samples_json = samples\n         .iter()\nDiff in /private/tmp/zstdoxide-module10-final-e8c2015/source/benches/allocators.rs:706:\n         })\n         .collect::<Vec<_>>()\n         .join(\",\");\n-    println!(concat!(\"{{\\\"record\\\":\\\"case\\\",\\\"case\\\":\\\"{}\\\",\\\"allocator\\\":\\\"{}\\\",\\\"mode\\\":\\\"{}\\\",\",\n-        \"\\\"timing_scope\\\":\\\"{}\\\",\\\"unit\\\":\\\"{}\\\",\\\"input_bytes\\\":{},\\\"input_fnv1a64\\\":\\\"{:016x}\\\",\\\"source_bytes\\\":{},\\\"source_fnv1a64\\\":\\\"{:016x}\\\",\",\n-        \"\\\"dictionary_bytes\\\":{},\\\"dictionary_fnv1a64\\\":\\\"{:016x}\\\",\\\"output_bytes\\\":{},\\\"output_fnv1a64\\\":\\\"{:016x}\\\",\",\n-        \"\\\"retained_scope\\\":\\\"{}\\\",\\\"cold_capacity\\\":{},\\\"reset_capacity\\\":{},\",\n-        \"\\\"allocation_survey\\\":{{\\\"before\\\":{},\\\"cold\\\":{},\\\"reset\\\":{},\\\"final_drop\\\":{}}},\",\n-        \"\\\"samples\\\":[{}],\\\"timing\\\":{}}}\"),\n-        case.name(),mode,if settings.smoke {\"smoke\"} else {\"timed\"},\n-        if case.streaming() {\"warm_reset_process\"} else {\"fresh_allocate_drop\"},\n-        case.unit(),case.input(corpus).len(),fingerprint(case.input(corpus)),units,fingerprint(case.source(corpus)),case.dictionary_bytes().len(),fingerprint(case.dictionary_bytes()),expected.len(),fingerprint(expected),\n-        case.retained_scope(),optional(survey.cold_capacity),optional(survey.reset_capacity),\n-        snapshot_json(survey.before),snapshot_json(survey.cold),snapshot_json(survey.reset),snapshot_json(survey.final_drop),samples_json,stats);\n+    println!(\n+        concat!(\n+            \"{{\\\"record\\\":\\\"case\\\",\\\"case\\\":\\\"{}\\\",\\\"allocator\\\":\\\"{}\\\",\\\"mode\\\":\\\"{}\\\",\",\n+            \"\\\"timing_scope\\\":\\\"{}\\\",\\\"unit\\\":\\\"{}\\\",\\\"input_bytes\\\":{},\\\"input_fnv1a64\\\":\\\"{:016x}\\\",\\\"source_bytes\\\":{},\\\"source_fnv1a64\\\":\\\"{:016x}\\\",\",\n+            \"\\\"dictionary_bytes\\\":{},\\\"dictionary_fnv1a64\\\":\\\"{:016x}\\\",\\\"output_bytes\\\":{},\\\"output_fnv1a64\\\":\\\"{:016x}\\\",\",\n+            \"\\\"retained_scope\\\":\\\"{}\\\",\\\"cold_capacity\\\":{},\\\"reset_capacity\\\":{},\",\n+            \"\\\"allocation_survey\\\":{{\\\"before\\\":{},\\\"cold\\\":{},\\\"reset\\\":{},\\\"final_drop\\\":{}}},\",\n+            \"\\\"samples\\\":[{}],\\\"timing\\\":{}}}\"\n+        ),\n+        case.name(),\n+        mode,\n+        if settings.smoke { \"smoke\" } else { \"timed\" },\n+        if case.streaming() {\n+            \"warm_reset_process\"\n+        } else {\n+            \"fresh_allocate_drop\"\n+        },\n+        case.unit(),\n+        case.input(corpus).len(),\n+        fingerprint(case.input(corpus)),\n+        units,\n+        fingerprint(case.source(corpus)),\n+        case.dictionary_bytes().len(),\n+        fingerprint(case.dictionary_bytes()),\n+        expected.len(),\n+        fingerprint(expected),\n+        case.retained_scope(),\n+        optional(survey.cold_capacity),\n+        optional(survey.reset_capacity),\n+        snapshot_json(survey.before),\n+        snapshot_json(survey.cold),\n+        snapshot_json(survey.reset),\n+        snapshot_json(survey.final_drop),\n+        samples_json,\n+        stats\n+    );\n }\n \n fn main() {\nDiff in /private/tmp/zstdoxide-module10-final-e8c2015/source/benches/allocators.rs:726:\n         .filter_map(|(name, enabled)| enabled.then_some(*name))\n         .collect::<Vec<_>>()\n         .join(\",\");\n-    println!(\"{{\\\"record\\\":\\\"metadata\\\",\\\"schema_version\\\":1,\\\"features\\\":\\\"{}\\\",\\\"seed\\\":\\\"{SEED:016x}\\\",\\\"samples\\\":{},\\\"minimum_sample_ms\\\":{},\\\"ledger_slots\\\":{LEDGER_SLOTS},\\\"source_size\\\":{SOURCE_SIZE},\\\"training_samples\\\":64,\\\"training_sample_bytes\\\":512,\\\"dictionary_size_cap\\\":2048,\\\"training_segment_size\\\":64}}\",\n-        if features.is_empty() {\"safe\"} else {&features},settings.samples,settings.duration.as_millis());\n+    println!(\n+        \"{{\\\"record\\\":\\\"metadata\\\",\\\"schema_version\\\":1,\\\"features\\\":\\\"{}\\\",\\\"seed\\\":\\\"{SEED:016x}\\\",\\\"samples\\\":{},\\\"minimum_sample_ms\\\":{},\\\"ledger_slots\\\":{LEDGER_SLOTS},\\\"source_size\\\":{SOURCE_SIZE},\\\"training_samples\\\":64,\\\"training_sample_bytes\\\":512,\\\"dictionary_size_cap\\\":2048,\\\"training_segment_size\\\":64}}\",\n+        if features.is_empty() {\n+            \"safe\"\n+        } else {\n+            &features\n+        },\n+        settings.samples,\n+        settings.duration.as_millis()\n+    );\n     let corpus = Corpus::new();\n     for case in CASES {\n         let expected = reference(case, &corpus);\n",
+  "repair_checks": [
+    {
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "benches/allocators.rs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "output": "Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nFinished `dev` profile [unoptimized + debuginfo] target(s) in 1.57s"
+    }
+  ]
+}

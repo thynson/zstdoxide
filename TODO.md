@@ -40,6 +40,7 @@ after oracle capture; each completed item receives its own verified commit.
 - [x] Port matching official encoder lifecycle assertions and independent C checks while preserving default output fingerprints.
 - [x] Update the official source/case inventory with precise scalar and lifecycle coverage, retaining blocked numeric execution and other missing contracts.
 - [x] Validate scalar inspection on 32-bit and big-endian interpreted targets, and compile the no_std library for a target without pointer atomics.
+- [x] Repair the allocator benchmark formatting found by the integrated matrix and verify the benchmark target before restarting the snapshot checks.
 - [ ] Run the complete safe/individual/all-feature, no_std, Clippy, formatting and oracle matrix; record precise completion and remaining gaps.
 
 ## Roadmap

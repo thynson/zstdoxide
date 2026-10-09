@@ -245,3 +245,16 @@ Both external corpus records remain partial. The
 [inventory evidence](evidence/2026-10-09-parameter-migration-inventory.json)
 preserves all changed mappings, commands and full audit logs. Passing catalog
 integrity is not a claim that the complete-migration gate passes.
+
+## Integrated formatting repair
+
+The first isolated matrix attempt at `e8c2015` stopped at formatting before
+running tests. It found macro-layout differences in `benches/allocators.rs`,
+whose benchmark checkpoint followed the earlier Module 9 codec snapshot.
+Applying the pinned rustfmt to that file resolves the check; complete crate
+formatting and strict all-feature Clippy for the benchmark target pass. Every
+string literal remains byte-identical and in the same order. No benchmark was
+rerun and historical measurements retain their original source hashes.
+[Repair evidence](evidence/2026-10-09-benchmark-format-repair.json) preserves the
+initial failed matrix record, full formatting diagnostic and focused repair
+checks. The complete matrix restarts from the subsequent committed snapshot.

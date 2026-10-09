@@ -638,12 +638,14 @@ fn snapshot_json(snapshot: Option<AllocationSnapshot>) -> String {
         return "null".to_owned();
     };
     format!(
-        concat!("{{\"allocate_calls\":{},\"allocate_zeroed_calls\":{},\"grow_calls\":{},",
-        "\"grow_zeroed_calls\":{},\"shrink_calls\":{},\"deallocate_calls\":{},",
-        "\"attempts\":{},\"successes\":{},\"failures\":{},\"zero_size_requests\":{},",
-        "\"requested_bytes\":{},\"live_blocks\":{},\"peak_live_blocks\":{},",
-        "\"live_requested_bytes\":{},\"peak_requested_bytes\":{},\"live_bytes\":{},",
-        "\"peak_bytes\":{},\"identities_created\":{},\"owners_dropped\":{},\"violations\":false}}"),
+        concat!(
+            "{{\"allocate_calls\":{},\"allocate_zeroed_calls\":{},\"grow_calls\":{},",
+            "\"grow_zeroed_calls\":{},\"shrink_calls\":{},\"deallocate_calls\":{},",
+            "\"attempts\":{},\"successes\":{},\"failures\":{},\"zero_size_requests\":{},",
+            "\"requested_bytes\":{},\"live_blocks\":{},\"peak_live_blocks\":{},",
+            "\"live_requested_bytes\":{},\"peak_requested_bytes\":{},\"live_bytes\":{},",
+            "\"peak_bytes\":{},\"identities_created\":{},\"owners_dropped\":{},\"violations\":false}}"
+        ),
         s.allocate_calls,
         s.allocate_zeroed_calls,
         s.grow_calls,
@@ -694,7 +696,11 @@ fn print_row(
         } else {
             values[middle]
         };
-        format!("{{\"median_ns_per_byte\":{median},\"minimum_ns_per_byte\":{},\"maximum_ns_per_byte\":{}}}", values[0], values[values.len()-1])
+        format!(
+            "{{\"median_ns_per_byte\":{median},\"minimum_ns_per_byte\":{},\"maximum_ns_per_byte\":{}}}",
+            values[0],
+            values[values.len() - 1]
+        )
     };
     let samples_json = samples
         .iter()
@@ -706,17 +712,42 @@ fn print_row(
         })
         .collect::<Vec<_>>()
         .join(",");
-    println!(concat!("{{\"record\":\"case\",\"case\":\"{}\",\"allocator\":\"{}\",\"mode\":\"{}\",",
-        "\"timing_scope\":\"{}\",\"unit\":\"{}\",\"input_bytes\":{},\"input_fnv1a64\":\"{:016x}\",\"source_bytes\":{},\"source_fnv1a64\":\"{:016x}\",",
-        "\"dictionary_bytes\":{},\"dictionary_fnv1a64\":\"{:016x}\",\"output_bytes\":{},\"output_fnv1a64\":\"{:016x}\",",
-        "\"retained_scope\":\"{}\",\"cold_capacity\":{},\"reset_capacity\":{},",
-        "\"allocation_survey\":{{\"before\":{},\"cold\":{},\"reset\":{},\"final_drop\":{}}},",
-        "\"samples\":[{}],\"timing\":{}}}"),
-        case.name(),mode,if settings.smoke {"smoke"} else {"timed"},
-        if case.streaming() {"warm_reset_process"} else {"fresh_allocate_drop"},
-        case.unit(),case.input(corpus).len(),fingerprint(case.input(corpus)),units,fingerprint(case.source(corpus)),case.dictionary_bytes().len(),fingerprint(case.dictionary_bytes()),expected.len(),fingerprint(expected),
-        case.retained_scope(),optional(survey.cold_capacity),optional(survey.reset_capacity),
-        snapshot_json(survey.before),snapshot_json(survey.cold),snapshot_json(survey.reset),snapshot_json(survey.final_drop),samples_json,stats);
+    println!(
+        concat!(
+            "{{\"record\":\"case\",\"case\":\"{}\",\"allocator\":\"{}\",\"mode\":\"{}\",",
+            "\"timing_scope\":\"{}\",\"unit\":\"{}\",\"input_bytes\":{},\"input_fnv1a64\":\"{:016x}\",\"source_bytes\":{},\"source_fnv1a64\":\"{:016x}\",",
+            "\"dictionary_bytes\":{},\"dictionary_fnv1a64\":\"{:016x}\",\"output_bytes\":{},\"output_fnv1a64\":\"{:016x}\",",
+            "\"retained_scope\":\"{}\",\"cold_capacity\":{},\"reset_capacity\":{},",
+            "\"allocation_survey\":{{\"before\":{},\"cold\":{},\"reset\":{},\"final_drop\":{}}},",
+            "\"samples\":[{}],\"timing\":{}}}"
+        ),
+        case.name(),
+        mode,
+        if settings.smoke { "smoke" } else { "timed" },
+        if case.streaming() {
+            "warm_reset_process"
+        } else {
+            "fresh_allocate_drop"
+        },
+        case.unit(),
+        case.input(corpus).len(),
+        fingerprint(case.input(corpus)),
+        units,
+        fingerprint(case.source(corpus)),
+        case.dictionary_bytes().len(),
+        fingerprint(case.dictionary_bytes()),
+        expected.len(),
+        fingerprint(expected),
+        case.retained_scope(),
+        optional(survey.cold_capacity),
+        optional(survey.reset_capacity),
+        snapshot_json(survey.before),
+        snapshot_json(survey.cold),
+        snapshot_json(survey.reset),
+        snapshot_json(survey.final_drop),
+        samples_json,
+        stats
+    );
 }
 
 fn main() {
@@ -726,8 +757,16 @@ fn main() {
         .filter_map(|(name, enabled)| enabled.then_some(*name))
         .collect::<Vec<_>>()
         .join(",");
-    println!("{{\"record\":\"metadata\",\"schema_version\":1,\"features\":\"{}\",\"seed\":\"{SEED:016x}\",\"samples\":{},\"minimum_sample_ms\":{},\"ledger_slots\":{LEDGER_SLOTS},\"source_size\":{SOURCE_SIZE},\"training_samples\":64,\"training_sample_bytes\":512,\"dictionary_size_cap\":2048,\"training_segment_size\":64}}",
-        if features.is_empty() {"safe"} else {&features},settings.samples,settings.duration.as_millis());
+    println!(
+        "{{\"record\":\"metadata\",\"schema_version\":1,\"features\":\"{}\",\"seed\":\"{SEED:016x}\",\"samples\":{},\"minimum_sample_ms\":{},\"ledger_slots\":{LEDGER_SLOTS},\"source_size\":{SOURCE_SIZE},\"training_samples\":64,\"training_sample_bytes\":512,\"dictionary_size_cap\":2048,\"training_segment_size\":64}}",
+        if features.is_empty() {
+            "safe"
+        } else {
+            &features
+        },
+        settings.samples,
+        settings.duration.as_millis()
+    );
     let corpus = Corpus::new();
     for case in CASES {
         let expected = reference(case, &corpus);
