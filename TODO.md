@@ -47,7 +47,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [ ] Add allocator-aware dictionary decoding collection with independent output ownership and complete scratch cleanup.
 - [x] Parameterize greedy match tables and seed copies with allocator-independent source storage and identical safe/unsafe candidates.
 - [x] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
-- [ ] Parameterize chain/lazy parser table and output storage while preserving resolver and ordering contracts.
+- [x] Parameterize chain/lazy parser table and output storage while preserving resolver and ordering contracts.
 - [ ] Expose allocator-aware block encoding with dictionary handles and transactional entropy publication.
 - [ ] Expose allocator-aware stream encoding and one-shot output without allocator-changing copies.
 - [x] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.

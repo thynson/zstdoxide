@@ -1,6 +1,7 @@
 //! Bounded greedy and one-byte lazy selection from indexed match candidates.
 
 use alloc::vec::Vec;
+use core::alloc::Allocator;
 
 use crate::frame::MAX_BLOCK_SIZE;
 use crate::matchchain::MatchChain;
@@ -36,14 +37,16 @@ struct ParsePolicy {
 /// changing outputs or table state. Output reservations are fallible and precede
 /// clearing logical contents. A resolver or insertion failure may leave partial
 /// scratch output and table state; the caller must discard that failed parse.
-pub(crate) fn parse_chain(
+/// Chain, literal, and sequence storage may use independent allocators. No
+/// allocator clone or ownership transfer is needed for these borrowed owners.
+pub(crate) fn parse_chain<A: Allocator, L: Allocator, S: Allocator>(
     input: &[u8],
-    table: &mut MatchChain,
+    table: &mut MatchChain<A>,
     virtual_base: u64,
     budget: usize,
     resolve: impl FnMut(u64, usize) -> Result<Option<(u32, u32)>>,
-    literals: &mut Vec<u8>,
-    sequences: &mut Vec<LogicalSequence>,
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<LogicalSequence, S>,
 ) -> Result<()> {
     parse(
         input,
@@ -72,13 +75,13 @@ pub(crate) fn parse_chain(
 /// each probe's actual position and never change entropy or repeat state here.
 /// Source verification, preflight validation and partial-error behavior follow
 /// `parse_chain`. The caller remains responsible for actual window eligibility.
-pub(crate) fn parse_lazy(
+pub(crate) fn parse_lazy<A: Allocator, L: Allocator, S: Allocator>(
     input: &[u8],
-    table: &mut MatchChain,
+    table: &mut MatchChain<A>,
     virtual_base: u64,
     resolve: impl FnMut(u64, usize) -> Result<Option<(u32, u32)>>,
-    literals: &mut Vec<u8>,
-    sequences: &mut Vec<LogicalSequence>,
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<LogicalSequence, S>,
 ) -> Result<()> {
     parse(
         input,
@@ -94,14 +97,14 @@ pub(crate) fn parse_lazy(
     )
 }
 
-fn parse(
+fn parse<A: Allocator, L: Allocator, S: Allocator>(
     input: &[u8],
-    table: &mut MatchChain,
+    table: &mut MatchChain<A>,
     virtual_base: u64,
     policy: ParsePolicy,
     mut resolve: impl FnMut(u64, usize) -> Result<Option<(u32, u32)>>,
-    literals: &mut Vec<u8>,
-    sequences: &mut Vec<LogicalSequence>,
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<LogicalSequence, S>,
 ) -> Result<()> {
     if input.len() > MAX_BLOCK_SIZE {
         return Err(Error::ResourceLimit);
@@ -161,7 +164,11 @@ fn parse(
             }
         }
         if let Some((distance, length)) = best {
-            literals.extend_from_slice(&input[literal_start..match_start]);
+            // Complete input capacity was reserved before clearing either
+            // output; initialized literal pushes cannot request another block.
+            for &byte in &input[literal_start..match_start] {
+                literals.push(byte);
+            }
             sequences.push(LogicalSequence {
                 literal_length: (match_start - literal_start) as u32,
                 match_length: length,
@@ -181,13 +188,15 @@ fn parse(
             position += 1;
         }
     }
-    literals.extend_from_slice(&input[literal_start..]);
+    for &byte in &input[literal_start..] {
+        literals.push(byte);
+    }
     Ok(())
 }
 
-fn find_best(
+fn find_best<A: Allocator>(
     input: &[u8],
-    table: &MatchChain,
+    table: &MatchChain<A>,
     virtual_base: u64,
     position: usize,
     budget: usize,
@@ -227,6 +236,353 @@ fn word_at(input: &[u8], position: usize) -> [u8; 4] {
 mod tests {
     use super::*;
     use alloc::vec;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 8,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    // The bounds intentionally omit Clone for every borrowed owner. Resolver
+    // traces and fixture bytes are test infrastructure outside those domains.
+    fn parse_traced<A: Allocator, L: Allocator, S: Allocator>(
+        prefix: &[u8],
+        input: &[u8],
+        lazy: bool,
+        table: &mut MatchChain<A>,
+        outputs: (&mut Vec<u8, L>, &mut Vec<LogicalSequence, S>),
+        trace: &mut Vec<(u64, usize)>,
+        fail_at: Option<usize>,
+    ) -> Result<()> {
+        let resolve = |previous, position| {
+            trace.push((previous, position));
+            if fail_at == Some(position) {
+                return Err(Error::InvalidDictionary);
+            }
+            resolve_bytes(prefix, input, previous, position)
+        };
+        if lazy {
+            parse_lazy(
+                input,
+                table,
+                prefix.len() as u64,
+                resolve,
+                outputs.0,
+                outputs.1,
+            )
+        } else {
+            parse_chain(
+                input,
+                table,
+                prefix.len() as u64,
+                8,
+                resolve,
+                outputs.0,
+                outputs.1,
+            )
+        }
+    }
+
+    #[test]
+    fn allocator_independent_nonclone_outputs_preserve_candidates_traces_and_bytes() {
+        let prefix = b"Xabc!abcdEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let input = b"XabcdEFGHIJKLMNOPQRSTUVWXYZ0123456789!tail";
+        for lazy in [false, true] {
+            let chain_owner = allocator().into_non_clone();
+            let chain_monitor = chain_owner.monitor();
+            let mut chain = MatchChain::new_in(128, &chain_owner).unwrap();
+            seed_prefix(&mut chain, prefix, input);
+            let chain_before = chain_monitor.snapshot();
+            let literal_owner = allocator();
+            let literal_monitor = literal_owner.monitor();
+            let sequence_owner = allocator().into_non_clone();
+            let sequence_monitor = sequence_owner.monitor();
+            let mut literals = Vec::new_in(literal_owner);
+            let mut sequences = Vec::new_in(sequence_owner);
+            let mut custom_trace = Vec::new();
+            parse_traced(
+                prefix,
+                input,
+                lazy,
+                &mut chain,
+                (&mut literals, &mut sequences),
+                &mut custom_trace,
+                None,
+            )
+            .unwrap();
+            assert_eq!(chain_monitor.snapshot(), chain_before);
+            assert_eq!(literal_monitor.snapshot().attempts, 1);
+            assert_eq!(sequence_monitor.snapshot().attempts, 1);
+            assert_eq!(literal_monitor.snapshot().identities_created, 1);
+            assert_eq!(sequence_monitor.snapshot().identities_created, 1);
+            let mut global_chain = MatchChain::new(128).unwrap();
+            seed_prefix(&mut global_chain, prefix, input);
+            let (mut expected_literals, mut expected_sequences) = (Vec::new(), Vec::new());
+            let mut expected_trace = Vec::new();
+            parse_traced(
+                prefix,
+                input,
+                lazy,
+                &mut global_chain,
+                (&mut expected_literals, &mut expected_sequences),
+                &mut expected_trace,
+                None,
+            )
+            .unwrap();
+            assert_eq!(literals, expected_literals);
+            assert_eq!(sequences, expected_sequences);
+            assert_eq!(custom_trace, expected_trace);
+            assert_eq!(reconstruct(prefix, &literals, &sequences), input);
+            for position in 0..=input.len() - MIN_MATCH {
+                let word = word_at(input, position);
+                assert_eq!(
+                    chain
+                        .candidates(word, u64::MAX, 16)
+                        .unwrap()
+                        .collect::<Vec<_>>(),
+                    global_chain
+                        .candidates(word, u64::MAX, 16)
+                        .unwrap()
+                        .collect::<Vec<_>>()
+                );
+            }
+            // Output owners move independently and retain no chain borrow.
+            drop(chain);
+            chain_monitor.assert_released();
+            let moved = (literals, sequences);
+            assert_eq!(reconstruct(prefix, &moved.0, &moved.1), input);
+            drop(moved);
+            literal_monitor.assert_released();
+            sequence_monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn allocator_each_output_reservation_failure_preserves_logical_inputs_and_chain() {
+        let prefix = b"abcdefgh";
+        let input = b"abcdefgh!abcdefgh?abcdefgh!tail";
+        let sentinel = LogicalSequence {
+            literal_length: 1,
+            match_length: 4,
+            distance: 9,
+        };
+        for lazy in [false, true] {
+            for failing_literals in [true, false] {
+                let chain_owner = allocator().into_non_clone();
+                let chain_monitor = chain_owner.monitor();
+                let mut chain = MatchChain::new_in(128, &chain_owner).unwrap();
+                seed_prefix(&mut chain, prefix, input);
+                let chain_before = chain_monitor.snapshot();
+                let candidates = chain
+                    .candidates(*b"abcd", u64::MAX, 16)
+                    .unwrap()
+                    .collect::<Vec<_>>();
+                let literal_owner = allocator().into_non_clone();
+                let literal_monitor = literal_owner.monitor();
+                let sequence_owner = allocator().into_non_clone();
+                let sequence_monitor = sequence_owner.monitor();
+                let mut literals = Vec::new_in(literal_owner);
+                literals.try_reserve_exact(1).unwrap();
+                literals.push(77);
+                let mut sequences = Vec::new_in(sequence_owner);
+                sequences.try_reserve_exact(1).unwrap();
+                sequences.push(sentinel);
+                let literal_before = literal_monitor.snapshot();
+                let sequence_before = sequence_monitor.snapshot();
+                let literal_pointer = literals.as_ptr();
+                let sequence_pointer = sequences.as_ptr();
+                if failing_literals {
+                    assert!(literal_monitor.fail_next());
+                } else {
+                    assert!(sequence_monitor.fail_next());
+                }
+                let mut trace = Vec::new();
+                assert_eq!(
+                    parse_traced(
+                        prefix,
+                        input,
+                        lazy,
+                        &mut chain,
+                        (&mut literals, &mut sequences),
+                        &mut trace,
+                        None
+                    ),
+                    Err(Error::AllocationFailed)
+                );
+                assert!(trace.is_empty());
+                assert_eq!(literals, [77]);
+                assert_eq!(sequences, [sentinel]);
+                assert_eq!(sequence_pointer, sequences.as_ptr());
+                assert_eq!(chain_monitor.snapshot(), chain_before);
+                assert_eq!(
+                    chain
+                        .candidates(*b"abcd", u64::MAX, 16)
+                        .unwrap()
+                        .collect::<Vec<_>>(),
+                    candidates
+                );
+                assert_eq!(
+                    literal_monitor.snapshot().attempts,
+                    literal_before.attempts + 1
+                );
+                assert_eq!(
+                    sequence_monitor.snapshot().attempts,
+                    sequence_before.attempts + u64::from(!failing_literals)
+                );
+                if failing_literals {
+                    assert_eq!(literal_pointer, literals.as_ptr());
+                    assert_eq!(
+                        literal_monitor.snapshot().live_bytes,
+                        literal_before.live_bytes
+                    );
+                    assert_eq!(sequence_monitor.snapshot(), sequence_before);
+                } else {
+                    // The first reserve may retain larger capacity even though
+                    // the second fails; existing initialized contents survive.
+                    assert!(literals.capacity() >= input.len());
+                    assert_eq!(
+                        sequence_monitor.snapshot().live_bytes,
+                        sequence_before.live_bytes
+                    );
+                }
+                literal_monitor.clear_failure();
+                sequence_monitor.clear_failure();
+                parse_traced(
+                    prefix,
+                    input,
+                    lazy,
+                    &mut chain,
+                    (&mut literals, &mut sequences),
+                    &mut trace,
+                    None,
+                )
+                .unwrap();
+                assert_eq!(reconstruct(prefix, &literals, &sequences), input);
+                drop(literals);
+                drop(sequences);
+                drop(chain);
+                literal_monitor.assert_released();
+                sequence_monitor.assert_released();
+                chain_monitor.assert_released();
+            }
+        }
+    }
+
+    #[test]
+    fn allocator_shape_validation_precedes_allocations_or_resolver_calls() {
+        let owner = allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut chain = MatchChain::new_in(8, &owner).unwrap();
+        chain.insert(*b"same", 0).unwrap();
+        let mut literals = Vec::new_in(&owner);
+        let mut sequences = Vec::new_in(&owner);
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        assert_eq!(
+            parse_chain(
+                b"same",
+                &mut chain,
+                1,
+                17,
+                |_, _| panic!("invalid budget"),
+                &mut literals,
+                &mut sequences
+            ),
+            Err(Error::InvalidParameter)
+        );
+        assert_eq!(
+            parse_lazy(
+                b"same",
+                &mut chain,
+                u64::MAX,
+                |_, _| panic!("overflowing position"),
+                &mut literals,
+                &mut sequences
+            ),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(monitor.snapshot(), before);
+        assert!(literals.is_empty() && sequences.is_empty());
+        assert_eq!(
+            chain
+                .candidates(*b"same", u64::MAX, 16)
+                .unwrap()
+                .collect::<Vec<_>>(),
+            [0]
+        );
+        drop(literals);
+        drop(sequences);
+        drop(chain);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_resolver_failure_matches_global_partial_scratch_and_insertions() {
+        let prefix = b"abcd!efgh?";
+        let input = b"abcdZefgh";
+        for lazy in [false, true] {
+            let owner = allocator().into_non_clone();
+            let monitor = owner.monitor();
+            let mut chain = MatchChain::new_in(32, &owner).unwrap();
+            seed_prefix(&mut chain, prefix, input);
+            let mut literals = Vec::new_in(&owner);
+            let mut sequences = Vec::new_in(&owner);
+            let mut trace = Vec::new();
+            assert_eq!(
+                parse_traced(
+                    prefix,
+                    input,
+                    lazy,
+                    &mut chain,
+                    (&mut literals, &mut sequences),
+                    &mut trace,
+                    Some(5)
+                ),
+                Err(Error::InvalidDictionary)
+            );
+            let mut expected_chain = MatchChain::new(32).unwrap();
+            seed_prefix(&mut expected_chain, prefix, input);
+            let (mut expected_literals, mut expected_sequences) = (Vec::new(), Vec::new());
+            let mut expected_trace = Vec::new();
+            assert_eq!(
+                parse_traced(
+                    prefix,
+                    input,
+                    lazy,
+                    &mut expected_chain,
+                    (&mut expected_literals, &mut expected_sequences),
+                    &mut expected_trace,
+                    Some(5)
+                ),
+                Err(Error::InvalidDictionary)
+            );
+            assert_eq!(sequences.len(), 1);
+            assert_eq!(sequences[0].match_length, 4);
+            assert_eq!(literals, expected_literals);
+            assert_eq!(sequences, expected_sequences);
+            assert_eq!(trace, expected_trace);
+            for position in 0..=input.len() - MIN_MATCH {
+                let word = word_at(input, position);
+                assert_eq!(
+                    chain
+                        .candidates(word, u64::MAX, 16)
+                        .unwrap()
+                        .collect::<Vec<_>>(),
+                    expected_chain
+                        .candidates(word, u64::MAX, 16)
+                        .unwrap()
+                        .collect::<Vec<_>>()
+                );
+            }
+            drop(literals);
+            drop(sequences);
+            drop(chain);
+            monitor.assert_released();
+        }
+    }
 
     fn byte_at(prefix: &[u8], input: &[u8], position: usize) -> u8 {
         if position < prefix.len() {
@@ -256,7 +612,7 @@ mod tests {
         Ok((length >= MIN_MATCH).then_some(((current - previous) as u32, length as u32)))
     }
 
-    fn seed_prefix(table: &mut MatchChain, prefix: &[u8], input: &[u8]) {
+    fn seed_prefix<A: Allocator>(table: &mut MatchChain<A>, prefix: &[u8], input: &[u8]) {
         for position in 0..prefix.len() {
             if prefix.len() + input.len() - position < MIN_MATCH {
                 break;

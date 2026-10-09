@@ -424,6 +424,23 @@ with no sample borrow or allocator-changing copy. Miri uses bounded ownership,
 frequency, early-failure and final-failure cases; the complete ordinal campaign
 runs in normal builds.
 
+Chain/lazy parsing now accepts independent chain, literal, and sequence
+allocator types, requiring only `Allocator` for these borrowed owners. The
+[parser evidence](evidence/2026-10-09-allocator-match-parser.json) records 25 parser
+tests in each of four configurations, public strategy tests in safe/all/no_std,
+and eight explicit C full-output comparisons in each of safe/all. Safe and
+unsafe-chain no_std compilation, strict all-target Clippy, formatting, and four
+all-feature strict-provenance Miri tests passed; Miri took 195.04 seconds.
+
+The tests preserve exact resolver traces, candidate ordering, literals and
+sequences across independent allocator domains and moved non-Clone owners.
+Failure at either output reservation preserves initialized contents and seeded
+chain state; a successful first reservation may retain additional capacity if
+the second fails. Invalid shape checks precede allocation or resolver calls.
+Resolver errors retain the same documented partial scratch/table state as the
+Global implementation. No search policy, visit budget, or coordinate arithmetic
+changed. Production copies use individual pushes after reservation.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The
