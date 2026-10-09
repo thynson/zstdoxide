@@ -73,7 +73,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Pin all five dictionary corpora and replay loader/raw targets with safe and unsafe backends.
 - [x] Record trained dictionary fuzz sample ownership, selectors, and adapter boundaries.
 - [x] Preserve the trained fuzz helper's 100 sample ranges, capacity, and failure fallback.
-- [ ] Adapt trained dictionary decompression and deterministic roundtrip fuzz assertions.
+- [x] Adapt trained dictionary decompression and deterministic roundtrip fuzz assertions.
 - [ ] Adapt trained streaming dictionaries with fragmented progress and prefix lifetime assertions.
 - [ ] Replay matching external dictionary corpora with explicit coverage mappings.
 - [x] Extend deterministic benchmark workloads for dictionary access, codec contexts, and training.

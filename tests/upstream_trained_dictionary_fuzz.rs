@@ -16,14 +16,20 @@
 mod fuzz_support;
 
 use fuzz_support::DataProducer;
+use std::fs;
+use std::io::{self, Read};
 use std::ops::Range;
+use std::path::PathBuf;
 use zstdoxide::{
-    Dictionary, DictionaryMode, DictionaryTrainingOptions, Error, RawTrainingOptions,
-    SharedDictionary, train_dictionary,
+    DecodeOptions, Decoder, Dictionary, DictionaryMode, DictionaryTrainingOptions, Encoder,
+    EncoderOptions, EndDirective, Error, RawTrainingOptions, SharedDictionary, StreamStatus,
+    train_dictionary,
 };
 
 const MAX_INPUT: usize = 2 * 1024 * 1024;
 const SAMPLE_COUNT: usize = 100;
+const MAX_FILES: usize = 65_536;
+const MAX_DEPTH: usize = 64;
 
 /// Shared source ranges are ordinary initialized value records, not pointers.
 /// No dictionary retains these temporary source borrows after training.
@@ -333,4 +339,401 @@ int main(int argc, char** argv) {
         }
     }
     eprintln!("Official FUZZ_train sample loop verified 36 cases and all 3,600 selected ranges");
+}
+
+/// Official ZSTD_COMPRESSBOUND arithmetic for the bounded destination contract.
+fn compression_bound(size: usize) -> usize {
+    size + (size >> 8)
+        + if size < 128 * 1024 {
+            (128 * 1024 - size) >> 11
+        } else {
+            0
+        }
+}
+
+fn selected_mode(producer: &mut DataProducer<'_>) -> DictionaryMode {
+    match producer.unsigned_range(0, 2) {
+        0 => DictionaryMode::Auto,
+        1 => DictionaryMode::Raw,
+        2 => DictionaryMode::Formatted,
+        _ => unreachable!(),
+    }
+}
+
+#[derive(Default)]
+struct Outcome {
+    trained: bool,
+    decoded: bool,
+}
+
+/// Assert the incremental equivalent of a bounded one-shot destination, with a
+/// canary after every caller-owned output slice. Malformed bytes may fail, while
+/// every reported success must consume all input and agree with cumulative totals.
+fn decode_checked(
+    source: &[u8],
+    dictionary: SharedDictionary,
+    prefix: bool,
+    capacity: usize,
+) -> zstdoxide::Result<Vec<u8>> {
+    let mut decoder = Decoder::new(DecodeOptions::new(capacity));
+    if prefix {
+        decoder.set_prefix(dictionary).unwrap();
+    } else {
+        decoder.set_dictionary(Some(dictionary)).unwrap();
+    }
+    let mut consumed = 0;
+    let mut output = Vec::new();
+    let mut scratch = [0xa5; 4096 + 8];
+    loop {
+        scratch.fill(0xa5);
+        let result = decoder.process(&source[consumed..], &mut scratch[..4096]);
+        assert!(scratch[4096..].iter().all(|&byte| byte == 0xa5));
+        let progress = match result {
+            Ok(progress) => progress,
+            Err(error) => {
+                assert_ne!(error, Error::AllocationFailed);
+                assert_ne!(error, Error::InvalidState);
+                return Err(error);
+            }
+        };
+        assert!(progress.consumed <= source.len() - consumed);
+        assert!(progress.produced <= 4096);
+        assert!(
+            scratch[progress.produced..]
+                .iter()
+                .all(|&byte| byte == 0xa5)
+        );
+        consumed += progress.consumed;
+        output.extend_from_slice(&scratch[..progress.produced]);
+        assert!(output.len() <= capacity);
+        assert_eq!(decoder.total_input(), consumed as u64);
+        assert_eq!(decoder.total_output(), output.len() as u64);
+        if consumed == source.len()
+            && matches!(
+                progress.status,
+                StreamStatus::NeedInput | StreamStatus::FrameFinished
+            )
+        {
+            decoder.finish()?;
+            return Ok(output);
+        }
+        assert!(progress.consumed != 0 || progress.produced != 0);
+    }
+}
+
+/// `dictionary_decompress.c::LLVMFuzzerTestOneInput`, retaining every selector
+/// before decompression. A prepared dictionary and owned loaded dictionary share
+/// the Rust handle implementation; by-reference loading becomes immutable sharing.
+fn dictionary_decompress(input: &[u8]) -> Outcome {
+    assert!(input.len() <= MAX_INPUT);
+    let mut producer = DataProducer::new(input);
+    let size = producer.reserve_prefix();
+    let source = &input[..size];
+    let samples = select_training_samples(size, &mut producer);
+    let trained = train_selected(source, &samples);
+    let (prefix, mode) = if producer.unsigned_range(0, 1) == 0 {
+        (false, DictionaryMode::Auto)
+    } else if producer.unsigned_range(0, 1) == 0 {
+        let _load_method = producer.unsigned_range(0, 1);
+        (false, selected_mode(&mut producer))
+    } else {
+        (true, selected_mode(&mut producer))
+    };
+    let capacity = producer.unsigned_range(0, (10 * size) as u32) as usize;
+    let dictionary = load_mode(&trained.dictionary, mode);
+    let decoded = decode_checked(source, dictionary, prefix, capacity).is_ok();
+    Outcome {
+        trained: trained.trained,
+        decoded,
+    }
+}
+
+fn encode_bounded(
+    source: &[u8],
+    dictionary: SharedDictionary,
+    prefix: bool,
+    capacity: usize,
+) -> Vec<u8> {
+    let options = EncoderOptions {
+        checksum: false,
+        pledged_size: Some(source.len() as u64),
+        ..EncoderOptions::default()
+    };
+    let mut encoder = Encoder::with_options(options).unwrap();
+    if prefix {
+        encoder.set_prefix(dictionary).unwrap();
+    } else {
+        encoder.set_dictionary(Some(dictionary)).unwrap();
+    }
+    let mut consumed = 0;
+    let mut output = Vec::new();
+    let mut scratch = [0xa5; 4096 + 8];
+    loop {
+        scratch.fill(0xa5);
+        let available = (capacity - output.len()).min(4096);
+        let progress = encoder
+            .process(
+                &source[consumed..],
+                &mut scratch[..available],
+                EndDirective::Finish,
+            )
+            .unwrap();
+        assert!(progress.consumed <= source.len() - consumed);
+        assert!(progress.produced <= available);
+        assert!(
+            scratch[progress.produced..]
+                .iter()
+                .all(|&byte| byte == 0xa5)
+        );
+        consumed += progress.consumed;
+        output.extend_from_slice(&scratch[..progress.produced]);
+        assert_eq!(encoder.total_input(), consumed as u64);
+        assert_eq!(encoder.total_output(), output.len() as u64);
+        if progress.status == StreamStatus::FrameFinished {
+            assert_eq!(consumed, source.len());
+            return output;
+        }
+        assert!(
+            available != 0,
+            "upstream reduced compression bound was exhausted"
+        );
+        assert!(progress.consumed != 0 || progress.produced != 0);
+    }
+}
+
+/// Preserve source, reduced bound, training, prefix and content-mode selectors
+/// from `dictionary_round_trip.c::roundTripTest`. The legacy level is consumed,
+/// then default Rust compression is used. Advanced C parameter consumption and
+/// load-method selectors following it are omitted: their offsets are not claimed
+/// equivalent. Both Rust runs use identical options and must encode identically.
+fn dictionary_round_trip(input: &[u8]) -> Outcome {
+    assert!(input.len() <= MAX_INPUT);
+    let mut producer = DataProducer::new(input);
+    let size = producer.reserve_prefix();
+    let source = &input[..size];
+    let capacity = compression_bound(size) - producer.unsigned_range(0, 1) as usize;
+    let samples = select_training_samples(size, &mut producer);
+    let trained = train_selected(source, &samples);
+    let prefix = producer.unsigned_range(0, 1) != 0;
+    let mode = if producer.unsigned_range(0, 15) == 0 {
+        // v1.5.7 zstd_helpers.c: kMinClevel=-3, kMaxClevel=19.
+        let _unsupported_level = producer.signed_range(-3, 19);
+        DictionaryMode::Auto
+    } else {
+        selected_mode(&mut producer)
+    };
+    let dictionary = load_mode(&trained.dictionary, mode);
+    let first = encode_bounded(source, dictionary.clone(), prefix, capacity);
+    let second = encode_bounded(source, dictionary.clone(), prefix, capacity);
+    assert_eq!(first, second);
+    let decoded = decode_checked(&first, dictionary, prefix, size).unwrap();
+    assert_eq!(decoded, source);
+    Outcome {
+        trained: trained.trained,
+        decoded: true,
+    }
+}
+
+/// Append selectors in reverse call order. Each pair is (inclusive maximum,
+/// requested value), with minimum zero; solve the reserve-prefix width boundary.
+fn target_case(source: &[u8], selectors: &[(u32, u32)]) -> Vec<u8> {
+    fn width(value: u32) -> usize {
+        ((u32::BITS - value.leading_zeros()) as usize).div_ceil(8)
+    }
+    let mut tail = Vec::new();
+    for &(maximum, value) in selectors.iter().rev() {
+        assert!(value <= maximum);
+        tail.extend_from_slice(&value.to_le_bytes()[..width(maximum)]);
+    }
+    for reserve_bytes in 0..=4 {
+        let total = source.len() + tail.len() + reserve_bytes;
+        if width(total as u32) != reserve_bytes {
+            continue;
+        }
+        let mut input = source.to_vec();
+        input.extend_from_slice(&tail);
+        input.extend_from_slice(&(tail.len() as u32).to_le_bytes()[..reserve_bytes]);
+        let mut producer = DataProducer::new(&input);
+        assert_eq!(producer.reserve_prefix(), source.len());
+        for &(maximum, value) in selectors {
+            assert_eq!(producer.unsigned_range(0, maximum), value);
+        }
+        assert!(producer.is_empty());
+        return input;
+    }
+    panic!("no consistent training fuzz reserve-prefix width");
+}
+
+fn sample_selectors(size: usize) -> Vec<(u32, u32)> {
+    vec![(size.max(1) as u32 - 1, 0); SAMPLE_COUNT]
+}
+
+#[test]
+fn trained_decompression_covers_prepared_loaded_prefix_modes_and_valid_controls() {
+    // Independent raw-frame bytes: one final five-byte raw block containing hello.
+    let frame = &[
+        0x28, 0xb5, 0x2f, 0xfd, 0x20, 5, 0x29, 0, 0, b'h', b'e', b'l', b'l', b'o',
+    ];
+    for mode in 0..=2 {
+        for prefix in [false, true] {
+            for load_method in 0..=1 {
+                let mut selectors = sample_selectors(frame.len());
+                selectors.extend_from_slice(&[(1, 1), (1, u32::from(prefix))]);
+                if !prefix {
+                    selectors.push((1, load_method));
+                }
+                selectors.extend_from_slice(&[(2, mode), ((10 * frame.len()) as u32, 5)]);
+                let outcome = dictionary_decompress(&target_case(frame, &selectors));
+                assert!(outcome.trained && outcome.decoded);
+                selectors.last_mut().unwrap().1 = 4;
+                assert!(!dictionary_decompress(&target_case(frame, &selectors)).decoded);
+            }
+        }
+    }
+    let mut selectors = sample_selectors(frame.len());
+    selectors.extend_from_slice(&[(1, 0), ((10 * frame.len()) as u32, 5)]);
+    assert!(dictionary_decompress(&target_case(frame, &selectors)).decoded);
+    let empty = &[0x28, 0xb5, 0x2f, 0xfd, 0x20, 0, 1, 0, 0];
+    let mut selectors = sample_selectors(empty.len());
+    selectors.extend_from_slice(&[(1, 0), ((10 * empty.len()) as u32, 0)]);
+    assert!(dictionary_decompress(&target_case(empty, &selectors)).decoded);
+}
+
+#[test]
+fn trained_roundtrip_covers_modes_prefixes_reduced_bounds_and_training_fallback() {
+    for size in [0, 1, 7, 8, 255, 256, 2048, 8192] {
+        let source: Vec<_> = (0..size).map(|index| (index * 17 + 123) as u8).collect();
+        for mode in 0..=2 {
+            for prefix in [false, true] {
+                for less in 0..=1 {
+                    let mut selectors = vec![(1, less)];
+                    selectors.extend(sample_selectors(size));
+                    selectors.extend_from_slice(&[(1, u32::from(prefix)), (15, 1), (2, mode)]);
+                    let outcome = dictionary_round_trip(&target_case(&source, &selectors));
+                    assert_eq!(outcome.trained, size >= 8);
+                    assert!(outcome.decoded);
+                }
+            }
+        }
+        let mut legacy = vec![(1, 1)];
+        legacy.extend(sample_selectors(size));
+        legacy.extend_from_slice(&[(1, 1), (15, 0), (22, 22)]);
+        assert!(dictionary_round_trip(&target_case(&source, &legacy)).decoded);
+    }
+}
+
+#[test]
+fn trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames() {
+    let mut random = 0x70af_c531_u32;
+    let noise: Vec<_> = (0..4096)
+        .map(|_| {
+            random ^= random << 13;
+            random ^= random >> 17;
+            random ^= random << 5;
+            random as u8
+        })
+        .collect();
+    for length in [0, 1, 2, 3, 4, 7, 8, 17, 31, 255, 256, 1024, 4096] {
+        dictionary_decompress(&noise[..length]);
+        dictionary_round_trip(&noise[..length]);
+    }
+    let frame = include_bytes!("upstream/dictionaries/formatted-id.zst");
+    for length in 0..=frame.len() {
+        let mut selectors = sample_selectors(length);
+        selectors.extend_from_slice(&[(1, 0), ((10 * length) as u32, (10 * length) as u32)]);
+        dictionary_decompress(&target_case(&frame[..length], &selectors));
+    }
+}
+
+fn collect_files(roots: Vec<PathBuf>, maximum: usize) -> io::Result<Vec<PathBuf>> {
+    let mut pending: Vec<_> = roots.into_iter().map(|path| (path, 0)).collect();
+    let mut files = Vec::new();
+    let mut visited = pending.len();
+    if visited > 4 * maximum {
+        return Err(io::Error::other("too many corpus roots"));
+    }
+    while let Some((path, depth)) = pending.pop() {
+        let metadata = fs::symlink_metadata(&path)?;
+        if metadata.file_type().is_symlink() || (!metadata.is_dir() && !metadata.is_file()) {
+            return Err(io::Error::other(format!(
+                "non-regular corpus path: {}",
+                path.display()
+            )));
+        }
+        if metadata.is_dir() {
+            if depth >= MAX_DEPTH {
+                return Err(io::Error::other("corpus directory depth exceeds limit"));
+            }
+            for entry in fs::read_dir(path)? {
+                visited += 1;
+                if visited > 4 * maximum {
+                    return Err(io::Error::other("corpus traversal exceeds entry limit"));
+                }
+                pending.push((entry?.path(), depth + 1));
+            }
+        } else {
+            if metadata.len() > MAX_INPUT as u64 {
+                return Err(io::Error::other(format!(
+                    "corpus input exceeds {MAX_INPUT} bytes: {}",
+                    path.display()
+                )));
+            }
+            files.push(path);
+            if files.len() > maximum {
+                return Err(io::Error::other("corpus file count exceeds limit"));
+            }
+        }
+    }
+    files.sort();
+    files.dedup();
+    Ok(files)
+}
+
+#[test]
+#[ignore = "requires ZSTDOXIDE_DICTIONARY_CORPUS and ZSTDOXIDE_DICTIONARY_TARGET=decompress|round_trip; no files are skipped"]
+fn external_trained_dictionary_file_corpus() {
+    let roots = std::env::var_os("ZSTDOXIDE_DICTIONARY_CORPUS")
+        .expect("ZSTDOXIDE_DICTIONARY_CORPUS is required");
+    let target = std::env::var("ZSTDOXIDE_DICTIONARY_TARGET")
+        .expect("ZSTDOXIDE_DICTIONARY_TARGET is required");
+    assert!(matches!(target.as_str(), "decompress" | "round_trip"));
+    let maximum = std::env::var("ZSTDOXIDE_DICTIONARY_MAX_FILES").map_or(1024, |value| {
+        value
+            .parse::<usize>()
+            .expect("file limit must be an integer")
+    });
+    assert!((1..=MAX_FILES).contains(&maximum));
+    let files = collect_files(std::env::split_paths(&roots).collect(), maximum).unwrap();
+    assert!(!files.is_empty());
+    let mut trained = 0;
+    let mut decoded = 0;
+    let started = std::time::Instant::now();
+    for path in &files {
+        eprintln!("{target}: {}", path.display());
+        let mut input = Vec::new();
+        fs::File::open(path)
+            .unwrap()
+            .take((MAX_INPUT + 1) as u64)
+            .read_to_end(&mut input)
+            .unwrap();
+        assert!(
+            input.len() <= MAX_INPUT,
+            "input grew beyond cap: {}",
+            path.display()
+        );
+        let outcome = if target == "decompress" {
+            dictionary_decompress(&input)
+        } else {
+            dictionary_round_trip(&input)
+        };
+        trained += usize::from(outcome.trained);
+        decoded += usize::from(outcome.decoded);
+    }
+    eprintln!(
+        "Replayed {} {target} corpus files: {trained} trained dictionaries, {} TrainingFailed empty fallbacks, {decoded} successful decodes, {} rejected compressed inputs, no files skipped; input cap {MAX_INPUT}, output cap 10*source for decompression, window cap 128 MiB; elapsed {:.3} s",
+        files.len(),
+        files.len() - trained,
+        files.len() - decoded,
+        started.elapsed().as_secs_f64()
+    );
 }
