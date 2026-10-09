@@ -189,6 +189,53 @@ fn normalized_count_fuzz_target_roundtrips_every_log_and_maximum_symbol() {
     }
 }
 
+/// Replay the complete normalized-count target on each external input.
+/// The flat corpus is sorted deterministically; entries must be regular files,
+/// with at most 65,536 files, 1 MiB per input and 64 MiB in total. No entry is
+/// silently skipped or truncated, and every generated header/suffix is <=512 B.
+#[cfg(feature = "std")]
+#[test]
+#[ignore = "requires pinned extracted fse_read_ncount corpus in ZSTDOXIDE_FSE_CORPUS"]
+fn replays_official_normalized_count_corpus() {
+    use std::fs;
+    use std::io::Read;
+    use std::path::PathBuf;
+
+    const MAX_INPUT: usize = 1024 * 1024;
+    const MAX_TOTAL: usize = 64 * 1024 * 1024;
+    let directory =
+        PathBuf::from(std::env::var_os("ZSTDOXIDE_FSE_CORPUS").expect("set ZSTDOXIDE_FSE_CORPUS"));
+    assert!(fs::symlink_metadata(&directory).unwrap().is_dir());
+    let mut paths = Vec::new();
+    for entry in fs::read_dir(&directory).unwrap() {
+        assert!(paths.len() < 65_536, "corpus file-count limit");
+        paths.push(entry.unwrap().path());
+    }
+    paths.sort();
+    assert!(!paths.is_empty(), "empty corpus");
+    let mut total_bytes = 0_usize;
+    for path in &paths {
+        std::eprintln!("fse_read_ncount: {}", path.display());
+        let metadata = fs::symlink_metadata(path).unwrap();
+        assert!(metadata.is_file(), "corpus must contain regular files only");
+        assert!(metadata.len() <= MAX_INPUT as u64, "corpus input limit");
+        let mut input = Vec::new();
+        fs::File::open(path)
+            .unwrap()
+            .take((MAX_INPUT + 1) as u64)
+            .read_to_end(&mut input)
+            .unwrap();
+        assert!(input.len() <= MAX_INPUT, "corpus input limit");
+        total_bytes = total_bytes.checked_add(input.len()).unwrap();
+        assert!(total_bytes <= MAX_TOTAL, "corpus total-byte limit");
+        normalized_count_fuzz_round_trip(&input);
+    }
+    std::eprintln!(
+        "replayed {} normalized-count inputs / {total_bytes} source bytes; no skips",
+        paths.len()
+    );
+}
+
 fn literals_section(header: &[u8], stream: &[u8], output_size: usize) -> Vec<u8> {
     // Four streams, 18-bit regenerated and compressed lengths, compressed kind.
     let size = header.len() + stream.len();
