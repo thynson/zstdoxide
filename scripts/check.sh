@@ -9,11 +9,11 @@ cargo fmt --all -- --check
 cargo test
 cargo clippy --all-targets -- -D warnings
 cargo check --no-default-features
-for feature in unsafe-byte-cursor unsafe-bitstream unsafe-history unsafe-ring-history unsafe-fse unsafe-huffman unsafe-match-table; do
+for feature in unsafe-byte-cursor unsafe-bitstream unsafe-history unsafe-ring-history unsafe-fse unsafe-huffman unsafe-match-table unsafe-dictionary unsafe-training; do
     cargo test --features "$feature"
     cargo check --no-default-features --features "$feature"
 done
 cargo test --all-features
 cargo test --release --all-features
-cargo check --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-huffman,unsafe-match-table
+cargo check --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-huffman,unsafe-match-table,unsafe-dictionary,unsafe-training
 cargo clippy --all-targets --all-features -- -D warnings

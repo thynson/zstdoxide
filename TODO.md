@@ -68,6 +68,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Adapt dictionary loader and raw-dictionary fuzz contracts with exact source selectors.
 - [ ] Replay matching external dictionary corpora with explicit coverage mappings.
 - [x] Extend deterministic benchmark workloads for dictionary access, codec contexts, and training.
+- [x] Include dictionary and training backends and C oracles in the validation scripts.
 - [ ] Compare safe/unsafe dictionary throughput and memory; run backend/no_std/oracle/Miri checks.
 
 Completed Module 6 work is recorded in `docs/streaming-validation.md`, including
