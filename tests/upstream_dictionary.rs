@@ -1014,3 +1014,33 @@ fn official_prefix_concatenations_consume_the_prefix_exactly_once() {
         second_output
     );
 }
+
+/// `zstreamtest.c:1371,1403,1421`: absent IDs do not make dependent frames
+/// independently decodable, while the second frame after a one-use prefix is.
+#[test]
+fn official_omitted_id_and_prefix_first_frames_require_content_without_an_id() {
+    for (_, frame, expected) in [
+        boundary_case!("formatted-omitted-id"),
+        boundary_case!("prefix-first"),
+    ] {
+        assert_eq!(FrameHeader::parse(frame).unwrap().0.dictionary_id, 0);
+        assert_eq!(
+            zstdoxide::decompress(frame, expected.len()),
+            Err(Error::CorruptData)
+        );
+        let mut decoder = Decoder::new(boundary_options(expected.len()));
+        assert_eq!(
+            decode_stream(&mut decoder, frame, 1, 1),
+            Err(Error::CorruptData)
+        );
+    }
+    let (_, second, expected) = boundary_case!("prefix-second");
+    assert_eq!(FrameHeader::parse(second).unwrap().0.dictionary_id, 0);
+    assert_eq!(
+        zstdoxide::decompress(second, expected.len()).unwrap(),
+        expected
+    );
+    let mut decoder = Decoder::new(boundary_options(expected.len()));
+    assert_eq!(decode_stream(&mut decoder, second, 1, 1).unwrap(), expected);
+    decoder.finish().unwrap();
+}

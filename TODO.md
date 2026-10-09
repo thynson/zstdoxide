@@ -53,6 +53,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Implement bounded training sample selection and raw dictionary-content construction.
 - [ ] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.
 - [x] Port dictionary decoder, prefix lifetime, prepared entropy, and malformed-input assertions.
+- [x] Preserve exact omitted-ID and first-prefix missing-dictionary failure controls.
 - [x] Map implemented parser/decoder assertions to pinned upstream source groups.
 - [x] Port dictionary encoder lifetime, effectiveness, ID, window, and interoperability assertions.
 - [ ] Port applicable official dictionary preparation and training assertions.
