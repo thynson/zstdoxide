@@ -7,7 +7,7 @@
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
-use crate::fse::{FseEntry, FseTable};
+use crate::fse::{FseEntry, FseTable, FseTableView};
 use crate::{Error, Result};
 
 const UNAVAILABLE: u16 = u16::MAX;
@@ -51,6 +51,13 @@ impl FseEncodingTable<Global> {
     /// Build an ordinary normalized table with the decoder's mass and alphabet
     /// validation. Single-symbol normalized dictionary tables enter through
     /// `from_decoding`; an inline RLE table enters through `rle`.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "Global convenience retained for direct inverse-table callers"
+        )
+    )]
     pub(crate) fn new(counts: &[i16], table_log: u8) -> Result<Self> {
         Self::new_in(counts, table_log, Global)
     }
@@ -58,6 +65,13 @@ impl FseEncodingTable<Global> {
     /// Invert an immutable validated decoding table without retaining a borrow.
     /// The first decoding state for each symbol is its terminal initialization,
     /// preserving the previous predefined encoder's exact initial selection.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "Global convenience retained for direct inverse-table callers"
+        )
+    )]
     pub(crate) fn from_decoding(decoding: &FseTable) -> Result<Self> {
         Self::from_decoding_in(decoding, Global)
     }
@@ -185,6 +199,13 @@ impl<A: Allocator + Clone> FseEncodingTable<A> {
         decoding: &FseTable<B>,
         allocator: A,
     ) -> Result<Self> {
+        Self::from_decoding_view_in(decoding.view(), allocator)
+    }
+
+    /// Copy an allocator-independent validated view into fresh owned storage.
+    /// No source reference or allocation enters the result, so the source may
+    /// be dropped after construction. Existing inverse validation and errors apply.
+    pub(crate) fn from_decoding_view_in(decoding: FseTableView<'_>, allocator: A) -> Result<Self> {
         Self::from_relation_in(
             decoding.table_log(),
             |state| decoding.entry(state),

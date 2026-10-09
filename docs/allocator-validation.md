@@ -361,6 +361,27 @@ are preserved. Candidate ordering is unchanged; tests add end-index ties and
 stale-score reinsertion against the standard heap. Checked peek allocates
 nothing, and reinsertion consumes the slot freed by pop without a request.
 
+`SequenceEncoder<A>` now retains every default/current/spare table and scratch
+owner. Its [context evidence](evidence/2026-10-09-allocator-sequence-context.json)
+records 13 tests in each of six configurations, nine inverse-view tests in each
+of three configurations, safe/unsafe no_std compilation, strict all-target
+Clippy, formatting, and four all-feature strict-provenance Miri cases. Miri
+completed the full ownership/failure sweep in 787.37 seconds. Five std builds
+each ignored one optional C test; no-default compiled it out. Explicit C runs
+in safe/all builds each decoded the exact 876-byte seven-block frame and a
+four-byte prepared-dictionary frame. The earlier emission evidence's summary
+was clarified to distinguish its same cfg(std) exclusion; logs did not change.
+
+Dictionary setup copies all three inverse tables through allocator-independent
+views before reset/publication. Every one of its six payload requests was
+failed separately while preserving an already prepared context. Every observed
+fresh or previously committed prepare allocation was also failed separately;
+errors expose no partial section or replacement table. Commit swaps complete
+owners, and reset/discard retain caches without allocating. One retention test
+accounts for 24 live payload allocations across nine dense tables and six
+buffers, excluding allocator-internal bookkeeping. The Global const constructor
+remains available; custom block/stream integration follows separately.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

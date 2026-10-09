@@ -307,3 +307,13 @@ Sample windows, frequency cells, queued candidates and selected ranges each
 own a fresh allocator value. Final content retains the original allocator and
 moves directly into `Dictionary<A>`; borrowed samples never enter the result.
 The frequency accessor keeps its existing independent `unsafe-training` flag.
+
+Formatted finalization preserves the existing validation copy deliberately:
+normalized-count descriptions, learned Huffman description, and assembled
+serialization use fresh allocator owners; the original allocator is passed to
+`Dictionary::from_bytes_with_mode_in` for final serialized ownership. Parsing
+allocates fresh validated table owners before returning. Raw training content
+is a separate temporary owner when finalization follows training. All metadata
+and padding writes follow complete reservation; content IDs continue to hash
+untrimmed/unpadded input. A future owned-byte parser optimization is separate
+from this migration and must not bypass validation before publication.

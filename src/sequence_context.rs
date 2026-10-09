@@ -1,10 +1,11 @@
 //! Transactional sequence tables and repeat offsets for one emitted frame.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 use crate::bitwriter::BitWriter;
 use crate::constants::{LL_DEFAULT, ML_DEFAULT, OF_DEFAULT};
-use crate::dictionary::Dictionary;
+use crate::dictionary::{Dictionary, DictionaryEntropyView};
 use crate::frame::MAX_BLOCK_SIZE;
 use crate::fse_encode::FseEncodingTable;
 use crate::fse_select::{self, Mode};
@@ -33,13 +34,13 @@ enum Source {
 /// Inactive tables remain allocated across discard/reset. New selection or
 /// dictionary setup may replace a slot; immutable table construction itself
 /// allocates fresh storage, rather than rebuilding an existing allocation.
-struct Channel {
+struct Channel<A: Allocator> {
     source: Source,
-    current: Option<FseEncodingTable>,
-    spare: Option<FseEncodingTable>,
+    current: Option<FseEncodingTable<A>>,
+    spare: Option<FseEncodingTable<A>>,
 }
 
-impl Channel {
+impl<A: Allocator> Channel<A> {
     const fn new() -> Self {
         Self {
             source: Source::Unavailable,
@@ -48,7 +49,10 @@ impl Channel {
         }
     }
 
-    fn available<'a>(&'a self, predefined: &'a FseEncodingTable) -> Option<&'a FseEncodingTable> {
+    fn available<'a>(
+        &'a self,
+        predefined: &'a FseEncodingTable<A>,
+    ) -> Option<&'a FseEncodingTable<A>> {
         match self.source {
             Source::Unavailable => None,
             Source::Predefined => Some(predefined),
@@ -77,20 +81,21 @@ impl Channel {
 /// serialized output and the bit writer have block-bounded reusable capacity.
 /// Storage access composes the independently gated FSE and bit-writer backends;
 /// scalar availability/pending tags need no artificial unsafe implementation.
-pub(crate) struct SequenceEncoder {
-    defaults: Option<[FseEncodingTable; 3]>,
-    channels: [Channel; 3],
+pub(crate) struct SequenceEncoder<A: Allocator = Global> {
+    defaults: Option<[FseEncodingTable<A>; 3]>,
+    channels: [Channel<A>; 3],
     repeat: [u32; 3],
     pending_repeat: [u32; 3],
     pending_modes: Option<[Mode; 3]>,
     prepared: bool,
-    plans: Vec<PlannedSequence>,
-    symbols: [Vec<u8>; 3],
-    section: Vec<u8>,
-    writer: BitWriter,
+    plans: Vec<PlannedSequence, A>,
+    symbols: [Vec<u8, A>; 3],
+    section: Vec<u8, A>,
+    writer: BitWriter<A>,
+    allocator: A,
 }
 
-impl SequenceEncoder {
+impl SequenceEncoder<Global> {
     pub(crate) const fn new() -> Self {
         Self {
             defaults: None,
@@ -103,23 +108,76 @@ impl SequenceEncoder {
             symbols: [Vec::new(), Vec::new(), Vec::new()],
             section: Vec::new(),
             writer: BitWriter::new(),
+            allocator: Global,
         }
+    }
+}
+
+impl<A: Allocator + Clone> SequenceEncoder<A> {
+    /// Keep a factory allocator and give every fresh owner its own clone.
+    /// Clones need not be equivalent: storage moves only with its retained
+    /// allocator. Ordinary Clone may itself allocate or panic; only fallible
+    /// collection allocation errors map to AllocationFailed.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "allocator-aware block contexts are migrated in the next checkpoint"
+        )
+    )]
+    pub(crate) fn new_in(allocator: A) -> Self {
+        Self {
+            defaults: None,
+            channels: [Channel::new(), Channel::new(), Channel::new()],
+            repeat: [1, 4, 8],
+            pending_repeat: [1, 4, 8],
+            pending_modes: None,
+            prepared: false,
+            plans: Vec::new_in(allocator.clone()),
+            symbols: [
+                Vec::new_in(allocator.clone()),
+                Vec::new_in(allocator.clone()),
+                Vec::new_in(allocator.clone()),
+            ],
+            section: Vec::new_in(allocator.clone()),
+            writer: BitWriter::new_in(allocator.clone()),
+            allocator,
+        }
+    }
+
+    /// Preserve the unambiguous Global dictionary convenience entry point.
+    /// Dictionaries with another allocator enter through their borrowed view.
+    pub(crate) fn start_frame(&mut self, dictionary: Option<&Dictionary>) -> Result<()> {
+        self.start_frame_with_entropy(
+            dictionary
+                .and_then(Dictionary::entropy)
+                .map(|entropy| entropy.view()),
+        )
     }
 
     /// Copy exact prepared dictionary tables and repeats, including duplicate
     /// repeats and normalized singleton tables with nonzero state widths.
     /// Construction is completed before changing this context. Raw/no
     /// dictionary starts with no reusable table and default repeats.
-    pub(crate) fn start_frame(&mut self, dictionary: Option<&Dictionary>) -> Result<()> {
-        let prepared = if let Some(entropy) = dictionary.and_then(Dictionary::entropy) {
+    pub(crate) fn start_frame_with_entropy(
+        &mut self,
+        entropy: Option<DictionaryEntropyView<'_>>,
+    ) -> Result<()> {
+        let prepared = if let Some(entropy) = entropy {
             let mut repeat = [0; 3];
             for (destination, &source) in repeat.iter_mut().zip(&entropy.repeat) {
                 *destination = u32::try_from(source).map_err(|_| Error::InvalidDictionary)?;
             }
             let tables = [
-                FseEncodingTable::from_decoding(&entropy.literal_lengths)?,
-                FseEncodingTable::from_decoding(&entropy.offsets)?,
-                FseEncodingTable::from_decoding(&entropy.match_lengths)?,
+                FseEncodingTable::from_decoding_view_in(
+                    entropy.literal_lengths,
+                    self.allocator.clone(),
+                )?,
+                FseEncodingTable::from_decoding_view_in(entropy.offsets, self.allocator.clone())?,
+                FseEncodingTable::from_decoding_view_in(
+                    entropy.match_lengths,
+                    self.allocator.clone(),
+                )?,
             ];
             Some((tables, repeat))
         } else {
@@ -135,17 +193,6 @@ impl SequenceEncoder {
             self.pending_repeat = repeat;
         }
         Ok(())
-    }
-
-    /// Invalidate frame state without freeing cached/default/spare allocations.
-    /// A subsequent start_frame may install a dictionary for the next frame.
-    pub(crate) fn reset(&mut self) {
-        self.discard();
-        for channel in &mut self.channels {
-            channel.source = Source::Unavailable;
-        }
-        self.repeat = [1, 4, 8];
-        self.pending_repeat = self.repeat;
     }
 
     /// Replace any older candidate. Validation or allocation failure leaves
@@ -207,33 +254,36 @@ impl SequenceEncoder {
         }
         if self.defaults.is_none() {
             self.defaults = Some([
-                FseEncodingTable::new(&LL_DEFAULT, 6)?,
-                FseEncodingTable::new(&OF_DEFAULT, 5)?,
-                FseEncodingTable::new(&ML_DEFAULT, 6)?,
+                FseEncodingTable::new_in(&LL_DEFAULT, 6, self.allocator.clone())?,
+                FseEncodingTable::new_in(&OF_DEFAULT, 5, self.allocator.clone())?,
+                FseEncodingTable::new_in(&ML_DEFAULT, 6, self.allocator.clone())?,
             ]);
         }
         let defaults = self.defaults.as_ref().ok_or(Error::CorruptData)?;
         let choices = [
-            fse_select::select(
+            fse_select::select_in(
                 &self.symbols[0],
                 &defaults[0],
                 self.channels[0].available(&defaults[0]),
                 35,
                 9,
+                self.allocator.clone(),
             )?,
-            fse_select::select(
+            fse_select::select_in(
                 &self.symbols[1],
                 &defaults[1],
                 self.channels[1].available(&defaults[1]),
                 31,
                 8,
+                self.allocator.clone(),
             )?,
-            fse_select::select(
+            fse_select::select_in(
                 &self.symbols[2],
                 &defaults[2],
                 self.channels[2].available(&defaults[2]),
                 52,
                 9,
+                self.allocator.clone(),
             )?,
         ];
         encode_sequences(
@@ -268,16 +318,21 @@ impl SequenceEncoder {
             self.section.push(count as u8);
         } else {
             self.section.push(255);
-            self.section
-                .extend_from_slice(&((count - 0x7f00) as u16).to_le_bytes());
+            for byte in ((count - 0x7f00) as u16).to_le_bytes() {
+                self.section.push(byte);
+            }
         }
         let modes = choices.each_ref().map(|choice| choice.mode());
         self.section
             .push(((modes[0] as u8) << 6) | ((modes[1] as u8) << 4) | ((modes[2] as u8) << 2));
         for choice in &choices {
-            self.section.extend_from_slice(choice.description());
+            for &byte in choice.description() {
+                self.section.push(byte);
+            }
         }
-        self.section.extend_from_slice(self.writer.as_bytes());
+        for &byte in self.writer.as_bytes() {
+            self.section.push(byte);
+        }
         // Consume every borrowed choice before mutating the owner slots. Each
         // selected replacement is now complete; no fallible operation follows.
         let replacements = choices.map(|choice| choice.into_replacement());
@@ -290,6 +345,19 @@ impl SequenceEncoder {
         self.pending_repeat = repeat;
         self.prepared = true;
         Ok(())
+    }
+}
+
+impl<A: Allocator> SequenceEncoder<A> {
+    /// Invalidate frame state without freeing cached/default/spare allocations.
+    /// A subsequent start_frame may install a dictionary for the next frame.
+    pub(crate) fn reset(&mut self) {
+        self.discard();
+        for channel in &mut self.channels {
+            channel.source = Source::Unavailable;
+        }
+        self.repeat = [1, 4, 8];
+        self.pending_repeat = self.repeat;
     }
 
     /// Complete candidate sequence section, retained after commit until the
@@ -335,8 +403,9 @@ impl SequenceEncoder {
         self.writer.reset();
     }
 
-    /// All owned heap capacity, including inactive current/spare tables and
-    /// cached defaults. Excludes only inline records and caller-owned input.
+    /// Codec-owned payload capacity, including inactive current/spare tables
+    /// and cached defaults. Excludes inline records, caller-owned input, and
+    /// allocator-internal bookkeeping whose storage is opaque to this context.
     pub(crate) fn retained_capacity(&self) -> usize {
         self.defaults.as_ref().map_or(0, |tables| {
             tables.iter().map(FseEncodingTable::retained_capacity).sum()
@@ -359,6 +428,243 @@ mod tests {
     use crate::history::History;
     use crate::sequences::SequenceState;
     use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 64,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    #[test]
+    fn allocator_context_retains_every_slot_across_move_reset_and_discard() {
+        let owner = allocator();
+        let monitor = owner.monitor();
+        let mut custom = SequenceEncoder::new_in(owner);
+        let mut global = SequenceEncoder::new();
+        assert_eq!(monitor.snapshot().attempts, 0);
+        assert_ne!(
+            custom.plans.allocator().identity(),
+            custom.section.allocator().identity()
+        );
+        for symbols in &custom.symbols {
+            assert_ne!(symbols.allocator().identity(), custom.allocator.identity());
+        }
+        for phase in [0, 1] {
+            let workload = dense_workload(phase);
+            custom.prepare(&workload).unwrap();
+            global.prepare(&workload).unwrap();
+            assert_eq!(custom.as_bytes(), global.as_bytes());
+            assert_eq!(custom.pending_modes, Some([Mode::Compressed; 3]));
+            custom.commit();
+            global.commit();
+        }
+        assert!(custom.channels.iter().all(|channel| {
+            channel.current.as_ref().unwrap().retained_capacity() != 0
+                && channel.spare.as_ref().unwrap().retained_capacity() != 0
+        }));
+        // Nine dense tables have two allocations each. Plans, three symbol
+        // vectors, the complete section, and the writer account for six more.
+        assert_eq!(monitor.snapshot().live_blocks, 24);
+        assert_eq!(
+            monitor.snapshot().live_bytes,
+            custom.retained_capacity() as u128
+        );
+        let before = monitor.snapshot();
+        let capacity = custom.retained_capacity();
+        let mut moved = custom;
+        moved.discard();
+        moved.reset();
+        moved.commit();
+        assert_eq!(monitor.snapshot(), before);
+        assert_eq!(moved.retained_capacity(), capacity);
+        assert_eq!(moved.repeat, [1, 4, 8]);
+        assert!(moved.as_bytes().is_empty());
+        assert!(
+            moved
+                .channels
+                .iter()
+                .all(|channel| channel.source == Source::Unavailable)
+        );
+        drop(moved);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_dictionary_view_is_copied_into_borrowed_nonclone_context_storage() {
+        let serialized = singleton_dictionary([10; 3]).as_bytes().to_vec();
+        let source_owner = allocator();
+        let source_monitor = source_owner.monitor();
+        let dictionary = Dictionary::from_bytes_in(&serialized, source_owner).unwrap();
+        let source_before = source_monitor.snapshot();
+        let destination = allocator().into_non_clone();
+        let monitor = destination.monitor();
+        let mut context = SequenceEncoder::new_in(&destination);
+        context
+            .start_frame_with_entropy(dictionary.entropy().map(|entropy| entropy.view()))
+            .unwrap();
+        assert_eq!(source_monitor.snapshot(), source_before);
+        assert_eq!(monitor.snapshot().live_blocks, 6);
+        assert_eq!(context.repeat, [10; 3]);
+        for channel in &context.channels {
+            assert_eq!(channel.current.as_ref().unwrap().table_log(), 5);
+        }
+        drop(dictionary);
+        source_monitor.assert_released();
+        context.prepare(&[logical(1, 3, 10)]).unwrap();
+        assert_eq!(context.as_bytes(), [1, 0xfc, 0, 0x80]);
+        context.commit();
+        assert_eq!(context.repeat, [10; 3]);
+        assert_eq!(
+            monitor.snapshot().live_bytes,
+            context.retained_capacity() as u128
+        );
+        let before = monitor.snapshot();
+        context.start_frame_with_entropy(None).unwrap();
+        assert_eq!(context.repeat, [1, 4, 8]);
+        assert_eq!(monitor.snapshot(), before);
+        drop(context);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_dictionary_copy_failures_preserve_the_complete_pending_context() {
+        let dictionary = singleton_dictionary([10; 3]);
+        let entropy = dictionary.entropy().unwrap().view();
+        let baseline = allocator();
+        let baseline_monitor = baseline.monitor();
+        let mut probe = SequenceEncoder::new_in(baseline);
+        probe.start_frame_with_entropy(Some(entropy)).unwrap();
+        let attempts = baseline_monitor.snapshot().attempts;
+        assert_eq!(attempts, 6);
+        drop(probe);
+        baseline_monitor.assert_released();
+
+        let owner = allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut context = SequenceEncoder::new_in(&owner);
+        context.prepare(&[logical(7, 3, 7)]).unwrap();
+        let first = context.as_bytes().to_vec();
+        context.commit();
+        context.prepare(&[logical(1, 3, 7)]).unwrap();
+        let pending = context.as_bytes().to_vec();
+        let committed_repeat = context.repeat;
+        let pending_repeat = context.pending_repeat;
+        let pending_modes = context.pending_modes;
+        let sources = context.channels.each_ref().map(|channel| channel.source);
+        let capacity = context.retained_capacity();
+        for ordinal in 1..=attempts {
+            let before = monitor.snapshot();
+            monitor.set_fail_at(NonZeroU64::new(before.attempts + ordinal));
+            assert_eq!(
+                context.start_frame_with_entropy(Some(entropy)),
+                Err(Error::AllocationFailed)
+            );
+            assert_eq!(monitor.snapshot().attempts, before.attempts + ordinal);
+            assert_eq!(monitor.snapshot().failures, before.failures + 1);
+            assert_eq!(monitor.snapshot().live_bytes, before.live_bytes);
+            assert_eq!(monitor.snapshot().live_blocks, before.live_blocks);
+            assert_eq!(context.retained_capacity(), capacity);
+            assert_eq!(context.as_bytes(), pending);
+            assert_eq!(context.repeat, committed_repeat);
+            assert_eq!(context.pending_repeat, pending_repeat);
+            assert_eq!(context.pending_modes, pending_modes);
+            assert_eq!(
+                context.channels.each_ref().map(|channel| channel.source),
+                sources
+            );
+            assert!(context.prepared);
+            monitor.clear_failure();
+        }
+        context.commit();
+        let mut state = SequenceState::new();
+        let mut history = History::new(14);
+        history.start_frame(1024);
+        state
+            .decode(&first, b"abcdefg", &mut history, MAX_BLOCK_SIZE)
+            .unwrap();
+        state
+            .decode(context.as_bytes(), b"X", &mut history, MAX_BLOCK_SIZE)
+            .unwrap();
+        assert_eq!(history.into_bytes(), b"abcdefgabcXefg");
+        drop(context);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_prepare_failure_sweeps_preserve_committed_state_and_release_candidates() {
+        let first: Vec<_> = (0..64).map(|index| logical(1 + index % 2, 3, 7)).collect();
+        let next = [logical(2, 3, 5), logical(3, 4, 5)];
+        for initialized in [false, true] {
+            let baseline = allocator();
+            let baseline_monitor = baseline.monitor();
+            let mut probe = SequenceEncoder::new_in(baseline);
+            if initialized {
+                probe.prepare(&first).unwrap();
+                probe.commit();
+                assert!(
+                    probe
+                        .channels
+                        .iter()
+                        .any(|channel| channel.source == Source::Owned)
+                );
+            }
+            let start = baseline_monitor.snapshot().attempts;
+            probe.prepare(&next).unwrap();
+            let attempts = baseline_monitor.snapshot().attempts - start;
+            let expected = probe.as_bytes().to_vec();
+            assert!(attempts > 1);
+            drop(probe);
+            baseline_monitor.assert_released();
+            for ordinal in 1..=attempts {
+                let owner = allocator().into_non_clone();
+                let monitor = owner.monitor();
+                let mut context = SequenceEncoder::new_in(&owner);
+                if initialized {
+                    context.prepare(&first).unwrap();
+                    context.commit();
+                }
+                let repeat = context.repeat;
+                let sources = context.channels.each_ref().map(|channel| channel.source);
+                let start = monitor.snapshot().attempts;
+                monitor.set_fail_at(NonZeroU64::new(start + ordinal));
+                assert_eq!(context.prepare(&next), Err(Error::AllocationFailed));
+                assert_eq!(monitor.snapshot().attempts, start + ordinal);
+                assert_eq!(monitor.snapshot().failures, 1);
+                assert!(context.as_bytes().is_empty());
+                assert!(!context.prepared);
+                assert!(context.pending_modes.is_none());
+                assert_eq!(context.repeat, repeat);
+                assert_eq!(context.pending_repeat, repeat);
+                assert_eq!(
+                    context.channels.each_ref().map(|channel| channel.source),
+                    sources
+                );
+                assert_eq!(
+                    monitor.snapshot().live_bytes,
+                    context.retained_capacity() as u128
+                );
+                // Defaults are published as a complete array, never individual
+                // partially constructed owners. Retained scratch may grow.
+                if let Some(defaults) = &context.defaults {
+                    assert_eq!(
+                        defaults.each_ref().map(|table| table.table_log()),
+                        [6, 5, 6]
+                    );
+                }
+                context.commit();
+                assert_eq!(context.repeat, repeat);
+                monitor.clear_failure();
+                context.prepare(&next).unwrap();
+                assert_eq!(context.as_bytes(), expected);
+                drop(context);
+                monitor.assert_released();
+            }
+        }
+    }
 
     fn logical(literal_length: u32, match_length: u32, distance: u32) -> LogicalSequence {
         LogicalSequence {

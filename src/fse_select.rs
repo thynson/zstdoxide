@@ -87,6 +87,13 @@ impl<A: Allocator> Selection<'_, A> {
 /// table log. Missing symbols make borrowed candidates ineligible. New tables
 /// use independent Rust normalization, not upstream mode/normalization policy.
 /// No emitted table or repeat-offset state is mutated by this function.
+#[cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "Global convenience retained for direct selector callers"
+    )
+)]
 pub(crate) fn select<'a>(
     symbols: &[u8],
     predefined: &'a FseEncodingTable,

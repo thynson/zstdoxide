@@ -39,7 +39,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Replace the Huffman builder's Global-only priority queue with checked allocator-compatible storage and preserve all tree/tie vectors.
 - [x] Parameterize transactional literal contexts and codebook streams, preserving selected descriptions and failure publication.
 - [x] Parameterize supplied-table sequence bit emission with independent table and writer allocation.
-- [ ] Parameterize transactional sequence contexts, including default/current/spare owners and every temporary.
+- [x] Parameterize transactional sequence contexts, including default/current/spare owners and every temporary.
 - [x] Add allocator-independent validated FSE/Huffman table views without duplicating checked access algorithms.
 - [x] Parameterize decoding sequence state with borrowed dictionary-table fallback and explicit reset after partial failures.
 - [ ] Expose allocator-aware whole-buffer decoding with original output ownership and unchanged frame limits.
@@ -47,7 +47,9 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [ ] Add allocator-aware dictionary decoding collection with independent output ownership and complete scratch cleanup.
 - [x] Parameterize greedy match tables and seed copies with allocator-independent source storage and identical safe/unsafe candidates.
 - [x] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
-- [ ] Expose allocator-aware block/stream encoding and one-shot output without allocator-changing copies.
+- [ ] Parameterize chain/lazy parser table and output storage while preserving resolver and ordering contracts.
+- [ ] Expose allocator-aware block encoding with dictionary handles and transactional entropy publication.
+- [ ] Expose allocator-aware stream encoding and one-shot output without allocator-changing copies.
 - [x] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
 - [x] Define allocation-free borrowed dictionary views and a sealed immutable handle contract.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.

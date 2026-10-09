@@ -304,7 +304,7 @@
     }
   ],
   "coverage": {
-    "normal_per_configuration": "10 passed; 1 optional C oracle ignored",
+    "normal_per_configuration": "10 passed in all six configurations; 1 optional C oracle ignored in each of the five std configurations, 0 ignored in no-default-features (oracle is cfg(std))",
     "configurations": [
       "default",
       "unsafe-fse",
