@@ -3319,7 +3319,7 @@
       "suite": "cli",
       "role": "test_case",
       "status": "partial",
-      "reason": "All four corpus inputs roundtrip in Rust and interoperate with the oracle; output-directory CLI handling, target block size, level 19, and mml=7 controls remain absent.",
+      "reason": "All four corpus inputs roundtrip in Rust and interoperate with the oracle. Output-directory CLI handling, target compressed block size, and the original level-19/minMatch-7 block-splitter combination remain unported. Admitted Fast requests can use minMatch 7, which does not execute the required level-19 algorithm or this CLI campaign.",
       "rust_tests": [
         "tests/upstream_golden.rs"
       ],
@@ -4924,7 +4924,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "blocked",
-      "reason": "The defining random insufficient compression-output-capacity contract requires a caller-buffer encoder API. Streaming output exhaustion is resumable rather than the atomic one-shot failure required here; compression-level and one-shot context variants also remain absent.",
+      "reason": "The defining random insufficient compression-output-capacity contract requires an atomic caller-buffer encoder API. Streaming output exhaustion is resumable, and the owned-Vec Fast API does not accept the chosen destination capacity. Admitted no-dictionary numeric Fast levels exist, but this target's reusable one-shot CCtx, full level range and external sequence-producer variants remain unported.",
       "rust_tests": [],
       "line_count": 60,
       "cases": [
@@ -4935,7 +4935,7 @@
           "line_end": 60,
           "label": "LLVMFuzzerTestOneInput",
           "status": "blocked",
-          "reason": "The defining random insufficient compression-output-capacity contract requires a caller-buffer encoder API. Streaming output exhaustion is resumable rather than the atomic one-shot failure required here; compression-level and one-shot context variants also remain absent.",
+          "reason": "The defining random insufficient compression-output-capacity contract requires an atomic caller-buffer encoder API. Streaming output exhaustion is resumable, and the owned-Vec Fast API does not accept the chosen destination capacity. Admitted no-dictionary numeric Fast levels exist, but this target's reusable one-shot CCtx, full level range and external sequence-producer variants remain unported.",
           "rust_tests": []
         }
       ]
@@ -5143,7 +5143,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Named one-shot/streaming regressions, deterministic corpora, prepared dictionary parsing, dictionary/prefix encode/decode and independent raw/formatted training run. Pure reference parameter validation/query/adjustment groups and qualified supported-options lifecycle assertions are mapped separately; detached profiles do not configure compression. Dictionary/options/reset adapters retain original dimensions with a declared RDG corpus and explicit Rust reset/default semantics. Bounded live hash/search settings now cover getter/reset and dictionary-attachment/order subsets; bounded no-dictionary Fast numeric execution now adapts the original negative-level size assertion; other numeric algorithms and remaining advanced live controls, COVER/fastCover optimization, randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
+      "reason": "Named one-shot/streaming regressions, deterministic corpora, prepared dictionary parsing, dictionary/prefix encode/decode and independent raw/formatted training run. Pure reference parameter validation/query/adjustment groups and qualified supported-options lifecycle assertions are mapped separately; scalar queries do not mutate live contexts; admitted detached requests separately drive whole-buffer no-dictionary Fast compression. Dictionary/options/reset adapters retain original dimensions with a declared RDG corpus and explicit Rust reset/default semantics. Bounded live hash/search settings now cover getter/reset and dictionary-attachment/order subsets; bounded no-dictionary Fast numeric execution now adapts the original negative-level size assertion; other numeric algorithms and remaining advanced live controls, COVER/fastCover optimization, randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
       "rust_tests": [
         "tests/upstream_fuzzer.rs",
         "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame",
@@ -5434,7 +5434,7 @@
           "line_end": 722,
           "label": "test%3u : compress %u bytes :",
           "status": "partial",
-          "reason": "Original 5-MiB RDG input and full output comparison run through the one-shot adapter. Level 1 is unsupported; reusable contexts exist but this original context setup is not mapped by that adapter.",
+          "reason": "The original 5-MiB RDG input and full output comparison run through the existing named one-shot adapter. A separate no-dictionary Fast API now supports level 1, but this mapped adapter has not been switched to the original numeric call or reusable C context setup/sizeof reporting. Numeric API availability alone does not port this group.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
           ]
@@ -5707,7 +5707,7 @@
           "line_end": 1019,
           "label": "test%3i : ZSTD_compressCCtx() doesn't use advanced parameters",
           "status": "blocked",
-          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
+          "reason": "The original group first installs magicless output in a reusable CCtx, then checks that ZSTD_compressCCtx at level 1 ignores that advanced setting and emits standard magic. Whole-buffer Fast level 1 exists, but no mutable magicless CCtx setting or legacy-call parameter-clearing path is exposed, so this defining configuration-inheritance assertion remains unported.",
           "rust_tests": []
         },
         {
@@ -5737,7 +5737,7 @@
           "line_end": 1034,
           "label": "test%3i : ZSTD_compress_advanced() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
+          "reason": "The original ZSTD_compress_advanced call uses the level-one parameter record after magicless format was installed in a reusable CCtx, and must emit standard magic by ignoring the prior advanced setting. Scalar parameter inspection and no-dictionary Fast request compression exist; mutable magicless context state and this legacy advanced-call inheritance contract remain unported.",
           "rust_tests": []
         },
         {
@@ -5956,7 +5956,7 @@
           "line_end": 1763,
           "label": "test%3d : ZSTD_CCtx_getParameter() :",
           "status": "partial",
-          "reason": "Detached reference request getters preserve default level/hash auto, explicit hashLog 6 across level-seven changes, and restoration by Default. A separate live search test follows the original getter/start/session-reset/parameter-reset sequence for all three named policies without allocation or owner cloning. Live Rust hash controls have concrete default 16/minimum 10, unlike C automatic 0/minimum 6; numeric levels remain inspection only. Other supported live settings survive partial headers, input, Flush, Finish and rejected configuration. Rust retains its explicit Finished/reset protocol and checksum/pledge defaults.",
+          "reason": "Detached reference request getters preserve default level/hash auto, explicit hashLog 6 across level-seven changes, and restoration by Default. A separate live search test follows the original getter/start/session-reset/parameter-reset sequence for all three named policies without allocation or owner cloning. Live Rust hash controls have concrete default 16/minimum 10, unlike C automatic 0/minimum 6; numeric level getters are not attached to the live named Encoder; separate whole-buffer APIs execute admitted Fast requests. Other supported live settings survive partial headers, input, Flush, Finish and rejected configuration. Rust retains its explicit Finished/reset protocol and checksum/pledge defaults.",
           "rust_tests": [
             "tests/upstream_parameters.rs#requested_hash_override_survives_level_changes_and_default_replacement",
             "tests/upstream_parameters.rs#explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values",
@@ -6024,7 +6024,7 @@
           "line_end": 1928,
           "label": "test%3d : overflow protection with large windowLog :",
           "status": "blocked",
-          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
+          "reason": "The original level -999 campaign repeatedly reuses a CCtx with unknown source size, disabled content size and ZSTD_WINDOWLOG_MAX for enough 5-MiB compressions to cross the U32 index boundary. Whole-buffer negative Fast profiles exist, but the 1-MiB operational window cap, known-size one-shot lifetime and checked usize indices do not implement this large-window C index-rescaling/context-reuse stress contract.",
           "rust_tests": []
         },
         {
@@ -6955,7 +6955,7 @@
           "line_end": 3012,
           "label": "test%3i : ZSTD_CCtx_refCDict() then set parameters :",
           "status": "partial",
-          "reason": "Operational hashLog 12 is installed and read on both sides of dictionary attachment for raw/formatted dictionaries, shared/borrowed handles and all three named policies. Each flow verifies complete decoding and byte-identical session reuse. Earlier supported-options frames are separately C-decoded. The original profile-specific CDict, numeric level one and C attachment-parameter inheritance remain unimplemented.",
+          "reason": "Operational hashLog 12 is installed and read on both sides of dictionary attachment for raw/formatted dictionaries, shared/borrowed handles and all three named policies. Each flow verifies complete decoding and byte-identical session reuse. Earlier supported-options frames are separately C-decoded. The original profile-specific CDict, dictionary-aware numeric level-one execution and C attachment-parameter inheritance remain unimplemented; the new numeric Fast entry points are no-dictionary whole-buffer APIs.",
           "rust_tests": [
             "tests/upstream_parameter_lifecycle.rs#dictionary_and_supported_options_order_produce_identical_complete_frames",
             "tests/upstream_parameter_lifecycle.rs#frame_flags_and_invalid_windows_preserve_atomic_supported_configuration",
@@ -7285,7 +7285,7 @@
           "line_end": 3512,
           "label": "test%3i : parameters in order :",
           "status": "blocked",
-          "reason": "The original level-two, enabled long-distance matching and windowLog-18 order permutations require operational numeric levels and LDM. Their equal compressed size and XXH64 assertions remain unported; detached override-order queries and named-policy dictionary/options ordering do not establish these output semantics.",
+          "reason": "The original 5-MiB-buffer/2 input, level-two, enabled long-distance matching and windowLog-18 setter-order permutations require the unimplemented LDM engine and live numeric CCtx setter/configuration semantics. No-dictionary level-two Fast execution is available for this input-size tier, but does not implement these LDM-enabled equal-size and XXH64 output assertions. Detached no-LDM override queries and named-policy dictionary/options ordering are separate coverage.",
           "rust_tests": []
         },
         {
@@ -7295,7 +7295,7 @@
           "line_end": 3532,
           "label": "test%3i : parameters disordered :",
           "status": "blocked",
-          "reason": "The original level-two, enabled long-distance matching and windowLog-18 order permutations require operational numeric levels and LDM. Their equal compressed size and XXH64 assertions remain unported; detached override-order queries and named-policy dictionary/options ordering do not establish these output semantics.",
+          "reason": "The original 5-MiB-buffer/2 input, level-two, enabled long-distance matching and windowLog-18 setter-order permutations require the unimplemented LDM engine and live numeric CCtx setter/configuration semantics. No-dictionary level-two Fast execution is available for this input-size tier, but does not implement these LDM-enabled equal-size and XXH64 output assertions. Detached no-LDM override queries and named-policy dictionary/options ordering are separate coverage.",
           "rust_tests": []
         },
         {
@@ -7603,7 +7603,7 @@
           "line_end": 4116,
           "label": "test%3i : incompressible data and ill suited dictionary :",
           "status": "blocked",
-          "reason": "Raw/formatted training and dictionary compression exist. The original 1-MiB CNBuffer training followed by byte inversion and 500-byte compression at level 1 remains unported; level selection is unsupported.",
+          "reason": "Raw/formatted training and named-policy dictionary compression exist. The original 1-MiB CNBuffer training followed by full-buffer byte inversion and 500-byte dictionary compression at level 1 remains unported. No-dictionary level-one Fast is now available; dictionary Fast execution and this exact trained-dictionary/source-state campaign remain the gaps.",
           "rust_tests": []
         },
         {
@@ -10548,7 +10548,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Bounded contexts cover fragmented progress, checksums, flush/finish, pledges/reset, dictionary/prefix encode/decode and prepared entropy/repeat offsets. Detached source-hint inspection and supported live getter/configuration/reset assertions now have precise qualified mappings. Rust retains explicit Finished reset and its checksum/pledge defaults; numeric legacy initialization and parameter execution are not implemented. Original broad sequence schedules, remaining level/parameter combinations, stable buffers, C allocation/workspace APIs, workers and magicless modes remain incomplete.",
+      "reason": "Bounded contexts cover fragmented progress, checksums, flush/finish, pledges/reset, dictionary/prefix encode/decode and prepared entropy/repeat offsets. Detached source-hint inspection and supported live getter/configuration/reset assertions now have precise qualified mappings. Rust retains explicit Finished reset and its checksum/pledge defaults; live numeric streaming setters and legacy initialization are not implemented; separate whole-buffer no-dictionary APIs now execute admitted Fast profiles. Original broad sequence schedules, remaining level/parameter combinations, stable buffers, C allocation/workspace APIs, workers and magicless modes remain incomplete.",
       "rust_tests": [
         "tests/upstream_streaming.rs#exact_small_sequence_sections_survive_every_chunk_boundary",
         "tests/upstream_streaming.rs#exact_history_overwrite_regression_survives_output_fragmentation",
@@ -11448,7 +11448,7 @@
           "line_end": 1620,
           "label": "test%3i : ZSTD_initCStream_advanced sets requestedParams :",
           "status": "partial",
-          "reason": "Concrete reference profiles retain all seven fields, while supported live settings survive processing/session reset and restore documented Rust defaults on parameter/full reset. This does not port level-nine ZSTD_initCStream_advanced bulk initialization or its live numeric badParameters comparison; reference profiles are inspection-only.",
+          "reason": "Concrete reference profiles retain all seven fields, while supported live settings survive processing/session reset and restore documented Rust defaults on parameter/full reset. This does not port level-nine ZSTD_initCStream_advanced bulk initialization or its live numeric badParameters comparison; this level-nine/live-streaming subset remains scalar inspection, while separate whole-buffer APIs execute admitted Fast profiles.",
           "rust_tests": [
             "tests/upstream_parameters.rs#concrete_validation_retains_all_fields_and_rejects_original_invalid_values",
             "tests/upstream_parameter_lifecycle.rs#settings_survive_partial_output_flush_finish_and_rejected_configuration",

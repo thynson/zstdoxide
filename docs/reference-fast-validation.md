@@ -575,3 +575,14 @@ budgets do not establish atomic caller-buffer errors, CCtx/DCtx reuse, mutable
 decoder settings, advanced parameter schedules or in-place overlap. The structural
 inventory still has 188 unfinished source units; the complete-migration gate is
 not satisfied by these bounded successes.
+
+The final numeric-coverage audit updates current inventory wording to distinguish
+implemented whole-buffer Fast execution from still-unported live contexts,
+dictionaries, LDM, workspace/index-reduction, full numeric ranges and CLI
+contracts. Fifteen inventory reasons and the current streaming guide are
+clarified without promoting any source/case status. The human-readable fuzzer
+mapping is synchronized for the affected numeric anchors; historical evidence
+remains explicitly tied to its original adapters. The bounded module's planned
+numeric/independent-frame assertions are now covered by the separate checked
+commits above. Final feature/platform validation and Fast measurements remain
+required before the module is recorded complete.

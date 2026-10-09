@@ -122,3 +122,15 @@ The bounded file reader also rejects a file that grows beyond the cap between
 metadata inspection and reading. Filesystem tests verify sorted nested traversal,
 symlink-loop exclusion on Unix, exact byte reads, and oversized-file rejection.
 The ignored external runner is an opt-in workload, not a skipped codec feature.
+
+## Additional admitted Fast simple-round-trip subset
+
+Module 12 adds `tests/upstream_reference_fast.rs` without changing the existing
+named-policy corpus. Its frozen C selector capture preserves original packet
+length for capacities, prefix reservation, capacity reduction, branch, signed
+level and decoder-toggle order. Of 81 recipes, 57 admitted simple cases execute
+twice and decode exactly, 20 reject explicitly, and four advanced tails remain
+unconsumed. Compressed sizes fit the captured C bound minus the selected
+reduction; owned vectors do not implement the original caller-buffer failure
+contract. Reusable CCtx/DCtx, mutable max-block settings, advanced random
+parameters, external sequences and in-place overlap remain unported.

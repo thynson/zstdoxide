@@ -78,8 +78,10 @@ assert_eq!(encoder.options(), options);
 Rejected replacement leaves the whole session unchanged, including any pending
 Flush/Finish and its poison state. It does not cancel a frame. To discard a
 session and install validated settings together, use `reset_with_options`.
-Reference numeric levels and reference strategies belong to parameter
-inspection; this method accepts only the implemented named Rust policies.
+This method accepts only the implemented named Rust policies. Reference
+profiles are inspected by the parameter API and executed, when admitted, by the
+separate whole-buffer Fast entry points; live numeric streaming configuration
+remains unsupported.
 
 ## Resetting an encoder
 
