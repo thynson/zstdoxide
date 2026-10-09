@@ -49,7 +49,8 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
 - [x] Parameterize chain/lazy parser table and output storage while preserving resolver and ordering contracts.
 - [ ] Expose allocator-aware block encoding with dictionary handles and transactional entropy publication.
-- [ ] Expose allocator-aware stream encoding and one-shot output without allocator-changing copies.
+- [ ] Expose allocator-aware stream encoding with independent dictionary handles and unchanged reset/directive contracts.
+- [ ] Add allocator-aware one-shot compression with original output ownership and no allocator-changing copies.
 - [x] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
 - [x] Define allocation-free borrowed dictionary views and a sealed immutable handle contract.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
@@ -59,7 +60,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [ ] Inject failure at each observed codec allocation, including HUF/FSE candidates, history growth, dictionary preparation, reset, and final drop.
 - [ ] Adapt the original 89,456,640-byte custom-context source campaign with explicit seeds and supported strategy/API qualifications.
 - [ ] Validate standard/custom allocation under safe, each individual unsafe feature, and all features with no_std and independent C checks.
-- [ ] Execute focused 32-bit and big-endian tests, compile a no-pointer-atomics target, and distinguish runner limits from passing execution.
+- [x] Execute focused 32-bit and big-endian tests, compile a no-pointer-atomics target, and distinguish runner limits from passing execution.
 - [ ] Compare deterministic output, allocation counts, peak live bytes, retained capacity, and time on identical Global/custom workloads.
 - [ ] Record the final compiler/platform evidence, allocator safety review, and remaining static-workspace/estimator/shrinking/1.100 verification gaps.
 

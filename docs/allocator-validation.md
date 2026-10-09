@@ -511,9 +511,27 @@ owners. Returned dictionaries retain no content/sample borrow. Miri covers
 bounded owner movement, temporary release, malformed input and final-copy
 failure; full ordinal sweeps run in normal builds.
 
+Focused platform execution is recorded in the
+[platform report](allocator-platform-validation.md) and
+[exact evidence](evidence/2026-10-09-allocator-platform.json). On isolated commit
+`dac4a43`, strict-provenance Miri interpreted ten safe and nine all-feature tests
+on each of i686 (32-bit little-endian) and s390x (64-bit big-endian). All 38
+selected executions passed, plus two preliminary history checks. Both safe
+runs include all 23 C checksum vectors through 1 MiB; the identical shared
+checksum test was omitted from the all-feature repeat. Interrupted duplicate
+attempts remain diagnostic records, not passing-batch claims.
+
+The no-pointer-atomics thumbv6m target passed offline no_std library compilation
+and safe/all-feature caller code generation. The caller explicitly requires the
+Rc dictionary type and instantiates allocator-aware decoder/dictionary paths.
+This does not execute an embedded allocator or produce a linked firmware image.
+Miri interpretation is distinct from native/QEMU testing. The report records the
+Linux test-helper mutex no-unwind review, exact source snapshot, and remaining
+platform limitations; later encoder changes require their own validation.
+
 The owner-by-owner implementation and failure-injection results will be added
-as their focused checks complete. Whole-codec custom allocation, 32-bit and
-big-endian execution, and no-pointer-atomics compilation remain open. The
+as their focused checks complete. Whole-codec custom allocation and the final
+integrated platform matrix remain open. The
 [upstream allocation plan](upstream-allocation-plan.md) distinguishes ordinary
 allocator control from static workspaces, shrinking policies, estimators,
 stable buffers, and C numeric compression levels.

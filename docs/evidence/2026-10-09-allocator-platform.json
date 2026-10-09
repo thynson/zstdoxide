@@ -1,0 +1,681 @@
+{
+  "schema_version": 1,
+  "purpose": "Focused Module 9 width, byte-order, allocation-ownership, and no-pointer-atomics checkpoint",
+  "reference_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "capabilities": {
+    "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+    "miri": "miri 0.1.0 (1d81eb4ad9 2026-10-07)\n",
+    "commit": "dac4a4318ac85fda63daffcc9839e85b05810b64",
+    "snapshot": "/tmp/zstdoxide-module9-platform-dac4a43",
+    "targets": {
+      "i686-unknown-linux-gnu": {
+        "cfg_file": "/tmp/zstdoxide-platform-i686-unknown-linux-gnu-cfg.txt",
+        "cfg_sha256": "78e5dfe79a40829b69be3b0e0f1fcdd29a6ca5aa998877d7bc0d070644707e0b",
+        "cfg": [
+          "debug_assertions",
+          "fmt_debug=\"full\"",
+          "overflow_checks",
+          "panic=\"unwind\"",
+          "relocation_model=\"pic\"",
+          "target_abi=\"\"",
+          "target_arch=\"x86\"",
+          "target_endian=\"little\"",
+          "target_env=\"gnu\"",
+          "target_family=\"unix\"",
+          "target_feature=\"fxsr\"",
+          "target_feature=\"sse\"",
+          "target_feature=\"sse2\"",
+          "target_feature=\"x87\"",
+          "target_has_atomic",
+          "target_has_atomic=\"16\"",
+          "target_has_atomic=\"32\"",
+          "target_has_atomic=\"64\"",
+          "target_has_atomic=\"8\"",
+          "target_has_atomic=\"ptr\"",
+          "target_has_atomic_load_store",
+          "target_has_atomic_load_store=\"16\"",
+          "target_has_atomic_load_store=\"32\"",
+          "target_has_atomic_load_store=\"64\"",
+          "target_has_atomic_load_store=\"8\"",
+          "target_has_atomic_load_store=\"ptr\"",
+          "target_has_atomic_primitive_alignment=\"16\"",
+          "target_has_atomic_primitive_alignment=\"32\"",
+          "target_has_atomic_primitive_alignment=\"8\"",
+          "target_has_atomic_primitive_alignment=\"ptr\"",
+          "target_has_reliable_f128",
+          "target_has_reliable_f16",
+          "target_has_reliable_f16_math",
+          "target_has_threads",
+          "target_object_format=\"elf\"",
+          "target_os=\"linux\"",
+          "target_pointer_width=\"32\"",
+          "target_thread_local",
+          "target_vendor=\"unknown\"",
+          "ub_checks",
+          "unix"
+        ]
+      },
+      "s390x-unknown-linux-gnu": {
+        "cfg_file": "/tmp/zstdoxide-platform-s390x-unknown-linux-gnu-cfg.txt",
+        "cfg_sha256": "2064e81ead58ea894cfbf643cc3e5cf767e9f16ac953d2b8a325bfb7e85094fe",
+        "cfg": [
+          "debug_assertions",
+          "fmt_debug=\"full\"",
+          "overflow_checks",
+          "panic=\"unwind\"",
+          "relocation_model=\"pic\"",
+          "target_abi=\"\"",
+          "target_arch=\"s390x\"",
+          "target_endian=\"big\"",
+          "target_env=\"gnu\"",
+          "target_family=\"unix\"",
+          "target_has_atomic",
+          "target_has_atomic=\"128\"",
+          "target_has_atomic=\"16\"",
+          "target_has_atomic=\"32\"",
+          "target_has_atomic=\"64\"",
+          "target_has_atomic=\"8\"",
+          "target_has_atomic=\"ptr\"",
+          "target_has_atomic_load_store",
+          "target_has_atomic_load_store=\"128\"",
+          "target_has_atomic_load_store=\"16\"",
+          "target_has_atomic_load_store=\"32\"",
+          "target_has_atomic_load_store=\"64\"",
+          "target_has_atomic_load_store=\"8\"",
+          "target_has_atomic_load_store=\"ptr\"",
+          "target_has_atomic_primitive_alignment=\"16\"",
+          "target_has_atomic_primitive_alignment=\"32\"",
+          "target_has_atomic_primitive_alignment=\"64\"",
+          "target_has_atomic_primitive_alignment=\"8\"",
+          "target_has_atomic_primitive_alignment=\"ptr\"",
+          "target_has_reliable_f128",
+          "target_has_reliable_f128_math",
+          "target_has_reliable_f16",
+          "target_has_reliable_f16_math",
+          "target_has_threads",
+          "target_object_format=\"elf\"",
+          "target_os=\"linux\"",
+          "target_pointer_width=\"64\"",
+          "target_thread_local",
+          "target_vendor=\"unknown\"",
+          "ub_checks",
+          "unix"
+        ]
+      },
+      "thumbv6m-none-eabi": {
+        "cfg_file": "/tmp/zstdoxide-platform-thumbv6m-none-eabi-cfg.txt",
+        "cfg_sha256": "9fa0bdd5bcb5493f15176d348fb82a1514d7a830c6773343150c1af3b86b39b6",
+        "cfg": [
+          "debug_assertions",
+          "fmt_debug=\"full\"",
+          "overflow_checks",
+          "panic=\"abort\"",
+          "relocation_model=\"static\"",
+          "target_abi=\"eabi\"",
+          "target_arch=\"arm\"",
+          "target_endian=\"little\"",
+          "target_env=\"\"",
+          "target_feature=\"mclass\"",
+          "target_feature=\"thumb-mode\"",
+          "target_feature=\"v5te\"",
+          "target_feature=\"v6\"",
+          "target_feature=\"v6m\"",
+          "target_has_atomic_load_store",
+          "target_has_atomic_load_store=\"16\"",
+          "target_has_atomic_load_store=\"32\"",
+          "target_has_atomic_load_store=\"8\"",
+          "target_has_atomic_load_store=\"ptr\"",
+          "target_has_atomic_primitive_alignment=\"16\"",
+          "target_has_atomic_primitive_alignment=\"32\"",
+          "target_has_atomic_primitive_alignment=\"8\"",
+          "target_has_atomic_primitive_alignment=\"ptr\"",
+          "target_has_reliable_f128",
+          "target_has_reliable_f16",
+          "target_has_reliable_f16_math",
+          "target_has_threads",
+          "target_object_format=\"elf\"",
+          "target_os=\"none\"",
+          "target_pointer_width=\"32\"",
+          "target_vendor=\"unknown\"",
+          "ub_checks"
+        ]
+      }
+    },
+    "stdlib_sources": [
+      {
+        "path": "/Users/lanxingcan/.rustup/toolchains/nightly-2026-10-08-aarch64-apple-darwin/lib/rustlib/src/rust/library/std/src/sys/sync/mutex/mod.rs",
+        "sha256": "a58c3f5605de2ec78f6b621fa1138042cc40088cf43e21694ab08129b47b1470"
+      },
+      {
+        "path": "/Users/lanxingcan/.rustup/toolchains/nightly-2026-10-08-aarch64-apple-darwin/lib/rustlib/src/rust/library/std/src/sys/sync/mutex/futex.rs",
+        "sha256": "ad217728f14b7385f923f6471336ee772ea739baa78f7633a9d564433227b20c"
+      },
+      {
+        "path": "/Users/lanxingcan/.rustup/toolchains/nightly-2026-10-08-aarch64-apple-darwin/lib/rustlib/src/rust/library/std/src/sync/poison/mutex.rs",
+        "sha256": "7bcfaa04fc7df7e1a5bf7ea8d7185b7820e840ed26fa05e448419a724f8e1af7"
+      }
+    ],
+    "miri_readme": {
+      "path": "/Users/lanxingcan/.rustup/toolchains/nightly-2026-10-08-aarch64-apple-darwin/share/doc/miri/README.md",
+      "sha256": "2a49a1cfdceaaa53d3ee7a51249796f95fe1dc5dddb755962ed0845814d2376c",
+      "cross_interpretation_lines": [
+        149,
+        160
+      ],
+      "supported_targets_lines": [
+        254,
+        277
+      ]
+    },
+    "snapshot_source_files": [
+      {
+        "path": "Cargo.lock",
+        "sha256": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d"
+      },
+      {
+        "path": "Cargo.toml",
+        "sha256": "d6b0afa6843e305362f2e27dce83c7dfd33b7b41ae96a193a8d6fe3e5fb72383"
+      },
+      {
+        "path": "rust-toolchain.toml",
+        "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20"
+      },
+      {
+        "path": "src/bitstream.rs",
+        "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+      },
+      {
+        "path": "src/bitwriter.rs",
+        "sha256": "ac8a1969268f61d5c1a976c625aaab05b4a76d377ae381782982d7300b964ccc"
+      },
+      {
+        "path": "src/constants.rs",
+        "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+      },
+      {
+        "path": "src/cursor.rs",
+        "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+      },
+      {
+        "path": "src/decode.rs",
+        "sha256": "e29cdae3367b689d36769484e9ff138e1ffd8d5900225b2a27f8de4bec6d4905"
+      },
+      {
+        "path": "src/dictionary.rs",
+        "sha256": "e04767e6811e4a7fed3bce4780dbfd57ad81f93b06410731285f1616c164c89b"
+      },
+      {
+        "path": "src/dictionary_train.rs",
+        "sha256": "b2c9370fb7e1064b0255ca2f516f08f72052b45ef5cdabaac126333f5db3e945"
+      },
+      {
+        "path": "src/encode.rs",
+        "sha256": "9943e01f939b6185f1554c3dac7964c4d5b681e7d25099578d696653a2ff2073"
+      },
+      {
+        "path": "src/entropy_encode.rs",
+        "sha256": "709558f36a3ee48c680075eadfd284afc6361108c303ec05150be21f6c27a756"
+      },
+      {
+        "path": "src/entropy_output.rs",
+        "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+      },
+      {
+        "path": "src/error.rs",
+        "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+      },
+      {
+        "path": "src/frame.rs",
+        "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+      },
+      {
+        "path": "src/fse.rs",
+        "sha256": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864"
+      },
+      {
+        "path": "src/fse_encode.rs",
+        "sha256": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68"
+      },
+      {
+        "path": "src/fse_select.rs",
+        "sha256": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3"
+      },
+      {
+        "path": "src/heap.rs",
+        "sha256": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8"
+      },
+      {
+        "path": "src/history.rs",
+        "sha256": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999"
+      },
+      {
+        "path": "src/huffman.rs",
+        "sha256": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc"
+      },
+      {
+        "path": "src/huffman_codebook.rs",
+        "sha256": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b"
+      },
+      {
+        "path": "src/huffman_encode.rs",
+        "sha256": "595ef6079f6f77dfbc2a2e7540e2c2aaad5e138f80b26951f1a08f4e433d0f2f"
+      },
+      {
+        "path": "src/lib.rs",
+        "sha256": "a5263eb5bf1229d0a29595de7d55a19125df2d7ecd537d8476de8d1ba28fb721"
+      },
+      {
+        "path": "src/literal_encode.rs",
+        "sha256": "d1e50ba7ba515906fef1c0413e1e8ed4d0ed18ce03cddb62b8bf331e4520c6cf"
+      },
+      {
+        "path": "src/literal_header.rs",
+        "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+      },
+      {
+        "path": "src/match_parse.rs",
+        "sha256": "5b1f02c688d31aa996103fa4f5a3473f5de7c27a72491aed29169fb7dc52807f"
+      },
+      {
+        "path": "src/matchchain.rs",
+        "sha256": "7128426b2ffb05f12ca5b227166879605469b515efef6009686735f3266fb446"
+      },
+      {
+        "path": "src/matchfinder.rs",
+        "sha256": "816544f36e7abb20546454133de5dd207900fae375d92a8f68b8cd3fa928a2b6"
+      },
+      {
+        "path": "src/ring_history.rs",
+        "sha256": "bde3d9b4f3dfb4a4aeb52caddd654534920fb5bfed041ad2abdd05c2a3385ec9"
+      },
+      {
+        "path": "src/sequence_context.rs",
+        "sha256": "5d6c0a78959f6800ff6aa6ce383b4235fb8ab3140494ac9054222bd9f24fdf58"
+      },
+      {
+        "path": "src/sequence_encode.rs",
+        "sha256": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61"
+      },
+      {
+        "path": "src/sequence_plan.rs",
+        "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+      },
+      {
+        "path": "src/sequences.rs",
+        "sha256": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb"
+      },
+      {
+        "path": "src/strategy.rs",
+        "sha256": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab"
+      },
+      {
+        "path": "src/stream.rs",
+        "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+      },
+      {
+        "path": "src/stream_decode.rs",
+        "sha256": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21"
+      },
+      {
+        "path": "src/stream_encode.rs",
+        "sha256": "e2a266edbbc0775fa0d5b2ded9c6fc82d81192e577ff6b32c136a4de7472d453"
+      },
+      {
+        "path": "src/training.rs",
+        "sha256": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      },
+      {
+        "path": "test-support/allocator/.gitignore",
+        "sha256": "07d64eb09a56c853b7853a47276799b38d7d6d25a4314b0c1abc10432c214e17"
+      },
+      {
+        "path": "test-support/allocator/Cargo.toml",
+        "sha256": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292"
+      },
+      {
+        "path": "test-support/allocator/README.md",
+        "sha256": "7a922896a4258b96ce39702be8cae20263a7685cbc23b0a19ae08d21c00121d8"
+      },
+      {
+        "path": "test-support/allocator/src/lib.rs",
+        "sha256": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971"
+      }
+    ],
+    "snapshot_matches_committed_tracked_source": true
+  },
+  "preparation_and_compile_commands": [
+    {
+      "command": "cargo miri setup --target i686-unknown-linux-gnu --offline",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-i686"
+      },
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/zstdoxide-platform-setup-i686.log",
+        "sha256": "762692fd099bb8e0486794c49279f18f17866f8ddb7ed2741ad10a42e1aa8a19",
+        "bytes": 2862
+      },
+      "summaries": [
+        "    Finished `custom_sysroot` profile [optimized] target(s) in 16.18s"
+      ]
+    },
+    {
+      "command": "cargo miri test --offline --locked --target i686-unknown-linux-gnu --lib ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head -- --exact",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/zstdoxide-platform-i686-initial.log",
+        "sha256": "803cb5c07f6b9ebccbf45e211211a40ca4d57f43e2054c05428aec67839a904a",
+        "bytes": 657
+      },
+      "summaries": [
+        "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.42s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 437 filtered out; finished in 0.18s"
+      ]
+    },
+    {
+      "command": "cargo miri setup --target s390x-unknown-linux-gnu --offline",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-s390x"
+      },
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/zstdoxide-platform-setup-s390x.log",
+        "sha256": "34b26bad6f1d762d9a5ceb896b26e416c097a863dfee522e88c4af5aac19779a",
+        "bytes": 2864
+      },
+      "summaries": [
+        "    Finished `custom_sysroot` profile [optimized] target(s) in 14.53s"
+      ]
+    },
+    {
+      "command": "cargo miri test --offline --locked --target s390x-unknown-linux-gnu --lib ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head -- --exact",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/zstdoxide-platform-s390x-initial.log",
+        "sha256": "b8ca02ef00ffd84149122ea66b07de90b39f80681e8f358959e8182a8252f3e9",
+        "bytes": 659
+      },
+      "summaries": [
+        "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.30s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 437 filtered out; finished in 0.18s"
+      ]
+    },
+    {
+      "command": "cargo check --offline --locked -Z build-std=core,alloc --target thumbv6m-none-eabi --no-default-features --lib",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-thumb"
+      },
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/zstdoxide-platform-thumb-safe.log",
+        "sha256": "fb155a7bb6d9ed91fdfb4d676c8cb5914f8703cd9e286e68605e3852e62ec09a",
+        "bytes": 614
+      },
+      "summaries": [
+        "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.58s"
+      ]
+    },
+    {
+      "command": "cargo +nightly-2026-10-08 build --offline -Z build-std=core,alloc --target thumbv6m-none-eabi --lib",
+      "cwd": "/tmp/zstdoxide-platform-rc-probe",
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-thumb"
+      },
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/zstdoxide-platform-rc-safe.log",
+        "sha256": "c9c9a1e0590404dae97625ee844b81074a03df640057f960fb196786568b61f9",
+        "bytes": 309
+      },
+      "summaries": [
+        "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.08s"
+      ]
+    },
+    {
+      "command": "cargo +nightly-2026-10-08 build --offline --locked -Z build-std=core,alloc --target thumbv6m-none-eabi --lib --features zstdoxide/unsafe-byte-cursor,zstdoxide/unsafe-bitstream,zstdoxide/unsafe-history,zstdoxide/unsafe-ring-history,zstdoxide/unsafe-fse,zstdoxide/unsafe-fse-encoder,zstdoxide/unsafe-huffman,zstdoxide/unsafe-huffman-codebook,zstdoxide/unsafe-match-table,zstdoxide/unsafe-match-chain,zstdoxide/unsafe-dictionary,zstdoxide/unsafe-training",
+      "cwd": "/tmp/zstdoxide-platform-rc-probe",
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-thumb"
+      },
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/zstdoxide-platform-rc-all.log",
+        "sha256": "fdc2656598f916083eb025720c1f456669b73592c198a6f0edc0dadac17dc7a7",
+        "bytes": 235
+      },
+      "summaries": [
+        "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.25s"
+      ]
+    }
+  ],
+  "cross_miri_results": [
+    {
+      "target": "i686-unknown-linux-gnu",
+      "backend": "safe",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "command": "cargo miri test --offline --locked --target i686-unknown-linux-gnu --lib -- --exact cursor::tests::failed_read_preserves_position_and_handles_overflow bitstream::tests::reads_unaligned_full_width xxhash::tests::official_vectors_cover_stripes_and_every_tail_path ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches fse::tests::table_views_preserve_rle_and_normalized_singleton_states_without_allocating huffman::tests::table_view_output_uses_an_independent_owner_and_recovers_after_failure stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers entropy_output::tests::native_word_thresholds_cover_empty_aligned_and_partial_markers_on_both_widths dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max --test-threads=1",
+      "exit_code": 0,
+      "seconds": 248.2187375840731,
+      "log": "/tmp/zstdoxide-platform-i686-safe.log",
+      "sha256": "46953dd568ea17738d9a48973af8c1608b03c7d6e7b50c528faea67c78adcc99",
+      "tests": [
+        "cursor::tests::failed_read_preserves_position_and_handles_overflow",
+        "bitstream::tests::reads_unaligned_full_width",
+        "xxhash::tests::official_vectors_cover_stripes_and_every_tail_path",
+        "ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head",
+        "ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches",
+        "fse::tests::table_views_preserve_rle_and_normalized_singleton_states_without_allocating",
+        "huffman::tests::table_view_output_uses_an_independent_owner_and_recovers_after_failure",
+        "stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers",
+        "entropy_output::tests::native_word_thresholds_cover_empty_aligned_and_partial_markers_on_both_widths",
+        "dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max"
+      ],
+      "summaries": [
+        "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 428 filtered out; finished in 359.48s"
+      ]
+    },
+    {
+      "target": "i686-unknown-linux-gnu",
+      "backend": "all",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "command": "cargo miri test --offline --locked --target i686-unknown-linux-gnu --lib --all-features -- --exact cursor::tests::failed_read_preserves_position_and_handles_overflow bitstream::tests::reads_unaligned_full_width ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches fse::tests::table_views_preserve_rle_and_normalized_singleton_states_without_allocating huffman::tests::table_view_output_uses_an_independent_owner_and_recovers_after_failure stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers entropy_output::tests::native_word_thresholds_cover_empty_aligned_and_partial_markers_on_both_widths dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max --test-threads=1",
+      "exit_code": 0,
+      "seconds": 37.042540750000626,
+      "log": "/tmp/zstdoxide-platform-i686-all.log",
+      "sha256": "d60a205899bec3643d011f1b8245823efd1647539d49cc9ff47c0280a153f5cd",
+      "tests": [
+        "cursor::tests::failed_read_preserves_position_and_handles_overflow",
+        "bitstream::tests::reads_unaligned_full_width",
+        "ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head",
+        "ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches",
+        "fse::tests::table_views_preserve_rle_and_normalized_singleton_states_without_allocating",
+        "huffman::tests::table_view_output_uses_an_independent_owner_and_recovers_after_failure",
+        "stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers",
+        "entropy_output::tests::native_word_thresholds_cover_empty_aligned_and_partial_markers_on_both_widths",
+        "dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max"
+      ],
+      "summaries": [
+        "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 429 filtered out; finished in 42.94s"
+      ]
+    },
+    {
+      "target": "s390x-unknown-linux-gnu",
+      "backend": "safe",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "command": "cargo miri test --offline --locked --target s390x-unknown-linux-gnu --lib -- --exact cursor::tests::failed_read_preserves_position_and_handles_overflow bitstream::tests::reads_unaligned_full_width xxhash::tests::official_vectors_cover_stripes_and_every_tail_path ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches fse::tests::table_views_preserve_rle_and_normalized_singleton_states_without_allocating huffman::tests::table_view_output_uses_an_independent_owner_and_recovers_after_failure stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers entropy_output::tests::native_word_thresholds_cover_empty_aligned_and_partial_markers_on_both_widths dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max --test-threads=1",
+      "exit_code": 0,
+      "seconds": 251.1722470840905,
+      "log": "/tmp/zstdoxide-platform-s390x-safe.log",
+      "sha256": "274f329d9f244f918bb29d34657ad2a1aa23cb976f84fe95defbc79057e96d11",
+      "tests": [
+        "cursor::tests::failed_read_preserves_position_and_handles_overflow",
+        "bitstream::tests::reads_unaligned_full_width",
+        "xxhash::tests::official_vectors_cover_stripes_and_every_tail_path",
+        "ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head",
+        "ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches",
+        "fse::tests::table_views_preserve_rle_and_normalized_singleton_states_without_allocating",
+        "huffman::tests::table_view_output_uses_an_independent_owner_and_recovers_after_failure",
+        "stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers",
+        "entropy_output::tests::native_word_thresholds_cover_empty_aligned_and_partial_markers_on_both_widths",
+        "dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max"
+      ],
+      "summaries": [
+        "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 428 filtered out; finished in 361.74s"
+      ]
+    },
+    {
+      "target": "s390x-unknown-linux-gnu",
+      "backend": "all",
+      "cwd": "/tmp/zstdoxide-module9-platform-dac4a43",
+      "environment": {
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "command": "cargo miri test --offline --locked --target s390x-unknown-linux-gnu --lib --all-features -- --exact cursor::tests::failed_read_preserves_position_and_handles_overflow bitstream::tests::reads_unaligned_full_width ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches fse::tests::table_views_preserve_rle_and_normalized_singleton_states_without_allocating huffman::tests::table_view_output_uses_an_independent_owner_and_recovers_after_failure stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers entropy_output::tests::native_word_thresholds_cover_empty_aligned_and_partial_markers_on_both_widths dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max --test-threads=1",
+      "exit_code": 0,
+      "seconds": 37.50004391698167,
+      "log": "/tmp/zstdoxide-platform-s390x-all.log",
+      "sha256": "9c4bfa8ed9c47b21dd1a97913e3acbe4c7d9163fd2e586de840948e5591f3725",
+      "tests": [
+        "cursor::tests::failed_read_preserves_position_and_handles_overflow",
+        "bitstream::tests::reads_unaligned_full_width",
+        "ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head",
+        "ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches",
+        "fse::tests::table_views_preserve_rle_and_normalized_singleton_states_without_allocating",
+        "huffman::tests::table_view_output_uses_an_independent_owner_and_recovers_after_failure",
+        "stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers",
+        "entropy_output::tests::native_word_thresholds_cover_empty_aligned_and_partial_markers_on_both_widths",
+        "dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max"
+      ],
+      "summaries": [
+        "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 429 filtered out; finished in 42.94s"
+      ]
+    }
+  ],
+  "selected_test_executions": 38,
+  "preliminary_repeated_test_executions": 2,
+  "features": [
+    "unsafe-byte-cursor",
+    "unsafe-bitstream",
+    "unsafe-history",
+    "unsafe-ring-history",
+    "unsafe-fse",
+    "unsafe-fse-encoder",
+    "unsafe-huffman",
+    "unsafe-huffman-codebook",
+    "unsafe-match-table",
+    "unsafe-match-chain",
+    "unsafe-dictionary",
+    "unsafe-training"
+  ],
+  "probe_files": [
+    {
+      "path": "/tmp/zstdoxide-platform-rc-probe/Cargo.toml",
+      "sha256": "d6b53db6bc64024d21cc2611ee0cd1c0fc13038bccbc435797092833fe12c945",
+      "bytes": 188,
+      "source": "[package]\nname = \"zstdoxide-platform-rc-probe\"\nversion = \"0.0.0\"\nedition = \"2024\"\n[dependencies]\nzstdoxide = { path = \"/tmp/zstdoxide-module9-platform-dac4a43\", default-features = false }\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-platform-rc-probe/Cargo.lock",
+      "sha256": "e0283f3c5913bae631700429f4c559b639ba1e1d7c24fd768555ab5e6c509ab8",
+      "bytes": 254,
+      "source": "# This file is automatically @generated by Cargo.\n# It is not intended for manual editing.\nversion = 4\n\n[[package]]\nname = \"zstdoxide\"\nversion = \"0.1.0\"\n\n[[package]]\nname = \"zstdoxide-platform-rc-probe\"\nversion = \"0.0.0\"\ndependencies = [\n \"zstdoxide\",\n]\n"
+    },
+    {
+      "path": "/tmp/zstdoxide-platform-rc-probe/src/lib.rs",
+      "sha256": "57f7c688dbdde73b43b39ab29913f5dfa8cdb3894a7e024f3e1621059b87b853",
+      "bytes": 1444,
+      "source": "#![no_std]\nextern crate alloc;\nuse alloc::{alloc::Global, rc::Rc, vec::Vec};\nuse core::alloc::Allocator;\nuse zstdoxide::{DecodeOptions, Decoder, Dictionary, Result, SharedDictionary};\n\n#[cfg(target_has_atomic = \"ptr\")]\ncompile_error!(\"This compile-only probe requires the no-pointer-atomics Rc branch.\");\n\n// This generic caller owns the factory; dictionary and decoder retain borrows\n// only for the call, while returned output retains the original factory value.\npub fn selected_allocator<A: Allocator + Clone>(input: &[u8], allocator: A) -> Result<Vec<u8, A>> {\n    {\n        let dictionary = Dictionary::raw_in(b\"abc\", &allocator)?;\n        // An explicit Rc type checks the selected SharedDictionary alias.\n        let shared: Rc<Dictionary<&A>> = dictionary.into_shared();\n        let alias: SharedDictionary<&A> = shared.clone();\n        let mut decoder = Decoder::with_dictionary_in(DecodeOptions::new(64), alias, &allocator);\n        let mut output = [0_u8; 7];\n        let _ = decoder.process(input, &mut output);\n        decoder.reset();\n        decoder.set_prefix(shared)?;\n        let _ = decoder.process(input, &mut output);\n        decoder.reset_with_options(DecodeOptions::new(32));\n    }\n    zstdoxide::decompress_in(input, 64, allocator)\n}\n\n// Code generation instantiates the generic paths; this is not target execution.\npub fn instantiate_rc_decode(input: &[u8]) -> Result<Vec<u8>> {\n    selected_allocator(input, Global)\n}\n"
+    }
+  ],
+  "runners": [
+    {
+      "path": "/tmp/zstdoxide-platform-run-initial.py",
+      "sha256": "fb1419d246db4767bf22f4f8c099e0a0e8991e8f6625faf9e1bcf8b26a9aa374",
+      "bytes": 2230
+    },
+    {
+      "path": "/tmp/zstdoxide-platform-run.py",
+      "sha256": "ced951994f0ea116b3d9e79c780fbe55adb1bb36ae7c10dcc16df90dd99f4d55",
+      "bytes": 2460
+    }
+  ],
+  "interrupted_attempts": [
+    {
+      "target": "i686-unknown-linux-gnu",
+      "log": {
+        "path": "/tmp/zstdoxide-platform-i686-all-interrupted.log",
+        "sha256": "838053760bb6124647ba8cabb59f9498f2229768f4f49b252c9a4234fd56ccdf",
+        "bytes": 6790
+      },
+      "orchestrator_exit_code": 130,
+      "reason": "Coordinator requested stopping the duplicate shared-safe XXH64 vector after both safe runs passed; the nine remaining exact tests were rerun as complete all-feature batches.",
+      "included_in_final_selected_count": false
+    },
+    {
+      "target": "s390x-unknown-linux-gnu",
+      "log": {
+        "path": "/tmp/zstdoxide-platform-s390x-all-interrupted.log",
+        "sha256": "6ba6f2fe7af94c8c5a277ef6358e5a055b997062995808b15412c06eee37cbb6",
+        "bytes": 6902
+      },
+      "orchestrator_exit_code": 130,
+      "reason": "Coordinator requested stopping the duplicate shared-safe XXH64 vector after both safe runs passed; the nine remaining exact tests were rerun as complete all-feature batches.",
+      "included_in_final_selected_count": false
+    }
+  ],
+  "report": {
+    "path": "/tmp/zstdoxide-module9-platform-report.md",
+    "sha256": "493846c658c2b8083cc7b8d44b7549f8d78e8baa6af9daf27c6998dc7ffe298a",
+    "bytes": 6219
+  },
+  "limitations": [
+    "Cross-target tests are Miri interpretation, not native or QEMU execution.",
+    "Bare-metal checks compile and code-generate a library only; there is no execution or target runtime/allocator/linker image.",
+    "The Rc probe type-checks generic allocator A and concretely instantiates Global; it does not execute a custom allocator on bare metal.",
+    "No original upstream fuzzer-duration or QEMU CLI campaign is claimed.",
+    "No cross-architecture allocation-count equality is claimed.",
+    "Only committed dac4a43 is covered, not subsequent Module 9 source changes.",
+    "The all-feature runs select all 12 unsafe flags together, not each flag individually."
+  ],
+  "setup_notes": [
+    "A first Rc-probe build invoked unqualified cargo outside the repository pin and was rejected before compilation because the ambient stable channel does not accept -Z. The corrected commands explicitly select nightly-2026-10-08; no toolchain setting was changed."
+  ]
+}
