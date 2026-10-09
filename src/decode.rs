@@ -6,7 +6,9 @@ use crate::history::History;
 use crate::huffman::decode_literals_in;
 use crate::sequences::SequenceState;
 use crate::xxhash::checksum;
-use crate::{Decoder, Error, FrameHeader, Result, SharedDictionary, StreamStatus};
+use crate::{
+    Decoder, DictionaryHandle, Error, FrameHeader, Result, SharedDictionary, StreamStatus,
+};
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
@@ -70,8 +72,29 @@ pub fn decompress_with_dictionary(
     dictionary: &SharedDictionary,
     options: DecodeOptions,
 ) -> Result<Vec<u8>> {
-    let mut decoder = Decoder::with_dictionary(options, dictionary.clone());
-    let mut output = Vec::new();
+    decompress_with_dictionary_in(input, dictionary, options, Global)
+}
+
+/// Collect dictionary-backed frame output in the supplied allocator.
+///
+/// Accepts either a shared dictionary owner or a borrowed [`crate::DictionaryView`]
+/// through the sealed handle contract. The dictionary may use another allocator
+/// type and remains unchanged. The result retains only its own allocator and
+/// output bytes; it borrows neither the dictionary nor the compressed input.
+/// Every decoder temporary uses fresh clones of the output allocator. A borrowed
+/// view avoids the standard shared handle's Global outer allocation.
+///
+/// Frame and limit behavior matches [`decompress_with_dictionary`]. Allocation
+/// failure drops partial output and decoder storage. Ordinary allocator cloning
+/// retains the caller's own allocation/panic semantics, as for [`decompress_in`].
+pub fn decompress_with_dictionary_in<A: Allocator + Clone, D: DictionaryHandle>(
+    input: &[u8],
+    dictionary: &D,
+    options: DecodeOptions,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    let mut decoder = Decoder::with_dictionary_in(options, dictionary.clone(), allocator.clone());
+    let mut output = Vec::new_in(allocator);
     let mut consumed = 0;
     let mut scratch = [0_u8; 4096];
     loop {
@@ -80,7 +103,9 @@ pub fn decompress_with_dictionary(
         output
             .try_reserve(progress.produced)
             .map_err(|_| Error::AllocationFailed)?;
-        output.extend_from_slice(&scratch[..progress.produced]);
+        for &byte in &scratch[..progress.produced] {
+            output.push(byte);
+        }
         match progress.status {
             StreamStatus::FrameFinished | StreamStatus::NeedInput if consumed == input.len() => {
                 decoder.finish()?;
@@ -177,6 +202,217 @@ pub fn decompress_with_options_in<A: Allocator + Clone>(
         }
     }
     Ok(history.into_bytes())
+}
+
+#[cfg(test)]
+mod dictionary_allocator_tests {
+    use super::*;
+    use crate::Dictionary;
+    use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    const HTTP_DICTIONARY: &[u8] =
+        include_bytes!("../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols");
+    const HTTP_FRAME: &[u8] =
+        include_bytes!("../tests/upstream/data/generated/http-dictionary.zst");
+    const HTTP_SOURCE: &[u8] = include_bytes!("../tests/upstream/data/golden-compression/http");
+    const RAW_DICTIONARY: &[u8] =
+        include_bytes!("../tests/upstream/dictionaries/boundary-dictionary.raw");
+    const RAW_FRAME: &[u8] = include_bytes!("../tests/upstream/dictionaries/p0-far-dictionary.zst");
+    const RAW_SOURCE: &[u8] =
+        include_bytes!("../tests/upstream/dictionaries/p0-far-dictionary.expected");
+
+    fn tracking() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig::default()).unwrap()
+    }
+
+    #[test]
+    fn borrowed_dictionary_collection_returns_only_independent_output_ownership() {
+        let output_owner = tracking().into_non_clone();
+        let output_monitor = output_owner.monitor();
+        for (dictionary, frame, expected) in [
+            (HTTP_DICTIONARY, HTTP_FRAME, HTTP_SOURCE),
+            (RAW_DICTIONARY, RAW_FRAME, RAW_SOURCE),
+        ] {
+            let dictionary_owner = tracking();
+            let dictionary_monitor = dictionary_owner.monitor();
+            let output = {
+                let dictionary = Dictionary::from_bytes_in(dictionary, dictionary_owner).unwrap();
+                let before = dictionary_monitor.snapshot();
+                let output = decompress_with_dictionary_in(
+                    frame,
+                    &dictionary.view(),
+                    DecodeOptions::new(expected.len()),
+                    &output_owner,
+                )
+                .unwrap();
+                assert_eq!(dictionary_monitor.snapshot(), before);
+                output
+            };
+            dictionary_monitor.assert_released();
+            assert_eq!(output.as_slice(), expected);
+            assert_eq!(output.allocator().identity(), output_owner.identity());
+            assert_eq!(output_monitor.snapshot().identities_created, 1);
+            assert_eq!(output_monitor.snapshot().live_blocks, 1);
+            assert_eq!(
+                output_monitor.snapshot().live_bytes,
+                output.capacity() as u128
+            );
+            drop(output);
+            output_monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn shared_non_clone_dictionary_and_output_allocators_remain_independent() {
+        let dictionary_owner = tracking().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary = Dictionary::raw_in(RAW_DICTIONARY, dictionary_owner)
+            .unwrap()
+            .into_shared();
+        let before = dictionary_monitor.snapshot();
+        let owner = tracking();
+        let monitor = owner.monitor();
+        let identity = owner.identity();
+        let output = decompress_with_dictionary_in(
+            RAW_FRAME,
+            &dictionary,
+            DecodeOptions::new(RAW_SOURCE.len()),
+            owner,
+        )
+        .unwrap();
+        assert_eq!(output.as_slice(), RAW_SOURCE);
+        assert_eq!(output.allocator().identity(), identity);
+        assert_eq!(SharedDictionary::strong_count(&dictionary), 1);
+        assert_eq!(dictionary_monitor.snapshot(), before);
+        drop(dictionary);
+        dictionary_monitor.assert_released();
+        assert_eq!(output.as_slice(), RAW_SOURCE);
+        drop(output);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn each_collection_allocation_failure_releases_decoder_and_result_without_touching_dictionary()
+    {
+        let dictionary_owner = tracking().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary = Dictionary::from_bytes_in(HTTP_DICTIONARY, &dictionary_owner).unwrap();
+        let dictionary_before = dictionary_monitor.snapshot();
+        let owner = tracking();
+        let monitor = owner.monitor();
+        let output = decompress_with_dictionary_in(
+            HTTP_FRAME,
+            &dictionary.view(),
+            DecodeOptions::new(HTTP_SOURCE.len()),
+            owner,
+        )
+        .unwrap();
+        let requests = monitor.snapshot().attempts;
+        assert!(requests > 3);
+        drop(output);
+        monitor.assert_released();
+        for ordinal in 1..=requests {
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                fail_at: NonZeroU64::new(ordinal),
+                ..AllocatorConfig::default()
+            })
+            .unwrap();
+            let monitor = owner.monitor();
+            let output = decompress_with_dictionary_in(
+                HTTP_FRAME,
+                &dictionary.view(),
+                DecodeOptions::new(HTTP_SOURCE.len()),
+                owner,
+            );
+            assert!(
+                matches!(output, Err(Error::AllocationFailed)),
+                "request {ordinal}"
+            );
+            assert_eq!(monitor.snapshot().attempts, ordinal);
+            drop(output);
+            monitor.assert_released();
+            assert_eq!(dictionary_monitor.snapshot(), dictionary_before);
+        }
+        drop(dictionary);
+        dictionary_monitor.assert_released();
+    }
+
+    #[test]
+    fn collecting_multiple_frames_and_errors_preserves_dictionary_and_releases_scratch() {
+        let dictionary = Dictionary::from_bytes(HTTP_DICTIONARY).unwrap();
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let mut stream = HTTP_FRAME.to_vec();
+        stream.extend_from_slice(&[0x5f, 0x2a, 0x4d, 0x18, 3, 0, 0, 0, b't', b'a', b'g']);
+        stream.extend_from_slice(HTTP_FRAME);
+        let expected: Vec<_> = HTTP_SOURCE.iter().chain(HTTP_SOURCE).copied().collect();
+        let output = decompress_with_dictionary_in(
+            &stream,
+            &dictionary.view(),
+            DecodeOptions::new(expected.len()),
+            &owner,
+        )
+        .unwrap();
+        assert_eq!(output.as_slice(), expected);
+        drop(output);
+        monitor.assert_released();
+        for end in [0, 1, 6, HTTP_FRAME.len() - 1] {
+            assert!(
+                decompress_with_dictionary_in(
+                    &HTTP_FRAME[..end],
+                    &dictionary.view(),
+                    DecodeOptions::new(HTTP_SOURCE.len()),
+                    &owner,
+                )
+                .is_err()
+            );
+            monitor.assert_released();
+        }
+        assert_eq!(
+            decompress_with_dictionary_in(
+                &stream,
+                &dictionary.view(),
+                DecodeOptions::new(HTTP_SOURCE.len()),
+                &owner,
+            )
+            .err(),
+            Some(Error::ResourceLimit)
+        );
+        monitor.assert_released();
+        let mut bad = HTTP_FRAME.to_vec();
+        *bad.last_mut().unwrap() ^= 1;
+        assert!(
+            decompress_with_dictionary_in(
+                &bad,
+                &dictionary.view(),
+                DecodeOptions::new(HTTP_SOURCE.len()),
+                &owner,
+            )
+            .is_err()
+        );
+        monitor.assert_released();
+
+        // This generated frame requires no dictionary. Collecting an empty
+        // result must not consume the armed payload-allocation failure.
+        let empty = vec![0x28, 0xb5, 0x2f, 0xfd, 0x20, 0, 1, 0, 0];
+        let before = monitor.snapshot().attempts;
+        assert!(monitor.fail_next());
+        assert!(
+            decompress_with_dictionary_in(
+                &empty,
+                &dictionary.view(),
+                DecodeOptions::new(0),
+                &owner,
+            )
+            .unwrap()
+            .is_empty()
+        );
+        assert_eq!(monitor.snapshot().attempts, before);
+        monitor.clear_failure();
+        monitor.assert_released();
+    }
 }
 
 #[cfg(test)]

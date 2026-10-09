@@ -92,8 +92,8 @@ mod upstream_sequence_generator_tests;
 mod upstream_sequence_sweep_tests;
 
 pub use decode::{
-    DecodeOptions, decompress, decompress_in, decompress_with_dictionary, decompress_with_options,
-    decompress_with_options_in,
+    DecodeOptions, decompress, decompress_in, decompress_with_dictionary,
+    decompress_with_dictionary_in, decompress_with_options, decompress_with_options_in,
 };
 pub use dictionary::{
     Dictionary, DictionaryHandle, DictionaryMode, DictionaryView, SharedDictionary,

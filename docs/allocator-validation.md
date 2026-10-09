@@ -462,6 +462,27 @@ frame state. Reachable dictionary capacity is reported even for a borrowed view;
 it is not a claim that the context owns those bytes. Standard shared ownership
 still has the documented Global outer allocation.
 
+`decompress_with_dictionary_in` collects output using its original allocator,
+with scratch owned by a temporary generic decoder. The dictionary may be a
+borrowed view or shared owner with an unrelated allocator type; the returned
+vector borrows neither dictionary nor input. Its
+[collection evidence](evidence/2026-10-09-allocator-dictionary-collection.json)
+records four tests across ten safe/individual-feature/all/no_std configurations,
+40 dictionary integration tests and an explicit live C dictionary test in each
+of safe/all, strict Clippy, no_std builds, and formatting. Three all-feature
+strict-provenance Miri tests passed, including the complete observed allocation
+failure sweep. Checks used an isolated committed snapshot excluding concurrent
+encoder/finalizer work.
+
+Prepared HTTP and raw dictionary fixtures verify original output identity,
+independent non-Clone/shared dictionary ownership, result lifetime beyond source
+dictionary release, and complete scratch cleanup. Every observed HTTP request
+was failed separately without changing dictionary storage. Concatenated and
+skippable input, malformed/truncated input, output limits, and empty results are
+covered. Empty output consumes no armed payload request. The live C test uses
+the Global wrapper of this same collector; custom contexts additionally retain
+the streaming checkpoint's separate live C coverage.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

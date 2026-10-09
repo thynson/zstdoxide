@@ -1,0 +1,414 @@
+{
+  "checkpoint": "Allocator-aware dictionary decoding collection",
+  "baseline": "dac4a43",
+  "snapshot": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-dictionary-collect-ugx7tko7",
+  "sources": {
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/lib.rs": "91b27e7587134664ffa9c2d8a6562b964de02a23631e949a6bab4dcbc90c22c5"
+  },
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 4.17,
+      "log": "/tmp/zstdoxide-collection-safe.log",
+      "sha256": "fff030554256a961a4d8ecea31d134b1341151100f3ca627b5589aeb5513f9f6",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 438 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "unsafe-byte-cursor",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-byte-cursor",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.35,
+      "log": "/tmp/zstdoxide-collection-unsafe-byte-cursor.log",
+      "sha256": "e4bf5f02c2f1ca209a924979fb910a42757c49f6462ba64782bedc3c87c757b7",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 438 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-bitstream",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.31,
+      "log": "/tmp/zstdoxide-collection-unsafe-bitstream.log",
+      "sha256": "c7a2e5fa2694b34db0d71426e46a7ba903e00d5fc1d2023c917b22b73cb8b5e5",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 438 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "unsafe-ring-history",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-ring-history",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.37,
+      "log": "/tmp/zstdoxide-collection-unsafe-ring-history.log",
+      "sha256": "e7e95c024f6453dbae5f60db95abcb4e68f454329e80e8095afaecce39f5d188",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 438 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "unsafe-fse",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.24,
+      "log": "/tmp/zstdoxide-collection-unsafe-fse.log",
+      "sha256": "45eeef0e76c9591e8a0706a7826a90072b96a38b38cf1ea0bf12db304cfc9245",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 438 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "unsafe-huffman",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-huffman",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 4.69,
+      "log": "/tmp/zstdoxide-collection-unsafe-huffman.log",
+      "sha256": "79147fb8b71c0cbec65859102c9f2ba54d6410986097e410b19d1843f5badfb5",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 438 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "name": "unsafe-dictionary",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-dictionary",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 5.49,
+      "log": "/tmp/zstdoxide-collection-unsafe-dictionary.log",
+      "sha256": "c3c8f4e06044542945906be59c95cbcf4cedcc76a133e9a7fd58936735a00d7a",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 438 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 6.21,
+      "log": "/tmp/zstdoxide-collection-all.log",
+      "sha256": "ba638143c8a04daceb36928a008a7e46582720ea5e2e857b9d1f8346e4aa4d44",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 438 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "name": "no-std",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 4.28,
+      "log": "/tmp/zstdoxide-collection-no-std.log",
+      "sha256": "abe7f9b23fff88a387cf1359dd2dbc51dba6134227dcbebf13f2c691895f7208",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 417 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "no-std-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "decode::dictionary_allocator_tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.13,
+      "log": "/tmp/zstdoxide-collection-no-std-all.log",
+      "sha256": "dbcd48ec3b6a27c73dc7357ca786e5a6e6acf6a46cb46eeb630b55d9e6a5d260",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 417 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "integration-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_dictionary"
+      ],
+      "exit_code": 0,
+      "seconds": 1.22,
+      "log": "/tmp/zstdoxide-collection-integration-safe.log",
+      "sha256": "586624ce9bb0172bc7ccdc3b19500b9ca34ed52e93972e7a92b00588499b5cbe",
+      "summaries": [
+        "test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "name": "oracle-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_dictionary_encode",
+        "official_codec_decodes_raw_prepared_and_omitted_id_dictionary_frames",
+        "--",
+        "--exact",
+        "--ignored"
+      ],
+      "exit_code": 0,
+      "seconds": 1.25,
+      "log": "/tmp/zstdoxide-collection-oracle-safe.log",
+      "sha256": "3c1774cc4377a7744e8161329ae80c1d814090f2bf55d430e79f60e0d1e5f4f6",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 25 filtered out; finished in 0.65s"
+      ]
+    },
+    {
+      "name": "integration-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--test",
+        "upstream_dictionary"
+      ],
+      "exit_code": 0,
+      "seconds": 1.26,
+      "log": "/tmp/zstdoxide-collection-integration-all.log",
+      "sha256": "f95ed53c471f2f340a970f7c661f1357b1acb60901fabeebeac4838c8025d07c",
+      "summaries": [
+        "test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "name": "oracle-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--test",
+        "upstream_dictionary_encode",
+        "official_codec_decodes_raw_prepared_and_omitted_id_dictionary_frames",
+        "--",
+        "--exact",
+        "--ignored"
+      ],
+      "exit_code": 0,
+      "seconds": 1.25,
+      "log": "/tmp/zstdoxide-collection-oracle-all.log",
+      "sha256": "effc707499b7c3a0e98f9a3ad856106f8ea4c86003628e130c2ff4d984185dec",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 25 filtered out; finished in 0.63s"
+      ]
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 2.34,
+      "log": "/tmp/zstdoxide-collection-clippy.log",
+      "sha256": "6dcb45109ece0f784f3f394b9a338cac85c4d111be9718cfc3c70fa6f3382b9c",
+      "summaries": []
+    },
+    {
+      "name": "check-no-std",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.48,
+      "log": "/tmp/zstdoxide-collection-check-no-std.log",
+      "sha256": "5770bae510f6aeba8b6dd6fa86df5aeb28823e9ab24a105adb0a0b437e22cad8",
+      "summaries": []
+    },
+    {
+      "name": "check-no-std-all",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 0.45,
+      "log": "/tmp/zstdoxide-collection-check-no-std-all.log",
+      "sha256": "d51594f09bd9044bc968adf7caa9399fbf17a18db5adb0b8b9a5dda84a69a9e9",
+      "summaries": []
+    },
+    {
+      "name": "fmt",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "--config",
+        "skip_children=true",
+        "src/decode.rs",
+        "src/lib.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05,
+      "log": "/tmp/zstdoxide-collection-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": []
+    },
+    {
+      "name": "miri-borrowed_dictionary_collection_returns_only_independent_output_ownership",
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "decode::dictionary_allocator_tests::borrowed_dictionary_collection_returns_only_independent_output_ownership",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 8.33,
+      "log": "/tmp/zstdoxide-collection-miri-borrowed_dictionary_collection_returns_only_independent_output_ownership.log",
+      "sha256": "4c57b15195d191f5f8267467180c48c31debcbd5c759993ba39fcc9b0f942125",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 441 filtered out; finished in 16.18s"
+      ]
+    },
+    {
+      "name": "miri-shared_non_clone_dictionary_and_output_allocators_remain_independent",
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "decode::dictionary_allocator_tests::shared_non_clone_dictionary_and_output_allocators_remain_independent",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 4.5,
+      "log": "/tmp/zstdoxide-collection-miri-shared_non_clone_dictionary_and_output_allocators_remain_independent.log",
+      "sha256": "29f015eebb4f86fb2bf7c192bf19408cd991419961cd9a910babf3d1cb5d8913",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 441 filtered out; finished in 9.68s"
+      ]
+    },
+    {
+      "name": "miri-each_collection_allocation_failure_releases_decoder_and_result_without_touching_dictionary",
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "decode::dictionary_allocator_tests::each_collection_allocation_failure_releases_decoder_and_result_without_touching_dictionary",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 27.86,
+      "log": "/tmp/zstdoxide-collection-miri-each_collection_allocation_failure_releases_decoder_and_result_without_touching_dictionary.log",
+      "sha256": "cd054ee5c26dbb3fe1e3aa68e399195591be2745669b9ef0b8e2328220c08a19",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 441 filtered out; finished in 71.32s"
+      ]
+    }
+  ],
+  "scope": "Isolated committed baseline with only decode.rs and its public export. Source dictionaries and harness output use independent storage. New custom paths use saved official fixtures; the explicitly run live C test exercises the Global wrapper of the same collection implementation.",
+  "environment": {
+    "CARGO_TARGET_DIR": "/tmp/zstdoxide-collection-target",
+    "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+    "miri": {
+      "CARGO_TARGET_DIR": "/tmp/zstdoxide-collection-miri",
+      "MIRIFLAGS": "-Zmiri-strict-provenance"
+    }
+  }
+}
