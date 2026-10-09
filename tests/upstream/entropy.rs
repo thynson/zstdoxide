@@ -9,6 +9,12 @@ use crate::fse::{FseTable, read_normalized_counts};
 use crate::huffman::decode_streams;
 use crate::huffman::{HuffmanTable, decode_literals};
 
+#[path = "fuzz_support.rs"]
+#[allow(dead_code)] // The shared producer also serves the other upstream adapters.
+mod fuzz_support;
+
+use fuzz_support::DataProducer;
+
 struct Records<'a> {
     remaining: &'a [u8],
 }
@@ -76,6 +82,111 @@ fn normalized_counts_match_all_official_vectors_and_suffixes() {
         }
     }
     assert!(input.remaining.is_empty());
+}
+
+/// The exact parameter/count selection in `tests/fuzz/fse_read_ncount.c`.
+/// The producer borrows input, the fixed count array owns initialized cells,
+/// and subtracting each absolute weight keeps the remaining mass nonnegative.
+fn produce_normalized_counts(producer: &mut DataProducer<'_>) -> ([i16; 256], u8, usize) {
+    let log = producer.unsigned_range(5, 12) as u8;
+    let maximum = producer.unsigned_range(0, 255) as usize;
+    let mut remaining = (1_u32 << log) - 1;
+    let mut counts = [0_i16; 256];
+    for count in &mut counts[..maximum] {
+        if remaining == 0 {
+            break;
+        }
+        *count = producer.signed_range(-1, remaining as i32) as i16;
+        remaining -= u32::from(count.unsigned_abs());
+    }
+    counts[maximum] = (remaining + 1) as i16;
+    if counts[maximum] == 1 && producer.unsigned_range(0, 1) == 1 {
+        counts[maximum] = -1;
+    }
+    (counts, log, maximum)
+}
+
+/// Port of all normalized writer/reader and random-suffix assertions in
+/// facebook/zstd v1.5.7 `tests/fuzz/fse_read_ncount.c:28-100`.
+/// Source-derived control flow is used under root LICENSE.zstd's BSD option.
+fn normalized_count_fuzz_round_trip(input: &[u8]) -> (u8, usize) {
+    let mut producer = DataProducer::new(input);
+    let (counts, log, maximum) = produce_normalized_counts(&mut producer);
+    assert_ne!(counts[maximum], 0);
+    assert_eq!(
+        counts
+            .iter()
+            .map(|count| usize::from(count.unsigned_abs()))
+            .sum::<usize>(),
+        1 << log
+    );
+    // Preserve FSE_NCountWriteBound's allocation assertion. Maximum zero asks
+    // for its default 512-byte bound, even for a single-symbol distribution.
+    let write_bound = if maximum == 0 {
+        512
+    } else {
+        ((maximum + 1) * usize::from(log) + 6) / 8 + 3
+    };
+    assert!(write_bound <= 512);
+    let encoded = write_normalized_counts(&counts[..=maximum], log).unwrap();
+    assert!(encoded.len() <= write_bound);
+    let header_size = encoded.len();
+    let buffer_size = producer.unsigned_range(header_size as u32, 512) as usize;
+    let mut buffer = encoded;
+    for _ in header_size..buffer_size {
+        buffer.push(producer.unsigned_range(0, 255) as u8);
+    }
+    let decoded = read_normalized_counts(&buffer, 255, 12).unwrap();
+    assert_eq!(decoded.bytes_read, header_size);
+    assert_eq!(decoded.symbols, maximum + 1);
+    assert_eq!(decoded.table_log, log);
+    assert_eq!(&decoded.counts[..=maximum], &counts[..=maximum]);
+    (log, maximum)
+}
+
+#[test]
+fn normalized_count_producer_preserves_signed_ranges_and_final_symbol_selection() {
+    let (counts, log, maximum) = produce_normalized_counts(&mut DataProducer::new(&[]));
+    assert_eq!((log, maximum, counts[0]), (5, 0, 32));
+    assert!(counts[1..].iter().all(|&count| count == 0));
+
+    // Tail consumption: log=5, maximum=2, counts=-1 then0, final mass=31.
+    let (counts, log, maximum) = produce_normalized_counts(&mut DataProducer::new(&[1, 0, 2, 0]));
+    assert_eq!((log, maximum), (5, 2));
+    assert_eq!(&counts[..3], &[-1, 0, 31]);
+
+    // Consuming all available mass stops the loop; the final selector can
+    // encode the required last unit as -1 while skipped cells stay zero.
+    let (counts, log, maximum) = produce_normalized_counts(&mut DataProducer::new(&[1, 32, 3, 0]));
+    assert_eq!((log, maximum), (5, 3));
+    assert_eq!(&counts[..4], &[31, 0, 0, -1]);
+
+    let (counts, log, maximum) = produce_normalized_counts(&mut DataProducer::new(&[0, 7]));
+    assert_eq!((log, maximum, counts[0]), (12, 0, 4096));
+}
+
+#[test]
+fn normalized_count_fuzz_target_roundtrips_every_log_and_maximum_symbol() {
+    assert_eq!(normalized_count_fuzz_round_trip(&[]), (5, 0));
+    for log in 5..=12 {
+        for maximum in 0..=255 {
+            // Exhaustion selects -1 repeatedly; longer zero and all-one
+            // tails exercise sparse runs, full mass and random suffix sizes.
+            for (length, byte) in [(0, 0), (512, 0), (512, 255)] {
+                let mut input = alloc::vec![byte; length];
+                input.extend_from_slice(&[maximum as u8, log - 5]);
+                assert_eq!(normalized_count_fuzz_round_trip(&input), (log, maximum));
+            }
+        }
+    }
+    let mut state = 0x8c73_e965;
+    for _ in 0..4096 {
+        let length = (random(&mut state) >> 16) as usize % 2049;
+        let input: Vec<_> = (0..length)
+            .map(|_| (random(&mut state) >> 24) as u8)
+            .collect();
+        normalized_count_fuzz_round_trip(&input);
+    }
 }
 
 fn literals_section(header: &[u8], stream: &[u8], output_size: usize) -> Vec<u8> {

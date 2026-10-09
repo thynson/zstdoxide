@@ -4,6 +4,10 @@
 // Used under the BSD-3-Clause option; see root LICENSE.zstd.
 //! Safe tail-driven parameter production for the public fuzz target ports.
 
+extern crate alloc;
+
+use alloc::vec::Vec;
+
 /// Borrowed fuzz input with checked slice indices replacing the C data pointer.
 pub struct DataProducer<'a> {
     input: &'a [u8],

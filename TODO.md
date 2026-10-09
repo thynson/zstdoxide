@@ -71,7 +71,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Correct stale capability descriptions without changing unverified coverage statuses.
 - [x] Port the exact generated CNBuffer training sample campaign and roundtrip assertions.
 - [x] Compare normalized-count writing with all 512 independent C header vectors.
-- [ ] Preserve the exact normalized-count fuzz producer and random-suffix roundtrip contract.
+- [x] Preserve the exact normalized-count fuzz producer and random-suffix roundtrip contract.
 - [ ] Replay the complete 79-input normalized-count corpus and verify every backend.
 - [x] Adapt dictionary loader and raw-dictionary fuzz contracts with exact source selectors.
 - [x] Pin all five dictionary corpora and replay loader/raw targets with safe and unsafe backends.
