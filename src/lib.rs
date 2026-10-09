@@ -42,6 +42,8 @@ mod dictionary;
 mod dictionary_train;
 mod encode;
 mod entropy_encode;
+#[cfg(test)]
+mod entropy_output;
 mod error;
 mod frame;
 mod fse;

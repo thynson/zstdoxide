@@ -34,6 +34,7 @@ cargo test --release --all-features --test upstream_trained_dictionary_fuzz offi
 # These targets contain explicit C checks only; external corpus entry points
 # remain separately parameterized by their pinned cache paths.
 cargo test --release --all-features --lib upstream_huffman_encode_tests -- --ignored
+cargo test --release --all-features --lib entropy_output::tests::oracle -- --ignored
 cargo test --release --all-features --lib upstream_huffman_round_trip_tests::oracle::official_c_producer_matches_huffman_parameters_for_both_bmi_layouts -- --ignored --exact
 cargo test --release --all-features --lib sequence_encode::tests::official_codec_decodes_every_supplied_table_mode_and_repeat_combination -- --ignored --exact
 cargo test --release --all-features --lib fse_select::tests::official_codec_decodes_automatically_selected_channel_tables -- --ignored --exact
