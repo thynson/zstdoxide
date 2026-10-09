@@ -98,3 +98,32 @@ completion of the entire Module 9 platform matrix.
 
 The [machine-readable record](evidence/2026-10-09-allocator-platform.json) preserves
 all exact commands, probe sources, result summaries, and source/log hashes.
+
+## Final public-API follow-up
+
+After the streaming encoder, one-shot compressor, and formatted trainer landed,
+committed source `9b7d4ff97646c332cc2b89555f27e4c6818d9ff8` was checked in a
+separate immutable archive. All 628 archived file hashes remained unchanged.
+The same pinned compiler and existing target sysroots were reused.
+
+Four strict-provenance Miri commands selected exactly three tests each on i686
+and s390x, safe and all features: streaming failure recovery after moving a
+context, borrowed allocator/dictionary ownership, and one-shot dictionary-ID
+header widths with no post-reservation allocation. All 12 executions passed,
+with no ignored or empty test selections. These complement the earlier 38
+selected platform executions without repeating the large checksum campaign.
+
+The thumbv6m safe/all-feature library checks and caller code-generation builds
+also passed. The caller checks generic custom allocator signatures for encoder
+and decoder contexts, dictionary attachment and prefixes, whole-buffer APIs,
+raw/formatted training, and finalization. It verifies the exact type equality
+`SharedDictionary<A> = Rc<Dictionary<A>>` and generates concrete owned and
+borrowed `Global` paths. The same interpreted-execution and compile-only limits
+above apply; no native, QEMU, or firmware execution is claimed.
+
+The [final evidence](evidence/2026-10-09-allocator-platform-final.json) preserves
+all eight commands, environment values, complete logs, runner and caller
+sources, and compiler identity. The
+[compressed snapshot manifest](evidence/2026-10-09-allocator-platform-final-manifest.json.gz)
+preserves all archived file hashes. Miri command wall time totaled 30.5001 s and
+ARM compilation 3.3543 s; neither quantity is a codec performance measurement.
