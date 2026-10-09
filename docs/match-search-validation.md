@@ -404,3 +404,61 @@ still unsupported. The inventory audit verifies all 418 source files and 615
 case anchors against pinned upstream without changing completion counts. Both
 new public-control and source-backed C runners are registered in the oracle
 script. No additional Miri or timing execution is attributed to this checkpoint.
+
+## Additional storage and public platform checks
+
+Two immutable snapshots preserve eleven additional strict-provenance Miri
+executions. On `6f04a16`, an i686 seed-range check and host/all-feature short-
+dictionary and every-growth-failure checks pass. On `24aff8f`, i686 safe/all each
+pass three exact history/dictionary/setter checks, while big-endian s390x/all
+passes tiny-history and reset checks. All selectors have positive exact-count
+guards and zero ignored tests. The 711- and 715-file source manifests and caller
+inputs remain unchanged. These executions supplement the earlier 45 foundation
+and leaf checks; they do not repeat maximum-size allocation campaigns.
+
+The final snapshot also compiles its no_std library and generates caller rlibs
+for `thumbv6m-none-eabi`, safe and all twelve unsafe features. The caller exercises
+owned and borrowed allocators, live search settings/reset/capacity and the
+no-pointer-atomics `Rc` shared-dictionary branch. The actual pinned compiler
+accepts `Allocator` without an `allocator_api` gate. These four checks establish
+compilation/code generation, not native, QEMU, firmware or hardware-allocator
+execution. Miri command wall times are not performance measurements.
+
+[Platform evidence](evidence/2026-10-09-match-search-platform.json) retains both
+snapshots, full source manifests, caller source, reproduction runners and every
+command log. Each source revision remains explicit rather than attributing all
+platform checks to a later documentation or test-only commit.
+
+
+## Immutable final correctness matrix
+
+The complete final matrix runs from `953737117b841845f5d60f4e0da9d6e349a29f23` with all
+723 archived tracked files unchanged. Each of fifteen full suites
+(safe, twelve individual unsafe features, all features, and release/all features)
+passes 842 tests with zero failures and 54 explicit ignores. The aggregate is
+12,630 passing executions and 810 ignored executions; this is not a count of
+distinct upstream assertions. All fourteen no_std library configurations, strict
+all-target Clippy safe/all, formatting, and eighteen registered examples in
+each of safe/all pass.
+
+Pinned C independently decodes 27 general-control and six source-backed ordering
+frames per backend in safe/all release builds: 66 complete comparisons and
+2,437,438 source bytes. These rerun the previously documented logical campaigns;
+they are not 66 newly distinct fixture recipes. Hash-oracle regeneration, original
+default archive audit, all 324 fixture files in ten collections, source inventory
+and oracle-script syntax pass. The complete-migration gate returns its expected
+failure while 188 source units remain unfinished. All other 45 main commands
+succeed.
+
+The separate allocator helper also passes all thirteen tests, strict Clippy and
+formatting. Its initial locked invocation ran no tests because the independently
+built helper had no checked-in lock file. An isolated copy generated that lock
+offline and completed the checks; the immutable main snapshot stayed unchanged.
+Later commits add next-module design only; every current codec/build/test input
+from this snapshot was rechecked byte for byte before packaging.
+
+[Final matrix evidence](evidence/2026-10-09-match-search-final-matrix.json) and its
+[archive](evidence/2026-10-09-match-search-final-matrix.tar.gz) preserve commands,
+logs, manifests, actual compiler, original helper diagnostic and reproduction
+runners. No timed result is inferred from test durations. The frozen timed
+comparison is the remaining Module 11 checkpoint.
