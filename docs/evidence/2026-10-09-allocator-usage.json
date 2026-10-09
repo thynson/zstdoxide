@@ -1,0 +1,44 @@
+{
+  "scope": "Standalone dictionary, streaming and allocator examples with real Cargo rlib/rmeta artifacts",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "scripts/check_doc_examples.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.86,
+      "log": "/tmp/zstdoxide-allocator-usage-0.log",
+      "sha256": "85802697eb49d41a24b6021cb1fa2a78fc9fed7009d5ac10479d633a857c780e",
+      "results": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_doc_examples.py",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 2.41,
+      "log": "/tmp/zstdoxide-allocator-usage-1.log",
+      "sha256": "429df2242832e321697686dc128bb8c13fdb0a22a7ee9562e88eebcc1375af21",
+      "results": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s"
+      ]
+    }
+  ],
+  "files": {
+    "docs/allocator-usage.md": "58ff668852b07265320db975638122944bc34e609237102607999aaa19510668",
+    "scripts/check_doc_examples.py": "49963d0ed3a934736d9e0fc45ec5ccce628af59db13787819939188545f7b80b",
+    "scripts/check.sh": "86af683f730103c1091fdaf85b5008c8a6b36ca412ced9568cb8b18d0a64199f"
+  },
+  "qualification": "Earlier direct rlib-only rustdoc failed positive examples because only a metadata stub was present; its apparent compile-fail successes were not valid lifetime evidence. Current compile-fail cases require E0597 and all positive cases pass with resolved full metadata."
+}

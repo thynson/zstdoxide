@@ -10,8 +10,7 @@ cargo fmt --manifest-path test-support/allocator/Cargo.toml -- --check
 cargo test --manifest-path test-support/allocator/Cargo.toml
 cargo clippy --manifest-path test-support/allocator/Cargo.toml --all-targets -- -D warnings
 cargo test
-cargo build
-rustdoc --edition 2024 --test docs/dictionary-usage.md --extern zstdoxide=target/debug/libzstdoxide.rlib -L dependency=target/debug/deps
+python3 scripts/check_doc_examples.py
 cargo clippy --all-targets -- -D warnings
 cargo check --no-default-features
 for feature in unsafe-byte-cursor unsafe-bitstream unsafe-history unsafe-ring-history unsafe-fse unsafe-fse-encoder unsafe-huffman unsafe-huffman-codebook unsafe-match-table unsafe-match-chain unsafe-dictionary unsafe-training; do

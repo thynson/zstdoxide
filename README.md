@@ -123,7 +123,8 @@ shared owners or borrowed views independently of their workspace allocator.
 `Encoder::new_in`, `with_options_in`, and `with_dictionary_in` retain workspace
 ownership across frame reset. One-shot compression retains the original
 allocator in its result and releases all temporary workspace before returning.
-[The allocator plan](docs/allocators.md) records the exact API and validation
+[Allocator usage](docs/allocator-usage.md) demonstrates caller-owned dictionaries
+and output lifetimes. [The allocator plan](docs/allocators.md) records the exact API and validation
 boundaries, including the unavailable Rust 1.100 verification.
 
 ## Building and checking

@@ -1,4 +1,4 @@
-# Allocator preparation
+# Allocator ownership and validation
 
 Module 9 is now decomposed in `TODO.md`. The complete ownership/API design is
 in [allocator-design.md](allocator-design.md), with original test contracts in
@@ -27,6 +27,9 @@ on the pin. Custom Arc/Rc, allocator-aware BinaryHeap, and fallible Box
 construction still require unstable `allocator_ext` in the inspected library;
 the design uses checked typed storage and an explicit dictionary-sharing
 contract instead. No substitute allocator trait is exposed.
+
+See [allocator usage](allocator-usage.md) for runnable examples and compile-time
+dictionary lifetime checks.
 
 ## Existing boundaries
 

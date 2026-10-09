@@ -619,6 +619,22 @@ was preserved and passed after its owner repaired the benchmark; the isolated
 five-file checkpoint independently passed strict Clippy, no_std, six tests and
 formatting without those concurrent files.
 
+The [caller-owned usage contract](allocator-usage.md) now documents independent
+workspace/dictionary allocators, borrowed non-Clone allocation, result ownership,
+prefix/reset lifetimes, reachable-capacity accounting and the infallible Global
+shared-object exception. Its [documentation evidence](evidence/2026-10-09-allocator-usage.json)
+records all ten standalone examples in safe and all-feature builds: three
+dictionary examples, two streaming examples, three allocator examples and two
+compile-fail cases requiring E0597 for escaping borrowed contexts.
+
+The previous rlib-only standalone rustdoc invocation is invalid on the pinned
+compiler, which emits separate full metadata. Its apparent compile-fail passes
+were dependency failures, not lifetime evidence. `check_doc_examples.py` now
+uses Cargo's actual rlib/rmeta artifact paths; all positive examples pass and
+the two lifetime examples fail with their expected diagnostic. `check.sh` calls
+this helper for all three usage documents. This changes validation tooling,
+not the lifetime or allocation implementation.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation and the final
 integrated platform matrix remain open. The

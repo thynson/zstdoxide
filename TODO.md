@@ -53,7 +53,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Add allocator-aware one-shot compression with original output ownership and no allocator-changing copies.
 - [x] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
 - [x] Define allocation-free borrowed dictionary views and a sealed immutable handle contract.
-- [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
+- [x] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
 - [x] Replace the training priority queue with checked storage and preserve ties and stale-score ordering.
 - [x] Parameterize raw-training sample windows, frequencies, candidates, ranges, and output without changing selected bytes.
 - [x] Parameterize formatted finalization and all validation copies, preserving dictionary bytes, IDs, and C acceptance.
