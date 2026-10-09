@@ -12,7 +12,6 @@ struct Fixture<'a> {
     source: &'a [u8],
     description: &'a [u8],
     single: &'a [u8],
-    #[cfg_attr(not(feature = "std"), allow(dead_code))]
     four: &'a [u8],
 }
 
@@ -75,6 +74,23 @@ fn one_stream_encoding_matches_all_thirty_official_tables() {
         weight_modes[usize::from(fixture.description[0] >= 128)] = true;
     }
     assert_eq!(weight_modes, [true, true]);
+}
+
+/// Four-stream encoder assertions from `tests/fuzz/huf_round_trip.c:118-127`
+/// with identical table descriptions and byte-for-byte independent C results.
+#[test]
+fn four_stream_encoding_matches_all_thirty_official_tables() {
+    let mut writer = BitWriter::new();
+    let mut output = Vec::new();
+    for (case, fixture) in fixtures().iter().enumerate() {
+        let (table, consumed) = HuffmanTable::read(fixture.description).unwrap();
+        assert_eq!(consumed, fixture.description.len());
+        let codebook = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        codebook
+            .encode_four_streams(fixture.source, &mut writer, &mut output)
+            .unwrap();
+        assert_eq!(output, fixture.four, "official table {case}");
+    }
 }
 
 #[cfg(feature = "std")]
@@ -364,6 +380,115 @@ mod oracle {
         assert_eq!(modes, [5, 6]);
         std::eprintln!(
             "C verified 11 sparse/fallback descriptions (6 direct, 5 FSE) and {verified} exact 1X streams through X1 and X2 decoding"
+        );
+    }
+
+    #[test]
+    #[ignore = "requires ZSTD_UPSTREAM pinned v1.5.7, built lib/libzstd.a, and a C compiler"]
+    fn official_oracle_verifies_four_stream_encoding_and_boundaries() {
+        let oracle = Oracle::compile();
+        let mut writer = BitWriter::new();
+        let mut output = Vec::new();
+        let mut verified = 0;
+        for fixture in fixtures() {
+            let (table, _) = HuffmanTable::read(fixture.description).unwrap();
+            let codebook = HuffmanCodebook::from_decoding_table(&table).unwrap();
+            codebook
+                .encode_four_streams(fixture.source, &mut writer, &mut output)
+                .unwrap();
+            assert_eq!(output, fixture.four);
+            assert_eq!(
+                oracle.check(fixture.description, fixture.source, 4, &output, &codebook),
+                0
+            );
+            verified += 1;
+        }
+
+        let description = [128, 0x10];
+        let (table, _) = HuffmanTable::read(&description).unwrap();
+        let codebook = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        for length in [
+            6, 7, 8, 9, 11, 12, 255, 256, 1023, 1024, 16383, 16384, 131071, 131072,
+        ] {
+            let source: Vec<_> = (0..length).map(|index| (index & 1) as u8).collect();
+            codebook
+                .encode_four_streams(&source, &mut writer, &mut output)
+                .unwrap();
+            if length == 6 || length == 9 {
+                assert_eq!(output.last(), Some(&1), "empty final stream marker");
+                let first_three: usize = output[..6]
+                    .chunks_exact(2)
+                    .map(|bytes| usize::from(u16::from_le_bytes(bytes.try_into().unwrap())))
+                    .sum();
+                assert_eq!(output.len(), 6 + first_three + 1);
+            }
+            assert_eq!(
+                oracle.check(&description, &source, 4, &output, &codebook),
+                0
+            );
+            verified += 1;
+        }
+
+        // Exercise encoded-size thresholds separately from regenerated size.
+        // The one-/two-bit symbols let each quarter gain whole encoded bytes
+        // without changing its source size. A one-bit alphabet alone skips
+        // some total sizes when all three leading quarters grow together.
+        // Literal header selection itself belongs to later assembly tests.
+        let size_description = [129, 0x21];
+        let (size_table, _) = HuffmanTable::read(&size_description).unwrap();
+        let size_codebook = HuffmanCodebook::from_decoding_table(&size_table).unwrap();
+        assert_eq!(size_codebook.code(0).unwrap().bits, 1);
+        assert_eq!(size_codebook.code(1).unwrap().bits, 2);
+        for target in [1023, 1024, 16383, 16384] {
+            let quarter = (target - 10_usize).div_ceil(8) * 8;
+            let mut source = alloc::vec![0; 4 * quarter];
+            let mut extra_bytes = target - (6 + 4 * (quarter / 8 + 1));
+            for part in source.chunks_exact_mut(quarter) {
+                let add = extra_bytes.min(quarter / 8);
+                part[..add * 8].fill(1);
+                extra_bytes -= add;
+            }
+            assert_eq!(extra_bytes, 0);
+            size_codebook
+                .encode_four_streams(&source, &mut writer, &mut output)
+                .unwrap();
+            assert_eq!(output.len(), target);
+            assert_eq!(
+                oracle.check(&size_description, &source, 4, &output, &size_codebook),
+                0
+            );
+            verified += 1;
+        }
+
+        let dictionary = include_bytes!("data/golden-dictionaries/http-dict-missing-symbols");
+        let (table, consumed) = HuffmanTable::read_dictionary(&dictionary[8..]).unwrap();
+        let description = &dictionary[8..8 + consumed];
+        let codebook = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        assert_eq!(codebook.table_log(), 12);
+        let present: Vec<_> = (0..=255_u8)
+            .filter(|&symbol| codebook.code(symbol).is_ok())
+            .collect();
+        for length in [6, 9, 12, 255, 256, 1023, 1024, 16383, 16384, 131072] {
+            let source: Vec<_> = present.iter().copied().cycle().take(length).collect();
+            codebook
+                .encode_four_streams(&source, &mut writer, &mut output)
+                .unwrap();
+            assert_eq!(oracle.check(description, &source, 4, &output, &codebook), 0);
+            verified += 1;
+        }
+        let source = alloc::vec![0; SOURCE_LIMIT];
+        codebook
+            .encode_four_streams(&source, &mut writer, &mut output)
+            .unwrap();
+        assert_eq!(output.len(), 196_618);
+        for bytes in output[..6].chunks_exact(2) {
+            assert_eq!(u16::from_le_bytes(bytes.try_into().unwrap()), 49_153);
+        }
+        assert_eq!(oracle.check(description, &source, 4, &output, &codebook), 0);
+        verified += 1;
+        assert_eq!(verified, 59);
+        std::eprintln!(
+            "C verified {verified} exact Rust 4X streams through X1 and X2; tiny6/9 independent quarters, encoded-size boundaries, maximum196618-byte payload"
         );
     }
 }

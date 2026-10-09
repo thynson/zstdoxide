@@ -6,6 +6,7 @@
 use alloc::vec::Vec;
 
 use crate::bitwriter::BitWriter;
+use crate::frame::MAX_BLOCK_SIZE;
 use crate::huffman::HuffmanTable;
 use crate::{Error, Result};
 
@@ -152,6 +153,76 @@ impl HuffmanCodebook {
         }
         writer.finish()
     }
+
+    /// Encode four independently terminated streams after their jump table.
+    ///
+    /// Corresponds to `HUF_compress4X_usingCTable`. The format requires at least
+    /// six literals; the block limit bounds each stream's length even for reused
+    /// twelve-bit dictionary codes. Invalid sizes or absent symbols leave both
+    /// caller-owned buffers unchanged. Successful reservation precedes reset;
+    /// a later writer allocation failure may leave partial scratch output.
+    pub(crate) fn encode_four_streams(
+        &self,
+        input: &[u8],
+        writer: &mut BitWriter,
+        output: &mut Vec<u8>,
+    ) -> Result<()> {
+        if !(6..=MAX_BLOCK_SIZE).contains(&input.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        if !self.covers(input) {
+            return Err(Error::CorruptData);
+        }
+        let quarter = input.len().div_ceil(4);
+        let third_end = quarter.checked_mul(3).ok_or(Error::InvalidParameter)?;
+        let final_length = input
+            .len()
+            .checked_sub(third_end)
+            .ok_or(Error::InvalidParameter)?;
+        let maximum_stream_size = |length: usize| -> Result<usize> {
+            length
+                .checked_mul(usize::from(self.table_log))
+                .and_then(|bits| bits.checked_add(1))
+                .map(|bits| bits.div_ceil(8))
+                .ok_or(Error::InvalidParameter)
+        };
+        let quarter_bound = maximum_stream_size(quarter)?;
+        if quarter_bound == 0 || quarter_bound > usize::from(u16::MAX) {
+            return Err(Error::InvalidParameter);
+        }
+        let final_bound = maximum_stream_size(final_length)?;
+        let maximum_size = quarter_bound
+            .checked_mul(3)
+            .and_then(|size| size.checked_add(final_bound))
+            .and_then(|size| size.checked_add(6))
+            .ok_or(Error::InvalidParameter)?;
+        // try_reserve's argument is additional to the current length. Retaining
+        // an already larger output allocation must not request it a second time.
+        output
+            .try_reserve(maximum_size.saturating_sub(output.len()))
+            .map_err(|_| Error::AllocationFailed)?;
+        output.clear();
+        output.resize(6, 0);
+        let mut start = 0;
+        for (stream_index, end) in [quarter, quarter * 2, third_end, input.len()]
+            .into_iter()
+            .enumerate()
+        {
+            self.encode_stream(&input[start..end], writer)?;
+            let encoded = writer.as_bytes();
+            if stream_index < 3 {
+                let length = u16::try_from(encoded.len()).map_err(|_| Error::CorruptData)?;
+                if length == 0 {
+                    return Err(Error::CorruptData);
+                }
+                let jump = stream_index * 2;
+                output[jump..jump + 2].copy_from_slice(&length.to_le_bytes());
+            }
+            output.extend_from_slice(encoded);
+            start = end;
+        }
+        Ok(())
+    }
 }
 
 /// A new inline table and the exact bytes that establish its codes for decoding.
@@ -188,6 +259,8 @@ impl BuiltLiteralTable {
     pub(crate) fn description(&self) -> &[u8] {
         &self.description
     }
+
+
 }
 
 #[cfg(test)]
@@ -322,6 +395,149 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn four_streams_six_and_nine_literals_include_an_empty_final_marker() {
+        let (table, _) = HuffmanTable::read(&[128, 0x10]).unwrap();
+        let codes = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        let mut writer = BitWriter::new();
+        let mut output = Vec::new();
+        for (source, expected) in [
+            (&[0, 1, 0, 1, 0, 1][..], &[1, 0, 1, 0, 1, 0, 5, 5, 5, 1][..]),
+            (
+                &[0, 1, 0, 1, 0, 1, 0, 1, 0],
+                &[1, 0, 1, 0, 1, 0, 10, 13, 10, 1],
+            ),
+        ] {
+            codes
+                .encode_four_streams(source, &mut writer, &mut output)
+                .unwrap();
+            assert_eq!(output, expected);
+            assert_eq!(writer.as_bytes(), &[1]);
+            assert_eq!(
+                crate::huffman::decode_streams(&table, &output, source.len(), true).unwrap(),
+                source
+            );
+        }
+    }
+
+    #[test]
+    fn four_streams_invalid_sizes_and_symbols_preserve_both_buffers() {
+        let mut lengths = [0; SYMBOLS];
+        lengths[0] = 1;
+        lengths[255] = 1;
+        let codes = HuffmanCodebook::from_lengths(&lengths, 1).unwrap();
+        let mut writer = BitWriter::new();
+        writer.write(0x52, 8).unwrap();
+        writer.write(5, 3).unwrap();
+        let mut output = vec![88, 99];
+        let capacity = output.capacity();
+        for length in [0, 1, 2, 3, 4, 5, MAX_BLOCK_SIZE + 1] {
+            assert_eq!(
+                codes.encode_four_streams(&vec![0; length], &mut writer, &mut output),
+                Err(Error::InvalidParameter)
+            );
+            assert_eq!(output, [88, 99]);
+            assert_eq!(output.capacity(), capacity);
+            assert_eq!(writer.as_bytes(), &[0x52]);
+        }
+        for absent_at in 0..9 {
+            let mut source = [0; 9];
+            source[absent_at] = 1;
+            assert_eq!(
+                codes.encode_four_streams(&source, &mut writer, &mut output),
+                Err(Error::CorruptData)
+            );
+            assert_eq!(output, [88, 99]);
+            assert_eq!(writer.as_bytes(), &[0x52]);
+        }
+        writer.write(3, 5).unwrap();
+        writer.finish().unwrap();
+        assert_eq!(writer.as_bytes(), &[0x52, 0x1d, 1]);
+    }
+
+    #[test]
+    fn four_stream_jump_lengths_and_order_cover_literal_size_boundaries() {
+        let codes = HuffmanCodebook::from_lengths(&[8; SYMBOLS], 11).unwrap();
+        let mut writer = BitWriter::new();
+        let mut output = Vec::new();
+        for length in [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            1023,
+            1024,
+            16_383,
+            16_384,
+            MAX_BLOCK_SIZE - 1,
+            MAX_BLOCK_SIZE,
+        ] {
+            let source: Vec<_> = (0..length).map(|index| index as u8).collect();
+            codes
+                .encode_four_streams(&source, &mut writer, &mut output)
+                .unwrap();
+            assert_eq!(output.len(), length + 10);
+            let quarter = length.div_ceil(4);
+            for jump in output[..6].chunks_exact(2) {
+                assert_eq!(
+                    usize::from(u16::from_le_bytes([jump[0], jump[1]])),
+                    quarter + 1
+                );
+            }
+            let mut encoded_start = 6;
+            for (stream, original_start) in (0..4).zip([0, quarter, quarter * 2, quarter * 3]) {
+                let original_end = if stream == 3 {
+                    length
+                } else {
+                    original_start + quarter
+                };
+                let count = original_end - original_start;
+                let encoded_end = encoded_start + count;
+                let recovered: Vec<_> = output[encoded_start..encoded_end]
+                    .iter()
+                    .rev()
+                    .copied()
+                    .collect();
+                assert_eq!(recovered, source[original_start..original_end]);
+                assert_eq!(output[encoded_end], 1);
+                encoded_start = encoded_end + 1;
+            }
+            assert_eq!(encoded_start, output.len());
+        }
+    }
+
+    #[test]
+    fn four_stream_dictionary_maximum_width_respects_jump_bounds_and_reuses_capacity() {
+        let dictionary =
+            include_bytes!("../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols");
+        let (table, _) = HuffmanTable::read_dictionary(&dictionary[8..]).unwrap();
+        let codes = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        assert_eq!(codes.code(0), Ok(Codeword { value: 0, bits: 12 }));
+        let source = vec![0; MAX_BLOCK_SIZE];
+        let mut writer = BitWriter::new();
+        let mut output = Vec::new();
+        codes
+            .encode_four_streams(&source, &mut writer, &mut output)
+            .unwrap();
+        assert_eq!(output.len(), 196_618);
+        assert_eq!(&output[..6], &[1, 192, 1, 192, 1, 192]);
+        assert_eq!(
+            crate::huffman::decode_streams(&table, &output, source.len(), true).unwrap(),
+            source
+        );
+        let capacities = (writer.retained_capacity(), output.capacity());
+        codes
+            .encode_four_streams(&source[..6], &mut writer, &mut output)
+            .unwrap();
+        assert_eq!(writer.as_bytes(), &[1]);
+        assert_eq!((writer.retained_capacity(), output.capacity()), capacities);
+        assert_eq!(output.len(), 19);
     }
 
     #[test]
