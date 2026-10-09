@@ -690,13 +690,16 @@ fn collect_files(roots: Vec<PathBuf>, maximum: usize) -> io::Result<Vec<PathBuf>
 }
 
 #[test]
-#[ignore = "requires ZSTDOXIDE_DICTIONARY_CORPUS and ZSTDOXIDE_DICTIONARY_TARGET=decompress|round_trip; no files are skipped"]
+#[ignore = "requires ZSTDOXIDE_DICTIONARY_CORPUS and ZSTDOXIDE_DICTIONARY_TARGET=decompress|round_trip|stream_round_trip; no files are skipped"]
 fn external_trained_dictionary_file_corpus() {
     let roots = std::env::var_os("ZSTDOXIDE_DICTIONARY_CORPUS")
         .expect("ZSTDOXIDE_DICTIONARY_CORPUS is required");
     let target = std::env::var("ZSTDOXIDE_DICTIONARY_TARGET")
         .expect("ZSTDOXIDE_DICTIONARY_TARGET is required");
-    assert!(matches!(target.as_str(), "decompress" | "round_trip"));
+    assert!(matches!(
+        target.as_str(),
+        "decompress" | "round_trip" | "stream_round_trip"
+    ));
     let maximum = std::env::var("ZSTDOXIDE_DICTIONARY_MAX_FILES").map_or(1024, |value| {
         value
             .parse::<usize>()
@@ -721,10 +724,11 @@ fn external_trained_dictionary_file_corpus() {
             "input grew beyond cap: {}",
             path.display()
         );
-        let outcome = if target == "decompress" {
-            dictionary_decompress(&input)
-        } else {
-            dictionary_round_trip(&input)
+        let outcome = match target.as_str() {
+            "decompress" => dictionary_decompress(&input),
+            "round_trip" => dictionary_round_trip(&input),
+            "stream_round_trip" => dictionary_stream_round_trip(&input),
+            _ => unreachable!(),
         };
         trained += usize::from(outcome.trained);
         decoded += usize::from(outcome.decoded);
@@ -736,4 +740,282 @@ fn external_trained_dictionary_file_corpus() {
         files.len() - decoded,
         started.elapsed().as_secs_f64()
     );
+}
+
+struct EncodedStream {
+    bytes: Vec<u8>,
+    frames: Vec<Range<usize>>,
+    modes: u16,
+}
+
+/// Adapt the original makeInBuffer/makeOutBuffer and mode state machine after
+/// the unsupported FUZZ_setRandomParameters call. Selector ordering within this
+/// schedule is preserved; its initial tail position is explicitly adapted.
+fn encode_streamed(
+    source: &[u8],
+    dictionary: SharedDictionary,
+    prefix: bool,
+    producer: &mut DataProducer<'_>,
+) -> EncodedStream {
+    let mut encoder = Encoder::with_options(EncoderOptions {
+        checksum: false,
+        ..EncoderOptions::default()
+    })
+    .unwrap();
+    if prefix {
+        encoder.set_prefix(dictionary).unwrap();
+    } else {
+        encoder.set_dictionary(Some(dictionary)).unwrap();
+    }
+    let capacity = compression_bound(source.len()).checked_mul(15).unwrap();
+    let mut scratch = vec![0xa5; capacity + 8];
+    let mut bytes = Vec::new();
+    let mut frames = Vec::new();
+    let mut modes = 0_u16;
+    let mut frame_start = 0;
+    let mut position = 0;
+    let mut calls = 0;
+    let call_limit = 32 * (source.len() + producer.remaining() + 1) + 1024;
+    while position < source.len() {
+        let length = producer.unsigned_range(1, (source.len() - position) as u32) as usize;
+        let end = position + length;
+        let mut mode = None;
+        while position < end || mode.is_some() {
+            calls += 1;
+            assert!(calls <= call_limit, "stream fuzz progress budget exhausted");
+            assert!(bytes.len() < capacity, "upstream stream bound exhausted");
+            let output_size = producer.unsigned_range(1, (capacity - bytes.len()) as u32) as usize;
+            let selected = *mode.get_or_insert_with(|| producer.unsigned_range(0, 9));
+            modes |= 1 << selected;
+            let directive = match selected {
+                0..=2 => EndDirective::Flush,
+                3 => EndDirective::Finish,
+                _ => EndDirective::Continue,
+            };
+            if selected == 4 {
+                let empty = encoder
+                    .process(&[], &mut [], EndDirective::Continue)
+                    .unwrap();
+                assert_eq!((empty.consumed, empty.produced), (0, 0));
+            }
+            scratch[..output_size + 8].fill(0xa5);
+            let progress = encoder
+                .process(
+                    &source[position..end],
+                    &mut scratch[..output_size],
+                    directive,
+                )
+                .unwrap();
+            assert!(progress.consumed <= end - position);
+            assert!(progress.produced <= output_size);
+            assert!(
+                scratch[progress.produced..output_size + 8]
+                    .iter()
+                    .all(|&byte| byte == 0xa5)
+            );
+            position += progress.consumed;
+            bytes.extend_from_slice(&scratch[..progress.produced]);
+            assert!(
+                progress.consumed != 0
+                    || progress.produced != 0
+                    || matches!(
+                        progress.status,
+                        StreamStatus::Flushed | StreamStatus::FrameFinished
+                    )
+            );
+            match directive {
+                EndDirective::Continue => mode = None,
+                EndDirective::Flush if progress.status == StreamStatus::Flushed => mode = None,
+                EndDirective::Finish if progress.status == StreamStatus::FrameFinished => {
+                    frames.push(frame_start..bytes.len());
+                    frame_start = bytes.len();
+                    encoder.reset();
+                    // Preserve the branch selector, excluding the unsupported
+                    // random-parameter function it would conditionally call.
+                    let _change_parameters = producer.unsigned_range(0, 7) == 0;
+                    mode = None;
+                }
+                _ => {}
+            }
+        }
+    }
+    loop {
+        calls += 1;
+        assert!(calls <= call_limit);
+        assert!(bytes.len() < capacity);
+        let output_size = producer.unsigned_range(1, (capacity - bytes.len()) as u32) as usize;
+        scratch[..output_size + 8].fill(0xa5);
+        let progress = encoder
+            .process(&[], &mut scratch[..output_size], EndDirective::Finish)
+            .unwrap();
+        assert_eq!(progress.consumed, 0);
+        assert!(progress.produced <= output_size);
+        assert!(
+            scratch[progress.produced..output_size + 8]
+                .iter()
+                .all(|&byte| byte == 0xa5)
+        );
+        bytes.extend_from_slice(&scratch[..progress.produced]);
+        if progress.status == StreamStatus::FrameFinished {
+            frames.push(frame_start..bytes.len());
+            break;
+        }
+        assert!(progress.produced != 0);
+    }
+    assert_eq!(position, source.len());
+    EncodedStream {
+        bytes,
+        frames,
+        modes,
+    }
+}
+
+/// Exact pre-training mode/sample/prefix selectors from
+/// `dictionary_stream_round_trip.c`, followed by the adapted Rust schedule.
+fn dictionary_stream_round_trip(input: &[u8]) -> Outcome {
+    assert!(input.len() <= MAX_INPUT);
+    let mut producer = DataProducer::new(input);
+    let size = producer.reserve_prefix();
+    let source = &input[..size];
+    let mode = selected_mode(&mut producer);
+    let samples = select_training_samples(size, &mut producer);
+    let trained = train_selected(source, &samples);
+    let prefix = producer.unsigned_range(0, 1) != 0;
+    let dictionary = load_mode(&trained.dictionary, mode);
+    let encoded = encode_streamed(source, dictionary.clone(), prefix, &mut producer);
+    let decoded = decode_checked(&encoded.bytes, dictionary, prefix, size).unwrap();
+    assert_eq!(decoded, source);
+    Outcome {
+        trained: trained.trained,
+        decoded: true,
+    }
+}
+
+fn decode_stream_fragments(
+    encoded: &[u8],
+    source: &[u8],
+    dictionary: SharedDictionary,
+    prefix: bool,
+) {
+    let mut decoder = Decoder::new(DecodeOptions::new(source.len()));
+    if prefix {
+        decoder.set_prefix(dictionary).unwrap();
+    } else {
+        decoder.set_dictionary(Some(dictionary)).unwrap();
+    }
+    let mut consumed = 0;
+    let mut produced = 0;
+    let mut scratch = [0xa5; 17 + 8];
+    let mut calls = 0;
+    loop {
+        calls += 1;
+        assert!(calls <= 32 * (encoded.len() + source.len() + 1) + 1024);
+        let end = (consumed + 13).min(encoded.len());
+        scratch.fill(0xa5);
+        let progress = decoder
+            .process(&encoded[consumed..end], &mut scratch[..17])
+            .unwrap();
+        assert!(progress.consumed <= end - consumed);
+        assert!(progress.produced <= 17);
+        assert!(
+            scratch[progress.produced..]
+                .iter()
+                .all(|&byte| byte == 0xa5)
+        );
+        assert!(progress.produced <= source.len() - produced);
+        assert_eq!(
+            &scratch[..progress.produced],
+            &source[produced..produced + progress.produced]
+        );
+        consumed += progress.consumed;
+        produced += progress.produced;
+        assert_eq!(decoder.total_input(), consumed as u64);
+        assert_eq!(decoder.total_output(), produced as u64);
+        if consumed == encoded.len()
+            && matches!(
+                progress.status,
+                StreamStatus::FrameFinished | StreamStatus::NeedInput
+            )
+        {
+            decoder.finish().unwrap();
+            assert_eq!(produced, source.len());
+            break;
+        }
+        assert!(progress.consumed != 0 || progress.produced != 0);
+    }
+}
+
+#[test]
+fn trained_stream_schedules_cover_every_mode_and_prefix_lifetime_across_reset() {
+    let source: Vec<_> = (0..256).map(|index| (index * 17 + 123) as u8).collect();
+    let samples = select_training_samples(source.len(), &mut DataProducer::new(&[]));
+    let trained = train_selected(&source, &samples);
+    assert!(trained.trained);
+    let mut seen = 0;
+    for prefix in [false, true] {
+        for mode in 0..=9 {
+            let selectors = vec![mode; 65536];
+            let first = encode_streamed(
+                &source,
+                trained.dictionary.clone(),
+                prefix,
+                &mut DataProducer::new(&selectors),
+            );
+            let second = encode_streamed(
+                &source,
+                trained.dictionary.clone(),
+                prefix,
+                &mut DataProducer::new(&selectors),
+            );
+            assert_eq!(first.bytes, second.bytes);
+            assert_eq!(first.frames, second.frames);
+            assert_eq!(first.modes, second.modes);
+            assert_ne!(first.modes & (1 << mode), 0);
+            seen |= first.modes;
+            if mode == 3 {
+                assert!(first.frames.len() > 1);
+            }
+            for (index, frame) in first.frames.iter().enumerate() {
+                let (header, _) =
+                    zstdoxide::FrameHeader::parse(&first.bytes[frame.clone()]).unwrap();
+                let expected = if prefix && index != 0 {
+                    0
+                } else {
+                    trained.dictionary.id()
+                };
+                assert_eq!(header.dictionary_id, expected);
+            }
+            decode_stream_fragments(&first.bytes, &source, trained.dictionary.clone(), prefix);
+        }
+    }
+    assert_eq!(seen, (1 << 10) - 1);
+}
+
+#[test]
+fn trained_stream_target_covers_modes_prefixes_empty_sources_and_noise() {
+    for size in [0, 1, 7, 8, 255, 256, 2048] {
+        let source: Vec<_> = (0..size).map(|index| (index * 17 + 123) as u8).collect();
+        for mode in 0..=2 {
+            for prefix in [false, true] {
+                let mut selectors = vec![(2, mode)];
+                selectors.extend(sample_selectors(size));
+                selectors.push((1, u32::from(prefix)));
+                let outcome = dictionary_stream_round_trip(&target_case(&source, &selectors));
+                assert_eq!(outcome.trained, size >= 8);
+                assert!(outcome.decoded);
+            }
+        }
+    }
+    let mut state = 0x417b_8351_u32;
+    let noise: Vec<_> = (0..8192)
+        .map(|_| {
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            state as u8
+        })
+        .collect();
+    for length in [0, 1, 3, 8, 31, 255, 256, 1024, 4096, 8192] {
+        assert!(dictionary_stream_round_trip(&noise[..length]).decoded);
+    }
 }
