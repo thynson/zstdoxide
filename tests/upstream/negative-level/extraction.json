@@ -1,0 +1,100 @@
+{
+  "datagen_sha256": "fdc1e21f374f7ce3d45f26702583ed2c606f9b5b7124c673bb3a4cbb09a62397",
+  "full_prefix_executed": false,
+  "fuzzer_sha256": "dedcfca725c18810ccb8fce1d2b9995f14f8fb879c8b277158a8316ac2cf690c",
+  "generated_sha256": "4100325a7b31e79313edffc5e7647630835dc189eef0fafa66930437407027cd",
+  "schema_version": 1,
+  "source_state_only": true,
+  "spans": [
+    {
+      "line_end": 129,
+      "line_start": 123,
+      "name": "CHECK_Z",
+      "sha256": "971eaea7e961b3bece3ae69d295ef18e5d5b9588a8355a90f3770c6bb75b1eed",
+      "source": "tests/fuzzer.c",
+      "text": "#define CHECK_Z(f) {                          \\\n    size_t const err = f;                     \\\n    if (ZSTD_isError(err)) {                  \\\n        DISPLAY(\"Error => %s : %s \",          \\\n                #f, ZSTD_getErrorName(err));  \\\n        exit(1);                              \\\n}   }\n"
+    },
+    {
+      "line_end": 54,
+      "line_start": 54,
+      "name": "DEFAULT_PROBABILITY",
+      "sha256": "4cbe77d15b9649028e674908328c6318b87ab36a733a3ccc539eacd41dacf158",
+      "source": "tests/fuzzer.c",
+      "text": "static const int FUZ_compressibility_default = 50;\n"
+    },
+    {
+      "line_end": 652,
+      "line_start": 652,
+      "name": "SOURCE_SIZE",
+      "sha256": "37adad6ad17dbfa2b5a12f16721174af5c9baa3b1c2a4ba31f04094e53f27d80",
+      "source": "tests/fuzzer.c",
+      "text": "    size_t const CNBuffSize = 5 MB;\n"
+    },
+    {
+      "line_end": 654,
+      "line_start": 654,
+      "name": "DESTINATION_SIZE",
+      "sha256": "1654e49e1dce324e2bc6347cebe3049d7cbbd61f928be729028e932f9f205338",
+      "source": "tests/fuzzer.c",
+      "text": "    size_t const compressedBufferSize = ZSTD_compressBound(CNBuffSize);\n"
+    },
+    {
+      "line_end": 1541,
+      "line_start": 1541,
+      "name": "FULL_RESTORE",
+      "sha256": "106b97914e2a54d64e6d35d585e778fcf56c7a91f3e94362fd9f5d87b1e20a63",
+      "source": "tests/fuzzer.c",
+      "text": "    RDG_genBuffer(CNBuffer, CNBuffSize, compressibility, 0. /*auto*/, seed);\n"
+    },
+    {
+      "line_end": 1642,
+      "line_start": 1639,
+      "name": "INITIAL_MATCH",
+      "sha256": "7f142047aa153aaf9c77c63539a4c73d84202f06c1f605456cfdfa7b16d4aaa4",
+      "source": "tests/fuzzer.c",
+      "text": "        int i;\n        for (i=0; i<20; i++)\n            ((char*)CNBuffer)[i] = (char)i;   /* ensure no match during initial section */\n        memcpy((char*)CNBuffer + 20, CNBuffer, 10);   /* create one match, starting from beginning of sample, which is the difficult case (see #1241) */\n"
+    },
+    {
+      "line_end": 2528,
+      "line_start": 2521,
+      "name": "FAMILY_GATE",
+      "sha256": "1ebeeb1934a42de1ac3ad0b526d9c457d1eb1b94edac53c5dcdaa407c44aaa76",
+      "source": "tests/fuzzer.c",
+      "text": "#if !defined(ZSTD_EXCLUDE_DFAST_BLOCK_COMPRESSOR) \\\n && !defined(ZSTD_EXCLUDE_GREEDY_BLOCK_COMPRESSOR) \\\n && !defined(ZSTD_EXCLUDE_DFAST_BLOCK_COMPRESSOR) \\\n && !defined(ZSTD_EXCLUDE_LAZY_BLOCK_COMPRESSOR) \\\n && !defined(ZSTD_EXCLUDE_LAZY2_BLOCK_COMPRESSOR) \\\n && !defined(ZSTD_EXCLUDE_BTLAZY2_BLOCK_COMPRESSOR) \\\n && !defined(ZSTD_EXCLUDE_BTOPT_BLOCK_COMPRESSOR) \\\n && !defined(ZSTD_EXCLUDE_BTULTRA_BLOCK_COMPRESSOR)\n"
+    },
+    {
+      "line_end": 2534,
+      "line_start": 2532,
+      "name": "FLAT_CONSTANTS",
+      "sha256": "3f142bbe20763dc85ef6273a013745afd9bc091407c0dbf06ed219e11e91af5f",
+      "source": "tests/fuzzer.c",
+      "text": "        if ((int)(compressibility * 100 + 0.1) == FUZ_compressibility_default) { /* test only valid with known input */\n            size_t const flatdictSize = 22 KB;\n            size_t const contentSize = 9 KB;\n"
+    },
+    {
+      "line_end": 2556,
+      "line_start": 2556,
+      "name": "FLAT_RESTORE",
+      "sha256": "dfd6c156c447441015a8db57d053af76d4427854b78107fed9d7a683ea017a40",
+      "source": "tests/fuzzer.c",
+      "text": "            RDG_genBuffer(CNBuffer, flatdictSize + contentSize, compressibility, 0., seed);\n"
+    },
+    {
+      "line_end": 3447,
+      "line_start": 3447,
+      "name": "BAD_MAGIC",
+      "sha256": "6cd99f9d844a9464623f1da9919302ba0646d18c570e9b8c8e9922fa8b5deb14",
+      "source": "tests/fuzzer.c",
+      "text": "    ((char*)(CNBuffer))[0] = 1;\n"
+    },
+    {
+      "line_end": 3489,
+      "line_start": 3468,
+      "name": "TARGET",
+      "sha256": "4ec4ef49d7de9e499dbd905b8a1c55c2660e800d670cf29480231460f3a449f9",
+      "source": "tests/fuzzer.c",
+      "text": "    /* negative compression level test : ensure simple API and advanced API produce same result */\n    DISPLAYLEVEL(3, \"test%3i : negative compression level : \", testNb++);\n    {   ZSTD_CCtx* const cctx = ZSTD_createCCtx();\n        size_t const srcSize = CNBuffSize / 5;\n        int const compressionLevel = -1;\n\n        assert(cctx != NULL);\n        {   size_t const cSize_1pass = ZSTD_compress(compressedBuffer, compressedBufferSize,\n                                                     CNBuffer, srcSize, compressionLevel);\n            if (ZSTD_isError(cSize_1pass)) goto _output_error;\n\n            CHECK_Z( ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, compressionLevel) );\n            {   size_t const compressionResult = ZSTD_compress2(cctx,\n                                    compressedBuffer, compressedBufferSize,\n                                    CNBuffer, srcSize);\n                DISPLAYLEVEL(5, \"simple=%u vs %u=advanced : \", (unsigned)cSize_1pass, (unsigned)compressionResult);\n                if (ZSTD_isError(compressionResult)) goto _output_error;\n                if (compressionResult != cSize_1pass) goto _output_error;\n        }   }\n        ZSTD_freeCCtx(cctx);\n    }\n    DISPLAYLEVEL(3, \"OK \\n\");\n"
+    }
+  ],
+  "target_edit": "Insert capture/decode hooks after the original successful simple call and original advanced equal-size check; all original target statements retained.",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

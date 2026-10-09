@@ -1,0 +1,9 @@
+This collection derives source statements and generated data from facebook/zstd
+v1.5.7, revision f8745da6ff1ad1e7bab384bd1f9d742439278e99.
+Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+Used under the BSD-3-Clause option; see LICENSE.zstd at the repository root.
+
+Source statements are extracted from tests/fuzzer.c; data generation calls the
+unchanged external programs/datagen.c. The helper template, capture driver and
+independent comparison are zstdoxide test infrastructure. Neither a complete C
+codec source copy nor a production C binding is included here.

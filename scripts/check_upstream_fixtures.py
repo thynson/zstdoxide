@@ -17,7 +17,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REVISION = "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
-REQUIRED_COLLECTIONS = ("data", "decodecorpus", "dictionaries", "entropy-data", "entropy-lifetimes", "fast-collector", "fast-frame-publication", "fast-parser", "fast-parser-families", "inline-regressions", "match-search", "parameters", "testcard", "window-sequences")
+REQUIRED_COLLECTIONS = ("data", "decodecorpus", "dictionaries", "entropy-data", "entropy-lifetimes", "fast-collector", "fast-frame-publication", "fast-parser", "fast-parser-families", "inline-regressions", "match-search", "negative-level", "parameters", "testcard", "window-sequences")
 OPTIONAL_COLLECTIONS = ()
 NON_FIXTURE_FILES = {"manifest.json", "README.md", "cases.rs", "NOTICE"}
 

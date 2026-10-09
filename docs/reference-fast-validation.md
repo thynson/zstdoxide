@@ -437,3 +437,31 @@ tests of the existing decoder, not claims about the upcoming Rust Fast encoder.
 [archive](evidence/2026-10-09-fast-frame-rust-decoding.tar.gz) preserve the frozen
 test, source manifest, exact commands and logs. No new C or Miri campaign is
 attributed to this checkpoint.
+
+## Original negative-level source and C assertion capture
+
+The negative-level case at pinned `tests/fuzzer.c:3468–3489` now has a portable
+capture of its exact inherited one-MiB input, plus the two complete C frames.
+This is an extracted source-state replay of four original writers, with seed
+zero and 50% compressibility, not execution of the entire preceding fuzzer.
+Independent Rust generation compares every byte of the four five-MiB source
+states and the selected prefix: 22,020,096 bytes per normal/sanitized mode.
+The original destination capacity is 5,263,360 bytes. Both C calls succeed and
+return 566,817 bytes, satisfying the original size-equality assertion; their
+additional byte equality is recorded separately.
+
+The relocated generator reproduces every frozen source/frame byte. Eighty
+normal/optimized-Python offline controls include six positive and 74 rejection
+cases. Actual shared fixture registration verifies 528 files in 15 collections;
+both standard check scripts now run the offline importer. Its generator and
+extraction spans, original source pins, driver identity and complete fixture
+catalog are checked before any execution. The scoped sanitizer instruments the
+helper, datagen, compression dispatcher and Fast parser; the remaining archive
+is uninstrumented, with leak detection disabled. No Rust numeric execution or
+complete upstream fuzzer coverage is claimed by this fixture checkpoint.
+
+The [evidence record](evidence/2026-10-09-negative-level-fixtures.json) and
+[command/control archive](evidence/2026-10-09-negative-level-fixtures.tar.gz)
+preserve original and relocated successful captures and the initial strict-C
+compile failure caused by redundant local macros. Removing those definitions
+did not change any extracted writer or target statement.

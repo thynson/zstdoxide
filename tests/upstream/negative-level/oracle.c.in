@@ -1,0 +1,186 @@
+/* Copyright (c) zstdoxide contributors.
+ * Bounded external oracle. Original statements are extracted from pinned
+ * facebook/zstd v1.5.7 fuzzer.c during generation, never vendored wholesale.
+ * This replays the exact selected source state, not the preceding unit tests.
+ */
+#undef NDEBUG
+#include <assert.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define ZSTD_STATIC_LINKING_ONLY
+#include "zstd.h"
+#include "zstd_errors.h"
+#include "zstd_compress_internal.h"
+#include "xxhash.h"
+#include "datagen.h"
+/* KB/MB use the unchanged zstd_internal.h macros included above. */
+#define DISPLAY(...) fprintf(stderr, __VA_ARGS__)
+#define DISPLAYLEVEL(level, ...) do { if ((level) <= 3) DISPLAY(__VA_ARGS__); } while (0)
+@CHECK_Z@
+@DEFAULT_PROBABILITY@
+
+#define GUARD_BYTES 64
+static const char* output_directory;
+static unsigned char* guarded_source;
+static unsigned char* guarded_compressed;
+static unsigned char* guarded_decoded;
+static size_t source_bytes;
+static size_t compressed_bytes;
+
+static void require(int ok, const char* reason) {
+    if (!ok) { fprintf(stderr, "negative-level oracle: %s\n", reason); exit(1); }
+}
+static void* allocate_guarded(size_t size, unsigned char** owner) {
+    require(size <= 5263360 && size <= SIZE_MAX - 2 * GUARD_BYTES, "bounded allocation");
+    *owner = (unsigned char*)malloc(size + 2 * GUARD_BYTES);
+    require(*owner != NULL, "allocation");
+    memset(*owner, 0xa7, size + 2 * GUARD_BYTES);
+    return *owner + GUARD_BYTES;
+}
+static void verify_guards(void) {
+    const unsigned char* allocations[3] = {guarded_source, guarded_compressed, guarded_decoded};
+    size_t sizes[3] = {source_bytes, compressed_bytes, source_bytes};
+    size_t object, index;
+    for (object = 0; object < 3; ++object) {
+        for (index = 0; index < GUARD_BYTES; ++index) {
+            require(allocations[object][index] == 0xa7
+                    && allocations[object][GUARD_BYTES + sizes[object] + index] == 0xa7,
+                    "allocation guards");
+        }
+    }
+}
+static uint64_t fingerprint(const void* source, size_t size) {
+    const unsigned char* p = (const unsigned char*)source;
+    uint64_t hash = UINT64_C(14695981039346656037);
+    size_t i;
+    for (i = 0; i < size; ++i) hash = (hash ^ p[i]) * UINT64_C(1099511628211);
+    return hash;
+}
+static void save_bytes(const char* name, const void* bytes, size_t size) {
+    char path[4096];
+    int result = snprintf(path, sizeof(path), "%s/%s", output_directory, name);
+    FILE* file;
+    require(size <= 5263360 && result > 0 && (size_t)result < sizeof(path), "bounded output path/size");
+    file = fopen(path, "wbx");
+    require(file != NULL, "fresh output file");
+    require(fwrite(bytes, 1, size, file) == size, "complete output write");
+    require(fflush(file) == 0, "flush output");
+    require(fclose(file) == 0, "close output");
+}
+static void save_stage(const char* name, const void* bytes, size_t size) {
+    char file[80];
+    int result = snprintf(file, sizeof(file), "%s.raw", name);
+    require(result > 0 && (size_t)result < sizeof(file) && size == 5242880, "stage dimensions");
+    verify_guards();
+    save_bytes(file, bytes, size);
+    printf("{\"record\":\"stage\",\"name\":\"%s\",\"size\":%zu,\"fnv1a64\":\"%016llx\",\"xxh64\":\"%016llx\",\"prefix_fnv1a64\":\"%016llx\",\"prefix_xxh64\":\"%016llx\"}\n",
+           name, size, (unsigned long long)fingerprint(bytes, size),
+           (unsigned long long)XXH64(bytes, size, 0),
+           (unsigned long long)fingerprint(bytes, 1048576),
+           (unsigned long long)XXH64(bytes, 1048576, 0));
+}
+static void print_parameters(ZSTD_compressionParameters p) {
+    printf("[%u,%u,%u,%u,%u,%u,%u]",p.windowLog,p.chainLog,p.hashLog,p.searchLog,
+           p.minMatch,p.targetLength,(unsigned)p.strategy);
+}
+static void save_frame(const char* name, const void* encoded, size_t encoded_size,
+                       const void* original, size_t original_size, void* decoded,
+                       const ZSTD_CCtx* context) {
+    char file[80];
+    ZSTD_FrameHeader header;
+    ZSTD_DCtx* decoder;
+    size_t decoded_size;
+    int result = snprintf(file, sizeof(file), "%s.zst", name);
+    require(result > 0 && (size_t)result < sizeof(file), "frame path");
+    require(original_size == 1048576 && encoded_size > 0 && encoded_size <= compressed_bytes,
+            "original frame dimensions");
+    require(encoded_size <= ZSTD_compressBound(original_size), "additional source-bound check");
+    require(ZSTD_getFrameHeader(&header, encoded, encoded_size) == 0, "complete frame header");
+    require(header.frameType == ZSTD_frame && header.frameContentSize == original_size
+            && header.dictID == 0 && header.checksumFlag == 0, "reference frame defaults");
+    require(ZSTD_findFrameCompressedSize(encoded, encoded_size) == encoded_size, "one complete frame");
+    decoder = ZSTD_createDCtx();
+    require(decoder != NULL, "independent decoder");
+    decoded_size = ZSTD_decompressDCtx(decoder, decoded, original_size, encoded, encoded_size);
+    require(!ZSTD_isError(decoded_size) && decoded_size == original_size
+            && memcmp(decoded, original, original_size) == 0, "independent C exact decode");
+    ZSTD_freeDCtx(decoder);
+    verify_guards();
+    save_bytes(file, encoded, encoded_size);
+    printf("{\"record\":\"frame\",\"name\":\"%s\",\"size\":%zu,\"fnv1a64\":\"%016llx\",\"xxh64\":\"%016llx\",\"content_size\":%llu,\"window_size\":%llu,\"block_size_max\":%u,\"header_size\":%u,\"dictionary_id\":%u,\"checksum\":%u,\"decoded_bytes\":%zu,\"query_parameters\":",
+           name, encoded_size, (unsigned long long)fingerprint(encoded, encoded_size),
+           (unsigned long long)XXH64(encoded, encoded_size, 0),
+           header.frameContentSize, header.windowSize, header.blockSizeMax, header.headerSize,
+           header.dictID, header.checksumFlag, decoded_size);
+    print_parameters(ZSTD_getCParams(-1, original_size, 0));
+    if (context != NULL) {
+        int level = 0;
+        CHECK_Z(ZSTD_CCtx_getParameter(context, ZSTD_c_compressionLevel, &level));
+        require(level == -1 && context->appliedParams.nbWorkers == 0
+                && context->dictID == 0, "fresh advanced context scalar state");
+        printf(",\"requested_level\":%d,\"applied_parameters\":", level);
+        print_parameters(context->appliedParams.cParams);
+        printf(",\"applied_frame_parameters\":[%u,%u,%u],\"workers\":%d",
+               context->appliedParams.fParams.contentSizeFlag,
+               context->appliedParams.fParams.checksumFlag,
+               context->appliedParams.fParams.noDictIDFlag,
+               context->appliedParams.nbWorkers);
+    } else {
+        printf(",\"requested_level\":-1,\"applied_parameters\":null,\"applied_frame_parameters\":null,\"workers\":null");
+    }
+    printf(",\"guards_intact\":true,\"decoded_equal\":true}\n");
+}
+
+static int capture(void) {
+    U32 const seed = 0;
+    double const compressibility = 0.50;
+@SOURCE_SIZE@
+@DESTINATION_SIZE@
+    void* const CNBuffer = allocate_guarded(CNBuffSize, &guarded_source);
+    void* const compressedBuffer = allocate_guarded(compressedBufferSize, &guarded_compressed);
+    void* const decodedBuffer = allocate_guarded(CNBuffSize, &guarded_decoded);
+    int testResult = 0;
+    unsigned testNb = 0;
+    source_bytes = CNBuffSize;
+    compressed_bytes = compressedBufferSize;
+    require(CNBuffSize == 5242880 && compressedBufferSize == 5263360, "original fixed buffer sizes");
+@FULL_RESTORE@
+    save_stage("restored", CNBuffer, CNBuffSize);
+    {
+@INITIAL_MATCH@
+    }
+    save_stage("initial-match", CNBuffer, CNBuffSize);
+@FAMILY_GATE@
+@FLAT_CONSTANTS@
+@FLAT_RESTORE@
+        } else { require(0, "default compressibility gate"); }
+#else
+#error "The exact inherited input requires the original all-compressors gate"
+#endif
+    save_stage("flat-dictionary", CNBuffer, CNBuffSize);
+@BAD_MAGIC@
+    save_stage("bad-magic", CNBuffer, CNBuffSize);
+    save_bytes("source.raw", CNBuffer, CNBuffSize / 5);
+@TARGET@
+    verify_guards();
+    require(memcmp(CNBuffer, decodedBuffer, CNBuffSize / 5) == 0, "final source still exact");
+    printf("{\"record\":\"complete\",\"original_size_assertion\":true,\"guard_bytes\":64}\n");
+    goto _end;
+_output_error:
+    testResult = 1;
+    DISPLAY("Original negative-level assertion failed\n");
+_end:
+    free(guarded_source);
+    free(guarded_compressed);
+    free(guarded_decoded);
+    return testResult;
+}
+int main(int argc, char** argv) {
+    require(argc == 2 && strlen(argv[1]) < 3900, "exact output-directory argument");
+    require(ZSTD_versionNumber() == 10507, "pinned codec version");
+    output_directory = argv[1];
+    printf("{\"record\":\"metadata\",\"revision\":\"f8745da6ff1ad1e7bab384bd1f9d742439278e99\",\"version\":10507,\"size_t_bytes\":%zu,\"seed\":0,\"probability_percent\":50,\"all_families_gate\":true,\"full_prefix_executed\":false,\"source_bytes\":5242880,\"input_bytes\":1048576,\"destination_capacity\":5263360,\"dictionary_bytes\":0,\"level\":-1}\n", sizeof(size_t));
+    return capture();
+}

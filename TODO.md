@@ -54,6 +54,8 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Add transactional explicit block preparation with reconstruction, snapshot and allocation-failure checks.
 - [x] Integrate persistent Fast parsing with selected block emission and truthful frame headers without altering named output.
 - [x] Publish allocator-aware level/request one-shot entry points with complete failure-ordinal, ownership and no_std coverage.
+- [x] Capture the official negative-level assertion's inherited source using a bounded attributed writer replay, preserving its original C size-equality contract.
+- [ ] Adapt the frozen negative-level size-equality assertion through both public Rust entry points and decode both original C frames, retaining the live-context gap.
 - [ ] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.
 - [ ] Validate feature/platform boundaries and measure a frozen Fast-specific deterministic safe/unsafe benchmark before recording this bounded module complete.
 

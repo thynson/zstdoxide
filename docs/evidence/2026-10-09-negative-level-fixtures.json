@@ -1,0 +1,85 @@
+{
+  "archive": {
+    "bytes": 1566995,
+    "excluded_files": 299,
+    "included_files": 421,
+    "path": "docs/evidence/2026-10-09-negative-level-fixtures.tar.gz",
+    "sha256": "4ec17d7c2053d9d114fe43e57eb8bbb57252e87a18ce3b86b3a47ca55efd5051"
+  },
+  "fixed_seed": 0,
+  "generic_audit": {
+    "collections": 15,
+    "errors": [],
+    "files": 528,
+    "registration": "negative-level added in-memory only; root owns shared registry"
+  },
+  "initial_failure": {
+    "path": "/tmp/zstdoxide-negative-level-initial/evidence.json",
+    "reason": "Strict C compile rejected redundant KB/MB macro definitions; only those local definitions removed. No C execution before repair.",
+    "sha256": "5f23ee2aabb2c4d1beb9da28f697dc3ac81a31d4e1703d4874977f4f9829c3c5"
+  },
+  "offline_controls": {
+    "checks": 48,
+    "path": "/tmp/zstdoxide-negative-level-controls-initial/summary.json",
+    "positive": 4,
+    "python_modes": [
+      "normal",
+      "-O"
+    ],
+    "rejections": 44,
+    "sha256": "0f92650c1fc3cf3e1f08165ba535863b265e9ea246dbdb9ed7c6e98f561cd4ac"
+  },
+  "original_capture": {
+    "commands": 10,
+    "modes": [
+      "normal",
+      "sanitized"
+    ],
+    "path": "/tmp/zstdoxide-negative-level-final/evidence.json",
+    "sha256": "0b14e9c43e7c2a936dac4946989a6eff6d4b811eda357b2a9d602d45094a0aff",
+    "source_comparison_bytes_per_mode": 22020096
+  },
+  "original_destination_capacity": 5263360,
+  "portable_reproduction": {
+    "commands": 10,
+    "path": "/tmp/zstdoxide-negative-level-portable-final/evidence.json",
+    "report_sha256": "843dfba450ea879ab817b43f6d412a26ad3103e4e1adff7643eb4740dfcfd030",
+    "same_sources_frames": true,
+    "sha256": "8cb4a7453f9a94bc461ddaeae962a3cef8bdb8461dd12d73262097081c79c912"
+  },
+  "probability_percent": 50,
+  "processes_remaining": false,
+  "record_controls": {
+    "checks": 32,
+    "path": "/tmp/zstdoxide-negative-level-record-controls/summary.json",
+    "positive": 2,
+    "python_modes": [
+      "normal",
+      "-O"
+    ],
+    "rejections": 30,
+    "sha256": "97dbed94873cee4d005ec32493da29916a5eb1c8cff0855208e2e91aa41be6d1"
+  },
+  "review": "Fuzzer independent writer-alias/helper/portable wrapper review and root wrapper review found no remaining blocker; no reviewer execution claim.",
+  "sanitizer_scope": "Helper + unchanged datagen.c,zstd_compress.c,zstd_fast.c and inline helpers; other archive code uninstrumented; LeakSanitizer disabled.",
+  "schema_version": 1,
+  "scope": "Exact extracted inherited CNBuffer source state and original C negative-level size assertion; no fullprefixexecution or RustnumericAPI claim.",
+  "source_bytes": 1048576,
+  "source_freeze": {
+    "scripts/import_negative_level_fixture.py": "705a577343327dd37781246a8c04e792ded28b51fe72b464572acd7dd43ff0d0",
+    "tests/upstream/negative-level/NOTICE": "aac53df8ebbd44526688f949dd4cb655d1faf69260861a77aa2a11ed9edf050d",
+    "tests/upstream/negative-level/README.md": "66eba2bf9a6afd79d4955237a449b56c79d42b87cb859080ff443e55e0a7014d",
+    "tests/upstream/negative-level/advanced.zst": "60d4310d442ea7e0e1e7e929665efe3d34364b0cb6494ba201201c26b38dd0ef",
+    "tests/upstream/negative-level/capture.json": "a218132512ab66396cef953438a071e9d161c6584bfacea99a9f828c31d67527",
+    "tests/upstream/negative-level/capture.py": "c38c64a4887b0a706c310a065a0fb60859233dbee7612c397be405e65c0bf70b",
+    "tests/upstream/negative-level/compare.rs": "5aff294704b567af3eb506a7acb1b238654d5f9c808c287e61d772382175efe0",
+    "tests/upstream/negative-level/extraction.json": "8ada1f07a0d1a648bd51cded3109d518f1fa0c71fcffc849d04a65d4ef905259",
+    "tests/upstream/negative-level/manifest.json": "ac7f9648fada44720ef1c65ad05dff57d9c574711fe0e7436045f248bb717a01",
+    "tests/upstream/negative-level/observations.jsonl": "82fa8c291771ff86cb69d50753024fda79b1bd9c4ef548d34f3277f253ed4f03",
+    "tests/upstream/negative-level/oracle.c.in": "7214d68718f69c022d717e402ca374b3a22b7593ec2bb97987e5180bab0827a0",
+    "tests/upstream/negative-level/simple.zst": "60d4310d442ea7e0e1e7e929665efe3d34364b0cb6494ba201201c26b38dd0ef",
+    "tests/upstream/negative-level/source.raw": "f20362d4a47fd3a1f1b0be21d8d7828bd43ee6ba7cdadafc697b3b0589dcea2a"
+  },
+  "status": "passed",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}
