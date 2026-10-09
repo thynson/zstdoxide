@@ -289,10 +289,72 @@ impl BuiltLiteralTable {
     }
 }
 
+/// A standalone description and its exact codes, permitting twelve-bit trees.
+/// This separate type cannot be supplied where an inline literal table is needed.
+#[cfg(test)]
+#[derive(Debug)]
+pub(crate) struct BuiltStandaloneTable {
+    codebook: HuffmanCodebook,
+    description: Vec<u8>,
+}
+
+#[cfg(test)]
+impl BuiltStandaloneTable {
+    /// Own exactly one checked standalone description with no trailing bytes.
+    /// The dictionary reader shares standalone Huffman's twelve-bit tree limit;
+    /// the inline `BuiltLiteralTable` constructor keeps its eleven-bit limit.
+    pub(crate) fn from_description(description: Vec<u8>) -> Result<Self> {
+        let (table, consumed) = HuffmanTable::read_dictionary(&description)?;
+        if consumed != description.len() {
+            return Err(Error::CorruptData);
+        }
+        let codebook = HuffmanCodebook::from_decoding_table(&table)?;
+        Ok(Self {
+            codebook,
+            description,
+        })
+    }
+
+    pub(crate) fn codebook(&self) -> &HuffmanCodebook {
+        &self.codebook
+    }
+
+    pub(crate) fn description(&self) -> &[u8] {
+        &self.description
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use alloc::vec;
+
+    #[test]
+    fn standalone_pair_accepts_twelve_bits_without_relaxing_inline_validation() {
+        let dictionary =
+            include_bytes!("../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols");
+        let (_, consumed) = HuffmanTable::read_dictionary(&dictionary[8..]).unwrap();
+        let description = &dictionary[8..8 + consumed];
+        let built = BuiltStandaloneTable::from_description(Vec::from(description)).unwrap();
+        assert_eq!(built.description(), description);
+        assert_eq!(built.codebook().table_log(), 12);
+        assert!(BuiltLiteralTable::from_description(Vec::from(description)).is_err());
+        let mut trailing = Vec::from(description);
+        trailing.push(0);
+        assert!(BuiltStandaloneTable::from_description(trailing).is_err());
+        for truncated in [
+            &[][..],
+            &description[..1],
+            &description[..description.len() - 1],
+        ] {
+            assert!(BuiltStandaloneTable::from_description(Vec::from(truncated)).is_err());
+        }
+        let inline = [128, 0x10];
+        let ordinary = BuiltLiteralTable::from_description(Vec::from(inline)).unwrap();
+        let standalone = BuiltStandaloneTable::from_description(Vec::from(inline)).unwrap();
+        assert_eq!(ordinary.codebook(), standalone.codebook());
+        assert_eq!(ordinary.description(), standalone.description());
+    }
 
     #[test]
     fn canonical_codes_match_the_format_example_and_symbol_order() {

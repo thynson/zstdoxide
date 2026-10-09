@@ -316,6 +316,63 @@ mod oracle {
 
     #[test]
     #[ignore = "requires ZSTD_UPSTREAM pinned v1.5.7, built lib/libzstd.a, and a C compiler"]
+    fn official_oracle_verifies_standalone_depth_policies_and_twelve_bit_weights() {
+        use crate::huffman_encode::{StandaloneDepthPolicy, build_standalone_table};
+
+        let oracle = Oracle::compile();
+        let mut writer = BitWriter::new();
+        let mut output = Vec::new();
+        let mut verified = 0;
+        let mut twelve_bit_descriptions = 0;
+        for depth in 1..=12_u8 {
+            for high_symbol in [false, true] {
+                let mut counts = [0; 256];
+                for (symbol, count) in counts.iter_mut().take(usize::from(depth)).enumerate() {
+                    *count = 1 << (usize::from(depth) - symbol);
+                }
+                counts[if high_symbol { 255 } else { usize::from(depth) }] = 1;
+                let present: Vec<_> = (0..=255_u8)
+                    .filter(|&symbol| counts[usize::from(symbol)] != 0)
+                    .collect();
+                let source: Vec<_> = present.iter().copied().cycle().take(1024).collect();
+                for policy in [
+                    StandaloneDepthPolicy::Requested,
+                    StandaloneDepthPolicy::SmallestEstimatedSize,
+                ] {
+                    let table = build_standalone_table(&counts, depth, policy)
+                        .unwrap()
+                        .unwrap();
+                    let codes = table.codebook();
+                    assert!(codes.table_log() <= depth);
+                    twelve_bit_descriptions += usize::from(codes.table_log() == 12);
+                    codes.encode_stream(&source, &mut writer).unwrap();
+                    assert_eq!(
+                        oracle.check(table.description(), &source, 1, writer.as_bytes(), codes),
+                        0
+                    );
+                    codes
+                        .encode_standalone_four_streams(&source, &mut writer, &mut output)
+                        .unwrap();
+                    assert_eq!(
+                        oracle.check(table.description(), &source, 4, &output, codes),
+                        0
+                    );
+                    verified += 2;
+                }
+            }
+        }
+        assert!(
+            twelve_bit_descriptions >= 2,
+            "exercise both direct and FSE weight twelve"
+        );
+        assert_eq!(verified, 96);
+        std::eprintln!(
+            "C verified 48 standalone descriptions under both depth policies and {verified} exact 1X/4X streams; {twelve_bit_descriptions} descriptions use depth twelve"
+        );
+    }
+
+    #[test]
+    #[ignore = "requires ZSTD_UPSTREAM pinned v1.5.7, built lib/libzstd.a, and a C compiler"]
     fn official_oracle_verifies_sparse_literal_descriptions_and_fallback_codes() {
         use crate::huffman_encode::build_sparse_literal_table;
 
