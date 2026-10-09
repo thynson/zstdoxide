@@ -17,7 +17,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REVISION = "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
-REQUIRED_COLLECTIONS = ("data", "decodecorpus", "dictionaries", "entropy-data", "inline-regressions", "testcard", "window-sequences")
+REQUIRED_COLLECTIONS = ("data", "decodecorpus", "dictionaries", "entropy-data", "entropy-lifetimes", "inline-regressions", "testcard", "window-sequences")
 OPTIONAL_COLLECTIONS = ()
 NON_FIXTURE_FILES = {"manifest.json", "README.md", "cases.rs", "NOTICE"}
 
@@ -77,6 +77,8 @@ def check_origin(path: str, digest: str, catalog: dict, errors: list[str], label
 
 
 def entries_for(collection: str, metadata: dict) -> list[dict]:
+    if collection == "entropy-lifetimes":
+        return [metadata["fixture"]]
     if collection == "data":
         return metadata["files"]
     if collection == "decodecorpus":
@@ -149,7 +151,8 @@ def audit_fixtures(root: Path = ROOT) -> tuple[list[str], int, int]:
         directory = base / collection
         if collection in OPTIONAL_COLLECTIONS and not directory.exists():
             continue
-        metadata = read_metadata(directory / "manifest.json", errors)
+        metadata_path = directory / ("provenance.json" if collection == "entropy-lifetimes" else "manifest.json")
+        metadata = read_metadata(metadata_path, errors)
         if metadata is None:
             continue
         collections += 1
@@ -188,9 +191,18 @@ def audit_fixtures(root: Path = ROOT) -> tuple[list[str], int, int]:
                         if len(original) != record["size"] or hashlib.sha256(original).hexdigest() != record["sha256"]:
                             errors.append(f"{collection}/{path}: derived byte range differs from its source fixture")
                 check_expected_output(record, entries, errors, f"{collection}/{path}")
+            # A collection may keep its hashed oracle next to the fixture.
+            # That source is checked independently below; it is not codec data.
+            metadata_paths = {metadata_path.name}
+            generator = metadata.get("generator")
+            if isinstance(generator, str) and safe_relative(generator):
+                generator_path = (root / generator).resolve()
+                if generator_path.is_relative_to(directory.resolve()):
+                    metadata_paths.add(generator_path.relative_to(directory.resolve()).as_posix())
             actual_paths = {path.relative_to(directory).as_posix()
                             for path in directory.rglob("*") if path.is_file()
-                            and path.name not in NON_FIXTURE_FILES}
+                            and path.name not in NON_FIXTURE_FILES
+                            and path.relative_to(directory).as_posix() not in metadata_paths}
             if actual_paths != expected_paths:
                 errors.append(f"{collection}: fixture catalog differs from files: "
                               f"missing={sorted(expected_paths - actual_paths)}, "

@@ -41,3 +41,4 @@ cargo test --release --all-features --lib sequence_context::tests::official_code
 cargo test --release --all-features --test entropy_encoding -- --ignored
 cargo test --release --all-features --test sequence_encoding -- --ignored
 cargo test --release --all-features --test compression_strategies -- --ignored
+cargo test --release --all-features --test upstream_entropy_lifetimes -- --ignored
