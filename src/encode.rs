@@ -5,6 +5,7 @@ use alloc::vec::Vec;
 use crate::bitwriter::BitWriter;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
 use crate::fse_encode::FseEncodingTable as EncodingTable;
+use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
@@ -26,8 +27,9 @@ pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
 ///
 /// A formatted dictionary's nonzero identifier is written using its smallest
 /// field; a raw dictionary has no identifier. Input size excludes dictionary
-/// bytes. Matches use this encoder's greedy parser and predefined entropy
-/// tables, independently of prepared dictionary entropy and repeat offsets.
+/// bytes. Matches use this encoder's greedy parser and predefined sequence
+/// distributions. Literals may reuse the dictionary's prepared Huffman table;
+/// matches currently use explicit offset values rather than initial repeats.
 /// Corresponds to the one-shot contract of upstream `ZSTD_compress_usingCDict`.
 pub fn compress_with_dictionary(input: &[u8], dictionary: &SharedDictionary) -> Result<Vec<u8>> {
     compress_frame(input, Some(dictionary))
@@ -60,7 +62,7 @@ fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result
     Ok(output)
 }
 
-/// Reusable frame match history and block-local predefined-entropy state.
+/// Reusable frame match history, literal trees, and sequence-table workspace.
 ///
 /// Corresponds to the independently owned block-compression workspace of
 /// `ZSTD_CCtx`; input references never survive an `encode` call.
@@ -74,6 +76,8 @@ pub(crate) struct BlockEncoder {
     entropy_tables: Option<EncodingTables>,
     literals: Vec<u8>,
     literal_encoder: LiteralEncoder,
+    literal_table: Option<HuffmanCodebook>,
+    pending_literal_table: Option<HuffmanCodebook>,
     sequences: Vec<Sequence>,
     payload: Vec<u8>,
     writer: BitWriter,
@@ -91,6 +95,8 @@ impl BlockEncoder {
             entropy_tables: None,
             literals: Vec::new(),
             literal_encoder: LiteralEncoder::new(),
+            literal_table: None,
+            pending_literal_table: None,
             sequences: Vec::new(),
             payload: Vec::new(),
             writer: BitWriter::new(),
@@ -108,6 +114,11 @@ impl BlockEncoder {
         dictionary: Option<SharedDictionary>,
         window_size: u64,
     ) -> Result<()> {
+        let literal_table = dictionary
+            .as_deref()
+            .and_then(Dictionary::entropy)
+            .map(|entropy| HuffmanCodebook::from_decoding_table(&entropy.huffman))
+            .transpose()?;
         if let Some(dictionary) = dictionary.as_deref()
             && dictionary.content().len() >= 4
         {
@@ -124,6 +135,8 @@ impl BlockEncoder {
         } else if let Some(seed) = &mut self.dictionary_seed {
             seed.reset();
         }
+        self.literal_table = literal_table;
+        self.pending_literal_table = None;
         self.active_dictionary = dictionary;
         if let Some(history) = &mut self.history {
             history.clear();
@@ -136,6 +149,8 @@ impl BlockEncoder {
     /// Drop active-frame ownership while retaining reusable workspace storage.
     pub(crate) fn reset(&mut self) {
         self.active_dictionary = None;
+        self.literal_table = None;
+        self.pending_literal_table = None;
         if let Some(history) = &mut self.history {
             history.clear();
         }
@@ -177,6 +192,7 @@ impl BlockEncoder {
     }
 
     fn encode_block(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
+        self.pending_literal_table = None;
         output
             .try_reserve(block.len() + 3)
             .map_err(|_| Error::AllocationFailed)?;
@@ -188,8 +204,15 @@ impl BlockEncoder {
         if block.len() >= 6 && self.compress_block(block)? {
             write_block_header(output, self.payload.len(), 2, last);
             output.extend_from_slice(&self.payload);
+            // Output capacity was reserved before candidate construction. This
+            // infallible transfer publishes only the tree described by emitted
+            // bytes; raw/RLE fallback leaves the previous tree unchanged.
+            if let Some(table) = self.pending_literal_table.take() {
+                self.literal_table = Some(table);
+            }
             return Ok(());
         }
+        self.pending_literal_table = None;
         write_block_header(output, block.len(), 0, last);
         output.extend_from_slice(block);
         Ok(())
@@ -265,7 +288,7 @@ struct Sequence {
     distance: u32,
 }
 
-/// Selects matches greedily and encodes them with predefined entropy tables.
+/// Selects matches greedily, chooses literal sections, and encodes sequences.
 ///
 /// Fulfills the block-compression role of `ZSTD_compressBlock_internal`, using
 /// an independent greedy parser and table inversion instead of C table layout.
@@ -351,9 +374,9 @@ impl BlockEncoder {
             }
         }
         literals.extend_from_slice(&block[literal_start..]);
-        // This checkpoint emits a new tree for each selected Huffman section.
-        // Frame-scoped table publication/reuse is the next independent step.
-        let _ = self.literal_encoder.select(literals, None)?;
+        self.pending_literal_table = self
+            .literal_encoder
+            .select(literals, self.literal_table.as_ref())?;
         if !sequences.is_empty() {
             let tables = match self.entropy_tables.as_ref() {
                 Some(tables) => tables,
@@ -650,6 +673,43 @@ mod tests {
     use crate::fse::FseTable;
     use crate::{DecodeOptions, Dictionary, decompress_with_dictionary};
     use alloc::vec;
+
+    #[test]
+    fn only_emitted_compressed_blocks_publish_pending_literal_tables() {
+        let mut lengths = [0; 256];
+        lengths[2] = 1;
+        lengths[3] = 1;
+        let mut encoder = BlockEncoder::new();
+        encoder.literal_table = Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
+        // The new seven-byte literal section beats its nine-byte raw section,
+        // but its zero sequence byte makes the entire eight-byte block a tie.
+        let rejected = [0, 0, 0, 0, 1, 0, 0, 1];
+        assert!(!encoder.compress_block(&rejected).unwrap());
+        assert!(encoder.pending_literal_table.is_some());
+        assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+        assert!(!encoder.literal_table.as_ref().unwrap().covers(&[0, 1]));
+        let mut encoded = Vec::new();
+        encoder.encode(&rejected, false, &mut encoded).unwrap();
+        assert_eq!((encoded[0] >> 1) & 3, 0);
+        assert!(encoder.pending_literal_table.is_none());
+        assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+        encoded.clear();
+        encoder.encode(&[42; 32], false, &mut encoded).unwrap();
+        assert_eq!((encoded[0] >> 1) & 3, 1);
+        assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+
+        encoder.reset();
+        assert!(encoder.literal_table.is_none());
+        assert!(encoder.pending_literal_table.is_none());
+        let accepted = [0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1];
+        encoded.clear();
+        encoder.encode(&accepted, false, &mut encoded).unwrap();
+        assert_eq!((encoded[0] >> 1) & 3, 2);
+        assert!(encoder.pending_literal_table.is_none());
+        assert!(encoder.literal_table.as_ref().unwrap().covers(&[0, 1]));
+        encoder.start_frame(None, MAX_BLOCK_SIZE as u64).unwrap();
+        assert!(encoder.literal_table.is_none());
+    }
 
     #[test]
     fn literal_only_compression_omits_sequence_modes_and_state_bits() {
