@@ -97,7 +97,8 @@ overwrites frame[0] at output byte 1,024 fails at output byte 1,100.
 | `tests/fuzzer.c:3088`, `:3104`, `:3124`, `:3146`, `:3166` | Persistent dictionary reset, explicit parameter clearing, prepared reuse, one-use prefix. | Separate session reset from explicit configuration reset. |
 | `tests/fuzzer.c:3265` | Duplicate non-default repeat offsets `[10,10,10]` are valid. | Preserve exact repeated-byte source and changed suffix; no level-19 equivalence claim. |
 | `tests/fuzzer.c:3312` | Multiple DDict selection by ID. | Explicit single selected dictionary does not implement the multi-dictionary cache API. |
-| `tests/fuzzer.c:4149`, `:4275` | Short dictionary inputs and forced-formatted prefix errors. | Preserve zero-length and incomplete-magic boundaries. |
+| `tests/fuzzer.c:4149` | The frame window is unchanged when compression uses 128-KiB versus 1-KiB prepared dictionaries. | Original encoder size/parameter assertion remains pending. |
+| `tests/fuzzer.c:4275` | A prefix falsely declared formatted is rejected during two-worker compression. | Parser validation alone does not reproduce the worker/flush branch. |
 | `tests/zstreamtest.c:1084`, `:1113`, `:1120` | Prepared dictionaries, frame IDs and streaming exactness. | Shared ownership replaces manual C object lifetime management. |
 | `tests/zstreamtest.c:1198`, `:1240`, `:1269`, `:1299`, `:1320` | Streaming dictionary persistence/reset, DDict reuse and prefix one-use behavior. | Test across fragmented input/output, error and reset boundaries. |
 | `tests/zstreamtest.c:1344`, `:1365`, `:1371`, `:1377`, `:1390`, `:1403`, `:1409`, `:1421` | Masked dictionary ID, dictionary-required frames, prefix use once, subsequent independent frame. | First-use and subsequent-use outcomes need separate fixtures. |
@@ -187,3 +188,34 @@ storage, because the C compressor can discard an overlapping history region.
 Levels in the manifest reproduce C fixture construction only. Passing these
 decoder fixtures does not claim equivalent Rust level selection, dictionary
 training algorithms, automatic dictionary maps, static workspaces, or workers.
+
+## Decoder/parser mapping checkpoint
+
+The initial prepared-decoder checkpoint passes 39 integration tests in
+`tests/upstream_dictionary.rs` and 11 parser tests in `src/dictionary.rs`.
+The machine inventory maps those declarations to the source groups above.
+The exact fixed dictionary's 115-byte header, dictionary/frame IDs, malformed
+header-only input, prefix one-use behavior and dictionary-independent second
+frame have complete named assertions. Other source groups remain partial where
+the original input campaign or an API-specific branch has not been reproduced.
+
+In particular, `fuzzer.c:3124,3146` and
+`zstreamtest.c:1198,1240,1269,1320` include C reset/init operations which clear
+dictionaries. Rust's selected contract retains dictionaries on either reset;
+clearing is explicit through `set_dictionary(None)`. These mappings describe
+the adaptation and remain partial. `zstreamtest.c:1551,1831,1884` retain pending
+exhaustive sequence-value and compressor table-validity schedules even though
+first-block Huffman/FSE defaults and per-frame repeat offsets are now exercised.
+
+`tests/invalidDictionaries.c` now rejects its exact invalid-repeat fixture during
+shared preparation; its original compression-constructor branch remains a
+separate pending encoder assertion. Dictionary loader/decompress fuzz sources
+map to deterministic parser/decoder portions only. Their exact tail producer,
+training, randomized configurations and external runners are not established by
+these fixed-input tests. C-generated trained dictionaries prove interoperable
+decoding, not a completed Rust trainer.
+
+External corpus pinning and replay are separate checkpoints. A completed download
+or manifest hash does not change a target's replay status. The structural source
+audit likewise verifies links, source bytes and classification; it does not run
+the referenced Rust tests.

@@ -2483,7 +2483,7 @@
       "suite": "examples",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+      "reason": "Dictionary compression and the file-based example program have not yet been ported.",
       "rust_tests": [],
       "line_count": 107,
       "cases": []
@@ -2494,8 +2494,8 @@
       "sha256": "d103ae8b3d85eedc01c3ac60ea08f24991826646e48c93f8ea5f2834a2e1b2f6",
       "suite": "examples",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+      "status": "planned",
+      "reason": "Prepared decoding is available; the independent file-based dictionary example program has not yet been ported.",
       "rust_tests": [],
       "line_count": 99,
       "cases": []
@@ -2798,7 +2798,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+      "reason": "The original 2GiB source, 1GiB chunks, 31-bit streaming window, worker/overlap settings and btopt parameter controls remain unimplemented or unported.",
       "rust_tests": [],
       "line_count": 133,
       "cases": []
@@ -3666,7 +3666,7 @@
       "suite": "cli",
       "role": "fixture",
       "status": "blocked",
-      "reason": "Prepared dictionaries and dictionary training/loading APIs are not implemented.",
+      "reason": "The CLI executable and exact mismatch diagnostic contract remain unimplemented; typed library dictionary errors now exist.",
       "rust_tests": [],
       "line_count": 7,
       "cases": []
@@ -4173,7 +4173,7 @@
       "suite": "golden_corpus",
       "role": "fixture",
       "status": "blocked",
-      "reason": "Prepared dictionaries and dictionary training/loading APIs are not implemented.",
+      "reason": "The exact CLI compression/decompression regression using this zero-weight dictionary is unported; the fixture is not yet exercised by a Rust dictionary roundtrip.",
       "rust_tests": [],
       "line_count": 4,
       "cases": []
@@ -4364,9 +4364,14 @@
       "sha256": "e6ecb0ef9e689c0a563555fc00899f87b173ec78065d9101d5cf461ce04abe74",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Prepared/raw/prefix bounded decoding, malformed frames and output limits run on deterministic official fixtures. FUZZ_train, original tail-consumption schedule and arbitrary source/context corpus replay remain unported.",
+      "rust_tests": [
+        "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+        "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
+        "tests/upstream_dictionary.rs#one_shot_dictionary_helper_rejects_every_incomplete_frame_prefix",
+        "tests/upstream_dictionary.rs#dictionaries_do_not_relax_advertised_window_or_output_limits"
+      ],
       "line_count": 77,
       "cases": [
         {
@@ -4375,9 +4380,14 @@
           "line_start": 27,
           "line_end": 77,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Prepared/raw/prefix bounded decoding, malformed frames and output limits run on deterministic official fixtures. FUZZ_train, original tail-consumption schedule and arbitrary source/context corpus replay remain unported.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+            "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_rejects_every_incomplete_frame_prefix",
+            "tests/upstream_dictionary.rs#dictionaries_do_not_relax_advertised_window_or_output_limits"
+          ]
         }
       ]
     },
@@ -4387,9 +4397,13 @@
       "sha256": "958cce92648bf175f6e560df150851eb5f66fd02202de959cd1a0ca85239337c",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Auto/Raw/Formatted preparation, all truncations, invalid metadata and prepared immutable ownership are tested. The exact tail selector, by-copy/by-reference compression branch, successful compression roundtrip and external corpus driver remain unported.",
+      "rust_tests": [
+        "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader",
+        "src/dictionary.rs#every_formatted_truncation_obeys_metadata_and_repeat_content_bounds",
+        "src/dictionary.rs#raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers"
+      ],
       "line_count": 106,
       "cases": [
         {
@@ -4398,9 +4412,13 @@
           "line_start": 69,
           "line_end": 106,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Auto/Raw/Formatted preparation, all truncations, invalid metadata and prepared immutable ownership are tested. The exact tail selector, by-copy/by-reference compression branch, successful compression roundtrip and external corpus driver remain unported.",
+          "rust_tests": [
+            "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader",
+            "src/dictionary.rs#every_formatted_truncation_obeys_metadata_and_repeat_content_bounds",
+            "src/dictionary.rs#raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers"
+          ]
         }
       ]
     },
@@ -4411,7 +4429,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+      "reason": "The exact randomized training and dictionary compression roundtrip driver remains unported; prepared dictionary decoding now exists.",
       "rust_tests": [],
       "line_count": 155,
       "cases": [
@@ -4422,7 +4440,7 @@
           "line_end": 109,
           "label": "roundTripTest",
           "status": "blocked",
-          "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+          "reason": "The exact randomized training and dictionary compression roundtrip driver remains unported; prepared dictionary decoding now exists.",
           "rust_tests": []
         },
         {
@@ -4432,7 +4450,7 @@
           "line_end": 155,
           "label": "LLVMFuzzerTestOneInput",
           "status": "blocked",
-          "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+          "reason": "The exact randomized training and dictionary compression roundtrip driver remains unported; prepared dictionary decoding now exists.",
           "rust_tests": []
         }
       ]
@@ -4444,7 +4462,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+      "reason": "The exact training and dictionary streaming-compression driver remains unported; bounded dictionary/prefix decoding now exists.",
       "rust_tests": [],
       "line_count": 209,
       "cases": [
@@ -4455,7 +4473,7 @@
           "line_end": 209,
           "label": "LLVMFuzzerTestOneInput",
           "status": "blocked",
-          "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+          "reason": "The exact training and dictionary streaming-compression driver remains unported; bounded dictionary/prefix decoding now exists.",
           "rust_tests": []
         }
       ]
@@ -4672,7 +4690,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+      "reason": "The exact tail-selected raw-dictionary compression roundtrip driver requires Rust dictionary encoding; decoder content/prefix APIs now exist.",
       "rust_tests": [],
       "line_count": 119,
       "cases": [
@@ -4683,7 +4701,7 @@
           "line_end": 69,
           "label": "roundTripTest",
           "status": "blocked",
-          "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+          "reason": "The exact tail-selected raw-dictionary compression roundtrip driver requires Rust dictionary encoding; decoder content/prefix APIs now exist.",
           "rust_tests": []
         },
         {
@@ -4693,7 +4711,7 @@
           "line_end": 119,
           "label": "LLVMFuzzerTestOneInput",
           "status": "blocked",
-          "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+          "reason": "The exact tail-selected raw-dictionary compression roundtrip driver requires Rust dictionary encoding; decoder content/prefix APIs now exist.",
           "rust_tests": []
         }
       ]
@@ -5027,11 +5045,26 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Named one-shot/frame regressions, deterministic fuzzer corpora, empty streaming Flush/Finish, and supported-strategy encoder reset determinism run in Rust. Dictionary/advanced-parameter, remaining one-shot context variants, long tests, and threading assertions remain unimplemented or unported.",
+      "reason": "Named one-shot/frame regressions, deterministic corpora, ordinary streaming cases, prepared dictionary parsing and dictionary/prefix decoding now run. Dictionary compression/training, advanced parameters, original randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
       "rust_tests": [
         "tests/upstream_fuzzer.rs",
         "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame",
-        "tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically"
+        "tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically",
+        "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+        "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
+        "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader",
+        "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
+        "tests/upstream_dictionary.rs#absent_and_explicit_zero_frame_ids_still_use_the_prepared_dictionary",
+        "src/dictionary.rs#official_invalid_repeat_dictionary_and_header_only_fixture_are_rejected",
+        "src/dictionary.rs#raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers",
+        "src/dictionary.rs#every_formatted_truncation_obeys_metadata_and_repeat_content_bounds",
+        "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
+        "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
+        "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
+        "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries",
+        "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
+        "tests/upstream_dictionary.rs#prefix_is_consumed_by_one_frame_and_does_not_persist_after_reset",
+        "tests/upstream_dictionary.rs#duplicate_initial_repeat_offsets_are_used_and_reset_between_frames"
       ],
       "line_count": 5147,
       "cases": [
@@ -5421,7 +5454,7 @@
           "line_end": 872,
           "label": "test%3i : decompress with null dict :",
           "status": "partial",
-          "reason": "No-dictionary behavior covered; explicit dictionary-context API absent.",
+          "reason": "No-dictionary one-shot content behavior is covered; the original reusable context call with explicit null dictionary selection is not yet mapped.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
           ]
@@ -5433,7 +5466,7 @@
           "line_end": 884,
           "label": "test%3i : decompress with null DDict :",
           "status": "partial",
-          "reason": "No-dictionary behavior covered; prepared-dictionary API absent.",
+          "reason": "No-dictionary one-shot content behavior is covered; the original reusable context call with explicit null prepared selection is not yet mapped.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
           ]
@@ -5535,7 +5568,7 @@
           "line_end": 1024,
           "label": "test%3i : ZSTD_compress_usingDict() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -5545,7 +5578,7 @@
           "line_end": 1029,
           "label": "test%3i : ZSTD_compress_usingCDict() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -5565,7 +5598,7 @@
           "line_end": 1043,
           "label": "test%3i : ZSTD_compress_usingCDict_advanced() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -5585,7 +5618,7 @@
           "line_end": 1085,
           "label": "test%3i : ldm fill dict out-of-bounds check",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -5595,7 +5628,7 @@
           "line_end": 1112,
           "label": "test%3i : testing dict compression with enableLdm and forceMaxWindow :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -5605,7 +5638,7 @@
           "line_end": 1156,
           "label": "test%3i : testing dict compression for determinism :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -5625,7 +5658,7 @@
           "line_end": 1276,
           "label": "test%3i : testing ldm dictionary gets invalidated :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -5635,7 +5668,7 @@
           "line_end": 1343,
           "label": "test%3i : testing refPrefx vs refPrefx + ldm (size comparison) :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -5992,7 +6025,7 @@
           "line_end": 2090,
           "label": "test%3i : init static CStream with dictionary (should fail) :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6242,7 +6275,7 @@
           "line_end": 2447,
           "label": "test%3i : copy context too soon :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6252,7 +6285,7 @@
           "line_end": 2452,
           "label": "test%3i : load dictionary into context :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6262,7 +6295,7 @@
           "line_end": 2460,
           "label": "test%3i : compress with flat dictionary :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6271,9 +6304,12 @@
           "line_start": 2461,
           "line_end": 2468,
           "label": "test%3i : frame built with flat dictionary should be decompressible :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Raw and shared prepared dictionary decoding restores exact official-oracle fixtures under one-shot and fragmented input/output. The original 551-byte RDG dictionary and CNBuffer workload have not been replayed.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2469",
@@ -6282,7 +6318,7 @@
           "line_end": 2479,
           "label": "test%3i : compress with duplicated context :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6292,7 +6328,7 @@
           "line_end": 2487,
           "label": "test%3i : frame built with duplicated context should be decompressible :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6301,9 +6337,12 @@
           "line_start": 2488,
           "line_end": 2495,
           "label": "test%3i : decompress with DDict :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Raw and shared prepared dictionary decoding restores exact official-oracle fixtures under one-shot and fragmented input/output. The original 551-byte RDG dictionary and CNBuffer workload have not been replayed.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2496",
@@ -6312,7 +6351,7 @@
           "line_end": 2507,
           "label": "test%3i : decompress with static DDict :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6322,7 +6361,7 @@
           "line_end": 2553,
           "label": "test%3i : check content size on duplicated context :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6332,7 +6371,7 @@
           "line_end": 2664,
           "label": "test%3i : flat-dictionary efficiency test : \\n",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6401,9 +6440,11 @@
           "line_start": 2742,
           "line_end": 2746,
           "label": "test%3i : check dictID :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Prepared metadata tests verify nonzero dictionary IDs and exact header/content boundaries, including the original fixed-training dictionary ID99 and header length115.",
+          "rust_tests": [
+            "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2747",
@@ -6411,9 +6452,11 @@
           "line_start": 2747,
           "line_end": 2751,
           "label": "test%3i : check dict header size no error :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Prepared metadata tests verify nonzero dictionary IDs and exact header/content boundaries, including the original fixed-training dictionary ID99 and header length115.",
+          "rust_tests": [
+            "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2752",
@@ -6421,9 +6464,11 @@
           "line_start": 2752,
           "line_end": 2757,
           "label": "test%3i : check dict header size correctness :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Prepared metadata tests verify nonzero dictionary IDs and exact header/content boundaries, including the original fixed-training dictionary ID99 and header length115.",
+          "rust_tests": [
+            "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2758",
@@ -6432,7 +6477,7 @@
           "line_end": 2764,
           "label": "test%3i : compress with dictionary :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6441,9 +6486,11 @@
           "line_start": 2765,
           "line_end": 2770,
           "label": "test%3i : retrieve dictID from dictionary :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Prepared metadata tests verify nonzero dictionary IDs and exact header/content boundaries, including the original fixed-training dictionary ID99 and header length115.",
+          "rust_tests": [
+            "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2771",
@@ -6451,9 +6498,11 @@
           "line_start": 2771,
           "line_end": 2776,
           "label": "test%3i : retrieve dictID from frame :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "FrameHeader and the shared prepared dictionary expose matching IDs for the exact official HTTP dictionary/frame.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2777",
@@ -6461,9 +6510,12 @@
           "line_start": 2777,
           "line_end": 2787,
           "label": "test%3i : frame built with dictionary should be decompressible :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Successful formatted/prepared one-shot and fragmented decoding runs on exact C-generated trained and finalized dictionary frames. The original random CNBuffer and compression-parameter setup are not replayed.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2788",
@@ -6472,7 +6524,7 @@
           "line_end": 2793,
           "label": "test%3i : estimate CDict size :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6482,7 +6534,7 @@
           "line_end": 2808,
           "label": "test%3i : compress with CDict",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6491,9 +6543,11 @@
           "line_start": 2809,
           "line_end": 2814,
           "label": "test%3i : retrieve dictID from frame :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "FrameHeader and the shared prepared dictionary expose matching IDs for the exact official HTTP dictionary/frame.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2815",
@@ -6501,9 +6555,12 @@
           "line_start": 2815,
           "line_end": 2825,
           "label": "test%3i : frame built with dictionary should be decompressible :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Successful formatted/prepared one-shot and fragmented decoding runs on exact C-generated trained and finalized dictionary frames. The original random CNBuffer and compression-parameter setup are not replayed.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2826",
@@ -6512,7 +6569,7 @@
           "line_end": 2853,
           "label": "test%3i : compress with static CDict :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6522,7 +6579,7 @@
           "line_end": 2867,
           "label": "test%3i : ZSTD_compress_usingCDict_advanced, no contentSize, no dictID :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6532,7 +6589,7 @@
           "line_end": 2873,
           "label": "test%3i : try retrieving contentSize from frame :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6541,9 +6598,12 @@
           "line_start": 2874,
           "line_end": 2885,
           "label": "test%3i : frame built without dictID should be decompressible :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Omitted and explicit-zero frame IDs still use selected dictionary content; official omitted-ID frames decode exactly. The original advanced encoder setup, including the no-content-size variant, remains unported.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#absent_and_explicit_zero_frame_ids_still_use_the_prepared_dictionary",
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2886",
@@ -6552,7 +6612,7 @@
           "line_end": 2895,
           "label": "test%3i : ZSTD_compress_advanced, no dictID :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6561,9 +6621,12 @@
           "line_start": 2896,
           "line_end": 2906,
           "label": "test%3i : frame built without dictID should be decompressible :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Omitted and explicit-zero frame IDs still use selected dictionary content; official omitted-ID frames decode exactly. The original advanced encoder setup, including the no-content-size variant, remains unported.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#absent_and_explicit_zero_frame_ids_still_use_the_prepared_dictionary",
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2907",
@@ -6571,9 +6634,11 @@
           "line_start": 2907,
           "line_end": 2919,
           "label": "test%3i : dictionary containing only header should return error :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The exact eight-byte header-only dictionary is rejected with InvalidDictionary in Auto and Formatted preparation modes.",
+          "rust_tests": [
+            "src/dictionary.rs#official_invalid_repeat_dictionary_and_header_only_fixture_are_rejected"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2920",
@@ -6582,7 +6647,7 @@
           "line_end": 2940,
           "label": "test%3d : bufferless api with cdict :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6591,9 +6656,12 @@
           "line_start": 2941,
           "line_end": 2948,
           "label": "test%3i : Building cdict w/ ZSTD_dct_fullDict on a good dictionary :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The shared prepared dictionary validates forced-formatted input and rejects raw bytes in that mode. Original CDict creation/compression parameter branches remain unported.",
+          "rust_tests": [
+            "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader",
+            "src/dictionary.rs#raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2949",
@@ -6601,9 +6669,12 @@
           "line_start": 2949,
           "line_end": 2962,
           "label": "test%3i : Building cdict w/ ZSTD_dct_fullDict on a rawContent (must fail) :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The shared prepared dictionary validates forced-formatted input and rejects raw bytes in that mode. Original CDict creation/compression parameter branches remain unported.",
+          "rust_tests": [
+            "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader",
+            "src/dictionary.rs#raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2963",
@@ -6611,9 +6682,12 @@
           "line_start": 2963,
           "line_end": 2975,
           "label": "test%3i : Loading rawContent starting with dict header w/ ZSTD_dct_auto should fail :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Recognized malformed dictionary magic commits to formatted parsing and fails; truncation and corrupted metadata are tested. The exact shifted-buffer construction and compression-context branch remain unported.",
+          "rust_tests": [
+            "src/dictionary.rs#every_formatted_truncation_obeys_metadata_and_repeat_content_bounds",
+            "src/dictionary.rs#official_invalid_repeat_dictionary_and_header_only_fixture_are_rejected"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2976",
@@ -6621,9 +6695,11 @@
           "line_start": 2976,
           "line_end": 2986,
           "label": "test%3i : Loading rawContent starting with dict header w/ ZSTD_dct_rawContent should pass :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Forced Raw mode accepts valid or corrupt formatted-looking bytes as content. The corresponding original compression operation is not yet ported.",
+          "rust_tests": [
+            "src/dictionary.rs#raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2987",
@@ -6632,7 +6708,7 @@
           "line_end": 3000,
           "label": "test%3i : Testing non-attached CDict with ZSTD_dct_rawContent :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6642,7 +6718,7 @@
           "line_end": 3012,
           "label": "test%3i : ZSTD_CCtx_refCDict() then set parameters :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6652,7 +6728,7 @@
           "line_end": 3031,
           "label": "test%3i : Loading dictionary before setting parameters is the same as loading after :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6662,7 +6738,7 @@
           "line_end": 3039,
           "label": "test%3i : Loading a dictionary clears the prefix :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6672,7 +6748,7 @@
           "line_end": 3049,
           "label": "test%3i : Loading a dictionary clears the cdict :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6682,7 +6758,7 @@
           "line_end": 3059,
           "label": "test%3i : Loading a cdict clears the prefix :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6692,7 +6768,7 @@
           "line_end": 3069,
           "label": "test%3i : Loading a cdict clears the dictionary :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6702,7 +6778,7 @@
           "line_end": 3077,
           "label": "test%3i : Loading a prefix clears the dictionary :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6712,7 +6788,7 @@
           "line_end": 3087,
           "label": "test%3i : Loading a prefix clears the cdict :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6722,7 +6798,7 @@
           "line_end": 3103,
           "label": "test%3i : Loaded dictionary persists across reset session :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6732,7 +6808,7 @@
           "line_end": 3123,
           "label": "test%3i : Loaded dictionary is cleared after resetting parameters :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6741,9 +6817,15 @@
           "line_start": 3124,
           "line_end": 3145,
           "label": "test%3i : ZSTD_decompressDCtx() with dictionary :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Owned/shared dictionaries persist across frame calls; missing dictionaries fail, and explicit clearing/reset reuse are exercised. Rust reset/reset_with_options intentionally retain dictionaries, so C session-and-parameters reset clearing is represented by explicit set_dictionary(None), not identical API semantics.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
+            "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
+            "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
+            "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
+            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3146",
@@ -6751,9 +6833,15 @@
           "line_start": 3146,
           "line_end": 3165,
           "label": "test%3i : ZSTD_decompressDCtx() with ddict :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Owned/shared dictionaries persist across frame calls; missing dictionaries fail, and explicit clearing/reset reuse are exercised. Rust reset/reset_with_options intentionally retain dictionaries, so C session-and-parameters reset clearing is represented by explicit set_dictionary(None), not identical API semantics.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
+            "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
+            "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
+            "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
+            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3166",
@@ -6761,9 +6849,12 @@
           "line_start": 3166,
           "line_end": 3180,
           "label": "test%3i : ZSTD_decompressDCtx() with prefix :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Raw and formatted owned prefixes decode once and are unavailable to later frames, including after reset. Rust one-shot helpers take persistent dictionaries; the original reusable one-shot DCtx prefix entrypoint is represented through the streaming Decoder.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
+            "tests/upstream_dictionary.rs#prefix_is_consumed_by_one_frame_and_does_not_persist_after_reset"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3181",
@@ -6772,7 +6863,7 @@
           "line_end": 3207,
           "label": "test%3i : ZSTD_fast attach dictionary with hashLog = 25 and chainLog = 25 :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6782,7 +6873,7 @@
           "line_end": 3234,
           "label": "test%3i : ZSTD_dfast attach dictionary with hashLog = 25 and chainLog = 25 :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6792,7 +6883,7 @@
           "line_end": 3264,
           "label": "test%3i : ZSTD_lazy attach dictionary with hashLog = 29 and searchLog = 4 :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -6801,9 +6892,12 @@
           "line_start": 3265,
           "line_end": 3311,
           "label": "test%3i : Dictionary with non-default repcodes :",
-          "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The official duplicate10/10/10 and eight-x suffix setup is preserved in a C level19 frame and decoded exactly. An explicit initial-rep2 witness also proves value10 is restored every frame. Rust optimal-parser compression and its original trained input remain pending.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+            "tests/upstream_dictionary.rs#duplicate_initial_repeat_offsets_are_used_and_reset_between_frames"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3312",
@@ -6812,7 +6906,7 @@
           "line_end": 3403,
           "label": "test%3i : ZSTD_decompressDCtx() with multiple ddicts :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7046,7 +7140,7 @@
           "line_end": 3715,
           "label": "test%3i : Dictionary Block compression test :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7056,7 +7150,7 @@
           "line_end": 3732,
           "label": "test%3i : Dictionary Block decompression test :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7066,7 +7160,7 @@
           "line_end": 3748,
           "label": "test%3i : Block compression with CDict :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7224,7 +7318,7 @@
           "line_end": 4116,
           "label": "test%3i : incompressible data and ill suited dictionary :",
           "status": "blocked",
-          "reason": "Dictionary training/COVER/FASTCOVER and dictionary compression APIs absent.",
+          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
           "rust_tests": []
         },
         {
@@ -7274,7 +7368,7 @@
           "line_end": 4171,
           "label": "test%3i : testing ZSTD dictionary sizes :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7314,7 +7408,7 @@
           "line_end": 4304,
           "label": "test%3i : passing wrong full dict should fail on compressStream2 refPrefix",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7324,7 +7418,7 @@
           "line_end": 4331,
           "label": "test%3i : small dictionary with multithreading and LDM",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7334,7 +7428,7 @@
           "line_end": 4345,
           "label": "test%3i : ZSTD_getCParams() + dictionary",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7344,7 +7438,7 @@
           "line_end": 4356,
           "label": "test%3i : ZSTD_adjustCParams() + dictionary",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7414,7 +7508,7 @@
           "line_end": 4664,
           "label": "longtest%3i : testing cdict compression with different attachment strategies :",
           "status": "blocked",
-          "reason": "Raw/prepared dictionaries, prefixes, dictionary attachment/reset, or dictionary parameter APIs absent.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
           "rust_tests": []
         },
         {
@@ -7612,9 +7706,13 @@
       "sha256": "f4c25620fc0fb4fd60b2a9e4834e822772bf795ce5dcaa99b8985315ac24ad8b",
       "suite": "golden_corpus",
       "role": "fixture",
-      "status": "blocked",
-      "reason": "Prepared dictionaries and dictionary training/loading APIs are not implemented.",
-      "rust_tests": [],
+      "status": "ported",
+      "reason": "The exact golden dictionary is parsed with official ID/content boundaries and decodes the exact original HTTP source from an official generated frame, including repeated prepared contexts.",
+      "rust_tests": [
+        "src/dictionary.rs#official_formatted_dictionary_metadata_matches_independent_c_loader",
+        "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
+        "tests/upstream_dictionary.rs#shared_prepared_dictionary_reinitializes_entropy_for_each_context_and_frame"
+      ],
       "line_count": 17,
       "cases": []
     },
@@ -7900,9 +7998,11 @@
       "sha256": "63e788285258664f3f432a00d1ec9b2d965dc94b6884e5a925ff888f4879c1b8",
       "suite": "core_and_stress",
       "role": "test_suite",
-      "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "The exact embedded invalid-repcode dictionary is rejected during shared prepared decoding construction. The original prepared compression constructor assertion awaits dictionary encoder integration.",
+      "rust_tests": [
+        "src/dictionary.rs#official_invalid_repeat_dictionary_and_header_only_fixture_are_rejected"
+      ],
       "line_count": 61,
       "cases": []
     },
@@ -7913,7 +8013,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "blocked",
-      "reason": "Raw/prepared dictionary contexts, dictionary selection, and dictionary training APIs are not implemented.",
+      "reason": "Original 2GiB source, 1GiB chunks, 31-bit window, worker/optimal-parser configuration and long continuous dictionary compression remain unimplemented or unported.",
       "rust_tests": [],
       "line_count": 128,
       "cases": []
@@ -10151,7 +10251,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Bounded Decoder/Encoder contexts now cover ordinary fragmented progress, raw/RLE output, checksums, flush/finish, pledge errors, reset, two exact regressions, and deterministic campaigns. Dictionaries, stable-buffer modes, allocation-size C APIs, advanced parameters, sequence producers, workers, and magicless modes remain absent.",
+      "reason": "Bounded Decoder/Encoder contexts cover fragmented progress, checksums, flush/finish, pledges, reset and deterministic campaigns; dictionary/prefix decoding now adds prepared entropy, repeat offsets, persistent selection and one-use prefixes. Dictionary compression, original broad dictionary sequence schedules, stable buffers, C allocation/workspace APIs, advanced parameters, workers and magicless modes remain incomplete.",
       "rust_tests": [
         "tests/upstream_streaming.rs#exact_small_sequence_sections_survive_every_chunk_boundary",
         "tests/upstream_streaming.rs#exact_history_overwrite_regression_survives_output_fragmentation",
@@ -10161,7 +10261,47 @@
         "tests/upstream_streaming.rs#flush_exposes_all_source_to_a_live_decoder_before_finish",
         "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
         "tests/upstream_window.rs#near_window_distances_cover_every_small_window_and_tiny_output",
-        "tests/upstream_window.rs#near_window_distances_cover_the_complete_large_window_sweep"
+        "tests/upstream_window.rs#near_window_distances_cover_the_complete_large_window_sweep",
+        "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
+        "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+        "tests/upstream_dictionary.rs#dictionaries_do_not_relax_advertised_window_or_output_limits",
+        "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
+        "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
+        "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
+        "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries",
+        "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
+        "tests/upstream_dictionary.rs#prefix_is_consumed_by_one_frame_and_does_not_persist_after_reset",
+        "tests/upstream_dictionary.rs#absent_and_explicit_zero_frame_ids_still_use_the_prepared_dictionary",
+        "tests/upstream_dictionary.rs#one_shot_dictionary_helper_reports_mismatch_and_malformed_match_errors",
+        "tests/upstream_dictionary.rs#first_block_treeless_literals_use_prepared_huffman_in_one_and_four_stream_modes",
+        "tests/upstream_dictionary.rs#first_block_repeat_sequence_tables_are_restored_for_every_prepared_frame",
+        "src/sequences.rs#prepared_tables_and_repcodes_are_borrowed_until_each_table_is_replaced",
+        "tests/upstream_dictionary.rs#raw_dictionary_boundaries_accept_p_at_or_before_window_under_backpressure",
+        "tests/upstream_dictionary.rs#dictionary_reference_after_window_is_rejected_even_when_c_accepts_it",
+        "tests/upstream_dictionary.rs#dictionary_reference_before_content_start_is_rejected",
+        "tests/upstream_dictionary.rs#dictionary_to_frame_match_preserves_prefix_until_the_block_is_committed",
+        "tests/upstream_dictionary.rs#dictionary_larger_than_window_does_not_count_as_decoded_content",
+        "tests/upstream_dictionary.rs#persistent_dictionary_decodes_concatenated_frames_with_cumulative_limits",
+        "tests/upstream_dictionary.rs#shared_prepared_dictionary_reinitializes_entropy_for_each_context_and_frame",
+        "tests/upstream_dictionary.rs#skippable_frames_do_not_claim_a_pending_prefix",
+        "tests/upstream_dictionary.rs#reset_preserves_an_unclaimed_prefix_including_after_a_skippable_frame",
+        "tests/upstream_dictionary.rs#reset_drops_a_prefix_claimed_by_an_unfinished_standard_frame",
+        "tests/upstream_dictionary.rs#even_an_empty_standard_frame_consumes_the_pending_prefix",
+        "tests/upstream_dictionary.rs#setting_a_prefix_replaces_the_persistent_dictionary",
+        "tests/upstream_dictionary.rs#boundary_configuration_preserves_cumulative_counters_and_limits",
+        "tests/upstream_dictionary.rs#rejected_configuration_during_partial_headers_or_pending_output_preserves_state",
+        "tests/upstream_dictionary.rs#ended_context_rejects_configuration_without_changing_its_sealed_state",
+        "tests/upstream_dictionary.rs#failed_context_requires_reset_before_configuration_and_retains_its_dictionary",
+        "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
+        "tests/upstream_dictionary.rs#one_shot_dictionary_helper_rejects_every_incomplete_frame_prefix",
+        "tests/upstream_dictionary.rs#one_shot_dictionary_helper_reuses_dictionary_across_skips_and_concatenated_frames",
+        "tests/upstream_dictionary.rs#dictionary_content_is_excluded_from_declared_frame_content_size",
+        "tests/upstream_dictionary.rs#prepared_dictionary_does_not_disable_content_checksum_validation",
+        "tests/upstream_dictionary.rs#reset_before_a_complete_standard_header_preserves_the_unclaimed_prefix",
+        "tests/upstream_dictionary.rs#reset_after_truncation_preserves_only_unclaimed_prefixes",
+        "tests/upstream_dictionary.rs#retained_capacity_counts_shared_dictionary_once_and_releases_consumed_prefix",
+        "tests/upstream_dictionary.rs#prepared_dictionary_retention_stays_bounded_across_many_frame_resets",
+        "tests/upstream_dictionary.rs#duplicate_initial_repeat_offsets_are_used_and_reset_between_frames"
       ],
       "line_count": 3467,
       "cases": [
@@ -10645,7 +10785,7 @@
           "line_end": 1106,
           "label": "test%3i : digested dictionary :",
           "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
+          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
           "rust_tests": []
         },
         {
@@ -10664,9 +10804,11 @@
           "line_start": 1113,
           "line_end": 1119,
           "label": "test%3i : check Dictionary ID :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The prepared dictionary ID matches the exact official HTTP frame header.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1120",
@@ -10674,9 +10816,12 @@
           "line_start": 1120,
           "line_end": 1138,
           "label": "test%3i : decompress %u bytes with digested dictionary :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Shared prepared dictionaries consume complete frames and restore exact contents under one-byte and larger chunks; original large CNBuffer/generated-dictionary workload is replaced by pinned HTTP and C-generated fixtures.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1139",
@@ -10684,10 +10829,10 @@
           "line_start": 1139,
           "line_end": 1152,
           "label": "test%3i : maxWindowSize < frame requirement :",
-          "status": "partial",
-          "reason": "A frame above the window limit is rejected and explicit option reset recovers decoding; original dictionary setup and generic C parameter-reset API remain absent.",
+          "status": "ported",
+          "reason": "A configured dictionary never bypasses an advertised frame-window limit; insufficient window/output budgets fail and exact limits succeed.",
           "rust_tests": [
-            "tests/upstream_streaming.rs#window_limit_rejection_and_reconfiguration_are_explicit"
+            "tests/upstream_dictionary.rs#dictionaries_do_not_relax_advertised_window_or_output_limits"
           ]
         },
         {
@@ -10697,7 +10842,7 @@
           "line_end": 1197,
           "label": "test%3i : dictionary source size and level :",
           "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
+          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
           "rust_tests": []
         },
         {
@@ -10706,9 +10851,15 @@
           "line_start": 1198,
           "line_end": 1239,
           "label": "test%3i : ZSTD_decompressStream() with dictionary :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None).",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
+            "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
+            "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
+            "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
+            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1240",
@@ -10716,9 +10867,15 @@
           "line_start": 1240,
           "line_end": 1268,
           "label": "test%3i : ZSTD_resetDStream() with dictionary :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None).",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
+            "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
+            "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
+            "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
+            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1269",
@@ -10726,9 +10883,15 @@
           "line_start": 1269,
           "line_end": 1298,
           "label": "test%3i : ZSTD_decompressStream() with ddict :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None).",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
+            "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
+            "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
+            "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
+            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1299",
@@ -10736,9 +10899,12 @@
           "line_start": 1299,
           "line_end": 1319,
           "label": "test%3i : ZSTD_decompressDCtx() with prefix :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "A configured formatted/raw prefix restores one frame and is cleared before a dependent second frame; exact C-generated concatenations also verify this lifetime.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
+            "tests/upstream_dictionary.rs#prefix_is_consumed_by_one_frame_and_does_not_persist_after_reset"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1320",
@@ -10746,9 +10912,15 @@
           "line_start": 1320,
           "line_end": 1343,
           "label": "test%3i : ZSTD_initDStream*() with dictionary :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None).",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
+            "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
+            "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
+            "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
+            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1344",
@@ -10757,7 +10929,7 @@
           "line_end": 1364,
           "label": "test%3i : ZSTD_initCStream_usingCDict_advanced with masked dictID :",
           "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
+          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
           "rust_tests": []
         },
         {
@@ -10766,9 +10938,11 @@
           "line_start": 1365,
           "line_end": 1370,
           "label": "test%3i : try retrieving dictID from frame :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Omitted and explicit-zero frame dictionary IDs parse as zero while selected prepared content still decodes.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#absent_and_explicit_zero_frame_ids_still_use_the_prepared_dictionary"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1371",
@@ -10776,9 +10950,11 @@
           "line_start": 1371,
           "line_end": 1376,
           "label": "test%3i : decompress without dictionary :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Dictionary-dependent raw frames reject empty dictionary content. The exact omitted-ID/no-dictionary negative branch has not yet been asserted in Rust.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_reports_mismatch_and_malformed_match_errors"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1377",
@@ -10787,7 +10963,7 @@
           "line_end": 1389,
           "label": "test%3i : compress with ZSTD_CCtx_refPrefix :",
           "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
+          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
           "rust_tests": []
         },
         {
@@ -10796,9 +10972,11 @@
           "line_start": 1390,
           "line_end": 1402,
           "label": "test%3i : decompress with ZSTD_DCtx_refPrefix :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The official C prefix frame consumes its complete input and restores exact output with an owned raw prefix, under one-byte input/output and unsplit concatenations.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1403",
@@ -10806,9 +10984,11 @@
           "line_start": 1403,
           "line_end": 1408,
           "label": "test%3i : decompress without dictionary (should fail):",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "A dependent second prefix frame is rejected after one-use selection expires. The separate fresh-context decode of the exact official prefix-first frame remains unasserted.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1409",
@@ -10826,9 +11006,11 @@
           "line_start": 1421,
           "line_end": 1425,
           "label": "test%3i : decompress without dictionary (should work):",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The second frame emitted by the reused official C compressor decodes successfully with no dictionary/prefix selected.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1426",
@@ -10870,7 +11052,7 @@
           "line_end": 1530,
           "label": "test%3i : compress %u bytes with multiple threads + dictionary :",
           "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
+          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
           "rust_tests": []
         },
         {
@@ -10880,7 +11062,7 @@
           "line_end": 1550,
           "label": "test%3i : decompress large frame created from multiple threads + dictionary :",
           "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
+          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
           "rust_tests": []
         },
         {
@@ -10889,9 +11071,12 @@
           "line_start": 1551,
           "line_end": 1598,
           "label": "test%3i : check dictionary FSE tables can represent every code :",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "First-block treeless Huffman and repeat LL/OF/ML decoding use prepared dictionary tables and reset them between frames. The exhaustive sequence producer sweep over all code values and windows is not yet ported.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#first_block_treeless_literals_use_prepared_huffman_in_one_and_four_stream_modes",
+            "tests/upstream_dictionary.rs#first_block_repeat_sequence_tables_are_restored_for_every_prepared_frame"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1599",
@@ -10988,9 +11173,12 @@
           "line_start": 1831,
           "line_end": 1883,
           "label": "test%3i : dictionary + uncompressible block + reusing tables checks offset table validity:",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Prepared tables are immutable defaults and each working table is independently replaced; repeat tables restore each frame. The original dictionary plus raw/small-block compressor schedules and offset-table optimization assertions remain unported.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#first_block_repeat_sequence_tables_are_restored_for_every_prepared_frame",
+            "src/sequences.rs#prepared_tables_and_repcodes_are_borrowed_until_each_table_is_replaced"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1884",
@@ -10998,9 +11186,12 @@
           "line_start": 1884,
           "line_end": 1920,
           "label": "test%3i : dictionary + small blocks + reusing tables checks offset table validity:",
-          "status": "blocked",
-          "reason": "The original group requires dictionary/prepared-dictionary/prefix state, IDs or training, which remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Prepared tables are immutable defaults and each working table is independently replaced; repeat tables restore each frame. The original dictionary plus raw/small-block compressor schedules and offset-table optimization assertions remain unported.",
+          "rust_tests": [
+            "tests/upstream_dictionary.rs#first_block_repeat_sequence_tables_are_restored_for_every_prepared_frame",
+            "src/sequences.rs#prepared_tables_and_repcodes_are_borrowed_until_each_table_is_replaced"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:1921",

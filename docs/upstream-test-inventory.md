@@ -109,12 +109,30 @@ existence of a local file.
 | Successful and malformed golden frames | `tests/upstream_golden.rs` | Exact original inputs and output/error assertions |
 | Golden compression corpus | `tests/upstream_golden.rs` | One-shot roundtrip and independent interoperability; specialized encoder settings remain missing |
 | Named fuzzer cases and randomized driver | `tests/upstream_fuzzer.rs` | Exact RNG/noise workload and supported one-shot cases; full label mapping in `tests/upstream/FUZZER.md` |
-| Generated complete frames and standalone headers | `tests/upstream_decodecorpus.rs` | Official generated inputs, original bytes, and bounded fresh-generator replay; stream/dictionary/raw-block modes remain missing |
+| Generated complete frames and standalone headers | `tests/upstream_decodecorpus.rs`, `tests/upstream_streaming.rs` | Official generated inputs, original bytes, bounded fresh-generator replay and fragmented decoding; the generator's dictionary/raw-block branches remain unported |
 | Inline legacy and skippable regression bytes | `tests/upstream_inline_regressions.rs` | Modern component runs; the full legacy desired-success assertion remains blocked |
 | Four public one-shot fuzz targets | `tests/upstream_fuzz_targets.rs` | Exact tail-selected input contracts with bounded deterministic inputs and a configurable external file runner; contexts/parameters/in-place and production scanner APIs remain missing |
 | Regression directory corpora | `tests/upstream_regression_corpora.rs` | Exact Silesia/GitHub inputs and full size/content roundtrips; the original method, strategy, level, dictionary, and CSV comparison matrix remains missing |
 | FSE normalized-count and Huffman decoding fuzz intent | `tests/upstream/entropy.rs` | Independent official vectors and arbitrary bounded inputs; encoder and specialized C control paths remain missing |
 | Single-file DXT1 and kernel empty-frame fixtures | `tests/upstream_testcard.rs` | Exact original bytes and output contracts; maximum-level selection, browser rendering, and kernel workspace APIs remain missing |
+| Ordinary streaming and context reuse | `tests/upstream_streaming.rs`, `tests/upstream_window.rs` | Bounded fragmented progress, flush/finish/reset, pledge and checksum failures, official window-distance fixtures and matching external adapters; specialized parameter/control paths remain separate |
+| Prepared dictionaries and prefixes | `src/dictionary.rs`, `tests/upstream_dictionary.rs` | Exact malformed/prepared dictionary metadata, raw/formatted content, first-block entropy/repeat offsets, IDs, persistent selection, one-use prefixes and resource/state boundaries; encoder/training and the original broader random schedules remain incomplete |
+
+The dictionary decoder checkpoint runs **39 integration tests** and **11 parser
+unit tests**. Its fixtures include the original HTTP/fixed-training/invalid
+dictionaries plus **48** reproducible dictionary-related files backed by **123**
+independent C oracle outcomes. C acceptance and the selected format lifetime rule
+remain separate: dictionary references at P==W are accepted and references at
+P>W rejected. Source-backed mappings and remaining qualifications are detailed in
+`docs/upstream-dictionary-plan.md`; fixture presence alone never marks a source
+test complete.
+
+Rust's dictionary reset contract deliberately preserves selected dictionaries
+through `reset` and `reset_with_options`. Upstream groups which also require C
+`session_and_parameters` or `initDStream` to clear a selection therefore remain
+partial; the explicit Rust operation is `set_dictionary(None)`. Similarly,
+first-block entropy witnesses do not complete upstream's exhaustive code-value
+or compressor-specific table-reuse sweeps.
 
 An ignored test may contain a complete desired-success assertion while still
 being `blocked` because the implementation cannot pass it. In particular,
@@ -124,15 +142,16 @@ fuzzer that uses random insufficient output buffers also remains blocked:
 the current allocating encoder has no equivalent caller-buffer API.
 
 Remaining `planned` examples are ordinary file-based sample-program ports.
-Remaining `blocked` suites need streaming, dictionary, compression-parameter,
-legacy, raw-block, seekable, threaded, CLI, or external-format interfaces. Their
+Remaining `blocked` suites need advanced streaming/context behavior, dictionary
+encoding/training test adapters, compression parameters, legacy, raw-block,
+seekable, threaded, CLI, or external-format interfaces. Their
 paths and reasons remain in the machine-readable inventory so future modules
 can enable actual assertions without losing the upstream correspondence.
 
 ## External corpus snapshots
 
-`tests/upstream/external-corpora.json` separately pins eight rolling release
-archives: five fuzz target corpora and three regression inputs. They are
+`tests/upstream/external-corpora.json` separately pins ten rolling release
+archives: seven fuzz target corpora and three regression inputs. They are
 external release snapshots observed on 2026-10-08, not files proven to belong
 to the v1.5.7 tag. Archives and extracted inputs remain in an external cache.
 Their original source notices are independent of the codec's root license.
@@ -146,12 +165,16 @@ release builds with all unsafe features enabled and no skipped files:
 | `zstd_frame_info` | 2,395 | Public frame-header parsing and metadata bounds |
 | `decompress_dstSize_tooSmall` | 1,173 | Empty input success and nonempty insufficient output failure |
 | `huf_decompress` | 605 | Both BMI-dependent parameter-consumption layouts; 604 successful table parses across both layouts |
+| `stream_decompress` | 12,462 | Tail-selected chunks, bounded streaming progress, dictionary-free output/error parity and complete input replay |
+| `stream_round_trip` | 24,223 | Complete selected source bytes, randomized supported chunk/directive schedules and exact decoded content |
 
 These are partial adapters for the original C targets because their missing
 API/control paths remain absent. The 79-input FSE corpus is downloaded and
 pinned; the upstream writer-based target has not been replayed. The source
 inventory keeps those distinctions even when all inputs in a selected
-supported adapter pass.
+supported adapter pass. Both streaming corpora also passed safe release builds;
+their random C compression parameters, stable-buffer and in-place branches are
+not claimed by the supported API adapters.
 
 The selected regression-directory adapter also passed all **512** Silesia and
 GitHub inputs (**12,407,963 bytes**) in a release build with all unsafe features.
@@ -182,7 +205,8 @@ unfinished child groups. It does not execute Rust tests; passing this audit
 alone establishes inventory integrity, not behavioral parity.
 
 The separate fixture audit checks all bytes listed by the golden,
-decodecorpus, entropy, inline-regression, and available testcard manifests.
+decodecorpus, entropy, inline-regression, testcard, window-sequence, and
+dictionary manifests.
 It verifies sizes, SHA-256 values, upstream source hashes, local oracle source
 hashes, derived byte ranges, and recorded expected-output metadata. Missing
 fixtures/manifests, unlisted files, duplicate records, and paths outside a
