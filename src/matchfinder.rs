@@ -1,6 +1,7 @@
 //! Position-indexed storage for a simple greedy match finder.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 use crate::{Error, Result};
 
@@ -12,17 +13,29 @@ const EMPTY: usize = usize::MAX;
 /// to by this table. Callers verify candidate bytes to resolve hash collisions.
 ///
 /// Corresponds to the indexed hash-table role of `ZSTD_MatchState_t`.
-pub(crate) struct MatchTable {
-    positions: Vec<usize>,
+pub(crate) struct MatchTable<A: Allocator = Global> {
+    positions: Vec<usize, A>,
 }
 
-impl MatchTable {
+impl MatchTable<Global> {
     pub(crate) fn new() -> Result<Self> {
-        let mut positions = Vec::new();
+        Self::new_in(Global)
+    }
+}
+
+impl<A: Allocator> MatchTable<A> {
+    /// Allocate the initialized table through this exact retained owner.
+    /// A single allocation needs no allocator clone or clone equivalence.
+    pub(crate) fn new_in(allocator: A) -> Result<Self> {
+        let mut positions = Vec::new_in(allocator);
         positions
             .try_reserve_exact(TABLE_SIZE)
             .map_err(|_| Error::AllocationFailed)?;
-        positions.resize(TABLE_SIZE, EMPTY);
+        // All pushes fit the successful reservation. Unlike bulk insertion,
+        // individual pushes into spare capacity promise not to allocate.
+        while positions.len() < TABLE_SIZE {
+            positions.push(EMPTY);
+        }
         Ok(Self { positions })
     }
 
@@ -35,7 +48,7 @@ impl MatchTable {
     ///
     /// Both vectors have the same fixed initialized length. The owned working
     /// allocation is retained and no reference to the seed table is stored.
-    pub(crate) fn reset_from(&mut self, seed: &Self) {
+    pub(crate) fn reset_from<B: Allocator>(&mut self, seed: &MatchTable<B>) {
         self.positions.copy_from_slice(&seed.positions);
     }
 
@@ -59,7 +72,8 @@ impl MatchTable {
             // SAFETY: HASH_BITS is 16, so shifting the u32 hash right by 16 proves
             // index < 2^16 = TABLE_SIZE. Construction initializes TABLE_SIZE
             // properly aligned usize entries; no method changes the vector
-            // length or allocation. The exclusive self borrow grants unique
+            // length or allocation, which retains its exact allocator owner.
+            // The exclusive self borrow grants unique
             // access to the element for this call. The temporary reference
             // cannot escape; neither operation reallocates or reads
             // uninitialized storage.
@@ -117,5 +131,120 @@ mod tests {
         seed.reset();
         working.reset_from(&seed);
         assert_eq!(working.replace(*b"seed", 47), None);
+    }
+    #[test]
+    fn custom_constructor_failure_drops_non_clone_owner_without_live_blocks() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let allocator = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = allocator.monitor();
+        assert!(monitor.fail_next());
+        assert!(matches!(
+            MatchTable::new_in(allocator),
+            Err(Error::AllocationFailed)
+        ));
+        assert_eq!(monitor.snapshot().attempts, 1);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_non_clone_table_matches_global_without_requests_after_setup() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let allocator = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let identity = allocator.identity();
+        let monitor = allocator.monitor();
+        let mut custom = MatchTable::new_in(allocator).unwrap();
+        let mut global = MatchTable::new().unwrap();
+        assert_eq!(custom.positions.allocator().identity(), identity);
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        for round in 0..3 {
+            for index in 0..1024_usize {
+                let word = ((index % 31) as u32)
+                    .wrapping_mul(0x0e8b_2f51)
+                    .to_le_bytes();
+                let position = match index % 17 {
+                    0 => usize::MAX,
+                    1 => 0,
+                    _ => index + round * 1024,
+                };
+                assert_eq!(
+                    custom.replace(word, position),
+                    global.replace(word, position)
+                );
+            }
+            custom.reset();
+            global.reset();
+        }
+        assert_eq!(custom.positions.as_slice(), global.positions);
+        assert_eq!(monitor.snapshot(), before);
+        drop(custom);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_seed_copies_accept_independent_allocator_types_without_allocation() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = allocator.monitor();
+        let mut seed = MatchTable::new().unwrap();
+        let mut custom_seed = MatchTable::new_in(&allocator).unwrap();
+        let mut working = MatchTable::new_in(allocator.clone().into_non_clone()).unwrap();
+        seed.replace(*b"seed", 7);
+        custom_seed.replace(*b"seed", 11);
+        let pointer = working.positions.as_ptr();
+        let identity = working.positions.allocator().identity();
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        working.reset_from(&seed);
+        assert_eq!(working.replace(*b"seed", 19), Some(7));
+        assert_eq!(seed.replace(*b"seed", 23), Some(7));
+        working.reset_from(&custom_seed);
+        assert_eq!(working.replace(*b"seed", 29), Some(11));
+        assert_eq!(custom_seed.replace(*b"seed", 31), Some(11));
+        assert_eq!(working.positions.as_ptr(), pointer);
+        assert_eq!(working.positions.allocator().identity(), identity);
+        assert_eq!(monitor.snapshot(), before);
+        // Seed copying retains destination ownership and never adopts a source
+        // allocation. A subsequent setup consumes the still-armed request.
+        assert!(matches!(
+            MatchTable::new_in(&allocator),
+            Err(Error::AllocationFailed)
+        ));
+        drop(working);
+        drop(custom_seed);
+        drop(allocator);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_distinct_owners_survive_moves_and_swaps() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = allocator.monitor();
+        let mut first = MatchTable::new_in(allocator.clone()).unwrap();
+        let mut second = MatchTable::new_in(allocator.clone()).unwrap();
+        let first_id = first.positions.allocator().identity();
+        let second_id = second.positions.allocator().identity();
+        assert_ne!(first_id, second_id);
+        first.replace(*b"move", 7);
+        second.replace(*b"move", 11);
+        let before = monitor.snapshot().attempts;
+        drop(allocator);
+        core::mem::swap(&mut first, &mut second);
+        assert_eq!(first.positions.allocator().identity(), second_id);
+        assert_eq!(second.positions.allocator().identity(), first_id);
+        assert_eq!(first.replace(*b"move", 19), Some(11));
+        assert_eq!(second.replace(*b"move", 23), Some(7));
+        assert_eq!(monitor.snapshot().attempts, before);
+        let moved = first;
+        drop(second);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(moved);
+        monitor.assert_released();
     }
 }

@@ -1,0 +1,184 @@
+{
+  "scope": "Focused allocator-aware match table; independently developed leaves changed concurrently.",
+  "source": "src/matchfinder.rs",
+  "source_sha256": "816544f36e7abb20546454133de5dd207900fae375d92a8f68b8cd3fa928a2b6",
+  "source_unchanged": true,
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "matchfinder::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.988271167036146,
+      "log": "/tmp/zstdoxide-match-table-safe.log",
+      "log_sha256": "0e1089ec08c3b4d2c48f315083d87b49839b303a1fbe6374351f828f4dcc39c3",
+      "passed": 8
+    },
+    {
+      "name": "unsafe",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.7720887907780707,
+      "log": "/tmp/zstdoxide-match-table-unsafe.log",
+      "log_sha256": "d58960758059cd5f365c34a4dbbacb4112c492aa25b7490238164fe6497a6d9a",
+      "passed": 8
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--all-features",
+        "matchfinder::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.519661500118673,
+      "log": "/tmp/zstdoxide-match-table-all.log",
+      "log_sha256": "2f02888703d4744a5ace5c71712593c503de7b03a0e9ad67f2fefdda3c598b55",
+      "passed": 8
+    },
+    {
+      "name": "no-std",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.198170374846086,
+      "log": "/tmp/zstdoxide-match-table-no-std.log",
+      "log_sha256": "d957241bca58131d6061186d3fc3bbeecbe6461885851b6218cb95e9059f382a",
+      "passed": 8
+    },
+    {
+      "name": "no-std-safe",
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.3149835839867592,
+      "log": "/tmp/zstdoxide-match-table-no-std-safe.log",
+      "log_sha256": "88f28ffb2f77cc4ee07c618ff4f3e062ec4cee7023f380866e2cc151b7cc7478",
+      "passed": 0
+    },
+    {
+      "name": "no-std-unsafe",
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-match-table"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.3035722079221159,
+      "log": "/tmp/zstdoxide-match-table-no-std-unsafe.log",
+      "log_sha256": "9a81c7dbe810817284ef35d909fa7e50466d60e9b86f642c4f6e49d372c1e8b3",
+      "passed": 0
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "src/matchfinder.rs"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.042114333948120475,
+      "log": "/tmp/zstdoxide-match-table-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": 0
+    },
+    {
+      "name": "final-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.349616000195965,
+      "log": "/tmp/zstdoxide-match-owners-final-clippy.log",
+      "log_sha256": "72f91d5532bc8154ac222e65a3aac6a029353829c9f49edf85d44c82c5c41c75",
+      "passed": 0
+    },
+    {
+      "name": "miri",
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests::custom"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-match-table-miri",
+        "CARGO_TERM_COLOR": "never",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 38.97126237512566,
+      "log": "/tmp/zstdoxide-match-table-miri.log",
+      "log_sha256": "453d56d8f1dc8414cd56a5c4e9024db7549bda86445f6b18c619339b024df13c",
+      "passed": 4
+    }
+  ],
+  "qualification": "Intermediate whole-crate Clippy checks encountered in-progress entropy/Huffman warnings; only the final passing Clippy command is included. All source bytes for this match owner were unchanged throughout the recorded commands. Miri runs the four allocator-specific tests with the owner unsafe feature and strict provenance."
+}

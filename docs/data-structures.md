@@ -231,3 +231,8 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   table/output owners with Allocator + Clone; a borrowed non-Clone allocator
   works without cloning the underlying value. Bounds and initialization proofs
   remain identical across `unsafe-fse` and safe lookup.
+- `MatchTable<A>` retains one allocator-bearing position vector and requires no
+  Clone. Initialization reserves before pushing the empty sentinel. Seed copies
+  accept `MatchTable<B>` from an independent allocation domain, copy only the
+  initialized indices, and retain the destination allocation. Lookup/reset and
+  seed copying consume no further allocation requests.

@@ -39,7 +39,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [ ] Replace the Huffman builder's Global-only priority queue with checked allocator-compatible storage and preserve all tree/tie vectors.
 - [ ] Parameterize transactional literal and sequence contexts, including default/current/spare owners and every temporary.
 - [ ] Expose allocator-aware decoding contexts and collecting output APIs with unchanged framing and poisoned-context recovery.
-- [ ] Parameterize greedy match tables and seed copies with allocator-independent source storage and identical safe/unsafe candidates.
+- [x] Parameterize greedy match tables and seed copies with allocator-independent source storage and identical safe/unsafe candidates.
 - [ ] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
 - [ ] Expose allocator-aware block/stream encoding and one-shot output without allocator-changing copies.
 - [ ] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.

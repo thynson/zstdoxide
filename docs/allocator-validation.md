@@ -159,6 +159,17 @@ malformed-input cleanup. The existing Global wrappers preserve earlier callers;
 the generic copy helper has a narrow temporary unused-code expectation until
 allocator-aware contexts consume it.
 
+`MatchTable<A>` now accepts owned non-Clone allocators, and seed copying accepts
+a different allocator type without adopting its storage. Its
+[focused evidence](evidence/2026-10-09-allocator-match-table.json) records eight
+tests in safe, `unsafe-match-table`, all-feature, and no-default/unsafe-table
+configurations; safe/unsafe no_std compilation; formatting; strict all-target
+Clippy; and four allocator-specific strict-provenance Miri tests with the
+unsafe table backend. New tests compare candidates with Global across resets,
+collisions and sentinel values; verify no requests after setup; preserve
+destination pointers during seed copying; and verify complete release after
+failed construction and swaps between distinct owners.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The
