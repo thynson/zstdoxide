@@ -574,6 +574,30 @@ count and lint corrections are retained in the evidence; production behavior
 was unchanged. Final ownership documentation and an isolated earlier-public-API
 snapshot passed Clippy, no_std, all eighteen tests and formatting.
 
+The [original-size allocation campaign](evidence/2026-10-09-allocator-upstream-campaign.json)
+passed in safe and all-feature release builds. C and Rust RDG generation matched
+all 89,456,640 bytes at seed 0x12345678, compressibility 0.50 and literal argument
+0.0; source FNV64 is 1372079263076317397. Each build checked six custom context
+configurations (three named strategies, complete-source Finish and fragmented
+Continue/Finish), three Global reference frames and six complete C decodes.
+Custom decoders compared all output bytes directly against source. Source and
+caller output buffers stayed outside tracked context allocation.
+
+All six frame fingerprints, sizes, allocation counts, requested/live/peak bytes
+and retained capacities matched exactly between safe and all-feature builds.
+Greedy emitted 30,843,477 bytes (FNV64 6769348192768063082); Lazy emitted 30,257,629
+bytes (FNV64 2278302310949511604). Each context released all tracked storage.
+The normal smaller-source test repeats domain/counter/byte assertions for every
+strategy. Final strict Clippy, scoped formatting and normal tests passed after
+a captured concurrent stream unit-test lint correction and diagnostic-only
+assertion cleanup. The 87.601/78.089 second large-test durations include other
+concurrent work and are not benchmark measurements.
+
+The original C level/worker schedules remain qualified: these six Rust cases do
+not reproduce levels 1..6, workers 1..4 or the 60/54/48/24 memtest suffix counts.
+The corresponding two inventory anchors advance to partial, not complete.
+Static workspaces, estimators and automatic shrinking remain separate contracts.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation and the final
 integrated platform matrix remain open. The

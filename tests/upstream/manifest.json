@@ -5181,7 +5181,9 @@
         "tests/upstream_formatted_training.rs#large_caps_do_not_force_large_allocations_and_dictionary_bytes_own_their_sources",
         "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
         "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
-        "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
+        "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source",
+        "tests/upstream_allocator.rs#custom_context_counters_exclude_caller_buffers_and_balance_for_each_strategy",
+        "tests/upstream_allocator.rs#original_custom_context_source_campaign_has_complete_byte_comparisons"
       ],
       "line_count": 5147,
       "cases": [
@@ -5191,9 +5193,12 @@
           "line_start": 194,
           "line_end": 278,
           "label": "FUZ_mallocTests_internal",
-          "status": "blocked",
-          "reason": "This named group requires allocator callbacks, caller-supplied context storage, or context memory accounting.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Allocator-aware Rust contexts preserve the exact 89,456,640-byte RDG source (explicit seed 0x12345678, p=0.50, literal argument 0.0), with source/caller buffers outside tracking. Safe/all-feature campaigns pass three named strategies under complete-source Finish and fragmented Continue/Finish schedules, exact Global frames, independent C/Rust decoded bytes, layout-consistent counters and final release. C levels 1..6 and worker groups 1..4 are not implemented; six Rust configurations do not replace the original 60/54/48/24 suffix schedule. Failure injection and balance are additional Rust assertions.",
+          "rust_tests": [
+            "tests/upstream_allocator.rs#custom_context_counters_exclude_caller_buffers_and_balance_for_each_strategy",
+            "tests/upstream_allocator.rs#original_custom_context_source_campaign_has_complete_byte_comparisons"
+          ]
         },
         {
           "id": "tests/fuzzer.c:279",
@@ -5201,9 +5206,12 @@
           "line_start": 279,
           "line_end": 302,
           "label": "FUZ_mallocTests",
-          "status": "blocked",
-          "reason": "This named group requires allocator callbacks, caller-supplied context storage, or context memory accounting.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Allocator-aware Rust contexts preserve the exact 89,456,640-byte RDG source (explicit seed 0x12345678, p=0.50, literal argument 0.0), with source/caller buffers outside tracking. Safe/all-feature campaigns pass three named strategies under complete-source Finish and fragmented Continue/Finish schedules, exact Global frames, independent C/Rust decoded bytes, layout-consistent counters and final release. C levels 1..6 and worker groups 1..4 are not implemented; six Rust configurations do not replace the original 60/54/48/24 suffix schedule. Failure injection and balance are additional Rust assertions.",
+          "rust_tests": [
+            "tests/upstream_allocator.rs#custom_context_counters_exclude_caller_buffers_and_balance_for_each_strategy",
+            "tests/upstream_allocator.rs#original_custom_context_source_campaign_has_complete_byte_comparisons"
+          ]
         },
         {
           "id": "tests/fuzzer.c:303",

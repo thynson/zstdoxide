@@ -250,8 +250,9 @@ explicit checks where supported, especially for shared dictionary ownership.
 
 ## Current inventory boundary
 
-The custom callback/accounting anchors, static workspace groups, estimators, and
-shrinking groups are blocked in the current manifest. Existing ordinary
+The custom callback/accounting anchors are partial after the exact-source Rust
+campaign. Static workspace groups, estimators, and shrinking groups remain
+blocked in the current manifest. Existing ordinary
 streaming and empty-frame ports give partial coverage to relevant stable-buffer
 and kernel entries, not complete workspace coverage. C build orchestration and
 ABI-only assertions are classified separately as non-applicable.
@@ -298,3 +299,27 @@ support must be linked to executable assertions before a source group advances.
 9. **Separate future API groups.** Keep static arenas, estimators, shrinking,
    stable buffers, stack budgets, and multithreading separately decomposed. Do
    not present a budget allocator as completing those contracts.
+
+## Exact source adaptation for Module 9
+
+The new `tests/upstream_allocator.rs` campaign retains the 89,456,640-byte source,
+compressibility 0.50, literal-distribution argument 0.0, and explicit seed
+0x12345678. The external v1.5.7 RDG helper must produce identical source bytes.
+Source, collected frames, and caller output buffers are outside tracked context
+allocation, matching the original ownership boundary. A complete-source Finish
+schedule and a fragmented Continue/Finish schedule exercise each supported
+Greedy, Chain and Lazy policy. These are six Rust policy/schedule configurations,
+not the original 60 numeric-level/worker combinations.
+
+Each custom frame must match its Global reference byte for byte and decode in a
+separate custom decoder and the independent C executable. Normal tests use a
+smaller deterministic source for the same ownership/accounting assertions.
+Layout-consistent requested/live/peak bytes and retained capacity are reported;
+all context allocations must be released at final drop. Byte equality, exact
+owner identity and balanced release are additional Rust assertions. This
+campaign does not port worker scheduling, numeric C levels, static workspaces,
+estimators or automatic shrinking. The large test remains opt-in, and records
+must identify the exact invocation before claiming it ran.
+
+The safe/all-feature execution record is preserved in
+[allocator-validation.md](allocator-validation.md) and its linked campaign JSON.

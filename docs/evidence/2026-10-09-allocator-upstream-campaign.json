@@ -1,0 +1,232 @@
+{
+  "checkpoint": "Exact upstream custom-context source adaptation",
+  "baseline": "ca21dc8c2b4ef80340c05d23ec5eb1439c36fff3",
+  "snapshot": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-allocation-campaign-6ilg0qyf",
+  "sources": {
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "ac8a1969268f61d5c1a976c625aaab05b4a76d377ae381782982d7300b964ccc",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "d02825c06bfd1aed23d6a778f24ce6a60d30d4d9410cb354f7d571c32f1c0f63",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "309e11beb42c881beb164698ba18b1da3f01e80dbe351e7b43d1d3184c0a5c38",
+    "src/literal_encode.rs": "e9282568a49a86dbfbd0361aef192fe263f7bdee0d15f94285ac70d52c0b73f1",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_parse.rs": "5b1f02c688d31aa996103fa4f5a3473f5de7c27a72491aed29169fb7dc52807f",
+    "src/matchchain.rs": "dbf5c8f65b8f6dedfaaa3907e22bb0e932029793bc0e1cbe412189113fc78e80",
+    "src/matchfinder.rs": "8f5e28b2127533638947744917078c929a9e2da785b6c38fd7e6c13ada00f9a6",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "8bb87a07cc60e3968299ed341976c134fce13fe3099ca8aba0ec78372e431678",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "b06411e5c2a54240644f640b0eb5d336a419a3cf81ba983b2d1f7c7790d7598a",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+  },
+  "test_sources": {
+    "tests/upstream_allocator.rs": "6789bc15bc47cbf70a4a1d733c7e2aed52f10f131f44bdf1d1e87cd5ad8514df",
+    "tests/upstream/allocator/oracle.c": "59d82901f0a73ce405d3712c776e4dc147c8c08615e259717efaa785b276be59"
+  },
+  "checks": [
+    {
+      "name": "normal-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "upstream_allocator"
+      ],
+      "exit_code": 0,
+      "seconds": 2.233,
+      "log": "/tmp/zstdoxide-allocation-campaign-normal-safe.log",
+      "sha256": "121eee85b903248a4d36fede95a3c22d4a42aac88fc7bff9f1133ffe14e9ca3b",
+      "results": [
+        "test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "original-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "upstream_allocator",
+        "original_custom_context_source_campaign_has_complete_byte_comparisons",
+        "--",
+        "--exact",
+        "--ignored",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 87.601,
+      "log": "/tmp/zstdoxide-allocation-campaign-original-safe.log",
+      "sha256": "425ce03539119e83bbca9d78f4eac6cc40b9618126dedac2639d5cfbdfcda010",
+      "results": [
+        "source_size=89456640 seed=305419896 compressibility=0.50 literal_distribution=0.0 source_fnv64=1372079263076317397",
+        "strategy=Greedy fragmented=false frame_bytes=30843477 frame_fnv64=6769348192768063082 encoder_retained=2674319 decoder_retained=312974 encoder=AllocationSnapshot { allocate_calls: 56031, allocate_zeroed_calls: 0, grow_calls: 12167, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 68198, successes: 68198, failures: 0, zero_size_requests: 0, requested_bytes: 339160889, live_blocks: 34, peak_live_blocks: 44, live_requested_bytes: 2674319, peak_requested_bytes: 2932726, live_bytes: 2674319, peak_bytes: 2932726, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 882, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 879, attempts: 895, successes: 895, failures: 0, zero_size_requests: 0, requested_bytes: 22297817, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312974, peak_requested_bytes: 357859, live_bytes: 312974, peak_bytes: 357859, identities_created: 884, owners_dropped: 879, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Greedy fragmented=true frame_bytes=30843477 frame_fnv64=6769348192768063082 encoder_retained=2674319 decoder_retained=312974 encoder=AllocationSnapshot { allocate_calls: 56031, allocate_zeroed_calls: 0, grow_calls: 12167, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 68198, successes: 68198, failures: 0, zero_size_requests: 0, requested_bytes: 339160889, live_blocks: 34, peak_live_blocks: 44, live_requested_bytes: 2674319, peak_requested_bytes: 2932726, live_bytes: 2674319, peak_bytes: 2932726, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 882, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 879, attempts: 895, successes: 895, failures: 0, zero_size_requests: 0, requested_bytes: 22297817, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312974, peak_requested_bytes: 357859, live_bytes: 312974, peak_bytes: 357859, identities_created: 884, owners_dropped: 879, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Chain fragmented=false frame_bytes=30388087 frame_fnv64=4800939254226763813 encoder_retained=11627018 decoder_retained=312348 encoder=AllocationSnapshot { allocate_calls: 56032, allocate_zeroed_calls: 0, grow_calls: 11904, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 67936, successes: 67936, failures: 0, zero_size_requests: 0, requested_bytes: 343966114, live_blocks: 35, peak_live_blocks: 48, live_requested_bytes: 11627018, peak_requested_bytes: 11952056, live_bytes: 11627018, peak_bytes: 11952056, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 1431, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 1428, attempts: 1444, successes: 1444, failures: 0, zero_size_requests: 0, requested_bytes: 19342128, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312348, peak_requested_bytes: 351498, live_bytes: 312348, peak_bytes: 351498, identities_created: 1433, owners_dropped: 1428, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Chain fragmented=true frame_bytes=30388087 frame_fnv64=4800939254226763813 encoder_retained=11627018 decoder_retained=312348 encoder=AllocationSnapshot { allocate_calls: 56032, allocate_zeroed_calls: 0, grow_calls: 11904, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 67936, successes: 67936, failures: 0, zero_size_requests: 0, requested_bytes: 343966114, live_blocks: 35, peak_live_blocks: 48, live_requested_bytes: 11627018, peak_requested_bytes: 11952056, live_bytes: 11627018, peak_bytes: 11952056, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 1431, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 1428, attempts: 1444, successes: 1444, failures: 0, zero_size_requests: 0, requested_bytes: 19342128, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312348, peak_requested_bytes: 351498, live_bytes: 312348, peak_bytes: 351498, identities_created: 1433, owners_dropped: 1428, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Lazy fragmented=false frame_bytes=30257629 frame_fnv64=2278302310949511604 encoder_retained=11626758 decoder_retained=312186 encoder=AllocationSnapshot { allocate_calls: 56032, allocate_zeroed_calls: 0, grow_calls: 11917, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 67949, successes: 67949, failures: 0, zero_size_requests: 0, requested_bytes: 343770771, live_blocks: 35, peak_live_blocks: 48, live_requested_bytes: 11626758, peak_requested_bytes: 11950260, live_bytes: 11626758, peak_bytes: 11950260, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 1371, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 1368, attempts: 1384, successes: 1384, failures: 0, zero_size_requests: 0, requested_bytes: 19160384, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312186, peak_requested_bytes: 351224, live_bytes: 312186, peak_bytes: 351224, identities_created: 1373, owners_dropped: 1368, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Lazy fragmented=true frame_bytes=30257629 frame_fnv64=2278302310949511604 encoder_retained=11626758 decoder_retained=312186 encoder=AllocationSnapshot { allocate_calls: 56032, allocate_zeroed_calls: 0, grow_calls: 11917, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 67949, successes: 67949, failures: 0, zero_size_requests: 0, requested_bytes: 343770771, live_blocks: 35, peak_live_blocks: 48, live_requested_bytes: 11626758, peak_requested_bytes: 11950260, live_bytes: 11626758, peak_bytes: 11950260, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 1371, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 1368, attempts: 1384, successes: 1384, failures: 0, zero_size_requests: 0, requested_bytes: 19160384, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312186, peak_requested_bytes: 351224, live_bytes: 312186, peak_bytes: 351224, identities_created: 1373, owners_dropped: 1368, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "Verified 6 custom encoder/decoder configurations, 3 Global reference frames, and 6 complete C decodes over the exact source in 86.619614666s; numeric levels and worker groups remain unsupported",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 87.55s"
+      ]
+    },
+    {
+      "name": "normal-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "upstream_allocator"
+      ],
+      "exit_code": 0,
+      "seconds": 3.946,
+      "log": "/tmp/zstdoxide-allocation-campaign-normal-all.log",
+      "sha256": "d86fa73dfeb85aa6d0c6d1be092e92bd217626fa2d0fafb5b1408c8d34e5bb97",
+      "results": [
+        "test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "name": "original-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "upstream_allocator",
+        "original_custom_context_source_campaign_has_complete_byte_comparisons",
+        "--",
+        "--exact",
+        "--ignored",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 78.089,
+      "log": "/tmp/zstdoxide-allocation-campaign-original-all.log",
+      "sha256": "4fa6dfb3c8153968ea7b54909a8accca1277a78a42331260c91cc31faeab0eab",
+      "results": [
+        "source_size=89456640 seed=305419896 compressibility=0.50 literal_distribution=0.0 source_fnv64=1372079263076317397",
+        "strategy=Greedy fragmented=false frame_bytes=30843477 frame_fnv64=6769348192768063082 encoder_retained=2674319 decoder_retained=312974 encoder=AllocationSnapshot { allocate_calls: 56031, allocate_zeroed_calls: 0, grow_calls: 12167, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 68198, successes: 68198, failures: 0, zero_size_requests: 0, requested_bytes: 339160889, live_blocks: 34, peak_live_blocks: 44, live_requested_bytes: 2674319, peak_requested_bytes: 2932726, live_bytes: 2674319, peak_bytes: 2932726, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 882, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 879, attempts: 895, successes: 895, failures: 0, zero_size_requests: 0, requested_bytes: 22297817, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312974, peak_requested_bytes: 357859, live_bytes: 312974, peak_bytes: 357859, identities_created: 884, owners_dropped: 879, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Greedy fragmented=true frame_bytes=30843477 frame_fnv64=6769348192768063082 encoder_retained=2674319 decoder_retained=312974 encoder=AllocationSnapshot { allocate_calls: 56031, allocate_zeroed_calls: 0, grow_calls: 12167, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 68198, successes: 68198, failures: 0, zero_size_requests: 0, requested_bytes: 339160889, live_blocks: 34, peak_live_blocks: 44, live_requested_bytes: 2674319, peak_requested_bytes: 2932726, live_bytes: 2674319, peak_bytes: 2932726, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 882, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 879, attempts: 895, successes: 895, failures: 0, zero_size_requests: 0, requested_bytes: 22297817, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312974, peak_requested_bytes: 357859, live_bytes: 312974, peak_bytes: 357859, identities_created: 884, owners_dropped: 879, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Chain fragmented=false frame_bytes=30388087 frame_fnv64=4800939254226763813 encoder_retained=11627018 decoder_retained=312348 encoder=AllocationSnapshot { allocate_calls: 56032, allocate_zeroed_calls: 0, grow_calls: 11904, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 67936, successes: 67936, failures: 0, zero_size_requests: 0, requested_bytes: 343966114, live_blocks: 35, peak_live_blocks: 48, live_requested_bytes: 11627018, peak_requested_bytes: 11952056, live_bytes: 11627018, peak_bytes: 11952056, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 1431, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 1428, attempts: 1444, successes: 1444, failures: 0, zero_size_requests: 0, requested_bytes: 19342128, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312348, peak_requested_bytes: 351498, live_bytes: 312348, peak_bytes: 351498, identities_created: 1433, owners_dropped: 1428, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Chain fragmented=true frame_bytes=30388087 frame_fnv64=4800939254226763813 encoder_retained=11627018 decoder_retained=312348 encoder=AllocationSnapshot { allocate_calls: 56032, allocate_zeroed_calls: 0, grow_calls: 11904, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 67936, successes: 67936, failures: 0, zero_size_requests: 0, requested_bytes: 343966114, live_blocks: 35, peak_live_blocks: 48, live_requested_bytes: 11627018, peak_requested_bytes: 11952056, live_bytes: 11627018, peak_bytes: 11952056, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 1431, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 1428, attempts: 1444, successes: 1444, failures: 0, zero_size_requests: 0, requested_bytes: 19342128, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312348, peak_requested_bytes: 351498, live_bytes: 312348, peak_bytes: 351498, identities_created: 1433, owners_dropped: 1428, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Lazy fragmented=false frame_bytes=30257629 frame_fnv64=2278302310949511604 encoder_retained=11626758 decoder_retained=312186 encoder=AllocationSnapshot { allocate_calls: 56032, allocate_zeroed_calls: 0, grow_calls: 11917, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 67949, successes: 67949, failures: 0, zero_size_requests: 0, requested_bytes: 343770771, live_blocks: 35, peak_live_blocks: 48, live_requested_bytes: 11626758, peak_requested_bytes: 11950260, live_bytes: 11626758, peak_bytes: 11950260, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 1371, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 1368, attempts: 1384, successes: 1384, failures: 0, zero_size_requests: 0, requested_bytes: 19160384, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312186, peak_requested_bytes: 351224, live_bytes: 312186, peak_bytes: 351224, identities_created: 1373, owners_dropped: 1368, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "strategy=Lazy fragmented=true frame_bytes=30257629 frame_fnv64=2278302310949511604 encoder_retained=11626758 decoder_retained=312186 encoder=AllocationSnapshot { allocate_calls: 56032, allocate_zeroed_calls: 0, grow_calls: 11917, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 55997, attempts: 67949, successes: 67949, failures: 0, zero_size_requests: 0, requested_bytes: 343770771, live_blocks: 35, peak_live_blocks: 48, live_requested_bytes: 11626758, peak_requested_bytes: 11950260, live_bytes: 11626758, peak_bytes: 11950260, identities_created: 1, owners_dropped: 0, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } } decoder=AllocationSnapshot { allocate_calls: 1371, allocate_zeroed_calls: 0, grow_calls: 13, grow_zeroed_calls: 0, shrink_calls: 0, deallocate_calls: 1368, attempts: 1384, successes: 1384, failures: 0, zero_size_requests: 0, requested_bytes: 19160384, live_blocks: 3, peak_live_blocks: 9, live_requested_bytes: 312186, peak_requested_bytes: 351224, live_bytes: 312186, peak_bytes: 351224, identities_created: 1373, owners_dropped: 1368, violations: Violations { poisoned_lock: false, counter_overflow: false, unknown_pointer: false, wrong_owner: false, invalid_layout: false, inconsistent_accounting: false, owner_dropped_with_live_blocks: false } }",
+        "Verified 6 custom encoder/decoder configurations, 3 Global reference frames, and 6 complete C decodes over the exact source in 76.789214292s; numeric levels and worker groups remain unsupported",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 78.01s"
+      ]
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 101,
+      "seconds": 3.625,
+      "log": "/tmp/zstdoxide-allocation-campaign-clippy.log",
+      "sha256": "9bcb2f6a9c4c621374e70692e31919b8a2dcb9607ebf0e542993fbfe2fb16ef3",
+      "results": []
+    },
+    {
+      "name": "clippy-final",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 1.842,
+      "log": "/tmp/zstdoxide-allocation-campaign-clippy-final.log",
+      "sha256": "a156b9860454c1bff919a6f9671a0efb64b10a8ec68425e9055f4a0792ee8386",
+      "results": []
+    },
+    {
+      "name": "normal-final",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "upstream_allocator"
+      ],
+      "exit_code": 0,
+      "seconds": 2.005,
+      "log": "/tmp/zstdoxide-allocation-campaign-normal-final.log",
+      "sha256": "f5be1989381640f7262eba2f305a40b9069705340afa57be4b92ae867951ceb0",
+      "results": [
+        "test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "format-final",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "tests/upstream_allocator.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.038,
+      "log": "/tmp/zstdoxide-allocation-campaign-format-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "results": []
+    }
+  ],
+  "followup_scope": "The failed strict Clippy snapshot caught a temporary Option::take in the concurrently added stream unit tests. Follow-up adopts the frozen stream test file and changes only huge-output assertion diagnostics in the campaign. Codec production behavior is unchanged; full source hashes distinguish snapshots.",
+  "followup_sources": {
+    "src/stream_encode.rs": "515202c6b1d9af92906dec1d5e75da9f4debe258c80aff9ec6299a874cd9a1bb",
+    "tests/upstream_allocator.rs": "c4fcd7f954a029aae4a3b6cbdfb651c0162f6ffbef3b309962dc1e04995d6a39"
+  },
+  "safe_all_metrics_and_complete_frame_fingerprints_equal": true,
+  "final_test_sha256": "c4fcd7f954a029aae4a3b6cbdfb651c0162f6ffbef3b309962dc1e04995d6a39",
+  "environment": {
+    "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+    "CARGO_TARGET_DIR": "/tmp/zstdoxide-upstream-allocation-target"
+  },
+  "qualification": "Elapsed values are concurrent validation wall times, not benchmarks. Custom allocators wrap Global with independent ledger bookkeeping. Six Rust policy/schedule cases do not implement original C numeric levels or worker groups. Whole-buffer helpers have separate ownership tests; complete-source Finish uses bounded streaming context API."
+}
