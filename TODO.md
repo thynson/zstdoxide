@@ -38,7 +38,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Assemble zero-sequence compressed blocks without sequence modes or states.
 - [x] Publish Huffman choices transactionally with emitted and pending entropy state.
 - [x] Verify public literal-only frames and literal size boundaries with independent C decoding.
-- [ ] Verify treeless lifetime, dictionary replacement, and fragmented output with C.
+- [x] Verify treeless lifetime, dictionary replacement, and fragmented output with C.
 - [x] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.
 - [x] Port exact unit-count normalization and sparse normalized-header regressions.
 - [x] Add unsafe-fse-encoder independently from the decoder unsafe-fse backend.

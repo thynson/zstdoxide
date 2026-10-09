@@ -5,7 +5,14 @@
 //! strategy. The optional executable is an independent v1.5.7 decode oracle.
 #![forbid(unsafe_code)]
 
-use zstdoxide::{FrameHeader, compress, decompress};
+use zstdoxide::{
+    DecodeOptions, Dictionary, Encoder, EncoderOptions, EndDirective, FrameHeader,
+    SharedDictionary, StreamStatus, compress, decompress, decompress_with_dictionary,
+};
+
+const HTTP_DICTIONARY: &[u8] =
+    include_bytes!("upstream/data/golden-dictionaries/http-dict-missing-symbols");
+const HTTP_SOURCE: &[u8] = include_bytes!("upstream/data/golden-compression/http");
 
 #[derive(Debug)]
 struct LiteralSection {
@@ -23,10 +30,10 @@ struct Block<'a> {
     literals: Option<LiteralSection>,
 }
 
-fn little_endian(bytes: &[u8]) -> usize {
+fn little_endian(bytes: &[u8]) -> u64 {
     assert!(bytes.len() <= 5);
     bytes.iter().enumerate().fold(0, |value, (index, &byte)| {
-        value | (usize::from(byte) << (8 * index))
+        value | (u64::from(byte) << (8 * index))
     })
 }
 
@@ -40,7 +47,7 @@ fn blocks(frame: &[u8]) -> Vec<Block<'_>> {
         position += 3;
         let kind = ((value >> 1) & 3) as u8;
         assert!(kind < 3, "reserved block kind");
-        let size = value >> 3;
+        let size = usize::try_from(value >> 3).unwrap();
         assert!(size <= 128 * 1024);
         let stored_size = if kind == 1 { 1 } else { size };
         let payload = &frame[position..position + stored_size];
@@ -54,7 +61,8 @@ fn blocks(frame: &[u8]) -> Vec<Block<'_>> {
                     1 => (2, 4),
                     _ => (3, 4),
                 };
-                let regenerated = little_endian(&payload[..width]) >> shift;
+                let regenerated =
+                    usize::try_from(little_endian(&payload[..width]) >> shift).unwrap();
                 (
                     width,
                     regenerated,
@@ -70,8 +78,8 @@ fn blocks(frame: &[u8]) -> Vec<Block<'_>> {
                 let value = little_endian(&payload[..width]);
                 (
                     width,
-                    (value >> 4) & ((1 << bits) - 1),
-                    value >> (4 + bits),
+                    usize::try_from((value >> 4) & ((1 << bits) - 1)).unwrap(),
+                    usize::try_from(value >> (4 + bits)).unwrap(),
                     format != 0,
                 )
             };
@@ -81,7 +89,7 @@ fn blocks(frame: &[u8]) -> Vec<Block<'_>> {
             let sequence_count = match tail[0] {
                 count @ 0..=127 => usize::from(count),
                 count @ 128..=254 => ((usize::from(count) - 128) << 8) + usize::from(tail[1]),
-                _ => little_endian(&tail[1..3]) + 0x7f00,
+                _ => usize::try_from(little_endian(&tail[1..3])).unwrap() + 0x7f00,
             };
             LiteralSection {
                 kind,
@@ -177,6 +185,266 @@ fn public_literal_encoding_crosses_one_and_four_stream_size_fields() {
     }
 }
 
+fn random_alphabet(size: usize, mut state: u64, base: u8) -> Vec<u8> {
+    (0..size)
+        .map(|_| {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            base + ((state >> 32) as u8 % 16)
+        })
+        .collect()
+}
+
+fn http_dictionary() -> SharedDictionary {
+    Dictionary::from_bytes(HTTP_DICTIONARY)
+        .unwrap()
+        .into_shared()
+}
+
+/// Keep directive boundaries constant while varying both caller buffer sizes.
+/// The source remains borrowed only for each call, and untouched output bytes
+/// are canaries. Zero-capacity calls must not lose staged input or pending bits.
+fn action(encoder: &mut Encoder, source: &[u8], directive: EndDirective, chunk: usize) -> Vec<u8> {
+    let before_input = encoder.total_input();
+    let before_output = encoder.total_output();
+    let mut consumed = 0;
+    let mut encoded = Vec::new();
+    for call in 1..1_000_000 {
+        let capacity = if call % 7 == 0 { 0 } else { chunk };
+        let mut output = vec![0xa5; capacity + 8];
+        let progress = encoder
+            .process(&source[consumed..], &mut output[..capacity], directive)
+            .unwrap();
+        assert!(progress.consumed <= source.len() - consumed);
+        assert!(progress.produced <= capacity);
+        assert!(output[progress.produced..].iter().all(|&byte| byte == 0xa5));
+        consumed += progress.consumed;
+        encoded.extend_from_slice(&output[..progress.produced]);
+        assert_eq!(encoder.total_input(), before_input + consumed as u64);
+        assert_eq!(encoder.total_output(), before_output + encoded.len() as u64);
+        let complete = match directive {
+            EndDirective::Continue => progress.status == StreamStatus::NeedInput,
+            EndDirective::Flush => progress.status == StreamStatus::Flushed,
+            EndDirective::Finish => progress.status == StreamStatus::FrameFinished,
+        };
+        if complete {
+            assert_eq!(consumed, source.len());
+            return encoded;
+        }
+        assert_eq!(progress.status, StreamStatus::NeedOutput);
+        assert!(progress.consumed != 0 || progress.produced != 0 || capacity == 0);
+    }
+    panic!("literal encoder failed to finish within the bounded call count");
+}
+
+fn encode_blocks(
+    encoder: &mut Encoder,
+    sources: &[Vec<u8>],
+    input_chunk: usize,
+    output_chunk: usize,
+) -> Vec<u8> {
+    assert!(!sources.is_empty() && input_chunk != 0 && output_chunk != 0);
+    let mut frame = Vec::new();
+    for (index, source) in sources.iter().enumerate() {
+        for fragment in source.chunks(input_chunk) {
+            frame.extend(action(
+                encoder,
+                fragment,
+                EndDirective::Continue,
+                output_chunk,
+            ));
+        }
+        frame.extend(action(
+            encoder,
+            &[],
+            if index + 1 == sources.len() {
+                EndDirective::Finish
+            } else {
+                EndDirective::Flush
+            },
+            output_chunk,
+        ));
+    }
+    assert_eq!(
+        encoder.total_input(),
+        sources
+            .iter()
+            .map(|source| source.len() as u64)
+            .sum::<u64>()
+    );
+    assert_eq!(encoder.total_output(), frame.len() as u64);
+    frame
+}
+
+fn assert_modes(frame: &[u8], expected: &[(u8, Option<u8>)]) {
+    let parsed = blocks(frame);
+    let modes: Vec<_> = parsed
+        .iter()
+        .map(|block| {
+            (
+                block.kind,
+                block.literals.as_ref().map(|section| section.kind),
+            )
+        })
+        .collect();
+    assert_eq!(
+        modes, expected,
+        "literal lifetime witness changed: {parsed:?}"
+    );
+}
+
+fn preservation_sources(base: u8) -> Vec<Vec<u8>> {
+    vec![
+        random_alphabet(8192, 1, base),
+        (0..=255).collect(),
+        vec![0xed; 4096],
+        random_alphabet(8192, 0xdead_beef, base),
+    ]
+}
+
+fn replacement_sources() -> Vec<Vec<u8>> {
+    vec![
+        random_alphabet(8192, 1, 0),
+        random_alphabet(8192, 12_346, 192),
+        random_alphabet(8192, 24_691, 192),
+    ]
+}
+
+#[test]
+fn successive_same_distribution_blocks_reuse_the_previous_inline_tree() {
+    let sources: Vec<_> = [1, 12_346, 24_691]
+        .into_iter()
+        .map(|seed| random_alphabet(8192, seed, 0))
+        .collect();
+    let frame = encode_blocks(&mut Encoder::new(), &sources, 4096, 4096);
+    assert_modes(&frame, &[(2, Some(2)), (2, Some(3)), (2, Some(3))]);
+    let expected = sources.concat();
+    assert_eq!(decompress(&frame, expected.len()).unwrap(), expected);
+}
+
+#[test]
+fn intervening_raw_and_rle_blocks_preserve_the_emitted_huffman_tree() {
+    let sources = preservation_sources(0);
+    let frame = encode_blocks(&mut Encoder::new(), &sources, 4096, 4096);
+    assert_modes(&frame, &[(2, Some(2)), (0, None), (1, None), (2, Some(3))]);
+    let expected = sources.concat();
+    assert_eq!(decompress(&frame, expected.len()).unwrap(), expected);
+}
+
+#[test]
+fn new_inline_trees_replace_the_prepared_dictionary_and_each_other() {
+    // The official HTTP dictionary has a twelve-bit tree and absent symbols
+    // 192/193. The first inline tree here only covers 0..15; neither that tree
+    // nor the dictionary can encode the second source's full alphabet.
+    let sources = replacement_sources();
+    assert!(sources[1].contains(&192) && sources[1].contains(&193));
+    let dictionary = http_dictionary();
+    let mut encoder =
+        Encoder::with_dictionary(EncoderOptions::default(), dictionary.clone()).unwrap();
+    let frame = encode_blocks(&mut encoder, &sources, 4096, 4096);
+    assert_modes(&frame, &[(2, Some(2)), (2, Some(2)), (2, Some(3))]);
+    let expected = sources.concat();
+    assert_eq!(
+        decompress_with_dictionary(&frame, &dictionary, DecodeOptions::new(expected.len()))
+            .unwrap(),
+        expected
+    );
+}
+
+#[test]
+fn frame_reset_discards_inline_state_and_restores_prepared_dictionary_entropy() {
+    let source = vec![random_alphabet(8192, 1, 0)];
+    let mut plain = Encoder::new();
+    let first = encode_blocks(&mut plain, &source, 4096, 4096);
+    plain.reset();
+    let second = encode_blocks(&mut plain, &source, 7, 13);
+    assert_eq!(second, first);
+    assert_modes(&second, &[(2, Some(2))]);
+
+    let dictionary = http_dictionary();
+    let mut prepared =
+        Encoder::with_dictionary(EncoderOptions::default(), dictionary.clone()).unwrap();
+    let replaced = encode_blocks(&mut prepared, &replacement_sources(), 4096, 4096);
+    assert_modes(&replaced, &[(2, Some(2)), (2, Some(2)), (2, Some(3))]);
+    prepared.reset();
+    let source = vec![HTTP_SOURCE[..128].to_vec()];
+    let restored = encode_blocks(&mut prepared, &source, 7, 13);
+    let mut fresh =
+        Encoder::with_dictionary(EncoderOptions::default(), dictionary.clone()).unwrap();
+    assert_eq!(restored, encode_blocks(&mut fresh, &source, 4096, 4096));
+    assert_modes(&restored, &[(2, Some(3))]);
+    assert_eq!(
+        decompress_with_dictionary(&restored, &dictionary, DecodeOptions::new(128)).unwrap(),
+        source[0]
+    );
+}
+
+#[test]
+fn a_claimed_prefix_does_not_leak_its_huffman_tree_into_the_next_frame() {
+    let source = vec![HTTP_SOURCE[..128].to_vec()];
+    let dictionary = http_dictionary();
+    let mut encoder = Encoder::new();
+    encoder.set_prefix(dictionary.clone()).unwrap();
+    let first = encode_blocks(&mut encoder, &source, 7, 13);
+    assert_modes(&first, &[(2, Some(3))]);
+    assert_eq!(
+        decompress_with_dictionary(&first, &dictionary, DecodeOptions::new(128)).unwrap(),
+        source[0]
+    );
+    encoder.reset();
+    let next = encode_blocks(&mut encoder, &source, 1, 1);
+    assert_eq!(
+        next,
+        encode_blocks(&mut Encoder::new(), &source, 4096, 4096)
+    );
+    assert_eq!(FrameHeader::parse(&next).unwrap().0.dictionary_id, 0);
+    assert!(blocks(&next).iter().all(|block| {
+        block
+            .literals
+            .as_ref()
+            .is_none_or(|literals| literals.kind != 3)
+    }));
+    assert_eq!(decompress(&next, 128).unwrap(), source[0]);
+}
+
+#[test]
+fn fragmented_input_and_output_preserve_complete_entropy_sections() {
+    for (base, use_dictionary) in [(0, false), (192, true)] {
+        let sources = preservation_sources(base);
+        let expected = sources.concat();
+        let dictionary = http_dictionary();
+        let mut baseline = None;
+        for (input_chunk, output_chunk) in [(4096, 4096), (7, 13), (1, 1)] {
+            let mut encoder = if use_dictionary {
+                Encoder::with_dictionary(EncoderOptions::default(), dictionary.clone()).unwrap()
+            } else {
+                Encoder::new()
+            };
+            let frame = encode_blocks(&mut encoder, &sources, input_chunk, output_chunk);
+            assert_modes(&frame, &[(2, Some(2)), (0, None), (1, None), (2, Some(3))]);
+            if use_dictionary {
+                assert_eq!(
+                    decompress_with_dictionary(
+                        &frame,
+                        &dictionary,
+                        DecodeOptions::new(expected.len())
+                    )
+                    .unwrap(),
+                    expected
+                );
+            } else {
+                assert_eq!(decompress(&frame, expected.len()).unwrap(), expected);
+            }
+            if let Some(baseline) = &baseline {
+                assert_eq!(&frame, baseline);
+            } else {
+                baseline = Some(frame);
+            }
+        }
+    }
+}
+
 #[cfg(feature = "std")]
 mod oracle {
     use super::*;
@@ -200,6 +468,16 @@ mod oracle {
             String::from_utf8(revision.stdout).unwrap().trim(),
             "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
         );
+        assert!(
+            Command::new("git")
+                .arg("-C")
+                .arg(&upstream)
+                .args(["diff", "--quiet", "HEAD", "--", "lib", "programs"])
+                .status()
+                .unwrap()
+                .success(),
+            "upstream library and CLI sources must be clean"
+        );
         let executable = upstream.join("programs/zstd");
         let version = Command::new(&executable).arg("--version").output().unwrap();
         assert!(version.status.success());
@@ -207,9 +485,16 @@ mod oracle {
         executable
     }
 
-    fn decode(executable: &std::path::Path, frame: &[u8], expected: &[u8]) {
-        let mut child = Command::new(executable)
-            .args(["-q", "-d", "-c"])
+    fn decode(executable: &std::path::Path, frame: &[u8], expected: &[u8], dictionary: bool) {
+        let mut command = Command::new(executable);
+        command.args(["-q", "-d", "-c"]);
+        if dictionary {
+            command.arg("-D").arg(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/tests/upstream/data/golden-dictionaries/http-dict-missing-symbols"
+            ));
+        }
+        let mut child = command
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -239,7 +524,59 @@ mod oracle {
             let source = &source[..size];
             let frame = compress(source).unwrap();
             assert_literal_only(&frame, source, size >= 1024);
-            decode(&executable, &frame, source);
+            decode(&executable, &frame, source, false);
         }
+    }
+
+    #[test]
+    #[ignore = "requires ZSTD_UPSTREAM pinned v1.5.7 with its programs/zstd executable"]
+    fn official_decoder_accepts_treeless_lifetimes_and_dictionary_replacement() {
+        let executable = executable();
+        let dictionary = http_dictionary();
+        let mut checked_frames = 0;
+        for prepared in [false, true] {
+            let sources = preservation_sources(if prepared { 192 } else { 0 });
+            let mut encoder = if prepared {
+                Encoder::with_dictionary(EncoderOptions::default(), dictionary.clone()).unwrap()
+            } else {
+                Encoder::new()
+            };
+            let frame = encode_blocks(&mut encoder, &sources, 7, 13);
+            assert_modes(&frame, &[(2, Some(2)), (0, None), (1, None), (2, Some(3))]);
+            decode(&executable, &frame, &sources.concat(), prepared);
+            checked_frames += 1;
+        }
+        let mut encoder =
+            Encoder::with_dictionary(EncoderOptions::default(), dictionary.clone()).unwrap();
+        let sources = replacement_sources();
+        let frame = encode_blocks(&mut encoder, &sources, 7, 13);
+        assert_modes(&frame, &[(2, Some(2)), (2, Some(2)), (2, Some(3))]);
+        decode(&executable, &frame, &sources.concat(), true);
+        checked_frames += 1;
+
+        encoder.reset();
+        let sources = vec![HTTP_SOURCE[..128].to_vec()];
+        let frame = encode_blocks(&mut encoder, &sources, 1, 1);
+        assert_modes(&frame, &[(2, Some(3))]);
+        decode(&executable, &frame, &sources.concat(), true);
+        checked_frames += 1;
+
+        let mut prefix = Encoder::new();
+        prefix.set_prefix(dictionary).unwrap();
+        let first = encode_blocks(&mut prefix, &sources, 1, 1);
+        assert_modes(&first, &[(2, Some(3))]);
+        decode(&executable, &first, &sources.concat(), true);
+        prefix.reset();
+        let second = encode_blocks(&mut prefix, &sources, 1, 1);
+        assert_eq!(
+            second,
+            encode_blocks(&mut Encoder::new(), &sources, 4096, 4096)
+        );
+        decode(&executable, &second, &sources.concat(), false);
+        checked_frames += 2;
+        assert_eq!(checked_frames, 6);
+        eprintln!(
+            "C decoded {checked_frames} frames with inline/reused trees, raw/RLE preservation, dictionary replacement, reset and prefix isolation"
+        );
     }
 }
