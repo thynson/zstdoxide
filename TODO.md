@@ -76,7 +76,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.
 - [x] Include all new entropy and strategy oracle entry points in the reproducible validation script.
 - [ ] Run the backend/strategy benchmark matrix and preserve comparable output fingerprints and memory measurements.
-- [ ] Refresh CI Miri selectors after module extraction and cover the three new unsafe families.
+- [x] Refresh CI Miri selectors after module extraction and cover the three new unsafe families.
 - [ ] Run final feature, no_std, Miri, interoperability, and migration checks; record remaining upstream gaps.
 
 ## Roadmap

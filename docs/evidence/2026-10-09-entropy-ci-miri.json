@@ -1,0 +1,403 @@
+{
+  "source_scope": "After the frozen Module 8 matrix; changes only to CI/launcher, with unchanged codec and test implementations. Existing CI selectors were checked for nonzero discovery; six newly configured/forwarded selectors were executed with Miri. The entire CI Miri workflow was not rerun.",
+  "launcher_sha256": "b85e78281c6db645417572c44ee05baa9bf27c76e8dce9c4fd0a8dbac75539fb",
+  "workflow_sha256": "a62c5c75301ee85f2cdae80f7eb904bc62410cbde6eb6219d7e4ad55f40616e6",
+  "toolchain": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)",
+  "selectors": [
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "history::tests"
+      ],
+      "matched_tests": [
+        "history::tests::expands_overlapping_patterns_at_every_small_offset",
+        "history::tests::rejects_out_of_window_cross_frame_and_oversized_matches",
+        "ring_history::tests::allocation_failure_preserves_the_previous_frame",
+        "ring_history::tests::counter_overflow_is_atomic_for_all_emission_modes",
+        "ring_history::tests::deferred_block_reads_previous_prefix_before_commit_evicts_it",
+        "ring_history::tests::deferred_commit_checks_entire_advancement_before_mutation",
+        "ring_history::tests::deferred_lookup_covers_partial_and_wrapped_retained_intervals",
+        "ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head",
+        "ring_history::tests::global_count_above_u32_does_not_determine_ring_indices",
+        "ring_history::tests::literals_rle_and_zero_output_resume_without_retaining_caller_buffers",
+        "ring_history::tests::matches_wrap_at_every_distance_and_preserve_whole_window_sources",
+        "ring_history::tests::partially_filled_match_can_overlap_and_resume_with_irregular_outputs",
+        "ring_history::tests::rejects_invalid_distances_and_windows_without_mutation",
+        "ring_history::tests::resets_reuse_capacity_and_forbid_cross_frame_matches",
+        "ring_history::tests::retained_history_stays_bounded_over_many_output_chunks",
+        "ring_history::tests::zero_window_allows_empty_progress_and_rejects_produced_bytes"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "ring_history::tests"
+      ],
+      "matched_tests": [
+        "ring_history::tests::allocation_failure_preserves_the_previous_frame",
+        "ring_history::tests::counter_overflow_is_atomic_for_all_emission_modes",
+        "ring_history::tests::deferred_block_reads_previous_prefix_before_commit_evicts_it",
+        "ring_history::tests::deferred_commit_checks_entire_advancement_before_mutation",
+        "ring_history::tests::deferred_lookup_covers_partial_and_wrapped_retained_intervals",
+        "ring_history::tests::deferred_lookup_uses_wide_logical_positions_and_independent_ring_head",
+        "ring_history::tests::global_count_above_u32_does_not_determine_ring_indices",
+        "ring_history::tests::literals_rle_and_zero_output_resume_without_retaining_caller_buffers",
+        "ring_history::tests::matches_wrap_at_every_distance_and_preserve_whole_window_sources",
+        "ring_history::tests::partially_filled_match_can_overlap_and_resume_with_irregular_outputs",
+        "ring_history::tests::rejects_invalid_distances_and_windows_without_mutation",
+        "ring_history::tests::resets_reuse_capacity_and_forbid_cross_frame_matches",
+        "ring_history::tests::retained_history_stays_bounded_over_many_output_chunks",
+        "ring_history::tests::zero_window_allows_empty_progress_and_rejects_produced_bytes"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "stream_decode::tests"
+      ],
+      "matched_tests": [
+        "stream_decode::tests::dictionary_configuration_is_transactional_and_prefix_claims_only_standard_frames",
+        "stream_decode::tests::every_partial_header_and_checksum_split_is_resumable",
+        "stream_decode::tests::explicit_dictionary_ids_are_checked_before_block_processing",
+        "stream_decode::tests::headers_raw_and_rle_resume_at_single_byte_boundaries",
+        "stream_decode::tests::processing_after_eof_poisoning_requires_reset",
+        "stream_decode::tests::skip_does_not_consume_the_following_prefix"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--test",
+        "upstream_streaming",
+        "--all-features",
+        "exact_history_overwrite_regression_survives_output_fragmentation"
+      ],
+      "matched_tests": [
+        "exact_history_overwrite_regression_survives_output_fragmentation"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--test",
+        "upstream_streaming",
+        "--all-features",
+        "exact_small_sequence_sections_survive_every_chunk_boundary"
+      ],
+      "matched_tests": [
+        "exact_small_sequence_sections_survive_every_chunk_boundary"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "bitstream::tests"
+      ],
+      "matched_tests": [
+        "bitstream::tests::crosses_bytes_in_original_significance",
+        "bitstream::tests::marker_is_not_payload",
+        "bitstream::tests::matches_bit_by_bit_reference_for_every_alignment",
+        "bitstream::tests::reads_unaligned_full_width",
+        "bitstream::tests::rejects_missing_marker_and_oversized_reads"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "fse::tests"
+      ],
+      "matched_tests": [
+        "fse::tests::all_low_probability_symbols_are_supported",
+        "fse::tests::every_symbols_transitions_partition_the_state_space",
+        "fse::tests::low_probability_symbols_fill_end_of_table",
+        "fse::tests::normalized_metadata_preserves_single_symbol_and_consumed_size",
+        "fse::tests::reads_balanced_distribution_header",
+        "fse::tests::reads_zero_run_with_continuation",
+        "fse::tests::rejects_invalid_tables_and_states",
+        "fse::tests::weight_output_is_bounded_at_255_symbols",
+        "fse::tests::weight_stream_emits_terminal_pair",
+        "fse::tests::weight_stream_rejects_missing_initial_states_and_marker"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "cursor::tests"
+      ],
+      "matched_tests": [
+        "cursor::tests::failed_read_preserves_position_and_handles_overflow"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "matchfinder::tests"
+      ],
+      "matched_tests": [
+        "matchfinder::tests::collisions_remain_candidates_that_need_byte_verification",
+        "matchfinder::tests::copying_seed_indices_retains_independent_working_storage",
+        "matchfinder::tests::empty_sentinel_cannot_escape_as_a_candidate",
+        "matchfinder::tests::returns_only_prior_candidates_and_reset_discards_them"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "huffman::tests::mixed_lengths_decode_short_final_code"
+      ],
+      "matched_tests": [
+        "huffman::tests::mixed_lengths_decode_short_final_code"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "bitwriter::tests"
+      ],
+      "matched_tests": [
+        "bitwriter::tests::closing_is_single_use_and_reset_reuses_storage",
+        "bitwriter::tests::every_reservoir_alignment_matches_an_independent_bit_vector",
+        "bitwriter::tests::reverse_fields_preserve_zero_and_full_width_values"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "encode::tests::inverse_entropy_transitions_recover_every_successor"
+      ],
+      "matched_tests": [
+        "encode::tests::inverse_entropy_transitions_recover_every_successor"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "fse_encode::tests::lookup_bounds_reject_extreme_indices_without_reading_absent_rows",
+        "--",
+        "--exact"
+      ],
+      "matched_tests": [
+        "fse_encode::tests::lookup_bounds_reject_extreme_indices_without_reading_absent_rows"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "huffman_codebook::tests::sparse_codebooks_reject_absent_symbols_and_cover_the_extreme_indices",
+        "--",
+        "--exact"
+      ],
+      "matched_tests": [
+        "huffman_codebook::tests::sparse_codebooks_reject_absent_symbols_and_cover_the_extreme_indices"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes",
+        "--",
+        "--exact"
+      ],
+      "matched_tests": [
+        "matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links",
+        "--",
+        "--exact"
+      ],
+      "matched_tests": [
+        "matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "match_parse::tests::lazy_delayed_overlap_inserts_every_start_once_at_full_width_coordinates",
+        "--",
+        "--exact"
+      ],
+      "matched_tests": [
+        "match_parse::tests::lazy_delayed_overlap_inserts_every_start_once_at_full_width_coordinates"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "bitwriter::tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.1624249590095133,
+      "log": "/tmp/zstdoxide-module8-ci-miri-0.log",
+      "sha256": "85c66ba186e27e35bcd4fa6e29db9f0b608701cf14f937aaf26af864ddc04100",
+      "result_lines": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 305 filtered out; finished in 3.65s"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "huffman_codebook::tests::sparse_codebooks_reject_absent_symbols_and_cover_the_extreme_indices",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.9145152079872787,
+      "log": "/tmp/zstdoxide-module8-ci-miri-1.log",
+      "sha256": "9661a4ee6a4501939d1f367ee31e31034545fd05cef2fd055488baa069fd6422",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 0.56s"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.9148956248536706,
+      "log": "/tmp/zstdoxide-module8-ci-miri-2.log",
+      "sha256": "85c88e6111e312e9575c7ef79ede0c8a50619c1b36042a03021971fb827473d4",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 10.34s"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.061713167000562,
+      "log": "/tmp/zstdoxide-module8-ci-miri-3.log",
+      "sha256": "1c2048007e268f12eaa45a9b6532d8e9657c744da41f7649e905b008605fd711",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 20.51s"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--all-features",
+        "match_parse::tests::lazy_delayed_overlap_inserts_every_start_once_at_full_width_coordinates",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.920805040979758,
+      "log": "/tmp/zstdoxide-module8-ci-miri-4.log",
+      "sha256": "ab2c3e99c95470a0fd9a753acebf50d7e38202a82ede2f572614a0645dbf8a04",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 10.38s"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/zstdoxide-check-miri-filter.py",
+        "--lib",
+        "--all-features",
+        "fse_encode::tests::lookup_bounds_reject_extreme_indices_without_reading_absent_rows",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "elapsed_seconds": 2.9667202080599964,
+      "log": "/tmp/zstdoxide-module8-miri-guard-positive.log",
+      "sha256": "bb8d1f4f0e006815810be92bb4a31a6eaf8025649cb1727fb475e840c4ef6348",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 0.36s"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/zstdoxide-check-miri-filter.py",
+        "--lib",
+        "--all-features",
+        "zstdoxide_intentionally_missing_miri_selector",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "elapsed_seconds": 0.9719572500325739,
+      "log": "/tmp/zstdoxide-module8-miri-guard-missing.log",
+      "sha256": "c62ae6067b399ee9e3f7da7fd1664d6bdc4597591301b38a047e79a296a92f54",
+      "result_lines": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 308 filtered out; finished in 0.03s"
+      ]
+    }
+  ]
+}

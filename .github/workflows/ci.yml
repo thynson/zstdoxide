@@ -34,15 +34,20 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: miri
-      - run: cargo +nightly miri test --lib --all-features history::tests
-      - run: cargo +nightly miri test --lib --all-features ring_history::tests
-      - run: cargo +nightly miri test --lib --all-features stream_decode::tests
-      - run: cargo +nightly miri test --test upstream_streaming --all-features exact_history_overwrite_regression_survives_output_fragmentation
-      - run: cargo +nightly miri test --test upstream_streaming --all-features exact_small_sequence_sections_survive_every_chunk_boundary
-      - run: cargo +nightly miri test --lib --all-features bitstream::tests
-      - run: cargo +nightly miri test --lib --all-features fse::tests
-      - run: cargo +nightly miri test --lib --all-features cursor::tests
-      - run: cargo +nightly miri test --lib --all-features matchfinder::tests
-      - run: cargo +nightly miri test --lib --all-features huffman::tests::mixed_lengths_decode_short_final_code
-      - run: cargo +nightly miri test --lib --all-features encode::tests::reverse_fields_preserve_zero_and_full_width_values
-      - run: cargo +nightly miri test --lib --all-features encode::tests::inverse_entropy_transitions_recover_every_successor
+      - run: python3 scripts/check_miri_filter.py --lib --all-features history::tests
+      - run: python3 scripts/check_miri_filter.py --lib --all-features ring_history::tests
+      - run: python3 scripts/check_miri_filter.py --lib --all-features stream_decode::tests
+      - run: python3 scripts/check_miri_filter.py --test upstream_streaming --all-features exact_history_overwrite_regression_survives_output_fragmentation
+      - run: python3 scripts/check_miri_filter.py --test upstream_streaming --all-features exact_small_sequence_sections_survive_every_chunk_boundary
+      - run: python3 scripts/check_miri_filter.py --lib --all-features bitstream::tests
+      - run: python3 scripts/check_miri_filter.py --lib --all-features fse::tests
+      - run: python3 scripts/check_miri_filter.py --lib --all-features cursor::tests
+      - run: python3 scripts/check_miri_filter.py --lib --all-features matchfinder::tests
+      - run: python3 scripts/check_miri_filter.py --lib --all-features huffman::tests::mixed_lengths_decode_short_final_code
+      - run: python3 scripts/check_miri_filter.py --lib --all-features bitwriter::tests
+      - run: python3 scripts/check_miri_filter.py --lib --all-features encode::tests::inverse_entropy_transitions_recover_every_successor
+      - run: python3 scripts/check_miri_filter.py --lib --all-features fse_encode::tests::lookup_bounds_reject_extreme_indices_without_reading_absent_rows -- --exact
+      - run: python3 scripts/check_miri_filter.py --lib --all-features huffman_codebook::tests::sparse_codebooks_reject_absent_symbols_and_cover_the_extreme_indices -- --exact
+      - run: python3 scripts/check_miri_filter.py --lib --all-features matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes -- --exact
+      - run: python3 scripts/check_miri_filter.py --lib --all-features matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links -- --exact
+      - run: python3 scripts/check_miri_filter.py --lib --all-features match_parse::tests::lazy_delayed_overlap_inserts_every_start_once_at_full_width_coordinates -- --exact
