@@ -15,6 +15,7 @@ python3 scripts/generate_upstream_decodecorpus.py "$ZSTD_UPSTREAM" --check
 python3 scripts/generate_upstream_entropy.py "$ZSTD_UPSTREAM" --check
 python3 scripts/generate_upstream_windows.py "$ZSTD_UPSTREAM" --check
 python3 scripts/generate_upstream_dictionaries.py "$ZSTD_UPSTREAM" --check
+python3 scripts/import_parameter_fixtures.py "$ZSTD_UPSTREAM" --check
 python3 scripts/check_upstream_fixtures.py
 
 # Select oracle tests explicitly: legacy success assertions remain blocked.
@@ -46,3 +47,7 @@ cargo test --release --all-features --test entropy_encoding -- --ignored
 cargo test --release --all-features --test sequence_encoding -- --ignored
 cargo test --release --all-features --test compression_strategies -- --ignored
 cargo test --release --all-features --test upstream_entropy_lifetimes -- --ignored
+
+# Module 10 supported configuration/reset frames; reference scalar profiles
+# remain inspection values and do not enable numeric compression execution.
+cargo test --release --all-features --test upstream_parameter_lifecycle official_codec_decodes_configured_session_and_parameter_reset_frames -- --ignored --exact

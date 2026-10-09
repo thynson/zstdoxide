@@ -45,6 +45,20 @@ more input, more output space, or a frame boundary was reached. See
 [streaming usage and lifecycle contracts](docs/streaming-usage.md) for complete
 examples, Flush/Finish retry rules, pledged sizes, reset, and EOF validation.
 
+`Encoder::set_options` replaces supported settings before frame processing.
+Session reset retains persistent configuration; `reset_parameters` restores
+defaults at a fresh or completed boundary, while `reset_all` also discards the
+session. Parameter resets remove dictionary/prefix selection and keep reusable
+codec storage and its allocator owners.
+
+`inspect_compression_level`, `RawCompressionParameters::adjust` and
+`CompressionParameterRequest::resolve` inspect the pinned reference's scalar
+profiles with checked size arithmetic. Unknown source size is distinct from
+known empty input; explicit overrides and source hints have documented resolution
+rules. These allocation-free queries can describe algorithms not yet implemented
+by the Rust encoder. See [parameter usage](docs/parameter-usage.md) and
+[validation scope](docs/compression-parameters-validation.md).
+
 `Dictionary` prepares owned raw or formatted content for shared reuse. One-shot
 and streaming operations support persistent dictionaries and streaming single-use
 prefixes. `train_raw_dictionary`, `train_dictionary`, and `finalize_dictionary`
@@ -62,6 +76,7 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
 | Compression | Greedy, bounded Chain, and one-byte Lazy matching over dictionary content and up to 128 KiB of retained output, raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
+| Parameter inspection | Pinned reference presets, scalar bounds, raw adjustment, explicit request overrides, source hints and checked source/dictionary size arithmetic; independent of live numeric execution |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
 | Training | Bounded deterministic raw content selection, learned full-alphabet Huffman metadata, predefined sequence priors, custom or automatic IDs, formatted finalization |
 | Portability | Rust 2024, pinned `nightly-2026-10-08`; `no_std` plus `alloc` core |

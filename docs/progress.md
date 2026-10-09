@@ -356,3 +356,11 @@ comparisons remain unchanged. The pinned CLI exactly decodes sixty configured,
 session-reset, parameter-reset, prefix and full-reset frames. Coverage explicitly
 distinguishes selected named policies from the Greedy defaults restored by reset.
 The source/case inventory update and complete feature matrix remain open.
+
+The corresponding inventory checkpoint updates 25 anchors with exact supported
+subsets. Six pure scalar groups are now ported; whole source files remain
+partial. Offline and pinned-source audits pass, while the explicitly separate
+complete-migration gate still reports 188 unfinished source units and partial
+external corpora. Case counts are 53 ported, 117 partial, 430 blocked and
+15 non-applicable. The complete Module 10 feature matrix is the remaining
+validation checkpoint.

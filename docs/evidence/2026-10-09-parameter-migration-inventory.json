@@ -1,0 +1,315 @@
+{
+  "scope": "Only tests/upstream/manifest.json; validated scalar/live parameter assertion mappings",
+  "manifest_before_validation": "41b874dd73b8755c6ff4c3266c2c105271f70ec75308e51b87e31c9c50cbae4e",
+  "head": "17b9b3ac83d9decc1680fa277ea7a11d5826a8d9",
+  "changes": [
+    {
+      "id": "tests/fuzzer.c:570",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "The original level-one valid profile and invalid windowLog 99 are checked through concrete value validation. This does not install seven compression fields in a live context: ZSTD_CCtx_setCParams, its allocation/setup path, and bulk context mutation remain unported.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#concrete_validation_retains_all_fields_and_rejects_original_invalid_values"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:576",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "The original level-one valid profile and invalid windowLog 99 are checked through concrete value validation. This does not install seven compression fields in a live context: ZSTD_CCtx_setCParams, its allocation/setup path, and bulk context mutation remain unported.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#concrete_validation_retains_all_fields_and_rejects_original_invalid_values"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:680",
+      "before": "blocked",
+      "after": "ported",
+      "reason": "The pinned minimum reference level is exposed and checked as -131072, including normalization below the minimum. This original group only queries the minimum; no operational numeric compression level is claimed.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#reference_minimum_and_default_levels_preserve_original_scalar_assertions"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:685",
+      "before": "blocked",
+      "after": "ported",
+      "reason": "The reference default-level getter assertion is preserved through DEFAULT_LEVEL == 3, default request construction, and level-zero normalization/query equivalence. The reference level is distinct from live named encoder policies.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#reference_minimum_and_default_levels_preserve_original_scalar_assertions"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:702",
+      "before": "blocked",
+      "after": "ported",
+      "reason": "The exact zero-initialized raw record with windowLog 10, hashLog 19 and chainLog 19 is adjusted for source 1000 and dictionary 100000; hashLog 18 and chainLog 17 are asserted. Rust uses typed known source size and validates the resulting concrete record.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:804",
+      "before": "blocked",
+      "after": "ported",
+      "reason": "The original default level-three, unknown-source, no-dictionary profile passes concrete seven-field validation. C public size zero is spelled SourceSize::Unknown in the Rust query.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#concrete_validation_retains_all_fields_and_rejects_original_invalid_values"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:1721",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "Detached request getters preserve default level/hash auto, explicit hashLog 6 across a level-seven change, and restoration by Default. Supported live settings remain unchanged through partial headers, input, Flush, Finish and rejected configuration, and session/parameter resets are exercised separately. Numeric level/hash getters are not attached to live compression, and Rust retains its explicit Finished/reset protocol and checksum/pledge defaults.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#requested_hash_override_survives_level_changes_and_default_replacement",
+        "tests/upstream_parameters.rs#explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values",
+        "tests/upstream_parameters.rs#request_resolution_preserves_the_two_pass_empty_source_chain_witness",
+        "tests/upstream_parameter_lifecycle.rs#settings_survive_partial_output_flush_finish_and_rejected_configuration",
+        "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:1764",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "Concrete records reject the original invalid strategy u32::MAX and preserve all seven valid level-derived fields, including level 12. Supported live option replacement rejects invalid windows atomically. There is no seven-field ZSTD_CCtx_setCParams bulk installer, so the original live all-fields getter and invalid-strategy bulk atomicity assertions remain unported.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#concrete_validation_retains_all_fields_and_rejects_original_invalid_values",
+        "tests/upstream_parameter_lifecycle.rs#frame_flags_and_invalid_windows_preserve_atomic_supported_configuration"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:1808",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "Reference frame defaults preserve content-size=true, checksum=false and dictionary-ID=true. Supported live option replacement verifies false/true/false for the original {0,1,1} FParams flags, as well as emitted metadata and exact decoding. Rust live defaults enable checksum, and no separate C-style ZSTD_CCtx_setFParams/getParameter API is claimed.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#reference_frame_defaults_remain_separate_from_live_encoder_defaults",
+        "tests/upstream_parameter_lifecycle.rs#frame_flags_and_invalid_windows_preserve_atomic_supported_configuration"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:1832",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "The scalar subset validates all seven level-derived fields and rejects invalid strategy; the live subset verifies supported frame flags, getter preservation and invalid-window atomicity. Combined compression/frame bulk installation and invalid-strategy rollback across all original live numeric fields remain unported. Reference checksum-disabled defaults remain separate from Rust checksum-enabled defaults.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#concrete_validation_retains_all_fields_and_rejects_original_invalid_values",
+        "tests/upstream_parameters.rs#reference_frame_defaults_remain_separate_from_live_encoder_defaults",
+        "tests/upstream_parameter_lifecycle.rs#frame_flags_and_invalid_windows_preserve_atomic_supported_configuration",
+        "tests/upstream_parameter_lifecycle.rs#settings_survive_partial_output_flush_finish_and_rejected_configuration"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:3001",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "A shared raw dictionary can be selected before supported options are installed; a separate pinned formatted dictionary follows the same configuration path and its emitted frames are independently C-decoded. The original compression-profile-specific CDict, level-one/hashLog-12 controls and C attachment-parameter inheritance are not implemented.",
+      "rust_tests": [
+        "tests/upstream_parameter_lifecycle.rs#dictionary_and_supported_options_order_produce_identical_complete_frames",
+        "tests/upstream_parameter_lifecycle.rs#frame_flags_and_invalid_windows_preserve_atomic_supported_configuration",
+        "tests/upstream_parameter_lifecycle.rs#official_codec_decodes_configured_session_and_parameter_reset_frames"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:3013",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "Both dictionary/options installation orders produce identical complete frames and exact decoding for Greedy, Chain and Lazy. Original 10 KiB dictionary/100 KiB source dimensions are retained using declared RDG(0.5,0.0,seed 0) data and its first 10 KiB, not the inherited mutable C CNBuffer. Operational level seven and C-specific dictionary preparation remain unported.",
+      "rust_tests": [
+        "tests/upstream_parameter_lifecycle.rs#dictionary_and_supported_options_order_produce_identical_complete_frames",
+        "tests/upstream_parameter_lifecycle.rs#official_codec_decodes_configured_session_and_parameter_reset_frames"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:3088",
+      "before": "partial",
+      "after": "partial",
+      "reason": "Persistent dictionary selection and complete deterministic frame bytes survive session reset with the original 10 KiB/100 KiB dimensions and declared RDG(0.5,0.0,seed 0) corpus under each named policy. Rust reset clears the pledge, so the same supported options are explicitly restored; this does not claim the inherited C corpus, numeric default-level execution or automatic next-frame protocol.",
+      "rust_tests": [
+        "tests/upstream_dictionary_encode.rs#encoder_reset_and_reset_with_options_preserve_persistent_dictionary",
+        "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it",
+        "tests/upstream_parameter_lifecycle.rs#official_codec_decodes_configured_session_and_parameter_reset_frames"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:3104",
+      "before": "partial",
+      "after": "partial",
+      "reason": "Parameter-only reset clears dictionary handles while preserving Finished/counters; an explicit session reset then enables plain encoding. Full reset also clears unclaimed/claimed prefixes. With declared 10 KiB/100 KiB RDG data, useful dictionary frames differ in size from the cleared frames, which exactly match fresh Rust defaults and decode without a dictionary. Parameter/full resets restore Greedy/checksum-enabled/no-pledge defaults even after Chain/Lazy; C default-level execution and automatic next-frame semantics remain distinct.",
+      "rust_tests": [
+        "tests/upstream_dictionary_encode.rs#prefix_and_dictionary_configuration_replace_one_another",
+        "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it",
+        "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_unclaimed_prefix_and_parameter_reset_removes_it",
+        "tests/upstream_parameter_lifecycle.rs#full_reset_discards_unclaimed_and_claimed_prefixes_before_plain_encoding",
+        "tests/upstream_parameter_lifecycle.rs#official_codec_decodes_configured_session_and_parameter_reset_frames"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:3469",
+      "before": "blocked",
+      "after": "blocked",
+      "reason": "Negative-level reference profiles can be inspected, but operational numeric compression levels are not implemented. The original level -1 simple-versus-advanced compression result-size comparison has not been ported; detached scalar queries do not establish this execution contract.",
+      "rust_tests": []
+    },
+    {
+      "id": "tests/fuzzer.c:3496",
+      "before": "blocked",
+      "after": "blocked",
+      "reason": "The original level-two, enabled long-distance matching and windowLog-18 order permutations require operational numeric levels and LDM. Their equal compressed size and XXH64 assertions remain unported; detached override-order queries and named-policy dictionary/options ordering do not establish these output semantics.",
+      "rust_tests": []
+    },
+    {
+      "id": "tests/fuzzer.c:3513",
+      "before": "blocked",
+      "after": "blocked",
+      "reason": "The original level-two, enabled long-distance matching and windowLog-18 order permutations require operational numeric levels and LDM. Their equal compressed size and XXH64 assertions remain unported; detached override-order queries and named-policy dictionary/options ordering do not establish these output semantics.",
+      "rust_tests": []
+    },
+    {
+      "id": "tests/fuzzer.c:3641",
+      "before": "blocked",
+      "after": "blocked",
+      "reason": "Decoder options and reusable session reset exist, but this original loop over numeric decoder parameter bounds/getters/setters and reset-to-default values is not implemented. The new parameter/full resets are encoder-only and do not reset a decoder caller's output/window resource policy.",
+      "rust_tests": []
+    },
+    {
+      "id": "tests/fuzzer.c:4332",
+      "before": "blocked",
+      "after": "ported",
+      "reason": "All three original fieldwise level-one dictionary-query equalities are preserved for source sizes 16 KiB-1 and 128 KiB-1 and dictionary sizes 400, 10000 and 100000. Value equality replaces C memcmp, and public C source zero maps explicitly to SourceSize::Unknown.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#dictionary_sizes_select_the_original_equal_reference_profiles"
+      ]
+    },
+    {
+      "id": "tests/fuzzer.c:4346",
+      "before": "blocked",
+      "after": "ported",
+      "reason": "The original level-one unknown-source profile is unchanged after adjustment with a 400-byte dictionary, while known source 500 plus dictionary 400 resolves windowLog 10. All fields are compared without C struct-padding assumptions; public C source zero maps explicitly to Unknown.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input"
+      ]
+    },
+    {
+      "id": "tests/zstreamtest.c:1599",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "Configured supported options remain visible through streaming progress and explicit session reset, with exact frame reuse/decode checks. Numeric ZSTD_initCStream_srcSize(level 11), live compression-level getters and C automatic next-frame behavior are not implemented; Rust reset also clears its per-frame pledge.",
+      "rust_tests": [
+        "tests/upstream_parameter_lifecycle.rs#settings_survive_partial_output_flush_finish_and_rejected_configuration",
+        "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it"
+      ]
+    },
+    {
+      "id": "tests/zstreamtest.c:1611",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "Concrete reference profiles retain all seven fields, while supported live settings survive processing/session reset and restore documented Rust defaults on parameter/full reset. This does not port level-nine ZSTD_initCStream_advanced bulk initialization or its live numeric badParameters comparison; reference profiles are inspection-only.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#concrete_validation_retains_all_fields_and_rejects_original_invalid_values",
+        "tests/upstream_parameter_lifecycle.rs#settings_survive_partial_output_flush_finish_and_rejected_configuration",
+        "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it"
+      ]
+    },
+    {
+      "id": "tests/zstreamtest.c:1621",
+      "before": "blocked",
+      "after": "partial",
+      "reason": "A detached typed request accepts an INT_MAX source hint and reports it unchanged, rejects values above INT_MAX atomically and treats zero as automatic. The original negative -1 C argument is unrepresentable at the u32 Rust setter. A small positive hint changes unknown-size resolution and leaves known sizes unchanged, but hints are not operational live encoder controls.",
+      "rust_tests": [
+        "tests/upstream_parameters.rs#source_hint_bounds_preserve_requested_values_after_rejection",
+        "tests/upstream_parameters.rs#a_small_source_hint_changes_only_unknown_size_resolution"
+      ]
+    },
+    {
+      "id": "tests/zstreamtest.c:2847",
+      "before": "partial",
+      "after": "partial",
+      "reason": "A bounded adapter for the enclosing new-API randomized driver repeats 128 supported-option schedules with byte-identical encoding and fragmented exact decoding. Separate source-anchored live tests preserve configured getters through partial output, Flush/Finish and rejected changes, including selected dictionary/prefix/reset cases. The full original randomized dictionary schedule, opaque parameter bulk API, numeric level/strategy execution, LDM, worker/job-boundary updates and rsyncable matrix remain unported; these deterministic named-policy adapters do not reproduce that full driver.",
+      "rust_tests": [
+        "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
+        "tests/upstream_parameter_lifecycle.rs#settings_survive_partial_output_flush_finish_and_rejected_configuration",
+        "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it"
+      ]
+    },
+    {
+      "id": "tests/zstreamtest.c:2917",
+      "before": "partial",
+      "after": "partial",
+      "reason": "A bounded adapter for the enclosing new-API randomized driver repeats 128 supported-option schedules with byte-identical encoding and fragmented exact decoding. Separate source-anchored live tests preserve configured getters through partial output, Flush/Finish and rejected changes, including selected dictionary/prefix/reset cases. The full original randomized dictionary schedule, opaque parameter bulk API, numeric level/strategy execution, LDM, worker/job-boundary updates and rsyncable matrix remain unported; these deterministic named-policy adapters do not reproduce that full driver.",
+      "rust_tests": [
+        "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
+        "tests/upstream_parameter_lifecycle.rs#settings_survive_partial_output_flush_finish_and_rejected_configuration",
+        "tests/upstream_parameter_lifecycle.rs#session_reset_preserves_dictionary_and_parameter_reset_clears_it"
+      ]
+    }
+  ],
+  "source_statuses": {
+    "blocked": 149,
+    "non_applicable": 216,
+    "partial": 34,
+    "planned": 5,
+    "ported": 14
+  },
+  "case_statuses": {
+    "blocked": 430,
+    "non_applicable": 15,
+    "partial": 117,
+    "ported": 53
+  },
+  "unfinished_source_units": 188,
+  "unfinished_case_groups": 547,
+  "unfinished_external_corpus_records": 2,
+  "records": [
+    {
+      "label": "offline",
+      "command": "python3 scripts/audit_upstream_tests.py",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "seconds": 1.27,
+      "log": "/tmp/zstdoxide-parameter-manifest-validation/offline.log",
+      "sha256": "248c65e5cb9b5efbd5e336851550050e44cf668783c3bea450aa49387ee124ad",
+      "log_text": "Inventory valid: 418 test-related sources, 221 explicit non-test exclusions, 615 named case groups.\nSource migration status: {\"blocked\": 149, \"non_applicable\": 216, \"partial\": 34, \"planned\": 5, \"ported\": 14}\nCase migration status: {\"blocked\": 430, \"non_applicable\": 15, \"partial\": 117, \"ported\": 53}\nStructural audit only; set ZSTD_UPSTREAM to verify the pinned checkout hashes.\n"
+    },
+    {
+      "label": "pinned",
+      "command": "python3 scripts/audit_upstream_tests.py --upstream /tmp/zstdoxize-upstream-1.5.7",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "seconds": 0.929,
+      "log": "/tmp/zstdoxide-parameter-manifest-validation/pinned.log",
+      "sha256": "fbba90eddd8fbf82b23b73134ff84099be51e2e824314d0e75e43bc4dc8ca352",
+      "log_text": "Inventory valid: 418 test-related sources, 221 explicit non-test exclusions, 615 named case groups.\nSource migration status: {\"blocked\": 149, \"non_applicable\": 216, \"partial\": 34, \"planned\": 5, \"ported\": 14}\nCase migration status: {\"blocked\": 430, \"non_applicable\": 15, \"partial\": 117, \"ported\": 53}\nUpstream checkout hashes and case anchors verified.\n"
+    },
+    {
+      "label": "require-complete",
+      "command": "python3 scripts/audit_upstream_tests.py --upstream /tmp/zstdoxize-upstream-1.5.7 --require-complete",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "seconds": 0.865,
+      "log": "/tmp/zstdoxide-parameter-manifest-validation/require-complete.log",
+      "sha256": "b4e4f125325272ee5fca76933ecb3ff103e1f43c8c1a6f50d8175d011fb9cba9",
+      "log_text": "ERROR: Migration incomplete: 188 source units remain unported\nERROR: Migration incomplete: external upstream corpus target coverage remains partial or blocked\n"
+    },
+    {
+      "label": "diff-check",
+      "command": "git diff --check -- tests/upstream/manifest.json",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "seconds": 0.045,
+      "log": "/tmp/zstdoxide-parameter-manifest-validation/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "manifest_after_validation": "41b874dd73b8755c6ff4c3266c2c105271f70ec75308e51b87e31c9c50cbae4e",
+  "all_expected_results": true,
+  "original_evidence_sha256": "a202c59c0a52105ffe5446747ff26a5c9b309b7047ab4a1683eb9d5de2cf365e"
+}

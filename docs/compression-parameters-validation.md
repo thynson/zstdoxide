@@ -227,3 +227,21 @@ lifecycle, not C numeric-level or reset-protocol equivalence. All production Rus
 sources and the owned test file remained unchanged during the fourteen focused
 commands. [Lifecycle integration evidence](evidence/2026-10-09-upstream-parameter-lifecycle.json)
 retains their exact commands, full logs, counts and reproduction runner.
+
+## Updated migration inventory
+
+Twenty-five source anchors now reflect the verified scalar and lifecycle tests.
+Six complete scalar groups are ported; qualified live/request subsets stay
+partial. Four numeric/LDM/decoder-reset groups remain blocked with corrected
+descriptions of the available inspection API. Both whole fuzzer and streaming
+sources remain partial. Existing unsupported behavior is retained explicitly.
+
+Offline and pinned-source inventory audits pass. The separate complete-migration
+gate still exits one, as expected: 188 source units and the external corpus
+coverage remain unfinished. Named groups now total 53 ported, 117 partial,
+430 blocked and 15 non-applicable; 547 groups remain unfinished. Source counts
+remain 14 ported, 34 partial, 149 blocked, five planned and 216 non-applicable.
+Both external corpus records remain partial. The
+[inventory evidence](evidence/2026-10-09-parameter-migration-inventory.json)
+preserves all changed mappings, commands and full audit logs. Passing catalog
+integrity is not a claim that the complete-migration gate passes.
