@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "audit_time_utc": "2026-10-09T05:08:19.184451+00:00",
+  "git_head": "3ed8933ef46c0db4995d6a9e609eebb49d58a968",
+  "result": "No open production correctness or safety findings within the reviewed scope. One documentation qualification was reported and is now resolved in the current allocator-usage.md.",
+  "method": "Read-only production call-path review, allocation-site/push/clone/pointer scans, and local safety-proof review. No builds, tests, benchmarks, repository edits, or commits were performed for this audit.",
+  "reviewed_source_hashes": {
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "f46255ec52198fa88c65e7de6e06a42c0d91722c698f2f725fd313e529114729",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/literal_encode.rs": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78",
+    "src/match_parse.rs": "5b1f02c688d31aa996103fa4f5a3473f5de7c27a72491aed29169fb7dc52807f",
+    "src/matchchain.rs": "dbf5c8f65b8f6dedfaaa3907e22bb0e932029793bc0e1cbe412189113fc78e80",
+    "src/matchfinder.rs": "8f5e28b2127533638947744917078c929a9e2da785b6c38fd7e6c13ada00f9a6",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "664490be8e5b713bfe415e1ac58920be1a3752781e9f8d0021a57de475070f6a",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/lib.rs": "91133565dc2f3cdf0b2be677df2fd0587e743013d55a4f65c934fd2daebdef8a",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+  },
+  "usage_doc": {
+    "path": "docs/allocator-usage.md",
+    "sha256": "58ff668852b07265320db975638122944bc34e609237102607999aaa19510668"
+  },
+  "checks": [
+    {
+      "area": "Public ownership routing",
+      "conclusion": "compress_in, compress_with_dictionary_in, decompress_in, decompress_with_options_in, decompress_with_dictionary_in, dictionary parsing and raw/formatted training preserve the original allocator in the returned byte owner. Independent scratch owners retain fresh clones; no raw-parts transfers or buffer allocator substitutions were found."
+    },
+    {
+      "area": "Collection fallibility",
+      "conclusion": "Runtime codec payload creation/growth is preceded by try_reserve or try_reserve_exact. Capacity-proven individual pushes, slice copy/fill and allocation-free sort_unstable operations replace infallible allocation-capable bulk insertion. Remaining reserve/extend search hits are private checked wrappers; remaining Vec::new constructors are explicit Global specializations or test-only support."
+    },
+    {
+      "area": "Publication and cleanup",
+      "conclusion": "FSE channel commit swaps whole owners; setup failures drop partial local arrays/tables. Huffman description validation borrows its allocator only within a scope that ends before description movement. Streaming errors retain the poison-until-reset contract and claimed/unclaimed prefix distinction."
+    },
+    {
+      "area": "Borrowed dictionaries",
+      "conclusion": "Private views borrow initialized slices and plain repeated/scalar records. Shared handles clone ownership without cloning payload allocators; custom dictionary storage types remain independent of workspace A. No references into adjacent context fields persist."
+    },
+    {
+      "area": "Unsafe backends",
+      "conclusion": "Reviewed all twelve gated families. Runtime bounds or fixed-width hash bounds remain valid for allocator-generic Vec owners and borrowed table views. Raw writes remain within fallibly reserved capacity and initialize bytes before length publication; pointer/reference lifetimes do not outlive their retained owner. No allocator-equivalence, Global-specific layout, or alignment assumption was found."
+    },
+    {
+      "area": "Safe/no_std separation",
+      "conclusion": "Default library builds forbid unsafe_code when no backend flags are enabled. Production code uses core/alloc, while entropy-output/oracles/filesystem/process helpers remain test-only. Global shared ownership uses Arc on pointer-atomic targets and Rc otherwise, with the outer allocation explicitly outside custom payload control."
+    },
+    {
+      "area": "Usage document",
+      "conclusion": "Public lifetime, custom Clone, exact-owner, borrowed allocator and retained-capacity claims agree with the reviewed implementation. The blanket fallibility sentence was narrowed to payload requests and now explicitly names the standard infallible Global into_shared allocation."
+    }
+  ],
+  "resolved_findings": [
+    {
+      "path": "docs/allocator-usage.md",
+      "current_lines": [
+        147,
+        150
+      ],
+      "issue": "Original blanket codec-owned allocation-failure statement omitted into_shared infallibility qualification.",
+      "resolution": "Coordinator changed the text to codec payload growth and explicitly documented standard infallible Global Arc/Rc outer storage; verified by readback."
+    }
+  ],
+  "limitations": [
+    "This is a source review, not a new dynamic validation campaign or a proof against every conforming/malicious allocator implementation.",
+    "One-shot encoder production was reviewed after its owning agent confirmed the body frozen; that agent was still adding tests and running its final matrix. Whole-file hashes include the observed test contents and may change through subsequent test-only edits.",
+    "Other agents may update documentation, tests, or commit source already reviewed. These hashes describe this readback checkpoint; future production changes require review.",
+    "Only the installed dated compiler and previously recorded target evidence are supported; this audit does not add a Rust 1.100, stable compiler, 32-bit, non-atomic, or cross-platform execution claim.",
+    "Allocator callbacks and Clone retain their ordinary contract, allocation and panic behavior. Global Arc/Rc outer storage, caller buffers, test ledgers, and external C oracle storage are explicit exclusions."
+  ],
+  "repository_files_changed": [],
+  "active_processes": []
+}

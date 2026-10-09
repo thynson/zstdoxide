@@ -635,6 +635,21 @@ the two lifetime examples fail with their expected diagnostic. `check.sh` calls
 this helper for all three usage documents. This changes validation tooling,
 not the lifetime or allocation implementation.
 
+The [failure coverage index](allocator-failure-validation.md) connects leaf,
+aggregate and public API campaigns to their exact executed records. Selected
+successful workloads are replayed with each observed request rejected; focused
+existing-state cases additionally check growth, final copies and reset recovery.
+The index preserves distinctions between decoder partial state, encoder
+candidate publication, and nontransactional dictionary-seed setup. It does not
+claim enumeration of every possible input or allocator implementation.
+
+An [independent ownership/safety review](evidence/2026-10-09-allocator-ownership-audit.json)
+found no open production allocation-routing, fallibility, detached-owner or
+unsafe-access issue in the recorded source. All reviewed source hashes match
+the committed codec. Its one documentation finding, the infallible Global
+shared-object allocation exception, was corrected and verified. This is source
+review evidence; it adds no dynamic, native-platform or compiler-version claim.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation and the final
 integrated platform matrix remain open. The
