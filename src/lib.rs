@@ -45,6 +45,8 @@ mod error;
 mod frame;
 mod fse;
 mod fse_encode;
+#[cfg(test)]
+mod fse_select;
 mod history;
 mod huffman;
 mod huffman_codebook;

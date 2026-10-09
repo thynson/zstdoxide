@@ -44,7 +44,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Add unsafe-fse-encoder independently from the decoder unsafe-fse backend.
 - [x] Plan repeat-offset values forward with exact triples and checked arithmetic.
 - [x] Encode sequences using supplied predefined, new, reused, and RLE tables.
-- [ ] Select adaptive per-channel distributions with deterministic complete cost comparisons.
+- [x] Select adaptive per-channel distributions with deterministic complete cost comparisons.
 - [ ] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
 - [x] Add bounded multi-candidate storage with checked stale-link and tag validation.
 - [ ] Add unsafe-match-chain with equivalent candidate order and search limits.
