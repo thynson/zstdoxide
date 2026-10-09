@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-10-09",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "complete_matrix": {
+    "command": "sh scripts/check.sh",
+    "status": 0,
+    "log": "/tmp/zstdoxide-module7-check.log",
+    "sha256": "f45c842bc72e52c3a069388be1278333ad5295e1207031386c5fe44e09437077",
+    "repository_suite_runs": [
+      {
+        "configuration": "safe",
+        "command": "cargo test",
+        "passed": 369,
+        "failed": 0,
+        "ignored": 21
+      },
+      {
+        "configuration": "unsafe-byte-cursor",
+        "command": "cargo test --features unsafe-byte-cursor",
+        "passed": 369,
+        "failed": 0,
+        "ignored": 21
+      },
+      {
+        "configuration": "unsafe-bitstream",
+        "command": "cargo test --features unsafe-bitstream",
+        "passed": 369,
+        "failed": 0,
+        "ignored": 21
+      },
+      {
+        "configuration": "unsafe-history",
+        "command": "cargo test --features unsafe-history",
+        "passed": 369,
+        "failed": 0,
+        "ignored": 21
+      },
+      {
+        "configuration": "unsafe-ring-history",
+        "command": "cargo test --features unsafe-ring-history",
+        "passed": 369,
+        "failed": 0,
+        "ignored": 21
+      },
+      {
+        "configuration": "unsafe-fse",
+        "command": "cargo test --features unsafe-fse",
+        "passed": 376,
+        "failed": 0,
+        "ignored": 21
+      },
+      {
+        "configuration": "unsafe-huffman",
+        "command": "cargo test --features unsafe-huffman",
+        "passed": 376,
+        "failed": 0,
+        "ignored": 21
+      },
+      {
+        "configuration": "unsafe-match-table",
+        "command": "cargo test --features unsafe-match-table",
+        "passed": 376,
+        "failed": 0,
+        "ignored": 22
+      },
+      {
+        "configuration": "unsafe-dictionary",
+        "command": "cargo test --features unsafe-dictionary",
+        "passed": 376,
+        "failed": 0,
+        "ignored": 22
+      },
+      {
+        "configuration": "unsafe-training",
+        "command": "cargo test --features unsafe-training",
+        "passed": 376,
+        "failed": 0,
+        "ignored": 22
+      },
+      {
+        "configuration": "all-debug",
+        "command": "cargo test --all-features",
+        "passed": 376,
+        "failed": 0,
+        "ignored": 22
+      },
+      {
+        "configuration": "all-release",
+        "command": "cargo test --release --all-features",
+        "passed": 376,
+        "failed": 0,
+        "ignored": 22
+      }
+    ],
+    "standalone_dictionary_usage_examples": {
+      "command": "rustdoc --edition 2024 --test docs/dictionary-usage.md --extern zstdoxide=target/debug/libzstdoxide.rlib -L dependency=target/debug/deps",
+      "passed": 3,
+      "failed": 0
+    },
+    "no_std_configurations": [
+      "safe",
+      "unsafe-byte-cursor",
+      "unsafe-bitstream",
+      "unsafe-history",
+      "unsafe-ring-history",
+      "unsafe-fse",
+      "unsafe-huffman",
+      "unsafe-match-table",
+      "unsafe-dictionary",
+      "unsafe-training",
+      "all"
+    ],
+    "format_and_strict_clippy": "Passed formatting and safe/all-feature all-target Clippy with -D warnings.",
+    "timing_of_final_tests": "Final test-only FSE additions landed during this run. Earlier configurations therefore have fewer tests; the separate twelve-configuration entropy matrix verifies all final additions on every configuration.",
+    "followup_evidence": "docs/evidence/2026-10-09-fse-target.json"
+  },
+  "oracle_script": {
+    "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 sh scripts/check_upstream_oracles.sh",
+    "status": 0,
+    "log": "/tmp/zstdoxide-module7-oracles.log",
+    "sha256": "d8a09c5779e6c0a60e210081512fcadae689f458fbfbe19d6d16e4c0422f652f",
+    "explicit_tests_passed": 14,
+    "failed": 0,
+    "fixture_files_verified": 311,
+    "fixture_collections": 7,
+    "fixture_mode": "Every import/generator used --check; checked-in fixtures were verified, not rewritten.",
+    "fresh_generated_frames": 4096,
+    "intensive_one_shot_cycles": 30000,
+    "intensive_one_shot_elapsed_seconds": 252.38,
+    "configuration": "release --all-features"
+  },
+  "final_miri_results_manifest_sha256": "9c346c597f1dcd9639f9ad74271cd2c21fa3f3d00259e8e5e4eab7bc293eef1c",
+  "final_miri_results": [
+    {
+      "test": "dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max",
+      "command": "cargo +nightly miri test --lib --all-features dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max",
+      "status": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 159 filtered out; finished in 2.30s"
+      ],
+      "log": "/tmp/zstdoxide-module7-miri-dictionary-access.log",
+      "sha256": "1fa44932801dd3b66607d8d7f8b00058763ff644dfed710b5590979ec04648ef"
+    },
+    {
+      "test": "dictionary::tests::owned_and_shared_dictionaries_outlive_original_input_without_copying_content_again",
+      "command": "cargo +nightly miri test --lib --all-features dictionary::tests::owned_and_shared_dictionaries_outlive_original_input_without_copying_content_again",
+      "status": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 159 filtered out; finished in 2.28s"
+      ],
+      "log": "/tmp/zstdoxide-module7-miri-dictionary-ownership.log",
+      "sha256": "a1beda95569e9eeedf4ae0b3c805e173ac3a77565ec50d800f7f6666067ee556"
+    },
+    {
+      "test": "encode::tests::retained_candidates_cross_input_boundaries_and_obey_the_advertised_window",
+      "command": "cargo +nightly miri test --lib --all-features encode::tests::retained_candidates_cross_input_boundaries_and_obey_the_advertised_window",
+      "status": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 159 filtered out; finished in 0.33s"
+      ],
+      "log": "/tmp/zstdoxide-module7-miri-retained-candidates.log",
+      "sha256": "0cc0cae12762ca62ec431ab597e4ebd898f124602d7a0e00d189194dba32d3b1"
+    }
+  ],
+  "benchmark_source_input_sha256": "bf2b8bb9bb67e1c315c43348f2351b7e40ac179a09f8bd70276f8121f21039ee",
+  "note": "Logs remain in the external local cache; hashes preserve the recorded evidence. Elapsed test times are not throughput comparisons. The long-running scripts began before final coverage mappings; a subsequent source-backed audit validates the current manifest. No production source changed during final test-only additions.",
+  "final_inventory_audit": {
+    "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 python3 scripts/audit_upstream_tests.py",
+    "status": 0,
+    "upstream_hashes_and_case_anchors_verified": true,
+    "test_related_sources": 418,
+    "explicit_non_test_exclusions": 221,
+    "named_case_groups": 615,
+    "source_status_counts": {
+      "blocked": 150,
+      "non_applicable": 216,
+      "partial": 33,
+      "planned": 5,
+      "ported": 14
+    },
+    "case_status_counts": {
+      "blocked": 452,
+      "non_applicable": 15,
+      "partial": 102,
+      "ported": 46
+    }
+  },
+  "final_fixture_audit": {
+    "command": "python3 scripts/check_upstream_fixtures.py",
+    "status": 0,
+    "files": 311,
+    "collections": 7
+  }
+}
