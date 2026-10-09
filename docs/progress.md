@@ -478,3 +478,11 @@ including tiny wrapped tails, all-policy distance-196,608 witnesses, independent
 dictionary eligibility, exact-owner growth failure/recovery and nonpublication
 after output failure. All 23 checks pass with 92 test executions. Public search
 configuration is the remaining context integration checkpoint.
+
+Public `MatchSearchOptions` and Encoder search getter/setter/capacity are now
+available with operational consumers. Phase-first installation preserves all
+handles/owners; session resets keep settings and parameter/full resets restore
+both defaults. Five new stream tests join 31 passing tests in eight builds,
+totaling 248 executions. Both no_std checks, strict library Clippy and all 18
+registered usage examples safe/all pass. Separate public control-effect and C
+interoperability campaigns follow before the final module matrix.

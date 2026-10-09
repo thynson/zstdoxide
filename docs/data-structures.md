@@ -152,7 +152,9 @@ unsafe representation. Each unsafe operation still needs a complete local
 validity, bounds, alignment, initialization, aliasing, and lifetime proof; an
 `unsafe fn` additionally needs the full caller contract in its `# Safety` docs.
 
-The encoder retains at most `min(advertised_window, 128 KiB)` output history.
+At the Module 8 checkpoint, the encoder retains at most
+`min(advertised_window, 128 KiB)` output history. Module 11 extends this to the
+selected horizon while keeping the same default; see its records below.
 Candidate storage adds separately bounded search metadata, not permission to
 read evicted bytes or retain all frame output. Prepared dictionary content and
 entropy remain owned by the selected immutable shared handle. Frame positions

@@ -45,6 +45,13 @@ more input, more output space, or a frame boundary was reached. See
 [streaming usage and lifecycle contracts](docs/streaming-usage.md) for complete
 examples, Flush/Finish retry rules, pledged sizes, reset, and EOF validation.
 
+`Encoder::set_search_options` configures hash and chain dimensions, four- through
+eight-byte keys, bounded Chain/Lazy effort and retained output history for the
+existing named policies. Settings are applied before frame processing and
+storage is prepared on demand. `search_retained_capacity` reports search caches
+separately from total reachable codec capacity. Defaults retain existing output
+behavior. See [search configuration and reset examples](docs/match-search-usage.md).
+
 `Encoder::set_options` replaces supported settings before frame processing.
 Session reset retains persistent configuration; `reset_parameters` restores
 defaults at a fresh or completed boundary, while `reset_all` also discards the
@@ -74,7 +81,7 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Blocks | Raw, RLE, and compressed blocks; block/window/output bounds |
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
-| Compression | Greedy, bounded Chain, and one-byte Lazy matching over dictionary content and up to 128 KiB of retained output, raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
+| Compression | Greedy, bounded Chain, and one-byte Lazy matching over dictionary content and up to 1 MiB of configured retained output (128 KiB by default), raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Parameter inspection | Pinned reference presets, scalar bounds, raw adjustment, explicit request overrides, source hints and checked source/dictionary size arithmetic; independent of live numeric execution |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |

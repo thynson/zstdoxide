@@ -1,0 +1,575 @@
+{
+  "schema": 1,
+  "owned_source": "src/stream_encode.rs",
+  "source_sha256_before": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+  "scope": "Focused public stream-search library tests; shared repository dependencies may advance independently.",
+  "head_before": "bd5fd8f915b15c8427a06184b15f67f0ba291154",
+  "environment": {
+    "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-stream-target",
+    "CARGO_TERM_COLOR": "never"
+  },
+  "runner": {
+    "path": "/tmp/zstdoxide-module11-stream-check.py",
+    "sha256": "175939ec6724390716001996760a24f07eb54cc8955efc2ceb895ab4c71c8763",
+    "text": "#!/usr/bin/env python3\n\"\"\"Focused published stream-search validation; never changes source files.\"\"\"\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport re\nimport subprocess\nimport time\n\nROOT = Path('/Users/lanxingcan/Workspace/zstdoxize')\nPREFIX = '/tmp/zstdoxide-module11-stream'\nOUT = Path(PREFIX + '-evidence.json')\nFEATURES = 'unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training'\n\ndef sha(path):\n    return hashlib.sha256(Path(path).read_bytes()).hexdigest()\n\ndef summaries(output):\n    return [dict(zip(('passed', 'failed', 'ignored', 'measured', 'filtered_out'), map(int, row)))\n            for row in re.findall(r'test result: ok\\. (\\d+) passed; (\\d+) failed; (\\d+) ignored; (\\d+) measured; (\\d+) filtered out;', output)]\n\ndef main():\n    source = ROOT / 'src/stream_encode.rs'\n    before = sha(source)\n    if before != '2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e':\n        raise RuntimeError('Unexpected owned source')\n    env_fields = {'CARGO_TARGET_DIR': '/tmp/zstdoxide-module11-stream-target', 'CARGO_TERM_COLOR': 'never'}\n    env = os.environ.copy()\n    env.update(env_fields)\n    evidence = {'schema': 1, 'owned_source': 'src/stream_encode.rs', 'source_sha256_before': before,\n        'scope': 'Focused public stream-search library tests; shared repository dependencies may advance independently.',\n        'head_before': subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),\n        'environment': env_fields, 'runner': {'path': __file__, 'sha256': sha(__file__)},\n        'commands': [], 'completed': False}\n    initial = Path(PREFIX + '-initial.log')\n    initial_summary = summaries(initial.read_text())\n    if initial_summary != [{'passed':31,'failed':0,'ignored':1,'measured':0,'filtered_out':543}]:\n        raise RuntimeError('Initial checked run did not have expected results')\n    evidence['commands'].append({'name':'safe-initial', 'command':['cargo','+nightly-2026-10-08','test','--offline','--locked','--lib','stream_encode::tests::'],\n        'cwd':str(ROOT),'exit_code':0,'seconds':None,'timing_note':'Initial exec command had no complete wall-time capture.',\n        'summaries':initial_summary,'log':str(initial),'log_sha256':sha(initial)})\n    commands = []\n    for name, features in [\n        ('table',['--features','unsafe-match-table']), ('chain',['--features','unsafe-match-chain']),\n        ('ring',['--features','unsafe-ring-history']), ('dictionary',['--features','unsafe-dictionary']),\n        ('all',['--all-features']), ('no-std-safe',['--no-default-features']),\n        ('no-std-all',['--no-default-features','--features',FEATURES]),\n    ]:\n        commands.append((name, ['cargo','+nightly-2026-10-08','test','--offline','--locked','--lib',*features,'stream_encode::tests::'], True))\n    for name, features in [('safe',[]),('all',['--features',FEATURES])]:\n        commands.append(('check-no-std-'+name, ['cargo','+nightly-2026-10-08','check','--offline','--locked','--lib','--no-default-features',*features], False))\n    for name, features in [('safe',[]),('all',['--all-features'])]:\n        commands.append(('clippy-lib-'+name,['cargo','+nightly-2026-10-08','clippy','--offline','--locked','--lib',*features,'--','-D','warnings'],False))\n    commands += [\n        ('format',['rustfmt','+nightly-2026-10-08','--edition','2024','--check','src/stream_encode.rs'],False),\n        ('diff-check',['git','diff','--check','--','src/stream_encode.rs'],False),\n    ]\n    def save(): OUT.write_text(json.dumps(evidence,indent=2)+'\\n')\n    save()\n    for name, command, is_test in commands:\n        if sha(source) != before: raise RuntimeError('Owned source changed before '+name)\n        log = Path(PREFIX+'-'+name+'.log')\n        start = time.monotonic()\n        print('START '+name,flush=True)\n        with log.open('wb') as handle:\n            result = subprocess.run(command,cwd=ROOT,env=env,stdout=handle,stderr=subprocess.STDOUT)\n        elapsed=time.monotonic()-start\n        parsed=summaries(log.read_text())\n        passed=sum(s['passed'] for s in parsed)\n        ignored=sum(s['ignored'] for s in parsed)\n        valid=result.returncode==0 and (not is_test or (passed==31 and ignored==1))\n        evidence['commands'].append({'name':name,'command':command,'cwd':str(ROOT),'exit_code':result.returncode,\n            'seconds':round(elapsed,4),'summaries':parsed,'expected_count_guard':valid,\n            'log':str(log),'log_sha256':sha(log),'source_sha256_after':sha(source)})\n        save()\n        print(f'END {name} exit={result.returncode} passed={passed} ignored={ignored} guard={valid}',flush=True)\n        if not valid: raise RuntimeError('Check failed: '+name)\n    evidence['head_after']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()\n    evidence['source_sha256_after']=sha(source)\n    evidence['source_unchanged']=sha(source)==before\n    evidence['passed']=sum(s['passed'] for c in evidence['commands'] for s in c['summaries'])\n    evidence['ignored']=sum(s['ignored'] for c in evidence['commands'] for s in c['summaries'])\n    evidence['completed']=sha(source)==before\n    save()\n    print('EVIDENCE '+str(OUT)+' sha256='+sha(OUT),flush=True)\n\nif __name__=='__main__': main()\n"
+  },
+  "commands": [
+    {
+      "name": "safe-initial",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "stream_encode::tests::"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": null,
+      "timing_note": "Initial exec command had no complete wall-time capture.",
+      "summaries": [
+        {
+          "passed": 31,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 543
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-stream-initial.log",
+      "log_sha256": "f28b267c19b2e4ea70905bac40c6f8160b0e30ce365b5174454c3bdcd78e4e0a",
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.41s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-stream-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 32 tests\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::search_and_frame_setters_are_order_independent_and_keep_selected_handles ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::search_session_resets_preserve_settings_and_parameter_resets_restore_defaults ... ok\ntest stream_encode::tests::search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging ... ok\ntest stream_encode::tests::search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::search_setter_rejects_every_started_phase_before_mutation ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 31 passed; 0 failed; 1 ignored; 0 measured; 543 filtered out; finished in 3.67s\n\n"
+    },
+    {
+      "name": "table",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "stream_encode::tests::"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 8.6046,
+      "summaries": [
+        {
+          "passed": 31,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 543
+        }
+      ],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-table.log",
+      "log_sha256": "c6306ee31323367694371ee47b6934baaf7213043ec23f2b321a652901054277",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.57s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-stream-target/debug/build/zstdoxide/fbd7fa6c50597489/out/zstdoxide-fbd7fa6c50597489)\n\nrunning 32 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::search_and_frame_setters_are_order_independent_and_keep_selected_handles ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::search_session_resets_preserve_settings_and_parameter_resets_restore_defaults ... ok\ntest stream_encode::tests::search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging ... ok\ntest stream_encode::tests::search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::search_setter_rejects_every_started_phase_before_mutation ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 31 passed; 0 failed; 1 ignored; 0 measured; 543 filtered out; finished in 3.52s\n\n"
+    },
+    {
+      "name": "chain",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-chain",
+        "stream_encode::tests::"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 8.32,
+      "summaries": [
+        {
+          "passed": 31,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 543
+        }
+      ],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-chain.log",
+      "log_sha256": "dae808282c939ffd224a97f4d3b822f66c22e759ee588f2941f2a794e3a5d8bd",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.01s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-stream-target/debug/build/zstdoxide/ef32ef0c462b872c/out/zstdoxide-ef32ef0c462b872c)\n\nrunning 32 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::search_and_frame_setters_are_order_independent_and_keep_selected_handles ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::search_session_resets_preserve_settings_and_parameter_resets_restore_defaults ... ok\ntest stream_encode::tests::search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging ... ok\ntest stream_encode::tests::search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::search_setter_rejects_every_started_phase_before_mutation ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 31 passed; 0 failed; 1 ignored; 0 measured; 543 filtered out; finished in 3.97s\n\n"
+    },
+    {
+      "name": "ring",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-ring-history",
+        "stream_encode::tests::"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 8.9677,
+      "summaries": [
+        {
+          "passed": 31,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 543
+        }
+      ],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-ring.log",
+      "log_sha256": "728ed44e7649a356b3bbcf45eb0dc7a8a9c2d2dd1535e5dd39699b4f11fb44ac",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.66s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-stream-target/debug/build/zstdoxide/559ca3778fa79c65/out/zstdoxide-559ca3778fa79c65)\n\nrunning 32 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::search_and_frame_setters_are_order_independent_and_keep_selected_handles ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::search_session_resets_preserve_settings_and_parameter_resets_restore_defaults ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging ... ok\ntest stream_encode::tests::search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::search_setter_rejects_every_started_phase_before_mutation ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 31 passed; 0 failed; 1 ignored; 0 measured; 543 filtered out; finished in 3.93s\n\n"
+    },
+    {
+      "name": "dictionary",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-dictionary",
+        "stream_encode::tests::"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 8.4746,
+      "summaries": [
+        {
+          "passed": 31,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 543
+        }
+      ],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-dictionary.log",
+      "log_sha256": "4851fada5bf0876f2198069b5a59310c926053311093da1e8249e9dfa6a3aae4",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.30s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-stream-target/debug/build/zstdoxide/42c5e42647031de4/out/zstdoxide-42c5e42647031de4)\n\nrunning 32 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::search_and_frame_setters_are_order_independent_and_keep_selected_handles ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::search_session_resets_preserve_settings_and_parameter_resets_restore_defaults ... ok\ntest stream_encode::tests::search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging ... ok\ntest stream_encode::tests::search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::search_setter_rejects_every_started_phase_before_mutation ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 31 passed; 0 failed; 1 ignored; 0 measured; 543 filtered out; finished in 3.82s\n\n"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "stream_encode::tests::"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 8.3892,
+      "summaries": [
+        {
+          "passed": 31,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 543
+        }
+      ],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-all.log",
+      "log_sha256": "14e1d92624e56ae3ddbd81687b19dccf5e0b7865f52939e2d6658d3afc5b3bb6",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.09s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-stream-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 32 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::search_and_frame_setters_are_order_independent_and_keep_selected_handles ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::search_session_resets_preserve_settings_and_parameter_resets_restore_defaults ... ok\ntest stream_encode::tests::search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging ... ok\ntest stream_encode::tests::search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::search_setter_rejects_every_started_phase_before_mutation ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 31 passed; 0 failed; 1 ignored; 0 measured; 543 filtered out; finished in 3.94s\n\n"
+    },
+    {
+      "name": "no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "stream_encode::tests::"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 7.9891,
+      "summaries": [
+        {
+          "passed": 31,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 519
+        }
+      ],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-no-std-safe.log",
+      "log_sha256": "e14714c2881daee07b82622893cb00d76e6a8064cdb358277357162c00f43164",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "count_guard_correction": "The optional official C test is gated on std and absent under no-default-features: expected 31 passed and 0 ignored. Initial runner wrongly expected 1 ignored; Cargo itself succeeded.",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.58s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-stream-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 31 tests\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::search_and_frame_setters_are_order_independent_and_keep_selected_handles ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::search_session_resets_preserve_settings_and_parameter_resets_restore_defaults ... ok\ntest stream_encode::tests::search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging ... ok\ntest stream_encode::tests::search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::search_setter_rejects_every_started_phase_before_mutation ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 519 filtered out; finished in 4.07s\n\n"
+    },
+    {
+      "name": "no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "stream_encode::tests::"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 7.8927,
+      "summaries": [
+        {
+          "passed": 31,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 519
+        }
+      ],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-no-std-all.log",
+      "log_sha256": "6e2a8a512affc9ae4569d3c0c4520af0af6b56d55fde902159e42e57e173e223",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.67s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-stream-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 31 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::search_and_frame_setters_are_order_independent_and_keep_selected_handles ... ok\ntest stream_encode::tests::search_session_resets_preserve_settings_and_parameter_resets_restore_defaults ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::search_setter_rejects_every_started_phase_before_mutation ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 519 filtered out; finished in 3.87s\n\n"
+    },
+    {
+      "name": "check-no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 0.4339,
+      "summaries": [],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-check-no-std-safe.log",
+      "log_sha256": "a3d0dfd410230c6c6c16dacc3691f93630c367b19c98634ed46abeb70529d941",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.41s\n"
+    },
+    {
+      "name": "check-no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 0.4196,
+      "summaries": [],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-check-no-std-all.log",
+      "log_sha256": "ba8e367644a51b282078cf1eb870fe1c3ce6c63e06b64e625eb2dcf11146ef9c",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.40s\n"
+    },
+    {
+      "name": "clippy-lib-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 0.5584,
+      "summaries": [],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-clippy-lib-safe.log",
+      "log_sha256": "dbbd3dfd8e5f0ba8ebc946b03fdc797e2f9422195da72aede58a520e7360d3b4",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.51s\n"
+    },
+    {
+      "name": "clippy-lib-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 0.5614,
+      "summaries": [],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-clippy-lib-all.log",
+      "log_sha256": "dbbd3dfd8e5f0ba8ebc946b03fdc797e2f9422195da72aede58a520e7360d3b4",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.51s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/stream_encode.rs"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 0.0456,
+      "summaries": [],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": ""
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/stream_encode.rs"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "seconds": 0.0075,
+      "summaries": [],
+      "expected_count_guard": true,
+      "log": "/tmp/zstdoxide-module11-stream-diff-check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "log_text": ""
+    }
+  ],
+  "completed": true,
+  "first_runner_diagnostic": {
+    "path": "/tmp/zstdoxide-module11-stream-guard-diagnostic.json",
+    "sha256": "526760ff0d0a61cb0c55b4629986640faeffefc7adf43744847abc2cdb4f5b5d",
+    "text": "{\n  \"schema\": 1,\n  \"owned_source\": \"src/stream_encode.rs\",\n  \"source_sha256_before\": \"2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e\",\n  \"scope\": \"Focused public stream-search library tests; shared repository dependencies may advance independently.\",\n  \"head_before\": \"bd5fd8f915b15c8427a06184b15f67f0ba291154\",\n  \"environment\": {\n    \"CARGO_TARGET_DIR\": \"/tmp/zstdoxide-module11-stream-target\",\n    \"CARGO_TERM_COLOR\": \"never\"\n  },\n  \"runner\": {\n    \"path\": \"/tmp/zstdoxide-module11-stream-check.py\",\n    \"sha256\": \"175939ec6724390716001996760a24f07eb54cc8955efc2ceb895ab4c71c8763\"\n  },\n  \"commands\": [\n    {\n      \"name\": \"safe-initial\",\n      \"command\": [\n        \"cargo\",\n        \"+nightly-2026-10-08\",\n        \"test\",\n        \"--offline\",\n        \"--locked\",\n        \"--lib\",\n        \"stream_encode::tests::\"\n      ],\n      \"cwd\": \"/Users/lanxingcan/Workspace/zstdoxize\",\n      \"exit_code\": 0,\n      \"seconds\": null,\n      \"timing_note\": \"Initial exec command had no complete wall-time capture.\",\n      \"summaries\": [\n        {\n          \"passed\": 31,\n          \"failed\": 0,\n          \"ignored\": 1,\n          \"measured\": 0,\n          \"filtered_out\": 543\n        }\n      ],\n      \"log\": \"/tmp/zstdoxide-module11-stream-initial.log\",\n      \"log_sha256\": \"f28b267c19b2e4ea70905bac40c6f8160b0e30ce365b5174454c3bdcd78e4e0a\"\n    },\n    {\n      \"name\": \"table\",\n      \"command\": [\n        \"cargo\",\n        \"+nightly-2026-10-08\",\n        \"test\",\n        \"--offline\",\n        \"--locked\",\n        \"--lib\",\n        \"--features\",\n        \"unsafe-match-table\",\n        \"stream_encode::tests::\"\n      ],\n      \"cwd\": \"/Users/lanxingcan/Workspace/zstdoxize\",\n      \"exit_code\": 0,\n      \"seconds\": 8.6046,\n      \"summaries\": [\n        {\n          \"passed\": 31,\n          \"failed\": 0,\n          \"ignored\": 1,\n          \"measured\": 0,\n          \"filtered_out\": 543\n        }\n      ],\n      \"expected_count_guard\": true,\n      \"log\": \"/tmp/zstdoxide-module11-stream-table.log\",\n      \"log_sha256\": \"c6306ee31323367694371ee47b6934baaf7213043ec23f2b321a652901054277\",\n      \"source_sha256_after\": \"2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e\"\n    },\n    {\n      \"name\": \"chain\",\n      \"command\": [\n        \"cargo\",\n        \"+nightly-2026-10-08\",\n        \"test\",\n        \"--offline\",\n        \"--locked\",\n        \"--lib\",\n        \"--features\",\n        \"unsafe-match-chain\",\n        \"stream_encode::tests::\"\n      ],\n      \"cwd\": \"/Users/lanxingcan/Workspace/zstdoxize\",\n      \"exit_code\": 0,\n      \"seconds\": 8.32,\n      \"summaries\": [\n        {\n          \"passed\": 31,\n          \"failed\": 0,\n          \"ignored\": 1,\n          \"measured\": 0,\n          \"filtered_out\": 543\n        }\n      ],\n      \"expected_count_guard\": true,\n      \"log\": \"/tmp/zstdoxide-module11-stream-chain.log\",\n      \"log_sha256\": \"dae808282c939ffd224a97f4d3b822f66c22e759ee588f2941f2a794e3a5d8bd\",\n      \"source_sha256_after\": \"2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e\"\n    },\n    {\n      \"name\": \"ring\",\n      \"command\": [\n        \"cargo\",\n        \"+nightly-2026-10-08\",\n        \"test\",\n        \"--offline\",\n        \"--locked\",\n        \"--lib\",\n        \"--features\",\n        \"unsafe-ring-history\",\n        \"stream_encode::tests::\"\n      ],\n      \"cwd\": \"/Users/lanxingcan/Workspace/zstdoxize\",\n      \"exit_code\": 0,\n      \"seconds\": 8.9677,\n      \"summaries\": [\n        {\n          \"passed\": 31,\n          \"failed\": 0,\n          \"ignored\": 1,\n          \"measured\": 0,\n          \"filtered_out\": 543\n        }\n      ],\n      \"expected_count_guard\": true,\n      \"log\": \"/tmp/zstdoxide-module11-stream-ring.log\",\n      \"log_sha256\": \"728ed44e7649a356b3bbcf45eb0dc7a8a9c2d2dd1535e5dd39699b4f11fb44ac\",\n      \"source_sha256_after\": \"2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e\"\n    },\n    {\n      \"name\": \"dictionary\",\n      \"command\": [\n        \"cargo\",\n        \"+nightly-2026-10-08\",\n        \"test\",\n        \"--offline\",\n        \"--locked\",\n        \"--lib\",\n        \"--features\",\n        \"unsafe-dictionary\",\n        \"stream_encode::tests::\"\n      ],\n      \"cwd\": \"/Users/lanxingcan/Workspace/zstdoxize\",\n      \"exit_code\": 0,\n      \"seconds\": 8.4746,\n      \"summaries\": [\n        {\n          \"passed\": 31,\n          \"failed\": 0,\n          \"ignored\": 1,\n          \"measured\": 0,\n          \"filtered_out\": 543\n        }\n      ],\n      \"expected_count_guard\": true,\n      \"log\": \"/tmp/zstdoxide-module11-stream-dictionary.log\",\n      \"log_sha256\": \"4851fada5bf0876f2198069b5a59310c926053311093da1e8249e9dfa6a3aae4\",\n      \"source_sha256_after\": \"2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e\"\n    },\n    {\n      \"name\": \"all\",\n      \"command\": [\n        \"cargo\",\n        \"+nightly-2026-10-08\",\n        \"test\",\n        \"--offline\",\n        \"--locked\",\n        \"--lib\",\n        \"--all-features\",\n        \"stream_encode::tests::\"\n      ],\n      \"cwd\": \"/Users/lanxingcan/Workspace/zstdoxize\",\n      \"exit_code\": 0,\n      \"seconds\": 8.3892,\n      \"summaries\": [\n        {\n          \"passed\": 31,\n          \"failed\": 0,\n          \"ignored\": 1,\n          \"measured\": 0,\n          \"filtered_out\": 543\n        }\n      ],\n      \"expected_count_guard\": true,\n      \"log\": \"/tmp/zstdoxide-module11-stream-all.log\",\n      \"log_sha256\": \"14e1d92624e56ae3ddbd81687b19dccf5e0b7865f52939e2d6658d3afc5b3bb6\",\n      \"source_sha256_after\": \"2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e\"\n    },\n    {\n      \"name\": \"no-std-safe\",\n      \"command\": [\n        \"cargo\",\n        \"+nightly-2026-10-08\",\n        \"test\",\n        \"--offline\",\n        \"--locked\",\n        \"--lib\",\n        \"--no-default-features\",\n        \"stream_encode::tests::\"\n      ],\n      \"cwd\": \"/Users/lanxingcan/Workspace/zstdoxize\",\n      \"exit_code\": 0,\n      \"seconds\": 7.9891,\n      \"summaries\": [\n        {\n          \"passed\": 31,\n          \"failed\": 0,\n          \"ignored\": 0,\n          \"measured\": 0,\n          \"filtered_out\": 519\n        }\n      ],\n      \"expected_count_guard\": false,\n      \"log\": \"/tmp/zstdoxide-module11-stream-no-std-safe.log\",\n      \"log_sha256\": \"e14714c2881daee07b82622893cb00d76e6a8064cdb358277357162c00f43164\",\n      \"source_sha256_after\": \"2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e\"\n    }\n  ],\n  \"completed\": false\n}\n"
+  },
+  "continuation_runner": {
+    "path": "/tmp/zstdoxide-module11-stream-resume.py",
+    "sha256": "65e18e335a9583069462bc9cd8852980b47924ce706a95db13745a59d5de68ee",
+    "text": "#!/usr/bin/env python3\n\"\"\"Resume checks after correcting the std-gated ignored-test count expectation.\"\"\"\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport re\nimport subprocess\nimport time\n\nROOT=Path('/Users/lanxingcan/Workspace/zstdoxize')\nPREFIX='/tmp/zstdoxide-module11-stream'\nOUT=Path(PREFIX+'-evidence.json')\nFEATURES='unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training'\ndef sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()\ndef summaries(text):\n    return [dict(zip(('passed','failed','ignored','measured','filtered_out'),map(int,row)))\n            for row in re.findall(r'test result: ok\\. (\\d+) passed; (\\d+) failed; (\\d+) ignored; (\\d+) measured; (\\d+) filtered out;',text)]\n\ndef main():\n    original=Path(PREFIX+'-guard-diagnostic.json')\n    if original.exists(): raise RuntimeError('Refusing to overwrite first-run diagnostic')\n    original.write_bytes(OUT.read_bytes())\n    e=json.loads(OUT.read_text())\n    last=e['commands'][-1]\n    if last['name']!='no-std-safe' or last['exit_code']!=0 or sum(s['passed'] for s in last['summaries'])!=31 or sum(s['ignored'] for s in last['summaries'])!=0:\n        raise RuntimeError('Unexpected continuation point')\n    last['expected_count_guard']=True\n    last['count_guard_correction']='The optional official C test is gated on std and absent under no-default-features: expected 31 passed and 0 ignored. Initial runner wrongly expected 1 ignored; Cargo itself succeeded.'\n    e['first_runner_diagnostic']={'path':str(original),'sha256':sha(original)}\n    e['continuation_runner']={'path':__file__,'sha256':sha(__file__)}\n    env=os.environ.copy();env.update(e['environment'])\n    commands=[('no-std-all',['cargo','+nightly-2026-10-08','test','--offline','--locked','--lib','--no-default-features','--features',FEATURES,'stream_encode::tests::'],True)]\n    for name,features in [('safe',[]),('all',['--features',FEATURES])]:\n        commands.append(('check-no-std-'+name,['cargo','+nightly-2026-10-08','check','--offline','--locked','--lib','--no-default-features',*features],False))\n    for name,features in [('safe',[]),('all',['--all-features'])]:\n        commands.append(('clippy-lib-'+name,['cargo','+nightly-2026-10-08','clippy','--offline','--locked','--lib',*features,'--','-D','warnings'],False))\n    commands.extend([\n        ('format',['rustfmt','+nightly-2026-10-08','--edition','2024','--check','src/stream_encode.rs'],False),\n        ('diff-check',['git','diff','--check','--','src/stream_encode.rs'],False),\n    ])\n    def save(): OUT.write_text(json.dumps(e,indent=2)+'\\n')\n    save()\n    for name,command,is_test in commands:\n        if sha(ROOT/e['owned_source'])!=e['source_sha256_before']: raise RuntimeError('Owned source changed')\n        log=Path(PREFIX+'-'+name+'.log');start=time.monotonic();print('START '+name,flush=True)\n        with log.open('wb') as h:r=subprocess.run(command,cwd=ROOT,env=env,stdout=h,stderr=subprocess.STDOUT)\n        elapsed=time.monotonic()-start;s=summaries(log.read_text());passed=sum(x['passed'] for x in s);ignored=sum(x['ignored'] for x in s)\n        valid=r.returncode==0 and(not is_test or(passed==31 and ignored==0))\n        e['commands'].append({'name':name,'command':command,'cwd':str(ROOT),'exit_code':r.returncode,'seconds':round(elapsed,4),'summaries':s,'expected_count_guard':valid,'log':str(log),'log_sha256':sha(log),'source_sha256_after':sha(ROOT/e['owned_source'])})\n        save();print(f'END {name} exit={r.returncode} passed={passed} ignored={ignored} guard={valid}',flush=True)\n        if not valid: raise RuntimeError('Check failed: '+name)\n    core=Path(PREFIX+'-core-manifest.json');manifest=json.loads(core.read_text())\n    changed=[p for p,v in manifest['files'].items() if sha(ROOT/p)!=v['sha256']]\n    e['core_manifest']={'path':str(core),'sha256':sha(core),'file_count':len(manifest['files']),'changed_after_capture':changed,'qualification':manifest['scope']}\n    e['head_after']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()\n    e['source_sha256_after']=sha(ROOT/e['owned_source']);e['source_unchanged']=e['source_sha256_after']==e['source_sha256_before']\n    e['passed']=sum(s['passed'] for c in e['commands'] for s in c['summaries']);e['ignored']=sum(s['ignored'] for c in e['commands'] for s in c['summaries'])\n    e['completed']=e['source_unchanged'];save();print('EVIDENCE '+str(OUT)+' sha256='+sha(OUT),flush=True)\nif __name__=='__main__':main()\n"
+  },
+  "core_manifest": {
+    "path": "/tmp/zstdoxide-module11-stream-core-manifest.json",
+    "sha256": "c9247f9418b78d29932063b8ab1790774af9f3dc0cc197a1b18ad24789e1144a",
+    "file_count": 44,
+    "changed_after_capture": [],
+    "qualification": "Production source/config snapshot captured after root export and allowance cleanup; initial safe stream run preceded these metadata-only changes.",
+    "text": "{\n  \"head\": \"bd5fd8f915b15c8427a06184b15f67f0ba291154\",\n  \"scope\": \"Production source/config snapshot captured after root export and allowance cleanup; initial safe stream run preceded these metadata-only changes.\",\n  \"files\": {\n    \"Cargo.lock\": {\n      \"bytes\": 266,\n      \"sha256\": \"0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d\"\n    },\n    \"Cargo.toml\": {\n      \"bytes\": 898,\n      \"sha256\": \"659ce726a22f6cc6360e76eb5bc5de8eb593fb2e0fb046688e28afc14755d402\"\n    },\n    \"rust-toolchain.toml\": {\n      \"bytes\": 118,\n      \"sha256\": \"6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20\"\n    },\n    \"src/bitstream.rs\": {\n      \"bytes\": 5025,\n      \"sha256\": \"efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6\"\n    },\n    \"src/bitwriter.rs\": {\n      \"bytes\": 10794,\n      \"sha256\": \"7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d\"\n    },\n    \"src/constants.rs\": {\n      \"bytes\": 1542,\n      \"sha256\": \"07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2\"\n    },\n    \"src/cursor.rs\": {\n      \"bytes\": 2412,\n      \"sha256\": \"0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f\"\n    },\n    \"src/decode.rs\": {\n      \"bytes\": 25995,\n      \"sha256\": \"842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403\"\n    },\n    \"src/dictionary.rs\": {\n      \"bytes\": 37284,\n      \"sha256\": \"44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1\"\n    },\n    \"src/dictionary_train.rs\": {\n      \"bytes\": 25999,\n      \"sha256\": \"3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6\"\n    },\n    \"src/encode.rs\": {\n      \"bytes\": 157242,\n      \"sha256\": \"64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9\"\n    },\n    \"src/entropy_encode.rs\": {\n      \"bytes\": 46189,\n      \"sha256\": \"925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53\"\n    },\n    \"src/entropy_output.rs\": {\n      \"bytes\": 30938,\n      \"sha256\": \"3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61\"\n    },\n    \"src/error.rs\": {\n      \"bytes\": 2528,\n      \"sha256\": \"76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54\"\n    },\n    \"src/frame.rs\": {\n      \"bytes\": 4396,\n      \"sha256\": \"c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e\"\n    },\n    \"src/fse.rs\": {\n      \"bytes\": 40545,\n      \"sha256\": \"62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864\"\n    },\n    \"src/fse_encode.rs\": {\n      \"bytes\": 26973,\n      \"sha256\": \"13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68\"\n    },\n    \"src/fse_select.rs\": {\n      \"bytes\": 28875,\n      \"sha256\": \"0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3\"\n    },\n    \"src/heap.rs\": {\n      \"bytes\": 10052,\n      \"sha256\": \"206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8\"\n    },\n    \"src/history.rs\": {\n      \"bytes\": 13893,\n      \"sha256\": \"849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999\"\n    },\n    \"src/huffman.rs\": {\n      \"bytes\": 51802,\n      \"sha256\": \"379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc\"\n    },\n    \"src/huffman_codebook.rs\": {\n      \"bytes\": 48091,\n      \"sha256\": \"e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b\"\n    },\n    \"src/huffman_encode.rs\": {\n      \"bytes\": 40632,\n      \"sha256\": \"c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf\"\n    },\n    \"src/lib.rs\": {\n      \"bytes\": 3291,\n      \"sha256\": \"bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a\"\n    },\n    \"src/literal_encode.rs\": {\n      \"bytes\": 18735,\n      \"sha256\": \"471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78\"\n    },\n    \"src/literal_header.rs\": {\n      \"bytes\": 7030,\n      \"sha256\": \"7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03\"\n    },\n    \"src/match_key.rs\": {\n      \"bytes\": 14429,\n      \"sha256\": \"32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2\"\n    },\n    \"src/match_parse.rs\": {\n      \"bytes\": 69730,\n      \"sha256\": \"f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818\"\n    },\n    \"src/match_search.rs\": {\n      \"bytes\": 21947,\n      \"sha256\": \"14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b\"\n    },\n    \"src/matchchain.rs\": {\n      \"bytes\": 50933,\n      \"sha256\": \"a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22\"\n    },\n    \"src/matchfinder.rs\": {\n      \"bytes\": 24248,\n      \"sha256\": \"88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb\"\n    },\n    \"src/parameters/presets.rs\": {\n      \"bytes\": 13712,\n      \"sha256\": \"3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4\"\n    },\n    \"src/parameters.rs\": {\n      \"bytes\": 62222,\n      \"sha256\": \"7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc\"\n    },\n    \"src/ring_history.rs\": {\n      \"bytes\": 45791,\n      \"sha256\": \"6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2\"\n    },\n    \"src/sequence_context.rs\": {\n      \"bytes\": 45618,\n      \"sha256\": \"e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6\"\n    },\n    \"src/sequence_encode.rs\": {\n      \"bytes\": 27994,\n      \"sha256\": \"fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61\"\n    },\n    \"src/sequence_plan.rs\": {\n      \"bytes\": 7646,\n      \"sha256\": \"9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06\"\n    },\n    \"src/sequences.rs\": {\n      \"bytes\": 25515,\n      \"sha256\": \"7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb\"\n    },\n    \"src/strategy.rs\": {\n      \"bytes\": 1215,\n      \"sha256\": \"c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab\"\n    },\n    \"src/stream.rs\": {\n      \"bytes\": 1452,\n      \"sha256\": \"029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c\"\n    },\n    \"src/stream_decode.rs\": {\n      \"bytes\": 59352,\n      \"sha256\": \"9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21\"\n    },\n    \"src/stream_encode.rs\": {\n      \"bytes\": 111445,\n      \"sha256\": \"2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e\"\n    },\n    \"src/training.rs\": {\n      \"bytes\": 29658,\n      \"sha256\": \"5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e\"\n    },\n    \"src/xxhash.rs\": {\n      \"bytes\": 28427,\n      \"sha256\": \"b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed\"\n    }\n  }\n}\n"
+  },
+  "head_after": "bd5fd8f915b15c8427a06184b15f67f0ba291154",
+  "source_sha256_after": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+  "source_unchanged": true,
+  "passed": 248,
+  "ignored": 6,
+  "original_evidence_sha256": "a6601dcf10a39f7fbfba97798ce064086a9b39a17eea97b90d093231734e4a44",
+  "root_export_and_documentation": {
+    "scope": "Public search export, scope cleanup and registered usage examples",
+    "source_sha256_before": {
+      "README.md": "6a7300ad32afa8f761937128a5567cc0e719c5634f40bb482d01468fb7abec73",
+      "docs/match-search-usage.md": "d673788c371c189ef6839a1676c3fc098f3f1278e0465fae9fc9889a6fbbe92a",
+      "scripts/check_doc_examples.py": "0663b665dcff8086c872add3f2d64c6d5a7fa7a752bda9994eae7b0d171518f0",
+      "src/lib.rs": "bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a",
+      "src/match_search.rs": "14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b",
+      "src/encode.rs": "64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9",
+      "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e"
+    },
+    "commands": [
+      {
+        "name": "usage-safe",
+        "command": [
+          "python3",
+          "scripts/check_doc_examples.py"
+        ],
+        "environment": {
+          "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-api-root-target",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 3.9374619589652866,
+        "log": "/tmp/zstdoxide-module11-public-docs/usage-safe.log",
+        "sha256": "4bdc92ecef1c7c08e797d05294cbab29a9eaedb85653ea190bbd5f53ae1f8c47",
+        "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.91s\nChecking docs/dictionary-usage.md\n\nrunning 3 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/dictionary-usage.md - Dictionary_use_and_training::Streaming_selection_and_reset (line 41) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/dictionary-usage.md - Dictionary_use_and_training::Raw_and_formatted_dictionaries (line 11) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/dictionary-usage.md - Dictionary_use_and_training::Independent_Rust_training (line 83) ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\nall doctests ran in 0.56s; merged doctests compilation took 0.26s\nChecking docs/streaming-usage.md\n\nrunning 4 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/streaming-usage.md - Using_bounded_streaming::Replacing_settings_before_a_frame (line 55) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/streaming-usage.md - Using_bounded_streaming::Resetting_an_encoder (line 99) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/streaming-usage.md - Using_bounded_streaming::Decoding_a_frame (line 162) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/streaming-usage.md - Using_bounded_streaming::Encoding_a_frame (line 14) ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nall doctests ran in 0.50s; merged doctests compilation took 0.21s\nChecking docs/allocator-usage.md\n\nrunning 3 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Returned_output_and_dictionary_storage (line 50) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Borrowed_and_shared_context_attachments (line 86) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Returned_output_and_dictionary_storage (line 25) ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 2 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Borrowed_and_shared_context_attachments (line 125) - compile fail ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Borrowed_and_shared_context_attachments (line 113) - compile fail ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\nall doctests ran in 0.68s; merged doctests compilation took 0.37s\nChecking docs/parameter-usage.md\n\nrunning 4 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/parameter-usage.md - Inspecting_reference_compression_parameters::Resolving_and_adjusting_profiles (line 121) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/parameter-usage.md - Inspecting_reference_compression_parameters::Keeping_requested_values (line 52) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/parameter-usage.md - Inspecting_reference_compression_parameters::Validating_concrete_values (line 16) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/parameter-usage.md - Inspecting_reference_compression_parameters::Resolving_and_adjusting_profiles (line 85) ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nall doctests ran in 0.49s; merged doctests compilation took 0.20s\nChecking docs/match-search-usage.md\n\nrunning 2 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/match-search-usage.md - Configuring_named_match_search::Session_and_parameter_resets (line 98) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/match-search-usage.md - Configuring_named_match_search::Installing_search_settings (line 33) ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nall doctests ran in 0.50s; merged doctests compilation took 0.22s\n",
+        "passing_examples": 18
+      },
+      {
+        "name": "usage-all",
+        "command": [
+          "python3",
+          "scripts/check_doc_examples.py",
+          "--all-features"
+        ],
+        "environment": {
+          "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-api-root-target",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 4.103334834100679,
+        "log": "/tmp/zstdoxide-module11-public-docs/usage-all.log",
+        "sha256": "1f4586d623568422fbbf1d97fe05aea0e726bf93904c0e82f06405466ae5541e",
+        "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.97s\nChecking docs/dictionary-usage.md\n\nrunning 3 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/dictionary-usage.md - Dictionary_use_and_training::Streaming_selection_and_reset (line 41) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/dictionary-usage.md - Dictionary_use_and_training::Raw_and_formatted_dictionaries (line 11) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/dictionary-usage.md - Dictionary_use_and_training::Independent_Rust_training (line 83) ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\nall doctests ran in 0.52s; merged doctests compilation took 0.23s\nChecking docs/streaming-usage.md\n\nrunning 4 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/streaming-usage.md - Using_bounded_streaming::Replacing_settings_before_a_frame (line 55) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/streaming-usage.md - Using_bounded_streaming::Resetting_an_encoder (line 99) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/streaming-usage.md - Using_bounded_streaming::Encoding_a_frame (line 14) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/streaming-usage.md - Using_bounded_streaming::Decoding_a_frame (line 162) ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\nall doctests ran in 0.51s; merged doctests compilation took 0.23s\nChecking docs/allocator-usage.md\n\nrunning 3 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Returned_output_and_dictionary_storage (line 25) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Borrowed_and_shared_context_attachments (line 86) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Returned_output_and_dictionary_storage (line 50) ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 2 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Borrowed_and_shared_context_attachments (line 125) - compile fail ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/allocator-usage.md - Using_explicit_allocation_ownership::Borrowed_and_shared_context_attachments (line 113) - compile fail ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\nall doctests ran in 0.72s; merged doctests compilation took 0.40s\nChecking docs/parameter-usage.md\n\nrunning 4 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/parameter-usage.md - Inspecting_reference_compression_parameters::Validating_concrete_values (line 16) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/parameter-usage.md - Inspecting_reference_compression_parameters::Keeping_requested_values (line 52) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/parameter-usage.md - Inspecting_reference_compression_parameters::Resolving_and_adjusting_profiles (line 121) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/parameter-usage.md - Inspecting_reference_compression_parameters::Resolving_and_adjusting_profiles (line 85) ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nall doctests ran in 0.52s; merged doctests compilation took 0.23s\nChecking docs/match-search-usage.md\n\nrunning 2 tests\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/match-search-usage.md - Configuring_named_match_search::Session_and_parameter_resets (line 98) ... ok\ntest /Users/lanxingcan/Workspace/zstdoxize/docs/match-search-usage.md - Configuring_named_match_search::Installing_search_settings (line 33) ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nall doctests ran in 0.58s; merged doctests compilation took 0.24s\n",
+        "passing_examples": 18
+      },
+      {
+        "name": "clippy-lib-safe",
+        "command": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--lib",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "environment": {
+          "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-api-root-target",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.6783569168765098,
+        "log": "/tmp/zstdoxide-module11-public-docs/clippy-lib-safe.log",
+        "sha256": "d0e6a161e6143ce7419d4a94a88bf8304d08a1455aca9069c7a23702c20d5cf1",
+        "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s\n"
+      },
+      {
+        "name": "clippy-lib-all",
+        "command": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--lib",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "environment": {
+          "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-api-root-target",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.08135479199700058,
+        "log": "/tmp/zstdoxide-module11-public-docs/clippy-lib-all.log",
+        "sha256": "23b9a21bbaf189889e08dc27ed8eba521021280c5852db22205f721db08b2c7c",
+        "log_text": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s\n"
+      },
+      {
+        "name": "owned-format",
+        "command": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--config",
+          "skip_children=true",
+          "--check",
+          "src/lib.rs",
+          "src/match_search.rs",
+          "src/encode.rs"
+        ],
+        "environment": {
+          "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-api-root-target",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.10164716700091958,
+        "log": "/tmp/zstdoxide-module11-public-docs/owned-format.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_text": ""
+      },
+      {
+        "name": "diff",
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "environment": {
+          "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-api-root-target",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.019332582829520106,
+        "log": "/tmp/zstdoxide-module11-public-docs/diff.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_text": ""
+      }
+    ],
+    "source_sha256_after": {
+      "README.md": "6a7300ad32afa8f761937128a5567cc0e719c5634f40bb482d01468fb7abec73",
+      "docs/match-search-usage.md": "d673788c371c189ef6839a1676c3fc098f3f1278e0465fae9fc9889a6fbbe92a",
+      "scripts/check_doc_examples.py": "0663b665dcff8086c872add3f2d64c6d5a7fa7a752bda9994eae7b0d171518f0",
+      "src/lib.rs": "bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a",
+      "src/match_search.rs": "14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b",
+      "src/encode.rs": "64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9",
+      "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e"
+    },
+    "source_unchanged": true,
+    "complete": true,
+    "original_evidence_sha256": "adb31fad163fdafad0c10cf567671aa5c807490e90162ca2819f5955443aa228",
+    "post_check_prose_only": {
+      "docs/streaming-usage.md": {
+        "sha256": "ec4eb0a7330bee1356c3947fab8c76ffeec975cf0659d325b72ddc095dd262b5",
+        "rust_fenced_blocks_unchanged_from_checked_version": true
+      },
+      "historical_design_scope_notes": [
+        "docs/data-structures.md",
+        "docs/stream-encoder-design.md"
+      ]
+    }
+  },
+  "root_review": "Verified public phase-first installation, no payload allocation or owner clone in setters, both reset records, Debug/capacity reporting, private-consumer wiring, all44 core hashes and every recorded log. No actionable finding."
+}

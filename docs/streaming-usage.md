@@ -137,25 +137,34 @@ existing session-reset API.
 
 ## Selecting bounded match effort
 
-Set `EncoderOptions::strategy` to `CompressionStrategy::Chain` to search up to
-eight candidates at each four-byte key. `Greedy` is the default and searches
-one candidate. All strategies share entropy coding, dictionary/window checks,
-and the same 128 KiB retained-output horizon. These policies are independent
-of upstream numeric compression levels.
+Set `EncoderOptions::strategy` to `CompressionStrategy::Chain` to use bounded
+candidate search. Its default examines up to eight candidates at each four-byte
+key. `Greedy` is the default policy and searches one candidate. All strategies
+share entropy coding, dictionary/window checks, and a configurable retained-output
+horizon whose default is 128 KiB. These policies are independent of upstream
+numeric compression levels.
 
 `CompressionStrategy::Lazy` uses the same bounded chain storage and probes one
-byte ahead, with sixteen candidate visits at each position. It delays only if
+byte ahead, with sixteen candidate visits at each position by default. It delays only if
 the next match is longer than the current match plus one byte, accounting for
 the extra literal. Ties keep the current match. It can improve ambiguous
 matches at the cost of additional source comparisons; it does not guarantee a
 smaller frame for every input.
 
-Chain's heads and nodes occupy 9 MiB on 64-bit targets; dictionary preparation
-uses another 3 MiB seed allocation containing at most 65,536 positions.
+The default Chain heads and nodes occupy 9 MiB on the tested 64-bit layout;
+default dictionary preparation uses another 3 MiB seed allocation containing
+at most 65,536 positions. Configured dimensions change these requested sizes.
 `retained_capacity()` includes this storage, other workspaces, and the selected
 shared dictionary. Reset retains allocations and the strategy. Change the
 policy for a new frame using `reset_with_options`; previously allocated chain
 storage remains reusable and counted even after selecting Greedy.
+
+`MatchSearchOptions` controls real hash/chain dimensions, exact key widths,
+Chain/Lazy visit limits and up to 1 MiB of retained output, further bounded by
+the frame window. Install it with `set_search_options` at a fresh boundary.
+Session reset preserves search settings; parameter/full reset restores them.
+`search_retained_capacity()` separates all retained search caches from the
+wider total. See [search usage](match-search-usage.md) for ranges and examples.
 
 ## Decoding a frame
 

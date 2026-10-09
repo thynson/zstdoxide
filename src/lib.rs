@@ -108,6 +108,7 @@ pub use dictionary_train::{
 pub use encode::{compress, compress_in, compress_with_dictionary, compress_with_dictionary_in};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
+pub use match_search::MatchSearchOptions;
 pub use parameters::{
     CompressionParameterRequest, RawCompressionParameters, ReferenceFrameParameters,
     ReferenceStrategy, ResolvedCompressionParameters, SourceSize, inspect_compression_level,

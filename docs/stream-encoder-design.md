@@ -4,6 +4,12 @@ Reference: facebook/zstd v1.5.7 `ZSTD_CCtx`, `ZSTD_compressStream2`,
 `ZSTD_compressBlock_internal`, `ZSTD_writeFrameHeader`, and the public contract
 in `streaming-design.md`. Rust retains its independent greedy block strategy.
 
+This document records the initial streaming workspace design. Subsequent entropy,
+dictionary and allocator modules extend its storage; [configurable match search](match-search-design.md)
+now supplies bounded dynamic search dimensions and history while preserving the
+default output behavior. The fixed dimensions below describe the original
+checkpoint, not the full set of current configuration choices.
+
 ## Ownership and decomposition recorded before implementation
 
 First extract a `BlockEncoder` owning optional indexed match storage and

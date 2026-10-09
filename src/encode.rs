@@ -371,26 +371,12 @@ impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
     }
 
     /// Configured controls for the next prepared frame.
-    #[cfg_attr(
-        not(test),
-        allow(
-            dead_code,
-            reason = "public encoder search controls follow storage integration"
-        )
-    )]
     pub(crate) const fn search_options(&self) -> MatchSearchOptions {
         self.search_options
     }
 
     /// Copy validated controls without allocating or reshaping existing owners.
     /// The enclosing Encoder enforces the supported fresh-frame boundary.
-    #[cfg_attr(
-        not(test),
-        allow(
-            dead_code,
-            reason = "public encoder search controls follow storage integration"
-        )
-    )]
     pub(crate) fn set_search_options(&mut self, options: MatchSearchOptions) {
         self.search_options = options;
     }

@@ -20,7 +20,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("documents", nargs="*", default=[
         "docs/dictionary-usage.md", "docs/streaming-usage.md", "docs/allocator-usage.md",
-        "docs/parameter-usage.md",
+        "docs/parameter-usage.md", "docs/match-search-usage.md",
     ])
     parser.add_argument("--all-features", action="store_true")
     args = parser.parse_args()

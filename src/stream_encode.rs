@@ -7,6 +7,7 @@ use core::fmt;
 use crate::dictionary::DictionaryHandle;
 use crate::encode::BlockEncoder;
 use crate::frame::{MAGIC, MAX_BLOCK_SIZE};
+use crate::match_search::{MatchSearchOptions, SearchShape};
 use crate::xxhash::XxHash64;
 use crate::{
     CompressionStrategy, EndDirective, Error, Progress, Result, SharedDictionary, StreamStatus,
@@ -78,9 +79,9 @@ struct LatchedDirective {
 /// Corresponds to the streaming role of `ZSTD_CCtx`/`ZSTD_CStream`. Input/output
 /// slices expire at the end of each call; a borrowed dictionary view retains
 /// its explicit lifetime. Internal allocations are fallible and
-/// bounded by the maximum block size plus fixed match/entropy workspace; memory
-/// use does not grow with the total source length. Existing optional unsafe
-/// block backends retain the same checked contract.
+/// bounded by the maximum block size, configured match-search/history storage,
+/// and entropy workspace; memory use does not grow with total source length.
+/// Existing optional unsafe block backends retain the same checked contract.
 pub struct Encoder<A: Allocator = Global, D: DictionaryHandle = SharedDictionary> {
     options: EncoderOptions,
     block: Vec<u8, A>,
@@ -206,6 +207,36 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
         self.options
     }
 
+    /// Return the configured named-policy search and storage settings.
+    ///
+    /// These operational controls are independent of reference compression
+    /// parameter queries and do not enable numeric compression levels.
+    pub fn search_options(&self) -> MatchSearchOptions {
+        self.workspace.search_options()
+    }
+
+    /// Replace search settings before the first process call or after reset.
+    ///
+    /// A session whose frame has started, finished or failed returns
+    /// [`Error::InvalidState`] before shape validation. At a clean boundary the
+    /// checked shape is stored without allocating or cloning any allocator or
+    /// dictionary handle. Errors preserve the entire context. Frame settings,
+    /// counters, selected dictionary/prefix and existing capacities are unchanged.
+    ///
+    /// Storage is prepared when the next frame or block needs it. A deferred
+    /// allocation failure then follows [`Self::process`]'s poison/reset contract.
+    /// Changing settings alone does not resize or release existing caches.
+    pub fn set_search_options(&mut self, options: MatchSearchOptions) -> Result<()> {
+        self.check_configuration_boundary()?;
+        SearchShape::new(
+            options,
+            self.options.strategy,
+            1_u64 << self.options.window_log,
+        )?;
+        self.workspace.set_search_options(options);
+        Ok(())
+    }
+
     /// Replace supported settings before the first process call or after reset.
     ///
     /// Corresponds to the configuration-boundary role of
@@ -216,8 +247,9 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
     /// [`Error::InvalidParameter`]. Either error leaves the entire context
     /// unchanged and does not poison a healthy session.
     ///
-    /// This operation preserves dictionary/prefix selection, counters, buffers,
-    /// and their allocator owners. It neither allocates nor resets a session.
+    /// This operation preserves separate search settings, dictionary/prefix
+    /// selection, counters, buffers, and their allocator owners. It neither
+    /// allocates nor resets a session.
     /// Unlike individual C effort setters, it cannot alter requested settings
     /// after frame processing starts, even if no input or output was transferred.
     pub fn set_options(&mut self, options: EncoderOptions) -> Result<()> {
@@ -236,7 +268,23 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
         self.total_output
     }
 
+    /// Retained search allocation capacity, including inactive strategy caches.
+    ///
+    /// Counts both Greedy position tables, both Chain head/node pairs shared
+    /// by Chain and Lazy, and retained output history. It excludes dictionary
+    /// payload/tables, staging, pending output, literal/sequence/entropy scratch,
+    /// inline state, allocator bookkeeping and shared outer control blocks.
+    ///
+    /// This is an observed capacity, not requested logical bytes, a memory limit
+    /// or a process-memory measurement. Previous larger configurations can keep
+    /// a high-water allocation until the context is dropped.
+    pub fn search_retained_capacity(&self) -> usize {
+        self.workspace.search_retained_capacity()
+    }
+
     /// Reachable heap capacity, excluding inline state and caller buffers.
+    /// Includes [`Self::search_retained_capacity`] plus the other owned codec
+    /// buffers and reachable dictionary allocations.
     /// Attached dictionary payloads are counted once even when borrowed or shared
     /// elsewhere. This is reachable capacity, not exclusive ownership; shared
     /// Arc/Rc outer storage and allocator bookkeeping are excluded.
@@ -252,7 +300,8 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
                 .map_or(0, |dictionary| dictionary.view().retained_capacity())
     }
 
-    /// Start another frame, retaining allocations and persistent frame settings.
+    /// Start another frame, retaining allocations, search settings and persistent
+    /// frame settings.
     ///
     /// The per-frame source pledge is cleared. This also recovers a context
     /// poisoned by a processing error; corresponds to session-only `ZSTD_CCtx_reset`.
@@ -262,15 +311,15 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
         self.clear_frame();
     }
 
-    /// Validate new options, then reset while retaining owned allocations.
-    /// Invalid options leave the current context untouched.
+    /// Validate new frame options, then reset while retaining owned allocations
+    /// and separate search settings. Invalid options leave the context untouched.
     pub fn reset_with_options(&mut self, options: EncoderOptions) -> Result<()> {
         self.options = options.validate()?;
         self.clear_frame();
         Ok(())
     }
 
-    /// Restore default settings and remove dictionary/prefix selection.
+    /// Restore default frame/search settings and remove dictionary/prefix selection.
     ///
     /// Corresponds to the supported role of `ZSTD_reset_parameters`. Only a
     /// clean configuration boundary or a completed frame accepts this operation.
@@ -278,8 +327,9 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
     /// mutation or recovery. A completed session remains finished and retains
     /// its counters: call [`Self::reset`] before processing another frame.
     ///
-    /// Defaults are Rust's [`EncoderOptions::default`], including checksum
-    /// enabled and no source pledge. C's parameter-only reset can retain a
+    /// Defaults are Rust's [`EncoderOptions::default`] and
+    /// [`MatchSearchOptions::default`], including checksum enabled and no source
+    /// pledge. C's parameter-only reset can retain a
     /// fresh session's pledge and uses different checksum defaults.
     ///
     /// Every selected/active dictionary handle and cached seed is cleared,
@@ -291,6 +341,8 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
             self.check_configuration_boundary()?;
         }
         self.options = EncoderOptions::default();
+        self.workspace
+            .set_search_options(MatchSearchOptions::default());
         self.dictionary = None;
         self.prefix = None;
         self.active_dictionary = None;
@@ -299,7 +351,8 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
         Ok(())
     }
 
-    /// Discard the session, restore defaults, and remove dictionary/prefix state.
+    /// Discard the session, restore frame/search defaults, and remove
+    /// dictionary/prefix state.
     ///
     /// Corresponds to `ZSTD_reset_session_and_parameters`. This accepts every
     /// phase, including processing failures, and returns a ready context with
@@ -310,6 +363,8 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
     /// compile-time lifetime remains part of the context type after its fields clear.
     pub fn reset_all(&mut self) {
         self.options = EncoderOptions::default();
+        self.workspace
+            .set_search_options(MatchSearchOptions::default());
         self.dictionary = None;
         self.prefix = None;
         self.clear_frame();
@@ -581,10 +636,12 @@ impl<A: Allocator + Clone, D: DictionaryHandle> fmt::Debug for Encoder<A, D> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Encoder")
             .field("options", &self.options)
+            .field("search_options", &self.search_options())
             .field("phase", &self.phase)
             .field("total_input", &self.total_input)
             .field("total_output", &self.total_output)
             .field("retained_capacity", &self.retained_capacity())
+            .field("search_retained_capacity", &self.search_retained_capacity())
             .finish_non_exhaustive()
     }
 }
@@ -596,6 +653,394 @@ mod tests {
     use alloc::vec;
     use core::num::NonZeroU64;
     use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn small_search_options() -> MatchSearchOptions {
+        let mut options = MatchSearchOptions::new();
+        options.set_hash_log(10).unwrap();
+        options.set_chain_log(10).unwrap();
+        options.set_key_bytes(6).unwrap();
+        options.set_chain_visits(3).unwrap();
+        options.set_lazy_visits(5).unwrap();
+        options.set_history_bytes(1024).unwrap();
+        options
+    }
+
+    #[test]
+    fn search_and_frame_setters_are_order_independent_and_keep_selected_handles() {
+        let dictionary = crate::Dictionary::raw(b"selected dictionary bytes")
+            .unwrap()
+            .into_shared();
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            for search_first in [false, true] {
+                for prefix in [false, true] {
+                    let frame = EncoderOptions {
+                        strategy,
+                        window_log: 10,
+                        checksum: false,
+                        pledged_size: Some(0),
+                        include_content_size: false,
+                        include_dictionary_id: false,
+                    };
+                    let search = small_search_options();
+                    let mut encoder = Encoder::new();
+                    assert_eq!(encoder.search_options(), MatchSearchOptions::default());
+                    assert_eq!(encoder.search_retained_capacity(), 0);
+                    if prefix {
+                        encoder.set_prefix(dictionary.clone()).unwrap();
+                    } else {
+                        encoder.set_dictionary(Some(dictionary.clone())).unwrap();
+                    }
+                    let owners = SharedDictionary::strong_count(&dictionary);
+                    let capacity = encoder.retained_capacity();
+                    if search_first {
+                        encoder.set_search_options(search).unwrap();
+                        encoder.set_options(frame).unwrap();
+                    } else {
+                        encoder.set_options(frame).unwrap();
+                        encoder.set_search_options(search).unwrap();
+                    }
+                    assert_eq!(encoder.options(), frame);
+                    assert_eq!(encoder.search_options(), search);
+                    assert_eq!(encoder.search_retained_capacity(), 0);
+                    assert_eq!(encoder.retained_capacity(), capacity);
+                    assert_eq!(SharedDictionary::strong_count(&dictionary), owners);
+                    assert_eq!(encoder.prefix.is_some(), prefix);
+                    assert_eq!(encoder.dictionary.is_some(), !prefix);
+                    assert_eq!((encoder.total_input(), encoder.total_output()), (0, 0));
+                    assert_eq!(encoder.phase, Phase::Active);
+                    assert!(!encoder.header_started);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn search_setter_rejects_every_started_phase_before_mutation() {
+        let source = b"abcabcabcabcabcabc";
+        for case in 0..9 {
+            let mut encoder = Encoder::new();
+            let search = small_search_options();
+            encoder.set_search_options(search).unwrap();
+            match case {
+                0 => {
+                    encoder
+                        .process(&[], &mut [], EndDirective::Continue)
+                        .unwrap();
+                }
+                1 => {
+                    encoder
+                        .process(&[], &mut [0; 1], EndDirective::Continue)
+                        .unwrap();
+                }
+                2 => {
+                    encoder
+                        .process(source, &mut [0; 64], EndDirective::Continue)
+                        .unwrap();
+                }
+                3 => {
+                    encoder
+                        .process(source, &mut [0; 64], EndDirective::Flush)
+                        .unwrap();
+                }
+                4 => {
+                    encoder
+                        .process(source, &mut [], EndDirective::Flush)
+                        .unwrap();
+                }
+                5 => {
+                    encoder
+                        .process(source, &mut [0; 6], EndDirective::Finish)
+                        .unwrap();
+                    assert_eq!(encoder.phase, Phase::Finishing);
+                }
+                6 => {
+                    finish(&mut encoder, source, 1);
+                    assert_eq!(encoder.phase, Phase::Finished);
+                }
+                7 => {
+                    encoder
+                        .process(source, &mut [], EndDirective::Flush)
+                        .unwrap();
+                    assert_eq!(
+                        encoder.process(&[], &mut [], EndDirective::Finish),
+                        Err(Error::InvalidState)
+                    );
+                    assert_eq!(encoder.phase, Phase::Failed);
+                }
+                8 => {
+                    encoder
+                        .process(source, &mut [], EndDirective::Finish)
+                        .unwrap();
+                    assert_eq!(encoder.phase, Phase::Active);
+                }
+                _ => unreachable!(),
+            }
+            reject_configuration_without_mutation(
+                &mut encoder,
+                |encoder| encoder.set_search_options(MatchSearchOptions::default()),
+                Error::InvalidState,
+            );
+            assert_eq!(encoder.search_options(), search);
+            // A phase-only rejection does not recover or poison the context.
+            encoder.reset();
+            assert_eq!(encoder.search_options(), search);
+            encoder
+                .set_search_options(MatchSearchOptions::default())
+                .unwrap();
+            assert_eq!(
+                finish(&mut encoder, source, 1),
+                finish(&mut Encoder::new(), source, 7)
+            );
+        }
+    }
+
+    #[test]
+    fn search_session_resets_preserve_settings_and_parameter_resets_restore_defaults() {
+        let source = b"session search settings";
+        let search = small_search_options();
+        let mut encoder = Encoder::new();
+        encoder.set_search_options(search).unwrap();
+        encoder
+            .set_options(EncoderOptions {
+                pledged_size: Some(source.len() as u64),
+                ..EncoderOptions::default()
+            })
+            .unwrap();
+        finish(&mut encoder, source, 1);
+        let capacity = encoder.retained_capacity();
+        let search_capacity = encoder.search_retained_capacity();
+        encoder.reset();
+        assert_eq!(encoder.search_options(), search);
+        assert_eq!(encoder.options().pledged_size, None);
+        assert_eq!(encoder.retained_capacity(), capacity);
+        assert_eq!(encoder.search_retained_capacity(), search_capacity);
+        let frame = EncoderOptions {
+            strategy: CompressionStrategy::Lazy,
+            window_log: 10,
+            checksum: false,
+            ..EncoderOptions::default()
+        };
+        encoder.reset_with_options(frame).unwrap();
+        assert_eq!(encoder.search_options(), search);
+        assert_eq!(encoder.options(), frame);
+        assert_eq!((encoder.total_input(), encoder.total_output()), (0, 0));
+        reject_configuration_without_mutation(
+            &mut encoder,
+            |encoder| {
+                encoder.reset_with_options(EncoderOptions {
+                    window_log: 9,
+                    ..frame
+                })
+            },
+            Error::InvalidParameter,
+        );
+        finish(&mut encoder, source, 1);
+        let completed = (
+            encoder.total_input(),
+            encoder.total_output(),
+            encoder.phase,
+            encoder.header_started,
+            encoder.search_retained_capacity(),
+        );
+        encoder.reset_parameters().unwrap();
+        assert_eq!(encoder.search_options(), MatchSearchOptions::default());
+        assert_eq!(encoder.options(), EncoderOptions::default());
+        assert_eq!(
+            (
+                encoder.total_input(),
+                encoder.total_output(),
+                encoder.phase,
+                encoder.header_started,
+                encoder.search_retained_capacity()
+            ),
+            completed
+        );
+        assert_eq!(encoder.set_search_options(search), Err(Error::InvalidState));
+        encoder.reset();
+        encoder.set_search_options(search).unwrap();
+        encoder.reset_all();
+        assert_eq!(encoder.search_options(), MatchSearchOptions::default());
+        assert_eq!(encoder.options(), EncoderOptions::default());
+        assert_eq!(encoder.search_retained_capacity(), completed.4);
+        assert_eq!((encoder.total_input(), encoder.total_output()), (0, 0));
+    }
+
+    #[test]
+    fn search_setters_keep_allocator_failures_armed_and_dictionary_domains_unchanged() {
+        fn check<A: Allocator + Clone>(
+            allocator: A,
+            monitor: &zstdoxide_test_allocator::AllocationMonitor,
+        ) {
+            let dictionary_owner = tracking().into_non_clone();
+            let dictionary_monitor = dictionary_owner.monitor();
+            let dictionary =
+                crate::Dictionary::raw_in(b"dictionary content", &dictionary_owner).unwrap();
+            let mut encoder = Encoder::with_dictionary_in(
+                EncoderOptions::default(),
+                dictionary.view(),
+                allocator,
+            )
+            .unwrap();
+            encoder.set_search_options(small_search_options()).unwrap();
+            finish(&mut encoder, b"abcabcabcabc", 1);
+            encoder.reset();
+            let before = monitor.snapshot();
+            let dictionary_before = dictionary_monitor.snapshot();
+            let capacities = (
+                encoder.retained_capacity(),
+                encoder.search_retained_capacity(),
+            );
+            let pointers = (encoder.block.as_ptr(), encoder.pending.as_ptr());
+            let identity = (
+                encoder.block.allocator() as *const A,
+                encoder.pending.allocator() as *const A,
+            );
+            assert!(monitor.fail_next());
+            let mut larger = small_search_options();
+            larger.set_hash_log(18).unwrap();
+            larger.set_chain_log(19).unwrap();
+            larger.set_key_bytes(8).unwrap();
+            larger.set_history_bytes(1 << 20).unwrap();
+            encoder.set_search_options(larger).unwrap();
+            encoder
+                .set_options(EncoderOptions {
+                    strategy: CompressionStrategy::Chain,
+                    window_log: 20,
+                    ..EncoderOptions::default()
+                })
+                .unwrap();
+            assert_eq!(encoder.search_options(), larger);
+            assert_eq!(
+                (
+                    encoder.retained_capacity(),
+                    encoder.search_retained_capacity()
+                ),
+                capacities
+            );
+            assert_eq!((encoder.block.as_ptr(), encoder.pending.as_ptr()), pointers);
+            assert_eq!(
+                (
+                    encoder.block.allocator() as *const A,
+                    encoder.pending.allocator() as *const A
+                ),
+                identity
+            );
+            assert_eq!(
+                encoder.dictionary.as_ref().unwrap().content(),
+                dictionary.content()
+            );
+            assert_eq!(monitor.snapshot(), before);
+            assert_eq!(dictionary_monitor.snapshot(), dictionary_before);
+            assert_eq!(
+                encoder.process(b"x", &mut [], EndDirective::Continue),
+                Err(Error::AllocationFailed)
+            );
+            assert_eq!(encoder.phase, Phase::Failed);
+            assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
+            let failed = monitor.snapshot();
+            encoder.reset_all();
+            assert_eq!(monitor.snapshot(), failed);
+            assert_eq!(encoder.search_options(), MatchSearchOptions::default());
+            assert!(encoder.dictionary.is_none());
+            drop(encoder);
+            monitor.assert_released();
+            drop(dictionary);
+            dictionary_monitor.assert_released();
+        }
+        let allocator = tracking();
+        let monitor = allocator.monitor();
+        check(allocator, &monitor);
+        let allocator = tracking().into_non_clone();
+        let monitor = allocator.monitor();
+        check(&allocator, &monitor);
+        drop(allocator);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn search_capacity_tracks_inactive_cache_families_without_dictionary_or_staging() {
+        let owner = tracking();
+        let monitor = owner.monitor();
+        let dictionary = crate::Dictionary::raw(b"abcdefghabcdefgh")
+            .unwrap()
+            .into_shared();
+        let dictionary_capacity = dictionary.retained_capacity();
+        let mut encoder =
+            Encoder::with_dictionary_in(EncoderOptions::default(), dictionary.clone(), owner)
+                .unwrap();
+        assert_eq!(encoder.search_retained_capacity(), 0);
+        assert_eq!(encoder.retained_capacity(), dictionary_capacity);
+        let source = b"abcdefgh".repeat(256);
+        let mut capacities = Vec::new();
+        for (index, strategy) in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+            CompressionStrategy::Greedy,
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            encoder
+                .reset_with_options(EncoderOptions {
+                    strategy,
+                    ..EncoderOptions::default()
+                })
+                .unwrap();
+            let mut search = small_search_options();
+            if index == 1 {
+                search.set_hash_log(11).unwrap();
+                search.set_chain_log(11).unwrap();
+            }
+            search.set_key_bytes([4, 6, 8, 4][index]).unwrap();
+            let retained = encoder.search_retained_capacity();
+            let before = monitor.snapshot();
+            encoder.set_search_options(search).unwrap();
+            assert_eq!(encoder.search_retained_capacity(), retained);
+            assert_eq!(monitor.snapshot(), before);
+            let encoded = finish(&mut encoder, &source, 257);
+            assert_eq!(
+                crate::decompress_with_dictionary(
+                    &encoded,
+                    &dictionary,
+                    crate::DecodeOptions::new(source.len())
+                )
+                .unwrap(),
+                source
+            );
+            let narrow = encoder.search_retained_capacity();
+            assert_eq!(narrow, encoder.workspace.search_retained_capacity());
+            assert!(narrow > 0);
+            assert!(encoder.retained_capacity() > narrow + dictionary_capacity);
+            assert!(
+                encoder.retained_capacity()
+                    >= narrow
+                        + dictionary_capacity
+                        + encoder.block.capacity()
+                        + encoder.pending.capacity()
+            );
+            assert_eq!(
+                monitor.snapshot().live_bytes as usize,
+                encoder.retained_capacity() - dictionary_capacity
+            );
+            capacities.push(narrow);
+        }
+        assert!(capacities[1] > capacities[0]);
+        assert_eq!(capacities[2], capacities[1]);
+        assert_eq!(capacities[3], capacities[2]);
+        let total = encoder.retained_capacity();
+        let before = monitor.snapshot();
+        encoder.reset_parameters().unwrap();
+        assert_eq!(encoder.search_retained_capacity(), capacities[3]);
+        assert_eq!(encoder.retained_capacity(), total - dictionary_capacity);
+        assert_eq!(monitor.snapshot(), before);
+        drop(encoder);
+        monitor.assert_released();
+    }
 
     #[test]
     fn set_options_applies_supported_fields_and_preserves_selected_handles() {
@@ -691,7 +1136,7 @@ mod tests {
     ) {
         let snapshot = |encoder: &Encoder<A>| {
             (
-                encoder.options,
+                (encoder.options, encoder.search_options()),
                 (
                     encoder.phase,
                     encoder.header_started,
@@ -711,6 +1156,7 @@ mod tests {
                     encoder.block.capacity(),
                     encoder.pending.capacity(),
                     encoder.workspace.retained_capacity(),
+                    encoder.search_retained_capacity(),
                 ),
                 [
                     encoder.dictionary.as_ref().map(SharedDictionary::as_ptr),
@@ -946,6 +1392,7 @@ mod tests {
                 include_dictionary_id: false,
             })
             .unwrap();
+            encoder.set_search_options(small_search_options()).unwrap();
             match case {
                 0 => {} // A fresh context accepts parameter-only reset.
                 1 => {
@@ -1011,6 +1458,7 @@ mod tests {
                 );
                 encoder.reset_parameters().unwrap();
                 assert_eq!(encoder.options(), EncoderOptions::default());
+                assert_eq!(encoder.search_options(), MatchSearchOptions::default());
                 assert_eq!(
                     (
                         encoder.phase,
@@ -1045,6 +1493,7 @@ mod tests {
             let pointers = (encoder.block.as_ptr(), encoder.pending.as_ptr());
             encoder.reset_all();
             assert_eq!(encoder.options(), EncoderOptions::default());
+            assert_eq!(encoder.search_options(), MatchSearchOptions::default());
             assert_eq!(encoder.phase, Phase::Active);
             assert!(!encoder.header_started);
             assert!(encoder.block.is_empty() && encoder.pending.is_empty());

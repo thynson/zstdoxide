@@ -2,13 +2,6 @@
 //!
 //! These plain values own no memory and share their safe representation across
 //! all backends. They do not admit reference compression levels or algorithms.
-#![cfg_attr(
-    not(test),
-    allow(
-        dead_code,
-        reason = "plain search foundation awaiting live consumer integration"
-    )
-)]
 
 use core::alloc::Layout;
 
@@ -287,18 +280,46 @@ impl SearchShape {
         self.history_bytes
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "validated payload diagnostic used by resource-bound tests"
+        )
+    )]
     pub(crate) const fn greedy_table_bytes(&self) -> usize {
         self.greedy_table_bytes
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "validated payload diagnostic used by resource-bound tests"
+        )
+    )]
     pub(crate) const fn chain_working_bytes(&self) -> usize {
         self.chain_working_bytes
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "validated payload diagnostic used by resource-bound tests"
+        )
+    )]
     pub(crate) const fn chain_seed_bytes(&self) -> usize {
         self.chain_seed_bytes
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "validated payload diagnostic used by resource-bound tests"
+        )
+    )]
     pub(crate) const fn all_cached_bytes(&self) -> usize {
         self.all_cached_bytes
     }

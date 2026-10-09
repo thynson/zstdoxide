@@ -287,3 +287,32 @@ embeds source hashes, logs and reproduction scripts, retaining initial test-only
 API and owner-count corrections. The production delta never changed after its
 publication. No additional C, Miri or timing execution is claimed here. All
 private search consumers are now operational; public boundary wiring follows.
+
+## Public encoder configuration and resets
+
+`MatchSearchOptions` is exported only after all its consumers operate. The
+encoder's getter, phase-first fallible setter and search-capacity method now
+expose those controls without adding constructor variants or changing one-shot
+defaults. Installation copies plain settings without allocation or allocator/
+dictionary cloning. Started, finished and failed sessions reject changes before
+validation. Session reset preserves search settings; parameter/full resets restore
+both option records and clear selected handles/seeds while retaining exact
+allocation owners. Debug output includes configured search and its capacity.
+
+All 31 normal stream tests pass in eight feature/std configurations: 248 passing
+executions. The existing optional C test is ignored in six std configurations and
+absent in no_std. Five new tests cover setter ordering, nine started-phase
+schedules, session/parameter reset bookkeeping, deferred failure in owned and
+borrowed allocator domains, and inactive-cache capacity accounting. Both no_std
+library checks, strict library Clippy safe/all and formatting pass. The 44-file
+core/config manifest remains unchanged through the captured final checks.
+
+All 18 registered usage examples pass in safe/all builds, including two new
+[search examples](match-search-usage.md). Existing streaming examples are unchanged;
+their surrounding prose now states which dimensions are defaults. Historical
+design documents explicitly scope their original fixed dimensions.
+[Public API evidence](evidence/2026-10-09-match-search-public-api.json) embeds unit,
+export and documentation checks. It preserves the corrected runner expectation
+for the cfg(std)-only ignored test; the successful no_std run was not repeated.
+Public actual-effect/failure and pinned-C frame campaigns remain separate next
+items, followed by the complete feature/platform matrix and benchmarks.
