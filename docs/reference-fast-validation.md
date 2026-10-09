@@ -160,3 +160,35 @@ throughput campaign is attributed to this structural extraction.
 [archive](evidence/2026-10-09-block-entropy-ownership.tar.gz) preserve logs, both
 manifests, initial/final owned sources, independent review and runners. Concurrent
 sequence-context work was excluded from both snapshots.
+
+## Transactional intent-bearing sequence preparation
+
+`SequenceWithOffset` retains each logical match and its chosen wire value.
+`SequenceEncoder::committed_repeats` exposes only the emitted frame's triple;
+`prepare_with_offsets` discards an older candidate and rejects a mismatched
+snapshot before any allocation, including empty input. This is a value check,
+not a frame identity token. Canonical and explicit preparation share the existing
+reservation/planning/selection/serialization flow through a monomorphized helper,
+with no new context field, allocation owner or unsafe operation.
+
+Six new tests exercise stale snapshots without allocation/cloning, empty and
+replaced candidates, malformed intent, actual decoded wire choices and complete
+repeat-state publication. The decode witness establishes a triple, emits an
+explicit offset equal to an existing repeat, then probes both literal-zero
+Repeat1 and Repeat3 so an incorrect third slot changes decoded output. Failure
+recovery covers all 28 fresh-context and thirteen committed-context allocation
+ordinals with exact owners, including borrowed non-Clone allocators.
+
+The isolated `7c2e928` snapshot plus the owned context overlay passes seventeen
+commands: nineteen tests in seven configurations, fourteen original default-frame
+executions safe/all release and three exact host/all-feature strict-provenance
+Miri checks, totaling 150 passes and five existing oracle ignores. No_std,
+strict all-target Clippy safe/all and formatting pass. Every recorded snapshot
+input remains unchanged. Three later current-tree integration checks with the
+extracted entropy owner also pass: nineteen context tests, seven unchanged default
+replays and strict library Clippy/all, with one existing oracle ignore.
+
+[Context evidence](evidence/2026-10-09-fast-sequence-context.json) preserves both
+scopes, exact commands/logs, compiler environment, source hashes and the runner.
+Miri includes the bounded 41-ordinal failure sweep; its elapsed duration is not a
+performance result. No new C execution or numeric compression API is claimed.

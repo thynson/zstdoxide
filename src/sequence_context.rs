@@ -10,7 +10,7 @@ use crate::frame::MAX_BLOCK_SIZE;
 use crate::fse_encode::FseEncodingTable;
 use crate::fse_select::{self, Mode};
 use crate::sequence_encode::encode_sequences;
-use crate::sequence_plan::PlannedSequence;
+use crate::sequence_plan::{OffsetIntent, PlannedSequence};
 use crate::{Error, Result};
 
 /// A checked match parser's logical output, before entropy or repeat planning.
@@ -20,6 +20,19 @@ pub(crate) struct LogicalSequence {
     pub(crate) literal_length: u32,
     pub(crate) match_length: u32,
     pub(crate) distance: u32,
+}
+
+/// Preserve a parser's wire offset choice alongside its logical match.
+/// This copied record owns no memory and does not enlarge the named parser's
+/// existing LogicalSequence records or require another safety backend.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "explicit parser integration follows")
+)]
+pub(crate) struct SequenceWithOffset {
+    pub(crate) sequence: LogicalSequence,
+    pub(crate) offset: OffsetIntent,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -212,18 +225,70 @@ impl<A: Allocator + Clone> SequenceEncoder<A> {
     /// the match parser's responsibility, independently of wire representability.
     pub(crate) fn prepare(&mut self, sequences: &[LogicalSequence]) -> Result<()> {
         self.discard();
-        let result = self.prepare_inner(sequences);
+        self.prepare_planned(sequences.len(), |index, repeat| {
+            let sequence = sequences[index];
+            PlannedSequence::new(
+                sequence.literal_length,
+                sequence.match_length,
+                sequence.distance,
+                repeat,
+            )
+        })
+    }
+
+    /// Preserve explicit/repeat intent from a parse of the committed snapshot.
+    ///
+    /// Discard an older candidate first. A stale snapshot then fails before any
+    /// allocation, including for an empty section. This is a value-consistency
+    /// check, not a frame identity token: source/window eligibility and frame
+    /// identity remain the caller's responsibility. Failure preserves committed
+    /// tables and repeats and exposes no partial section.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "explicit parser integration follows")
+    )]
+    pub(crate) fn prepare_with_offsets(
+        &mut self,
+        sequences: &[SequenceWithOffset],
+        initial_repeat: [u32; 3],
+    ) -> Result<()> {
+        self.discard();
+        if initial_repeat != self.committed_repeats() {
+            return Err(Error::InvalidState);
+        }
+        self.prepare_planned(sequences.len(), |index, repeat| {
+            let SequenceWithOffset { sequence, offset } = sequences[index];
+            PlannedSequence::with_offset(
+                sequence.literal_length,
+                sequence.match_length,
+                sequence.distance,
+                offset,
+                repeat,
+            )
+        })
+    }
+
+    fn prepare_planned(
+        &mut self,
+        count: usize,
+        plan: impl FnMut(usize, [u32; 3]) -> Result<PlannedSequence>,
+    ) -> Result<()> {
+        let result = self.prepare_inner(count, plan);
         if result.is_err() {
             self.discard();
         }
         result
     }
 
-    fn prepare_inner(&mut self, sequences: &[LogicalSequence]) -> Result<()> {
-        if sequences.len() > MAX_BLOCK_SIZE / 3 {
+    fn prepare_inner(
+        &mut self,
+        count: usize,
+        mut plan: impl FnMut(usize, [u32; 3]) -> Result<PlannedSequence>,
+    ) -> Result<()> {
+        if count > MAX_BLOCK_SIZE / 3 {
             return Err(Error::ResourceLimit);
         }
-        if sequences.is_empty() {
+        if count == 0 {
             self.section
                 .try_reserve_exact(1)
                 .map_err(|_| Error::AllocationFailed)?;
@@ -232,22 +297,17 @@ impl<A: Allocator + Clone> SequenceEncoder<A> {
             return Ok(());
         }
         self.plans
-            .try_reserve_exact(sequences.len())
+            .try_reserve_exact(count)
             .map_err(|_| Error::AllocationFailed)?;
         for symbols in &mut self.symbols {
             symbols
-                .try_reserve_exact(sequences.len())
+                .try_reserve_exact(count)
                 .map_err(|_| Error::AllocationFailed)?;
         }
-        let mut repeat = self.repeat;
+        let mut repeat = self.committed_repeats();
         let mut generated = 0_u32;
-        for sequence in sequences {
-            let plan = PlannedSequence::new(
-                sequence.literal_length,
-                sequence.match_length,
-                sequence.distance,
-                repeat,
-            )?;
+        for index in 0..count {
+            let plan = plan(index, repeat)?;
             generated = generated
                 .checked_add(plan.literal_length)
                 .and_then(|size| size.checked_add(plan.match_length))
@@ -321,7 +381,6 @@ impl<A: Allocator + Clone> SequenceEncoder<A> {
         self.section
             .try_reserve_exact(required)
             .map_err(|_| Error::AllocationFailed)?;
-        let count = sequences.len();
         if count < 128 {
             self.section.push(count as u8);
         } else if count < 0x7f00 {
@@ -360,6 +419,12 @@ impl<A: Allocator + Clone> SequenceEncoder<A> {
 }
 
 impl<A: Allocator> SequenceEncoder<A> {
+    /// Copy only the emitted frame's repeat state, even while a candidate is
+    /// prepared. The returned value owns no borrow into this context.
+    pub(crate) const fn committed_repeats(&self) -> [u32; 3] {
+        self.repeat
+    }
+
     /// Invalidate frame state without freeing cached/default/spare allocations.
     /// A subsequent start_frame may install a dictionary for the next frame.
     pub(crate) fn reset(&mut self) {
@@ -448,6 +513,416 @@ mod tests {
             fail_at: None,
         })
         .unwrap()
+    }
+
+    fn intended(
+        literals: u32,
+        matches: u32,
+        distance: u32,
+        offset: OffsetIntent,
+    ) -> SequenceWithOffset {
+        SequenceWithOffset {
+            sequence: logical(literals, matches, distance),
+            offset,
+        }
+    }
+
+    #[test]
+    fn explicit_snapshot_tracks_only_commit_and_replacement_starts_from_committed_state() {
+        let mut context = SequenceEncoder::new();
+        let initial = context.committed_repeats();
+        let first = [intended(4, 3, 4, OffsetIntent::Explicit)];
+        context.prepare_with_offsets(&first, initial).unwrap();
+        let first_bytes = context.as_bytes().to_vec();
+        assert_eq!(context.plans[0].offset_value, 7);
+        assert_eq!(context.committed_repeats(), initial);
+        assert_eq!(context.pending_repeat, [4, 1, 4]);
+        context.discard();
+        context.commit();
+        assert_eq!(context.committed_repeats(), initial);
+
+        context.prepare_with_offsets(&first, initial).unwrap();
+        // The pending candidate has repeat0=4, but a replacement must still
+        // interpret Repeat1 from committed repeat0=1.
+        context
+            .prepare_with_offsets(&[intended(1, 3, 1, OffsetIntent::Repeat1)], initial)
+            .unwrap();
+        assert_eq!(context.pending_repeat, initial);
+        assert_eq!(context.plans[0].offset_value, 1);
+        context.prepare_with_offsets(&first, initial).unwrap();
+        assert_eq!(context.as_bytes(), first_bytes);
+        context.commit();
+        assert_eq!(context.committed_repeats(), [4, 1, 4]);
+        let sources = context.channels.each_ref().map(|channel| channel.source);
+        context.commit();
+        assert_eq!(context.committed_repeats(), [4, 1, 4]);
+        let committed = context.committed_repeats();
+        context
+            .prepare_with_offsets(&[intended(0, 3, 4, OffsetIntent::Explicit)], committed)
+            .unwrap();
+        assert_eq!(context.pending_repeat, [4, 4, 1]);
+        context.prepare_with_offsets(&[], committed).unwrap();
+        assert_eq!(context.as_bytes(), &[0]);
+        context.commit();
+        context.commit();
+        assert_eq!(context.committed_repeats(), committed);
+        assert_eq!(
+            context.channels.each_ref().map(|channel| channel.source),
+            sources
+        );
+        context.reset();
+        assert_eq!(context.committed_repeats(), initial);
+        assert_eq!(
+            context.prepare_with_offsets(&[], committed),
+            Err(Error::InvalidState)
+        );
+    }
+
+    #[test]
+    fn explicit_stale_snapshot_discards_even_empty_candidates_before_allocation_or_clone() {
+        let owner = allocator();
+        let monitor = owner.monitor();
+        let mut context = SequenceEncoder::new_in(owner);
+        let one = [intended(4, 3, 4, OffsetIntent::Explicit)];
+        for initialized in [false, true] {
+            if initialized {
+                context
+                    .prepare_with_offsets(&one, context.committed_repeats())
+                    .unwrap();
+                context.commit();
+                context
+                    .prepare_with_offsets(&one, context.committed_repeats())
+                    .unwrap();
+                assert!(!context.as_bytes().is_empty());
+            }
+            let committed = context.committed_repeats();
+            let sources = context.channels.each_ref().map(|channel| channel.source);
+            let capacity = context.retained_capacity();
+            let before = monitor.snapshot();
+            assert!(monitor.fail_next());
+            let stale = [committed[0] + 1, committed[1], committed[2]];
+            for input in [&[][..], one.as_slice()] {
+                assert_eq!(
+                    context.prepare_with_offsets(input, stale),
+                    Err(Error::InvalidState)
+                );
+                assert_eq!(monitor.snapshot(), before);
+                assert!(context.as_bytes().is_empty());
+                assert!(!context.prepared);
+                assert_eq!(context.pending_modes, None);
+                assert_eq!(context.committed_repeats(), committed);
+                assert_eq!(context.pending_repeat, committed);
+                assert_eq!(context.retained_capacity(), capacity);
+                assert_eq!(
+                    context.channels.each_ref().map(|channel| channel.source),
+                    sources
+                );
+                context.commit();
+            }
+            // The armed request is still rejected by the first actual growth.
+            let larger = [one[0]; 64];
+            assert_eq!(
+                context.prepare_with_offsets(&larger, committed),
+                Err(Error::AllocationFailed)
+            );
+            assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
+            assert_eq!(monitor.snapshot().failures, before.failures + 1);
+            monitor.clear_failure();
+        }
+        drop(context);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn explicit_sections_decode_wire_intent_and_all_repeat_cells_across_commits() {
+        use crate::history::SequenceOutput;
+
+        struct ObservedHistory {
+            history: History,
+            distances: Vec<usize>,
+        }
+        impl SequenceOutput for ObservedHistory {
+            fn len(&self) -> usize {
+                self.history.len()
+            }
+            fn append(&mut self, bytes: &[u8]) -> Result<()> {
+                self.history.append(bytes)
+            }
+            fn copy_match(&mut self, distance: usize, length: usize) -> Result<()> {
+                self.distances.push(distance);
+                self.history.copy_match(distance, length)
+            }
+        }
+
+        let mut context = SequenceEncoder::new();
+        let mut decoder = SequenceState::new();
+        let mut output = ObservedHistory {
+            history: History::new(128),
+            distances: Vec::new(),
+        };
+        output.history.start_frame(1024);
+        // Reach nondefault repeats through actual emitted sequences, rather
+        // than injecting private state into either encoder or decoder.
+        let seed = [
+            intended(30, 3, 30, OffsetIntent::Explicit),
+            intended(0, 3, 20, OffsetIntent::Explicit),
+            intended(0, 3, 10, OffsetIntent::Explicit),
+        ];
+        context.prepare_with_offsets(&seed, [1, 4, 8]).unwrap();
+        decoder
+            .decode(
+                context.as_bytes(),
+                b"0123456789abcdefghijklmnopqrst",
+                &mut output,
+                MAX_BLOCK_SIZE,
+            )
+            .unwrap();
+        context.commit();
+        assert_eq!(context.committed_repeats(), [10, 20, 30]);
+
+        for (sequence, literal, wire_value, next) in [
+            (
+                intended(1, 4, 10, OffsetIntent::Explicit),
+                b"X".as_slice(),
+                13,
+                [10, 10, 20],
+            ),
+            (
+                intended(0, 3, 10, OffsetIntent::Repeat1),
+                b"".as_slice(),
+                1,
+                [10, 10, 20],
+            ),
+            (
+                intended(1, 3, 20, OffsetIntent::Repeat3),
+                b"Y".as_slice(),
+                3,
+                [20, 10, 10],
+            ),
+            (
+                intended(1, 3, 10, OffsetIntent::Repeat2),
+                b"Z".as_slice(),
+                2,
+                [10, 20, 10],
+            ),
+            (
+                intended(1, 3, 10, OffsetIntent::Repeat1),
+                b"W".as_slice(),
+                1,
+                [10, 20, 10],
+            ),
+        ] {
+            let committed = context.committed_repeats();
+            context
+                .prepare_with_offsets(&[sequence], committed)
+                .unwrap();
+            assert_eq!(context.plans[0].offset_value, wire_value);
+            assert_eq!(context.committed_repeats(), committed);
+            decoder
+                .decode(context.as_bytes(), literal, &mut output, MAX_BLOCK_SIZE)
+                .unwrap();
+            assert_eq!(
+                output.distances.last().copied(),
+                Some(sequence.sequence.distance as usize)
+            );
+            context.commit();
+            assert_eq!(context.committed_repeats(), next);
+        }
+        // The second block's zero-LL Repeat1 distinguishes Explicit(10) from
+        // canonical Repeat1(10); the next Repeat3 also observes the third cell.
+        // These are decoded wire transitions, not just inspection of plans.
+        assert_eq!(output.distances, [30, 20, 10, 10, 10, 20, 10, 10]);
+        assert_eq!(
+            output.history.into_bytes(),
+            b"0123456789abcdefghijklmnopqrst012defqrsX012defqYst0Z2deWqYs"
+        );
+    }
+
+    #[test]
+    fn explicit_invalid_plans_clear_pending_output_without_publishing_state() {
+        let mut context = SequenceEncoder::new();
+        for sequences in [
+            vec![intended(1, 3, 4, OffsetIntent::Repeat1)],
+            vec![intended(0, 3, 1, OffsetIntent::Repeat3)],
+            vec![intended(1, 3, u32::MAX, OffsetIntent::Explicit)],
+            vec![intended(0, 2, 1, OffsetIntent::Explicit)],
+            vec![intended(u32::MAX, 3, 1, OffsetIntent::Explicit)],
+            vec![
+                intended(0, 131_072, 1, OffsetIntent::Explicit),
+                intended(0, 3, 1, OffsetIntent::Explicit),
+            ],
+        ] {
+            context
+                .prepare_with_offsets(&[intended(7, 3, 7, OffsetIntent::Explicit)], [1, 4, 8])
+                .unwrap();
+            assert_eq!(
+                context.prepare_with_offsets(&sequences, [1, 4, 8]),
+                Err(Error::CorruptData)
+            );
+            assert!(context.as_bytes().is_empty());
+            assert_eq!(context.pending_modes, None);
+            context.commit();
+            assert_eq!(context.committed_repeats(), [1, 4, 8]);
+            assert!(
+                context
+                    .channels
+                    .iter()
+                    .all(|channel| channel.source == Source::Unavailable)
+            );
+        }
+        let excessive = vec![intended(0, 3, 1, OffsetIntent::Explicit); MAX_BLOCK_SIZE / 3 + 1];
+        assert_eq!(
+            context.prepare_with_offsets(&excessive, [1, 4, 8]),
+            Err(Error::ResourceLimit)
+        );
+        assert!(context.as_bytes().is_empty());
+    }
+
+    #[test]
+    fn allocator_explicit_owned_context_matches_global_through_move_discard_and_reset() {
+        let owner = allocator();
+        let monitor = owner.monitor();
+        let mut custom = SequenceEncoder::new_in(owner);
+        let mut global = SequenceEncoder::new();
+        let factory_id = custom.allocator.identity();
+        let buffer_ids = [
+            custom.plans.allocator().identity(),
+            custom.section.allocator().identity(),
+        ];
+        assert_ne!(buffer_ids[0], buffer_ids[1]);
+        assert!(buffer_ids.iter().all(|&id| id != factory_id));
+        for phase in [0, 1] {
+            let workload: Vec<_> = dense_workload(phase)
+                .into_iter()
+                .map(|sequence| SequenceWithOffset {
+                    sequence,
+                    offset: OffsetIntent::Explicit,
+                })
+                .collect();
+            custom
+                .prepare_with_offsets(&workload, custom.committed_repeats())
+                .unwrap();
+            global
+                .prepare_with_offsets(&workload, global.committed_repeats())
+                .unwrap();
+            assert_eq!(custom.as_bytes(), global.as_bytes());
+            custom.commit();
+            global.commit();
+            assert_eq!(custom.committed_repeats(), global.committed_repeats());
+        }
+        assert_eq!(
+            monitor.snapshot().live_bytes,
+            custom.retained_capacity() as u128
+        );
+        let before = monitor.snapshot();
+        let mut moved = custom;
+        moved.discard();
+        moved.reset();
+        moved.commit();
+        assert_eq!(monitor.snapshot(), before);
+        assert_eq!(moved.allocator.identity(), factory_id);
+        assert_eq!(
+            [
+                moved.plans.allocator().identity(),
+                moved.section.allocator().identity()
+            ],
+            buffer_ids
+        );
+        assert_eq!(moved.committed_repeats(), [1, 4, 8]);
+        drop(moved);
+        monitor.assert_released();
+        assert_eq!(
+            monitor.snapshot().owners_dropped,
+            monitor.snapshot().identities_created
+        );
+    }
+
+    #[test]
+    fn allocator_explicit_every_failure_preserves_committed_state_and_recovers_borrowed_owners() {
+        let first: Vec<_> = (0..64)
+            .map(|index| intended(1 + index % 2, 3, 7, OffsetIntent::Explicit))
+            .collect();
+        let next = [
+            intended(2, 3, 5, OffsetIntent::Explicit),
+            intended(3, 4, 5, OffsetIntent::Explicit),
+        ];
+        for initialized in [false, true] {
+            let baseline = allocator();
+            let baseline_monitor = baseline.monitor();
+            let mut probe = SequenceEncoder::new_in(baseline);
+            if initialized {
+                probe.prepare_with_offsets(&first, [1, 4, 8]).unwrap();
+                probe.commit();
+            }
+            let start = baseline_monitor.snapshot().attempts;
+            probe
+                .prepare_with_offsets(&next, probe.committed_repeats())
+                .unwrap();
+            let attempts = baseline_monitor.snapshot().attempts - start;
+            let expected = probe.as_bytes().to_vec();
+            let expected_repeat = probe.pending_repeat;
+            assert!(attempts > 1);
+            #[cfg(feature = "std")]
+            std::println!(
+                "explicit preparation allocation failures: initialized={initialized}, ordinals={attempts}"
+            );
+            drop(probe);
+            baseline_monitor.assert_released();
+            for ordinal in 1..=attempts {
+                let owner = allocator().into_non_clone();
+                let owner_id = owner.identity();
+                let monitor = owner.monitor();
+                let mut context = SequenceEncoder::new_in(&owner);
+                if initialized {
+                    context.prepare_with_offsets(&first, [1, 4, 8]).unwrap();
+                    context.commit();
+                }
+                let committed = context.committed_repeats();
+                let sources = context.channels.each_ref().map(|channel| channel.source);
+                let start = monitor.snapshot().attempts;
+                monitor.set_fail_at(NonZeroU64::new(start + ordinal));
+                assert_eq!(
+                    context.prepare_with_offsets(&next, committed),
+                    Err(Error::AllocationFailed)
+                );
+                assert_eq!(monitor.snapshot().attempts, start + ordinal);
+                assert_eq!(monitor.snapshot().failures, 1);
+                assert!(context.as_bytes().is_empty());
+                assert_eq!(context.pending_modes, None);
+                assert_eq!(context.pending_repeat, committed);
+                assert_eq!(context.committed_repeats(), committed);
+                assert_eq!(
+                    context.channels.each_ref().map(|channel| channel.source),
+                    sources
+                );
+                assert_eq!(
+                    monitor.snapshot().live_bytes,
+                    context.retained_capacity() as u128
+                );
+                assert_eq!(context.plans.allocator().identity(), owner_id);
+                assert_eq!(context.section.allocator().identity(), owner_id);
+                assert!(
+                    context
+                        .symbols
+                        .iter()
+                        .all(|symbols| symbols.allocator().identity() == owner_id)
+                );
+                assert_eq!(monitor.snapshot().identities_created, 1);
+                context.commit();
+                assert_eq!(context.committed_repeats(), committed);
+                monitor.clear_failure();
+                context.prepare_with_offsets(&next, committed).unwrap();
+                assert_eq!(context.as_bytes(), expected);
+                assert_eq!(context.committed_repeats(), committed);
+                context.commit();
+                assert_eq!(context.committed_repeats(), expected_repeat);
+                drop(context);
+                monitor.assert_released();
+                assert_eq!(monitor.snapshot().owners_dropped, 0);
+                drop(owner);
+                assert_eq!(monitor.snapshot().owners_dropped, 1);
+            }
+        }
     }
 
     #[test]

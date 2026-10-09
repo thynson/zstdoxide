@@ -42,11 +42,13 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Add a plain checked Fast execution plan using existing known-size request resolution and explicit strategy/resource admission.
 - [x] Extend private small hash layouts and separate checked table lookup/store for persistent sampled Fast state, preserving named bounds and both access backends.
 - [x] Add checked explicit wire-offset value transitions and planning while preserving canonical named plans.
-- [ ] Add committed-repeat snapshots and transactional preparation of intent-bearing sequences with complete ownership/failure coverage.
+- [x] Add committed-repeat snapshots and transactional preparation of intent-bearing sequences with complete ownership/failure coverage.
 - [ ] Implement safe single-block Fast sampling, repeat probes, backward/forward matches, tails and acceleration against frozen observations.
 - [ ] Preserve sampled Fast state across blocks with checked whole-source ranges and raw/RLE/compressed transition coverage.
 - [x] Extract the parser-independent block entropy owner while preserving named bytes, allocator identities, clone/reserve order and capacities.
-- [ ] Integrate Fast literal policy, minimum-gain decisions and truthful source/window headers without altering named output.
+- [ ] Add an allocation-free known-size Fast frame header and checked raw-frame bound, preserving the named header bytes.
+- [ ] Add Fast raw-only/minimum-gain literal selection and transactional explicit block preparation with reconstruction and failure checks.
+- [ ] Integrate persistent Fast parsing with selected block emission and truthful frame headers without altering named output.
 - [ ] Publish allocator-aware level/request one-shot entry points with complete failure-ordinal, ownership and no_std coverage.
 - [ ] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.
 - [ ] Validate feature/platform boundaries and measure a frozen Fast-specific deterministic safe/unsafe benchmark before recording this bounded module complete.
