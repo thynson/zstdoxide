@@ -117,9 +117,10 @@ construction, `train_raw_dictionary_in`, `train_dictionary_in`, and
 original allocator in its returned vector; temporary storage uses fresh clones.
 Borrowing `&allocator` supports non-Clone allocator values. Standard dictionary
 Arc/Rc sharing still uses Global for the counts and inline object; borrowed
-`DictionaryView` values allocate nothing. Custom streaming decoders accept either
+`DictionaryView` values allocate nothing. Custom streaming encoders and decoders accept either
 shared owners or borrowed views independently of their workspace allocator.
-Compression is being integrated as a separate checkpoint.
+`Encoder::new_in`, `with_options_in`, and `with_dictionary_in` retain workspace
+ownership across frame reset. One-shot compression is being integrated separately.
 [The allocator plan](docs/allocators.md) records the exact API and validation
 boundaries, including the unavailable Rust 1.100 verification.
 

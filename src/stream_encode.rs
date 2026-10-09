@@ -1,8 +1,10 @@
 //! Bounded incremental frame compression with reusable owned block workspaces.
 
+use alloc::alloc::{Allocator, Global};
 use alloc::vec::Vec;
 use core::fmt;
 
+use crate::dictionary::DictionaryHandle;
 use crate::encode::BlockEncoder;
 use crate::frame::{MAGIC, MAX_BLOCK_SIZE};
 use crate::xxhash::XxHash64;
@@ -73,43 +75,74 @@ struct LatchedDirective {
 
 /// A reusable encoder that retains at most one input block and pending output.
 ///
-/// Corresponds to the streaming role of `ZSTD_CCtx`/`ZSTD_CStream`. All borrowed
-/// slices expire at the end of each call. Internal allocations are fallible and
+/// Corresponds to the streaming role of `ZSTD_CCtx`/`ZSTD_CStream`. Input/output
+/// slices expire at the end of each call; a borrowed dictionary view retains
+/// its explicit lifetime. Internal allocations are fallible and
 /// bounded by the maximum block size plus fixed match/entropy workspace; memory
 /// use does not grow with the total source length. Existing optional unsafe
 /// block backends retain the same checked contract.
-pub struct Encoder {
+pub struct Encoder<A: Allocator = Global, D: DictionaryHandle = SharedDictionary> {
     options: EncoderOptions,
-    block: Vec<u8>,
-    pending: Vec<u8>,
+    block: Vec<u8, A>,
+    pending: Vec<u8, A>,
     pending_position: usize,
-    workspace: BlockEncoder,
+    workspace: BlockEncoder<A, D>,
     checksum: XxHash64,
     total_input: u64,
     total_output: u64,
     header_started: bool,
     phase: Phase,
     latched: Option<LatchedDirective>,
-    dictionary: Option<SharedDictionary>,
-    prefix: Option<SharedDictionary>,
-    active_dictionary: Option<SharedDictionary>,
+    dictionary: Option<D>,
+    prefix: Option<D>,
+    active_dictionary: Option<D>,
 }
 
-impl Encoder {
+impl Encoder<Global, SharedDictionary> {
     /// Create a fresh frame using the default options without allocating.
     /// Corresponds to `ZSTD_createCStream` followed by default initialization.
     pub fn new() -> Self {
-        Self::from_options(EncoderOptions::default())
+        Self::new_in(Global)
     }
 
     /// Validate options and create a fresh frame without allocating.
     pub fn with_options(options: EncoderOptions) -> Result<Self> {
-        Ok(Self::from_options(options.validate()?))
+        Self::with_options_in(options, Global)
     }
 
     /// Create a context with a persistent dictionary for each new frame.
     pub fn with_dictionary(options: EncoderOptions, dictionary: SharedDictionary) -> Result<Self> {
-        let mut encoder = Self::with_options(options)?;
+        Self::with_dictionary_in(options, dictionary, Global)
+    }
+}
+
+impl<A: Allocator + Clone> Encoder<A, SharedDictionary> {
+    /// Construct empty workspace owners with default settings. No codec payload
+    /// is allocated. Fresh allocator clones own staging and pending storage;
+    /// the original value remains with the block workspace's allocation factory.
+    /// Ordinary allocator cloning retains the caller's allocation/panic policy.
+    pub fn new_in(allocator: A) -> Self {
+        Self::from_options_in(EncoderOptions::default(), allocator)
+    }
+
+    /// Validate settings before cloning the allocator or creating storage owners.
+    pub fn with_options_in(options: EncoderOptions, allocator: A) -> Result<Self> {
+        Ok(Self::from_options_in(options.validate()?, allocator))
+    }
+}
+
+impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
+    /// Attach a persistent shared dictionary or borrowed dictionary view, using
+    /// an independent allocator for codec workspace. Attachment and reset borrow
+    /// prepared tables without copying dictionary allocations. A borrowed view
+    /// must remain valid for the context's lifetime; shared owners retain their
+    /// existing Global Arc/Rc control allocation outside the selected domain.
+    pub fn with_dictionary_in(
+        options: EncoderOptions,
+        dictionary: D,
+        allocator: A,
+    ) -> Result<Self> {
+        let mut encoder = Self::from_options_in(options.validate()?, allocator);
         encoder.dictionary = Some(dictionary);
         Ok(encoder)
     }
@@ -118,8 +151,8 @@ impl Encoder {
     ///
     /// Call before the first process operation or after reset. An active,
     /// finished or failed frame rejects configuration without changing state.
-    /// Corresponds to `ZSTD_CCtx_refCDict` with immutable shared ownership.
-    pub fn set_dictionary(&mut self, dictionary: Option<SharedDictionary>) -> Result<()> {
+    /// Corresponds to `ZSTD_CCtx_refCDict` with the immutable attachment lifetime.
+    pub fn set_dictionary(&mut self, dictionary: Option<D>) -> Result<()> {
         self.check_configuration_boundary()?;
         self.dictionary = dictionary;
         self.prefix = None;
@@ -131,8 +164,8 @@ impl Encoder {
     /// The first process call that starts a header claims this handle. Reset
     /// preserves an unclaimed prefix and drops a claimed one. For raw prefixes,
     /// construct the handle with [`crate::Dictionary::raw`]. Corresponds to
-    /// `ZSTD_CCtx_refPrefix_advanced` with owned lifetime.
-    pub fn set_prefix(&mut self, prefix: SharedDictionary) -> Result<()> {
+    /// `ZSTD_CCtx_refPrefix_advanced` with the attachment's enforced lifetime.
+    pub fn set_prefix(&mut self, prefix: D) -> Result<()> {
         self.check_configuration_boundary()?;
         self.dictionary = None;
         self.prefix = Some(prefix);
@@ -147,13 +180,13 @@ impl Encoder {
         }
     }
 
-    fn from_options(options: EncoderOptions) -> Self {
+    fn from_options_in(options: EncoderOptions, allocator: A) -> Self {
         Self {
             options,
-            block: Vec::new(),
-            pending: Vec::new(),
+            block: Vec::new_in(allocator.clone()),
+            pending: Vec::new_in(allocator.clone()),
             pending_position: 0,
-            workspace: BlockEncoder::new(),
+            workspace: BlockEncoder::new_in(allocator),
             checksum: XxHash64::new(),
             total_input: 0,
             total_output: 0,
@@ -182,7 +215,9 @@ impl Encoder {
     }
 
     /// Reachable heap capacity, excluding inline state and caller buffers.
-    /// Shared dictionary allocations are counted once for this context.
+    /// Attached dictionary payloads are counted once even when borrowed or shared
+    /// elsewhere. This is reachable capacity, not exclusive ownership; shared
+    /// Arc/Rc outer storage and allocator bookkeeping are excluded.
     pub fn retained_capacity(&self) -> usize {
         self.block.capacity()
             + self.pending.capacity()
@@ -192,7 +227,7 @@ impl Encoder {
                 .as_ref()
                 .or(self.dictionary.as_ref())
                 .or(self.prefix.as_ref())
-                .map_or(0, |dictionary| dictionary.retained_capacity())
+                .map_or(0, |dictionary| dictionary.view().retained_capacity())
     }
 
     /// Start another frame, retaining allocations and persistent frame settings.
@@ -237,7 +272,8 @@ impl Encoder {
     /// input and draining the operation's output.
     ///
     /// Empty output can still accept input into the bounded staging block.
-    /// Any error poisons the context until reset. After `FrameFinished`, only an
+    /// Any error poisons the context until reset; output touched by a failing
+    /// call must be discarded. After `FrameFinished`, only an
     /// empty `Finish` is accepted, idempotently returning the same boundary.
     pub fn process(
         &mut self,
@@ -312,7 +348,10 @@ impl Encoder {
                         .try_reserve_exact(block_limit - self.block.len())
                         .map_err(|_| Error::AllocationFailed)?;
                     let source = &input[consumed..consumed + count];
-                    self.block.extend_from_slice(source);
+                    // The complete block capacity was reserved before accepting bytes.
+                    for &byte in source {
+                        self.block.push(byte);
+                    }
                     if self.options.checksum {
                         self.checksum.update(source);
                     }
@@ -393,7 +432,10 @@ impl Encoder {
         self.pending
             .try_reserve_exact(18)
             .map_err(|_| Error::AllocationFailed)?;
-        self.pending.extend_from_slice(&MAGIC.to_le_bytes());
+        // Eighteen bytes cover every supported header field combination.
+        for byte in MAGIC.to_le_bytes() {
+            self.pending.push(byte);
+        }
         self.active_dictionary = self.prefix.take().or_else(|| self.dictionary.clone());
         self.workspace.start_frame(
             self.active_dictionary.clone(),
@@ -403,7 +445,7 @@ impl Encoder {
             .active_dictionary
             .as_ref()
             .filter(|_| self.options.include_dictionary_id)
-            .map_or(0, |dictionary| dictionary.id());
+            .map_or(0, |dictionary| dictionary.view().id());
         let (dictionary_flag, dictionary_bytes) = match dictionary_id {
             0 => (0, 0),
             1..=255 => (1, 1),
@@ -423,10 +465,12 @@ impl Encoder {
         self.pending
             .push((flag << 6) | (u8::from(self.options.checksum) << 2) | dictionary_flag);
         self.pending.push((self.options.window_log - 10) << 3);
-        self.pending
-            .extend_from_slice(&dictionary_id.to_le_bytes()[..dictionary_bytes]);
-        self.pending
-            .extend_from_slice(&value.to_le_bytes()[..count]);
+        for &byte in &dictionary_id.to_le_bytes()[..dictionary_bytes] {
+            self.pending.push(byte);
+        }
+        for &byte in &value.to_le_bytes()[..count] {
+            self.pending.push(byte);
+        }
         self.header_started = true;
         Ok(())
     }
@@ -448,8 +492,10 @@ impl Encoder {
         self.block.clear();
         if last {
             if self.options.checksum {
-                self.pending
-                    .extend_from_slice(&(self.checksum.digest() as u32).to_le_bytes());
+                // The initial reservation includes the four checksum bytes.
+                for byte in (self.checksum.digest() as u32).to_le_bytes() {
+                    self.pending.push(byte);
+                }
             }
             self.phase = Phase::Finishing;
         }
@@ -457,13 +503,13 @@ impl Encoder {
     }
 }
 
-impl Default for Encoder {
+impl Default for Encoder<Global, SharedDictionary> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl fmt::Debug for Encoder {
+impl<A: Allocator + Clone, D: DictionaryHandle> fmt::Debug for Encoder<A, D> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Encoder")
             .field("options", &self.options)
@@ -480,6 +526,8 @@ mod tests {
     use super::*;
     use crate::{FrameHeader, decompress};
     use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
     #[test]
     fn dictionary_header_widths_and_omission_preserve_dictionary_configuration() {
@@ -574,7 +622,11 @@ mod tests {
         assert!(encoder.dictionary.is_none());
     }
 
-    fn finish(encoder: &mut Encoder, source: &[u8], output_chunk: usize) -> Vec<u8> {
+    fn finish<A: Allocator + Clone, D: DictionaryHandle>(
+        encoder: &mut Encoder<A, D>,
+        source: &[u8],
+        output_chunk: usize,
+    ) -> Vec<u8> {
         let mut position = 0;
         let mut encoded = Vec::new();
         for _ in 0..source.len() + 1024 {
@@ -845,6 +897,587 @@ mod tests {
         assert_eq!(
             decompress(&encoded, source.len()),
             Err(Error::ChecksumMismatch)
+        );
+    }
+    fn tracking() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 128,
+            ..AllocatorConfig::default()
+        })
+        .unwrap()
+    }
+
+    /// All sources and returned bytes belong to the test, outside codec owners.
+    /// Flush boundaries and periodic empty output exercise resumed directives.
+    fn fragmented<A: Allocator + Clone, D: DictionaryHandle>(
+        encoder: &mut Encoder<A, D>,
+        source: &[u8],
+        input_chunk: usize,
+        output_chunk: usize,
+        flush: bool,
+    ) -> Result<Vec<u8>> {
+        assert!(input_chunk > 0 && (1..=257).contains(&output_chunk));
+        let mut encoded = Vec::new();
+        let mut position = 0;
+        let mut calls = 0;
+        loop {
+            let end = source.len().min(position + input_chunk);
+            let directive = if end == source.len() {
+                EndDirective::Finish
+            } else if flush {
+                EndDirective::Flush
+            } else {
+                EndDirective::Continue
+            };
+            loop {
+                let capacity = if calls % 7 == 0 { 0 } else { output_chunk };
+                let mut guarded = [0xa5; 259];
+                let result = encoder.process(
+                    &source[position..end],
+                    &mut guarded[1..1 + capacity],
+                    directive,
+                );
+                assert_eq!(guarded[0], 0xa5);
+                assert!(guarded[1 + capacity..].iter().all(|&byte| byte == 0xa5));
+                let progress = result?;
+                assert!(progress.consumed <= end - position);
+                assert!(progress.produced <= capacity);
+                assert!(
+                    guarded[1 + progress.produced..]
+                        .iter()
+                        .all(|&byte| byte == 0xa5)
+                );
+                encoded.extend_from_slice(&guarded[1..1 + progress.produced]);
+                position += progress.consumed;
+                calls += 1;
+                assert!(calls <= 32 * (source.len() + 1024));
+                match progress.status {
+                    StreamStatus::FrameFinished => {
+                        assert_eq!(position, source.len());
+                        assert_eq!(encoder.total_input(), source.len() as u64);
+                        assert_eq!(encoder.total_output(), encoded.len() as u64);
+                        return Ok(encoded);
+                    }
+                    StreamStatus::NeedInput | StreamStatus::Flushed => {
+                        assert_eq!(position, end);
+                        break;
+                    }
+                    StreamStatus::NeedOutput => {}
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners() {
+        for with_dictionary in [false, true] {
+            let allocator = tracking();
+            let monitor = allocator.monitor();
+            let options = EncoderOptions {
+                window_log: 9,
+                ..EncoderOptions::default()
+            };
+            let result = if with_dictionary {
+                Encoder::with_dictionary_in(
+                    options,
+                    crate::Dictionary::raw(b"").unwrap().into_shared(),
+                    allocator,
+                )
+            } else {
+                Encoder::with_options_in(options, allocator)
+            };
+            assert!(matches!(result, Err(Error::InvalidParameter)));
+            assert_eq!(monitor.snapshot().attempts, 0);
+            assert_eq!(monitor.snapshot().identities_created, 1);
+            assert_eq!(monitor.snapshot().owners_dropped, 1);
+            monitor.assert_released();
+        }
+        let allocator = tracking();
+        let identity = allocator.identity();
+        let monitor = allocator.monitor();
+        let mut encoder = Encoder::new_in(allocator);
+        assert_eq!(monitor.snapshot().attempts, 0);
+        let block_identity = encoder.block.allocator().identity();
+        let pending_identity = encoder.pending.allocator().identity();
+        assert_ne!(block_identity, pending_identity);
+        assert_ne!(block_identity, identity);
+        assert_ne!(pending_identity, identity);
+        let expected = fragmented(&mut encoder, b"xxx", 3, 1, false).unwrap();
+        let before = monitor.snapshot();
+        let capacity = encoder.retained_capacity();
+        assert_eq!(before.live_bytes, capacity as u128);
+        encoder.reset();
+        assert_eq!(encoder.retained_capacity(), capacity);
+        assert_eq!(encoder.block.allocator().identity(), block_identity);
+        assert_eq!(encoder.pending.allocator().identity(), pending_identity);
+        assert_eq!(
+            fragmented(&mut encoder, b"xxx", 3, 7, false).unwrap(),
+            expected
+        );
+        assert_eq!(monitor.snapshot().attempts, before.attempts);
+        assert_eq!(
+            monitor.snapshot().identities_created,
+            before.identities_created
+        );
+        drop(encoder);
+        monitor.assert_released();
+        assert_eq!(
+            monitor.snapshot().owners_dropped,
+            monitor.snapshot().identities_created
+        );
+    }
+
+    #[test]
+    fn allocator_stream_bytes_preserve_the_pre_migration_baseline() {
+        // Captured with the Global stream implementation before this migration;
+        // lengths delimit every frame in the fingerprint's byte sequence.
+        let dictionary = crate::Dictionary::from_bytes(include_bytes!(
+            "../tests/upstream/dictionaries/formatted.dict"
+        ))
+        .unwrap()
+        .into_shared();
+        let mut fingerprint = 0xcbf29ce484222325_u64;
+        let mut cases = 0;
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            for length in [0, 1, 17, 1024, 2053, 131089] {
+                for kind in 0..3 {
+                    for selected in [false, true] {
+                        let input: Vec<u8> = (0..length)
+                            .map(|i| match kind {
+                                0 => b'x',
+                                1 => ((i * 17 + i / 13) % 251) as u8,
+                                _ => ((i % 11) * 19) as u8,
+                            })
+                            .collect();
+                        let options = EncoderOptions {
+                            strategy,
+                            window_log: 10,
+                            pledged_size: Some(length as u64),
+                            ..EncoderOptions::default()
+                        };
+                        let owner = tracking();
+                        let monitor = owner.monitor();
+                        let mut encoder = Encoder::with_options_in(options, owner).unwrap();
+                        if selected {
+                            encoder.set_dictionary(Some(dictionary.clone())).unwrap();
+                        }
+                        let encoded = finish(&mut encoder, &input, 129);
+                        for byte in (encoded.len() as u64)
+                            .to_le_bytes()
+                            .iter()
+                            .chain(encoded.iter())
+                        {
+                            fingerprint =
+                                (fingerprint ^ u64::from(*byte)).wrapping_mul(0x100000001b3);
+                        }
+                        drop(encoder);
+                        monitor.assert_released();
+                        cases += 1;
+                    }
+                }
+            }
+        }
+        assert_eq!(cases, 108);
+        assert_eq!(fingerprint, 7_858_392_785_807_785_414);
+    }
+
+    #[test]
+    fn allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules() {
+        for bytes in [
+            b"".as_slice(),
+            b"raw source dictionary data",
+            include_bytes!("../tests/upstream/dictionaries/formatted.dict").as_slice(),
+        ] {
+            let dictionary_owner = tracking().into_non_clone();
+            let dictionary_monitor = dictionary_owner.monitor();
+            let dictionary = crate::Dictionary::from_bytes_in(bytes, &dictionary_owner).unwrap();
+            let before = dictionary_monitor.snapshot();
+            assert!(dictionary_monitor.fail_next());
+            let input: Vec<u8> = (0..2053)
+                .map(|index| {
+                    dictionary
+                        .content()
+                        .get(index % dictionary.content().len().max(1))
+                        .copied()
+                        .unwrap_or((index % 113) as u8)
+                })
+                .collect();
+            for strategy in [
+                CompressionStrategy::Greedy,
+                CompressionStrategy::Chain,
+                CompressionStrategy::Lazy,
+            ] {
+                for (input_chunk, output_chunk, flush) in
+                    [(1, 1, false), (127, 7, true), (1024, 257, false)]
+                {
+                    let options = EncoderOptions {
+                        strategy,
+                        window_log: 10,
+                        ..EncoderOptions::default()
+                    };
+                    let mut global =
+                        Encoder::with_dictionary_in(options, dictionary.view(), Global).unwrap();
+                    let expected =
+                        fragmented(&mut global, &input, input_chunk, output_chunk, flush).unwrap();
+                    let owner = tracking().into_non_clone();
+                    let monitor = owner.monitor();
+                    let mut encoder =
+                        Encoder::with_dictionary_in(options, dictionary.view(), &owner).unwrap();
+                    let actual =
+                        fragmented(&mut encoder, &input, input_chunk, output_chunk, flush).unwrap();
+                    assert_eq!(actual, expected);
+                    assert_eq!(
+                        crate::decompress_with_dictionary_in(
+                            &actual,
+                            &dictionary.view(),
+                            crate::DecodeOptions::new(input.len()),
+                            Global
+                        )
+                        .unwrap(),
+                        input
+                    );
+                    encoder.reset();
+                    assert_eq!(
+                        fragmented(&mut encoder, &input, input_chunk, output_chunk, flush).unwrap(),
+                        expected
+                    );
+                    assert_eq!(monitor.snapshot().identities_created, 1);
+                    drop(encoder);
+                    monitor.assert_released();
+                }
+            }
+            assert_eq!(dictionary_monitor.snapshot().attempts, before.attempts);
+            assert_eq!(
+                dictionary_monitor.snapshot().identities_created,
+                before.identities_created
+            );
+            drop(dictionary);
+            dictionary_monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement() {
+        let dictionary_owner = tracking();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary = crate::Dictionary::from_bytes_in(
+            include_bytes!("../tests/upstream/dictionaries/formatted.dict"),
+            dictionary_owner,
+        )
+        .unwrap()
+        .into_shared();
+        let weak = SharedDictionary::downgrade(&dictionary);
+        let before = dictionary_monitor.snapshot();
+        let allocator = tracking();
+        let monitor = allocator.monitor();
+        let mut encoder =
+            Encoder::with_dictionary_in(EncoderOptions::default(), dictionary, allocator).unwrap();
+        let encoded = fragmented(
+            &mut encoder,
+            b"some source bytes repeated some source bytes repeated",
+            11,
+            7,
+            true,
+        )
+        .unwrap();
+        assert_eq!(
+            FrameHeader::parse(&encoded).unwrap().0.dictionary_id,
+            0x12345678
+        );
+        assert!(weak.upgrade().is_some());
+        encoder.reset();
+        assert_eq!(dictionary_monitor.snapshot().attempts, before.attempts);
+        assert_eq!(
+            dictionary_monitor.snapshot().identities_created,
+            before.identities_created
+        );
+        encoder.set_dictionary(None).unwrap();
+        assert!(weak.upgrade().is_none());
+        dictionary_monitor.assert_released();
+        drop(encoder);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_every_observed_stream_failure_poison_resets_and_releases() {
+        for bytes in [
+            b"".as_slice(),
+            include_bytes!("../tests/upstream/dictionaries/formatted.dict").as_slice(),
+        ] {
+            let dictionary = crate::Dictionary::from_bytes(bytes).unwrap();
+            let input: Vec<u8> = (0..1537).map(|i| ((i % 131) * 17) as u8).collect();
+            for strategy in [
+                CompressionStrategy::Greedy,
+                CompressionStrategy::Chain,
+                CompressionStrategy::Lazy,
+            ] {
+                let options = EncoderOptions {
+                    strategy,
+                    window_log: 10,
+                    ..EncoderOptions::default()
+                };
+                let owner = tracking();
+                let monitor = owner.monitor();
+                let mut baseline =
+                    Encoder::with_dictionary_in(options, dictionary.view(), owner).unwrap();
+                let expected = fragmented(&mut baseline, &input, 701, 257, true).unwrap();
+                let attempts = monitor.snapshot().attempts;
+                assert!(attempts >= 8);
+                drop(baseline);
+                monitor.assert_released();
+                for ordinal in 1..=attempts {
+                    let owner = TrackingAllocator::new(AllocatorConfig {
+                        max_live_allocations: 128,
+                        fail_at: NonZeroU64::new(ordinal),
+                    })
+                    .unwrap();
+                    let monitor = owner.monitor();
+                    let mut encoder =
+                        Encoder::with_dictionary_in(options, dictionary.view(), owner).unwrap();
+                    assert_eq!(
+                        fragmented(&mut encoder, &input, 701, 257, true),
+                        Err(Error::AllocationFailed),
+                        "{strategy:?} request {ordinal}"
+                    );
+                    assert_eq!(monitor.snapshot().attempts, ordinal);
+                    assert_eq!(monitor.snapshot().failures, 1);
+                    assert_eq!(
+                        encoder.process(&[], &mut [], EndDirective::Finish),
+                        Err(Error::InvalidState)
+                    );
+                    assert_eq!(encoder.set_dictionary(None), Err(Error::InvalidState));
+                    assert_eq!(
+                        encoder.set_prefix(dictionary.view()),
+                        Err(Error::InvalidState)
+                    );
+                    encoder.reset();
+                    assert_eq!(encoder.total_input(), 0);
+                    assert_eq!(encoder.total_output(), 0);
+                    assert!(encoder.dictionary.is_some());
+                    assert!(encoder.active_dictionary.is_none());
+                    assert_eq!(
+                        fragmented(&mut encoder, &input, 701, 257, true).unwrap(),
+                        expected
+                    );
+                    drop(encoder);
+                    monitor.assert_released();
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds() {
+        for ordinal in [1, 2] {
+            let dictionary_owner = tracking().into_non_clone();
+            let dictionary_monitor = dictionary_owner.monitor();
+            let dictionary = crate::Dictionary::raw_in(b"prefix", dictionary_owner)
+                .unwrap()
+                .into_shared();
+            let weak = SharedDictionary::downgrade(&dictionary);
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 128,
+                fail_at: NonZeroU64::new(ordinal),
+            })
+            .unwrap();
+            let monitor = owner.monitor();
+            let mut encoder =
+                Encoder::with_dictionary_in(EncoderOptions::default(), dictionary.clone(), owner)
+                    .unwrap();
+            encoder.set_prefix(dictionary).unwrap();
+            assert_eq!(
+                encoder.process(b"abc", &mut [], EndDirective::Continue),
+                Err(Error::AllocationFailed)
+            );
+            assert_eq!(monitor.snapshot().attempts, ordinal);
+            assert_eq!(encoder.prefix.is_some(), ordinal == 1);
+            assert_eq!(encoder.active_dictionary.is_some(), ordinal == 2);
+            encoder.reset();
+            assert_eq!(weak.upgrade().is_some(), ordinal == 1);
+            if ordinal == 1 {
+                encoder.set_dictionary(None).unwrap();
+            }
+            assert!(weak.upgrade().is_none());
+            dictionary_monitor.assert_released();
+            assert_eq!(
+                decompress(&fragmented(&mut encoder, b"xxx", 3, 7, false).unwrap(), 3).unwrap(),
+                b"xxx"
+            );
+            drop(encoder);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn allocator_small_raw_frame_failures_recover_after_move_and_option_validation() {
+        // RLE input avoids large match/entropy tables, keeping this exhaustive
+        // pending/staging/history failure and context-move witness suitable for Miri.
+        let options = EncoderOptions {
+            window_log: 10,
+            pledged_size: Some(3),
+            ..EncoderOptions::default()
+        };
+        let owner = tracking();
+        let monitor = owner.monitor();
+        let mut baseline = Encoder::with_options_in(options, owner).unwrap();
+        let expected = fragmented(&mut baseline, b"xxx", 3, 7, false).unwrap();
+        let attempts = monitor.snapshot().attempts;
+        assert_eq!(attempts, 3);
+        drop(baseline);
+        monitor.assert_released();
+        for ordinal in 1..=attempts {
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 16,
+                fail_at: NonZeroU64::new(ordinal),
+            })
+            .unwrap();
+            let monitor = owner.monitor();
+            let mut encoder = Encoder::with_options_in(options, owner).unwrap();
+            assert_eq!(
+                fragmented(&mut encoder, b"xxx", 3, 7, false),
+                Err(Error::AllocationFailed)
+            );
+            let mut slot = Some(encoder);
+            let mut moved = slot.take().unwrap();
+            assert!(slot.is_none());
+            let before = monitor.snapshot();
+            assert_eq!(
+                moved.reset_with_options(EncoderOptions {
+                    window_log: 9,
+                    ..options
+                }),
+                Err(Error::InvalidParameter)
+            );
+            assert_eq!(moved.options(), options);
+            assert_eq!(monitor.snapshot().attempts, before.attempts);
+            assert_eq!(
+                moved.process(&[], &mut [], EndDirective::Finish),
+                Err(Error::InvalidState)
+            );
+            moved.reset_with_options(options).unwrap();
+            assert_eq!(
+                fragmented(&mut moved, b"xxx", 3, 7, false).unwrap(),
+                expected
+            );
+            drop(moved);
+            monitor.assert_released();
+        }
+    }
+    #[test]
+    fn allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment() {
+        let dictionary_owner = tracking().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary = crate::Dictionary::raw_in(b"xyz", &dictionary_owner).unwrap();
+        let before = dictionary_monitor.snapshot();
+        assert!(dictionary_monitor.fail_next());
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let options = EncoderOptions {
+            window_log: 10,
+            ..EncoderOptions::default()
+        };
+        let mut encoder = Encoder::with_dictionary_in(options, dictionary.view(), &owner).unwrap();
+        let encoded = fragmented(&mut encoder, b"xxx", 3, 1, false).unwrap();
+        encoder.reset();
+        assert_eq!(
+            fragmented(&mut encoder, b"xxx", 3, 7, false).unwrap(),
+            encoded
+        );
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        assert_eq!(dictionary_monitor.snapshot().attempts, before.attempts);
+        drop(encoder);
+        monitor.assert_released();
+        drop(dictionary);
+        dictionary_monitor.assert_released();
+    }
+
+    #[cfg(feature = "std")]
+    #[test]
+    #[ignore = "requires ZSTD_BIN pointing to the pinned upstream CLI"]
+    fn official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners() {
+        use std::io::Write;
+        use std::process::{Command, Stdio};
+
+        let binary = std::env::var_os("ZSTD_BIN").expect("set ZSTD_BIN to the pinned upstream CLI");
+        let cases = [
+            None,
+            Some("boundary-dictionary.raw"),
+            Some("formatted.dict"),
+        ];
+        let mut frames = 0;
+        for name in cases {
+            let path = name.map(|name| {
+                std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("tests/upstream/dictionaries")
+                    .join(name)
+            });
+            let bytes = path
+                .as_ref()
+                .map(|path| std::fs::read(path).unwrap())
+                .unwrap_or_default();
+            let dictionary_owner = tracking().into_non_clone();
+            let dictionary_monitor = dictionary_owner.monitor();
+            let dictionary = crate::Dictionary::from_bytes_in(&bytes, &dictionary_owner).unwrap();
+            let source: Vec<u8> = (0..2053)
+                .map(|index| {
+                    dictionary
+                        .content()
+                        .get(index % dictionary.content().len().clamp(1, 256))
+                        .copied()
+                        .unwrap_or((index % 127) as u8)
+                })
+                .collect();
+            for strategy in [
+                CompressionStrategy::Greedy,
+                CompressionStrategy::Chain,
+                CompressionStrategy::Lazy,
+            ] {
+                for include_dictionary_id in [false, true] {
+                    let owner = tracking();
+                    let monitor = owner.monitor();
+                    let options = EncoderOptions {
+                        strategy,
+                        window_log: 10,
+                        include_dictionary_id,
+                        ..EncoderOptions::default()
+                    };
+                    let mut encoder =
+                        Encoder::with_dictionary_in(options, dictionary.view(), owner).unwrap();
+                    let encoded = fragmented(&mut encoder, &source, 701, 17, true).unwrap();
+                    let mut command = Command::new(&binary);
+                    command.args(["-d", "-q", "-c"]);
+                    if let Some(path) = &path {
+                        command.arg("-D").arg(path);
+                    }
+                    let mut child = command
+                        .stdin(Stdio::piped())
+                        .stdout(Stdio::piped())
+                        .stderr(Stdio::piped())
+                        .spawn()
+                        .unwrap();
+                    child.stdin.take().unwrap().write_all(&encoded).unwrap();
+                    let output = child.wait_with_output().unwrap();
+                    assert!(
+                        output.status.success(),
+                        "upstream failed: {}",
+                        String::from_utf8_lossy(&output.stderr)
+                    );
+                    assert_eq!(output.stdout, source);
+                    drop(encoder);
+                    monitor.assert_released();
+                    frames += 1;
+                }
+            }
+            drop(dictionary);
+            dictionary_monitor.assert_released();
+        }
+        assert_eq!(frames, 18);
+        std::eprintln!(
+            "C decoded {frames} custom allocator streams exactly across three strategies, empty/raw/prepared dictionaries, and both dictionary-ID policies"
         );
     }
 }

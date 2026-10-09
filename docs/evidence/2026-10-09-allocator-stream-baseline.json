@@ -1,0 +1,14 @@
+{
+  "scope": "Global streaming encoder output captured before stream_encode.rs allocator migration; BlockEncoder allocator migration was already compile-stable. This records output compatibility, not C encoder byte identity.",
+  "case_count": 108,
+  "fnv64_length_delimited_encoded_frames": 7858392785807785414,
+  "command": "CARGO_TARGET_DIR=/Users/lanxingcan/Workspace/zstdoxize/target/module9-stream-baseline cargo +nightly-2026-10-08 run --offline --manifest-path /tmp/zstdoxide-module9-stream-baseline/Cargo.toml",
+  "exit_code": 0,
+  "files": {
+    "/tmp/zstdoxide-module9-stream-baseline/src/main.rs": "bfb5934f648ab4d4b45d3fd3fea03c81c7b91344a0c62530ab12320693bbb1d1",
+    "/tmp/zstdoxide-module9-stream-baseline/Cargo.toml": "5ca0e72bad06ffdec3e9f69f33dd53459eaa220c029fa2f2438860b5275ba1bd",
+    "/tmp/zstdoxide-module9-stream-baseline.log": "9584a6000941d0a1b53a4db133c4eef03e6972dbfe32d5ea71652788e617ca12",
+    "/tmp/zstdoxide-module9-stream-baseline-before.json": "3d2705e2c7c82280aecad2f73e56ee593ee44696efc59fa5ba486cb9a64bc530",
+    "/tmp/zstdoxide-module9-stream-before.rs": "e2a266edbbc0775fa0d5b2ded9c6fc82d81192e577ff6b32c136a4de7472d453"
+  }
+}

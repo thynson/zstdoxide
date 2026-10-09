@@ -551,6 +551,29 @@ dead-code allowances; after those attribute-only repairs its Clippy, no_std,
 five allocator tests and formatting passed. Public stream/one-shot integration
 remains a separate checkpoint.
 
+`Encoder<A, D>` now owns allocator-bearing staging and pending output while its
+block workspace retains the original factory. The
+[stream encoder evidence](evidence/2026-10-09-allocator-stream-encoder.json) and
+[35 command records](evidence/2026-10-09-allocator-stream-encoder-results.json)
+report 424 passing executions: eighteen unit tests in sixteen configurations,
+streaming/dictionary integration in safe/all, no_std checks, formatting and
+strict safe/all Clippy. Each backend's explicit C checks decoded eighteen new
+custom-allocator frames, 96 existing dictionary cases, and the broader streaming
+interoperability suite. Four strict-provenance Miri tests passed in 7.458 seconds.
+
+A [108-frame capture](evidence/2026-10-09-allocator-stream-baseline.json), with
+its [helper](evidence/2026-10-09-allocator-stream-baseline-helper.rs.gz),
+[prior stream source](evidence/2026-10-09-allocator-stream-baseline-source.rs.gz)
+and [log](evidence/2026-10-09-allocator-stream-baseline-log.gz), retains FNV64
+7858392785807785414. Global/custom frames match exactly across strategy,
+dictionary and flush schedules. Every observed allocation ordinal in selected
+campaigns preserves the existing poison/reset/retry contract and releases all
+owners. Prefix claim is distinguished before/after successful header reservation;
+invalid reset options do not change a failed context. Initial test-only request
+count and lint corrections are retained in the evidence; production behavior
+was unchanged. Final ownership documentation and an isolated earlier-public-API
+snapshot passed Clippy, no_std, all eighteen tests and formatting.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation and the final
 integrated platform matrix remain open. The

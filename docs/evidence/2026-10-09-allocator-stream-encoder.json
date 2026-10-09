@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "scope": "Streaming Encoder allocator ownership, generic dictionary attachment, preserved frame lifecycle and byte output. Only src/stream_encode.rs was owned and frozen; other agents changed independent source/test files concurrently.",
+  "status": "passed",
+  "owned_source": {
+    "src/stream_encode.rs": "515202c6b1d9af92906dec1d5e75da9f4debe258c80aff9ec6299a874cd9a1bb"
+  },
+  "owned_source_unchanged_during_final_validation": true,
+  "final_validation": {
+    "results": {
+      "path": "/tmp/zstdoxide-module9-stream-encode-results.json",
+      "sha256": "bd10b9ea26cd5958a4852e5b98fcfd12fd3b087f94234f3966614a96bb7d39ed"
+    },
+    "combined_log": {
+      "path": "/tmp/zstdoxide-module9-stream-encode.log",
+      "sha256": "30e4898ffdc40b9ed4744baae6ba22dbdb1aa20b277fa335a23b25bef548863d"
+    },
+    "recorder": {
+      "path": "/tmp/zstdoxide-module9-stream-encode-check.py",
+      "sha256": "9d153500f093ec43287887adb1af078a20b597f9f1b005ce611168c600614c9d"
+    },
+    "commands": 35,
+    "test_executions": 424,
+    "wall_seconds": 283.0631638329942,
+    "stream_tests": 18,
+    "stream_configurations": 16,
+    "configurations": "safe; each of twelve independent backend features; all features; no_std safe; no_std all backends",
+    "integration_suites": {
+      "upstream_streaming": {
+        "tests": 39,
+        "configurations": [
+          "safe",
+          "all"
+        ]
+      },
+      "upstream_dictionary_encode": {
+        "tests": 24,
+        "configurations": [
+          "safe",
+          "all"
+        ]
+      }
+    },
+    "no_std_checks": [
+      "safe",
+      "all backends"
+    ],
+    "format": "passed",
+    "strict_clippy_all_targets": [
+      "safe",
+      "all features"
+    ],
+    "miri_cases": 4,
+    "miri_seconds": 7.458390709012747
+  },
+  "oracles": {
+    "custom_allocator_frames_per_backend": 18,
+    "existing_dictionary_frames_per_backend": 96,
+    "broader_bidirectional_stream_oracle": "passed; existing official_codec_accepts_streamed_frames_and_stream_decoder_accepts_official_frames",
+    "configurations": [
+      "safe",
+      "all features"
+    ],
+    "upstream_path": "/tmp/zstdoxize-upstream-1.5.7",
+    "oracle_only": true
+  },
+  "byte_baseline": {
+    "evidence": {
+      "path": "/tmp/zstdoxide-module9-stream-baseline-evidence.json",
+      "sha256": "e441a20d61cf2a44a595eccf01480e8e0b72eda9fccd802df62a5788aba1fd83"
+    },
+    "cases": 108,
+    "fnv64_length_delimited_encoded_frames": 7858392785807785414,
+    "qualification": "Captured from pre-migration Global stream output, after BlockEncoder generic API was compile-stable; not a claim of identical C encoder decisions."
+  },
+  "allocation_contracts": [
+    "Original allocator value moves into the BlockEncoder factory; distinct fresh clones own input staging and pending output.",
+    "Borrowed nonClone context and dictionary allocators are supported through references; dictionary allocation domains do not change after attachment.",
+    "Every observed allocation request in selected greedy/chain/lazy empty/prepared-dictionary flush campaigns fails with AllocationFailed, poisons until reset, then retries to exact expected bytes and drops without ledger violations.",
+    "Header reservation failure preserves an unclaimed prefix; failure after header claim consumes the prefix and reset releases it.",
+    "Moved partially allocated contexts retain allocator identities; invalid reset options preserve poison/options, valid reset recovers.",
+    "All tracked no-dictionary live bytes equal retained_capacity in the focused ownership witness."
+  ],
+  "exploratory_checks": [
+    {
+      "command": "cargo +nightly-2026-10-08 test --lib stream_encode::tests",
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module9-stream-encode"
+      },
+      "log": {
+        "path": "/tmp/zstdoxide-module9-stream-tests.log",
+        "sha256": "7371fde2faf49006cd0519b1d733499f19cec05b464db84ee3a28bbc542aeb34"
+      },
+      "exit_code": 101,
+      "reason": "New small RLE test initially expected two allocations; observed third allocation was existing ring history. Corrected test expectation, no production behavior change."
+    },
+    {
+      "command": "cargo +nightly-2026-10-08 clippy --all-targets --all-features -- -D warnings",
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module9-stream-encode"
+      },
+      "log": {
+        "path": "/tmp/zstdoxide-module9-stream-clippy-preflight.log",
+        "sha256": "94460e42e10b27196c6e9843a41d2cbadb0df5e30866ae7899f79cdba017091b"
+      },
+      "exit_code": 101,
+      "reason": "New move test called Option::take on a temporary. Corrected to an explicit slot holding the failed, partially allocated context."
+    }
+  ],
+  "limitations": [
+    "Context allocator Clone and user allocator callbacks keep their ordinary panic/allocation policy.",
+    "Shared dictionary Arc/Rc control storage and caller source/output storage are outside selected context payload allocation.",
+    "Elapsed values are validation wall time with concurrent independent work, not performance measurements."
+  ],
+  "active_sessions": [],
+  "coordinator_isolated_review": {
+    "baseline": "3181a1e",
+    "scope": "Only stream_encode.rs over committed block migration, excluding concurrent whole-buffer encoder and campaign work. Three final documentation-only changes clarify dictionary handle lifetimes and reachable capacity.",
+    "final_source_sha256": "664490be8e5b713bfe415e1ac58920be1a3752781e9f8d0021a57de475070f6a",
+    "checks": [
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "output": "    Checking zstdoxide-test-allocator v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-encoder-review-x6zo7xfa/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-encoder-review-x6zo7xfa)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.98s\n"
+      },
+      {
+        "command": [
+          "cargo",
+          "check",
+          "--locked",
+          "--no-default-features"
+        ],
+        "exit_code": 0,
+        "output": "    Checking zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-encoder-review-x6zo7xfa)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.34s\n"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--lib",
+          "stream_encode::tests"
+        ],
+        "exit_code": 0,
+        "output": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-encoder-review-x6zo7xfa/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-encoder-review-x6zo7xfa)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.16s\n     Running unittests src/lib.rs (/tmp/zstdoxide-stream-encoder-review-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 19 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 18 passed; 0 failed; 1 ignored; 0 measured; 446 filtered out; finished in 3.13s\n\n"
+      },
+      {
+        "command": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--check",
+          "src/stream_encode.rs"
+        ],
+        "exit_code": 0,
+        "output": ""
+      }
+    ]
+  }
+}
