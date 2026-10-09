@@ -483,7 +483,7 @@ mod oracle {
             })
             .unwrap();
         let mut source = alloc::vec![0; 4 * 43_690];
-        for quarter in source.chunks_exact_mut(43_690) {
+        for quarter in source.as_chunks_mut::<43_690>().0 {
             quarter[43_689] = boundary_symbol;
         }
         codes
@@ -530,8 +530,10 @@ mod oracle {
             if length == 6 || length == 9 {
                 assert_eq!(output.last(), Some(&1), "empty final stream marker");
                 let first_three: usize = output[..6]
-                    .chunks_exact(2)
-                    .map(|bytes| usize::from(u16::from_le_bytes(bytes.try_into().unwrap())))
+                    .as_chunks::<2>()
+                    .0
+                    .iter()
+                    .map(|bytes| usize::from(u16::from_le_bytes(*bytes)))
                     .sum();
                 assert_eq!(output.len(), 6 + first_three + 1);
             }
@@ -594,8 +596,8 @@ mod oracle {
             .encode_four_streams(&source, &mut writer, &mut output)
             .unwrap();
         assert_eq!(output.len(), 196_618);
-        for bytes in output[..6].chunks_exact(2) {
-            assert_eq!(u16::from_le_bytes(bytes.try_into().unwrap()), 49_153);
+        for bytes in output[..6].as_chunks::<2>().0 {
+            assert_eq!(u16::from_le_bytes(*bytes), 49_153);
         }
         assert_eq!(oracle.check(description, &source, 4, &output, &codebook), 0);
         verified += 1;

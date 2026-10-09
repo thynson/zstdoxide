@@ -1,0 +1,38 @@
+[
+  {
+    "name": "positive",
+    "command": [
+      "python3",
+      "scripts/check_miri_filter.py",
+      "--lib",
+      "--all-features",
+      "history::tests::rejects_out_of_window_cross_frame_and_oversized_matches",
+      "--",
+      "--exact"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 2.0986580420285463,
+    "log": "/tmp/zstdoxide-module9-miri-guard-positive.log",
+    "log_sha256": "94e6363a01632546a9cc0f567651e0c095e09338bee0a258697e69268ae04b91",
+    "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.10s\n     Running unittests src/lib.rs (target/module9-miri-guard/miri/aarch64-apple-darwin/debug/build/zstdoxide/5738a27faf175145/out/zstdoxide-5738a27faf175145)\n\nrunning 1 test\ntest history::tests::rejects_out_of_window_cross_frame_and_oversized_matches ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 0.16s\n\nVerified 1 passing Miri test(s) for the requested filter.\n"
+  },
+  {
+    "name": "empty",
+    "command": [
+      "python3",
+      "scripts/check_miri_filter.py",
+      "--lib",
+      "--all-features",
+      "module9_intentionally_missing_miri_filter",
+      "--",
+      "--exact"
+    ],
+    "exit_code": 1,
+    "expected_exit_code": 1,
+    "seconds": 0.7087748749181628,
+    "log": "/tmp/zstdoxide-module9-miri-guard-empty.log",
+    "log_sha256": "cc8e5a88dd07025afd22ce5777f1533d1eed4103b2c821a8218dc21c65f6f221",
+    "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (target/module9-miri-guard/miri/aarch64-apple-darwin/debug/build/zstdoxide/5738a27faf175145/out/zstdoxide-5738a27faf175145)\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 308 filtered out; finished in 0.03s\n\nERROR: Miri filter executed no passing tests; check the selector.\n"
+  }
+]

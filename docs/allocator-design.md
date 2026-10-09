@@ -2,7 +2,8 @@
 
 Design recorded on 2026-10-09 before Module 9 implementation. The executable
 checkpoint list belongs to `TODO.md`. Module 8 validation uses its frozen
-Rust 1.89 source snapshot; this design does not change compiler or codec inputs.
+Rust 1.89 source snapshot. The compiler checkpoint below precedes generic codec
+migration and does not rewrite that historical evidence.
 
 ## Scope and implementation direction
 
@@ -24,12 +25,12 @@ vector is a useful intermediate checkpoint, not completion of this module.
 
 ## Verified toolchain evidence and decision boundary
 
-The repository currently pins Rust 1.89.0 and declares `rust-version = "1.89"`.
-Installed tools observed during this review are:
+Before the Module 9 compiler checkpoint the repository pinned Rust 1.89.0 and
+declared `rust-version = "1.89"`. Tools observed during the initial review were:
 
 | Toolchain | Compiler evidence | Installed targets observed |
 | --- | --- | --- |
-| Project pin | 1.89.0, commit 29483883e, 2025-08-04 | aarch64-apple-darwin |
+| Module 8 pin | 1.89.0, commit 29483883e, 2025-08-04 | aarch64-apple-darwin |
 | stable | 1.99.0, commit b940084d7, 2026-09-28 | aarch64-apple-darwin; aarch64-unknown-linux-gnu |
 | nightly | 1.101.0-nightly, commit 1d81eb4ad, 2026-10-07 | aarch64-apple-darwin |
 
@@ -73,23 +74,23 @@ Source anchors under the installed nightly sysroot's
 These are local source observations, not a guarantee that every annotated
 feature behaves identically in an unavailable earlier compiler.
 
-Two honest execution paths are available:
+The selected implementation compiler is `nightly-2026-10-08`, successfully
+installed with rustfmt, Clippy, rust-src, and Miri on 2026-10-09. Its exact
+compiler commit is `1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6`, reporting
+`1.101.0-nightly`, LLVM 23.1.3. The repository pin, CI jobs, Miri guard, and
+benchmark default use that dated toolchain. The package declares
+`rust-version = "1.101"` as a conservative version floor. The supported compiler
+is the exact pin; this is not a claim of testing a future stable 1.101 release
+or the unavailable 1.100 distribution. No unstable feature gates or
+`RUSTC_BOOTSTRAP` are needed for the chosen standard API subset.
 
-1. Preserve Rust 1.89 for documentation, ownership cleanup, and platform work
-   first. Leave custom allocator implementation and its completion checkbox
-   open while the toolchain decision remains unresolved.
-2. Deliberately migrate to the actual verified newer compiler after Module 8
-   freezes. Record the exact chosen toolchain and its tested package policy.
-   The installed 1.101 nightly can exercise the stable subset above without
-   enabling `allocator_ext`. Do not advertise a tested 1.100 MSRV on that basis.
-
-A later available Rust 1.100 compiler can be tested explicitly before lowering
-or declaring that minimum. Avoid a compatibility layer solely to keep two
-complete generic representations compiling on 1.89. If an opt-in Cargo feature
-is instead chosen to require a newer compiler, document that requirement and
-split the feature matrix: today's `cargo --all-features` on 1.89 would otherwise
-stop being a valid check. Do not silently remove old checks or use
-`RUSTC_BOOTSTRAP` to disguise this decision.
+Before changing codec storage, run the unchanged production source under this
+compiler with default/all-feature tests, safe/all-backend no_std compilation,
+strict Clippy, and formatting. Record any compatibility corrections explicitly.
+The Module 8 records retain their original Rust 1.89 compiler and source hashes.
+A later available Rust 1.100 compiler must be tested explicitly before lowering
+or claiming that minimum; do not create duplicate codec representations solely
+to maintain the old compiler pin.
 
 ## Production allocation map
 
@@ -168,8 +169,11 @@ its own retained clone, and no existing block is freed through another clone.
 The installed nightly's `Vec<T, A>::Clone` uses precisely this ownership shape:
 `self.allocator().clone()` followed by a fresh `to_vec_in` allocation
 (`alloc/src/vec/mod.rs:3901`). That library method is still unsuitable for codec
-buffer copies because it is infallible; reserve fallibly and extend initialized
-elements instead. Whole vectors or complete table owners may be moved or swapped,
+buffer copies because it is infallible; reserve fallibly and push initialized
+`Copy` elements into proven spare capacity instead. The general Vec contract
+permits bulk insertion to reallocate despite spare capacity, so a durable
+fallibility guarantee must not rely solely on the current implementation of
+`extend_from_slice` or `resize`. Whole vectors or complete table owners may be moved or swapped,
 including current/spare entropy slots, because their allocators move with them.
 Never separate a block from its allocator, infer interchangeability from equal
 allocator types, or introduce a raw-parts conversion to resolve a type mismatch.
@@ -184,6 +188,14 @@ allocation tests a simple way to route all requests through one observed
 allocator instance. If an owned allocator's Clone deliberately chooses separate
 resources, accounting must follow those actual resources rather than assume a
 single allocation domain.
+
+Ordinary `A::clone()` may unwind or allocate independently of `A`'s allocation
+methods. Only the stronger, unstable `AllocatorClone` trait adds a no-unwind
+clone requirement. Public allocation guarantees cover codec-owned collection
+requests, not arbitrary user allocator cloning behavior: a clone panic cannot
+be converted into `Error::AllocationFailed`, and a clone's private allocation
+need not use the selected domain. Passing `&A` avoids cloning the allocator
+value itself.
 
 An independently generic workspace/output driver is an optional extension for
 an actual caller-owned-output API, not a prerequisite for Global convenience:
@@ -217,7 +229,9 @@ The stable subset does not currently support custom `Arc`/`Rc` control blocks.
 Choose and document one of these staged contracts:
 
 - Keep Global `Arc`/`Rc` ownership around allocator-aware dictionary payloads.
-  Report that fixed-size ownership allocation as an explicit exception.
+  Report that ownership allocation as an explicit exception. It contains the
+  reference counts and the entire inline `Dictionary<A>`, not just a header;
+  dictionary vectors and table buffers remain separately allocator-owned.
 - Add borrowed prepared-dictionary views for contexts whose caller requires all
   allocation to use the provided allocator. The caller owns the dictionary and
   its allocator; the borrow prevents either from disappearing while in use.
@@ -268,6 +282,8 @@ it to the frequency-cell backend.
    Explicit size/budget validation remains `ResourceLimit` or the existing
    parameter error. A caller-provided allocator may itself abort under its
    standard trait contract; the codec cannot transform that into a Result.
+   Ordinary allocator cloning may separately panic or allocate, as described
+   above; element copies inside fallible buffer helpers use `Copy` values.
 10. Allocation accounting distinguishes requested layouts, collection capacity,
     allocator rounding, live/peak bytes, and any retained Global ownership
     handles. Existing `retained_capacity` is not silently relabeled total heap
@@ -370,8 +386,8 @@ The complete upstream allocator/workspace test migration is a separate claim:
 this design does not implement C callback allocators, static workspaces,
 in-place compression, numeric levels, or every upstream custom-memory API.
 
-Before implementation, root must decide the actual compiler policy and whether
-the first dictionary contract permits a Global shared handle or requires a
-borrowed prepared view. The current 1.100 HTTP 404 remains a recorded verification
-gap. The successful 1.101 no-feature compiler probe permits a concrete newer-
-toolchain option without pretending that the unavailable version was tested.
+The compiler policy is the dated 1.101 nightly above. Dictionary migration will
+preserve the convenient Global shared handle and separately add a caller-owned
+prepared view for fully controlled allocation, each with its own checkpoint.
+The current 1.100 HTTP 404 remains a recorded verification gap; the successful
+1.101 no-feature compiler probe does not test the unavailable compiler.

@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "scope": "Minimal idiomatic compiler-lint corrections only; no allocator/storage/API migration.",
+  "corrections": {
+    "production": "Huffman rank divisibility uses is_multiple_of with a validated positive power-of-two divisor; XXH64 uses as_chunks with the identical complete stripes and remainder.",
+    "tests_and_bench": "Constant-size array chunk iterators preserve order, omitted incomplete tails, fixed-size fixture decoding, and sample slice types.",
+    "unsafe_added": false
+  },
+  "changed_files": {
+    "production_sources": [
+      {
+        "path": "src/huffman_codebook.rs",
+        "before_sha256": "883d62ebae5f07ba6357536b14b2d771ebc3d67c4280867d6b7b546460b78946",
+        "after_sha256": "7a457e102debc3d2d367b5ce2f8edc39ed6f24199260b3e429a22c690a8a21dd"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "before_sha256": "940cce8c92a45d41528eaad99390a3d33c9e98d0b9fde148953b838b4d436950",
+        "after_sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      }
+    ],
+    "compiled_tests_and_benches": [
+      {
+        "path": "benches/backends.rs",
+        "before_sha256": "76737904aaa24d50b835b758664435486e2231f52fbb14f5a4a59ae8aaa821e3",
+        "after_sha256": "7110e96053e7d60ff4254ae8620954f376379e42e0cd1bdd69e3eec2271599ec"
+      },
+      {
+        "path": "tests/upstream/entropy.rs",
+        "before_sha256": "203e2f6f362375e2fc49b9d0762dad9d940b8d3b73d0c353b9f390626f62355b",
+        "after_sha256": "e141c5bde8784f9878ad3741786f553247392ad88012437ffb9a3c172c03854c"
+      },
+      {
+        "path": "tests/upstream/huffman_encode.rs",
+        "before_sha256": "ff9ec902c8496529ebc08d75b90ba1008c8b2e90dd386312d9ff48968d0bfeca",
+        "after_sha256": "6c42c6e4a2b1bfc7d4003d06050c1fb0401d74b21cae1854f8ef81fa6f23e40d"
+      },
+      {
+        "path": "tests/upstream/huffman_round_trip.rs",
+        "before_sha256": "adafb858320eb20cca41be32b564d974457696e200830b297ab6e218d1dcd3a2",
+        "after_sha256": "2ac159a0ae07ed971684f3930ba20f02f4b36761e93c7ba46e6f37fea259976a"
+      },
+      {
+        "path": "tests/upstream_entropy_lifetimes.rs",
+        "before_sha256": "957d27ed37529c718319c666ba59ee3cb91928bbc82916f28c6e6bdd3cc63543",
+        "after_sha256": "40b116a59f82fc5ad3ddf684a3bb56c01c968bad0bbf56e4d75e2cfaebe5aa8b"
+      },
+      {
+        "path": "tests/upstream_formatted_training.rs",
+        "before_sha256": "e55489ec20d9d17f3e5d4a1e02a931e9ce13118fa2c2d35e679d6db3a960465d",
+        "after_sha256": "8043063f357815e082725195a8c3a4d54069b2d69bf57fb09de295e854688287"
+      }
+    ]
+  },
+  "baseline_failure_preserved": {
+    "path": "/tmp/zstdoxide-module9-baseline-results.json",
+    "sha256": "6996c1546db316421ec91120e86dbc26557f707a46612f8d03eda78147f76ded"
+  },
+  "final_compatibility": {
+    "path": "/tmp/zstdoxide-module9-compatibility-results.json",
+    "sha256": "2a7364283d193d8eac1803d391f10950ac8703fd9f2872e49bea0df802a212c1"
+  },
+  "lint_iterations": {
+    "path": "/tmp/zstdoxide-module9-clippy-iterations.json",
+    "sha256": "fb1c43669c86c609f6b4cba50d0d9f65dd50a9edebebfcac9cb0b92dad2d5a21"
+  },
+  "final_log": {
+    "path": "/tmp/zstdoxide-module9-compatibility.log",
+    "sha256": "f0a6875a82ed26a8397469efe14d46da17f76bd2b79ae8dc9aa2217bfd609fe7"
+  },
+  "final_status": 0,
+  "seconds": 84.83672762499191,
+  "full_test_configurations": 2,
+  "passed_tests_per_configuration": 534,
+  "ignored_tests_per_configuration": 45,
+  "focused_tests": {
+    "xxhash": 7,
+    "huffman_codebook_all_features": 19
+  },
+  "no_std_configurations": 2,
+  "strict_all_target_clippy_configurations": 2,
+  "source_inputs_unchanged_during_final_checks": true,
+  "test_and_bench_inputs_unchanged_during_final_checks": true,
+  "source_fingerprint": "e8dbf93bdd3879b401bfb3d946eca4dd513b302aa55fb8c533cddfafeb8a0545",
+  "test_and_bench_fingerprint": "01a1fa15643bb2229b6d55a0db4bfd9ee4b662756ff2f5cd427c239a30673a4f",
+  "qualification": "Ignored C oracle/corpus campaigns were compiled but not executed. Prior Module8 stable-compiler oracle and performance evidence is retained with its own source fingerprints; no new performance claim is made."
+}

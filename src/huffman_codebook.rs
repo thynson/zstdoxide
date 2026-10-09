@@ -69,7 +69,7 @@ impl HuffmanCodebook {
                 if length != bits {
                     continue;
                 }
-                if rank_start % copies != 0 {
+                if !rank_start.is_multiple_of(copies) {
                     return Err(Error::InvalidParameter);
                 }
                 let value = rank_start / copies;
@@ -572,7 +572,7 @@ mod tests {
                 .unwrap();
             assert_eq!(output.len(), length + 10);
             let quarter = length.div_ceil(4);
-            for jump in output[..6].chunks_exact(2) {
+            for jump in output[..6].as_chunks::<2>().0 {
                 assert_eq!(
                     usize::from(u16::from_le_bytes([jump[0], jump[1]])),
                     quarter + 1

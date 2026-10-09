@@ -59,11 +59,10 @@ impl XxHash64 {
             self.tail_len = 0;
             input = &input[needed..];
         }
-        let mut stripes = input.chunks_exact(32);
-        for stripe in &mut stripes {
+        let (stripes, remainder) = input.as_chunks::<32>();
+        for stripe in stripes {
             mix_stripe(&mut self.lanes, stripe);
         }
-        let remainder = stripes.remainder();
         self.tail[..remainder.len()].copy_from_slice(remainder);
         self.tail_len = remainder.len();
     }
@@ -103,23 +102,23 @@ impl Default for XxHash64 {
 /// Works on arbitrary, possibly unaligned slices without allocation. Hash
 /// arithmetic wraps intentionally, including when release overflow checks run.
 pub(crate) fn checksum(data: &[u8]) -> u64 {
-    let mut stripes = data.chunks_exact(32);
+    let (stripes, remainder) = data.as_chunks::<32>();
     let hash = if data.len() >= 32 {
         let mut lanes = INITIAL_LANES;
-        for stripe in &mut stripes {
+        for stripe in stripes {
             mix_stripe(&mut lanes, stripe);
         }
         combine_lanes(lanes)
     } else {
         PRIME_5
     };
-    finish(hash.wrapping_add(data.len() as u64), stripes.remainder())
+    finish(hash.wrapping_add(data.len() as u64), remainder)
 }
 
 /// Mix one complete 32-byte stripe; corresponds to the four `XXH64_round`
 /// calls in the stripe loops of `XXH64_update` and `XXH64_endian_align`.
 fn mix_stripe(lanes: &mut [u64; 4], stripe: &[u8]) {
-    for (lane, word) in lanes.iter_mut().zip(stripe.chunks_exact(8)) {
+    for (lane, word) in lanes.iter_mut().zip(stripe.as_chunks::<8>().0) {
         *lane = round(*lane, read_word(word));
     }
 }

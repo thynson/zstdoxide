@@ -95,8 +95,10 @@ fn normalized_counts_match_all_official_vectors_and_suffixes() {
         let header_size = usize::from(u16::from_le_bytes(input.take(2).try_into().unwrap()));
         let expected: Vec<_> = input
             .take(2 * (maximum + 1))
-            .chunks_exact(2)
-            .map(|bytes| i16::from_le_bytes(bytes.try_into().unwrap()))
+            .as_chunks::<2>()
+            .0
+            .iter()
+            .map(|bytes| i16::from_le_bytes(*bytes))
             .collect();
         let header = input.take(header_size);
         assert_eq!(

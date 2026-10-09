@@ -5,15 +5,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@1.89.0
+      - uses: dtolnay/rust-toolchain@master
         with:
+          toolchain: nightly-2026-10-08
           components: rustfmt, clippy
       - run: sh scripts/check.sh
   upstream-oracles:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@1.89.0
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly-2026-10-08
       - name: Build pinned external test oracles
         run: |
           reference="$RUNNER_TEMP/zstd-v1.5.7"
@@ -31,9 +34,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@master
         with:
-          components: miri
+          toolchain: nightly-2026-10-08
+          components: miri, rust-src
       - run: python3 scripts/check_miri_filter.py --lib --all-features history::tests
       - run: python3 scripts/check_miri_filter.py --lib --all-features ring_history::tests
       - run: python3 scripts/check_miri_filter.py --lib --all-features stream_decode::tests

@@ -4,7 +4,7 @@ set -euo pipefail
 cd -- "$(dirname -- "$0")/.."
 
 output_dir="${1:-target/backend-benchmarks}"
-toolchain="${ZSTDOXIDE_TOOLCHAIN:-1.89.0}"
+toolchain="${ZSTDOXIDE_TOOLCHAIN:-nightly-2026-10-08}"
 mkdir -p "$output_dir"
 source_fingerprint() {
     python3 - <<'HASH'

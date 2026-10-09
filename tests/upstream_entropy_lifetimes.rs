@@ -742,8 +742,10 @@ mod oracle {
         assert_eq!(encoded_boundaries.len(), 43_700 * 4);
         assert_eq!(fnv1a(&encoded_boundaries), 0x1ac5_eb48_2bb6_821b);
         let boundaries: Vec<_> = encoded_boundaries
-            .chunks_exact(4)
-            .map(|bytes| u32::from_le_bytes(bytes.try_into().unwrap()) as usize)
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .map(|bytes| u32::from_le_bytes(*bytes) as usize)
             .collect();
         assert_small_block_boundaries(&original, &boundaries, true);
         let dictionary = prepared_dictionary();

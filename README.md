@@ -64,7 +64,7 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
 | Training | Bounded deterministic raw content selection, learned full-alphabet Huffman metadata, predefined sequence priors, custom or automatic IDs, formatted finalization |
-| Portability | Rust 2024, tested with Rust 1.89.0; `no_std` plus `alloc` core |
+| Portability | Rust 2024, pinned `nightly-2026-10-08` for allocator work; `no_std` plus `alloc` core |
 
 Remaining work includes COVER/fastCover and advanced dictionary training,
 advanced compression strategies and
@@ -115,7 +115,14 @@ Rust 1.100 allocator API and records the remaining implementation and test work.
 
 ## Building and checking
 
-The checked-in toolchain file selects the tested Rust 1.89.0 toolchain.
+The checked-in toolchain file selects `nightly-2026-10-08` (Rust 1.101.0-nightly,
+commit `1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6`) for allocator work. The package
+declares `rust-version = "1.101"` as a conservative version floor; the supported
+compiler is this exact dated toolchain, not an untested stable release. The
+allocator implementation uses the standard API without unstable feature gates.
+Rust 1.100 could not be installed from the official distribution on 2026-10-09,
+so compatibility with that compiler remains unverified. Completed Module 8
+validation and benchmark records retain their original Rust 1.89 environment.
 
 ```sh
 cargo test
@@ -127,7 +134,7 @@ ZSTD_BIN=/path/to/zstd cargo test --test interop -- --ignored
 
 # All unsafe families enabled, with release overflow checks still active.
 cargo test --release --all-features
-cargo +nightly miri test --lib --all-features history::tests
+python3 scripts/check_miri_filter.py --lib --all-features history::tests
 ```
 
 The normal tests use checked-in official-codec fixtures and need no external

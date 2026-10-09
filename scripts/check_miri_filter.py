@@ -11,7 +11,7 @@ def main():
         print("usage: check_miri_filter.py CARGO_TEST_ARGUMENTS...", file=sys.stderr)
         return 2
     result = subprocess.run(
-        ["cargo", "+nightly", "miri", "test", *sys.argv[1:]],
+        ["cargo", "miri", "test", *sys.argv[1:]],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,

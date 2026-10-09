@@ -155,10 +155,7 @@ fn main() {
     measure_ring_history(&settings, &input);
 
     let mut table = matchfinder::MatchTable::new().unwrap();
-    let words: Vec<[u8; 4]> = input
-        .chunks_exact(4)
-        .map(|bytes| bytes.try_into().unwrap())
-        .collect();
+    let words: Vec<[u8; 4]> = input.as_chunks::<4>().0.to_vec();
     measure(
         &settings,
         "match_table",
@@ -231,7 +228,9 @@ fn measure_encoder_accessors(settings: &Settings, input: &[u8]) {
         }
     }
     let queries: Vec<_> = input
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| (usize::from(pair[0] & 3) + 1, u16::from(pair[1] & 31)))
         .collect();
     let mut complete = Vec::with_capacity(queries.len() * 5);
@@ -378,7 +377,7 @@ fn measure_strategies(settings: &Settings, compressible: &[u8]) {
     let random = deterministic_bytes(128 * 64);
     let mut dictionary_bytes = Vec::new();
     let mut ambiguous = Vec::new();
-    for pattern in random.chunks_exact(64) {
+    for pattern in random.as_chunks::<64>().0 {
         dictionary_bytes.push(b'X');
         dictionary_bytes.extend_from_slice(&pattern[..3]);
         dictionary_bytes.push(u8::from(pattern[3] == 0));
@@ -473,7 +472,9 @@ fn measure_dictionaries(settings: &Settings, indices: &[u8]) {
         full_checksum(serialized)
     );
     let positions: Vec<_> = indices
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| {
             usize::from(u16::from_le_bytes([pair[0], pair[1]])) % dictionary.content().len()
         })
@@ -639,7 +640,12 @@ fn measure_dictionaries(settings: &Settings, indices: &[u8]) {
 /// This measures the complete allocating selector, not only its frequency reads.
 fn measure_raw_training(settings: &Settings) {
     let input = include_bytes!("../tests/upstream/dictionaries/training-samples.bin");
-    let samples: Vec<_> = input.chunks_exact(512).collect();
+    let samples: Vec<_> = input
+        .as_chunks::<512>()
+        .0
+        .iter()
+        .map(|sample| sample.as_slice())
+        .collect();
     let options = RawTrainingOptions {
         dictionary_size: 2048,
         max_sample_bytes: 64 * 1024,

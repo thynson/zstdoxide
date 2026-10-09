@@ -42,7 +42,12 @@ fn samples() -> Vec<Vec<u8>> {
 #[test]
 fn upstream_cyclic_training_shape_builds_a_formatted_dictionary_with_a_nonzero_id() {
     let source: Vec<_> = (0..1024 * 1024).map(|index| index as u8).collect();
-    let samples: Vec<_> = source.chunks_exact(8192).collect();
+    let samples: Vec<_> = source
+        .as_chunks::<8192>()
+        .0
+        .iter()
+        .map(|sample| sample.as_slice())
+        .collect();
     assert_eq!(samples.len(), 128);
     let dictionary = train_dictionary(
         &samples,
@@ -557,7 +562,10 @@ int main(int argc, char** argv) {
         let source = generated.stdout;
         assert_eq!(source.len(), SOURCE_SIZE);
         let samples: Vec<_> = source[..SAMPLE_SIZE * SAMPLE_COUNT]
-            .chunks_exact(SAMPLE_SIZE)
+            .as_chunks::<SAMPLE_SIZE>()
+            .0
+            .iter()
+            .map(|sample| sample.as_slice())
             .collect();
         assert_eq!(samples.len(), SAMPLE_COUNT);
         let dictionary = train_dictionary(

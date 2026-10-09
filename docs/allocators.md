@@ -5,19 +5,19 @@ in [allocator-design.md](allocator-design.md), with original test contracts in
 [upstream-allocation-plan.md](upstream-allocation-plan.md). The Rust 1.100
 installation attempt returned HTTP 404 on 2026-10-09; the installed 1.101
 nightly separately compiled a no_std standard-API probe without feature gates.
-The current project pin remains unchanged until the compiler checkpoint.
+The implementation compiler is now pinned to `nightly-2026-10-08`, reporting
+Rust 1.101.0-nightly at commit `1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6`.
+The package's conservative version floor is `1.101`; only the exact dated
+compiler is supported by the current verification. Stable 1.100 and stable
+1.101 are not claimed as tested. Module 8 retains its Rust 1.89 evidence.
 
-The initial crate targets Rust 1.89.0 and uses the global allocator through
-`alloc::vec::Vec`. Custom allocators are not implemented yet. This keeps the first
-codec version usable on the tested installed toolchain while leaving a concrete
-migration path to the allocator API requested for Rust 1.100.
-
-The installed Rust 1.101.0-nightly `rust-src` was inspected on 2026-10-08.
-`library/core/src/alloc/mod.rs` marks `Allocator` stable since 1.100.0, and
-`library/alloc/src/vec/mod.rs` gives the same stabilization version for `Vec<T, A>`
-and `Vec::new_in`. The allocator work should target those APIs after adding an
-actual Rust 1.100 build to the test matrix. This is source inspection evidence,
-not a claim that the current crate has been built with Rust 1.100.
+Custom allocation is being implemented incrementally. Existing public codec
+APIs still use Global until their individual checkpoints are complete. The
+chosen standard `Allocator`/`Vec<T, A>` subset compiles without feature gates
+on the pin. Custom Arc/Rc, allocator-aware BinaryHeap, and fallible Box
+construction still require unstable `allocator_ext` in the inspected library;
+the design uses checked typed storage and an explicit dictionary-sharing
+contract instead. No substitute allocator trait is exposed.
 
 ## Existing boundaries
 
@@ -37,19 +37,25 @@ movement. Unsafe paths obtain addresses only after reservation and keep no raw
 pointer across a possible reallocation. These properties are independent of
 which allocator backs a vector.
 
-## Work decomposition for a later module
+## Implementation and verification
 
-1. Add Rust 1.100 CI and verify the stable allocator API and supported targets.
-2. Choose context/output APIs that carry an allocator type without introducing
-   self-referential borrows; preserve current convenience wrappers using `Global`.
-3. Parameterize output/history first, then entropy tables and compression
-   workspace. Each allocation remains paired with the allocator stored by its
-   owning collection; never free through an unrelated allocator instance.
-4. Add a counting/failing allocator to exercise every fallible allocation and
-   prove allocation failure leaves owned structures valid. Every allocator
-   `unsafe impl` and raw allocation operation needs its own complete proof.
-5. Run the existing safe/unsafe, oracle, Miri, and performance matrices for both
-   global and custom allocation paths. Measure allocation counts alongside time.
+`TODO.md` tracks the active per-owner migration. Default convenience APIs retain
+Global results. Custom constructors create each owner with its own allocator
+value, including independent clones; moving or swapping storage moves that
+allocator too. A borrowed `&A` permits a non-Clone allocator and avoids cloning
+user allocator state. Ordinary allocator cloning may panic or allocate outside
+the selected domain; only codec-owned collection requests are covered by the
+fallible allocation guarantee.
 
-Public allocator-aware signatures remain a later design decision. The codec
-does not emulate an allocator trait or expose a temporary incompatible trait.
+The separate test allocator checks every selected positive-size request,
+failed-growth preservation, distinct clone identities, ownership transfer,
+reset, and final release. It does not weaken the production safe-default lint.
+Verification must include Global/custom correctness, every unsafe feature,
+no_std, Miri, independent official-codec interoperability, and identical-input
+allocation/time measurements. Fully controlled dictionary allocation needs a
+caller-owned prepared view: convenient Global Arc/Rc sharing allocates both
+reference counts and the inline dictionary object outside the custom domain.
+
+The exact scope of upstream custom-memory reporting, static workspaces,
+estimators, and shrinking tests is recorded separately; ordinary Rust allocator
+parameterization does not implement all those contracts.

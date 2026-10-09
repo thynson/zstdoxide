@@ -28,7 +28,7 @@ The Rust 1.100 distribution probe returned HTTP 404; actual 1.101 nightly
 compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 
 - [x] Record every allocation owner, standard API boundaries, failure invariants, and exact upstream allocator/workspace test scope.
-- [ ] Verify and pin the actual implementation compiler, document its minimum-version policy, and check the unchanged codec before generic migration.
+- [x] Verify and pin the actual implementation compiler, document its minimum-version policy, and check the unchanged codec before generic migration.
 - [ ] Add a separate counting/failing test allocator with layout, lifetime, distinct-clone identity, zero-size, growth, and non-unwinding contracts.
 - [ ] Parameterize complete output history while preserving Global return ownership, overlap behavior, limits, and failed-growth state.
 - [ ] Parameterize ring history and verify wrap, reserve-before-reset, window changes, and retained capacity.

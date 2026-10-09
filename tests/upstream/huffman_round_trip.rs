@@ -1183,7 +1183,7 @@ mod oracle {
             cases.len()
         );
         for ((input, bmi, expected), bytes) in
-            cases.iter().zip(output.stdout[12..].chunks_exact(48))
+            cases.iter().zip(output.stdout[12..].as_chunks::<48>().0)
         {
             let actual: [u32; 12] = core::array::from_fn(|index| {
                 u32::from_le_bytes(bytes[index * 4..index * 4 + 4].try_into().unwrap())
@@ -1282,7 +1282,7 @@ mod oracle {
             cases.len()
         );
         for ((_, requested, size, highest), bytes) in
-            cases.iter().zip(result.stdout[12..].chunks_exact(8))
+            cases.iter().zip(result.stdout[12..].as_chunks::<8>().0)
         {
             let adjusted = adjusted_depth(*requested, *highest);
             assert_eq!(

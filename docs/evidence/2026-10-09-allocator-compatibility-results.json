@@ -1,0 +1,768 @@
+{
+  "schema": 1,
+  "scope": "Installed nightly compatibility after minimal Clippy idiom corrections; corrected sources frozen for all checks; no ignored oracle/corpus campaigns executed.",
+  "toolchain": "nightly-2026-10-08",
+  "versions": {
+    "rustc": {
+      "command": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "--version",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "stdout": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3",
+      "stderr": ""
+    },
+    "cargo": {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "cargo 1.101.0-nightly (f3865b2a4 2026-09-29)",
+      "stderr": ""
+    },
+    "rustfmt": {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "fmt",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "rustfmt 1.11.0-nightly (1d81eb4ad9 2026-10-07)",
+      "stderr": ""
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "clippy 0.1.101 (1d81eb4ad9 2026-10-07)",
+      "stderr": ""
+    }
+  },
+  "environment_overrides": {
+    "CARGO_TARGET_DIR": "target/module9-baseline",
+    "CARGO_TERM_COLOR": "never"
+  },
+  "before_manifest": {
+    "path": "/tmp/zstdoxide-module9-compatibility-before.json",
+    "sha256": "caed7a19a31c2edf7eb733b32285031197b4a205bcd8578ec31b52c096449999"
+  },
+  "before_source_fingerprint": "e8dbf93bdd3879b401bfb3d946eca4dd513b302aa55fb8c533cddfafeb8a0545",
+  "before_test_fingerprint": "01a1fa15643bb2229b6d55a0db4bfd9ee4b662756ff2f5cd427c239a30673a4f",
+  "exclusions": "Unrelated documentation, test-support, scripts and CI are excluded. Production src Rust sources and compiled test/benchmark inputs are independently fingerprinted. Cargo/toolchain metadata is recorded separately because the coordinator is updating its compiler pin and rust-version.",
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.2932370831258595,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-00-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_binaries": [],
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "xxhash-focused",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "xxhash::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 1.713772791204974,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-01-xxhash-focused.log",
+      "log_sha256": "f75975d10be73ee869e2b7709f0a731ead476a920ff7c7574dd56696aa8144bd",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/module9-baseline/debug/build/zstdoxide/fb0e92b2b09cd9c3/out/zstdoxide-fb0e92b2b09cd9c3)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 301,
+          "seconds": 0.25
+        }
+      ],
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "codebook-focused",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--all-features",
+        "huffman_codebook::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 1.4303665000479668,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-02-codebook-focused.log",
+      "log_sha256": "a53915bac835cf62689bf4daf807515ea61659931698ad757192d972203de51f",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/module9-baseline/debug/build/zstdoxide/35070964098ecfbd/out/zstdoxide-35070964098ecfbd)",
+          "status": "ok",
+          "passed": 19,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 289,
+          "seconds": 0.11
+        }
+      ],
+      "passed": 19,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "test-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 39.36880012485199,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-03-test-safe.log",
+      "log_sha256": "31fcebd03c11f3361bd1d7b89a02c80c51ce0aeb85a1375a24692ec978cbcf22",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/module9-baseline/debug/build/zstdoxide/fb0e92b2b09cd9c3/out/zstdoxide-fb0e92b2b09cd9c3)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 3.43
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/module9-baseline/debug/build/zstdoxide/1bb59a66267d4548/out/compression_strategies-1bb59a66267d4548)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.08
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/module9-baseline/debug/build/zstdoxide/eff43d453457d290/out/entropy_encoding-eff43d453457d290)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.16
+        },
+        {
+          "binary": "Running tests/interop.rs (target/module9-baseline/debug/build/zstdoxide/8cb6fce09202246b/out/interop-8cb6fce09202246b)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.66
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/module9-baseline/debug/build/zstdoxide/ef010c3101c6d5cf/out/malformed-ef010c3101c6d5cf)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.79
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/module9-baseline/debug/build/zstdoxide/75912a521632202d/out/sequence_encoding-75912a521632202d)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/module9-baseline/debug/build/zstdoxide/1b14336761555039/out/upstream_decodecorpus-1b14336761555039)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.83
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/module9-baseline/debug/build/zstdoxide/cad45f81aaea87b6/out/upstream_dictionary-cad45f81aaea87b6)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/module9-baseline/debug/build/zstdoxide/1a8c497e97575ec8/out/upstream_dictionary_encode-1a8c497e97575ec8)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.95
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/module9-baseline/debug/build/zstdoxide/6ca62ddcadfd7881/out/upstream_dictionary_fuzz-6ca62ddcadfd7881)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.98
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/module9-baseline/debug/build/zstdoxide/e15d6eece945e4f1/out/upstream_entropy_lifetimes-e15d6eece945e4f1)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.66
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/module9-baseline/debug/build/zstdoxide/2c82c44e290116ed/out/upstream_formatted_training-2c82c44e290116ed)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.18
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/module9-baseline/debug/build/zstdoxide/c95296be419adb72/out/upstream_fuzz_targets-c95296be419adb72)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.39
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/module9-baseline/debug/build/zstdoxide/be06ec39074c1814/out/upstream_fuzzer-be06ec39074c1814)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 14.78
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/module9-baseline/debug/build/zstdoxide/721a09009576be2b/out/upstream_golden-721a09009576be2b)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.14
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/module9-baseline/debug/build/zstdoxide/1446f1e569547013/out/upstream_inline_regressions-1446f1e569547013)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/module9-baseline/debug/build/zstdoxide/433ce8212108a7b2/out/upstream_regression_corpora-433ce8212108a7b2)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.6
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/module9-baseline/debug/build/zstdoxide/7886654447cd445a/out/upstream_streaming-7886654447cd445a)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 3.23
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/module9-baseline/debug/build/zstdoxide/4234be11231a7e56/out/upstream_testcard-4234be11231a7e56)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/module9-baseline/debug/build/zstdoxide/4ab4492aca749f40/out/upstream_trained_dictionary_fuzz-4ab4492aca749f40)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.38
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/module9-baseline/debug/build/zstdoxide/946e7879fa69cc1e/out/upstream_training-946e7879fa69cc1e)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.09
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/module9-baseline/debug/build/zstdoxide/19c0c163027a2493/out/upstream_window-19c0c163027a2493)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.21
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45
+    },
+    {
+      "name": "test-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 40.248990416992456,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-04-test-all.log",
+      "log_sha256": "9780d74945ebf3d9f40231303ac11fda70f86a5d5c9b9fac76d0ea87fc0cbd59",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/module9-baseline/debug/build/zstdoxide/35070964098ecfbd/out/zstdoxide-35070964098ecfbd)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 3.45
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/module9-baseline/debug/build/zstdoxide/ce26703eda40ffd4/out/compression_strategies-ce26703eda40ffd4)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.07
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/module9-baseline/debug/build/zstdoxide/e5b83a568ae7995f/out/entropy_encoding-e5b83a568ae7995f)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.15
+        },
+        {
+          "binary": "Running tests/interop.rs (target/module9-baseline/debug/build/zstdoxide/475134011b36dee5/out/interop-475134011b36dee5)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.64
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/module9-baseline/debug/build/zstdoxide/a2a4922e58e23f60/out/malformed-a2a4922e58e23f60)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.52
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/module9-baseline/debug/build/zstdoxide/a69364aa211d08d3/out/sequence_encoding-a69364aa211d08d3)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/module9-baseline/debug/build/zstdoxide/1c4c0d1f560f10f0/out/upstream_decodecorpus-1c4c0d1f560f10f0)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.76
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/module9-baseline/debug/build/zstdoxide/635c5e0af9e969ae/out/upstream_dictionary-635c5e0af9e969ae)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/module9-baseline/debug/build/zstdoxide/0b73be67339773bd/out/upstream_dictionary_encode-0b73be67339773bd)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.0
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/module9-baseline/debug/build/zstdoxide/170b40cc22abf7d6/out/upstream_dictionary_fuzz-170b40cc22abf7d6)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.01
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/module9-baseline/debug/build/zstdoxide/b72aa415ff67773e/out/upstream_entropy_lifetimes-b72aa415ff67773e)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.7
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/module9-baseline/debug/build/zstdoxide/cb90e7a1574f3fbc/out/upstream_formatted_training-cb90e7a1574f3fbc)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.19
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/module9-baseline/debug/build/zstdoxide/b35aa451dda0dc05/out/upstream_fuzz_targets-b35aa451dda0dc05)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.38
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/module9-baseline/debug/build/zstdoxide/388637e57fdc7682/out/upstream_fuzzer-388637e57fdc7682)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 15.59
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/module9-baseline/debug/build/zstdoxide/e501a9e4f337bf5c/out/upstream_golden-e501a9e4f337bf5c)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.15
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/module9-baseline/debug/build/zstdoxide/ca7e66de38fc045d/out/upstream_inline_regressions-ca7e66de38fc045d)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/module9-baseline/debug/build/zstdoxide/bd577021ace42802/out/upstream_regression_corpora-bd577021ace42802)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.62
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/module9-baseline/debug/build/zstdoxide/10763a669b376022/out/upstream_streaming-10763a669b376022)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 3.29
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/module9-baseline/debug/build/zstdoxide/ed6536ab0e863d7c/out/upstream_testcard-ed6536ab0e863d7c)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/module9-baseline/debug/build/zstdoxide/6209c2848595f31b/out/upstream_trained_dictionary_fuzz-6209c2848595f31b)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.38
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/module9-baseline/debug/build/zstdoxide/151ef45770ef5205/out/upstream_training-151ef45770ef5205)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.09
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/module9-baseline/debug/build/zstdoxide/93801e394d5e9562/out/upstream_window-93801e394d5e9562)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.21
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45
+    },
+    {
+      "name": "no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16021987493149936,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-05-no-std-safe.log",
+      "log_sha256": "8bfccf177c2c7f20b0fc78e1734fbeb2a1229eb49b22afcf39733f37e477e5a2",
+      "test_binaries": [],
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 0.12092183390632272,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-06-no-std-all.log",
+      "log_sha256": "b33c9a192f519356d1b3e646b46984d9c858e3568803733ebb7331dbe10aef2a",
+      "test_binaries": [],
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 0.09800595790147781,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-07-clippy-safe.log",
+      "log_sha256": "ee1d3fffa2022e962e63e0dbe4d35c9c198450a20c29fc09030f635dbb38bfcd",
+      "test_binaries": [],
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 1.3668835000135005,
+      "log_path": "/tmp/zstdoxide-module9-compatibility-08-clippy-all.log",
+      "log_sha256": "3691e4779b6fe572253597a8065d3f1a883e41ca24117be612149987ffa189d4",
+      "test_binaries": [],
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "running": false,
+  "seconds": 84.83672762499191,
+  "after_manifest": {
+    "path": "/tmp/zstdoxide-module9-compatibility-after.json",
+    "sha256": "7f4d508ba62e2e1d3ced393202013389c9363334992490b2b33a93afbfda56e7"
+  },
+  "after_source_fingerprint": "e8dbf93bdd3879b401bfb3d946eca4dd513b302aa55fb8c533cddfafeb8a0545",
+  "after_test_fingerprint": "01a1fa15643bb2229b6d55a0db4bfd9ee4b662756ff2f5cd427c239a30673a4f",
+  "source_unchanged": true,
+  "tests_and_benches_unchanged": true,
+  "allowed_build_metadata_before": {
+    "files": [
+      {
+        "path": "Cargo.lock",
+        "bytes": 153,
+        "sha256": "8d0f4bb88027939995b2770c81ed5dec960050bd23572e3331881cc1b4448fa9"
+      },
+      {
+        "path": "Cargo.toml",
+        "bytes": 740,
+        "sha256": "8e68695c8f6b8fdb5544e2f3a0f045377312899126b27e8f0030a1b3536e7f77"
+      },
+      {
+        "path": "rust-toolchain.toml",
+        "bytes": 118,
+        "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20"
+      }
+    ],
+    "fingerprint_sha256": "b153d9ab74aeb37a1dfac6db7c3a8dbe67d8a988ed5a28514ff7972f120583ab"
+  },
+  "allowed_build_metadata_after": {
+    "files": [
+      {
+        "path": "Cargo.lock",
+        "bytes": 153,
+        "sha256": "8d0f4bb88027939995b2770c81ed5dec960050bd23572e3331881cc1b4448fa9"
+      },
+      {
+        "path": "Cargo.toml",
+        "bytes": 740,
+        "sha256": "8e68695c8f6b8fdb5544e2f3a0f045377312899126b27e8f0030a1b3536e7f77"
+      },
+      {
+        "path": "rust-toolchain.toml",
+        "bytes": 118,
+        "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20"
+      }
+    ],
+    "fingerprint_sha256": "b153d9ab74aeb37a1dfac6db7c3a8dbe67d8a988ed5a28514ff7972f120583ab"
+  },
+  "log_path": "/tmp/zstdoxide-module9-compatibility.log",
+  "log_sha256": "f0a6875a82ed26a8397469efe14d46da17f76bd2b79ae8dc9aa2217bfd609fe7",
+  "command_count": 9,
+  "all_requested_commands_completed": true,
+  "exit_code": 0
+}
