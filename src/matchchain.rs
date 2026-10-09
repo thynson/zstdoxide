@@ -4,7 +4,8 @@
 //! `u64` coordinates; the caller still verifies bytes, source regions, retained
 //! history and advertised window bounds before accepting any candidate.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 use crate::{Error, Result};
 
@@ -33,32 +34,50 @@ struct Node {
 /// Corresponds to the hash/chain-table roles in `ZSTD_HcFindBestMatch`; the
 /// bounded search and storage policies are independent Rust implementation
 /// choices. Newest means insertion order, not numeric source-position order.
+/// Each vector retains its allocation owner; no pointer survives a mutation.
+/// Moving the chain moves both independent allocator values with their storage.
 #[derive(Debug)]
-pub(crate) struct MatchChain {
-    heads: Vec<Link>,
-    nodes: Vec<Node>,
+pub(crate) struct MatchChain<A: Allocator = Global> {
+    heads: Vec<Link, A>,
+    nodes: Vec<Node, A>,
     next_slot: usize,
     last_tag: u64,
 }
 
-impl MatchChain {
+impl MatchChain<Global> {
     /// Reserve at most 262,144 nodes, independently of total frame length.
     /// Dictionary seed storage may use a 65,536-node limit and be copied into
     /// a larger working chain. Both initialized allocations are fallible.
     pub(crate) fn new(node_limit: usize) -> Result<Self> {
+        Self::new_in(node_limit, Global)
+    }
+}
+
+impl<A: Allocator> MatchChain<A> {
+    /// Create two independent typed owners. The heads allocate through a fresh
+    /// clone, and nodes retain the supplied allocator. Clones need not share an
+    /// allocation domain: each Vec keeps the exact value owning its storage.
+    pub(crate) fn new_in(node_limit: usize, allocator: A) -> Result<Self>
+    where
+        A: Clone,
+    {
         if !(1..=MAX_NODES).contains(&node_limit) {
             return Err(Error::InvalidParameter);
         }
-        let mut heads = Vec::new();
+        let mut heads = Vec::new_in(allocator.clone());
         heads
             .try_reserve_exact(HEAD_COUNT)
             .map_err(|_| Error::AllocationFailed)?;
-        heads.resize(HEAD_COUNT, Link::default());
-        let mut nodes = Vec::new();
+        while heads.len() < HEAD_COUNT {
+            heads.push(Link::default());
+        }
+        let mut nodes = Vec::new_in(allocator);
         nodes
             .try_reserve_exact(node_limit)
             .map_err(|_| Error::AllocationFailed)?;
-        nodes.resize(node_limit, Node::default());
+        while nodes.len() < node_limit {
+            nodes.push(Node::default());
+        }
         Ok(Self {
             heads,
             nodes,
@@ -84,7 +103,7 @@ impl MatchChain {
     /// or wrapped seeds preserves all index/tag pairs exactly. An incompatible
     /// size is rejected before changing the destination; this call allocates
     /// nothing and stores no reference to the seed.
-    pub(crate) fn reset_from(&mut self, seed: &Self) -> Result<()> {
+    pub(crate) fn reset_from<B: Allocator>(&mut self, seed: &MatchChain<B>) -> Result<()> {
         if seed.nodes.len() > self.nodes.len() {
             return Err(Error::InvalidParameter);
         }
@@ -149,7 +168,7 @@ impl MatchChain {
         word: [u8; 4],
         before: u64,
         visit_budget: usize,
-    ) -> Result<Candidates<'_>> {
+    ) -> Result<Candidates<'_, A>> {
         if visit_budget > MAX_VISITS {
             return Err(Error::InvalidParameter);
         }
@@ -260,22 +279,22 @@ fn hash(word: [u8; 4]) -> usize {
 
 /// A non-allocating shared traversal. Its borrow prevents insertion, reset, or
 /// slot replacement until traversal ends. This cursor owns only value fields.
-pub(crate) struct Candidates<'a> {
-    chain: &'a MatchChain,
+pub(crate) struct Candidates<'a, A: Allocator = Global> {
+    chain: &'a MatchChain<A>,
     next: Link,
     before: u64,
     remaining: usize,
     visited: usize,
 }
 
-impl Candidates<'_> {
+impl<A: Allocator> Candidates<'_, A> {
     #[cfg(test)]
     pub(crate) fn visited(&self) -> usize {
         self.visited
     }
 }
 
-impl Iterator for Candidates<'_> {
+impl<A: Allocator> Iterator for Candidates<'_, A> {
     type Item = u64;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -310,7 +329,7 @@ mod tests {
     use super::*;
     use alloc::vec;
 
-    fn collect(chain: &MatchChain, key: [u8; 4], before: u64) -> Vec<u64> {
+    fn collect<A: Allocator>(chain: &MatchChain<A>, key: [u8; 4], before: u64) -> Vec<u64> {
         chain.candidates(key, before, MAX_VISITS).unwrap().collect()
     }
 
@@ -553,5 +572,165 @@ mod tests {
         chain.insert(*b"same", u64::MAX - 1).unwrap();
         assert_eq!(chain.last_tag, 1);
         assert_eq!(collect(&chain, *b"same", u64::MAX), vec![u64::MAX - 1]);
+    }
+    #[test]
+    fn custom_setup_failures_drop_each_partial_owner_and_validation_allocates_nothing() {
+        use core::num::NonZeroU64;
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        for ordinal in 1..=2 {
+            let allocator = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 4,
+                fail_at: NonZeroU64::new(ordinal),
+            })
+            .unwrap();
+            let monitor = allocator.monitor();
+            assert!(matches!(
+                MatchChain::new_in(8, allocator),
+                Err(Error::AllocationFailed)
+            ));
+            let stats = monitor.snapshot();
+            assert_eq!(stats.attempts, ordinal);
+            assert_eq!(stats.successes, ordinal - 1);
+            assert_eq!(stats.deallocate_calls, ordinal - 1);
+            assert_eq!(stats.identities_created, 2);
+            assert_eq!(stats.owners_dropped, 2);
+            monitor.assert_released();
+        }
+        for limit in [0, MAX_NODES + 1, usize::MAX] {
+            let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+            let monitor = allocator.monitor();
+            assert!(matches!(
+                MatchChain::new_in(limit, allocator),
+                Err(Error::InvalidParameter)
+            ));
+            assert_eq!(monitor.snapshot().attempts, 0);
+            assert_eq!(monitor.snapshot().identities_created, 1);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn custom_distinct_domains_preserve_candidates_and_move_with_both_vectors() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let identity = allocator.identity();
+        let monitor = allocator.monitor();
+        let mut custom = MatchChain::new_in(8, allocator).unwrap();
+        let mut global = MatchChain::new(8).unwrap();
+        assert_eq!(custom.nodes.allocator().identity(), identity);
+        assert_ne!(custom.heads.allocator().identity(), identity);
+        let pointers = (custom.heads.as_ptr(), custom.nodes.as_ptr());
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        for index in 0..64_u64 {
+            let key = (index % 3).to_le_bytes()[..4].try_into().unwrap();
+            let position = match index % 5 {
+                0 => u64::MAX - index,
+                1 => u64::from(u32::MAX) + index,
+                _ => index,
+            };
+            custom.insert(key, position).unwrap();
+            global.insert(key, position).unwrap();
+            for limit in [0, 1, u64::from(u32::MAX), u64::MAX] {
+                for budget in [0, 1, 8, 16] {
+                    let actual: Vec<_> = custom.candidates(key, limit, budget).unwrap().collect();
+                    let expected: Vec<_> = global.candidates(key, limit, budget).unwrap().collect();
+                    assert_eq!(actual, expected);
+                }
+            }
+        }
+        assert_eq!(monitor.snapshot(), before);
+        let mut moved = custom;
+        assert_eq!((moved.heads.as_ptr(), moved.nodes.as_ptr()), pointers);
+        moved.reset();
+        assert_eq!(moved.last_tag, 0);
+        assert_eq!(moved.next_slot, 0);
+        assert!(collect(&moved, [0; 4], u64::MAX).is_empty());
+        assert_eq!(monitor.snapshot().attempts, before.attempts);
+        drop(moved);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_seed_copy_borrows_non_clone_allocator_and_never_adopts_source_storage() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let allocator = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = allocator.monitor();
+        let mut working = MatchChain::new_in(8, &allocator).unwrap();
+        let mut seed = MatchChain::new(3).unwrap();
+        let larger = MatchChain::new(9).unwrap();
+        for position in [7, 11, 17, 23] {
+            seed.insert(*b"seed", position).unwrap();
+        }
+        let pointers = (working.heads.as_ptr(), working.nodes.as_ptr());
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        working.reset_from(&seed).unwrap();
+        assert_eq!(collect(&working, *b"seed", u64::MAX), [23, 17, 11]);
+        working.insert(*b"seed", 29).unwrap();
+        seed.insert(*b"seed", 31).unwrap();
+        let expected = collect(&working, *b"seed", u64::MAX);
+        assert_eq!(expected, [29, 23, 17, 11]);
+        assert_eq!(working.reset_from(&larger), Err(Error::InvalidParameter));
+        assert_eq!(collect(&working, *b"seed", u64::MAX), expected);
+        assert_eq!((working.heads.as_ptr(), working.nodes.as_ptr()), pointers);
+        assert_eq!(working.heads.allocator().identity(), allocator.identity());
+        assert_eq!(working.nodes.allocator().identity(), allocator.identity());
+        working.reset_from(&seed).unwrap();
+        assert_eq!(collect(&working, *b"seed", u64::MAX), [31, 23, 17]);
+        assert_eq!(monitor.snapshot(), before);
+        assert!(matches!(
+            MatchChain::new_in(1, &allocator),
+            Err(Error::AllocationFailed)
+        ));
+        drop(working);
+        drop(allocator);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_chain_swaps_keep_all_four_allocator_owners_paired() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = allocator.monitor();
+        let mut first = MatchChain::new_in(3, allocator.clone()).unwrap();
+        let mut second = MatchChain::new_in(5, allocator.clone()).unwrap();
+        let first_ids = (
+            first.heads.allocator().identity(),
+            first.nodes.allocator().identity(),
+        );
+        let second_ids = (
+            second.heads.allocator().identity(),
+            second.nodes.allocator().identity(),
+        );
+        assert_ne!(first_ids, second_ids);
+        first.insert(*b"swap", 7).unwrap();
+        second.insert(*b"swap", 11).unwrap();
+        drop(allocator);
+        let before = monitor.snapshot();
+        core::mem::swap(&mut first, &mut second);
+        assert_eq!(
+            (
+                first.heads.allocator().identity(),
+                first.nodes.allocator().identity()
+            ),
+            second_ids
+        );
+        assert_eq!(
+            (
+                second.heads.allocator().identity(),
+                second.nodes.allocator().identity()
+            ),
+            first_ids
+        );
+        assert_eq!(collect(&first, *b"swap", u64::MAX), [11]);
+        assert_eq!(collect(&second, *b"swap", u64::MAX), [7]);
+        assert_eq!(monitor.snapshot(), before);
+        drop(first);
+        assert_eq!(monitor.snapshot().live_blocks, 2);
+        drop(second);
+        monitor.assert_released();
     }
 }

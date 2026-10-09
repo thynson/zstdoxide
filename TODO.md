@@ -40,7 +40,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [ ] Parameterize transactional literal and sequence contexts, including default/current/spare owners and every temporary.
 - [ ] Expose allocator-aware decoding contexts and collecting output APIs with unchanged framing and poisoned-context recovery.
 - [x] Parameterize greedy match tables and seed copies with allocator-independent source storage and identical safe/unsafe candidates.
-- [ ] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
+- [x] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
 - [ ] Expose allocator-aware block/stream encoding and one-shot output without allocator-changing copies.
 - [ ] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.

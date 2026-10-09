@@ -170,6 +170,18 @@ collisions and sentinel values; verify no requests after setup; preserve
 destination pointers during seed copying; and verify complete release after
 failed construction and swaps between distinct owners.
 
+`MatchChain<A>` and its candidate borrow are allocator-aware. Its
+[focused evidence](evidence/2026-10-09-allocator-match-chain.json) records all
+15 tests in safe, `unsafe-match-chain`, all-feature, and no-default/unsafe-chain
+configurations, safe/unsafe no_std compilation, formatting, strict all-target
+Clippy, and four allocator-specific strict-provenance Miri tests. Both initial
+allocation ordinals were failed separately, with all partially constructed
+owners released. Invalid limits allocate nothing. Candidate order matches
+Global with cyclic replacement, visit budgets, future positions and full-width
+coordinates. Seed copies from a different allocator type leave source storage
+independent and destination ownership intact; swaps move all four heads/node
+allocator values with their allocations.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

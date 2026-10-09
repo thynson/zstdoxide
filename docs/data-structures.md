@@ -236,3 +236,8 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   accept `MatchTable<B>` from an independent allocation domain, copy only the
   initialized indices, and retain the destination allocation. Lookup/reset and
   seed copying consume no further allocation requests.
+- `MatchChain<A>` creates fresh heads/node owners from an allocator and one
+  clone; clones may be distinct domains. Each typed vector retains the value
+  that allocated it. `Candidates<'_, A>` borrows the complete chain without
+  allocation or source-byte ownership. Seed copying accepts an independently
+  allocated `MatchChain<B>` and preserves all checked slot/tag ordering.
