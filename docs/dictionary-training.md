@@ -77,3 +77,63 @@ Before implementation, entropy construction and finalization will be decomposed
 further in TODO.md. Independent loader/compressor/decompressor checks must verify
 every produced dictionary. Missing upstream trainer strategies and parameter
 matrices remain explicitly open in the test inventory.
+
+## Entropy-writing and formatted-finalization checkpoints
+
+The first finalizer learns a full-alphabet literal prefix tree from smoothed
+sample-byte frequencies and serializes the existing attributed predefined
+OF/ML/LL distributions as sequence priors. Adaptive sequence statistics belong
+to the following entropy-encoder module; this baseline must not be described as
+upstream ZDICT entropy optimization. It creates its metadata algorithmically,
+without copying an opaque dictionary fixture.
+
+1. A fallible forward bit writer serializes normalized-count descriptions by
+   inverting the checked format reader's cutoff/threshold and zero-run rules.
+   Accept table logs 5..=12, counts >=-1, nonempty alphabet at most256 symbols,
+   and exact absolute mass2^log. Test byte equality against the pinned C header
+   vectors, including single-symbol prepared-table headers and long zero runs.
+2. Frequency normalization uses one unit for every positive symbol and allocates
+   remaining mass proportionally with integer largest remainders. Ties prefer
+   lower symbols. Counts with unit mass may use the format's -1 marker. This is
+   deterministic normalization, not a claim of reproducing FSE_normalizeCount.
+3. A two-state FSE writer encodes explicit Huffman weights. It reuses owned
+   FseTable and its existing independently gated safe/unsafe access backend.
+   Invert transitions with bounded checked scans initially; no new pointer or
+   unchecked inverse-table structure is necessary. Choose terminal states whose
+   update needs positive bits, serialize preceding transitions in reverse, then
+   initial states and the stop marker. Verify all outputs with independent C
+   FSE decoding and all relevant Rust termination/bounds checks. A plain forward
+   bit buffer and normalized integer records require no artificial unsafe code.
+4. Literal tree construction owns a fixed alphabet frequency/length/code record
+   and indexed tree/heap nodes. Construct an ordinary deterministic Huffman tree;
+   if its depth exceeds11, use a bounded weighted partition whose child leaf
+   counts fit the remaining depth. Preserve a complete prefix tree and all256
+   symbols with pseudocount1. Convert lengths to canonical weights. A flat8-bit
+   tree is replaced by a valid near-flat tree (one7-bit,2538-bit,two9-bit leaves)
+   so its255 explicit weights have at least two symbols and can be FSE encoded.
+   Select the highest-frequency symbol for the shorter code and the two least
+   frequent for longer codes. Serialization must fit the127-byte weight payload;
+   a deterministic near-flat fallback remains available when a tree's metadata
+   would exceed this format limit. Every fallback is built from explicit lengths
+   and validated, not an imported byte header.
+5. `DictionaryTrainingOptions` combines raw selection options and an optional
+   nonzero caller ID. `train_dictionary` selects content then finalizes it;
+   `finalize_dictionary` accepts custom content and training samples. The final
+   byte cap is the selection's dictionary_size and must be at least256. Auto IDs
+   are deterministic XXH64-derived values in32768..2^31, exclusive of2^31.
+   The finalizer writes magic, ID, learned literal tree, sequence priors,
+   `[1,4,8]` repeat offsets and content. Preserve the most useful content suffix
+   when metadata consumes capacity, and zero-pad before short content to8bytes.
+   Return a normal parsed Dictionary so all loader invariants are revalidated.
+6. Test dictionary metadata with pinned C loading, C compression/Rust decoding,
+   Rust compression/C decoding, custom IDs, tiny/corrupt/overflow parameters,
+   held-out effectiveness, resets, and applicable official training assertions.
+   Report COVER/fastCover, shrink optimization and strategy-specific original
+   matrices separately until they are implemented.
+
+`EntropyBits`, frequency arrays, normalized arrays and node records are setup
+values owned by their containing Vec/array; borrowed source bytes never enter
+persistent state. All dynamic reservations are fallible. Existing FSE tables
+retain their safe/unsafe feature boundary. If a later hot-path encoder adds a
+new unchecked inverse/code table, that structure needs its own opt-in feature
+and benchmark before it is enabled.
