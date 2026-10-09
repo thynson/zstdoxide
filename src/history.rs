@@ -23,6 +23,13 @@ pub(crate) struct History<A: Allocator = Global> {
 }
 
 impl History<Global> {
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "Global convenience for direct tests and benchmarks"
+        )
+    )]
     pub(crate) fn new(limit: usize) -> Self {
         Self::new_in(limit, Global)
     }

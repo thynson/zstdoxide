@@ -108,10 +108,16 @@ release-only assumption may bypass range checks.
 
 Read [the data structure inventory](docs/data-structures.md),
 [architecture](docs/architecture.md), and module design documents before adding
-another backend. Allocation boundaries use fallible reservation and are explicit
-to support future allocator parameterization. Custom allocators are not currently
-supported. [The allocator plan](docs/allocators.md) maps these boundaries to the
-Rust 1.100 allocator API and records the remaining implementation and test work.
+another backend. Allocation boundaries use fallible reservation. The standard
+`Allocator` is supported by `decompress_in`, `decompress_with_options_in`, and
+allocator-aware dictionary construction. Whole-buffer decoding retains the
+original allocator in its returned vector; temporary storage uses fresh clones.
+Borrowing `&allocator` supports non-Clone allocator values. Standard dictionary
+Arc/Rc sharing still uses Global for the counts and inline object; borrowed
+`DictionaryView` values allocate nothing. Streaming, compression, training, and
+dictionary-based collection are being integrated as separate checkpoints.
+[The allocator plan](docs/allocators.md) records the exact API and validation
+boundaries, including the unavailable Rust 1.100 verification.
 
 ## Building and checking
 

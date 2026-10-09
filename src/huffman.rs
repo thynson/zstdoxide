@@ -331,6 +331,10 @@ impl HuffmanTableView<'_> {
 ///
 /// Corresponds to upstream `ZSTD_decodeLiteralsBlock`. The returned byte count
 /// includes the literals header, tree description, jump table, and all streams.
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "Global convenience for entropy tests")
+)]
 pub(crate) fn decode_literals(
     input: &[u8],
     previous: &mut Option<HuffmanTable>,
@@ -351,6 +355,13 @@ pub(crate) fn decode_literals_in<A: Allocator + Clone>(
 
 /// A prepared dictionary supplies the initial table until this frame replaces
 /// it. Borrowed immutable tables never become self-references in frame state.
+#[cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "Global owner convenience retained during view migration"
+    )
+)]
 pub(crate) fn decode_literals_with_dictionary(
     input: &[u8],
     previous: &mut Option<HuffmanTable>,

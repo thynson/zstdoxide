@@ -3,11 +3,12 @@
 use crate::cursor::ByteCursor;
 use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
 use crate::history::History;
-use crate::huffman::decode_literals;
+use crate::huffman::decode_literals_in;
 use crate::sequences::SequenceState;
 use crate::xxhash::checksum;
 use crate::{Decoder, Error, FrameHeader, Result, SharedDictionary, StreamStatus};
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 /// Resource limits shared by one-shot and incremental decompression.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -40,6 +41,22 @@ impl DecodeOptions {
 /// Corresponds to the one-shot behavior of upstream `ZSTD_decompress`.
 pub fn decompress(input: &[u8], max_output_size: usize) -> Result<Vec<u8>> {
     decompress_with_options(input, DecodeOptions::new(max_output_size))
+}
+
+/// Decompress whole frames into the supplied allocator, including every
+/// temporary table and literal buffer. The result retains the original
+/// allocator value; fresh clones own scratch and never adopt its allocations.
+/// A borrowed non-Clone allocator can be supplied as `&allocator`.
+///
+/// Ordinary allocator cloning may allocate or panic outside the codec's
+/// fallible collection requests. Frame, checksum, dictionary, and resource
+/// contracts are the same as [`decompress`].
+pub fn decompress_in<A: Allocator + Clone>(
+    input: &[u8],
+    max_output_size: usize,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    decompress_with_options_in(input, DecodeOptions::new(max_output_size), allocator)
 }
 
 /// Decompress concatenated frames using one persistent prepared or raw dictionary.
@@ -77,11 +94,27 @@ pub fn decompress_with_dictionary(
 
 /// Decompress frames with explicit output and advertised-window limits.
 pub fn decompress_with_options(input: &[u8], options: DecodeOptions) -> Result<Vec<u8>> {
+    decompress_with_options_in(input, options, Global)
+}
+
+/// Decompress with explicit resource limits and allocator ownership.
+///
+/// The complete output is retained during decoding. All collection requests
+/// are fallible; an error drops the partial result and frame-local tables.
+/// The selected allocator is retained by the returned vector, without copying
+/// bytes or converting allocation ownership. See [`decompress_in`] for the
+/// allocator-cloning boundary.
+pub fn decompress_with_options_in<A: Allocator + Clone>(
+    input: &[u8],
+    options: DecodeOptions,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
     if input.is_empty() {
         return Err(Error::UnexpectedEof);
     }
+    let scratch_allocator = allocator.clone();
     let mut cursor = ByteCursor::new(input);
-    let mut history = History::new(options.max_output_size);
+    let mut history = History::new_in(options.max_output_size, allocator);
     while !cursor.remaining().is_empty() {
         let mut prefix = ByteCursor::new(cursor.remaining());
         let magic = prefix.little_endian(4)? as u32;
@@ -110,7 +143,7 @@ pub fn decompress_with_options(input: &[u8], options: DecodeOptions) -> Result<V
         history.start_frame(window);
         let max_block = window.min(MAX_BLOCK_SIZE);
         let mut huffman = None;
-        let mut sequences = SequenceState::new();
+        let mut sequences = SequenceState::new_in(scratch_allocator.clone());
         loop {
             let block = BlockHeader::read(&mut cursor, max_block)?;
             match block.kind {
@@ -119,8 +152,12 @@ pub fn decompress_with_options(input: &[u8], options: DecodeOptions) -> Result<V
                 BlockKind::Compressed => {
                     let encoded = cursor.take(block.size)?;
                     let literal_limit = max_block.min(options.max_output_size - history.len());
-                    let (literals, consumed) =
-                        decode_literals(encoded, &mut huffman, literal_limit)?;
+                    let (literals, consumed) = decode_literals_in(
+                        encoded,
+                        &mut huffman,
+                        literal_limit,
+                        scratch_allocator.clone(),
+                    )?;
                     sequences.decode(&encoded[consumed..], &literals, &mut history, max_block)?;
                 }
             }
@@ -146,6 +183,156 @@ pub fn decompress_with_options(input: &[u8], options: DecodeOptions) -> Result<V
 mod tests {
     use super::*;
     use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    const HTTP_FRAME: &[u8] = include_bytes!("../tests/upstream/data/generated/http.zst");
+    const HTTP_SOURCE: &[u8] = include_bytes!("../tests/upstream/data/golden-compression/http");
+    const LARGER_FRAME: &[u8] =
+        include_bytes!("../tests/upstream/data/generated/huffman-compressed-larger.zst");
+    const LARGER_SOURCE: &[u8] =
+        include_bytes!("../tests/upstream/data/golden-compression/huffman-compressed-larger");
+
+    fn tracking() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig::default()).unwrap()
+    }
+
+    #[test]
+    fn custom_complete_output_owns_the_requested_allocator_after_scratch_release() {
+        // Independently generated pinned C frames; original fixture attribution
+        // and source bytes remain under tests/upstream/data and its manifest.
+        for (frame, source) in [(HTTP_FRAME, HTTP_SOURCE), (LARGER_FRAME, LARGER_SOURCE)] {
+            let owner = tracking();
+            let identity = owner.identity();
+            let monitor = owner.monitor();
+            let output = decompress_in(frame, source.len(), owner).unwrap();
+            assert_eq!(output.as_slice(), source);
+            assert_eq!(output.allocator().identity(), identity);
+            assert_eq!(monitor.snapshot().live_blocks, 1);
+            assert_eq!(monitor.snapshot().live_bytes, output.capacity() as u128);
+            let pointer = output.as_ptr();
+            let moved = output;
+            assert_eq!(moved.as_ptr(), pointer);
+            drop(moved);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames() {
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let mut stream = HTTP_FRAME.to_vec();
+        for low in 0..16 {
+            stream.extend_from_slice(&(0x184d_2a50_u32 + low).to_le_bytes());
+            stream.extend_from_slice(&3_u32.to_le_bytes());
+            stream.extend_from_slice(b"tag");
+        }
+        stream.extend_from_slice(LARGER_FRAME);
+        let size = HTTP_SOURCE.len() + LARGER_SOURCE.len();
+        let output = decompress_in(&stream, size, &owner).unwrap();
+        assert_eq!(&output[..HTTP_SOURCE.len()], HTTP_SOURCE);
+        assert_eq!(&output[HTTP_SOURCE.len()..], LARGER_SOURCE);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(output);
+        monitor.assert_released();
+
+        let skipped = [0x50, 0x2a, 0x4d, 0x18, 0, 0, 0, 0];
+        let before = monitor.snapshot().attempts;
+        assert!(monitor.fail_next());
+        let output = decompress_in(&skipped, 0, &owner).unwrap();
+        assert!(output.is_empty());
+        assert_eq!(monitor.snapshot().attempts, before);
+        assert_eq!(output.allocator().identity(), owner.identity());
+        drop(output);
+        assert!(matches!(
+            decompress_in(&raw(b"x", false), 1, &owner),
+            Err(Error::AllocationFailed)
+        ));
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn each_complete_decoder_allocation_failure_releases_output_and_entropy() {
+        let owner = tracking();
+        let monitor = owner.monitor();
+        let result = decompress_in(HTTP_FRAME, HTTP_SOURCE.len(), owner).unwrap();
+        let requests = monitor.snapshot().attempts;
+        assert!(requests > 5);
+        drop(result);
+        monitor.assert_released();
+        for ordinal in 1..=requests {
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                fail_at: NonZeroU64::new(ordinal),
+                ..AllocatorConfig::default()
+            })
+            .unwrap();
+            let monitor = owner.monitor();
+            let result = decompress_in(HTTP_FRAME, HTTP_SOURCE.len(), owner);
+            assert!(
+                matches!(result, Err(Error::AllocationFailed)),
+                "request {ordinal}"
+            );
+            assert_eq!(monitor.snapshot().attempts, ordinal);
+            assert_eq!(monitor.snapshot().failures, 1);
+            drop(result);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn custom_decoder_preserves_limits_errors_and_releases_partial_results() {
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        for (frame, options, error) in [
+            (&[][..], DecodeOptions::new(0), Error::UnexpectedEof),
+            (
+                &[0, 0, 0, 0][..],
+                DecodeOptions::new(1),
+                Error::InvalidMagic,
+            ),
+            (
+                &raw(b"abc", true)[..],
+                DecodeOptions::new(2),
+                Error::ResourceLimit,
+            ),
+            (
+                &raw(b"abc", true)[..],
+                DecodeOptions {
+                    max_output_size: 3,
+                    max_window_size: 2,
+                },
+                Error::ResourceLimit,
+            ),
+        ] {
+            let before = monitor.snapshot().attempts;
+            assert_eq!(
+                decompress_with_options_in(frame, options, &owner).err(),
+                Some(error)
+            );
+            assert_eq!(monitor.snapshot().attempts, before);
+            monitor.assert_released();
+        }
+        let mut bad_checksum = raw(b"abc", true);
+        *bad_checksum.last_mut().unwrap() ^= 1;
+        assert_eq!(
+            decompress_in(&bad_checksum, 3, &owner).err(),
+            Some(Error::ChecksumMismatch)
+        );
+        monitor.assert_released();
+        for end in 0..HTTP_FRAME.len() {
+            assert!(decompress_in(&HTTP_FRAME[..end], HTTP_SOURCE.len(), &owner).is_err());
+            monitor.assert_released();
+        }
+        assert_eq!(
+            decompress_in(HTTP_FRAME, HTTP_SOURCE.len(), &owner)
+                .unwrap()
+                .as_slice(),
+            HTTP_SOURCE
+        );
+        monitor.assert_released();
+    }
 
     fn raw(input: &[u8], checksum_flag: bool) -> Vec<u8> {
         let mut encoded = vec![

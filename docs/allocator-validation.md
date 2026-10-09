@@ -382,6 +382,26 @@ accounts for 24 live payload allocations across nine dense tables and six
 buffers, excluding allocator-internal bookkeeping. The Global const constructor
 remains available; custom block/stream integration follows separately.
 
+Public `decompress_in` and `decompress_with_options_in` now construct complete
+output in the original requested allocator and allocate all frame-local tables
+and literal scratch through fresh clones. Their
+[whole-buffer evidence](evidence/2026-10-09-allocator-whole-decode.json) uses an
+isolated committed baseline excluding concurrent streaming/training work.
+Eight tests passed in nine configurations: safe, each of five relevant unsafe
+features, all features, and safe/all no_std. Interop passed in safe/all builds;
+the live C decoding differential was explicitly run in both. Two no_std builds,
+strict all-target Clippy, formatting, and three all-feature strict-provenance
+Miri cases passed.
+
+Custom output matches independent saved C HTTP and Huffman-larger frames,
+retains its original allocator identity and pointer across moves, and leaves
+only one result allocation after scratch release. Borrowed non-Clone usage,
+concatenation, all sixteen skippable magics, allocation-free skip-only results,
+limits, checksums, every HTTP truncation, and every observed HTTP allocation
+failure are covered. Errors release partial output and tables. The live C
+oracle exercises the Global wrapper of the same implementation; custom
+streaming and dictionary collection are separate checkpoints.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

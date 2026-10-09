@@ -1,0 +1,335 @@
+{
+  "source_sha256": {
+    "src/decode.rs": "e29cdae3367b689d36769484e9ff138e1ffd8d5900225b2a27f8de4bec6d4905",
+    "src/lib.rs": "11b88acaa8c0823f8c53fcf7854b2460022828dc9b2269ec5249fd778f21aa4f",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999"
+  },
+  "base_commit": "5dbd816",
+  "scope": "Isolated committed baseline plus whole-buffer decoding API and two Global-wrapper allowances; concurrent streaming/sequence/training changes excluded.",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.430458459071815,
+      "output": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-whole-decode-check/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.06s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 8 tests\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 407 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--features",
+        "unsafe-byte-cursor",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.5906038749963045,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.24s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/ff692301381cfaad/out/zstdoxide-ff692301381cfaad)\n\nrunning 8 tests\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 407 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--features",
+        "unsafe-bitstream",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.409004708053544,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.06s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/c6c04400b66d6610/out/zstdoxide-c6c04400b66d6610)\n\nrunning 8 tests\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 407 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--features",
+        "unsafe-history",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.5114644579589367,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.14s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/3962a8e6f2816335/out/zstdoxide-3962a8e6f2816335)\n\nrunning 8 tests\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 407 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--features",
+        "unsafe-fse",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.0713408750016242,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.69s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/366a34bcdf4262de/out/zstdoxide-366a34bcdf4262de)\n\nrunning 8 tests\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 407 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--features",
+        "unsafe-huffman",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.0221912499982864,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.66s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/302b730c954d0e31/out/zstdoxide-302b730c954d0e31)\n\nrunning 8 tests\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 407 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--all-features",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9668337090406567,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.60s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 8 tests\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 407 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--no-default-features",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.737578417174518,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.35s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 8 tests\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 387 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "decode::tests",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--",
+        "--skip",
+        "stream_decode::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.6034729999955744,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.25s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 8 tests\ntest decode::tests::concatenation_and_all_skippable_magic_values ... ok\ntest decode::tests::raw_rle_and_checksum_frames ... ok\ntest decode::tests::rejects_truncation_invalid_sizes_and_limits ... ok\ntest decode::tests::compressed_frame_executes_sequence ... ok\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\ntest decode::tests::custom_decoder_preserves_limits_errors_and_releases_partial_results ... ok\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 387 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "interop"
+      ],
+      "exit_code": 0,
+      "seconds": 2.1552994169760495,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.93s\n     Running tests/interop.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/fa56ad8c24d1552d/out/interop-fa56ad8c24d1552d)\n\nrunning 7 tests\ntest differential_decode_against_official_cli ... ignored, requires the external official zstd v1.5.7 test oracle\ntest differential_encode_against_official_cli ... ignored, requires the external official zstd v1.5.7 test oracle\ntest decodes_concatenated_and_skippable_official_frames ... ok\ntest decodes_official_frames_at_multiple_levels ... ok\ntest verifies_checksums_on_official_frames ... ok\ntest rust_encoder_roundtrips_deterministic_corpora ... ok\ntest rejects_truncated_official_frames_and_output_limit_overruns ... ok\n\ntest result: ok. 5 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.91s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "interop",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 2.748698625015095,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.55s\n     Running tests/interop.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/7176eae24f06975a/out/interop-7176eae24f06975a)\n\nrunning 7 tests\ntest differential_decode_against_official_cli ... ignored, requires the external official zstd v1.5.7 test oracle\ntest differential_encode_against_official_cli ... ignored, requires the external official zstd v1.5.7 test oracle\ntest decodes_concatenated_and_skippable_official_frames ... ok\ntest verifies_checksums_on_official_frames ... ok\ntest decodes_official_frames_at_multiple_levels ... ok\ntest rust_encoder_roundtrips_deterministic_corpora ... ok\ntest rejects_truncated_official_frames_and_output_limit_overruns ... ok\n\ntest result: ok. 5 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.83s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "interop",
+        "differential_decode_against_official_cli",
+        "--",
+        "--ignored",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 1.0688245419878513,
+      "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running tests/interop.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/fa56ad8c24d1552d/out/interop-fa56ad8c24d1552d)\n\nrunning 1 test\ntest differential_decode_against_official_cli ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 1.00s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "interop",
+        "differential_decode_against_official_cli",
+        "--all-features",
+        "--",
+        "--ignored",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 1.170594499912113,
+      "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running tests/interop.rs (/tmp/zstdoxide-whole-decode-target/debug/build/zstdoxide/7176eae24f06975a/out/interop-7176eae24f06975a)\n\nrunning 1 test\ntest differential_decode_against_official_cli ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 1.12s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4861467918381095,
+      "output": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.45s\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4602139159105718,
+      "output": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.43s\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 2.2709228328894824,
+      "output": "    Checking zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-whole-decode-check/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.20s\n"
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "src/decode.rs",
+        "src/lib.rs",
+        "src/huffman.rs",
+        "src/history.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06535958289168775,
+      "output": ""
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 7.825630666920915,
+      "output": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-whole-decode-check/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-whole-decode-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest decode::tests::custom_complete_output_owns_the_requested_allocator_after_scratch_release ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 414 filtered out; finished in 12.79s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 2.2613102078903466,
+      "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest decode::tests::borrowed_non_clone_allocator_handles_concatenation_and_skippable_frames ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 414 filtered out; finished in 4.07s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 45.21919854078442,
+      "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-whole-decode-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest decode::tests::each_complete_decoder_allocation_failure_releases_output_and_entropy ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 414 filtered out; finished in 113.19s\n\n"
+    }
+  ],
+  "checkpoint": "Module 9 public allocator-aware whole-buffer decoding",
+  "date": "2026-10-09",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "qualifications": [
+    "Nine configurations each pass all 8 whole-buffer decoder unit tests; stream_decode tests were explicitly skipped to keep this checkpoint independent.",
+    "Interop default/all each passed 5 tests with 2 optional C tests ignored. The decoding C oracle was then explicitly executed in both builds. Encoding oracle was not rerun.",
+    "Three exact all-feature strict-provenance Miri tests passed, including every observed allocation failure on the saved independent HTTP frame.",
+    "Custom allocator parity covers saved official HTTP and Huffman-larger frames; the live C differential uses the Global wrapper of the same generic implementation. Dictionary collection and streaming custom allocation remain separate tasks."
+  ]
+}
