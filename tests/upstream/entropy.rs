@@ -3,7 +3,7 @@
 
 use alloc::vec::Vec;
 
-use crate::entropy_encode::write_normalized_counts;
+use crate::entropy_encode::{normalize_frequencies, write_normalized_counts};
 use crate::fse::{FseTable, read_normalized_counts};
 #[cfg(feature = "std")]
 use crate::huffman::decode_streams;
@@ -28,6 +28,55 @@ impl<'a> Records<'a> {
 
     fn u32(&mut self) -> usize {
         u32::from_le_bytes(self.take(4).try_into().unwrap()) as usize
+    }
+}
+
+/// `tests/fuzzer.c:4172-4189`, PR#1255: 32 unit counts at table log five
+/// must not trigger a division by zero. The original C test ignores the return
+/// value; v1.5.7 rejects this requested log before normalization. Our independent
+/// normalizer accepts the exactly representable distribution, so its successful
+/// mass/readback assertions do not claim identical C normalization policy.
+#[test]
+fn fuzzer_pr1255_unit_counts_normalize_without_division_by_zero() {
+    let counts = [1_u64; 32];
+    let normalized = normalize_frequencies(&counts, 5).unwrap();
+    assert_eq!(normalized, [-1; 32]);
+    assert_eq!(
+        normalized
+            .iter()
+            .map(|count| usize::from(count.unsigned_abs()))
+            .sum::<usize>(),
+        32
+    );
+    let encoded = write_normalized_counts(&normalized, 5).unwrap();
+    let decoded = read_normalized_counts(&encoded, 31, 5).unwrap();
+    assert_eq!(decoded.table_log, 5);
+    assert_eq!(decoded.symbols, 32);
+    assert_eq!(decoded.bytes_read, encoded.len());
+    assert_eq!(&decoded.counts[..32], &normalized);
+}
+
+/// `tests/fuzzer.c:4190-4205`, PR#2779: preserve the exact sparse distribution.
+/// The header below was independently emitted by v1.5.7 FSE_writeNCount with
+/// 512 bytes of destination slack, log five and maximum symbol ten, then checked
+/// with FSE_readNCount. Reference revision:
+/// f8745da6ff1ad1e7bab384bd1f9d742439278e99; BSD option in LICENSE.zstd.
+/// The original C call with a nine-byte destination returns dstSize_tooSmall
+/// despite this nine-byte final header. Rust returns owned bytes, so this test
+/// does not claim the original caller-buffer capacity/error contract is ported.
+#[test]
+fn fuzzer_pr2779_sparse_counts_match_the_exact_nine_byte_header() {
+    const COUNTS: [i16; 11] = [1, 0, 1, 0, 1, 0, 1, 0, 1, 9, 18];
+    const EXPECTED: [u8; 9] = [0x20, 0x02, 0x22, 0x20, 0x02, 0x22, 0x10, 0xea, 0x03];
+    let encoded = write_normalized_counts(&COUNTS, 5).unwrap();
+    assert_eq!(encoded, EXPECTED);
+    let decoded = read_normalized_counts(&encoded, 10, 5).unwrap();
+    assert_eq!(decoded.table_log, 5);
+    assert_eq!(decoded.symbols, 11);
+    assert_eq!(decoded.bytes_read, 9);
+    assert_eq!(&decoded.counts[..11], COUNTS);
+    for end in 0..encoded.len() {
+        assert!(read_normalized_counts(&encoded[..end], 10, 5).is_err());
     }
 }
 

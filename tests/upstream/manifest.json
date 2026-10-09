@@ -7561,9 +7561,11 @@
           "line_start": 4172,
           "line_end": 4189,
           "label": "test%3i : testing FSE_normalizeCount() PR#1255:",
-          "status": "blocked",
-          "reason": "Checked normalized-count encoding and deterministic normalization exist; this exact upstream regression and any caller-owned output-capacity contract have not yet been mapped.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The exact 32 unit frequencies at table log 5 execute without division by zero. The independent Rust normalizer additionally preserves all 32 units and serializes/readbacks the distribution. Pinned C returns a generic error for this requested log; the original regression ignores the return value, so this mapping claims the no-arithmetic-trap contract rather than identical normalization policy.",
+          "rust_tests": [
+            "tests/upstream/entropy.rs#fuzzer_pr1255_unit_counts_normalize_without_division_by_zero"
+          ]
         },
         {
           "id": "tests/fuzzer.c:4190",
@@ -7571,9 +7573,11 @@
           "line_start": 4190,
           "line_end": 4205,
           "label": "test%3i : testing FSE_writeNCount() PR#2779:",
-          "status": "blocked",
-          "reason": "Checked normalized-count encoding and deterministic normalization exist; this exact upstream regression and any caller-owned output-capacity contract have not yet been mapped.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The exact sparse counts [1,0,1,0,1,0,1,0,1,9,18] at log 5 produce the independently C-verified nine-byte header 20022220022210ea03 and preserve exact readback/truncation behavior. C emits these bytes with ample destination slack but returns dstSize_tooSmall for the original nine-byte destination. Rust returns owned output; the original caller-buffer bounds/error branch remains unavailable.",
+          "rust_tests": [
+            "tests/upstream/entropy.rs#fuzzer_pr2779_sparse_counts_match_the_exact_nine_byte_header"
+          ]
         },
         {
           "id": "tests/fuzzer.c:4206",

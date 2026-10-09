@@ -35,7 +35,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [ ] Add checked literal headers and zero-sequence compressed-block assembly.
 - [ ] Publish Huffman choices transactionally with emitted and pending entropy state.
 - [x] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.
-- [ ] Port exact unit-count normalization and sparse normalized-header regressions.
+- [x] Port exact unit-count normalization and sparse normalized-header regressions.
 - [ ] Add unsafe-fse-encoder independently from the decoder unsafe-fse backend.
 - [x] Plan repeat-offset values forward with exact triples and checked arithmetic.
 - [ ] Encode sequences using supplied predefined, new, reused, and RLE tables.
