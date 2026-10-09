@@ -108,7 +108,7 @@ pub use error::{Error, Result};
 pub use frame::FrameHeader;
 pub use parameters::{
     CompressionParameterRequest, RawCompressionParameters, ReferenceFrameParameters,
-    ReferenceStrategy, ResolvedCompressionParameters, SourceSize,
+    ReferenceStrategy, ResolvedCompressionParameters, SourceSize, inspect_compression_level,
 };
 pub use strategy::CompressionStrategy;
 pub use stream::{EndDirective, Progress, StreamStatus};

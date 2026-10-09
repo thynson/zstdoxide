@@ -317,3 +317,12 @@ their selected forms, with checked tier arithmetic and negative acceleration.
 Twenty-two parameter tests pass in each of four configurations; no_std, strict
 Clippy and formatting checks pass. The lookup remains test-only until complete
 query adjustment is implemented, and does not change the live encoder.
+
+Complete reference query, raw adjustment and two-pass request resolution are now
+implemented and exported. All 32 parameter tests pass in four configurations;
+262 query profiles, 223 adjustments and 450 scalar-state resolutions match the
+frozen oracle, with six explicitly classified reserved/overflow rejections.
+The independent 46-row review probe passes safe/all replay, including its five
+intentional Rust-domain errors. Both no_std checks, strict Clippy and all four
+parameter usage examples pass. Numeric encoder execution remains a later
+milestone; the new allocation-free API inspects reference profiles only.

@@ -7,7 +7,6 @@
 
 use crate::{Error, Result};
 
-#[cfg(test)]
 mod presets;
 
 // Bounds correspond to lib/zstd.h:1263-1279 and zstd_compress.c:7673-7674
@@ -41,8 +40,8 @@ pub enum SourceSize {
     Unknown,
     /// An exact source size, including zero for empty input.
     ///
-    /// The reference reserves `u64::MAX` as its unknown sentinel. A future
-    /// inspection query rejects `Known(u64::MAX)` instead of reinterpreting it.
+    /// The reference reserves `u64::MAX` as its unknown sentinel. Inspection
+    /// and adjustment reject `Known(u64::MAX)` instead of reinterpreting it.
     Known(u64),
 }
 
@@ -134,6 +133,47 @@ pub struct RawCompressionParameters {
 }
 
 impl RawCompressionParameters {
+    /// Clamp raw fields and adjust them for the given source and dictionary.
+    ///
+    /// Corresponds to `ZSTD_adjustCParams` in its ordinary dictionary mode,
+    /// with `Known(0)` preserving the internal reference's empty-source meaning.
+    /// A caller adapting the public C API maps its zero size to `Unknown`.
+    ///
+    /// Raw fields deliberately follow the pinned 32-bit signed clamp: values
+    /// whose high bit is set, including `u32::MAX`, clamp to the field's lower
+    /// bound. This differs from saturating an unsigned value to its upper bound.
+    /// Unlike [`Self::validate`], invalid raw fields are therefore accepted.
+    ///
+    /// `Known(u64::MAX)` returns [`Error::InvalidParameter`]. Overflow in a
+    /// known source plus dictionary or dictionary plus intermediate window
+    /// returns [`Error::ResourceLimit`] instead of reproducing C wrapping.
+    /// Unknown-source adjustment does not perform the preset selector's
+    /// dictionary-plus-499 arithmetic. No allocation or encoder mutation occurs.
+    pub fn adjust(
+        self,
+        source_size: SourceSize,
+        dictionary_size: usize,
+    ) -> Result<ResolvedCompressionParameters> {
+        let clamped = Self {
+            window_log: signed_clamp(
+                self.window_log,
+                WINDOW_LOG_MIN.into(),
+                WINDOW_LOG_MAX.into(),
+            ),
+            chain_log: signed_clamp(self.chain_log, CHAIN_LOG_MIN.into(), CHAIN_LOG_MAX.into()),
+            hash_log: signed_clamp(self.hash_log, HASH_LOG_MIN.into(), HASH_LOG_MAX.into()),
+            search_log: signed_clamp(
+                self.search_log,
+                SEARCH_LOG_MIN.into(),
+                SEARCH_LOG_MAX.into(),
+            ),
+            min_match: signed_clamp(self.min_match, MIN_MATCH_MIN.into(), MIN_MATCH_MAX.into()),
+            target_length: signed_clamp(self.target_length, 0, TARGET_LENGTH_MAX),
+            strategy: signed_clamp(self.strategy, 1, 9),
+        };
+        adjust_parameters(clamped, source_size, dictionary_size)
+    }
+
     /// Validate all concrete fields without clamping or resolving a level.
     ///
     /// Corresponds to `ZSTD_checkCParams`. Bounds follow the target pointer
@@ -159,6 +199,94 @@ impl RawCompressionParameters {
             strategy,
         })
     }
+}
+
+/// Inspect the pinned reference's parameters for a level, source and dictionary.
+///
+/// Corresponds to `ZSTD_getCParams_internal` in no-attached-dictionary mode.
+/// Zero selects reference level three; other levels clamp to the reference
+/// bounds. `Known(0)` represents empty input, while `Unknown` leaves its size
+/// unspecified. Adapters for the public C query map its zero argument to
+/// `Unknown` explicitly. Reference frame defaults are available separately via
+/// [`ReferenceFrameParameters`].
+///
+/// This allocation-free query does not select a Rust encoder algorithm or
+/// promise its memory requirements. `Known(u64::MAX)` is invalid. Checked size
+/// arithmetic returns [`Error::ResourceLimit`] on overflow, including the
+/// unknown-source dictionary-plus-499 tier expression. The separate raw
+/// adjustment method checks only its own expressions.
+pub fn inspect_compression_level(
+    level: i32,
+    source_size: SourceSize,
+    dictionary_size: usize,
+) -> Result<ResolvedCompressionParameters> {
+    adjust_parameters(
+        presets::select(level, source_size, dictionary_size)?,
+        source_size,
+        dictionary_size,
+    )
+}
+
+// ZSTD_clampCParams interprets each u32 field as a 32-bit signed int first.
+// Reinterpreting the bit pattern states this compatibility policy explicitly;
+// every caller passes nonnegative bounds at most TARGET_LENGTH_MAX (or 31).
+fn signed_clamp(value: u32, minimum: u32, maximum: u32) -> u32 {
+    i32::from_ne_bytes(value.to_ne_bytes()).clamp(minimum as i32, maximum as i32) as u32
+}
+
+// The input and result satisfy public scalar bounds, but intermediate window
+// logs may be below ten. Preserve that smaller value until hash and chain
+// downsizing completes, matching ZSTD_adjustCParams_internal's order.
+fn adjust_parameters(
+    parameters: RawCompressionParameters,
+    source_size: SourceSize,
+    dictionary_size: usize,
+) -> Result<ResolvedCompressionParameters> {
+    let mut working = parameters.validate()?.to_raw();
+    let dictionary = u64::try_from(dictionary_size).map_err(|_| Error::ResourceLimit)?;
+    if let SourceSize::Known(source) = source_size {
+        if source == u64::MAX {
+            return Err(Error::InvalidParameter);
+        }
+        let total = source.checked_add(dictionary).ok_or(Error::ResourceLimit)?;
+        let resize_limit = 1_u64 << (WINDOW_LOG_MAX - 1);
+        if source <= resize_limit && dictionary <= resize_limit {
+            let source_log = if total < (1_u64 << HASH_LOG_MIN) {
+                u32::from(HASH_LOG_MIN)
+            } else {
+                // total is nonzero in this branch. The subtraction is exact.
+                u64::BITS - (total - 1).leading_zeros()
+            };
+            working.window_log = working.window_log.min(source_log);
+        }
+        let dictionary_window_log = if dictionary == 0 {
+            working.window_log
+        } else {
+            // Validated window logs only decrease, so the shift is at most 31.
+            let window = 1_u64 << working.window_log;
+            let combined = dictionary.checked_add(window).ok_or(Error::ResourceLimit)?;
+            if window >= total {
+                working.window_log
+            } else if combined >= (1_u64 << WINDOW_LOG_MAX) {
+                u32::from(WINDOW_LOG_MAX)
+            } else {
+                // The nonempty dictionary and positive window make combined > 1.
+                u64::BITS - (combined - 1).leading_zeros()
+            }
+        };
+        working.hash_log = working.hash_log.min(dictionary_window_log + 1);
+        let tree_scale = u32::from(working.strategy >= ReferenceStrategy::BinaryTreeLazy2.code());
+        working.chain_log = working.chain_log.min(dictionary_window_log + tree_scale);
+    }
+    working.window_log = working.window_log.max(u32::from(WINDOW_LOG_MIN));
+    // The reference's automatic row finder applies only to Greedy/Lazy/Lazy2.
+    // Each row stores eight-bit tags; its row log is search_log clamped to 4..6.
+    if (ReferenceStrategy::Greedy.code()..=ReferenceStrategy::Lazy2.code())
+        .contains(&working.strategy)
+    {
+        working.hash_log = working.hash_log.min(24 + working.search_log.clamp(4, 6));
+    }
+    working.validate()
 }
 
 fn normalized_level(level: i32) -> i32 {
@@ -263,6 +391,59 @@ pub struct CompressionParameterRequest {
 }
 
 impl CompressionParameterRequest {
+    /// Lowest level accepted by the pinned reference, including fast acceleration.
+    pub const MIN_LEVEL: i32 = LEVEL_MIN;
+    /// Highest level defined by the pinned reference's preset table.
+    pub const MAX_LEVEL: i32 = LEVEL_MAX;
+    /// Pinned reference default level, also selected by a request for zero.
+    pub const DEFAULT_LEVEL: i32 = LEVEL_DEFAULT;
+
+    /// Resolve the requested level and overrides without changing this record.
+    ///
+    /// Corresponds to `ZSTD_getCParamsFromCCtxParams` in no-attached-dictionary
+    /// mode with automatic row matching and no long-distance matching. A source
+    /// hint supplies size knowledge only for `Unknown`; known sizes, including
+    /// zero, take precedence. The preset is adjusted first, explicit overrides
+    /// are applied second, and the result is adjusted again. This preserves
+    /// source-dependent reductions made before a strategy or window override.
+    ///
+    /// Errors and checked size policy match [`inspect_compression_level`].
+    /// No numeric compression algorithm or live context setting is enabled.
+    pub fn resolve(
+        &self,
+        source_size: SourceSize,
+        dictionary_size: usize,
+    ) -> Result<ResolvedCompressionParameters> {
+        let source_size = match (source_size, self.source_hint) {
+            (SourceSize::Unknown, Some(hint)) => SourceSize::Known(u64::from(hint)),
+            (source_size, _) => source_size,
+        };
+        let mut parameters =
+            inspect_compression_level(self.level, source_size, dictionary_size)?.to_raw();
+        if let Some(value) = self.window_log {
+            parameters.window_log = value.into();
+        }
+        if let Some(value) = self.chain_log {
+            parameters.chain_log = value.into();
+        }
+        if let Some(value) = self.hash_log {
+            parameters.hash_log = value.into();
+        }
+        if let Some(value) = self.search_log {
+            parameters.search_log = value.into();
+        }
+        if let Some(value) = self.min_match {
+            parameters.min_match = value.into();
+        }
+        if let Some(value) = self.target_length {
+            parameters.target_length = value;
+        }
+        if let Some(value) = self.strategy {
+            parameters.strategy = value.code();
+        }
+        adjust_parameters(parameters, source_size, dictionary_size)
+    }
+
     /// Request reference level three, with automatic fields and no source hint.
     pub const fn new() -> Self {
         Self {
@@ -979,5 +1160,456 @@ mod frame_tests {
             crate::EncoderOptions::default().strategy,
             crate::CompressionStrategy::Greedy
         );
+    }
+}
+
+#[cfg(test)]
+mod resolution_tests {
+    use super::*;
+
+    fn baseline() -> RawCompressionParameters {
+        RawCompressionParameters {
+            window_log: 21,
+            chain_log: 16,
+            hash_log: 17,
+            search_log: 1,
+            min_match: 5,
+            target_length: 0,
+            strategy: 2,
+        }
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    fn raw_record(fields: &[&str]) -> RawCompressionParameters {
+        assert_eq!(fields.len(), 7);
+        RawCompressionParameters {
+            window_log: fixture::number(fields[0]),
+            chain_log: fixture::number(fields[1]),
+            hash_log: fixture::number(fields[2]),
+            search_log: fixture::number(fields[3]),
+            min_match: fixture::number(fields[4]),
+            target_length: fixture::number(fields[5]),
+            strategy: fixture::number(fields[6]),
+        }
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    fn request_record(
+        level: i32,
+        raw: RawCompressionParameters,
+        hint: u32,
+    ) -> CompressionParameterRequest {
+        let mut request = CompressionParameterRequest::with_level(level);
+        request
+            .set_window_log(raw.window_log.try_into().unwrap())
+            .unwrap();
+        request
+            .set_chain_log(raw.chain_log.try_into().unwrap())
+            .unwrap();
+        request
+            .set_hash_log(raw.hash_log.try_into().unwrap())
+            .unwrap();
+        request
+            .set_search_log(raw.search_log.try_into().unwrap())
+            .unwrap();
+        request
+            .set_min_match(raw.min_match.try_into().unwrap())
+            .unwrap();
+        request.set_target_length(raw.target_length).unwrap();
+        request.set_strategy(if raw.strategy == 0 {
+            None
+        } else {
+            Some(ReferenceStrategy::try_from(raw.strategy).unwrap())
+        });
+        request.set_source_hint(hint).unwrap();
+        request
+    }
+
+    #[test]
+    fn associated_level_bounds_match_normalization_and_frozen_bounds() {
+        assert_eq!(CompressionParameterRequest::MIN_LEVEL, -131_072);
+        assert_eq!(CompressionParameterRequest::MAX_LEVEL, 22);
+        assert_eq!(CompressionParameterRequest::DEFAULT_LEVEL, 3);
+        for (input, expected) in [
+            (i32::MIN, CompressionParameterRequest::MIN_LEVEL),
+            (i32::MAX, CompressionParameterRequest::MAX_LEVEL),
+            (0, CompressionParameterRequest::DEFAULT_LEVEL),
+        ] {
+            assert_eq!(
+                inspect_compression_level(input, SourceSize::Unknown, 0),
+                inspect_compression_level(expected, SourceSize::Unknown, 0)
+            );
+        }
+    }
+
+    #[test]
+    fn raw_adjustment_uses_signed32_clamps_and_target_width_bounds() {
+        for high_bit in [0x8000_0000, u32::MAX] {
+            let raw = RawCompressionParameters {
+                window_log: high_bit,
+                chain_log: high_bit,
+                hash_log: high_bit,
+                search_log: high_bit,
+                min_match: high_bit,
+                target_length: high_bit,
+                strategy: high_bit,
+            };
+            assert_eq!(raw.validate(), Err(Error::InvalidParameter));
+            assert_eq!(
+                raw.adjust(SourceSize::Unknown, 0).unwrap().to_raw(),
+                RawCompressionParameters {
+                    window_log: 10,
+                    chain_log: 6,
+                    hash_log: 6,
+                    search_log: 1,
+                    min_match: 3,
+                    target_length: 0,
+                    strategy: 1
+                }
+            );
+        }
+        let upper = RawCompressionParameters {
+            window_log: i32::MAX as u32,
+            chain_log: i32::MAX as u32,
+            hash_log: i32::MAX as u32,
+            search_log: i32::MAX as u32,
+            min_match: i32::MAX as u32,
+            target_length: i32::MAX as u32,
+            strategy: i32::MAX as u32,
+        };
+        assert_eq!(
+            upper.adjust(SourceSize::Unknown, 0).unwrap().to_raw(),
+            RawCompressionParameters {
+                window_log: WINDOW_LOG_MAX.into(),
+                chain_log: CHAIN_LOG_MAX.into(),
+                hash_log: HASH_LOG_MAX.into(),
+                search_log: SEARCH_LOG_MAX.into(),
+                min_match: 7,
+                target_length: 131_072,
+                strategy: 9
+            }
+        );
+    }
+
+    #[test]
+    fn empty_adjustment_downsizes_hash_and_chain_before_flooring_window() {
+        let value = inspect_compression_level(3, SourceSize::Known(0), 0).unwrap();
+        assert_eq!(
+            value.to_raw(),
+            RawCompressionParameters {
+                window_log: 10,
+                chain_log: 6,
+                hash_log: 7,
+                search_log: 2,
+                min_match: 4,
+                target_length: 0,
+                strategy: 2
+            }
+        );
+        let raw = RawCompressionParameters {
+            strategy: 9,
+            ..baseline()
+        };
+        assert_eq!(raw.adjust(SourceSize::Known(0), 0).unwrap().chain_log(), 7);
+        assert_eq!(raw.adjust(SourceSize::Unknown, 0).unwrap().chain_log(), 16);
+    }
+
+    #[test]
+    fn row_hash_caps_apply_only_to_the_three_reference_row_strategies() {
+        for strategy in 1..=9 {
+            for search in [1, 4, 5, 6, SEARCH_LOG_MAX] {
+                let raw = RawCompressionParameters {
+                    hash_log: 30,
+                    search_log: search.into(),
+                    strategy,
+                    ..baseline()
+                };
+                let adjusted = raw.adjust(SourceSize::Unknown, 0).unwrap();
+                let expected = if (3..=5).contains(&strategy) {
+                    24 + search.clamp(4, 6)
+                } else {
+                    30
+                };
+                assert_eq!(
+                    adjusted.hash_log(),
+                    expected,
+                    "strategy {strategy}, search {search}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn request_resolution_preserves_initial_adjustment_before_strategy_override() {
+        let mut request = CompressionParameterRequest::new();
+        request.set_strategy(Some(ReferenceStrategy::Ultra2));
+        let before = request;
+        let resolved = request.resolve(SourceSize::Known(0), 0).unwrap();
+        assert_eq!(
+            (
+                resolved.window_log(),
+                resolved.chain_log(),
+                resolved.hash_log(),
+                resolved.strategy()
+            ),
+            (10, 6, 7, ReferenceStrategy::Ultra2)
+        );
+        let unadjusted_override = RawCompressionParameters {
+            strategy: 9,
+            ..presets::select(3, SourceSize::Known(0), 0).unwrap()
+        };
+        assert_eq!(
+            unadjusted_override
+                .adjust(SourceSize::Known(0), 0)
+                .unwrap()
+                .chain_log(),
+            7
+        );
+        assert_eq!(request, before);
+    }
+
+    #[test]
+    fn source_hints_change_unknown_resolution_only_and_never_mutate_requests() {
+        let mut request = CompressionParameterRequest::new();
+        let unknown = request.resolve(SourceSize::Unknown, 0).unwrap();
+        let empty = request.resolve(SourceSize::Known(0), 0).unwrap();
+        let known = request.resolve(SourceSize::Known(16_385), 0).unwrap();
+        request.set_source_hint(16_384).unwrap();
+        let before = request;
+        assert_ne!(request.resolve(SourceSize::Unknown, 0).unwrap(), unknown);
+        assert_eq!(
+            request.resolve(SourceSize::Unknown, 0),
+            request.resolve(SourceSize::Known(16_384), 0)
+        );
+        assert_eq!(request.resolve(SourceSize::Known(0), 0), Ok(empty));
+        assert_eq!(request.resolve(SourceSize::Known(16_385), 0), Ok(known));
+        assert_eq!(
+            request.resolve(SourceSize::Known(u64::MAX), 0),
+            Err(Error::InvalidParameter)
+        );
+        assert_eq!(request, before);
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    #[test]
+    fn checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses() {
+        let raw = baseline();
+        assert_eq!(
+            raw.adjust(SourceSize::Unknown, usize::MAX)
+                .unwrap()
+                .to_raw(),
+            raw
+        );
+        assert_eq!(
+            inspect_compression_level(3, SourceSize::Unknown, usize::MAX),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(
+            raw.adjust(SourceSize::Known(u64::MAX), 0),
+            Err(Error::InvalidParameter)
+        );
+        assert_eq!(
+            raw.adjust(SourceSize::Known(u64::MAX - 1), 2),
+            Err(Error::ResourceLimit)
+        );
+        assert!(raw.adjust(SourceSize::Known(u64::MAX - 1), 1).is_ok());
+        let small_window = RawCompressionParameters {
+            window_log: 10,
+            ..raw
+        };
+        assert!(
+            small_window
+                .adjust(SourceSize::Known(1), usize::MAX - 1024)
+                .is_ok()
+        );
+        assert_eq!(
+            small_window.adjust(SourceSize::Known(1), usize::MAX - 1023),
+            Err(Error::ResourceLimit)
+        );
+        let mut request = CompressionParameterRequest::new();
+        request.set_source_hint(16_384).unwrap();
+        request.set_hash_log(25).unwrap();
+        let before = request;
+        assert_eq!(
+            request.resolve(SourceSize::Unknown, usize::MAX - 1000),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(request, before);
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    #[test]
+    fn all_266_query_rows_compare_or_explicitly_reject_c_modular_domains() {
+        let mut exact = 0;
+        let mut rejected = 0;
+        for row in fixture::rows(fixture::QUERIES) {
+            let source = match row[6] {
+                "known" | "reserved_known" => SourceSize::Known(fixture::number(row[3])),
+                "unknown" | "public_zero_unknown" => SourceSize::Unknown,
+                other => panic!("unclassified source kind: {other}"),
+            };
+            assert!(matches!(row[1], "public" | "typed_no_attach"));
+            let result =
+                inspect_compression_level(fixture::number(row[2]), source, fixture::number(row[4]));
+            match row[5] {
+                "ordinary" => {
+                    assert_eq!(
+                        result.map(|p| p.to_raw()),
+                        Ok(raw_record(&row[7..14])),
+                        "{row:?}"
+                    );
+                    exact += 1;
+                }
+                "rust_reject_reserved_known" => {
+                    assert_eq!(result, Err(Error::InvalidParameter), "{row:?}");
+                    rejected += 1;
+                }
+                "c_modular_known_sum"
+                | "c_modular_dictionary_plus499"
+                | "c_modular_dictionary_window" => {
+                    assert_eq!(result, Err(Error::ResourceLimit), "{row:?}");
+                    rejected += 1;
+                }
+                other => panic!("unclassified query domain: {other}"),
+            }
+        }
+        assert_eq!((exact, rejected), (262, 4));
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    #[test]
+    fn all_225_adjustment_rows_compare_signed_clamps_or_explicitly_reject_overflow() {
+        let mut exact = 0;
+        let mut rejected = 0;
+        for row in fixture::rows(fixture::ADJUSTMENTS) {
+            let size = fixture::number::<u64>(row[2]);
+            assert!(matches!(row[1], "public" | "typed_no_attach_adapter"));
+            let source = if size == u64::MAX || (row[1] == "public" && size == 0) {
+                SourceSize::Unknown
+            } else {
+                SourceSize::Known(size)
+            };
+            let result = raw_record(&row[5..12]).adjust(source, fixture::number(row[3]));
+            match row[4] {
+                "ordinary" | "ordinary_signed32_raw" => {
+                    assert_eq!(
+                        result.map(|p| p.to_raw()),
+                        Ok(raw_record(&row[13..20])),
+                        "{row:?}"
+                    );
+                    exact += 1;
+                }
+                "c_modular_known_sum" | "c_modular_dictionary_window" => {
+                    assert_eq!(result, Err(Error::ResourceLimit), "{row:?}");
+                    rejected += 1;
+                }
+                other => panic!("unclassified adjustment domain: {other}"),
+            }
+        }
+        assert_eq!((exact, rejected), (223, 2));
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    #[test]
+    fn all_150_requested_states_resolve_without_claiming_frame_or_unsupported_setters() {
+        let mut scalar = 0;
+        let mut frame_projection = 0;
+        let mut unsupported_projection = 0;
+        let mut profiles = 0;
+        for row in fixture::rows(fixture::REQUESTS) {
+            // Stage-one tests replay supported mutation operations. Here every
+            // recorded scalar state is resolved, including projections from
+            // frame-only and unsupported operations without claiming those APIs.
+            match row[0] {
+                "content_size" | "checksum" | "dictionary_id" => frame_projection += 1,
+                "unsupported" => unsupported_projection += 1,
+                _ => scalar += 1,
+            }
+            let request = request_record(
+                fixture::number(row[7]),
+                raw_record(&row[8..15]),
+                fixture::number(row[15]),
+            );
+            let before = request;
+            for (source, offset) in [
+                (SourceSize::Known(0), 19),
+                (SourceSize::Unknown, 26),
+                (SourceSize::Known(16_385), 33),
+            ] {
+                assert_eq!(
+                    request.resolve(source, 0).map(|p| p.to_raw()),
+                    Ok(raw_record(&row[offset..offset + 7])),
+                    "{row:?} {source:?}"
+                );
+                assert_eq!(request, before);
+                profiles += 1;
+            }
+        }
+        assert_eq!(
+            (scalar, frame_projection, unsupported_projection, profiles),
+            (119, 30, 1, 450)
+        );
+    }
+
+    #[cfg(all(feature = "std", target_pointer_width = "64"))]
+    #[test]
+    #[ignore = "requires the separately generated C review probe via ZSTDOXIDE_PARAMETER_REVIEW_PROBE"]
+    fn external_review_probe_matches_independent_c_queries_adjustments_and_requests() {
+        let path = std::env::var("ZSTDOXIDE_PARAMETER_REVIEW_PROBE")
+            .expect("set path to the 46-row external review TSV");
+        let input = std::fs::read_to_string(path).unwrap();
+        let mut exact = 0;
+        let mut rejected = 0;
+        for row in fixture::rows(&input) {
+            assert_eq!(row.len(), 21);
+            let size = fixture::number::<u64>(row[3]);
+            let source = if row[2] == "rust_reject_reserved_known" {
+                SourceSize::Known(u64::MAX)
+            } else if size == u64::MAX || (row[1].starts_with("public_") && size == 0) {
+                SourceSize::Unknown
+            } else {
+                SourceSize::Known(size)
+            };
+            let dictionary = fixture::number(row[4]);
+            let raw = raw_record(&row[7..14]);
+            let result = match row[1] {
+                "public_query" => {
+                    inspect_compression_level(fixture::number(row[5]), source, dictionary)
+                }
+                "public_adjust" => raw.adjust(source, dictionary),
+                "typed_request" => {
+                    let request =
+                        request_record(fixture::number(row[5]), raw, fixture::number(row[6]));
+                    let before = request;
+                    let result = request.resolve(source, dictionary);
+                    assert_eq!(request, before);
+                    result
+                }
+                other => panic!("unclassified review operation: {other}"),
+            };
+            match row[2] {
+                "ordinary_known" | "ordinary_unknown" => {
+                    assert_eq!(
+                        result.map(|p| p.to_raw()),
+                        Ok(raw_record(&row[14..21])),
+                        "{row:?}"
+                    );
+                    exact += 1;
+                }
+                "rust_reject_reserved_known" => {
+                    assert_eq!(result, Err(Error::InvalidParameter), "{row:?}");
+                    rejected += 1;
+                }
+                "rust_reject_sum_overflow"
+                | "rust_reject_plus499_overflow"
+                | "rust_reject_hint_sum_overflow"
+                | "rust_reject_dictionary_window_overflow" => {
+                    assert_eq!(result, Err(Error::ResourceLimit), "{row:?}");
+                    rejected += 1;
+                }
+                other => panic!("unclassified review domain: {other}"),
+            }
+        }
+        assert_eq!((exact, rejected), (41, 5));
     }
 }

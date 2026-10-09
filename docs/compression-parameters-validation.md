@@ -86,3 +86,41 @@ uses it, so this checkpoint introduces neither an incomplete query nor unused
 production lookup code. No new C execution, Miri or benchmark is claimed.
 [Preset evidence](evidence/2026-10-09-parameter-presets.json) records the frozen
 sources and all ten focused commands and logs.
+
+## Complete scalar inspection
+
+`inspect_compression_level`, raw adjustment and request resolution now use the
+production preset selector. Resolution preserves both reference adjustment
+passes around explicit overrides; source hints affect unknown sizes only.
+Signed 32-bit raw-field clamping and temporary window logs below ten follow the
+pinned algorithm. Reserved known size and arithmetic overflow return explicit
+Rust errors. Each operation checks only expressions it actually uses, so raw
+unknown-size adjustment does not evaluate the preset selector's extra offset.
+
+Ten new tests bring the parameter suite to 32 passing tests in each of four
+safe/feature/std configurations, or 128 executions. The normal std suites leave
+one external-probe test explicitly ignored. Frozen replay checks 262 exact
+query results and four deliberate rejections; 223 exact raw adjustments and two
+overflow rejections; and 450 resolved profiles from 150 recorded scalar states.
+The last group includes 30 frame-only and one unsupported-operation projection,
+which do not claim those setters. Both no_std checks, strict safe/all Clippy,
+owned formatting and diff checks pass. All four parameter usage examples pass
+under safe and all-feature builds.
+
+A separately prepared C probe supplies 46 additional rows. Explicit safe/all
+replays each match 41 ordinary profiles and reject five labeled Rust-domain
+cases. It covers neighboring sizes, dictionary contributions, source hints and
+override ordering. This checkpoint replays previously generated observations;
+the probe metadata separately records its successful C generation. All executed
+C observations are 64-bit; no native 32-bit execution, Miri or performance claim
+is made for these allocation-free scalar records.
+
+[Query evidence](evidence/2026-10-09-parameter-queries.json) embeds all twelve
+focused command logs and identifies the frozen sources. The separate
+[probe archive](evidence/2026-10-09-parameter-query-probe.tar.gz) contains only
+project-owned probe/reproduction files and captured observations. To reproduce
+its original setup, extract those files into `/tmp`, provide the pinned external
+checkout and built archive at `/tmp/zstdoxize-upstream-1.5.7`, and run the archived
+Python script. Set `ZSTDOXIDE_PARAMETER_REVIEW_PROBE` to the resulting TSV when
+running the ignored test named in the evidence. The Rust implementation neither
+links C nor enables numeric encoder execution.
