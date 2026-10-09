@@ -113,7 +113,7 @@ existence of a local file.
 | Inline legacy and skippable regression bytes | `tests/upstream_inline_regressions.rs` | Modern component runs; the full legacy desired-success assertion remains blocked |
 | Four public one-shot fuzz targets | `tests/upstream_fuzz_targets.rs` | Exact tail-selected input contracts with bounded deterministic inputs and a configurable external file runner; contexts/parameters/in-place and production scanner APIs remain missing |
 | Regression directory corpora | `tests/upstream_regression_corpora.rs` | Exact Silesia/GitHub inputs and full size/content roundtrips; the original method, strategy, level, dictionary, and CSV comparison matrix remains missing |
-| FSE normalized-count and Huffman decoding fuzz intent | `tests/upstream/entropy.rs`, `src/entropy_encode.rs` | Complete normalized-count target, 512 byte-identical C headers and arbitrary bounded Huffman decoding; Huffman payload encoding and specialized C controls remain incomplete |
+| FSE normalized-count and Huffman fuzz intent | `tests/upstream/entropy.rs`, `tests/upstream/huffman_encode.rs`, `src/entropy_encode.rs` | Complete normalized-count target, 512 byte-identical C headers, bounded Huffman decoding, thirty exact C tables with Rust 1X/4X encoding and live same-table C verification; standalone depth/capacity and full roundtrip selectors remain partial |
 | Single-file DXT1 and kernel empty-frame fixtures | `tests/upstream_testcard.rs` | Exact original bytes and output contracts; maximum-level selection, browser rendering, and kernel workspace APIs remain missing |
 | Ordinary streaming and context reuse | `tests/upstream_streaming.rs`, `tests/upstream_window.rs` | Bounded fragmented progress, flush/finish/reset, pledge and checksum failures, official window-distance fixtures and matching external adapters; specialized parameter/control paths remain separate |
 | Prepared dictionaries and prefixes | `src/dictionary.rs`, `tests/upstream_dictionary.rs`, `tests/upstream_dictionary_encode.rs` | Exact malformed/prepared metadata, raw/formatted matches, first-block decoding entropy/repeat offsets, IDs, persistent selection, one-use prefixes and resource/state boundaries; original level/strategy and broader random schedules remain incomplete |
@@ -144,6 +144,26 @@ through `reset` and `reset_with_options`. Upstream groups which also require C
 partial; the explicit Rust operation is `set_dictionary(None)`. Similarly,
 first-block entropy witnesses do not complete upstream's exhaustive code-value
 or compressor-specific table-reuse sweeps.
+
+Module 8 adds executable Huffman encoding evidence without declaring a new
+upstream strategy implementation. The `huf_round_trip.c:41` source/case is now
+`partial`: thirty stored descriptions reproduce exact 1X/4X payloads, and
+independent C checks verify both serialized tables and successful streams.
+Prepared log-12 encoding, sparse alphabets, four-stream size boundaries and
+public inline/treeless frame lifetimes are covered. The original target's
+tail selectors, standalone requested table depths, 256 KiB four-stream inputs
+and caller-sized output branches still require work. Its corpus has not been
+replayed by this checkpoint.
+
+Generalized inverse FSE tables and supplied-table sequence encoding have their
+own exact bounds, repeat and C interoperability tests. Their existence does
+not complete the original dictionary code-value sweep at
+`zstreamtest.c:1551`, the raw/small-block schedules at `:1831` and `:1884`, or
+numeric strategy/level controls. The existing normalized-count target remains
+ported; `fuzzer.c:4172` remains ported for its arithmetic-trap assertion and
+`:4190` remains partial for its caller-owned destination contract. The
+[Module 8 coverage plan](upstream-entropy-plan.md) separates these foundations
+from the remaining executable upstream campaigns.
 
 An ignored test may contain a complete desired-success assertion while still
 being `blocked` because the implementation cannot pass it. In particular,

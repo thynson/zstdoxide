@@ -68,6 +68,35 @@ literal-buffer growth schedule up to 5 MiB. Corrupted input tests require
 failure where invalidity is certain. Noisy source tests also allow successful
 bounded outputs, matching the upstream contract.
 
+## Module 8 entropy evidence and remaining strategy assertions
+
+The two exact normalization regressions retain their distinct contracts:
+`fuzzer.c:4172` requires the original unit-count call not to divide by zero;
+`:4190` has independently verified sparse-header bytes, while its exact
+caller-owned nine-byte destination behavior remains unported. Successful
+Huffman payload encoding and supplied-table sequence encoding do not change
+either status.
+
+The separate `huf_round_trip.c` target now has a partial executable mapping:
+thirty official descriptions yield byte-identical Rust 1X and 4X streams,
+and live C checks validate new sparse descriptions, log-12 prepared tables
+and both decoding engines. `tests/entropy_encoding.rs` additionally proves
+zero-sequence compression, inline/treeless lifetime, raw/RLE preservation,
+dictionary replacement and fragmented output through public APIs. These are
+format regressions, not implementations of the fuzzer's level-19 block
+splitter, `minMatch=7`, `splitAfterSequences`, btultra2, superblock, target
+compressed-block-size or numeric level controls.
+
+The inverse FSE/sequence foundations exercise all 27 supplied
+predefined/RLE/new channel combinations followed by repeat, long literal
+lengths, zero-literal repeat rules and duplicate offsets. The independent C
+oracle decodes all 27 frames/54 sections. Those synthetic combinations do not
+reproduce the complete original dictionary/training/strategy setup at
+`zstreamtest.c:1551`, `:1831` or `:1884`, or `fuzzer.c:3265`. Their existing
+partial statuses remain in force. See
+[the entropy coverage plan](../../docs/upstream-entropy-plan.md) for exact
+selectors and the next bounded upstream campaigns.
+
 ## Complete diagnostic-label inventory
 
 This table includes every `test%3`/`longtest%3` label in the pinned fuzzer,

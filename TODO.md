@@ -39,7 +39,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Publish Huffman choices transactionally with emitted and pending entropy state.
 - [x] Verify public literal-only frames and literal size boundaries with independent C decoding.
 - [x] Verify treeless lifetime, dictionary replacement, and fragmented output with C.
-- [ ] Map verified Huffman/FSE encoder contracts and decompose remaining entropy fuzz assertions.
+- [x] Map verified Huffman/FSE encoder contracts and decompose remaining entropy fuzz assertions.
 - [x] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.
 - [x] Port exact unit-count normalization and sparse normalized-header regressions.
 - [x] Add unsafe-fse-encoder independently from the decoder unsafe-fse backend.

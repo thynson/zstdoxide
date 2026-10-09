@@ -21,9 +21,10 @@ normalized-count writer now reproduces all 512 complete headers byte for byte.
 
 Huffman vectors contain upstream-written tables, one- and four-stream payloads,
 and original bytes. They test the Rust decoder independently of the Rust
-compressor. Upstream's entropy encoders, separate X1/X2 implementations, CPU
-dispatch flags, workspaces, and their full randomized roundtrips remain
-unported. Fixed vectors are finite coverage, not a complete fuzz campaign.
+compressor. The Module 8 encoder tests now reproduce all thirty one-stream and
+all thirty four-stream payloads byte for byte using those exact descriptions.
+The complete `huf_round_trip.c` parameter driver remains partial; fixed vectors
+do not replace its randomized capacities, table depths or source sizes.
 
 `manifest.json` records hashes of the vectors, generator, and pinned reference
 sources. Run `python3 scripts/generate_upstream_entropy.py /path/to/zstd`
@@ -88,3 +89,48 @@ hashes are preserved in the
 [2026-10-09 evidence record](../../../docs/evidence/2026-10-09-fse-target.json).
 The source/case status is complete for this normalized-count target; it does
 not assert a port of unrelated FSE or Huffman compression APIs.
+
+## Huffman stream encoding and independent table verification
+
+`tests/upstream/huffman_encode.rs` verifies the encoder against the existing
+`huffman.bin` collection without changing its bytes or provenance. Its separate
+live C oracle, `scripts/oracles/huffman_streams.c`, receives the exact table
+description, original source and Rust stream. The pinned C library checks
+weights/code lengths, re-encodes that table byte for byte, and decodes with its
+X1 and X2 engines. It never supplies compressed output to the production Rust
+implementation.
+
+Both safe and all-feature builds passed these three explicit C checks:
+
+- 85 same-table checks: thirty Rust 1X and thirty stored C 4X payloads, fifteen
+  two-symbol boundaries, and ten prepared HTTP log-12 cases.
+- 55 sparse-table checks: eleven descriptions across five source lengths,
+  covering direct/FSE weights, missing symbols, maximum symbols 128/129/255,
+  skewed trees and the complete-alphabet serialization fallback.
+- 59 Rust 4X checks: thirty official tables, tiny and size-field boundaries,
+  prepared log-12 cases and the 196,618-byte maximum payload from a 128 KiB
+  source of twelve-bit symbols. Each first-quarter stream occupies 49,153 bytes.
+
+These counts describe oracle invocations, not distinct upstream test groups.
+At source sizes six and nine, the independent oracle assembles four C 1X
+streams because the C 4X entrypoint returns zero below twelve source bytes.
+The empty 1X case checks its `01` marker without claiming a successful C
+zero-output decode. An X2 table-log fallback is explicit in the oracle;
+none of these successful runs required it.
+
+```sh
+cargo test --lib upstream_huffman_encode_tests
+ZSTD_UPSTREAM=/path/to/zstd-v1.5.7 \
+  cargo test --all-features --lib upstream_huffman_encode_tests -- --ignored --nocapture
+```
+
+The public `tests/entropy_encoding.rs` suite adds eight ordinary tests and two
+explicit C CLI tests. Its independent frame inspector proves a literal-only
+zero-sequence block, 1X/4X field transitions, inline/treeless modes, preservation
+across raw/RLE blocks, dictionary replacement, reset/prefix isolation and
+identical fragmented output. Each safe/all-feature C run decoded twelve whole
+frames. These format witnesses supplement the original entropy targets; they
+do not complete upstream compression-level, output-buffer or strategy APIs.
+
+The exact outstanding selector, standalone table-log, capacity and corpus work
+is decomposed in [the Module 8 coverage plan](../../../docs/upstream-entropy-plan.md).

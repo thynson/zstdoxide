@@ -4711,9 +4711,15 @@
       "sha256": "fe383918833e6f3b791827d6d828436830c479977d87990b8b5d292f6529ed18",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "blocked",
-      "reason": "Dictionary literal-tree/weight serialization exists; general one/four-stream Huffman payload compression and the original standalone entropy roundtrip target remain unimplemented.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "The 30 official table descriptions now produce byte-identical Rust 1X and 4X streams. Independent C checks verify sparse descriptions, supplied code lengths/weights, exact stream bytes, and X1/X2 decoding, including prepared log-12 tables and maximum block payloads. These exercise the serialization and successful roundtrip assertions at lines 94..127. The exact tail-driven target remains incomplete: requested/adjusted standalone table depths, optimalDepth selection, caller-owned capacity/error/zero-result paths, and 4X source sizes above 128 KiB up to the original 256 KiB cap are not ported. preferRepeat/suspectUncompressible selectors have no active policy branch in this target's called functions; CPU flags and X1/X2 remain independent C engine controls, not Rust APIs. No huf_round_trip external replay is claimed.",
+      "rust_tests": [
+        "tests/upstream/huffman_encode.rs#one_stream_encoding_matches_all_thirty_official_tables",
+        "tests/upstream/huffman_encode.rs#four_stream_encoding_matches_all_thirty_official_tables",
+        "tests/upstream/huffman_encode.rs#official_oracle_verifies_one_stream_encoding_and_pinned_four_streams",
+        "tests/upstream/huffman_encode.rs#official_oracle_verifies_sparse_literal_descriptions_and_fallback_codes",
+        "tests/upstream/huffman_encode.rs#official_oracle_verifies_four_stream_encoding_and_boundaries"
+      ],
       "line_count": 137,
       "cases": [
         {
@@ -4722,9 +4728,15 @@
           "line_start": 41,
           "line_end": 137,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "blocked",
-          "reason": "Dictionary literal-tree/weight serialization exists; general one/four-stream Huffman payload compression and the original standalone entropy roundtrip target remain unimplemented.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The 30 official table descriptions now produce byte-identical Rust 1X and 4X streams. Independent C checks verify sparse descriptions, supplied code lengths/weights, exact stream bytes, and X1/X2 decoding, including prepared log-12 tables and maximum block payloads. These exercise the serialization and successful roundtrip assertions at lines 94..127. The exact tail-driven target remains incomplete: requested/adjusted standalone table depths, optimalDepth selection, caller-owned capacity/error/zero-result paths, and 4X source sizes above 128 KiB up to the original 256 KiB cap are not ported. preferRepeat/suspectUncompressible selectors have no active policy branch in this target's called functions; CPU flags and X1/X2 remain independent C engine controls, not Rust APIs. No huf_round_trip external replay is claimed.",
+          "rust_tests": [
+            "tests/upstream/huffman_encode.rs#one_stream_encoding_matches_all_thirty_official_tables",
+            "tests/upstream/huffman_encode.rs#four_stream_encoding_matches_all_thirty_official_tables",
+            "tests/upstream/huffman_encode.rs#official_oracle_verifies_one_stream_encoding_and_pinned_four_streams",
+            "tests/upstream/huffman_encode.rs#official_oracle_verifies_sparse_literal_descriptions_and_fallback_codes",
+            "tests/upstream/huffman_encode.rs#official_oracle_verifies_four_stream_encoding_and_boundaries"
+          ]
         }
       ]
     },
@@ -11385,7 +11397,7 @@
           "line_end": 1793,
           "label": "test%3i : decompress blocks with small sequences section :",
           "status": "ported",
-          "reason": "Exact 51-byte upstream frame decodes into exact 60-byte upstream output under 25 input/output schedules, preserving repeat entropy tables across tiny sequence sections.",
+          "reason": "The exact 51-byte upstream frame decodes into the exact 60-byte upstream output under 25 input/output schedules. Inspection of the stored bytes shows one compressed block containing three sequences with RLE tables; the upstream comment describes three blocks, but this byte fixture alone does not establish cross-block table reuse.",
           "rust_tests": [
             "tests/upstream_streaming.rs#exact_small_sequence_sections_survive_every_chunk_boundary"
           ]
