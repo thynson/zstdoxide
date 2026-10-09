@@ -48,6 +48,59 @@ pub(crate) fn build_literal_table(
     crate::huffman_codebook::BuiltLiteralTable::from_description(serialize_literal_table(observed)?)
 }
 
+/// Build a sparse inline literal table, preserving the exact selected codes.
+/// Zero- and one-symbol inputs belong to raw/RLE selection and are rejected here.
+/// Corresponds to the bounded tree/description role of `HUF_compress_internal`.
+#[cfg(test)]
+pub(crate) fn build_sparse_literal_table(
+    observed: &[u64; SYMBOLS],
+) -> Result<crate::huffman_codebook::BuiltLiteralTable> {
+    let total = observed.iter().try_fold(0_u64, |sum, &count| {
+        sum.checked_add(count).ok_or(Error::ResourceLimit)
+    })?;
+    let lengths = tree_lengths(observed, total)?;
+    let maximum = *lengths.iter().max().ok_or(Error::InvalidState)?;
+    let last = lengths
+        .iter()
+        .rposition(|&length| length != 0)
+        .ok_or(Error::InvalidState)?;
+    let mut weights = [0; SYMBOLS];
+    for (weight, &length) in weights.iter_mut().zip(&lengths) {
+        *weight = if length == 0 { 0 } else { maximum + 1 - length };
+    }
+    let mut description = Vec::new();
+    if last <= 128 {
+        description
+            .try_reserve_exact(1 + last.div_ceil(2))
+            .map_err(|_| Error::AllocationFailed)?;
+        description.push((127 + last) as u8);
+        for pair in weights[..last].chunks(2) {
+            description.push((pair[0] << 4) | pair.get(1).copied().unwrap_or(0));
+        }
+    } else {
+        let payload = encode_weights(&weights[..last]);
+        let payload = match payload {
+            Ok(payload) if payload.len() < 128 => payload,
+            Ok(_) | Err(Error::InvalidParameter) => {
+                // Constant explicit weights and oversized payloads cannot be
+                // represented in FSE form. Fall back to the known complete
+                // alphabet; parsing the selected bytes pairs its actual codes.
+                encode_weights(&explicit_weights(&near_flat_lengths(observed))?)?
+            }
+            Err(error) => return Err(error),
+        };
+        if payload.is_empty() || payload.len() >= 128 {
+            return Err(Error::InvalidState);
+        }
+        description
+            .try_reserve_exact(payload.len() + 1)
+            .map_err(|_| Error::AllocationFailed)?;
+        description.push(payload.len() as u8);
+        description.extend_from_slice(&payload);
+    }
+    crate::huffman_codebook::BuiltLiteralTable::from_description(description)
+}
+
 /// Construct a complete full-alphabet tree with one pseudocount per symbol.
 ///
 /// Corresponds to the tree-construction role of `HUF_buildCTable_wksp`, using
@@ -60,11 +113,27 @@ pub(crate) fn literal_lengths(observed: &[u64; SYMBOLS]) -> Result<[u8; SYMBOLS]
         *frequency = count.checked_add(1).ok_or(Error::ResourceLimit)?;
         total = total.checked_add(*frequency).ok_or(Error::ResourceLimit)?;
     }
+    let mut lengths = tree_lengths(&frequencies, total)?;
+    if lengths.iter().all(|&length| length == 8) {
+        lengths = near_flat_lengths(&frequencies);
+    }
+    Ok(lengths)
+}
+
+/// Build a complete tree over exactly the nonzero frequencies. Parent links
+/// remain indices even when absent byte values leave holes in the leaf range.
+fn tree_lengths(frequencies: &[u64; SYMBOLS], total: u64) -> Result<[u8; SYMBOLS]> {
+    let present = frequencies.iter().filter(|&&count| count != 0).count();
+    if present < 2 {
+        return Err(Error::InvalidParameter);
+    }
     let mut heap = BinaryHeap::new();
-    heap.try_reserve(SYMBOLS)
+    heap.try_reserve(present)
         .map_err(|_| Error::AllocationFailed)?;
     for (symbol, &weight) in frequencies.iter().enumerate() {
-        heap.push(Reverse((weight, symbol, symbol)));
+        if weight != 0 {
+            heap.push(Reverse((weight, symbol, symbol)));
+        }
     }
     let mut parents = [usize::MAX; SYMBOLS * 2 - 1];
     let mut next = SYMBOLS;
@@ -81,6 +150,9 @@ pub(crate) fn literal_lengths(observed: &[u64; SYMBOLS]) -> Result<[u8; SYMBOLS]
     }
     let mut lengths = [0_u8; SYMBOLS];
     for (symbol, length) in lengths.iter_mut().enumerate() {
+        if frequencies[symbol] == 0 {
+            continue;
+        }
         let mut node = symbol;
         while parents[node] != usize::MAX {
             *length += 1; // A binary tree with 256 leaves has depth at most 255.
@@ -90,10 +162,7 @@ pub(crate) fn literal_lengths(observed: &[u64; SYMBOLS]) -> Result<[u8; SYMBOLS]
     if lengths.iter().any(|&length| length > MAX_DEPTH) {
         let mut symbols: [usize; SYMBOLS] = core::array::from_fn(|index| index);
         symbols.sort_unstable_by_key(|&symbol| (Reverse(frequencies[symbol]), symbol));
-        partition_lengths(&symbols, &frequencies, total, 0, &mut lengths);
-    }
-    if lengths.iter().all(|&length| length == 8) {
-        lengths = near_flat_lengths(&frequencies);
+        partition_lengths(&symbols[..present], frequencies, total, 0, &mut lengths);
     }
     Ok(lengths)
 }
@@ -178,6 +247,109 @@ pub(crate) fn explicit_weights(lengths: &[u8; SYMBOLS]) -> Result<[u8; SYMBOLS -
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn sparse_trees_preserve_holes_and_direct_description_boundaries() {
+        for last in [1, 2, 15, 127, 128, 129, 254, 255] {
+            let mut counts = [0; SYMBOLS];
+            counts[0] = 7;
+            counts[last] = 11;
+            let built = build_sparse_literal_table(&counts).unwrap();
+            assert_eq!(built.description()[0] >= 128, last <= 128);
+            assert_eq!(built.codebook().code(0).unwrap().bits, 1);
+            assert_eq!(built.codebook().code(last as u8).unwrap().bits, 1);
+            for symbol in 1..last {
+                assert!(built.codebook().code(symbol as u8).is_err());
+            }
+            if last <= 128 {
+                assert_eq!(built.description().len(), 1 + last.div_ceil(2));
+                if last % 2 != 0 {
+                    assert_eq!(built.description().last().unwrap() & 15, 0);
+                }
+            }
+        }
+        let mut two = [0; SYMBOLS];
+        two[0] = 1;
+        two[1] = 1;
+        assert_eq!(
+            build_sparse_literal_table(&two).unwrap().description(),
+            &[128, 0x10]
+        );
+    }
+
+    #[test]
+    fn sparse_tree_depth_and_constant_weight_fallback_are_paired_correctly() {
+        let mut counts = [0; SYMBOLS];
+        for (symbol, count) in counts.iter_mut().enumerate().take(60) {
+            *count = 1_u64 << symbol;
+        }
+        let built = build_sparse_literal_table(&counts).unwrap();
+        assert!(built.codebook().table_log() <= MAX_DEPTH);
+        for symbol in 0..60 {
+            assert!(built.codebook().code(symbol).is_ok());
+        }
+        assert!(built.codebook().code(60).is_err());
+
+        // A flat 256-symbol tree would have 255 identical explicit weights,
+        // which FSE cannot encode. The selected fallback is a different tree.
+        let flat = build_sparse_literal_table(&[1; SYMBOLS]).unwrap();
+        assert_eq!(flat.codebook().code(0).unwrap().bits, 7);
+        assert_eq!(flat.codebook().code(254).unwrap().bits, 9);
+        assert_eq!(flat.codebook().code(255).unwrap().bits, 9);
+        let source: Vec<_> = (0..=255).collect();
+        let mut writer = crate::bitwriter::BitWriter::new();
+        flat.codebook().encode_stream(&source, &mut writer).unwrap();
+        let (table, _) = crate::huffman::HuffmanTable::read(flat.description()).unwrap();
+        assert_eq!(
+            table
+                .decode_stream(writer.as_bytes(), source.len())
+                .unwrap(),
+            source
+        );
+    }
+
+    #[test]
+    fn sparse_tables_reject_degenerate_and_overflowing_histograms() {
+        let mut counts = [0; SYMBOLS];
+        assert!(matches!(
+            build_sparse_literal_table(&counts),
+            Err(Error::InvalidParameter)
+        ));
+        counts[255] = 1;
+        assert!(matches!(
+            build_sparse_literal_table(&counts),
+            Err(Error::InvalidParameter)
+        ));
+        counts[0] = u64::MAX;
+        assert!(matches!(
+            build_sparse_literal_table(&counts),
+            Err(Error::ResourceLimit)
+        ));
+    }
+
+    #[test]
+    fn dictionary_table_bytes_preserve_the_module_seven_baseline() {
+        let mut random = 0x5eed_f00d_u64;
+        let mut fingerprint = 0xcbf29ce484222325_u64;
+        for trial in 0..128 {
+            let counts = core::array::from_fn(|symbol| {
+                random ^= random << 13;
+                random ^= random >> 7;
+                random ^= random << 17;
+                if trial == 0 {
+                    0
+                } else {
+                    (random & 255) << ((symbol + trial) % 32)
+                }
+            });
+            let bytes = serialize_literal_table(&counts).unwrap();
+            for byte in (bytes.len() as u32).to_le_bytes().into_iter().chain(bytes) {
+                fingerprint = (fingerprint ^ u64::from(byte)).wrapping_mul(0x100000001b3);
+            }
+        }
+        // Captured before sparse-tree refactoring from Module 7 serialization.
+        assert_eq!(fingerprint, 17_806_659_356_530_344_110);
+    }
 
     fn check_serialized_tree(observed: &[u64; SYMBOLS]) {
         let encoded = serialize_literal_table(observed).unwrap();

@@ -297,4 +297,73 @@ mod oracle {
             "C verified {verified} same-table streams; {x2_fallbacks} explicit X2 table-log fallbacks; one empty-stream marker check bypassed C decoding"
         );
     }
+
+    #[test]
+    #[ignore = "requires ZSTD_UPSTREAM pinned v1.5.7, built lib/libzstd.a, and a C compiler"]
+    fn official_oracle_verifies_sparse_literal_descriptions_and_fallback_codes() {
+        use crate::huffman_encode::build_sparse_literal_table;
+
+        let oracle = Oracle::compile();
+        let mut histograms = Vec::new();
+        for maximum in [1, 2, 15, 127, 128, 129, 254, 255] {
+            let mut counts = [0; 256];
+            counts[0] = 7;
+            counts[maximum] = 11;
+            histograms.push(counts);
+        }
+        let mut skewed = [0; 256];
+        for (symbol, count) in skewed.iter_mut().enumerate().take(60) {
+            *count = 1_u64 << symbol;
+        }
+        histograms.push(skewed);
+        skewed[255] = 1;
+        histograms.push(skewed);
+        // An ordinary uniform tree has 255 constant explicit weights. Its
+        // selected nonconstant fallback must provide the codes actually sent.
+        histograms.push([1; 256]);
+
+        let mut writer = BitWriter::new();
+        let mut modes = [0_usize; 2];
+        let mut verified = 0;
+        for (case, counts) in histograms.iter().enumerate() {
+            let built = build_sparse_literal_table(counts).unwrap();
+            let codebook = built.codebook();
+            let maximum = counts.iter().rposition(|&count| count != 0).unwrap();
+            let direct = built.description()[0] >= 128;
+            assert_eq!(direct, maximum <= 128, "description kind, case {case}");
+            modes[usize::from(direct)] += 1;
+            let present: Vec<_> = (0..=255_u8)
+                .filter(|&symbol| counts[usize::from(symbol)] != 0)
+                .collect();
+            if case < 10 {
+                for symbol in 0..=255_u8 {
+                    assert_eq!(
+                        codebook.code(symbol).is_ok(),
+                        counts[usize::from(symbol)] != 0,
+                        "sparse support, case {case}, symbol {symbol}"
+                    );
+                }
+            } else {
+                assert_eq!(codebook.code(0).unwrap().bits, 7);
+                assert_eq!(codebook.code(254).unwrap().bits, 9);
+                assert_eq!(codebook.code(255).unwrap().bits, 9);
+            }
+            assert!(codebook.table_log() <= 11);
+            for length in [1, 6, 9, 257, 4096] {
+                let source: Vec<_> = present.iter().copied().cycle().take(length).collect();
+                codebook.encode_stream(&source, &mut writer).unwrap();
+                assert_eq!(
+                    oracle.check(built.description(), &source, 1, writer.as_bytes(), codebook),
+                    0,
+                    "nonempty inline table needs neither X2 fallback nor empty-output bypass"
+                );
+                verified += 1;
+            }
+        }
+        assert_eq!(histograms.len(), 11);
+        assert_eq!(modes, [5, 6]);
+        std::eprintln!(
+            "C verified 11 sparse/fallback descriptions (6 direct, 5 FSE) and {verified} exact 1X streams through X1 and X2 decoding"
+        );
+    }
 }
