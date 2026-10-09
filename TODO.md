@@ -51,6 +51,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Select adaptive per-channel distributions with deterministic complete cost comparisons.
 - [x] Own pending sequence-table replacements and repeat triples in a resettable transactional context.
 - [ ] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
+- [ ] Verify adaptive sequence modes, repeat-offset lifetime, and dictionary/reset boundaries through public APIs and C decoding.
 - [x] Add bounded multi-candidate storage with checked stale-link and tag validation.
 - [x] Add unsafe-match-chain with equivalent candidate order and search limits.
 - [x] Add the bounded multi-candidate parser with deterministic ties and source-independent resolution.
