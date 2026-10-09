@@ -2,7 +2,7 @@
 // Copyright (c) zstdoxide contributors.
 // Selector contracts derive from facebook/zstd v1.5.7
 // tests/fuzz/huf_round_trip.c:43-61. BSD option; see LICENSE.zstd.
-//! Exact Huffman fuzz parameters, independent of the codec implementation.
+//! Adapted complete Huffman fuzz control flow with exact upstream parameters.
 //!
 //! `HuffmanParameters` contains plain scalar values and an immutable source
 //! prefix borrowed for the input's lifetime. `DataProducer` replaces the C
@@ -10,12 +10,18 @@
 //! These metadata records require no artificial unsafe backend. The flags are
 //! observations of upstream selectors, not invented Rust codec controls.
 //!
-//! Decomposition: preserve selectors; compare independently stored C vectors;
-//! verify both BMI layouts live against the pinned C producer. Standalone
-//! entropy compression, adjusted/optimal depths and corpus replay follow in
-//! separate checkpoints and are not performed by this module yet.
+//! Source extents, cheap depths, and stream-capacity rules match the original
+//! target. Independent Rust trees and estimated-size search need not select C's
+//! exact table. Copying a selected description uses Rust's exact-fit contract,
+//! not C's destination-dependent raw/FSE serialization choice. X1/X2 and CPU
+//! selectors remain recorded C engine choices; Rust has one checked decoder.
+//! Independent C selector, table, stream, and capacity tests cover those
+//! boundaries without inventing Rust implementations for each C engine.
 #![forbid(unsafe_code)]
 
+use crate::entropy_output::{EntropyOutput, EntropyStreams, write_description};
+use crate::huffman::{HuffmanTable, decode_streams};
+use crate::huffman_encode::{StandaloneDepthPolicy, build_standalone_table};
 use crate::upstream_entropy_tests::fuzz_support::DataProducer;
 use crate::{Error, Result};
 use alloc::vec::Vec;
@@ -93,6 +99,189 @@ impl HuffmanParameters<'_> {
             self.source.len() as u32,
         ]
     }
+}
+
+/// Each original early return is an observed outcome, never a skipped input.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum Outcome {
+    Empty,
+    Single,
+    Uniform,
+    TableUnavailable,
+    DescriptionTooSmall,
+    StreamZero,
+    RoundTrip,
+}
+
+/// Owned scalar evidence; no source borrow or scratch allocation escapes a call.
+#[derive(Debug, Eq, PartialEq)]
+struct Trial {
+    outcome: Outcome,
+    original_size: usize,
+    parameters: [u32; 12],
+    input_fingerprint: u64,
+    source_fingerprint: u64,
+    highest_symbol: Option<u8>,
+    distinct_symbols: u16,
+    adjusted_depth: u8,
+    selected_cap: u8,
+    actual_depth: u8,
+    description_size: usize,
+    description_fingerprint: u64,
+    encoded_size: usize,
+    encoded_fingerprint: u64,
+}
+
+fn fingerprint(bytes: &[u8]) -> u64 {
+    bytes.iter().fold(0xcbf2_9ce4_8422_2325, |hash, &byte| {
+        (hash ^ u64::from(byte)).wrapping_mul(0x100_0000_01b3)
+    })
+}
+
+/// The fuzz driver's conservative limit uses the highest byte value, including
+/// holes, rather than the number of present symbols: ceil(log2(max + 1)) + 1.
+fn adjusted_depth(requested: u8, highest_symbol: u8) -> u8 {
+    let alphabet = u32::from(highest_symbol) + 1;
+    requested.max((u32::BITS - (alphabet - 1).leading_zeros() + 1) as u8)
+}
+
+/// Exact scalar path of v1.5.7 HUF_optimalTableLog without optimalDepth:
+/// FSE_optimalTableLog_internal(adjusted, source_size, highest_symbol, 1).
+/// Nonuniform sources guarantee size >= 2 and highest symbol >= 1. The source
+/// cap makes every u32 conversion exact. C's size-two subtraction wraps; using
+/// saturation would incorrectly change a requested depth twelve to five.
+fn cheap_depth(adjusted: u8, source_size: usize, highest_symbol: u8) -> u8 {
+    assert!((2..=SOURCE_LIMIT).contains(&source_size));
+    assert!(highest_symbol != 0);
+    let size = source_size as u32;
+    let source_maximum = (31 - (size - 1).leading_zeros()).wrapping_sub(1);
+    let minimum = (32 - size.leading_zeros()).min(33 - u32::from(highest_symbol).leading_zeros());
+    u32::from(adjusted)
+        .min(source_maximum)
+        .max(minimum)
+        .clamp(5, 12) as u8
+}
+
+fn untouched(guarded: &[u8], written: usize, previous_description: &[u8]) {
+    assert_eq!(guarded[0], 0xa5);
+    assert_eq!(guarded.last(), Some(&0xa5));
+    for (position, &byte) in guarded[1..guarded.len() - 1]
+        .iter()
+        .enumerate()
+        .skip(written)
+    {
+        assert_eq!(
+            byte,
+            previous_description.get(position).copied().unwrap_or(0xa5)
+        );
+    }
+}
+
+/// Preserve the target's source prefix and reuse the same selected destination
+/// for its table and data stream. Every nonzero stream is decoded through the
+/// written description; an unexpected codec/allocation error fails the case.
+fn round_trip(input: &[u8], bmi: bool, scratch: &mut EntropyOutput) -> Result<Trial> {
+    let selected = select_parameters(input, bmi)?;
+    let mut trial = Trial {
+        outcome: Outcome::Empty,
+        original_size: input.len(),
+        parameters: selected.fields(),
+        input_fingerprint: fingerprint(input),
+        source_fingerprint: fingerprint(selected.source),
+        highest_symbol: None,
+        distinct_symbols: 0,
+        adjusted_depth: 0,
+        selected_cap: 0,
+        actual_depth: 0,
+        description_size: 0,
+        description_fingerprint: 0,
+        encoded_size: 0,
+        encoded_fingerprint: 0,
+    };
+    if selected.source.is_empty() {
+        return Ok(trial);
+    }
+    if selected.source.len() == 1 {
+        trial.outcome = Outcome::Single;
+        return Ok(trial);
+    }
+    let mut counts = [0_u64; 256];
+    for &symbol in selected.source {
+        counts[usize::from(symbol)] += 1;
+    }
+    let highest = counts.iter().rposition(|&count| count != 0).unwrap() as u8;
+    trial.highest_symbol = Some(highest);
+    trial.distinct_symbols = counts.iter().filter(|&&count| count != 0).count() as u16;
+    if trial.distinct_symbols == 1 {
+        trial.outcome = Outcome::Uniform;
+        return Ok(trial);
+    }
+    trial.adjusted_depth = adjusted_depth(selected.requested_table_log, highest);
+    let policy = if selected.optimal_depth {
+        // This is the original adjusted hard cap, not a claimed C optimal log.
+        trial.selected_cap = trial.adjusted_depth;
+        StandaloneDepthPolicy::SmallestEstimatedSize
+    } else {
+        trial.selected_cap = cheap_depth(trial.adjusted_depth, selected.source.len(), highest);
+        StandaloneDepthPolicy::Requested
+    };
+    let Some(built) = build_standalone_table(&counts, trial.selected_cap, policy)? else {
+        trial.outcome = Outcome::TableUnavailable;
+        return Ok(trial);
+    };
+    trial.actual_depth = built.codebook().table_log();
+    trial.description_size = built.description().len();
+    trial.description_fingerprint = fingerprint(built.description());
+    assert!(trial.actual_depth <= trial.selected_cap);
+    let capacity = usize::try_from(selected.output_capacity).map_err(|_| Error::ResourceLimit)?;
+    let mut guarded = Vec::new();
+    guarded
+        .try_reserve_exact(capacity + 2)
+        .map_err(|_| Error::AllocationFailed)?;
+    guarded.resize(capacity + 2, 0xa5);
+    if capacity < built.description().len() {
+        assert_eq!(
+            write_description(&built, &mut guarded[1..1 + capacity]),
+            Err(Error::ResourceLimit)
+        );
+        untouched(&guarded, 0, &[]);
+        trial.outcome = Outcome::DescriptionTooSmall;
+        return Ok(trial);
+    }
+    let written = write_description(&built, &mut guarded[1..1 + capacity])?;
+    assert_eq!(&guarded[1..1 + written], built.description());
+    untouched(&guarded, written, &[]);
+    let (table, consumed) = HuffmanTable::read_dictionary(&guarded[1..1 + written])?;
+    assert_eq!(consumed, written);
+    let streams = if selected.four_streams {
+        EntropyStreams::Four
+    } else {
+        EntropyStreams::One
+    };
+    let result = scratch.encode(
+        built.codebook(),
+        selected.source,
+        &mut guarded[1..1 + capacity],
+        streams,
+    )?;
+    let Some(encoded_size) = result else {
+        untouched(&guarded, 0, built.description());
+        trial.outcome = Outcome::StreamZero;
+        return Ok(trial);
+    };
+    untouched(&guarded, encoded_size, built.description());
+    let encoded = &guarded[1..1 + encoded_size];
+    let decoded = decode_streams(
+        &table,
+        encoded,
+        selected.source.len(),
+        selected.four_streams,
+    )?;
+    assert_eq!(decoded, selected.source);
+    trial.encoded_size = encoded_size;
+    trial.encoded_fingerprint = fingerprint(encoded);
+    trial.outcome = Outcome::RoundTrip;
+    Ok(trial)
 }
 
 fn pattern(length: usize) -> Vec<u8> {
@@ -318,6 +507,154 @@ fn explicit_case(source: &[u8], bmi: bool, mask: u8, requested_log: u8) -> (Vec<
     (input, expected)
 }
 
+fn explicit_capacity(source: &[u8], bmi: bool, mask: u8, log: u8, capacity: u32) -> Vec<u8> {
+    let (mut input, _) = explicit_case(source, bmi, mask, log);
+    assert!(capacity <= 4 * input.len() as u32);
+    let flag_count = if bmi { 8 } else { 7 };
+    let width = input.len() - source.len() - flag_count - 1;
+    input[source.len() + 1..source.len() + 1 + width]
+        .copy_from_slice(&capacity.to_le_bytes()[..width]);
+    let selected = select_parameters(&input, bmi).unwrap();
+    assert_eq!(selected.output_capacity, capacity);
+    assert_eq!(selected.source, &source[..source.len().min(SOURCE_LIMIT)]);
+    input
+}
+
+#[test]
+fn complete_huffman_driver_records_every_early_exit_and_round_trip() {
+    let alternating: Vec<_> = (0..128).map(|index| (index & 1) as u8).collect();
+    let alphabet: Vec<_> = (0..=255).collect();
+    let mut scratch = EntropyOutput::new();
+    for bmi in [false, true] {
+        for (source, capacity, expected) in [
+            (&[][..], 0, Outcome::Empty),
+            (&[9][..], 0, Outcome::Single),
+            (&[5; 128][..], 0, Outcome::Uniform),
+            (&alphabet, 1024, Outcome::TableUnavailable),
+            (&alternating, 0, Outcome::DescriptionTooSmall),
+            (&[0, 1][..], 2, Outcome::StreamZero),
+            (&alternating, 512, Outcome::RoundTrip),
+        ] {
+            let input = explicit_capacity(source, bmi, 0, 12, capacity);
+            let trial = round_trip(&input, bmi, &mut scratch).unwrap();
+            assert_eq!(
+                trial.outcome,
+                expected,
+                "BMI={bmi}, source={}",
+                source.len()
+            );
+            assert_eq!(trial.original_size, input.len());
+            assert_eq!(trial.source_fingerprint, fingerprint(source));
+            assert_eq!(trial.parameters[11] as usize, source.len());
+            assert_eq!(round_trip(&input, bmi, &mut scratch).unwrap(), trial);
+        }
+        // These are successful wire encodings, but the original standalone
+        // 4X compressor returns zero for sources below twelve symbols.
+        for size in [6, 9, 11] {
+            let input = explicit_capacity(&alternating[..size], bmi, 1, 12, 48);
+            assert_eq!(
+                round_trip(&input, bmi, &mut scratch).unwrap().outcome,
+                Outcome::StreamZero
+            );
+        }
+    }
+}
+
+#[test]
+fn complete_huffman_driver_preserves_source_caps_depths_and_engine_selectors() {
+    let mut source: Vec<_> = (0..SOURCE_LIMIT + 512)
+        .map(|index| u8::from(index % 17 == 0))
+        .collect();
+    source[SOURCE_LIMIT] = 255; // Outside the capped prefix; cannot affect its histogram.
+    let mut scratch = EntropyOutput::new();
+    for bmi in [false, true] {
+        for mask in [0, 1, if bmi { 0xff } else { 0x7f }] {
+            let input = explicit_capacity(&source, bmi, mask, 12, 1 << 20);
+            let trial = round_trip(&input, bmi, &mut scratch).unwrap();
+            assert_eq!(trial.outcome, Outcome::RoundTrip);
+            assert_eq!(trial.parameters[10] as usize, source.len());
+            assert_eq!(trial.parameters[11] as usize, SOURCE_LIMIT);
+            assert_eq!(trial.highest_symbol, Some(1));
+            assert_eq!(trial.distinct_symbols, 2);
+            assert_eq!(
+                trial.source_fingerprint,
+                fingerprint(&source[..SOURCE_LIMIT])
+            );
+        }
+        for log in 1..=12 {
+            let input = explicit_capacity(&[0, 255], bmi, 0, log, 40);
+            let trial = round_trip(&input, bmi, &mut scratch).unwrap();
+            assert_eq!(trial.outcome, Outcome::RoundTrip);
+            assert_eq!(trial.adjusted_depth, log.max(9));
+            assert_eq!(trial.selected_cap, log.max(9)); // size-two C unsigned wrap.
+            assert_eq!(trial.actual_depth, 1);
+            let optimal_mask = if bmi { 1 << 3 } else { 1 << 2 };
+            let input = explicit_capacity(&[0, 255], bmi, optimal_mask, log, 40);
+            let trial = round_trip(&input, bmi, &mut scratch).unwrap();
+            assert_eq!(trial.outcome, Outcome::RoundTrip);
+            assert_eq!(trial.selected_cap, trial.adjusted_depth);
+            assert_eq!(trial.actual_depth, 1);
+        }
+    }
+    assert!(scratch.retained_capacity() > 0);
+}
+
+#[test]
+fn highest_symbol_adjustment_and_cheap_depth_match_reference_corner_vectors() {
+    for (highest, minimum) in [(1, 2), (2, 3), (3, 3), (4, 4), (127, 8), (128, 9), (255, 9)] {
+        for requested in 1..=12 {
+            assert_eq!(adjusted_depth(requested, highest), requested.max(minimum));
+        }
+    }
+    // Independently observed with pinned HUF_optimalTableLog flags=0; size two
+    // demonstrates why a saturating subtraction changes the reference policy.
+    for (cap, size, highest, expected) in [
+        (2, 2, 1, 5),
+        (12, 2, 1, 12),
+        (9, 2, 255, 9),
+        (12, 300, 2, 7),
+        (12, 609, 12, 8),
+        (12, 100255, 255, 12),
+    ] {
+        assert_eq!(cheap_depth(cap, size, highest), expected);
+    }
+}
+
+#[test]
+fn complete_huffman_driver_applies_a_meaningful_independent_optimal_policy() {
+    // The 609-symbol Fibonacci distribution makes the cheap policy choose
+    // depth eight. Searching the adjusted cap permits a cheaper deeper tree.
+    let mut frequencies = [1_usize; 13];
+    for index in 2..frequencies.len() {
+        frequencies[index] = frequencies[index - 1] + frequencies[index - 2];
+    }
+    let mut source = Vec::new();
+    for (symbol, count) in frequencies.into_iter().enumerate() {
+        source.extend(core::iter::repeat_n(symbol as u8, count));
+    }
+    let mut scratch = EntropyOutput::new();
+    for bmi in [false, true] {
+        let capacity = (4 * source.len()) as u32;
+        let cheap_input = explicit_capacity(&source, bmi, 0, 12, capacity);
+        let optimal_input = explicit_capacity(&source, bmi, if bmi { 8 } else { 4 }, 12, capacity);
+        let cheap = round_trip(&cheap_input, bmi, &mut scratch).unwrap();
+        let optimal = round_trip(&optimal_input, bmi, &mut scratch).unwrap();
+        assert_eq!(cheap.outcome, Outcome::RoundTrip);
+        assert_eq!(optimal.outcome, Outcome::RoundTrip);
+        assert_eq!(cheap.source_fingerprint, optimal.source_fingerprint);
+        assert_ne!(
+            cheap.description_fingerprint,
+            optimal.description_fingerprint
+        );
+        assert!(
+            optimal.description_size + optimal.encoded_size
+                < cheap.description_size + cheap.encoded_size
+        );
+        assert_eq!(optimal.selected_cap, 12);
+        assert_eq!(cheap.selected_cap, 8);
+    }
+}
+
 #[test]
 fn huffman_selectors_preserve_every_flag_pattern_depth_and_capacity_bound() {
     let source = pattern(63);
@@ -357,6 +694,9 @@ mod oracle {
     use std::io::Write;
     use std::path::PathBuf;
     use std::process::{Command, Stdio};
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    static NEXT_DIRECTORY: AtomicUsize = AtomicUsize::new(0);
 
     struct OracleDirectory(PathBuf);
 
@@ -395,8 +735,9 @@ mod oracle {
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
             .as_nanos();
+        let sequence = NEXT_DIRECTORY.fetch_add(1, Ordering::Relaxed);
         let directory = OracleDirectory(std::env::temp_dir().join(alloc::format!(
-            "zstdoxide-huffman-parameters-{}-{stamp}",
+            "zstdoxide-huffman-parameters-{}-{stamp}-{sequence}",
             std::process::id()
         )));
         std::fs::create_dir(&directory.0).unwrap();
@@ -475,6 +816,107 @@ mod oracle {
             );
             assert_eq!(select_parameters(input, *bmi).unwrap().fields(), actual);
         }
+    }
+
+    #[test]
+    #[ignore = "requires ZSTD_UPSTREAM pinned v1.5.7 with built lib/libzstd.a and a C compiler"]
+    fn official_c_depth_selection_matches_adjustment_and_cheap_policy() {
+        let directory = compile(); // Also verifies the clean pinned source revision.
+        let upstream = PathBuf::from(std::env::var_os("ZSTD_UPSTREAM").unwrap());
+        let executable = directory.0.join("depths");
+        let compiled = Command::new(std::env::var_os("CC").unwrap_or_else(|| "cc".into()))
+            .args(["-std=c99", "-O2", "-Wall", "-Wextra", "-Werror"])
+            .arg("-I")
+            .arg(upstream.join("lib"))
+            .arg(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/scripts/oracles/huffman_depths.c"
+            ))
+            .arg(upstream.join("lib/libzstd.a"))
+            .arg("-o")
+            .arg(&executable)
+            .output()
+            .unwrap();
+        assert!(
+            compiled.status.success(),
+            "{}",
+            std::string::String::from_utf8_lossy(&compiled.stderr)
+        );
+        let mut cases = Vec::new();
+        for highest in [1_u8, 2, 3, 4, 127, 128, 254, 255] {
+            for size in [
+                2_usize,
+                3,
+                4,
+                5,
+                31,
+                32,
+                33,
+                255,
+                256,
+                257,
+                4095,
+                4096,
+                4097,
+                SOURCE_LIMIT,
+            ] {
+                for requested in 1..=12_u8 {
+                    let mut counts = [0_u32; 256];
+                    counts[0] = size as u32 - 1;
+                    counts[usize::from(highest)] = 1;
+                    cases.push((counts, requested, size, highest));
+                }
+            }
+        }
+        assert_eq!(cases.len(), 1344);
+        let mut request = Vec::from(&b"ZHDEP001"[..]);
+        request.extend_from_slice(&(cases.len() as u32).to_le_bytes());
+        for (counts, requested, _, _) in &cases {
+            request.extend_from_slice(&u32::from(*requested).to_le_bytes());
+            for count in counts {
+                request.extend_from_slice(&count.to_le_bytes());
+            }
+        }
+        let mut child = Command::new(&executable)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .unwrap();
+        let result = std::thread::scope(|scope| {
+            let mut stdin = child.stdin.take().unwrap();
+            let writer = scope.spawn(move || stdin.write_all(&request));
+            let result = child.wait_with_output().unwrap();
+            writer.join().unwrap().unwrap();
+            result
+        });
+        assert!(
+            result.status.success(),
+            "{}",
+            std::string::String::from_utf8_lossy(&result.stderr)
+        );
+        assert_eq!(result.stdout.len(), 12 + cases.len() * 8);
+        assert_eq!(&result.stdout[..8], b"ZHDOUT01");
+        assert_eq!(
+            u32::from_le_bytes(result.stdout[8..12].try_into().unwrap()) as usize,
+            cases.len()
+        );
+        for ((_, requested, size, highest), bytes) in
+            cases.iter().zip(result.stdout[12..].chunks_exact(8))
+        {
+            let adjusted = adjusted_depth(*requested, *highest);
+            assert_eq!(
+                u32::from_le_bytes(bytes[..4].try_into().unwrap()),
+                u32::from(adjusted)
+            );
+            assert_eq!(
+                u32::from_le_bytes(bytes[4..].try_into().unwrap()),
+                u32::from(cheap_depth(adjusted, *size, *highest))
+            );
+        }
+        std::eprintln!(
+            "C verified all1344 adjusted/cheap-depth combinations, including size-two unsigned wrap and every requested depth"
+        );
     }
 
     #[test]
