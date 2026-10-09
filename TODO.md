@@ -45,7 +45,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Encode sequences using supplied predefined, new, reused, and RLE tables.
 - [ ] Select adaptive per-channel distributions with deterministic complete cost comparisons.
 - [ ] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
-- [ ] Add bounded multi-candidate storage with checked stale-link and tag validation.
+- [x] Add bounded multi-candidate storage with checked stale-link and tag validation.
 - [ ] Add unsafe-match-chain with equivalent candidate order and search limits.
 - [ ] Implement bounded multi-candidate greedy matching with documented budgets.
 - [ ] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
