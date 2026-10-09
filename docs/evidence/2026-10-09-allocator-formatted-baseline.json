@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "cases": 56,
+  "fnv64": 14787186922959212481,
+  "method": "Run the Global APIs from the cached dedicated training-queue validation library, whose source snapshot records the old non-generic formatted finalizer. Compare these bytes against the new generic path.",
+  "source_commit": "5dbd816",
+  "source_path": "/tmp/zstdoxide-module9-formatted-baseline-source.rs",
+  "source_sha256": "b2c9370fb7e1064b0255ca2f516f08f72052b45ef5cdabaac126333f5db3e945",
+  "prior_source_snapshot": "/tmp/zstdoxide-module9-training-queue-results.json",
+  "prior_source_snapshot_sha256": "4c1b3580af512f465d03029fabe83c526c3fc5d1f77da02eb2db2ef4c69e95cf",
+  "helper": "/tmp/zstdoxide-module9-formatted-baseline.rs",
+  "helper_sha256": "aff8ca22c147e9f5a9d46489bdb778963adce542d9ad171497471286df6b7ef3",
+  "log_path": "/tmp/zstdoxide-module9-formatted-baseline.log",
+  "log_sha256": "9fbf082056e2445a8a032cb728b1d26ec5df7a0f4d03ba49e1b76950405dd8d7",
+  "libraries": [
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/target/module9-training-queue/debug/build/zstdoxide/c11d91fdc2dd2ba1/out/libzstdoxide-c11d91fdc2dd2ba1.rlib",
+      "sha256": "492e1209d72c9ba0d09f420e859a1d7e3288fa2f771f26744e111fc853129218"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/target/module9-training-queue/debug/build/zstdoxide/c11d91fdc2dd2ba1/out/libzstdoxide-c11d91fdc2dd2ba1.rmeta",
+      "sha256": "f3dc7d492df7ffc696af29fb1d65988a85c8af076354b0aad40b56c629900008"
+    }
+  ],
+  "build_command": [
+    "rustc",
+    "+nightly-2026-10-08",
+    "--edition",
+    "2024",
+    "/tmp/zstdoxide-module9-formatted-baseline.rs",
+    "--extern",
+    "zstdoxide=/Users/lanxingcan/Workspace/zstdoxize/target/module9-training-queue/debug/build/zstdoxide/c11d91fdc2dd2ba1/out/libzstdoxide-c11d91fdc2dd2ba1.rlib",
+    "--extern",
+    "zstdoxide=/Users/lanxingcan/Workspace/zstdoxize/target/module9-training-queue/debug/build/zstdoxide/c11d91fdc2dd2ba1/out/libzstdoxide-c11d91fdc2dd2ba1.rmeta",
+    "-o",
+    "/tmp/zstdoxide-module9-formatted-baseline"
+  ],
+  "build_exit_code": 0,
+  "run_command": [
+    "/tmp/zstdoxide-module9-formatted-baseline"
+  ],
+  "run_exit_code": 0,
+  "toolchain_note": "The installed compiler separates code and full metadata; the successful invocation supplies both cached rlib and rmeta files.",
+  "interpretation": "This captures earlier Rust bytes, not C-identical dictionary-training output."
+}

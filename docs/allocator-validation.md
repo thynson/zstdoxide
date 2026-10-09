@@ -483,6 +483,34 @@ covered. Empty output consumes no armed payload request. The live C test uses
 the Global wrapper of this same collector; custom contexts additionally retain
 the streaming checkpoint's separate live C coverage.
 
+`train_dictionary_in` and `finalize_dictionary_in` now retain explicit allocation
+ownership across raw selection, entropy descriptions, assembly and the preserved
+validation copy. The [formatted evidence](evidence/2026-10-09-allocator-formatted-training.json)
+and [30 command records](evidence/2026-10-09-allocator-formatted-training-results.json)
+report 211 passing executions: eleven tests in ten configurations, existing
+training/Huffman/integration checks, safe/all C interoperability, both no_std
+builds, strict Clippy and formatting. Five strict-provenance Miri tests passed
+in 24.41 seconds. Public exports additionally passed isolated Clippy, no_std,
+unit tests and formatting without concurrent encoder or collector changes.
+
+The [pre-migration capture](evidence/2026-10-09-allocator-formatted-baseline.json)
+records 56 complete dictionaries with FNV64 14787186922959212481. Its
+[helper](evidence/2026-10-09-allocator-formatted-baseline.rs.gz),
+[original source](evidence/2026-10-09-allocator-formatted-baseline-source.rs.gz),
+and [result](evidence/2026-10-09-allocator-formatted-baseline.log.gz) preserve
+provenance. Custom/Global bytes match; raw and Huffman fingerprints also remain
+unchanged. C accepted eight dictionaries and 36 bidirectional frames per
+backend, plus the existing FSE/Huffman serialization checks. This is independent
+Rust training with C format acceptance, not byte parity with C training policy.
+
+The final dictionary's byte vector retains the original allocator; four prepared
+tables own fresh values. Temporary raw content is released before return.
+Every observed full-training and finalization allocation was failed separately,
+including the final validation copy; malformed assembly also releases all
+owners. Returned dictionaries retain no content/sample borrow. Miri covers
+bounded owner movement, temporary release, malformed input and final-copy
+failure; full ordinal sweeps run in normal builds.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

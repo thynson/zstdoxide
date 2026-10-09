@@ -55,7 +55,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
 - [x] Replace the training priority queue with checked storage and preserve ties and stale-score ordering.
 - [x] Parameterize raw-training sample windows, frequencies, candidates, ranges, and output without changing selected bytes.
-- [ ] Parameterize formatted finalization and all validation copies, preserving dictionary bytes, IDs, and C acceptance.
+- [x] Parameterize formatted finalization and all validation copies, preserving dictionary bytes, IDs, and C acceptance.
 - [ ] Inject failure at each observed codec allocation, including HUF/FSE candidates, history growth, dictionary preparation, reset, and final drop.
 - [ ] Adapt the original 89,456,640-byte custom-context source campaign with explicit seeds and supported strategy/API qualifications.
 - [ ] Validate standard/custom allocation under safe, each individual unsafe feature, and all features with no_std and independent C checks.

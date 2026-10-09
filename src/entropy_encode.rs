@@ -72,6 +72,10 @@ impl<A: Allocator> EntropyBits<A> {
 /// nonnegative entries, and contain between one and 256 symbols. Table logs are
 /// in `5..=12`. Trailing zero symbols are omitted by the wire format. Invalid
 /// parameters fail before allocation. Corresponds to upstream `FSE_writeNCount`.
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "Global convenience for entropy callers")
+)]
 pub(crate) fn write_normalized_counts(counts: &[i16], table_log: u8) -> Result<Vec<u8>> {
     write_normalized_counts_in(counts, table_log, Global)
 }

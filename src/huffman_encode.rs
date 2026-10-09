@@ -24,6 +24,10 @@ const MAX_DEPTH: u8 = 11;
 /// 128-symbol limit, so its description always uses a two-state FSE stream.
 /// An oversized description falls back to a deterministic near-flat complete
 /// tree; no partial or truncated table is ever published.
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "Global convenience for tree callers")
+)]
 pub(crate) fn serialize_literal_table(observed: &[u64; SYMBOLS]) -> Result<Vec<u8>> {
     serialize_literal_table_in(observed, Global)
 }

@@ -112,13 +112,14 @@ another backend. Allocation boundaries use fallible reservation. The standard
 `Allocator` is supported by `decompress_in`, `decompress_with_options_in`,
 `decompress_with_dictionary_in`,
 `Decoder::new_in`, `Decoder::with_dictionary_in`, allocator-aware dictionary
-construction and `train_raw_dictionary_in`. Whole-buffer decoding retains the
+construction, `train_raw_dictionary_in`, `train_dictionary_in`, and
+`finalize_dictionary_in`. Whole-buffer decoding retains the
 original allocator in its returned vector; temporary storage uses fresh clones.
 Borrowing `&allocator` supports non-Clone allocator values. Standard dictionary
 Arc/Rc sharing still uses Global for the counts and inline object; borrowed
 `DictionaryView` values allocate nothing. Custom streaming decoders accept either
 shared owners or borrowed views independently of their workspace allocator.
-Compression and formatted training are being integrated as separate checkpoints.
+Compression is being integrated as a separate checkpoint.
 [The allocator plan](docs/allocators.md) records the exact API and validation
 boundaries, including the unavailable Rust 1.100 verification.
 

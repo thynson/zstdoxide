@@ -98,7 +98,10 @@ pub use decode::{
 pub use dictionary::{
     Dictionary, DictionaryHandle, DictionaryMode, DictionaryView, SharedDictionary,
 };
-pub use dictionary_train::{DictionaryTrainingOptions, finalize_dictionary, train_dictionary};
+pub use dictionary_train::{
+    DictionaryTrainingOptions, finalize_dictionary, finalize_dictionary_in, train_dictionary,
+    train_dictionary_in,
+};
 pub use encode::{compress, compress_with_dictionary};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
