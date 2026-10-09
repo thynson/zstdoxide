@@ -35,17 +35,14 @@ mod constants;
 mod cursor;
 mod decode;
 mod dictionary;
-#[cfg(test)]
 mod dictionary_train;
 mod encode;
-#[cfg(test)]
 mod entropy_encode;
 mod error;
 mod frame;
 mod fse;
 mod history;
 mod huffman;
-#[cfg(test)]
 mod huffman_encode;
 mod matchfinder;
 mod ring_history;
@@ -62,6 +59,7 @@ mod upstream_entropy_tests;
 
 pub use decode::{DecodeOptions, decompress, decompress_with_dictionary, decompress_with_options};
 pub use dictionary::{Dictionary, DictionaryMode, SharedDictionary};
+pub use dictionary_train::{DictionaryTrainingOptions, finalize_dictionary, train_dictionary};
 pub use encode::{compress, compress_with_dictionary};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;

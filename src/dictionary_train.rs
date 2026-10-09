@@ -33,6 +33,50 @@ impl DictionaryTrainingOptions {
     }
 }
 
+/// Select content and construct a bounded formatted dictionary from samples.
+///
+/// The complete serialized dictionary, including entropy metadata, fits the
+/// requested selection dictionary_size. Selected samples and content are never
+/// borrowed by the returned object. Empty or insufficient samples return
+/// [`Error::TrainingFailed`]; invalid options return [`Error::InvalidParameter`].
+///
+/// This fulfills the dictionary-building role of upstream `ZDICT_trainFromBuffer`
+/// using independent greedy content selection, learned literal frequencies, and
+/// predefined sequence priors. COVER/fastCover and their parameter matrices are
+/// not implemented by this API.
+pub fn train_dictionary(
+    samples: &[&[u8]],
+    options: DictionaryTrainingOptions,
+) -> Result<Dictionary> {
+    let options = options.validate()?;
+    let content = crate::training::train_raw_dictionary(samples, options.selection)?;
+    finalize_dictionary(content.content(), samples, options)
+}
+
+/// Build a formatted dictionary from explicit content and bounded samples.
+///
+/// Literal statistics include every byte in the proportional sample prefixes,
+/// even from samples shorter than eight bytes. Empty samples are valid and
+/// produce a full-alphabet pseudocount tree. Sequence tables use predefined
+/// priors; this does not reproduce upstream compressed-sequence profiling.
+///
+/// Metadata consumes part of selection.dictionary_size. Content is trimmed from
+/// its front to preserve the suffix; fewer than eight content bytes receive
+/// leading zero padding for initial repeat offsets `[1, 4, 8]`. Automatic IDs
+/// hash the original untrimmed, unpadded content. Allocation is fallible, and the
+/// result is revalidated by the normal formatted dictionary parser.
+/// Corresponds to the construction contract of `ZDICT_finalizeDictionary`.
+pub fn finalize_dictionary(
+    content: &[u8],
+    samples: &[&[u8]],
+    options: DictionaryTrainingOptions,
+) -> Result<Dictionary> {
+    let options = options.validate()?;
+    let observed = literal_histogram(samples, options.selection.max_sample_bytes)?;
+    let literal_table = crate::huffman_encode::serialize_literal_table(&observed)?;
+    assemble_dictionary(content, &literal_table, options)
+}
+
 /// Assemble metadata and a preserved content suffix into a validated object.
 /// The literal description is computed by the tree serializer at the call site;
 /// the attributed wire-format sequence priors come from constants.rs.

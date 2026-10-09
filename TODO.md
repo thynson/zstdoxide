@@ -57,9 +57,9 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Build complete full-alphabet literal trees with a bounded maximum depth.
 - [x] Serialize validated dictionary Huffman weights through two-state FSE.
 - [x] Assemble formatted dictionary IDs, sequence priors, repeat offsets, padding, and suffix bounds.
-- [ ] Finalize formatted dictionaries with IDs, sequence priors, repeat offsets and bounded content.
+- [x] Finalize formatted dictionaries with IDs, sequence priors, repeat offsets and bounded content.
 - [x] Implement bounded training sample selection and raw dictionary-content construction.
-- [ ] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.
+- [x] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.
 - [x] Port dictionary decoder, prefix lifetime, prepared entropy, and malformed-input assertions.
 - [x] Preserve exact omitted-ID and first-prefix missing-dictionary failure controls.
 - [x] Map implemented parser/decoder assertions to pinned upstream source groups.
