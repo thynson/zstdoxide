@@ -16,18 +16,42 @@ const MAX_DICTIONARY_DISTANCE: usize = (1 << 29) - 4;
 /// Corresponds to the one-shot contract of upstream `ZSTD_compress`, using this
 /// implementation's own block-selection strategy rather than upstream levels.
 pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
+    compress_frame(input, None)
+}
+
+/// Compresses input into a checksummed frame using owned dictionary content.
+///
+/// A formatted dictionary's nonzero identifier is written using its smallest
+/// field; a raw dictionary has no identifier. Input size excludes dictionary
+/// bytes. Matches use this encoder's greedy parser and predefined entropy
+/// tables, independently of prepared dictionary entropy and repeat offsets.
+/// Corresponds to the one-shot contract of upstream `ZSTD_compress_usingCDict`.
+pub fn compress_with_dictionary(input: &[u8], dictionary: &SharedDictionary) -> Result<Vec<u8>> {
+    compress_frame(input, Some(dictionary))
+}
+
+fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result<Vec<u8>> {
     let blocks = input.len().div_ceil(MAX_BLOCK_SIZE).max(1);
+    let dictionary_id = dictionary.map_or(0, |dictionary| dictionary.id());
+    let (_, dictionary_bytes) = dictionary_field(dictionary_id);
     let capacity = blocks
         .checked_mul(3)
         .and_then(|overhead| overhead.checked_add(17))
+        .and_then(|overhead| overhead.checked_add(dictionary_bytes))
         .and_then(|overhead| overhead.checked_add(input.len()))
         .ok_or(Error::ResourceLimit)?;
     let mut output = Vec::new();
     output
         .try_reserve_exact(capacity)
         .map_err(|_| Error::AllocationFailed)?;
-    write_frame_header(&mut output, input.len());
+    write_frame_header(&mut output, input.len(), dictionary_id);
     let mut encoder = BlockEncoder::new();
+    if let Some(dictionary) = dictionary {
+        encoder.start_frame(
+            Some(SharedDictionary::clone(dictionary)),
+            input.len() as u64,
+        )?;
+    }
     if input.is_empty() {
         encoder.encode(&[], true, &mut output)?;
     }
@@ -167,7 +191,7 @@ impl BlockEncoder {
 }
 
 /// Writes a single-segment frame header; corresponds to `ZSTD_writeFrameHeader`.
-fn write_frame_header(output: &mut Vec<u8>, content_size: usize) {
+fn write_frame_header(output: &mut Vec<u8>, content_size: usize, dictionary_id: u32) {
     output.extend_from_slice(&crate::frame::MAGIC.to_le_bytes());
     let size = content_size as u64;
     let (descriptor, value, count) = if size < 256 {
@@ -179,8 +203,19 @@ fn write_frame_header(output: &mut Vec<u8>, content_size: usize) {
     } else {
         (0xe4, size, 8)
     };
-    output.push(descriptor);
+    let (dictionary_flag, dictionary_bytes) = dictionary_field(dictionary_id);
+    output.push(descriptor | dictionary_flag);
+    output.extend_from_slice(&dictionary_id.to_le_bytes()[..dictionary_bytes]);
     output.extend_from_slice(&value.to_le_bytes()[..count]);
+}
+
+fn dictionary_field(dictionary_id: u32) -> (u8, usize) {
+    match dictionary_id {
+        0 => (0, 0),
+        1..=255 => (1, 1),
+        256..=65535 => (2, 2),
+        _ => (3, 4),
+    }
 }
 
 /// Writes a three-byte block header; corresponds to `ZSTD_writeLastEmptyBlock`
@@ -673,6 +708,74 @@ mod tests {
     use super::*;
     use crate::{DecodeOptions, Dictionary, decompress_with_dictionary};
     use alloc::vec;
+
+    #[test]
+    fn one_shot_dictionary_header_has_exact_identifier_and_content_size_fields() {
+        let bytes = include_bytes!("../tests/upstream/dictionaries/formatted.dict");
+        for (id, field_size) in [
+            (0_u32, 0),
+            (1, 1),
+            (255, 1),
+            (256, 2),
+            (65535, 2),
+            (65536, 4),
+            (u32::MAX, 4),
+        ] {
+            let mut bytes = bytes.to_vec();
+            bytes[4..8].copy_from_slice(&id.to_le_bytes());
+            let dictionary = Dictionary::from_bytes(&bytes).unwrap().into_shared();
+            for (length, size_field) in
+                [(0, 1), (1, 1), (255, 1), (256, 2), (65_791, 2), (65_792, 4)]
+            {
+                let source = vec![42; length];
+                let encoded = compress_with_dictionary(&source, &dictionary).unwrap();
+                let (header, header_size) = crate::FrameHeader::parse(&encoded).unwrap();
+                assert_eq!(header.dictionary_id, id);
+                assert_eq!(header.content_size, Some(length as u64));
+                assert_eq!(header.window_size, length as u64);
+                assert!(header.has_checksum);
+                assert_eq!(header_size, 5 + field_size + size_field);
+                assert_eq!(
+                    decompress_with_dictionary(&encoded, &dictionary, DecodeOptions::new(length))
+                        .unwrap(),
+                    source
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn one_shot_dictionary_content_matches_across_block_and_empty_boundaries() {
+        for content in [&b""[..], &b"ab"[..], &b"a larger dictionary pattern "[..]] {
+            let dictionary = Dictionary::raw(content).unwrap().into_shared();
+            let source: Vec<_> = b"a larger dictionary pattern "
+                .iter()
+                .copied()
+                .cycle()
+                .take(MAX_BLOCK_SIZE * 2 + 19)
+                .collect();
+            let count = SharedDictionary::strong_count(&dictionary);
+            let encoded = compress_with_dictionary(&source, &dictionary).unwrap();
+            assert_eq!(SharedDictionary::strong_count(&dictionary), count);
+            assert_eq!(
+                decompress_with_dictionary(&encoded, &dictionary, DecodeOptions::new(source.len()))
+                    .unwrap(),
+                source
+            );
+            if content.is_empty() {
+                assert_eq!(encoded, compress(&source).unwrap());
+            }
+        }
+        let dictionary = Dictionary::raw(b"xy").unwrap().into_shared();
+        let source = b"xy".repeat(200);
+        let encoded = compress_with_dictionary(&source, &dictionary).unwrap();
+        assert!(crate::decompress(&encoded, source.len()).is_err());
+        assert_eq!(
+            decompress_with_dictionary(&encoded, &dictionary, DecodeOptions::new(source.len()))
+                .unwrap(),
+            source
+        );
+    }
 
     fn dictionary_blocks(blocks: &[&[u8]], dictionary: &SharedDictionary) -> (Vec<u8>, Vec<u8>) {
         let source: Vec<_> = blocks

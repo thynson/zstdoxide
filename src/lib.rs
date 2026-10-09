@@ -55,7 +55,7 @@ mod upstream_entropy_tests;
 
 pub use decode::{DecodeOptions, decompress, decompress_with_dictionary, decompress_with_options};
 pub use dictionary::{Dictionary, DictionaryMode, SharedDictionary};
-pub use encode::compress;
+pub use encode::{compress, compress_with_dictionary};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
 pub use stream::{EndDirective, Progress, StreamStatus};

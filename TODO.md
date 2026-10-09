@@ -39,7 +39,8 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Extend indexed match search to dictionary content and first-block crossing.
 - [ ] Extend indexed match search to retained output history across blocks.
 - [x] Write dictionary frame IDs with explicit omission and smallest field widths.
-- [ ] Produce interoperable raw/prepared dictionary compression.
+- [x] Produce interoperable raw/prepared dictionary compression.
+- [x] Expose one-shot dictionary compression with known size and minimal ID width.
 - [x] Add dictionary-aware encoding context, reset, and single-use prefix configuration.
 - [x] Analyze bounded raw sample selection and dictionary-training ownership.
 - [x] Implement safe bounded frequency scoring and deterministic raw content selection.
