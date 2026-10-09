@@ -44,7 +44,7 @@ regression matrix. The suite therefore remains partial.
 | `data.c`: `silesia_tar` and `github_tar` file datasets | Not executed in the recorded run. The extracted payload files are different inputs from the complete tar byte streams. |
 | `data.c`: `data_filenames_get`, `data_buffers_get`, `data_buffer_read`, `data_buffer_compare` | Deterministic recursive file collection, exact reads, and complete length/content comparisons in `CorpusPlan`, `CorpusEntry::read`, and `roundtrip_corpus`. Rust rejects symlinks explicitly and applies documented resource caps. |
 | `method.c:94` `simple_compress` | Compression/decompression/content equality adapted to Rust's current one-shot API. Upstream's simple method intentionally skips directory inputs; the Rust directory loop instead corresponds to the per-file content checks of the next method. Compression level selection remains absent. |
-| `method.c:144` `compress_cctx_compress` | Per-file non-dictionary roundtrip/content assertions are executable. Reusable contexts and dictionaries exist, but their original regression-method branches are not exercised here; levels and advanced parameters remain unsupported. |
+| `method.c:144` `compress_cctx_compress` | Per-file non-dictionary content assertions run with reused Rust contexts for Greedy, Chain and Lazy, resetting between pledged frames. The original C method variants, dictionary branch, numeric levels and advanced parameters remain incomplete. |
 | `method.c:259` `cli_compress` | Pending a Rust CLI and its configuration matrix. An official executable is not used as the implementation. |
 | `method.c:333` `advanced_one_pass_compress_output_adjustment`, wrappers at `:379`/`:385` | Pledged-size streaming APIs exist; the original advanced-parameter/output-adjustment branch and atomic caller-owned compression destination, including the one-byte-smaller bound case, remain unported. |
 | `method.c:391` `advanced_streaming_compress` | Incremental compression and flush/finish/reset exist; this regression method's exact 4096-byte input/1024-byte output and parameter schedule remains unported. |
@@ -67,6 +67,17 @@ is not copied into the repository.
 ```sh
 ZSTDOXIDE_REGRESSION_CORPUS=/tmp/zstdoxide-external-corpora/extracted/silesia:/tmp/zstdoxide-external-corpora/extracted/github cargo test --release --all-features --test upstream_regression_corpora external_regression_corpus_roundtrips -- --ignored --nocapture
 ```
+
+Select `external_regression_corpus_named_strategies` instead to execute every
+file with each named Rust strategy. That adapter reuses a context, resets and
+pledges each exact source length, then drains Finish through a guarded 64 KiB
+caller buffer. It checks consumed/produced counts and every decoded byte.
+Its `STRATEGY` records contain files, source bytes, encoded bytes, complete
+length-delimited source and frame FNV-1a hashes, peak reported retained heap
+capacity, and skipped count. Compare each strategy's records between backend
+builds; strategies may legitimately produce different frames. Retained memory
+excludes caller buffers, inline context state and transient allocation overhead.
+This functional corpus replay is not a throughput benchmark.
 
 `ZSTDOXIDE_REGRESSION_CORPUS` accepts an operating-system path list of files or
 directories: colon-separated on Unix/macOS, semicolon-separated on Windows.

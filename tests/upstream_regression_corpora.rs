@@ -7,7 +7,10 @@ use std::fs;
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
-use zstdoxide::{DecodeOptions, compress, decompress_with_options};
+use zstdoxide::{
+    CompressionStrategy, DecodeOptions, Encoder, EncoderOptions, EndDirective, StreamStatus,
+    compress, decompress_with_options,
+};
 
 const MAX_FILE_SIZE: u64 = 128 * 1024 * 1024;
 const MAX_TOTAL_SIZE: u64 = 512 * 1024 * 1024;
@@ -124,7 +127,7 @@ struct RunSummary {
 }
 
 /// Content equality from method.c::simple_compress/compress_cctx_compress.
-/// The Rust API currently offers one owned-output compression strategy.
+/// The one-shot helper uses its documented default Greedy policy.
 fn roundtrip_corpus(plan: &CorpusPlan) -> RunSummary {
     let started = Instant::now();
     let mut encoded_bytes = 0;
@@ -162,6 +165,145 @@ fn roundtrip_corpus(plan: &CorpusPlan) -> RunSummary {
         source_bytes: plan.total_size,
         encoded_bytes,
         elapsed: started.elapsed(),
+    }
+}
+
+const STRATEGIES: [CompressionStrategy; 3] = [
+    CompressionStrategy::Greedy,
+    CompressionStrategy::Chain,
+    CompressionStrategy::Lazy,
+];
+
+/// Test metadata owns scalar counts only; no corpus or encoder storage is borrowed.
+#[derive(Debug)]
+struct StrategySummary {
+    files: usize,
+    source_bytes: u64,
+    encoded_bytes: u64,
+    source_fingerprint: u64,
+    frame_fingerprint: u64,
+    peak_retained_bytes: usize,
+}
+
+fn hash_bytes(hash: &mut u64, bytes: &[u8]) {
+    for &byte in bytes {
+        *hash = (*hash ^ u64::from(byte)).wrapping_mul(0x100_0000_01b3);
+    }
+}
+
+/// Content-equality adaptation of regression method.c's context reuse. Numeric
+/// upstream levels, specialized C methods and CSV ratio baselines remain open.
+fn strategy_corpus(plan: &CorpusPlan, strategy: CompressionStrategy) -> StrategySummary {
+    let mut encoder = Encoder::new();
+    let mut summary = StrategySummary {
+        files: 0,
+        source_bytes: 0,
+        encoded_bytes: 0,
+        source_fingerprint: 0xcbf2_9ce4_8422_2325,
+        frame_fingerprint: 0xcbf2_9ce4_8422_2325,
+        peak_retained_bytes: 0,
+    };
+    let mut guarded = [0xa5; 65_536 + 2];
+    for entry in &plan.entries {
+        let source = entry.read().unwrap();
+        encoder
+            .reset_with_options(EncoderOptions {
+                strategy,
+                pledged_size: Some(source.len() as u64),
+                ..EncoderOptions::default()
+            })
+            .unwrap();
+        assert_eq!((encoder.total_input(), encoder.total_output()), (0, 0));
+        let mut consumed = 0;
+        let mut encoded = Vec::new();
+        let mut calls = 0;
+        loop {
+            calls += 1;
+            // Each nonfinal call must consume input or drain owned output.
+            assert!(calls <= 2 * source.len() + 1024);
+            guarded.fill(0xa5);
+            let progress = encoder
+                .process(
+                    &source[consumed..],
+                    &mut guarded[1..65_537],
+                    EndDirective::Finish,
+                )
+                .unwrap_or_else(|error| {
+                    panic!("{strategy:?} encode {}: {error}", entry.path.display())
+                });
+            assert!(progress.consumed <= source.len() - consumed);
+            assert!(progress.produced <= 65_536);
+            assert_eq!(guarded[0], 0xa5);
+            assert!(
+                guarded[1 + progress.produced..]
+                    .iter()
+                    .all(|&byte| byte == 0xa5)
+            );
+            consumed += progress.consumed;
+            encoded.extend_from_slice(&guarded[1..1 + progress.produced]);
+            summary.peak_retained_bytes =
+                summary.peak_retained_bytes.max(encoder.retained_capacity());
+            assert_eq!(encoder.total_input(), consumed as u64);
+            assert_eq!(encoder.total_output(), encoded.len() as u64);
+            if progress.status == StreamStatus::FrameFinished {
+                break;
+            }
+            assert_eq!(progress.status, StreamStatus::NeedOutput);
+            assert!(progress.consumed != 0 || progress.produced != 0);
+        }
+        assert_eq!(consumed, source.len());
+        let decoded = decompress_with_options(
+            &encoded,
+            DecodeOptions {
+                max_output_size: source.len(),
+                max_window_size: MAX_FILE_SIZE,
+            },
+        )
+        .unwrap_or_else(|error| panic!("{strategy:?} decode {}: {error}", entry.path.display()));
+        assert_eq!(decoded.len(), source.len());
+        if let Some(offset) = source.iter().zip(&decoded).position(|(a, b)| a != b) {
+            panic!(
+                "{strategy:?} mismatch in {} at {offset}",
+                entry.path.display()
+            );
+        }
+        hash_bytes(
+            &mut summary.source_fingerprint,
+            &(source.len() as u64).to_le_bytes(),
+        );
+        hash_bytes(&mut summary.source_fingerprint, &source);
+        hash_bytes(
+            &mut summary.frame_fingerprint,
+            &(encoded.len() as u64).to_le_bytes(),
+        );
+        hash_bytes(&mut summary.frame_fingerprint, &encoded);
+        summary.files += 1;
+        summary.source_bytes += source.len() as u64;
+        summary.encoded_bytes += encoded.len() as u64;
+    }
+    assert_eq!(summary.files, plan.entries.len());
+    assert_eq!(summary.source_bytes, plan.total_size);
+    summary
+}
+
+#[test]
+#[ignore = "requires ZSTDOXIDE_REGRESSION_CORPUS pointing to complete regression-data files/directories"]
+fn external_regression_corpus_named_strategies() {
+    let value = std::env::var_os("ZSTDOXIDE_REGRESSION_CORPUS")
+        .expect("ZSTDOXIDE_REGRESSION_CORPUS is required");
+    let roots: Vec<_> = std::env::split_paths(&value).collect();
+    let plan = CorpusPlan::collect(&roots).unwrap();
+    for strategy in STRATEGIES {
+        let summary = strategy_corpus(&plan, strategy);
+        eprintln!(
+            "STRATEGY\t{strategy:?}\t{}\t{}\t{}\t{:016x}\t{:016x}\t{}\t0 skipped",
+            summary.files,
+            summary.source_bytes,
+            summary.encoded_bytes,
+            summary.source_fingerprint,
+            summary.frame_fingerprint,
+            summary.peak_retained_bytes,
+        );
     }
 }
 
@@ -243,6 +385,45 @@ fn corpus_roundtrips_every_file_in_sorted_order() {
     assert_eq!(summary.files, 3);
     assert_eq!(summary.source_bytes, 32);
     assert!(summary.encoded_bytes > 0);
+    for strategy in STRATEGIES {
+        let summary = strategy_corpus(&plan, strategy);
+        assert_eq!(summary.files, 3);
+        assert_eq!(summary.source_bytes, 32);
+        assert!(summary.encoded_bytes > 0);
+    }
+}
+
+#[test]
+fn named_strategy_corpus_reuses_contexts_across_multiblock_and_empty_frames() {
+    let corpus = TemporaryCorpus::new();
+    let mut state = 0xa721_409b_u32;
+    let source: Vec<_> = (0..2 * 131_072 + 17)
+        .map(|index| {
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            if index < 131_072 {
+                state as u8
+            } else {
+                (index % 11) as u8
+            }
+        })
+        .collect();
+    fs::write(corpus.0.join("a-multiblock"), &source).unwrap();
+    fs::write(corpus.0.join("b-empty"), []).unwrap();
+    fs::write(corpus.0.join("c-repeat"), &source).unwrap();
+    let plan = CorpusPlan::collect(std::slice::from_ref(&corpus.0)).unwrap();
+    let mut source_fingerprint = None;
+    for strategy in STRATEGIES {
+        let summary = strategy_corpus(&plan, strategy);
+        assert_eq!(summary.files, 3);
+        assert_eq!(summary.source_bytes, 2 * source.len() as u64);
+        assert!(summary.encoded_bytes < summary.source_bytes);
+        assert_eq!(
+            *source_fingerprint.get_or_insert(summary.source_fingerprint),
+            summary.source_fingerprint
+        );
+    }
 }
 
 #[test]
