@@ -360,3 +360,27 @@ regions. Five samples of at least 150 ms use identical inputs across backend
 features. Tracking wraps Global, so its timing includes ledger, locking and
 clone bookkeeping and is not a comparison with another heap implementation.
 No timing starts until concurrent verification work has finished.
+
+
+## Module 10: compression parameters and context lifecycle
+
+Design precedes implementation; see
+[compression-parameters-design.md](compression-parameters-design.md) for source
+anchors, exact semantics and the distinction between inspection and executable
+compression profiles. Module 10 introduces no heap-owning or pointer-bearing
+structure and changes no existing unsafe access family.
+
+| Data structure / upstream counterpart | Ownership and representation | Invariants and backend policy |
+| --- | --- | --- |
+| `SourceSize`; source-size hints and `ZSTD_CONTENTSIZE_UNKNOWN` | `Unknown` or `Known(u64)` plain enum | Known empty and unknown differ; reject the reserved sentinel as known; use checked ordinary size arithmetic and explicit unknown-plus-dictionary tier algebra. Shared safe representation. |
+| `ReferenceStrategy`; `ZSTD_strategy` | Nine plain enum values distinct from the existing independent `CompressionStrategy` policies | A queried reference strategy is never silently admitted to an unsupported parser. Shared safe representation, no artificial unsafe operations. |
+| `CompressionParameterRequest`; requested `ZSTD_CCtx_params` fields | Private level/override/hint values; automatic values represented explicitly | Validate before mutation; explicit overrides survive level changes; getters return requests; resolution never mutates requests or allocates codec storage. |
+| `ResolvedCompressionParameters`; `ZSTD_compressionParameters` | Private concrete scalar fields with checked construction | Respect target-width bounds and source/dictionary adjustments; keep arbitrary raw adjustment inputs outside validated records; typed checked lookup for preset tables. |
+| Pinned level presets; `ZSTD_defaultCParameters` | Attributed immutable four-tier, 23-row table | Exact source constants and source hash; negative acceleration is clamped before negation; selection is separate from adjustment and codec resource admission. |
+| `ReferenceFrameParameters`; `ZSTD_frameParameters` | Plain flags | C query defaults remain distinct from existing Rust checksum-enabled encoder defaults. |
+| Encoder configuration/reset state; requested/applied parameters and reset directives | Existing `Encoder<A, D>` retains its buffers and handles; new operations manipulate only checked values and complete owners | Active settings remain immutable; rejected configuration is non-poisoning; parameter reset releases dictionary handles from outer and workspace state; parameter-only reset preserves Finished until explicit session reset. Allocation retention is not automatic shrinking. |
+
+Future configurable hash/chain tables, persistent search coordinates, binary
+trees, optimal-parser predecessor arrays, long-distance buckets, stable borrowed
+sessions and worker queues require separate design checkpoints. This scalar
+foundation does not extend their current storage or ownership promises.
