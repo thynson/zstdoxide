@@ -17,7 +17,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REVISION = "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
-REQUIRED_COLLECTIONS = ("data", "decodecorpus", "dictionaries", "entropy-data", "entropy-lifetimes", "inline-regressions", "testcard", "window-sequences")
+REQUIRED_COLLECTIONS = ("data", "decodecorpus", "dictionaries", "entropy-data", "entropy-lifetimes", "inline-regressions", "parameters", "testcard", "window-sequences")
 OPTIONAL_COLLECTIONS = ()
 NON_FIXTURE_FILES = {"manifest.json", "README.md", "cases.rs", "NOTICE"}
 
@@ -212,13 +212,17 @@ def audit_fixtures(root: Path = ROOT) -> tuple[list[str], int, int]:
             if "generator_source" in metadata:
                 check_origin(metadata["generator_source"], metadata["generator_source_sha256"],
                              catalog, errors, collection)
-            if "generator" in metadata:
-                generator = metadata["generator"]
-                if (not safe_relative(generator) or not (root / generator).is_file()
-                        or not (root / generator).resolve().is_relative_to(root.resolve())):
-                    errors.append(f"{collection}: missing local oracle generator")
-                elif hashlib.sha256((root / generator).read_bytes()).hexdigest() != metadata["generator_sha256"]:
-                    errors.append(f"{collection}: local oracle generator SHA-256 differs")
+            local_sources = [(role, metadata[role], metadata[role + "_sha256"])
+                             for role in ("generator", "importer") if role in metadata]
+            local_sources.extend(("repository input", path, digest) for path, digest
+                                 in metadata.get("repository_input_sha256", {}).items())
+            for role, path, digest in local_sources:
+                if (not isinstance(path, str) or not safe_relative(path)
+                        or not (root / path).is_file()
+                        or not (root / path).resolve().is_relative_to(root.resolve())):
+                    errors.append(f"{collection}: missing or invalid local {role}")
+                elif hashlib.sha256((root / path).read_bytes()).hexdigest() != digest:
+                    errors.append(f"{collection}: local {role} SHA-256 differs")
         except (KeyError, TypeError, ValueError, OSError) as error:
             errors.append(f"{collection}: malformed fixture manifest: {error}")
     return errors, collections, count

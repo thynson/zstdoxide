@@ -54,6 +54,7 @@ settled in the first implementation item and then used consistently.
 | `SourceSize::{Unknown, Known(u64)}` | Plain value; empty input is distinct from unknown. Reserved-sentinel and overflow policy is checked before arithmetic. | Source-size arguments and `ZSTD_CONTENTSIZE_UNKNOWN` |
 | `ReferenceStrategy` | Separate nine-variant enum: Fast, DoubleFast, Greedy, Lazy, Lazy2, BinaryTreeLazy2, Optimal, Ultra, Ultra2. Never converted implicitly to `CompressionStrategy`. | `ZSTD_strategy`, `lib/zstd.h:335` |
 | `CompressionParameterRequest` | Private fields, checked setters/getters, requested level, automatic/explicit overrides, optional source hint. Setter failure leaves every field unchanged. | `ZSTD_CCtx_params`, requested values |
+| `RawCompressionParameters` | Seven public `u32` fields. Validation rejects invalid concrete inputs; adjustment explicitly applies the pinned signed-32 clamp. No validated invariant is implied by construction. | Unvalidated `ZSTD_compressionParameters` boundary |
 | `ResolvedCompressionParameters` | Private, concrete validated window/hash/chain/search logs, minimum-match search setting, target length, and reference strategy. No source ownership or allocation promise. | `ZSTD_compressionParameters` |
 | `ReferenceFrameParameters` | Separate value record for reference content-size/checksum/dictionary-ID defaults. Does not change `EncoderOptions::default()`. | `ZSTD_frameParameters` and `ZSTD_getParams` |
 | Reset mode/configuration snapshot | Plain enum and values. Session state and dictionary handles stay in the existing encoder owner. Active frame settings cannot change retroactively. | `ZSTD_ResetDirective`, requested/applied separation |
@@ -80,11 +81,14 @@ The module provides three distinguishable operations:
 3. Adjust parameter values for source/dictionary sizes, with the reference's
    initial clamping and subsequent resolution rules.
 
-Request resolution starts with a level-derived profile, applies explicit
-overrides and supported scalar reference rules, then adjusts for the supplied
-source/dictionary information. It returns a new resolved value without changing
-the request. A getter for a request reports the requested override, not an
-effective value substituted during compression planning.
+Request resolution first adjusts the selected level preset for the supplied
+source/dictionary information, then applies explicit overrides, then adjusts
+again. The two adjustments cannot be collapsed: for level three, known empty
+input and an explicit Ultra2 override, the first pass downsizes the chain log
+to six; applying the override before a single pass would incorrectly yield
+seven. Resolution returns a new value without changing the request. A getter
+for a request reports the requested override, not an effective value substituted
+during compression planning.
 
 The pinned level table has four size tiers, bounded at 16 KiB, 128 KiB, and
 256 KiB, and a default tier above them. It is in
@@ -163,6 +167,10 @@ still required before processing another frame. This preserves the existing
 Rust explicit-reset protocol. It is not C's automatic next-frame protocol.
 Session-plus-parameter reset returns a ready context. None of these operations
 implicitly releases retained allocations or implements automatic shrinking.
+Restoring Rust defaults clears `pledged_size` and enables checksum; the pinned
+C parameter-only reset instead preserves a fresh context's existing pledge and
+restores its own checksum-disabled defaults. These are intentionally different
+contracts, not evidence of C reset equivalence.
 Clearing dictionary selection releases every corresponding handle in the
 outer configuration, active frame, block workspace and prepared seed state;
 clearing only the outer `Option<D>` is insufficient. Retained scratch capacity
@@ -193,8 +201,9 @@ checkbox in `TODO.md` and commits after its focused validation.
 1. **Freeze oracle semantics first.** Add a small pinned-source C probe and
    reproducible fixture importer for bounds, level lookup, adjustment, getter
    mutations, and reset outcomes. Record public-zero conversion separately from
-   typed internal empty-size resolution. This is planned work: no oracle vectors
-   were generated or run as part of writing this design.
+   typed internal empty-size resolution. The completed fixture checkpoint is
+   documented in `tests/upstream/parameters/README.md`: 934 rows across seven
+   TSV files, with pinned provenance and reproducible byte-for-byte regeneration.
 2. **Add value records and validation.** Implement the nine-strategy reference
    enum, source-size type, private concrete fields and checked constructors.
    Verify every parameter boundary, unsupported enum input in the adapter, and

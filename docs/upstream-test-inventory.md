@@ -259,10 +259,11 @@ unfinished child groups. It does not execute Rust tests; passing this audit
 alone establishes inventory integrity, not behavioral parity.
 
 The separate fixture audit checks all bytes listed by the golden,
-decodecorpus, entropy, inline-regression, testcard, window-sequence, and
-dictionary manifests.
+decodecorpus, entropy, inline-regression, parameter, testcard, window-sequence,
+and dictionary manifests.
 It verifies sizes, SHA-256 values, upstream source hashes, local oracle source
-hashes, derived byte ranges, and recorded expected-output metadata. Missing
+hashes, optional importer and repository-input hashes, derived byte ranges, and
+recorded expected-output metadata. Missing
 fixtures/manifests, unlisted files, duplicate records, and paths outside a
 fixture collection are errors. It uses only Python's standard library and
 does not require a C compiler, upstream checkout, codec executable, or network.

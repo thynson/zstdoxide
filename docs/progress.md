@@ -263,3 +263,33 @@ Evidence and reproducible details: [final codec matrix](allocator-final-validati
 removed from TODO and retained in Git history. Module 10's parameter inspection
 and supported encoder lifecycle are analyzed and decomposed before implementation;
 operational numeric algorithms and later roadmap work remain explicit follow-ons.
+
+## Module 10: parameter oracle checkpoint
+
+The first implementation prerequisite is complete on 2026-10-09. Seven pinned
+TSV fixtures preserve 934 C observations: all 92 presets, 13 public bounds,
+two width-bound records, 266 queries, 225 adjustment cases, 150 requested-value
+operations and 186 bounded lifecycle observations. The oracle/importer retain
+source attribution and hashes; neither is linked into the Rust codec.
+
+Independent review checked public-zero versus typed-empty semantics, signed
+clamping, two-pass requested resolution, a meaningful small source hint,
+pending/completed operations, actual pledge failure, and cached dictionary-ID
+labels. Fresh C parameter reset preserves its pledge; the planned Rust reset
+restores its own defaults. C's cached ID does not prove retained ownership.
+
+Seven focused checks passed, including exact regeneration under both `cc` and
+`clang` command names and a probe-only UBSan run. These commands use the same
+Apple Clang installation; no independent compiler implementation or instrumented
+reference archive is claimed. Fixture integrity covers 319 files in nine
+collections. An isolated audit rejects corrupted importer/input hashes,
+escaping paths and altered fixture bytes. Source inventory integrity passes;
+no migration statuses were promoted merely because observations were imported.
+
+This checkpoint implements no Rust scalar API and runs no Rust codec tests.
+Only 64-bit C was executed; the 32-bit maxima are explicitly macro-derived.
+Fixture contracts and reproduction live in
+[the collection README](../tests/upstream/parameters/README.md), with
+[validation metadata](evidence/2026-10-09-parameter-oracle.json) and archived
+logs. Value records, query algorithms, live configuration and reset work remain
+in the Module 10 checklist.

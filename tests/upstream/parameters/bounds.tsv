@@ -1,0 +1,14 @@
+name	parameter_id	lower	upper	error_code
+level	100	-131072	22	0
+window_log	101	10	31	0
+chain_log	103	6	30	0
+hash_log	102	6	30	0
+search_log	104	1	30	0
+min_match	105	3	7	0
+target_length	106	0	131072	0
+strategy	107	1	9	0
+source_hint	1004	0	2147483647	0
+content_size	200	0	1	0
+checksum	201	0	1	0
+dictionary_id	202	0	1	0
+unsupported	2147483647	0	0	40

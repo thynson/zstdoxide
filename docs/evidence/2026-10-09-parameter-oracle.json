@@ -1,0 +1,192 @@
+{
+  "scope": "Pinned C scalar parameter and bounded context semantics, no Rust API implementation or binding",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "fixture_rows": {
+    "adjustments.tsv": 225,
+    "bounds.tsv": 13,
+    "lifecycle.tsv": 186,
+    "presets.tsv": 92,
+    "queries.tsv": 266,
+    "requests.tsv": 150,
+    "width-bounds.tsv": 2
+  },
+  "total_rows": 934,
+  "source_hashes": {
+    "tests/upstream/parameters/README.md": "b37761f547877fe80bc1b80060c27cfdfc98f21615ed3948c85d0ad93eb85614",
+    "tests/upstream/parameters/adjustments.tsv": "b6c214459f95a66307876d1ecda2841e36c691f2cd26f5f165aa18ec8bb976cd",
+    "tests/upstream/parameters/bounds.tsv": "2ce6557c1b38a3360a3cf29ecd631ceee0784eb61e8dbfb25f2f55c4c3e3f054",
+    "tests/upstream/parameters/lifecycle.tsv": "89797d0d1cbc7c744ce86cbfaf460cd7655f8fecf0c08dd68cd81e5851a5c72f",
+    "tests/upstream/parameters/manifest.json": "8e4721b527513f191605af86bde5b2536476233feb8b195d22da156b2bc383a0",
+    "tests/upstream/parameters/oracle.c": "7158669393bedff77a9f553f4ee94091bea7cde74fb929687ecc7c927e4231dc",
+    "tests/upstream/parameters/presets.tsv": "4e188cc16826c6665dcd440ae9d153484aeb4e561321a089be2aec260667881d",
+    "tests/upstream/parameters/queries.tsv": "06bde515b1b48430cc396d0685de2a1769a2b00f8b5c1c71fe540bfa0def5c7a",
+    "tests/upstream/parameters/requests.tsv": "e8f179e44bc0872d4d271799d759e426d173cd31e5e25ba2d42e1a499f10d003",
+    "tests/upstream/parameters/width-bounds.tsv": "70c4269ea7fc8abee023f1b1edbface32a63b08791feeac0fbe875f401940fa5",
+    "scripts/import_parameter_fixtures.py": "e0104b73a2d22e0fa06dd7555a4381c0ab956d8d73bb3059b4895bde0bd49d65"
+  },
+  "sources_unchanged": true,
+  "capture": {
+    "compiler_command": [
+      "cc"
+    ],
+    "compiler_version": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "compile_command_template": [
+      "cc",
+      "-std=c99",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I",
+      "<upstream>/lib",
+      "<root>/tests/upstream/parameters/oracle.c",
+      "<upstream>/lib/libzstd.a",
+      "-pthread",
+      "-o",
+      "<temporary>/oracle"
+    ],
+    "host_system": "Darwin",
+    "host_machine": "arm64",
+    "executed_size_t_bits": 64,
+    "executed_int_bits": 32,
+    "static_archive_sha256": "2a6a6b22f5c98389d4c3cac3ab65ac77386ae529aa6fcdb8dbdbe267210a640d",
+    "policy": "Compiler/archive/host identify this capture; --check compares stable data/provenance and reports current execution metadata separately."
+  },
+  "checks": [
+    {
+      "name": "regenerate-check",
+      "command": [
+        "python3",
+        "scripts/import_parameter_fixtures.py",
+        "/tmp/zstdoxize-upstream-1.5.7",
+        "--check",
+        "--report",
+        "/tmp/zstdoxide-parameters-validation/regenerate-report.json"
+      ],
+      "environment": {},
+      "exit_code": 0,
+      "seconds": 0.446,
+      "log": "/tmp/zstdoxide-parameters-validation/regenerate-check.log",
+      "sha256": "ccdaec67589a021479764587213d6855ab313f6bb426be8b8dd222e795a52257"
+    },
+    {
+      "name": "alternate-compiler-command",
+      "command": [
+        "python3",
+        "scripts/import_parameter_fixtures.py",
+        "/tmp/zstdoxize-upstream-1.5.7",
+        "--check",
+        "--report",
+        "/tmp/zstdoxide-parameters-validation/alternate-report.json"
+      ],
+      "environment": {
+        "CC": "clang"
+      },
+      "exit_code": 0,
+      "seconds": 0.457,
+      "log": "/tmp/zstdoxide-parameters-validation/alternate-compiler-command.log",
+      "sha256": "ccdaec67589a021479764587213d6855ab313f6bb426be8b8dd222e795a52257"
+    },
+    {
+      "name": "undefined-sanitizer-probe",
+      "command": [
+        "python3",
+        "scripts/import_parameter_fixtures.py",
+        "/tmp/zstdoxize-upstream-1.5.7",
+        "--check",
+        "--report",
+        "/tmp/zstdoxide-parameters-validation/ubsan-report.json"
+      ],
+      "environment": {
+        "CC": "cc -fsanitize=undefined -fno-omit-frame-pointer",
+        "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+      },
+      "exit_code": 0,
+      "seconds": 0.631,
+      "log": "/tmp/zstdoxide-parameters-validation/undefined-sanitizer-probe.log",
+      "sha256": "ccdaec67589a021479764587213d6855ab313f6bb426be8b8dd222e795a52257"
+    },
+    {
+      "name": "fixture-audit",
+      "command": [
+        "python3",
+        "scripts/check_upstream_fixtures.py"
+      ],
+      "environment": {},
+      "exit_code": 0,
+      "seconds": 0.485,
+      "log": "/tmp/zstdoxide-parameters-validation/fixture-audit.log",
+      "sha256": "9611a17633607f61d09bd596abe38477f97dbc9bdf907eb577aa05687891cdec"
+    },
+    {
+      "name": "pinned-inventory",
+      "command": [
+        "python3",
+        "scripts/audit_upstream_tests.py",
+        "--upstream",
+        "/tmp/zstdoxize-upstream-1.5.7"
+      ],
+      "environment": {},
+      "exit_code": 0,
+      "seconds": 0.322,
+      "log": "/tmp/zstdoxide-parameters-validation/pinned-inventory.log",
+      "sha256": "1ad27a19d9b97a3f932afd401b5b9294fa8e4dcb42c26d4f1375e8e274666f8f"
+    },
+    {
+      "name": "python-syntax",
+      "command": [
+        "python3",
+        "-c",
+        "import ast,pathlib; ast.parse(pathlib.Path('scripts/import_parameter_fixtures.py').read_text())"
+      ],
+      "environment": {},
+      "exit_code": 0,
+      "seconds": 0.027,
+      "log": "/tmp/zstdoxide-parameters-validation/python-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "environment": {},
+      "exit_code": 0,
+      "seconds": 0.012,
+      "log": "/tmp/zstdoxide-parameters-validation/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "qualifications": [
+    "Typed adjustment uses an attributed clamp bridge then the actual private no-attach resolver; public adjustment independently exercises the library clamp.",
+    "Only host64 C executed;32-bit target bounds derive from pinned macros.",
+    "UBSan instruments the probe; the prebuilt external reference archive is unchanged and not claimed sanitizer-instrumented.",
+    "Alternative compiler command demonstrates capture metadata can differ while exact stable bytes/provenance remain verified.",
+    "Initial mislabeled partial-header/pledge-error scenarios were corrected before final capture; final guards assert one magic byte and source-size error72.",
+    "No nonexistent Rust API tests or performance benchmark were run."
+  ],
+  "integrity_negative_check": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 integrity-negative-check.py",
+    "exit_code": 0,
+    "baseline": {
+      "collections": 9,
+      "files": 319
+    },
+    "rejected": [
+      "importer_hash",
+      "repository_input_hash",
+      "importer_traversal",
+      "repository_input_traversal",
+      "fixture_corruption"
+    ],
+    "script_sha256": "41e764a5aa3268f8cd2b9d2c6d7cd5f6928cb21c75dedf4902cbfe45fff2b468",
+    "checker_sha256": "cf6b0871d499ed88c1c05555c587caf65c25fe5333a6f6cd7a8049f52a2bee12"
+  },
+  "archive": {
+    "path": "docs/evidence/2026-10-09-parameter-oracle.tar.gz",
+    "sha256": "5c989b5d44944a60f7c01e63f12d75520678e37426af7acaebc860f5bece67f6",
+    "size": 5673
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "generator": "tests/upstream/parameters/oracle.c",
+  "generator_sha256": "7158669393bedff77a9f553f4ee94091bea7cde74fb929687ecc7c927e4231dc",
+  "importer": "scripts/import_parameter_fixtures.py",
+  "importer_sha256": "e0104b73a2d22e0fa06dd7555a4381c0ab956d8d73bb3059b4895bde0bd49d65",
+  "source_sha256": {
+    "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b",
+    "lib/zstd_errors.h": "66a8c3f71d12ea6e797e4f622f31f3f8f81c41b36f48cad4f5de7d8bfb6aac0a",
+    "lib/common/zstd_internal.h": "ad3d95ce2b81a8c5c6b00cfe6323d8e80cacb690d3b5883725cd0d939f4f576f",
+    "lib/compress/zstd_compress_internal.h": "ab7754413cef565da559bda7eb738bc2b3708c48877cb9ec37aff767d32c57d1",
+    "lib/compress/clevels.h": "d764daa89b7a636d26fe96ff3536c5075e9867fb5dddbf8c9d57023a8ff4a155",
+    "lib/compress/zstd_compress.c": "10c315ae609d49b2fc431521aa95908086e69fd917991c5ed9a875af3d1208e8",
+    "tests/fuzzer.c": "dedcfca725c18810ccb8fce1d2b9995f14f8fb879c8b277158a8316ac2cf690c",
+    "tests/zstreamtest.c": "ad409d3017fab12a889320d2de5354f23e0b8a998f44ad37f3b50f14d0e6682a"
+  },
+  "repository_input_sha256": {
+    "tests/upstream/dictionaries/formatted.dict": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281"
+  },
+  "fixtures": [
+    {
+      "path": "adjustments.tsv",
+      "size": 22819,
+      "sha256": "b6c214459f95a66307876d1ecda2841e36c691f2cd26f5f165aa18ec8bb976cd",
+      "rows": 225
+    },
+    {
+      "path": "bounds.tsv",
+      "size": 346,
+      "sha256": "2ce6557c1b38a3360a3cf29ecd631ceee0784eb61e8dbfb25f2f55c4c3e3f054",
+      "rows": 13
+    },
+    {
+      "path": "lifecycle.tsv",
+      "size": 21663,
+      "sha256": "89797d0d1cbc7c744ce86cbfaf460cd7655f8fecf0c08dd68cd81e5851a5c72f",
+      "rows": 186
+    },
+    {
+      "path": "presets.tsv",
+      "size": 2150,
+      "sha256": "4e188cc16826c6665dcd440ae9d153484aeb4e561321a089be2aec260667881d",
+      "rows": 92
+    },
+    {
+      "path": "queries.tsv",
+      "size": 21372,
+      "sha256": "06bde515b1b48430cc396d0685de2a1769a2b00f8b5c1c71fe540bfa0def5c7a",
+      "rows": 266
+    },
+    {
+      "path": "requests.tsv",
+      "size": 16236,
+      "sha256": "e8f179e44bc0872d4d271799d759e426d173cd31e5e25ba2d42e1a499f10d003",
+      "rows": 150
+    },
+    {
+      "path": "width-bounds.tsv",
+      "size": 156,
+      "sha256": "70c4269ea7fc8abee023f1b1edbface32a63b08791feeac0fbe875f401940fa5",
+      "rows": 2
+    }
+  ],
+  "policy": "Test-only C parameter oracle. All seven compression fields are recorded. Public zero-source conversion, typed-no-attach adapter, reserved/modular C cases, and lifecycle observations are distinct. No operational numeric Rust levels or C lifecycle parity is claimed.",
+  "capture": {
+    "compiler_command": [
+      "cc"
+    ],
+    "compiler_version": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "compile_command_template": [
+      "cc",
+      "-std=c99",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I",
+      "<upstream>/lib",
+      "<root>/tests/upstream/parameters/oracle.c",
+      "<upstream>/lib/libzstd.a",
+      "-pthread",
+      "-o",
+      "<temporary>/oracle"
+    ],
+    "host_system": "Darwin",
+    "host_machine": "arm64",
+    "executed_size_t_bits": 64,
+    "executed_int_bits": 32,
+    "static_archive_sha256": "2a6a6b22f5c98389d4c3cac3ab65ac77386ae529aa6fcdb8dbdbe267210a640d",
+    "policy": "Compiler/archive/host identify this capture; --check compares stable data/provenance and reports current execution metadata separately."
+  }
+}
