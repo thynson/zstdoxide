@@ -159,8 +159,28 @@ pub(crate) struct SearchKeyLayout {
 
 impl SearchKeyLayout {
     pub(crate) fn new(hash_log: u8, key_bytes: u8) -> Result<Self> {
-        checked_byte(hash_log, MIN_HASH_LOG, MAX_HASH_LOG)?;
-        checked_byte(key_bytes, MIN_KEY_BYTES, MAX_KEY_BYTES)?;
+        Self::with_bounds(hash_log, key_bytes, MIN_HASH_LOG, MAX_KEY_BYTES)
+    }
+
+    /// Fast's private hash domain includes logs 6..=9. Its dispatch accepts
+    /// four-through-seven-byte keys; minMatch three resolves to width four
+    /// before this constructor. Named public settings retain their old bounds.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "Fast parser integration follows")
+    )]
+    pub(crate) fn for_fast(hash_log: u8, key_bytes: u8) -> Result<Self> {
+        Self::with_bounds(hash_log, key_bytes, 6, 7)
+    }
+
+    fn with_bounds(
+        hash_log: u8,
+        key_bytes: u8,
+        minimum_log: u8,
+        maximum_width: u8,
+    ) -> Result<Self> {
+        checked_byte(hash_log, minimum_log, MAX_HASH_LOG)?;
+        checked_byte(key_bytes, MIN_KEY_BYTES, maximum_width)?;
         let bucket_count = checked_power_of_two(hash_log)?;
         Ok(Self {
             hash_log,
@@ -463,6 +483,31 @@ mod tests {
             assert_eq!(checked_power_of_two(log), Err(Error::ResourceLimit));
         }
         assert_eq!(checked_power_of_two(0), Ok(1));
+    }
+
+    #[test]
+    fn fast_layout_admission_does_not_expand_named_public_bounds() {
+        for log in 0..=u8::MAX {
+            for width in [0, 3, 4, 5, 6, 7, 8, 9, u8::MAX] {
+                let result = SearchKeyLayout::for_fast(log, width);
+                if (6..=18).contains(&log) && (4..=7).contains(&width) {
+                    let layout = result.unwrap();
+                    assert_eq!(layout.bucket_count(), 1_usize << log);
+                    assert_eq!((layout.hash_log(), layout.key_bytes()), (log, width));
+                } else {
+                    assert_eq!(result, Err(Error::InvalidParameter));
+                }
+                if log < 10 {
+                    assert_eq!(
+                        SearchKeyLayout::new(log, width),
+                        Err(Error::InvalidParameter)
+                    );
+                    let mut options = DEFAULTS;
+                    assert_eq!(options.set_hash_log(log), Err(Error::InvalidParameter));
+                    assert_eq!(options, DEFAULTS);
+                }
+            }
+        }
     }
 
     #[test]

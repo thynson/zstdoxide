@@ -40,7 +40,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [ ] Corroborate direct candidates through the official sequence collector, retaining its distinct publication, tiny-input and delimiter behavior.
 - [ ] Capture ordinary Fast frame publication witnesses across compressed/raw/RLE transitions and full independent decoding before Rust Fast implementation.
 - [ ] Add a plain checked Fast execution plan using existing known-size request resolution and explicit strategy/resource admission.
-- [ ] Extend private small hash layouts and separate checked table lookup/store for persistent sampled Fast state, preserving named bounds and both access backends.
+- [x] Extend private small hash layouts and separate checked table lookup/store for persistent sampled Fast state, preserving named bounds and both access backends.
 - [ ] Add checked explicit wire-offset value transitions and planning while preserving canonical named plans.
 - [ ] Add committed-repeat snapshots and transactional preparation of intent-bearing sequences with complete ownership/failure coverage.
 - [ ] Implement safe single-block Fast sampling, repeat probes, backward/forward matches, tails and acceleration against frozen observations.

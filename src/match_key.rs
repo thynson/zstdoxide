@@ -74,7 +74,7 @@ impl SearchKeyLayout {
     /// Return the unsalted hash bucket, rejecting incompatible key widths.
     ///
     /// Corresponds to `ZSTD_hash4/5/6/7/8` with zero salt. SearchKeyLayout checks
-    /// hash logs 10..=18 and the representable bucket count at construction;
+    /// hash logs 6..=18 (10..=18 for named settings) and bucket counts at construction;
     /// these shifts therefore select a value below that count on every target.
     /// Leaf owners still check their own live initialized storage length.
     pub(crate) fn bucket(&self, key: MatchKey) -> Result<usize> {
@@ -152,6 +152,29 @@ mod tests {
             count += 1;
         }
         assert_eq!(count, 2880);
+    }
+
+    #[test]
+    fn fast_small_hashes_select_high_bits_of_independent_pinned_vectors() {
+        // The pinned log-ten observations supply independent expected high
+        // bits. Smaller logs discard low bucket bits without changing the hash.
+        let mut count = 0;
+        for line in VECTORS.lines().skip(1) {
+            let [width, log, _, bytes, expected] = fields(line);
+            let width: u8 = width.parse().unwrap();
+            if log != "10" || width > 7 {
+                continue;
+            }
+            let bytes = hex8(bytes);
+            let expected: usize = expected.parse().unwrap();
+            for small_log in 6..=9 {
+                let layout = SearchKeyLayout::for_fast(small_log, width).unwrap();
+                let key = layout.read_key(&bytes[..usize::from(width)]).unwrap();
+                assert_eq!(layout.bucket(key), Ok(expected >> (10 - small_log)));
+                count += 1;
+            }
+        }
+        assert_eq!(count, 4 * 64 * 4);
     }
 
     #[test]

@@ -123,6 +123,64 @@ impl<A: Allocator> MatchTable<A> {
         self.positions.capacity() * core::mem::size_of::<usize>()
     }
 
+    /// Read a sampled candidate without updating the table or borrowing it.
+    ///
+    /// A nonempty position is a hash collision, possibly at or beyond the
+    /// current cursor. Callers check source/window bounds and candidate bytes.
+    /// Separate reads and writes preserve Fast's delayed-store collision order.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "Fast parser integration follows")
+    )]
+    pub(crate) fn lookup(&self, key: impl Into<MatchKey>) -> Result<Option<usize>> {
+        let index = self.layout.bucket(key.into())?;
+        if index >= self.positions.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-match-table"))]
+        let position = self.positions[index];
+        #[cfg(feature = "unsafe-match-table")]
+        let position = {
+            // SAFETY: The runtime check proves index is within the initialized
+            // Vec<usize> length, not just its capacity. The retained allocator
+            // owns valid aligned storage of initialized usize values. The shared
+            // self borrow excludes mutation/reallocation for this read, and the
+            // temporary reference cannot escape: only its Copy value is returned.
+            unsafe { *self.positions.get_unchecked(index) }
+        };
+        Ok((position != EMPTY).then_some(position))
+    }
+
+    /// Store a sampled position without observing the previous collision.
+    ///
+    /// The reserved usize::MAX sentinel clears this bucket. Other positions
+    /// need not index a source until a caller validates a later lookup. Width
+    /// or initialized-bound errors preserve the table, and no allocation occurs.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "Fast parser integration follows")
+    )]
+    pub(crate) fn store(&mut self, key: impl Into<MatchKey>, position: usize) -> Result<()> {
+        let index = self.layout.bucket(key.into())?;
+        if index >= self.positions.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-match-table"))]
+        {
+            self.positions[index] = position;
+        }
+        #[cfg(feature = "unsafe-match-table")]
+        {
+            // SAFETY: The runtime check proves index is below initialized length;
+            // the exact allocator owns aligned, valid usize storage. Exclusive
+            // self excludes aliases, mutation and reallocation until this access
+            // ends. The temporary reference does not escape. Assigning a Copy
+            // usize preserves initialization and cannot allocate or run a drop.
+            unsafe { *self.positions.get_unchecked_mut(index) = position };
+        }
+        Ok(())
+    }
+
     /// Record the current position and return an earlier candidate, if any.
     ///
     /// Incompatible key widths and invalid live indices fail before mutation.
@@ -159,6 +217,98 @@ impl<A: Allocator> MatchTable<A> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn sampled_reads_preserve_delayed_store_collision_order() {
+        for log in 6..=9 {
+            let layout = SearchKeyLayout::for_fast(log, 4).unwrap();
+            let mut table = MatchTable::with_layout_in(layout, Global).unwrap();
+            let first = 0_u32.to_le_bytes();
+            let colliding = 0x0e8b_2f51_u32.to_le_bytes();
+            assert_eq!(layout.bucket(first.into()), layout.bucket(colliding.into()));
+            assert_eq!(table.lookup(first), Ok(None));
+            table.store(first, 0).unwrap();
+            let saved = table.lookup(colliding).unwrap();
+            assert_eq!(saved, Some(0));
+            assert_eq!(table.lookup(first), Ok(Some(0)));
+            table.store(colliding, 19).unwrap();
+            assert_eq!(saved, Some(0));
+            assert_eq!(table.lookup(first), Ok(Some(19)));
+            // Lookup has no cursor and must not silently apply replace's prior
+            // position filter; the parser performs that contextual check.
+            table.store(first, usize::MAX - 1).unwrap();
+            assert_eq!(table.lookup(first), Ok(Some(usize::MAX - 1)));
+            table.store(first, EMPTY).unwrap();
+            assert_eq!(table.lookup(first), Ok(None));
+        }
+    }
+
+    #[test]
+    fn sampled_access_rejects_width_and_live_length_before_mutation() {
+        let layout = SearchKeyLayout::for_fast(6, 4).unwrap();
+        let mut table = MatchTable::with_layout_in(layout, Global).unwrap();
+        table.store([0; 4], 13).unwrap();
+        let wrong = SearchKeyLayout::for_fast(6, 5)
+            .unwrap()
+            .read_key(b"12345")
+            .unwrap();
+        let before = table.positions.to_vec();
+        assert_eq!(table.lookup(wrong), Err(Error::InvalidParameter));
+        assert_eq!(table.store(wrong, 17), Err(Error::InvalidParameter));
+        assert_eq!(table.positions.as_slice(), before);
+        let last = u32::MAX.wrapping_mul(0x0e8b_2f51).to_le_bytes();
+        assert_eq!(layout.bucket(last.into()), Ok(63));
+        table.positions.truncate(63);
+        let before = table.positions.to_vec();
+        assert!(table.positions.capacity() >= 64);
+        assert_eq!(table.lookup(last), Err(Error::CorruptData));
+        assert_eq!(table.store(last, 17), Err(Error::CorruptData));
+        assert_eq!(table.positions.as_slice(), before);
+        table.positions.clear();
+        assert_eq!(table.lookup([0; 4]), Err(Error::CorruptData));
+        assert_eq!(table.store([0; 4], 1), Err(Error::CorruptData));
+        assert!(table.positions.is_empty());
+    }
+
+    #[test]
+    fn sampled_small_layouts_reuse_exact_owner_without_allocation() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = owner.monitor();
+        let mut table =
+            MatchTable::with_layout_in(SearchKeyLayout::for_fast(9, 7).unwrap(), &owner).unwrap();
+        let pointer = table.positions.as_ptr();
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        for log in 6..=9 {
+            for width in 4..=7 {
+                let layout = SearchKeyLayout::for_fast(log, width).unwrap();
+                table.reconfigure(layout).unwrap();
+                let key = layout.read_key(b"1234567").unwrap();
+                assert_eq!(table.lookup(key), Ok(None));
+                table.store(key, 7).unwrap();
+                assert_eq!(table.lookup(key), Ok(Some(7)));
+                assert_eq!(table.positions.as_ptr(), pointer);
+                assert_eq!(monitor.snapshot(), before);
+            }
+        }
+        let old_layout = table.layout();
+        let before_entries = table.positions.to_vec();
+        assert_eq!(
+            table.reconfigure(SearchKeyLayout::new(18, 4).unwrap()),
+            Err(Error::AllocationFailed)
+        );
+        assert_eq!(table.positions.as_slice(), before_entries);
+        assert_eq!(table.layout(), old_layout);
+        assert_eq!(monitor.snapshot().failures, 1);
+        drop(table);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 0);
+        drop(owner);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+    }
 
     #[test]
     fn returns_only_prior_candidates_and_reset_discards_them() {
