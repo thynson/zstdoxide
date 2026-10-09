@@ -255,3 +255,10 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   `Selection<'_, A>` borrows current/predefined tables or owns a complete
   replacement with its description. Exact cost/tie decisions are unchanged;
   failed selection publishes nothing and drops all temporary owners.
+- `MaxHeap<T, A>` owns initialized indexed values in a fallibly reserved vector.
+  Huffman setup preserves `Reverse<(weight, minimum_symbol, node_index)>` ties.
+  The queue uses checked indexing and swaps; it is bounded setup work, not a
+  new unchecked access backend. Child arithmetic follows the `parent < len/2`
+  guard and right-child bounds check. Tree nodes remain fixed inline arrays.
+  Full/sparse description builders retain the requested output owner through
+  fallback; standalone selection moves the entire winning candidate owner.

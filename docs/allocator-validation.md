@@ -222,6 +222,27 @@ normalization, ranking, and description storage; moving a selected replacement
 moves its allocator. Ordinary Clone itself retains its documented caller-owned
 panic/allocation boundary. Sequence-context integration is still pending.
 
+The Huffman builder now uses an indexed `MaxHeap<T, A>` and allocator-aware
+full, sparse, and standalone description builders. The
+[builder evidence](evidence/2026-10-09-allocator-huffman-builder.json) and
+[33 command records](evidence/2026-10-09-allocator-huffman-builder-results.json)
+record 289 passing test executions. The 22 builder tests passed in nine
+configurations, including each of five relevant unsafe features and safe/all
+no_std builds. Queue, paired-codebook, fixed-fixture, and formatted-training
+checks passed. Both no_std compilations, formatting, strict all-target Clippy,
+and seven strict-provenance Miri cases passed.
+
+The safe and all-feature C stream groups each reported 301 checks, including
+one documented empty-marker case that bypasses C decoding. Learned-dictionary
+CLI interoperability passed separately. The original Module 7 description
+fingerprint remains 17806659356530344110. Queue differential tests cover every
+small shape, deterministic ties, interleaved operations, non-Copy destruction,
+failed growth, and independently owned allocations. Every observed builder
+allocation was failed separately. Normal/sparse output retains the original
+allocator through fallback; standalone search moves the complete winning
+candidate owner. This is a focused builder checkpoint, not a new full-corpus
+or complete-codec validation.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

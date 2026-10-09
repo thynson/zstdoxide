@@ -1,0 +1,1200 @@
+{
+  "schema": 1,
+  "scope": "Checked priority queue and Huffman builder allocator ownership; concurrent independent migrations may change other files. lib.rs includes one authorized mod heap registration.",
+  "toolchain": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3",
+  "before": {
+    "time_utc": "2026-10-09T04:27:50.976383+00:00",
+    "git_head": "dc821f4e8604c3fa6f89b3c16dcb7fd78701dffa",
+    "owned_files": {
+      "src/heap.rs": "9200ae5a7492dbec09daf6644f0b6b030cf868e5593436d522bc86c7e0fe49c5",
+      "src/huffman_encode.rs": "7ae3fc124e20efd7f286c11dd06c2c22180144a1d8830e6b64f79a6773caee23"
+    },
+    "all_source_files": [
+      {
+        "path": "src/bitstream.rs",
+        "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+      },
+      {
+        "path": "src/bitwriter.rs",
+        "sha256": "e45ab72d4d1abed0313b80ff18e411130768827e23f785f9f0e86e03a09386ca"
+      },
+      {
+        "path": "src/constants.rs",
+        "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+      },
+      {
+        "path": "src/cursor.rs",
+        "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+      },
+      {
+        "path": "src/decode.rs",
+        "sha256": "4899cda69de82430435eabc6e0eb8c63cac5d518bf1ab73c1acd1422febaba55"
+      },
+      {
+        "path": "src/dictionary.rs",
+        "sha256": "c576cbadc7e6d8759d4e31d2ff0cecb7516d2903e1ce6620a58ea7249a5dbe60"
+      },
+      {
+        "path": "src/dictionary_train.rs",
+        "sha256": "b2c9370fb7e1064b0255ca2f516f08f72052b45ef5cdabaac126333f5db3e945"
+      },
+      {
+        "path": "src/encode.rs",
+        "sha256": "9943e01f939b6185f1554c3dac7964c4d5b681e7d25099578d696653a2ff2073"
+      },
+      {
+        "path": "src/entropy_encode.rs",
+        "sha256": "967289d75d71d948c658476b0995c5f1e9e380651b4b243eea17e0e210e3d65a"
+      },
+      {
+        "path": "src/entropy_output.rs",
+        "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+      },
+      {
+        "path": "src/error.rs",
+        "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+      },
+      {
+        "path": "src/frame.rs",
+        "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+      },
+      {
+        "path": "src/fse.rs",
+        "sha256": "2466b8db35a82a3e9e37ebd00fac65bb1a7041314c74caa58d7614a9275d76cb"
+      },
+      {
+        "path": "src/fse_encode.rs",
+        "sha256": "260265b9e174f46969e2a8dab38fdac218a5e800a6350818c018198dbf4fa568"
+      },
+      {
+        "path": "src/fse_select.rs",
+        "sha256": "3fba96b62fafa5374c53d3b1446850fe0417210c7c45c27ed92bf098a4a2de25"
+      },
+      {
+        "path": "src/heap.rs",
+        "sha256": "9200ae5a7492dbec09daf6644f0b6b030cf868e5593436d522bc86c7e0fe49c5"
+      },
+      {
+        "path": "src/history.rs",
+        "sha256": "eba2efb9ebc679767db1194bcd2fd9755ff49d56a62b3be612178aee634afb9c"
+      },
+      {
+        "path": "src/huffman.rs",
+        "sha256": "98f0c08317f5144307112323383d966385072d3ec3a75fe7eb16cb64d3a1ed72"
+      },
+      {
+        "path": "src/huffman_codebook.rs",
+        "sha256": "a83d5cf4ef2586c92aca252689b93360e30806d026939db958ab24d122d9acc0"
+      },
+      {
+        "path": "src/huffman_encode.rs",
+        "sha256": "7ae3fc124e20efd7f286c11dd06c2c22180144a1d8830e6b64f79a6773caee23"
+      },
+      {
+        "path": "src/lib.rs",
+        "sha256": "405ecf0e10c0528e702eb4c67f27db1c5b8f8cb834a05e0b69522e2ba1a0e885"
+      },
+      {
+        "path": "src/literal_encode.rs",
+        "sha256": "c36f9cb863fcd234b5c2150b177af85511ce2a6c5a6ffefb54ac69f458fd31b9"
+      },
+      {
+        "path": "src/literal_header.rs",
+        "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+      },
+      {
+        "path": "src/match_parse.rs",
+        "sha256": "6178dd023571d9a1d244fc0f40eccf69d986b89f6a48c5bf0057bbe7b978b222"
+      },
+      {
+        "path": "src/matchchain.rs",
+        "sha256": "7128426b2ffb05f12ca5b227166879605469b515efef6009686735f3266fb446"
+      },
+      {
+        "path": "src/matchfinder.rs",
+        "sha256": "816544f36e7abb20546454133de5dd207900fae375d92a8f68b8cd3fa928a2b6"
+      },
+      {
+        "path": "src/ring_history.rs",
+        "sha256": "bde3d9b4f3dfb4a4aeb52caddd654534920fb5bfed041ad2abdd05c2a3385ec9"
+      },
+      {
+        "path": "src/sequence_context.rs",
+        "sha256": "08acd9b27e930040f985dba9fd228f7f05018a876d5afb4198086e112aef605f"
+      },
+      {
+        "path": "src/sequence_encode.rs",
+        "sha256": "d7a5491e3747eee3f19537bc12a774fa76bd95974eb2b7adc2ae268ec5502132"
+      },
+      {
+        "path": "src/sequence_plan.rs",
+        "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+      },
+      {
+        "path": "src/sequences.rs",
+        "sha256": "da52cba287770af961640f9abdda28d5f9e9a39874977e98629103cf19533d3c"
+      },
+      {
+        "path": "src/strategy.rs",
+        "sha256": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab"
+      },
+      {
+        "path": "src/stream.rs",
+        "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+      },
+      {
+        "path": "src/stream_decode.rs",
+        "sha256": "c5214e6e53635a7084e43a0b151353105450b11d166f171b7d9353489ec32c2a"
+      },
+      {
+        "path": "src/stream_encode.rs",
+        "sha256": "e2a266edbbc0775fa0d5b2ded9c6fc82d81192e577ff6b32c136a4de7472d453"
+      },
+      {
+        "path": "src/training.rs",
+        "sha256": "4f4e60f12a9d15e32ac80eff4e358acb54184c78ff26cdd29f92fefa7bbae172"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.408367833821103,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-00-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": []
+    },
+    {
+      "name": "builder-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.2127566251438111,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-01-builder-safe.log",
+      "log_sha256": "6d65c78c53f3fbcb8f8d8626bda009edffcd183996291f7d51e22c9f73087e12",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "builder-unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-bitstream",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 3.480091500096023,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-02-builder-unsafe-bitstream.log",
+      "log_sha256": "f924cb27013e97b9bcc3416b67e6b883dfba1cc83add2ed1df586877c658dad7",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "builder-unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 2.996933792019263,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-03-builder-unsafe-fse.log",
+      "log_sha256": "522508829fba1b6958c0d261f0399bc8d3270a1eaa3f2ef10df8d706a6f0a316",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "builder-unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse-encoder",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 3.5874638331588358,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-04-builder-unsafe-fse-encoder.log",
+      "log_sha256": "facb68d774fed34083c2f69069cc67324729ec63bcb19a9fe0ec485a3cd608eb",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "builder-unsafe-huffman",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-huffman",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 2.9249216250609607,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-05-builder-unsafe-huffman.log",
+      "log_sha256": "aa1d2961a540a783f8183e736a4bdb1a9afec6223c83cbf67897c8edd2c9329a",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "builder-unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-huffman-codebook",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 3.0005585830658674,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-06-builder-unsafe-huffman-codebook.log",
+      "log_sha256": "2ea126cbbd9e8da3a246cde5891a574f865a657b4872c363133b7b5d1390dfb8",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "builder-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 2.824673208175227,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-07-builder-all.log",
+      "log_sha256": "4a5a7df4fb7e0ceb24704e20f54acf3cbcaf4f6160a8e2249b5454e9a2f48f69",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "builder-no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 2.6588802500627935,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-08-builder-no-std-safe.log",
+      "log_sha256": "a2937f05e280357d04fe7f26c2ea39793a451f093f1ec508517d25af3d920d09",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "builder-no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "huffman_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 2.733462292002514,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-09-builder-no-std-all.log",
+      "log_sha256": "d214486fe3b38ff19c468a16e34585e9b184d4f2eaaed32c6c6cbe369561a029",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "heap-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "heap::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.05379124986939132,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-10-heap-safe.log",
+      "log_sha256": "c7336d7543c11eabd83ca7f5139b5ef2f0a958c9e818d468391b5970b60f28b7",
+      "test_summaries": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "upstream_huffman_encode_tests-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "upstream_huffman_encode_tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.05362024996429682,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-11-upstream_huffman_encode_tests-safe.log",
+      "log_sha256": "da3494b1fb8efa7a240b2570943a29990dbaab653c0caea9028cfb6677e998f5",
+      "test_summaries": [
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 5
+        }
+      ]
+    },
+    {
+      "name": "huffman_codebook-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "huffman_codebook::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.1312003331258893,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-12-huffman_codebook-safe.log",
+      "log_sha256": "e84ce673ac1d55495d47e0314a6f3d894327780a1375b9282cd6ce6fe825f7e5",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "training-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_formatted_training"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 1.3521306668408215,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-13-training-safe.log",
+      "log_sha256": "49a83c79fa31c8e20011b46c3ef50bd88f57ba14e59a60741039796555d94036",
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2
+        }
+      ]
+    },
+    {
+      "name": "heap-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "heap::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.04645391693338752,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-14-heap-all.log",
+      "log_sha256": "f0c98f8408e288d904fb48a3b40bfbb7cf6611eca59aab0320180afc234a6cf4",
+      "test_summaries": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "upstream_huffman_encode_tests-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "upstream_huffman_encode_tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.061579416040331125,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-15-upstream_huffman_encode_tests-all.log",
+      "log_sha256": "cbff10e67a241cbedf1248ada3a00893cd9fbc86f368aaedc90419cc50d8793f",
+      "test_summaries": [
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 5
+        }
+      ]
+    },
+    {
+      "name": "huffman_codebook-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_codebook::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.13148674997501075,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-16-huffman_codebook-all.log",
+      "log_sha256": "69890ffba7e1bfbf33e501d353e329c5e6458cb1c030c7c92bf2760ee5b31bb4",
+      "test_summaries": [
+        {
+          "passed": 22,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "training-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_formatted_training",
+        "--all-features"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 1.2895764999557287,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-17-training-all.log",
+      "log_sha256": "aeaa5d1b17d745b59d26681a7e3555dc901829941ac1d2c293cf3ffeb6ca7de1",
+      "test_summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2
+        }
+      ]
+    },
+    {
+      "name": "check-no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--locked",
+        "--no-default-features"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.30034691700711846,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-18-check-no-std-safe.log",
+      "log_sha256": "736b9896a4e40b66f27cce23dc31720ef213eb464e1ce583714a768526229e98",
+      "test_summaries": []
+    },
+    {
+      "name": "check-no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.2969887498766184,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-19-check-no-std-all.log",
+      "log_sha256": "736b9896a4e40b66f27cce23dc31720ef213eb464e1ce583714a768526229e98",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 1.5688726250082254,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-20-clippy-safe.log",
+      "log_sha256": "3eba8e175b160185a8f21c966f6b61d7074e9068f136ca5d3af656bc67d84277",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.06328458292409778,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-21-clippy-all.log",
+      "log_sha256": "6d77f64dfc8c5325b90fdbe05d8be367bdd578bcccec24f275c5ffee7d03dd6e",
+      "test_summaries": []
+    },
+    {
+      "name": "oracle-streams-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "upstream_huffman_encode_tests",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 1.10177499987185,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-22-oracle-streams-safe.log",
+      "log_sha256": "a0fc7087d333589a656bb025cc530326daa038293867fa34941403274309b2fa",
+      "test_summaries": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "oracle-training-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_formatted_training",
+        "official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.31158016715198755,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-23-oracle-training-safe.log",
+      "log_sha256": "a633375d4416ec9a128a5a8e864bb91c581baba3a53326928a05e8836b642a66",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "oracle-streams-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "upstream_huffman_encode_tests",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.7739466251805425,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-24-oracle-streams-all.log",
+      "log_sha256": "926f41a5a509c26be22066388f66b8a633052e37a8deea235d746cbf8efc8e62",
+      "test_summaries": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "oracle-training-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_formatted_training",
+        "--all-features",
+        "official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build"
+      },
+      "exit_code": 0,
+      "seconds": 0.34551050001755357,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-25-oracle-training-all.log",
+      "log_sha256": "7ce3ff04ec348c0d3d43b3a408aeaf67843babb1e591acceda76ddc22631a0fb",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-initial_reservation_growth_failure_and_overflow_preserve_values",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "heap::tests::initial_reservation_growth_failure_and_overflow_preserve_values",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 2.289985792012885,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-26-miri-initial_reservation_growth_failure_and_overflow_preserve_values.log",
+      "log_sha256": "dcff42399ec222db001f48c5f6b5ac619975d5e2f2d3366fbb26e5bf1d4309db",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-non_copy_values_are_dropped_once_on_failure_pop_and_owner_drop",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "heap::tests::non_copy_values_are_dropped_once_on_failure_pop_and_owner_drop",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 0.8366445831488818,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-27-miri-non_copy_values_are_dropped_once_on_failure_pop_and_owner_drop.log",
+      "log_sha256": "2bbb426a8709058f8374b086ba2359cdf29da60cbf8ca7958401c230c4704fe6",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-complete_heap_moves_and_swaps_preserve_distinct_allocator_domains",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "heap::tests::complete_heap_moves_and_swaps_preserve_distinct_allocator_domains",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 0.816582249943167,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-28-miri-complete_heap_moves_and_swaps_preserve_distinct_allocator_domains.log",
+      "log_sha256": "432280db3f9e39e162493a96e63767b640d6ba0a125afb87c0f16400d04361b0",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-allocator_tree_leaf_accepts_a_non_clone_owner_by_value",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_encode::tests::allocator_tree_leaf_accepts_a_non_clone_owner_by_value",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 3.4515194159466773,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-29-miri-allocator_tree_leaf_accepts_a_non_clone_owner_by_value.log",
+      "log_sha256": "ebb98926cb2d2ec9dc0b81a1fa8e8829b451f7245be4dc9d0f7066dac5260f95",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-allocator_fresh_clone_domains_keep_outputs_and_temporaries_with_their_owners",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_encode::tests::allocator_fresh_clone_domains_keep_outputs_and_temporaries_with_their_owners",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 7.1680066250264645,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-30-miri-allocator_fresh_clone_domains_keep_outputs_and_temporaries_with_their_owners.log",
+      "log_sha256": "1d4142e823caf4f0a5722e3fca642e8aa27e5ce2cf42b7a821c9bef2949e238c",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-allocator_direct_builder_releases_every_failed_temporary",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_encode::tests::allocator_direct_builder_releases_every_failed_temporary",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 1.4643102081026882,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-31-miri-allocator_direct_builder_releases_every_failed_temporary.log",
+      "log_sha256": "e3030d2a0f5b31509b8a730036d970441fa739f6b2cc3bf2a13a388207885057",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-allocator_invalid_counts_and_unavailable_weights_do_not_allocate",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_encode::tests::allocator_invalid_counts_and_unavailable_weights_do_not_allocate",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-huffman-build-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 0.9425792498514056,
+      "log_path": "/tmp/zstdoxide-module9-huffman-build-32-miri-allocator_invalid_counts_and_unavailable_weights_do_not_allocate.log",
+      "log_sha256": "e4236bad9826219ba18cbb869365d3c5e3e2aa5cea72f38db0e290c194aa7722",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    }
+  ],
+  "running": false,
+  "after": {
+    "time_utc": "2026-10-09T04:28:41.119294+00:00",
+    "git_head": "c2723cb41472398af2202f27e1ef84e9a03b3435",
+    "owned_files": {
+      "src/heap.rs": "9200ae5a7492dbec09daf6644f0b6b030cf868e5593436d522bc86c7e0fe49c5",
+      "src/huffman_encode.rs": "7ae3fc124e20efd7f286c11dd06c2c22180144a1d8830e6b64f79a6773caee23"
+    },
+    "all_source_files": [
+      {
+        "path": "src/bitstream.rs",
+        "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+      },
+      {
+        "path": "src/bitwriter.rs",
+        "sha256": "e45ab72d4d1abed0313b80ff18e411130768827e23f785f9f0e86e03a09386ca"
+      },
+      {
+        "path": "src/constants.rs",
+        "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+      },
+      {
+        "path": "src/cursor.rs",
+        "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+      },
+      {
+        "path": "src/decode.rs",
+        "sha256": "4899cda69de82430435eabc6e0eb8c63cac5d518bf1ab73c1acd1422febaba55"
+      },
+      {
+        "path": "src/dictionary.rs",
+        "sha256": "c576cbadc7e6d8759d4e31d2ff0cecb7516d2903e1ce6620a58ea7249a5dbe60"
+      },
+      {
+        "path": "src/dictionary_train.rs",
+        "sha256": "b2c9370fb7e1064b0255ca2f516f08f72052b45ef5cdabaac126333f5db3e945"
+      },
+      {
+        "path": "src/encode.rs",
+        "sha256": "9943e01f939b6185f1554c3dac7964c4d5b681e7d25099578d696653a2ff2073"
+      },
+      {
+        "path": "src/entropy_encode.rs",
+        "sha256": "967289d75d71d948c658476b0995c5f1e9e380651b4b243eea17e0e210e3d65a"
+      },
+      {
+        "path": "src/entropy_output.rs",
+        "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+      },
+      {
+        "path": "src/error.rs",
+        "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+      },
+      {
+        "path": "src/frame.rs",
+        "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+      },
+      {
+        "path": "src/fse.rs",
+        "sha256": "2466b8db35a82a3e9e37ebd00fac65bb1a7041314c74caa58d7614a9275d76cb"
+      },
+      {
+        "path": "src/fse_encode.rs",
+        "sha256": "260265b9e174f46969e2a8dab38fdac218a5e800a6350818c018198dbf4fa568"
+      },
+      {
+        "path": "src/fse_select.rs",
+        "sha256": "3fba96b62fafa5374c53d3b1446850fe0417210c7c45c27ed92bf098a4a2de25"
+      },
+      {
+        "path": "src/heap.rs",
+        "sha256": "9200ae5a7492dbec09daf6644f0b6b030cf868e5593436d522bc86c7e0fe49c5"
+      },
+      {
+        "path": "src/history.rs",
+        "sha256": "eba2efb9ebc679767db1194bcd2fd9755ff49d56a62b3be612178aee634afb9c"
+      },
+      {
+        "path": "src/huffman.rs",
+        "sha256": "98f0c08317f5144307112323383d966385072d3ec3a75fe7eb16cb64d3a1ed72"
+      },
+      {
+        "path": "src/huffman_codebook.rs",
+        "sha256": "a83d5cf4ef2586c92aca252689b93360e30806d026939db958ab24d122d9acc0"
+      },
+      {
+        "path": "src/huffman_encode.rs",
+        "sha256": "7ae3fc124e20efd7f286c11dd06c2c22180144a1d8830e6b64f79a6773caee23"
+      },
+      {
+        "path": "src/lib.rs",
+        "sha256": "405ecf0e10c0528e702eb4c67f27db1c5b8f8cb834a05e0b69522e2ba1a0e885"
+      },
+      {
+        "path": "src/literal_encode.rs",
+        "sha256": "c36f9cb863fcd234b5c2150b177af85511ce2a6c5a6ffefb54ac69f458fd31b9"
+      },
+      {
+        "path": "src/literal_header.rs",
+        "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+      },
+      {
+        "path": "src/match_parse.rs",
+        "sha256": "6178dd023571d9a1d244fc0f40eccf69d986b89f6a48c5bf0057bbe7b978b222"
+      },
+      {
+        "path": "src/matchchain.rs",
+        "sha256": "7128426b2ffb05f12ca5b227166879605469b515efef6009686735f3266fb446"
+      },
+      {
+        "path": "src/matchfinder.rs",
+        "sha256": "816544f36e7abb20546454133de5dd207900fae375d92a8f68b8cd3fa928a2b6"
+      },
+      {
+        "path": "src/ring_history.rs",
+        "sha256": "bde3d9b4f3dfb4a4aeb52caddd654534920fb5bfed041ad2abdd05c2a3385ec9"
+      },
+      {
+        "path": "src/sequence_context.rs",
+        "sha256": "08acd9b27e930040f985dba9fd228f7f05018a876d5afb4198086e112aef605f"
+      },
+      {
+        "path": "src/sequence_encode.rs",
+        "sha256": "d7a5491e3747eee3f19537bc12a774fa76bd95974eb2b7adc2ae268ec5502132"
+      },
+      {
+        "path": "src/sequence_plan.rs",
+        "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+      },
+      {
+        "path": "src/sequences.rs",
+        "sha256": "da52cba287770af961640f9abdda28d5f9e9a39874977e98629103cf19533d3c"
+      },
+      {
+        "path": "src/strategy.rs",
+        "sha256": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab"
+      },
+      {
+        "path": "src/stream.rs",
+        "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+      },
+      {
+        "path": "src/stream_decode.rs",
+        "sha256": "c5214e6e53635a7084e43a0b151353105450b11d166f171b7d9353489ec32c2a"
+      },
+      {
+        "path": "src/stream_encode.rs",
+        "sha256": "e2a266edbbc0775fa0d5b2ded9c6fc82d81192e577ff6b32c136a4de7472d453"
+      },
+      {
+        "path": "src/training.rs",
+        "sha256": "4f4e60f12a9d15e32ac80eff4e358acb54184c78ff26cdd29f92fefa7bbae172"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      }
+    ]
+  },
+  "owned_file_unchanged": true,
+  "seconds": 49.97147741704248,
+  "all_requested_commands_completed": true,
+  "log_path": "/tmp/zstdoxide-module9-huffman-build.log",
+  "log_sha256": "08deb3efbabfe0370673e1a3128066bed3676171c718efdd061fffbc1d5a0c39",
+  "exit_code": 0
+}

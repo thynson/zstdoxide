@@ -49,6 +49,7 @@ mod frame;
 mod fse;
 mod fse_encode;
 mod fse_select;
+mod heap;
 mod history;
 mod huffman;
 mod huffman_codebook;
