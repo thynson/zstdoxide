@@ -260,7 +260,11 @@ impl BuiltLiteralTable {
         &self.description
     }
 
-
+    /// Transfer the validated codes after their matching description has been
+    /// copied into a selected literal section. The setup bytes can be released.
+    pub(crate) fn into_codebook(self) -> HuffmanCodebook {
+        self.codebook
+    }
 }
 
 #[cfg(test)]

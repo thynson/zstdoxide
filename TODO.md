@@ -34,7 +34,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Encode four streams and checked jump tables, including minimum and size boundaries.
 - [x] Build sparse literal tables while preserving formatted dictionary-training output.
 - [x] Serialize checked raw, RLE, and Huffman literal headers at every field boundary.
-- [ ] Select complete raw, RLE, new-Huffman, and reused-Huffman literal sections by serialized cost.
+- [x] Select complete raw, RLE, new-Huffman, and reused-Huffman literal sections by serialized cost.
 - [ ] Assemble zero-sequence compressed blocks without sequence modes or states.
 - [ ] Publish Huffman choices transactionally with emitted and pending entropy state.
 - [ ] Verify literal-only compression, treeless lifetime, dictionary replacement, and fragmented output with C.
