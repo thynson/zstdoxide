@@ -1,0 +1,8 @@
+Reference implementation: facebook/zstd v1.5.7
+Revision: f8745da6ff1ad1e7bab384bd1f9d742439278e99
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+Observations are derived from unchanged upstream Fast and its private
+sequence/hash definitions. This project uses upstream's BSD-3-Clause option;
+see ../../../LICENSE.zstd. The independent setup/replay helper and recipe
+checker are test tools only, and never a Rust production dependency.

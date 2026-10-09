@@ -4,6 +4,7 @@ set -eu
 python3 scripts/audit_upstream_tests.py
 python3 scripts/check_upstream_fixtures.py
 python3 scripts/import_fast_parser_smoke.py --check
+python3 scripts/import_fast_parser_families.py --check
 python3 scripts/check_match_search_baseline.py
 
 # Each backend alone must compile without std and pass the same test suite.

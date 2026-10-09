@@ -1,0 +1,372 @@
+{
+  "scope": "Frozen direct no-dictionary Fast candidate sequence/state families; no Rust parser, collector or ordinary-frame publication claim",
+  "original_capture": {
+    "additional_checks": {
+      "expanded_final_normal_observation_equality": "passed",
+      "expanded_final_packet_recipe_equality": "passed",
+      "python_ast": "passed for driver and controls"
+    },
+    "archive": {
+      "bytes": 1394869,
+      "files": 2439,
+      "manifest": "direct-fast-families/archive-manifest.json",
+      "omitted_binary_debug_files": 11,
+      "omitted_hashes": "direct-fast-families/omitted-artifacts.json",
+      "path": "/tmp/zstdoxide-fast-direct-family-evidence.tar.gz",
+      "sha256": "34a181c27f37986ce0fc2e1299c194272b28c582b870b8733ab08927a4f9acce"
+    },
+    "compiler_diagnostics_bytes": {
+      "normal": 0,
+      "sanitized": 0
+    },
+    "compiler_version": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "family_counts": {
+      "acceleration": 25,
+      "collision": 5,
+      "conditional-store": 2,
+      "conventional-table": 12,
+      "extension": 8,
+      "long-length": 12,
+      "low-bound": 8,
+      "repeat-transition": 12,
+      "short-tail": 28,
+      "width-dispatch": 30
+    },
+    "final_capture": {
+      "archive_path": "final/evidence.json",
+      "builds": [
+        "normal",
+        "sanitized"
+      ],
+      "command": [
+        "python3",
+        "-u",
+        "/tmp/zstdoxide-fast-direct-family-work/direct_families.py",
+        "--upstream",
+        "/tmp/zstdoxize-upstream-1.5.7",
+        "--source-manifest",
+        "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/manifest.json",
+        "--output",
+        "/tmp/zstdoxide-fast-direct-family-final",
+        "--sanitize"
+      ],
+      "complete_padding_equality": true,
+      "exact_relational_checks_per_build": 23,
+      "observations_per_build": 284,
+      "recipes": 142,
+      "recipes_sha256": "d6bc0b0fb3136edfe2e36936856778d664356a5f64b869f378503b24a540c9a5",
+      "records_equal_across_builds": true,
+      "report_sha256": "c6a62b3e4af17fc84ad0e27d5c38a019f4e500643311ac7de0b70d1737950e5e",
+      "source_before_equals_after": true,
+      "successful_c_case_executions": 568
+    },
+    "final_source": [
+      {
+        "bytes": 6908,
+        "path": "RESULTS.md",
+        "sha256": "0ec1265f75cfd5bce172ddc517e2d8bc72fe093a6356446211ac8e87efd7a5f3"
+      },
+      {
+        "bytes": 10889,
+        "path": "SETUP.md",
+        "sha256": "714cfd92444875390082d7e7714760a5162e32aa73419df09a3b56216c320cf1"
+      },
+      {
+        "bytes": 29851,
+        "path": "direct_families.py",
+        "sha256": "f7c6f09ad37ffe63f8952bbf3fc5bc5d30464488d87b19a8ff6be64cc10c6419"
+      },
+      {
+        "bytes": 20917,
+        "path": "fast_direct_families.c",
+        "sha256": "7001f317a95274e8b504b80abb755da386c8f5036f9600a298d08840a2a2c20b"
+      },
+      {
+        "bytes": 13011,
+        "path": "negative_controls.py",
+        "sha256": "d01764cf476a1bc71d68094cffbe11f4f26f9daee81e1fbaede36a24f6b46db3"
+      },
+      {
+        "bytes": 8572,
+        "path": "prepare_helper.py",
+        "sha256": "01591381c3768ea88bc66197640d474532165f1ba6569bf8a91ba7c1ff82eeb3"
+      }
+    ],
+    "host_metadata": {
+      "case_count": 2,
+      "chain_log": 6,
+      "dict_match_state": false,
+      "entry_point": "ZSTD_compressBlock_fast",
+      "little_endian": true,
+      "loaded_dict_end": 0,
+      "observations": "sequences-and-final-table-state-not-chronological-trace",
+      "pointer_bits": 64,
+      "recipe_count": 1,
+      "record": "metadata",
+      "schema_version": 2,
+      "search_log": 1,
+      "sizeof_match_state": 304,
+      "sizeof_seqdef": 8,
+      "strategy": "fast",
+      "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+    },
+    "instrumentation": {
+      "helper_and_unchanged_fast_and_inline_headers": true,
+      "leak_sanitizer": false,
+      "remaining_archive_instrumented": false
+    },
+    "negative_controls": {
+      "archive_path": "negative-final/summary.json",
+      "c_packet_negatives_per_build": 27,
+      "commands": 114,
+      "commands_sha256": "f1c2f369654e2f848e5a1187f86eabe65167f265705fe6493f3f2efd6d984e5f",
+      "expected_rejections": 106,
+      "positive_controls": 8,
+      "python_modes": [
+        "normal",
+        "-O"
+      ],
+      "python_record_cases_per_mode": 28,
+      "report_sha256": "9cd84b06ac2f39bbda5c3ce0a04886fb53392a43ad83702620f3295fdab5b704",
+      "semantic_controls": "Byte-valid synthetic sequences rejected independently for exceeded window or match before retained prefix floor; corresponding valid controls accepted."
+    },
+    "observed_consequences": {
+      "actual_long_literal_marker": [
+        "long-literal-candidate"
+      ],
+      "actual_long_match_marker": [
+        "long-match-65541",
+        "long-match-65542",
+        "long-match-65700",
+        "long-match-131072"
+      ],
+      "disabled_multiple_new_offsets": [
+        "repeats-one-disabled",
+        "repeats-alternating-disabled",
+        "repeats-two-disabled",
+        "repeats-loop-disabled"
+      ],
+      "disabled_no_new_offset": [
+        "repeats-none-disabled"
+      ],
+      "disabled_one_new_offset": [
+        "repeats-single-disabled"
+      ],
+      "multiple_zero_literal_repeats": [
+        "repeats-loop-available",
+        "repeats-loop-disabled"
+      ],
+      "postmatch_end_minus_two_key_present": [
+        "width-wide-split-m3-w18",
+        "width-wide-split-m3-w19",
+        "width-wide-split-m4-w18",
+        "width-wide-split-m4-w19",
+        "width-wide-split-m5-w18",
+        "width-wide-split-m5-w19",
+        "width-wide-split-m6-w18",
+        "width-wide-split-m6-w19",
+        "width-wide-split-m7-w18",
+        "width-wide-split-m7-w19",
+        "width-asymmetric-m3-w18",
+        "width-asymmetric-m3-w19",
+        "width-asymmetric-m4-w18",
+        "width-asymmetric-m4-w19",
+        "width-asymmetric-m5-w18",
+        "width-asymmetric-m5-w19",
+        "width-asymmetric-m6-w18",
+        "width-asymmetric-m6-w19",
+        "width-asymmetric-m7-w18",
+        "width-asymmetric-m7-w19",
+        "accel-plant-p257-t3",
+        "second-probe-step4",
+        "second-probe-step5",
+        "conditional-store-step4",
+        "conditional-store-step5",
+        "extension-offset-0",
+        "extension-repeat-0",
+        "extension-offset-1",
+        "extension-repeat-1",
+        "extension-offset-3",
+        "extension-repeat-3",
+        "extension-offset-7",
+        "extension-repeat-7",
+        "repeats-one-available",
+        "repeats-one-disabled",
+        "repeats-alternating-available",
+        "repeats-alternating-disabled",
+        "repeats-loop-available",
+        "repeats-loop-disabled",
+        "low-bound-1",
+        "low-bound-2"
+      ],
+      "zero_literal_repeat": [
+        "repeats-alternating-available",
+        "repeats-loop-available",
+        "repeats-loop-disabled"
+      ]
+    },
+    "preserved_prior_evidence": [
+      {
+        "builds": [
+          "normal"
+        ],
+        "path": "initial-normal/evidence.json",
+        "qualification": "All capture integrity checks passed; named disabled-one-new-offset consequence initially absent and explicitly reported.",
+        "recipes": 132,
+        "sha256": "438321133250693af5408451bdddb3a84d6560f2711afa0024f7781b52c8c508",
+        "successful_case_executions": 264
+      },
+      {
+        "builds": [
+          "normal",
+          "sanitized"
+        ],
+        "path": "expanded/evidence.json",
+        "qualification": "Ten directed witnesses added; before exact-count guard/comment-only final source cleanup. Final case packets/observations confirmed identical.",
+        "recipes": 142,
+        "sha256": "430a01d3e9615b251df0d74faf7248ab286f87a928ec02c95e1fee748f786504",
+        "successful_case_executions": 568
+      },
+      {
+        "commands": 114,
+        "path": "negative-initial/summary.json",
+        "qualification": "First complete negative campaign; repeated against final source/binaries.",
+        "sha256": "f465e6533986f87ac111104311f6eca73cf8ec2e2f70ae8b8b0b9ec97134ade7"
+      }
+    ],
+    "remaining_obligations": [
+      "Existing independent Greedy discriminator not yet run.",
+      "No chronological probe/store trace or claim of every source branch.",
+      "No persistent multi-block direct corpus in this checkpoint.",
+      "Ordinary frame raw/RLE publication and collector are separate trajectories.",
+      "Dictionary Fast/extDict/dictMatchState, rescaling, noncontiguous streaming, workers and LDM remain outside this scope.",
+      "C setup nextToUpdate=2 is unused by direct noDict; not an ordinary CCtx frontier observation.",
+      "Only native arm64 64-bit little-endian execution is recorded; no cross-target claim.",
+      "No Rust Fast execution, C entropy/ratio/performance parity or full upstream migration claim."
+    ],
+    "review": {
+      "approved_c_sha256": "7001f317a95274e8b504b80abb755da386c8f5036f9600a298d08840a2a2c20b",
+      "approved_driver_sha256": "f7c6f09ad37ffe63f8952bbf3fc5bc5d30464488d87b19a8ff6be64cc10c6419",
+      "reviewer": "golden_tests independent static review; no execution by reviewer",
+      "scope": "Packet domains/EOF, initialized arena/pointer formation, guarded typed capacities, valid noDict seed/prefix state, separate parser/wire reps, replay window/floor bounds, bounded recipe delta and isolated conditional final-slot assertion; final C comment/Python count-only delta verified."
+    },
+    "schema_version": 1,
+    "scope": "bounded direct Fast deterministic-family C oracle; no Rust/collector/frame implementation claim",
+    "task_owned_active_processes": 0,
+    "unobserved_automatic_categories": [],
+    "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+  },
+  "portable_regeneration": {
+    "evidence_archive_path": "portable/regeneration/evidence.json",
+    "sha256": "c46e1bf7dd8b0fffa7e0a5a51f8a897e15714d3d19577373c05b5c636af2c88c",
+    "commands_passed": 289,
+    "recipes": 142,
+    "observations_per_build": 284,
+    "successful_c_case_executions": 568,
+    "frozen_fixture_comparison": [
+      {
+        "all_case_records_equal": true,
+        "mode": "normal",
+        "observations": 284,
+        "recipes": 142
+      },
+      {
+        "all_case_records_equal": true,
+        "mode": "sanitized",
+        "observations": 284,
+        "recipes": 142
+      }
+    ],
+    "source_before_equals_after": true,
+    "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "instrumentation": {
+      "helper_and_unchanged_fast_and_inline_headers": true,
+      "leak_sanitizer": false,
+      "remaining_archive_instrumented": false
+    },
+    "repository_source_sha256": {
+      "scripts/import_fast_parser_families.py": "dc361378bbac2409011653c1399d26d1fdb575cae55d6e018e5f310dc4e571ae",
+      "scripts/oracles/fast_direct_families.c": "7001f317a95274e8b504b80abb755da386c8f5036f9600a298d08840a2a2c20b",
+      "scripts/oracles/fast_direct_families.py": "f7c6f09ad37ffe63f8952bbf3fc5bc5d30464488d87b19a8ff6be64cc10c6419"
+    }
+  },
+  "portable_offline_controls": {
+    "commands": 54,
+    "positive": 2,
+    "expected_rejections": 52,
+    "compiler_search_path": "/nonexistent",
+    "importer_sha256": "dc361378bbac2409011653c1399d26d1fdb575cae55d6e018e5f310dc4e571ae",
+    "status": "passed",
+    "commands_archive_path": "portable/controls/commands.json",
+    "commands_sha256": "c2019e06752cdfc0269e3e31d28e78293718673617f253b9cd340f59a71b66b8"
+  },
+  "registration_checks": [
+    {
+      "command": [
+        "python3",
+        "scripts/check_upstream_fixtures.py"
+      ],
+      "exit": 0,
+      "stdout": "Fixture integrity valid: 468 files in 12 collections; source provenance and recorded expected-output metadata agree.\nNo upstream checkout, C compiler, or codec executable was required.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/audit_upstream_tests.py"
+      ],
+      "exit": 0,
+      "stdout": "Inventory valid: 418 test-related sources, 221 explicit non-test exclusions, 615 named case groups.\nSource migration status: {\"blocked\": 149, \"non_applicable\": 216, \"partial\": 34, \"planned\": 5, \"ported\": 14}\nCase migration status: {\"blocked\": 430, \"non_applicable\": 15, \"partial\": 117, \"ported\": 53}\nStructural audit only; set ZSTD_UPSTREAM to verify the pinned checkout hashes.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "-n",
+        "scripts/check.sh"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sh",
+        "-n",
+        "scripts/check_upstream_oracles.sh"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "review": {
+    "reviewer": "independent golden_tests agent",
+    "importer_sha256": "dc361378bbac2409011653c1399d26d1fdb575cae55d6e018e5f310dc4e571ae",
+    "finding": "No blocker in offline purity, frozen identity binding, disjoint output paths, or complete record regeneration comparisons."
+  },
+  "archive": {
+    "path": "2026-10-09-fast-parser-families.tar.gz",
+    "bytes": 1465937,
+    "sha256": "2beb9ab793fba9118a1fdc237b5f370434669a5398857b10f1b7cf65d679226f",
+    "regular_members": 845,
+    "omitted_portable_binary_debug_files": 5
+  },
+  "qualifications": [
+    "Final table state is not chronological tracing.",
+    "Scoped sanitizer instruments helper, unchanged Fast and inline helpers; remaining archive is uninstrumented; LeakSanitizer disabled.",
+    "Normal and sanitized native execution on arm64 macOS only.",
+    "Repeated captures increase validation executions, not distinct recipe coverage.",
+    "Original nine-recipe smoke fixtures remain unchanged."
+  ]
+}

@@ -284,3 +284,45 @@ found no production issue; the additional committed-state tests needed no fix.
 manifest, commands, logs, compiler and runner. This item adds no allocation
 owner or unsafe operation. Persistent parsing, block choice and public Fast
 frame emission remain separate integration work.
+
+## Expanded direct parser families
+
+The separate `fast-parser-families` collection freezes 142 deterministic recipes
+and 284 initialized-padding observations. It preserves requested/effective key
+widths, explicit wire intent, full literal/match replay, separate parser/wire
+repeat triples and complete reconstructible hash-table state. Larger tables use
+canonical little-endian full-table fingerprints and sorted deltas without
+discarding slots. The original nine-recipe smoke collection is unchanged.
+
+The actual records include collision lookup/store consequences, an isolated
+step-four/five next-key difference, several immediate zero-literal repeats,
+disabled-offset restoration, distinct hash/repeat lower-bound behavior and both
+long-length flags. Twenty-three relational checks per build compare width3/4,
+equal-bound window18/19, target0/1 and the conditional-store witness. Recipe
+names do not independently prove every intended branch: these are unchanged-C
+sequence and final-state observations, not chronological instruction traces.
+
+The original final capture and its independent portable regeneration each pass
+568 C case executions: 142 recipes times two paddings times normal/sanitized
+builds. Complete observations agree across padding/builds and with the frozen
+fixture. The portable runner passes 289 commands, preserves source identities,
+and observes host layout separately. ASan/UBSan instrument the helper, unchanged
+Fast and inline helpers; other archive support remains uninstrumented and leak
+checking is disabled. Native execution is arm64 macOS only.
+
+Original malformed controls pass 114 commands (eight valid controls and 106
+expected rejections), including independently byte-replaying but invalid window/
+prefix matches. Portable offline validation passes 54 commands under ordinary
+and optimized Python with an unavailable executable search path: two positive
+controls and 52 expected rejections. Frozen catalog hashes bind even a jointly
+modified fixture/manifest; source, host metadata, scope, counts and output-path
+isolation are checked. Both routine check scripts run the offline semantic
+checker, and the generic audit verifies 468 fixtures in twelve collections.
+
+[Family evidence](evidence/2026-10-09-fast-parser-families.json) and its
+[archive](evidence/2026-10-09-fast-parser-families.tar.gz) preserve exact helpers,
+recipes, all original/portable logs and controls, earlier qualified captures and
+review. Executable/debug bytes are omitted with hashes retained. Repeated runs
+add validation executions, not new distinct corpus coverage. Collector and
+ordinary-frame state publication are separate prerequisites; Rust Fast and
+complete upstream migration are not established by this fixture checkpoint.
