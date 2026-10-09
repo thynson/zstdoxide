@@ -1,8 +1,9 @@
-//! Decoder adaptations of v1.5.7's FSE and Huffman fuzz contracts.
+//! Adaptations of v1.5.7's FSE and Huffman fuzz contracts.
 //! Fixtures were generated and verified by the independent upstream codec.
 
 use alloc::vec::Vec;
 
+use crate::entropy_encode::write_normalized_counts;
 use crate::fse::{FseTable, read_normalized_counts};
 #[cfg(feature = "std")]
 use crate::huffman::decode_streams;
@@ -43,6 +44,11 @@ fn normalized_counts_match_all_official_vectors_and_suffixes() {
             .map(|bytes| i16::from_le_bytes(bytes.try_into().unwrap()))
             .collect();
         let header = input.take(header_size);
+        assert_eq!(
+            write_normalized_counts(&expected, log).unwrap(),
+            header,
+            "independent C normalized-count bytes, case {case}"
+        );
         for suffix_size in [0, 1, 2, 7, 31, 512 - header_size] {
             let mut with_suffix = header.to_vec();
             with_suffix.extend((0..suffix_size).map(|index| (index * 37 + case) as u8));
