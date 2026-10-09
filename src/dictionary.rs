@@ -334,6 +334,13 @@ impl<A: Allocator> Dictionary<A> {
         read_content_byte(self.content(), index)
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "convenience entry point retained for direct callers"
+        )
+    )]
     pub(crate) fn entropy(&self) -> Option<&DictionaryEntropy<A>> {
         self.entropy.as_ref()
     }

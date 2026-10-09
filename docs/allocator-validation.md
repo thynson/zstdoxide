@@ -529,6 +529,28 @@ Miri interpretation is distinct from native/QEMU testing. The report records the
 Linux test-helper mutex no-unwind review, exact source snapshot, and remaining
 platform limitations; later encoder changes require their own validation.
 
+`BlockEncoder<A, D>` now retains independent literal, sequence, payload, match,
+seed and history owners; block destinations may use a different allocator type.
+Its [block evidence](evidence/2026-10-09-allocator-block-encoder.json) records five
+new allocator tests across 15 configurations (safe, all twelve individual unsafe
+features, all features, and no-default), 120 existing dependency tests per
+safe/all/no-default build, and public strategy/dictionary tests. Each explicit
+safe/all C run decoded six custom frames covering three strategies and both raw
+and prepared dictionary views. No_std, strict Clippy and formatting passed;
+three strict-provenance Miri cases passed in 70.35, 22.85 and 48.09 seconds.
+
+Every observed setup and encode allocation was failed separately for all three
+strategies. Dictionary, workspace and output allocation domains stay independent;
+borrowed non-Clone contexts, owner movement, output-failure preservation and
+reset recovery are covered. Setup may already have rebuilt a dictionary seed
+before inverse-table allocation fails, so reuse requires reset and successful
+setup. Failed blocks do not publish output or committed entropy, and history
+advances only after accepted emission. The const Global constructor remains.
+An isolated earlier-stream baseline required two narrow private-constructor
+dead-code allowances; after those attribute-only repairs its Clippy, no_std,
+five allocator tests and formatting passed. Public stream/one-shot integration
+remains a separate checkpoint.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation and the final
 integrated platform matrix remain open. The

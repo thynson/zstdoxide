@@ -1,6 +1,7 @@
 //! A checksummed Zstandard frame encoder.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
@@ -10,7 +11,8 @@ use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
 use crate::sequence_context::{LogicalSequence, SequenceEncoder};
 use crate::{
-    CompressionStrategy, Dictionary, Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash,
+    CompressionStrategy, DictionaryHandle, DictionaryView, Error, Result, SharedDictionary,
+    frame::MAX_BLOCK_SIZE, xxhash,
 };
 
 /// Dictionary search retains the initial parser's bounded distance policy.
@@ -71,26 +73,27 @@ fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result
 ///
 /// Corresponds to the independently owned block-compression workspace of
 /// `ZSTD_CCtx`; input references never survive an `encode` call.
-pub(crate) struct BlockEncoder {
+pub(crate) struct BlockEncoder<A: Allocator = Global, D: DictionaryHandle = SharedDictionary> {
     strategy: CompressionStrategy,
-    match_table: Option<MatchTable>,
-    dictionary_seed: Option<MatchTable>,
-    chain: Option<MatchChain>,
-    chain_seed: Option<MatchChain>,
-    active_dictionary: Option<SharedDictionary>,
-    history: Option<RingHistory>,
+    match_table: Option<MatchTable<A>>,
+    dictionary_seed: Option<MatchTable<A>>,
+    chain: Option<MatchChain<A>>,
+    chain_seed: Option<MatchChain<A>>,
+    active_dictionary: Option<D>,
+    history: Option<RingHistory<A>>,
     frame_position: u64,
     window_size: u64,
-    literals: Vec<u8>,
-    literal_encoder: LiteralEncoder,
+    literals: Vec<u8, A>,
+    literal_encoder: LiteralEncoder<A>,
     literal_table: Option<HuffmanCodebook>,
     pending_literal_table: Option<HuffmanCodebook>,
-    sequences: Vec<LogicalSequence>,
-    sequence_encoder: SequenceEncoder,
-    payload: Vec<u8>,
+    sequences: Vec<LogicalSequence, A>,
+    sequence_encoder: SequenceEncoder<A>,
+    payload: Vec<u8, A>,
+    allocator: A,
 }
 
-impl BlockEncoder {
+impl BlockEncoder<Global, SharedDictionary> {
     pub(crate) const fn new() -> Self {
         Self {
             strategy: CompressionStrategy::Greedy,
@@ -109,31 +112,61 @@ impl BlockEncoder {
             sequences: Vec::new(),
             sequence_encoder: SequenceEncoder::new(),
             payload: Vec::new(),
+            allocator: Global,
+        }
+    }
+}
+
+impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
+    /// Give each fresh workspace owner its own allocator value. Clones need
+    /// not be equivalent; complete owners move with their actual allocator.
+    /// Ordinary Clone may allocate or panic independently of fallible reserves.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "private allocator-aware context entry point")
+    )]
+    pub(crate) fn new_in(allocator: A) -> Self {
+        Self {
+            strategy: CompressionStrategy::Greedy,
+            match_table: None,
+            dictionary_seed: None,
+            chain: None,
+            chain_seed: None,
+            active_dictionary: None,
+            history: None,
+            frame_position: 0,
+            window_size: MAX_BLOCK_SIZE as u64,
+            literals: Vec::new_in(allocator.clone()),
+            literal_encoder: LiteralEncoder::new_in(allocator.clone()),
+            literal_table: None,
+            pending_literal_table: None,
+            sequences: Vec::new_in(allocator.clone()),
+            sequence_encoder: SequenceEncoder::new_in(allocator.clone()),
+            payload: Vec::new_in(allocator.clone()),
+            allocator,
         }
     }
 
-    /// Select the next frame's parser before calling start_frame.
-    pub(crate) fn set_strategy(&mut self, strategy: CompressionStrategy) {
-        self.strategy = strategy;
-    }
-
-    /// Prepare an independently owned frame dictionary and its indexed seeds.
+    /// Prepare a dictionary attachment and independently owned indexed seeds.
     ///
     /// Corresponds to the dictionary hash preparation in `ZSTD_compressBegin`.
-    /// The shared handle keeps every candidate's immutable source allocation
-    /// alive; only indices enter the hash table. Reusing this workspace for a
+    /// The attachment preserves shared ownership or the caller's source borrow;
+    /// only indices enter the hash table. Reusing this workspace for a
     /// different dictionary always rebuilds its seed indices before publication.
-    pub(crate) fn start_frame(
-        &mut self,
-        dictionary: Option<SharedDictionary>,
-        window_size: u64,
-    ) -> Result<()> {
-        let literal_table = dictionary
-            .as_deref()
-            .and_then(Dictionary::entropy)
-            .map(|entropy| HuffmanCodebook::from_decoding_table(&entropy.huffman))
+    /// A seed can change before a later setup error. After any error the caller
+    /// must reset and successfully start a frame before encoding again; setup
+    /// does not promise rollback of the previous frame's scratch state.
+    pub(crate) fn start_frame(&mut self, dictionary: Option<D>, window_size: u64) -> Result<()> {
+        let dictionary_view = dictionary.as_ref().map(DictionaryHandle::view);
+        let entropy = dictionary_view.and_then(|view| view.entropy());
+        let literal_table = entropy
+            .map(|entropy| {
+                // Prepared dictionaries allow twelve-bit codes. The codebook
+                // copies plain values, retaining no source-table borrow.
+                HuffmanCodebook::from_lengths(&entropy.huffman.code_lengths(), 12)
+            })
             .transpose()?;
-        if let Some(dictionary) = dictionary.as_deref()
+        if let Some(dictionary) = dictionary_view
             && dictionary.content().len() >= 4
         {
             let content = dictionary.content();
@@ -141,7 +174,9 @@ impl BlockEncoder {
                 CompressionStrategy::Greedy => {
                     let seed = match self.dictionary_seed.as_mut() {
                         Some(seed) => seed,
-                        None => self.dictionary_seed.insert(MatchTable::new()?),
+                        None => self
+                            .dictionary_seed
+                            .insert(MatchTable::new_in(self.allocator.clone())?),
                     };
                     seed.reset();
                     let start = content.len().saturating_sub(MAX_DICTIONARY_DISTANCE);
@@ -152,7 +187,10 @@ impl BlockEncoder {
                 CompressionStrategy::Chain | CompressionStrategy::Lazy => {
                     let seed = match self.chain_seed.as_mut() {
                         Some(seed) => seed,
-                        None => self.chain_seed.insert(MatchChain::new(CHAIN_SEED_NODES)?),
+                        None => self.chain_seed.insert(MatchChain::new_in(
+                            CHAIN_SEED_NODES,
+                            self.allocator.clone(),
+                        )?),
                     };
                     seed.reset();
                     let start = content.len().saturating_sub(CHAIN_SEED_NODES + 3);
@@ -169,7 +207,7 @@ impl BlockEncoder {
                 seed.reset();
             }
         }
-        self.sequence_encoder.start_frame(dictionary.as_deref())?;
+        self.sequence_encoder.start_frame_with_entropy(entropy)?;
         self.literal_table = literal_table;
         self.pending_literal_table = None;
         self.active_dictionary = dictionary;
@@ -181,21 +219,16 @@ impl BlockEncoder {
         Ok(())
     }
 
-    /// Drop active-frame ownership while retaining reusable workspace storage.
-    pub(crate) fn reset(&mut self) {
-        self.active_dictionary = None;
-        self.literal_table = None;
-        self.pending_literal_table = None;
-        self.sequence_encoder.reset();
-        if let Some(history) = &mut self.history {
-            history.clear();
-        }
-        self.frame_position = 0;
-        self.window_size = MAX_BLOCK_SIZE as u64;
-    }
-
     /// Append exactly one bounded raw, RLE, or compressed block.
-    pub(crate) fn encode(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
+    /// A failure can change match/entropy scratch but never accepts this block.
+    /// The caller must reset before reuse; committed entropy and prior output
+    /// remain intact, and history advances only after successful emission.
+    pub(crate) fn encode<O: Allocator>(
+        &mut self,
+        block: &[u8],
+        last: bool,
+        output: &mut Vec<u8, O>,
+    ) -> Result<()> {
         let next = self
             .frame_position
             .checked_add(block.len() as u64)
@@ -206,7 +239,7 @@ impl BlockEncoder {
         if !block.is_empty() {
             let history = self
                 .history
-                .get_or_insert_with(|| RingHistory::new(MAX_BLOCK_SIZE));
+                .get_or_insert_with(|| RingHistory::new_in(MAX_BLOCK_SIZE, self.allocator.clone()));
             if history.window_size() == 0 {
                 let horizon = self.window_size.min(MAX_BLOCK_SIZE as u64) as usize;
                 history.start_frame(horizon)?;
@@ -227,7 +260,12 @@ impl BlockEncoder {
         Ok(())
     }
 
-    fn encode_block(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
+    fn encode_block<O: Allocator>(
+        &mut self,
+        block: &[u8],
+        last: bool,
+        output: &mut Vec<u8, O>,
+    ) -> Result<()> {
         self.pending_literal_table = None;
         self.sequence_encoder.discard();
         output
@@ -240,7 +278,9 @@ impl BlockEncoder {
         }
         if block.len() >= 6 && self.compress_block(block)? {
             write_block_header(output, self.payload.len(), 2, last);
-            output.extend_from_slice(&self.payload);
+            for &byte in &self.payload {
+                output.push(byte);
+            }
             // Output capacity was reserved before candidate construction. This
             // infallible transfer publishes only the tree described by emitted
             // bytes; raw/RLE fallback leaves the previous tree unchanged.
@@ -253,12 +293,35 @@ impl BlockEncoder {
         self.pending_literal_table = None;
         self.sequence_encoder.discard();
         write_block_header(output, block.len(), 0, last);
-        output.extend_from_slice(block);
+        for &byte in block {
+            output.push(byte);
+        }
         Ok(())
     }
+}
 
-    /// Heap capacity owned by the block workspace, excluding this value record
-    /// and shared dictionary storage already reported by the owning context.
+impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
+    /// Select the next frame's parser before calling start_frame.
+    pub(crate) fn set_strategy(&mut self, strategy: CompressionStrategy) {
+        self.strategy = strategy;
+    }
+
+    /// Drop active-frame ownership while retaining reusable workspace storage.
+    pub(crate) fn reset(&mut self) {
+        self.active_dictionary = None;
+        self.literal_table = None;
+        self.pending_literal_table = None;
+        self.sequence_encoder.reset();
+        if let Some(history) = &mut self.history {
+            history.clear();
+        }
+        self.frame_position = 0;
+        self.window_size = MAX_BLOCK_SIZE as u64;
+    }
+
+    /// Codec payload capacity owned by the workspace, excluding inline values,
+    /// opaque allocator bookkeeping, and dictionary/control-block storage whose
+    /// ownership or borrow is accounted for separately by the enclosing context.
     pub(crate) fn retained_capacity(&self) -> usize {
         self.match_table
             .as_ref()
@@ -314,20 +377,26 @@ fn dictionary_field(dictionary_id: u32) -> (u8, usize) {
 
 /// Writes a three-byte block header; corresponds to `ZSTD_writeLastEmptyBlock`
 /// and the block-header writes in `ZSTD_compressBlock_internal`.
-fn write_block_header(output: &mut Vec<u8>, size: usize, kind: u8, last: bool) {
+fn write_block_header<O: Allocator>(output: &mut Vec<u8, O>, size: usize, kind: u8, last: bool) {
     let header = ((size as u32) << 3) | (u32::from(kind) << 1) | u32::from(last);
-    output.extend_from_slice(&header.to_le_bytes()[..3]);
+    for byte in &header.to_le_bytes()[..3] {
+        output.push(*byte);
+    }
 }
 
 /// Selects matches greedily, chooses literal sections, and encodes sequences.
 ///
 /// Fulfills the block-compression role of `ZSTD_compressBlock_internal`, using
 /// an independent greedy parser and table inversion instead of C table layout.
-impl BlockEncoder {
+impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
     fn compress_block(&mut self, block: &[u8]) -> Result<bool> {
-        let dictionary = self.active_dictionary.as_deref().filter(|dictionary| {
-            !dictionary.content().is_empty() && self.frame_position <= self.window_size
-        });
+        let dictionary = self
+            .active_dictionary
+            .as_ref()
+            .map(DictionaryHandle::view)
+            .filter(|dictionary| {
+                !dictionary.content().is_empty() && self.frame_position <= self.window_size
+            });
         let source = MatchSource {
             block,
             dictionary,
@@ -341,7 +410,9 @@ impl BlockEncoder {
             CompressionStrategy::Greedy => {
                 let table = match self.match_table.as_mut() {
                     Some(table) => table,
-                    None => self.match_table.insert(MatchTable::new()?),
+                    None => self
+                        .match_table
+                        .insert(MatchTable::new_in(self.allocator.clone())?),
                 };
                 parse_greedy(
                     &source,
@@ -354,7 +425,9 @@ impl BlockEncoder {
             CompressionStrategy::Chain | CompressionStrategy::Lazy => {
                 let table = match self.chain.as_mut() {
                     Some(table) => table,
-                    None => self.chain.insert(MatchChain::new(CHAIN_NODES)?),
+                    None => self
+                        .chain
+                        .insert(MatchChain::new_in(CHAIN_NODES, self.allocator.clone())?),
                 };
                 parse_seeded_chain(
                     &source,
@@ -381,19 +454,23 @@ impl BlockEncoder {
         payload
             .try_reserve_exact(capacity)
             .map_err(|_| Error::AllocationFailed)?;
-        payload.extend_from_slice(section);
-        payload.extend_from_slice(stream);
+        for &byte in section {
+            payload.push(byte);
+        }
+        for &byte in stream {
+            payload.push(byte);
+        }
         Ok(payload.len() < block.len())
     }
 }
 
 /// Keep the original single-candidate policy independent of chain storage.
-fn parse_greedy(
-    source: &MatchSource<'_>,
-    match_table: &mut MatchTable,
-    seed: Option<&MatchTable>,
-    literals: &mut Vec<u8>,
-    sequences: &mut Vec<LogicalSequence>,
+fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Allocator>(
+    source: &MatchSource<'_, H>,
+    match_table: &mut MatchTable<M>,
+    seed: Option<&MatchTable<B>>,
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<LogicalSequence, S>,
 ) -> Result<()> {
     let block = source.block;
     if source.dictionary.is_some()
@@ -438,7 +515,9 @@ fn parse_greedy(
         if let Some(previous) = candidate
             && let Some((distance, match_length)) = source.find_match(previous, position)?
         {
-            literals.extend_from_slice(&block[literal_start..position]);
+            for &byte in &block[literal_start..position] {
+                literals.push(byte);
+            }
             sequences.push(LogicalSequence {
                 literal_length: (position - literal_start) as u32,
                 match_length: match_length as u32,
@@ -456,19 +535,21 @@ fn parse_greedy(
             position += 1;
         }
     }
-    literals.extend_from_slice(&block[literal_start..]);
+    for &byte in &block[literal_start..] {
+        literals.push(byte);
+    }
     Ok(())
 }
 
 /// Seed only live dictionary/history coordinates; every match is verified by
 /// the same source view as Greedy, independently of candidate-storage policy.
-fn parse_seeded_chain(
-    source: &MatchSource<'_>,
-    chain: &mut MatchChain,
-    seed: Option<&MatchChain>,
+fn parse_seeded_chain<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Allocator>(
+    source: &MatchSource<'_, H>,
+    chain: &mut MatchChain<M>,
+    seed: Option<&MatchChain<B>>,
     strategy: CompressionStrategy,
-    literals: &mut Vec<u8>,
-    sequences: &mut Vec<LogicalSequence>,
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<LogicalSequence, S>,
 ) -> Result<()> {
     if source.dictionary.is_some()
         && let Some(seed) = seed
@@ -521,17 +602,17 @@ fn parse_seeded_chain(
 /// so long streams never truncate into indices. The ring is immutable until
 /// matching completes; later current-block positions may still refer to its
 /// oldest byte if the advertised window permits that complete distance.
-struct MatchSource<'a> {
+struct MatchSource<'a, A: Allocator = Global> {
     block: &'a [u8],
-    dictionary: Option<&'a Dictionary>,
+    dictionary: Option<DictionaryView<'a>>,
     dictionary_size: usize,
-    history: Option<&'a RingHistory>,
+    history: Option<&'a RingHistory<A>>,
     history_size: usize,
     frame_position: u64,
     window_size: u64,
 }
 
-impl MatchSource<'_> {
+impl<A: Allocator> MatchSource<'_, A> {
     fn virtual_position(&self, position: usize) -> Result<usize> {
         self.dictionary_size
             .checked_add(self.history_size)
@@ -697,6 +778,372 @@ mod tests {
     use crate::fse_encode::FseEncodingTable as EncodingTable;
     use crate::{DecodeOptions, Dictionary, decompress_with_dictionary};
     use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn block_allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 128,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    fn allocator_dictionary(prepared: bool) -> Dictionary {
+        if prepared {
+            Dictionary::from_bytes(include_bytes!(
+                "../tests/upstream/dictionaries/formatted.dict"
+            ))
+            .unwrap()
+        } else {
+            Dictionary::raw(b"a useful raw dictionary pattern abcdefghijklmnopqrstuvwxyz").unwrap()
+        }
+    }
+
+    fn allocator_block_case(
+        strategy: CompressionStrategy,
+        prepared: bool,
+    ) -> (Vec<u8>, Vec<u8>, Vec<u8>) {
+        let serialized = allocator_dictionary(prepared).as_bytes().to_vec();
+        let dictionary_owner = block_allocator();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary = Dictionary::from_bytes_in(&serialized, dictionary_owner).unwrap();
+        let dictionary_before = dictionary_monitor.snapshot();
+        let workspace_owner = block_allocator();
+        let workspace_monitor = workspace_owner.monitor();
+        let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(workspace_owner);
+        encoder.set_strategy(strategy);
+        encoder.start_frame(Some(dictionary.view()), 1024).unwrap();
+        let mut reference = BlockEncoder::<_, DictionaryView<'_>>::new_in(Global);
+        reference.set_strategy(strategy);
+        reference
+            .start_frame(Some(dictionary.view()), 1024)
+            .unwrap();
+        let output_owner = block_allocator().into_non_clone();
+        let output_monitor = output_owner.monitor();
+        let mut encoded = Vec::new_in(output_owner);
+        let mut expected = Vec::new();
+        let pattern = b"a useful raw dictionary pattern abcdefghijklmnopqrstuvwxyz".repeat(4);
+        let blocks: [&[u8]; 4] = [b"raw", &[0xaa; 32], &pattern, &pattern];
+        let mut source = Vec::new();
+        for (index, block) in blocks.into_iter().enumerate() {
+            encoder.encode(block, index == 3, &mut encoded).unwrap();
+            reference.encode(block, index == 3, &mut expected).unwrap();
+            assert_eq!(encoded, expected);
+            assert_eq!(encoder.frame_position, reference.frame_position);
+            assert_eq!(
+                encoder.history.as_ref().unwrap().frame_len(),
+                encoder.frame_position
+            );
+            assert_eq!(
+                workspace_monitor.snapshot().live_bytes,
+                encoder.retained_capacity() as u128
+            );
+            source.extend_from_slice(block);
+        }
+        assert_eq!(dictionary_monitor.snapshot(), dictionary_before);
+        assert_eq!(output_monitor.snapshot().identities_created, 1);
+        assert_eq!(
+            output_monitor.snapshot().live_bytes,
+            encoded.capacity() as u128
+        );
+        let before_reset = workspace_monitor.snapshot();
+        let retained = encoder.retained_capacity();
+        let mut moved = encoder;
+        moved.reset();
+        assert_eq!(workspace_monitor.snapshot(), before_reset);
+        assert_eq!(moved.retained_capacity(), retained);
+        assert!(moved.active_dictionary.is_none());
+        drop(moved);
+        workspace_monitor.assert_released();
+        drop(reference);
+
+        // Frame assembly and oracle storage are separate test infrastructure;
+        // the independently allocated block output is compared before copying.
+        let mut frame = Vec::new();
+        frame.try_reserve_exact(source.len() + 64).unwrap();
+        write_frame_header(&mut frame, source.len(), dictionary.id());
+        frame.extend_from_slice(&encoded);
+        frame.extend_from_slice(&(xxhash::checksum(&source) as u32).to_le_bytes());
+        assert_eq!(
+            crate::decompress_with_dictionary_in(
+                &frame,
+                &dictionary.view(),
+                DecodeOptions::new(source.len()),
+                Global,
+            )
+            .unwrap(),
+            source
+        );
+        drop(encoded);
+        output_monitor.assert_released();
+        drop(dictionary);
+        dictionary_monitor.assert_released();
+        (frame, source, serialized)
+    }
+
+    #[test]
+    fn allocator_block_all_strategies_keep_dictionary_workspace_and_output_domains_independent() {
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            for prepared in [false, true] {
+                allocator_block_case(strategy, prepared);
+            }
+        }
+    }
+
+    #[test]
+    fn allocator_block_borrowed_nonclone_context_reuses_history_and_releases_shared_source() {
+        let owner = block_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let dictionary = Dictionary::raw(b"abcabcabc!").unwrap().into_shared();
+        let mut encoder = BlockEncoder::<_, SharedDictionary>::new_in(&owner);
+        encoder.start_frame(Some(dictionary.clone()), 32).unwrap();
+        assert_eq!(SharedDictionary::strong_count(&dictionary), 2);
+        let mut reference = BlockEncoder::new();
+        reference.start_frame(Some(dictionary.clone()), 32).unwrap();
+        let (mut output, mut expected) = (Vec::new(), Vec::new());
+        for (index, block) in [&b"abcabcabc!"[..], &b"abcabcabc!tail"[..]]
+            .into_iter()
+            .enumerate()
+        {
+            encoder.encode(block, index == 1, &mut output).unwrap();
+            reference.encode(block, index == 1, &mut expected).unwrap();
+            assert_eq!(output, expected);
+        }
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        assert_eq!(
+            monitor.snapshot().live_bytes,
+            encoder.retained_capacity() as u128
+        );
+        let before = monitor.snapshot();
+        let retained = encoder.retained_capacity();
+        encoder.reset();
+        assert_eq!(monitor.snapshot(), before);
+        assert_eq!(encoder.retained_capacity(), retained);
+        assert_eq!(SharedDictionary::strong_count(&dictionary), 2); // Caller + reference.
+        encoder.start_frame(None, 32).unwrap();
+        assert!(encoder.active_dictionary.is_none());
+        drop(encoder);
+        monitor.assert_released();
+        drop(reference);
+        assert_eq!(SharedDictionary::strong_count(&dictionary), 1);
+    }
+
+    #[test]
+    fn allocator_block_every_setup_and_encode_failure_recovers_after_reset() {
+        let dictionary = allocator_dictionary(true);
+        let source = b"a useful raw dictionary pattern abcdefghijklmnopqrstuvwxyz".repeat(4);
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            let baseline = block_allocator().into_non_clone();
+            let baseline_monitor = baseline.monitor();
+            let mut probe = BlockEncoder::<_, DictionaryView<'_>>::new_in(&baseline);
+            probe.set_strategy(strategy);
+            let mut expected = vec![0xee, 0x55];
+            probe.start_frame(Some(dictionary.view()), 1024).unwrap();
+            probe.encode(&source, true, &mut expected).unwrap();
+            let attempts = baseline_monitor.snapshot().attempts;
+            assert!(attempts > 10);
+            drop(probe);
+            baseline_monitor.assert_released();
+            for ordinal in 1..=attempts {
+                let owner = TrackingAllocator::new(AllocatorConfig {
+                    max_live_allocations: 128,
+                    fail_at: NonZeroU64::new(ordinal),
+                })
+                .unwrap()
+                .into_non_clone();
+                let monitor = owner.monitor();
+                let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(&owner);
+                encoder.set_strategy(strategy);
+                let mut output = vec![0xee, 0x55];
+                let result = encoder
+                    .start_frame(Some(dictionary.view()), 1024)
+                    .and_then(|()| encoder.encode(&source, true, &mut output));
+                assert_eq!(
+                    result,
+                    Err(Error::AllocationFailed),
+                    "{strategy:?}, allocation {ordinal}"
+                );
+                assert_eq!(monitor.snapshot().attempts, ordinal);
+                assert_eq!(monitor.snapshot().failures, 1);
+                assert_eq!(output, [0xee, 0x55]);
+                assert_eq!(encoder.frame_position, 0);
+                assert_eq!(
+                    encoder.history.as_ref().map_or(0, RingHistory::frame_len),
+                    0
+                );
+                assert_eq!(
+                    monitor.snapshot().live_bytes,
+                    encoder.retained_capacity() as u128
+                );
+                // Setup/parse failures may alter seeds and scratch. Recovery
+                // obeys the existing reset contract instead of assuming rollback.
+                monitor.clear_failure();
+                encoder.reset();
+                encoder.start_frame(Some(dictionary.view()), 1024).unwrap();
+                encoder.encode(&source, true, &mut output).unwrap();
+                assert_eq!(output, expected);
+                assert_eq!(
+                    monitor.snapshot().live_bytes,
+                    encoder.retained_capacity() as u128
+                );
+                drop(encoder);
+                monitor.assert_released();
+            }
+        }
+    }
+
+    #[test]
+    fn allocator_block_output_failure_keeps_prior_bytes_and_committed_history() {
+        let owner = block_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut encoder = BlockEncoder::<_, SharedDictionary>::new_in(&owner);
+        encoder.start_frame(None, 1024).unwrap();
+        let output_owner = block_allocator().into_non_clone();
+        let output_monitor = output_owner.monitor();
+        let mut output = Vec::new_in(output_owner);
+        let first = b"abcd".repeat(16);
+        encoder.encode(&first, false, &mut output).unwrap();
+        let before = output.to_vec();
+        let output_pointer = output.as_ptr();
+        let output_capacity = output.capacity();
+        let workspace_before = monitor.snapshot();
+        assert!(output_monitor.fail_next());
+        assert_eq!(
+            encoder.encode(&[42; 512], true, &mut output),
+            Err(Error::AllocationFailed)
+        );
+        assert_eq!(output, before);
+        assert_eq!(output.as_ptr(), output_pointer);
+        assert_eq!(output.capacity(), output_capacity);
+        assert_eq!(encoder.frame_position, first.len() as u64);
+        assert_eq!(
+            encoder.history.as_ref().unwrap().frame_len(),
+            first.len() as u64
+        );
+        assert_eq!(monitor.snapshot(), workspace_before);
+        output_monitor.clear_failure();
+        encoder.reset();
+        encoder.start_frame(None, 1024).unwrap();
+        output.clear();
+        encoder.encode(&first, false, &mut output).unwrap();
+        assert_eq!(output, before);
+        drop(output);
+        drop(encoder);
+        output_monitor.assert_released();
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_block_failed_dictionary_setup_requires_reset_after_seed_mutation() {
+        let original = allocator_dictionary(true);
+        let mut bytes = original.as_bytes().to_vec();
+        let content_start = bytes.len() - original.content().len();
+        bytes[content_start..].fill(b'Z');
+        let replacement = Dictionary::from_bytes(&bytes).unwrap();
+        let first = Dictionary::raw(b"aaaaaaaaaaaaaaaa").unwrap();
+        let owner = block_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(&owner);
+        encoder.start_frame(Some(first.view()), 1024).unwrap();
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        assert_eq!(
+            encoder.start_frame(Some(replacement.view()), 1024),
+            Err(Error::AllocationFailed)
+        );
+        assert_eq!(
+            encoder.active_dictionary.as_ref().unwrap().as_bytes(),
+            first.as_bytes()
+        );
+        assert_eq!(monitor.snapshot().live_bytes, before.live_bytes);
+        let mut inspection = MatchTable::new().unwrap();
+        inspection.reset_from(encoder.dictionary_seed.as_ref().unwrap());
+        assert!(inspection.replace(*b"ZZZZ", usize::MAX).is_some());
+        assert_eq!(inspection.replace(*b"aaaa", usize::MAX), None);
+        monitor.clear_failure();
+        encoder.reset();
+        encoder.start_frame(Some(first.view()), 1024).unwrap();
+        inspection.reset_from(encoder.dictionary_seed.as_ref().unwrap());
+        assert!(inspection.replace(*b"aaaa", usize::MAX).is_some());
+        let mut output = Vec::new();
+        encoder.encode(first.content(), true, &mut output).unwrap();
+        let mut reference = BlockEncoder::<_, DictionaryView<'_>>::new_in(Global);
+        reference.start_frame(Some(first.view()), 1024).unwrap();
+        let mut expected = Vec::new();
+        reference
+            .encode(first.content(), true, &mut expected)
+            .unwrap();
+        assert_eq!(output, expected);
+        drop(encoder);
+        monitor.assert_released();
+    }
+
+    #[cfg(feature = "std")]
+    #[test]
+    #[ignore = "requires official zstd v1.5.7 CLI; set ZSTD_BIN"]
+    fn official_codec_decodes_allocator_owned_blocks_with_borrowed_dictionaries() {
+        use std::io::Write;
+        use std::process::{Command, Stdio};
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        static NEXT: AtomicUsize = AtomicUsize::new(0);
+        let executable = std::env::var_os("ZSTD_BIN").expect("set ZSTD_BIN");
+        let version = Command::new(&executable).arg("--version").output().unwrap();
+        assert!(version.status.success());
+        assert!(std::string::String::from_utf8_lossy(&version.stdout).contains("1.5.7"));
+        struct File(std::path::PathBuf);
+        impl Drop for File {
+            fn drop(&mut self) {
+                let _ = std::fs::remove_file(&self.0);
+            }
+        }
+        let path = File(std::env::temp_dir().join(std::format!(
+            "zstdoxide-allocator-block-{}-{}-{}.dict",
+            std::process::id(),
+            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos(),
+            NEXT.fetch_add(1, Ordering::Relaxed),
+        )));
+        let mut cases = 0;
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            for prepared in [false, true] {
+                let (frame, source, dictionary) = allocator_block_case(strategy, prepared);
+                std::fs::write(&path.0, &dictionary).unwrap();
+                let mut child = Command::new(&executable)
+                    .args(["-q", "-d", "-c", "-D"])
+                    .arg(&path.0)
+                    .stdin(Stdio::piped())
+                    .stdout(Stdio::piped())
+                    .stderr(Stdio::piped())
+                    .spawn()
+                    .unwrap();
+                child.stdin.take().unwrap().write_all(&frame).unwrap();
+                let decoded = child.wait_with_output().unwrap();
+                assert!(
+                    decoded.status.success(),
+                    "{strategy:?}/{prepared}: {}",
+                    std::string::String::from_utf8_lossy(&decoded.stderr)
+                );
+                assert_eq!(decoded.stdout, source);
+                cases += 1;
+            }
+        }
+        assert_eq!(cases, 6);
+        std::eprintln!(
+            "Official v1.5.7 decoded {cases} allocator-owned frames with raw/prepared dictionary views"
+        );
+    }
 
     #[test]
     fn sequence_state_is_published_only_for_accepted_blocks_and_reset_for_new_frames() {
@@ -878,7 +1325,7 @@ mod tests {
             history.commit(&vec![0; extra]).unwrap();
             let source = MatchSource {
                 block: b"abcd\0\0\0\0",
-                dictionary: Some(&dictionary),
+                dictionary: Some(dictionary.view()),
                 dictionary_size: 4,
                 history: Some(&history),
                 history_size: history.available(),
@@ -1124,9 +1571,9 @@ mod tests {
     #[test]
     fn dictionary_candidate_lifetime_and_search_distance_limits_are_checked_at_start() {
         let dictionary = Dictionary::raw(b"abcd").unwrap();
-        let mut source = MatchSource {
+        let mut source = MatchSource::<Global> {
             block: b"abcdabcdabcd",
-            dictionary: Some(&dictionary),
+            dictionary: Some(dictionary.view()),
             dictionary_size: 4,
             history: None,
             history_size: 0,

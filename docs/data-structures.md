@@ -317,3 +317,29 @@ is a separate temporary owner when finalization follows training. All metadata
 and padding writes follow complete reservation; content IDs continue to hash
 untrimmed/unpadded input. A future owned-byte parser optimization is separate
 from this migration and must not bypass validation before publication.
+
+Private block encoding retains an allocator factory plus independent owners for
+literal bytes, logical sequences, payload, entropy contexts, lazy match tables,
+dictionary seeds and bounded ring history. `BlockEncoder<A, D>` owns a sealed
+dictionary handle; `MatchSource<'_, A>` borrows history and copies a temporary
+validated dictionary view. No self-reference is stored. Output may use an
+independent allocator type and never borrows the workspace allocator. Global
+const construction remains available; generic construction occurs at runtime.
+
+Frame setup can rebuild match seeds before a later inverse-table allocation
+fails. Its private caller must reset and complete frame setup before reuse;
+this migration does not promise rollback of every seed. Block failure can
+change scratch, but reserved output emission precedes committed entropy
+publication, and history commits only an accepted block. Reset invalidates the
+active attachment and frame state. Copies use individual pushes after checked
+reservation, preserving parser order, match eligibility, and emitted bytes.
+
+The public streaming `Encoder<A, D>` adds staging and pending-output vectors,
+each built with a fresh allocator value, around the generic block workspace.
+The original allocator moves into that workspace's lazy-allocation factory;
+a redundant stream-level factory is unnecessary. Shared or borrowed dictionary
+attachments are independent of the allocator type. Input/output slices expire
+at each process call, while a borrowed dictionary retains its explicit lifetime.
+Allocator-last constructors validate options before creating storage. Reset
+retains workspace/buffer owners, and existing prefix claim, pledge, directive
+retry, provisional output, and poisoned-until-reset behavior remain unchanged.

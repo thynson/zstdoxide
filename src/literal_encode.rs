@@ -40,7 +40,7 @@ impl<A: Allocator + Clone> LiteralEncoder<A> {
     /// be equivalent; the original allocator belongs to the final section.
     #[cfg_attr(
         not(test),
-        expect(dead_code, reason = "allocator-aware block contexts migrate next")
+        allow(dead_code, reason = "private allocator-aware context entry point")
     )]
     pub(crate) fn new_in(allocator: A) -> Self {
         Self {

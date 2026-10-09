@@ -18,6 +18,13 @@ pub(crate) struct MatchTable<A: Allocator = Global> {
 }
 
 impl MatchTable<Global> {
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "convenience entry point retained for direct callers"
+        )
+    )]
     pub(crate) fn new() -> Result<Self> {
         Self::new_in(Global)
     }

@@ -1,0 +1,840 @@
+{
+  "checkpoint": "Private BlockEncoder allocator/dictionary-handle migration",
+  "toolchain": "nightly-2026-10-08, rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)",
+  "sources": [
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/src/encode.rs",
+      "sha256": "14ed81d1a93dd38c4f1f33eac86fbfaaea56fdc81fb23caf96338bbf9aab3499"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/src/literal_encode.rs",
+      "sha256": "e9282568a49a86dbfbd0361aef192fe263f7bdee0d15f94285ac70d52c0b73f1"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/src/dictionary.rs",
+      "sha256": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/src/matchchain.rs",
+      "sha256": "dbf5c8f65b8f6dedfaaa3907e22bb0e932029793bc0e1cbe412189113fc78e80"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/src/matchfinder.rs",
+      "sha256": "8f5e28b2127533638947744917078c929a9e2da785b6c38fd7e6c13ada00f9a6"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/src/ring_history.rs",
+      "sha256": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/src/sequence_context.rs",
+      "sha256": "8bb87a07cc60e3968299ed341976c134fce13fe3099ca8aba0ec78372e431678"
+    }
+  ],
+  "scope": {
+    "src/encode.rs": "Generic private BlockEncoder and match source/parser/header helpers; five allocator tests and one optional C oracle. Public one-shot compression signatures/driver remain Global for the later checkpoint.",
+    "src/literal_encode.rs": "Remove obsolete new_in dead-code expectation after its production caller is added.",
+    "other_five_sources": "Only root-authorized non-test dead-code annotations for Dictionary::entropy, MatchChain::new, MatchTable::new, RingHistory::new, SequenceEncoder::start_frame."
+  },
+  "proposal": {
+    "path": "/tmp/zstdoxide-block-allocator-proposal.md",
+    "sha256": "e619fd429e27eddb56eebc1dead97ea66b11797baffa7095d3753c7ba4ec0327"
+  },
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 4.926,
+      "log": "/tmp/zstdoxide-allocator-block-safe.log",
+      "sha256": "1ea7776cdc8199737ec3480d6a5efb1d3f4bcbd27d670f1d27505253fd96b1ef",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 459 filtered out; finished in 2.21s"
+      ]
+    },
+    {
+      "name": "unsafe-byte-cursor",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-byte-cursor",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 8.236,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-byte-cursor.log",
+      "sha256": "c0023b6e2c8c9978ded10164438f24a5dc7711c51cf3bf049547ec9e783086e5",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 459 filtered out; finished in 2.04s"
+      ]
+    },
+    {
+      "name": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-bitstream",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 9.428,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-bitstream.log",
+      "sha256": "d24863ae8931dfdade2817ac7b327cc49a815a78a41336fe591dcc3a0da24604",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 459 filtered out; finished in 2.50s"
+      ]
+    },
+    {
+      "name": "unsafe-history",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-history",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 9.884,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-history.log",
+      "sha256": "e88ae9ad181dd2562367005427b10396ed2d324636ae74dd7b8c7c0e767e7878",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 459 filtered out; finished in 2.14s"
+      ]
+    },
+    {
+      "name": "unsafe-ring-history",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-ring-history",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 8.517,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-ring-history.log",
+      "sha256": "10ecab214150a33fe26ccff1a428d750c922a2793a81c7483e65959d6729e2ae",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 459 filtered out; finished in 2.35s"
+      ]
+    },
+    {
+      "name": "unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-fse",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 9.311,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-fse.log",
+      "sha256": "0af9430d3d548c51415bdd251fab7e2afe7e3bd1bb4223cae516f30ef5d0cfd8",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 2.38s"
+      ]
+    },
+    {
+      "name": "unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-fse-encoder",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 9.486,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-fse-encoder.log",
+      "sha256": "06757901043cbf63ffce0947ad45b14756d7b2dcb51c5aa214332a52a61fd832",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 2.44s"
+      ]
+    },
+    {
+      "name": "unsafe-huffman",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-huffman",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 11.965,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-huffman.log",
+      "sha256": "23425bd578ecddd39fae81ee6fb03329725e00137cb0c53c43eeda6170578f2d",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 3.76s"
+      ]
+    },
+    {
+      "name": "unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-huffman-codebook",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 13.567,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-huffman-codebook.log",
+      "sha256": "b9e561367504f2fc31e36a7d7e6087030ede00d412e720cbba9b2461e65269ad",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 3.05s"
+      ]
+    },
+    {
+      "name": "unsafe-match-table",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 10.451,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-match-table.log",
+      "sha256": "7c3e2156a7be07d2e44d51e295df6e7f0b9cab354d0a6307c22bb79a8cabe513",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 2.15s"
+      ]
+    },
+    {
+      "name": "unsafe-match-chain",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-match-chain",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 7.99,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-match-chain.log",
+      "sha256": "36dbf7d64ec4cc5cbcd2a611c0a2f80f713827f3902008068cb1a912beee8420",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 2.15s"
+      ]
+    },
+    {
+      "name": "unsafe-dictionary",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-dictionary",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 9.788,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-dictionary.log",
+      "sha256": "4b16e0d465c348fca5be2db8519cdf405271fe3f0b3b407d7a97a3ee9cba9051",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 2.79s"
+      ]
+    },
+    {
+      "name": "unsafe-training",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-training",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 9.06,
+      "log": "/tmp/zstdoxide-allocator-block-unsafe-training.log",
+      "sha256": "677ea5584a1cc4b81648cda7e68557f948f4de8f59349a58d5aeccb8b0770a5a",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 2.43s"
+      ]
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--all-features",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 10.036,
+      "log": "/tmp/zstdoxide-allocator-block-all.log",
+      "sha256": "701f6809e2d4cb2b097ed959d5ee66f76cdd906bfd42d1ceeb8f3ceeb210734c",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 2.52s"
+      ]
+    },
+    {
+      "name": "no-default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--no-default-features",
+        "encode::tests::allocator_block_",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 9.195,
+      "log": "/tmp/zstdoxide-allocator-block-no-default.log",
+      "sha256": "54b998b6e453ac11b2525d8bcf90c810e558855a56234b3ddf11d7ce88968bc0",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 437 filtered out; finished in 2.62s"
+      ]
+    },
+    {
+      "name": "existing-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "encode::tests::",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 8.498,
+      "log": "/tmp/zstdoxide-allocator-block-existing-safe.log",
+      "sha256": "1be0ffd81d15aaa0a01c5fd7ad8f06216010f1b8b81ba5cd891950798fb0ec98",
+      "test_summaries": [
+        "test result: ok. 120 passed; 0 failed; 4 ignored; 0 measured; 341 filtered out; finished in 6.51s"
+      ]
+    },
+    {
+      "name": "existing-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--all-features",
+        "encode::tests::",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 7.444,
+      "log": "/tmp/zstdoxide-allocator-block-existing-all.log",
+      "sha256": "cd92c215f7933fe3f75b47ad0618524a70580377c4a7aca97afbf7beae30ad6a",
+      "test_summaries": [
+        "test result: ok. 120 passed; 0 failed; 4 ignored; 0 measured; 341 filtered out; finished in 7.39s"
+      ]
+    },
+    {
+      "name": "existing-no-default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--no-default-features",
+        "encode::tests::",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 6.364,
+      "log": "/tmp/zstdoxide-allocator-block-existing-no-default.log",
+      "sha256": "dcfdc2723d212e3cf06565577cfb018dff3dc8ffcaffed39e3b830f33535f436",
+      "test_summaries": [
+        "test result: ok. 120 passed; 0 failed; 0 ignored; 0 measured; 322 filtered out; finished in 6.32s"
+      ]
+    },
+    {
+      "name": "public-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--test",
+        "compression_strategies",
+        "--test",
+        "upstream_dictionary_encode",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 6.332,
+      "log": "/tmp/zstdoxide-allocator-block-public-safe.log",
+      "sha256": "139b22b1b8f6a0e23883f1eef787c9e2d14035c3ce98aa5d43fa2f5fa02ee1a3",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.66s",
+        "test result: ok. 24 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 2.42s"
+      ]
+    },
+    {
+      "name": "public-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--test",
+        "compression_strategies",
+        "--test",
+        "upstream_dictionary_encode",
+        "--all-features",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 5.135,
+      "log": "/tmp/zstdoxide-allocator-block-public-all.log",
+      "sha256": "039999fa01b2c294afd2e9d91141a532c3173a3e5132a234ab23fb8bc289fc00",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.44s",
+        "test result: ok. 24 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 1.69s"
+      ]
+    },
+    {
+      "name": "oracle-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "encode::tests::official_codec_decodes_allocator_owned_blocks_with_borrowed_dictionaries",
+        "--",
+        "--exact",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.191,
+      "log": "/tmp/zstdoxide-allocator-block-oracle-safe.log",
+      "sha256": "bdac6fc5118bbec3e28079cde4885d575ae94a0192619052833d4495e7fe48ad",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 464 filtered out; finished in 0.15s"
+      ]
+    },
+    {
+      "name": "oracle-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "--all-features",
+        "encode::tests::official_codec_decodes_allocator_owned_blocks_with_borrowed_dictionaries",
+        "--",
+        "--exact",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.185,
+      "log": "/tmp/zstdoxide-allocator-block-oracle-all.log",
+      "sha256": "cf3da797bf729d9e4e753ec9dea4ec3029081f89c788f4988d767e00f61574ad",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 464 filtered out; finished in 0.15s"
+      ]
+    },
+    {
+      "name": "no-std",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--no-default-features"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.495,
+      "log": "/tmp/zstdoxide-allocator-block-no-std.log",
+      "sha256": "e753b04dfef80f5b8c274c6060881d18e208eb0cf1be2098be0bd78d1a2162c6",
+      "test_summaries": []
+    },
+    {
+      "name": "no-std-backends",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.511,
+      "log": "/tmp/zstdoxide-allocator-block-no-std-backends.log",
+      "sha256": "d247b0ee89caf2ddbdf83f218ffd9c83a7bdf2696289121d1732b42e37bc7b3d",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.027,
+      "log": "/tmp/zstdoxide-allocator-block-clippy.log",
+      "sha256": "40e68c233de8e50c606a7a8b046676070fb538feb06bc95e08eaf913e129735e",
+      "test_summaries": []
+    },
+    {
+      "name": "fmt",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/encode.rs",
+        "src/literal_encode.rs",
+        "src/dictionary.rs",
+        "src/matchchain.rs",
+        "src/matchfinder.rs",
+        "src/ring_history.rs",
+        "src/sequence_context.rs"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.1,
+      "log": "/tmp/zstdoxide-allocator-block-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": []
+    },
+    {
+      "name": "allocator_block_borrowed_nonclone_context_reuses_history_and_releases_shared_source",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--lib",
+        "--all-features",
+        "encode::tests::allocator_block_borrowed_nonclone_context_reuses_history_and_releases_shared_source",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 43.098,
+      "log": "/tmp/zstdoxide-allocator-block-miri-1.log",
+      "sha256": "c1be55f034ec3118900524680e2c0b75c5be66bc6432837e4c6c120406d0270a",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 463 filtered out; finished in 70.35s"
+      ]
+    },
+    {
+      "name": "allocator_block_output_failure_keeps_prior_bytes_and_committed_history",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--lib",
+        "--all-features",
+        "encode::tests::allocator_block_output_failure_keeps_prior_bytes_and_committed_history",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 15.618,
+      "log": "/tmp/zstdoxide-allocator-block-miri-2.log",
+      "sha256": "030bbaf8b4dd6590f2b469264c9375a5c6df458eca80a5da55ee7211d472f2a1",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 464 filtered out; finished in 22.85s"
+      ]
+    },
+    {
+      "name": "allocator_block_failed_dictionary_setup_requires_reset_after_seed_mutation",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--lib",
+        "--all-features",
+        "encode::tests::allocator_block_failed_dictionary_setup_requires_reset_after_seed_mutation",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-block-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 35.603,
+      "log": "/tmp/zstdoxide-allocator-block-miri-3.log",
+      "sha256": "a8262b95cb6c0b308993777876f764899df0eeb52309a7d933df52ba28bc17bb",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 464 filtered out; finished in 48.09s"
+      ]
+    }
+  ],
+  "coverage": {
+    "new_tests": "5 passed, 0 ignored in each of 15 configurations: default, 12 individual unsafe features, all features, and no default features.",
+    "existing_selector": "The encode::tests:: substring selects block, entropy, and stream encoder dependencies: 120 passed / 4 ignored for default and all features; 120 passed / 0 ignored for no default features.",
+    "public_suites": "compression_strategies: 5 passed / 1 ignored; upstream_dictionary_encode: 24 passed / 2 ignored, in each default/all-feature run.",
+    "official_c": "The explicit custom-allocation oracle passed for default and all features: 6 exact full-output frames per run, covering all 3 strategies with raw and prepared borrowed dictionary views.",
+    "miri": "3 exact all-feature strict-provenance cases: borrowed non-Clone/shared lifetime; output allocation failure; failed dictionary setup after seed mutation/reset. The full observed-ordinal sweep runs in every normal configuration, not under Miri."
+  },
+  "contract": "Output allocator, workspace allocator, and dictionary source are independent. Complete owners retain their allocators. Failed setup may mutate seeds and requires reset; failed encoding preserves accepted output and committed entropy/history. Live payload equals retained workspace capacity; dictionary/control blocks and opaque allocator bookkeeping are accounted separately.",
+  "qualification": "Production body was frozen before coordinator snapshot. Only the start_frame documentation wording was subsequently clarified to cover borrowed attachments as well as shared ownership; no executable behavior changed during verification. All command sessions completed successfully.",
+  "coordinator_isolated_review": {
+    "baseline": "e985958",
+    "initial": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 101,
+      "output": "    Checking zstdoxide-test-allocator v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-block-review-9hz7h1gq/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-block-review-9hz7h1gq)\nerror: associated function `new_in` is never used\n   --> src/encode.rs:124:19\n    |\n120 | impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {\n    | ------------------------------------------------------------------ associated function in this implementation\n...\n124 |     pub(crate) fn new_in(allocator: A) -> Self {\n    |                   ^^^^^^\n    |\n    = note: `-D dead-code` implied by `-D warnings`\n    = help: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`\n\nerror: associated function `new_in` is never used\n  --> src/literal_encode.rs:41:19\n   |\n38 | impl<A: Allocator + Clone> LiteralEncoder<A> {\n   | -------------------------------------------- associated function in this implementation\n...\n41 |     pub(crate) fn new_in(allocator: A) -> Self {\n   |                   ^^^^^^\n\nerror: could not compile `zstdoxide` (lib) due to 2 previous errors\nwarning: build failed, waiting for other jobs to finish...\n"
+    },
+    "repair": "Two private new_in constructors need narrow non-test dead-code allowances while the committed stream encoder still uses Global construction. Only these attributes changed after agent runtime checks.",
+    "checks": [
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "output": "    Checking zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-block-review-9hz7h1gq)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.85s\n"
+      },
+      {
+        "command": [
+          "cargo",
+          "check",
+          "--locked",
+          "--no-default-features"
+        ],
+        "exit_code": 0,
+        "output": "    Checking zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-block-review-9hz7h1gq)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.36s\n"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--lib",
+          "encode::tests::allocator_block_"
+        ],
+        "exit_code": 0,
+        "output": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-block-review-9hz7h1gq/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-block-review-9hz7h1gq)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.22s\n     Running unittests src/lib.rs (/tmp/zstdoxide-block-review-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 5 tests\ntest encode::tests::allocator_block_borrowed_nonclone_context_reuses_history_and_releases_shared_source ... ok\ntest encode::tests::allocator_block_output_failure_keeps_prior_bytes_and_committed_history ... ok\ntest encode::tests::allocator_block_failed_dictionary_setup_requires_reset_after_seed_mutation ... ok\ntest encode::tests::allocator_block_all_strategies_keep_dictionary_workspace_and_output_domains_independent ... ok\ntest encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 451 filtered out; finished in 1.25s\n\n"
+      },
+      {
+        "command": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--check",
+          "src/encode.rs",
+          "src/literal_encode.rs"
+        ],
+        "exit_code": 0,
+        "output": ""
+      }
+    ],
+    "final_sources": {
+      "/Users/lanxingcan/Workspace/zstdoxize/src/encode.rs": "2c482cdff88839fe55ac6ce0b056d760bb8dfa8943a63e4cf900f14b74f805c4",
+      "/Users/lanxingcan/Workspace/zstdoxize/src/literal_encode.rs": "c34bbf45deb229326455704f8caa9885d3fcfa8bcdb849851f3707af3d4f0e55",
+      "/Users/lanxingcan/Workspace/zstdoxize/src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+      "/Users/lanxingcan/Workspace/zstdoxize/src/matchchain.rs": "dbf5c8f65b8f6dedfaaa3907e22bb0e932029793bc0e1cbe412189113fc78e80",
+      "/Users/lanxingcan/Workspace/zstdoxize/src/matchfinder.rs": "8f5e28b2127533638947744917078c929a9e2da785b6c38fd7e6c13ada00f9a6",
+      "/Users/lanxingcan/Workspace/zstdoxize/src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+      "/Users/lanxingcan/Workspace/zstdoxize/src/sequence_context.rs": "8bb87a07cc60e3968299ed341976c134fce13fe3099ca8aba0ec78372e431678"
+    }
+  }
+}

@@ -48,6 +48,13 @@ impl MatchChain<Global> {
     /// Reserve at most 262,144 nodes, independently of total frame length.
     /// Dictionary seed storage may use a 65,536-node limit and be copied into
     /// a larger working chain. Both initialized allocations are fallible.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "convenience entry point retained for direct callers"
+        )
+    )]
     pub(crate) fn new(node_limit: usize) -> Result<Self> {
         Self::new_in(node_limit, Global)
     }

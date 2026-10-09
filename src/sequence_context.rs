@@ -147,6 +147,13 @@ impl<A: Allocator + Clone> SequenceEncoder<A> {
 
     /// Preserve the unambiguous Global dictionary convenience entry point.
     /// Dictionaries with another allocator enter through their borrowed view.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "convenience entry point retained for direct callers"
+        )
+    )]
     pub(crate) fn start_frame(&mut self, dictionary: Option<&Dictionary>) -> Result<()> {
         self.start_frame_with_entropy(
             dictionary

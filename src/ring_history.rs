@@ -26,6 +26,13 @@ pub(crate) struct RingHistory<A: Allocator = Global> {
 
 impl RingHistory<Global> {
     /// Create an empty context without allocating the maximum window eagerly.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "convenience entry point retained for direct callers"
+        )
+    )]
     pub(crate) fn new(maximum_window: usize) -> Self {
         Self::new_in(maximum_window, Global)
     }
