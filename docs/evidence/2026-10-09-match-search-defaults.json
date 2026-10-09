@@ -1,0 +1,56 @@
+{
+  "purpose": "Activate unchanged pre-change default frame expectations before modifying search owners; include standalone archive/input SHA-256 audit.",
+  "codec_baseline_revision": "ba4529c9e44eee2218209bb660038e42848d11e8",
+  "replay": {
+    "configurations": 4,
+    "tests_per_configuration": 7,
+    "new_regressions": 5,
+    "existing_rdg_tests": 2,
+    "complete_frame_replays": 304,
+    "captured_record_comparisons": 608,
+    "all_checks_passed": true,
+    "scope": "Absolute capture capacities are qualified archival observations; runtime assertions compare reset/cache relationships only."
+  },
+  "auditor": {
+    "positive": 2,
+    "negative": 40,
+    "all_passed": true,
+    "codec_runs": 0,
+    "fixture_regenerations": 0
+  },
+  "source_sha256": {
+    "tests/match_search_defaults.rs": {
+      "sha256": "084bd291f1dd8fa47a86138bacfe7bcd025337fa84351ea4e3b6e15aa23d684d",
+      "bytes": 20345
+    },
+    "tests/fixtures/match-search-baseline/README.md": {
+      "sha256": "36ee727ddbcbdd33f760e40e7a39ff935ce43837045dbcd2ccdc9464508905ed",
+      "bytes": 5992
+    },
+    "tests/fixtures/match-search-baseline/cases.tsv": {
+      "sha256": "54d96b25eec068fc116622bd4086000a8c9df5b67be9d6649ad160c86d03daf3",
+      "bytes": 3515
+    },
+    "tests/fixtures/match-search-baseline/expected.tsv": {
+      "sha256": "c12ee881fd1333e29302a8f8f4b2f475cdf714785587bdd3b72b6510f629a25d",
+      "bytes": 56606
+    },
+    "tests/fixtures/match-search-baseline/provenance.json": {
+      "sha256": "53ef3b523bcde52d12ce33597515d82b52d5cc222fc0e2129b6f4adb3803f496",
+      "bytes": 3138
+    }
+  },
+  "audit_script_sha256": "aa71b9780b5fbb0cc6a206c24761b2d0034aa27a7a46b666a9c01e10ce60fe9f",
+  "replay_evidence_sha256": "2b977d5b6e093d4f7525f7da5c6c139b45823a5df9821a6eae41cb12d0da9a2d",
+  "audit_evidence_sha256": "f8e50af1c93061ed4443e68efd9ad48e2513c2fd5dc963f2c7d9ff31b94222d9",
+  "archive": {
+    "path": "docs/evidence/2026-10-09-match-search-defaults.tar.gz",
+    "sha256": "62eeb5efe5d185f2500171a12215e2881bf1b8b9c38971abd465989c4f0346d4",
+    "members": 57
+  },
+  "limits": [
+    "No new C decode run; the original archive retains 152 independent complete C byte comparisons.",
+    "Current output lengths/FNV are compatibility fingerprints; complete bytes are compared between fresh/reset and first/final Greedy cycle frames.",
+    "Absolute captured capacities remain host observations; current tests check portable retention relationships."
+  ]
+}

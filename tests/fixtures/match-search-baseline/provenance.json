@@ -1,0 +1,55 @@
+{
+  "source_evidence_sha256": "7c54fa58a31f4a28b21422c660e62ee2577cc33f20a7176de13f624ae3521274",
+  "codec_revision": "ba4529c9e44eee2218209bb660038e42848d11e8",
+  "fnv1a64": {
+    "offset_basis_hex": "cbf29ce484222325",
+    "prime_hex": "00000100000001b3",
+    "operation": "For each raw byte: (hash XOR byte) * prime modulo 2^64. No length prefix or framing is included.",
+    "reference": "tests/upstream/support/mod.rs:247-248"
+  },
+  "row_count": 152,
+  "rows_per_backend": 76,
+  "input_cases": 12,
+  "source_files": {
+    "capture.rs": {
+      "original_path": "/tmp/zstdoxide-module11-baseline-driver/src/main.rs",
+      "sha256": "5f924b243f1bc1d8c32b7aad7b4025e61cf0ad008d5e83996986f7964b50cb8e",
+      "bytes": 9325
+    },
+    "capture.Cargo.toml": {
+      "original_path": "/tmp/zstdoxide-module11-baseline-driver/Cargo.toml",
+      "sha256": "efa940aa5ae8513f63af967666ccda496d44ef06be79d5e384aa274811d7bff1",
+      "bytes": 189
+    },
+    "capture.Cargo.lock": {
+      "original_path": "/tmp/zstdoxide-module11-baseline-driver/Cargo.lock",
+      "sha256": "ded3be74cd4c83bea571e7483e363ec4c2ba1936f91598c70fb63bb8e961a072",
+      "bytes": 251
+    },
+    "capture.py": {
+      "original_path": "/tmp/zstdoxide-module11-baseline-run.py",
+      "sha256": "960769cd07450e9c6736bedda878f2e935ac6cd9e5d25e1b87a523f7de47586c",
+      "bytes": 1577
+    },
+    "oracle.py": {
+      "original_path": "/tmp/zstdoxide-module11-baseline-oracle.py",
+      "sha256": "149d1177f5678253522e16ddea6316f5c6e86bf921471c7ffa9e7a72b294a289",
+      "bytes": 7215
+    },
+    "rdg_support.rs": {
+      "original_path": "/tmp/zstdoxide-module11-baseline-ba4529c/tests/upstream/support/mod.rs",
+      "sha256": "78ec1663c4873dba095a6ba24e5787d545a1ccffccb95b3edfd940c7142c3d2a",
+      "bytes": 8465
+    }
+  },
+  "dictionary_reachable_accounting": "The original fresh Encoder had no allocated codec payload before its first process call, so the equal retained_capacity_before observed across all three fresh strategy records is exactly the selected persistent dictionary reachable capacity. It remains selected throughout this capture. Subtracting it produces owned codec totals, not search-only totals.",
+  "narrow_search_capacity": "Not measured by ba4529c public API; never inferred as zero or as total minus dictionary.",
+  "derivation": "All data hashes and FNV values were derived from saved pre-change input/dictionary/output bytes after SHA256/length revalidation. No source regeneration or codec execution occurred.",
+  "expected_tsv_sha256": "c12ee881fd1333e29302a8f8f4b2f475cdf714785587bdd3b72b6510f629a25d",
+  "cases_tsv_sha256": "54d96b25eec068fc116622bd4086000a8c9df5b67be9d6649ad160c86d03daf3",
+  "archived_package": "docs/evidence/2026-10-09-match-search-baseline.tar.gz",
+  "archived_package_sha256": "bc8ad73fd3ea95877dc74d8fe75b7617985656d8350e5d70eff4b2c46678ca6d",
+  "reference_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "independent_c_decodes": 152,
+  "license": "Derived RDG source and formatted dictionary fixtures retain their upstream BSD-3-Clause attribution; see LICENSE.zstd and existing fixture provenance."
+}

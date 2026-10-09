@@ -407,3 +407,11 @@ without allocation. Seven tests pass in four native feature/std configurations
 and on both i686 and big-endian s390x under Miri; no_std, strict Clippy and
 formatting pass. Costs use actual target layouts with a 32 MiB requested-payload
 ceiling. The records remain private until meaningful consumers are integrated.
+
+The offline default regression is active before owner reshaping: seven tests
+pass in all four feature/std configurations, replaying 304 frames against 608
+unchanged captured records. Full Rust decodes and fresh/reset byte comparisons
+pass. A registered standalone SHA-256 auditor connects the original archive,
+reproduction sources, TSVs and current recipe inputs; normal and optimized
+Python pass two positive audits and forty expected isolated rejections. The
+original independent C evidence remains unchanged.

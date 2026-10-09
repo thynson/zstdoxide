@@ -18,6 +18,7 @@ python3 scripts/generate_upstream_dictionaries.py "$ZSTD_UPSTREAM" --check
 python3 scripts/import_parameter_fixtures.py "$ZSTD_UPSTREAM" --check
 python3 scripts/import_match_search_fixtures.py "$ZSTD_UPSTREAM" --check
 python3 scripts/check_upstream_fixtures.py
+python3 scripts/check_match_search_baseline.py
 
 # Select oracle tests explicitly: legacy success assertions remain blocked.
 cargo test --release --all-features --test interop -- --ignored

@@ -68,3 +68,29 @@ command logs and the frozen source hashes. It retains the initial all-target
 Clippy failure caused by concurrent baseline-test compilation, and the final
 passing run after that test owner repaired the errors. Search owner resizing,
 hash primitives and actual parser/context consumers remain later items.
+
+## Offline default-frame replay and archive audit
+
+Five regression/schema tests and the two existing RDG helper tests now replay
+every captured default frame. Each of safe, all-feature, no_std safe and no_std
+with all twelve unsafe features passes all seven tests: 304 complete current
+frames and 608 comparisons with the unchanged original backend records. Inputs
+and dictionaries are verified before encoder calls. Output fingerprints, frame
+and block metadata, process-call counts, bounded progress and output canaries
+match; every current frame decodes completely in Rust. Fresh/reset frames and
+the first/final Greedy strategy-cycle frames also match byte for byte. Portable
+capacity assertions check reset preservation and reuse of both cache families.
+Focused strict Clippy, no_std library compilation and owned formatting pass.
+
+`scripts/check_match_search_baseline.py`, registered in both check runners,
+verifies the original archive and every member, reproduction-source attribution,
+exact TSV bytes and current RDG/dictionary inputs. It neither extracts the
+archive nor regenerates codec expectations. Normal Python and `python3 -O` each
+pass one positive isolated audit and twenty expected negative rejections,
+including altered TSVs with locally updated hashes and invalid archive members.
+The script uses explicit errors, so optimization cannot disable its checks.
+
+[Replay evidence](evidence/2026-10-09-match-search-defaults.json) links all
+commands, logs and the isolated mutation reproducer. This checkpoint does not
+rerun C: the original archive retains the 152 independent complete C decodes.
+Future implementation changes must continue satisfying these saved inputs.
