@@ -5,7 +5,9 @@ use core::alloc::Allocator;
 
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
+use crate::match_key::MatchKey;
 use crate::match_parse::{parse_chain, parse_lazy};
+use crate::match_search::SearchKeyLayout;
 use crate::matchchain::MatchChain;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
@@ -687,6 +689,118 @@ impl<A: Allocator> MatchSource<'_, A> {
 
     fn retains_frame_start(&self) -> bool {
         self.frame_position == self.history_size as u64
+    }
+
+    /// Checked indexed extents before assembling a variable-width key.
+    ///
+    /// Dictionary/history/input indices remain usize; the absolute frame end
+    /// stays u64. A very long frame does not need to fit usize when its borrowed
+    /// dictionary, retained history and current input still have a valid local
+    /// indexed extent. These checks do not change either borrowed owner.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "variable-width parser integration follows this source checkpoint"
+        )
+    )]
+    fn key_extents(&self) -> Result<(usize, usize)> {
+        let output_size = self
+            .history_size
+            .checked_add(self.block.len())
+            .ok_or(Error::ResourceLimit)?;
+        let virtual_size = self
+            .dictionary_size
+            .checked_add(output_size)
+            .ok_or(Error::ResourceLimit)?;
+        let history_size = u64::try_from(self.history_size).map_err(|_| Error::ResourceLimit)?;
+        self.frame_position
+            .checked_sub(history_size)
+            .ok_or(Error::CorruptData)?;
+        let input_size = u64::try_from(self.block.len()).map_err(|_| Error::ResourceLimit)?;
+        self.frame_position
+            .checked_add(input_size)
+            .ok_or(Error::ResourceLimit)?;
+        Ok((output_size, virtual_size))
+    }
+
+    /// Copy exactly the selected bytes across dictionary and retained frame zero.
+    ///
+    /// Starts in 0..=D are valid; D denotes the frame-zero boundary, including
+    /// an empty dictionary with no dictionary owner. A start beyond D is
+    /// CorruptData. Frame zero must still be retained, including at that endpoint,
+    /// or this boundary operation returns InvalidState. Dictionary-only matching
+    /// has separate eligibility and does not depend on this helper.
+    /// A valid tail shorter than the selected width returns None. Arithmetic
+    /// overflow returns ResourceLimit before copying any bytes. Missing source
+    /// storage is reported by the same checked dictionary/history byte readers.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "variable-width parser integration follows this source checkpoint"
+        )
+    )]
+    fn dictionary_boundary_key(
+        &self,
+        position: usize,
+        layout: SearchKeyLayout,
+    ) -> Result<Option<MatchKey>> {
+        let (_, virtual_size) = self.key_extents()?;
+        if position > self.dictionary_size {
+            return Err(Error::CorruptData);
+        }
+        if !self.retains_frame_start() {
+            return Err(Error::InvalidState);
+        }
+        let width = usize::from(layout.key_bytes());
+        if virtual_size - position < width {
+            return Ok(None);
+        }
+        let mut bytes = [0; 8];
+        for (offset, byte) in bytes[..width].iter_mut().enumerate() {
+            let index = position.checked_add(offset).ok_or(Error::ResourceLimit)?;
+            *byte = if index < self.dictionary_size {
+                self.dictionary
+                    .ok_or(Error::InvalidState)?
+                    .content_byte(index)?
+            } else {
+                self.output_byte(index - self.dictionary_size)?
+            };
+        }
+        // Only the selected initialized prefix is read. Zeroed scratch bytes
+        // beyond width are never used to pad an absent logical source byte.
+        Ok(layout.read_key(&bytes[..width]))
+    }
+
+    /// Copy a key starting in retained-output/current-input coordinates.
+    ///
+    /// Positions in 0..=H+B are valid; the exact endpoint is an empty tail.
+    /// A valid tail shorter than width returns None, while a position beyond
+    /// the indexed region is CorruptData. Extent or absolute-frame overflow is
+    /// ResourceLimit. A malformed retained-history coordinate remains an error
+    /// from the checked output reader rather than being replaced with padding.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "variable-width parser integration follows this source checkpoint"
+        )
+    )]
+    fn output_key(&self, position: usize, layout: SearchKeyLayout) -> Result<Option<MatchKey>> {
+        let (output_size, _) = self.key_extents()?;
+        if position > output_size {
+            return Err(Error::CorruptData);
+        }
+        let width = usize::from(layout.key_bytes());
+        if output_size - position < width {
+            return Ok(None);
+        }
+        let mut bytes = [0; 8];
+        for (offset, byte) in bytes[..width].iter_mut().enumerate() {
+            *byte = self.output_byte(position.checked_add(offset).ok_or(Error::ResourceLimit)?)?;
+        }
+        Ok(layout.read_key(&bytes[..width]))
     }
 
     /// Read a four-byte key across dictionary/frame-zero while it remains live.
@@ -2305,5 +2419,374 @@ mod tests {
                 .unwrap();
             assert_eq!(history.into_bytes(), vec![b'x'; length]);
         }
+    }
+
+    #[test]
+    fn source_keys_join_dictionary_history_and_input_at_every_selected_width() {
+        let dictionary = Dictionary::raw(b"ab").unwrap();
+        let mut history = RingHistory::new(8);
+        history.start_frame(8).unwrap();
+        history.commit(b"cd").unwrap();
+        let source = MatchSource {
+            block: b"efghijkl",
+            dictionary: Some(dictionary.view()),
+            dictionary_size: 2,
+            history: Some(&history),
+            history_size: 2,
+            frame_position: 2,
+            window_size: 8,
+        };
+        let joined = b"abcdefghijkl";
+        for width in 4..=8 {
+            let layout = SearchKeyLayout::new(10, width).unwrap();
+            for start in 0..=2 {
+                assert_eq!(
+                    source.dictionary_boundary_key(start, layout).unwrap(),
+                    layout.read_key(&joined[start..])
+                );
+            }
+            for start in 0..=10 {
+                assert_eq!(
+                    source.output_key(start, layout).unwrap(),
+                    layout.read_key(&joined[2 + start..])
+                );
+            }
+        }
+        let layout = SearchKeyLayout::new(18, 8).unwrap();
+        // This key crosses both boundaries in a single eight-byte extraction.
+        assert_eq!(
+            source.dictionary_boundary_key(0, layout).unwrap(),
+            layout.read_key(b"abcdefgh")
+        );
+        // D itself is the frame-zero boundary, with both H and B contributing.
+        assert_eq!(
+            source.dictionary_boundary_key(2, layout).unwrap(),
+            layout.read_key(b"cdefghij")
+        );
+        assert_eq!(source.dictionary_boundary_word(0).unwrap(), *b"abcd");
+        assert_eq!(source.output_word(0).unwrap(), *b"cdef");
+        assert_eq!(history.frame_len(), 2);
+        assert_eq!(dictionary.content(), b"ab");
+    }
+
+    #[test]
+    fn source_keys_read_wrapped_history_and_current_input_without_stored_pointers() {
+        let mut history = RingHistory::new(5);
+        history.start_frame(5).unwrap();
+        history.commit(b"abcde").unwrap();
+        history.commit(b"fg").unwrap();
+        let source = MatchSource {
+            block: b"hijklmn",
+            dictionary: None,
+            dictionary_size: 0,
+            history: Some(&history),
+            history_size: 5,
+            frame_position: 7,
+            window_size: 16,
+        };
+        let expected = b"cdefghijklmn";
+        for width in 4..=8 {
+            let layout = SearchKeyLayout::new(16, width).unwrap();
+            for start in 0..=expected.len() {
+                assert_eq!(
+                    source.output_key(start, layout).unwrap(),
+                    layout.read_key(&expected[start..])
+                );
+            }
+        }
+        assert_eq!(source.output_word(3).unwrap(), *b"fghi");
+        assert_eq!(history.byte_at(1), Err(Error::CorruptData));
+        assert_eq!(history.byte_at(2).unwrap(), b'c');
+        assert_eq!(history.byte_at(6).unwrap(), b'g');
+    }
+
+    #[test]
+    fn source_keys_short_flush_tails_return_none_without_padding() {
+        let bytes = b"abcdefgh";
+        for length in 0..=bytes.len() {
+            let source = MatchSource::<Global> {
+                block: &bytes[..length],
+                dictionary: None,
+                dictionary_size: 0,
+                history: None,
+                history_size: 0,
+                frame_position: 0,
+                window_size: 1024,
+            };
+            for width in 4..=8 {
+                let layout = SearchKeyLayout::new(10, width).unwrap();
+                assert_eq!(
+                    source.dictionary_boundary_key(0, layout).unwrap(),
+                    layout.read_key(&bytes[..length])
+                );
+                for start in 0..=length {
+                    assert_eq!(
+                        source.output_key(start, layout).unwrap(),
+                        layout.read_key(&bytes[start..length])
+                    );
+                }
+                if length < usize::from(width) {
+                    assert_eq!(source.output_key(0, layout), Ok(None));
+                }
+            }
+        }
+        let dictionary = Dictionary::raw(b"a").unwrap();
+        let mut history = RingHistory::new(1);
+        history.start_frame(1).unwrap();
+        history.commit(b"b").unwrap();
+        for length in 0..=6 {
+            let source = MatchSource {
+                block: &b"cdefgh"[..length],
+                dictionary: Some(dictionary.view()),
+                dictionary_size: 1,
+                history: Some(&history),
+                history_size: 1,
+                frame_position: 1,
+                window_size: 1024,
+            };
+            for width in 4..=8 {
+                let layout = SearchKeyLayout::new(18, width).unwrap();
+                assert_eq!(
+                    source.dictionary_boundary_key(0, layout).unwrap(),
+                    layout.read_key(&bytes[..2 + length])
+                );
+                assert_eq!(
+                    source.output_key(0, layout).unwrap(),
+                    layout.read_key(&bytes[1..2 + length])
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn source_keys_empty_regions_and_exact_endpoints_have_explicit_results() {
+        let empty = Dictionary::raw(&[]).unwrap();
+        let mut history = RingHistory::new(8);
+        history.start_frame(8).unwrap();
+        let layout = SearchKeyLayout::new(16, 4).unwrap();
+        let mut source = MatchSource {
+            block: &[],
+            dictionary: Some(empty.view()),
+            dictionary_size: 0,
+            history: Some(&history),
+            history_size: 0,
+            frame_position: 0,
+            window_size: 8,
+        };
+        for _ in 0..2 {
+            assert_eq!(source.dictionary_boundary_key(0, layout), Ok(None));
+            assert_eq!(source.output_key(0, layout), Ok(None));
+            assert_eq!(
+                source.dictionary_boundary_key(1, layout),
+                Err(Error::CorruptData)
+            );
+            assert_eq!(source.output_key(1, layout), Err(Error::CorruptData));
+            source.dictionary = None;
+            source.history = None;
+        }
+        let dictionary = Dictionary::raw(b"abcd").unwrap();
+        source.dictionary = Some(dictionary.view());
+        source.dictionary_size = 4;
+        assert_eq!(
+            source.dictionary_boundary_key(0, layout).unwrap(),
+            layout.read_key(b"abcd")
+        );
+        assert_eq!(source.dictionary_boundary_key(4, layout), Ok(None));
+        assert_eq!(source.output_key(0, layout), Ok(None));
+        assert_eq!(
+            source.dictionary_boundary_key(5, layout),
+            Err(Error::CorruptData)
+        );
+        assert_eq!(source.output_key(1, layout), Err(Error::CorruptData));
+    }
+
+    #[test]
+    fn source_keys_reject_evicted_frame_zero_while_dictionary_only_matches_remain_live() {
+        let dictionary = Dictionary::raw(b"abcd").unwrap();
+        let mut history = RingHistory::new(4);
+        history.start_frame(4).unwrap();
+        history.commit(b"abcd").unwrap();
+        let layout = SearchKeyLayout::new(16, 8).unwrap();
+        {
+            let source = MatchSource {
+                block: b"abcdabcd",
+                dictionary: Some(dictionary.view()),
+                dictionary_size: 4,
+                history: Some(&history),
+                history_size: 4,
+                frame_position: 4,
+                window_size: 64,
+            };
+            assert_eq!(
+                source.dictionary_boundary_key(0, layout).unwrap(),
+                layout.read_key(b"abcdabcd")
+            );
+            assert_eq!(source.find_match(0, 0).unwrap(), Some((8, 8)));
+        }
+        history.commit(b"ef").unwrap();
+        let source = MatchSource {
+            block: b"abcdabcd",
+            dictionary: Some(dictionary.view()),
+            dictionary_size: 4,
+            history: Some(&history),
+            history_size: 4,
+            frame_position: 6,
+            window_size: 64,
+        };
+        for width in 4..=8 {
+            let layout = SearchKeyLayout::new(16, width).unwrap();
+            for position in 0..=4 {
+                assert_eq!(
+                    source.dictionary_boundary_key(position, layout),
+                    Err(Error::InvalidState)
+                );
+            }
+        }
+        assert_eq!(
+            source.output_key(0, layout).unwrap(),
+            layout.read_key(b"cdefabcd")
+        );
+        assert_eq!(source.find_match(0, 0).unwrap(), Some((10, 4)));
+        assert_eq!(dictionary.content(), b"abcd");
+    }
+
+    #[test]
+    fn source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64() {
+        let layout = SearchKeyLayout::new(10, 8).unwrap();
+        let mut source = MatchSource::<Global> {
+            block: b"abcdefgh",
+            dictionary: None,
+            dictionary_size: 0,
+            history: None,
+            history_size: 0,
+            frame_position: (1_u64 << 32) + 5,
+            window_size: 1 << 20,
+        };
+        assert_eq!(
+            source.output_key(0, layout).unwrap(),
+            layout.read_key(b"abcdefgh")
+        );
+        assert_eq!(source.frame_position, (1_u64 << 32) + 5);
+        assert_eq!(
+            source.dictionary_boundary_key(0, layout),
+            Err(Error::InvalidState)
+        );
+        for position in [9, usize::MAX] {
+            assert_eq!(source.output_key(position, layout), Err(Error::CorruptData));
+            assert_eq!(
+                source.dictionary_boundary_key(position, layout),
+                Err(Error::CorruptData)
+            );
+        }
+        source.frame_position = u64::MAX - 8;
+        assert_eq!(
+            source.output_key(0, layout).unwrap(),
+            layout.read_key(b"abcdefgh")
+        );
+        source.frame_position += 1;
+        assert_eq!(source.output_key(0, layout), Err(Error::ResourceLimit));
+        assert_eq!(
+            source.dictionary_boundary_key(0, layout),
+            Err(Error::ResourceLimit)
+        );
+        source.block = &[];
+        source.frame_position = u64::MAX;
+        assert_eq!(source.output_key(0, layout), Ok(None));
+        for (dictionary_size, history_size, block) in [
+            (usize::MAX, 0, &b"x"[..]),
+            (0, usize::MAX, &b"x"[..]),
+            (usize::MAX - 2, 1, &b"xy"[..]),
+        ] {
+            source.dictionary_size = dictionary_size;
+            source.history_size = history_size;
+            source.block = block;
+            assert_eq!(source.output_key(0, layout), Err(Error::ResourceLimit));
+            assert_eq!(
+                source.dictionary_boundary_key(0, layout),
+                Err(Error::ResourceLimit)
+            );
+        }
+        source.dictionary_size = 0;
+        source.history_size = 4;
+        source.frame_position = 3;
+        source.block = b"abcdefgh";
+        assert_eq!(source.output_key(0, layout), Err(Error::CorruptData));
+        assert_eq!(
+            source.dictionary_boundary_key(0, layout),
+            Err(Error::CorruptData)
+        );
+        // Enough logical bytes with unavailable storage must be an error, not a
+        // zero-padded key or a valid short tail. No invalid memory is constructed.
+        source.frame_position = 4;
+        assert_eq!(source.output_key(0, layout), Err(Error::CorruptData));
+        source.history_size = 0;
+        source.frame_position = 0;
+        source.dictionary_size = 4;
+        assert_eq!(
+            source.dictionary_boundary_key(0, layout),
+            Err(Error::InvalidState)
+        );
+    }
+
+    #[test]
+    fn source_keys_borrow_independent_dictionary_and_ring_allocator_domains() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let dictionary_owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let history_owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let history_monitor = history_owner.monitor();
+        let dictionary = Dictionary::raw_in(b"ab", &dictionary_owner).unwrap();
+        let mut history = RingHistory::new_in(8, &history_owner);
+        history.start_frame(8).unwrap();
+        history.commit(b"cd").unwrap();
+        let dictionary_before = dictionary_monitor.snapshot();
+        let history_before = history_monitor.snapshot();
+        let capacity = history.retained_capacity();
+        assert!(dictionary_monitor.fail_next());
+        assert!(history_monitor.fail_next());
+        {
+            let source = MatchSource {
+                block: b"efghijkl",
+                dictionary: Some(dictionary.view()),
+                dictionary_size: 2,
+                history: Some(&history),
+                history_size: 2,
+                frame_position: 2,
+                window_size: 8,
+            };
+            for width in 4..=8 {
+                let layout = SearchKeyLayout::new(10, width).unwrap();
+                assert_eq!(
+                    source.dictionary_boundary_key(0, layout).unwrap(),
+                    layout.read_key(b"abcdefghijkl")
+                );
+                assert_eq!(
+                    source.output_key(0, layout).unwrap(),
+                    layout.read_key(b"cdefghijkl")
+                );
+                assert_eq!(source.output_key(10, layout), Ok(None));
+                assert_eq!(
+                    source.dictionary_boundary_key(3, layout),
+                    Err(Error::CorruptData)
+                );
+            }
+        }
+        assert_eq!(dictionary_monitor.snapshot(), dictionary_before);
+        assert_eq!(history_monitor.snapshot(), history_before);
+        assert_eq!(dictionary.content(), b"ab");
+        assert_eq!(history.frame_len(), 2);
+        assert_eq!(history.byte_at(0).unwrap(), b'c');
+        assert_eq!(history.byte_at(1).unwrap(), b'd');
+        assert_eq!(history.retained_capacity(), capacity);
+        drop(dictionary);
+        drop(history);
+        drop(dictionary_owner);
+        drop(history_owner);
+        dictionary_monitor.assert_released();
+        history_monitor.assert_released();
     }
 }

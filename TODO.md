@@ -38,7 +38,7 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 - [x] Make MatchTable dimensions and layout configurable, preserving exact owners and logical state on failure, checked seed copying and equivalent safe/unsafe access.
 - [x] Make MatchChain heads/nodes configurable with compatible seed transfer, bounded tags/visits and allocator-failure/resize coverage in both backends.
 - [x] Route selected key width and explicit Chain/Lazy effort through parser probes, preserving lookahead, insertion, tie and failure contracts.
-- [ ] Add exact-width borrowed dictionary/history/input key extraction, with checked coordinates and explicit incomplete tails before storage integration.
+- [x] Add exact-width borrowed dictionary/history/input key extraction, with checked coordinates and explicit incomplete tails before storage integration.
 - [ ] Integrate frame-local storage shape with working tables and dictionary seeds, preserving default insertion order and transactional entropy publication.
 - [ ] Integrate selected output-history retention, including width-aware short Flush tails and dictionary/history/input crossings.
 - [ ] Expose meaningful Encoder search configuration and capacity reporting, with existing boundary/reset/allocator contracts and runnable documentation.

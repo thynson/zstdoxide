@@ -455,3 +455,10 @@ actual budget-dependent selection, both Lazy probes and preflight failure
 atomicity. Thirty-two tests pass in five configurations, public strategy/default
 fingerprints remain unchanged, and three narrow Miri checks pass. These remain
 private capabilities pending live encoder configuration.
+
+Borrowed source keys now span dictionary, ring history and input at each selected
+width, with explicit incomplete tails and checked indexed/absolute coordinates.
+Seven new tests pass in six configurations, six existing boundary executions
+pass, and eight focused Miri executions pass. Both no_std checks, strict Clippy
+and formatting pass. Existing consumers remain unchanged before storage wiring;
+no new C execution is attributed to this helper-only checkpoint.

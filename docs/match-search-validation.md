@@ -202,3 +202,27 @@ wording error: leaf and parser checkpoints replayed saved default frames in
 Rust; the original independent C capture belongs to `ba4529c`, not a new leaf
 C run. No current configurable public encoder or C strategy equivalence is
 claimed before the remaining context consumers are integrated.
+
+## Borrowed dictionary, history and input keys
+
+`MatchSource` now extracts every selected width across its borrowed dictionary,
+wrapped retained history and current input. Both region endpoints are valid
+incomplete tails; out-of-region positions fail. Indexed extents use checked
+`usize` arithmetic while absolute frame positions remain checked `u64` values.
+Dictionary-to-frame crossings require retained frame zero, independently from
+ordinary dictionary-only match eligibility. Extraction copies only initialized
+selected bytes into stack scratch and never allocates or changes an owner.
+
+Seven new tests pass in six feature/std configurations, with three existing
+boundary regressions passing in safe/all builds. Both no_std library checks,
+strict all-target/all-feature Clippy and formatting pass. All seven helper tests
+also pass under all-feature strict-provenance Miri; one exact coordinate test
+passes under i686 Miri with frame positions beyond 32 bits. This totals 56 passing
+test executions across 19 commands. Miri execution is interpreted, not native
+foreign-target execution.
+
+[Source-key evidence](evidence/2026-10-09-match-source-keys.json) embeds all command
+logs and verifies the unchanged source hash. Existing four-byte helpers and
+consumers remain intact at this checkpoint. No new C oracle or complete archived
+default replay was run for this addition; storage and live-control integration
+remain subsequent work items.

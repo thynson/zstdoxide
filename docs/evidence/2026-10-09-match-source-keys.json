@@ -1,0 +1,614 @@
+{
+  "schema_version": 1,
+  "scope": "Module 11 borrowed MatchSource variable-width key helpers; existing consumers unchanged",
+  "repository_head_at_freeze": "04836a2b7085d2492cfe5a2bcef594104eb4289f",
+  "changed_files": [
+    "src/encode.rs"
+  ],
+  "source_sha256": {
+    "src/encode.rs": "8a1f1f41c27bdc12e6c02bdeeed5cce7486e4932b1f83a8bcda609351a6ea072"
+  },
+  "base_source": {
+    "source": "src/encode.rs",
+    "sha256": "e4b77657644ccd70f1536f1114c652b6b99e792e4ec61673bdc3c3e4800b5db6"
+  },
+  "preparation": "A temporary current-source copy was prepared before table/chain commits. Publication asserted the live source was byte-identical to that captured base before writing the prepared addition.",
+  "source_unchanged_through_final_checks": true,
+  "old_four_byte_helpers_byte_identical": true,
+  "api": [
+    "dictionary_boundary_key(position,SearchKeyLayout) -> Result<Option<MatchKey>>",
+    "output_key(position,SearchKeyLayout) -> Result<Option<MatchKey>>"
+  ],
+  "contracts": [
+    "Dictionary-side starts accept 0..=D; D is the frame-zero boundary, including an empty dictionary without an owner.",
+    "Output-side starts accept 0..=H+B; exact endpoints are valid empty tails. Starts beyond the indicated region return CorruptData.",
+    "Every width from four through eight copies exactly its required initialized logical bytes, across dictionary/history/input or wrapped ring boundaries. A valid insufficient tail returns None without zero-padding missing data.",
+    "Dictionary boundary extraction requires retained frame zero and returns InvalidState otherwise, including the D endpoint. Dictionary-only match eligibility remains independently checked by existing find_match.",
+    "D+H+B and H+B indexed extents are checked; frame_position stays u64 and its history subtraction/current-input addition are checked separately. Overflow is ResourceLimit.",
+    "Methods borrow immutable views and fixed stack scratch only. They do not allocate, clone, change owners, mutate ring contents or retain pointers.",
+    "Current four-byte methods and default storage/parser callers remain unchanged for this checkpoint."
+  ],
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::source_keys_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.058,
+      "log": "/tmp/zstdoxide-module11-source-keys-safe.log",
+      "sha256": "91a8b3fdb3f6fc0200cd75cf4a18eb28026110008ec14e1386a1d903ba56de71",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 7 tests\ntest encode::tests::source_keys_read_wrapped_history_and_current_input_without_stored_pointers ... ok\ntest encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64 ... ok\ntest encode::tests::source_keys_join_dictionary_history_and_input_at_every_selected_width ... ok\ntest encode::tests::source_keys_empty_regions_and_exact_endpoints_have_explicit_results ... ok\ntest encode::tests::source_keys_reject_evicted_frame_zero_while_dictionary_only_matches_remain_live ... ok\ntest encode::tests::source_keys_short_flush_tails_return_none_without_padding ... ok\ntest encode::tests::source_keys_borrow_independent_dictionary_and_ring_allocator_domains ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 548 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "ring",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-ring-history",
+        "encode::tests::source_keys_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 10.77,
+      "log": "/tmp/zstdoxide-module11-source-keys-ring.log",
+      "sha256": "0355822dd052216703a31dbc39af4333fdcf67749dc1df1b7bd14b53e929d9c6",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.14s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/559ca3778fa79c65/out/zstdoxide-559ca3778fa79c65)\n\nrunning 7 tests\ntest encode::tests::source_keys_empty_regions_and_exact_endpoints_have_explicit_results ... ok\ntest encode::tests::source_keys_read_wrapped_history_and_current_input_without_stored_pointers ... ok\ntest encode::tests::source_keys_short_flush_tails_return_none_without_padding ... ok\ntest encode::tests::source_keys_reject_evicted_frame_zero_while_dictionary_only_matches_remain_live ... ok\ntest encode::tests::source_keys_join_dictionary_history_and_input_at_every_selected_width ... ok\ntest encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64 ... ok\ntest encode::tests::source_keys_borrow_independent_dictionary_and_ring_allocator_domains ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 548 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "dictionary",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-dictionary",
+        "encode::tests::source_keys_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 8.513,
+      "log": "/tmp/zstdoxide-module11-source-keys-dictionary.log",
+      "sha256": "85fbb82b66d96e4808a78b3cb6bf22c8f0d5f4e643adab2dc05b3c4d47c364e7",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.94s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/42c5e42647031de4/out/zstdoxide-42c5e42647031de4)\n\nrunning 7 tests\ntest encode::tests::source_keys_short_flush_tails_return_none_without_padding ... ok\ntest encode::tests::source_keys_join_dictionary_history_and_input_at_every_selected_width ... ok\ntest encode::tests::source_keys_empty_regions_and_exact_endpoints_have_explicit_results ... ok\ntest encode::tests::source_keys_reject_evicted_frame_zero_while_dictionary_only_matches_remain_live ... ok\ntest encode::tests::source_keys_read_wrapped_history_and_current_input_without_stored_pointers ... ok\ntest encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64 ... ok\ntest encode::tests::source_keys_borrow_independent_dictionary_and_ring_allocator_domains ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 548 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::source_keys_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 10.111,
+      "log": "/tmp/zstdoxide-module11-source-keys-all.log",
+      "sha256": "c55aa711ce1f474646a90bfff80869323cb03aa78a4c187d06364a8a95842d65",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.46s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 7 tests\ntest encode::tests::source_keys_read_wrapped_history_and_current_input_without_stored_pointers ... ok\ntest encode::tests::source_keys_empty_regions_and_exact_endpoints_have_explicit_results ... ok\ntest encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64 ... ok\ntest encode::tests::source_keys_reject_evicted_frame_zero_while_dictionary_only_matches_remain_live ... ok\ntest encode::tests::source_keys_join_dictionary_history_and_input_at_every_selected_width ... ok\ntest encode::tests::source_keys_short_flush_tails_return_none_without_padding ... ok\ntest encode::tests::source_keys_borrow_independent_dictionary_and_ring_allocator_domains ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 548 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "nostd",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "encode::tests::source_keys_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 14.687,
+      "log": "/tmp/zstdoxide-module11-source-keys-nostd.log",
+      "sha256": "a9bf7bd7d192a81909cf7e0d79e12d4fe15674e8cda8b9f8c017f03e3381124a",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.92s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 7 tests\ntest encode::tests::source_keys_empty_regions_and_exact_endpoints_have_explicit_results ... ok\ntest encode::tests::source_keys_read_wrapped_history_and_current_input_without_stored_pointers ... ok\ntest encode::tests::source_keys_join_dictionary_history_and_input_at_every_selected_width ... ok\ntest encode::tests::source_keys_short_flush_tails_return_none_without_padding ... ok\ntest encode::tests::source_keys_reject_evicted_frame_zero_while_dictionary_only_matches_remain_live ... ok\ntest encode::tests::source_keys_borrow_independent_dictionary_and_ring_allocator_domains ... ok\ntest encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64 ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 523 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "nostd-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "encode::tests::source_keys_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 12.175,
+      "log": "/tmp/zstdoxide-module11-source-keys-nostd-all.log",
+      "sha256": "50e2261832a78080ad0abf12231e34a464103fd1a48d49cbf5dfba4050c1f214",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.47s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 7 tests\ntest encode::tests::source_keys_read_wrapped_history_and_current_input_without_stored_pointers ... ok\ntest encode::tests::source_keys_join_dictionary_history_and_input_at_every_selected_width ... ok\ntest encode::tests::source_keys_empty_regions_and_exact_endpoints_have_explicit_results ... ok\ntest encode::tests::source_keys_short_flush_tails_return_none_without_padding ... ok\ntest encode::tests::source_keys_reject_evicted_frame_zero_while_dictionary_only_matches_remain_live ... ok\ntest encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64 ... ok\ntest encode::tests::source_keys_borrow_independent_dictionary_and_ring_allocator_domains ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 523 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-safe-retained",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::retained_candidates_cross_input_boundaries_and_obey_the_advertised_window",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.08,
+      "log": "/tmp/zstdoxide-module11-source-keys-existing-safe-retained.log",
+      "sha256": "507bb7e79612c7a438612cddadbdb6e9a854678ab8abd4469e74491555dce97e",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::retained_candidates_cross_input_boundaries_and_obey_the_advertised_window ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 554 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-safe-dictionary",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::dictionary_crossing_clips_only_after_frame_zero_leaves_the_retained_horizon",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "/tmp/zstdoxide-module11-source-keys-existing-safe-dictionary.log",
+      "sha256": "fc01aaa768f4b3794d3774d05586d45090317c84141861842687b7629071fac3",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::dictionary_crossing_clips_only_after_frame_zero_leaves_the_retained_horizon ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 554 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-safe-prefix",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::short_raw_prefix_keys_cross_dictionary_end_and_expand_with_overlap",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.068,
+      "log": "/tmp/zstdoxide-module11-source-keys-existing-safe-prefix.log",
+      "sha256": "187b1470838f3c3e37485e21483493d416f97f87aee3eff3ef3694d7b7cd97f0",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.01
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::short_raw_prefix_keys_cross_dictionary_end_and_expand_with_overlap ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 554 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "existing-all-retained",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::retained_candidates_cross_input_boundaries_and_obey_the_advertised_window",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.061,
+      "log": "/tmp/zstdoxide-module11-source-keys-existing-all-retained.log",
+      "sha256": "ff96860d1eaa544ab3de98db0e30db11fe130c3c319c7422a6594cd79c458beb",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::retained_candidates_cross_input_boundaries_and_obey_the_advertised_window ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 554 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-all-dictionary",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::dictionary_crossing_clips_only_after_frame_zero_leaves_the_retained_horizon",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.057,
+      "log": "/tmp/zstdoxide-module11-source-keys-existing-all-dictionary.log",
+      "sha256": "4a57d0c18969535721f415e8c5df7da375dcad54b886431c9aa213f2a1b61d07",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::dictionary_crossing_clips_only_after_frame_zero_leaves_the_retained_horizon ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 554 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-all-prefix",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::short_raw_prefix_keys_cross_dictionary_end_and_expand_with_overlap",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.061,
+      "log": "/tmp/zstdoxide-module11-source-keys-existing-all-prefix.log",
+      "sha256": "758436314e677fb5b097ed887c892cf7c67155aa1b5e93fd603bb58eb89620cf",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.01
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::short_raw_prefix_keys_cross_dictionary_end_and_expand_with_overlap ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 554 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "nostd-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.758,
+      "log": "/tmp/zstdoxide-module11-source-keys-nostd-lib.log",
+      "sha256": "889b1812906ded2eb3554af127d5204bc8fc42ce6f0d8db0299c4260a1734327",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.71s\n"
+    },
+    {
+      "name": "nostd-all-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.861,
+      "log": "/tmp/zstdoxide-module11-source-keys-nostd-all-lib.log",
+      "sha256": "9020b0db96cab826d8c03feefbcdd824506c29f4d72995dfad7d2345913c9875",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.82s\n"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 6.504,
+      "log": "/tmp/zstdoxide-module11-source-keys-clippy.log",
+      "sha256": "336427e66eb424eecd21f9f2ac0ba21e055c9de650eb77b12ec0ffbc3238d768",
+      "log_text": "    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.38s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/encode.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.096,
+      "log": "/tmp/zstdoxide-module11-source-keys-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/encode.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.021,
+      "log": "/tmp/zstdoxide-module11-source-keys-diff.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "miri": [
+    {
+      "name": "miri-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::source_keys_",
+        "--",
+        "--test-threads=1"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-miri-all-target",
+        "CARGO_TERM_COLOR": "never",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 18.115,
+      "log": "/tmp/zstdoxide-module11-source-keys-miri-all.log",
+      "sha256": "fb6975591535c960cc747e13fb37ec533d196dc4863e479b715ce8dfe075666a",
+      "execution": "Miri interpreted, not native cross-target or QEMU",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 5.09
+        }
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.38s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-miri-all-target/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 7 tests\ntest encode::tests::source_keys_borrow_independent_dictionary_and_ring_allocator_domains ... ok\ntest encode::tests::source_keys_empty_regions_and_exact_endpoints_have_explicit_results ... ok\ntest encode::tests::source_keys_join_dictionary_history_and_input_at_every_selected_width ... ok\ntest encode::tests::source_keys_read_wrapped_history_and_current_input_without_stored_pointers ... ok\ntest encode::tests::source_keys_reject_evicted_frame_zero_while_dictionary_only_matches_remain_live ... ok\ntest encode::tests::source_keys_short_flush_tails_return_none_without_padding ... ok\ntest encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64 ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 548 filtered out; finished in 5.09s\n\n"
+    },
+    {
+      "name": "miri-i686",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--target",
+        "i686-unknown-linux-gnu",
+        "encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64",
+        "--",
+        "--exact",
+        "--test-threads=1"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-source-keys-miri-i686-target",
+        "CARGO_TERM_COLOR": "never",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686"
+      },
+      "exit_code": 0,
+      "seconds": 13.335,
+      "log": "/tmp/zstdoxide-module11-source-keys-miri-i686.log",
+      "sha256": "33ce74152d52966ec8e180b04847ee557497a7e9d8e3927d276f1e1535ceefa8",
+      "execution": "Miri interpreted, not native cross-target or QEMU",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.15
+        }
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.71s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-source-keys-miri-i686-target/miri/i686-unknown-linux-gnu/debug/build/zstdoxide/b692d32578d03506/out/zstdoxide-b692d32578d03506)\n\nrunning 1 test\ntest encode::tests::source_keys_validate_index_extents_and_keep_absolute_frame_coordinates_u64 ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 547 filtered out; finished in 0.15s\n\n"
+    }
+  ],
+  "summary": {
+    "native_helper_configurations": 6,
+    "helper_tests_per_configuration": 7,
+    "relevant_existing_tests": 3,
+    "existing_test_configurations": 2,
+    "no_std_library_checks": 2,
+    "strict_all_target_all_feature_clippy": true,
+    "format_and_diff": true,
+    "all_feature_native_host_miri_tests": 7,
+    "safe_i686_miri_coordinate_tests": 1,
+    "running_sessions": []
+  },
+  "qualifications": [
+    "Miri is interpreted execution, not native/QEMU cross-target execution. The i686 check used the cached dated sysroot and verifies usize limits alongside frame coordinates above 32 bits.",
+    "No new unsafe operations or feature were introduced. The all-feature Miri helper suite exercises borrowed dictionary/ring reader paths.",
+    "No C oracle or full archived 76-frame baseline was repeated in this helper-only checkpoint; earlier leaf integration evidence remains separate.",
+    "No live MatchSearchOptions integration is claimed. Root owns the subsequent BlockEncoder storage checkpoint.",
+    "Reported harness durations are validation timings, not performance measurements."
+  ],
+  "runner_sha256": {
+    "/tmp/zstdoxide-module11-source-keys-checks.py": "cbe404cad8c7a1bc61ea956f3d5d89fc561af67cf8e8a64a95121b73aa2038ec",
+    "/tmp/zstdoxide-module11-source-keys-miri.py": "fd730c10ae4c00d4acef45a2f6ee3247957faf74c9d00b3b05c33cf2103d2611"
+  },
+  "original_evidence_sha256": "3559ebaba4e90c135fa93c5e0d69655cebf37fd337ca33133214be31fad367c4",
+  "root_review": {
+    "source_and_log_hashes_verified": true,
+    "review": "Checked exact-width bounds, separate usize/u64 coordinates, retained-frame-zero eligibility, and no mutation/allocation. Existing consumers remain unchanged at this checkpoint.",
+    "passing_test_executions": 56
+  }
+}
