@@ -1,0 +1,115 @@
+{
+  "cases": [
+    {
+      "capacity": 2,
+      "derived_from": "width-4",
+      "family": "capacity",
+      "hash_log": 6,
+      "id": "width-4-capacity-exact",
+      "min_match": 4,
+      "packet_bytes": 1128,
+      "packet_sha256": "9d458077aaebd75bf8a7e6f3db15b09bb7f6e15ddd41262bf92572ded02b2d99",
+      "source_bytes": 1024,
+      "source_sha256": "8477a952476246dc1fc3d3a2fb67b9b1cd1938b954e27b95e1045ddde414e4fb",
+      "target": 0,
+      "window_log": 10
+    },
+    {
+      "capacity": 1,
+      "derived_from": "width-4",
+      "family": "capacity",
+      "hash_log": 6,
+      "id": "width-4-capacity-short",
+      "min_match": 4,
+      "packet_bytes": 1128,
+      "packet_sha256": "6f07e5ff5b560f81c77fa555d0c9db81bd3ce4cae6f6758b5208103da2410f57",
+      "source_bytes": 1024,
+      "source_sha256": "8477a952476246dc1fc3d3a2fb67b9b1cd1938b954e27b95e1045ddde414e4fb",
+      "target": 0,
+      "window_log": 10
+    },
+    {
+      "capacity": 0,
+      "derived_from": "width-4",
+      "family": "capacity",
+      "hash_log": 6,
+      "id": "width-4-capacity-zero",
+      "min_match": 4,
+      "packet_bytes": 1128,
+      "packet_sha256": "5ede0e669d2c9ed51f69184555729170a7312a272cdf14404d718e59c17cedbb",
+      "source_bytes": 1024,
+      "source_sha256": "8477a952476246dc1fc3d3a2fb67b9b1cd1938b954e27b95e1045ddde414e4fb",
+      "target": 0,
+      "window_log": 10
+    },
+    {
+      "capacity": 6,
+      "derived_from": "history-period",
+      "family": "capacity",
+      "hash_log": 6,
+      "id": "history-period-capacity-exact",
+      "min_match": 4,
+      "packet_bytes": 3176,
+      "packet_sha256": "c2b4bac574a191a64ef1dddb1aac50a06477fb1dd092a60c57d6603aa4a307f7",
+      "source_bytes": 3072,
+      "source_sha256": "b5ed49d0e4f9fc171af890dc7851b7f350418d611c785f888707ebdbe34fab17",
+      "target": 0,
+      "window_log": 10
+    },
+    {
+      "capacity": 5,
+      "derived_from": "history-period",
+      "family": "capacity",
+      "hash_log": 6,
+      "id": "history-period-capacity-short",
+      "min_match": 4,
+      "packet_bytes": 3176,
+      "packet_sha256": "9c6f3dde4af3fd427f66d76d361bb37961dcb42a4950260d8add7b1603634741",
+      "source_bytes": 3072,
+      "source_sha256": "b5ed49d0e4f9fc171af890dc7851b7f350418d611c785f888707ebdbe34fab17",
+      "target": 0,
+      "window_log": 10
+    },
+    {
+      "capacity": 0,
+      "derived_from": "history-period",
+      "family": "capacity",
+      "hash_log": 6,
+      "id": "history-period-capacity-zero",
+      "min_match": 4,
+      "packet_bytes": 3176,
+      "packet_sha256": "a5b28730988708a485f3c351936ad4da2992bdc71f4de80ac8c4d9ba9432c52a",
+      "source_bytes": 3072,
+      "source_sha256": "b5ed49d0e4f9fc171af890dc7851b7f350418d611c785f888707ebdbe34fab17",
+      "target": 0,
+      "window_log": 10
+    }
+  ],
+  "packet_pins": [
+    {
+      "path": "/private/tmp/zstdoxide-fast-collector-final/packets/width-4-capacity-exact.packet",
+      "sha256": "9d458077aaebd75bf8a7e6f3db15b09bb7f6e15ddd41262bf92572ded02b2d99"
+    },
+    {
+      "path": "/private/tmp/zstdoxide-fast-collector-final/packets/width-4-capacity-short.packet",
+      "sha256": "6f07e5ff5b560f81c77fa555d0c9db81bd3ce4cae6f6758b5208103da2410f57"
+    },
+    {
+      "path": "/private/tmp/zstdoxide-fast-collector-final/packets/width-4-capacity-zero.packet",
+      "sha256": "5ede0e669d2c9ed51f69184555729170a7312a272cdf14404d718e59c17cedbb"
+    },
+    {
+      "path": "/private/tmp/zstdoxide-fast-collector-final/packets/history-period-capacity-exact.packet",
+      "sha256": "c2b4bac574a191a64ef1dddb1aac50a06477fb1dd092a60c57d6603aa4a307f7"
+    },
+    {
+      "path": "/private/tmp/zstdoxide-fast-collector-final/packets/history-period-capacity-short.packet",
+      "sha256": "9c6f3dde4af3fd427f66d76d361bb37961dcb42a4950260d8add7b1603634741"
+    },
+    {
+      "path": "/private/tmp/zstdoxide-fast-collector-final/packets/history-period-capacity-zero.packet",
+      "sha256": "a5b28730988708a485f3c351936ad4da2992bdc71f4de80ac8c4d9ba9432c52a"
+    }
+  ],
+  "phase": "after normal baseline, before capacity or sanitizer calls"
+}

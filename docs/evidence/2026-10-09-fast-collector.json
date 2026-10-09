@@ -1,0 +1,459 @@
+{
+  "archive": {
+    "all_member_hashes_verified": true,
+    "bytes": 1740595,
+    "files": 891,
+    "path": "2026-10-09-fast-collector.tar.gz",
+    "sha256": "24e9e42b917763667a582a61f079db94ac59a731e6e722f630d5a0200c10f265"
+  },
+  "changed_files": [
+    {
+      "bytes": 14426,
+      "path": "scripts/import_fast_collector.py",
+      "sha256": "a7929fbc8d50697fc0631de4d6de9f311727249cfadef488dfbb5bdf450b598d"
+    },
+    {
+      "bytes": 797,
+      "path": "tests/upstream/fast-collector/NOTICE",
+      "sha256": "a589d71195a9d7777939c7c3181ad2f268c232f15d4a40daf156ee427b1f442c"
+    },
+    {
+      "bytes": 4535,
+      "path": "tests/upstream/fast-collector/README.md",
+      "sha256": "87f20b3d6ce57cc4180fb74a3bcad73955ac2d326a67a50f9bdc17580b69daf1"
+    },
+    {
+      "bytes": 4080,
+      "path": "tests/upstream/fast-collector/capacity-recipes.json",
+      "sha256": "601edcb9bd81719e25b3b094414fb265bf7add73428015a8015c77589dd9faaf"
+    },
+    {
+      "bytes": 25942,
+      "path": "tests/upstream/fast-collector/collector.py",
+      "sha256": "f393b832243b9d104d9249a79ddecf4c8a8ed2e710f8a5d6460a7135c37d0f99"
+    },
+    {
+      "bytes": 28509,
+      "path": "tests/upstream/fast-collector/collector_oracle.c",
+      "sha256": "f5b575b5d2b57191a210e71402ade98b7e5039fcbc13115165fd95b2548308af"
+    },
+    {
+      "bytes": 36795,
+      "path": "tests/upstream/fast-collector/manifest.json",
+      "sha256": "475c8a7e37ea811aa8cfc1d462733f314eaa02b6afe1db20d15a55cd2b94239d"
+    },
+    {
+      "bytes": 11133,
+      "path": "tests/upstream/fast-collector/negative_controls.py",
+      "sha256": "ed4976c953c7787ca6d7d2e6b0dbf1cd74fe81ae20d88587e00b4df39ca95a35"
+    },
+    {
+      "bytes": 2865,
+      "path": "tests/upstream/fast-collector/normal-adjust-1024-0.stdout",
+      "sha256": "781958ea60b4924f4b391581b4d2106aa6511533678605d5dd7ace6c38616003"
+    },
+    {
+      "bytes": 3193,
+      "path": "tests/upstream/fast-collector/normal-adjust-1024-1.stdout",
+      "sha256": "162427acad2ce81382a7fefb66b11edb9e6274eaf17ac30e15a4eb05ec7f9b29"
+    },
+    {
+      "bytes": 2559,
+      "path": "tests/upstream/fast-collector/normal-adjust-16-0.stdout",
+      "sha256": "6cc3a9c0085ebd209abe376f93fb0bace31c5d3b23374ff281d4edf81ea92e3c"
+    },
+    {
+      "bytes": 2561,
+      "path": "tests/upstream/fast-collector/normal-adjust-16-1.stdout",
+      "sha256": "63b702fe1990c9d920520f6e41c95abf6277880eafae8b90e7b4b62d4608d8bc"
+    },
+    {
+      "bytes": 5965,
+      "path": "tests/upstream/fast-collector/normal-history-alternating.stdout",
+      "sha256": "30c09271f22c2ee6520777e1a64d4a55ea545a8720927246ae1e5477e3593c21"
+    },
+    {
+      "bytes": 9983,
+      "path": "tests/upstream/fast-collector/normal-history-copy-three.stdout",
+      "sha256": "6244e28ed2735b32bed4d2d8dd656832377d57b2e8c3b4b79bc8aeef0fd97080"
+    },
+    {
+      "bytes": 9967,
+      "path": "tests/upstream/fast-collector/normal-history-expiry.stdout",
+      "sha256": "59b3293e22497f015c46d44474212c9c356c18d73490c40dc01b05a40b199571"
+    },
+    {
+      "bytes": 93871,
+      "path": "tests/upstream/fast-collector/normal-history-large.stdout",
+      "sha256": "5b14f5e548c919c774c228b61bb843c08d13192269adf0d67b613b84ea045c34"
+    },
+    {
+      "bytes": 5703,
+      "path": "tests/upstream/fast-collector/normal-history-period-capacity-exact.stdout",
+      "sha256": "92e1441fcf76784d2bed895b139271bfe90b87879147a22270cb8960c25984f5"
+    },
+    {
+      "bytes": 889,
+      "path": "tests/upstream/fast-collector/normal-history-period-capacity-short.stdout",
+      "sha256": "f921661d1a6eb6cd9e36847618c38e860227cfa1a9cf7786c6b42a3887cfdc1c"
+    },
+    {
+      "bytes": 887,
+      "path": "tests/upstream/fast-collector/normal-history-period-capacity-zero.stdout",
+      "sha256": "2c6221eba2bf6bc0f9ebcf80d7109ccca61d5c1247bd63e4cceaf13fd3f331e4"
+    },
+    {
+      "bytes": 5649,
+      "path": "tests/upstream/fast-collector/normal-history-period.stdout",
+      "sha256": "d760c54bca5d385867860a675966533209b5c02dea8e1ea509fe1bbc0850d820"
+    },
+    {
+      "bytes": 93579,
+      "path": "tests/upstream/fast-collector/normal-long-literal.stdout",
+      "sha256": "4541f9a39a6dccd31b3876bd8cf5ad56bb1b1f2049c7e1075efe4137c9975f7c"
+    },
+    {
+      "bytes": 2579,
+      "path": "tests/upstream/fast-collector/normal-long-match-65540.stdout",
+      "sha256": "7c33765d6a5e5763320e26a694f25618a6e733e5c4e7f57351f4448da69bc39e"
+    },
+    {
+      "bytes": 2579,
+      "path": "tests/upstream/fast-collector/normal-long-match-65541.stdout",
+      "sha256": "3159366dc1f9720bcc41f44c91774ab53b9047dfddea6f20125426a00ef2ebb3"
+    },
+    {
+      "bytes": 2563,
+      "path": "tests/upstream/fast-collector/normal-long-uniform.stdout",
+      "sha256": "2e1007cd720394160c98e8594803e71594cb7248d3d36e94456ae94d5ec1c07b"
+    },
+    {
+      "bytes": 2495,
+      "path": "tests/upstream/fast-collector/normal-target-131072.stdout",
+      "sha256": "889a16d904c586beef42ae3aa7592419839f26843d1f6004855ca6df9c490a8c"
+    },
+    {
+      "bytes": 4661,
+      "path": "tests/upstream/fast-collector/normal-target-3.stdout",
+      "sha256": "1acac6282f6766bd2745dcab80ea7bd43032edca4f59779602e7ffd97ca34bb5"
+    },
+    {
+      "bytes": 4397,
+      "path": "tests/upstream/fast-collector/normal-target-4.stdout",
+      "sha256": "b8d8523faf1f09d51f672de6a85658408e2d3d593146a0b794bd7f94e50d8f2f"
+    },
+    {
+      "bytes": 797,
+      "path": "tests/upstream/fast-collector/normal-tiny-0.stdout",
+      "sha256": "c4ad0b2d958a01c476a496879d8f977bd929afb6e913b020cad108ef3dea9dc6"
+    },
+    {
+      "bytes": 893,
+      "path": "tests/upstream/fast-collector/normal-tiny-1.stdout",
+      "sha256": "dafbc02a7f9438bc7e207e466561b1bc0ffd3037a6aa39abc9117b86a6fbca0e"
+    },
+    {
+      "bytes": 2419,
+      "path": "tests/upstream/fast-collector/normal-tiny-10.stdout",
+      "sha256": "0f53331cb6a3130d11bc70dab680850bfda6e054f9dd6fbe46c18a2d68e6ec42"
+    },
+    {
+      "bytes": 2419,
+      "path": "tests/upstream/fast-collector/normal-tiny-11.stdout",
+      "sha256": "f36d4f664e715e223f9094d526d6c7f2a24d4ff22dc8bfcb131e9ddf44947b9c"
+    },
+    {
+      "bytes": 2419,
+      "path": "tests/upstream/fast-collector/normal-tiny-12.stdout",
+      "sha256": "93539518f5f397c32aa23eac85582df4e373b4857739188fea97c19b4cfceb6a"
+    },
+    {
+      "bytes": 2447,
+      "path": "tests/upstream/fast-collector/normal-tiny-13.stdout",
+      "sha256": "822c81677ea7fdce80fa8aa2038a87b2762fada18e62e36c14337547ed7b7a60"
+    },
+    {
+      "bytes": 2447,
+      "path": "tests/upstream/fast-collector/normal-tiny-14.stdout",
+      "sha256": "19cbabba0919c25dd3a68deb160ecd8d876a0680f4468c52fbe64be8da20a415"
+    },
+    {
+      "bytes": 2447,
+      "path": "tests/upstream/fast-collector/normal-tiny-15.stdout",
+      "sha256": "e0e5158ed15098b07ca456ae8e758ebafe4378be741e0e699a039b0086ec8d3d"
+    },
+    {
+      "bytes": 2447,
+      "path": "tests/upstream/fast-collector/normal-tiny-16.stdout",
+      "sha256": "99a8c9b5ba1e1b308e07c48f5c72aa97b56fdc0154cee24d08bfb273c6f27c57"
+    },
+    {
+      "bytes": 893,
+      "path": "tests/upstream/fast-collector/normal-tiny-2.stdout",
+      "sha256": "cdc42fb10aa1ee7a3e6dd96353d2be107060c30862ff64a09c5ae3ff01571577"
+    },
+    {
+      "bytes": 893,
+      "path": "tests/upstream/fast-collector/normal-tiny-3.stdout",
+      "sha256": "2f757b44e6dd245aba02ffdb7a1101a78457a51acb24f4684075982edb486b38"
+    },
+    {
+      "bytes": 893,
+      "path": "tests/upstream/fast-collector/normal-tiny-4.stdout",
+      "sha256": "0e4bb86150fb727b59bc67a0006103533903fe509553c1ceaf220d32e25b10ee"
+    },
+    {
+      "bytes": 893,
+      "path": "tests/upstream/fast-collector/normal-tiny-5.stdout",
+      "sha256": "bfc35329a2006637e094315029d5c36ea44e41ea674c23a3c8776ed94cee9ae6"
+    },
+    {
+      "bytes": 893,
+      "path": "tests/upstream/fast-collector/normal-tiny-6.stdout",
+      "sha256": "421f509dece9a21de63588cdc29c2d8f52b3135a2a847937734db91e13a7101b"
+    },
+    {
+      "bytes": 2403,
+      "path": "tests/upstream/fast-collector/normal-tiny-7.stdout",
+      "sha256": "9bc6dbf1868aa888f551b5911b040b3d4b021361c8acf60b9d5c7a759079200b"
+    },
+    {
+      "bytes": 2403,
+      "path": "tests/upstream/fast-collector/normal-tiny-8.stdout",
+      "sha256": "177d57901b8cf9b9820bd8fb92b1b1d6e8c7f2d6b71356abcf95576f45d8b620"
+    },
+    {
+      "bytes": 2403,
+      "path": "tests/upstream/fast-collector/normal-tiny-9.stdout",
+      "sha256": "1335a08ab668d90f8186f039f62d00f4bdc772f7a073129abd1f4c62a953c79e"
+    },
+    {
+      "bytes": 919,
+      "path": "tests/upstream/fast-collector/normal-tiny-final-1.stdout",
+      "sha256": "4d571932da75cc509763d2dc4ab830aaad62572a6428451b813571b5dbfcedec"
+    },
+    {
+      "bytes": 919,
+      "path": "tests/upstream/fast-collector/normal-tiny-final-6.stdout",
+      "sha256": "719856e5098ddc915b086d1a6d8704549dd9166855271f13c7c452293412a9d3"
+    },
+    {
+      "bytes": 4541,
+      "path": "tests/upstream/fast-collector/normal-width-3.stdout",
+      "sha256": "63e8e1adf6e694c150099a548498ffd81dc04cbbd36b6905db68bfa362eeaeef"
+    },
+    {
+      "bytes": 4597,
+      "path": "tests/upstream/fast-collector/normal-width-4-capacity-exact.stdout",
+      "sha256": "2a0b77e8681b9371417a55ff1bb53ca9d1b78d20814281d989dff81ebad07f7c"
+    },
+    {
+      "bytes": 873,
+      "path": "tests/upstream/fast-collector/normal-width-4-capacity-short.stdout",
+      "sha256": "69e18dac75cccb0495b7743523b68d4f8712605c8920d8919e0c64380f9d6cb4"
+    },
+    {
+      "bytes": 871,
+      "path": "tests/upstream/fast-collector/normal-width-4-capacity-zero.stdout",
+      "sha256": "aadcba3ebc72627a7f48e83b829cb5361c21402e27d807f6d893afa47bab6e4c"
+    },
+    {
+      "bytes": 4541,
+      "path": "tests/upstream/fast-collector/normal-width-4.stdout",
+      "sha256": "f3938a5869122c7f1e9b9c5c365b494905352a99b9ba7bd07b2f6ecbe3392c0d"
+    },
+    {
+      "bytes": 4641,
+      "path": "tests/upstream/fast-collector/normal-width-5.stdout",
+      "sha256": "630527de87ab45688728ecc74903d2d2caa4914a11d53b7d2d5cd750d8778d72"
+    },
+    {
+      "bytes": 4549,
+      "path": "tests/upstream/fast-collector/normal-width-6.stdout",
+      "sha256": "9d24c00ed1cecbf25135ec2952df515f611968bb7b3960ffb5981e207b63aec4"
+    },
+    {
+      "bytes": 4605,
+      "path": "tests/upstream/fast-collector/normal-width-7.stdout",
+      "sha256": "1a23d131470cfbb7bc7b003c404363d1c87c1a579c396dea7a5c8a0ed098580d"
+    },
+    {
+      "bytes": 18011,
+      "path": "tests/upstream/fast-collector/recipes.json",
+      "sha256": "68b08490820868728b7128126f38f08f58b08f6e1d139db72b7a6eeb5d111612"
+    }
+  ],
+  "coordinator_registration": {
+    "commands": [
+      {
+        "command": [
+          "python3",
+          "scripts/import_fast_collector.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "stdout": "Validated 46 Fast collector cases / 92 padding observations offline; no subprocess was used.\n"
+      },
+      {
+        "command": [
+          "python3",
+          "-O",
+          "scripts/import_fast_collector.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "stdout": "Validated 46 Fast collector cases / 92 padding observations offline; no subprocess was used.\n"
+      },
+      {
+        "command": [
+          "python3",
+          "scripts/check_upstream_fixtures.py"
+        ],
+        "exit_code": 0,
+        "stdout": "Fixture integrity valid: 520 files in 14 collections; source provenance and recorded expected-output metadata agree.\nNo upstream checkout, C compiler, or codec executable was required.\n"
+      },
+      {
+        "command": [
+          "sh",
+          "-n",
+          "scripts/check.sh",
+          "scripts/check_upstream_oracles.sh"
+        ],
+        "exit_code": 0,
+        "stdout": ""
+      }
+    ],
+    "registered_source_sha256": {
+      "scripts/check.sh": "53aab7f2195908ea3207f6c4572a9a1f4b66cfdb50ff4f1707436ab275b08483",
+      "scripts/check_upstream_fixtures.py": "1229c22706c50b1f15d231a73de24f85963d1028e3155e377c77f7d2bb1a86a5",
+      "scripts/check_upstream_oracles.sh": "2335b0a1627691084d15e0b48c952feb0cb8b63c1268a9395bfa2f5cdb8ec462"
+    },
+    "status": "passed"
+  },
+  "duplicate_negative_baseline_files_omitted": 2222,
+  "duplicate_qualification": "Every omitted baseline file is byte-identical to the included repository collection; the negative runner reconstructs each mutated copy. All changed input files, command logs and summaries are retained.",
+  "initial_wrapper_controls": {
+    "commands": 58,
+    "path": "/tmp/zstdoxide-collector-portable-negative-initial/summary.json",
+    "qualification": "Before optional explicit --cc rejection adjustment; preserved initial importer hash in the source manifest.",
+    "sha256": "a7d013bfdf2b07dce33ff3cdc2eee4704e4b7e355a55fda55691517d756f6cc1",
+    "status": "passed"
+  },
+  "omitted_artifacts": [
+    {
+      "bytes": 504640,
+      "path": "/tmp/zstdoxide-fast-collector-portable-final/collector-normal",
+      "reason": "compiled executable/debug artifact excluded",
+      "sha256": "6c2060a18798a7db88fc245fc0fea58e421293a1d6f3dfc75bf654e4eea593b3"
+    },
+    {
+      "bytes": 1253600,
+      "path": "/tmp/zstdoxide-fast-collector-portable-final/collector-sanitized",
+      "reason": "compiled executable/debug artifact excluded",
+      "sha256": "9b7df2e07039faacc340f9be64a2b255c41936f49a88136a164b64aeaa71db0f"
+    },
+    {
+      "bytes": 648,
+      "path": "/tmp/zstdoxide-fast-collector-portable-final/collector-sanitized.dSYM/Contents/Info.plist",
+      "reason": "compiled executable/debug artifact excluded",
+      "sha256": "801cc7b5d1588cc70819b4346c33de6a5cdf62451e4f75a704aa57a23a8e87ed"
+    },
+    {
+      "bytes": 765516,
+      "path": "/tmp/zstdoxide-fast-collector-portable-final/collector-sanitized.dSYM/Contents/Resources/DWARF/collector-sanitized",
+      "reason": "compiled executable/debug artifact excluded",
+      "sha256": "e36d9aac1d9a41cfbcc99b29b218345cf8b7c404aad21eb6d06a334721ee203b"
+    },
+    {
+      "bytes": 158,
+      "path": "/tmp/zstdoxide-fast-collector-portable-final/collector-sanitized.dSYM/Contents/Resources/Relocations/aarch64/collector-sanitized.yml",
+      "reason": "compiled executable/debug artifact excluded",
+      "sha256": "14efef3417978a5f8d923b8d322950055205e76b6ae3c6a5d12b9678fe4c0646"
+    },
+    {
+      "kind": "symlink",
+      "path": "/tmp/zstdoxide-collector-portable-negative-initial/outside-symlink/normal-width-4.stdout",
+      "reason": "negative escape case retained as metadata, not a traversable archive link",
+      "target": "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-collector/normal-width-4.stdout"
+    },
+    {
+      "kind": "symlink",
+      "path": "/tmp/zstdoxide-collector-portable-negative-final/outside-symlink/normal-width-4.stdout",
+      "reason": "negative escape case retained as metadata, not a traversable archive link",
+      "target": "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-collector/normal-width-4.stdout"
+    }
+  ],
+  "original_capture": {
+    "archive_sha256": "33923ded89357b0b0e4868c8dcd9de8c650101f810b0f89fbf34d5bda5865121",
+    "evidence_sha256": "232daa52a8ddfc63a03209d3155478aa323f8437c4af5e8072c482ad8e93a97f",
+    "frozen_sources_unchanged": true
+  },
+  "original_publication_evidence_sha256": "d81f5a689389ce5e0803e7e4e3fd0015f0f77226784f9a98d4904fbf89c2e7ff",
+  "other_checks": {
+    "generic_fixture_auditor": {
+      "collections": 14,
+      "files": 520,
+      "qualification": "fast-collector appended to REQUIRED_COLLECTIONS in the validation process only; root-owned registration pending at this checkpoint.",
+      "result": "passed"
+    },
+    "python_ast_files": [
+      "scripts/import_fast_collector.py",
+      "tests/upstream/fast-collector/collector.py",
+      "tests/upstream/fast-collector/negative_controls.py"
+    ],
+    "read_only_relocation_review": "fuzzer_tests found no blocker; optional explicit --cc offline rejection applied. Relative docs links confirmed correct at three parent directories."
+  },
+  "portable_reproduction": {
+    "all_command_stderr_empty": true,
+    "case_executions": 184,
+    "commands": 97,
+    "exact_frozen_comparisons": [
+      {
+        "cases": 46,
+        "complete_public_and_corroboration_records_equal": true,
+        "mode": "normal",
+        "observations": 92
+      },
+      {
+        "cases": 46,
+        "complete_public_and_corroboration_records_equal": true,
+        "mode": "sanitized",
+        "observations": 92
+      }
+    ],
+    "instrumentation": {
+      "helper_compress_c_fast_c_inline_headers": true,
+      "leak_sanitizer": false,
+      "remaining_archive_instrumented": false
+    },
+    "path": "/tmp/zstdoxide-fast-collector-portable-final/evidence.json",
+    "separate_report_sha256": "5780b09bb6c60b138e82393363c10a8fb427a650942dda56df04386e531a5a67",
+    "sha256": "5780b09bb6c60b138e82393363c10a8fb427a650942dda56df04386e531a5a67"
+  },
+  "preserved_diagnostics": "No capture or negative-control failure occurred. Initial normal and initial wrapper controls are retained separately. Valid-input API errors are recorded outcomes, not omitted failures.",
+  "reference_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "runtime_negative_controls": {
+    "commands": 118,
+    "expected_rejections": 114,
+    "path": "/tmp/zstdoxide-fast-collector-portable-runtime-negatives/summary.json",
+    "positive_controls": 4,
+    "sha256": "0d2341231827c5b45b0ad3a102c07bea6e218d46bb7597cfff7df9763e9da268"
+  },
+  "schema_version": 1,
+  "scope": "Bounded collector corroboration only; original full semantic and candidate-state distinctions remain. No production source changed. No complete upstream fuzz target claim.",
+  "status": "passed",
+  "task_owned_processes_remaining": [],
+  "wrapper_negative_controls": {
+    "collection_mutations_per_mode": 21,
+    "commands": 62,
+    "expected_rejections": 58,
+    "modes": [
+      "normal",
+      "-O"
+    ],
+    "path": "/tmp/zstdoxide-collector-portable-negative-final/summary.json",
+    "positive_controls": 4,
+    "sha256": "7e5e5f89e4b25f0253e469d7d08673f7d72dbe311686a7ed7942a2fe6131cc62",
+    "subprocess_spy_passed": true
+  }
+}

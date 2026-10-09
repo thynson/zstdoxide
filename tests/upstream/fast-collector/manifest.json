@@ -1,0 +1,1240 @@
+{
+  "capture": {
+    "cases": [
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-0",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": 0,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 106,
+        "error_name": "Block-level external sequence producer returned an error code",
+        "id": "tiny-1",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 106,
+        "error_name": "Block-level external sequence producer returned an error code",
+        "id": "tiny-2",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 106,
+        "error_name": "Block-level external sequence producer returned an error code",
+        "id": "tiny-3",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 106,
+        "error_name": "Block-level external sequence producer returned an error code",
+        "id": "tiny-4",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 106,
+        "error_name": "Block-level external sequence producer returned an error code",
+        "id": "tiny-5",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 106,
+        "error_name": "Block-level external sequence producer returned an error code",
+        "id": "tiny-6",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-7",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-8",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-9",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-10",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-11",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-12",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-13",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-14",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-15",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "tiny-16",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "adjust-16-0",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 7,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "adjust-16-1",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "adjust-1024-0",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 11,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "adjust-1024-1",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 3,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "width-3",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "width-4",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 5,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "width-5",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 6,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "width-6",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 7,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "width-7",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 3,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "target-3",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 4,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "target-4",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 131072,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "target-131072",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 1,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 16,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 17
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "long-uniform",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 18,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 17
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "long-literal",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 16,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 17
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "long-match-65540",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 16,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 17
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "long-match-65541",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 3,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "history-copy-three",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 3,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 3,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "history-period",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 6,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 3,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "history-expiry",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 3,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 18,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 18
+        },
+        "blocks": 2,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "history-large",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 4,
+        "tables_equal": true
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 3,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "history-alternating",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 6,
+        "tables_equal": true
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 106,
+        "error_name": "Block-level external sequence producer returned an error code",
+        "id": "tiny-final-1",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 106,
+        "error_name": "Block-level external sequence producer returned an error code",
+        "id": "tiny-final-6",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 1,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "width-4-capacity-exact",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 2,
+        "tables_equal": true
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 70,
+        "error_name": "Destination buffer is too small",
+        "id": "width-4-capacity-short",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 70,
+        "error_name": "Destination buffer is too small",
+        "id": "width-4-capacity-zero",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": {
+          "chain_log": 6,
+          "hash_log": 6,
+          "min_match": 4,
+          "search_log": 1,
+          "strategy": 1,
+          "target": 0,
+          "window_log": 10
+        },
+        "blocks": 3,
+        "direct_global_wire_mismatches": 0,
+        "direct_mismatches": 0,
+        "error": 0,
+        "error_name": "No error detected",
+        "id": "history-period-capacity-exact",
+        "observations": 2,
+        "parser_first_two_equal": true,
+        "public_wire_mismatches": 0,
+        "rows": 6,
+        "tables_equal": true
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 70,
+        "error_name": "Destination buffer is too small",
+        "id": "history-period-capacity-short",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      },
+      {
+        "applied": null,
+        "blocks": null,
+        "direct_global_wire_mismatches": null,
+        "direct_mismatches": null,
+        "error": 70,
+        "error_name": "Destination buffer is too small",
+        "id": "history-period-capacity-zero",
+        "observations": 2,
+        "parser_first_two_equal": null,
+        "public_wire_mismatches": null,
+        "rows": null,
+        "tables_equal": null
+      }
+    ],
+    "evidence": "docs/evidence/2026-10-09-fast-collector.json",
+    "final_c_case_executions": 184,
+    "instrumentation": {
+      "helper_compress_c_fast_c_inline_headers": true,
+      "leak_sanitizer": false,
+      "remaining_archive_instrumented": false
+    },
+    "metadata": {
+      "block_cap": 131072,
+      "direct_next_to_update": 2,
+      "little_endian": true,
+      "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+      "sequence_bytes": 16,
+      "size_t_bytes": 8,
+      "source_cap": 524288,
+      "suffix_bytes": 262656,
+      "type": "metadata",
+      "version": 10507
+    },
+    "normal_sanitizer_equal": true,
+    "original_archive_sha256": "33923ded89357b0b0e4868c8dcd9de8c650101f810b0f89fbf34d5bda5865121",
+    "original_driver_sha256": "f393b832243b9d104d9249a79ddecf4c8a8ed2e710f8a5d6460a7135c37d0f99",
+    "original_evidence_sha256": "232daa52a8ddfc63a03209d3155478aa323f8437c4af5e8072c482ad8e93a97f",
+    "source_snapshot": "/private/tmp/zstdoxide-fast-collector-final"
+  },
+  "coverage": {
+    "base_recipes": 40,
+    "capacity_variants": 6,
+    "cases": 46,
+    "direct_comparison": "ZSTD_compressBlock_fast",
+    "entry_point": "ZSTD_generateSequences",
+    "kind": "bounded-fast-collector-corroboration",
+    "observations": 92,
+    "ordinary_frames": false,
+    "padding_patterns": [
+      106,
+      195
+    ]
+  },
+  "fixture_catalog_sha256": "5cfe36886aeb6692f8c19a45a944c1058c015923541e990d085ecd7fda8f58d6",
+  "fixtures": [
+    {
+      "path": "capacity-recipes.json",
+      "sha256": "601edcb9bd81719e25b3b094414fb265bf7add73428015a8015c77589dd9faaf",
+      "size": 4080
+    },
+    {
+      "path": "collector.py",
+      "sha256": "f393b832243b9d104d9249a79ddecf4c8a8ed2e710f8a5d6460a7135c37d0f99",
+      "size": 25942
+    },
+    {
+      "path": "negative_controls.py",
+      "sha256": "ed4976c953c7787ca6d7d2e6b0dbf1cd74fe81ae20d88587e00b4df39ca95a35",
+      "size": 11133
+    },
+    {
+      "path": "normal-adjust-1024-0.stdout",
+      "sha256": "781958ea60b4924f4b391581b4d2106aa6511533678605d5dd7ace6c38616003",
+      "size": 2865
+    },
+    {
+      "path": "normal-adjust-1024-1.stdout",
+      "sha256": "162427acad2ce81382a7fefb66b11edb9e6274eaf17ac30e15a4eb05ec7f9b29",
+      "size": 3193
+    },
+    {
+      "path": "normal-adjust-16-0.stdout",
+      "sha256": "6cc3a9c0085ebd209abe376f93fb0bace31c5d3b23374ff281d4edf81ea92e3c",
+      "size": 2559
+    },
+    {
+      "path": "normal-adjust-16-1.stdout",
+      "sha256": "63b702fe1990c9d920520f6e41c95abf6277880eafae8b90e7b4b62d4608d8bc",
+      "size": 2561
+    },
+    {
+      "path": "normal-history-alternating.stdout",
+      "sha256": "30c09271f22c2ee6520777e1a64d4a55ea545a8720927246ae1e5477e3593c21",
+      "size": 5965
+    },
+    {
+      "path": "normal-history-copy-three.stdout",
+      "sha256": "6244e28ed2735b32bed4d2d8dd656832377d57b2e8c3b4b79bc8aeef0fd97080",
+      "size": 9983
+    },
+    {
+      "path": "normal-history-expiry.stdout",
+      "sha256": "59b3293e22497f015c46d44474212c9c356c18d73490c40dc01b05a40b199571",
+      "size": 9967
+    },
+    {
+      "path": "normal-history-large.stdout",
+      "sha256": "5b14f5e548c919c774c228b61bb843c08d13192269adf0d67b613b84ea045c34",
+      "size": 93871
+    },
+    {
+      "path": "normal-history-period-capacity-exact.stdout",
+      "sha256": "92e1441fcf76784d2bed895b139271bfe90b87879147a22270cb8960c25984f5",
+      "size": 5703
+    },
+    {
+      "path": "normal-history-period-capacity-short.stdout",
+      "sha256": "f921661d1a6eb6cd9e36847618c38e860227cfa1a9cf7786c6b42a3887cfdc1c",
+      "size": 889
+    },
+    {
+      "path": "normal-history-period-capacity-zero.stdout",
+      "sha256": "2c6221eba2bf6bc0f9ebcf80d7109ccca61d5c1247bd63e4cceaf13fd3f331e4",
+      "size": 887
+    },
+    {
+      "path": "normal-history-period.stdout",
+      "sha256": "d760c54bca5d385867860a675966533209b5c02dea8e1ea509fe1bbc0850d820",
+      "size": 5649
+    },
+    {
+      "path": "normal-long-literal.stdout",
+      "sha256": "4541f9a39a6dccd31b3876bd8cf5ad56bb1b1f2049c7e1075efe4137c9975f7c",
+      "size": 93579
+    },
+    {
+      "path": "normal-long-match-65540.stdout",
+      "sha256": "7c33765d6a5e5763320e26a694f25618a6e733e5c4e7f57351f4448da69bc39e",
+      "size": 2579
+    },
+    {
+      "path": "normal-long-match-65541.stdout",
+      "sha256": "3159366dc1f9720bcc41f44c91774ab53b9047dfddea6f20125426a00ef2ebb3",
+      "size": 2579
+    },
+    {
+      "path": "normal-long-uniform.stdout",
+      "sha256": "2e1007cd720394160c98e8594803e71594cb7248d3d36e94456ae94d5ec1c07b",
+      "size": 2563
+    },
+    {
+      "path": "normal-target-131072.stdout",
+      "sha256": "889a16d904c586beef42ae3aa7592419839f26843d1f6004855ca6df9c490a8c",
+      "size": 2495
+    },
+    {
+      "path": "normal-target-3.stdout",
+      "sha256": "1acac6282f6766bd2745dcab80ea7bd43032edca4f59779602e7ffd97ca34bb5",
+      "size": 4661
+    },
+    {
+      "path": "normal-target-4.stdout",
+      "sha256": "b8d8523faf1f09d51f672de6a85658408e2d3d593146a0b794bd7f94e50d8f2f",
+      "size": 4397
+    },
+    {
+      "path": "normal-tiny-0.stdout",
+      "sha256": "c4ad0b2d958a01c476a496879d8f977bd929afb6e913b020cad108ef3dea9dc6",
+      "size": 797
+    },
+    {
+      "path": "normal-tiny-1.stdout",
+      "sha256": "dafbc02a7f9438bc7e207e466561b1bc0ffd3037a6aa39abc9117b86a6fbca0e",
+      "size": 893
+    },
+    {
+      "path": "normal-tiny-10.stdout",
+      "sha256": "0f53331cb6a3130d11bc70dab680850bfda6e054f9dd6fbe46c18a2d68e6ec42",
+      "size": 2419
+    },
+    {
+      "path": "normal-tiny-11.stdout",
+      "sha256": "f36d4f664e715e223f9094d526d6c7f2a24d4ff22dc8bfcb131e9ddf44947b9c",
+      "size": 2419
+    },
+    {
+      "path": "normal-tiny-12.stdout",
+      "sha256": "93539518f5f397c32aa23eac85582df4e373b4857739188fea97c19b4cfceb6a",
+      "size": 2419
+    },
+    {
+      "path": "normal-tiny-13.stdout",
+      "sha256": "822c81677ea7fdce80fa8aa2038a87b2762fada18e62e36c14337547ed7b7a60",
+      "size": 2447
+    },
+    {
+      "path": "normal-tiny-14.stdout",
+      "sha256": "19cbabba0919c25dd3a68deb160ecd8d876a0680f4468c52fbe64be8da20a415",
+      "size": 2447
+    },
+    {
+      "path": "normal-tiny-15.stdout",
+      "sha256": "e0e5158ed15098b07ca456ae8e758ebafe4378be741e0e699a039b0086ec8d3d",
+      "size": 2447
+    },
+    {
+      "path": "normal-tiny-16.stdout",
+      "sha256": "99a8c9b5ba1e1b308e07c48f5c72aa97b56fdc0154cee24d08bfb273c6f27c57",
+      "size": 2447
+    },
+    {
+      "path": "normal-tiny-2.stdout",
+      "sha256": "cdc42fb10aa1ee7a3e6dd96353d2be107060c30862ff64a09c5ae3ff01571577",
+      "size": 893
+    },
+    {
+      "path": "normal-tiny-3.stdout",
+      "sha256": "2f757b44e6dd245aba02ffdb7a1101a78457a51acb24f4684075982edb486b38",
+      "size": 893
+    },
+    {
+      "path": "normal-tiny-4.stdout",
+      "sha256": "0e4bb86150fb727b59bc67a0006103533903fe509553c1ceaf220d32e25b10ee",
+      "size": 893
+    },
+    {
+      "path": "normal-tiny-5.stdout",
+      "sha256": "bfc35329a2006637e094315029d5c36ea44e41ea674c23a3c8776ed94cee9ae6",
+      "size": 893
+    },
+    {
+      "path": "normal-tiny-6.stdout",
+      "sha256": "421f509dece9a21de63588cdc29c2d8f52b3135a2a847937734db91e13a7101b",
+      "size": 893
+    },
+    {
+      "path": "normal-tiny-7.stdout",
+      "sha256": "9bc6dbf1868aa888f551b5911b040b3d4b021361c8acf60b9d5c7a759079200b",
+      "size": 2403
+    },
+    {
+      "path": "normal-tiny-8.stdout",
+      "sha256": "177d57901b8cf9b9820bd8fb92b1b1d6e8c7f2d6b71356abcf95576f45d8b620",
+      "size": 2403
+    },
+    {
+      "path": "normal-tiny-9.stdout",
+      "sha256": "1335a08ab668d90f8186f039f62d00f4bdc772f7a073129abd1f4c62a953c79e",
+      "size": 2403
+    },
+    {
+      "path": "normal-tiny-final-1.stdout",
+      "sha256": "4d571932da75cc509763d2dc4ab830aaad62572a6428451b813571b5dbfcedec",
+      "size": 919
+    },
+    {
+      "path": "normal-tiny-final-6.stdout",
+      "sha256": "719856e5098ddc915b086d1a6d8704549dd9166855271f13c7c452293412a9d3",
+      "size": 919
+    },
+    {
+      "path": "normal-width-3.stdout",
+      "sha256": "63e8e1adf6e694c150099a548498ffd81dc04cbbd36b6905db68bfa362eeaeef",
+      "size": 4541
+    },
+    {
+      "path": "normal-width-4-capacity-exact.stdout",
+      "sha256": "2a0b77e8681b9371417a55ff1bb53ca9d1b78d20814281d989dff81ebad07f7c",
+      "size": 4597
+    },
+    {
+      "path": "normal-width-4-capacity-short.stdout",
+      "sha256": "69e18dac75cccb0495b7743523b68d4f8712605c8920d8919e0c64380f9d6cb4",
+      "size": 873
+    },
+    {
+      "path": "normal-width-4-capacity-zero.stdout",
+      "sha256": "aadcba3ebc72627a7f48e83b829cb5361c21402e27d807f6d893afa47bab6e4c",
+      "size": 871
+    },
+    {
+      "path": "normal-width-4.stdout",
+      "sha256": "f3938a5869122c7f1e9b9c5c365b494905352a99b9ba7bd07b2f6ecbe3392c0d",
+      "size": 4541
+    },
+    {
+      "path": "normal-width-5.stdout",
+      "sha256": "630527de87ab45688728ecc74903d2d2caa4914a11d53b7d2d5cd750d8778d72",
+      "size": 4641
+    },
+    {
+      "path": "normal-width-6.stdout",
+      "sha256": "9d24c00ed1cecbf25135ec2952df515f611968bb7b3960ffb5981e207b63aec4",
+      "size": 4549
+    },
+    {
+      "path": "normal-width-7.stdout",
+      "sha256": "1a23d131470cfbb7bc7b003c404363d1c87c1a579c396dea7a5c8a0ed098580d",
+      "size": 4605
+    },
+    {
+      "path": "recipes.json",
+      "sha256": "68b08490820868728b7128126f38f08f58b08f6e1d139db72b7a6eeb5d111612",
+      "size": 18011
+    }
+  ],
+  "generator": "tests/upstream/fast-collector/collector_oracle.c",
+  "generator_sha256": "f5b575b5d2b57191a210e71402ade98b7e5039fcbc13115165fd95b2548308af",
+  "importer": "scripts/import_fast_collector.py",
+  "importer_sha256": "a7929fbc8d50697fc0631de4d6de9f311727249cfadef488dfbb5bdf450b598d",
+  "repository_input_sha256": {
+    "tests/upstream/fast-collector/collector.py": "f393b832243b9d104d9249a79ddecf4c8a8ed2e710f8a5d6460a7135c37d0f99",
+    "tests/upstream/fast-collector/negative_controls.py": "ed4976c953c7787ca6d7d2e6b0dbf1cd74fe81ae20d88587e00b4df39ca95a35"
+  },
+  "schema_version": 1,
+  "source_sha256": {
+    "lib/common/allocations.h": "6a718e8edaca112abdc0bdfa7de67edefaa44c8d9e514b79672ab58ab3a9118a",
+    "lib/common/bits.h": "5bb7693a35d7ce03f8715c0b1e237062285e052250fdd34f72f38e7e92365090",
+    "lib/common/bitstream.h": "a9461685c9add6f609078acc950a08db4c02e6e6a849d550f45182ba2ae38556",
+    "lib/common/compiler.h": "d19829705d8039437ffba873df2b58d20d7b876d58da479121d2e515df55cbf7",
+    "lib/common/cpu.h": "23d520b536a6f23114e66549d03a967b1f24b15560c5b1ebd47ee392ccee4a1c",
+    "lib/common/debug.h": "8260cd5087b8309679c61b772b535688993c61a675a30481b8ae55b45740ba15",
+    "lib/common/error_private.h": "ae077bb433eb150ee247410a0357f910b9c07be839c6a9abe0b2e6b18ceb716d",
+    "lib/common/fse.h": "5235ce1e512bf80204d013b1f4cecd776fdaa9effddb48308bce08f6d0b84499",
+    "lib/common/huf.h": "9a83d899c8c9bf03389d482562090ec2443bc0f87f27864a2b891b180333f2d4",
+    "lib/common/mem.h": "4dd5fe76fa30a020cd4b3af3134ae143920300a1fe54baac1a5da73297e66783",
+    "lib/common/portability_macros.h": "75e2b43968b70decc6bd17876833be04894035594ddc1e745cd6b70be8265637",
+    "lib/common/xxhash.h": "8cb837b21a8fe9a6b9dbcd0961ab16e733bfcbfa9e003f3a496ce07ae80aa8ee",
+    "lib/common/zstd_deps.h": "9c77ea7d0afa8d5c868a7839e178a446a82d88eb75fd56f2fd7d9d96c5ab7c11",
+    "lib/common/zstd_internal.h": "ad3d95ce2b81a8c5c6b00cfe6323d8e80cacb690d3b5883725cd0d939f4f576f",
+    "lib/common/zstd_trace.h": "17f6daa4c7e97055cd1ed7bcf4d9241a4e79b465f083c5d732fda1df2f0be11e",
+    "lib/compress/zstd_compress.c": "10c315ae609d49b2fc431521aa95908086e69fd917991c5ed9a875af3d1208e8",
+    "lib/compress/zstd_compress_internal.h": "ab7754413cef565da559bda7eb738bc2b3708c48877cb9ec37aff767d32c57d1",
+    "lib/compress/zstd_cwksp.h": "ed77c2739b18b9800b97785262526a1dd4f385311ca5c2caa20b6f2a35f3735d",
+    "lib/compress/zstd_fast.c": "8037320f321836652e73ab6cbf7b8f1f4c97cef38835ac6b4aaf0af716aa398d",
+    "lib/compress/zstd_fast.h": "dffdf43fae7ee10a2acc04e6a5eaaf03f7d3572898117a06c330d647eed5591d",
+    "lib/compress/zstd_preSplit.h": "910facb2e3442e42a6952c514223c4502d95ed957bf7dc73982b3b03785b361b",
+    "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b",
+    "lib/zstd_errors.h": "66a8c3f71d12ea6e797e4f622f31f3f8f81c41b36f48cad4f5de7d8bfb6aac0a"
+  },
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}
