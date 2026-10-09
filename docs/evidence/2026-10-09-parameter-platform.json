@@ -1,0 +1,713 @@
+{
+  "purpose": "Module 10 scalar width/endian interpretation and no_std compilation",
+  "revision": "6ca8617d046472fe60007173239981589dde4556",
+  "snapshot_directory": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+  "snapshot_file_count": 669,
+  "all_snapshot_hashes_unchanged": true,
+  "extra_frozen_integration_file": {
+    "path": "tests/upstream_parameters.rs",
+    "sha256": "ef87a4cd0196600eee66237a037c93e40ef96293aa99aa88b2ddd247a83d99a7"
+  },
+  "owned_source_hashes": {
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "tests/upstream_parameters.rs": "ef87a4cd0196600eee66237a037c93e40ef96293aa99aa88b2ddd247a83d99a7"
+  },
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "miri": "miri 0.1.0 (1d81eb4ad9 2026-10-07)\n",
+  "files": {
+    "/tmp/zstdoxide-module10-parameter-platform-snapshot.json": {
+      "sha256": "457a0d6a05e9d623b4d132c5062a31c12d91367136dd2ff948979dbccaa7feab",
+      "bytes": 79558
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-run.py": {
+      "sha256": "c8242be9fb6d64a2a2e9538ea33e924108a1134ac9e07ab1f657d71dd2f89908",
+      "bytes": 4661
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-rustc.txt": {
+      "sha256": "a4bb13dccabda9ebf5294b8144f22400733afc06744ab8062bcf43b7254e0c03",
+      "bytes": 210
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-miri.txt": {
+      "sha256": "8d87ac0bffd5900b9c516d37c46a1ece5f779b7278561963622909709e57d2c0",
+      "bytes": 35
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-i686-cfg.txt": {
+      "sha256": "78e5dfe79a40829b69be3b0e0f1fcdd29a6ca5aa998877d7bc0d070644707e0b",
+      "bytes": 998
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-i686-results.json": {
+      "sha256": "c916038b9359f04764a3d366d3db4937faced81f26772b5c00a046a941042c97",
+      "bytes": 12983
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-s390x-cfg.txt": {
+      "sha256": "2064e81ead58ea894cfbf643cc3e5cf767e9f16ac953d2b8a325bfb7e85094fe",
+      "bytes": 1043
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-s390x-results.json": {
+      "sha256": "c7e061055ea87fbf297b50c4a018500d5f74c71d1002488b086f391908157847",
+      "bytes": 8222
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-thumb-cfg.txt": {
+      "sha256": "9fa0bdd5bcb5493f15176d348fb82a1514d7a830c6773343150c1af3b86b39b6",
+      "bytes": 816
+    },
+    "/tmp/zstdoxide-module10-parameter-platform-thumb-results.json": {
+      "sha256": "bd1b778b1646350c9a26dfa3b28083dafb10bdc4491ebf14f4ab0bbff6a718f5",
+      "bytes": 3183
+    }
+  },
+  "target_cfg": {
+    "i686": [
+      "debug_assertions",
+      "fmt_debug=\"full\"",
+      "overflow_checks",
+      "panic=\"unwind\"",
+      "relocation_model=\"pic\"",
+      "target_abi=\"\"",
+      "target_arch=\"x86\"",
+      "target_endian=\"little\"",
+      "target_env=\"gnu\"",
+      "target_family=\"unix\"",
+      "target_feature=\"fxsr\"",
+      "target_feature=\"sse\"",
+      "target_feature=\"sse2\"",
+      "target_feature=\"x87\"",
+      "target_has_atomic",
+      "target_has_atomic=\"16\"",
+      "target_has_atomic=\"32\"",
+      "target_has_atomic=\"64\"",
+      "target_has_atomic=\"8\"",
+      "target_has_atomic=\"ptr\"",
+      "target_has_atomic_load_store",
+      "target_has_atomic_load_store=\"16\"",
+      "target_has_atomic_load_store=\"32\"",
+      "target_has_atomic_load_store=\"64\"",
+      "target_has_atomic_load_store=\"8\"",
+      "target_has_atomic_load_store=\"ptr\"",
+      "target_has_atomic_primitive_alignment=\"16\"",
+      "target_has_atomic_primitive_alignment=\"32\"",
+      "target_has_atomic_primitive_alignment=\"8\"",
+      "target_has_atomic_primitive_alignment=\"ptr\"",
+      "target_has_reliable_f128",
+      "target_has_reliable_f16",
+      "target_has_reliable_f16_math",
+      "target_has_threads",
+      "target_object_format=\"elf\"",
+      "target_os=\"linux\"",
+      "target_pointer_width=\"32\"",
+      "target_thread_local",
+      "target_vendor=\"unknown\"",
+      "ub_checks",
+      "unix"
+    ],
+    "s390x": [
+      "debug_assertions",
+      "fmt_debug=\"full\"",
+      "overflow_checks",
+      "panic=\"unwind\"",
+      "relocation_model=\"pic\"",
+      "target_abi=\"\"",
+      "target_arch=\"s390x\"",
+      "target_endian=\"big\"",
+      "target_env=\"gnu\"",
+      "target_family=\"unix\"",
+      "target_has_atomic",
+      "target_has_atomic=\"128\"",
+      "target_has_atomic=\"16\"",
+      "target_has_atomic=\"32\"",
+      "target_has_atomic=\"64\"",
+      "target_has_atomic=\"8\"",
+      "target_has_atomic=\"ptr\"",
+      "target_has_atomic_load_store",
+      "target_has_atomic_load_store=\"128\"",
+      "target_has_atomic_load_store=\"16\"",
+      "target_has_atomic_load_store=\"32\"",
+      "target_has_atomic_load_store=\"64\"",
+      "target_has_atomic_load_store=\"8\"",
+      "target_has_atomic_load_store=\"ptr\"",
+      "target_has_atomic_primitive_alignment=\"16\"",
+      "target_has_atomic_primitive_alignment=\"32\"",
+      "target_has_atomic_primitive_alignment=\"64\"",
+      "target_has_atomic_primitive_alignment=\"8\"",
+      "target_has_atomic_primitive_alignment=\"ptr\"",
+      "target_has_reliable_f128",
+      "target_has_reliable_f128_math",
+      "target_has_reliable_f16",
+      "target_has_reliable_f16_math",
+      "target_has_threads",
+      "target_object_format=\"elf\"",
+      "target_os=\"linux\"",
+      "target_pointer_width=\"64\"",
+      "target_thread_local",
+      "target_vendor=\"unknown\"",
+      "ub_checks",
+      "unix"
+    ],
+    "thumb": [
+      "debug_assertions",
+      "fmt_debug=\"full\"",
+      "overflow_checks",
+      "panic=\"abort\"",
+      "relocation_model=\"static\"",
+      "target_abi=\"eabi\"",
+      "target_arch=\"arm\"",
+      "target_endian=\"little\"",
+      "target_env=\"\"",
+      "target_feature=\"mclass\"",
+      "target_feature=\"thumb-mode\"",
+      "target_feature=\"v5te\"",
+      "target_feature=\"v6\"",
+      "target_feature=\"v6m\"",
+      "target_has_atomic_load_store",
+      "target_has_atomic_load_store=\"16\"",
+      "target_has_atomic_load_store=\"32\"",
+      "target_has_atomic_load_store=\"8\"",
+      "target_has_atomic_load_store=\"ptr\"",
+      "target_has_atomic_primitive_alignment=\"16\"",
+      "target_has_atomic_primitive_alignment=\"32\"",
+      "target_has_atomic_primitive_alignment=\"8\"",
+      "target_has_atomic_primitive_alignment=\"ptr\"",
+      "target_has_reliable_f128",
+      "target_has_reliable_f16",
+      "target_has_reliable_f16_math",
+      "target_has_threads",
+      "target_object_format=\"elf\"",
+      "target_os=\"none\"",
+      "target_pointer_width=\"32\"",
+      "target_vendor=\"unknown\"",
+      "ub_checks"
+    ]
+  },
+  "results": {
+    "i686": {
+      "mode": "i686",
+      "revision": "6ca8617d046472fe60007173239981589dde4556",
+      "snapshot": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+      "extra_integration_source": {
+        "path": "tests/upstream_parameters.rs",
+        "sha256": "ef87a4cd0196600eee66237a037c93e40ef96293aa99aa88b2ddd247a83d99a7"
+      },
+      "commands": [
+        {
+          "name": "i686-unit-safe",
+          "cwd": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+          "command": [
+            "cargo",
+            "+nightly-2026-10-08",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "i686-unknown-linux-gnu",
+            "--lib",
+            "parameters::",
+            "--",
+            "--test-threads=1"
+          ],
+          "command_shell": "cargo +nightly-2026-10-08 miri test --offline --locked --target i686-unknown-linux-gnu --lib parameters:: -- --test-threads=1",
+          "environment": {
+            "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+            "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-i686",
+            "MIRIFLAGS": "-Zmiri-strict-provenance",
+            "CARGO_TERM_COLOR": "never"
+          },
+          "exit_code": 0,
+          "seconds": 26.157623499864712,
+          "log": "/tmp/zstdoxide-module10-parameter-platform-i686-unit-safe.log",
+          "log_sha256": "330b3469dca916cdfd83672a8c247a7ebf9a7fa80cef5820692697f94026f191",
+          "expected_test_count": 26,
+          "exact_selectors": null,
+          "actual_passing_tests": [
+            "parameters::frame_tests::reference_defaults_match_query_flags_without_changing_encoder_defaults",
+            "parameters::presets::tests::every_attributed_entry_matches_the_92_independent_c_rows",
+            "parameters::presets::tests::every_frozen_row_is_reachable_without_adjustment",
+            "parameters::presets::tests::known_empty_is_distinct_and_selection_does_not_perform_adjustment",
+            "parameters::presets::tests::known_source_and_dictionary_sum_cross_every_inclusive_tier_boundary",
+            "parameters::presets::tests::level_zero_and_extremes_share_request_normalization",
+            "parameters::presets::tests::negative_levels_change_only_acceleration_in_every_tier",
+            "parameters::presets::tests::pointer_width_only_limits_dictionary_input_not_u64_tier_arithmetic",
+            "parameters::presets::tests::reserved_known_size_and_overflow_are_errors_without_modular_tiers",
+            "parameters::presets::tests::unknown_source_uses_the_nonempty_dictionary_plus_499_tier",
+            "parameters::request_tests::default_and_const_construction_leave_every_override_automatic",
+            "parameters::request_tests::invalid_scalar_setters_preserve_the_complete_request",
+            "parameters::request_tests::level_clamps_extremes_without_negation_or_clearing_overrides",
+            "parameters::request_tests::typed_setters_accept_target_width_bounds_and_keep_hint_independent",
+            "parameters::request_tests::zero_clears_overrides_and_hint_without_changing_level",
+            "parameters::resolution_tests::associated_level_bounds_match_normalization_and_frozen_bounds",
+            "parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window",
+            "parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds",
+            "parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override",
+            "parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies",
+            "parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests",
+            "parameters::validation_tests::bounds_match_host_oracle_and_separately_labeled_width_macros",
+            "parameters::validation_tests::each_raw_field_validates_boundaries_without_clamping",
+            "parameters::validation_tests::reference_strategy_codes_are_explicit_and_reject_non_strategies",
+            "parameters::validation_tests::resolved_getters_preserve_all_concrete_fields_including_zero_target",
+            "parameters::validation_tests::source_size_keeps_unknown_distinct_from_known_empty_and_reserved_value"
+          ],
+          "summaries": [
+            {
+              "passed": 26,
+              "failed": 0,
+              "ignored": 0
+            }
+          ],
+          "nonempty_expected_selection_verified": true,
+          "snapshot_unchanged": true,
+          "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s\n     Running unittests src/lib.rs (/tmp/zstdoxide-platform-build-i686/miri/i686-unknown-linux-gnu/debug/build/zstdoxide/b692d32578d03506/out/zstdoxide-b692d32578d03506)\n\nrunning 26 tests\ntest parameters::frame_tests::reference_defaults_match_query_flags_without_changing_encoder_defaults ... ok\ntest parameters::presets::tests::every_attributed_entry_matches_the_92_independent_c_rows ... ok\ntest parameters::presets::tests::every_frozen_row_is_reachable_without_adjustment ... ok\ntest parameters::presets::tests::known_empty_is_distinct_and_selection_does_not_perform_adjustment ... ok\ntest parameters::presets::tests::known_source_and_dictionary_sum_cross_every_inclusive_tier_boundary ... ok\ntest parameters::presets::tests::level_zero_and_extremes_share_request_normalization ... ok\ntest parameters::presets::tests::negative_levels_change_only_acceleration_in_every_tier ... ok\ntest parameters::presets::tests::pointer_width_only_limits_dictionary_input_not_u64_tier_arithmetic ... ok\ntest parameters::presets::tests::reserved_known_size_and_overflow_are_errors_without_modular_tiers ... ok\ntest parameters::presets::tests::unknown_source_uses_the_nonempty_dictionary_plus_499_tier ... ok\ntest parameters::request_tests::default_and_const_construction_leave_every_override_automatic ... ok\ntest parameters::request_tests::invalid_scalar_setters_preserve_the_complete_request ... ok\ntest parameters::request_tests::level_clamps_extremes_without_negation_or_clearing_overrides ... ok\ntest parameters::request_tests::typed_setters_accept_target_width_bounds_and_keep_hint_independent ... ok\ntest parameters::request_tests::zero_clears_overrides_and_hint_without_changing_level ... ok\ntest parameters::resolution_tests::associated_level_bounds_match_normalization_and_frozen_bounds ... ok\ntest parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window ... ok\ntest parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds ... ok\ntest parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override ... ok\ntest parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies ... ok\ntest parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests ... ok\ntest parameters::validation_tests::bounds_match_host_oracle_and_separately_labeled_width_macros ... ok\ntest parameters::validation_tests::each_raw_field_validates_boundaries_without_clamping ... ok\ntest parameters::validation_tests::reference_strategy_codes_are_explicit_and_reject_non_strategies ... ok\ntest parameters::validation_tests::resolved_getters_preserve_all_concrete_fields_including_zero_target ... ok\ntest parameters::validation_tests::source_size_keeps_unknown_distinct_from_known_empty_and_reserved_value ... ok\n\ntest result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 476 filtered out; finished in 22.93s\n\n"
+        },
+        {
+          "name": "i686-integration-safe",
+          "cwd": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+          "command": [
+            "cargo",
+            "+nightly-2026-10-08",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "i686-unknown-linux-gnu",
+            "--test",
+            "upstream_parameters",
+            "--",
+            "--test-threads=1"
+          ],
+          "command_shell": "cargo +nightly-2026-10-08 miri test --offline --locked --target i686-unknown-linux-gnu --test upstream_parameters -- --test-threads=1",
+          "environment": {
+            "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+            "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-i686",
+            "MIRIFLAGS": "-Zmiri-strict-provenance",
+            "CARGO_TERM_COLOR": "never"
+          },
+          "exit_code": 0,
+          "seconds": 2.9173741249833256,
+          "log": "/tmp/zstdoxide-module10-parameter-platform-i686-integration-safe.log",
+          "log_sha256": "e6f686d80cb943a61e7028b3820bb40fc04ccf11d2e13709eadb0d586d55be68",
+          "expected_test_count": 11,
+          "exact_selectors": null,
+          "actual_passing_tests": [
+            "a_small_source_hint_changes_only_unknown_size_resolution",
+            "concrete_validation_retains_all_fields_and_rejects_original_invalid_values",
+            "dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input",
+            "dictionary_sizes_select_the_original_equal_reference_profiles",
+            "explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values",
+            "original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary",
+            "reference_frame_defaults_remain_separate_from_live_encoder_defaults",
+            "reference_minimum_and_default_levels_preserve_original_scalar_assertions",
+            "request_resolution_preserves_the_two_pass_empty_source_chain_witness",
+            "requested_hash_override_survives_level_changes_and_default_replacement",
+            "source_hint_bounds_preserve_requested_values_after_rejection"
+          ],
+          "summaries": [
+            {
+              "passed": 11,
+              "failed": 0,
+              "ignored": 0
+            }
+          ],
+          "nonempty_expected_selection_verified": true,
+          "snapshot_unchanged": true,
+          "log_text": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.96s\n     Running tests/upstream_parameters.rs (/tmp/zstdoxide-platform-build-i686/miri/i686-unknown-linux-gnu/debug/build/zstdoxide/585b772bd18b06e1/out/upstream_parameters-585b772bd18b06e1)\n\nrunning 11 tests\ntest a_small_source_hint_changes_only_unknown_size_resolution ... ok\ntest concrete_validation_retains_all_fields_and_rejects_original_invalid_values ... ok\ntest dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input ... ok\ntest dictionary_sizes_select_the_original_equal_reference_profiles ... ok\ntest explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values ... ok\ntest original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary ... ok\ntest reference_frame_defaults_remain_separate_from_live_encoder_defaults ... ok\ntest reference_minimum_and_default_levels_preserve_original_scalar_assertions ... ok\ntest request_resolution_preserves_the_two_pass_empty_source_chain_witness ... ok\ntest requested_hash_override_survives_level_changes_and_default_replacement ... ok\ntest source_hint_bounds_preserve_requested_values_after_rejection ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.59s\n\n"
+        },
+        {
+          "name": "i686-unit-all",
+          "cwd": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+          "command": [
+            "cargo",
+            "+nightly-2026-10-08",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "i686-unknown-linux-gnu",
+            "--lib",
+            "--all-features",
+            "parameters::",
+            "--",
+            "--test-threads=1"
+          ],
+          "command_shell": "cargo +nightly-2026-10-08 miri test --offline --locked --target i686-unknown-linux-gnu --lib --all-features parameters:: -- --test-threads=1",
+          "environment": {
+            "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+            "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-i686",
+            "MIRIFLAGS": "-Zmiri-strict-provenance",
+            "CARGO_TERM_COLOR": "never"
+          },
+          "exit_code": 0,
+          "seconds": 23.75178112485446,
+          "log": "/tmp/zstdoxide-module10-parameter-platform-i686-unit-all.log",
+          "log_sha256": "ca0d9c71d82721dad866f993d77ff30968c75697799429f388c7b7ca1dfed464",
+          "expected_test_count": 26,
+          "exact_selectors": null,
+          "actual_passing_tests": [
+            "parameters::frame_tests::reference_defaults_match_query_flags_without_changing_encoder_defaults",
+            "parameters::presets::tests::every_attributed_entry_matches_the_92_independent_c_rows",
+            "parameters::presets::tests::every_frozen_row_is_reachable_without_adjustment",
+            "parameters::presets::tests::known_empty_is_distinct_and_selection_does_not_perform_adjustment",
+            "parameters::presets::tests::known_source_and_dictionary_sum_cross_every_inclusive_tier_boundary",
+            "parameters::presets::tests::level_zero_and_extremes_share_request_normalization",
+            "parameters::presets::tests::negative_levels_change_only_acceleration_in_every_tier",
+            "parameters::presets::tests::pointer_width_only_limits_dictionary_input_not_u64_tier_arithmetic",
+            "parameters::presets::tests::reserved_known_size_and_overflow_are_errors_without_modular_tiers",
+            "parameters::presets::tests::unknown_source_uses_the_nonempty_dictionary_plus_499_tier",
+            "parameters::request_tests::default_and_const_construction_leave_every_override_automatic",
+            "parameters::request_tests::invalid_scalar_setters_preserve_the_complete_request",
+            "parameters::request_tests::level_clamps_extremes_without_negation_or_clearing_overrides",
+            "parameters::request_tests::typed_setters_accept_target_width_bounds_and_keep_hint_independent",
+            "parameters::request_tests::zero_clears_overrides_and_hint_without_changing_level",
+            "parameters::resolution_tests::associated_level_bounds_match_normalization_and_frozen_bounds",
+            "parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window",
+            "parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds",
+            "parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override",
+            "parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies",
+            "parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests",
+            "parameters::validation_tests::bounds_match_host_oracle_and_separately_labeled_width_macros",
+            "parameters::validation_tests::each_raw_field_validates_boundaries_without_clamping",
+            "parameters::validation_tests::reference_strategy_codes_are_explicit_and_reject_non_strategies",
+            "parameters::validation_tests::resolved_getters_preserve_all_concrete_fields_including_zero_target",
+            "parameters::validation_tests::source_size_keeps_unknown_distinct_from_known_empty_and_reserved_value"
+          ],
+          "summaries": [
+            {
+              "passed": 26,
+              "failed": 0,
+              "ignored": 0
+            }
+          ],
+          "nonempty_expected_selection_verified": true,
+          "snapshot_unchanged": true,
+          "log_text": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running unittests src/lib.rs (/tmp/zstdoxide-platform-build-i686/miri/i686-unknown-linux-gnu/debug/build/zstdoxide/b3ef6e12d48a0bc1/out/zstdoxide-b3ef6e12d48a0bc1)\n\nrunning 26 tests\ntest parameters::frame_tests::reference_defaults_match_query_flags_without_changing_encoder_defaults ... ok\ntest parameters::presets::tests::every_attributed_entry_matches_the_92_independent_c_rows ... ok\ntest parameters::presets::tests::every_frozen_row_is_reachable_without_adjustment ... ok\ntest parameters::presets::tests::known_empty_is_distinct_and_selection_does_not_perform_adjustment ... ok\ntest parameters::presets::tests::known_source_and_dictionary_sum_cross_every_inclusive_tier_boundary ... ok\ntest parameters::presets::tests::level_zero_and_extremes_share_request_normalization ... ok\ntest parameters::presets::tests::negative_levels_change_only_acceleration_in_every_tier ... ok\ntest parameters::presets::tests::pointer_width_only_limits_dictionary_input_not_u64_tier_arithmetic ... ok\ntest parameters::presets::tests::reserved_known_size_and_overflow_are_errors_without_modular_tiers ... ok\ntest parameters::presets::tests::unknown_source_uses_the_nonempty_dictionary_plus_499_tier ... ok\ntest parameters::request_tests::default_and_const_construction_leave_every_override_automatic ... ok\ntest parameters::request_tests::invalid_scalar_setters_preserve_the_complete_request ... ok\ntest parameters::request_tests::level_clamps_extremes_without_negation_or_clearing_overrides ... ok\ntest parameters::request_tests::typed_setters_accept_target_width_bounds_and_keep_hint_independent ... ok\ntest parameters::request_tests::zero_clears_overrides_and_hint_without_changing_level ... ok\ntest parameters::resolution_tests::associated_level_bounds_match_normalization_and_frozen_bounds ... ok\ntest parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window ... ok\ntest parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds ... ok\ntest parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override ... ok\ntest parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies ... ok\ntest parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests ... ok\ntest parameters::validation_tests::bounds_match_host_oracle_and_separately_labeled_width_macros ... ok\ntest parameters::validation_tests::each_raw_field_validates_boundaries_without_clamping ... ok\ntest parameters::validation_tests::reference_strategy_codes_are_explicit_and_reject_non_strategies ... ok\ntest parameters::validation_tests::resolved_getters_preserve_all_concrete_fields_including_zero_target ... ok\ntest parameters::validation_tests::source_size_keeps_unknown_distinct_from_known_empty_and_reserved_value ... ok\n\ntest result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 476 filtered out; finished in 22.93s\n\n"
+        },
+        {
+          "name": "i686-integration-all",
+          "cwd": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+          "command": [
+            "cargo",
+            "+nightly-2026-10-08",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "i686-unknown-linux-gnu",
+            "--test",
+            "upstream_parameters",
+            "--all-features",
+            "--",
+            "--test-threads=1"
+          ],
+          "command_shell": "cargo +nightly-2026-10-08 miri test --offline --locked --target i686-unknown-linux-gnu --test upstream_parameters --all-features -- --test-threads=1",
+          "environment": {
+            "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+            "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-i686",
+            "MIRIFLAGS": "-Zmiri-strict-provenance",
+            "CARGO_TERM_COLOR": "never"
+          },
+          "exit_code": 0,
+          "seconds": 3.0097160001751035,
+          "log": "/tmp/zstdoxide-module10-parameter-platform-i686-integration-all.log",
+          "log_sha256": "5ba6a469d79f921daa96e6af513dd3a052a76849d280dd1c4cd90ba114bd75e2",
+          "expected_test_count": 11,
+          "exact_selectors": null,
+          "actual_passing_tests": [
+            "a_small_source_hint_changes_only_unknown_size_resolution",
+            "concrete_validation_retains_all_fields_and_rejects_original_invalid_values",
+            "dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input",
+            "dictionary_sizes_select_the_original_equal_reference_profiles",
+            "explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values",
+            "original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary",
+            "reference_frame_defaults_remain_separate_from_live_encoder_defaults",
+            "reference_minimum_and_default_levels_preserve_original_scalar_assertions",
+            "request_resolution_preserves_the_two_pass_empty_source_chain_witness",
+            "requested_hash_override_survives_level_changes_and_default_replacement",
+            "source_hint_bounds_preserve_requested_values_after_rejection"
+          ],
+          "summaries": [
+            {
+              "passed": 11,
+              "failed": 0,
+              "ignored": 0
+            }
+          ],
+          "nonempty_expected_selection_verified": true,
+          "snapshot_unchanged": true,
+          "log_text": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.99s\n     Running tests/upstream_parameters.rs (/tmp/zstdoxide-platform-build-i686/miri/i686-unknown-linux-gnu/debug/build/zstdoxide/6a4a0920e1ce4c92/out/upstream_parameters-6a4a0920e1ce4c92)\n\nrunning 11 tests\ntest a_small_source_hint_changes_only_unknown_size_resolution ... ok\ntest concrete_validation_retains_all_fields_and_rejects_original_invalid_values ... ok\ntest dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input ... ok\ntest dictionary_sizes_select_the_original_equal_reference_profiles ... ok\ntest explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values ... ok\ntest original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary ... ok\ntest reference_frame_defaults_remain_separate_from_live_encoder_defaults ... ok\ntest reference_minimum_and_default_levels_preserve_original_scalar_assertions ... ok\ntest request_resolution_preserves_the_two_pass_empty_source_chain_witness ... ok\ntest requested_hash_override_survives_level_changes_and_default_replacement ... ok\ntest source_hint_bounds_preserve_requested_values_after_rejection ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.59s\n\n"
+        }
+      ],
+      "running": false,
+      "start_utc": "2026-10-09T06:14:05.173987+00:00",
+      "complete": true,
+      "snapshot_unchanged": true,
+      "exit_code": 0,
+      "total_command_seconds": 55.8364947498776
+    },
+    "s390x": {
+      "mode": "s390x",
+      "revision": "6ca8617d046472fe60007173239981589dde4556",
+      "snapshot": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+      "extra_integration_source": {
+        "path": "tests/upstream_parameters.rs",
+        "sha256": "ef87a4cd0196600eee66237a037c93e40ef96293aa99aa88b2ddd247a83d99a7"
+      },
+      "commands": [
+        {
+          "name": "s390x-selected-safe",
+          "cwd": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+          "command": [
+            "cargo",
+            "+nightly-2026-10-08",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "s390x-unknown-linux-gnu",
+            "--lib",
+            "--",
+            "--exact",
+            "parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds",
+            "parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window",
+            "parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies",
+            "parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override",
+            "parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests",
+            "parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses",
+            "--test-threads=1"
+          ],
+          "command_shell": "cargo +nightly-2026-10-08 miri test --offline --locked --target s390x-unknown-linux-gnu --lib -- --exact parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses --test-threads=1",
+          "environment": {
+            "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+            "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-s390x",
+            "MIRIFLAGS": "-Zmiri-strict-provenance",
+            "CARGO_TERM_COLOR": "never"
+          },
+          "exit_code": 0,
+          "seconds": 6.272406416945159,
+          "log": "/tmp/zstdoxide-module10-parameter-platform-s390x-selected-safe.log",
+          "log_sha256": "4e515e8a5f9da46e71373814c6470e9ca34b881385f2f7e401147e8944ebe1e7",
+          "expected_test_count": 6,
+          "exact_selectors": [
+            "parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds",
+            "parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window",
+            "parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies",
+            "parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override",
+            "parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests",
+            "parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses"
+          ],
+          "actual_passing_tests": [
+            "parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses",
+            "parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window",
+            "parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds",
+            "parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override",
+            "parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies",
+            "parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests"
+          ],
+          "summaries": [
+            {
+              "passed": 6,
+              "failed": 0,
+              "ignored": 0
+            }
+          ],
+          "nonempty_expected_selection_verified": true,
+          "snapshot_unchanged": true,
+          "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s\n     Running unittests src/lib.rs (/tmp/zstdoxide-platform-build-s390x/miri/s390x-unknown-linux-gnu/debug/build/zstdoxide/352fcbf9ea7fd889/out/zstdoxide-352fcbf9ea7fd889)\n\nrunning 6 tests\ntest parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses ... ok\ntest parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window ... ok\ntest parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds ... ok\ntest parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override ... ok\ntest parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies ... ok\ntest parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 503 filtered out; finished in 1.00s\n\n"
+        },
+        {
+          "name": "s390x-selected-all",
+          "cwd": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+          "command": [
+            "cargo",
+            "+nightly-2026-10-08",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "s390x-unknown-linux-gnu",
+            "--lib",
+            "--all-features",
+            "--",
+            "--exact",
+            "parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds",
+            "parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window",
+            "parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies",
+            "parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override",
+            "parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests",
+            "parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses",
+            "--test-threads=1"
+          ],
+          "command_shell": "cargo +nightly-2026-10-08 miri test --offline --locked --target s390x-unknown-linux-gnu --lib --all-features -- --exact parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses --test-threads=1",
+          "environment": {
+            "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+            "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-s390x",
+            "MIRIFLAGS": "-Zmiri-strict-provenance",
+            "CARGO_TERM_COLOR": "never"
+          },
+          "exit_code": 0,
+          "seconds": 5.166363707976416,
+          "log": "/tmp/zstdoxide-module10-parameter-platform-s390x-selected-all.log",
+          "log_sha256": "472bc8febc4812a5fb2a0fc91994a511ed1e7b362984a33a8f334bdb1fa66ad6",
+          "expected_test_count": 6,
+          "exact_selectors": [
+            "parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds",
+            "parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window",
+            "parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies",
+            "parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override",
+            "parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests",
+            "parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses"
+          ],
+          "actual_passing_tests": [
+            "parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses",
+            "parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window",
+            "parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds",
+            "parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override",
+            "parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies",
+            "parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests"
+          ],
+          "summaries": [
+            {
+              "passed": 6,
+              "failed": 0,
+              "ignored": 0
+            }
+          ],
+          "nonempty_expected_selection_verified": true,
+          "snapshot_unchanged": true,
+          "log_text": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running unittests src/lib.rs (/tmp/zstdoxide-platform-build-s390x/miri/s390x-unknown-linux-gnu/debug/build/zstdoxide/e4715997d90fb03a/out/zstdoxide-e4715997d90fb03a)\n\nrunning 6 tests\ntest parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses ... ok\ntest parameters::resolution_tests::empty_adjustment_downsizes_hash_and_chain_before_flooring_window ... ok\ntest parameters::resolution_tests::raw_adjustment_uses_signed32_clamps_and_target_width_bounds ... ok\ntest parameters::resolution_tests::request_resolution_preserves_initial_adjustment_before_strategy_override ... ok\ntest parameters::resolution_tests::row_hash_caps_apply_only_to_the_three_reference_row_strategies ... ok\ntest parameters::resolution_tests::source_hints_change_unknown_resolution_only_and_never_mutate_requests ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 503 filtered out; finished in 1.00s\n\n"
+        }
+      ],
+      "running": false,
+      "start_utc": "2026-10-09T06:14:05.174002+00:00",
+      "complete": true,
+      "snapshot_unchanged": true,
+      "exit_code": 0,
+      "total_command_seconds": 11.438770124921575
+    },
+    "thumb": {
+      "mode": "thumb",
+      "revision": "6ca8617d046472fe60007173239981589dde4556",
+      "snapshot": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+      "extra_integration_source": {
+        "path": "tests/upstream_parameters.rs",
+        "sha256": "ef87a4cd0196600eee66237a037c93e40ef96293aa99aa88b2ddd247a83d99a7"
+      },
+      "commands": [
+        {
+          "name": "thumb-library-safe",
+          "cwd": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+          "command": [
+            "cargo",
+            "+nightly-2026-10-08",
+            "check",
+            "--offline",
+            "--locked",
+            "-Z",
+            "build-std=core,alloc",
+            "--target",
+            "thumbv6m-none-eabi",
+            "--no-default-features",
+            "--lib"
+          ],
+          "command_shell": "cargo +nightly-2026-10-08 check --offline --locked -Z build-std=core,alloc --target thumbv6m-none-eabi --no-default-features --lib",
+          "environment": {
+            "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-thumb",
+            "CARGO_TERM_COLOR": "never"
+          },
+          "exit_code": 0,
+          "seconds": 1.2964608750771731,
+          "log": "/tmp/zstdoxide-module10-parameter-platform-thumb-library-safe.log",
+          "log_sha256": "6d10bd3ad679c04f144261383aeeaa99ad1383564a4f1a59bdddad2816220d70",
+          "expected_test_count": null,
+          "exact_selectors": null,
+          "actual_passing_tests": [],
+          "summaries": [],
+          "nonempty_expected_selection_verified": null,
+          "snapshot_unchanged": true,
+          "log_text": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.22s\n"
+        },
+        {
+          "name": "thumb-library-all",
+          "cwd": "/tmp/zstdoxide-module10-parameter-platform-6ca8617",
+          "command": [
+            "cargo",
+            "+nightly-2026-10-08",
+            "check",
+            "--offline",
+            "--locked",
+            "-Z",
+            "build-std=core,alloc",
+            "--target",
+            "thumbv6m-none-eabi",
+            "--no-default-features",
+            "--lib",
+            "--features",
+            "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+          ],
+          "command_shell": "cargo +nightly-2026-10-08 check --offline --locked -Z build-std=core,alloc --target thumbv6m-none-eabi --no-default-features --lib --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+          "environment": {
+            "CARGO_TARGET_DIR": "/tmp/zstdoxide-platform-build-thumb",
+            "CARGO_TERM_COLOR": "never"
+          },
+          "exit_code": 0,
+          "seconds": 0.9440425420179963,
+          "log": "/tmp/zstdoxide-module10-parameter-platform-thumb-library-all.log",
+          "log_sha256": "62b4a582c42b8c5f556fcaa492a9ade4be6d9427696104301891d3eaec953388",
+          "expected_test_count": null,
+          "exact_selectors": null,
+          "actual_passing_tests": [],
+          "summaries": [],
+          "nonempty_expected_selection_verified": null,
+          "snapshot_unchanged": true,
+          "log_text": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-module10-parameter-platform-6ca8617)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.91s\n"
+        }
+      ],
+      "running": false,
+      "start_utc": "2026-10-09T06:14:05.173931+00:00",
+      "complete": true,
+      "snapshot_unchanged": true,
+      "exit_code": 0,
+      "total_command_seconds": 2.2405034170951694
+    }
+  },
+  "summary": {
+    "i686_unit_tests_per_backend": 26,
+    "i686_integration_tests_per_backend": 11,
+    "i686_total_passed": 74,
+    "s390x_selected_tests_per_backend": 6,
+    "s390x_total_passed": 12,
+    "total_miri_passed": 86,
+    "total_miri_failed": 0,
+    "total_miri_ignored": 0,
+    "thumb_no_std_configurations": 2,
+    "commands": 8
+  },
+  "cfg_exclusions": {
+    "i686_normal_host64_tests": [
+      "parameters::validation_tests::all_225_recorded_raw_inputs_match_c_validation_only",
+      "parameters::request_tests::c_scalar_trace_accounts_for_typed_inputs_and_outside_surface_rows",
+      "parameters::resolution_tests::checked_size_policy_is_specific_to_the_arithmetic_each_operation_uses",
+      "parameters::resolution_tests::all_266_query_rows_compare_or_explicitly_reject_c_modular_domains",
+      "parameters::resolution_tests::all_225_adjustment_rows_compare_signed_clamps_or_explicitly_reject_overflow",
+      "parameters::resolution_tests::all_150_requested_states_resolve_without_claiming_frame_or_unsupported_setters"
+    ],
+    "i686_host64_optional_test_not_compiled": "parameters::resolution_tests::external_review_probe_matches_independent_c_queries_adjustments_and_requests",
+    "reason": "The six normal cases assert explicitly recorded host64 C values or host64 overflow domains. The i686 suite instead executes target-width bounds, signed clamps, complete presets, tier arithmetic and all eleven public scalar integration cases. No dropped test is reported as passed."
+  },
+  "limitations": [
+    "Miri cross-interprets Rust MIR with strict provenance; this is not native Linux execution, QEMU, or independent C execution on i686/s390x.",
+    "The big-endian campaign runs six exact scalar tests, not the entire library or codec suite.",
+    "thumbv6m checks compile only the no_std library with core/alloc built from the installed pinned sources. No firmware execution, linker image, memory-fit or native allocator behavior is claimed.",
+    "Cached Miri sysroots and build-std packages were reused offline. No toolchain components, targets or system tools were installed.",
+    "Uncommitted reset/lifecycle changes were excluded from the committed archive; only the frozen scalar public integration file was copied into it.",
+    "No repository files were edited and no performance benchmark was run."
+  ],
+  "original_evidence_sha256": "518c9d5724d84cb394c2b5831957c8b92883d0fb911fe81acfcfe13daf7e249c",
+  "archive": {
+    "path": "docs/evidence/2026-10-09-parameter-platform.tar.gz",
+    "sha256": "f6945e70653e7144367301f060dd71bb4874191d69a14c415e358831f5dc079d"
+  }
+}

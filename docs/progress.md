@@ -341,3 +341,10 @@ safe/all streaming suites each pass 26 tests. Focused feature/no_std checks,
 strict Clippy, two narrow strict-provenance Miri tests and 36 independent C frame
 decodes pass. All four streaming usage examples pass safe/all. Public official
 lifecycle adaptations remain the next independent migration checkpoint.
+
+The scalar platform checkpoint passes 86 strict-provenance Miri executions:
+74 across i686 safe/all applicable unit and public-integration suites, plus
+twelve selected big-endian s390x executions. Six host-64-only normal tests are
+explicitly excluded on i686. Safe/all thumbv6m no_std compilation also passes.
+The isolated snapshot remained unchanged; this qualifies interpreted Rust and
+compile-only targets, not native C/platform release behavior.

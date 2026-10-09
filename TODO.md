@@ -39,7 +39,8 @@ after oracle capture; each completed item receives its own verified commit.
 - [x] Port source-anchored official scalar assertions through the completed public inspection API.
 - [ ] Port matching official encoder lifecycle assertions and independent C checks while preserving default output fingerprints.
 - [ ] Update the official source/case inventory with precise scalar and lifecycle coverage, retaining blocked numeric execution and other missing contracts.
-- [ ] Run the safe/individual/all-feature, no_std, Clippy, formatting, oracle, and appropriate width checks; record precise completion and remaining gaps.
+- [x] Validate scalar inspection on 32-bit and big-endian interpreted targets, and compile the no_std library for a target without pointer atomics.
+- [ ] Run the complete safe/individual/all-feature, no_std, Clippy, formatting and oracle matrix; record precise completion and remaining gaps.
 
 ## Roadmap
 

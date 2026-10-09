@@ -175,3 +175,29 @@ large shared/formatted dictionary or chain phase matrix under Miri. Existing
 pinned-C regression runs decode 18 generated frames exactly per safe/all release
 build; these are interoperability checks, not identical C/Rust reset protocols.
 Source-anchored public lifecycle integration is the next separate checkpoint.
+
+## Scalar width and endian validation
+
+An isolated archive of `6ca8617`, plus the frozen scalar integration file later
+committed as `d190d56`, retained all 669 file hashes throughout eight commands.
+The three relevant source hashes still match the committed implementation.
+The pinned compiler and cached sysroots were reused offline without installation.
+
+Strict-provenance Miri interprets 26 applicable parameter unit tests and eleven
+public integration tests on i686 in each safe/all-feature configuration: 74
+passing executions. Six host-64-only unit tests contain the captured 64-bit C
+values or usize-overflow domains and are explicitly excluded, as is the optional
+64-bit external probe reader. The evidence lists every exclusion; they are not
+reported as passing 32-bit cases.
+
+Six selected signed-clamp, adjustment-order, row-cap, hint and overflow tests
+also pass safe/all on big-endian s390x: twelve further executions. Total selected
+Miri execution is 86 passed, zero failed and zero ignored. The thumbv6m library
+compiles without std in safe and all-twelve-feature builds using cached build-std.
+These are interpreted Rust checks and compile-only ARM checks, not native Linux,
+QEMU, firmware or cross-target C execution. No codec benchmark is claimed.
+
+[Platform evidence](evidence/2026-10-09-parameter-platform.json) preserves commands,
+compiler/target configuration, selected test names, full logs and hashes. Its
+[archive](evidence/2026-10-09-parameter-platform.tar.gz) retains the complete
+snapshot manifest and reproduction runner.
