@@ -8,7 +8,8 @@
 
 use zstdoxide::{
     DecodeOptions, Dictionary, Encoder, EncoderOptions, EndDirective, Error, FrameHeader,
-    SharedDictionary, StreamStatus, decompress, decompress_with_dictionary,
+    SharedDictionary, StreamStatus, compress, compress_with_dictionary, decompress,
+    decompress_with_dictionary,
 };
 
 const RAW: &[u8] = include_bytes!("upstream/dictionaries/boundary-dictionary.raw");
@@ -580,4 +581,138 @@ fn official_codec_decodes_raw_prepared_and_omitted_id_dictionary_frames() {
     }
     assert_eq!(cases, 96);
     eprintln!("Official zstd v1.5.7 decoded {cases} dictionary frames byte-exactly");
+}
+
+#[test]
+fn one_shot_dictionary_compression_preserves_header_contract_and_source_bytes() {
+    for dictionary in [
+        raw_dictionary(),
+        prepared(FORMATTED),
+        prepared(TRAINED),
+        prepared(DUPLICATE_REPS),
+    ] {
+        for length in [
+            0, 1, 255, 256, 65_535, 65_791, 65_792, 131_071, 131_072, 131_073, 262_145,
+        ] {
+            let source: Vec<_> = dictionary
+                .content()
+                .iter()
+                .copied()
+                .cycle()
+                .take(length)
+                .collect();
+            let first = compress_with_dictionary(&source, &dictionary).unwrap();
+            let second = compress_with_dictionary(&source, &dictionary).unwrap();
+            assert_eq!(first, second);
+            let header = FrameHeader::parse(&first).unwrap().0;
+            assert_ne!(
+                first[4] & 0x20,
+                0,
+                "one-shot headers use single-segment framing"
+            );
+            assert_eq!(header.window_size, length as u64);
+            assert_eq!(header.content_size, Some(length as u64));
+            assert_eq!(header.dictionary_id, dictionary.id());
+            assert!(header.has_checksum);
+            assert_round_trip(&first, &source, &dictionary);
+        }
+    }
+}
+
+#[test]
+fn one_shot_and_streaming_dictionary_compression_both_use_real_dictionary_matches() {
+    let source = &RAW[..512];
+    let plain = compress(source).unwrap();
+    for dictionary in [raw_dictionary(), prepared(FORMATTED)] {
+        let one_shot = compress_with_dictionary(source, &dictionary).unwrap();
+        let streamed = encode(source, dictionary.clone(), options(source.len()));
+        assert!(one_shot.len() * 4 < plain.len());
+        assert!(streamed.len() * 4 < plain.len());
+        assert_round_trip(&one_shot, source, &dictionary);
+        assert_round_trip(&streamed, source, &dictionary);
+        assert!(decompress(&one_shot, source.len()).is_err());
+        assert_eq!(dictionary.content(), RAW);
+    }
+}
+
+#[test]
+fn one_shot_dictionary_id_widths_and_empty_raw_dictionary_match_the_public_contract() {
+    let source = &RAW[..512];
+    for (id, flag) in [
+        (0_u32, 0_u8),
+        (1, 1),
+        (255, 1),
+        (256, 2),
+        (65_535, 2),
+        (65_536, 3),
+        (u32::MAX, 3),
+    ] {
+        let mut bytes = FORMATTED.to_vec();
+        bytes[4..8].copy_from_slice(&id.to_le_bytes());
+        let dictionary = prepared(&bytes);
+        let frame = compress_with_dictionary(source, &dictionary).unwrap();
+        assert_eq!(FrameHeader::parse(&frame).unwrap().0.dictionary_id, id);
+        assert_eq!(frame[4] & 3, flag);
+        assert_round_trip(&frame, source, &dictionary);
+        assert_eq!(dictionary.as_bytes(), bytes);
+    }
+    let empty = Dictionary::raw(&[]).unwrap().into_shared();
+    for source in [b"".as_slice(), b"abcdabcdabcd", source] {
+        assert_eq!(
+            compress_with_dictionary(source, &empty).unwrap(),
+            compress(source).unwrap()
+        );
+    }
+}
+
+#[test]
+#[ignore = "requires official zstd v1.5.7 CLI; set ZSTD_BIN or put zstd on PATH"]
+fn official_codec_decodes_one_shot_dictionary_frames_across_content_size_boundaries() {
+    use std::io::Write;
+    use std::process::{Command, Stdio};
+    let executable = std::env::var_os("ZSTD_BIN").unwrap_or_else(|| "zstd".into());
+    let version = Command::new(&executable).arg("--version").output().unwrap();
+    assert!(version.status.success());
+    assert!(String::from_utf8_lossy(&version.stdout).contains("v1.5.7"));
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/upstream/dictionaries");
+    let mut cases = 0;
+    for (name, dictionary) in [
+        ("boundary-dictionary.raw", raw_dictionary()),
+        ("formatted.dict", prepared(FORMATTED)),
+        ("trained.dict", prepared(TRAINED)),
+        ("duplicate-reps.dict", prepared(DUPLICATE_REPS)),
+    ] {
+        for length in [0, 1, 255, 256, 131_073] {
+            let source: Vec<_> = dictionary
+                .content()
+                .iter()
+                .copied()
+                .cycle()
+                .take(length)
+                .collect();
+            let frame = compress_with_dictionary(&source, &dictionary).unwrap();
+            let mut child = Command::new(&executable)
+                .args(["-q", "-d", "-c", "-D"])
+                .arg(root.join(name))
+                .stdin(Stdio::piped())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .spawn()
+                .unwrap();
+            let mut stdin = child.stdin.take().unwrap();
+            let writer = std::thread::spawn(move || stdin.write_all(&frame));
+            let result = child.wait_with_output().unwrap();
+            let written = writer.join().unwrap();
+            assert!(
+                result.status.success(),
+                "dictionary={name}, length={length}: {}",
+                String::from_utf8_lossy(&result.stderr)
+            );
+            written.unwrap();
+            assert_eq!(result.stdout, source, "dictionary={name}, length={length}");
+            cases += 1;
+        }
+    }
+    assert_eq!(cases, 20);
+    eprintln!("Official zstd v1.5.7 decoded {cases} one-shot dictionary frames byte-exactly");
 }

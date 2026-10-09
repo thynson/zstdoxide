@@ -43,6 +43,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Write dictionary frame IDs with explicit omission and smallest field widths.
 - [x] Produce interoperable raw/prepared dictionary compression.
 - [x] Expose one-shot dictionary compression with known size and minimal ID width.
+- [x] Verify one-shot dictionary compression boundaries and independent C decoding.
 - [x] Add dictionary-aware encoding context, reset, and single-use prefix configuration.
 - [x] Analyze bounded raw sample selection and dictionary-training ownership.
 - [x] Implement safe bounded frequency scoring and deterministic raw content selection.
