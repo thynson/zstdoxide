@@ -5,12 +5,39 @@
 //! module initially builds metadata; hot-path literal encoding follows later.
 
 use alloc::collections::BinaryHeap;
+use alloc::vec::Vec;
 use core::cmp::Reverse;
 
+use crate::entropy_encode::encode_weights;
 use crate::{Error, Result};
 
 const SYMBOLS: usize = 256;
 const MAX_DEPTH: u8 = 11;
+
+/// Serialize a complete dictionary literal alphabet learned from sample counts.
+///
+/// Corresponds to the metadata role of upstream `HUF_writeCTable_wksp`. The
+/// full alphabet needs 255 explicit weights, exceeding the direct nibble form's
+/// 128-symbol limit, so its description always uses a two-state FSE stream.
+/// An oversized description falls back to a deterministic near-flat complete
+/// tree; no partial or truncated table is ever published.
+pub(crate) fn serialize_literal_table(observed: &[u64; SYMBOLS]) -> Result<Vec<u8>> {
+    let lengths = literal_lengths(observed)?;
+    let mut payload = encode_weights(&explicit_weights(&lengths)?)?;
+    if payload.len() >= 128 {
+        payload = encode_weights(&explicit_weights(&near_flat_lengths(observed))?)?;
+    }
+    if payload.is_empty() || payload.len() >= 128 {
+        return Err(Error::InvalidState);
+    }
+    let mut description = Vec::new();
+    description
+        .try_reserve_exact(payload.len() + 1)
+        .map_err(|_| Error::AllocationFailed)?;
+    description.push(payload.len() as u8);
+    description.extend_from_slice(&payload);
+    Ok(description)
+}
 
 /// Construct a complete full-alphabet tree with one pseudocount per symbol.
 ///
@@ -142,6 +169,58 @@ pub(crate) fn explicit_weights(lengths: &[u8; SYMBOLS]) -> Result<[u8; SYMBOLS -
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn check_serialized_tree(observed: &[u64; SYMBOLS]) {
+        let encoded = serialize_literal_table(observed).unwrap();
+        assert!((1..128).contains(&encoded[0]));
+        assert_eq!(encoded.len(), usize::from(encoded[0]) + 1);
+        let (_, consumed) = crate::huffman::HuffmanTable::read_dictionary(&encoded).unwrap();
+        assert_eq!(consumed, encoded.len());
+        let (_, consumed) = crate::huffman::HuffmanTable::read(&encoded).unwrap();
+        assert_eq!(consumed, encoded.len());
+        let learned = explicit_weights(&literal_lengths(observed).unwrap()).unwrap();
+        let expected = if encode_weights(&learned).unwrap().len() < 128 {
+            learned
+        } else {
+            explicit_weights(&near_flat_lengths(observed)).unwrap()
+        };
+        assert_eq!(crate::fse::decode_weights(&encoded[1..]).unwrap(), expected);
+        assert_eq!(serialize_literal_table(observed).unwrap(), encoded);
+        for length in 0..encoded.len() {
+            assert!(crate::huffman::HuffmanTable::read_dictionary(&encoded[..length]).is_err());
+        }
+    }
+
+    #[test]
+    fn serialized_tables_preserve_flat_extreme_and_randomized_literal_trees() {
+        check_serialized_tree(&[0; SYMBOLS]);
+        check_serialized_tree(&[u32::MAX as u64; SYMBOLS]);
+        let mut extreme = [0; SYMBOLS];
+        extreme[255] = 1 << 50;
+        check_serialized_tree(&extreme);
+        for (index, frequency) in extreme.iter_mut().enumerate().take(60) {
+            *frequency = 1 << index;
+        }
+        check_serialized_tree(&extreme);
+        let mut state = 0x9e37_79b9_u64;
+        for trial in 0..64 {
+            let frequencies = core::array::from_fn(|symbol| {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                (state & 1023) << ((symbol + trial) % 32)
+            });
+            check_serialized_tree(&frequencies);
+        }
+    }
+
+    #[test]
+    fn literal_table_serialization_rejects_overflow_before_building_metadata() {
+        assert_eq!(
+            serialize_literal_table(&[u64::MAX; SYMBOLS]),
+            Err(Error::ResourceLimit)
+        );
+    }
 
     fn check_tree(lengths: &[u8; SYMBOLS]) {
         assert!(

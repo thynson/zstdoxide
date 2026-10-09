@@ -558,7 +558,7 @@ mod tests {
     #[cfg(feature = "std")]
     #[test]
     #[ignore = "requires ZSTD_UPSTREAM pointing to pinned v1.5.7 with built lib/libzstd.a and a C compiler"]
-    fn official_fse_decoder_accepts_generated_weight_streams() {
+    fn official_fse_and_huffman_readers_accept_generated_headers() {
         use std::io::Write;
         use std::process::{Command, Stdio};
         let upstream = std::path::PathBuf::from(
@@ -647,6 +647,58 @@ int main(int argc, char** argv) {
         std::eprintln!(
             "Official v1.5.7 FSE decoder verified {} weight streams",
             cases.len()
+        );
+        let mut frequencies = alloc::vec![[0_u64; 256], [u64::from(u32::MAX); 256]];
+        let mut extreme = [0; 256];
+        extreme[255] = 1 << 50;
+        frequencies.push(extreme);
+        for (index, value) in extreme.iter_mut().enumerate().take(60) {
+            *value = 1 << index;
+        }
+        frequencies.push(extreme);
+        let mut random = 0x9e37_79b9_u64;
+        for trial in 0..64 {
+            frequencies.push(core::array::from_fn(|symbol| {
+                random ^= random << 13;
+                random ^= random >> 7;
+                random ^= random << 17;
+                (random & 1023) << ((symbol + trial) % 32)
+            }));
+        }
+        for (case, observed) in frequencies.iter().enumerate() {
+            let header = crate::huffman_encode::serialize_literal_table(observed).unwrap();
+            let mut lengths = crate::huffman_encode::literal_lengths(observed).unwrap();
+            let weights = crate::huffman_encode::explicit_weights(&lengths).unwrap();
+            if encode_weights(&weights).unwrap().len() >= 128 {
+                lengths = crate::huffman_encode::near_flat_lengths(observed);
+            }
+            let table_log = *lengths.iter().max().unwrap();
+            let expected: Vec<_> = lengths
+                .iter()
+                .map(|&length| table_log + 1 - length)
+                .collect();
+            let mut child = Command::new(&executable)
+                .arg("huffman")
+                .stdin(Stdio::piped())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .spawn()
+                .unwrap();
+            child.stdin.take().unwrap().write_all(&header).unwrap();
+            let result = child.wait_with_output().unwrap();
+            assert!(
+                result.status.success(),
+                "HUF case {case}: {}",
+                std::string::String::from_utf8_lossy(&result.stderr)
+            );
+            assert_eq!(result.stdout.len(), 259, "HUF case {case}");
+            assert_eq!(result.stdout[0], table_log, "HUF case {case}");
+            assert_eq!(&result.stdout[1..3], &[0, 1], "HUF case {case}");
+            assert_eq!(&result.stdout[3..], expected, "HUF case {case}");
+        }
+        std::eprintln!(
+            "Official v1.5.7 HUF_readStats verified {} complete literal headers",
+            frequencies.len()
         );
     }
 }
