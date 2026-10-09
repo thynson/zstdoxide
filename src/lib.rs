@@ -46,6 +46,7 @@ mod entropy_encode;
 #[cfg(test)]
 mod entropy_output;
 mod error;
+mod fast_frame;
 mod fast_plan;
 mod frame;
 mod fse;

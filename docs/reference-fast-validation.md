@@ -192,3 +192,30 @@ replays and strict library Clippy/all, with one existing oracle ignore.
 scopes, exact commands/logs, compiler environment, source hashes and the runner.
 Miri includes the bounded 41-ordinal failure sweep; its elapsed duration is not a
 performance result. No new C execution or numeric compression API is claimed.
+
+## Known-size frame metadata and raw output bound
+
+`FastFrameHeader` is an allocation-free fixed-array value built from an admitted
+plan. It emits standard magic, no checksum/dictionary field, known content size
+and a single-segment flag only when the entire source fits the selected window.
+Otherwise its explicit power-of-two window descriptor is truthful. The content
+size switches to eight bytes at 0xffffffff, matching the source rule of the
+pinned C writer; the named convenience header retains its original behavior.
+The checked complete raw-frame bound includes all actual block headers and one
+final empty block for empty input, rejecting overflow without allocating a
+fabricated huge source or output.
+
+Five tests cover field boundaries, every admitted window exponent, large scalar
+sizes, target-width overflow and complete Rust decoding of real raw-block frames.
+Expected header bytes are explicitly source-derived rather than new captured C
+observations. Four configurations pass all twenty test executions, safe/all
+original default replay passes fourteen, and two exact i686 strict-provenance
+Miri tests cover the u32 field transition and complete-size overflow. All thirteen
+commands pass, including no_std safe/all, strict all-target Clippy safe/all and
+formatting; all snapshot inputs remain unchanged.
+
+[Header evidence](evidence/2026-10-09-fast-frame-header.json) retains the immutable
+snapshot manifest, full logs, commands, compiler and runner. The i686 checks are
+interpreted scalar tests, not native foreign-platform execution. Public C-path
+header observations and actual Fast frame emission remain later integration
+checks; no new parser or public numeric API is claimed here.

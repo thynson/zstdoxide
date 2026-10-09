@@ -500,3 +500,14 @@ destruction interleaving, while each child still releases through its exact
 allocator; no old field-drop-order guarantee is introduced. The neutral
 extraction retains named scratch validity rules until the explicit Fast
 preparation contract is integrated.
+
+`FastFrameHeader` is a plain fixed-array record with at most fourteen
+initialized bytes: standard magic, descriptor, optional power-of-two window
+byte and known content size. It owns no allocation or source reference and
+shares one entirely safe representation. Its input is the admitted Fast plan;
+checksum and dictionary ID remain absent. Single-segment encoding requires
+actual input size no greater than the selected window. The C-compatible known
+size transition to an eight-byte field occurs at 0xffffffff, while the existing
+named convenience header remains unchanged. The complete raw-frame bound uses
+checked source/header/block-header arithmetic, with one final empty raw block
+for an empty source and no fabricated huge input allocation in boundary tests.
