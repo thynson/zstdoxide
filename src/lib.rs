@@ -35,6 +35,8 @@ mod constants;
 mod cursor;
 mod decode;
 mod dictionary;
+#[cfg(test)]
+mod dictionary_train;
 mod encode;
 #[cfg(test)]
 mod entropy_encode;

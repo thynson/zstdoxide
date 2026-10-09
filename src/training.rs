@@ -36,7 +36,7 @@ impl Default for RawTrainingOptions {
 }
 
 impl RawTrainingOptions {
-    fn validate(self) -> Result<Self> {
+    pub(crate) fn validate(self) -> Result<Self> {
         if self.dictionary_size < 8
             || self.dictionary_size > self.max_sample_bytes
             || self.max_sample_bytes as u128 > u128::from(u32::MAX)
@@ -131,13 +131,39 @@ struct SampleWindow {
 }
 
 fn select_sample_windows(samples: &[&[u8]], budget: usize) -> Result<Vec<SampleWindow>> {
+    let mut windows = Vec::new();
+    visit_sample_prefixes(samples, budget, |sample, bytes| {
+        if bytes.len() >= 8 {
+            windows
+                .try_reserve(1)
+                .map_err(|_| Error::AllocationFailed)?;
+            windows.push(SampleWindow {
+                sample,
+                length: bytes.len(),
+            });
+        }
+        Ok(())
+    })?;
+    if windows.is_empty() {
+        return Err(Error::TrainingFailed);
+    }
+    Ok(windows)
+}
+
+/// Visit deterministic proportional prefixes without allocating sample records.
+///
+/// All sample lengths are summed before visiting any source. Each quota rounds
+/// down, so the aggregate visited bytes never exceed budget. Empty and short
+/// prefixes are included: content selection filters them, but literal entropy
+/// observations must count every selected byte. No caller borrow is retained.
+pub(crate) fn visit_sample_prefixes(
+    samples: &[&[u8]],
+    budget: usize,
+    mut visit: impl FnMut(usize, &[u8]) -> Result<()>,
+) -> Result<()> {
     let total = samples.iter().try_fold(0_usize, |total, sample| {
         total.checked_add(sample.len()).ok_or(Error::ResourceLimit)
     })?;
-    if total < 8 {
-        return Err(Error::TrainingFailed);
-    }
-    let mut windows = Vec::new();
     for (sample, bytes) in samples.iter().enumerate() {
         let length = if total > budget {
             let quota = (bytes.len() as u128)
@@ -148,17 +174,9 @@ fn select_sample_windows(samples: &[&[u8]], budget: usize) -> Result<Vec<SampleW
         } else {
             bytes.len()
         };
-        if length >= 8 {
-            windows
-                .try_reserve(1)
-                .map_err(|_| Error::AllocationFailed)?;
-            windows.push(SampleWindow { sample, length });
-        }
+        visit(sample, &bytes[..length])?;
     }
-    if windows.is_empty() {
-        return Err(Error::TrainingFailed);
-    }
-    Ok(windows)
+    Ok(())
 }
 
 /// Plain heap values; source indices and integer scores need no unsafe variant.

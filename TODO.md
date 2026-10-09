@@ -50,6 +50,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Add a separately gated unsafe training-frequency accessor with full proofs.
 - [x] Verify raw training quality, malformed parameters, determinism, and bounded selection.
 - [x] Decompose entropy construction and formatted dictionary finalization before implementation.
+- [x] Validate formatted-training options and share bounded sample-prefix observation.
 - [x] Serialize normalized FSE counts with checked forward bit output.
 - [ ] Normalize sample frequencies deterministically with bounded integer arithmetic.
 - [ ] Encode two-state FSE weight streams using checked transition inversion.
