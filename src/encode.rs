@@ -5,7 +5,7 @@ use alloc::vec::Vec;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
 use crate::fse::FseTable;
 use crate::matchfinder::MatchTable;
-use crate::{Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash};
+use crate::{Dictionary, Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash};
 
 /// Predefined offset tables provide symbols 0..=28. Larger dictionaries remain
 /// valid, but the initial encoder searches only this addressable suffix.
@@ -123,7 +123,7 @@ impl BlockEncoder {
     }
 
     fn encode_block(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
-        if block.len() > MAX_BLOCK_SIZE {
+        if block.len() > MAX_BLOCK_SIZE || block.len() as u64 > self.window_size {
             return Err(Error::ResourceLimit);
         }
         output
@@ -190,7 +190,7 @@ fn write_block_header(output: &mut Vec<u8>, size: usize, kind: u8, last: bool) {
     output.extend_from_slice(&header.to_le_bytes()[..3]);
 }
 
-/// A plain sequence; lengths and distance are bounded by one 128 KiB block.
+/// A plain sequence with block-bounded lengths and an encodable match distance.
 #[derive(Clone, Copy, Debug)]
 struct Sequence {
     literal_length: u32,
@@ -204,11 +204,35 @@ struct Sequence {
 /// an independent greedy parser and table inversion instead of C table layout.
 impl BlockEncoder {
     fn compress_block(&mut self, block: &[u8]) -> Result<bool> {
+        let dictionary = self.active_dictionary.as_deref().filter(|dictionary| {
+            !dictionary.content().is_empty() && self.frame_position <= self.window_size
+        });
+        let source = MatchSource {
+            block,
+            dictionary,
+            dictionary_size: dictionary.map_or(0, |dictionary| dictionary.content().len()),
+            frame_position: self.frame_position,
+            window_size: self.window_size,
+        };
         let match_table = match self.match_table.as_mut() {
             Some(table) => table,
             None => self.match_table.insert(MatchTable::new()?),
         };
-        match_table.reset();
+        if dictionary.is_some()
+            && let Some(seed) = &self.dictionary_seed
+        {
+            match_table.reset_from(seed);
+        } else {
+            match_table.reset();
+        }
+        if dictionary.is_some() && self.frame_position == 0 {
+            // At frame start, keys may straddle dictionary end and frame[0].
+            // This also makes one-, two-, and three-byte raw prefixes useful.
+            for position in source.dictionary_size.saturating_sub(3)..source.dictionary_size {
+                let word = source.first_block_word(position)?;
+                match_table.replace(word, position);
+            }
+        }
         let literals = &mut self.literals;
         literals.clear();
         literals
@@ -222,26 +246,22 @@ impl BlockEncoder {
         let mut position = 0;
         let mut literal_start = 0;
         while position + 4 <= block.len() {
-            let candidate = match_table.replace(word_at(block, position), position);
+            let virtual_position = source.virtual_position(position)?;
+            let candidate = match_table.replace(word_at(block, position), virtual_position);
             if let Some(previous) = candidate
-                && block[previous..previous + 4] == block[position..position + 4]
+                && let Some((distance, match_length)) = source.find_match(previous, position)?
             {
-                let mut match_length = 4;
-                while position + match_length < block.len()
-                    && block[previous + match_length] == block[position + match_length]
-                {
-                    match_length += 1;
-                }
                 literals.extend_from_slice(&block[literal_start..position]);
                 sequences.push(Sequence {
                     literal_length: (position - literal_start) as u32,
                     match_length: match_length as u32,
-                    distance: (position - previous) as u32,
+                    distance: distance as u32,
                 });
                 let match_end = position + match_length;
                 position += 1;
                 while position < match_end && position + 4 <= block.len() {
-                    match_table.replace(word_at(block, position), position);
+                    match_table
+                        .replace(word_at(block, position), source.virtual_position(position)?);
                     position += 1;
                 }
                 position = match_end;
@@ -276,6 +296,116 @@ impl BlockEncoder {
         payload.push(0); // All three symbol distributions are predefined.
         payload.extend_from_slice(stream);
         Ok(payload.len() < block.len())
+    }
+}
+
+/// A temporary indexed view of immutable dictionary content and the input block.
+///
+/// No reference escapes the current encode call. Dictionary positions are in
+/// `0..D`; block positions are checked `D + local_position` coordinates. Frame
+/// position remains a separate u64 so long streams never truncate into indices.
+struct MatchSource<'a> {
+    block: &'a [u8],
+    dictionary: Option<&'a Dictionary>,
+    dictionary_size: usize,
+    frame_position: u64,
+    window_size: u64,
+}
+
+impl MatchSource<'_> {
+    fn virtual_position(&self, position: usize) -> Result<usize> {
+        self.dictionary_size
+            .checked_add(position)
+            .ok_or(Error::ResourceLimit)
+    }
+
+    /// Read a four-byte key across dictionary/frame-zero only in the first block.
+    fn first_block_word(&self, position: usize) -> Result<[u8; 4]> {
+        if self.frame_position != 0 {
+            return Err(Error::InvalidState);
+        }
+        let mut word = [0; 4];
+        for (offset, byte) in word.iter_mut().enumerate() {
+            let index = position.checked_add(offset).ok_or(Error::ResourceLimit)?;
+            *byte = if index < self.dictionary_size {
+                self.dictionary
+                    .ok_or(Error::InvalidState)?
+                    .content_byte(index)?
+            } else {
+                *self
+                    .block
+                    .get(index - self.dictionary_size)
+                    .ok_or(Error::CorruptData)?
+            };
+        }
+        Ok(word)
+    }
+
+    /// Verify a hash candidate and return its explicit distance and match length.
+    fn find_match(&self, previous: usize, position: usize) -> Result<Option<(usize, usize)>> {
+        let available = self
+            .block
+            .len()
+            .checked_sub(position)
+            .ok_or(Error::CorruptData)?;
+        if available < 4 {
+            return Ok(None);
+        }
+        if previous >= self.dictionary_size {
+            let previous = previous - self.dictionary_size;
+            if previous >= position {
+                return Ok(None);
+            }
+            let distance = position - previous;
+            if distance as u64 > self.window_size
+                || self.block[previous..previous + 4] != self.block[position..position + 4]
+            {
+                return Ok(None);
+            }
+            let mut length = 4;
+            while length < available
+                && self.block[previous + length] == self.block[position + length]
+            {
+                length += 1;
+            }
+            return Ok(Some((distance, length)));
+        }
+        let produced = self
+            .frame_position
+            .checked_add(position as u64)
+            .ok_or(Error::ResourceLimit)?;
+        if produced > self.window_size {
+            return Ok(None);
+        }
+        let tail = self.dictionary_size - previous;
+        let distance = produced
+            .checked_add(tail as u64)
+            .ok_or(Error::ResourceLimit)?;
+        if distance > MAX_DICTIONARY_DISTANCE as u64 {
+            return Ok(None);
+        }
+        let dictionary = self.dictionary.ok_or(Error::InvalidState)?;
+        // Before retained prior-block output is available, only the first block
+        // can extend a dictionary match through frame byte zero. Later blocks
+        // clip at dictionary end. This is a search limit, not a decoder limit.
+        let maximum = if self.frame_position == 0 {
+            available
+        } else {
+            available.min(tail)
+        };
+        let mut length = 0;
+        while length < maximum {
+            let expected = if length < tail {
+                dictionary.content_byte(previous + length)?
+            } else {
+                self.block[length - tail]
+            };
+            if expected != self.block[position + length] {
+                break;
+            }
+            length += 1;
+        }
+        Ok((length >= 4).then_some((distance as usize, length)))
     }
 }
 
@@ -541,8 +671,127 @@ impl BitWriter {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::Dictionary;
+    use crate::{DecodeOptions, Dictionary, decompress_with_dictionary};
     use alloc::vec;
+
+    fn dictionary_blocks(blocks: &[&[u8]], dictionary: &SharedDictionary) -> (Vec<u8>, Vec<u8>) {
+        let source: Vec<_> = blocks
+            .iter()
+            .flat_map(|block| block.iter().copied())
+            .collect();
+        let mut encoded = vec![0x28, 0xb5, 0x2f, 0xfd, 4, 0]; // 1 KiB window, no ID, checksum.
+        let mut encoder = BlockEncoder::new();
+        encoder
+            .start_frame(Some(SharedDictionary::clone(dictionary)), 1024)
+            .unwrap();
+        for (index, block) in blocks.iter().enumerate() {
+            encoder
+                .encode(block, index + 1 == blocks.len(), &mut encoded)
+                .unwrap();
+        }
+        encoded.extend_from_slice(&(xxhash::checksum(&source) as u32).to_le_bytes());
+        (source, encoded)
+    }
+
+    #[test]
+    fn raw_dictionary_references_can_exceed_the_advertised_output_window() {
+        let mut state = 0x1234_5678_u32;
+        let content: Vec<_> = (0..4096)
+            .map(|_| {
+                state = state.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+                (state >> 24) as u8
+            })
+            .collect();
+        let dictionary = Dictionary::raw(&content).unwrap().into_shared();
+        let (source, encoded) = dictionary_blocks(&[&content[..512]], &dictionary);
+        assert!(encoded.len() < source.len() / 4);
+        assert_eq!(
+            decompress_with_dictionary(&encoded, &dictionary, DecodeOptions::new(source.len()))
+                .unwrap(),
+            source
+        );
+        assert!(crate::decompress(&encoded, source.len()).is_err());
+    }
+
+    #[test]
+    fn formatted_dictionary_matches_ignore_custom_initial_repeat_offsets() {
+        let bytes = include_bytes!("../tests/upstream/inline-regressions/fixed-training.dict");
+        let mut changed = bytes.to_vec();
+        for position in (103..115).step_by(4) {
+            changed[position..position + 4].copy_from_slice(&10_u32.to_le_bytes());
+        }
+        let dictionary = Dictionary::from_bytes(&changed).unwrap().into_shared();
+        let source = dictionary.content().repeat(16);
+        let (source, encoded) = dictionary_blocks(&[&source], &dictionary);
+        assert!(encoded.len() < source.len() / 4);
+        assert_eq!(
+            decompress_with_dictionary(&encoded, &dictionary, DecodeOptions::new(source.len()))
+                .unwrap(),
+            source
+        );
+        assert!(crate::decompress(&encoded, source.len()).is_err());
+    }
+
+    #[test]
+    fn short_raw_prefix_keys_cross_dictionary_end_and_expand_with_overlap() {
+        for bytes in [&b"ab"[..], &b"xyz"[..]] {
+            let dictionary = Dictionary::raw(bytes).unwrap().into_shared();
+            let source = bytes.repeat(100);
+            let (source, encoded) = dictionary_blocks(&[&source], &dictionary);
+            assert_eq!(
+                decompress_with_dictionary(&encoded, &dictionary, DecodeOptions::new(source.len()))
+                    .unwrap(),
+                source
+            );
+            assert!(crate::decompress(&encoded, source.len()).is_err());
+        }
+    }
+
+    #[test]
+    fn dictionary_candidate_lifetime_and_predefined_offset_limits_are_checked_at_start() {
+        let dictionary = Dictionary::raw(b"abcd").unwrap();
+        let mut source = MatchSource {
+            block: b"abcdabcdabcd",
+            dictionary: Some(&dictionary),
+            dictionary_size: 4,
+            frame_position: 0,
+            window_size: 1024,
+        };
+        assert_eq!(source.find_match(0, 0).unwrap(), Some((4, 12)));
+        source.frame_position = 1024;
+        assert_eq!(source.find_match(0, 0).unwrap(), Some((1028, 4)));
+        source.frame_position = 1025;
+        assert_eq!(source.find_match(0, 0).unwrap(), None);
+        source.frame_position = MAX_DICTIONARY_DISTANCE as u64;
+        source.window_size = source.frame_position;
+        assert_eq!(source.find_match(0, 0).unwrap(), None);
+        source.frame_position = u64::MAX;
+        source.window_size = u64::MAX;
+        assert_eq!(source.find_match(0, 1), Err(Error::ResourceLimit));
+    }
+
+    #[test]
+    fn later_block_dictionary_matches_expire_after_window_position() {
+        let content: Vec<_> = (0..256).map(|index| index as u8).collect();
+        let dictionary = Dictionary::raw(&content).unwrap().into_shared();
+        let mut encoder = BlockEncoder::new();
+        encoder.start_frame(Some(dictionary.clone()), 1024).unwrap();
+        let mut output = Vec::new();
+        encoder.encode(&vec![0; 1024], false, &mut output).unwrap();
+        output.clear();
+        encoder.encode(&content, false, &mut output).unwrap();
+        assert_eq!((output[0] >> 1) & 3, 2); // P == W can still reference the dictionary.
+        output.clear();
+        encoder.encode(&content, true, &mut output).unwrap();
+        assert_eq!((output[0] >> 1) & 3, 0); // P > W, with no internal four-byte repeats.
+        let (source, encoded) =
+            dictionary_blocks(&[&vec![0; 1024], &content, &content], &dictionary);
+        assert_eq!(
+            decompress_with_dictionary(&encoded, &dictionary, DecodeOptions::new(source.len()))
+                .unwrap(),
+            source
+        );
+    }
 
     #[test]
     fn frame_dictionary_seed_owns_its_source_and_reset_retains_only_workspace() {
