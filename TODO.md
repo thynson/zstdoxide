@@ -35,7 +35,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Analyze reference Fast ownership, sampling, repeat publication, whole-buffer profile admission and independently review the implementation boundaries.
 - [x] Specify separate direct-parser, collector and ordinary-frame oracle contracts and the checked explicit-offset interface.
 - [x] Specify shared entropy-owner extraction, reconstruction checks, Fast literal/gain policy and truthful known-size headers.
-- [ ] Add a bounded direct-C Fast helper with independent sequence replay and reviewed source/literal capacity guards.
+- [x] Add a bounded direct-C Fast helper with independent sequence replay and reviewed source/literal capacity guards.
 - [ ] Freeze deterministic direct Fast sequence/state recipe families with attributed normal/sanitizer reproduction and offline integrity checks.
 - [ ] Corroborate direct candidates through the official sequence collector, retaining its distinct publication, tiny-input and delimiter behavior.
 - [ ] Capture ordinary Fast frame publication witnesses across compressed/raw/RLE transitions and full independent decoding before Rust Fast implementation.

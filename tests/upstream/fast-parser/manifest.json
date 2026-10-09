@@ -1,0 +1,90 @@
+{
+  "capture": {
+    "earlier_c_case_executions": 36,
+    "evidence": "docs/evidence/2026-10-09-fast-parser-smoke.json",
+    "final_c_case_executions": 36,
+    "instrumentation": "helper plus unchanged zstd_fast.c and inline helpers; remaining archive support uninstrumented; LeakSanitizer disabled",
+    "metadata": {
+      "case_count": 18,
+      "chain_log": 6,
+      "dict_match_state": false,
+      "entry_point": "ZSTD_compressBlock_fast",
+      "initial_dict_limit": 2,
+      "initial_low_limit": 2,
+      "little_endian": true,
+      "loaded_dict_end": 0,
+      "observations": "sequences-and-final-table-state-not-chronological-trace",
+      "pointer_bits": 64,
+      "recipe_count": 9,
+      "record": "metadata",
+      "schema_version": 1,
+      "search_log": 1,
+      "sizeof_match_state": 304,
+      "sizeof_seqdef": 8,
+      "strategy": "fast",
+      "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+    },
+    "normal_sanitizer_equal": true,
+    "original_archive_sha256": "e0baf468b7ffaf9a4523be94831c0b52e4edd945eb7e73beabc774d7bfb2a60d",
+    "original_compiler_version": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "original_directory": "/tmp/zstdoxide-fast-oracle-work",
+    "original_final_observations_sha256": "806bdbbadae4afa38d49390852955ec53b0b67c67d0e4e502b1c0517ad8ae5b7",
+    "original_runner_sha256": "cd1fd8dfcaa95a9fa600c102763b9fab74b8d2a1e8c70369d9540dc864d82825",
+    "original_static_archive_sha256": "2a6a6b22f5c98389d4c3cac3ab65ac77386ae529aa6fcdb8dbdbe267210a640d"
+  },
+  "coverage": {
+    "collector": false,
+    "effective_key_bytes": 4,
+    "entry_point": "ZSTD_compressBlock_fast",
+    "hash_log": 6,
+    "kind": "bounded-direct-smoke",
+    "observations": 18,
+    "ordinary_frames": false,
+    "padding_patterns": [
+      106,
+      195
+    ],
+    "recipes": 9
+  },
+  "fixtures": [
+    {
+      "observations": 18,
+      "path": "observations.jsonl",
+      "recipes": 9,
+      "sha256": "806bdbbadae4afa38d49390852955ec53b0b67c67d0e4e502b1c0517ad8ae5b7",
+      "size": 295279
+    }
+  ],
+  "generator": "tests/upstream/fast-parser/fast_oracle.c",
+  "generator_sha256": "f9ab6e65ba20671560040d674d54ff64e78fc39c73a0e76f509722cb85b75f82",
+  "importer": "scripts/import_fast_parser_smoke.py",
+  "importer_sha256": "97e659bc324b0a3f71eb8c55b042f432d126a0a87ad20673ff74865cce738d94",
+  "policy": "Test-only unchanged direct Fast observations, no Rust Fast/collector/frame/complete-suite claim; final table state is not chronological tracing.",
+  "schema_version": 1,
+  "source_sha256": {
+    "lib/common/allocations.h": "6a718e8edaca112abdc0bdfa7de67edefaa44c8d9e514b79672ab58ab3a9118a",
+    "lib/common/bits.h": "5bb7693a35d7ce03f8715c0b1e237062285e052250fdd34f72f38e7e92365090",
+    "lib/common/bitstream.h": "a9461685c9add6f609078acc950a08db4c02e6e6a849d550f45182ba2ae38556",
+    "lib/common/compiler.h": "d19829705d8039437ffba873df2b58d20d7b876d58da479121d2e515df55cbf7",
+    "lib/common/cpu.h": "23d520b536a6f23114e66549d03a967b1f24b15560c5b1ebd47ee392ccee4a1c",
+    "lib/common/debug.h": "8260cd5087b8309679c61b772b535688993c61a675a30481b8ae55b45740ba15",
+    "lib/common/error_private.h": "ae077bb433eb150ee247410a0357f910b9c07be839c6a9abe0b2e6b18ceb716d",
+    "lib/common/fse.h": "5235ce1e512bf80204d013b1f4cecd776fdaa9effddb48308bce08f6d0b84499",
+    "lib/common/huf.h": "9a83d899c8c9bf03389d482562090ec2443bc0f87f27864a2b891b180333f2d4",
+    "lib/common/mem.h": "4dd5fe76fa30a020cd4b3af3134ae143920300a1fe54baac1a5da73297e66783",
+    "lib/common/portability_macros.h": "75e2b43968b70decc6bd17876833be04894035594ddc1e745cd6b70be8265637",
+    "lib/common/xxhash.h": "8cb837b21a8fe9a6b9dbcd0961ab16e733bfcbfa9e003f3a496ce07ae80aa8ee",
+    "lib/common/zstd_deps.h": "9c77ea7d0afa8d5c868a7839e178a446a82d88eb75fd56f2fd7d9d96c5ab7c11",
+    "lib/common/zstd_internal.h": "ad3d95ce2b81a8c5c6b00cfe6323d8e80cacb690d3b5883725cd0d939f4f576f",
+    "lib/common/zstd_trace.h": "17f6daa4c7e97055cd1ed7bcf4d9241a4e79b465f083c5d732fda1df2f0be11e",
+    "lib/compress/zstd_compress.c": "10c315ae609d49b2fc431521aa95908086e69fd917991c5ed9a875af3d1208e8",
+    "lib/compress/zstd_compress_internal.h": "ab7754413cef565da559bda7eb738bc2b3708c48877cb9ec37aff767d32c57d1",
+    "lib/compress/zstd_cwksp.h": "ed77c2739b18b9800b97785262526a1dd4f385311ca5c2caa20b6f2a35f3735d",
+    "lib/compress/zstd_fast.c": "8037320f321836652e73ab6cbf7b8f1f4c97cef38835ac6b4aaf0af716aa398d",
+    "lib/compress/zstd_fast.h": "dffdf43fae7ee10a2acc04e6a5eaaf03f7d3572898117a06c330d647eed5591d",
+    "lib/compress/zstd_preSplit.h": "910facb2e3442e42a6952c514223c4502d95ed957bf7dc73982b3b03785b361b",
+    "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b",
+    "lib/zstd_errors.h": "66a8c3f71d12ea6e797e4f622f31f3f8f81c41b36f48cad4f5de7d8bfb6aac0a"
+  },
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

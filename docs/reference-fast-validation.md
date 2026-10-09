@@ -91,3 +91,36 @@ formatting passes. [Admission evidence](evidence/2026-10-09-fast-profile-admissi
 retains commands, complete logs, compiler/environment, before/after hashes and
 count guards. No new parser, public compression function or C campaign is
 claimed by this allocation-free foundation.
+
+## First bounded direct-C Fast observations
+
+The [Fast parser smoke collection](../tests/upstream/fast-parser/README.md)
+freezes nine deterministic recipes with two initialized padding patterns each.
+The unchanged pinned `ZSTD_compressBlock_fast` produces sequences, literal bytes,
+raw parser repeats, full independently replayed wire repeats and final hash
+buckets. Explicit prior-prefix, duplicate-repeat, tiny-input, maximum acceleration
+and expanded long-match metadata witnesses are included. Table observations do
+not claim chronological probe/store traces or coverage of every dispatch branch.
+
+The original final normal/sanitized captures each pass eighteen observations;
+portable regeneration repeats both builds and matches every complete case record.
+ASan/UBSan instrument the helper, unchanged Fast source and inline helpers;
+archive support objects and leak detection remain outside that claim. Earlier
+successful captures and metadata/path-review corrections retain their separate
+counts and logs. No Rust Fast algorithm was used to generate expectations.
+
+Normal and optimized Python offline checks pass four positive controls and 78
+expected malformed/schema/path-overlap rejections, without a compiler search
+path. Independent review tightened report/output path separation before file
+creation and bound captured metadata to the observation header. The semantic
+checker is registered in both check runners; generic integrity now verifies
+325 fixture files in eleven required collections. No source migration status is
+promoted merely because this helper collection exists.
+
+[Smoke evidence](evidence/2026-10-09-fast-parser-smoke.json) and its
+[compact archive](evidence/2026-10-09-fast-parser-smoke.tar.gz) preserve source
+attribution, original/portable commands, complete logs, record hashes and
+instrumentation limits. Executable/debug bytes are omitted while their recorded
+hashes remain. Broader direct families, the sequence collector and ordinary
+frame publication are still open prerequisite oracle items before Rust Fast
+parser implementation.

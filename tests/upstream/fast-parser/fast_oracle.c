@@ -1,0 +1,305 @@
+/* Test-only observations of unchanged facebook/zstd v1.5.7 Fast.
+ * Reference: f8745da6ff1ad1e7bab384bd1f9d742439278e99.
+ * Fixture setup, validation and serialization only; no copied Fast parser.
+ */
+#define ZSTD_STATIC_LINKING_ONLY
+#include "zstd.h"
+#include "compress/zstd_fast.h"
+#include <inttypes.h>
+#include <limits.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define GUARD_BYTES 64u
+#define LEADING_BYTES 64u
+#define MAX_SOURCE_BYTES (2u * 1024u * 1024u)
+#define MAX_BLOCK_BYTES (128u * 1024u)
+#define MAX_TARGET_LENGTH 131072u
+#define ARRAY_COUNT(a) (sizeof(a) / sizeof((a)[0]))
+
+typedef struct { unsigned char* allocation; unsigned char* data; size_t bytes; } Guarded;
+typedef struct {
+    const char* name;
+    const char* pattern;
+    size_t prefix_bytes, block_bytes;
+    unsigned window_log, target_length;
+    U32 initial_repeats[3];
+    int seed_position_zero;
+} Recipe;
+typedef struct { size_t ll, ml; U32 off_base, distance; } Observation;
+
+static const Recipe recipes[] = {
+    {"short-seven", "abcdefg", 0, 7, 10, 0, {1, 4, 8}, 0},
+    {"short-twelve", "abcdefghijkl", 0, 12, 10, 0, {1, 4, 8}, 0},
+    {"repeat-one", "A", 0, 64, 10, 0, {1, 4, 8}, 0},
+    {"repeat-four", "abcd", 0, 64, 10, 0, {1, 4, 8}, 0},
+    {"offset-sixteen", "0123456789ABCDEF", 0, 96, 10, 0, {1, 4, 8}, 0},
+    {"prefix-explicit", "0123456789ABCDEF", 16, 64, 10, 0, {1, 4, 8}, 1},
+    {"prefix-duplicate-repeats", "abcd", 16, 64, 10, 0, {4, 4, 8}, 1},
+    {"maximum-acceleration", "abcd", 0, 64, 10, MAX_TARGET_LENGTH, {1, 4, 8}, 0},
+    {"long-match", "A", 0, 65700, 17, 0, {1, 4, 8}, 0},
+};
+static const char* active_case = "setup";
+
+static void require(int valid, const char* reason) {
+    if (!valid) { fprintf(stderr, "fast oracle [%s]: %s\n", active_case, reason); exit(1); }
+}
+static size_t add_size(size_t a, size_t b) {
+    require(b <= SIZE_MAX - a, "size addition overflow"); return a + b;
+}
+static size_t multiply_size(size_t a, size_t b) {
+    require(a == 0 || b <= SIZE_MAX / a, "size multiplication overflow"); return a * b;
+}
+static Guarded guarded_new(size_t bytes) {
+    Guarded result;
+    size_t total = add_size(add_size(GUARD_BYTES, bytes), GUARD_BYTES);
+    result.allocation = (unsigned char*)malloc(total);
+    require(result.allocation != NULL, "guarded allocation failed");
+    result.data = result.allocation + GUARD_BYTES; result.bytes = bytes;
+    memset(result.allocation, 0xd7, GUARD_BYTES);
+    memset(result.data, 0, bytes);
+    memset(result.data + bytes, 0x9b, GUARD_BYTES);
+    return result;
+}
+static void guarded_check(const Guarded* b) {
+    size_t i;
+    for (i = 0; i < GUARD_BYTES; ++i) {
+        require(b->allocation[i] == 0xd7, "leading allocation guard changed");
+        require(b->data[b->bytes + i] == 0x9b, "trailing allocation guard changed");
+    }
+}
+static void guarded_drop(Guarded* b) {
+    guarded_check(b); free(b->allocation); b->allocation = NULL; b->data = NULL;
+}
+static uint64_t fingerprint_bytes(const unsigned char* data, size_t bytes) {
+    uint64_t hash = UINT64_C(0xcbf29ce484222325); size_t i;
+    for (i = 0; i < bytes; ++i) { hash ^= data[i]; hash *= UINT64_C(0x100000001b3); }
+    return hash;
+}
+/* Independent full wire replay, without ZSTD_updateRep/copyBlockSequences.
+ * The expanded LL selects the zero-literal rule, never the truncated U16. */
+static U32 resolve_and_update(U32 repeats[3], U32 off_base, size_t ll) {
+    U32 a = repeats[0], b = repeats[1], c = repeats[2], distance;
+    require(off_base != 0 && a != 0 && b != 0 && c != 0, "zero offBase or saved repeat");
+    if (off_base > 3) {
+        distance = off_base - 3; repeats[2] = b; repeats[1] = a; repeats[0] = distance;
+    } else if (ll != 0 && off_base == 1) {
+        distance = a;
+    } else if ((ll != 0 && off_base == 2) || (ll == 0 && off_base == 1)) {
+        distance = b; repeats[0] = b; repeats[1] = a;
+    } else {
+        if (ll == 0 && off_base == 3) {
+            require(a > 1, "rep1-minus-one must remain positive"); distance = a - 1;
+        } else distance = c;
+        repeats[2] = b; repeats[1] = a; repeats[0] = distance;
+    }
+    require(distance != 0, "zero resolved distance"); return distance;
+}
+static void print_hex(const unsigned char* bytes, size_t count) {
+    size_t i; putchar('"');
+    for (i = 0; i < count; ++i) printf("%02x", bytes[i]);
+    putchar('"');
+}
+static void print_repeats(const U32 r[3]) {
+    printf("[%" PRIu32 ",%" PRIu32 ",%" PRIu32 "]", r[0], r[1], r[2]);
+}
+static void print_table(const U32* table, size_t count, int normalized) {
+    size_t i; putchar('[');
+    for (i = 0; i < count; ++i) {
+        if (i) putchar(',');
+        if (normalized && table[i] < ZSTD_WINDOW_START_INDEX) fputs("null", stdout);
+        else printf("%" PRIu32, table[i] - (normalized ? ZSTD_WINDOW_START_INDEX : 0));
+    }
+    putchar(']');
+}
+static void print_table_fingerprint(const U32* table, size_t count) {
+    uint64_t hash = UINT64_C(0xcbf29ce484222325); size_t i;
+    for (i = 0; i < count; ++i) {
+        unsigned byte;
+        for (byte = 0; byte < 4; ++byte) {
+            hash ^= (table[i] >> (8 * byte)) & 255; hash *= UINT64_C(0x100000001b3);
+        }
+    }
+    printf("\"%016" PRIx64 "\"", hash);
+}
+
+static void execute_recipe(const Recipe* r, unsigned char padding) {
+    const unsigned hash_log = 6, min_match = 4;
+    size_t source_bytes, suffix, arena_bytes, table_entries, sequence_capacity;
+    Guarded arena, arena_copy, table_storage, before_storage, sequence_storage;
+    Guarded literal_storage, code_storage, replay_storage, observation_storage;
+    unsigned char *source, *base;
+    U32 *table, *before, parser_repeats[3], wire_repeats[3];
+    Observation* observations;
+    SeqStore_t store; ZSTD_MatchState_t state;
+    size_t i, trailing, count, literal_bytes, literal_cursor, cursor;
+    size_t pattern_bytes = strlen(r->pattern);
+    active_case = r->name;
+    require(r->block_bytes >= 7 && r->block_bytes <= MAX_BLOCK_BYTES, "direct block admission");
+    require(r->window_log >= 10 && r->window_log <= 20, "window admission");
+    require(r->window_log < sizeof(size_t) * CHAR_BIT, "window shift");
+    require(r->block_bytes <= ((size_t)1 << r->window_log), "block exceeds selected window");
+    require(r->target_length <= MAX_TARGET_LENGTH, "target length admission");
+    source_bytes = add_size(r->prefix_bytes, r->block_bytes);
+    require(source_bytes <= MAX_SOURCE_BYTES && source_bytes <= UINT32_MAX - 2, "source/index admission");
+    require(pattern_bytes != 0, "empty pattern");
+    require(hash_log < sizeof(size_t) * CHAR_BIT, "hash shift");
+    table_entries = (size_t)1 << hash_log;
+    sequence_capacity = add_size(r->block_bytes / MINMATCH, 1);
+    /* All pointer formation stays in one initialized allocation:
+     * base=source-2, with another62 bytes before base. Thus iend-8 and iend-32
+     * are within it even for these short blocks. Before cleanup Fast forms
+     * ip0+128 and ip0+step+1. There are <=block_bytes forward advances, so step
+     * <=target_length+2+block_bytes conservatively. Later pair, nextStep and
+     * prefetch expressions add <=128 more bytes. The suffix below covers all
+     * expressions beyond logical iend. Initialized slack is not logical input.
+     */
+    suffix = add_size(add_size(MAX_TARGET_LENGTH, MAX_BLOCK_BYTES), 512);
+    arena_bytes = add_size(add_size(LEADING_BYTES, source_bytes), suffix);
+    arena = guarded_new(arena_bytes); arena_copy = guarded_new(arena_bytes);
+    memset(arena.data, padding, arena.bytes);
+    source = arena.data + LEADING_BYTES; base = source - ZSTD_WINDOW_START_INDEX;
+    for (i = 0; i < source_bytes; ++i) source[i] = (unsigned char)r->pattern[i % pattern_bytes];
+    memcpy(arena_copy.data, arena.data, arena.bytes);
+    require(GUARD_BYTES % _Alignof(U32) == 0 && GUARD_BYTES % _Alignof(SeqDef) == 0
+            && GUARD_BYTES % _Alignof(Observation) == 0, "guard alignment");
+    table_storage = guarded_new(multiply_size(table_entries, sizeof(U32)));
+    before_storage = guarded_new(table_storage.bytes);
+    table = (U32*)table_storage.data; before = (U32*)before_storage.data;
+    sequence_storage = guarded_new(multiply_size(sequence_capacity, sizeof(SeqDef)));
+    /* Guard follows permitted write slack, not logical maxNbLit. */
+    literal_storage = guarded_new(add_size(r->block_bytes, WILDCOPY_OVERLENGTH));
+    code_storage = guarded_new(multiply_size(sequence_capacity, 3));
+    replay_storage = guarded_new(source_bytes);
+    observation_storage = guarded_new(multiply_size(sequence_capacity, sizeof(Observation)));
+    observations = (Observation*)observation_storage.data;
+    memset(&state, 0, sizeof(state)); memset(&store, 0, sizeof(store));
+    state.cParams.windowLog = r->window_log; state.cParams.chainLog = 6;
+    state.cParams.hashLog = hash_log; state.cParams.searchLog = 1;
+    state.cParams.minMatch = min_match; state.cParams.targetLength = r->target_length;
+    state.cParams.strategy = ZSTD_fast;
+    require(!ZSTD_isError(ZSTD_checkCParams(state.cParams)), "invalid C parameters");
+    state.window.base = base; state.window.dictBase = base;
+    state.window.dictLimit = ZSTD_WINDOW_START_INDEX;
+    state.window.lowLimit = ZSTD_WINDOW_START_INDEX;
+    state.window.nextSrc = source + source_bytes;
+    state.hashTable = table; state.nextToUpdate = ZSTD_WINDOW_START_INDEX;
+    /* loadedDictEnd, dictMatchState, optional tables and all other state zero. */
+    store.sequencesStart = (SeqDef*)sequence_storage.data; store.litStart = literal_storage.data;
+    store.llCode = code_storage.data; store.mlCode = code_storage.data + sequence_capacity;
+    store.ofCode = code_storage.data + 2 * sequence_capacity;
+    store.maxNbSeq = sequence_capacity; store.maxNbLit = r->block_bytes;
+    ZSTD_resetSeqStore(&store);
+    if (r->seed_position_zero) {
+        size_t bucket;
+        require(r->prefix_bytes >= HASH_READ_SIZE, "seed needs initialized prior key");
+        bucket = ZSTD_hashPtr(source, hash_log, min_match);
+        require(bucket < table_entries, "seed bucket bounds");
+        table[bucket] = ZSTD_WINDOW_START_INDEX;
+    }
+    memcpy(before, table, table_storage.bytes);
+    memcpy(parser_repeats, r->initial_repeats, sizeof(parser_repeats));
+    memcpy(wire_repeats, r->initial_repeats, sizeof(wire_repeats));
+    for (i = 0; i < 3; ++i) require(parser_repeats[i] > 0, "positive initial repeat");
+    trailing = ZSTD_compressBlock_fast(&state, &store, parser_repeats,
+                                     source + r->prefix_bytes, r->block_bytes);
+    require(trailing <= r->block_bytes, "returned trailing length bounds");
+    guarded_check(&arena); guarded_check(&table_storage); guarded_check(&sequence_storage);
+    guarded_check(&literal_storage); guarded_check(&code_storage);
+    require(memcmp(arena.data, arena_copy.data, arena.bytes) == 0, "source or padding changed");
+    /* Unchanged parser received proven capacity; guards detect outer writes.
+     * Returned pointers still belong to those arrays before differences below. */
+    count = (size_t)(store.sequences - store.sequencesStart);
+    literal_bytes = (size_t)(store.lit - store.litStart);
+    require(count <= sequence_capacity && literal_bytes <= r->block_bytes, "returned store capacity");
+    require(store.longLengthType >= ZSTD_llt_none && store.longLengthType <= ZSTD_llt_matchLength, "long length kind");
+    require(store.longLengthType == ZSTD_llt_none || store.longLengthPos < count, "long length position");
+    memcpy(replay_storage.data, source, r->prefix_bytes);
+    literal_cursor = 0; cursor = r->prefix_bytes;
+    for (i = 0; i < count; ++i) {
+        SeqDef const* sequence = store.sequencesStart + i;
+        ZSTD_SequenceLength c_length = ZSTD_getSequenceLength(&store, sequence);
+        size_t ll = sequence->litLength, ml = add_size(sequence->mlBase, MINMATCH), byte;
+        U32 distance;
+        if (store.longLengthType != ZSTD_llt_none && store.longLengthPos == i) {
+            if (store.longLengthType == ZSTD_llt_literalLength) ll = add_size(ll, 65536);
+            else ml = add_size(ml, 65536);
+        }
+        require(ll == c_length.litLength && ml == c_length.matchLength, "independent long length differs");
+        require(literal_cursor <= literal_bytes && ll <= literal_bytes - literal_cursor, "literal read bounds");
+        require(cursor <= source_bytes && ll <= source_bytes - cursor, "literal output bounds");
+        memcpy(replay_storage.data + cursor, store.litStart + literal_cursor, ll);
+        cursor += ll; literal_cursor += ll;
+        distance = resolve_and_update(wire_repeats, sequence->offBase, ll);
+        require(distance <= cursor, "match before initialized logical prefix");
+        require(ml >= MINMATCH && ml <= source_bytes - cursor, "match output bounds");
+        for (byte = 0; byte < ml; ++byte) { replay_storage.data[cursor] = replay_storage.data[cursor - distance]; cursor++; }
+        observations[i].ll = ll; observations[i].ml = ml;
+        observations[i].off_base = sequence->offBase; observations[i].distance = distance;
+    }
+    require(literal_cursor == literal_bytes, "unconsumed stored literals");
+    require(trailing == source_bytes - cursor, "last literal coverage");
+    memcpy(replay_storage.data + cursor, source + cursor, trailing);
+    require(memcmp(replay_storage.data, source, source_bytes) == 0, "independent replay differs");
+    require(parser_repeats[0] == wire_repeats[0] && parser_repeats[1] == wire_repeats[1], "parser-used repeats differ");
+    require(parser_repeats[2] == r->initial_repeats[2], "Fast changed unused parser repeat cell");
+    for (i = 0; i < table_entries; ++i) {
+        U32 position = table[i];
+        if (position != 0) {
+            require(position >= ZSTD_WINDOW_START_INDEX
+                    && position - ZSTD_WINDOW_START_INDEX <= source_bytes - min_match,
+                    "final table key is not wholly in initialized logical source");
+            require(ZSTD_hashPtr(base + position, hash_log, min_match) == i, "final slot/key disagreement");
+        }
+    }
+    printf("{\"record\":\"case\",\"id\":\"%s\",\"padding\":%u,\"pattern\":\"%s\",", r->name, padding, r->pattern);
+    printf("\"prefix_bytes\":%zu,\"block_bytes\":%zu,\"source_hex\":", r->prefix_bytes, r->block_bytes);
+    print_hex(source, source_bytes);
+    printf(",\"source_fnv1a64\":\"%016" PRIx64 "\",\"window_log\":%u,\"hash_log\":%u,\"min_match\":%u,\"target_length\":%u,",
+           fingerprint_bytes(source, source_bytes), r->window_log, hash_log, min_match, r->target_length);
+    printf("\"physical_leading_bytes\":%u,\"physical_suffix_bytes\":%zu,\"sequence_capacity\":%zu,\"literal_slack_bytes\":%u,",
+           LEADING_BYTES, suffix, sequence_capacity, WILDCOPY_OVERLENGTH);
+    fputs("\"initial_repeats\":", stdout); print_repeats(r->initial_repeats);
+    fputs(",\"parser_repeats\":", stdout); print_repeats(parser_repeats);
+    fputs(",\"wire_repeats\":", stdout); print_repeats(wire_repeats);
+    printf(",\"long_length_type\":%u,\"long_length_position\":%u,\"trailing_literals\":%zu,\"stored_literals_hex\":",
+           (unsigned)store.longLengthType, (unsigned)store.longLengthPos, trailing);
+    print_hex(store.litStart, literal_bytes); fputs(",\"sequences\":[", stdout);
+    for (i = 0; i < count; ++i) {
+        Observation const* s = observations + i;
+        if (i) putchar(',');
+        printf("{\"ll\":%zu,\"ml\":%zu,\"distance\":%" PRIu32 ",\"off_base\":%" PRIu32 ",\"intent\":\"%s\"}",
+               s->ll, s->ml, s->distance, s->off_base, s->off_base <= 3 ? "repeat" : "offset");
+    }
+    fputs("],\"table_before_c\":", stdout); print_table(before, table_entries, 0);
+    fputs(",\"table_after_c\":", stdout); print_table(table, table_entries, 0);
+    fputs(",\"table_before_positions\":", stdout); print_table(before, table_entries, 1);
+    fputs(",\"table_after_positions\":", stdout); print_table(table, table_entries, 1);
+    fputs(",\"table_before_le32_fnv1a64\":", stdout); print_table_fingerprint(before, table_entries);
+    fputs(",\"table_after_le32_fnv1a64\":", stdout); print_table_fingerprint(table, table_entries);
+    fputs(",\"replay_equal\":true,\"guards_intact\":true}\n", stdout);
+    guarded_drop(&observation_storage); guarded_drop(&replay_storage); guarded_drop(&code_storage);
+    guarded_drop(&literal_storage); guarded_drop(&sequence_storage); guarded_drop(&before_storage);
+    guarded_drop(&table_storage); guarded_drop(&arena_copy); guarded_drop(&arena);
+}
+
+int main(void) {
+    static const unsigned char paddings[] = {0x6a, 0xc3};
+    const U32 endian_probe = 1;
+    size_t recipe, padding;
+    printf("{\"record\":\"metadata\",\"schema_version\":1,\"upstream_revision\":\"f8745da6ff1ad1e7bab384bd1f9d742439278e99\","
+           "\"entry_point\":\"ZSTD_compressBlock_fast\",\"observations\":\"sequences-and-final-table-state-not-chronological-trace\","
+           "\"strategy\":\"fast\",\"chain_log\":6,\"search_log\":1,\"initial_dict_limit\":2,\"initial_low_limit\":2,"
+           "\"loaded_dict_end\":0,\"dict_match_state\":false,"
+           "\"pointer_bits\":%zu,\"little_endian\":%s,\"recipe_count\":%zu,\"case_count\":%zu,\"sizeof_seqdef\":%zu,\"sizeof_match_state\":%zu}\n",
+           sizeof(void*) * CHAR_BIT, *(const unsigned char*)&endian_probe ? "true" : "false",
+           ARRAY_COUNT(recipes), ARRAY_COUNT(recipes) * ARRAY_COUNT(paddings), sizeof(SeqDef), sizeof(ZSTD_MatchState_t));
+    for (recipe = 0; recipe < ARRAY_COUNT(recipes); ++recipe)
+        for (padding = 0; padding < ARRAY_COUNT(paddings); ++padding) execute_recipe(recipes + recipe, paddings[padding]);
+    require(fflush(stdout) == 0 && !ferror(stdout), "stdout write failure");
+    fprintf(stderr, "Validated %zu direct Fast cases (%zu recipes, two padding patterns); no collector or frame campaign.\n",
+            ARRAY_COUNT(recipes) * ARRAY_COUNT(paddings), ARRAY_COUNT(recipes));
+    return 0;
+}

@@ -1,0 +1,234 @@
+{
+  "active_task_owned_processes": 0,
+  "archive": {
+    "bytes": 142742,
+    "manifest_path": "fast-parser-smoke/archive-manifest.json",
+    "omitted_executable_or_debug_files": 20,
+    "omitted_hashes_path": "fast-parser-smoke/omitted-executables.json",
+    "path": "docs/evidence/2026-10-09-fast-parser-smoke.tar.gz",
+    "qualification": "No executable or debug object bytes included. Original execution reports and their executable hashes are preserved.",
+    "sha256": "4c3bdc3131a32240df1ede65024a87de51c79cf8667499c0e2a3a5504b35de13",
+    "stored_files": 278
+  },
+  "final_focused_checks": {
+    "archive_directory": "final-checks",
+    "commands_sha256": "c5a6bb9c8c5011376e771e6706570766eaea9a6d25e1dcc939bd2952ec10dd3f",
+    "generic_fixture_audit": "325 files in11 collections passed; no C required",
+    "offline_normal": "18 observations /9 recipes passed",
+    "offline_optimized": "18 observations /9 recipes passed",
+    "owned_diff_whitespace": "passed",
+    "python_syntax": "ast.parse passed without generating bytecode"
+  },
+  "limits": [
+    "Only effective key width4, hash log6, window logs10/17, default or maximum acceleration and admitted no-dictionary/prior-prefix recipes.",
+    "Final hash-table observations are not chronological probe or insertion traces.",
+    "Parser first-two repeat cells and independently replayed full wire repeat triple are deliberately distinct.",
+    "No collector, ordinary-frame raw/RLE publication, dictionary modes, all-branch coverage, Rust Fast execution or complete upstream migration claimed.",
+    "ASan/UBSan instrument the helper and unchanged zstd_fast.c plus inline header helpers; remaining static archive support is uninstrumented; LeakSanitizer disabled.",
+    "Recorded native execution is64-bit little-endian arm64 macOS; portability validation structure does not claim other platforms ran."
+  ],
+  "observations": 18,
+  "offline_validation": {
+    "archive_directory": "negative-checks",
+    "collection_negatives_per_mode": 10,
+    "commands_sha256": "2b359a5e5a15df028c1fa6e72165dc57674f62879e447d3fc5fae8f24d623b8f",
+    "empty_search_path": true,
+    "expected_rejections": 78,
+    "normal_commands": 41,
+    "optimized_commands": 41,
+    "path_overlap_negatives_per_mode": 2,
+    "positive_controls": 4,
+    "qualification": "No C invoked; 27 parser, 10 collection and 2 path-overlap negatives in each mode. The Python parent launches child interpreters only. Source manifest includes pre-final-prose README; importer/C/observation/manifest remain identical.",
+    "runner_sha256": "9678027bc54c4e3b6fbbf7010df0b3f462a91dc3b760dba12094da1c29e5625e",
+    "semantic_negatives_per_mode": 27,
+    "source_after": {
+      "/Users/lanxingcan/Workspace/zstdoxize/scripts/import_fast_parser_smoke.py": "97e659bc324b0a3f71eb8c55b042f432d126a0a87ad20673ff74865cce738d94",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/NOTICE": "d70fe4b63a1a8d6cd8721b66b60375c62772fe8de152b8f7b381e9d529719c5e",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/README.md": "503f7f725c59e6cac4358a8bdc669f09fc1e7859a51eca020074b916e2de9c5e",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/fast_oracle.c": "f9ab6e65ba20671560040d674d54ff64e78fc39c73a0e76f509722cb85b75f82",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/manifest.json": "e4f3b39dd9d565fe8076568cbdfa65b15c922b424f1841fa418c99dbcd123951",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/observations.jsonl": "806bdbbadae4afa38d49390852955ec53b0b67c67d0e4e502b1c0517ad8ae5b7"
+    },
+    "source_before": {
+      "/Users/lanxingcan/Workspace/zstdoxize/scripts/import_fast_parser_smoke.py": "97e659bc324b0a3f71eb8c55b042f432d126a0a87ad20673ff74865cce738d94",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/NOTICE": "d70fe4b63a1a8d6cd8721b66b60375c62772fe8de152b8f7b381e9d529719c5e",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/README.md": "503f7f725c59e6cac4358a8bdc669f09fc1e7859a51eca020074b916e2de9c5e",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/fast_oracle.c": "f9ab6e65ba20671560040d674d54ff64e78fc39c73a0e76f509722cb85b75f82",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/manifest.json": "e4f3b39dd9d565fe8076568cbdfa65b15c922b424f1841fa418c99dbcd123951",
+      "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fast-parser/observations.jsonl": "806bdbbadae4afa38d49390852955ec53b0b67c67d0e4e502b1c0517ad8ae5b7"
+    },
+    "summary_sha256": "d55a936ee1433e31aa689fe2edf0795a42437f77bc9ae15d35863589635fc869"
+  },
+  "original_preparation": {
+    "archive_sha256": "e0baf468b7ffaf9a4523be94831c0b52e4edd945eb7e73beabc774d7bfb2a60d",
+    "consolidated_evidence_sha256": "04a2d219f8e25ee11b66ee9ab11204f977d03eed0509e4ddb78b0b0364a4f574",
+    "directory": "/tmp/zstdoxide-fast-oracle-work",
+    "earlier_c_case_executions": 36,
+    "final_c_case_executions": 36,
+    "immutable_archive": "/tmp/zstdoxide-fast-oracle-work.tar.gz",
+    "qualification": "Earlier successful normal/sanitized captures preceded metadata-only fixed-parameter fields; final case rows remained unchanged. Original archive still intact."
+  },
+  "padding_patterns": [
+    106,
+    195
+  ],
+  "portable_reproduction": {
+    "all_bytes_equal_frozen_capture": true,
+    "command": [
+      "python3",
+      "-u",
+      "scripts/import_fast_parser_smoke.py",
+      "--upstream",
+      "/tmp/zstdoxize-upstream-1.5.7",
+      "--output",
+      "/tmp/zstdoxide-fast-parser-portable-final",
+      "--report",
+      "/tmp/zstdoxide-fast-parser-portable-final.json",
+      "--sanitize"
+    ],
+    "compiler_version_archive_path": "portable-final/compiler-version.stdout",
+    "earlier_pre_path_fix_successful_c_case_executions": 36,
+    "earlier_qualification": "Diagnostic reproduction retained separately with its exact earlier importer hash; final source was rerun after path/metadata fixes.",
+    "final_c_case_executions": 36,
+    "host_metadata": {
+      "case_count": 18,
+      "chain_log": 6,
+      "dict_match_state": false,
+      "entry_point": "ZSTD_compressBlock_fast",
+      "initial_dict_limit": 2,
+      "initial_low_limit": 2,
+      "little_endian": true,
+      "loaded_dict_end": 0,
+      "observations": "sequences-and-final-table-state-not-chronological-trace",
+      "pointer_bits": 64,
+      "recipe_count": 9,
+      "record": "metadata",
+      "schema_version": 1,
+      "search_log": 1,
+      "sizeof_match_state": 304,
+      "sizeof_seqdef": 8,
+      "strategy": "fast",
+      "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+    },
+    "instrumentation": {
+      "leak_sanitizer": false,
+      "scope": "helper and unchanged zstd_fast.c plus inlined header code",
+      "support_archive_instrumented": false
+    },
+    "modes": [
+      "normal",
+      "sanitized"
+    ],
+    "observations_per_mode": 18,
+    "report_archive_path": "portable-final/report.json",
+    "report_sha256": "c9d21e48d65e51387ec676e0ca4f2a06c23e674b9fa2df96932480b5ddcef346",
+    "result": "passed",
+    "source_before_equals_after": true
+  },
+  "recipes": 9,
+  "review": {
+    "approved_helper_sha256": "f9ab6e65ba20671560040d674d54ff64e78fc39c73a0e76f509722cb85b75f82",
+    "approved_importer_sha256": "97e659bc324b0a3f71eb8c55b042f432d126a0a87ad20673ff74865cce738d94",
+    "helper_scope": "9 admitted recipes: initialized allocation/pointer slack, wildcopy guards, capacity, expanded long lengths, parser/wire repeats, canonical final tables",
+    "negative_inputs": "Only deterministic negative-control generator, command logs and hashes are archived; generated malformed collection copies can be recreated outside the repository.",
+    "pre_fix_source_preservation": "Earlier portable importer reconstructed by reversing only the reviewed metadata/path delta; exact recorded source hash verified.",
+    "publication_review": "Resolved report/output ancestor/descendant/equality rejected before mkdir; manifest capture metadata bound to parsed metadata. No remaining blocker within schema/bounds/portability/scope review.",
+    "reviewer": "independent golden_tests agent; static review only"
+  },
+  "schema_version": 1,
+  "scope": "First bounded direct Fast C test-oracle tooling checkpoint; no Rust Fast implementation claim",
+  "source_manifest": [
+    {
+      "bytes": 25650,
+      "path": "scripts/import_fast_parser_smoke.py",
+      "sha256": "97e659bc324b0a3f71eb8c55b042f432d126a0a87ad20673ff74865cce738d94"
+    },
+    {
+      "bytes": 694,
+      "path": "tests/upstream/fast-parser/NOTICE",
+      "sha256": "d70fe4b63a1a8d6cd8721b66b60375c62772fe8de152b8f7b381e9d529719c5e"
+    },
+    {
+      "bytes": 7423,
+      "path": "tests/upstream/fast-parser/README.md",
+      "sha256": "ba50231ce3588f8cec7663fe3e6fb4c3a9897b6411bd9a5e345f8de1c5722fa8"
+    },
+    {
+      "bytes": 17915,
+      "path": "tests/upstream/fast-parser/fast_oracle.c",
+      "sha256": "f9ab6e65ba20671560040d674d54ff64e78fc39c73a0e76f509722cb85b75f82"
+    },
+    {
+      "bytes": 5033,
+      "path": "tests/upstream/fast-parser/manifest.json",
+      "sha256": "e4f3b39dd9d565fe8076568cbdfa65b15c922b424f1841fa418c99dbcd123951"
+    },
+    {
+      "bytes": 295279,
+      "path": "tests/upstream/fast-parser/observations.jsonl",
+      "sha256": "806bdbbadae4afa38d49390852955ec53b0b67c67d0e4e502b1c0517ad8ae5b7"
+    }
+  ],
+  "source_pins": "tests/upstream/fast-parser/manifest.json (23 upstream source/header hashes)",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "root_registration_review": {
+    "commands": [
+      {
+        "command": [
+          "python3",
+          "scripts/check_upstream_fixtures.py"
+        ],
+        "exit": 0,
+        "output": "Fixture integrity valid: 325 files in 11 collections; source provenance and recorded expected-output metadata agree.\nNo upstream checkout, C compiler, or codec executable was required.\n",
+        "sha256": "0f2a7e63d3870204ef030ae5f079fde0de9dcc36c22d11fd237014159bb74351"
+      },
+      {
+        "command": [
+          "python3",
+          "scripts/import_fast_parser_smoke.py",
+          "--check"
+        ],
+        "exit": 0,
+        "output": "Fast smoke fixtures valid: 18 observations / 9 recipes; no C checkout/compiler required.\n",
+        "sha256": "bd4a548a7906d08db529bc9d7772069e081c279f342d35313de04a1c060caeff"
+      },
+      {
+        "command": [
+          "python3",
+          "-O",
+          "scripts/import_fast_parser_smoke.py",
+          "--check"
+        ],
+        "exit": 0,
+        "output": "Fast smoke fixtures valid: 18 observations / 9 recipes; no C checkout/compiler required.\n",
+        "sha256": "bd4a548a7906d08db529bc9d7772069e081c279f342d35313de04a1c060caeff"
+      },
+      {
+        "command": [
+          "sh",
+          "-n",
+          "scripts/check.sh"
+        ],
+        "exit": 0,
+        "output": "",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "sh",
+          "-n",
+          "scripts/check_upstream_oracles.sh"
+        ],
+        "exit": 0,
+        "output": "",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "registration_sources": {
+      "scripts/check.sh": "e3a12f685729f676b37d1b6d056441a366e1e397e9fb9a81446f1d78284afa53",
+      "scripts/check_upstream_oracles.sh": "f497e888eec65eb116dbc22ee1b4576b080b26ccbfa338605561106d48a8c245",
+      "scripts/check_upstream_fixtures.py": "0078b65754af8011d36b97afb6c9aab4df25ce6c83f025fa318b5bd0f67a9664"
+    },
+    "scope": "Offline semantic checker registered in both check runners; generic required collection registered. No whole-source migration count promoted."
+  }
+}
