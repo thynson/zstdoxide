@@ -650,9 +650,12 @@ the committed codec. Its one documentation finding, the infallible Global
 shared-object allocation exception, was corrected and verified. This is source
 review evidence; it adds no dynamic, native-platform or compiler-version claim.
 
-The owner-by-owner implementation and failure-injection results will be added
-as their focused checks complete. Whole-codec custom allocation and the final
-integrated platform matrix remain open. The
+All per-owner implementations are now connected through the public codec APIs.
+The final focused platform follow-up is recorded in
+[allocator-platform-validation.md](allocator-platform-validation.md), and the
+[allocator overview](allocators.md) records the final compiler/safety evidence
+and distinct remaining contracts. The full ordinary feature matrix and timed
+allocator comparisons are still pending separate completion records. The
 [upstream allocation plan](upstream-allocation-plan.md) distinguishes ordinary
 allocator control from static workspaces, shrinking policies, estimators,
 stable buffers, and C numeric compression levels.

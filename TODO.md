@@ -64,7 +64,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Recheck final encoder/trainer public APIs with exact 32-bit/big-endian Miri selectors and no-atomics caller code generation.
 - [x] Build a deterministic allocator benchmark harness and validate every workload and backend without timing.
 - [ ] Compare deterministic output, allocation counts, peak live bytes, retained capacity, and time on identical Global/custom workloads.
-- [ ] Record the final compiler/platform evidence, allocator safety review, and remaining static-workspace/estimator/shrinking/1.100 verification gaps.
+- [x] Record the final compiler/platform evidence, allocator safety review, and remaining static-workspace/estimator/shrinking/1.100 verification gaps.
 
 ## Roadmap
 

@@ -78,18 +78,22 @@ propagation where storage grows from input. Check content/window/output limits
 before allocation and use checked size arithmetic. A declared content size is
 untrusted metadata, not permission to allocate arbitrary memory.
 
-Future allocator parameterization can introduce context/workspace constructors
-that accept a storage provider or allocator, while leaving slice-based algorithms
-unchanged. Do not bake global allocation assumptions into table lookup or match
-execution. Allocations must be released with the allocator that created them;
-resizing must preserve initialized regions and invalidate saved addresses.
+The codec owners now use the standard `Allocator` and `Vec<T, A>`. Contexts,
+whole-buffer output, dictionary preparation, training and their scratch owners
+accept allocator-aware constructors while convenience APIs retain Global.
+Each typed collection carries its exact allocator across moves and swaps; cloned
+allocators need not be interchangeable. Resizing preserves initialized regions,
+and no unsafe access retains an address across reservation. Borrowed dictionary
+views separate immutable dictionary ownership from context allocation.
 
-The installed nightly standard-library source marks `Allocator`, `Vec<T, A>`,
-and `Vec::new_in` stable since Rust 1.100. The initial version uses Rust 1.89.0
-without unstable features. [The allocator plan](allocators.md) records that
-source evidence and the required migration and validation work. Explicit
-allocation boundaries are preparation, not a claim that custom allocation
-already works or that a Rust 1.100 build has been tested.
+The implementation pin is `nightly-2026-10-08`, reporting Rust 1.101.0-nightly;
+no unstable feature gate is used for the selected standard allocation APIs.
+The initial Module 8 evidence remains tied to Rust 1.89. The attempted Rust
+1.100 distribution was unavailable and has not been verified. Standard dictionary
+Arc/Rc sharing still allocates its counts and inline object infallibly in Global;
+caller-owned dictionary views avoid that outer allocation. See
+[allocator ownership and validation](allocators.md) for exact compiler, failure,
+platform and remaining workspace boundaries.
 
 ## Incremental implementation order
 
