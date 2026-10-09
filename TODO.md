@@ -48,7 +48,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Extract the parser-independent block entropy owner while preserving named bytes, allocator identities, clone/reserve order and capacities.
 - [x] Add an allocation-free known-size Fast frame header and checked raw-frame bound, preserving the named header bytes.
 - [x] Add Fast raw-only/minimum-gain literal selection while preserving named output and allocator behavior.
-- [ ] Add transactional explicit block preparation with reconstruction, snapshot and allocation-failure checks.
+- [x] Add transactional explicit block preparation with reconstruction, snapshot and allocation-failure checks.
 - [ ] Integrate persistent Fast parsing with selected block emission and truthful frame headers without altering named output.
 - [ ] Publish allocator-aware level/request one-shot entry points with complete failure-ordinal, ownership and no_std coverage.
 - [ ] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.

@@ -248,3 +248,39 @@ logs, source, compiler and runner. Initial test-only calls to an unavailable
 codebook `Clone` were replaced with immutable codeword snapshots; the original
 diagnostic and corrected run are preserved separately from the final campaign.
 No new C execution or throughput measurement is attributed to this item.
+
+## Transactional Fast block preparation
+
+`BlockEntropyEncoder::prepare_fast` first discards candidates and clears exposed
+payload, then checks the supplied committed-repeat snapshot, complete literal/
+match reconstruction and each explicit offset intent before requesting storage.
+The parser remains responsible for source and window eligibility. Tiny blocks
+bypass entropy work after validation. Other candidates use Fast literal
+selection and intent-bearing sequence preparation, then apply strict whole-block
+gain including both section headers and excluding the outer block header.
+Errors and insufficient gain clear pending publication and payload while
+preserving committed trees, tables, repeats and allocator owners. The named
+path retains its existing selection/reservation order through a shared join.
+
+Eight new tests cover complete two-block decoding, final literals, stale
+snapshot priority, malformed lengths/intent, exact gain boundaries, every
+observed fresh allocation failure, borrowed non-Clone recovery and retained
+committed state. Two independently added witnesses begin with an emitted tree
+and nondefault repeat triple: stale/malformed replacement discards a different
+pending tree, and a late warmed allocation failure cannot publish it. Recovery
+produces identical bytes and a complete decodable frame. This does not repeat
+the separate sequence context's already recorded 41-ordinal campaign.
+
+The immutable `a5ec297` snapshot plus the frozen literal and block overlays
+passes nineteen commands: nine owner/preparation tests in nine configurations,
+fourteen original default replays safe/all, and three exact host/all-feature
+strict-provenance Miri checks, totaling 98 passes and no ignored tests. Strict
+all-target Clippy safe/all, no_std safe/all and formatting pass. All 495 snapshot
+inputs and both owned workspace sources remain unchanged. Independent review
+found no production issue; the additional committed-state tests needed no fix.
+
+[Preparation evidence](evidence/2026-10-09-fast-block-preparation.json) and its
+[archive](evidence/2026-10-09-fast-block-preparation.tar.gz) retain both overlays,
+manifest, commands, logs, compiler and runner. This item adds no allocation
+owner or unsafe operation. Persistent parsing, block choice and public Fast
+frame emission remain separate integration work.
