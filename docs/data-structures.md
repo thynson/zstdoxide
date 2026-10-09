@@ -174,7 +174,8 @@ inventory, toolchain evidence, and failure contracts are in
 in [upstream-allocation-plan.md](upstream-allocation-plan.md). The unavailable
 Rust 1.100 distribution is not a verified build. The installed 1.101 nightly
 has compiled the standard `Allocator`/`Vec<T, A>` subset without feature gates;
-the implementation checkpoint must record its actual compiler policy first.
+the compiler checkpoint pinned `nightly-2026-10-08` with a conservative package
+version floor of 1.101 before generic storage migration.
 
 | Owner and upstream counterpart | Safe allocator-bearing ownership | Existing unsafe selection and invariants |
 | --- | --- | --- |
@@ -203,3 +204,13 @@ endianness, alignment and the no-pointer-atomics `Rc` path explicitly. Report
 collection capacity separately from allocator layout accounting and any Global
 control-block exception. Static workspaces, footprint estimators and automatic
 shrinking remain separate upstream contracts.
+
+Completed leaf checkpoints retain the existing Global constructors and algorithms:
+
+- `History<A: Allocator = Global>` owns `Vec<u8, A>`, accepts owned or borrowed
+  non-Clone allocators, and returns the same vector without conversion. Append
+  and repetition reserve before individual pushes; the unsafe overlap path
+  obtains pointers only after reservation. Failed growth preserves bytes,
+  capacity, frame boundaries, and the exact allocator-bearing owner. Custom
+  storage, distinct-domain swaps, failure recovery, and Global parity are
+  verified in [allocator-validation.md](allocator-validation.md).

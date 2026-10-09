@@ -93,6 +93,22 @@ never dynamically extend bookkeeping. These measurement and platform limits
 are documented in the helper README. CI now schedules its tests, strict checks,
 and Miri; this edit is not evidence of an executed Linux CI run.
 
+`History<A>` is the first migrated codec owner. Its
+[focused evidence](evidence/2026-10-09-allocator-history.json) records seven tests
+in each of safe, `unsafe-history`, all-feature, and no-default/unsafe-history
+builds, plus seven tests in each safe and unsafe strict-provenance Miri run:
+42 passing test executions. Safe/unsafe no_std checks, strict safe/all-feature
+all-target Clippy, and the file's formatting check passed. These are focused
+leaf checks during concurrent development, not a frozen whole-codec matrix.
+
+The five added tests cover an owned non-Clone allocator and borrowed use,
+pointer/allocator-preserving return, every append/repeat/match growth failure,
+validation before allocation, absence of hidden requests within reserved
+capacity, overlap parity at distances 1 through 16, and swaps between distinct
+allocator domains followed by complete release. Default public codec APIs
+still use Global; the private generic owner alone does not expose a custom
+one-shot decoder.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

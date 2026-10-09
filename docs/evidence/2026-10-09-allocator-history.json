@@ -1,0 +1,223 @@
+{
+  "scope": "Focused allocator-aware complete history checkpoint; other leaf migrations were developed concurrently, not a frozen whole-codec matrix.",
+  "source": "src/history.rs",
+  "source_sha256": "eba2efb9ebc679767db1194bcd2fd9755ff49d56a62b3be612178aee634afb9c",
+  "source_unchanged": true,
+  "environment": {
+    "CARGO_TARGET_DIR": "target/module9-history",
+    "CARGO_TERM_COLOR": "never",
+    "miri_overrides": {
+      "CARGO_TARGET_DIR": "target/module9-history-miri",
+      "MIRIFLAGS": "-Zmiri-strict-provenance"
+    }
+  },
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "history::tests::",
+        "--",
+        "--skip",
+        "ring_history::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.894102165941149,
+      "log": "/tmp/zstdoxide-history-safe.log",
+      "log_sha256": "4ed02466863c8a6f370a3a255206e07d5d932864effedcb0d22f78ce4c6b0b5c",
+      "passed": 7
+    },
+    {
+      "name": "unsafe",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-history",
+        "history::tests::",
+        "--",
+        "--skip",
+        "ring_history::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.2747197919525206,
+      "log": "/tmp/zstdoxide-history-unsafe.log",
+      "log_sha256": "a350e3502160ec1c50c65ca053e80860ef21cdee312379c3720f34042d83e12f",
+      "passed": 7
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--all-features",
+        "history::tests::",
+        "--",
+        "--skip",
+        "ring_history::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.4630509160924703,
+      "log": "/tmp/zstdoxide-history-all.log",
+      "log_sha256": "a3a7d29aea855c7e154f8971ade4ee71aa233bb100ec58d935623216e03fa153",
+      "passed": 7
+    },
+    {
+      "name": "no-std-test",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-history",
+        "history::tests::",
+        "--",
+        "--skip",
+        "ring_history::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.1613193748053163,
+      "log": "/tmp/zstdoxide-history-no-std-test.log",
+      "log_sha256": "4416e9f229a87a47216019fc5dcf9a9d1b199cfe27155bdd90d393320e4c4f0f",
+      "passed": 7
+    },
+    {
+      "name": "no-std-safe",
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3526458339765668,
+      "log": "/tmp/zstdoxide-history-no-std-safe.log",
+      "log_sha256": "5967961c06ccb338b8c0e29f3dc370050347170660ce19eec0e04d92c9f914e4",
+      "passed": 0
+    },
+    {
+      "name": "no-std-unsafe",
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-history"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3345797499641776,
+      "log": "/tmp/zstdoxide-history-no-std-unsafe.log",
+      "log_sha256": "91d2cedd23271dce797ac25f8ec3a852be57d25e2f651695a26a42a755c80f64",
+      "passed": 0
+    },
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 1.387709500035271,
+      "log": "/tmp/zstdoxide-history-clippy-safe.log",
+      "log_sha256": "3691e4779b6fe572253597a8065d3f1a883e41ca24117be612149987ffa189d4",
+      "passed": 0
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 1.3481443747878075,
+      "log": "/tmp/zstdoxide-history-clippy-all.log",
+      "log_sha256": "f270c4ceb39df67c9af6b6951e15eea8b466c0eab5f968b0e4a3b3c00ed30d99",
+      "passed": 0
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "src/history.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.036801750073209405,
+      "log": "/tmp/zstdoxide-history-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": 0
+    },
+    {
+      "name": "miri-safe",
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "history::tests::",
+        "--",
+        "--skip",
+        "ring_history::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 9.53617487498559,
+      "log": "/tmp/zstdoxide-history-miri-safe.log",
+      "log_sha256": "4f9e2170f26c9265edc70fa5cf44861c0483e2c80938db38e6cb4036a1233cb3",
+      "passed": 7
+    },
+    {
+      "name": "miri-unsafe",
+      "command": [
+        "python3",
+        "scripts/check_miri_filter.py",
+        "--lib",
+        "--features",
+        "unsafe-history",
+        "history::tests::",
+        "--",
+        "--skip",
+        "ring_history::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 7.714205417083576,
+      "log": "/tmp/zstdoxide-history-miri-unsafe.log",
+      "log_sha256": "5c91f81243fa11b8148729534e0a5ca3217b73d223944f414a9da4ba7af57575",
+      "passed": 7
+    }
+  ],
+  "intermediate_clippy_failure": {
+    "name": "clippy-safe",
+    "command": [
+      "cargo",
+      "clippy",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 101,
+    "seconds": 1.3185338750481606,
+    "log": "/tmp/zstdoxide-history-clippy-safe.log",
+    "log_sha256": "a91daeb0b138e7d74e8ff8f8f57127e44f0458d6b06b5f626b0baf0e91c8de9a",
+    "passed": 0
+  },
+  "qualifications": [
+    "Intermediate Clippy failure was in concurrently edited writer/ring tests; those lint fixes were present for the final strict checks.",
+    "Seven history tests ran in each of safe, unsafe-history, all-features, no-default+unsafe-history, safe Miri, and unsafe-history Miri; ring tests were explicitly skipped.",
+    "No full external C corpus, performance matrix, or custom public codec API is claimed at this private-owner checkpoint."
+  ]
+}
