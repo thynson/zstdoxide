@@ -219,3 +219,32 @@ snapshot manifest, full logs, commands, compiler and runner. The i686 checks are
 interpreted scalar tests, not native foreign-platform execution. Public C-path
 header observations and actual Fast frame emission remain later integration
 checks; no new parser or public numeric API is claimed here.
+
+## Fast literal admission
+
+The literal encoder shares its existing owners and selection flow through a
+plain policy value. Positive target length selects raw bytes before uniform
+scanning, previous-tree coverage, frequency counting or table construction.
+Otherwise each candidate must independently beat the strict Fast payload gain
+limit before complete-section comparison. Payload includes tree description,
+jump sizes, streams and end markers, but excludes the literal header. Existing
+named tie rules, reserve order and default bytes remain unchanged. A Rust
+codebook does not represent C's separate HUF-valid state or minimum attempted
+input scheduling, and this is not a claim of identical C entropy choices.
+
+Six new tests cover ownership, exact gain equality, header exclusion, each
+payload cost, unpublished trees, borrowed non-Clone allocation and complete
+fresh/warmed selection failure recovery. The isolated `a5ec297` snapshot with
+only the literal overlay passes nineteen commands: fourteen focused tests in
+nine configurations, fourteen original default replays in safe/all release, and
+three exact host/all-feature strict-provenance Miri tests. The total is 143
+passes and no ignored tests. Strict all-target Clippy safe/all, no_std safe/all
+and formatting pass; all 495 snapshot inputs and the owned workspace source
+remain unchanged.
+
+[Literal evidence](evidence/2026-10-09-fast-literal-selection.json) and its
+[archive](evidence/2026-10-09-fast-literal-selection.tar.gz) retain commands,
+logs, source, compiler and runner. Initial test-only calls to an unavailable
+codebook `Clone` were replaced with immutable codeword snapshots; the original
+diagnostic and corrected run are preserved separately from the final campaign.
+No new C execution or throughput measurement is attributed to this item.

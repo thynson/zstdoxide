@@ -511,3 +511,20 @@ size transition to an eight-byte field occurs at 0xffffffff, while the existing
 named convenience header remains unchanged. The complete raw-frame bound uses
 checked source/header/block-header arithmetic, with one final empty raw block
 for an empty source and no fabricated huge input allocation in boundary tests.
+
+Fast literal selection uses a plain private policy value shared by all backends;
+there is no additional buffer or unsafe representation. Positive target length
+selects raw bytes before RLE/reuse/frequency work. Otherwise Huffman admission
+compares complete stream/jump/tree payload, excluding its header, against the
+strict Fast gain boundary. Existing named selection and its owner/reserve order
+remain unchanged. An available Rust codebook does not invent C's separate
+HUF repeat-valid flag or its minimum attempted-input threshold.
+
+The shared Fast block-preparation method owns no extra context field. Before
+fallible work it discards candidates, clears stale payload, validates the supplied
+committed-repeat snapshot, checks complete LL/ML reconstruction and exact offset
+intent, then selects literal/sequence sections. Every failure and nonbeneficial
+candidate clears exposed payload and pending publication without changing
+committed tables/tree/repeats. Sampled match history and source/window eligibility
+remain the parser's responsibility. Checked raw output reservation precedes the
+later infallible append and commit; preparation alone publishes nothing.
