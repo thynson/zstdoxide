@@ -12,7 +12,10 @@ compiler is supported by the current verification. Stable 1.100 and stable
 1.101 are not claimed as tested. Module 8 retains its Rust 1.89 evidence.
 
 Custom allocation is being implemented incrementally. Existing public codec
-APIs still use Global until their individual checkpoints are complete. The
+APIs still use Global until their individual checkpoints are complete. Dictionary
+construction now exposes `from_bytes_in`, `from_bytes_with_mode_in`, and
+`raw_in`; its payload and prepared tables use the chosen allocator. Standard
+shared handles still allocate the counts and inline dictionary object in Global. The
 chosen standard `Allocator`/`Vec<T, A>` subset compiles without feature gates
 on the pin. Custom Arc/Rc, allocator-aware BinaryHeap, and fallible Box
 construction still require unstable `allocator_ext` in the inspected library;

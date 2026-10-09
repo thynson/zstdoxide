@@ -271,6 +271,26 @@ FSE state size, reject extreme bounds, and exercise independent non-Clone output
 owners and dictionary fallback followed by frame-local replacement. The views
 retain ordinary Rust slice lifetimes; no raw ownership transfer is involved.
 
+`Dictionary<A>` now prepares bytes, Huffman weights, and all four immutable
+tables in the chosen allocator family. The
+[dictionary evidence](evidence/2026-10-09-allocator-dictionary.json) records
+16 tests passing in seven configurations: safe, unsafe-dictionary, unsafe-FSE,
+unsafe-Huffman, all features, no_std safe, and no_std with all twelve backends.
+Four exact all-feature strict-provenance Miri tests, both no_std compilations,
+strict all-target Clippy, and formatting passed with unchanged dictionary
+source. Existing official fixtures retain their independent loader assertions;
+no new live C or full corpus campaign is claimed here.
+
+The five added tests verify owned non-Clone raw storage, allocation-free empty
+raw content, formatted parsing with a borrowed non-Clone allocator, every
+prepared state including normalized singletons, all observed allocation-failure
+ordinals, malformed-input error preservation and cleanup, and shared lifetime
+through final release. The original allocator retains serialized bytes; cloned
+values own fresh tables and scratch without assuming equivalence. Standard
+`SharedDictionary<A>` uses Global for the counts and entire inline dictionary
+object; the custom allocator owns its bytes/tables only. Borrowed public views
+and allocator-aware codec attachment remain separate checkpoints.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

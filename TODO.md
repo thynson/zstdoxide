@@ -46,7 +46,8 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Parameterize greedy match tables and seed copies with allocator-independent source storage and identical safe/unsafe candidates.
 - [x] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
 - [ ] Expose allocator-aware block/stream encoding and one-shot output without allocator-changing copies.
-- [ ] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
+- [x] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
+- [ ] Define allocation-free borrowed dictionary views and a sealed immutable handle contract.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
 - [ ] Replace the training priority queue and parameterize sample windows, frequencies, candidates, ranges, and output without changing selection ties.
 - [ ] Parameterize formatted finalization and all validation copies, preserving dictionary bytes, IDs, and C acceptance.
