@@ -91,7 +91,8 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-bitstream` | Reverse/forward bit readers and initialized spare-capacity bit writer |
 | `unsafe-history` | Overlapping LZ match expansion |
 | `unsafe-ring-history` | Bounded wraparound history reads and stores |
-| `unsafe-fse` | FSE decoding and inverse encoding tables |
+| `unsafe-fse` | FSE decoding tables |
+| `unsafe-fse-encoder` | Validated inverse FSE encoding tables |
 | `unsafe-huffman` | Huffman lookup table |
 | `unsafe-match-table` | Hash-indexed prior-position table |
 | `unsafe-dictionary` | Validated immutable dictionary-content access |

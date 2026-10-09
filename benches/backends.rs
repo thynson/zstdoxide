@@ -879,6 +879,7 @@ fn enabled_features() -> String {
         ("unsafe-byte-cursor", cfg!(feature = "unsafe-byte-cursor")),
         ("unsafe-bitstream", cfg!(feature = "unsafe-bitstream")),
         ("unsafe-fse", cfg!(feature = "unsafe-fse")),
+        ("unsafe-fse-encoder", cfg!(feature = "unsafe-fse-encoder")),
         ("unsafe-huffman", cfg!(feature = "unsafe-huffman")),
         ("unsafe-history", cfg!(feature = "unsafe-history")),
         ("unsafe-ring-history", cfg!(feature = "unsafe-ring-history")),

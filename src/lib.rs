@@ -20,6 +20,7 @@
         feature = "unsafe-history",
         feature = "unsafe-ring-history",
         feature = "unsafe-fse",
+        feature = "unsafe-fse-encoder",
         feature = "unsafe-huffman",
         feature = "unsafe-match-table",
         feature = "unsafe-dictionary",
@@ -42,7 +43,6 @@ mod entropy_encode;
 mod error;
 mod frame;
 mod fse;
-#[cfg(test)]
 mod fse_encode;
 mod history;
 mod huffman;

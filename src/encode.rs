@@ -4,7 +4,7 @@ use alloc::vec::Vec;
 
 use crate::bitwriter::BitWriter;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
-use crate::fse::FseTable;
+use crate::fse_encode::FseEncodingTable as EncodingTable;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
 use crate::{Dictionary, Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash};
@@ -576,93 +576,6 @@ fn write_sequence_count(output: &mut Vec<u8>, count: usize) {
     }
 }
 
-/// One inverse transition. The numeric value/bit count encode a forward
-/// decoding step from `state` to the requested successor state.
-#[derive(Clone, Copy, Default)]
-struct EncodingTransition {
-    state: u16,
-    value: u16,
-    bits: u8,
-}
-
-/// Typed, initialized inverse transitions indexed by symbol and next state.
-struct EncodingTable {
-    transitions: Vec<EncodingTransition>,
-    initial: Vec<u16>,
-    state_count: usize,
-    table_log: u8,
-}
-
-impl EncodingTable {
-    fn retained_capacity(&self) -> usize {
-        self.transitions.capacity() * core::mem::size_of::<EncodingTransition>()
-            + self.initial.capacity() * core::mem::size_of::<u16>()
-    }
-
-    /// Inverts the public decoding relation instead of adopting `FSE_CTable`'s
-    /// packed representation. Each symbol partitions the successor state set.
-    fn new(counts: &[i16], table_log: u8) -> Result<Self> {
-        let decoding = FseTable::from_normalized(counts, table_log)?;
-        let state_count = 1_usize << table_log;
-        let mut transitions = Vec::new();
-        transitions
-            .try_reserve_exact(counts.len() * state_count)
-            .map_err(|_| Error::AllocationFailed)?;
-        transitions.resize(counts.len() * state_count, EncodingTransition::default());
-        let mut initial = Vec::new();
-        initial
-            .try_reserve_exact(counts.len())
-            .map_err(|_| Error::AllocationFailed)?;
-        initial.resize(counts.len(), u16::MAX);
-        for state in 0..state_count {
-            let entry = decoding.entry(state)?;
-            let symbol = usize::from(entry.symbol);
-            if initial[symbol] == u16::MAX {
-                initial[symbol] = state as u16;
-            }
-            for value in 0..(1_u16 << entry.bits) {
-                let next = usize::from(entry.base + value);
-                transitions[symbol * state_count + next] = EncodingTransition {
-                    state: state as u16,
-                    value,
-                    bits: entry.bits,
-                };
-            }
-        }
-        Ok(Self {
-            transitions,
-            initial,
-            state_count,
-            table_log,
-        })
-    }
-
-    fn initial(&self, symbol: usize) -> Result<u16> {
-        self.initial
-            .get(symbol)
-            .copied()
-            .filter(|&state| state != u16::MAX)
-            .ok_or(Error::CorruptData)
-    }
-
-    fn transition(&self, symbol: usize, next: u16) -> Result<EncodingTransition> {
-        if usize::from(next) >= self.state_count || symbol >= self.initial.len() {
-            return Err(Error::CorruptData);
-        }
-        let index = symbol * self.state_count + usize::from(next);
-        #[cfg(not(feature = "unsafe-fse"))]
-        let transition = self.transitions[index];
-        #[cfg(feature = "unsafe-fse")]
-        // SAFETY: construction creates initial.len() * state_count initialized
-        // transitions, and both dimensions are checked above. Thus index is
-        // within the live owned vector, whose length and allocation never
-        // change after construction. Vec supplies proper alignment and this
-        // shared copied read neither aliases a mutable reference nor escapes.
-        let transition = unsafe { *self.transitions.get_unchecked(index) };
-        Ok(transition)
-    }
-}
-
 struct EncodingTables {
     literals: EncodingTable,
     matches: EncodingTable,
@@ -726,15 +639,16 @@ fn encode_sequences(
         )?;
         writer.write(offset_value - (1_u32 << offset_code), offset_code as u8)?;
     }
-    writer.write(u32::from(match_state), tables.matches.table_log)?;
-    writer.write(u32::from(offset_state), tables.offsets.table_log)?;
-    writer.write(u32::from(literal_state), tables.literals.table_log)?;
+    writer.write(u32::from(match_state), tables.matches.table_log())?;
+    writer.write(u32::from(offset_state), tables.offsets.table_log())?;
+    writer.write(u32::from(literal_state), tables.literals.table_log())?;
     writer.finish()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::fse::FseTable;
     use crate::{DecodeOptions, Dictionary, decompress_with_dictionary};
     use alloc::vec;
 

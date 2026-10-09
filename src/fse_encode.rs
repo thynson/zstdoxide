@@ -35,6 +35,8 @@ impl FseEncodingTransition {
 /// once. Absent rows and initial states are explicitly unavailable. Logical
 /// links are indices into initialized owned storage; no source borrow escapes
 /// construction. A normalized singleton retains its original nonzero log.
+/// `unsafe-fse-encoder` changes only checked dense-row access, independently
+/// of the decoder's `unsafe-fse` feature. Scalar RLE uses the shared safe path.
 #[derive(Debug)]
 pub(crate) struct FseEncodingTable {
     transitions: Vec<FseEncodingTransition>,
@@ -87,11 +89,23 @@ impl FseEncodingTable {
                 Err(Error::CorruptData)
             };
         }
-        self.initial
-            .get(symbol)
-            .copied()
-            .filter(|&state| state != UNAVAILABLE)
-            .ok_or(Error::CorruptData)
+        if symbol >= self.initial.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-fse-encoder"))]
+        let state = self.initial[symbol];
+        #[cfg(feature = "unsafe-fse-encoder")]
+        // SAFETY: the runtime check proves symbol < initial.len(). Every
+        // element was initialized by extend_from_slice during construction.
+        // The Vec owns the live, properly aligned u16 allocation throughout
+        // this shared borrow; no mutation or reallocation can overlap it.
+        // Copying this scalar neither creates aliases nor extends a reference.
+        let state = unsafe { *self.initial.get_unchecked(symbol) };
+        if state == UNAVAILABLE {
+            Err(Error::CorruptData)
+        } else {
+            Ok(state)
+        }
     }
 
     pub(crate) fn transition(&self, symbol: usize, next: u16) -> Result<FseEncodingTransition> {
@@ -112,11 +126,25 @@ impl FseEncodingTable {
             .checked_mul(self.state_count)
             .and_then(|row| row.checked_add(usize::from(next)))
             .ok_or(Error::CorruptData)?;
-        self.transitions
-            .get(index)
-            .copied()
-            .filter(|transition| transition.state != UNAVAILABLE)
-            .ok_or(Error::CorruptData)
+        if index >= self.transitions.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-fse-encoder"))]
+        let transition = self.transitions[index];
+        #[cfg(feature = "unsafe-fse-encoder")]
+        // SAFETY: symbol availability and successor bounds were checked, the
+        // flattened index uses checked arithmetic, and the final runtime
+        // check proves index < transitions.len(). Construction initialized
+        // every slot, including explicit unavailable records. Vec owns valid,
+        // properly aligned storage for this shared borrow, which prevents
+        // overlapping mutation/reallocation. The copied scalar record carries
+        // no references, pointers, or ownership out of that allocation.
+        let transition = unsafe { *self.transitions.get_unchecked(index) };
+        if transition.state == UNAVAILABLE {
+            Err(Error::CorruptData)
+        } else {
+            Ok(transition)
+        }
     }
 
     /// The relation callback reads the same immutable table on both passes.
@@ -290,6 +318,30 @@ mod tests {
             verify_inverse(&FseTable::from_normalized(&counts, log).unwrap());
         }
         verify_inverse(&FseTable::from_normalized(&[1; 256], 8).unwrap());
+    }
+
+    #[test]
+    fn lookup_bounds_reject_extreme_indices_without_reading_absent_rows() {
+        let decoding = FseTable::from_normalized(&[16, 0, 0, 16], 5).unwrap();
+        let encoding = FseEncodingTable::from_decoding(&decoding).unwrap();
+        for symbol in [0, 3] {
+            assert!(encoding.initial(symbol).is_ok());
+            for next in [0, 15, 31] {
+                let inverse = encoding.transition(symbol, next).unwrap();
+                let entry = decoding.entry(usize::from(inverse.state)).unwrap();
+                assert_eq!(usize::from(entry.symbol), symbol);
+                assert_eq!(entry.base + inverse.value, next);
+            }
+            for next in [32, 33, u16::MAX] {
+                assert_eq!(encoding.transition(symbol, next), Err(Error::CorruptData));
+            }
+        }
+        for symbol in [1, 2, 4, 255, 256, usize::MAX] {
+            assert_eq!(encoding.initial(symbol), Err(Error::CorruptData));
+            for next in [0, 31, u16::MAX] {
+                assert_eq!(encoding.transition(symbol, next), Err(Error::CorruptData));
+            }
+        }
     }
 
     #[test]
