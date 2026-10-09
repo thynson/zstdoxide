@@ -31,6 +31,18 @@ impl HuffmanTable {
         self.entries.capacity() * core::mem::size_of::<DecodeEntry>()
     }
 
+    /// Copy validated per-symbol lengths for checked encoding-table setup.
+    /// Every lookup entry for one symbol has the same bit count; absent symbols
+    /// remain zero. No reference into this decoding table escapes the call.
+    #[cfg(test)]
+    pub(crate) fn code_lengths(&self) -> [u8; MAX_SYMBOLS] {
+        let mut lengths = [0; MAX_SYMBOLS];
+        for entry in &self.entries {
+            lengths[usize::from(entry.symbol)] = entry.bits;
+        }
+        lengths
+    }
+
     /// Read weights and build a complete decoding table.
     ///
     /// Corresponds to upstream `HUF_readStats` and `HUF_readDTableX1_wksp`.

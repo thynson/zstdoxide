@@ -39,6 +39,15 @@ pub(crate) fn serialize_literal_table(observed: &[u64; SYMBOLS]) -> Result<Vec<u
     Ok(description)
 }
 
+/// Pair the actual published table description with its checked canonical codes.
+/// Parsing the selected bytes also preserves any near-flat serialization fallback.
+#[cfg(test)]
+pub(crate) fn build_literal_table(
+    observed: &[u64; SYMBOLS],
+) -> Result<crate::huffman_codebook::BuiltLiteralTable> {
+    crate::huffman_codebook::BuiltLiteralTable::from_description(serialize_literal_table(observed)?)
+}
+
 /// Construct a complete full-alphabet tree with one pseudocount per symbol.
 ///
 /// Corresponds to the tree-construction role of `HUF_buildCTable_wksp`, using

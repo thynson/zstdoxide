@@ -46,6 +46,8 @@ mod fse;
 mod fse_encode;
 mod history;
 mod huffman;
+#[cfg(test)]
+mod huffman_codebook;
 mod huffman_encode;
 mod matchfinder;
 mod ring_history;
