@@ -1,0 +1,424 @@
+{
+  "schema": 1,
+  "target": "tests/fuzz/huf_round_trip.c",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "archive_pin": {
+    "id": "huf_round_trip",
+    "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/huf_round_trip_seed_corpus.zip",
+    "compressed_bytes": 857229,
+    "sha256": "0a865a54eb80d629ea8639925f92aeab078650f93ac215714460fc6d55de6c22",
+    "observed_date": "2026-10-09",
+    "response_headers": {
+      "Content-Length": "857229",
+      "Content-Type": "application/octet-stream",
+      "ETag": "\"0x8D9B9A275689C78\"",
+      "Last-Modified": "Tue, 07 Dec 2021 16:56:05 GMT",
+      "Accept-Ranges": "bytes"
+    },
+    "member_count": 833,
+    "file_count": 833,
+    "unpacked_bytes": 2350233,
+    "largest_member_bytes": 238262,
+    "format": "zip",
+    "name": "huf_round_trip_seed_corpus.zip",
+    "release": "fuzz-corpora",
+    "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/huf_round_trip.c",
+    "upstream_checksum_pin": null,
+    "release_asset_id": 41611378,
+    "observation_note": "Same-day cached GitHub API record; live API request was rate limited. Archive headers and bytes checked independently.",
+    "coverage_note": "Archive integrity pin only. This checkpoint does not replay the Huffman roundtrip target or change its partial source/case coverage."
+  },
+  "integrity_evidence": {
+    "path": "/tmp/zstdoxide-huffman-corpus-integrity.json",
+    "sha256": "fefa0c502da694eea6999ea1b43b62a3db840f1efeea0a5ec794fa020884534a",
+    "zip_crc_verified": true,
+    "every_extracted_file_compared_with_archive": true
+  },
+  "source_revision_before_corpus_checkpoint": "463e4a9375d5c94eb5eba955178f4e840a71285e",
+  "driver_sha256": "adafb858320eb20cca41be32b564d974457696e200830b297ab6e218d1dcd3a2",
+  "runs": [
+    {
+      "features": "safe",
+      "command": "ZSTDOXIDE_HUF_ROUND_TRIP_CORPUS=/tmp/zstdoxide-external-corpora/extracted/huf_round_trip cargo test --locked --release --lib complete_pinned_huffman_round_trip_corpus_replays_both_bmi_layouts -- --ignored --nocapture",
+      "exit_code": 0,
+      "log_path": "/tmp/zstdoxide-huffman-corpus-safe.log",
+      "log_sha256": "7baceb8f45e418dd5b6e24269d4af1f324db5e15d2057fce13b4176030974f3d",
+      "test_seconds": 1.24
+    },
+    {
+      "features": "all-features",
+      "command": "ZSTDOXIDE_HUF_ROUND_TRIP_CORPUS=/tmp/zstdoxide-external-corpora/extracted/huf_round_trip cargo test --locked --release --lib --all-features complete_pinned_huffman_round_trip_corpus_replays_both_bmi_layouts -- --ignored --nocapture",
+      "exit_code": 0,
+      "log_path": "/tmp/zstdoxide-huffman-corpus-all.log",
+      "log_sha256": "66e8c826bafb4307d4a6b7914d149c9863fe651b09ff007b3e1f166bc2714a1d",
+      "test_seconds": 0.56
+    }
+  ],
+  "record_count_per_build": 1666,
+  "records_identical_between_backends": true,
+  "all_report_fields_identical_between_backends": true,
+  "canonical_records_sha256": "47066ae6d346f0e63986a71515f6efb47790ee9fc2f06af6294dfc1f41d6ef5c",
+  "outcome_order": [
+    "empty",
+    "single",
+    "uniform",
+    "table_unavailable",
+    "description_too_small",
+    "stream_zero",
+    "round_trip"
+  ],
+  "parameter_order": [
+    "four_streams",
+    "decode_two_symbols",
+    "bmi2",
+    "optimal_depth",
+    "prefer_repeat",
+    "suspect_uncompressible",
+    "disable_assembly",
+    "disable_fast",
+    "output_capacity",
+    "requested_table_log",
+    "remaining_before_cap",
+    "source_size"
+  ],
+  "capacity_bucket_ranges": [
+    "0",
+    "1..7",
+    "8..16",
+    "17..63",
+    "64..255",
+    "256..4095",
+    "4096..65535",
+    "65536+"
+  ],
+  "depth_histogram_note": "Index zero means construction was not reached or no table was available; all other indices are actual values. Optimal selected_cap is the adjusted hard maximum, not a C optimal-depth claim.",
+  "fingerprint_note": "Per-input/source/description/encoded fingerprints and aggregate transcript fingerprint use FNV-1a64. Archive, logs, canonical records, source and integrity evidence use SHA-256. highest_symbol=256 marks unavailable histogram metadata.",
+  "corpus": {
+    "files": 833,
+    "bytes": 2350233,
+    "largest_file": 238262,
+    "fingerprint": "3103a89f6b46b300",
+    "source_limit": 262144,
+    "input_limit": 1048576
+  },
+  "layouts": [
+    {
+      "bmi_layout": false,
+      "cases": 833,
+      "outcomes": [
+        41,
+        7,
+        4,
+        0,
+        74,
+        122,
+        585
+      ],
+      "stream_outcomes": [
+        [
+          25,
+          4,
+          0,
+          0,
+          28,
+          26,
+          172
+        ],
+        [
+          16,
+          3,
+          4,
+          0,
+          46,
+          96,
+          413
+        ]
+      ],
+      "flag_false_true": [
+        [
+          255,
+          578
+        ],
+        [
+          322,
+          511
+        ],
+        [
+          833,
+          0
+        ],
+        [
+          394,
+          439
+        ],
+        [
+          349,
+          484
+        ],
+        [
+          412,
+          421
+        ],
+        [
+          392,
+          441
+        ],
+        [
+          376,
+          457
+        ]
+      ],
+      "requested_depths": [
+        0,
+        97,
+        64,
+        67,
+        90,
+        50,
+        70,
+        91,
+        65,
+        104,
+        54,
+        41,
+        40
+      ],
+      "adjusted_depths": [
+        52,
+        0,
+        0,
+        0,
+        0,
+        2,
+        7,
+        16,
+        40,
+        582,
+        54,
+        41,
+        39
+      ],
+      "selected_caps": [
+        52,
+        0,
+        0,
+        0,
+        0,
+        33,
+        35,
+        70,
+        77,
+        470,
+        44,
+        20,
+        32
+      ],
+      "actual_depths": [
+        52,
+        23,
+        16,
+        36,
+        40,
+        72,
+        78,
+        120,
+        102,
+        236,
+        34,
+        18,
+        6
+      ],
+      "capacity_buckets": [
+        62,
+        19,
+        19,
+        84,
+        163,
+        349,
+        124,
+        13
+      ],
+      "source_bytes": 2342130,
+      "capped_sources": 0,
+      "maximum_original": 238262,
+      "maximum_remaining": 238251,
+      "maximum_source": 238251,
+      "maximum_capacity": 631680,
+      "maximum_description": 99,
+      "maximum_encoded": 33810,
+      "maximum_retained": 65636,
+      "fingerprint": "260763a2415eaf9d"
+    },
+    {
+      "bmi_layout": true,
+      "cases": 833,
+      "outcomes": [
+        48,
+        2,
+        5,
+        0,
+        72,
+        91,
+        615
+      ],
+      "stream_outcomes": [
+        [
+          29,
+          0,
+          0,
+          0,
+          23,
+          18,
+          185
+        ],
+        [
+          19,
+          2,
+          5,
+          0,
+          49,
+          73,
+          430
+        ]
+      ],
+      "flag_false_true": [
+        [
+          255,
+          578
+        ],
+        [
+          322,
+          511
+        ],
+        [
+          394,
+          439
+        ],
+        [
+          349,
+          484
+        ],
+        [
+          412,
+          421
+        ],
+        [
+          392,
+          441
+        ],
+        [
+          376,
+          457
+        ],
+        [
+          398,
+          435
+        ]
+      ],
+      "requested_depths": [
+        0,
+        156,
+        83,
+        61,
+        70,
+        73,
+        77,
+        36,
+        21,
+        79,
+        57,
+        67,
+        53
+      ],
+      "adjusted_depths": [
+        55,
+        0,
+        0,
+        0,
+        0,
+        3,
+        8,
+        13,
+        37,
+        542,
+        57,
+        66,
+        52
+      ],
+      "selected_caps": [
+        55,
+        0,
+        0,
+        0,
+        0,
+        32,
+        39,
+        58,
+        73,
+        427,
+        60,
+        37,
+        52
+      ],
+      "actual_depths": [
+        55,
+        22,
+        19,
+        33,
+        36,
+        83,
+        85,
+        120,
+        85,
+        208,
+        51,
+        29,
+        7
+      ],
+      "capacity_buckets": [
+        71,
+        10,
+        17,
+        85,
+        167,
+        347,
+        120,
+        16
+      ],
+      "source_bytes": 2341338,
+      "capped_sources": 0,
+      "maximum_original": 238262,
+      "maximum_remaining": 238250,
+      "maximum_source": 238250,
+      "maximum_capacity": 631680,
+      "maximum_description": 99,
+      "maximum_encoded": 129430,
+      "maximum_retained": 194966,
+      "fingerprint": "7f5e2d10e7c0c952"
+    }
+  ],
+  "normal_checks": [
+    "8 normal tests passed safe and all-features; 7 no-default tests passed (filesystem loader excluded without std)",
+    "Loader rejects duplicate lists, excess path counts, nonregular entries, symlink inputs/root, oversized files; deterministic sorting and bounded reads verified",
+    "Global strict all-feature Clippy, fmt and owned diff checks passed"
+  ],
+  "qualifications": [
+    "Every one of the 833 pinned files ran both BMI consumption layouts; no files skipped or truncated by the harness. Original target source cap of256KiB remains in effect.",
+    "This snapshot never exceeds the256KiB source cap; normal driver tests separately exercise the cap and preserve original capacity derivation.",
+    "The corpus has no table_unavailable outcome; a deterministic normal full-alphabet witness exercises it. All seven outcomes are covered by normal tests.",
+    "Trees and optimal-size search are independent Rust implementations. Exact cheap scalar selection is independently C-verified.",
+    "Rust selected-description copying has an exact-fit contract. It does not reproduce C destination-dependent raw/FSE table serialization.",
+    "CPU/X1/X2/BMI/asm/fast selections are recorded and qualified, not claimed as separate Rust engines. Existing independent C selector/stream/capacity checks cover relevant boundaries.",
+    "The release corpus is a rolling official archive pinned by observed SHA-256, not claimed to have been generated from the reference v1.5.7 commit."
+  ],
+  "records_artifact": {
+    "path": "docs/evidence/2026-10-09-huffman-corpus-records.jsonl.gz",
+    "format": "gzip-compressed UTF-8 JSON Lines, one complete Trial per line",
+    "records": 1666,
+    "uncompressed_bytes": 850266,
+    "uncompressed_sha256": "61a2d89b17afe958fd4a1fb94b27ce0f2eff0ab84df548c508295c1727d64477",
+    "compressed_bytes": 125047,
+    "compressed_sha256": "395e9fee5df055c3fd57ff6f8a04ac68da4a414eeb380fd0e79905e26fcc6de1"
+  },
+  "original_full_evidence_sha256": "85dca8b79a87ddeffeb5c6a88d21c26e4defcfaeb8471aceeb3cdf8a1f0e3196"
+}

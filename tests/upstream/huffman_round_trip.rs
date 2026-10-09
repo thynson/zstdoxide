@@ -689,6 +689,386 @@ fn huffman_selectors_reject_oversized_harness_input_before_consumption() {
 }
 
 #[cfg(feature = "std")]
+mod corpus {
+    use super::*;
+    use std::io::{self, Read};
+    use std::path::{Path, PathBuf};
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    const FILES: usize = 833;
+    const UNPACKED_BYTES: usize = 2_350_233;
+    const LARGEST_FILE: usize = 238_262;
+    // FNV-1a over sorted [u64 name length, UTF-8 name, u64 size, exact bytes].
+    // Snapshot SHA-256 is 0a865a54eb80d629ea8639925f92aeab078650f93ac215714460fc6d55de6c22;
+    // all members were independently compared against that archive before replay.
+    const CORPUS_FINGERPRINT: u64 = 3_531_851_935_441_662_720;
+    const NAMES: [&str; 7] = [
+        "empty",
+        "single",
+        "uniform",
+        "table_unavailable",
+        "description_too_small",
+        "stream_zero",
+        "round_trip",
+    ];
+
+    fn invalid(message: &str) -> io::Error {
+        io::Error::new(io::ErrorKind::InvalidData, message)
+    }
+
+    fn ordered_unique(mut paths: Vec<PathBuf>) -> io::Result<Vec<PathBuf>> {
+        paths.sort();
+        if paths.len() > FILES || paths.windows(2).any(|pair| pair[0] == pair[1]) {
+            return Err(invalid("too many or duplicate corpus paths"));
+        }
+        Ok(paths)
+    }
+
+    fn validate_file(path: &Path) -> io::Result<()> {
+        let metadata = std::fs::symlink_metadata(path)?;
+        if !metadata.file_type().is_file() || metadata.len() > INPUT_LIMIT as u64 {
+            return Err(invalid("nonregular, symlink, or oversized corpus file"));
+        }
+        Ok(())
+    }
+
+    fn files(root: &Path) -> io::Result<Vec<PathBuf>> {
+        if !std::fs::symlink_metadata(root)?.file_type().is_dir() {
+            return Err(invalid("corpus root must be a real directory"));
+        }
+        let mut paths = Vec::new();
+        // This pinned archive has one flat directory. Reject nested directories
+        // and every other non-file entry instead of silently omitting them.
+        for entry in std::fs::read_dir(root)? {
+            let path = entry?.path();
+            validate_file(&path)?;
+            if path.file_name().and_then(|name| name.to_str()).is_none() {
+                return Err(invalid("corpus names must have stable UTF-8 bytes"));
+            }
+            paths.push(path);
+            if paths.len() > FILES {
+                return Err(invalid("too many corpus files"));
+            }
+        }
+        ordered_unique(paths)
+    }
+
+    fn read_input(path: &Path) -> io::Result<Vec<u8>> {
+        validate_file(path)?;
+        let file = std::fs::File::open(path)?;
+        if !file.metadata()?.is_file() {
+            return Err(invalid("opened corpus input is not a file"));
+        }
+        let mut bytes = Vec::new();
+        file.take(INPUT_LIMIT as u64 + 1).read_to_end(&mut bytes)?;
+        if bytes.len() > INPUT_LIMIT {
+            return Err(invalid("corpus input grew past the harness bound"));
+        }
+        Ok(bytes)
+    }
+
+    fn mix(hash: &mut u64, bytes: &[u8]) {
+        for &byte in bytes {
+            *hash = (*hash ^ u64::from(byte)).wrapping_mul(0x100_0000_01b3);
+        }
+    }
+
+    fn outcome_index(outcome: Outcome) -> usize {
+        match outcome {
+            Outcome::Empty => 0,
+            Outcome::Single => 1,
+            Outcome::Uniform => 2,
+            Outcome::TableUnavailable => 3,
+            Outcome::DescriptionTooSmall => 4,
+            Outcome::StreamZero => 5,
+            Outcome::RoundTrip => 6,
+        }
+    }
+
+    struct Totals {
+        cases: usize,
+        outcomes: [usize; 7],
+        stream_outcomes: [[usize; 7]; 2],
+        flags: [[usize; 2]; 8],
+        requested: [usize; 13],
+        adjusted: [usize; 13],
+        selected: [usize; 13],
+        actual: [usize; 13],
+        capacity_buckets: [usize; 8],
+        source_bytes: usize,
+        capped_sources: usize,
+        maximum_original: usize,
+        maximum_remaining: usize,
+        maximum_source: usize,
+        maximum_capacity: usize,
+        maximum_description: usize,
+        maximum_encoded: usize,
+        maximum_retained: usize,
+        fingerprint: u64,
+    }
+
+    impl Totals {
+        fn new() -> Self {
+            Self {
+                cases: 0,
+                outcomes: [0; 7],
+                stream_outcomes: [[0; 7]; 2],
+                flags: [[0; 2]; 8],
+                requested: [0; 13],
+                adjusted: [0; 13],
+                selected: [0; 13],
+                actual: [0; 13],
+                capacity_buckets: [0; 8],
+                source_bytes: 0,
+                capped_sources: 0,
+                maximum_original: 0,
+                maximum_remaining: 0,
+                maximum_source: 0,
+                maximum_capacity: 0,
+                maximum_description: 0,
+                maximum_encoded: 0,
+                maximum_retained: 0,
+                fingerprint: 0xcbf2_9ce4_8422_2325,
+            }
+        }
+
+        fn observe(&mut self, name: &str, trial: &Trial, retained: usize) {
+            let outcome = outcome_index(trial.outcome);
+            self.cases += 1;
+            self.outcomes[outcome] += 1;
+            self.stream_outcomes[trial.parameters[0] as usize][outcome] += 1;
+            for (flag, &value) in self.flags.iter_mut().zip(&trial.parameters[..8]) {
+                flag[value as usize] += 1;
+            }
+            self.requested[trial.parameters[9] as usize] += 1;
+            self.adjusted[usize::from(trial.adjusted_depth)] += 1;
+            self.selected[usize::from(trial.selected_cap)] += 1;
+            self.actual[usize::from(trial.actual_depth)] += 1;
+            let capacity = trial.parameters[8] as usize;
+            let bucket = match capacity {
+                0 => 0,
+                1..=7 => 1,
+                8..=16 => 2,
+                17..=63 => 3,
+                64..=255 => 4,
+                256..=4095 => 5,
+                4096..=65535 => 6,
+                _ => 7,
+            };
+            self.capacity_buckets[bucket] += 1;
+            self.source_bytes += trial.parameters[11] as usize;
+            self.capped_sources += usize::from(trial.parameters[10] as usize > SOURCE_LIMIT);
+            self.maximum_original = self.maximum_original.max(trial.original_size);
+            self.maximum_remaining = self.maximum_remaining.max(trial.parameters[10] as usize);
+            self.maximum_source = self.maximum_source.max(trial.parameters[11] as usize);
+            self.maximum_capacity = self.maximum_capacity.max(capacity);
+            self.maximum_description = self.maximum_description.max(trial.description_size);
+            self.maximum_encoded = self.maximum_encoded.max(trial.encoded_size);
+            self.maximum_retained = self.maximum_retained.max(retained);
+            mix(&mut self.fingerprint, &(name.len() as u64).to_le_bytes());
+            mix(&mut self.fingerprint, name.as_bytes());
+            for value in trial.parameters.map(u64::from).into_iter().chain([
+                outcome as u64,
+                trial.original_size as u64,
+                trial.input_fingerprint,
+                trial.source_fingerprint,
+                trial.highest_symbol.map_or(256, u64::from),
+                u64::from(trial.distinct_symbols),
+                u64::from(trial.adjusted_depth),
+                u64::from(trial.selected_cap),
+                u64::from(trial.actual_depth),
+                trial.description_size as u64,
+                trial.description_fingerprint,
+                trial.encoded_size as u64,
+                trial.encoded_fingerprint,
+            ]) {
+                mix(&mut self.fingerprint, &value.to_le_bytes());
+            }
+        }
+
+        fn report(&self, bmi: bool) {
+            assert_eq!(self.cases, FILES);
+            assert_eq!(self.outcomes.iter().sum::<usize>(), FILES);
+            for histogram in [
+                &self.requested,
+                &self.adjusted,
+                &self.selected,
+                &self.actual,
+            ] {
+                assert_eq!(histogram.iter().sum::<usize>(), FILES);
+            }
+            std::eprintln!(
+                concat!(
+                    "HUF_SUMMARY {{\"bmi_layout\":{},\"cases\":{},\"outcomes\":{:?},",
+                    "\"stream_outcomes\":{:?},\"flag_false_true\":{:?},\"requested_depths\":{:?},",
+                    "\"adjusted_depths\":{:?},\"selected_caps\":{:?},\"actual_depths\":{:?},",
+                    "\"capacity_buckets\":{:?},\"source_bytes\":{},\"capped_sources\":{},",
+                    "\"maximum_original\":{},\"maximum_remaining\":{},\"maximum_source\":{},",
+                    "\"maximum_capacity\":{},\"maximum_description\":{},\"maximum_encoded\":{},",
+                    "\"maximum_retained\":{},\"fingerprint\":\"{:016x}\"}}"
+                ),
+                bmi,
+                self.cases,
+                self.outcomes,
+                self.stream_outcomes,
+                self.flags,
+                self.requested,
+                self.adjusted,
+                self.selected,
+                self.actual,
+                self.capacity_buckets,
+                self.source_bytes,
+                self.capped_sources,
+                self.maximum_original,
+                self.maximum_remaining,
+                self.maximum_source,
+                self.maximum_capacity,
+                self.maximum_description,
+                self.maximum_encoded,
+                self.maximum_retained,
+                self.fingerprint
+            );
+        }
+    }
+
+    #[test]
+    #[ignore = "requires all833 pinned huf_round_trip files in ZSTDOXIDE_HUF_ROUND_TRIP_CORPUS; emits auditable per-file JSON"]
+    fn complete_pinned_huffman_round_trip_corpus_replays_both_bmi_layouts() {
+        let root = PathBuf::from(
+            std::env::var_os("ZSTDOXIDE_HUF_ROUND_TRIP_CORPUS")
+                .expect("set ZSTDOXIDE_HUF_ROUND_TRIP_CORPUS to the pinned extracted archive"),
+        );
+        let paths = files(&root).unwrap();
+        assert_eq!(paths.len(), FILES, "the full pinned corpus is required");
+        let mut totals = [Totals::new(), Totals::new()];
+        let mut scratch = [EntropyOutput::new(), EntropyOutput::new()];
+        let mut corpus_hash = 0xcbf2_9ce4_8422_2325;
+        let mut bytes = 0;
+        let mut maximum = 0;
+        for path in paths {
+            let input = read_input(&path).unwrap();
+            let name = path.file_name().unwrap().to_str().unwrap();
+            let name_hex: std::string::String = name
+                .as_bytes()
+                .iter()
+                .map(|byte| alloc::format!("{byte:02x}"))
+                .collect();
+            mix(&mut corpus_hash, &(name.len() as u64).to_le_bytes());
+            mix(&mut corpus_hash, name.as_bytes());
+            mix(&mut corpus_hash, &(input.len() as u64).to_le_bytes());
+            mix(&mut corpus_hash, &input);
+            bytes += input.len();
+            maximum = maximum.max(input.len());
+            for layout in 0..2 {
+                let bmi = layout != 0;
+                let trial = round_trip(&input, bmi, &mut scratch[layout])
+                    .unwrap_or_else(|error| panic!("{}, BMI={bmi}: {error:?}", path.display()));
+                totals[layout].observe(name, &trial, scratch[layout].retained_capacity());
+                std::eprintln!(
+                    concat!(
+                        "HUF_RECORD {{\"name_utf8_hex\":\"{}\",\"bmi_layout\":{},\"outcome\":\"{}\",",
+                        "\"original_size\":{},\"parameters\":{:?},\"input_fingerprint\":\"{:016x}\",",
+                        "\"source_fingerprint\":\"{:016x}\",\"highest_symbol\":{},\"distinct_symbols\":{},",
+                        "\"adjusted_depth\":{},\"selected_cap\":{},\"actual_depth\":{},\"description_size\":{},",
+                        "\"description_fingerprint\":\"{:016x}\",\"encoded_size\":{},\"encoded_fingerprint\":\"{:016x}\"}}"
+                    ),
+                    name_hex,
+                    bmi,
+                    NAMES[outcome_index(trial.outcome)],
+                    trial.original_size,
+                    trial.parameters,
+                    trial.input_fingerprint,
+                    trial.source_fingerprint,
+                    trial.highest_symbol.map_or(256, usize::from),
+                    trial.distinct_symbols,
+                    trial.adjusted_depth,
+                    trial.selected_cap,
+                    trial.actual_depth,
+                    trial.description_size,
+                    trial.description_fingerprint,
+                    trial.encoded_size,
+                    trial.encoded_fingerprint
+                );
+            }
+        }
+        assert_eq!(bytes, UNPACKED_BYTES);
+        assert_eq!(maximum, LARGEST_FILE);
+        assert_eq!(
+            corpus_hash, CORPUS_FINGERPRINT,
+            "changed corpus bytes/names"
+        );
+        for (layout, total) in totals.iter().enumerate() {
+            total.report(layout != 0);
+        }
+        std::eprintln!(
+            "HUF_CORPUS {{\"files\":{FILES},\"bytes\":{bytes},\"largest_file\":{maximum},\"fingerprint\":\"{corpus_hash:016x}\",\"source_limit\":{SOURCE_LIMIT},\"input_limit\":{INPUT_LIMIT}}}"
+        );
+    }
+
+    #[test]
+    fn corpus_loader_rejects_duplicate_nonregular_symlink_and_oversized_inputs() {
+        static NEXT_DIRECTORY: AtomicUsize = AtomicUsize::new(0);
+        struct Directory(PathBuf);
+        impl Drop for Directory {
+            fn drop(&mut self) {
+                let _ = std::fs::remove_dir_all(&self.0);
+            }
+        }
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let directory = Directory(std::env::temp_dir().join(alloc::format!(
+            "zstdoxide-huffman-loader-{}-{stamp}-{}",
+            std::process::id(),
+            NEXT_DIRECTORY.fetch_add(1, Ordering::Relaxed)
+        )));
+        std::fs::create_dir(&directory.0).unwrap();
+        let valid = directory.0.join("b");
+        std::fs::write(&valid, b"valid").unwrap();
+        std::fs::write(directory.0.join("a"), b"").unwrap();
+        assert_eq!(
+            files(&directory.0).unwrap(),
+            [directory.0.join("a"), valid.clone()]
+        );
+        assert_eq!(read_input(&valid).unwrap(), b"valid");
+        assert!(ordered_unique(alloc::vec![valid.clone(), valid.clone()]).is_err());
+        assert!(
+            ordered_unique(
+                (0..=FILES)
+                    .map(|i| directory.0.join(i.to_string()))
+                    .collect()
+            )
+            .is_err()
+        );
+        assert!(files(&valid).is_err());
+        let nested = directory.0.join("nested");
+        std::fs::create_dir(&nested).unwrap();
+        assert!(files(&directory.0).is_err());
+        std::fs::remove_dir(&nested).unwrap();
+        let oversized = directory.0.join("oversized");
+        std::fs::File::create(&oversized)
+            .unwrap()
+            .set_len(INPUT_LIMIT as u64 + 1)
+            .unwrap();
+        assert!(read_input(&oversized).is_err());
+        assert!(files(&directory.0).is_err());
+        std::fs::remove_file(&oversized).unwrap();
+        #[cfg(unix)]
+        {
+            let link = directory.0.join("link");
+            std::os::unix::fs::symlink(&valid, &link).unwrap();
+            assert!(read_input(&link).is_err());
+            assert!(files(&directory.0).is_err());
+            std::fs::remove_file(&link).unwrap();
+            let root_link = directory.0.join("root-link");
+            std::os::unix::fs::symlink(&directory.0, &root_link).unwrap();
+            assert!(files(&root_link).is_err());
+        }
+    }
+}
+
+#[cfg(feature = "std")]
 mod oracle {
     use super::*;
     use std::io::Write;

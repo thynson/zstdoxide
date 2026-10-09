@@ -71,6 +71,41 @@ standalone stream into independent frame blocks and call it the same input.
 
 ## Executed evidence
 
+### Complete pinned Huffman replay
+
+The matching adapted driver now replays every one of the 833 pinned files under
+both BMI consumption layouts. Safe and all-feature release builds agree on all
+1,666 per-file records, for 3,332 total executions with no skipped files. The
+archive holds 2,350,233 bytes; independent ZIP CRC, SHA-256 and exact extracted
+member comparisons passed. Both layouts reach every requested and actual tree
+depth from one through twelve.
+
+| Driver outcome | Without BMI consumption | With BMI consumption |
+| --- | ---: | ---: |
+| Empty | 41 | 48 |
+| Single byte | 7 | 2 |
+| Uniform | 4 | 5 |
+| Table unavailable | 0 | 0 |
+| Description capacity failure | 74 | 72 |
+| Zero stream | 122 | 91 |
+| Exact roundtrip | 585 | 615 |
+
+The corpus's maximum selected source is 238,251 bytes; normal witnesses
+separately reach the full 256 KiB limit and the unavailable-table branch.
+Maximum selected capacity is 631,680 bytes and maximum successful stream
+length is 129,430 bytes. The two transcript fingerprints are respectively
+`260763a2415eaf9d` and `7f5e2d10e7c0c952` in both backend configurations.
+
+Commands, SHA-256 values, flags, depth/capacity histograms and qualifications
+are preserved in [the replay evidence](evidence/2026-10-09-huffman-corpus.json).
+All per-file records are archived as
+[compressed JSON Lines](evidence/2026-10-09-huffman-corpus-records.jsonl.gz);
+the evidence records both compressed and uncompressed hashes, and decompression
+was checked against every original record before committing. Python's `gzip`
+module or `gzip -dc` reads the complete transcript without the external corpus.
+These are test metadata, not redistributed corpus inputs. Independent tree
+policy, description copying and C engine qualifications below still apply.
+
 ### Standalone driver checkpoint
 
 The exact selector vectors, requested-depth builder, and 256 KiB wire encoder
