@@ -26,14 +26,15 @@ Design: `docs/compression-parameters-design.md` and
 `docs/data-structures.md`. Pure reference profile inspection is distinct from
 operational numeric compression; the existing named policies remain unchanged.
 Module 9 completion and its exact validation boundaries are recorded in
-`docs/progress.md`; implementation now proceeds through these items in order.
+`docs/progress.md`. Scalar and live-context checkpoints can proceed independently
+after oracle capture; each completed item receives its own verified commit.
 
 - [x] Analyze requested/resolved value records, exact pinned semantics, live configuration boundaries, and subsequent search/storage milestones.
 - [x] Freeze pinned C oracle fixtures for bounds, presets, scalar resolution, mutation failures, and reset outcomes before implementing their Rust counterparts.
 - [x] Add allocation-free validated parameter records, source-size and reference-strategy types, and checked mutation boundaries.
 - [ ] Add attributed preset tables and internal tier/level/acceleration selection without changing current compression policies.
 - [ ] Implement complete parameter adjustment and pure level/request queries, preserving explicit overrides, source hints, platform bounds, and checked size arithmetic.
-- [ ] Add atomic supported encoder configuration replacement at the documented pre-header boundary.
+- [x] Add atomic supported encoder configuration replacement at the documented pre-header boundary.
 - [ ] Add parameter-only and full encoder reset, verifying phase, pledge, dictionary/prefix release, retained workspace, and allocator ownership.
 - [ ] Port matching official scalar/lifecycle assertions, preserve default output fingerprints, and update the inventory without promoting blocked numeric execution.
 - [ ] Run the safe/individual/all-feature, no_std, Clippy, formatting, oracle, and appropriate width checks; record precise completion and remaining gaps.

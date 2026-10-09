@@ -303,3 +303,11 @@ are checked with explicit exclusions for unimplemented operations. Presets,
 adjustment and complete query resolution remain separate upcoming items; see
 [parameter validation](compression-parameters-validation.md) and
 [runnable usage](parameter-usage.md).
+
+The independent live configuration checkpoint adds `Encoder::set_options` at
+the clean pre-header boundary. Failure preserves the complete context without
+poisoning it; success retains dictionary/prefix selection and allocator owners.
+Safe/all encoder suites each pass 22 tests, the new boundary/ownership tests pass
+four additional feature/std configurations, and 36 configured frames pass exact
+independent C decoding across safe/all release builds. Default frame bytes remain
+unchanged. Parameter reset and full reset remain separate work items.

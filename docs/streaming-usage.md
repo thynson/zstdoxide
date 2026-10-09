@@ -44,6 +44,43 @@ keeps the frame open. Finish returns `FrameFinished` only after the final block
 and checksum drain. A repeated empty Finish is idempotent. Start another frame
 with `reset()` or validated `reset_with_options(options)`.
 
+## Replacing settings before a frame
+
+`set_options(options)` replaces all supported options at a fresh configuration
+boundary. It preserves the selected dictionary or unclaimed prefix, buffers and
+allocator owners, and does not allocate. A boundary exists before the first
+`process` call or after session reset. Even a process call with empty input and
+output starts the header and closes that boundary.
+
+```rust
+use zstdoxide::{CompressionStrategy, Encoder, EncoderOptions, EndDirective, Error};
+
+let mut encoder = Encoder::new();
+let options = EncoderOptions {
+    strategy: CompressionStrategy::Chain,
+    window_log: 16,
+    checksum: false,
+    ..EncoderOptions::default()
+};
+encoder.set_options(options)?;
+assert_eq!(encoder.options(), options);
+
+let invalid = EncoderOptions { window_log: 9, ..options };
+assert_eq!(encoder.set_options(invalid), Err(Error::InvalidParameter));
+assert_eq!(encoder.options(), options);
+
+encoder.process(&[], &mut [], EndDirective::Continue)?;
+assert_eq!(encoder.set_options(options), Err(Error::InvalidState));
+assert_eq!(encoder.options(), options);
+# Ok::<(), zstdoxide::Error>(())
+```
+
+Rejected replacement leaves the whole session unchanged, including any pending
+Flush/Finish and its poison state. It does not cancel a frame. To discard a
+session and install validated settings together, use `reset_with_options`.
+Reference numeric levels and reference strategies belong to parameter
+inspection; this method accepts only the implemented named Rust policies.
+
 ## Selecting bounded match effort
 
 Set `EncoderOptions::strategy` to `CompressionStrategy::Chain` to search up to

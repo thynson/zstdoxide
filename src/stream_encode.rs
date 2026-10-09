@@ -204,6 +204,26 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
         self.options
     }
 
+    /// Replace supported settings before the first process call or after reset.
+    ///
+    /// Corresponds to the configuration-boundary role of
+    /// `ZSTD_CCtx_setParametersUsingCCtxParams`, restricted to this encoder's
+    /// implemented frame options and named Rust strategies. An active, finished,
+    /// or failed session returns [`Error::InvalidState`] before validating the
+    /// options. At a clean boundary, invalid options return
+    /// [`Error::InvalidParameter`]. Either error leaves the entire context
+    /// unchanged and does not poison a healthy session.
+    ///
+    /// This operation preserves dictionary/prefix selection, counters, buffers,
+    /// and their allocator owners. It neither allocates nor resets a session.
+    /// Unlike individual C effort setters, it cannot alter requested settings
+    /// after frame processing starts, even if no input or output was transferred.
+    pub fn set_options(&mut self, options: EncoderOptions) -> Result<()> {
+        self.check_configuration_boundary()?;
+        self.options = options.validate()?;
+        Ok(())
+    }
+
     /// Source bytes accepted since the last reset.
     pub fn total_input(&self) -> u64 {
         self.total_input
@@ -528,6 +548,330 @@ mod tests {
     use alloc::vec;
     use core::num::NonZeroU64;
     use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    #[test]
+    fn set_options_applies_supported_fields_and_preserves_selected_handles() {
+        let dictionary = crate::Dictionary::from_bytes(include_bytes!(
+            "../tests/upstream/dictionaries/formatted.dict"
+        ))
+        .unwrap()
+        .into_shared();
+        let source = b"a supported configuration is applied before its frame starts";
+        for (strategy, window_log) in [
+            (CompressionStrategy::Greedy, 10),
+            (CompressionStrategy::Chain, 17),
+            (CompressionStrategy::Lazy, 31),
+        ] {
+            for flags in 0..8 {
+                let options = EncoderOptions {
+                    strategy,
+                    window_log,
+                    checksum: flags & 1 != 0,
+                    pledged_size: Some(source.len() as u64),
+                    include_content_size: flags & 2 != 0,
+                    include_dictionary_id: flags & 4 != 0,
+                };
+                let mut encoder = Encoder::new();
+                let mut reference = Encoder::with_options(options).unwrap();
+                if flags & 1 == 0 {
+                    encoder.set_dictionary(Some(dictionary.clone())).unwrap();
+                    reference.set_dictionary(Some(dictionary.clone())).unwrap();
+                } else {
+                    encoder.set_prefix(dictionary.clone()).unwrap();
+                    reference.set_prefix(dictionary.clone()).unwrap();
+                }
+                let owners = SharedDictionary::strong_count(&dictionary);
+                encoder.set_options(options).unwrap();
+                assert_eq!(encoder.options(), options);
+                assert_eq!(SharedDictionary::strong_count(&dictionary), owners);
+                assert_eq!(encoder.dictionary.is_some(), flags & 1 == 0);
+                assert_eq!(encoder.prefix.is_some(), flags & 1 != 0);
+                let encoded = finish(&mut encoder, source, 1);
+                assert_eq!(encoded, finish(&mut reference, source, 7));
+                let header = FrameHeader::parse(&encoded).unwrap().0;
+                assert_eq!(header.window_size, 1_u64 << window_log);
+                assert_eq!(header.has_checksum, options.checksum);
+                assert_eq!(
+                    header.content_size,
+                    options
+                        .pledged_size
+                        .filter(|_| options.include_content_size)
+                );
+                assert_eq!(
+                    header.dictionary_id,
+                    if options.include_dictionary_id {
+                        dictionary.id()
+                    } else {
+                        0
+                    }
+                );
+                assert_eq!(
+                    crate::decompress_with_dictionary(
+                        &encoded,
+                        &dictionary,
+                        crate::DecodeOptions {
+                            max_window_size: 1_u64 << window_log,
+                            ..crate::DecodeOptions::new(source.len())
+                        }
+                    )
+                    .unwrap(),
+                    source
+                );
+            }
+        }
+    }
+
+    /// Snapshot plain values, caller-visible state, and owned byte contents.
+    /// All snapshot allocations belong to the test's Global domain. Dictionary
+    /// addresses are compared only; the snapshot never dereferences a pointer.
+    fn reject_options_without_mutation<A: Allocator + Clone>(
+        encoder: &mut Encoder<A>,
+        options: EncoderOptions,
+        error: Error,
+    ) {
+        let snapshot = |encoder: &Encoder<A>| {
+            (
+                encoder.options,
+                (
+                    encoder.phase,
+                    encoder.header_started,
+                    encoder.checksum.digest(),
+                ),
+                (encoder.total_input, encoder.total_output),
+                encoder
+                    .latched
+                    .map(|latch| (latch.directive, latch.remaining)),
+                (
+                    encoder.block.to_vec(),
+                    encoder.pending.to_vec(),
+                    encoder.pending_position,
+                ),
+                (encoder.block.as_ptr(), encoder.pending.as_ptr()),
+                (
+                    encoder.block.capacity(),
+                    encoder.pending.capacity(),
+                    encoder.workspace.retained_capacity(),
+                ),
+                [
+                    encoder.dictionary.as_ref().map(SharedDictionary::as_ptr),
+                    encoder.prefix.as_ref().map(SharedDictionary::as_ptr),
+                    encoder
+                        .active_dictionary
+                        .as_ref()
+                        .map(SharedDictionary::as_ptr),
+                ],
+            )
+        };
+        let before = snapshot(encoder);
+        assert_eq!(encoder.set_options(options), Err(error));
+        assert_eq!(snapshot(encoder), before);
+    }
+
+    #[test]
+    fn set_options_rejects_each_started_phase_without_poisoning_or_mutation() {
+        let source = b"abcabcabcabcabcabc";
+        let dictionary = crate::Dictionary::from_bytes(include_bytes!(
+            "../tests/upstream/dictionaries/formatted.dict"
+        ))
+        .unwrap()
+        .into_shared();
+        for case in 0..9 {
+            let mut encoder =
+                Encoder::with_dictionary(EncoderOptions::default(), dictionary.clone()).unwrap();
+            let mut encoded = Vec::new();
+            let has_source;
+            if case == 7 {
+                encoded = finish(&mut encoder, source, 1);
+                has_source = true;
+                assert_eq!(encoder.phase, Phase::Finished);
+            } else {
+                let (input, capacity, directive) = match case {
+                    0 => (&[][..], 0, EndDirective::Continue),
+                    1 => (&[][..], 1, EndDirective::Continue),
+                    2 => (&source[..], 64, EndDirective::Continue),
+                    3 => (&source[..], 64, EndDirective::Flush),
+                    4 | 8 => (&source[..], 0, EndDirective::Flush),
+                    5 => (&source[..], 0, EndDirective::Finish),
+                    // The formatted ID has four bytes, so the full header is
+                    // ten bytes. Exhaust output exactly before the last block.
+                    6 => (&source[..], 10, EndDirective::Finish),
+                    _ => unreachable!(),
+                };
+                let mut output = [0; 64];
+                let progress = encoder
+                    .process(input, &mut output[..capacity], directive)
+                    .unwrap();
+                assert_eq!(progress.consumed, input.len());
+                encoded.extend_from_slice(&output[..progress.produced]);
+                has_source = !input.is_empty();
+                assert!(encoder.header_started);
+                assert_eq!(
+                    encoder.phase,
+                    if case == 6 {
+                        Phase::Finishing
+                    } else {
+                        Phase::Active
+                    }
+                );
+                if case == 8 {
+                    assert_eq!(
+                        encoder.process(&[], &mut [], EndDirective::Finish),
+                        Err(Error::InvalidState)
+                    );
+                    assert_eq!(encoder.phase, Phase::Failed);
+                }
+            }
+            for window_log in [9, 10, 32, 255] {
+                reject_options_without_mutation(
+                    &mut encoder,
+                    EncoderOptions {
+                        window_log,
+                        strategy: CompressionStrategy::Lazy,
+                        checksum: false,
+                        pledged_size: Some(999),
+                        include_content_size: false,
+                        include_dictionary_id: false,
+                    },
+                    Error::InvalidState,
+                );
+            }
+            if case == 8 {
+                assert_eq!(
+                    encoder.process(&[], &mut [], EndDirective::Finish),
+                    Err(Error::InvalidState)
+                );
+                encoder.reset();
+                encoded = finish(&mut encoder, source, 1);
+            } else {
+                if case == 4 {
+                    let mut output = [0; 128];
+                    let progress = encoder
+                        .process(&[], &mut output, EndDirective::Flush)
+                        .unwrap();
+                    assert_eq!(progress.status, StreamStatus::Flushed);
+                    encoded.extend_from_slice(&output[..progress.produced]);
+                }
+                encoded.extend_from_slice(&finish(
+                    &mut encoder,
+                    if has_source { &[] } else { source },
+                    1,
+                ));
+            }
+            assert_eq!(
+                crate::decompress_with_dictionary(
+                    &encoded,
+                    &dictionary,
+                    crate::DecodeOptions::new(source.len())
+                )
+                .unwrap(),
+                source
+            );
+        }
+    }
+
+    #[test]
+    fn set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged() {
+        let mut encoder = Encoder::new();
+        for window_log in [0, 9, 32, 255] {
+            reject_options_without_mutation(
+                &mut encoder,
+                EncoderOptions {
+                    window_log,
+                    checksum: false,
+                    pledged_size: Some(0),
+                    ..EncoderOptions::default()
+                },
+                Error::InvalidParameter,
+            );
+        }
+        // A pledge is a frame contract, not the reference query's SourceSize
+        // sentinel. This setter must preserve the existing live options domain.
+        let options = EncoderOptions {
+            pledged_size: Some(u64::MAX),
+            ..EncoderOptions::default()
+        };
+        encoder.set_options(options).unwrap();
+        assert_eq!(encoder.options(), options);
+        encoder.set_options(EncoderOptions::default()).unwrap();
+        assert_eq!(
+            finish(&mut encoder, b"default", 1),
+            finish(&mut Encoder::new(), b"default", 1)
+        );
+    }
+
+    #[test]
+    fn set_options_preserves_custom_owners_capacity_and_pending_allocation_failure() {
+        fn check<A: Allocator + Clone>(
+            allocator: A,
+            monitor: &zstdoxide_test_allocator::AllocationMonitor,
+        ) {
+            let dictionary_allocator = tracking().into_non_clone();
+            let dictionary_monitor = dictionary_allocator.monitor();
+            let dictionary =
+                crate::Dictionary::raw_in(b"dictionary content", &dictionary_allocator).unwrap();
+            let mut encoder = Encoder::with_dictionary_in(
+                EncoderOptions::default(),
+                dictionary.view(),
+                allocator,
+            )
+            .unwrap();
+            finish(&mut encoder, b"abcabcabcabc", 1);
+            encoder.reset();
+            let before = monitor.snapshot();
+            let dictionary_before = dictionary_monitor.snapshot();
+            let capacity = encoder.retained_capacity();
+            let pointers = (encoder.block.as_ptr(), encoder.pending.as_ptr());
+            assert!(monitor.fail_next());
+            for strategy in [
+                CompressionStrategy::Chain,
+                CompressionStrategy::Lazy,
+                CompressionStrategy::Greedy,
+            ] {
+                let options = EncoderOptions {
+                    strategy,
+                    window_log: 10,
+                    checksum: false,
+                    ..EncoderOptions::default()
+                };
+                encoder.set_options(options).unwrap();
+                assert_eq!(encoder.options(), options);
+                assert_eq!(
+                    encoder.dictionary.as_ref().unwrap().content(),
+                    dictionary.content()
+                );
+                assert_eq!(encoder.total_input(), 0);
+                assert_eq!(encoder.total_output(), 0);
+                assert_eq!(encoder.retained_capacity(), capacity);
+                assert_eq!((encoder.block.as_ptr(), encoder.pending.as_ptr()), pointers);
+                assert_eq!(monitor.snapshot(), before);
+                assert_eq!(dictionary_monitor.snapshot(), dictionary_before);
+            }
+            // Selecting Chain does not construct it. Its first frame setup is
+            // still the next allocation and must see the still-armed failure.
+            encoder
+                .set_options(EncoderOptions {
+                    strategy: CompressionStrategy::Chain,
+                    ..EncoderOptions::default()
+                })
+                .unwrap();
+            assert_eq!(
+                encoder.process(b"x", &mut [], EndDirective::Continue),
+                Err(Error::AllocationFailed)
+            );
+            drop(encoder);
+            monitor.assert_released();
+            drop(dictionary);
+            dictionary_monitor.assert_released();
+        }
+        let allocator = tracking();
+        let monitor = allocator.monitor();
+        check(allocator, &monitor);
+        let allocator = tracking().into_non_clone();
+        let monitor = allocator.monitor();
+        check(&allocator, &monitor);
+        drop(allocator);
+        monitor.assert_released();
+    }
 
     #[test]
     fn dictionary_header_widths_and_omission_preserve_dictionary_configuration() {
@@ -1236,8 +1580,13 @@ mod tests {
                     })
                     .unwrap();
                     let monitor = owner.monitor();
-                    let mut encoder =
-                        Encoder::with_dictionary_in(options, dictionary.view(), owner).unwrap();
+                    let mut encoder = Encoder::with_dictionary_in(
+                        EncoderOptions::default(),
+                        dictionary.view(),
+                        owner,
+                    )
+                    .unwrap();
+                    encoder.set_options(options).unwrap();
                     assert_eq!(
                         fragmented(&mut encoder, &input, 701, 257, true),
                         Err(Error::AllocationFailed),

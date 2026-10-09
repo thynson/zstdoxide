@@ -1,0 +1,306 @@
+{
+  "source_sha256": "3c0d31bca91906135338d09aa372e101f7c0d62e91aee578bd2f7b8da688597d",
+  "environment": {
+    "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-set-options-target",
+    "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+  },
+  "checks": [
+    {
+      "name": "safe-stream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "stream_encode::tests::"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-safe-stream.log",
+      "sha256": "cde753fe938a04feb89cc888bb76260e7a6f197da8e4cf4ec019bc5fadb98472",
+      "summaries": [
+        "test result: ok. 22 passed; 0 failed; 1 ignored; 0 measured; 453 filtered out; finished in 3.31s"
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.40s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-set-options-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 23 tests\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 22 passed; 0 failed; 1 ignored; 0 measured; 453 filtered out; finished in 3.31s\n\n"
+    },
+    {
+      "name": "all-stream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--all-features",
+        "--lib",
+        "stream_encode::tests::"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-all-stream.log",
+      "sha256": "df7a7bca979b925ad549d8bc6ef43f9433d9ff7cba3a2a06fda6a9c7d85c575a",
+      "summaries": [
+        "test result: ok. 22 passed; 0 failed; 1 ignored; 0 measured; 453 filtered out; finished in 3.48s"
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.17s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-set-options-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 23 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 22 passed; 0 failed; 1 ignored; 0 measured; 453 filtered out; finished in 3.48s\n\n"
+    },
+    {
+      "name": "no-default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--no-default-features",
+        "--lib",
+        "stream_encode::tests::set_options"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-no-default.log",
+      "sha256": "d3e8c94b5f3fd85b71f4b635929627e55060b44532ab80b52880cc98afc518e0",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 461 filtered out; finished in 0.32s"
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.97s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-set-options-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 4 tests\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 461 filtered out; finished in 0.32s\n\n"
+    },
+    {
+      "name": "no-default-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib",
+        "stream_encode::tests::set_options"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-no-default-all.log",
+      "sha256": "ec9f416c81578b3fc7d1cd43a89375a7b56a36944d933bab6004cb1f3f9f3e1f",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 461 filtered out; finished in 0.33s"
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.13s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-set-options-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 4 tests\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 461 filtered out; finished in 0.33s\n\n"
+    },
+    {
+      "name": "match-chain",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-match-chain",
+        "--lib",
+        "stream_encode::tests::set_options"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-match-chain.log",
+      "sha256": "66c67af5da3bc0759ff669c72974c2b0402392d0c01204dd675bc28fddabb8b3",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 485 filtered out; finished in 0.33s"
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.45s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-set-options-target/debug/build/zstdoxide/ef32ef0c462b872c/out/zstdoxide-ef32ef0c462b872c)\n\nrunning 4 tests\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 485 filtered out; finished in 0.33s\n\n"
+    },
+    {
+      "name": "dictionary",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-dictionary",
+        "--lib",
+        "stream_encode::tests::set_options"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-dictionary.log",
+      "sha256": "6f53410a53ebb737b87255755d0fc92d7d0b209a77b201d3247da246eb6bee5e",
+      "summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 485 filtered out; finished in 0.34s"
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.29s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-set-options-target/debug/build/zstdoxide/42c5e42647031de4/out/zstdoxide-42c5e42647031de4)\n\nrunning 4 tests\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 485 filtered out; finished in 0.34s\n\n"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 101,
+      "log": "/tmp/zstdoxide-module10-set-options-clippy.log",
+      "sha256": "d1195c3a197a92dc54cfb26e067f7f3052d8f5a2b7a83319f8f51bac38b88c7b",
+      "summaries": [],
+      "log_text": "    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nerror: very complex type used. Consider factoring parts into `type` definitions\n   --> src/parameters.rs:763:22\n    |\n763 |           let setters: [(\n    |  ______________________^\n764 | |             fn(&mut CompressionParameterRequest, u8) -> Result<()>,\n765 | |             u8,\n766 | |             u8,\n767 | |         ); 5] = [\n    | |_____________^\n    |\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/main/index.html#type_complexity\n    = note: `-D clippy::type-complexity` implied by `-D warnings`\n    = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`\n\nerror: could not compile `zstdoxide` (lib test) due to 1 previous error\n"
+    },
+    {
+      "name": "no-std-check",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-no-std-check.log",
+      "sha256": "0431cd3472cd9cca9bc515f8ae7619e31aabd922a353797ab684311b7a66dc3b",
+      "summaries": [],
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.79s\n"
+    },
+    {
+      "name": "oracle-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--release",
+        "--lib",
+        "stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-oracle-safe.log",
+      "sha256": "3aacb0746922b29568bcd26b97d51ff74eb659ea88c6555c7c74392bffecfaed",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 488 filtered out; finished in 0.11s"
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 7.07s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-set-options-target/release/build/zstdoxide/e1626a9536adb678/out/zstdoxide-e1626a9536adb678)\n\nrunning 1 test\nC decoded 18 custom allocator streams exactly across three strategies, empty/raw/prepared dictionaries, and both dictionary-ID policies\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 488 filtered out; finished in 0.11s\n\n"
+    },
+    {
+      "name": "oracle-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--lib",
+        "stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-oracle-all.log",
+      "sha256": "753d57731bc04d360e020d259aef431923b6f495e72893bf67175734fa8541ed",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 488 filtered out; finished in 0.10s"
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 6.63s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-set-options-target/release/build/zstdoxide/8fca094558319608/out/zstdoxide-8fca094558319608)\n\nrunning 1 test\nC decoded 18 custom allocator streams exactly across three strategies, empty/raw/prepared dictionaries, and both dictionary-ID policies\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 488 filtered out; finished in 0.10s\n\n"
+    },
+    {
+      "name": "clippy-final",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-clippy-final.log",
+      "sha256": "9f84680fce42aa9f420509ad783070db4693aeea89e29433e4fc0870d7ee6121",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.13s\n"
+    },
+    {
+      "name": "no-std-all-check",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-no-std-all-check.log",
+      "sha256": "ffd8613fd57d29cd6d48fd052cbde83862c2fe1acc6e8c16dd62ed08d28dee8e",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.37s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/stream_encode.rs"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/stream_encode.rs"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module10-set-options-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "status": "frozen: all final checks passed",
+  "initial_lint_failure": "Initial shared Clippy was blocked by concurrent parameters.rs:763 test-only type_complexity; owner fixed with a local alias; clippy-final passed.",
+  "owned_files": [
+    "src/stream_encode.rs"
+  ],
+  "production_change": "Encoder::set_options only; phase-first checked replacement at clean boundary, no reset/dictionary/allocator mutation.",
+  "tests": {
+    "new_regular": 4,
+    "safe_and_all_stream_suites": "22 passed, 1 explicit C oracle ignored per build; unchanged pre-migration encoded fingerprint passed",
+    "focused_configurations": [
+      "default",
+      "all-features",
+      "no-default",
+      "no-default with all12 unsafe flags",
+      "unsafe-match-chain",
+      "unsafe-dictionary"
+    ],
+    "explicit_C_replays": "safe and all-features release each1test/18frames exact; existing harness now callsset_options"
+  },
+  "running_sessions": [],
+  "original_evidence_sha256": "e2dffa04f69e9f4eb44ba26ea232c88b7fbfbcaaa21091098b22c615b4a1d153",
+  "documentation_checks": [
+    {
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-module10-doc-target python3 scripts/check_doc_examples.py docs/streaming-usage.md",
+      "exit_code": 0,
+      "passed": 3
+    },
+    {
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-module10-doc-target python3 scripts/check_doc_examples.py --all-features docs/parameter-usage.md docs/streaming-usage.md",
+      "exit_code": 0,
+      "passed_by_document": {
+        "docs/parameter-usage.md": 2,
+        "docs/streaming-usage.md": 3
+      }
+    }
+  ]
+}
