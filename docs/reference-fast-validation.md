@@ -357,3 +357,54 @@ review found no structural/serialization issue.
 [archive](evidence/2026-10-09-fast-rust-fixtures.tar.gz) retain overlays, provenance,
 commands, compiler, logs and runner. The i686 check is interpreted, not native
 foreign execution. No new C observation or production ownership is introduced.
+
+## Ordinary frame publication and captured headers
+
+The `fast-frame-publication` collection records 23 fixed ordinary C frame
+schedules plus four aligned whole-buffer comparisons, separately from eleven
+unfinished header captures. Its known-pledge no-dictionary helper uses explicit
+Fast parameters, ordinary Continue/End entry points and disabled splitting,
+workers, LDM and external sequences. Applied parameters and actual block limits
+are checked. The unchanged helper's capacities, initialized owners, source
+slack and replay were independently reviewed before its first capture.
+
+The main schedules contain 64 nonempty blocks: 26 raw, two RLE and 36 compressed.
+Ten raw candidates and both RLE candidates actually change pending repeat state
+while preserving committed state, establishing rollback witnesses rather than
+merely observing coincidentally equal repeats. The remaining two directed raw
+cases remain recorded non-witnesses. Five/six-byte inputs expose stale rather
+than fresh sequence state; seven bytes begins fresh construction. First uniform
+blocks are compressed in these normal-path observations. The window17/19 A/B/A
+pair exposes expiry versus retained matches. Full raw parser and wire triples
+remain distinct; no-dictionary FSE-valid-to-check demotion remains unobserved.
+
+Every capture fully C-decodes 27 frames and 2,275,346 source bytes. The eleven
+header-only contexts are abandoned after emitting metadata, without allocating
+the pledged huge source or claiming complete frames. Their bytes corroborate
+the Fast header's source-derived single-segment/window and FCS rules, including
+the eight-byte switch at `0xffffffff`. Whole-buffer equivalence is limited to
+the four explicitly compared schedules, not arbitrary flush boundaries.
+
+Original normal, independent normal regeneration and full-used-C sanitizer
+captures agree. The relocated portable normal/sanitizer campaign passes 106
+recorded compile/capture commands and compares every logical record and frame
+byte with the frozen collection. ASan/UBSan cover the helper plus 26 unchanged
+common/compress/decompress C units; assembly and LeakSanitizer are disabled.
+Native evidence is arm64 macOS, not a native 32-bit result.
+
+Offline checks bound gzip expansion, reject duplicate keys/trailing members,
+reconstruct source, candidates and tables, inspect raw/RLE bytes and frame
+boundaries, and bind the compressed bytes to captured C decoding. They do not
+implement another compressed decoder. Audited ordinary/optimized Python controls
+pass 148 checks: four positives, 144 expected rejections and no process attempts.
+Routine check scripts now include this semantic checker; the generic audit
+verifies 470 fixtures in thirteen collections. Generated Rust frame indices are
+ready for the separate normal-Cargo decode checkpoint.
+
+[Frame evidence](evidence/2026-10-09-fast-frame-publication.json) and its
+[compact archive](evidence/2026-10-09-fast-frame-publication.tar.gz) preserve
+reviewed sources, commands, records, initial setup diagnostics and checks.
+Before any recipe ran, runner fixes excluded an unrelated CRLF package script,
+removed an arbitrary source-count assumption and scoped the deprecation warning
+for deliberately selected APIs. No runtime recipe was changed to force success.
+This establishes ordinary C publication observations, not Rust Fast execution.
