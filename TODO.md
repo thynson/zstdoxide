@@ -62,7 +62,8 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Integrate bounded chain matching with dictionary/history eligibility and documented budgets.
 - [x] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
 - [x] Expose Lazy through the shared dictionary/history path and verify public ratio/lifetime contracts.
-- [ ] Port the original raw-block dictionary entropy lifetime schedule at zstreamtest.c:1831.
+- [x] Port the original raw-block dictionary entropy lifetime schedule at zstreamtest.c:1831.
+- [ ] Include the exact dictionary lifetime fixture and both original campaign oracles in reproducible audits.
 - [ ] Port the original six-byte flush and dictionary offset schedule at zstreamtest.c:1884.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.
 - [x] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.

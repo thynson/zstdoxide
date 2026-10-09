@@ -1,0 +1,112 @@
+{
+  "upstream_repository": "https://github.com/facebook/zstd",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "case": "tests/zstreamtest.c:1831-1881",
+  "prerequisites": [
+    "tests/zstreamtest.c:145-166",
+    "tests/zstreamtest.c:263-302",
+    "tests/zstreamtest.c:1652-1718"
+  ],
+  "source_sha256": {
+    "tests/zstreamtest.c": "ad409d3017fab12a889320d2de5354f23e0b8a998f44ad37f3b50f14d0e6682a",
+    "programs/datagen.c": "fdc1e21f374f7ce3d45f26702583ed2c606f9b5b7124c673bb3a4cbb09a62397",
+    "programs/datagen.h": "fce55139b80280516108ca2a0377b43239389c2e7a927a1c804f9e01d10a715c",
+    "lib/zdict.h": "abacadb94e3f79e591f4b1648e839b0160fbf4291211fd01bdba1380269b245c",
+    "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b"
+  },
+  "generator": "tests/upstream/entropy-lifetimes/oracle.c",
+  "generator_sha256": "2966b51dd20c1d9730f1d66c7e29c64f674807c74c03c3a67d64811e283d5018",
+  "compile_arguments": [
+    "cc",
+    "-std=c99",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I",
+    "$ZSTD_UPSTREAM/programs",
+    "-I",
+    "$ZSTD_UPSTREAM/lib",
+    "tests/upstream/entropy-lifetimes/oracle.c",
+    "$ZSTD_UPSTREAM/programs/datagen.c",
+    "$ZSTD_UPSTREAM/lib/libzstd.a",
+    "-o",
+    "$OUTPUT/oracle"
+  ],
+  "generation_arguments": [
+    "$OUTPUT/oracle",
+    "generate",
+    "$OUTPUT"
+  ],
+  "training": {
+    "cn_buffer_size": 10485760,
+    "compressibility": 0.5,
+    "literal_probability": 0.0,
+    "seed": 0,
+    "sample_prefix_size": 3495253,
+    "sample_size": 16384,
+    "sample_count": 214,
+    "last_sample_size": 5461,
+    "dictionary_capacity": 49152,
+    "function": "ZDICT_trainFromBuffer"
+  },
+  "fixture": {
+    "path": "original-default.dict",
+    "size": 49152,
+    "sha256": "d94b5d23148b133538a478ee6498c7a161b9225b305ca9fff8a45548f0e566c2"
+  },
+  "independent_c_result": {
+    "dictionary_size": 49152,
+    "dictionary_id": 2004100296,
+    "header_size": 147,
+    "window_log": 17,
+    "sample_count": 214,
+    "last_sample_size": 5461,
+    "training_fnv1a": "113bd69cda9b8c20",
+    "cases": [
+      {
+        "maximum_prior_window_log": 26,
+        "rng_draws": 339966,
+        "seed": 437141494,
+        "source_size": 262144,
+        "source_fnv1a": "0b06fdac2fcf494a",
+        "frame_size": 231058,
+        "frame_window": 262144
+      },
+      {
+        "maximum_prior_window_log": 29,
+        "rng_draws": 399960,
+        "seed": 3173672436,
+        "source_size": 262144,
+        "source_fnv1a": "e617038687c0164c",
+        "frame_size": 233715,
+        "frame_window": 262144
+      }
+    ]
+  },
+  "external_outputs": {
+    "source-small.bin": {
+      "size": 262144,
+      "sha256": "3b371bd0a85d153751ca614bc894d93129aa6512f588364b356ae804388e1ced"
+    },
+    "source-big.bin": {
+      "size": 262144,
+      "sha256": "5264528780946a9904c23fe7f7c38c0e780a859a260f180923aba99729810624"
+    },
+    "original-small.zst": {
+      "size": 231058,
+      "sha256": "1b49af9e084ca0875b383ffaa5175df03a0dabe4b698ab367e40082f6f85cb4e"
+    },
+    "original-big.zst": {
+      "size": 233715,
+      "sha256": "59034f350e8b653f5dbce3c45f4eb30cd3dea503bb913d49df50274681238d67"
+    }
+  },
+  "rust_adaptations": [
+    "Owned shared full-dictionary preparation instead of borrowed by-reference CDict storage.",
+    "Greedy/Chain/Lazy are independent Rust policies, not C numeric level 3.",
+    "Use window_log 18 for the actual 262144-byte original frame window; the initial C CDict parameters report windowLog 17.",
+    "The fixture pins the default 50 percent training profile; other upstream -P settings are not implied."
+  ],
+  "license": "BSD-3-Clause option; see root LICENSE.zstd"
+}

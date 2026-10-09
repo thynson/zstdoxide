@@ -11421,10 +11421,13 @@
           "line_end": 1883,
           "label": "test%3i : dictionary + uncompressible block + reusing tables checks offset table validity:",
           "status": "partial",
-          "reason": "Prepared tables are immutable defaults and each working table is independently replaced; repeat tables restore each frame. The original dictionary plus raw/small-block compressor schedules and offset-table optimization assertions remain unported.",
+          "reason": "Exact default trained dictionary, both prior-RNG-state paths, original RDG regions and serialized dictionary ranges pass with raw/compressed block boundaries and actual dictionary dependence. Independent C baseline and bidirectional decoding pass. Rust uses owned shared preparation and Greedy/Chain/Lazy policies; numeric level 3, by-reference ownership and nondefault training profiles remain qualified.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#first_block_repeat_sequence_tables_are_restored_for_every_prepared_frame",
-            "src/sequences.rs#prepared_tables_and_repcodes_are_borrowed_until_each_table_is_replaced"
+            "src/sequences.rs#prepared_tables_and_repcodes_are_borrowed_until_each_table_is_replaced",
+            "tests/upstream_entropy_lifetimes.rs#original_uncompressible_dictionary_campaign_after_small_prior_window_sweep",
+            "tests/upstream_entropy_lifetimes.rs#original_uncompressible_dictionary_campaign_after_big_prior_window_sweep",
+            "tests/upstream_entropy_lifetimes.rs#original_c_dictionary_and_raw_block_campaign_match_rust_bytes_and_decode"
           ]
         },
         {
