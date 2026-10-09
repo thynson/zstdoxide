@@ -564,3 +564,18 @@ and owned test vectors need no unsafe backend; source, sequence and table counts
 are checked before fallible reservation. Normal Cargo tests consume the derived
 binary without JSON/gzip dependencies or processes. This adapter excludes the
 partial headers and is not a compressed-frame decoder.
+
+`FastMatchState<'a, A>` will bind one borrowed whole source to an admitted plan
+and exactly three existing owners: the sampled table, literal vector and intent
+vector. Its cursor counts successfully parsed source, not published wire state.
+The retained prefix floor advances from the block start; the parser independently
+derives the stronger ordinary-match floor from the block end. Tiny blocks advance
+source position without replacing stale scratch or modifying the table. Empty
+continuations change nothing. A parser failure poisons this private one-shot
+state, because scratch and sampled cells may have changed. Argument rejection
+before parsing preserves usability. Each next call receives the enclosing
+entropy context's committed wire triple; no duplicate committed triple exists.
+Construction moves complete owners and resets the table once for the borrowed
+source. This composite adds no unsafe representation; table access retains its
+existing individual feature. The later frame emitter requests the next block
+only after publishing the previous block and drops both owners on any error.

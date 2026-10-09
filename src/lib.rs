@@ -56,6 +56,8 @@ mod fast_oracle_fixture;
 #[cfg(test)]
 mod fast_parse;
 mod fast_plan;
+#[cfg(test)]
+mod fast_state;
 mod frame;
 mod fse;
 mod fse_encode;

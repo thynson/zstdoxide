@@ -60,6 +60,22 @@ impl FastExecutionPlan {
         Self::admit(parameters, source_len, source_size)
     }
 
+    /// Compare private parser state at the exact applied C oracle parameters.
+    /// The ordinary-frame helper calls the internal begin API with explicit
+    /// parameters, bypassing public known-source adjustment. This test boundary
+    /// retains all operational admission checks and never changes that resolver.
+    #[cfg(test)]
+    pub(crate) fn from_observed_parameters(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+    ) -> Result<Self> {
+        Self::admit(
+            parameters,
+            source_len,
+            Self::checked_source_size(source_len)?,
+        )
+    }
+
     fn checked_source_size(source_len: usize) -> Result<u64> {
         let source_size = u64::try_from(source_len).map_err(|_| Error::ResourceLimit)?;
         if source_size == u64::MAX {
