@@ -28,3 +28,4 @@ cargo test --release --all-features --test upstream_dictionary_encode -- --ignor
 cargo test --release --all-features --test upstream_training -- --ignored
 cargo test --release --all-features --test upstream_formatted_training -- --ignored
 cargo test --release --all-features --lib official_fse_and_huffman_readers_accept_generated_headers -- --ignored
+cargo test --release --all-features --test upstream_trained_dictionary_fuzz official_training_sample_loop_matches_every_selected_range -- --ignored
