@@ -432,3 +432,34 @@ keys, every representative allocation failure, default byte fingerprints and
 pinned C decoding. Compare safe and unsafe implementations on identical default
 and tuned deterministic workloads, reporting memory and search-cost differences
 separately from accessor timings.
+
+
+## Module 12: bounded reference Fast profile execution
+
+Design: [reference Fast execution](reference-fast-design.md). This opt-in
+whole-buffer path reuses pinned scalar resolution and implements admitted Fast
+profiles; it does not rename independent Greedy or alter named-policy defaults.
+Source borrowing, lookup/store ordering and explicit wire-repeat intent are
+specified before implementation. All codec components remain no_std plus alloc.
+
+| Structure | Ownership and invariants | Upstream counterpart / backend |
+| --- | --- | --- |
+| `FastExecutionPlan` | Shared plain value record. Resolve known input size before allocation; admit Fast, window logs 10–20, hash logs 6–18, selected keys 4–7, checked block/window/step/resource bounds. Unsupported strategies and resources fail explicitly. Chain/search scalars remain valid but have no invented Fast consumer. | `ZSTD_compressionParameters` and Fast literal/minimum-gain policies; no artificial unsafe variant. |
+| `FastMatchState<A>` | Own one existing `MatchTable<A>` with its exact allocator. Persist sampled entries across blocks, clear once per frame. Whole-source positions are checked `usize` indices distinct from EMPTY; wider counters require checked conversion. No dense history reseeding or duplicate retained-output ring. | `ZSTD_MatchState_t` hash/window role; reuse safe / `unsafe-match-table` access with independently checked lookup and store. |
+| `BorrowedFastInput<'a>` | Borrow initialized original input and a checked current-block range. Validate every key/match extent, block-end-derived low limit, source position and distance before access. Own no bytes; returned output keeps no borrow. | Contiguous no-dictionary prefix, replacing pointers with indices; safe borrowed representation. |
+| `FastParseCursor` | Plain anchor, candidate positions/buckets, step and next-step boundary. Checked progress, exact sampling/update order and eight-byte reference search margin even for narrower selected keys. | `ZSTD_compressBlock_fast_noDict_generic` search pipeline; no separate unsafe parser. |
+| Explicit offset intent / checked sequence plan | Plain explicit-distance or repeat-code choice. Validate literal-zero semantics, exact selected wire value and its next triple. Preserve existing canonical named planning. | `ZSTD_storeSeq` offBase; share safe validated records. |
+| Pending Fast block state | Reuse allocator-owned literal/sequence/entropy buffers without invoking named search preparation. `SequenceEncoder` owns the authoritative committed wire-repeat triple; only accepted compressed output publishes pending entropy tables, literal tree and repeats. Raw/RLE discard those candidates. Sampled hash updates for initialized emitted source have a separate lifetime. | `nextCBlock` versus `prevCBlock`; existing backend families retain their own safety contracts. |
+
+Reference Fast mutates only its first two parser repeat cells. Capture those raw
+observations separately from the full triple reconstructed by replaying actual
+wire offset values; do not assert that its untouched third cell is decoder state.
+The first milestone uses caller-owned whole-input indices; future streaming
+coordinates beyond `usize` require their own conversion/rescaling design.
+
+Allocation admission precedes any output/workspace request. Output retains its
+original allocator and every scratch vector its exact owner; owner cloning is
+explicit. On failure, drop all unreturned output and scratch without changing
+input or request. Compare every observed allocation-failure ordinal, safe and
+unsafe table access, named default frames, and actual C parser/frame observations
+before publishing numeric compression APIs.

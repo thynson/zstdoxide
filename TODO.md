@@ -53,6 +53,24 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 Numeric profile execution, additional reference algorithms, long-distance matches,
 threading, static workspaces and the remaining official migration stay open.
 
+## Module 12: bounded reference Fast profile execution
+
+Design: `docs/reference-fast-design.md` and `docs/data-structures.md`.
+This is the next implementation module after Module 11 validation/measurement.
+Existing named APIs and default frame bytes remain compatibility inputs.
+
+- [x] Analyze reference Fast ownership, sampling, repeat publication, whole-buffer profile admission and independently review the implementation boundaries.
+- [ ] Freeze attributed direct-C Fast observations and normal-frame publication witnesses before Rust Fast implementation.
+- [ ] Add a plain checked Fast execution plan using existing known-size request resolution and explicit strategy/resource admission.
+- [ ] Extend private small hash layouts and separate checked table lookup/store for persistent sampled Fast state, preserving named bounds and both access backends.
+- [ ] Add checked explicit wire-offset intent and transactional sequence preparation while retaining canonical named planning.
+- [ ] Implement safe single-block Fast sampling, repeat probes, backward/forward matches, tails and acceleration against frozen observations.
+- [ ] Preserve sampled Fast state across blocks with checked whole-source ranges and raw/RLE/compressed transition coverage.
+- [ ] Integrate Fast literal policy, minimum-gain decisions and truthful source/window headers without altering named output.
+- [ ] Publish allocator-aware level/request one-shot entry points with complete failure-ordinal, ownership and no_std coverage.
+- [ ] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.
+- [ ] Validate feature/platform boundaries and measure a frozen Fast-specific deterministic safe/unsafe benchmark before recording this bounded module complete.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
