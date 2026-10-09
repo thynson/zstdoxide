@@ -509,3 +509,43 @@ The source anchor is now partial rather than blocked. Its original live CCtx
 setter/context and caller destination-capacity behavior remain explicit gaps;
 no C entropy byte/size identity is imposed on the independent Rust encoder.
 The complete migration gate therefore remains open.
+
+## Complete public Fast frame interoperability
+
+Two fresh campaigns each validate the same 92 pinned source/request recipes:
+79 admitted, 11 unsupported-strategy and two resource-limit cases. Safe and
+all-feature Rust builds produce identical complete responses and frames.
+Each successful campaign independently C-decodes 316 Rust frames, Rust-decodes
+316 C frames, and compares 64,935,672 decoded bytes. Normal and helper-sanitized
+C builds produce the same 158 complete frames. Thirty-two malformed protocol
+requests must exit exactly 2, including concatenated empty frames and skippable
+tails. All source, compiler and case records agree across both captures.
+
+The C helper uses fresh public parameter setters and known-size `compress2`;
+it does not mislabel requested parameters as an applied-context observation.
+Only its adapter is instrumented by ASan/UBSan; the pinned static codec archive
+is uninstrumented and leak detection is disabled. Rust and C compressed bytes,
+block choices and ratios are allowed to differ. All frames must have known
+content size, no checksum/dictionary, and exact single-frame exhaustion.
+
+The initial recipe incorrectly expected ResourceLimit for an unmodified level-1
+request with 1,048,577 source bytes. Independent review of `clevels.h:29` and the
+pre-existing preset fixture established windowLog19 and successful admission.
+Only the row name/expectation changed; its input/request and all other recipes
+remained unchanged. The original stopped campaign is preserved. No production
+codec fix was needed. Sixteen offline controls and focused Rust lint/format/
+no-default-feature checks also pass.
+
+See [evidence](evidence/2026-10-09-reference-fast-interop.json) and the
+[64-member archive](evidence/2026-10-09-reference-fast-interop.tar.gz). The archive
+retains command evidence and hashes without duplicating every binary response;
+the omission manifest states their exact sizes and hashes. The coordinator
+verified all archive members and the current source manifest. The standard
+check runs the offline recipe plan; the external-oracle script runs the complete
+campaign into a fresh retained temporary directory. Direct reproduction:
+
+```sh
+python3 scripts/check_reference_fast_interop.py --check-plan
+python3 scripts/check_reference_fast_interop.py \
+  --upstream /path/to/zstd-v1.5.7 --output /tmp/fresh-fast-interop
+```

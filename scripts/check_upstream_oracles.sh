@@ -65,3 +65,7 @@ cargo test --release --all-features --test upstream_parameter_lifecycle official
 # Module 11 operational named search controls and source-backed ordering subsets.
 cargo test --release --all-features --test match_search_options official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames -- --ignored --exact
 cargo test --release --all-features --test upstream_search_lifecycle official_codec_decodes_both_original_dictionary_orders_for_each_named_policy -- --ignored --exact
+
+# Module 12 complete admitted Fast frames, with a fresh retained evidence root.
+fast_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-fast-interop.XXXXXX")
+python3 scripts/check_reference_fast_interop.py --upstream "$ZSTD_UPSTREAM" --output "$fast_output/capture"
