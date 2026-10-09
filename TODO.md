@@ -60,6 +60,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Freeze the original simple-round-trip fuzz selector order, tail boundaries and C capacity observations without consuming unimplemented advanced branches.
 - [x] Port admitted simple-round-trip profiles and the original empty/30-byte numeric subsets with explicit unsupported counts and remaining context/capacity gaps.
 - [x] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.
+- [x] Add a clock-free-by-default nine-case Fast benchmark with separate allocation accounting, independent corpus fingerprints and reviewed safe/unsafe result validation.
 - [ ] Validate feature/platform boundaries and measure a frozen Fast-specific deterministic safe/unsafe benchmark before recording this bounded module complete.
 
 ## Roadmap

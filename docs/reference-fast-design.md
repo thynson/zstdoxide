@@ -371,3 +371,37 @@ drops all unreturned output and scratch without changing caller input/request.
 Reference parser observations establish decisions for the same input and state;
 independent entropy can select different block kinds and hence different later
 committed repeats. Do not infer universal C frame-byte or block-kind identity.
+
+## Fast measurement contract
+
+The bounded one-shot benchmark has nine predetermined cases: three sources
+(32 KiB skewed literals with periodic copies, a 384 KiB A/B/A history source,
+and four 128 KiB mixed blocks) crossed with level 1, level -7, and an explicit
+Fast windowLog17/hashLog14/minMatch4 request. The explicit window deliberately
+changes eligible history; it is not assumed to improve compression or speed.
+An independent Python generator pins each complete source before timing.
+No dictionary or live-context claim follows from these one-shot measurements.
+
+The benchmark owns each generated source in an ordinary Vec and borrows it
+for all cases. Requests are plain values. The production API owns every
+per-call allocation; a separate TrackingAllocator call records allocation
+counts, peak requested/returned bytes, returned-output residency, and complete
+release. Its ledger, hashing, decoding and JSON formatting are never timed.
+These test-only records need no unsafe implementation. All codec structures
+retain their existing individual feature switches.
+
+Clock-free smoke is the default. An explicit timed run measures Global-backed
+compression, including request resolution, fresh workspace construction and
+output destruction, after untimed warmup. Each of five samples runs for at
+least 100 ms. Complete frame equality and full decoded-source equality are
+checked outside clocks. Every unsafe feature is built separately, followed by
+all features together, on identical source/request cases. A feature that is
+not used by this encoder may affect untimed decoding or no executed path;
+its timing ratio is not evidence that its individual optimization ran.
+
+Build all configurations before timing; run measurements sequentially while
+other project jobs are stopped. Record compiler, target, effective environment,
+source hashes, executable hashes, configuration order, raw sample durations
+and iterations. Recheck input/source identity before and after every command.
+Report each case's compressed size, allocation survey and timing distribution;
+do not generalize one workload or one run into a universal unsafe speedup.
