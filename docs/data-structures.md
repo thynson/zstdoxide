@@ -214,3 +214,8 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   capacity, frame boundaries, and the exact allocator-bearing owner. Custom
   storage, distinct-domain swaps, failure recovery, and Global parity are
   verified in [allocator-validation.md](allocator-validation.md).
+- `RingHistory<A: Allocator = Global>` retains its exact allocator without a
+  Clone requirement. Window growth reserves before clearing old state; smaller
+  windows, emission, wraparound, and reset reuse the same allocation. Owned and
+  borrowed non-Clone cases preserve the existing logical-position and unsafe
+  store invariants, including failed growth after wraparound.

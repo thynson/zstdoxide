@@ -3,6 +3,7 @@
 //! Corresponds to prefix/window retention in upstream `ZSTD_DCtx` and the
 //! match-copy part of `ZSTD_execSequence`. No caller buffer is retained.
 
+use alloc::alloc::{Allocator, Global};
 use alloc::vec::Vec;
 
 use crate::{Error, Result};
@@ -13,19 +14,32 @@ use crate::{Error, Result};
 /// identifies the oldest byte and the next slot to overwrite. The initialized
 /// length never exceeds `window`, which never exceeds `maximum_window`.
 /// `produced` is independent of the physical index and never wraps.
-pub(crate) struct RingHistory {
-    bytes: Vec<u8>,
+/// The vector retains the exact allocator that owns its storage. Moving the
+/// complete ring moves that owner; no allocator cloning or equivalence is needed.
+pub(crate) struct RingHistory<A: Allocator = Global> {
+    bytes: Vec<u8, A>,
     head: usize,
     window: usize,
     maximum_window: usize,
     produced: u64,
 }
 
-impl RingHistory {
+impl RingHistory<Global> {
     /// Create an empty context without allocating the maximum window eagerly.
     pub(crate) fn new(maximum_window: usize) -> Self {
+        Self::new_in(maximum_window, Global)
+    }
+}
+
+impl<A: Allocator> RingHistory<A> {
+    /// Create an empty ring with its own allocator, without allocating bytes.
+    ///
+    /// The allocator may be an owned non-Clone value or an external reference.
+    /// Reservation, storage retention, and final deallocation use that exact
+    /// retained owner. No reference into the ring itself is created.
+    pub(crate) fn new_in(maximum_window: usize, allocator: A) -> Self {
         Self {
-            bytes: Vec::new(),
+            bytes: Vec::new_in(allocator),
             head: 0,
             window: 0,
             maximum_window,
@@ -112,8 +126,9 @@ impl RingHistory {
             // < len. Once full, len == window and head < window: the first
             // branch subtracts into 0..len; the second has
             // 1 <= distance - head <= window and also yields 0..len.
-            // The Vec owns its live allocation, aligned for u8, and every
-            // element below len is initialized. The shared borrow of self
+            // The Vec retains the allocator owning its live u8 allocation,
+            // correctly aligned with every element below len initialized.
+            // The shared borrow of self
             // prevents mutation or reallocation for this read and permits no
             // conflicting exclusive alias. Pointer arithmetic stays inside
             // this allocation; read copies one byte without retaining a
@@ -142,8 +157,9 @@ impl RingHistory {
                 // capacity >= window. Constructors and every store preserve
                 // initialized len <= window, head == len before filling, and
                 // head < window once full. All metadata and byte are initialized.
-                // self exclusively owns the live Vec allocation, correctly
-                // aligned for u8; no history references or pointers escape.
+                // self exclusively owns the Vec and its allocator, keeping
+                // the allocation live and correctly aligned for u8. No history
+                // references or pointers escape.
                 // The exclusive borrow prevents conflicting access, including
                 // input aliasing this allocation, and no reallocation occurs.
                 unsafe { self.store_unchecked(byte) };
@@ -171,8 +187,8 @@ impl RingHistory {
                 // start_frame bounded window by maximum_window and reserved
                 // capacity >= window; constructors and stores preserve
                 // len <= window and the head invariant.
-                // The owned Vec remains live and uniquely borrowed by self;
-                // no history references escape. Its u8 prefix is initialized,
+                // The Vec and its allocator remain live and uniquely borrowed
+                // by self; no history references escape. The prefix is initialized,
                 // and the byte value is initialized. No reallocation occurs.
                 unsafe { self.store_unchecked(byte) };
             }
@@ -204,8 +220,8 @@ impl RingHistory {
                 // start_frame bounded window by maximum_window and reserved
                 // capacity >= window; constructors and stores preserve
                 // len <= window and the head invariant.
-                // The owned Vec remains live and uniquely borrowed by self;
-                // no history references escape. Its u8 prefix is initialized,
+                // The Vec and its allocator remain live and uniquely borrowed
+                // by self; no history references escape. The prefix is initialized,
                 // and the byte value is initialized. No reallocation occurs.
                 unsafe { self.store_unchecked(byte) };
             }
@@ -254,8 +270,9 @@ impl RingHistory {
                 // 1 <= distance - head <= window, so window minus that value
                 // lies in 0..len. Stores preserve these invariants each turn.
                 // The Vec's initialized u8 prefix is live, aligned for u8, and
-                // owned by self. This read copies the byte and leaves no borrow
-                // or pointer alive across the following exclusive store.
+                // owned by self through its retained allocator. This read copies
+                // the byte and leaves no borrow or pointer alive across the
+                // following exclusive store.
                 unsafe { self.bytes.as_ptr().add(source).read() }
             };
             #[cfg(not(feature = "unsafe-ring-history"))]
@@ -267,8 +284,8 @@ impl RingHistory {
                 // start_frame bounded window by maximum_window and reserved
                 // capacity >= window; constructors and stores preserve
                 // len <= window and the head invariant.
-                // The owned Vec remains live and uniquely borrowed by self;
-                // no history references escape. Its u8 prefix is initialized,
+                // The Vec and its allocator remain live and uniquely borrowed
+                // by self; no history references escape. The prefix is initialized,
                 // and the byte value is initialized. No reallocation occurs.
                 unsafe { self.store_unchecked(byte) };
             }
@@ -316,8 +333,9 @@ impl RingHistory {
     ///   for this call. No other reference or pointer may access that allocation
     ///   during the write. The vector's existing prefix and `byte` must be fully
     ///   initialized; any unused capacity need not be initialized.
-    /// - The allocation must be the Vec's own valid u8 allocation, with its
-    ///   required alignment (one). All struct fields must be initialized.
+    /// - The allocation must be the Vec's own valid u8 allocation, kept live by
+    ///   its retained allocator, with its required alignment (one). All struct
+    ///   fields must be initialized. No allocator operation occurs in this call.
     ///
     /// These requirements put the write inside the allocation. For a growing
     /// prefix, the newly initialized byte is immediately included in its length.
@@ -330,7 +348,8 @@ impl RingHistory {
         // SAFETY: the contract gives capacity >= window > 0. If growing,
         // head == len < window <= capacity; otherwise head < window == len.
         // Thus pointer.add(head) addresses one writable u8 inside this live
-        // allocation, with alignment one, and write initializes that byte.
+        // allocation, kept live by the Vec's retained allocator, with alignment
+        // one, and write initializes that byte.
         // Exclusive ownership excludes conflicting access or aliases. The
         // pointer is temporary and no allocation or reallocation occurs.
         // In the growing case, len + 1 <= window <= capacity, cannot overflow,
@@ -356,8 +375,9 @@ impl RingHistory {
 mod tests {
     use super::*;
     use alloc::vec;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
-    fn seed(history: &mut RingHistory, bytes: &[u8]) {
+    fn seed<A: Allocator>(history: &mut RingHistory<A>, bytes: &[u8]) {
         let mut output = vec![0; bytes.len()];
         assert_eq!(history.append(bytes, &mut output).unwrap(), bytes.len());
         assert_eq!(output, bytes);
@@ -686,5 +706,326 @@ mod tests {
             assert_eq!(history.retained_capacity(), capacity);
         }
         assert_eq!(history.frame_len(), 4096 * 37);
+    }
+
+    #[test]
+    fn custom_owned_and_borrowed_non_clone_allocators_keep_their_identity() {
+        fn moved<A: Allocator>(mut history: RingHistory<A>) -> RingHistory<A> {
+            history.commit(b"d").unwrap();
+            history
+        }
+
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let identity = owner.identity();
+        let monitor = owner.monitor();
+        let mut history = RingHistory::new_in(16, owner);
+        assert_eq!(monitor.snapshot().attempts, 0);
+        assert_eq!(history.bytes.allocator().identity(), identity);
+        history.start_frame(3).unwrap();
+        history.commit(b"abc").unwrap();
+        let pointer = history.bytes.as_ptr();
+        let history = moved(history);
+        assert_eq!(history.bytes.as_ptr(), pointer);
+        assert_eq!(history.bytes.allocator().identity(), identity);
+        assert_eq!(history.byte_at(1).unwrap(), b'b');
+        assert_eq!(history.byte_at(3).unwrap(), b'd');
+        drop(history);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+        monitor.assert_released();
+
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = owner.monitor();
+        let mut left = RingHistory::new_in(8, &owner);
+        let mut right = RingHistory::new_in(8, &owner);
+        left.start_frame(3).unwrap();
+        right.start_frame(5).unwrap();
+        left.commit(b"one").unwrap();
+        right.commit(b"other").unwrap();
+        assert_eq!(left.bytes.allocator().identity(), owner.identity());
+        assert_eq!(right.bytes.allocator().identity(), owner.identity());
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        assert_eq!(monitor.snapshot().live_blocks, 2);
+        drop(left);
+        drop(right);
+        assert_eq!(monitor.snapshot().owners_dropped, 0);
+        drop(owner);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_failed_initial_reservation_preserves_empty_state_and_recovers() {
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let mut history = RingHistory::new_in(64, owner);
+        let pointer = history.bytes.as_ptr();
+        assert!(monitor.fail_next());
+        assert_eq!(history.start_frame(9), Err(Error::AllocationFailed));
+        assert_eq!(history.bytes.as_ptr(), pointer);
+        assert_eq!(history.retained_capacity(), 0);
+        assert_eq!(history.available(), 0);
+        assert_eq!(history.head, 0);
+        assert_eq!(history.window_size(), 0);
+        assert_eq!(history.frame_len(), 0);
+        assert_eq!(monitor.snapshot().attempts, 1);
+        assert_eq!(monitor.snapshot().failures, 1);
+        assert_eq!(monitor.snapshot().live_blocks, 0);
+        monitor.clear_failure();
+        history.start_frame(9).unwrap();
+        assert!(history.retained_capacity() >= 9);
+        history.commit(b"recovered").unwrap();
+        assert_eq!(history.byte_at(8).unwrap(), b'd');
+        drop(history);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_failed_growth_preserves_wrapped_history_and_previous_matches() {
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let mut history = RingHistory::new_in(usize::MAX, owner);
+        history.start_frame(7).unwrap();
+        history.commit(b"abcdefghijklmnopqr").unwrap();
+        let bytes = history.bytes.to_vec();
+        let pointer = history.bytes.as_ptr();
+        let capacity = history.retained_capacity();
+        let head = history.head;
+        let before = monitor.snapshot();
+        let larger = capacity.checked_add(1).unwrap();
+        assert!(monitor.fail_next());
+        assert_eq!(history.start_frame(larger), Err(Error::AllocationFailed));
+        assert_eq!(history.bytes.as_slice(), bytes);
+        assert_eq!(history.bytes.as_ptr(), pointer);
+        assert_eq!(history.retained_capacity(), capacity);
+        assert_eq!(history.head, head);
+        assert_eq!(history.window_size(), 7);
+        assert_eq!(history.frame_len(), 18);
+        for (position, &byte) in b"lmnopqr".iter().enumerate() {
+            assert_eq!(history.byte_at(11 + position as u64).unwrap(), byte);
+        }
+        let after = monitor.snapshot();
+        assert_eq!(after.attempts, before.attempts + 1);
+        assert_eq!(after.grow_calls, before.grow_calls + 1);
+        assert_eq!(after.failures, before.failures + 1);
+        assert_eq!(after.live_blocks, before.live_blocks);
+        assert_eq!(after.live_bytes, before.live_bytes);
+        assert_eq!(after.live_requested_bytes, before.live_requested_bytes);
+
+        let mut output = [0; 14];
+        assert_eq!(history.copy_match(7, 14, &mut output).unwrap(), 14);
+        assert_eq!(&output, b"lmnopqrlmnopqr");
+        monitor.clear_failure();
+        history.start_frame(larger).unwrap();
+        assert!(history.retained_capacity() >= larger);
+        assert_eq!(history.window_size(), larger);
+        assert_eq!(history.available(), 0);
+        assert_eq!(history.frame_len(), 0);
+        assert_eq!(history.byte_at(0), Err(Error::CorruptData));
+        history.commit(b"new").unwrap();
+        assert_eq!(history.byte_at(2).unwrap(), b'w');
+        drop(history);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_emission_clear_and_smaller_windows_reuse_the_reserved_allocation() {
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let mut history = RingHistory::new_in(usize::MAX, owner);
+        history.start_frame(17).unwrap();
+        let capacity = history.retained_capacity();
+        let pointer = history.bytes.as_ptr();
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        let mut output = [99; 5];
+        assert_eq!(history.append(b"abcde", &mut output).unwrap(), 5);
+        assert_eq!(&output, b"abcde");
+        assert_eq!(history.append(b"x", &mut []).unwrap(), 0);
+        assert_eq!(history.repeat(b'Z', 3, &mut output).unwrap(), 3);
+        assert_eq!(&output, b"ZZZde");
+        history.commit(b"0123456789abcdefghijkl").unwrap();
+        assert_eq!(history.byte_at(history.frame_len() - 1).unwrap(), b'l');
+        assert_eq!(history.copy_match(3, 5, &mut output).unwrap(), 5);
+        assert_eq!(&output, b"jkljk");
+        for window in [17, 7, 0, 3] {
+            history.start_frame(window).unwrap();
+            assert_eq!(history.available(), 0);
+            assert_eq!(history.frame_len(), 0);
+            assert_eq!(history.bytes.as_ptr(), pointer);
+            assert_eq!(history.retained_capacity(), capacity);
+            assert_eq!(history.copy_match(1, 0, &mut []), Err(Error::CorruptData));
+            if window != 0 {
+                history.commit(b"more retained bytes").unwrap();
+            }
+            history.clear();
+            history.commit(&[]).unwrap();
+            assert_eq!(history.commit(b"x"), Err(Error::CorruptData));
+        }
+        let after = monitor.snapshot();
+        assert_eq!(after.attempts, before.attempts);
+        assert_eq!(after.successes, before.successes);
+        assert_eq!(after.deallocate_calls, before.deallocate_calls);
+        assert_eq!(after.live_bytes, before.live_bytes);
+        // The failed request is still armed: none of the previous operations
+        // called the allocator, including filling and wrapping the ring.
+        assert_eq!(
+            history.start_frame(capacity.checked_add(1).unwrap()),
+            Err(Error::AllocationFailed)
+        );
+        assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
+        assert_eq!(monitor.snapshot().failures, before.failures + 1);
+        drop(history);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_validation_and_counter_overflow_do_not_request_storage_or_mutate() {
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let mut history = RingHistory::new_in(7, owner);
+        history.start_frame(3).unwrap();
+        history.commit(b"abcdef").unwrap();
+        history.produced = u64::MAX - 2;
+        let bytes = history.bytes.to_vec();
+        let pointer = history.bytes.as_ptr();
+        let capacity = history.retained_capacity();
+        let head = history.head;
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        assert_eq!(history.start_frame(8), Err(Error::ResourceLimit));
+        let mut output = [99; 3];
+        assert_eq!(history.commit(b"xyz"), Err(Error::ResourceLimit));
+        assert_eq!(
+            history.append(b"xyz", &mut output),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(
+            history.repeat(b'x', 3, &mut output),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(
+            history.copy_match(1, 3, &mut output),
+            Err(Error::ResourceLimit)
+        );
+        for distance in [0, 4, usize::MAX] {
+            assert_eq!(
+                history.copy_match(distance, 0, &mut []),
+                Err(Error::CorruptData)
+            );
+        }
+        assert_eq!(output, [99; 3]);
+        assert_eq!(history.bytes.as_slice(), bytes);
+        assert_eq!(history.bytes.as_ptr(), pointer);
+        assert_eq!(history.retained_capacity(), capacity);
+        assert_eq!(history.head, head);
+        assert_eq!(history.window_size(), 3);
+        assert_eq!(history.frame_len(), u64::MAX - 2);
+        assert_eq!(monitor.snapshot().attempts, before.attempts);
+        assert_eq!(monitor.snapshot().failures, before.failures);
+        assert_eq!(history.start_frame(7), Err(Error::AllocationFailed));
+        assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
+        assert_eq!(history.frame_len(), u64::MAX - 2);
+        assert_eq!(history.bytes.as_slice(), bytes);
+        drop(history);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_wrap_and_fragmented_matches_cover_every_small_window_and_distance() {
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = owner.monitor();
+        for window in 1..=19 {
+            for distance in 1..=window {
+                let mut history = RingHistory::new_in(window, &owner);
+                history.start_frame(window).unwrap();
+                let prefix: Vec<u8> = (0..window * 3 + 5).map(|n| (n * 37) as u8).collect();
+                seed(&mut history, &prefix);
+                let mut expected = prefix.clone();
+                let length = window * 4 + 11;
+                for _ in 0..length {
+                    expected.push(expected[expected.len() - distance]);
+                }
+                let before = monitor.snapshot();
+                let mut offset = 0;
+                let mut call = 0;
+                while offset < length {
+                    let capacity = [0, 1, 2, 5, 31][call % 5];
+                    call += 1;
+                    let mut output = [0xa5; 33];
+                    let count = history
+                        .copy_match(distance, length - offset, &mut output[1..1 + capacity])
+                        .unwrap();
+                    assert_eq!(count, capacity.min(length - offset));
+                    assert_eq!(
+                        &output[1..1 + count],
+                        &expected[prefix.len() + offset..prefix.len() + offset + count]
+                    );
+                    assert_eq!(output[0], 0xa5);
+                    assert!(output[1 + count..].iter().all(|&byte| byte == 0xa5));
+                    offset += count;
+                }
+                assert_eq!(history.frame_len(), expected.len() as u64);
+                let retained_start = expected.len() - window;
+                assert_eq!(
+                    history.byte_at((retained_start - 1) as u64),
+                    Err(Error::CorruptData)
+                );
+                for (position, &byte) in expected.iter().enumerate().skip(retained_start) {
+                    assert_eq!(history.byte_at(position as u64).unwrap(), byte);
+                }
+                assert_eq!(monitor.snapshot().attempts, before.attempts);
+                drop(history);
+                monitor.assert_released();
+            }
+        }
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        drop(owner);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_distinct_owner_moves_and_swaps_keep_allocations_with_their_allocators() {
+        let original = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = original.monitor();
+        let first = original.clone();
+        let second = original.clone();
+        let first_id = first.identity();
+        let second_id = second.identity();
+        assert_ne!(first_id, second_id);
+        let mut left = RingHistory::new_in(7, first);
+        let mut right = RingHistory::new_in(11, second);
+        left.start_frame(3).unwrap();
+        right.start_frame(5).unwrap();
+        left.commit(b"abc").unwrap();
+        right.commit(b"123456").unwrap();
+        let left_pointer = left.bytes.as_ptr();
+        let right_pointer = right.bytes.as_ptr();
+        let attempts = monitor.snapshot().attempts;
+        drop(original);
+        core::mem::swap(&mut left, &mut right);
+        assert_eq!(left.bytes.allocator().identity(), second_id);
+        assert_eq!(right.bytes.allocator().identity(), first_id);
+        assert_eq!(left.bytes.as_ptr(), right_pointer);
+        assert_eq!(right.bytes.as_ptr(), left_pointer);
+        assert_eq!(left.maximum_window, 11);
+        assert_eq!(right.maximum_window, 7);
+        assert_eq!(left.byte_at(1).unwrap(), b'2');
+        assert_eq!(right.byte_at(0).unwrap(), b'a');
+        let mut output = [0; 6];
+        right.copy_match(3, 6, &mut output).unwrap();
+        assert_eq!(&output, b"abcabc");
+        assert_eq!(monitor.snapshot().attempts, attempts);
+        let moved = left;
+        drop(right);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(moved);
+        assert_eq!(monitor.snapshot().identities_created, 3);
+        assert_eq!(monitor.snapshot().owners_dropped, 3);
+        monitor.assert_released();
     }
 }

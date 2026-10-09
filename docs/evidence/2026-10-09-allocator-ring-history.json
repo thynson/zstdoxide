@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-09",
+  "scope": "Allocator-aware RingHistory only; no streaming orchestration changes",
+  "toolchain": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "source_files": {
+    "src/ring_history.rs": "bde3d9b4f3dfb4a4aeb52caddd654534920fb5bfed041ad2abdd05c2a3385ec9"
+  },
+  "checks": [
+    {
+      "name": "safe",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-target cargo test --locked --lib ring_history::tests",
+      "exit_code": 0,
+      "unit_tests_passed": 21,
+      "log": "/tmp/zstdoxide-ring-allocator-safe.log",
+      "sha256": "463e58ea25b6a215aa66da9af57ba954dd57ceab79ab35e0e4291de117220d96",
+      "summaries": [
+        "test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 306 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "name": "unsafe",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-target cargo test --locked --lib --features unsafe-ring-history ring_history::tests",
+      "exit_code": 0,
+      "unit_tests_passed": 21,
+      "log": "/tmp/zstdoxide-ring-allocator-unsafe.log",
+      "sha256": "309dd87ace08de3d3a6a46d36bde6bf1b0db730f511483ee8c121c5a40f39e4d",
+      "summaries": [
+        "test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 306 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "all",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-target cargo test --locked --lib --all-features ring_history::tests",
+      "exit_code": 0,
+      "unit_tests_passed": 21,
+      "log": "/tmp/zstdoxide-ring-allocator-all.log",
+      "sha256": "5af74239c5bc7f129f989ce1b26a99ebaa05e5820c43ed390329ee998436c27b",
+      "summaries": [
+        "test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 306 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "name": "no-default",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-target cargo test --locked --lib --no-default-features ring_history::tests",
+      "exit_code": 0,
+      "unit_tests_passed": 21,
+      "log": "/tmp/zstdoxide-ring-allocator-no-default.log",
+      "sha256": "979c3c7f566e961af425992a9c6835571824d39dc6f5ba151163667e2f0c137f",
+      "summaries": [
+        "test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 286 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "name": "no-default-unsafe",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-target cargo test --locked --lib --no-default-features --features unsafe-ring-history ring_history::tests",
+      "exit_code": 0,
+      "unit_tests_passed": 21,
+      "log": "/tmp/zstdoxide-ring-allocator-no-default-unsafe.log",
+      "sha256": "d99d069becc1ac88b12a48c5e2d2979cfc1ce8c6c91eae1585a3d0abaacf6505",
+      "summaries": [
+        "test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 286 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "name": "no_std_safe",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-target cargo check --locked --lib --no-default-features",
+      "exit_code": 0,
+      "unit_tests_passed": null,
+      "log": "/tmp/zstdoxide-ring-allocator-nostd-check.log",
+      "sha256": "0012603f10028048f3f07a580ae73aa5748e351da5c01d4ef99323da3549b339",
+      "summaries": []
+    },
+    {
+      "name": "no_std_all_backends",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-target cargo check --locked --lib --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+      "exit_code": 0,
+      "unit_tests_passed": null,
+      "log": "/tmp/zstdoxide-ring-allocator-nostd-all-check.log",
+      "sha256": "e61a2bdaf97e8c22e5cd950c479f4ca34df4f70f5f7e91940ff2bc1e70a7f879",
+      "summaries": []
+    },
+    {
+      "name": "strict_clippy",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-target cargo clippy --locked --lib --tests --all-features -- -D warnings",
+      "exit_code": 0,
+      "unit_tests_passed": null,
+      "log": "/tmp/zstdoxide-ring-allocator-clippy.log",
+      "sha256": "fc8b8a9d047ce32ea1344381b16b7987d3edb34a24a99e222ce9586c4c2729ee",
+      "summaries": []
+    },
+    {
+      "name": "format",
+      "command": "rustfmt --edition 2024 --check src/ring_history.rs",
+      "exit_code": 0,
+      "unit_tests_passed": null,
+      "log": "/tmp/zstdoxide-ring-allocator-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": []
+    },
+    {
+      "name": "diff_check",
+      "command": "git diff --check -- src/ring_history.rs",
+      "exit_code": 0,
+      "unit_tests_passed": null,
+      "log": "/tmp/zstdoxide-ring-allocator-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": []
+    },
+    {
+      "name": "miri_growth",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --features unsafe-ring-history ring_history::tests::custom_failed_growth_preserves_wrapped_history_and_previous_matches",
+      "exit_code": 0,
+      "unit_tests_passed": 1,
+      "log": "/tmp/zstdoxide-ring-allocator-miri-growth.log",
+      "sha256": "274c1a5042e300fc1e126b3628870234e7e5d8462859827ed7b67567145bada6",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 326 filtered out; finished in 1.58s"
+      ]
+    },
+    {
+      "name": "miri_non-clone",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --features unsafe-ring-history ring_history::tests::custom_owned_and_borrowed_non_clone_allocators_keep_their_identity",
+      "exit_code": 0,
+      "unit_tests_passed": 1,
+      "log": "/tmp/zstdoxide-ring-allocator-miri-non-clone.log",
+      "sha256": "e9d1f699acd30e766fc718b7f3ccdf06e8004855a98ee1d9d0eee55ea4a1b480",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 326 filtered out; finished in 2.92s"
+      ]
+    },
+    {
+      "name": "miri_ownership",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --features unsafe-ring-history ring_history::tests::custom_distinct_owner_moves_and_swaps_keep_allocations_with_their_allocators",
+      "exit_code": 0,
+      "unit_tests_passed": 1,
+      "log": "/tmp/zstdoxide-ring-allocator-miri-ownership.log",
+      "sha256": "f7b0adc3465e2282a86bf147fd6c39a2f223a5fd1ab631f27c74f80cdba57854",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 326 filtered out; finished in 2.96s"
+      ]
+    },
+    {
+      "name": "miri_retention",
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-ring-allocator-miri MIRIFLAGS=-Zmiri-strict-provenance cargo miri test --locked --lib --features unsafe-ring-history ring_history::tests::custom_emission_clear_and_smaller_windows_reuse_the_reserved_allocation",
+      "exit_code": 0,
+      "unit_tests_passed": 1,
+      "log": "/tmp/zstdoxide-ring-allocator-miri-retention.log",
+      "sha256": "ebc8d5da2f68c02a56d8aba13584f3ab115e142e2671fab643566d51dee1f08d",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 326 filtered out; finished in 1.58s"
+      ]
+    }
+  ],
+  "qualifications": [
+    "Five focused normal configurations each ran 21 tests: 14 existing tests plus seven custom allocator tests.",
+    "No-default unit tests use the std test-support dependency; separate no-default library checks verify no_std production compilation.",
+    "Miri ran the unsafe-ring-history backend and strict provenance, one test per explicit selector.",
+    "Other agents changed unrelated files concurrently. Miri logs contain a then-unused FSE helper warning; final strict whole-crate Clippy passed after the FSE tests began using it.",
+    "Allocator request counts concern this selected payload allocator; test snapshots and reference vectors use separate Global test infrastructure.",
+    "Only src/ring_history.rs was edited by this checkpoint; no commits were made."
+  ]
+}

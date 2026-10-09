@@ -109,6 +109,22 @@ allocator domains followed by complete release. Default public codec APIs
 still use Global; the private generic owner alone does not expose a custom
 one-shot decoder.
 
+`RingHistory<A>` retains its allocator without requiring Clone. Its
+[focused evidence](evidence/2026-10-09-allocator-ring-history.json) records all
+21 tests (14 existing and seven custom) passing in five configurations: safe,
+`unsafe-ring-history`, all features, no default features, and no default
+features with the ring backend. Safe/all-backend no_std checks, strict
+whole-crate Clippy, and owned-file formatting passed. Four exact
+strict-provenance Miri tests exercised unsafe-ring growth failure, non-Clone
+ownership, distinct-domain swaps, and reuse without allocation.
+
+The new ring tests preserve bytes and all metadata after real initial/growth
+allocation failures, verify that same/smaller windows consume no further
+requests, and compare fragmented overlap output for every distance in windows
+1 through 19. Validation and counter-overflow errors leave both caller output
+and history unchanged. This checkpoint preserves the public streaming API's
+Global default; allocator-aware streaming integration remains a separate item.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

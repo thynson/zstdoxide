@@ -31,7 +31,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Verify and pin the actual implementation compiler, document its minimum-version policy, and check the unchanged codec before generic migration.
 - [x] Add a separate counting/failing test allocator with layout, lifetime, distinct-clone identity, zero-size, growth, and non-unwinding contracts.
 - [x] Parameterize complete output history while preserving Global return ownership, overlap behavior, limits, and failed-growth state.
-- [ ] Parameterize ring history and verify wrap, reserve-before-reset, window changes, and retained capacity.
+- [x] Parameterize ring history and verify wrap, reserve-before-reset, window changes, and retained capacity.
 - [ ] Parameterize forward/count bit writers with identical bits and reservation-failure guarantees.
 - [ ] Parameterize FSE decoding entries and weight scratch, including fallible table copies.
 - [ ] Parameterize inverse FSE tables, normalization, descriptions, and channel-selection temporaries.
@@ -39,7 +39,8 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [ ] Replace the Huffman builder's Global-only priority queue with checked allocator-compatible storage and preserve all tree/tie vectors.
 - [ ] Parameterize transactional literal and sequence contexts, including default/current/spare owners and every temporary.
 - [ ] Expose allocator-aware decoding contexts and collecting output APIs with unchanged framing and poisoned-context recovery.
-- [ ] Parameterize match tables/chains and dictionary seeds with identical safe/unsafe candidate ordering.
+- [ ] Parameterize greedy match tables and seed copies with allocator-independent source storage and identical safe/unsafe candidates.
+- [ ] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
 - [ ] Expose allocator-aware block/stream encoding and one-shot output without allocator-changing copies.
 - [ ] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
