@@ -92,7 +92,9 @@ mod upstream_sequence_generator_tests;
 mod upstream_sequence_sweep_tests;
 
 pub use decode::{DecodeOptions, decompress, decompress_with_dictionary, decompress_with_options};
-pub use dictionary::{Dictionary, DictionaryMode, SharedDictionary};
+pub use dictionary::{
+    Dictionary, DictionaryHandle, DictionaryMode, DictionaryView, SharedDictionary,
+};
 pub use dictionary_train::{DictionaryTrainingOptions, finalize_dictionary, train_dictionary};
 pub use encode::{compress, compress_with_dictionary};
 pub use error::{Error, Result};

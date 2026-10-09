@@ -298,3 +298,12 @@ spare tables, symbols, plans, writer and section as complete owners. Dictionary
 inverse tables are constructed before start-frame state changes; prepare errors
 preserve committed tables/repeats and expose no partial section. Global const
 constructors remain available; custom aggregate constructors run at runtime.
+
+Raw training will reuse `MaxHeap<Candidate, A>` after a separate queue-only
+checkpoint freezes its exact score-descending and sample/start/end-ascending
+ordering. A checked peek borrows only an initialized root. Popping before a
+stale-score reinsertion leaves a spare slot, so reinsertion needs no new block.
+Sample windows, frequency cells, queued candidates and selected ranges each
+own a fresh allocator value. Final content retains the original allocator and
+moves directly into `Dictionary<A>`; borrowed samples never enter the result.
+The frequency accessor keeps its existing independent `unsafe-training` flag.

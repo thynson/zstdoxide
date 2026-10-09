@@ -1,0 +1,228 @@
+{
+  "source_sha256": {
+    "src/dictionary.rs": "aa112be440fa2778c4949c46a1b2f30116f159339e7bb18e1f0606c821997640",
+    "src/lib.rs": "800673b6ae197d47aa1970ef197e47b02c413864b351d1cb568625f8083a1baa"
+  },
+  "base_commit": "71f0cb2",
+  "scope": "Isolated committed baseline plus dictionary.rs and lib.rs only; concurrent sequence and training changes excluded.",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "dictionary::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.2368814998771995,
+      "output": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.64s\n     Running unittests src/lib.rs (/tmp/zstdoxide-dictionary-view-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 18 tests\ntest dictionary::tests::custom_raw_owner_needs_no_clone_and_moves_without_copying_storage ... ok\ntest dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max ... ok\ntest dictionary::tests::official_formatted_dictionary_metadata_matches_independent_c_loader ... ok\ntest dictionary::tests::every_fse_table_enforces_its_dictionary_log_and_symbol_bounds ... ok\ntest dictionary::tests::raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers ... ok\ntest dictionary::tests::custom_shared_payload_retains_exact_owners_until_the_last_handle ... ok\ntest dictionary::tests::short_auto_inputs_are_raw_even_with_a_complete_magic_prefix ... ok\ntest dictionary::tests::borrowed_views_erase_allocator_type_without_requests_or_state_changes ... ok\ntest dictionary::tests::owned_and_shared_dictionaries_outlive_original_input_without_copying_content_again ... ok\ntest dictionary::tests::official_invalid_repeat_dictionary_and_header_only_fixture_are_rejected ... ok\ntest dictionary::tests::supported_handles_clone_without_allocating_or_cloning_payload_allocators ... ok\ntest dictionary::tests::zero_and_reserved_dictionary_ids_are_accepted_without_changing_format ... ok\ntest dictionary::tests::single_symbol_dictionary_tables_preserve_the_normalized_state_width ... ok\ntest dictionary::tests::custom_malformed_dictionaries_preserve_errors_and_release_scratch ... ok\ntest dictionary::tests::custom_formatted_tables_match_global_and_accept_borrowed_non_clone_owners ... ok\ntest dictionary::tests::repeat_offsets_must_be_positive_and_within_content_but_may_duplicate ... ok\ntest dictionary::tests::custom_dictionary_failure_sweep_releases_all_partial_owners ... ok\ntest dictionary::tests::every_formatted_truncation_obeys_metadata_and_repeat_content_bounds ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 384 filtered out; finished in 0.26s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "dictionary::tests",
+        "--features",
+        "unsafe-dictionary"
+      ],
+      "exit_code": 0,
+      "seconds": 3.3414729998912662,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.76s\n     Running unittests src/lib.rs (/tmp/zstdoxide-dictionary-view-target/debug/build/zstdoxide/42c5e42647031de4/out/zstdoxide-42c5e42647031de4)\n\nrunning 18 tests\ntest dictionary::tests::custom_raw_owner_needs_no_clone_and_moves_without_copying_storage ... ok\ntest dictionary::tests::borrowed_views_erase_allocator_type_without_requests_or_state_changes ... ok\ntest dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max ... ok\ntest dictionary::tests::custom_shared_payload_retains_exact_owners_until_the_last_handle ... ok\ntest dictionary::tests::raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers ... ok\ntest dictionary::tests::official_formatted_dictionary_metadata_matches_independent_c_loader ... ok\ntest dictionary::tests::short_auto_inputs_are_raw_even_with_a_complete_magic_prefix ... ok\ntest dictionary::tests::every_fse_table_enforces_its_dictionary_log_and_symbol_bounds ... ok\ntest dictionary::tests::owned_and_shared_dictionaries_outlive_original_input_without_copying_content_again ... ok\ntest dictionary::tests::official_invalid_repeat_dictionary_and_header_only_fixture_are_rejected ... ok\ntest dictionary::tests::custom_malformed_dictionaries_preserve_errors_and_release_scratch ... ok\ntest dictionary::tests::custom_formatted_tables_match_global_and_accept_borrowed_non_clone_owners ... ok\ntest dictionary::tests::supported_handles_clone_without_allocating_or_cloning_payload_allocators ... ok\ntest dictionary::tests::zero_and_reserved_dictionary_ids_are_accepted_without_changing_format ... ok\ntest dictionary::tests::single_symbol_dictionary_tables_preserve_the_normalized_state_width ... ok\ntest dictionary::tests::repeat_offsets_must_be_positive_and_within_content_but_may_duplicate ... ok\ntest dictionary::tests::custom_dictionary_failure_sweep_releases_all_partial_owners ... ok\ntest dictionary::tests::every_formatted_truncation_obeys_metadata_and_repeat_content_bounds ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 384 filtered out; finished in 0.24s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "dictionary::tests",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 3.941788583062589,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.28s\n     Running unittests src/lib.rs (/tmp/zstdoxide-dictionary-view-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 18 tests\ntest dictionary::tests::custom_raw_owner_needs_no_clone_and_moves_without_copying_storage ... ok\ntest dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max ... ok\ntest dictionary::tests::custom_shared_payload_retains_exact_owners_until_the_last_handle ... ok\ntest dictionary::tests::borrowed_views_erase_allocator_type_without_requests_or_state_changes ... ok\ntest dictionary::tests::custom_malformed_dictionaries_preserve_errors_and_release_scratch ... ok\ntest dictionary::tests::official_formatted_dictionary_metadata_matches_independent_c_loader ... ok\ntest dictionary::tests::owned_and_shared_dictionaries_outlive_original_input_without_copying_content_again ... ok\ntest dictionary::tests::every_fse_table_enforces_its_dictionary_log_and_symbol_bounds ... ok\ntest dictionary::tests::raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers ... ok\ntest dictionary::tests::short_auto_inputs_are_raw_even_with_a_complete_magic_prefix ... ok\ntest dictionary::tests::official_invalid_repeat_dictionary_and_header_only_fixture_are_rejected ... ok\ntest dictionary::tests::single_symbol_dictionary_tables_preserve_the_normalized_state_width ... ok\ntest dictionary::tests::custom_formatted_tables_match_global_and_accept_borrowed_non_clone_owners ... ok\ntest dictionary::tests::supported_handles_clone_without_allocating_or_cloning_payload_allocators ... ok\ntest dictionary::tests::repeat_offsets_must_be_positive_and_within_content_but_may_duplicate ... ok\ntest dictionary::tests::zero_and_reserved_dictionary_ids_are_accepted_without_changing_format ... ok\ntest dictionary::tests::custom_dictionary_failure_sweep_releases_all_partial_owners ... ok\ntest dictionary::tests::every_formatted_truncation_obeys_metadata_and_repeat_content_bounds ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 384 filtered out; finished in 0.26s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "dictionary::tests",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 2.827234874945134,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.20s\n     Running unittests src/lib.rs (/tmp/zstdoxide-dictionary-view-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 18 tests\ntest dictionary::tests::custom_raw_owner_needs_no_clone_and_moves_without_copying_storage ... ok\ntest dictionary::tests::borrowed_views_erase_allocator_type_without_requests_or_state_changes ... ok\ntest dictionary::tests::indexed_content_access_checks_relative_bounds_and_usize_max ... ok\ntest dictionary::tests::every_fse_table_enforces_its_dictionary_log_and_symbol_bounds ... ok\ntest dictionary::tests::custom_shared_payload_retains_exact_owners_until_the_last_handle ... ok\ntest dictionary::tests::official_formatted_dictionary_metadata_matches_independent_c_loader ... ok\ntest dictionary::tests::owned_and_shared_dictionaries_outlive_original_input_without_copying_content_again ... ok\ntest dictionary::tests::custom_malformed_dictionaries_preserve_errors_and_release_scratch ... ok\ntest dictionary::tests::official_invalid_repeat_dictionary_and_header_only_fixture_are_rejected ... ok\ntest dictionary::tests::raw_mode_never_interprets_even_valid_or_corrupt_formatted_headers ... ok\ntest dictionary::tests::short_auto_inputs_are_raw_even_with_a_complete_magic_prefix ... ok\ntest dictionary::tests::custom_formatted_tables_match_global_and_accept_borrowed_non_clone_owners ... ok\ntest dictionary::tests::supported_handles_clone_without_allocating_or_cloning_payload_allocators ... ok\ntest dictionary::tests::single_symbol_dictionary_tables_preserve_the_normalized_state_width ... ok\ntest dictionary::tests::repeat_offsets_must_be_positive_and_within_content_but_may_duplicate ... ok\ntest dictionary::tests::zero_and_reserved_dictionary_ids_are_accepted_without_changing_format ... ok\ntest dictionary::tests::custom_dictionary_failure_sweep_releases_all_partial_owners ... ok\ntest dictionary::tests::every_formatted_truncation_obeys_metadata_and_repeat_content_bounds ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 364 filtered out; finished in 0.27s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--doc"
+      ],
+      "exit_code": 0,
+      "seconds": 1.1645466249901801,
+      "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.55s\n   Doc-tests zstdoxide\n\nrunning 1 test\ntest src/lib.rs - (line 6) ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 1 test\ntest src/dictionary.rs - dictionary::DictionaryView (line 88) - compile fail ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\nall doctests ran in 0.51s; merged doctests compilation took 0.18s\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3172623331192881,
+      "output": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.29s\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3100287080742419,
+      "output": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 1.721734541002661,
+      "output": "    Checking zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.66s\n"
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "src/dictionary.rs",
+        "src/lib.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.04111237498000264,
+      "output": ""
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "dictionary::tests::borrowed_views_erase_allocator_type_without_requests_or_state_changes",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 5.364803833886981,
+      "output": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.26s\n     Running unittests src/lib.rs (/tmp/zstdoxide-dictionary-view-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest dictionary::tests::borrowed_views_erase_allocator_type_without_requests_or_state_changes ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 401 filtered out; finished in 9.06s\n\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "dictionary::tests::supported_handles_clone_without_allocating_or_cloning_payload_allocators",
+        "--",
+        "--exact"
+      ],
+      "exit_code": 0,
+      "seconds": 4.417402792023495,
+      "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-dictionary-view-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest dictionary::tests::supported_handles_clone_without_allocating_or_cloning_payload_allocators ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 401 filtered out; finished in 9.91s\n\n"
+    }
+  ],
+  "checkpoint": "Module 9 caller-owned dictionary views and static handle contract",
+  "date": "2026-10-09",
+  "final_lifetime_checks": {
+    "change": "Spell returned slice/entropy lifetime as original owner lifetime; no runtime statements changed. Add successful temporary-view doc example.",
+    "source_sha256": {
+      "src/dictionary.rs": "a419f9a0c471600045b9f6a0b62f0eb2271cac5a6e849f19345f160cf67ad686",
+      "src/lib.rs": "800673b6ae197d47aa1970ef197e47b02c413864b351d1cb568625f8083a1baa"
+    },
+    "checks": [
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--doc"
+        ],
+        "exit_code": 0,
+        "output": "   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.54s\n   Doc-tests zstdoxide\n\nrunning 2 tests\ntest src/dictionary.rs - dictionary::DictionaryView (line 88) ... ok\ntest src/lib.rs - (line 6) ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 1 test\ntest src/dictionary.rs - dictionary::DictionaryView (line 98) - compile fail ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\nall doctests ran in 0.64s; merged doctests compilation took 0.24s\n"
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "output": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.20s\n"
+      },
+      {
+        "command": [
+          "cargo",
+          "check",
+          "--locked",
+          "--lib",
+          "--no-default-features"
+        ],
+        "exit_code": 0,
+        "output": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-dictionary-view-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s\n"
+      },
+      {
+        "command": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--config",
+          "skip_children=true",
+          "--check",
+          "src/dictionary.rs",
+          "src/lib.rs"
+        ],
+        "exit_code": 0,
+        "output": ""
+      }
+    ]
+  },
+  "qualifications": [
+    "Initial matrix and Miri used the original lifetime spelling, which tied returned slices to the view borrow. Final API ties returned slices and entropy directly to the owner lifetime; no runtime statement changed. Three doctests, strict Clippy, no_std and formatting passed on the final spelling.",
+    "Four configurations passed all 18 dictionary tests; two exact all-feature strict-provenance Miri view tests passed. Snapshot excludes concurrent context implementation.",
+    "The public handle contract is sealed to shared owners and borrowed views. Codec constructors accepting these handles are implemented separately; this checkpoint alone is not a complete custom-allocation decode API."
+  ]
+}

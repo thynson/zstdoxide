@@ -15,7 +15,9 @@ Custom allocation is being implemented incrementally. Existing public codec
 APIs still use Global until their individual checkpoints are complete. Dictionary
 construction now exposes `from_bytes_in`, `from_bytes_with_mode_in`, and
 `raw_in`; its payload and prepared tables use the chosen allocator. Standard
-shared handles still allocate the counts and inline dictionary object in Global. The
+shared handles still allocate the counts and inline dictionary object in Global.
+`Dictionary::view()` provides an allocation-free borrowed alternative; codec
+context integration follows its own checkpoint. The
 chosen standard `Allocator`/`Vec<T, A>` subset compiles without feature gates
 on the pin. Custom Arc/Rc, allocator-aware BinaryHeap, and fallible Box
 construction still require unstable `allocator_ext` in the inspected library;

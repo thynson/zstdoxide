@@ -309,6 +309,23 @@ The C stream groups each report 301 checks including one empty-marker bypass,
 with two CLI literal-section/lifetime tests run separately in each backend.
 Public block/stream allocator orchestration remains pending.
 
+`DictionaryView<'a>` now borrows validated bytes and entropy without retaining
+an allocator type. The sealed `DictionaryHandle` contract statically supports
+shared owners and borrowed views; cloning either consumes no allocator request
+or allocator clone. The [dictionary-view evidence](evidence/2026-10-09-allocator-dictionary-views.json)
+uses an isolated committed baseline, excluding concurrent context changes.
+All 18 dictionary tests passed in safe, unsafe-dictionary, all-feature, and
+no_std/all-backend builds; both new view/handle tests passed strict-provenance
+Miri. no_std compilation, strict Clippy, formatting, and doctests passed.
+
+Final explicit accessor lifetimes permit slices obtained from a temporary view
+to borrow the original owner. A successful doctest demonstrates that use; a
+compile-fail doctest rejects a view outliving its dictionary. This final lifetime
+spelling changes no runtime operation and was checked separately after the
+runtime matrix. Content access shares the owning dictionary's existing checked
+backend. Capacity is reachable original payload capacity, not memory owned by
+the Copy view. Attaching these handles to public codec contexts remains open.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

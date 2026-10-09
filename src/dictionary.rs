@@ -7,8 +7,8 @@ use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
 use crate::cursor::ByteCursor;
-use crate::fse::FseTable;
-use crate::huffman::HuffmanTable;
+use crate::fse::{FseTable, FseTableView};
+use crate::huffman::{HuffmanTable, HuffmanTableView};
 use crate::{Error, Result};
 
 const MAGIC: u32 = 0xec30_a437;
@@ -46,6 +46,141 @@ pub(crate) struct DictionaryEntropy<A: Allocator = Global> {
     pub(crate) match_lengths: FseTable<A>,
     pub(crate) literal_lengths: FseTable<A>,
     pub(crate) repeat: [usize; 3],
+}
+
+/// Validated immutable entropy borrowed independently of allocator type.
+#[derive(Clone, Copy, Debug)]
+#[cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "allocator-aware contexts consume borrowed entropy next"
+    )
+)]
+pub(crate) struct DictionaryEntropyView<'a> {
+    pub(crate) huffman: HuffmanTableView<'a>,
+    pub(crate) offsets: FseTableView<'a>,
+    pub(crate) match_lengths: FseTableView<'a>,
+    pub(crate) literal_lengths: FseTableView<'a>,
+    pub(crate) repeat: [usize; 3],
+}
+
+impl<A: Allocator> DictionaryEntropy<A> {
+    pub(crate) fn view(&self) -> DictionaryEntropyView<'_> {
+        DictionaryEntropyView {
+            huffman: self.huffman.view(),
+            offsets: self.offsets.view(),
+            match_lengths: self.match_lengths.view(),
+            literal_lengths: self.literal_lengths.view(),
+            repeat: self.repeat,
+        }
+    }
+}
+
+/// An allocation-free immutable borrow of a validated dictionary.
+///
+/// The original owner retains bytes, prepared tables, and their allocators.
+/// Copying this view neither allocates nor extends that owner's lifetime. Its
+/// allocator type does not appear in the view. Obtain one with [`Dictionary::view`].
+///
+/// Slices borrow the dictionary, so a temporary view can provide them:
+///
+/// ```
+/// use zstdoxide::Dictionary;
+/// let dictionary = Dictionary::raw(b"content")?;
+/// let content = dictionary.view().content();
+/// assert_eq!(content, b"content");
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+///
+/// A view cannot outlive the dictionary that produced it:
+///
+/// ```compile_fail
+/// use zstdoxide::Dictionary;
+/// let view = {
+///     let dictionary = Dictionary::raw(b"content").unwrap();
+///     dictionary.view()
+/// };
+/// let _ = view.content();
+/// ```
+#[derive(Clone, Copy, Debug)]
+pub struct DictionaryView<'a> {
+    bytes: &'a [u8],
+    content_start: usize,
+    id: u32,
+    entropy: Option<DictionaryEntropyView<'a>>,
+    retained_capacity: usize,
+}
+
+impl<'a> DictionaryView<'a> {
+    /// Formatted dictionary ID, or zero for raw content.
+    pub fn id(&self) -> u32 {
+        self.id
+    }
+
+    /// Matchable bytes, excluding formatted metadata.
+    pub fn content(&self) -> &'a [u8] {
+        &self.bytes[self.content_start..]
+    }
+
+    /// Exact original serialization borrowed from the owner.
+    pub fn as_bytes(&self) -> &'a [u8] {
+        self.bytes
+    }
+
+    /// Whether the owner parsed a formatted dictionary.
+    pub fn is_formatted(&self) -> bool {
+        self.entropy.is_some()
+    }
+
+    /// Read a checked content-relative byte using the same access backend as
+    /// the owning dictionary. Invalid positions report corrupt compressed data.
+    pub fn content_byte(&self, index: usize) -> Result<u8> {
+        read_content_byte(self.content(), index)
+    }
+
+    #[cfg_attr(not(test), allow(dead_code, reason = "context integration follows"))]
+    pub(crate) fn entropy(&self) -> Option<DictionaryEntropyView<'a>> {
+        self.entropy
+    }
+
+    /// Reachable payload capacity of the original owner, not memory owned by
+    /// this view. Shared control storage and inline values remain excluded.
+    #[cfg_attr(not(test), allow(dead_code, reason = "context integration follows"))]
+    pub(crate) fn retained_capacity(&self) -> usize {
+        self.retained_capacity
+    }
+}
+
+mod sealed {
+    pub trait Sealed {}
+}
+
+/// A supported immutable dictionary attachment, dispatched without trait objects.
+///
+/// Implementations are sealed to shared [`SharedDictionary`] owners and borrowed
+/// [`DictionaryView`] values. Cloning either attachment allocates nothing; a
+/// shared owner keeps the dictionary alive, while a view preserves its original
+/// borrow. Cloning a shared handle never clones the dictionary's allocator.
+pub trait DictionaryHandle: sealed::Sealed + Clone {
+    /// Borrow validated bytes and prepared tables for the current operation.
+    fn view(&self) -> DictionaryView<'_>;
+}
+
+impl<A: Allocator> sealed::Sealed for SharedDictionary<A> {}
+
+impl<A: Allocator> DictionaryHandle for SharedDictionary<A> {
+    fn view(&self) -> DictionaryView<'_> {
+        self.as_ref().view()
+    }
+}
+
+impl sealed::Sealed for DictionaryView<'_> {}
+
+impl DictionaryHandle for DictionaryView<'_> {
+    fn view(&self) -> DictionaryView<'_> {
+        *self
+    }
 }
 
 /// An owned raw dictionary or validated formatted dictionary.
@@ -134,6 +269,18 @@ impl<A: Allocator + Clone> Dictionary<A> {
 }
 
 impl<A: Allocator> Dictionary<A> {
+    /// Borrow bytes and prepared entropy without copying or allocating. The
+    /// returned view is independent of `A` but cannot outlive this owner.
+    pub fn view(&self) -> DictionaryView<'_> {
+        DictionaryView {
+            bytes: &self.bytes,
+            content_start: self.content_start,
+            id: self.id,
+            entropy: self.entropy.as_ref().map(DictionaryEntropy::view),
+            retained_capacity: self.retained_capacity(),
+        }
+    }
+
     /// Copy raw content into a single allocation owner without cloning it or
     /// interpreting headers. Owned non-Clone allocators are accepted here.
     pub fn raw_in(input: &[u8], allocator: A) -> Result<Self> {
@@ -193,23 +340,7 @@ impl<A: Allocator> Dictionary<A> {
     /// Invalid history positions are corrupt compressed data, independently of
     /// whether the configured dictionary itself is formatted or raw.
     pub fn content_byte(&self, index: usize) -> Result<u8> {
-        let content = self.content();
-        if index >= content.len() {
-            return Err(Error::CorruptData);
-        }
-        #[cfg(not(feature = "unsafe-dictionary"))]
-        let byte = content[index];
-        #[cfg(feature = "unsafe-dictionary")]
-        // SAFETY: the runtime check above proves index < content.len(), so the
-        // read is inside this initialized slice. Construction proves that the
-        // content range lies inside the owned Vec, and neither bytes nor the
-        // start index can change after publication. The shared self borrow
-        // keeps that allocation alive and forbids mutation throughout this
-        // read, including when ownership is shared through Arc or Rc. Vec's
-        // u8 storage is properly aligned; copying this byte neither exposes a
-        // pointer/reference nor creates mutable aliases or moves owned data.
-        let byte = unsafe { *content.get_unchecked(index) };
-        Ok(byte)
+        read_content_byte(self.content(), index)
     }
 
     pub(crate) fn entropy(&self) -> Option<&DictionaryEntropy<A>> {
@@ -226,6 +357,23 @@ impl<A: Allocator> Dictionary<A> {
                     + entropy.literal_lengths.retained_capacity()
             })
     }
+}
+
+fn read_content_byte(content: &[u8], index: usize) -> Result<u8> {
+    if index >= content.len() {
+        return Err(Error::CorruptData);
+    }
+    #[cfg(not(feature = "unsafe-dictionary"))]
+    let byte = content[index];
+    #[cfg(feature = "unsafe-dictionary")]
+    // SAFETY: The runtime check proves index is inside the initialized slice.
+    // A shared slice guarantees valid aligned u8 storage for this access and
+    // prevents mutation or destruction while borrowed. Both callers derive it
+    // from the owner's validated content range; the view retains that borrow.
+    // Copying a byte neither extends a reference nor transfers ownership, and
+    // no pointer or mutable alias escapes this access.
+    let byte = unsafe { *content.get_unchecked(index) };
+    Ok(byte)
 }
 
 /// Parse the ordered entropy fields and repcodes used by `ZSTD_loadDEntropy`.
@@ -300,6 +448,86 @@ mod tests {
 
     fn tracking() -> TrackingAllocator {
         TrackingAllocator::new(AllocatorConfig::default()).unwrap()
+    }
+
+    fn same_view(view: DictionaryView<'_>, expected: &Dictionary) {
+        assert_eq!(view.id(), expected.id());
+        assert_eq!(view.as_bytes(), expected.as_bytes());
+        assert_eq!(view.content(), expected.content());
+        assert_eq!(view.is_formatted(), expected.is_formatted());
+        assert_eq!(view.retained_capacity(), expected.retained_capacity());
+        for index in 0..view.content().len() {
+            assert_eq!(view.content_byte(index), expected.content_byte(index));
+        }
+        assert_eq!(
+            view.content_byte(view.content().len()),
+            Err(Error::CorruptData)
+        );
+        assert_eq!(view.content_byte(usize::MAX), Err(Error::CorruptData));
+        if let (Some(view), Some(owned)) = (view.entropy(), expected.entropy()) {
+            assert_eq!(view.repeat, owned.repeat);
+            assert_eq!(view.huffman.code_lengths(), owned.huffman.code_lengths());
+            for (view, owned) in [
+                (view.offsets, &owned.offsets),
+                (view.match_lengths, &owned.match_lengths),
+                (view.literal_lengths, &owned.literal_lengths),
+            ] {
+                assert_eq!(view.table_log(), owned.table_log());
+                for state in 0..1 << view.table_log() {
+                    assert_eq!(view.entry(state), owned.entry(state));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn borrowed_views_erase_allocator_type_without_requests_or_state_changes() {
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        for bytes in [&b""[..], &b"plain raw"[..], FIXED] {
+            let global = Dictionary::from_bytes(bytes).unwrap();
+            let custom = Dictionary::from_bytes_in(bytes, &owner).unwrap();
+            let before = monitor.snapshot();
+            assert!(monitor.fail_next());
+            let views = [global.view(), custom.view()];
+            let copied = views;
+            for view in copied {
+                same_view(view, &global);
+            }
+            assert_eq!(views[1].as_bytes().as_ptr(), custom.as_bytes().as_ptr());
+            assert_eq!(monitor.snapshot(), before);
+            assert!(matches!(
+                Dictionary::raw_in(b"request", &owner),
+                Err(Error::AllocationFailed)
+            ));
+            same_view(views[1], &global);
+            drop(custom);
+            monitor.assert_released();
+        }
+        assert_eq!(monitor.snapshot().identities_created, 1);
+    }
+
+    fn check_handle<D: DictionaryHandle>(handle: D, expected: &Dictionary) {
+        let clone = handle.clone();
+        same_view(handle.view(), expected);
+        drop(handle);
+        same_view(clone.view(), expected);
+    }
+
+    #[test]
+    fn supported_handles_clone_without_allocating_or_cloning_payload_allocators() {
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let dictionary = Dictionary::from_bytes_in(FIXED, &owner).unwrap();
+        let global = Dictionary::from_bytes(FIXED).unwrap();
+        let before = monitor.snapshot();
+        check_handle(dictionary.view(), &global);
+        let shared = dictionary.into_shared();
+        check_handle(shared.clone(), &global);
+        assert_eq!(monitor.snapshot(), before);
+        assert_eq!(monitor.snapshot().live_blocks, 5);
+        drop(shared);
+        monitor.assert_released();
     }
 
     #[test]
