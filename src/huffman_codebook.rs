@@ -181,7 +181,7 @@ impl HuffmanCodebook {
             .ok_or(Error::InvalidParameter)?;
         let maximum_stream_size = |length: usize| -> Result<usize> {
             length
-                .checked_mul(usize::from(self.table_log))
+                .checked_mul(usize::from(self.table_log()))
                 .and_then(|bits| bits.checked_add(1))
                 .map(|bits| bits.div_ceil(8))
                 .ok_or(Error::InvalidParameter)

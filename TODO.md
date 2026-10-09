@@ -35,7 +35,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Build sparse literal tables while preserving formatted dictionary-training output.
 - [x] Serialize checked raw, RLE, and Huffman literal headers at every field boundary.
 - [x] Select complete raw, RLE, new-Huffman, and reused-Huffman literal sections by serialized cost.
-- [ ] Assemble zero-sequence compressed blocks without sequence modes or states.
+- [x] Assemble zero-sequence compressed blocks without sequence modes or states.
 - [ ] Publish Huffman choices transactionally with emitted and pending entropy state.
 - [ ] Verify literal-only compression, treeless lifetime, dictionary replacement, and fragmented output with C.
 - [x] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.

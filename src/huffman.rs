@@ -34,7 +34,6 @@ impl HuffmanTable {
     /// Copy validated per-symbol lengths for checked encoding-table setup.
     /// Every lookup entry for one symbol has the same bit count; absent symbols
     /// remain zero. No reference into this decoding table escapes the call.
-    #[cfg(test)]
     pub(crate) fn code_lengths(&self) -> [u8; MAX_SYMBOLS] {
         let mut lengths = [0; MAX_SYMBOLS];
         for entry in &self.entries {

@@ -5,6 +5,7 @@ use alloc::vec::Vec;
 use crate::bitwriter::BitWriter;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
 use crate::fse_encode::FseEncodingTable as EncodingTable;
+use crate::literal_encode::LiteralEncoder;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
 use crate::{Dictionary, Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash};
@@ -72,6 +73,7 @@ pub(crate) struct BlockEncoder {
     window_size: u64,
     entropy_tables: Option<EncodingTables>,
     literals: Vec<u8>,
+    literal_encoder: LiteralEncoder,
     sequences: Vec<Sequence>,
     payload: Vec<u8>,
     writer: BitWriter,
@@ -88,6 +90,7 @@ impl BlockEncoder {
             window_size: MAX_BLOCK_SIZE as u64,
             entropy_tables: None,
             literals: Vec::new(),
+            literal_encoder: LiteralEncoder::new(),
             sequences: Vec::new(),
             payload: Vec::new(),
             writer: BitWriter::new(),
@@ -182,7 +185,7 @@ impl BlockEncoder {
             output.push(block[0]);
             return Ok(());
         }
-        if block.len() >= 8 && self.compress_block(block)? {
+        if block.len() >= 6 && self.compress_block(block)? {
             write_block_header(output, self.payload.len(), 2, last);
             output.extend_from_slice(&self.payload);
             return Ok(());
@@ -208,6 +211,7 @@ impl BlockEncoder {
                     + tables.offsets.retained_capacity()
             })
             + self.literals.capacity()
+            + self.literal_encoder.retained_capacity()
             + self.sequences.capacity() * core::mem::size_of::<Sequence>()
             + self.payload.capacity()
             + self.writer.retained_capacity()
@@ -346,31 +350,39 @@ impl BlockEncoder {
                 position += 1;
             }
         }
-        if sequences.is_empty() {
-            return Ok(false);
-        }
         literals.extend_from_slice(&block[literal_start..]);
-        let tables = match self.entropy_tables.as_ref() {
-            Some(tables) => tables,
-            None => self.entropy_tables.insert(EncodingTables::new()?),
+        // This checkpoint emits a new tree for each selected Huffman section.
+        // Frame-scoped table publication/reuse is the next independent step.
+        let _ = self.literal_encoder.select(literals, None)?;
+        if !sequences.is_empty() {
+            let tables = match self.entropy_tables.as_ref() {
+                Some(tables) => tables,
+                None => self.entropy_tables.insert(EncodingTables::new()?),
+            };
+            encode_sequences(sequences, tables, &mut self.writer)?;
+        }
+        let stream = if sequences.is_empty() {
+            &[][..]
+        } else {
+            self.writer.as_bytes()
         };
-        encode_sequences(sequences, tables, &mut self.writer)?;
-        let stream = self.writer.as_bytes();
-        let capacity = literals
+        let section = self.literal_encoder.as_bytes();
+        let capacity = section
             .len()
             .checked_add(stream.len())
-            .and_then(|size| size.checked_add(7))
+            .and_then(|size| size.checked_add(4))
             .ok_or(Error::ResourceLimit)?;
         let payload = &mut self.payload;
         payload.clear();
         payload
             .try_reserve_exact(capacity)
             .map_err(|_| Error::AllocationFailed)?;
-        write_literal_header(payload, literals.len());
-        payload.extend_from_slice(literals);
+        payload.extend_from_slice(section);
         write_sequence_count(payload, sequences.len());
-        payload.push(0); // All three symbol distributions are predefined.
-        payload.extend_from_slice(stream);
+        if !sequences.is_empty() {
+            payload.push(0); // Sequence distributions remain predefined here.
+            payload.extend_from_slice(stream);
+        }
         Ok(payload.len() < block.len())
     }
 }
@@ -551,19 +563,6 @@ fn word_at(block: &[u8], position: usize) -> [u8; 4] {
     ]
 }
 
-/// Writes a raw-literal header; corresponds to the raw branch of
-/// `ZSTD_compressLiterals`.
-fn write_literal_header(output: &mut Vec<u8>, length: usize) {
-    let (header, count) = if length < 32 {
-        ((length as u32) << 3, 1)
-    } else if length < 4096 {
-        (((length as u32) << 4) | 4, 2)
-    } else {
-        (((length as u32) << 4) | 12, 3)
-    };
-    output.extend_from_slice(&header.to_le_bytes()[..count]);
-}
-
 /// Writes the variable-width count used by `ZSTD_encodeSequences`.
 fn write_sequence_count(output: &mut Vec<u8>, count: usize) {
     if count < 128 {
@@ -651,6 +650,47 @@ mod tests {
     use crate::fse::FseTable;
     use crate::{DecodeOptions, Dictionary, decompress_with_dictionary};
     use alloc::vec;
+
+    #[test]
+    fn literal_only_compression_omits_sequence_modes_and_state_bits() {
+        fn de_bruijn(t: usize, period: usize, word: &mut [u8; 5], output: &mut Vec<u8>) {
+            if t == 5 {
+                if 4 % period == 0 {
+                    output.extend_from_slice(&word[1..=period]);
+                }
+                return;
+            }
+            word[t] = word[t - period];
+            de_bruijn(t + 1, period, word, output);
+            for symbol in word[t - period] + 1..16 {
+                word[t] = symbol;
+                de_bruijn(t + 1, t, word, output);
+            }
+        }
+        let mut source = Vec::new();
+        de_bruijn(1, 1, &mut [0; 5], &mut source);
+        assert_eq!(source.len(), 65_536);
+        let mut seen = vec![false; 65_536];
+        for word in source.windows(4) {
+            let index = word
+                .iter()
+                .fold(0, |value, &symbol| (value << 4) | usize::from(symbol));
+            assert!(!seen[index]);
+            seen[index] = true;
+        }
+        let mut encoder = BlockEncoder::new();
+        let mut output = Vec::new();
+        encoder.encode(&source, true, &mut output).unwrap();
+        assert!(encoder.sequences.is_empty());
+        assert_eq!((output[0] >> 1) & 3, 2);
+        assert!(output.len() < source.len() * 3 / 4);
+        let (literals, consumed) =
+            crate::huffman::decode_literals(&output[3..], &mut None, MAX_BLOCK_SIZE).unwrap();
+        assert_eq!(literals, source);
+        assert_eq!(&output[3 + consumed..], &[0]);
+        let frame = compress(&source).unwrap();
+        assert_eq!(crate::decompress(&frame, source.len()).unwrap(), source);
+    }
 
     #[test]
     fn retained_candidates_cross_input_boundaries_and_obey_the_advertised_window() {
@@ -1146,6 +1186,15 @@ mod tests {
         let mut encoded = Vec::new();
         encoder.encode(&block, true, &mut encoded).unwrap();
         let expected = encoded.clone();
+        // Warm both literal distributions: the short intervening block has
+        // more unmatched literals than this highly repetitive full block.
+        encoder
+            .encode(b"a different preceding block", false, &mut encoded)
+            .unwrap();
+        encoder.reset();
+        encoded.clear();
+        encoder.encode(&block, true, &mut encoded).unwrap();
+        assert_eq!(encoded, expected);
         let capacity = encoder.retained_capacity();
         assert!(capacity > MAX_BLOCK_SIZE);
         for _ in 0..8 {
