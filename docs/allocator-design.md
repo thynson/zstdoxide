@@ -410,3 +410,17 @@ never be stored as references into an adjacent field. Prefix claim, skippable
 frames, and reset semantics remain unchanged. Switching handle representations
 may require a new context; clearing a borrowed handle does not promise to
 shorten the context type's compile-time lifetime.
+
+The decoder integration is divided into whole-buffer output, incremental
+context, and dictionary-based collection checkpoints. Whole-buffer output
+retains the original allocator value in `History<A>` and uses fresh allocator
+clones for per-frame tables/literal scratch. The streaming type will be
+`Decoder<A = Global, D = SharedDictionary>` with the sealed `DictionaryHandle`
+bound, allocator-aware `new_in(options, allocator)` on the default handle
+specialization, and `with_dictionary_in(options, dictionary, allocator)` where
+both types are inferred from arguments. Existing Global constructors stay
+available. Persistent, prefix and active fields store `D`; block sinks borrow
+only validated dictionary views and typed history/output owners. Reset retains
+the allocator factory; a changed window limit replaces the complete ring owner
+using a fresh clone. Every runtime allocation failure still poisons the context
+until reset, including failures after provisional output or prefix claim.

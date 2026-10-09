@@ -326,6 +326,23 @@ runtime matrix. Content access shares the owning dictionary's existing checked
 backend. Capacity is reachable original payload capacity, not memory owned by
 the Copy view. Attaching these handles to public codec contexts remains open.
 
+`SequenceState<A>` now owns only allocator-bearing frame overrides and repeat
+values, borrowing prepared dictionary entropy per call. Its
+[sequence-state evidence](evidence/2026-10-09-allocator-sequence-state.json)
+records ten tests in seven configurations, six new all-feature strict-provenance
+Miri cases, and passing sequence, dictionary, and streaming integration suites.
+Strict Clippy, both no_std builds, benchmark compilation, formatting, and diff
+checks passed. Explicitly ignored integration oracles remain identified in the
+record; no new live C campaign is claimed for this checkpoint.
+
+Repeat fallback and zero-sequence processing clone no allocator and allocate no
+tables. Tests cover independent dictionary/context domains and prepared
+singletons. Allocation failures at LL, OF, and ML preserve the existing order
+of partial table publication; sink failures may already advance repeats or
+output. Reset releases overrides and restores repeats while keeping the selected
+allocator. This is the decoder's existing failure contract, distinct from an
+encoder's transactional candidate commit.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

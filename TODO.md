@@ -41,8 +41,10 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Parameterize supplied-table sequence bit emission with independent table and writer allocation.
 - [ ] Parameterize transactional sequence contexts, including default/current/spare owners and every temporary.
 - [x] Add allocator-independent validated FSE/Huffman table views without duplicating checked access algorithms.
-- [ ] Parameterize decoding sequence state with borrowed dictionary-table fallback and explicit reset after partial failures.
-- [ ] Expose allocator-aware decoding contexts and collecting output APIs with unchanged framing and poisoned-context recovery.
+- [x] Parameterize decoding sequence state with borrowed dictionary-table fallback and explicit reset after partial failures.
+- [ ] Expose allocator-aware whole-buffer decoding with original output ownership and unchanged frame limits.
+- [ ] Expose allocator-aware streaming decoding contexts with borrowed/shared dictionary attachments and poisoned-context recovery.
+- [ ] Add allocator-aware dictionary decoding collection with independent output ownership and complete scratch cleanup.
 - [x] Parameterize greedy match tables and seed copies with allocator-independent source storage and identical safe/unsafe candidates.
 - [x] Parameterize bounded match chains, candidate borrows, and dictionary seeds with identical safe/unsafe ordering and failure cleanup.
 - [ ] Expose allocator-aware block/stream encoding and one-shot output without allocator-changing copies.

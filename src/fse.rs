@@ -36,10 +36,24 @@ pub(crate) struct FseTableView<'a> {
 }
 
 impl FseTable<Global> {
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "Global convenience retained for direct entropy callers"
+        )
+    )]
     pub(crate) fn from_normalized(counts: &[i16], table_log: u8) -> Result<Self> {
         Self::from_normalized_in(counts, table_log, Global)
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "Global convenience retained for direct entropy callers"
+        )
+    )]
     pub(crate) fn read(data: &[u8], max_symbol: usize, max_log: u8) -> Result<(Self, usize)> {
         Self::read_in(data, max_symbol, max_log, Global)
     }
@@ -59,6 +73,13 @@ impl FseTable<Global> {
         Self::read_dictionary_in(data, max_symbol, max_log, Global)
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "Global convenience retained for direct entropy callers"
+        )
+    )]
     pub(crate) fn rle(symbol: u8) -> Self {
         Self::rle_in(symbol, Global)
     }
