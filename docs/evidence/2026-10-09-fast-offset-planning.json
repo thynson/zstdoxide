@@ -1,0 +1,306 @@
+{
+  "source_before": "2dbd16ebb375017938bcf53e949f5e369eeae708e5eea0f48ffd437e3da8da48",
+  "target_dir": "/tmp/zstdoxide-fast-offset-target",
+  "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+  "toolchain": "[toolchain]\nchannel = \"nightly-2026-10-08\"\nprofile = \"minimal\"\ncomponents = [\"clippy\", \"rustfmt\", \"rust-src\", \"miri\"]\n",
+  "baseline_fixture_before": {
+    "tests/fixtures/match-search-baseline/README.md": "36ee727ddbcbdd33f760e40e7a39ff935ce43837045dbcd2ccdc9464508905ed",
+    "tests/fixtures/match-search-baseline/cases.tsv": "54d96b25eec068fc116622bd4086000a8c9df5b67be9d6649ad160c86d03daf3",
+    "tests/fixtures/match-search-baseline/expected.tsv": "c12ee881fd1333e29302a8f8f4b2f475cdf714785587bdd3b72b6510f629a25d",
+    "tests/fixtures/match-search-baseline/provenance.json": "53ef3b523bcde52d12ce33597515d82b52d5cc222fc0e2129b6f4adb3803f496"
+  },
+  "checks": [
+    {
+      "name": "planner-all",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "sequence_plan::tests",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 4.483712209155783,
+      "log": "/tmp/zstdoxide-fast-offset-planner-all.log",
+      "log_sha256": "ad407d5199bdb3c734a932bf780d55a14489f24cc9633d63933088614dd3c72f",
+      "summaries": [
+        {
+          "passed": 11,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.50s\n     Running unittests src/lib.rs (/tmp/zstdoxide-fast-offset-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 11 tests\ntest sequence_plan::tests::forward_planning_carries_candidate_repeats_across_every_sequence ... ok\ntest sequence_plan::tests::offset_intent_checks_every_zero_and_nonzero_literal_repeat_branch ... ok\ntest sequence_plan::tests::duplicate_offsets_retain_distinct_valid_wire_choices ... ok\ntest sequence_plan::tests::explicit_repeat_distance_preserves_intent_and_changes_the_following_transition ... ok\ntest sequence_plan::tests::every_repeat_branch_preserves_its_exact_wire_update ... ok\ntest sequence_plan::tests::explicit_plans_enforce_lengths_after_pure_offset_resolution ... ok\ntest sequence_plan::tests::duplicate_repeats_choose_the_smallest_value_without_deducing_state_from_distance ... ok\ntest sequence_plan::tests::offset_intent_rejects_zeros_and_checks_only_explicit_addition ... ok\ntest sequence_plan::tests::repeat_intent_rejects_another_valid_repeat_instead_of_reselecting ... ok\ntest sequence_plan::tests::zero_subtraction_overflow_and_malformed_lengths_are_checked ... ok\ntest sequence_plan::tests::all_block_bounded_lengths_preserve_full_width_codes_and_extras ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.06s\n\n"
+    },
+    {
+      "name": "planner-no-std",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "sequence_plan::tests",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 3.702481291955337,
+      "log": "/tmp/zstdoxide-fast-offset-planner-no-std.log",
+      "log_sha256": "b67debcee5216cb0912690f8430d8fb0571595d2368b2094ab7e7fe12e503e16",
+      "summaries": [
+        {
+          "passed": 11,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.17s\n     Running unittests src/lib.rs (/tmp/zstdoxide-fast-offset-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 11 tests\ntest sequence_plan::tests::every_repeat_branch_preserves_its_exact_wire_update ... ok\ntest sequence_plan::tests::duplicate_repeats_choose_the_smallest_value_without_deducing_state_from_distance ... ok\ntest sequence_plan::tests::explicit_repeat_distance_preserves_intent_and_changes_the_following_transition ... ok\ntest sequence_plan::tests::forward_planning_carries_candidate_repeats_across_every_sequence ... ok\ntest sequence_plan::tests::offset_intent_checks_every_zero_and_nonzero_literal_repeat_branch ... ok\ntest sequence_plan::tests::offset_intent_rejects_zeros_and_checks_only_explicit_addition ... ok\ntest sequence_plan::tests::duplicate_offsets_retain_distinct_valid_wire_choices ... ok\ntest sequence_plan::tests::explicit_plans_enforce_lengths_after_pure_offset_resolution ... ok\ntest sequence_plan::tests::repeat_intent_rejects_another_valid_repeat_instead_of_reselecting ... ok\ntest sequence_plan::tests::zero_subtraction_overflow_and_malformed_lengths_are_checked ... ok\ntest sequence_plan::tests::all_block_bounded_lengths_preserve_full_width_codes_and_extras ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 550 filtered out; finished in 0.06s\n\n"
+    },
+    {
+      "name": "planner-no-std-all",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "sequence_plan::tests",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 3.712438083952293,
+      "log": "/tmp/zstdoxide-fast-offset-planner-no-std-all.log",
+      "log_sha256": "4c69b9986b9b81fdf05406dff800a79a5568507b537b785e4bb1feff35e2f5f5",
+      "summaries": [
+        {
+          "passed": 11,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.12s\n     Running unittests src/lib.rs (/tmp/zstdoxide-fast-offset-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 11 tests\ntest sequence_plan::tests::explicit_repeat_distance_preserves_intent_and_changes_the_following_transition ... ok\ntest sequence_plan::tests::every_repeat_branch_preserves_its_exact_wire_update ... ok\ntest sequence_plan::tests::duplicate_repeats_choose_the_smallest_value_without_deducing_state_from_distance ... ok\ntest sequence_plan::tests::forward_planning_carries_candidate_repeats_across_every_sequence ... ok\ntest sequence_plan::tests::offset_intent_rejects_zeros_and_checks_only_explicit_addition ... ok\ntest sequence_plan::tests::duplicate_offsets_retain_distinct_valid_wire_choices ... ok\ntest sequence_plan::tests::repeat_intent_rejects_another_valid_repeat_instead_of_reselecting ... ok\ntest sequence_plan::tests::explicit_plans_enforce_lengths_after_pure_offset_resolution ... ok\ntest sequence_plan::tests::offset_intent_checks_every_zero_and_nonzero_literal_repeat_branch ... ok\ntest sequence_plan::tests::zero_subtraction_overflow_and_malformed_lengths_are_checked ... ok\ntest sequence_plan::tests::all_block_bounded_lengths_preserve_full_width_codes_and_extras ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 550 filtered out; finished in 0.08s\n\n"
+    },
+    {
+      "name": "context-all",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "sequence_context::tests",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.2039481250103563,
+      "log": "/tmp/zstdoxide-fast-offset-context-all.log",
+      "log_sha256": "1e83e806a10ee8d1c5bc6215649f5e606017ea983467ad2b924a577ea29186f3",
+      "summaries": [
+        {
+          "passed": 13,
+          "failed": 0,
+          "ignored": 1
+        }
+      ],
+      "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-fast-offset-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 14 tests\ntest sequence_context::tests::a_replaced_dictionary_channel_never_reappears_as_the_repeat_source ... ok\ntest sequence_context::tests::allocator_dictionary_view_is_copied_into_borrowed_nonclone_context_storage ... ok\ntest sequence_context::tests::discard_and_failed_prepare_preserve_committed_repeats_and_tables ... ok\ntest sequence_context::tests::dictionary_frame_uses_exact_nonzero_initial_state_widths ... ok\ntest sequence_context::tests::official_codec_decodes_transactional_and_dictionary_frames ... ignored, requires official zstd v1.5.7 CLI; set ZSTD_BIN\ntest sequence_context::tests::invalid_counts_lengths_and_distances_never_publish_partial_sections ... ok\ntest sequence_context::tests::dictionary_state_is_owned_and_keeps_duplicates_and_nonzero_singleton_logs ... ok\ntest sequence_context::tests::allocator_dictionary_copy_failures_preserve_the_complete_pending_context ... ok\ntest sequence_context::tests::empty_sections_and_repeated_commit_leave_all_frame_state_unchanged ... ok\ntest sequence_context::tests::reset_and_discard_retain_all_six_owned_slots_and_every_buffer ... ok\ntest sequence_context::tests::allocator_context_retains_every_slot_across_move_reset_and_discard ... ok\ntest sequence_context::tests::new_repeat_raw_and_empty_blocks_share_only_committed_frame_state ... ok\ntest sequence_context::tests::allocator_prepare_failure_sweeps_preserve_committed_state_and_release_candidates ... ok\ntest sequence_context::tests::complete_sections_decode_all_count_header_boundaries_and_overlap ... ok\n\ntest result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 572 filtered out; finished in 0.17s\n\n"
+    },
+    {
+      "name": "emitter-all",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "sequence_encode::tests",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03557341708801687,
+      "log": "/tmp/zstdoxide-fast-offset-emitter-all.log",
+      "log_sha256": "3e81ffbc2d44b7db84a06b63121f17b2d503795aa65d35d0aa6e7d5aebee0702",
+      "summaries": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1
+        }
+      ],
+      "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-fast-offset-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 11 tests\ntest sequence_encode::tests::official_codec_decodes_every_supplied_table_mode_and_repeat_combination ... ignored, requires official zstd v1.5.7 CLI; set ZSTD_BIN\ntest sequence_encode::tests::reused_dictionary_singletons_keep_nonzero_state_widths ... ok\ntest sequence_encode::tests::absent_repeat_context_and_incomplete_or_overlong_streams_fail_decoding ... ok\ntest sequence_encode::tests::all_rle_zero_bit_states_emit_only_the_terminal_marker ... ok\ntest sequence_encode::tests::allocator_every_writer_failure_releases_output_and_preserves_reusable_tables ... ok\ntest sequence_encode::tests::maximum_channel_logs_and_offset_code_preserve_full_width_fields ... ok\ntest sequence_encode::tests::allocator_independent_tables_and_owned_nonclone_writer_preserve_exact_bits ... ok\ntest sequence_encode::tests::allocator_borrowed_nonclone_tables_validate_before_touching_closed_writer ... ok\ntest sequence_encode::tests::long_literals_zero_literals_and_duplicate_repeats_preserve_exact_output ... ok\ntest sequence_encode::tests::malformed_plans_table_limits_and_support_fail_before_resetting_scratch ... ok\ntest sequence_encode::tests::every_predefined_new_rle_combination_decodes_and_reuses_each_channel ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 575 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "defaults-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--release",
+        "--test",
+        "match_search_defaults",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 2.27485837507993,
+      "log": "/tmp/zstdoxide-fast-offset-defaults-safe.log",
+      "log_sha256": "3ffb3809b5ed398183b9607f70226edfe33304086dc76ef197b32f359d01dee5",
+      "summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Finished `release` profile [optimized] target(s) in 1.54s\n     Running tests/match_search_defaults.rs (/tmp/zstdoxide-fast-offset-target/release/build/zstdoxide/f25ea9eed9f87347/out/match_search_defaults-f25ea9eed9f87347)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s\n\n"
+    },
+    {
+      "name": "defaults-all",
+      "command": [
+        "cargo",
+        "test",
+        "--release",
+        "--test",
+        "match_search_defaults",
+        "--all-features",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 2.16441912506707,
+      "log": "/tmp/zstdoxide-fast-offset-defaults-all.log",
+      "log_sha256": "9fb907e6640cd72115718d91cd244fc597a808f85ce6a9d8c0ee9e3357d311ff",
+      "summaries": [
+        {
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 1.42s\n     Running tests/match_search_defaults.rs (/tmp/zstdoxide-fast-offset-target/release/build/zstdoxide/49976999a25ac11c/out/match_search_defaults-49976999a25ac11c)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s\n\n"
+    },
+    {
+      "name": "no-std-safe",
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3810876249335706,
+      "log": "/tmp/zstdoxide-fast-offset-no-std-safe.log",
+      "log_sha256": "9c76db3fff1203fa0a260ee6e0ea47a264af7b0c855f963ee77a2c795465bdb1",
+      "summaries": [],
+      "output": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.35s\n"
+    },
+    {
+      "name": "no-std-all",
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3988197080325335,
+      "log": "/tmp/zstdoxide-fast-offset-no-std-all.log",
+      "log_sha256": "ffd8613fd57d29cd6d48fd052cbde83862c2fe1acc6e8c16dd62ed08d28dee8e",
+      "summaries": [],
+      "output": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.37s\n"
+    },
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 2.404227208113298,
+      "log": "/tmp/zstdoxide-fast-offset-clippy-safe.log",
+      "log_sha256": "7484945aca7bdc60dce5a69b8028d1cc11ea4d86b7a618fdfec7ab3db7a9e043",
+      "summaries": [],
+      "output": "    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.34s\n"
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 2.2377294588368386,
+      "log": "/tmp/zstdoxide-fast-offset-clippy-all.log",
+      "log_sha256": "eef6fd8f9eaa1ea4dc46092bf6694034309cae69a1273f6988027320e2e594a9",
+      "summaries": [],
+      "output": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.18s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "src/sequence_plan.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.034042208921164274,
+      "log": "/tmp/zstdoxide-fast-offset-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": [],
+      "output": ""
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/sequence_plan.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.007411458063870668,
+      "log": "/tmp/zstdoxide-fast-offset-diff.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": [],
+      "output": ""
+    }
+  ],
+  "initial_safe": {
+    "command": [
+      "cargo",
+      "test",
+      "--lib",
+      "sequence_plan::tests"
+    ],
+    "exit_code": 0,
+    "passed": 11,
+    "ignored": 0,
+    "log": "/tmp/zstdoxide-fast-offset-initial.log",
+    "log_sha256": "ccae1e20c3f676daccc367c66eb5f4315d2691c5a713b6c6f5f2ec83b63309cc",
+    "timing_note": "Initial shell command did not record full wall time.",
+    "output": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.58s\n     Running unittests src/lib.rs (/tmp/zstdoxide-fast-offset-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 11 tests\ntest sequence_plan::tests::repeat_intent_rejects_another_valid_repeat_instead_of_reselecting ... ok\ntest sequence_plan::tests::explicit_plans_enforce_lengths_after_pure_offset_resolution ... ok\ntest sequence_plan::tests::duplicate_offsets_retain_distinct_valid_wire_choices ... ok\ntest sequence_plan::tests::every_repeat_branch_preserves_its_exact_wire_update ... ok\ntest sequence_plan::tests::forward_planning_carries_candidate_repeats_across_every_sequence ... ok\ntest sequence_plan::tests::offset_intent_checks_every_zero_and_nonzero_literal_repeat_branch ... ok\ntest sequence_plan::tests::duplicate_repeats_choose_the_smallest_value_without_deducing_state_from_distance ... ok\ntest sequence_plan::tests::explicit_repeat_distance_preserves_intent_and_changes_the_following_transition ... ok\ntest sequence_plan::tests::offset_intent_rejects_zeros_and_checks_only_explicit_addition ... ok\ntest sequence_plan::tests::zero_subtraction_overflow_and_malformed_lengths_are_checked ... ok\ntest sequence_plan::tests::all_block_bounded_lengths_preserve_full_width_codes_and_extras ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.06s\n\n"
+  },
+  "source_after": "2dbd16ebb375017938bcf53e949f5e369eeae708e5eea0f48ffd437e3da8da48",
+  "baseline_fixture_after": {
+    "tests/fixtures/match-search-baseline/README.md": "36ee727ddbcbdd33f760e40e7a39ff935ce43837045dbcd2ccdc9464508905ed",
+    "tests/fixtures/match-search-baseline/cases.tsv": "54d96b25eec068fc116622bd4086000a8c9df5b67be9d6649ad160c86d03daf3",
+    "tests/fixtures/match-search-baseline/expected.tsv": "c12ee881fd1333e29302a8f8f4b2f475cdf714785587bdd3b72b6510f629a25d",
+    "tests/fixtures/match-search-baseline/provenance.json": "53ef3b523bcde52d12ce33597515d82b52d5cc222fc0e2129b6f4adb3803f496"
+  },
+  "result": "passed",
+  "original_evidence_sha256": "9cfd2ded5952a873e73a19b7a28f213d579134ac809367e795578c60700901c8",
+  "runner": "import hashlib,json,os,pathlib,re,subprocess,time\nroot=pathlib.Path('/Users/lanxingcan/Workspace/zstdoxize')\nsource=root/'src/sequence_plan.rs'\nsha=lambda p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()\nconfigurations=[\n('planner-all',['cargo','test','--lib','sequence_plan::tests','--all-features']),\n('planner-no-std',['cargo','test','--lib','sequence_plan::tests','--no-default-features']),\n('planner-no-std-all',['cargo','test','--lib','sequence_plan::tests','--no-default-features','--features','unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training']),\n('context-all',['cargo','test','--lib','sequence_context::tests','--all-features']),\n('emitter-all',['cargo','test','--lib','sequence_encode::tests','--all-features']),\n('defaults-safe',['cargo','test','--release','--test','match_search_defaults','--','--nocapture']),\n('defaults-all',['cargo','test','--release','--test','match_search_defaults','--all-features','--','--nocapture']),\n('no-std-safe',['cargo','check','--no-default-features']),\n('no-std-all',['cargo','check','--no-default-features','--features','unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training']),\n('clippy-safe',['cargo','clippy','--all-targets','--','-D','warnings']),\n('clippy-all',['cargo','clippy','--all-targets','--all-features','--','-D','warnings']),\n('format',['rustfmt','--edition','2024','--check','src/sequence_plan.rs']),\n('diff',['git','diff','--check','--','src/sequence_plan.rs']),\n]\nenv=os.environ.copy();env['CARGO_TARGET_DIR']='/tmp/zstdoxide-fast-offset-target'\nmanifest={str(p.relative_to(root)):sha(p) for p in sorted((root/'tests/fixtures/match-search-baseline').rglob('*')) if p.is_file()}\nresult={'source_before':sha(source),'target_dir':env['CARGO_TARGET_DIR'],'cwd':str(root),'toolchain':(root/'rust-toolchain.toml').read_text(),'baseline_fixture_before':manifest,'checks':[]}\ninitial=pathlib.Path('/tmp/zstdoxide-fast-offset-initial.log')\nresult['initial_safe']={'command':['cargo','test','--lib','sequence_plan::tests'],'exit_code':0,'passed':11,'ignored':0,'log':str(initial),'log_sha256':sha(initial),'timing_note':'Initial shell command did not record full wall time.'}\noutput=pathlib.Path('/tmp/zstdoxide-fast-offset-evidence.json')\ndef save(): output.write_text(json.dumps(result,indent=2)+'\\n')\nsave()\nfor name,command in configurations:\n log=pathlib.Path('/tmp/zstdoxide-fast-offset-'+name+'.log');start=time.monotonic()\n with log.open('w') as f: completed=subprocess.run(command,cwd=root,env=env,stdout=f,stderr=subprocess.STDOUT)\n text=log.read_text();summaries=[{'passed':int(p),'failed':int(f),'ignored':int(i)} for p,f,i in re.findall(r'test result: ok\\. (\\d+) passed; (\\d+) failed; (\\d+) ignored;',text)]\n result['checks'].append({'name':name,'command':command,'exit_code':completed.returncode,'seconds':time.monotonic()-start,'log':str(log),'log_sha256':sha(log),'summaries':summaries})\n save();print(name,completed.returncode,summaries,flush=True)\n if completed.returncode: raise SystemExit(completed.returncode)\n if command[1]=='test' and sum(s['passed'] for s in summaries)==0: raise SystemExit('no passing tests')\n if sha(source)!=result['source_before']: raise SystemExit('owned source changed')\nresult['source_after']=sha(source)\nresult['baseline_fixture_after']={str(p.relative_to(root)):sha(p) for p in sorted((root/'tests/fixtures/match-search-baseline').rglob('*')) if p.is_file()}\nif result['baseline_fixture_before']!=result['baseline_fixture_after']: raise SystemExit('baseline fixture changed')\nresult['result']='passed';save()\n",
+  "scope": "Owned sequence_plan source and original baseline inputs frozen during focused working-tree checks. Other agents edited independent files; this is not an immutable whole-repository final matrix. No new C/Miri or timing campaign.",
+  "summary": {
+    "commands_passed": 14,
+    "test_executions": 81,
+    "existing_ignored_executions": 2,
+    "new_tests": 6,
+    "unsafe_operations_added": 0,
+    "allocations_added": 0
+  }
+}
