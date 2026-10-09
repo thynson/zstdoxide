@@ -66,7 +66,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Port the original raw-block dictionary entropy lifetime schedule at zstreamtest.c:1831.
 - [x] Include the exact dictionary lifetime fixture and its oracle target in reproducible audits.
 - [x] Port the original six-byte flush and dictionary offset schedule at zstreamtest.c:1884.
-- [ ] Port the incremental upstream sequence source generator with independent byte and digest vectors.
+- [x] Port the incremental upstream sequence source generator with independent byte and digest vectors.
 - [ ] Run the original 971-case dictionary sequence sweep through all named strategies and independent C decoding.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.
 - [x] Extend the regression content adapter to every named strategy with reset, output-bound, and full-byte checks.

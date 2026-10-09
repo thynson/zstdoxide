@@ -37,6 +37,7 @@ cargo test --release --all-features --lib upstream_huffman_encode_tests -- --ign
 cargo test --release --all-features --lib entropy_output::tests::oracle -- --ignored
 cargo test --release --all-features --lib upstream_huffman_round_trip_tests::oracle::official_c_producer_matches_huffman_parameters_for_both_bmi_layouts -- --ignored --exact
 cargo test --release --all-features --lib upstream_huffman_round_trip_tests::oracle::official_c_depth_selection_matches_adjustment_and_cheap_policy -- --ignored --exact
+cargo test --release --all-features --lib upstream_sequence_generator_tests::oracle -- --ignored
 cargo test --release --all-features --lib sequence_encode::tests::official_codec_decodes_every_supplied_table_mode_and_repeat_combination -- --ignored --exact
 cargo test --release --all-features --lib fse_select::tests::official_codec_decodes_automatically_selected_channel_tables -- --ignored --exact
 cargo test --release --all-features --lib sequence_context::tests::official_codec_decodes_transactional_and_dictionary_frames -- --ignored --exact
