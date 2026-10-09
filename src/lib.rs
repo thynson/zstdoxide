@@ -31,6 +31,7 @@
 extern crate alloc;
 
 mod bitstream;
+mod bitwriter;
 mod constants;
 mod cursor;
 mod decode;

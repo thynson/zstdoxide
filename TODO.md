@@ -26,7 +26,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 `docs/data-structures.md`. Each checked item belongs to its own verified commit.
 
 - [x] Record entropy encoder ownership, wire boundaries, safety contracts, and ordered checkpoints.
-- [ ] Extract the reusable forward bit writer with byte-identical baseline output.
+- [x] Extract the reusable forward bit writer with byte-identical baseline output.
 - [ ] Add the checked canonical codebook and exact serialized-description pairing.
 - [ ] Add unsafe-huffman-codebook with bounds, missing-symbol, and Miri checks.
 - [ ] Encode one Huffman stream and verify exact C streams, including dictionary log twelve.

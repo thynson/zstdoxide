@@ -2,6 +2,7 @@
 
 use alloc::vec::Vec;
 
+use crate::bitwriter::BitWriter;
 use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
 use crate::fse::FseTable;
 use crate::matchfinder::MatchTable;
@@ -209,7 +210,7 @@ impl BlockEncoder {
             + self.literals.capacity()
             + self.sequences.capacity() * core::mem::size_of::<Sequence>()
             + self.payload.capacity()
-            + self.writer.bytes.capacity()
+            + self.writer.retained_capacity()
             + self
                 .history
                 .as_ref()
@@ -354,7 +355,7 @@ impl BlockEncoder {
             None => self.entropy_tables.insert(EncodingTables::new()?),
         };
         encode_sequences(sequences, tables, &mut self.writer)?;
-        let stream = &self.writer.bytes;
+        let stream = self.writer.as_bytes();
         let capacity = literals
             .len()
             .checked_add(stream.len())
@@ -729,74 +730,6 @@ fn encode_sequences(
     writer.write(u32::from(offset_state), tables.offsets.table_log)?;
     writer.write(u32::from(literal_state), tables.literals.table_log)?;
     writer.finish()
-}
-
-/// A forward writer for fields consumed by `ReverseBits` in reverse order.
-/// Storage is owned; unsafe-bitstream optionally initializes spare capacity
-/// directly before increasing the length. Reservoir arithmetic stays shared.
-struct BitWriter {
-    bytes: Vec<u8>,
-    pending: u64,
-    used: u8,
-}
-
-impl BitWriter {
-    const fn new() -> Self {
-        Self {
-            bytes: Vec::new(),
-            pending: 0,
-            used: 0,
-        }
-    }
-
-    fn reset(&mut self) {
-        self.bytes.clear();
-        self.pending = 0;
-        self.used = 0;
-    }
-
-    fn write(&mut self, value: u32, count: u8) -> Result<()> {
-        if count > 32 || u64::from(value) >= (1_u64 << count) {
-            return Err(Error::CorruptData);
-        }
-        // used < 8 and count <= 32, so at most four bytes will be emitted.
-        self.bytes
-            .try_reserve(4)
-            .map_err(|_| Error::AllocationFailed)?;
-        self.pending |= u64::from(value) << self.used;
-        self.used += count;
-        let emitted = usize::from(self.used / 8);
-        #[cfg(not(feature = "unsafe-bitstream"))]
-        for _ in 0..emitted {
-            self.bytes.push(self.pending as u8);
-            self.pending >>= 8;
-        }
-        #[cfg(feature = "unsafe-bitstream")]
-        {
-            let previous_length = self.bytes.len();
-            for slot in self.bytes.spare_capacity_mut().iter_mut().take(emitted) {
-                slot.write(self.pending as u8);
-                self.pending >>= 8;
-            }
-            // SAFETY: used was below 8 before adding count <= 32, so emitted
-            // is at most four. try_reserve(4) succeeded above, proving enough
-            // spare capacity and no usize overflow in previous_length + 4.
-            // The loop writes exactly emitted initialized u8 values, and its
-            // exclusive spare-capacity borrow has ended. The original prefix
-            // remains initialized; the new length is at most the capacity.
-            unsafe { self.bytes.set_len(previous_length + emitted) };
-        }
-        self.used %= 8;
-        Ok(())
-    }
-
-    fn finish(&mut self) -> Result<()> {
-        self.write(1, 1)?;
-        if self.used != 0 {
-            self.bytes.push(self.pending as u8);
-        }
-        Ok(())
-    }
 }
 
 #[cfg(test)]
@@ -1336,24 +1269,6 @@ mod tests {
     }
 
     #[test]
-    fn reverse_fields_preserve_zero_and_full_width_values() {
-        let fields = [(0, 0), (5, 3), (u32::MAX, 32), (0x1234_5678, 29), (1, 1)];
-        let mut writer = BitWriter::new();
-        assert!(writer.write(1, 0).is_err());
-        assert!(writer.write(8, 3).is_err());
-        assert!(writer.write(0, 33).is_err());
-        for &(value, count) in &fields {
-            writer.write(value, count).unwrap();
-        }
-        writer.finish().unwrap();
-        let mut reader = crate::bitstream::ReverseBits::new(&writer.bytes).unwrap();
-        for &(value, count) in fields.iter().rev() {
-            assert_eq!(reader.read_bits(count).unwrap(), value);
-        }
-        assert_eq!(reader.remaining(), 0);
-    }
-
-    #[test]
     fn sequence_count_boundaries_and_overlapping_expansion_round_trip() {
         let tables = EncodingTables::new().unwrap();
         for count in [1, 127, 128, 255, 256, 0x7eff, 0x7f00] {
@@ -1371,7 +1286,7 @@ mod tests {
             section.push(0);
             let mut writer = BitWriter::new();
             encode_sequences(&sequences, &tables, &mut writer).unwrap();
-            section.extend_from_slice(&writer.bytes);
+            section.extend_from_slice(writer.as_bytes());
             let length = count * 4 + 1;
             let mut history = crate::history::History::new(length);
             history.start_frame(length);
