@@ -20,28 +20,9 @@ and the validation reports. The complete upstream migration remains open.
 The required items remain open. A complete inventory and passing available
 one-shot adaptations do not complete the upstream test migration.
 
-## Module 10: compression parameters and encoder lifecycle
-
-Design: `docs/compression-parameters-design.md` and
-`docs/data-structures.md`. Pure reference profile inspection is distinct from
-operational numeric compression; the existing named policies remain unchanged.
-Module 9 completion and its exact validation boundaries are recorded in
-`docs/progress.md`. Scalar and live-context checkpoints can proceed independently
-after oracle capture; each completed item receives its own verified commit.
-
-- [x] Analyze requested/resolved value records, exact pinned semantics, live configuration boundaries, and subsequent search/storage milestones.
-- [x] Freeze pinned C oracle fixtures for bounds, presets, scalar resolution, mutation failures, and reset outcomes before implementing their Rust counterparts.
-- [x] Add allocation-free validated parameter records, source-size and reference-strategy types, and checked mutation boundaries.
-- [x] Add attributed preset tables and internal tier/level/acceleration selection without changing current compression policies.
-- [x] Implement complete parameter adjustment and pure level/request queries, preserving explicit overrides, source hints, platform bounds, and checked size arithmetic.
-- [x] Add atomic supported encoder configuration replacement at the documented pre-header boundary.
-- [x] Add parameter-only and full encoder reset, verifying phase, pledge, dictionary/prefix release, retained workspace, and allocator ownership.
-- [x] Port source-anchored official scalar assertions through the completed public inspection API.
-- [x] Port matching official encoder lifecycle assertions and independent C checks while preserving default output fingerprints.
-- [x] Update the official source/case inventory with precise scalar and lifecycle coverage, retaining blocked numeric execution and other missing contracts.
-- [x] Validate scalar inspection on 32-bit and big-endian interpreted targets, and compile the no_std library for a target without pointer atomics.
-- [x] Repair the allocator benchmark formatting found by the integrated matrix and verify the benchmark target before restarting the snapshot checks.
-- [x] Run the complete safe/individual/all-feature, no_std, Clippy, formatting and oracle matrix; record precise completion and remaining gaps.
+Module 10 is complete; its checked work items are archived in Git history and
+`docs/progress.md`. The immutable final matrix and remaining migration gaps are
+recorded in `docs/compression-parameters-validation.md`.
 
 ## Module 11: configurable named match search
 
