@@ -136,6 +136,30 @@ remain historical snapshots and are not rewritten as current suite counts.
 
 ## Next original campaigns and strategy obligations
 
+The sequence-source checkpoint is separate from its public codec campaign.
+Implement the three generator shapes from `tests/seqgen.c` with a typed phase
+and checked output indices, preserving one `0x87654321` random state across the
+whole schedule. Match-length requests produce a different guard byte, `value+1`
+copies of the match byte, and a final different guard. Literal-length requests
+save the random state, produce `min(value,128)` high-alphabet bytes, the remaining
+low-alphabet literals, and replay the saved high-alphabet prefix. Offset requests
+use zero padding instead of low-alphabet literals. The exact wrapping recurrence
+and full-width seed-zero XXH64 digest are checked against unchanged C `seqgen.c`,
+including zero-capacity and fragmented continuation boundaries.
+
+The codec checkpoint runs all three kinds for values 0..299, each power 2^8
+through 2^16 and its quarter-offset value, then offsets `2^log-1` for every log
+8..24: 971 requests and 34,639,743 source bytes. Use 1,024-byte generation,
+compression-output and decompression-output buffers, one persistent prepared
+dictionary and one frame, with Continue until final Finish. Verify complete
+byte equality incrementally, the final full-width digest, counters, canaries
+and finalization. Repeat for Greedy, Chain and Lazy and compare independent
+official decoding; preserve the original C level-3/by-reference campaign as
+oracle evidence. Rust's bounded 128 KiB search history does not guarantee
+choosing the long matches the source was designed to suggest. Inspect actual
+sequence coverage where claimed, and retain that qualification in inventory
+rather than claiming every OF code was emitted by each Rust strategy.
+
 1. Preserve every original Huffman selector and remaining source range with
    independent C vectors, both BMI layouts, empty/RLE inputs and every requested
    depth. Add the supported roundtrip driver with explicit unsupported-branch
