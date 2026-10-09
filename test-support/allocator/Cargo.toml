@@ -1,0 +1,20 @@
+[package]
+name = "zstdoxide-test-allocator"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.101"
+publish = false
+license = "BSD-3-Clause"
+description = "Bounded allocation accounting and failure injection for zstdoxide tests"
+
+[workspace]
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+undocumented_unsafe_blocks = "deny"
+missing_safety_doc = "deny"
+
+[profile.release]
+overflow-checks = true

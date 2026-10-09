@@ -71,6 +71,28 @@ execution; it does not establish that the current Linux workflow has run.
 
 ## Allocation and platform checkpoints
 
+The separate `zstdoxide-test-allocator` development dependency provides a
+bounded, preallocated ledger, positive-size failure ordinals, distinct clone
+identities, and a non-Clone owner usable by value or reference. Final
+[helper evidence](evidence/2026-10-09-allocator-helper.json) records 13 passing
+tests in each of debug, release, and strict-provenance Miri, plus clean strict
+all-target Clippy and formatting. Root test-target compilation and safe no_std
+compilation also passed after development-dependency registration.
+
+Review found and fixed macOS std Mutex's lazy first-lock allocation: constructor
+setup initializes and unlocks the mutex before an allocator owner can exist.
+The selected stdlib's subsequent lock/unlock/destruction preconditions, every
+unsafe forwarding call, failed-resize preservation, and owner identity were
+reviewed again after that fix. The helper's unsafe implementation is outside
+the core crate; default codec code still forbids unsafe operations.
+
+Payload counters exclude setup ledger/Arc/native-mutex storage and cannot see
+transient overlap internal to Global resizing. Setup retains standard Arc and
+native-mutex panic/abort behavior; callbacks use initialized private state and
+never dynamically extend bookkeeping. These measurement and platform limits
+are documented in the helper README. CI now schedules its tests, strict checks,
+and Miri; this edit is not evidence of an executed Linux CI run.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

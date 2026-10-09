@@ -22,6 +22,9 @@ unsafe-match-chain = []
 unsafe-dictionary = []
 unsafe-training = []
 
+[dev-dependencies]
+zstdoxide-test-allocator = { path = "test-support/allocator" }
+
 [lints.rust]
 unsafe_op_in_unsafe_fn = "deny"
 

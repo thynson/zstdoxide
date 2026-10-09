@@ -6,6 +6,9 @@ python3 scripts/check_upstream_fixtures.py
 
 # Each backend alone must compile without std and pass the same test suite.
 cargo fmt --all -- --check
+cargo fmt --manifest-path test-support/allocator/Cargo.toml -- --check
+cargo test --manifest-path test-support/allocator/Cargo.toml
+cargo clippy --manifest-path test-support/allocator/Cargo.toml --all-targets -- -D warnings
 cargo test
 cargo build
 rustdoc --edition 2024 --test docs/dictionary-usage.md --extern zstdoxide=target/debug/libzstdoxide.rlib -L dependency=target/debug/deps

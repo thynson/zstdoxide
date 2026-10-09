@@ -5,3 +5,10 @@ version = 4
 [[package]]
 name = "zstdoxide"
 version = "0.1.0"
+dependencies = [
+ "zstdoxide-test-allocator",
+]
+
+[[package]]
+name = "zstdoxide-test-allocator"
+version = "0.1.0"
