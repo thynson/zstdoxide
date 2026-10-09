@@ -144,7 +144,11 @@ impl HuffmanCodebook {
     /// allocation; subsequent allocation failure may leave partial scratch
     /// output. Numeric codewords are appended little-endian without reversing
     /// their individual bits. Empty input still produces the marker byte `1`.
-    pub(crate) fn encode_stream(&self, input: &[u8], writer: &mut BitWriter) -> Result<()> {
+    pub(crate) fn encode_stream<A: Allocator>(
+        &self,
+        input: &[u8],
+        writer: &mut BitWriter<A>,
+    ) -> Result<()> {
         if !self.covers(input) {
             return Err(Error::CorruptData);
         }
@@ -163,11 +167,11 @@ impl HuffmanCodebook {
     /// twelve-bit dictionary codes. Invalid sizes or absent symbols leave both
     /// caller-owned buffers unchanged. Successful reservation precedes reset;
     /// a later writer allocation failure may leave partial scratch output.
-    pub(crate) fn encode_four_streams(
+    pub(crate) fn encode_four_streams<A: Allocator, B: Allocator>(
         &self,
         input: &[u8],
-        writer: &mut BitWriter,
-        output: &mut Vec<u8>,
+        writer: &mut BitWriter<A>,
+        output: &mut Vec<u8, B>,
     ) -> Result<()> {
         self.encode_four_streams_bounded(input, writer, output, MAX_BLOCK_SIZE)
     }
@@ -176,20 +180,20 @@ impl HuffmanCodebook {
     /// source bound. Frame literal sections continue to use the smaller limit.
     /// Actual quarter sizes, including markers, must fit the u16 jump fields.
     #[cfg(test)]
-    pub(crate) fn encode_standalone_four_streams(
+    pub(crate) fn encode_standalone_four_streams<A: Allocator, B: Allocator>(
         &self,
         input: &[u8],
-        writer: &mut BitWriter,
-        output: &mut Vec<u8>,
+        writer: &mut BitWriter<A>,
+        output: &mut Vec<u8, B>,
     ) -> Result<()> {
         self.encode_four_streams_bounded(input, writer, output, 256 * 1024)
     }
 
-    fn encode_four_streams_bounded(
+    fn encode_four_streams_bounded<A: Allocator, B: Allocator>(
         &self,
         input: &[u8],
-        writer: &mut BitWriter,
-        output: &mut Vec<u8>,
+        writer: &mut BitWriter<A>,
+        output: &mut Vec<u8, B>,
         source_limit: usize,
     ) -> Result<()> {
         if !(6..=source_limit).contains(&input.len()) {
@@ -228,7 +232,10 @@ impl HuffmanCodebook {
             .try_reserve(encoded_size.saturating_sub(output.len()))
             .map_err(|_| Error::AllocationFailed)?;
         output.clear();
-        output.resize(6, 0);
+        // The exact complete stream reservation includes all six jump bytes.
+        while output.len() < 6 {
+            output.push(0);
+        }
         let mut start = 0;
         for (stream_index, end) in ends.into_iter().enumerate() {
             self.encode_stream(&input[start..end], writer)?;
@@ -241,7 +248,11 @@ impl HuffmanCodebook {
                 let jump = stream_index * 2;
                 output[jump..jump + 2].copy_from_slice(&length.to_le_bytes());
             }
-            output.extend_from_slice(encoded);
+            // The prevalidated sum includes each exact code width and marker,
+            // so every initialized byte fits the complete reservation above.
+            for &byte in encoded {
+                output.push(byte);
+            }
             start = end;
         }
         Ok(())
@@ -340,6 +351,174 @@ mod tests {
     use alloc::vec;
     use core::num::NonZeroU64;
     use zstdoxide_test_allocator::{AllocatorConfig, NonCloneAllocator, TrackingAllocator};
+
+    fn stream_allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 4,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    fn two_symbol_codes() -> HuffmanCodebook {
+        let mut lengths = [0; 256];
+        lengths[..2].fill(1);
+        HuffmanCodebook::from_lengths(&lengths, 11).unwrap()
+    }
+
+    #[test]
+    fn custom_streams_accept_independent_non_clone_writer_and_output_owners() {
+        let writer_owner = stream_allocator().into_non_clone();
+        let writer_monitor = writer_owner.monitor();
+        let output_owner = stream_allocator().into_non_clone();
+        let output_monitor = output_owner.monitor();
+        let output_id = output_owner.identity();
+        let mut writer = BitWriter::new_in(writer_owner);
+        let mut output = Vec::new_in(output_owner);
+        let codes = two_symbol_codes();
+        for length in [6, 9, 128, 1024] {
+            let source: Vec<_> = (0..length).map(|index| (index % 2) as u8).collect();
+            let mut expected_writer = BitWriter::new();
+            let mut expected_four = Vec::new();
+            codes.encode_stream(&source, &mut writer).unwrap();
+            codes.encode_stream(&source, &mut expected_writer).unwrap();
+            assert_eq!(writer.as_bytes(), expected_writer.as_bytes());
+            codes
+                .encode_four_streams(&source, &mut writer, &mut output)
+                .unwrap();
+            codes
+                .encode_four_streams(&source, &mut expected_writer, &mut expected_four)
+                .unwrap();
+            assert_eq!(output, expected_four);
+            assert_eq!(output.allocator().identity(), output_id);
+        }
+        drop(writer);
+        writer_monitor.assert_released();
+        assert_eq!(output_monitor.snapshot().live_blocks, 1);
+        drop(output);
+        output_monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_stream_prevalidation_and_output_reservation_preserve_both_buffers() {
+        let writer_owner = stream_allocator().into_non_clone();
+        let writer_monitor = writer_owner.monitor();
+        let output_owner = stream_allocator().into_non_clone();
+        let output_monitor = output_owner.monitor();
+        let mut writer = BitWriter::new_in(writer_owner);
+        let mut output = Vec::new_in(output_owner);
+        writer.write(0x9a, 8).unwrap();
+        writer.finish().unwrap();
+        output.try_reserve_exact(1).unwrap();
+        output.push(0xa5);
+        let old_writer = writer.as_bytes().to_vec();
+        let old_pointer = output.as_ptr();
+        let codes = two_symbol_codes();
+        let source = vec![0; 1024];
+        let writer_attempts = writer_monitor.snapshot().attempts;
+        let output_attempts = output_monitor.snapshot().attempts;
+        for bad in [&[2, 0, 0, 0, 0, 0][..], &[0; 5][..]] {
+            assert!(
+                codes
+                    .encode_four_streams(bad, &mut writer, &mut output)
+                    .is_err()
+            );
+            assert_eq!(writer.as_bytes(), old_writer);
+            assert_eq!(output.as_slice(), &[0xa5]);
+            assert_eq!(writer_monitor.snapshot().attempts, writer_attempts);
+            assert_eq!(output_monitor.snapshot().attempts, output_attempts);
+        }
+        assert!(output_monitor.fail_next());
+        assert_eq!(
+            codes.encode_four_streams(&source, &mut writer, &mut output),
+            Err(Error::AllocationFailed)
+        );
+        assert_eq!(writer.as_bytes(), old_writer);
+        assert_eq!(writer.finish(), Err(Error::CorruptData));
+        assert_eq!(output.as_slice(), &[0xa5]);
+        assert_eq!(output.as_ptr(), old_pointer);
+        assert_eq!(writer_monitor.snapshot().attempts, writer_attempts);
+        drop(writer);
+        drop(output);
+        writer_monitor.assert_released();
+        output_monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_stream_failures_release_distinct_owners_and_retry_exactly() {
+        let codes = two_symbol_codes();
+        let source: Vec<_> = (0..128).map(|index| (index % 2) as u8).collect();
+        let mut expected_writer = BitWriter::new();
+        let mut expected = Vec::new();
+        codes
+            .encode_four_streams(&source, &mut expected_writer, &mut expected)
+            .unwrap();
+        let owner = stream_allocator();
+        let monitor = owner.monitor();
+        let mut writer = BitWriter::new_in(owner.clone().into_non_clone());
+        let mut output = Vec::new_in(owner.into_non_clone());
+        codes
+            .encode_four_streams(&source, &mut writer, &mut output)
+            .unwrap();
+        let attempts = monitor.snapshot().attempts;
+        assert!(attempts >= 2);
+        drop(writer);
+        drop(output);
+        monitor.assert_released();
+        for ordinal in 1..=attempts {
+            let owner = stream_allocator();
+            let monitor = owner.monitor();
+            let mut writer = BitWriter::new_in(owner.clone().into_non_clone());
+            let mut output = Vec::new_in(owner.into_non_clone());
+            monitor.set_fail_at(NonZeroU64::new(ordinal));
+            assert_eq!(
+                codes.encode_four_streams(&source, &mut writer, &mut output),
+                Err(Error::AllocationFailed)
+            );
+            if ordinal == 2 {
+                // Output reservation succeeded, but the first writer request
+                // failed after the jump-table scratch had been initialized.
+                assert_eq!(output.as_slice(), &[0; 6]);
+                assert!(writer.as_bytes().is_empty());
+            }
+            monitor.clear_failure();
+            codes
+                .encode_four_streams(&source, &mut writer, &mut output)
+                .unwrap();
+            assert_eq!(output.as_slice(), expected);
+            assert_eq!(monitor.snapshot().failures, 1);
+            drop(writer);
+            drop(output);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn custom_standalone_streams_retain_twelve_bit_codes_and_the_large_source_bound() {
+        let owner = stream_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let description = [139, 0x11, 0x23, 0x45, 0x67, 0x89, 0xab];
+        let (table, _) = HuffmanTable::read_dictionary(&description).unwrap();
+        let codes = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        let short = (0..=255)
+            .find(|&symbol| codes.code(symbol).is_ok_and(|c| c.bits == 1))
+            .unwrap();
+        let source = vec![short; 256 * 1024];
+        let mut custom_writer = BitWriter::new_in(&owner);
+        let mut custom_output = Vec::new_in(&owner);
+        let mut global_writer = BitWriter::new();
+        let mut global_output = Vec::new();
+        codes
+            .encode_standalone_four_streams(&source, &mut custom_writer, &mut custom_output)
+            .unwrap();
+        codes
+            .encode_standalone_four_streams(&source, &mut global_writer, &mut global_output)
+            .unwrap();
+        assert_eq!(custom_output, global_output);
+        drop(custom_writer);
+        drop(custom_output);
+        monitor.assert_released();
+    }
 
     fn owned_description(
         bytes: &[u8],

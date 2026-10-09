@@ -37,7 +37,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Parameterize inverse FSE tables, normalization, descriptions, and channel-selection temporaries.
 - [x] Parameterize Huffman decoding, literal buffers, and paired-description validation storage.
 - [x] Replace the Huffman builder's Global-only priority queue with checked allocator-compatible storage and preserve all tree/tie vectors.
-- [ ] Parameterize transactional literal contexts and codebook streams, preserving selected descriptions and failure publication.
+- [x] Parameterize transactional literal contexts and codebook streams, preserving selected descriptions and failure publication.
 - [x] Parameterize supplied-table sequence bit emission with independent table and writer allocation.
 - [ ] Parameterize transactional sequence contexts, including default/current/spare owners and every temporary.
 - [x] Add allocator-independent validated FSE/Huffman table views without duplicating checked access algorithms.

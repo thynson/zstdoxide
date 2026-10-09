@@ -29,13 +29,6 @@ impl BitWriter<Global> {
 impl<A: Allocator> BitWriter<A> {
     /// Each allocation belongs to the supplied allocator value. No allocator
     /// clone or equivalence is needed; moves retain the complete Vec owner.
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "allocator-aware contexts are migrated in the next checkpoint"
-        )
-    )]
     pub(crate) fn new_in(allocator: A) -> Self {
         Self {
             bytes: Vec::new_in(allocator),

@@ -1,0 +1,1233 @@
+{
+  "schema": 1,
+  "scope": "Literal encoder and Huffman stream allocator ownership; concurrent independent migrations may change other files.",
+  "toolchain": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3",
+  "before": {
+    "time_utc": "2026-10-09T04:33:50.289456+00:00",
+    "git_head": "e41217a70b0b39b6e422be85026c26fc14928c65",
+    "owned_files": {
+      "src/literal_encode.rs": "d1e50ba7ba515906fef1c0413e1e8ed4d0ed18ce03cddb62b8bf331e4520c6cf",
+      "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+      "src/huffman_encode.rs": "595ef6079f6f77dfbc2a2e7540e2c2aaad5e138f80b26951f1a08f4e433d0f2f",
+      "src/bitwriter.rs": "ac8a1969268f61d5c1a976c625aaab05b4a76d377ae381782982d7300b964ccc"
+    },
+    "all_source_files": [
+      {
+        "path": "src/bitstream.rs",
+        "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+      },
+      {
+        "path": "src/bitwriter.rs",
+        "sha256": "ac8a1969268f61d5c1a976c625aaab05b4a76d377ae381782982d7300b964ccc"
+      },
+      {
+        "path": "src/constants.rs",
+        "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+      },
+      {
+        "path": "src/cursor.rs",
+        "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+      },
+      {
+        "path": "src/decode.rs",
+        "sha256": "4899cda69de82430435eabc6e0eb8c63cac5d518bf1ab73c1acd1422febaba55"
+      },
+      {
+        "path": "src/dictionary.rs",
+        "sha256": "0c1eafe83c2f354f34309e9d0f81a37f44528c97c5c41a04fa7c51617d6fea33"
+      },
+      {
+        "path": "src/dictionary_train.rs",
+        "sha256": "b2c9370fb7e1064b0255ca2f516f08f72052b45ef5cdabaac126333f5db3e945"
+      },
+      {
+        "path": "src/encode.rs",
+        "sha256": "9943e01f939b6185f1554c3dac7964c4d5b681e7d25099578d696653a2ff2073"
+      },
+      {
+        "path": "src/entropy_encode.rs",
+        "sha256": "709558f36a3ee48c680075eadfd284afc6361108c303ec05150be21f6c27a756"
+      },
+      {
+        "path": "src/entropy_output.rs",
+        "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+      },
+      {
+        "path": "src/error.rs",
+        "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+      },
+      {
+        "path": "src/frame.rs",
+        "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+      },
+      {
+        "path": "src/fse.rs",
+        "sha256": "7a2544b7b75f291a121f75bbf7bfb4b6be421075e8a07a06c93a5e9fade4a789"
+      },
+      {
+        "path": "src/fse_encode.rs",
+        "sha256": "260265b9e174f46969e2a8dab38fdac218a5e800a6350818c018198dbf4fa568"
+      },
+      {
+        "path": "src/fse_select.rs",
+        "sha256": "3fba96b62fafa5374c53d3b1446850fe0417210c7c45c27ed92bf098a4a2de25"
+      },
+      {
+        "path": "src/heap.rs",
+        "sha256": "9200ae5a7492dbec09daf6644f0b6b030cf868e5593436d522bc86c7e0fe49c5"
+      },
+      {
+        "path": "src/history.rs",
+        "sha256": "eba2efb9ebc679767db1194bcd2fd9755ff49d56a62b3be612178aee634afb9c"
+      },
+      {
+        "path": "src/huffman.rs",
+        "sha256": "7f676952b8f92d500acad233d90801aa01901f2944364f3ebbbad20b04dd1b06"
+      },
+      {
+        "path": "src/huffman_codebook.rs",
+        "sha256": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b"
+      },
+      {
+        "path": "src/huffman_encode.rs",
+        "sha256": "595ef6079f6f77dfbc2a2e7540e2c2aaad5e138f80b26951f1a08f4e433d0f2f"
+      },
+      {
+        "path": "src/lib.rs",
+        "sha256": "405ecf0e10c0528e702eb4c67f27db1c5b8f8cb834a05e0b69522e2ba1a0e885"
+      },
+      {
+        "path": "src/literal_encode.rs",
+        "sha256": "d1e50ba7ba515906fef1c0413e1e8ed4d0ed18ce03cddb62b8bf331e4520c6cf"
+      },
+      {
+        "path": "src/literal_header.rs",
+        "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+      },
+      {
+        "path": "src/match_parse.rs",
+        "sha256": "6178dd023571d9a1d244fc0f40eccf69d986b89f6a48c5bf0057bbe7b978b222"
+      },
+      {
+        "path": "src/matchchain.rs",
+        "sha256": "7128426b2ffb05f12ca5b227166879605469b515efef6009686735f3266fb446"
+      },
+      {
+        "path": "src/matchfinder.rs",
+        "sha256": "816544f36e7abb20546454133de5dd207900fae375d92a8f68b8cd3fa928a2b6"
+      },
+      {
+        "path": "src/ring_history.rs",
+        "sha256": "bde3d9b4f3dfb4a4aeb52caddd654534920fb5bfed041ad2abdd05c2a3385ec9"
+      },
+      {
+        "path": "src/sequence_context.rs",
+        "sha256": "08acd9b27e930040f985dba9fd228f7f05018a876d5afb4198086e112aef605f"
+      },
+      {
+        "path": "src/sequence_encode.rs",
+        "sha256": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61"
+      },
+      {
+        "path": "src/sequence_plan.rs",
+        "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+      },
+      {
+        "path": "src/sequences.rs",
+        "sha256": "da52cba287770af961640f9abdda28d5f9e9a39874977e98629103cf19533d3c"
+      },
+      {
+        "path": "src/strategy.rs",
+        "sha256": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab"
+      },
+      {
+        "path": "src/stream.rs",
+        "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+      },
+      {
+        "path": "src/stream_decode.rs",
+        "sha256": "c5214e6e53635a7084e43a0b151353105450b11d166f171b7d9353489ec32c2a"
+      },
+      {
+        "path": "src/stream_encode.rs",
+        "sha256": "e2a266edbbc0775fa0d5b2ded9c6fc82d81192e577ff6b32c136a4de7472d453"
+      },
+      {
+        "path": "src/training.rs",
+        "sha256": "4f4e60f12a9d15e32ac80eff4e358acb54184c78ff26cdd29f92fefa7bbae172"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.348554375115782,
+      "log_path": "/tmp/zstdoxide-module9-literals-00-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": []
+    },
+    {
+      "name": "literal-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.08201062493026257,
+      "log_path": "/tmp/zstdoxide-module9-literals-01-literal-safe.log",
+      "log_sha256": "e465064ff9ffd5e18e370a673380e8eeaa781536094bcc2ae0b892e57fe0ea2a",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "codebook-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "huffman_codebook::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.134101000148803,
+      "log_path": "/tmp/zstdoxide-module9-literals-02-codebook-safe.log",
+      "log_sha256": "c2df98f75acffbee9ac4352d48b55f820992a7a2b718224ef270b938818eb61b",
+      "test_summaries": [
+        {
+          "passed": 26,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "literal-unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-bitstream",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.0876282500103116,
+      "log_path": "/tmp/zstdoxide-module9-literals-03-literal-unsafe-bitstream.log",
+      "log_sha256": "e3dbf180f9b82611e504bba9e0c2be63d6c214b5bafcbc96785ca79c9d0a79d1",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "codebook-unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-bitstream",
+        "huffman_codebook::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.1670198340434581,
+      "log_path": "/tmp/zstdoxide-module9-literals-04-codebook-unsafe-bitstream.log",
+      "log_sha256": "ca0c9d7f30d9fd02b43fcd1cf9cc1fd3c8480d13545ed192806435ae84f891e9",
+      "test_summaries": [
+        {
+          "passed": 26,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "literal-unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.082735708914697,
+      "log_path": "/tmp/zstdoxide-module9-literals-05-literal-unsafe-fse.log",
+      "log_sha256": "8c490cd7075f38d73a0b8dbc9153d2de3ff3ce3987f27f2cc45d9d98f4e6d9ba",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "literal-unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse-encoder",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.3684291660320014,
+      "log_path": "/tmp/zstdoxide-module9-literals-06-literal-unsafe-fse-encoder.log",
+      "log_sha256": "b42f49d981bab0ba1af79e4cc0fd70d38f9d5d359238c7f326af2b09000fac0b",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "literal-unsafe-huffman",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-huffman",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.3421991250943393,
+      "log_path": "/tmp/zstdoxide-module9-literals-07-literal-unsafe-huffman.log",
+      "log_sha256": "38437fedef80fac5e1a7d008e24d5fd610c0c03093327981bd6ccc40c84367d1",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "literal-unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-huffman-codebook",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.2736629170831293,
+      "log_path": "/tmp/zstdoxide-module9-literals-08-literal-unsafe-huffman-codebook.log",
+      "log_sha256": "610efeeac54de662a1186b8da70dd2abc479479c22b0848c974f63c2fa6d2715",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "codebook-unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-huffman-codebook",
+        "huffman_codebook::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.15120425005443394,
+      "log_path": "/tmp/zstdoxide-module9-literals-09-codebook-unsafe-huffman-codebook.log",
+      "log_sha256": "6eaf9b9d566b565fab987cc07cc2c8083b133893a6c5e1c2dbf0e829b9f57ca5",
+      "test_summaries": [
+        {
+          "passed": 26,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "literal-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.249434375204146,
+      "log_path": "/tmp/zstdoxide-module9-literals-10-literal-all.log",
+      "log_sha256": "759e214084542c5e7bfaf5545c81be83431a0057e5bec7ec24f6f5c07670b153",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "codebook-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_codebook::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.19948141602799296,
+      "log_path": "/tmp/zstdoxide-module9-literals-11-codebook-all.log",
+      "log_sha256": "29455523ecde255467d74197d78ed2afe0660bcec08bd70e06abaf036989b13c",
+      "test_summaries": [
+        {
+          "passed": 26,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "literal-no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.207150083966553,
+      "log_path": "/tmp/zstdoxide-module9-literals-12-literal-no-std-safe.log",
+      "log_sha256": "b42cbc3616509d5466718733ca7bfddf0f1585bfe8124557eb2ec7ba860a5af7",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "codebook-no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "huffman_codebook::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.1502214171923697,
+      "log_path": "/tmp/zstdoxide-module9-literals-13-codebook-no-std-safe.log",
+      "log_sha256": "4c5161cbdf5560855d00ab6743e8db7ef78aea116fba73d4a0a9954c5a23689f",
+      "test_summaries": [
+        {
+          "passed": 26,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "literal-no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "literal_encode::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 2.813914665952325,
+      "log_path": "/tmp/zstdoxide-module9-literals-14-literal-no-std-all.log",
+      "log_sha256": "1700787d5f187533668b23544cbffe052d11a77cc4c5c22f9d443085fce40429",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "codebook-no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "huffman_codebook::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.14220783300697803,
+      "log_path": "/tmp/zstdoxide-module9-literals-15-codebook-no-std-all.log",
+      "log_sha256": "589160cc1bee08683431613bf56a158243e817f16e0aa3e1d39641c47170cd63",
+      "test_summaries": [
+        {
+          "passed": 26,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "publication-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "only_emitted_compressed_blocks_publish_pending_literal_tables"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.033264166209846735,
+      "log_path": "/tmp/zstdoxide-module9-literals-16-publication-safe.log",
+      "log_sha256": "75d4a9641d7a7ea4e53409cf1f995fd1127ac9f1794d0bd412e10edd14c6ead1",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "integration-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--test",
+        "entropy_encoding"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 1.4580639170017093,
+      "log_path": "/tmp/zstdoxide-module9-literals-17-integration-safe.log",
+      "log_sha256": "35ab3d92d664021b74de9e13fd8acc37867940e4a588688118f17599d97b9dbc",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2
+        }
+      ]
+    },
+    {
+      "name": "publication-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "only_emitted_compressed_blocks_publish_pending_literal_tables"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.023435666924342513,
+      "log_path": "/tmp/zstdoxide-module9-literals-18-publication-all.log",
+      "log_sha256": "3baec4e1bd6ceaf4b11a25361ec037c09fcb20b54982a3b99e940e5e9825d6aa",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "integration-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--test",
+        "entropy_encoding",
+        "--all-features"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 1.581071542110294,
+      "log_path": "/tmp/zstdoxide-module9-literals-19-integration-all.log",
+      "log_sha256": "9a49b7ebd6904a9ba08189c95697a14ad790aed6381e67391cab72c9d6ea8f43",
+      "test_summaries": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2
+        }
+      ]
+    },
+    {
+      "name": "check-no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--locked",
+        "--no-default-features"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.3253757080528885,
+      "log_path": "/tmp/zstdoxide-module9-literals-20-check-no-std-safe.log",
+      "log_sha256": "0012603f10028048f3f07a580ae73aa5748e351da5c01d4ef99323da3549b339",
+      "test_summaries": []
+    },
+    {
+      "name": "check-no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.32485958305187523,
+      "log_path": "/tmp/zstdoxide-module9-literals-21-check-no-std-all.log",
+      "log_sha256": "91d2cedd23271dce797ac25f8ec3a852be57d25e2f651695a26a42a755c80f64",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 1.8885054169222713,
+      "log_path": "/tmp/zstdoxide-module9-literals-22-clippy-safe.log",
+      "log_sha256": "99f09f307b5ffcde769320310a85cb8022a559c2639cea8488cb64f64729523d",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.06877974979579449,
+      "log_path": "/tmp/zstdoxide-module9-literals-23-clippy-all.log",
+      "log_sha256": "a13905646e2aed93ec6ea9ed6ac91490a4e01f91af0215c3965279a910612149",
+      "test_summaries": []
+    },
+    {
+      "name": "oracle-streams-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "upstream_huffman_encode_tests",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 1.150326499948278,
+      "log_path": "/tmp/zstdoxide-module9-literals-24-oracle-streams-safe.log",
+      "log_sha256": "14d8f66083cbbde7f2e46b20969c56f2fd31b6d2d7457f45a5818a89e2f6b234",
+      "test_summaries": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "oracle-integration-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--test",
+        "entropy_encoding",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.13576325005851686,
+      "log_path": "/tmp/zstdoxide-module9-literals-25-oracle-integration-safe.log",
+      "log_sha256": "7d1f12b71904f0e9471aae13251a1fd7f55a34a57b22ed155605c82190d11583",
+      "test_summaries": [
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "oracle-streams-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "upstream_huffman_encode_tests",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.9863959578797221,
+      "log_path": "/tmp/zstdoxide-module9-literals-26-oracle-streams-all.log",
+      "log_sha256": "298f882ce05247a1c7e040526bf1f8e4d6c17c39bf356e1ee2287687cc4f7794",
+      "test_summaries": [
+        {
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "oracle-integration-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--test",
+        "entropy_encoding",
+        "--all-features",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 0.1280243331566453,
+      "log_path": "/tmp/zstdoxide-module9-literals-27-oracle-integration-all.log",
+      "log_sha256": "4636361b3dbdb53162b930455042de7427059bba907a596ab9e7b6d5ff783be7",
+      "test_summaries": [
+        {
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-custom_stream_prevalidation_and_output_reservation_preserve_both_buffers",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_codebook::tests::custom_stream_prevalidation_and_output_reservation_preserve_both_buffers",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals-miri",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 2.5140495831146836,
+      "log_path": "/tmp/zstdoxide-module9-literals-28-miri-custom_stream_prevalidation_and_output_reservation_preserve_both_buffers.log",
+      "log_sha256": "8d36a6034c54479593b46050002e31432a0aa9799b7ae9a5666d29b548b442b9",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-custom_stream_failures_release_distinct_owners_and_retry_exactly",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "huffman_codebook::tests::custom_stream_failures_release_distinct_owners_and_retry_exactly",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals-miri",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 1.3889991249889135,
+      "log_path": "/tmp/zstdoxide-module9-literals-29-miri-custom_stream_failures_release_distinct_owners_and_retry_exactly.log",
+      "log_sha256": "3de070f3566964123fcf32b6e1394d5636df05a3e126c3a0865ae25be39be50c",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-distinct_allocator_domains_move_with_the_complete_context",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "literal_encode::tests::distinct_allocator_domains_move_with_the_complete_context",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals-miri",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 12.591371083864942,
+      "log_path": "/tmp/zstdoxide-module9-literals-30-miri-distinct_allocator_domains_move_with_the_complete_context.log",
+      "log_sha256": "27bb4f65cc8caa7deecad3d2e761a38587789ee6533902f4b02331f7dfdf3ca1",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-warmed_reuse_failures_preserve_the_published_table_and_recover",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "literal_encode::tests::warmed_reuse_failures_preserve_the_published_table_and_recover",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-literals-miri",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 6.5035584170836955,
+      "log_path": "/tmp/zstdoxide-module9-literals-31-miri-warmed_reuse_failures_preserve_the_published_table_and_recover.log",
+      "log_sha256": "814ffbf970572a69fef9df1df019d7be67e5ef01e8108b5beecdea3fe1f40c77",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    }
+  ],
+  "running": false,
+  "after": {
+    "time_utc": "2026-10-09T04:34:48.506084+00:00",
+    "git_head": "629786ea3d73b4ecb9dfdb7b85cf1d5e7a06be49",
+    "owned_files": {
+      "src/literal_encode.rs": "d1e50ba7ba515906fef1c0413e1e8ed4d0ed18ce03cddb62b8bf331e4520c6cf",
+      "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+      "src/huffman_encode.rs": "595ef6079f6f77dfbc2a2e7540e2c2aaad5e138f80b26951f1a08f4e433d0f2f",
+      "src/bitwriter.rs": "ac8a1969268f61d5c1a976c625aaab05b4a76d377ae381782982d7300b964ccc"
+    },
+    "all_source_files": [
+      {
+        "path": "src/bitstream.rs",
+        "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+      },
+      {
+        "path": "src/bitwriter.rs",
+        "sha256": "ac8a1969268f61d5c1a976c625aaab05b4a76d377ae381782982d7300b964ccc"
+      },
+      {
+        "path": "src/constants.rs",
+        "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+      },
+      {
+        "path": "src/cursor.rs",
+        "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+      },
+      {
+        "path": "src/decode.rs",
+        "sha256": "4899cda69de82430435eabc6e0eb8c63cac5d518bf1ab73c1acd1422febaba55"
+      },
+      {
+        "path": "src/dictionary.rs",
+        "sha256": "0c1eafe83c2f354f34309e9d0f81a37f44528c97c5c41a04fa7c51617d6fea33"
+      },
+      {
+        "path": "src/dictionary_train.rs",
+        "sha256": "b2c9370fb7e1064b0255ca2f516f08f72052b45ef5cdabaac126333f5db3e945"
+      },
+      {
+        "path": "src/encode.rs",
+        "sha256": "9943e01f939b6185f1554c3dac7964c4d5b681e7d25099578d696653a2ff2073"
+      },
+      {
+        "path": "src/entropy_encode.rs",
+        "sha256": "709558f36a3ee48c680075eadfd284afc6361108c303ec05150be21f6c27a756"
+      },
+      {
+        "path": "src/entropy_output.rs",
+        "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+      },
+      {
+        "path": "src/error.rs",
+        "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+      },
+      {
+        "path": "src/frame.rs",
+        "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+      },
+      {
+        "path": "src/fse.rs",
+        "sha256": "7a2544b7b75f291a121f75bbf7bfb4b6be421075e8a07a06c93a5e9fade4a789"
+      },
+      {
+        "path": "src/fse_encode.rs",
+        "sha256": "260265b9e174f46969e2a8dab38fdac218a5e800a6350818c018198dbf4fa568"
+      },
+      {
+        "path": "src/fse_select.rs",
+        "sha256": "3fba96b62fafa5374c53d3b1446850fe0417210c7c45c27ed92bf098a4a2de25"
+      },
+      {
+        "path": "src/heap.rs",
+        "sha256": "9200ae5a7492dbec09daf6644f0b6b030cf868e5593436d522bc86c7e0fe49c5"
+      },
+      {
+        "path": "src/history.rs",
+        "sha256": "eba2efb9ebc679767db1194bcd2fd9755ff49d56a62b3be612178aee634afb9c"
+      },
+      {
+        "path": "src/huffman.rs",
+        "sha256": "7f676952b8f92d500acad233d90801aa01901f2944364f3ebbbad20b04dd1b06"
+      },
+      {
+        "path": "src/huffman_codebook.rs",
+        "sha256": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b"
+      },
+      {
+        "path": "src/huffman_encode.rs",
+        "sha256": "595ef6079f6f77dfbc2a2e7540e2c2aaad5e138f80b26951f1a08f4e433d0f2f"
+      },
+      {
+        "path": "src/lib.rs",
+        "sha256": "405ecf0e10c0528e702eb4c67f27db1c5b8f8cb834a05e0b69522e2ba1a0e885"
+      },
+      {
+        "path": "src/literal_encode.rs",
+        "sha256": "d1e50ba7ba515906fef1c0413e1e8ed4d0ed18ce03cddb62b8bf331e4520c6cf"
+      },
+      {
+        "path": "src/literal_header.rs",
+        "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+      },
+      {
+        "path": "src/match_parse.rs",
+        "sha256": "6178dd023571d9a1d244fc0f40eccf69d986b89f6a48c5bf0057bbe7b978b222"
+      },
+      {
+        "path": "src/matchchain.rs",
+        "sha256": "7128426b2ffb05f12ca5b227166879605469b515efef6009686735f3266fb446"
+      },
+      {
+        "path": "src/matchfinder.rs",
+        "sha256": "816544f36e7abb20546454133de5dd207900fae375d92a8f68b8cd3fa928a2b6"
+      },
+      {
+        "path": "src/ring_history.rs",
+        "sha256": "bde3d9b4f3dfb4a4aeb52caddd654534920fb5bfed041ad2abdd05c2a3385ec9"
+      },
+      {
+        "path": "src/sequence_context.rs",
+        "sha256": "08acd9b27e930040f985dba9fd228f7f05018a876d5afb4198086e112aef605f"
+      },
+      {
+        "path": "src/sequence_encode.rs",
+        "sha256": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61"
+      },
+      {
+        "path": "src/sequence_plan.rs",
+        "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+      },
+      {
+        "path": "src/sequences.rs",
+        "sha256": "da52cba287770af961640f9abdda28d5f9e9a39874977e98629103cf19533d3c"
+      },
+      {
+        "path": "src/strategy.rs",
+        "sha256": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab"
+      },
+      {
+        "path": "src/stream.rs",
+        "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+      },
+      {
+        "path": "src/stream_decode.rs",
+        "sha256": "c5214e6e53635a7084e43a0b151353105450b11d166f171b7d9353489ec32c2a"
+      },
+      {
+        "path": "src/stream_encode.rs",
+        "sha256": "e2a266edbbc0775fa0d5b2ded9c6fc82d81192e577ff6b32c136a4de7472d453"
+      },
+      {
+        "path": "src/training.rs",
+        "sha256": "4f4e60f12a9d15e32ac80eff4e358acb54184c78ff26cdd29f92fefa7bbae172"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      }
+    ]
+  },
+  "owned_file_unchanged": true,
+  "seconds": 58.19467233400792,
+  "all_requested_commands_completed": true,
+  "log_path": "/tmp/zstdoxide-module9-literals.log",
+  "log_sha256": "42490971f5ed94c8dd18dacf803bb47160814acd9baf7fd8315790c9f82c2a77",
+  "exit_code": 0
+}

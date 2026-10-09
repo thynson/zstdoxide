@@ -291,6 +291,24 @@ values own fresh tables and scratch without assuming equivalence. Standard
 object; the custom allocator owns its bytes/tables only. Borrowed public views
 and allocator-aware codec attachment remain separate checkpoints.
 
+`LiteralEncoder<A>` now owns its writer, stream, and section buffers, while
+Huffman stream emission accepts independent writer/output allocator types.
+The [literal evidence](evidence/2026-10-09-allocator-literals.json) and
+[32 command records](evidence/2026-10-09-allocator-literals-results.json) report
+264 passing executions: eight context tests across nine configurations,
+26 codebook tests across six, production publication and entropy integration
+checks, safe/all C checks, and four strict-provenance Miri cases. Both no_std
+builds, safe/all strict Clippy, and formatting passed.
+
+Global const construction, literal kind/stream decisions, and selected bytes
+are preserved. Every observed allocation during fresh and warmed selection was
+failed separately; the published codebook stays unchanged, and retry produces
+identical output. Prevalidation and failed output reservation preserve both
+4X buffers; a later writer failure can leave documented partial scratch.
+The C stream groups each report 301 checks including one empty-marker bypass,
+with two CLI literal-section/lifetime tests run separately in each backend.
+Public block/stream allocator orchestration remains pending.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

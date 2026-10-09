@@ -79,6 +79,13 @@ pub(crate) fn build_literal_table_in<A: Allocator + Clone>(
 /// Build a sparse inline literal table, preserving the exact selected codes.
 /// Zero- and one-symbol inputs belong to raw/RLE selection and are rejected here.
 /// Corresponds to the bounded tree/description role of `HUF_compress_internal`.
+#[cfg_attr(
+    not(test),
+    expect(
+        dead_code,
+        reason = "Global convenience wrapper retained for explicit setup callers"
+    )
+)]
 pub(crate) fn build_sparse_literal_table(
     observed: &[u64; SYMBOLS],
 ) -> Result<crate::huffman_codebook::BuiltLiteralTable> {

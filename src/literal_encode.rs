@@ -1,20 +1,21 @@
 //! Complete literal-section selection with unpublished table ownership.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 use crate::bitwriter::BitWriter;
 use crate::frame::MAX_BLOCK_SIZE;
 use crate::huffman_codebook::HuffmanCodebook;
-use crate::huffman_encode::build_sparse_literal_table;
+use crate::huffman_encode::build_sparse_literal_table_in;
 use crate::literal_header::LiteralHeader;
 use crate::{Error, Result};
 
 /// Reusable owned scratch. Table lifetime belongs to the enclosing block
 /// encoder, which publishes a returned codebook only when it emits this section.
-pub(crate) struct LiteralEncoder {
-    writer: BitWriter,
-    streams: Vec<u8>,
-    section: Vec<u8>,
+pub(crate) struct LiteralEncoder<A: Allocator = Global> {
+    writer: BitWriter<A>,
+    streams: Vec<u8, A>,
+    section: Vec<u8, A>,
 }
 
 struct FormatChoice {
@@ -24,7 +25,7 @@ struct FormatChoice {
     section_size: usize,
 }
 
-impl LiteralEncoder {
+impl LiteralEncoder<Global> {
     pub(crate) const fn new() -> Self {
         Self {
             writer: BitWriter::new(),
@@ -32,11 +33,30 @@ impl LiteralEncoder {
             section: Vec::new(),
         }
     }
+}
+
+impl<A: Allocator + Clone> LiteralEncoder<A> {
+    /// Each child retains the allocator that owns its storage. Clones need not
+    /// be equivalent; the original allocator belongs to the final section.
+    #[cfg_attr(
+        not(test),
+        expect(dead_code, reason = "allocator-aware block contexts migrate next")
+    )]
+    pub(crate) fn new_in(allocator: A) -> Self {
+        Self {
+            writer: BitWriter::new_in(allocator.clone()),
+            streams: Vec::new_in(allocator.clone()),
+            section: Vec::new_in(allocator),
+        }
+    }
 
     /// Select by complete serialized size, including all headers and markers.
     /// Ties preserve raw/RLE first, then an existing tree, then a new tree;
     /// one stream wins a tie against four. The previous codebook is immutable.
     /// A returned table is pending: discarding this block must also discard it.
+    /// Errors never publish a codebook or modify the caller's previous table.
+    /// Scratch may contain partial output after an allocation failure; a later
+    /// call starts a fresh selection and retains existing buffer capacities.
     pub(crate) fn select(
         &mut self,
         input: &[u8],
@@ -51,9 +71,14 @@ impl LiteralEncoder {
         self.section
             .try_reserve_exact(input.len() + 5)
             .map_err(|_| Error::AllocationFailed)?;
-        self.section.extend_from_slice(header.as_bytes());
-        self.section
-            .extend_from_slice(if repeated { &input[..1] } else { input });
+        // The complete raw bound above includes the largest five-byte header.
+        // Individual pushes cannot request another allocation within that bound.
+        for &byte in header.as_bytes() {
+            self.section.push(byte);
+        }
+        for &byte in if repeated { &input[..1] } else { input } {
+            self.section.push(byte);
+        }
         if input.len() < 2 || repeated {
             return Ok(None);
         }
@@ -68,7 +93,10 @@ impl LiteralEncoder {
         for &symbol in input {
             frequencies[usize::from(symbol)] += 1;
         }
-        let table = build_sparse_literal_table(&frequencies)?;
+        // A fresh owner avoids borrowing an allocator inside self while the
+        // selected description is copied into self.section. The complete table
+        // retains this clone until its codebook is moved out or it is discarded.
+        let table = build_sparse_literal_table_in(&frequencies, self.section.allocator().clone())?;
         if let Some(choice) =
             choose_format(table.codebook(), input, table.description().len(), false)?
             && choice.section_size < self.section.len()
@@ -78,7 +106,9 @@ impl LiteralEncoder {
         }
         Ok(None)
     }
+}
 
+impl<A: Allocator> LiteralEncoder<A> {
     fn write_candidate(
         &mut self,
         codebook: &HuffmanCodebook,
@@ -106,9 +136,15 @@ impl LiteralEncoder {
             .try_reserve(choice.section_size.saturating_sub(self.section.len()))
             .map_err(|_| Error::AllocationFailed)?;
         self.section.clear();
-        self.section.extend_from_slice(choice.header.as_bytes());
-        self.section.extend_from_slice(description);
-        self.section.extend_from_slice(encoded);
+        for &byte in choice
+            .header
+            .as_bytes()
+            .iter()
+            .chain(description)
+            .chain(encoded)
+        {
+            self.section.push(byte);
+        }
         Ok(())
     }
 
@@ -176,6 +212,181 @@ mod tests {
     use super::*;
     use crate::huffman::{HuffmanTable, decode_literals};
     use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 32,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    fn sixteen_symbol_codebook() -> HuffmanCodebook {
+        let mut lengths = [0; 256];
+        lengths[..16].fill(4);
+        HuffmanCodebook::from_lengths(&lengths, 11).unwrap()
+    }
+
+    #[test]
+    fn custom_context_matches_global_sections_and_pending_tables() {
+        let owner = allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut custom = LiteralEncoder::new_in(&owner);
+        let mut global = LiteralEncoder::new();
+        let mut previous = None;
+        let mut decoder = None;
+        let mut kinds = [false; 4];
+        let mut stream_formats = [false; 2];
+        for input in [
+            vec![],
+            vec![7],
+            (0..=255).collect(),
+            vec![42; 4096],
+            (0..333).map(|index| (index % 16) as u8).collect(),
+            (0..4096).map(|index| (index % 16) as u8).collect(),
+            (0..4096).map(|index| (index % 16) as u8).collect(),
+        ] {
+            let expected = global.select(&input, previous.as_ref()).unwrap();
+            let pending = custom.select(&input, previous.as_ref()).unwrap();
+            assert_eq!(pending, expected);
+            assert_eq!(custom.as_bytes(), global.as_bytes());
+            let kind = usize::from(custom.as_bytes()[0] & 3);
+            kinds[kind] = true;
+            if kind >= 2 {
+                stream_formats[usize::from(custom.as_bytes()[0] & 12 != 0)] = true;
+            }
+            assert_eq!(
+                decode_literals(custom.as_bytes(), &mut decoder, MAX_BLOCK_SIZE)
+                    .unwrap()
+                    .0,
+                input
+            );
+            if pending.is_some() {
+                previous = pending;
+            }
+        }
+        assert_eq!(kinds, [true; 4]);
+        assert_eq!(stream_formats, [true; 2]);
+        drop(custom);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn distinct_allocator_domains_move_with_the_complete_context() {
+        let owner = allocator();
+        let original = owner.identity();
+        let monitor = owner.monitor();
+        let mut context = LiteralEncoder::new_in(owner);
+        assert_eq!(context.section.allocator().identity(), original);
+        assert_ne!(context.streams.allocator().identity(), original);
+        let input: Vec<_> = (0..4096).map(|index| (index % 16) as u8).collect();
+        let pending = context.select(&input, None).unwrap().unwrap();
+        assert!(pending.covers(&input));
+        // Candidate description and decoder validation scratch have been freed;
+        // the remaining allocations belong to the three reusable child buffers.
+        assert_eq!(monitor.snapshot().live_blocks, 3);
+        let mut moved = context;
+        assert!(moved.select(&input, Some(&pending)).unwrap().is_none());
+        assert_eq!(moved.as_bytes()[0] & 3, 3);
+        drop(moved);
+        assert!(monitor.snapshot().identities_created > 3);
+        monitor.assert_released();
+    }
+
+    fn check_selection_failures(input: &[u8], warm: bool) {
+        let previous = sixteen_symbol_codebook();
+        let original = sixteen_symbol_codebook();
+        let owner = allocator();
+        let monitor = owner.monitor();
+        let mut baseline = LiteralEncoder::new_in(owner);
+        if warm {
+            baseline.select(input, Some(&previous)).unwrap();
+        }
+        let before = monitor.snapshot().attempts;
+        let expected_pending = baseline.select(input, Some(&previous)).unwrap();
+        let expected_bytes = baseline.as_bytes().to_vec();
+        let attempts = monitor.snapshot().attempts - before;
+        assert!(attempts > 0);
+        drop(baseline);
+        monitor.assert_released();
+        for ordinal in 1..=attempts {
+            let owner = allocator();
+            let monitor = owner.monitor();
+            let mut encoder = LiteralEncoder::new_in(owner);
+            if warm {
+                encoder.select(input, Some(&previous)).unwrap();
+            }
+            let before = monitor.snapshot().attempts;
+            monitor.set_fail_at(NonZeroU64::new(before + ordinal));
+            // Even if reuse was already written to scratch before a new-tree
+            // allocation fails, Err must never return a pending publication.
+            assert_eq!(
+                encoder.select(input, Some(&previous)),
+                Err(Error::AllocationFailed),
+                "allocation {ordinal}, warm {warm}"
+            );
+            assert_eq!(previous, original);
+            assert_eq!(monitor.snapshot().failures, 1);
+            monitor.clear_failure();
+            assert_eq!(
+                encoder.select(input, Some(&previous)).unwrap(),
+                expected_pending
+            );
+            assert_eq!(encoder.as_bytes(), expected_bytes);
+            assert_eq!(previous, original);
+            drop(encoder);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn allocation_failures_never_publish_tables_and_retry_exactly() {
+        for length in [128, 4096] {
+            let input: Vec<_> = (0..length).map(|index| (index % 2) as u8).collect();
+            check_selection_failures(&input, false);
+        }
+    }
+
+    #[test]
+    fn warmed_reuse_failures_preserve_the_published_table_and_recover() {
+        let input: Vec<_> = (0..128).map(|index| (index % 16) as u8).collect();
+        check_selection_failures(&input, true);
+    }
+
+    #[test]
+    fn invalid_size_preserves_scratch_and_warmed_capacities_stabilize() {
+        let owner = allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut context = LiteralEncoder::new_in(&owner);
+        let sources = [
+            (0..4096).map(|index| index as u8).collect::<Vec<_>>(),
+            (0..333).map(|index| (index % 16) as u8).collect(),
+            (0..4096).map(|index| (index % 16) as u8).collect(),
+        ];
+        for source in &sources {
+            context.select(source, None).unwrap();
+        }
+        let capacity = context.retained_capacity();
+        let retained_bytes = monitor.snapshot().live_bytes;
+        for source in &sources {
+            context.select(source, None).unwrap();
+            assert_eq!(context.retained_capacity(), capacity);
+            assert_eq!(monitor.snapshot().live_bytes, retained_bytes);
+        }
+        let before = context.as_bytes().to_vec();
+        let attempts = monitor.snapshot().attempts;
+        assert_eq!(
+            context.select(&vec![0; MAX_BLOCK_SIZE + 1], None),
+            Err(Error::CorruptData)
+        );
+        assert_eq!(context.as_bytes(), before);
+        assert_eq!(monitor.snapshot().attempts, attempts);
+        drop(context);
+        monitor.assert_released();
+    }
 
     #[test]
     fn raw_rle_new_and_repeated_tables_round_trip_with_exact_section_costs() {
