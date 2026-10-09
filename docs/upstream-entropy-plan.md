@@ -160,6 +160,18 @@ choosing the long matches the source was designed to suggest. Inspect actual
 sequence coverage where claimed, and retain that qualification in inventory
 rather than claiming every OF code was emitted by each Rust strategy.
 
+The regression content adapter gets a separate named-strategy checkpoint.
+Retain its existing bounded, sorted file plan and one-shot baseline. Reuse one
+encoder for each of Greedy, Chain and Lazy, reset between complete input files,
+pledge the original size, and drain caller-owned output until Finish completes.
+Check progress, total counters, output canaries and full decoded bytes, including
+empty and multiblock inputs. Aggregate complete source/frame fingerprints with
+explicit length delimiters so safe and unsafe runs can be compared per strategy.
+The following replay checkpoint processes all 512 pinned Silesia/GitHub files,
+12,407,963 bytes, under both safe and all-feature builds. This extends the
+original content-equality assertion; it does not implement upstream numeric
+levels, C method variants, or historical CSV compression-ratio baselines.
+
 1. Preserve every original Huffman selector and remaining source range with
    independent C vectors, both BMI layouts, empty/RLE inputs and every requested
    depth. Add the supported roundtrip driver with explicit unsupported-branch

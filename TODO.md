@@ -69,6 +69,8 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [ ] Port the incremental upstream sequence source generator with independent byte and digest vectors.
 - [ ] Run the original 971-case dictionary sequence sweep through all named strategies and independent C decoding.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.
+- [ ] Extend the regression content adapter to every named strategy with reset, output-bound, and full-byte checks.
+- [ ] Replay every pinned regression input with each named strategy under safe and all-feature builds.
 - [x] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.
 - [x] Include all new entropy and strategy oracle entry points in the reproducible validation script.
 - [ ] Run the backend/strategy benchmark matrix and preserve comparable output fingerprints and memory measurements.
