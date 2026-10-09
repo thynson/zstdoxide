@@ -76,6 +76,13 @@ impl FseEncodingTable {
         self.table_log
     }
 
+    /// Highest present symbol; dense construction trims absent trailing rows.
+    #[cfg(test)]
+    pub(crate) fn max_symbol(&self) -> u8 {
+        self.repeated
+            .unwrap_or_else(|| (self.initial.len() - 1) as u8)
+    }
+
     pub(crate) fn retained_capacity(&self) -> usize {
         self.transitions.capacity() * core::mem::size_of::<FseEncodingTransition>()
             + self.initial.capacity() * core::mem::size_of::<u16>()
@@ -300,6 +307,7 @@ mod tests {
             let decoding = FseTable::from_normalized(counts, log).unwrap();
             verify_inverse(&decoding);
             let encoding = FseEncodingTable::new(counts, log).unwrap();
+            assert_eq!(encoding.max_symbol() as usize, counts.len() - 1);
             assert!(encoding.retained_capacity() > 0);
             for symbol in 0..counts.len() {
                 let initial = encoding.initial(symbol).unwrap();
@@ -349,6 +357,7 @@ mod tests {
         for symbol in [0, 1, 255] {
             let table = FseEncodingTable::rle(symbol);
             assert_eq!(table.table_log(), 0);
+            assert_eq!(table.max_symbol(), symbol);
             assert_eq!(table.retained_capacity(), 0);
             assert_eq!(table.initial(usize::from(symbol)), Ok(0));
             assert_eq!(

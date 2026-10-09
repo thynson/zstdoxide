@@ -40,7 +40,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Port exact unit-count normalization and sparse normalized-header regressions.
 - [x] Add unsafe-fse-encoder independently from the decoder unsafe-fse backend.
 - [x] Plan repeat-offset values forward with exact triples and checked arithmetic.
-- [ ] Encode sequences using supplied predefined, new, reused, and RLE tables.
+- [x] Encode sequences using supplied predefined, new, reused, and RLE tables.
 - [ ] Select adaptive per-channel distributions with deterministic complete cost comparisons.
 - [ ] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
 - [ ] Add bounded multi-candidate storage with checked stale-link and tag validation.
