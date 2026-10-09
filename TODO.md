@@ -42,7 +42,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Map verified Huffman/FSE encoder contracts and decompose remaining entropy fuzz assertions.
 - [x] Pin the official Huffman corpus independently and verify archive metadata without claiming replay.
 - [x] Preserve exact Huffman tail selectors with independent C parameter vectors for both BMI layouts.
-- [ ] Admit weight twelve in standalone Huffman descriptions while preserving existing serialized bytes.
+- [x] Admit weight twelve in standalone Huffman descriptions while preserving existing serialized bytes.
 - [ ] Build standalone Huffman trees with explicit requested depths through twelve and meaningful optimal-depth selection.
 - [ ] Encode standalone Huffman sources through 256 KiB with checked four-stream jump limits.
 - [ ] Implement caller-owned standalone entropy output bounds and zero-result contracts.

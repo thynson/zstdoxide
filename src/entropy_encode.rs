@@ -186,8 +186,11 @@ pub(crate) fn normalize_frequencies(counts: &[u64], table_log: u8) -> Result<Vec
 /// Encode explicit Huffman weights as a normalized header and two-state FSE
 /// payload, excluding the leading Huffman payload-length byte.
 ///
-/// Accepts between 2 and 255 weights in 0..=11, with at least two distinct values.
-/// The fixed table log is 6. Setup scans invert checked decoding transitions;
+/// Accepts between 2 and 255 weights in 0..=12, with at least two distinct values.
+/// Weight twelve permits a one-bit code in a twelve-bit standalone or dictionary
+/// tree; callers still enforce the lower depth limit for new inline frame trees.
+/// The table log is six, or five when weight twelve is present. Setup scans
+/// invert checked decoding transitions;
 /// FseTable supplies its existing safe or unsafe backend under the same API.
 /// Payloads may exceed 127 bytes; the caller selects a bounded tree fallback when
 /// necessary. Corresponds to the weight-stream role of upstream FSE_compress_wksp.
@@ -195,10 +198,10 @@ pub(crate) fn encode_weights(weights: &[u8]) -> Result<Vec<u8>> {
     if !(2..=255).contains(&weights.len()) {
         return Err(Error::InvalidParameter);
     }
-    let mut frequencies = [0_u64; 12];
+    let mut frequencies = [0_u64; 13];
     let mut maximum = 0;
     for &weight in weights {
-        if weight > 11 {
+        if weight > 12 {
             return Err(Error::InvalidParameter);
         }
         frequencies[usize::from(weight)] += 1;
@@ -207,9 +210,13 @@ pub(crate) fn encode_weights(weights: &[u8]) -> Result<Vec<u8>> {
     if frequencies.iter().filter(|&&count| count != 0).count() < 2 {
         return Err(Error::InvalidParameter);
     }
-    const TABLE_LOG: u8 = 6;
-    let normalized = normalize_frequencies(&frequencies[..=maximum], TABLE_LOG)?;
-    let table = FseTable::from_normalized(&normalized, TABLE_LOG)?;
+    // v1.5.7 HUF_readStats reserves FSE workspace for maximum weight eleven
+    // at log six. Weight twelve at log six exceeds that public reader's buffer;
+    // log five fits all thirteen weight values and its smaller table fits the
+    // same workspace. Existing zero-through-eleven streams retain exact bytes.
+    let table_log = if maximum == 12 { 5 } else { 6 };
+    let normalized = normalize_frequencies(&frequencies[..=maximum], table_log)?;
+    let table = FseTable::from_normalized(&normalized, table_log)?;
     let mut states = [0; 2];
     // No transition bits follow the terminal pair. Requiring a positive width
     // in both states makes the decoder stop exactly when it reaches that pair,
@@ -226,11 +233,11 @@ pub(crate) fn encode_weights(weights: &[u8]) -> Result<Vec<u8>> {
     }
     // The reverse reader consumes state 0 first, then state 1. A final high bit
     // marks the exact payload extent, so byte padding cannot add FSE symbols.
-    bits.push(states[1] as u32, TABLE_LOG)?;
-    bits.push(states[0] as u32, TABLE_LOG)?;
+    bits.push(states[1] as u32, table_log)?;
+    bits.push(states[0] as u32, table_log)?;
     bits.push(1, 1)?;
     let payload = bits.into_bytes();
-    let mut output = write_normalized_counts(&normalized, TABLE_LOG)?;
+    let mut output = write_normalized_counts(&normalized, table_log)?;
     output
         .try_reserve_exact(payload.len())
         .map_err(|_| Error::AllocationFailed)?;
@@ -505,6 +512,40 @@ mod tests {
         cases
     }
 
+    fn twelve_bit_weight_cases() -> Vec<Vec<u8>> {
+        let mut cases = Vec::new();
+        for other in 0..12 {
+            // Exercise weight twelve in both terminal states, including the
+            // shortest even stream and the two possible odd terminal positions.
+            cases.extend([
+                alloc::vec![other, 12],
+                alloc::vec![12, other],
+                alloc::vec![other, 12, other],
+                alloc::vec![12, other, 12],
+            ]);
+        }
+        for length in [13, 31, 32, 33, 127, 128, 129, 254, 255] {
+            cases.push((0..length).map(|index| (index % 13) as u8).collect());
+            for rare in [0, length / 2, length - 1] {
+                let mut weights = alloc::vec![12; length];
+                weights[rare] = 0;
+                cases.push(weights);
+            }
+        }
+        cases
+    }
+
+    fn twelve_bit_tree_weights() -> Vec<u8> {
+        // Explicit Kraft mass is 2048 + 1024 + ... + 2 + 1 = 4095;
+        // the implicit final weight is one, completing a twelve-bit tree.
+        let mut weights = alloc::vec![0; 255];
+        for (index, weight) in weights.iter_mut().take(11).enumerate() {
+            *weight = 12 - index as u8;
+        }
+        weights[254] = 1;
+        weights
+    }
+
     #[test]
     fn weight_streams_preserve_odd_even_lengths_terminal_pairs_and_zero_bit_updates() {
         let cases = weight_cases();
@@ -530,6 +571,61 @@ mod tests {
     }
 
     #[test]
+    fn existing_eleven_bit_weight_streams_preserve_their_encoded_bytes() {
+        let mut fingerprint = 0xcbf2_9ce4_8422_2325_u64;
+        for weights in weight_cases() {
+            let encoded = encode_weights(&weights).unwrap();
+            for byte in (encoded.len() as u64)
+                .to_le_bytes()
+                .into_iter()
+                .chain(encoded)
+            {
+                fingerprint ^= u64::from(byte);
+                fingerprint = fingerprint.wrapping_mul(0x100_0000_01b3);
+            }
+        }
+        // Captured from all 437 existing cases before adding weight twelve.
+        assert_eq!(fingerprint, 5_470_459_091_833_037_505);
+    }
+
+    #[test]
+    fn twelve_bit_weight_streams_preserve_terminal_states_and_sparse_alphabets() {
+        let cases = twelve_bit_weight_cases();
+        assert_eq!(cases.len(), 84);
+        for (case, weights) in cases.iter().enumerate() {
+            let encoded = encode_weights(weights).unwrap();
+            assert_eq!(
+                read_normalized_counts(&encoded, 12, 6).unwrap().table_log,
+                5
+            );
+            assert_eq!(
+                crate::fse::decode_weights(&encoded).unwrap(),
+                *weights,
+                "twelve-bit case {case}"
+            );
+            assert_eq!(encode_weights(weights).unwrap(), encoded);
+        }
+    }
+
+    #[test]
+    fn weight_twelve_builds_a_valid_description_without_broadening_inline_limits() {
+        let weights = twelve_bit_tree_weights();
+        let payload = encode_weights(&weights).unwrap();
+        assert!((1..128).contains(&payload.len()));
+        let mut description = alloc::vec![payload.len() as u8];
+        description.extend_from_slice(&payload);
+        let (table, consumed) =
+            crate::huffman::HuffmanTable::read_dictionary(&description).unwrap();
+        assert_eq!(consumed, description.len());
+        let lengths = table.code_lengths();
+        assert_eq!(lengths[0], 1);
+        assert_eq!(lengths[254], 12);
+        assert_eq!(lengths[255], 12);
+        assert!(lengths[11..254].iter().all(|&length| length == 0));
+        assert!(crate::huffman::HuffmanTable::read(&description).is_err());
+    }
+
+    #[test]
     fn near_flat_literal_tree_weights_fit_the_huffman_payload_limit() {
         let mut weights = alloc::vec![2; 255];
         weights[0] = 3;
@@ -546,7 +642,7 @@ mod tests {
             &[1][..],
             &[1, 1][..],
             &[0; 255][..],
-            &[0, 12][..],
+            &[0, 13][..],
             &[255, 1][..],
             &[1; 256][..],
         ] {
@@ -599,7 +695,8 @@ int main(int argc, char** argv) {
     if (argc > 1 && !strcmp(argv[1], "huffman")) {
         unsigned ranks[HUF_TABLELOG_MAX + 1] = {0}, symbols = 0, log = 0;
         decoded = HUF_readStats(output, sizeof(output), ranks, &symbols, &log, input, size);
-        if (HUF_isError(decoded) || decoded != size || symbols > 256) return 3;
+        if (HUF_isError(decoded)) { fprintf(stderr, "%s\n", HUF_getErrorName(decoded)); return 3; }
+        if (decoded != size || symbols > 256) return 3;
         if (fputc((int)log, stdout) == EOF || fputc((int)(symbols & 255), stdout) == EOF ||
             fputc((int)(symbols >> 8), stdout) == EOF) return 4;
         return fwrite(output, 1, symbols, stdout) != symbols;
@@ -626,7 +723,8 @@ int main(int argc, char** argv) {
             "{}",
             std::string::String::from_utf8_lossy(&compiled.stderr)
         );
-        let cases = weight_cases();
+        let mut cases = weight_cases();
+        cases.extend(twelve_bit_weight_cases());
         for (case, weights) in cases.iter().enumerate() {
             let encoded = encode_weights(weights).unwrap();
             let mut child = Command::new(&executable)
@@ -700,5 +798,28 @@ int main(int argc, char** argv) {
             "Official v1.5.7 HUF_readStats verified {} complete literal headers",
             frequencies.len()
         );
+        let mut expected = twelve_bit_tree_weights();
+        let payload = encode_weights(&expected).unwrap();
+        assert!((1..128).contains(&payload.len()));
+        let mut header = alloc::vec![payload.len() as u8];
+        header.extend_from_slice(&payload);
+        expected.push(1); // HUF_readStats also reconstructs the implicit weight.
+        let mut child = Command::new(&executable)
+            .arg("huffman")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .unwrap();
+        child.stdin.take().unwrap().write_all(&header).unwrap();
+        let result = child.wait_with_output().unwrap();
+        assert!(
+            result.status.success(),
+            "twelve-bit HUF description: {}",
+            std::string::String::from_utf8_lossy(&result.stderr)
+        );
+        assert_eq!(&result.stdout[..3], &[12, 0, 1]);
+        assert_eq!(&result.stdout[3..], expected);
+        std::eprintln!("Official v1.5.7 HUF_readStats verified a sparse weight-twelve description");
     }
 }
