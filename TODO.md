@@ -44,7 +44,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Preserve exact Huffman tail selectors with independent C parameter vectors for both BMI layouts.
 - [x] Admit weight twelve in standalone Huffman descriptions while preserving existing serialized bytes.
 - [ ] Build standalone Huffman trees with explicit requested depths through twelve and meaningful optimal-depth selection.
-- [ ] Encode standalone Huffman sources through 256 KiB with checked four-stream jump limits.
+- [x] Encode standalone Huffman sources through 256 KiB with checked four-stream jump limits.
 - [ ] Implement caller-owned standalone entropy output bounds and zero-result contracts.
 - [ ] Replay the complete pinned Huffman corpus through its exact target driver and record every branch outcome.
 - [x] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.

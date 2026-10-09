@@ -148,6 +148,15 @@ With a 128 KiB block and at most twelve bits per symbol, each quarter's worst
 case is bounded below `u16::MAX`; enforce the bound rather than relying on a
 compression heuristic.
 
+Standalone entropy tests use a separate 256 KiB source limit without changing
+frame literal limits. Four-stream preparation sums actual code widths plus each
+terminal marker before mutating scratch. Every leading stream must fit `u16`;
+using the table's maximum width alone would incorrectly reject large sources
+made of short codes. Exact jumps of 65,535 bytes are accepted, while overflow
+preserves both scratch buffers. A twelve-bit standalone 1X stream may occupy
+393,217 bytes. Six independent C cases cover the larger source limit, short
+codes in a log-twelve table, maximum one-stream size, and exact jump bounds.
+
 | Size format | Streams | Regenerated and compressed size fields | Header bytes |
 | --- | --- | --- | --- |
 | 0 | 1 | Each at most 1,023 | 3 |

@@ -22,10 +22,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SOURCE_LIMIT (128u * 1024u)
+#define SOURCE_LIMIT (256u * 1024u)
 #define DESCRIPTION_LIMIT 512u
-/* Four twelve-bit streams require at most 4 * 49153 + 6 = 196618 bytes. */
-#define STREAM_LIMIT 196640u
+/* A 256 KiB twelve-bit 1X stream requires 393217 bytes. Four-stream jumps
+ * are checked against UINT16_MAX individually before any native comparison. */
+#define STREAM_LIMIT 393240u
 
 static void require(int condition, const char* message) {
     if (!condition) {

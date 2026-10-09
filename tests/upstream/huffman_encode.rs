@@ -101,8 +101,8 @@ mod oracle {
     use std::process::{Command, Stdio};
 
     const REVISION: &str = "f8745da6ff1ad1e7bab384bd1f9d742439278e99";
-    const SOURCE_LIMIT: usize = 128 * 1024;
-    const STREAM_LIMIT: usize = 196_640;
+    const SOURCE_LIMIT: usize = 256 * 1024;
+    const STREAM_LIMIT: usize = 393_240;
 
     struct Directory(PathBuf);
 
@@ -304,7 +304,7 @@ mod oracle {
         }
         // Every source symbol uses all twelve bits, exercising the actual
         // 128-KiB block's maximum 1X payload rather than a mixed-width average.
-        let source = alloc::vec![0; SOURCE_LIMIT];
+        let source = alloc::vec![0; 128 * 1024];
         codebook.encode_stream(&source, &mut writer).unwrap();
         assert_eq!(writer.as_bytes().len(), 196_609);
         x2_fallbacks += oracle.check(description, &source, 1, writer.as_bytes(), &codebook) & 1;
@@ -380,6 +380,62 @@ mod oracle {
         assert_eq!(modes, [5, 6]);
         std::eprintln!(
             "C verified 11 sparse/fallback descriptions (6 direct, 5 FSE) and {verified} exact 1X streams through X1 and X2 decoding"
+        );
+    }
+
+    #[test]
+    #[ignore = "requires ZSTD_UPSTREAM pinned v1.5.7, built lib/libzstd.a, and a C compiler"]
+    fn official_oracle_verifies_standalone_source_and_jump_boundaries() {
+        let oracle = Oracle::compile();
+        let (table, _) = HuffmanTable::read(&[128, 0x10]).unwrap();
+        let codes = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        let mut writer = BitWriter::new();
+        let mut output = Vec::new();
+        for length in [131_073, 262_143, 262_144] {
+            let source: Vec<_> = (0..length).map(|index| (index & 1) as u8).collect();
+            codes
+                .encode_standalone_four_streams(&source, &mut writer, &mut output)
+                .unwrap();
+            assert_eq!(oracle.check(&[128, 0x10], &source, 4, &output, &codes), 0);
+        }
+        let dictionary = include_bytes!("data/golden-dictionaries/http-dict-missing-symbols");
+        let (table, consumed) = HuffmanTable::read_dictionary(&dictionary[8..]).unwrap();
+        let description = &dictionary[8..8 + consumed];
+        let codes = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        let short_symbol = (0..=255_u8)
+            .filter(|&symbol| codes.code(symbol).is_ok())
+            .min_by_key(|&symbol| codes.code(symbol).unwrap().bits)
+            .unwrap();
+        let source = alloc::vec![short_symbol; 262_144];
+        codes
+            .encode_standalone_four_streams(&source, &mut writer, &mut output)
+            .unwrap();
+        assert_eq!(oracle.check(description, &source, 4, &output, &codes), 0);
+        let source = alloc::vec![0; 262_144];
+        codes.encode_stream(&source, &mut writer).unwrap();
+        assert_eq!(writer.as_bytes().len(), 393_217);
+        assert_eq!(
+            oracle.check(description, &source, 1, writer.as_bytes(), &codes),
+            0
+        );
+        let boundary_symbol = (0..=255_u8)
+            .find(|&symbol| {
+                codes
+                    .code(symbol)
+                    .is_ok_and(|code| (4..12).contains(&code.bits))
+            })
+            .unwrap();
+        let mut source = alloc::vec![0; 4 * 43_690];
+        for quarter in source.chunks_exact_mut(43_690) {
+            quarter[43_689] = boundary_symbol;
+        }
+        codes
+            .encode_standalone_four_streams(&source, &mut writer, &mut output)
+            .unwrap();
+        assert_eq!(&output[..6], &[255; 6]);
+        assert_eq!(oracle.check(description, &source, 4, &output, &codes), 0);
+        std::eprintln!(
+            "C verified 6 standalone streams through 256 KiB, 393217 encoded bytes and exact u16 jumps"
         );
     }
 
@@ -476,7 +532,7 @@ mod oracle {
             assert_eq!(oracle.check(description, &source, 4, &output, &codebook), 0);
             verified += 1;
         }
-        let source = alloc::vec![0; SOURCE_LIMIT];
+        let source = alloc::vec![0; 128 * 1024];
         codebook
             .encode_four_streams(&source, &mut writer, &mut output)
             .unwrap();

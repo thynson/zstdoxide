@@ -99,6 +99,7 @@ impl HuffmanCodebook {
         Self::from_lengths(&table.code_lengths(), DICTIONARY_MAX_LOG)
     }
 
+    #[cfg(test)]
     pub(crate) fn table_log(&self) -> u8 {
         self.table_log
     }
@@ -167,47 +168,68 @@ impl HuffmanCodebook {
         writer: &mut BitWriter,
         output: &mut Vec<u8>,
     ) -> Result<()> {
-        if !(6..=MAX_BLOCK_SIZE).contains(&input.len()) {
+        self.encode_four_streams_bounded(input, writer, output, MAX_BLOCK_SIZE)
+    }
+
+    /// Standalone entropy streams follow the upstream fuzz target's 256 KiB
+    /// source bound. Frame literal sections continue to use the smaller limit.
+    /// Actual quarter sizes, including markers, must fit the u16 jump fields.
+    #[cfg(test)]
+    pub(crate) fn encode_standalone_four_streams(
+        &self,
+        input: &[u8],
+        writer: &mut BitWriter,
+        output: &mut Vec<u8>,
+    ) -> Result<()> {
+        self.encode_four_streams_bounded(input, writer, output, 256 * 1024)
+    }
+
+    fn encode_four_streams_bounded(
+        &self,
+        input: &[u8],
+        writer: &mut BitWriter,
+        output: &mut Vec<u8>,
+        source_limit: usize,
+    ) -> Result<()> {
+        if !(6..=source_limit).contains(&input.len()) {
             return Err(Error::InvalidParameter);
-        }
-        if !self.covers(input) {
-            return Err(Error::CorruptData);
         }
         let quarter = input.len().div_ceil(4);
         let third_end = quarter.checked_mul(3).ok_or(Error::InvalidParameter)?;
-        let final_length = input
-            .len()
-            .checked_sub(third_end)
-            .ok_or(Error::InvalidParameter)?;
-        let maximum_stream_size = |length: usize| -> Result<usize> {
-            length
-                .checked_mul(usize::from(self.table_log()))
-                .and_then(|bits| bits.checked_add(1))
-                .map(|bits| bits.div_ceil(8))
-                .ok_or(Error::InvalidParameter)
-        };
-        let quarter_bound = maximum_stream_size(quarter)?;
-        if quarter_bound == 0 || quarter_bound > usize::from(u16::MAX) {
+        if third_end > input.len() {
             return Err(Error::InvalidParameter);
         }
-        let final_bound = maximum_stream_size(final_length)?;
-        let maximum_size = quarter_bound
-            .checked_mul(3)
-            .and_then(|size| size.checked_add(final_bound))
-            .and_then(|size| size.checked_add(6))
-            .ok_or(Error::InvalidParameter)?;
+        let ends = [quarter, quarter * 2, third_end, input.len()];
+        let mut start = 0;
+        let mut encoded_size = 6_usize;
+        for (index, &end) in ends.iter().enumerate() {
+            let bits = input[start..end]
+                .iter()
+                .try_fold(1_usize, |bits, &symbol| {
+                    bits.checked_add(usize::from(self.code(symbol)?.bits))
+                        .ok_or(Error::InvalidParameter)
+                })?;
+            let size = bits.div_ceil(8);
+            if index < 3 && size > usize::from(u16::MAX) {
+                return Err(Error::InvalidParameter);
+            }
+            encoded_size = encoded_size
+                .checked_add(size)
+                .ok_or(Error::InvalidParameter)?;
+            start = end;
+        }
+        // Validate every symbol and exact jump before changing either buffer.
+        // A large source using short codes may fit even when table_log's
+        // worst-case bound exceeds u16, so that bound cannot reject a stream.
         // try_reserve's argument is additional to the current length. Retaining
         // an already larger output allocation must not request it a second time.
         output
-            .try_reserve(maximum_size.saturating_sub(output.len()))
+            .try_reserve(encoded_size.saturating_sub(output.len()))
             .map_err(|_| Error::AllocationFailed)?;
         output.clear();
         output.resize(6, 0);
         let mut start = 0;
-        for (stream_index, end) in [quarter, quarter * 2, third_end, input.len()]
-            .into_iter()
-            .enumerate()
-        {
+        for (stream_index, end) in ends.into_iter().enumerate() {
             self.encode_stream(&input[start..end], writer)?;
             let encoded = writer.as_bytes();
             if stream_index < 3 {
@@ -542,6 +564,74 @@ mod tests {
         assert_eq!(writer.as_bytes(), &[1]);
         assert_eq!((writer.retained_capacity(), output.capacity()), capacities);
         assert_eq!(output.len(), 19);
+    }
+
+    #[test]
+    fn standalone_streams_use_their_own_source_limit_and_exact_jump_boundaries() {
+        let codes = HuffmanCodebook::from_lengths(&[8; 256], 12).unwrap();
+        let mut writer = BitWriter::new();
+        let mut output = Vec::new();
+        let source = vec![0; 4 * 65_534];
+        codes
+            .encode_standalone_four_streams(&source, &mut writer, &mut output)
+            .unwrap();
+        assert_eq!(&output[..6], &[255; 6]);
+        assert_eq!(output.len(), 6 + 4 * 65_535);
+        let saved = output.clone();
+        let saved_stream = writer.as_bytes().to_vec();
+        for length in [4 * 65_534 + 1, 256 * 1024, 256 * 1024 + 1] {
+            assert_eq!(
+                codes.encode_standalone_four_streams(&vec![0; length], &mut writer, &mut output),
+                Err(Error::InvalidParameter)
+            );
+            assert_eq!(output, saved);
+            assert_eq!(writer.as_bytes(), saved_stream);
+        }
+        assert_eq!(
+            codes.encode_four_streams(&source, &mut writer, &mut output),
+            Err(Error::InvalidParameter)
+        );
+    }
+
+    #[test]
+    fn standalone_log_twelve_streams_accept_short_codes_and_reject_actual_jump_overflow() {
+        let dictionary =
+            include_bytes!("../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols");
+        let (table, _) = HuffmanTable::read_dictionary(&dictionary[8..]).unwrap();
+        let codes = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        let symbol = (0..=255_u8)
+            .filter(|&symbol| codes.code(symbol).is_ok())
+            .min_by_key(|&symbol| codes.code(symbol).unwrap().bits)
+            .unwrap();
+        let bits = usize::from(codes.code(symbol).unwrap().bits);
+        assert!(bits < 8);
+        let mut writer = BitWriter::new();
+        let mut output = Vec::new();
+        let source = vec![symbol; 256 * 1024];
+        codes
+            .encode_standalone_four_streams(&source, &mut writer, &mut output)
+            .unwrap();
+        assert_eq!(output.len(), 6 + 4 * (65_536 * bits + 1).div_ceil(8));
+        assert_eq!(
+            crate::huffman::decode_streams(&table, &output, source.len(), true).unwrap(),
+            source
+        );
+        let saved = output.clone();
+        let stream = writer.as_bytes().to_vec();
+        assert_eq!(
+            codes.encode_standalone_four_streams(&vec![0; source.len()], &mut writer, &mut output),
+            Err(Error::InvalidParameter)
+        );
+        assert_eq!(output, saved);
+        assert_eq!(writer.as_bytes(), stream);
+        let long_codes = vec![0; source.len()];
+        codes.encode_stream(&long_codes, &mut writer).unwrap();
+        assert_eq!(writer.as_bytes().len(), 393_217);
+        assert_eq!(
+            crate::huffman::decode_streams(&table, writer.as_bytes(), long_codes.len(), false)
+                .unwrap(),
+            long_codes
+        );
     }
 
     #[test]
