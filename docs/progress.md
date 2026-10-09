@@ -326,3 +326,9 @@ The independent 46-row review probe passes safe/all replay, including its five
 intentional Rust-domain errors. Both no_std checks, strict Clippy and all four
 parameter usage examples pass. Numeric encoder execution remains a later
 milestone; the new allocation-free API inspects reference profiles only.
+
+Eleven source-anchored official scalar integration tests now exercise that
+public API, including the original adjustment and dictionary-size equalities.
+All eleven pass in four safe/feature/std configurations, with strict focused
+Clippy and formatting. The adapters label detached-request and frame-default
+subsets precisely; live lifecycle tests and inventory updates remain separate.

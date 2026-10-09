@@ -1,0 +1,177 @@
+{
+  "scope": "Eleven source-anchored public scalar parameter integration tests; no lifecycle, numeric codec execution, manifest update or fixture mutation.",
+  "environment": {
+    "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-integration"
+  },
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "owned_source": "tests/upstream_parameters.rs",
+  "owned_sha256": "ef87a4cd0196600eee66237a037c93e40ef96293aa99aa88b2ddd247a83d99a7",
+  "owned_source_unchanged": true,
+  "production_observation_only": {
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/lib.rs": "a2e9c8346f880c0361c9ce8ac7b4050b4bba3a4251a9b7a34e310849c51eca17"
+  },
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_parameters"
+      ],
+      "exit_code": 0,
+      "seconds": 1.291,
+      "log": "/tmp/zstdoxide-parameter-integration-validation/safe.log",
+      "sha256": "e2b98be8cb6f4ad294e617e6e5a863bc09d787a40986dd6ff203769e18b87b22",
+      "test_counts": {
+        "passed": 11,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered": 0
+      },
+      "archived_log_sha256": "e2b98be8cb6f4ad294e617e6e5a863bc09d787a40986dd6ff203769e18b87b22",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.94s\n     Running tests/upstream_parameters.rs (target/module10-parameter-integration/debug/build/zstdoxide/2549c7ae94a0cd86/out/upstream_parameters-2549c7ae94a0cd86)\n\nrunning 11 tests\ntest dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input ... ok\ntest dictionary_sizes_select_the_original_equal_reference_profiles ... ok\ntest a_small_source_hint_changes_only_unknown_size_resolution ... ok\ntest original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary ... ok\ntest concrete_validation_retains_all_fields_and_rejects_original_invalid_values ... ok\ntest reference_frame_defaults_remain_separate_from_live_encoder_defaults ... ok\ntest explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values ... ok\ntest reference_minimum_and_default_levels_preserve_original_scalar_assertions ... ok\ntest request_resolution_preserves_the_two_pass_empty_source_chain_witness ... ok\ntest requested_hash_override_survives_level_changes_and_default_replacement ... ok\ntest source_hint_bounds_preserve_requested_values_after_rejection ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_parameters",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 1.945,
+      "log": "/tmp/zstdoxide-parameter-integration-validation/all.log",
+      "sha256": "5db16fb49928e1c741b9bc9eff7737c1cfb2574897401278ed768787d365ea79",
+      "test_counts": {
+        "passed": 11,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered": 0
+      },
+      "archived_log_sha256": "5db16fb49928e1c741b9bc9eff7737c1cfb2574897401278ed768787d365ea79",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.59s\n     Running tests/upstream_parameters.rs (target/module10-parameter-integration/debug/build/zstdoxide/66ec75fb582222ec/out/upstream_parameters-66ec75fb582222ec)\n\nrunning 11 tests\ntest a_small_source_hint_changes_only_unknown_size_resolution ... ok\ntest concrete_validation_retains_all_fields_and_rejects_original_invalid_values ... ok\ntest dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input ... ok\ntest explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values ... ok\ntest dictionary_sizes_select_the_original_equal_reference_profiles ... ok\ntest original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary ... ok\ntest reference_frame_defaults_remain_separate_from_live_encoder_defaults ... ok\ntest request_resolution_preserves_the_two_pass_empty_source_chain_witness ... ok\ntest reference_minimum_and_default_levels_preserve_original_scalar_assertions ... ok\ntest requested_hash_override_survives_level_changes_and_default_replacement ... ok\ntest source_hint_bounds_preserve_requested_values_after_rejection ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "no-std-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_parameters",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 1.775,
+      "log": "/tmp/zstdoxide-parameter-integration-validation/no-std-safe.log",
+      "sha256": "75f2e78b9ecc4274c0614ac882306ef5e094d1fb73ab7c24ffab0900adf04e20",
+      "test_counts": {
+        "passed": 11,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered": 0
+      },
+      "archived_log_sha256": "75f2e78b9ecc4274c0614ac882306ef5e094d1fb73ab7c24ffab0900adf04e20",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.44s\n     Running tests/upstream_parameters.rs (target/module10-parameter-integration/debug/build/zstdoxide/cecc6eb47105accd/out/upstream_parameters-cecc6eb47105accd)\n\nrunning 11 tests\ntest a_small_source_hint_changes_only_unknown_size_resolution ... ok\ntest concrete_validation_retains_all_fields_and_rejects_original_invalid_values ... ok\ntest explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values ... ok\ntest dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input ... ok\ntest dictionary_sizes_select_the_original_equal_reference_profiles ... ok\ntest original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary ... ok\ntest reference_frame_defaults_remain_separate_from_live_encoder_defaults ... ok\ntest reference_minimum_and_default_levels_preserve_original_scalar_assertions ... ok\ntest request_resolution_preserves_the_two_pass_empty_source_chain_witness ... ok\ntest requested_hash_override_survives_level_changes_and_default_replacement ... ok\ntest source_hint_bounds_preserve_requested_values_after_rejection ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "no-std-unsafe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_parameters",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 4.423,
+      "log": "/tmp/zstdoxide-parameter-integration-validation/no-std-unsafe.log",
+      "sha256": "bbe6d3ccaa219ab6b70e3b20baaec1cc08b2d2a80e0573a301bb122f03206fc5",
+      "test_counts": {
+        "passed": 11,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered": 0
+      },
+      "archived_log_sha256": "bbe6d3ccaa219ab6b70e3b20baaec1cc08b2d2a80e0573a301bb122f03206fc5",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.08s\n     Running tests/upstream_parameters.rs (target/module10-parameter-integration/debug/build/zstdoxide/6d468c82861119d9/out/upstream_parameters-6d468c82861119d9)\n\nrunning 11 tests\ntest dictionary_adjustment_preserves_unknown_profile_and_downsizes_known_input ... ok\ntest concrete_validation_retains_all_fields_and_rejects_original_invalid_values ... ok\ntest a_small_source_hint_changes_only_unknown_size_resolution ... ok\ntest dictionary_sizes_select_the_original_equal_reference_profiles ... ok\ntest explicit_override_order_and_zero_auto_preserve_requested_and_resolved_values ... ok\ntest original_adjustment_example_reduces_hash_and_chain_for_source_and_dictionary ... ok\ntest reference_frame_defaults_remain_separate_from_live_encoder_defaults ... ok\ntest reference_minimum_and_default_levels_preserve_original_scalar_assertions ... ok\ntest request_resolution_preserves_the_two_pass_empty_source_chain_witness ... ok\ntest requested_hash_override_survives_level_changes_and_default_replacement ... ok\ntest source_hint_bounds_preserve_requested_values_after_rejection ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--test",
+        "upstream_parameters",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 1.914,
+      "log": "/tmp/zstdoxide-parameter-integration-validation/clippy-safe.log",
+      "sha256": "901063b628eef13f4fe6ebf138c9266edf37e5d3f377ae663e2dab31ba22a019",
+      "archived_log_sha256": "901063b628eef13f4fe6ebf138c9266edf37e5d3f377ae663e2dab31ba22a019",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.65s\n"
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--test",
+        "upstream_parameters",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 1.395,
+      "log": "/tmp/zstdoxide-parameter-integration-validation/clippy-all.log",
+      "sha256": "867bf5bf561139fc518b7b938a7b144f29acc619158bddf485d1b09a68c65a5a",
+      "archived_log_sha256": "867bf5bf561139fc518b7b938a7b144f29acc619158bddf485d1b09a68c65a5a",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.23s\n"
+    },
+    {
+      "name": "format-owned",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "tests/upstream_parameters.rs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.09,
+      "log": "/tmp/zstdoxide-parameter-integration-validation/format-owned.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archived_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "test_executions_passed": 44,
+  "test_executions_ignored": 0,
+  "qualifications": [
+    "The library is no_std in both no-default-feature runs; the integration harness itself uses Rust standard test infrastructure.",
+    "Scalar records share the safe implementation across backend feature flags; no artificial scalar unsafe/Miri claim.",
+    "Production owners run independent fixture/algorithm checks and may have concurrent changes; only the owned integration file is claimed frozen."
+  ],
+  "original_evidence_sha256": "39af27fa168d7729a7c006aa5291fddb4b71a5694e453d6f29d47b6e555512a3"
+}

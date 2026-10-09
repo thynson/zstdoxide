@@ -36,7 +36,7 @@ after oracle capture; each completed item receives its own verified commit.
 - [x] Implement complete parameter adjustment and pure level/request queries, preserving explicit overrides, source hints, platform bounds, and checked size arithmetic.
 - [x] Add atomic supported encoder configuration replacement at the documented pre-header boundary.
 - [ ] Add parameter-only and full encoder reset, verifying phase, pledge, dictionary/prefix release, retained workspace, and allocator ownership.
-- [ ] Port source-anchored official scalar assertions through the completed public inspection API.
+- [x] Port source-anchored official scalar assertions through the completed public inspection API.
 - [ ] Port matching official encoder lifecycle assertions and independent C checks while preserving default output fingerprints.
 - [ ] Update the official source/case inventory with precise scalar and lifecycle coverage, retaining blocked numeric execution and other missing contracts.
 - [ ] Run the safe/individual/all-feature, no_std, Clippy, formatting, oracle, and appropriate width checks; record precise completion and remaining gaps.

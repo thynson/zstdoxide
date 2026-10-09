@@ -124,3 +124,20 @@ checkout and built archive at `/tmp/zstdoxize-upstream-1.5.7`, and run the archi
 Python script. Set `ZSTDOXIDE_PARAMETER_REVIEW_PROBE` to the resulting TSV when
 running the ignored test named in the evidence. The Rust implementation neither
 links C nor enables numeric encoder execution.
+
+## Official scalar assertion adapters
+
+Eleven public integration tests preserve pinned source anchors and the original
+adjustment and dictionary-profile assertions. They cover reference level
+constants, validation, requested-field independence, automatic-field clearing,
+source-hint bounds and precedence, the two-pass empty-source witness and frame
+defaults. Public C size zero maps explicitly to `SourceSize::Unknown`.
+
+All eleven pass in safe, all-feature, no_std safe and no_std with every unsafe
+backend: 44 passing executions, no ignores and no filtered tests. Focused
+safe/all strict Clippy and formatting pass.
+[Scalar integration evidence](evidence/2026-10-09-upstream-scalar-parameters.json)
+embeds exact commands and logs. The adapters distinguish detached request values
+from live context reset, and do not claim a seven-field bulk setter, LDM-enabled
+compressed equality or numeric-level execution. Lifecycle integration and
+case-inventory promotion remain separate work items.
