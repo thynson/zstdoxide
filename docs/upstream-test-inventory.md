@@ -112,8 +112,8 @@ existence of a local file.
 | Generated complete frames and standalone headers | `tests/upstream_decodecorpus.rs`, `tests/upstream_streaming.rs` | Official generated inputs, original bytes, bounded fresh-generator replay and fragmented decoding; the generator's dictionary/raw-block branches remain unported |
 | Inline legacy and skippable regression bytes | `tests/upstream_inline_regressions.rs` | Modern component runs; the full legacy desired-success assertion remains blocked |
 | Four public one-shot fuzz targets | `tests/upstream_fuzz_targets.rs` | Exact tail-selected input contracts with bounded deterministic inputs and a configurable external file runner; contexts/parameters/in-place and production scanner APIs remain missing |
-| Regression directory corpora | `tests/upstream_regression_corpora.rs` | Exact Silesia/GitHub inputs and full size/content roundtrips; the original method, strategy, level, dictionary, and CSV comparison matrix remains missing |
-| FSE normalized-count and Huffman fuzz intent | `tests/upstream/entropy.rs`, `tests/upstream/huffman_encode.rs`, `src/entropy_encode.rs` | Complete normalized-count target, 512 byte-identical C headers, bounded Huffman decoding, thirty exact C tables with Rust 1X/4X encoding and live same-table C verification; standalone depth/capacity and full roundtrip selectors remain partial |
+| Regression directory corpora | `tests/upstream_regression_corpora.rs` | Every Silesia/GitHub input passes full content comparisons with all three named Rust strategies and reused contexts under safe/all-feature builds; original C methods, numeric levels, dictionary and CSV matrices remain incomplete |
+| FSE normalized-count and Huffman fuzz intent | `tests/upstream/entropy.rs`, `tests/upstream/huffman_encode.rs`, `tests/upstream/huffman_round_trip.rs`, `src/entropy_output.rs` | Complete normalized-count target, exact C headers/tables/streams, standalone depth/capacity control flow and all 833 Huffman inputs in both BMI layouts; independent tree, serializer and CPU-engine qualifications remain explicit |
 | Single-file DXT1 and kernel empty-frame fixtures | `tests/upstream_testcard.rs` | Exact original bytes and output contracts; maximum-level selection, browser rendering, and kernel workspace APIs remain missing |
 | Ordinary streaming and context reuse | `tests/upstream_streaming.rs`, `tests/upstream_window.rs` | Bounded fragmented progress, flush/finish/reset, pledge and checksum failures, official window-distance fixtures and matching external adapters; specialized parameter/control paths remain separate |
 | Prepared dictionaries and prefixes | `src/dictionary.rs`, `tests/upstream_dictionary.rs`, `tests/upstream_dictionary_encode.rs` | Exact malformed/prepared metadata, raw/formatted matches, first-block decoding entropy/repeat offsets, IDs, persistent selection, one-use prefixes and resource/state boundaries; original level/strategy and broader random schedules remain incomplete |
@@ -145,21 +145,25 @@ partial; the explicit Rust operation is `set_dictionary(None)`. Similarly,
 first-block entropy witnesses do not complete upstream's exhaustive code-value
 or compressor-specific table-reuse sweeps.
 
-Module 8 adds executable Huffman encoding evidence without declaring a new
-upstream strategy implementation. The `huf_round_trip.c:41` source/case is now
-`partial`: thirty stored descriptions reproduce exact 1X/4X payloads, and
-independent C checks verify both serialized tables and successful streams.
-Prepared log-12 encoding, sparse alphabets, four-stream size boundaries and
-public inline/treeless frame lifetimes are covered. The original target's
-tail selectors, standalone requested table depths, 256 KiB four-stream inputs
-and caller-sized output branches still require work. Its corpus has not been
-replayed by this checkpoint.
+Module 8 adds independently bounded Greedy, Chain and Lazy policies, adaptive
+sequence tables, transactional Huffman reuse and standalone entropy contracts.
+The `huf_round_trip.c:41` source/case remains `partial`, now with a complete
+adapted driver: exact tail selectors and cheap-depth arithmetic, independent
+optimal tree selection through twelve bits, 256 KiB inputs, guarded caller
+destinations and explicit zero/error outcomes. Every one of the 833 corpus
+files runs both BMI layouts under safe and all-feature builds. The 1,666
+per-file records agree across backends; no file is skipped. Rust's independent
+tree/cost policy, exact-fit paired-description copying and single decoder
+representation remain distinct from C's serialization and CPU/X1/X2 engines.
 
 Generalized inverse FSE tables and supplied-table sequence encoding have their
 own exact bounds, repeat and C interoperability tests. Their existence does
-not complete the original dictionary code-value sweep at
-`zstreamtest.c:1551`, the raw/small-block schedules at `:1831` and `:1884`, or
-numeric strategy/level controls. The existing normalized-count target remains
+not by itself complete the original dictionary code-value sweep at
+`zstreamtest.c:1551` or numeric strategy/level controls. The separate original
+`:1831` and `:1884` schedules now preserve exact source and dictionary bytes,
+both prior random-state paths, all 43,691 small flushes and nine dictionary
+ranges, with independent C comparisons. Numeric levels, borrowed CDict ownership
+and nondefault training profiles remain qualified. The normalized-count target remains
 ported; `fuzzer.c:4172` remains ported for its arithmetic-trap assertion and
 `:4190` remains partial for its caller-owned destination contract. The
 [Module 8 coverage plan](upstream-entropy-plan.md) separates these foundations
@@ -181,8 +185,8 @@ can enable actual assertions without losing the upstream correspondence.
 
 ## External corpus snapshots
 
-`tests/upstream/external-corpora.json` separately pins fifteen rolling release
-archives: twelve fuzz target corpora and three regression inputs. They are
+`tests/upstream/external-corpora.json` separately pins sixteen rolling release
+archives: thirteen fuzz target corpora and three regression inputs. They are
 external release snapshots observed on 2026-10-08 and 2026-10-09, not files proven to belong
 to the v1.5.7 tag. Archives and extracted inputs remain in an external cache.
 Their original source notices are independent of the codec's root license.
@@ -196,6 +200,7 @@ release builds with all unsafe features enabled and no skipped files:
 | `zstd_frame_info` | 2,395 | Public frame-header parsing and metadata bounds |
 | `decompress_dstSize_tooSmall` | 1,173 | Empty input success and nonempty insufficient output failure |
 | `huf_decompress` | 605 | Both BMI-dependent parameter-consumption layouts; 604 successful table parses across both layouts |
+| `huf_round_trip` | 833 | Both exact BMI layouts, every file and branch outcome; all requested and actual depths 1..12; safe/all-feature transcripts agree |
 | `fse_read_ncount` | 79 | Complete writer/readback target with exact count selectors, random suffix bytes and consumed-header assertions |
 | `stream_decompress` | 12,462 | Tail-selected chunks, bounded streaming progress, dictionary-free output/error parity and complete input replay |
 | `stream_round_trip` | 24,223 | Complete selected source bytes, randomized supported chunk/directive schedules and exact decoded content |
@@ -217,14 +222,16 @@ explicit training-failure fallback. Their fastCover path is still partial.
 The dictionary streaming archive is byte-identical to the ordinary streaming
 roundtrip snapshot and has now also passed its separate dictionary target.
 
-The fifteen selected archives contain 2,682,880,516 unpacked bytes. The importer
+The sixteen selected archives contain 2,685,230,749 unpacked bytes. The importer
 allows a 4 GiB combined snapshot while retaining its 1 GiB per-archive ceiling.
 Each extraction is further bounded by that archive's pinned unpacked size, and
 all member paths, sizes, CRCs, archive hashes and extracted-cache bytes are
 verified before publication. Archives remain outside the repository.
 
 The selected regression-directory adapter also passed all **512** Silesia and
-GitHub inputs (**12,407,963 bytes**) in a release build with all unsafe features.
+GitHub inputs (**12,407,963 bytes**) with every named Rust strategy under safe
+and all-feature release builds. Per-strategy complete frame fingerprints and
+retained-capacity observations agree across backends.
 The separately pinned GitHub dictionary is not consumed as a dictionary. This
 run preserves complete input/output comparisons, while C compression method,
 level, context, streaming, CLI, dictionary, and historical CSV baseline

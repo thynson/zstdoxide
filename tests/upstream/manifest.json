@@ -16,23 +16,25 @@
       "url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/",
       "manifest": "tests/upstream/external-corpora.json",
       "status": "partial",
-      "reason": "Twelve rolling fuzz archives are independently SHA-256 pinned. Every selected simple_decompress(11631),zstd_frame_info(2395),too-small destination(1173) and huf_decompress(605,both parameter modes) input passed all-feature release. Both ordinary streaming targets passed safe/all-feature release:12462 decompression and24223 roundtrip inputs. All five dictionary targets passed safe/all-feature release:2271 loader,13876 raw roundtrip,12063 trained decompression,30925 trained roundtrip and24223 trained streaming inputs; no files skipped. Training/fallback counts and partial parameter/by-reference/fastCover coverage remain explicit in the source records. The 79-input/908-byte FSE normalized-count target passed safe/all-feature release with no skips. Snapshots are independent of the v1.5.7 tag; shared archive bytes do not establish another target's coverage.",
+      "reason": "Thirteen rolling fuzz archives are independently SHA-256 pinned. Every selected simple_decompress(11631),zstd_frame_info(2395),too-small destination(1173) and huf_decompress(605,both parameter modes) input passed all-feature release. Both ordinary streaming targets passed safe/all-feature release:12462 decompression and24223 roundtrip inputs. All five dictionary targets passed safe/all-feature release:2271 loader,13876 raw roundtrip,12063 trained decompression,30925 trained roundtrip and24223 trained streaming inputs; no files skipped. Training/fallback counts and partial parameter/by-reference/fastCover coverage remain explicit in the source records. The 79-input/908-byte FSE normalized-count target passed safe/all-feature release with no skips. Snapshots are independent of the v1.5.7 tag; shared archive bytes do not establish another target's coverage. The complete 833-input Huffman roundtrip corpus passed both BMI layouts under safe/all-feature builds with identical per-file evidence and the documented independent-tree/serializer/engine qualifications.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#external_file_corpus",
         "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus",
         "tests/upstream_streaming.rs#external_official_streaming_corpus",
         "tests/upstream_dictionary_fuzz.rs#external_dictionary_file_corpus",
         "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus",
-        "tests/upstream/entropy.rs#replays_official_normalized_count_corpus"
+        "tests/upstream/entropy.rs#replays_official_normalized_count_corpus",
+        "tests/upstream/huffman_round_trip.rs#complete_pinned_huffman_round_trip_corpus_replays_both_bmi_layouts"
       ]
     },
     {
       "source": "tests/regression/data.c",
       "manifest": "tests/upstream/external-corpora.json",
       "status": "partial",
-      "reason": "Silesia, GitHub files, and GitHub dictionary archives are independently SHA-256 pinned and checked against upstream XXH64 constants. All 512 selected Silesia/GitHub files (12407963 bytes) passed Rust content/size roundtrips in a release all-feature run. Dictionary usage and original method/level/strategy/context/stream/CLI/results.csv regression matrices remain unimplemented.",
+      "reason": "Silesia, GitHub files, and GitHub dictionary archives are independently SHA-256 pinned and checked against upstream XXH64 constants. All 512 selected Silesia/GitHub files (12407963 bytes) pass complete content comparisons with Greedy, Chain and Lazy in reused contexts under safe and all-feature release builds. Per-strategy full frame fingerprints, sizes and reported retained capacities agree across backends; no files are skipped. The original numeric C levels/strategies, dictionary variants, full C method matrix, exact streaming method schedules, CLI/tar inputs and results.csv size baselines remain incomplete. The separate GitHub dictionary is not used as a source substitute.",
       "rust_tests": [
-        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips",
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_named_strategies"
       ]
     }
   ],
@@ -4712,13 +4714,21 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "The 30 official table descriptions now produce byte-identical Rust 1X and 4X streams. Independent C checks verify sparse descriptions, supplied code lengths/weights, exact stream bytes, and X1/X2 decoding, including prepared log-12 tables and maximum block payloads. These exercise the serialization and successful roundtrip assertions at lines 94..127. The exact tail-driven target remains incomplete: requested/adjusted standalone table depths, optimalDepth selection, caller-owned capacity/error/zero-result paths, and 4X source sizes above 128 KiB up to the original 256 KiB cap are not ported. preferRepeat/suspectUncompressible selectors have no active policy branch in this target's called functions; CPU flags and X1/X2 remain independent C engine controls, not Rust APIs. No huf_round_trip external replay is claimed.",
+      "reason": "Exact tail selectors in both BMI layouts, highest-symbol adjustment, C cheap-depth policy, standalone trees through depth twelve, meaningful independent Rust optimal selection, 256 KiB source bounds and caller-owned stream capacity/zero-result paths are implemented. All 833 pinned files passed both layouts with safe and all-feature builds: 1666 identical per-file records per build, with every outcome accounted and no skips. Independent C checks cover exact tables/streams, 4674 parameter vectors, 1344 depth cases and 5033 capacity outcomes. The source remains partial because Rust uses independent tree/cost policies, exact-fit paired-description copying instead of C destination-dependent raw/FSE serialization, and one checked decoder rather than separate C CPU/X1/X2 engines; inactive preferRepeat/suspectUncompressible flags are consumed without invented controls.",
       "rust_tests": [
         "tests/upstream/huffman_encode.rs#one_stream_encoding_matches_all_thirty_official_tables",
         "tests/upstream/huffman_encode.rs#four_stream_encoding_matches_all_thirty_official_tables",
         "tests/upstream/huffman_encode.rs#official_oracle_verifies_one_stream_encoding_and_pinned_four_streams",
         "tests/upstream/huffman_encode.rs#official_oracle_verifies_sparse_literal_descriptions_and_fallback_codes",
-        "tests/upstream/huffman_encode.rs#official_oracle_verifies_four_stream_encoding_and_boundaries"
+        "tests/upstream/huffman_encode.rs#official_oracle_verifies_four_stream_encoding_and_boundaries",
+        "tests/upstream/huffman_round_trip.rs#complete_huffman_driver_records_every_early_exit_and_round_trip",
+        "tests/upstream/huffman_round_trip.rs#complete_huffman_driver_preserves_source_caps_depths_and_engine_selectors",
+        "tests/upstream/huffman_round_trip.rs#complete_huffman_driver_applies_a_meaningful_independent_optimal_policy",
+        "tests/upstream/huffman_round_trip.rs#official_c_producer_matches_huffman_parameters_for_both_bmi_layouts",
+        "tests/upstream/huffman_round_trip.rs#official_c_depth_selection_matches_adjustment_and_cheap_policy",
+        "tests/upstream/huffman_round_trip.rs#complete_pinned_huffman_round_trip_corpus_replays_both_bmi_layouts",
+        "src/entropy_output.rs#official_capacity_oracle_matches_native_word_slack_flags_and_every_quarter_limit",
+        "src/entropy_output.rs#official_table_writer_capacity_outcomes_remain_distinct_from_paired_copy"
       ],
       "line_count": 137,
       "cases": [
@@ -4729,13 +4739,21 @@
           "line_end": 137,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "The 30 official table descriptions now produce byte-identical Rust 1X and 4X streams. Independent C checks verify sparse descriptions, supplied code lengths/weights, exact stream bytes, and X1/X2 decoding, including prepared log-12 tables and maximum block payloads. These exercise the serialization and successful roundtrip assertions at lines 94..127. The exact tail-driven target remains incomplete: requested/adjusted standalone table depths, optimalDepth selection, caller-owned capacity/error/zero-result paths, and 4X source sizes above 128 KiB up to the original 256 KiB cap are not ported. preferRepeat/suspectUncompressible selectors have no active policy branch in this target's called functions; CPU flags and X1/X2 remain independent C engine controls, not Rust APIs. No huf_round_trip external replay is claimed.",
+          "reason": "Exact tail selectors in both BMI layouts, highest-symbol adjustment, C cheap-depth policy, standalone trees through depth twelve, meaningful independent Rust optimal selection, 256 KiB source bounds and caller-owned stream capacity/zero-result paths are implemented. All 833 pinned files passed both layouts with safe and all-feature builds: 1666 identical per-file records per build, with every outcome accounted and no skips. Independent C checks cover exact tables/streams, 4674 parameter vectors, 1344 depth cases and 5033 capacity outcomes. The source remains partial because Rust uses independent tree/cost policies, exact-fit paired-description copying instead of C destination-dependent raw/FSE serialization, and one checked decoder rather than separate C CPU/X1/X2 engines; inactive preferRepeat/suspectUncompressible flags are consumed without invented controls.",
           "rust_tests": [
             "tests/upstream/huffman_encode.rs#one_stream_encoding_matches_all_thirty_official_tables",
             "tests/upstream/huffman_encode.rs#four_stream_encoding_matches_all_thirty_official_tables",
             "tests/upstream/huffman_encode.rs#official_oracle_verifies_one_stream_encoding_and_pinned_four_streams",
             "tests/upstream/huffman_encode.rs#official_oracle_verifies_sparse_literal_descriptions_and_fallback_codes",
-            "tests/upstream/huffman_encode.rs#official_oracle_verifies_four_stream_encoding_and_boundaries"
+            "tests/upstream/huffman_encode.rs#official_oracle_verifies_four_stream_encoding_and_boundaries",
+            "tests/upstream/huffman_round_trip.rs#complete_huffman_driver_records_every_early_exit_and_round_trip",
+            "tests/upstream/huffman_round_trip.rs#complete_huffman_driver_preserves_source_caps_depths_and_engine_selectors",
+            "tests/upstream/huffman_round_trip.rs#complete_huffman_driver_applies_a_meaningful_independent_optimal_policy",
+            "tests/upstream/huffman_round_trip.rs#official_c_producer_matches_huffman_parameters_for_both_bmi_layouts",
+            "tests/upstream/huffman_round_trip.rs#official_c_depth_selection_matches_adjustment_and_cheap_policy",
+            "tests/upstream/huffman_round_trip.rs#complete_pinned_huffman_round_trip_corpus_replays_both_bmi_layouts",
+            "src/entropy_output.rs#official_capacity_oracle_matches_native_word_slack_flags_and_every_quarter_limit",
+            "src/entropy_output.rs#official_table_writer_capacity_outcomes_remain_distinct_from_paired_copy"
           ]
         }
       ]
@@ -10241,9 +10259,10 @@
       "suite": "compression_regression",
       "role": "test_suite",
       "status": "partial",
-      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. The regression adapter has not yet implemented the original C-context method matrix, compression levels/strategies, dictionaries, streaming method variants, CLI/tar variants, or results.csv baselines.",
+      "reason": "All 512 selected Silesia/GitHub files (12407963 bytes) pass complete content comparisons with Greedy, Chain and Lazy in reused contexts under safe and all-feature release builds. Per-strategy full frame fingerprints, sizes and reported retained capacities agree across backends; no files are skipped. The original numeric C levels/strategies, dictionary variants, full C method matrix, exact streaming method schedules, CLI/tar inputs and results.csv size baselines remain incomplete.",
       "rust_tests": [
-        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips",
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_named_strategies"
       ],
       "line_count": 631,
       "cases": []
@@ -10279,9 +10298,10 @@
       "suite": "compression_regression",
       "role": "test_suite",
       "status": "partial",
-      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. The regression adapter has not yet implemented the original C-context method matrix, compression levels/strategies, dictionaries, streaming method variants, CLI/tar variants, or results.csv baselines.",
+      "reason": "All 512 selected Silesia/GitHub files (12407963 bytes) pass complete content comparisons with Greedy, Chain and Lazy in reused contexts under safe and all-feature release builds. Per-strategy full frame fingerprints, sizes and reported retained capacities agree across backends; no files are skipped. The original numeric C levels/strategies, dictionary variants, full C method matrix, exact streaming method schedules, CLI/tar inputs and results.csv size baselines remain incomplete.",
       "rust_tests": [
-        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips",
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_named_strategies"
       ],
       "line_count": 701,
       "cases": []
@@ -10341,9 +10361,10 @@
       "suite": "compression_regression",
       "role": "test_suite",
       "status": "partial",
-      "reason": "The exact selected Silesia and GitHub directory corpus inputs (512 files, 12407963 bytes) roundtrip through Rust with complete size/content comparisons in a release all-feature run. The regression adapter has not yet implemented the original C-context method matrix, compression levels/strategies, dictionaries, streaming method variants, CLI/tar variants, or results.csv baselines.",
+      "reason": "All 512 selected Silesia/GitHub files (12407963 bytes) pass complete content comparisons with Greedy, Chain and Lazy in reused contexts under safe and all-feature release builds. Per-strategy full frame fingerprints, sizes and reported retained capacities agree across backends; no files are skipped. The original numeric C levels/strategies, dictionary variants, full C method matrix, exact streaming method schedules, CLI/tar inputs and results.csv size baselines remain incomplete.",
       "rust_tests": [
-        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips"
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_roundtrips",
+        "tests/upstream_regression_corpora.rs#external_regression_corpus_named_strategies"
       ],
       "line_count": 362,
       "cases": []

@@ -71,6 +71,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.
 - [x] Extend the regression content adapter to every named strategy with reset, output-bound, and full-byte checks.
 - [x] Replay every pinned regression input with each named strategy under safe and all-feature builds.
+- [x] Map complete Huffman and named-strategy corpus evidence while preserving upstream API qualifications.
 - [x] Extend deterministic benchmarks to every independent entropy/chain backend and each named strategy.
 - [x] Include all new entropy and strategy oracle entry points in the reproducible validation script.
 - [ ] Run the backend/strategy benchmark matrix and preserve comparable output fingerprints and memory measurements.
