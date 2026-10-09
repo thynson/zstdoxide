@@ -493,3 +493,19 @@ retain source hashes and complete observed tuples. This checkpoint does not
 establish reusable contexts, destination-buffer failure behavior, mutable
 decoder settings or overlapping in-place decoding. The separately decomposed
 Rust port will make the admitted source/level assertions executable.
+
+The separate Rust negative-level port now executes two normal Cargo tests:
+exact decoding of both captured C frames, and the original simple-versus-
+advanced size equality adapted to `compress_at_level(-1)` versus a fresh
+parameter request. It additionally checks deterministic Rust frame bytes,
+complete decoded bytes, and unchanged input/request. Eight test executions
+pass across safe/all/no-default/no-default-with-all-unsafe builds, with no
+ignored tests. Strict focused Clippy safe/all and formatting also pass; seven
+commands preserve the implementation, fixture and test hashes throughout.
+See the [Rust evidence](evidence/2026-10-09-negative-level-rust.json) and
+[logs](evidence/2026-10-09-negative-level-rust.tar.gz).
+
+The source anchor is now partial rather than blocked. Its original live CCtx
+setter/context and caller destination-capacity behavior remain explicit gaps;
+no C entropy byte/size identity is imposed on the independent Rust encoder.
+The complete migration gate therefore remains open.

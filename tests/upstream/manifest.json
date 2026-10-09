@@ -5137,7 +5137,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Named one-shot/streaming regressions, deterministic corpora, prepared dictionary parsing, dictionary/prefix encode/decode and independent raw/formatted training run. Pure reference parameter validation/query/adjustment groups and qualified supported-options lifecycle assertions are mapped separately; detached profiles do not configure compression. Dictionary/options/reset adapters retain original dimensions with a declared RDG corpus and explicit Rust reset/default semantics. Bounded live hash/search settings now cover getter/reset and dictionary-attachment/order subsets; operational numeric compression levels and remaining advanced live controls, COVER/fastCover optimization, randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
+      "reason": "Named one-shot/streaming regressions, deterministic corpora, prepared dictionary parsing, dictionary/prefix encode/decode and independent raw/formatted training run. Pure reference parameter validation/query/adjustment groups and qualified supported-options lifecycle assertions are mapped separately; detached profiles do not configure compression. Dictionary/options/reset adapters retain original dimensions with a declared RDG corpus and explicit Rust reset/default semantics. Bounded live hash/search settings now cover getter/reset and dictionary-attachment/order subsets; bounded no-dictionary Fast numeric execution now adapts the original negative-level size assertion; other numeric algorithms and remaining advanced live controls, COVER/fastCover optimization, randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
       "rust_tests": [
         "tests/upstream_fuzzer.rs",
         "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame",
@@ -5186,7 +5186,8 @@
         "tests/upstream_allocator.rs#original_custom_context_source_campaign_has_complete_byte_comparisons",
         "tests/upstream_parameters.rs",
         "tests/upstream_parameter_lifecycle.rs",
-        "tests/upstream_search_lifecycle.rs"
+        "tests/upstream_search_lifecycle.rs",
+        "tests/upstream_negative_level.rs"
       ],
       "line_count": 5147,
       "cases": [
@@ -7260,9 +7261,12 @@
           "line_start": 3469,
           "line_end": 3495,
           "label": "test%3i : negative compression level :",
-          "status": "blocked",
-          "reason": "Negative-level reference profiles can be inspected, but operational numeric compression levels are not implemented. The original level -1 simple-versus-advanced compression result-size comparison has not been ported; detached scalar queries do not establish this execution contract.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The exact inherited 1 MiB input is preserved by independently checked source-state replay. Rust level -1 and a fresh parameter request both succeed with equal sizes, additionally equal frame bytes and complete decoded source. Both original C frames decode exactly. The original live advanced CCtx setter/context and caller-owned destination-capacity contract remain unported.",
+          "rust_tests": [
+            "tests/upstream_negative_level.rs#negative_level_simple_and_parameter_requests_preserve_the_original_size_assertion",
+            "tests/upstream_negative_level.rs#both_original_c_negative_level_frames_decode_the_exact_inherited_source"
+          ]
         },
         {
           "id": "tests/fuzzer.c:3496",
