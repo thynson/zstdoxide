@@ -63,6 +63,34 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Add a clock-free-by-default nine-case Fast benchmark with separate allocation accounting, independent corpus fingerprints and reviewed safe/unsafe result validation.
 - [ ] Validate feature/platform boundaries and measure a frozen Fast-specific deterministic safe/unsafe benchmark before recording this bounded module complete.
 
+## Module 13: bounded reference DoubleFast profile execution
+
+Design: `docs/reference-double-fast-design.md` and `docs/data-structures.md`.
+Only preparation is complete. Implementation and C capture wait for Module 12
+final validation and measurements. Current Fast/named outputs remain regression
+inputs, and historical C observations retain their original admission scope.
+
+- [x] Analyze the two-table ownership, exact source bounds/scheduling, algorithm-specific admission, shared integration and newly admitted official subsets; independently review the design.
+- [ ] Freeze complete current Fast frame bytes and exact allocator counts alongside the existing named baselines.
+- [ ] Specify and independently review bounded direct DoubleFast C protocol/arenas, then capture tiny hand-readable observations with scoped sanitizers.
+- [ ] Freeze directed direct-parser families, both full table maps, low-log eight-byte hashes, provenance and offline rejection controls before Rust parsing.
+- [ ] Add the private checked eight-byte long-key layout while preserving current Fast and named layout domains.
+- [ ] Add the allocation-free DoubleFast plan, independent table/window caps, target layouts and actual source-tier admission checks.
+- [ ] Add checked borrowed block/cursor records and two-table owner construction with exact-owner failure/reset coverage.
+- [ ] Implement safe single-block DoubleFast parsing against frozen sequences, literals, repeat intents and both complete table observations.
+- [ ] Capture ordinary DoubleFast frame publication trajectories; keep collector corroboration and constructed direct states separately qualified.
+- [ ] Add a dependency-free checked Rust adapter for frozen ordinary trajectories and complete C frames.
+- [ ] Retain both sampled tables across blocks with separate parsed/emitted state, committed repeats and poison semantics.
+- [ ] Extract common plain frame settings and truthful header/bound writing while preserving Fast/named output and allocator behavior.
+- [ ] Extract the shared explicit entropy/gain policy while retaining Fast-only raw-literal acceleration and existing allocation order.
+- [ ] Add small static search/emission dispatch without allocating inactive algorithm state or duplicating committed entropy.
+- [ ] Emit complete DoubleFast frames with window-log-21 metadata, raw/RLE fallback, transactional publication and every observed allocation-failure ordinal.
+- [ ] Extend public level/request admission with level0/default3 equivalence, tier-specific levels2/4 and qualified usage documentation.
+- [ ] Port newly admitted official numeric/fuzz assertions through a successor policy layer while preserving frozen C tuples and all remaining context/dictionary/capacity gaps.
+- [ ] Validate complete bidirectional C/Rust frames, all individual unsafe features, no_std and focused interpreted/compile-only platform boundaries.
+- [ ] Freeze and measure deterministic DoubleFast workloads with separate allocation accounting after the CPU barrier; preserve Fast comparisons and qualify results.
+- [ ] Reconcile inventory and validation evidence, record the bounded milestone, and clear its completed checklist.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

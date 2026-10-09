@@ -595,3 +595,51 @@ bypass entropy and RLE, and nonfirst uniform blocks use the reference's
 effective candidate-size-below-25 RLE gate. Internal failures invalidate the
 private wrapper; preflight argument errors leave it usable. These composite
 roles introduce no unsafe backend beyond their individually gated children.
+
+## Module 13: bounded no-dictionary DoubleFast (planned)
+
+The [reviewed design](reference-double-fast-design.md) pins the exact upstream
+loop and resource scope. These records are planned; this section does not claim
+an implemented DoubleFast path or new test result.
+
+| Structure | Ownership and invariants | Reference counterpart / unsafe representation |
+| --- | --- | --- |
+| `DoubleFastExecutionPlan` | Copy values: checked source domain, resolved profile, window10..21, block limit, long/short layouts and each/summed allocation size. No owner or hidden clamping. | Resolved DoubleFast compression parameters and dispatch; shared safe values. |
+| `DoubleFastBlock<'a>` | Borrows one immutable complete source with checked block range and retained prefix floor. All candidate/current/next positions are indices. | No-dictionary parser source/base/end/prefix pointers; no pointer-backed alternate required. |
+| Long `MatchTable<A>` | Owns initialized usize cells indexed by eight-byte hashes at log6..18. EMPTY remains distinct from valid source index zero. Validate layout and initialized access before reads/writes. | `hashTable`, sized by hashLog; existing safe and `unsafe-match-table` implementations. |
+| Short `MatchTable<A>` | A separate complete owner of initialized usize cells, log6..18 and key width max(4,minMatch). It contains positions, not linked predecessors. | `chainTable` in DoubleFast, sized by chainLog; same existing independently gated table type. |
+| Parser cursor/result | Plain checked positions, cached buckets/candidates, step/threshold, two saved repeats, trailing-literal count and separate raw-parser/full-wire triples. | Local no-dictionary DoubleFast state; shared safe values. |
+| `DoubleFastMatchState<'a,A>` | Moves both complete table owners plus separately allocated literal and intent-bearing sequence vectors; borrows source and tracks parsed position/floor/failure. Reset tables once per source. | Match state plus sequence store, with explicit Rust ownership; composite needs no new unsafe flag. |
+| Shared reference frame settings | Plain known content size, selected window/log and block limit, validated before header/output-bound calculation. | Reference standard frame metadata; safe fixed initialized header bytes. |
+| Search/emission dispatch | Small static choice of existing Fast or new DoubleFast state; inactive storage is never allocated. Original allocator belongs to returned output; fresh clones own workspace children. | Block-compressor selection and frame loop; safe composite. |
+| Existing entropy owner | One literal/FSE/bitstream/payload aggregate with committed and candidate publication state. DoubleFast uses normal literals even with positive targetLength. | Block entropy state and minimum-gain policy; existing individually gated child implementations. |
+
+Ordinary current-long/current-short candidates accept indices equal to the
+block-end floor, because `ZSTD_selectAddr` uses `>=`. The later-long candidate
+uses an explicit strict `>` condition. Backward extension may finish at the
+floor after a checked decrement. Saved repeat eligibility uses the separate
+current-position/retained-prefix bounds. All probes also need a positive valid
+distance and enough initialized source bytes; a matching hash proves none of
+those conditions by itself.
+
+Long/short lookup and store order is explicit. Preserve cached current-long
+state, short lookup before current writes, the later-long read after those
+writes, the step<4 deferred long store and collision-sensitive complementary
+writes. Source/index arithmetic is checked. Seven/eight-byte inputs and some
+nine-byte inputs still refresh literal/repeat scratch without hashing; only
+ordinary-frame sizes below seven take the stale-scratch bypass.
+
+Both output-vector bounds are reserved before the first parser table mutation.
+A failed second reserve may retain increased first-vector capacity, but logical
+contents and tables remain unchanged. Later parser errors poison persistent
+state. Raw/RLE retains both sampled tables and discards candidate repeats and
+entropy; compressed publication follows complete output reservation/append.
+There is no second committed-repeat copy in the workspace.
+
+The long-key layout extension preserves existing Fast and named validation.
+Each table checks `Layout::array::<usize>` and their checked sum; at both log18
+maxima the table payload is 4 MiB on 64-bit or 2 MiB on 32-bit targets, excluding
+all other allocations. DoubleFast's 2-MiB history cap does not widen Fast's
+existing 1-MiB cap. A pair of existing table owners adds no new unsafe operation;
+any future packed/pointer representation would require its own reviewed safety
+contract, backend and feature instead of relying on this composite rationale.
