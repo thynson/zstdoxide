@@ -140,3 +140,29 @@ The small work items and their required commits are in `TODO.md`. Before closing
 Module 7, port applicable dictionary/prefix/training tests, replay matching
 external corpora, measure the added backend, and run the complete no_std/backend,
 independent-oracle and targeted Miri validation.
+
+## Retained encoder output history
+
+After dictionary-seeded matching, `BlockEncoder` gains an owned optional
+`RingHistory` using its already independent safe/unsafe family. Allocate it
+lazily for nonempty input with horizon `min(advertised_window, 128 KiB)`. Every
+successfully encoded block commits its original input, including raw and RLE
+blocks. Reset/start clears logical positions and preserves reusable capacity.
+The ring allocation is included in context capacity. This horizon is a
+compression search limit; larger advertised windows remain accepted.
+
+Temporary match coordinates concatenate dictionary `[0,D)`, retained history
+`[D,D+H)`, and the current block `[D+H,D+H+B)`, using checked usize additions.
+Absolute frame positions remain u64. Seed the working table from dictionary and
+retained output, including keys across the history/current-block boundary.
+Validate ordinary distances against advertised window and initialized retained
+history before comparing source bytes. Dictionary eligibility remains P<=W and
+predefined offset symbols still impose their documented distance bound. A
+dictionary match may cross into frame byte zero only while that position remains
+available in the immutable ring or current input; otherwise clip the match.
+
+Previous-block matching intentionally changes some previously independent-block
+encoded bytes. Verify exact decoded content and determinism under caller chunk
+schedules, document the changed subset of the old 48-frame baseline, and test
+ring wrap, horizon eviction, explicit reset isolation and retained allocation.
+No additional unsafe structure is introduced.
