@@ -77,6 +77,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [ ] Adapt trained streaming dictionaries with fragmented progress and prefix lifetime assertions.
 - [ ] Replay matching external dictionary corpora with explicit coverage mappings.
 - [x] Extend deterministic benchmark workloads for dictionary access, codec contexts, and training.
+- [x] Measure all eleven backend configurations and preserve dictionary/training timing and memory results.
 - [x] Include dictionary and training backends and C oracles in the validation scripts.
 - [x] Add formatted-training, entropy C-oracle, and dictionary documentation checks to validation.
 - [ ] Compare safe/unsafe dictionary throughput and memory; run backend/no_std/oracle/Miri checks.

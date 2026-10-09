@@ -1,5 +1,53 @@
 # Recorded backend comparisons
 
+## Module 7 dictionary and training measurements
+
+The 2026-10-09 run used Rust 1.89.0 on `aarch64-apple-darwin`, release overflow
+checks, five samples of at least 150 ms, eleven configurations and fifteen
+workloads. The configurations are safe defaults, each of the nine unsafe
+features alone, and all features together. All deterministic fingerprints,
+whole-output checksums, sizes, and retained-capacity metadata matched. The
+[complete summary and raw samples](measurements/2026-10-09-dictionaries/summary.md)
+include all earlier workloads as well as the four new dictionary/training cases.
+
+| Workload | Safe ns/byte | Selected unsafe ns/byte | Relative throughput |
+| --- | ---: | ---: | ---: |
+| Dictionary content, dictionary feature alone | 1.0205 | 1.0064 | 1.014x |
+| Raw training, training feature alone | 9.3851 | 9.4417 | 0.994x |
+| Dictionary compression, all features | 3.4845 | 3.3110 | 1.052x |
+| Prepared dictionary decompression, all features | 4.3854 | 4.4677 | 0.982x |
+
+The two new unsafe accessors show little difference on these workloads; the
+training feature is slightly slower in this run. These sequential workstation
+measurements include noise and do not establish a universal improvement. Unsafe
+features remain opt-in. Compression/decompression timings reuse contexts and
+include reset, while raw training includes scratch allocation and the complete
+selection algorithm. Formatted-training throughput is not measured by that raw
+selection workload.
+
+Dictionary compression encodes 32,768 source bytes to 27 bytes, compared with
+2,074 bytes for the same source without the dictionary. Prepared HTTP decoding
+processes 64 frames containing 76,096 output bytes from 27,328 encoded bytes.
+The raw trainer observes 65,536 bytes from 256 samples totaling 131,072 bytes,
+uses 64-byte segments and a 2,048-byte output cap, and returns exactly 2,048
+bytes with full-output FNV-1a `b3a3cc2c22959aae` in every configuration.
+
+Persistent prepared dictionary decoder/encoder contexts retain 17,099 and
+1,525,990 heap-capacity bytes after reset, including each dictionary once per
+context report. Ordinary streaming memory trials retain 264,107 decoder bytes
+for both 512 KiB and 8 MiB of output, and 1,483,361 encoder bytes for both four
+and 64 blocks. The encoder increase of 131,072 bytes from Module 6 corresponds
+to the new retained-output history ring. These measurements exclude inline
+state, transient scratch, caller buffers, allocator overhead and shared-owner
+deduplication across separate contexts.
+
+The source SHA-256 is
+`bf2b8bb9bb67e1c315c43348f2351b7e40ac179a09f8bd70276f8121f21039ee`,
+with revision `8f55d3df3b83925c246c6fd4e7e6ae97b59264ec`. The benchmark script
+verified that core source, benchmark code, and consumed fixtures did not change
+during the run. Other agents paused CPU-intensive validation for the timed run.
+CPU model access was unavailable; compiler/host metadata is preserved.
+
 ## Module 6 streaming measurements
 
 The streaming run on 2026-10-08 used Rust 1.89.0 on `aarch64-apple-darwin`,
