@@ -61,6 +61,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 
 - [x] Analyze reference Fast ownership, sampling, repeat publication, whole-buffer profile admission and independently review the implementation boundaries.
 - [x] Specify separate direct-parser, collector and ordinary-frame oracle contracts and the checked explicit-offset interface.
+- [x] Specify shared entropy-owner extraction, reconstruction checks, Fast literal/gain policy and truthful known-size headers.
 - [ ] Add a bounded direct-C Fast helper with independent sequence replay and reviewed source/literal capacity guards.
 - [ ] Freeze deterministic direct Fast sequence/state recipe families with attributed normal/sanitizer reproduction and offline integrity checks.
 - [ ] Corroborate direct candidates through the official sequence collector, retaining its distinct publication, tiny-input and delimiter behavior.
@@ -71,6 +72,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [ ] Add committed-repeat snapshots and transactional preparation of intent-bearing sequences with complete ownership/failure coverage.
 - [ ] Implement safe single-block Fast sampling, repeat probes, backward/forward matches, tails and acceleration against frozen observations.
 - [ ] Preserve sampled Fast state across blocks with checked whole-source ranges and raw/RLE/compressed transition coverage.
+- [ ] Extract the parser-independent block entropy owner while preserving named bytes, allocator identities, clone/reserve order and capacities.
 - [ ] Integrate Fast literal policy, minimum-gain decisions and truthful source/window headers without altering named output.
 - [ ] Publish allocator-aware level/request one-shot entry points with complete failure-ordinal, ownership and no_std coverage.
 - [ ] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.

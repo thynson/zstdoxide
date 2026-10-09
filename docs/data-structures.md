@@ -480,3 +480,15 @@ uninitialized delimiter fields are never serialized. Actual sequence/state
 observations are distinct from chronological instruction traces; collector
 candidate publication is distinct from ordinary frame selection. These test
 records need no artificial unsafe Rust representation.
+
+
+`BlockEntropyEncoder<A>` is the planned shared composite of existing literal,
+sequence and payload owners. It introduces neither a new backend nor another
+allocator factory: safe/unsafe access stays in each existing child family.
+Construction preserves existing child creation/clone order, and extraction
+moves complete owners rather than adopting buffers through allocator clones.
+The named parser keeps all current source/search owners. The whole-input Fast
+supervisor owns only its required sampled table and intent-bearing parser
+buffers; no unused ring or seed storage is constructed. A pure Fast header and
+block-selection record carries checked lengths and flags with shared safe
+representation. See the emission/ownership contract in the Fast design.

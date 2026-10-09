@@ -314,3 +314,60 @@ bounded initialized C arenas and canonical observation schemas. The
 wire transition, one intent-bearing sequence vector, committed-state snapshot
 and allocation-preserving preparation path. Their smaller checkpoints are
 recorded separately in `TODO.md` before any implementation begins.
+
+
+## Shared emission and allocator ownership
+
+Extract a private `BlockEntropyEncoder<A>` containing exactly the current
+literal encoder, committed/pending Huffman codebooks, sequence encoder and
+candidate payload vector. Named `BlockEncoder` keeps its literal/logical-
+sequence vectors, tables, seeds, ring, selected handles and counters. Fast owns
+one persistent MatchTable, one literal vector, one `SequenceWithOffset` vector
+and the shared entropy owner, borrowing the complete source. Fast must bypass
+named `encode`/`start_frame` search setup; no duplicate unused ring, chain or
+seed allocation is permitted.
+
+For the first extraction, construct existing children in their existing order
+and move complete owners into the aggregate. Preserve original allocator
+identities, clone order, reserve order, retained capacities and named frame
+bytes. The aggregate needs no additional allocator factory. Only later add a
+Fast preparation method; named preparation keeps its current canonical plans
+and literal selector. The extraction is its own verified work item.
+
+Before entropy work, validate checked reconstructed lengths: `sum(LL)` cannot
+exceed the literal buffer, the remainder is trailing literals, and
+`literals.len() + sum(ML)` equals the original block size. Byte equality and
+window eligibility remain parser responsibilities. Explicit preparation uses
+the committed-repeat snapshot specified in the offset interface. Failed
+preparation discards pending state and exposes no candidate. Reserve output
+for the raw bound before appending a chosen block; publication after Copy
+appends is allocation-free. Raw/RLE discard pending entropy/repeats while
+sampled source indices remain eligible according to their window.
+
+Fast literal policy must distinguish raw-only from enabled independent Huffman
+selection. A positive target length takes raw-only before literal RLE,
+histograms or codebook selection (`zstd_compress_literals.c:151–155`). For enabled
+Fast compression, minimum gain is `(n >> 6) + 2`, with equality falling back.
+The literal test compares streams/jump table/tree description excluding the
+literal header; the block test compares the complete literal/sequence payload
+excluding the block header. Checked subtraction makes too-small inputs
+ineligible. Existing named selection continues using its old size criterion.
+C's separate minimum-attempt and Huffman-validity scheduling is not represented
+by the existing optional codebook; retain the independent-entropy qualification.
+
+A pure header record for the new known-size, no-dictionary path uses the admitted
+window and reference checksum default of false. Single segment applies exactly
+when input size fits that window; otherwise emit its descriptor. Block size is
+`min(128 KiB, window)`, and empty input emits one final empty raw block. The new
+header follows C's four/eight-byte content-size promotion at `0xffffffff`
+(`zstd_compress.c:4695–4738`); the existing convenience encoding remains unchanged.
+Test large scalar boundaries without allocating those input sizes.
+
+The original allocator moves into returned output. Workspace children receive
+explicit fresh clones; every vector retains the exact allocator that owns its
+blocks. Borrowing a non-Clone allocator through `&A` remains supported. Admit
+strategy/resources and check the raw output bound before allocation. An error
+drops all unreturned output and scratch without changing caller input/request.
+Reference parser observations establish decisions for the same input and state;
+independent entropy can select different block kinds and hence different later
+committed repeats. Do not infer universal C frame-byte or block-kind identity.
