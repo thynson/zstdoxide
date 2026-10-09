@@ -33,7 +33,8 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [ ] Encode one Huffman stream and verify exact C streams, including dictionary log twelve.
 - [ ] Encode four streams and checked jump tables, including minimum and size boundaries.
 - [ ] Build sparse literal tables while preserving formatted dictionary-training output.
-- [ ] Add checked literal headers and zero-sequence compressed-block assembly.
+- [ ] Serialize checked raw, RLE, and Huffman literal headers at every field boundary.
+- [ ] Assemble zero-sequence compressed blocks without sequence modes or states.
 - [ ] Publish Huffman choices transactionally with emitted and pending entropy state.
 - [x] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.
 - [x] Port exact unit-count normalization and sparse normalized-header regressions.
