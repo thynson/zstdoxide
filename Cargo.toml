@@ -39,3 +39,8 @@ overflow-checks = true
 name = "backends"
 harness = false
 required-features = ["std"]
+
+[[bench]]
+name = "allocators"
+harness = false
+required-features = ["std"]

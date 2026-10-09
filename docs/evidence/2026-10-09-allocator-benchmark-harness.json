@@ -1,0 +1,558 @@
+{
+  "schema_version": 1,
+  "scope": "Module 9 deterministic allocator benchmark harness; clock-free readiness only",
+  "mode": "smoke",
+  "timed_execution_performed": false,
+  "workloads": 11,
+  "allocator_modes": [
+    "global",
+    "tracking_owned",
+    "tracking_borrowed"
+  ],
+  "backend_configurations": [
+    "safe",
+    "unsafe-byte-cursor",
+    "unsafe-bitstream",
+    "unsafe-history",
+    "unsafe-ring-history",
+    "unsafe-fse",
+    "unsafe-fse-encoder",
+    "unsafe-huffman",
+    "unsafe-huffman-codebook",
+    "unsafe-match-table",
+    "unsafe-match-chain",
+    "unsafe-dictionary",
+    "unsafe-training",
+    "all"
+  ],
+  "rows_per_configuration": 33,
+  "total_rows": 462,
+  "files_changed": [
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/Cargo.toml",
+      "bytes": 898,
+      "sha256": "659ce726a22f6cc6360e76eb5bc5de8eb593fb2e0fb046688e28afc14755d402"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/benches/allocators.rs",
+      "bytes": 27814,
+      "sha256": "9d7e7a2244b2d190d8ead52bdd9f35c1cf861a3299c117de94a1bbfd14dca448"
+    },
+    {
+      "path": "/Users/lanxingcan/Workspace/zstdoxize/scripts/benchmark_allocators.py",
+      "bytes": 18888,
+      "sha256": "98422f4c2b27f3683b9c500fbb5e1eaea5004f8b42422395684c7ad439be5b48"
+    }
+  ],
+  "source_fingerprint": "2b2c51a395d53d658db1089fdbbc7937c28f5543759c5962a09729d808d11686",
+  "source_fingerprint_stable_for_all_configurations": true,
+  "full_smoke_command": "CARGO_TARGET_DIR=/tmp/zstdoxide-allocator-bench-target python3 scripts/benchmark_allocators.py /tmp/zstdoxide-allocator-bench-smoke-all",
+  "commands": [
+    {
+      "configuration": "safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "safe.jsonl",
+      "stderr": "safe.cargo.log"
+    },
+    {
+      "configuration": "unsafe-byte-cursor",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-byte-cursor"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-byte-cursor.jsonl",
+      "stderr": "unsafe-byte-cursor.cargo.log"
+    },
+    {
+      "configuration": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-bitstream.jsonl",
+      "stderr": "unsafe-bitstream.cargo.log"
+    },
+    {
+      "configuration": "unsafe-history",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-history"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-history.jsonl",
+      "stderr": "unsafe-history.cargo.log"
+    },
+    {
+      "configuration": "unsafe-ring-history",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-ring-history"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-ring-history.jsonl",
+      "stderr": "unsafe-ring-history.cargo.log"
+    },
+    {
+      "configuration": "unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-fse"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-fse.jsonl",
+      "stderr": "unsafe-fse.cargo.log"
+    },
+    {
+      "configuration": "unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-fse-encoder"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-fse-encoder.jsonl",
+      "stderr": "unsafe-fse-encoder.cargo.log"
+    },
+    {
+      "configuration": "unsafe-huffman",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-huffman"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-huffman.jsonl",
+      "stderr": "unsafe-huffman.cargo.log"
+    },
+    {
+      "configuration": "unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-huffman-codebook"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-huffman-codebook.jsonl",
+      "stderr": "unsafe-huffman-codebook.cargo.log"
+    },
+    {
+      "configuration": "unsafe-match-table",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-match-table"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-match-table.jsonl",
+      "stderr": "unsafe-match-table.cargo.log"
+    },
+    {
+      "configuration": "unsafe-match-chain",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-match-chain"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-match-chain.jsonl",
+      "stderr": "unsafe-match-chain.cargo.log"
+    },
+    {
+      "configuration": "unsafe-dictionary",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-dictionary"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-dictionary.jsonl",
+      "stderr": "unsafe-dictionary.cargo.log"
+    },
+    {
+      "configuration": "unsafe-training",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--features",
+        "unsafe-training"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-training.jsonl",
+      "stderr": "unsafe-training.cargo.log"
+    },
+    {
+      "configuration": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "allocators",
+        "--all-features"
+      ],
+      "environment": {
+        "ZSTDOXIDE_ALLOCATOR_BENCH_SMOKE": "1",
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-bench-target"
+      },
+      "exit_code": 0,
+      "stdout": "all.jsonl",
+      "stderr": "all.cargo.log"
+    }
+  ],
+  "smoke_artifacts": [
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/all.cargo.log",
+      "bytes": 208,
+      "sha256": "b508c6e7ca23e4798a362cca55fc3abb773f326603d271eb652e00099ee4b697"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/all.jsonl",
+      "bytes": 50910,
+      "sha256": "3b8941c73535044dcf050f77cecd0f680c4f08cb0a4379e993439e096a78ac75"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/commands.json",
+      "bytes": 6822,
+      "sha256": "18d47535594a8a4a42f0b5156cac7b9a092f4bf5e4c5907c47e4a800ae4349ad"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/environment.json",
+      "bytes": 937,
+      "sha256": "b93a88f416cdb1b3cb2515d40d307557a17df5b29e9768476972418a9d9d2a1c"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/results.json",
+      "bytes": 1226956,
+      "sha256": "4183d45818b5e390611451b715a01d318a491a0ba93e1098082d4d8a3003a56f"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/safe.cargo.log",
+      "bytes": 208,
+      "sha256": "30818c85a0d91ee1fd728919096221c801e8a4521d14a75e6c8cb4b8583c43fe"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/safe.jsonl",
+      "bytes": 50703,
+      "sha256": "dc9128c46a011314a1c78f8fdbb910fa699b86cdfde007e47a069bc86455b537"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/source.json",
+      "bytes": 7767,
+      "sha256": "162b1386771192f85cb2d3c24d1f21fe9661ce241468b584f848a528c31f2007"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/summary.md",
+      "bytes": 6353,
+      "sha256": "22c3abf95c6fb7d6615eee47cb4f5d38cb39842c8547d8a1ce21b7f217fc4395"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-bitstream.cargo.log",
+      "bytes": 278,
+      "sha256": "f5bd0c1dbb63fff332b03bccc16c755ab9c18f033c4b374947e2a37298204a4f"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-bitstream.jsonl",
+      "bytes": 50715,
+      "sha256": "d5c0555111757e5d5e975ac6b71e1e4dfc0b037cac9fa12ebcea729d943d197f"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-byte-cursor.cargo.log",
+      "bytes": 278,
+      "sha256": "c601718a174da5369f69051f8d5b6ce7b96e9a135748eed161087a4491361507"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-byte-cursor.jsonl",
+      "bytes": 50717,
+      "sha256": "bc52363790fb494e7134ad9f350ca524e278325f12cd91c517c3a4805ae33829"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-dictionary.cargo.log",
+      "bytes": 278,
+      "sha256": "6f263ca85551eb82378746838ae4cce4069852b343b2735c6ca4d62c900f266c"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-dictionary.jsonl",
+      "bytes": 50716,
+      "sha256": "1f90f5450f9f0ebdcdf4f22b550bf71ff98c7a76cfca5a57d829c2b1ff8133df"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-fse-encoder.cargo.log",
+      "bytes": 278,
+      "sha256": "1dabb4e8de5da92296630be1ae98ad2c69811483efccefe7670f525138fce466"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-fse-encoder.jsonl",
+      "bytes": 50717,
+      "sha256": "1570b444e54d784f0e3fbbb7314e2e6718e4aac47f791af3f02b78fb0f1dc395"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-fse.cargo.log",
+      "bytes": 278,
+      "sha256": "1190e8b9bdd14896081eb3bae5d5401c5f7d86ab56de9bc35058221bd0f68b11"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-fse.jsonl",
+      "bytes": 50709,
+      "sha256": "f0274fd9a889034b2a070acfa32cd2cc9d5bf580d99e8e476da7f8fb3b68fb89"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-history.cargo.log",
+      "bytes": 278,
+      "sha256": "c842085cb07daf4de8a1ddfa5b6ef3cd9586eb9a1442dfe70c3ff7a82300107b"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-history.jsonl",
+      "bytes": 50713,
+      "sha256": "467dc5cac7d605355b33c42fc685164d011615492719e8f28065056ab8c8a5cf"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-huffman-codebook.cargo.log",
+      "bytes": 278,
+      "sha256": "79e4688c1b5e9dd9b1c3f9937ec6968e32559ab8199973de9606e7602c1af94f"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-huffman-codebook.jsonl",
+      "bytes": 50722,
+      "sha256": "e33fd380197e8137106ac04290287d6d0f944fca52ee5394b34aae5e30203fe9"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-huffman.cargo.log",
+      "bytes": 278,
+      "sha256": "c20ffd86e724f138ab1a3b3daa89b724ac168e014f2314bfd16ab6b1846d2acb"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-huffman.jsonl",
+      "bytes": 50713,
+      "sha256": "61183fa21c95ae57402b9285ca150b1c06c54c8cc971b56a47c6550ad1146fe5"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-match-chain.cargo.log",
+      "bytes": 278,
+      "sha256": "cfd1ffad91854aa543efe739e617ccac42e77d68b0fe37e6e0b349e4d36909e3"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-match-chain.jsonl",
+      "bytes": 50717,
+      "sha256": "9c50e57475549681a03f6b50bd739ad1bea307cf3d233bb18ccb9e75433b093b"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-match-table.cargo.log",
+      "bytes": 278,
+      "sha256": "bdc791fd3a98e0751d67f4395682476bad528d0e633886a5251075e12f20d0f7"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-match-table.jsonl",
+      "bytes": 50717,
+      "sha256": "608a0bd6b73f1da87cf1157495b59f1501ef170765b5ca27e041764ad77d889b"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-ring-history.cargo.log",
+      "bytes": 278,
+      "sha256": "547e87cf245c1213706adb0f0dc83cfaac0f769ed0ca1e683cd3522cd4bad96a"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-ring-history.jsonl",
+      "bytes": 50718,
+      "sha256": "38df626ccdfc2924a72ca84a53baff0c6dd02aa7b392a980b162718c88ac9f61"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-training.cargo.log",
+      "bytes": 278,
+      "sha256": "2f62f631a08b0d7174ede54bffc3837792e49bca02caa1e022b01ab54f3b0fc6"
+    },
+    {
+      "path": "/tmp/zstdoxide-allocator-bench-smoke-all/unsafe-training.jsonl",
+      "bytes": 50714,
+      "sha256": "9c3c174efe7f9a2e1ebac9e994860b05934ab08548a2c69e04e80f097f4c98c3"
+    }
+  ],
+  "other_checks": [
+    {
+      "command": "CARGO_TARGET_DIR=/tmp/zstdoxide-allocator-bench-target cargo clippy --locked --all-targets --all-features -- -D warnings",
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/zstdoxide-allocator-bench-clippy.log",
+        "bytes": 142,
+        "sha256": "8bfccf177c2c7f20b0fc78e1734fbeb2a1229eb49b22afcf39733f37e477e5a2"
+      }
+    },
+    {
+      "command": "rustfmt +nightly-2026-10-08 --check benches/allocators.rs",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m py_compile scripts/benchmark_allocators.py",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check -- Cargo.toml benches/allocators.rs scripts/benchmark_allocators.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 /tmp/zstdoxide-allocator-bench-parser-check.py",
+      "exit_code": 0,
+      "source": {
+        "path": "/tmp/zstdoxide-allocator-bench-parser-check.py",
+        "bytes": 2628,
+        "sha256": "61a3a4a2e4cb9b8e2784e078e149a80859c455ad3c1bba8aae4b265d46330fbb"
+      },
+      "log": {
+        "path": "/tmp/zstdoxide-allocator-bench-parser-check.log",
+        "bytes": 436,
+        "sha256": "f0d4877fb9e14efa24554cefe5c4e2dc2297edb7fd6238b3abaebd8b5b9a48d1"
+      },
+      "checks": 12,
+      "synthetic_sample_arithmetic_only": true
+    }
+  ],
+  "qualifications": [
+    "No performance timing loop has been executed; its branch is compiled and sample parser arithmetic has synthetic checks only.",
+    "Global payload counters are null. Tracking forwards to Global and includes bookkeeping and distinct-owner clone costs when timed.",
+    "Metric surveys use fresh monitors separate from timing and record cumulative peaks, not subtracted peaks.",
+    "Streaming uses warm reset/process; other cases allocate/drop fresh operation results. Contexts retain generic owners and borrowed prepared views.",
+    "Full scans/fingerprints/correctness checks, source and prepared-owner setup, helper setup and caller buffers remain outside every timed region.",
+    "Prepared context retained capacity includes external dictionary payload; domain metrics do not include that payload or Global control blocks.",
+    "The harness was checked against the recorded working-tree source fingerprint; the eventual timed campaign must require source stability and explicit quiet-host approval."
+  ]
+}

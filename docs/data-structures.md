@@ -343,3 +343,20 @@ at each process call, while a borrowed dictionary retains its explicit lifetime.
 Allocator-last constructors validate options before creating storage. Reset
 retains workspace/buffer owners, and existing prefix claim, pledge, directive
 retry, provisional output, and poisoned-until-reset behavior remain unchanged.
+
+Allocator benchmarking uses only ordinary safe source/caller buffers plus the
+separate audited tracking allocator. Eleven deterministic codec workloads use
+Global, owned tracking values with distinct clones, and borrowed non-Clone
+tracking values. Global payload counters remain uninstrumented/null. Fresh
+metric surveys record cold, reset-retained and final-release snapshots; peaks
+are cumulative high-water values, not subtracted deltas. Dictionary reachable
+capacity is separate from domain-owned live bytes. Ledger/setup and caller
+storage stay outside payload accounting.
+
+Streaming timing reuses contexts and includes reset/process; whole-buffer,
+parsing and training timing includes fresh allocation and result destruction.
+Full byte/fingerprint checks and independent metric surveys occur outside timed
+regions. Five samples of at least 150 ms use identical inputs across backend
+features. Tracking wraps Global, so its timing includes ledger, locking and
+clone bookkeeping and is not a comparison with another heap implementation.
+No timing starts until concurrent verification work has finished.

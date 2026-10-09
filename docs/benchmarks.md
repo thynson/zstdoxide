@@ -1,5 +1,8 @@
 # Recorded backend comparisons
 
+The [allocator-aware benchmark report](allocator-benchmarks.md) records the
+Module 9 harness, accounting boundaries, and validation status.
+
 ## Module 8 entropy and strategy measurements
 
 The 2026-10-09 entropy run used Rust 1.89.0 on `aarch64-apple-darwin`, release
