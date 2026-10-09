@@ -104,6 +104,16 @@ impl Dictionary {
         Self::from_bytes_with_mode(input, DictionaryMode::Raw)
     }
 
+    /// Transfer initialized raw content from a fallibly allocated trainer.
+    pub(crate) fn from_raw_owned(bytes: Vec<u8>) -> Self {
+        Self {
+            bytes,
+            content_start: 0,
+            id: 0,
+            entropy: None,
+        }
+    }
+
     /// Move this prepared value into shared ownership without copying its bytes.
     ///
     /// Dictionary-sized allocations were prepared fallibly by the constructor.

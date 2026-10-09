@@ -19,9 +19,11 @@ pub enum Error {
     InvalidDictionary,
     /// The supplied dictionary ID does not match the frame's nonzero ID.
     DictionaryMismatch,
+    /// Samples contain insufficient usable data for the requested training budget.
+    TrainingFailed,
     /// A valid format feature is not implemented yet.
     UnsupportedFeature,
-    /// Decoding would exceed the caller's resource limit.
+    /// An operation would exceed a checked size or caller resource limit.
     ResourceLimit,
     /// An allocation could not be satisfied.
     AllocationFailed,
@@ -45,6 +47,7 @@ impl fmt::Display for Error {
             Self::DictionaryRequired => "a dictionary is required",
             Self::InvalidDictionary => "invalid Zstandard dictionary",
             Self::DictionaryMismatch => "dictionary ID mismatch",
+            Self::TrainingFailed => "insufficient dictionary training samples",
             Self::UnsupportedFeature => "unsupported Zstandard feature",
             Self::ResourceLimit => "resource limit exceeded",
             Self::AllocationFailed => "allocation failed",

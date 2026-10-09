@@ -42,11 +42,11 @@ one-shot adaptations do not complete the upstream test migration.
 - [ ] Produce interoperable raw/prepared dictionary compression.
 - [x] Add dictionary-aware encoding context, reset, and single-use prefix configuration.
 - [x] Analyze bounded raw sample selection and dictionary-training ownership.
-- [ ] Implement safe bounded frequency scoring and deterministic raw content selection.
+- [x] Implement safe bounded frequency scoring and deterministic raw content selection.
 - [ ] Add a separately gated unsafe training-frequency accessor with full proofs.
 - [ ] Verify raw training quality, malformed parameters, determinism, and bounded selection.
 - [ ] Decompose entropy construction and formatted dictionary finalization before implementation.
-- [ ] Implement bounded training sample selection and dictionary-content construction.
+- [x] Implement bounded training sample selection and raw dictionary-content construction.
 - [ ] Serialize validated trained dictionary entropy metadata, ID, and repeat offsets.
 - [x] Port dictionary decoder, prefix lifetime, prepared entropy, and malformed-input assertions.
 - [x] Map implemented parser/decoder assertions to pinned upstream source groups.
