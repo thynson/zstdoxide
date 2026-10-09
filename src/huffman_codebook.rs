@@ -103,11 +103,28 @@ impl HuffmanCodebook {
 
     /// Return only a present symbol's code. Missing symbols cannot emit zero bits.
     pub(crate) fn code(&self, symbol: u8) -> Result<Codeword> {
-        self.entries
-            .get(usize::from(symbol))
-            .copied()
-            .filter(|entry| entry.bits != 0)
-            .ok_or(Error::CorruptData)
+        let index = usize::from(symbol);
+        if index >= self.entries.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-huffman-codebook"))]
+        let entry = self.entries[index];
+        #[cfg(feature = "unsafe-huffman-codebook")]
+        // SAFETY: The runtime guard proves index is within the initialized
+        // 256-entry array; converting a u8 also bounds it independently. The
+        // array owns properly aligned Codeword values and cannot be resized.
+        // The shared self borrow keeps that storage alive and prevents mutation
+        // for the entire access. get_unchecked therefore returns a valid shared
+        // reference within the array, and dereferencing copies an initialized
+        // Codeword without moving ownership or creating a mutable alias. No
+        // reference or pointer escapes this block. Symbol presence is checked
+        // afterward identically in both backends, never assumed from the input.
+        let entry = unsafe { *self.entries.get_unchecked(index) };
+        if entry.bits == 0 {
+            Err(Error::CorruptData)
+        } else {
+            Ok(entry)
+        }
     }
 
     /// Test table reuse eligibility without modifying the codebook or input.

@@ -22,6 +22,7 @@
         feature = "unsafe-fse",
         feature = "unsafe-fse-encoder",
         feature = "unsafe-huffman",
+        feature = "unsafe-huffman-codebook",
         feature = "unsafe-match-table",
         feature = "unsafe-dictionary",
         feature = "unsafe-training"

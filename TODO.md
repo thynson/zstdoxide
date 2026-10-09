@@ -28,7 +28,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Record entropy encoder ownership, wire boundaries, safety contracts, and ordered checkpoints.
 - [x] Extract the reusable forward bit writer with byte-identical baseline output.
 - [x] Add the checked canonical codebook and exact serialized-description pairing.
-- [ ] Add unsafe-huffman-codebook with bounds, missing-symbol, and Miri checks.
+- [x] Add unsafe-huffman-codebook with bounds, missing-symbol, and Miri checks.
 - [ ] Add an independent bounded C oracle for exact Huffman tables and streams.
 - [ ] Encode one Huffman stream and verify exact C streams, including dictionary log twelve.
 - [ ] Encode four streams and checked jump tables, including minimum and size boundaries.
