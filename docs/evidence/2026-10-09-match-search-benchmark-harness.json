@@ -1,0 +1,627 @@
+{
+  "schema_version": 1,
+  "scope": "Module11 clock-free 27-row configurable-search benchmark harness, independent corpus pins and strict evidence validation",
+  "status": "frozen; no timed measurement",
+  "repository_head_at_freeze": "b1d95af4d4f12033c0522f0b5bbf7bab437a4eed",
+  "owned_changed_files": [
+    "benches/search.rs",
+    "scripts/benchmark_search.py"
+  ],
+  "coordinator_owned_dependency": {
+    "path": "Cargo.toml",
+    "sha256": "0fd0cf08eb2c8dd08f4cc527ee49b761185dd0171808868e176b00d60aad2d9b",
+    "change": "search bench registration only"
+  },
+  "source_manifest_sha256": "e1f8f7250861fa363210c84dc3188ab80ba6aa394a9a683cffd8a47b3fc0e445",
+  "source_unchanged_through_final_campaign": true,
+  "owned_source_sha256": {
+    "benches/search.rs": "08c3109741b578c7c3d4e0ef394c6e0d95310d7e9237d02fc71032f0db002063",
+    "scripts/benchmark_search.py": "ed5b3c7ddc9737ade86ba3637f5b6d20e335a30d8d2bbf146d4cae26020ea4be"
+  },
+  "campaign": "/tmp/zstdoxide-module11-search-smoke-final",
+  "configuration_order": [
+    "safe",
+    "all",
+    "unsafe-byte-cursor",
+    "unsafe-bitstream",
+    "unsafe-history",
+    "unsafe-ring-history",
+    "unsafe-fse",
+    "unsafe-fse-encoder",
+    "unsafe-huffman",
+    "unsafe-huffman-codebook",
+    "unsafe-match-table",
+    "unsafe-match-chain",
+    "unsafe-dictionary",
+    "unsafe-training"
+  ],
+  "configuration_count": 14,
+  "rows_per_configuration": 27,
+  "total_rows": 378,
+  "build_commands": 14,
+  "smoke_run_commands": 14,
+  "smoke_timing_status": "All378 rows use mode smoke, samples=[], timing=null; run environments explicitly set ZSTDOXIDE_SEARCH_BENCH_TIMED=0. Synthetic timing in parser fixtures is not measured execution.",
+  "independent_input_manifest": {
+    "schema_version": 1,
+    "recipe": "xorshift64-and-contiguous-dictionary-runs-v1",
+    "seed": "5eed5ea2c1202026",
+    "dictionary_fixture": "tests/upstream/dictionaries/formatted.dict",
+    "dictionary_fixture_sha256": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281",
+    "dictionary_content_offset": 149,
+    "dictionary_content_bytes": 2048,
+    "dictionary_boundary_reference": "tests/upstream/dictionaries/manifest.json",
+    "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+    "workloads": {
+      "block": {
+        "source_bytes": 32768,
+        "source_fnv1a64": "8e2f9283049eacd8",
+        "source_sha256": "f62a7f5980b867d640cf8ddbbcd8f0a10b725ae4ee22d84d04c1a484ca71833b",
+        "dictionary_bytes": 0,
+        "dictionary_fnv1a64": "cbf29ce484222325",
+        "dictionary_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "history": {
+        "source_bytes": 393216,
+        "source_fnv1a64": "a0f43a4eab5c6e2d",
+        "source_sha256": "668bee3ff532d0f9cca3ee528736ef44da22f46e448e15388e75e942cf065df8",
+        "dictionary_bytes": 0,
+        "dictionary_fnv1a64": "cbf29ce484222325",
+        "dictionary_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "dictionary": {
+        "source_bytes": 32768,
+        "source_fnv1a64": "cc6272e6ae396202",
+        "source_sha256": "481bf8c0dbb2787163c7072476d7433f3afccc225f3253b7c94879158461d1f6",
+        "dictionary_bytes": 2197,
+        "dictionary_fnv1a64": "d5e098c680a7348e",
+        "dictionary_sha256": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281"
+      }
+    }
+  },
+  "comparison_contract": "Every source/dictionary/frame identity, complete settings, length, ratio, cold/reused search/total capacities and all allocator snapshots match the safe reference across all14 configurations. Each row verifies full fresh/reused Global output and full tracked output; original source is decoded byte-for-byte outside any clock.",
+  "allocation_qualification": "Owned TrackingAllocator is Global-backed bookkeeping. Its external ledger/Arc/Mutex and caller buffers are not codec payload; prepared dictionary uses independent Global storage, excluded from tracked live bytes and added once to public reachable capacity. Every final snapshot has zero live blocks/bytes and balanced owners without violations. Reused attempts are cumulative, not per-cycle counts.",
+  "timing_qualification": "No timing run. Future timed scope includes reset, dictionary seeding, history rebuilding, codec processing/draining and bounded progress/capacity assertions. Only full verification, hashing, snapshotting, formatting, caller buffers and corpus/dictionary setup remain outside clocks. Individual unsafe features may affect only untimed decoding or paths absent from these workloads.",
+  "parser_validation": {
+    "case_count": 33,
+    "python_modes": [
+      "normal",
+      "-O"
+    ],
+    "invocations": 66,
+    "accepted_controls": 4,
+    "expected_rejections": 62,
+    "results_path": "/tmp/zstdoxide-module11-search-negative-frozen/results.json",
+    "results_sha256": "e0368b96d0f9c3bfe9a6da4697ebec4751adaf5db3edc32dfeb189bcba206ba7",
+    "runner": "/tmp/zstdoxide-search-benchmark-negative.py",
+    "runner_sha256": "13fb91125b6ca24489530ce2015e99cf54c8fe5b941b5f19af0abf7a764b415d",
+    "cases": [
+      "unaltered-smoke",
+      "detached-run-stdout",
+      "noncanonical-equivalent-stdout",
+      "missing-backend-command",
+      "duplicate-backend-command",
+      "omitted-command-field",
+      "bool-exit-code",
+      "altered-build-command",
+      "altered-build-environment",
+      "altered-run-sample-setting",
+      "uncontrolled-parent-environment",
+      "wrong-recorded-configuration-order",
+      "wrong-compiler-host",
+      "missing-row",
+      "duplicate-row",
+      "omitted-feature-metadata",
+      "wrong-feature-metadata",
+      "missing-row-scalar",
+      "changed-search-option",
+      "changed-source-identity",
+      "same-wrong-source-in-all-backends",
+      "bool-source-length",
+      "unbalanced-final-owner",
+      "owner-violation",
+      "smoke-with-timing",
+      "duplicate-json-field",
+      "omitted-aggregate-backend",
+      "altered-independent-input-manifest",
+      "synthetic-six-sample-control",
+      "synthetic-reciprocal-median",
+      "synthetic-missing-sample",
+      "synthetic-zero-iterations",
+      "synthetic-infinite-timing"
+    ],
+    "synthetic_even_sample_qualification": "A six-sample synthetic parser control checks independent throughput medians; reciprocal-median, missing sample, zero iteration and infinite-value mutations are rejected. These are not benchmark timings."
+  },
+  "quality_checks": [
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--bench",
+        "search",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-clippy-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.061183791840448976,
+      "log": "/tmp/zstdoxide-module11-search-quality/clippy-safe.log",
+      "sha256": "23b9a21bbaf189889e08dc27ed8eba521021280c5852db22205f721db08b2c7c"
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--bench",
+        "search",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-clippy-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.05752904200926423,
+      "log": "/tmp/zstdoxide-module11-search-quality/clippy-all.log",
+      "sha256": "23b9a21bbaf189889e08dc27ed8eba521021280c5852db22205f721db08b2c7c"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "benches/search.rs"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-clippy-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.03183108288794756,
+      "log": "/tmp/zstdoxide-module11-search-quality/format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "python-syntax",
+      "command": [
+        "python3",
+        "-c",
+        "import ast,pathlib;ast.parse(pathlib.Path('scripts/benchmark_search.py').read_text());ast.parse(pathlib.Path('/tmp/zstdoxide-search-benchmark-negative.py').read_text())"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-clippy-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.03337924997322261,
+      "log": "/tmp/zstdoxide-module11-search-quality/python-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "benches/search.rs",
+        "scripts/benchmark_search.py"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-search-clippy-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.007736583007499576,
+      "log": "/tmp/zstdoxide-module11-search-quality/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "final_archive_checks": [
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/lanxingcan/Workspace/zstdoxize/scripts/benchmark_search.py",
+        "/tmp/zstdoxide-module11-search-smoke-final",
+        "--root",
+        "/Users/lanxingcan/Workspace/zstdoxize",
+        "--configs",
+        "safe,all,unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--samples",
+        "5",
+        "--minimum-ms",
+        "100",
+        "--toolchain",
+        "nightly-2026-10-08",
+        "--validate-only"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module11-search-archive-normal.log",
+      "sha256": "fee02f94047cc75716b59bdfcfc9c51c80c7c76d03d0e94a121dabd748398e2e"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-O",
+        "/Users/lanxingcan/Workspace/zstdoxize/scripts/benchmark_search.py",
+        "/tmp/zstdoxide-module11-search-smoke-final",
+        "--root",
+        "/Users/lanxingcan/Workspace/zstdoxize",
+        "--configs",
+        "safe,all,unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--samples",
+        "5",
+        "--minimum-ms",
+        "100",
+        "--toolchain",
+        "nightly-2026-10-08",
+        "--validate-only"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-module11-search-archive-optimized.log",
+      "sha256": "fee02f94047cc75716b59bdfcfc9c51c80c7c76d03d0e94a121dabd748398e2e"
+    }
+  ],
+  "subprocess_check_counts": {
+    "build_and_smoke": 28,
+    "negative_and_positive_parser_controls": 66,
+    "quality": 5,
+    "archive_validation": 2,
+    "total": 101
+  },
+  "preserved_initial_diagnostics": [
+    "Initial safe/all smoke passed. Initial scoped Clippy rejected Context large_enum_variant (3477-byte plain versus4085-byte borrowed-dictionary context). A narrow allowance documents the single reused inline context, avoiding an unrelated Global box. Final safe/all smoke and all66 parser checks were rerun after this source-only harness adjustment.",
+    "The external negative runner first passed its valid-control validator invocation, then failed its own sha(__file__) bookkeeping because the helper expected Path and received str. Converting via Path fixed the runner; both initial and final66-check campaigns then completed. No production or parser behavior fix was needed.",
+    "Initial staging headers were removed before the final frozen source. No codec production changes were made by this checkpoint."
+  ],
+  "source_files": [
+    {
+      "path": "Cargo.lock",
+      "bytes": 266,
+      "sha256": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 969,
+      "sha256": "0fd0cf08eb2c8dd08f4cc527ee49b761185dd0171808868e176b00d60aad2d9b"
+    },
+    {
+      "path": "benches/search.rs",
+      "bytes": 22757,
+      "sha256": "08c3109741b578c7c3d4e0ef394c6e0d95310d7e9237d02fc71032f0db002063"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "bytes": 118,
+      "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20"
+    },
+    {
+      "path": "scripts/benchmark_search.py",
+      "bytes": 39521,
+      "sha256": "ed5b3c7ddc9737ade86ba3637f5b6d20e335a30d8d2bbf146d4cae26020ea4be"
+    },
+    {
+      "path": "src/bitstream.rs",
+      "bytes": 5025,
+      "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+    },
+    {
+      "path": "src/bitwriter.rs",
+      "bytes": 10794,
+      "sha256": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d"
+    },
+    {
+      "path": "src/constants.rs",
+      "bytes": 1542,
+      "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+    },
+    {
+      "path": "src/cursor.rs",
+      "bytes": 2412,
+      "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+    },
+    {
+      "path": "src/decode.rs",
+      "bytes": 25995,
+      "sha256": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403"
+    },
+    {
+      "path": "src/dictionary.rs",
+      "bytes": 37284,
+      "sha256": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1"
+    },
+    {
+      "path": "src/dictionary_train.rs",
+      "bytes": 25999,
+      "sha256": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6"
+    },
+    {
+      "path": "src/encode.rs",
+      "bytes": 157242,
+      "sha256": "64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9"
+    },
+    {
+      "path": "src/entropy_encode.rs",
+      "bytes": 46189,
+      "sha256": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53"
+    },
+    {
+      "path": "src/entropy_output.rs",
+      "bytes": 30938,
+      "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+    },
+    {
+      "path": "src/error.rs",
+      "bytes": 2528,
+      "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+    },
+    {
+      "path": "src/frame.rs",
+      "bytes": 4396,
+      "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+    },
+    {
+      "path": "src/fse.rs",
+      "bytes": 40545,
+      "sha256": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864"
+    },
+    {
+      "path": "src/fse_encode.rs",
+      "bytes": 26973,
+      "sha256": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68"
+    },
+    {
+      "path": "src/fse_select.rs",
+      "bytes": 28875,
+      "sha256": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3"
+    },
+    {
+      "path": "src/heap.rs",
+      "bytes": 10052,
+      "sha256": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8"
+    },
+    {
+      "path": "src/history.rs",
+      "bytes": 13893,
+      "sha256": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999"
+    },
+    {
+      "path": "src/huffman.rs",
+      "bytes": 51802,
+      "sha256": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc"
+    },
+    {
+      "path": "src/huffman_codebook.rs",
+      "bytes": 48091,
+      "sha256": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b"
+    },
+    {
+      "path": "src/huffman_encode.rs",
+      "bytes": 40632,
+      "sha256": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 3291,
+      "sha256": "bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a"
+    },
+    {
+      "path": "src/literal_encode.rs",
+      "bytes": 18735,
+      "sha256": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78"
+    },
+    {
+      "path": "src/literal_header.rs",
+      "bytes": 7030,
+      "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+    },
+    {
+      "path": "src/match_key.rs",
+      "bytes": 14429,
+      "sha256": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2"
+    },
+    {
+      "path": "src/match_parse.rs",
+      "bytes": 69730,
+      "sha256": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818"
+    },
+    {
+      "path": "src/match_search.rs",
+      "bytes": 21947,
+      "sha256": "14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b"
+    },
+    {
+      "path": "src/matchchain.rs",
+      "bytes": 50933,
+      "sha256": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22"
+    },
+    {
+      "path": "src/matchfinder.rs",
+      "bytes": 24248,
+      "sha256": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb"
+    },
+    {
+      "path": "src/parameters/presets.rs",
+      "bytes": 13712,
+      "sha256": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4"
+    },
+    {
+      "path": "src/parameters.rs",
+      "bytes": 62222,
+      "sha256": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc"
+    },
+    {
+      "path": "src/ring_history.rs",
+      "bytes": 45791,
+      "sha256": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2"
+    },
+    {
+      "path": "src/sequence_context.rs",
+      "bytes": 45618,
+      "sha256": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6"
+    },
+    {
+      "path": "src/sequence_encode.rs",
+      "bytes": 27994,
+      "sha256": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61"
+    },
+    {
+      "path": "src/sequence_plan.rs",
+      "bytes": 7646,
+      "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+    },
+    {
+      "path": "src/sequences.rs",
+      "bytes": 25515,
+      "sha256": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb"
+    },
+    {
+      "path": "src/strategy.rs",
+      "bytes": 1215,
+      "sha256": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab"
+    },
+    {
+      "path": "src/stream.rs",
+      "bytes": 1452,
+      "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+    },
+    {
+      "path": "src/stream_decode.rs",
+      "bytes": 59352,
+      "sha256": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21"
+    },
+    {
+      "path": "src/stream_encode.rs",
+      "bytes": 111445,
+      "sha256": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e"
+    },
+    {
+      "path": "src/training.rs",
+      "bytes": 29658,
+      "sha256": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e"
+    },
+    {
+      "path": "src/xxhash.rs",
+      "bytes": 28427,
+      "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+    },
+    {
+      "path": "test-support/allocator/Cargo.toml",
+      "bytes": 412,
+      "sha256": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292"
+    },
+    {
+      "path": "test-support/allocator/src/lib.rs",
+      "bytes": 49773,
+      "sha256": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971"
+    },
+    {
+      "path": "tests/upstream/dictionaries/formatted.dict",
+      "bytes": 2197,
+      "sha256": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281"
+    },
+    {
+      "path": "tests/upstream/dictionaries/manifest.json",
+      "bytes": 90188,
+      "sha256": "eb6eda57abc976e0a9086593b37b4d86ba5cdeb2673aa025f554417ae2baa761"
+    }
+  ],
+  "environment": {
+    "schema_version": 1,
+    "timestamp_utc": "2026-10-09T07:34:07.810615+00:00",
+    "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "toolchain": "nightly-2026-10-08",
+    "host_target": "aarch64-apple-darwin",
+    "compiler": {
+      "command": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "-vV"
+      ],
+      "exit_code": 0,
+      "stdout": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+      "stderr": ""
+    },
+    "head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "b1d95af4d4f12033c0522f0b5bbf7bab437a4eed\n",
+      "stderr": ""
+    },
+    "status": {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": " M Cargo.toml\n M docs/match-search-benchmark-design.md\n?? benches/search.rs\n?? scripts/benchmark_search.py\n?? tests/upstream_search_lifecycle.rs\n",
+      "stderr": ""
+    },
+    "configuration_order": [
+      "safe",
+      "all",
+      "unsafe-byte-cursor",
+      "unsafe-bitstream",
+      "unsafe-history",
+      "unsafe-ring-history",
+      "unsafe-fse",
+      "unsafe-fse-encoder",
+      "unsafe-huffman",
+      "unsafe-huffman-codebook",
+      "unsafe-match-table",
+      "unsafe-match-chain",
+      "unsafe-dictionary",
+      "unsafe-training"
+    ],
+    "timed": false,
+    "samples": 5,
+    "minimum_ms": 100,
+    "base_environment": {
+      "HOME": "/Users/lanxingcan",
+      "LOGNAME": "lanxingcan",
+      "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+      "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+      "USER": "lanxingcan",
+      "LC_ALL": "C",
+      "LANG": "C",
+      "TZ": "UTC",
+      "CARGO_INCREMENTAL": "0",
+      "CARGO_ENCODED_RUSTFLAGS": "",
+      "RUSTFLAGS": "",
+      "RUSTDOCFLAGS": "",
+      "RUSTC": "rustc",
+      "RUSTDOC": "rustdoc",
+      "RUSTC_WRAPPER": "",
+      "RUSTC_WORKSPACE_WRAPPER": ""
+    },
+    "cargo_configs": [
+      {
+        "path": "/Users/lanxingcan/.cargo/config.toml",
+        "bytes": 1131,
+        "sha256": "54523ec655a982d1a8eead631437b06318a57366ab4c772410ad40b9f30485a3"
+      }
+    ],
+    "campaign_directory": "/private/tmp/zstdoxide-module11-search-smoke-final",
+    "repository_root": "/Users/lanxingcan/Workspace/zstdoxize"
+  },
+  "continuation": "The initial safe/all final-source checkpoint is preserved separately. An external source-hashed orchestration script appended only12 individual builds, retaining their actual safe,all,then12individual order; the published driver independently revalidated the complete14-backend archive under normal and optimized Python."
+}

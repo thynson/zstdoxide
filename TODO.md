@@ -45,7 +45,7 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 - [x] Add public default-compatibility and actual-control-effect tests, pinned-C decoding and representative complete allocation-failure campaigns.
 - [ ] Port supported live search/reset/dictionary-order assertions from relevant official groups, retaining explicit numeric-level and attachment gaps.
 - [x] Define deterministic benchmark profiles, work schedules, ownership accounting and separate harness/measurement checkpoints.
-- [ ] Add a clock-free validated benchmark harness for identical default/tuned workloads, explicit capacity/allocation accounting and complete backend comparisons.
+- [x] Add a clock-free validated benchmark harness for identical default/tuned workloads, explicit capacity/allocation accounting and complete backend comparisons.
 - [ ] Validate bounds, owners, feature combinations, no_std and target layouts; update relevant official coverage without claiming new reference strategies.
 - [ ] Measure the frozen default/tuned benchmark matrix across safe, individual unsafe and all-feature builds; record ratios, sample ranges, allocation and retained-capacity effects.
 

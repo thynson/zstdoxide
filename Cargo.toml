@@ -44,3 +44,8 @@ required-features = ["std"]
 name = "allocators"
 harness = false
 required-features = ["std"]
+
+[[bench]]
+name = "search"
+harness = false
+required-features = ["std"]

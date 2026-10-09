@@ -345,3 +345,32 @@ embeds full logs, 47 unchanged dependency hashes, the independent hash probe and
 all commands. It retains a metrics-only correction for interleaved successful
 harness output; no codec run failed or was repeated. Relevant original lifecycle
 assertions and their remaining gaps are recorded in a subsequent migration item.
+
+
+## Clock-free benchmark harness
+
+The public search benchmark validates 27 deterministic rows per backend: three
+workloads, three complete profiles and three policies. Safe, all features and
+then each of twelve individual features pass all 378 rows. Each row compares
+complete fresh/reused Global output, fully decodes it, and independently surveys
+owned allocator requests, exact releases and search/total retained capacities.
+Input recipes and dictionary boundaries have independent Python pins. Every
+non-timing record agrees across all fourteen builds; no timer was started.
+
+The 28 build/run commands, 66 parser/control invocations, two final archive
+replays and five quality checks all pass. The parser campaign has four accepted
+controls and 62 expected rejections across normal and optimized Python. It
+checks complete unique rows, source identity, owner accounting, finite sample
+arithmetic, even-count medians, declared features, canonical result binding and
+recorded build environments. Source manifests remain unchanged throughout.
+Scoped strict Clippy safe/all, Rust formatting and Python syntax checks pass.
+
+[Harness evidence](evidence/2026-10-09-match-search-benchmark-harness.json) and its
+[archive](evidence/2026-10-09-match-search-benchmark-harness.tar.gz) preserve exact
+commands, original diagnostics and all logs. Initial external-runner bookkeeping
+and a narrow benchmark enum lint were corrected before the final campaign.
+Synthetic sample records test the parser only and are not performance results.
+The final measured scope includes API-driver bounds/progress assertions, reset,
+seeding and history rebuilding; full decoding, byte comparisons, fingerprints
+and the separate tracking allocator survey remain outside clocks. Individual
+features may affect only untimed decoding or paths absent from these workloads.
