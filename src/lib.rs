@@ -59,6 +59,7 @@ mod literal_header;
 mod match_parse;
 mod matchchain;
 mod matchfinder;
+mod parameters;
 mod ring_history;
 mod sequence_context;
 mod sequence_encode;
@@ -105,6 +106,10 @@ pub use dictionary_train::{
 pub use encode::{compress, compress_in, compress_with_dictionary, compress_with_dictionary_in};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
+pub use parameters::{
+    CompressionParameterRequest, RawCompressionParameters, ReferenceFrameParameters,
+    ReferenceStrategy, ResolvedCompressionParameters, SourceSize,
+};
 pub use strategy::CompressionStrategy;
 pub use stream::{EndDirective, Progress, StreamStatus};
 pub use stream_decode::Decoder;

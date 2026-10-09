@@ -30,7 +30,7 @@ Module 9 completion and its exact validation boundaries are recorded in
 
 - [x] Analyze requested/resolved value records, exact pinned semantics, live configuration boundaries, and subsequent search/storage milestones.
 - [x] Freeze pinned C oracle fixtures for bounds, presets, scalar resolution, mutation failures, and reset outcomes before implementing their Rust counterparts.
-- [ ] Add allocation-free validated parameter records, source-size and reference-strategy types, and checked mutation boundaries.
+- [x] Add allocation-free validated parameter records, source-size and reference-strategy types, and checked mutation boundaries.
 - [ ] Add attributed preset tables and internal tier/level/acceleration selection without changing current compression policies.
 - [ ] Implement complete parameter adjustment and pure level/request queries, preserving explicit overrides, source hints, platform bounds, and checked size arithmetic.
 - [ ] Add atomic supported encoder configuration replacement at the documented pre-header boundary.

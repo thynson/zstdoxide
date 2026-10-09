@@ -293,3 +293,13 @@ Fixture contracts and reproduction live in
 [validation metadata](evidence/2026-10-09-parameter-oracle.json) and archived
 logs. Value records, query algorithms, live configuration and reset work remain
 in the Module 10 checklist.
+
+The next checkpoint implements the six allocation-free scalar records and
+atomic request setters. Thirteen focused tests pass in four safe/feature/std
+configurations, both no_std library checks and strict safe/all Clippy pass,
+and the two new usage examples pass under both backends. The 225 raw-input
+validation outcomes, 119 scalar request-state rows and reference frame defaults
+are checked with explicit exclusions for unimplemented operations. Presets,
+adjustment and complete query resolution remain separate upcoming items; see
+[parameter validation](compression-parameters-validation.md) and
+[runnable usage](parameter-usage.md).
