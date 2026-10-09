@@ -33,12 +33,13 @@ blocks, known and unknown content size, small block/content caps, normal block
 caps, and standalone frame headers. It does not claim exhaustive random-space
 coverage.
 
-Dictionary modes, `--gen-blocks`, and `--no-magic` require dictionary, raw block,
-and magicless decoder APIs that the Rust crate does not yet expose. Those
-upstream modes remain explicitly blocked. Streaming API comparisons in
-`runFrameTest` are also blocked by the missing streaming API. The CLI generator's
-own command-line error handling is an upstream executable test, not Rust codec
-coverage.
+Dictionary APIs are available, but this generator's random dictionary/frame
+mode has not yet been adapted. Public raw-block and magicless APIs needed by
+`--gen-blocks` and `--no-magic` remain unavailable. Complete generated ordinary
+frames also run through fragmented streaming in `tests/upstream_streaming.rs`;
+this does not port every original `runFrameTest` branch or fresh-generator
+streaming campaign. The generator's own command-line error handling is an
+upstream executable test, not Rust codec coverage.
 
 Generated fixtures derive from upstream algorithms, copyright Meta Platforms,
 Inc. and affiliates. The upstream BSD license is retained in `LICENSE.zstd`.

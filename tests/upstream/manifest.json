@@ -4075,7 +4075,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Official seed-fixed frame/header generation is replayed through one-shot and bounded streaming Rust APIs with exact outputs, plus a configurable fresh one-shot generator run. Dictionary, raw-block, and magicless modes remain absent.",
+      "reason": "Official seed-fixed frame/header generation replays through one-shot and bounded streaming Rust APIs with exact outputs, plus a configurable fresh one-shot run. Dictionary APIs now exist, but the original random dictionary-generation branch is not yet ported; public raw-block and magicless modes remain unavailable.",
       "rust_tests": [
         "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
         "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run",
@@ -4115,7 +4115,7 @@
           "line_end": 1493,
           "label": "testDecodeWithDict",
           "status": "blocked",
-          "reason": "This named group requires dictionary/prefix loading or dictionary context state, which is not implemented.",
+          "reason": "Raw/formatted dictionary loading and context state now exist. The original random dictionary generator (up to 10 MiB), frame generation and exact output campaign are not yet adapted.",
           "rust_tests": []
         },
         {
@@ -4145,7 +4145,7 @@
           "line_end": 1572,
           "label": "runFrameTest",
           "status": "partial",
-          "reason": "Generated dictionary-free frames run through both one-shot and bounded streaming Rust decoders; dictionary, raw-block and magicless branches remain absent.",
+          "reason": "Generated dictionary-free frames run through one-shot and bounded streaming decoders. Dictionary APIs exist, but this driver's dictionary-generation branch is not ported; public raw-block and magicless modes remain unavailable.",
           "rust_tests": [
             "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
             "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
@@ -4158,7 +4158,7 @@
           "line_end": 1998,
           "label": "runTestMode",
           "status": "partial",
-          "reason": "Bounded seed-fixed one-shot/streaming and configurable fresh one-shot frame campaigns run; timed campaigns, fresh streaming oracle generation, raw-block and dictionary modes remain absent.",
+          "reason": "Bounded seed-fixed one-shot/streaming and configurable fresh one-shot campaigns run. Timed/fresh-streaming campaigns and the generator's dictionary branch remain unported; public raw-block mode is unavailable.",
           "rust_tests": [
             "tests/upstream_decodecorpus.rs#decodes_every_generated_frame_byte_for_byte",
             "tests/upstream_decodecorpus.rs#replays_configurable_official_generator_run",
@@ -4314,7 +4314,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "blocked",
-      "reason": "This target combines legacy/cross-format and dictionary behavior absent from the current Rust API.",
+      "reason": "This target compares standard and magicless one-shot/streaming decoding after frame-boundary scanning. Magicless format selection and the public compressed-frame-size scanner remain unimplemented; it is not a dictionary or legacy test.",
       "rust_tests": [],
       "line_count": 130,
       "cases": [
@@ -4325,7 +4325,7 @@
           "line_end": 130,
           "label": "LLVMFuzzerTestOneInput",
           "status": "blocked",
-          "reason": "This target combines legacy/cross-format and dictionary behavior absent from the current Rust API.",
+          "reason": "This target compares standard and magicless one-shot/streaming decoding after frame-boundary scanning. Magicless format selection and the public compressed-frame-size scanner remain unimplemented; it is not a dictionary or legacy test.",
           "rust_tests": []
         }
       ]
@@ -4678,7 +4678,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "blocked",
-      "reason": "Huffman encoding and the public standalone entropy roundtrip API are not implemented.",
+      "reason": "Dictionary literal-tree/weight serialization exists; general one/four-stream Huffman payload compression and the original standalone entropy roundtrip target remain unimplemented.",
       "rust_tests": [],
       "line_count": 137,
       "cases": [
@@ -4689,7 +4689,7 @@
           "line_end": 137,
           "label": "LLVMFuzzerTestOneInput",
           "status": "blocked",
-          "reason": "Huffman encoding and the public standalone entropy roundtrip API are not implemented.",
+          "reason": "Dictionary literal-tree/weight serialization exists; general one/four-stream Huffman payload compression and the original standalone entropy roundtrip target remain unimplemented.",
           "rust_tests": []
         }
       ]
@@ -5232,7 +5232,7 @@
           "line_end": 589,
           "label": "test%3u : ZSTD_CCtx_setCParams :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5262,7 +5262,7 @@
           "line_end": 669,
           "label": "basicUnitTests",
           "status": "partial",
-          "reason": "Named one-shot groups are mapped separately; contexts, dictionaries, streaming, parameters, and allocation hooks remain absent.",
+          "reason": "Named one-shot, streaming, dictionary and training groups are mapped separately. Remaining parameter, workspace/allocation, strategy, worker and original randomized-driver branches do not become complete merely because reusable contexts now exist.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs"
           ]
@@ -5294,7 +5294,7 @@
           "line_end": 684,
           "label": "test%3u : min compression level :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5304,7 +5304,7 @@
           "line_end": 690,
           "label": "test%3u : default compression level :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5324,7 +5324,7 @@
           "line_end": 714,
           "label": "test%3u : ZSTD_adjustCParams :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5334,7 +5334,7 @@
           "line_end": 722,
           "label": "test%3u : compress %u bytes :",
           "status": "partial",
-          "reason": "Original 5-MiB RDG input and full output comparison; level 1/context selection pending.",
+          "reason": "Original 5-MiB RDG input and full output comparison run through the one-shot adapter. Level 1 is unsupported; reusable contexts exist but this original context setup is not mapped by that adapter.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#basic_compression_and_decompression"
           ]
@@ -5346,7 +5346,7 @@
           "line_end": 729,
           "label": "test%3i : size of cctx for level 1 :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5461,7 +5461,7 @@
           "line_end": 803,
           "label": "test%3u : invalid endDirective :",
           "status": "blocked",
-          "reason": "Streaming end-directive/pledged-source-size API absent.",
+          "reason": "Typed Continue/Flush/Finish directives exist. The original C test injects invalid integer enum values 3 and -1, which the safe Rust enum does not represent; that numeric-ABI assertion is not ported or reclassified here.",
           "rust_tests": []
         },
         {
@@ -5471,7 +5471,7 @@
           "line_end": 810,
           "label": "test%3i : ZSTD_checkCParams :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5481,7 +5481,7 @@
           "line_end": 819,
           "label": "test%3i : ZSTD_createDCtx_advanced and ZSTD_sizeof_DCtx:",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5595,7 +5595,7 @@
           "line_end": 1014,
           "label": "test%3d: check DCtx size is reduced after many oversized calls :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5605,7 +5605,7 @@
           "line_end": 1019,
           "label": "test%3i : ZSTD_compressCCtx() doesn't use advanced parameters",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5615,7 +5615,7 @@
           "line_end": 1024,
           "label": "test%3i : ZSTD_compress_usingDict() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -5625,7 +5625,7 @@
           "line_end": 1029,
           "label": "test%3i : ZSTD_compress_usingCDict() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -5635,7 +5635,7 @@
           "line_end": 1034,
           "label": "test%3i : ZSTD_compress_advanced() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5645,7 +5645,7 @@
           "line_end": 1043,
           "label": "test%3i : ZSTD_compress_usingCDict_advanced() doesn't use advanced parameters:",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -5665,7 +5665,7 @@
           "line_end": 1085,
           "label": "test%3i : ldm fill dict out-of-bounds check",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -5675,7 +5675,7 @@
           "line_end": 1112,
           "label": "test%3i : testing dict compression with enableLdm and forceMaxWindow :",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -5685,7 +5685,7 @@
           "line_end": 1156,
           "label": "test%3i : testing dict compression for determinism :",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -5705,7 +5705,7 @@
           "line_end": 1276,
           "label": "test%3i : testing ldm dictionary gets invalidated :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -5715,7 +5715,7 @@
           "line_end": 1343,
           "label": "test%3i : testing refPrefx vs refPrefx + ldm (size comparison) :",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -5797,7 +5797,7 @@
           "line_end": 1576,
           "label": "test%3d : check CCtx size after compressing empty input :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5807,7 +5807,7 @@
           "line_end": 1619,
           "label": "test%3d : decompress empty frame into NULL :",
           "status": "partial",
-          "reason": "Known/unknown-size empty one-shot frames and the unknown-size empty Flush/Finish streaming branch pass; the original level-selection API is not reproduced.",
+          "reason": "Known/unknown-size empty one-shot frames are covered. Streaming APIs exist, but this named group's exact original streaming subcase is not mapped here.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames",
             "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame"
@@ -5830,7 +5830,7 @@
           "line_end": 1680,
           "label": "test%3d : re-using a CCtx should compress the same :",
           "status": "partial",
-          "reason": "The exact 20 unique bytes plus repeated first 10 source is reused with deterministic identical streaming schedules; the original levels 1..19 and all C one-shot/context/stream entry points remain absent.",
+          "reason": "The exact 20 unique bytes plus repeated first 10 source is reused with deterministic identical streaming schedules. The original levels 1..19 and equivalence matrix across C one-shot/context/stream entry points remain unported.",
           "rust_tests": [
             "tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically"
           ]
@@ -5852,7 +5852,7 @@
           "line_end": 1763,
           "label": "test%3d : ZSTD_CCtx_getParameter() :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5862,7 +5862,7 @@
           "line_end": 1807,
           "label": "test%3d : ZSTD_CCtx_setCParams() :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5872,7 +5872,7 @@
           "line_end": 1831,
           "label": "test%3d : ZSTD_CCtx_setFParams() :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5882,7 +5882,7 @@
           "line_end": 1890,
           "label": "test%3d : ZSTD_CCtx_setParams() :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5902,7 +5902,7 @@
           "line_end": 1928,
           "label": "test%3d : overflow protection with large windowLog :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5912,7 +5912,7 @@
           "line_end": 1963,
           "label": "test%3d : size down context :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5922,7 +5922,7 @@
           "line_end": 1987,
           "label": "test%3i : create static CCtx for level %u :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5932,7 +5932,7 @@
           "line_end": 1994,
           "label": "test%3i : compress small input with small static CCtx :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5942,7 +5942,7 @@
           "line_end": 2002,
           "label": "test%3i : compress large input with small static CCtx (must fail) :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5952,7 +5952,7 @@
           "line_end": 2008,
           "label": "test%3i : resize context to full CCtx size :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5962,7 +5962,7 @@
           "line_end": 2015,
           "label": "test%3i : compress large input with static CCtx :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5972,7 +5972,7 @@
           "line_end": 2027,
           "label": "test%3i : compress small input often enough to trigger context reduce :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5982,7 +5982,7 @@
           "line_end": 2031,
           "label": "test%3i : init CCtx for level %u :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -5992,7 +5992,7 @@
           "line_end": 2038,
           "label": "test%3i : compression again with static CCtx :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6002,7 +6002,7 @@
           "line_end": 2045,
           "label": "test%3i : simple decompression test with static DCtx :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6012,7 +6012,7 @@
           "line_end": 2049,
           "label": "test%3i : check decompressed result :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6022,7 +6022,7 @@
           "line_end": 2054,
           "label": "test%3i : init CCtx for too large level (must fail) :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6032,7 +6032,7 @@
           "line_end": 2058,
           "label": "test%3i : init CCtx for small level %u (should work again) :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6042,7 +6042,7 @@
           "line_end": 2067,
           "label": "test%3i : use CStream on CCtx-sized static context (should fail) :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6052,7 +6052,7 @@
           "line_end": 2077,
           "label": "test%3i : resize context to CStream size, then stream compress :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6062,7 +6062,7 @@
           "line_end": 2085,
           "label": "test%3i : CStream for small level %u :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6072,7 +6072,7 @@
           "line_end": 2090,
           "label": "test%3i : init static CStream with dictionary (should fail) :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6082,7 +6082,7 @@
           "line_end": 2099,
           "label": "test%3i : use DStream on DCtx-sized static context (should fail) :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6092,7 +6092,7 @@
           "line_end": 2141,
           "label": "test%3i : test estimation functions with default cctx params :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6102,7 +6102,7 @@
           "line_end": 2191,
           "label": "test%3i : test estimation functions with maxBlockSize = 0 :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6112,7 +6112,7 @@
           "line_end": 2204,
           "label": "test%3i : Static context sizes for negative levels :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -6192,7 +6192,7 @@
           "line_end": 2280,
           "label": "test%3u : compress empty string and decompress with small window log :",
           "status": "blocked",
-          "reason": "Streaming decoder with configurable window-log/reset context absent.",
+          "reason": "Encoder content-size omission and Decoder window limits exist. This exact empty-frame/window-log 10/zero-output original setup has not yet been mapped.",
           "rust_tests": []
         },
         {
@@ -6322,7 +6322,7 @@
           "line_end": 2447,
           "label": "test%3i : copy context too soon :",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6332,7 +6332,7 @@
           "line_end": 2452,
           "label": "test%3i : load dictionary into context :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6369,7 +6369,7 @@
           "line_end": 2479,
           "label": "test%3i : compress with duplicated context :",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6379,7 +6379,7 @@
           "line_end": 2487,
           "label": "test%3i : frame built with duplicated context should be decompressible :",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6402,7 +6402,7 @@
           "line_end": 2507,
           "label": "test%3i : decompress with static DDict :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6412,7 +6412,7 @@
           "line_end": 2553,
           "label": "test%3i : check content size on duplicated context :",
           "status": "blocked",
-          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6605,7 +6605,7 @@
           "line_end": 2793,
           "label": "test%3i : estimate CDict size :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6661,7 +6661,7 @@
           "line_end": 2853,
           "label": "test%3i : compress with static CDict :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6749,7 +6749,7 @@
           "line_end": 2940,
           "label": "test%3d : bufferless api with cdict :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6818,7 +6818,7 @@
           "line_end": 3000,
           "label": "test%3i : Testing non-attached CDict with ZSTD_dct_rawContent :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6828,7 +6828,7 @@
           "line_end": 3012,
           "label": "test%3i : ZSTD_CCtx_refCDict() then set parameters :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -6838,7 +6838,7 @@
           "line_end": 3031,
           "label": "test%3i : Loading dictionary before setting parameters is the same as loading after :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7001,7 +7001,7 @@
           "line_end": 3207,
           "label": "test%3i : ZSTD_fast attach dictionary with hashLog = 25 and chainLog = 25 :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7011,7 +7011,7 @@
           "line_end": 3234,
           "label": "test%3i : ZSTD_dfast attach dictionary with hashLog = 25 and chainLog = 25 :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7021,7 +7021,7 @@
           "line_end": 3264,
           "label": "test%3i : ZSTD_lazy attach dictionary with hashLog = 29 and searchLog = 4 :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7031,7 +7031,7 @@
           "line_end": 3311,
           "label": "test%3i : Dictionary with non-default repcodes :",
           "status": "partial",
-          "reason": "Duplicate nondefault10/10/10 prepared dictionaries now encode and decode exact content; an explicit rep2 witness proves decoder initialization. Rust uses its supported match strategy rather than the original level19 optimal-parser setup.",
+          "reason": "Duplicate nondefault10/10/10 prepared dictionaries now encode and decode exact content; an explicit rep2 witness proves decoder initialization. Rust uses its supported match strategy rather than the original level 19 optimal-parser setup.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#prepared_dictionaries_with_nondefault_duplicate_repcodes_roundtrip",
             "tests/upstream_dictionary.rs#duplicate_initial_repeat_offsets_are_used_and_reset_between_frames",
@@ -7045,7 +7045,7 @@
           "line_end": 3403,
           "label": "test%3i : ZSTD_decompressDCtx() with multiple ddicts :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7119,7 +7119,7 @@
           "line_end": 3468,
           "label": "test%3i : Content size verification :",
           "status": "blocked",
-          "reason": "Streaming end-directive/pledged-source-size API absent.",
+          "reason": "Pledged-size validation exists. The original bufferless compressBegin_advanced/compressEnd test pledges 6000 bytes and ends with 5000 CNBuffer bytes at level 1; its exact workload and C error-code assertion are not mapped.",
           "rust_tests": []
         },
         {
@@ -7129,7 +7129,7 @@
           "line_end": 3495,
           "label": "test%3i : negative compression level :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7139,7 +7139,7 @@
           "line_end": 3512,
           "label": "test%3i : parameters in order :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7149,7 +7149,7 @@
           "line_end": 3532,
           "label": "test%3i : parameters disordered :",
           "status": "blocked",
-          "reason": "Encoder level/parameter configuration, parameter validation, or reusable CCtx API absent.",
+          "reason": "Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7159,7 +7159,7 @@
           "line_end": 3538,
           "label": "test%3i : get dParameter bounds",
           "status": "blocked",
-          "reason": "Decoder parameter bound/query/reset API absent.",
+          "reason": "Typed DecodeOptions validation and reusable Decoder reset exist; the original C numeric parameter-bound/query/reset contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7169,7 +7169,7 @@
           "line_end": 3547,
           "label": "test%3i : wrong dParameter :",
           "status": "blocked",
-          "reason": "Decoder parameter bound/query/reset API absent.",
+          "reason": "Typed DecodeOptions validation and reusable Decoder reset exist; the original C numeric parameter-bound/query/reset contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7179,7 +7179,7 @@
           "line_end": 3567,
           "label": "test%3i : out of bound dParameter :",
           "status": "blocked",
-          "reason": "Decoder parameter bound/query/reset API absent.",
+          "reason": "Typed DecodeOptions validation and reusable Decoder reset exist; the original C numeric parameter-bound/query/reset contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7239,7 +7239,7 @@
           "line_end": 3677,
           "label": "test%3i : Decompression parameter reset test :",
           "status": "blocked",
-          "reason": "Decoder parameter bound/query/reset API absent.",
+          "reason": "Typed DecodeOptions validation and reusable Decoder reset exist; the original C numeric parameter-bound/query/reset contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7279,7 +7279,7 @@
           "line_end": 3715,
           "label": "test%3i : Dictionary Block compression test :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7289,7 +7289,7 @@
           "line_end": 3732,
           "label": "test%3i : Dictionary Block decompression test :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7299,7 +7299,7 @@
           "line_end": 3748,
           "label": "test%3i : Block compression with CDict :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7409,7 +7409,7 @@
           "line_end": 4049,
           "label": "test%3i : growing nbSeq :",
           "status": "partial",
-          "reason": "Original counts and triple corpus retained; context reuse and level 19 absent.",
+          "reason": "The original counts and triple corpus are retained; this adapter does not exercise the original context-reuse path, and level 19 is unsupported.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#growing_sequence_count"
           ]
@@ -7445,7 +7445,7 @@
           "line_end": 4078,
           "label": "test%3i : growing literals buffer :",
           "status": "partial",
-          "reason": "Original literal profile and full 1..5-MiB schedule; context reuse absent.",
+          "reason": "The original literal profile and complete 1..5-MiB schedule run through allocating calls. Reusable contexts exist, but the original context-reuse branch is not exercised by this adapter.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#growing_literals_buffer"
           ]
@@ -7457,7 +7457,7 @@
           "line_end": 4116,
           "label": "test%3i : incompressible data and ill suited dictionary :",
           "status": "blocked",
-          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
+          "reason": "Raw/formatted training and dictionary compression exist. The original 1-MiB CNBuffer training followed by byte inversion and 500-byte compression at level 1 remains unported; level selection is unsupported.",
           "rust_tests": []
         },
         {
@@ -7507,7 +7507,7 @@
           "line_end": 4171,
           "label": "test%3i : testing ZSTD dictionary sizes :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7517,7 +7517,7 @@
           "line_end": 4189,
           "label": "test%3i : testing FSE_normalizeCount() PR#1255:",
           "status": "blocked",
-          "reason": "FSE normalized-count encoding/normalization API not implemented; decoder alone does not cover it.",
+          "reason": "Checked normalized-count encoding and deterministic normalization exist; this exact upstream regression and any caller-owned output-capacity contract have not yet been mapped.",
           "rust_tests": []
         },
         {
@@ -7527,7 +7527,7 @@
           "line_end": 4205,
           "label": "test%3i : testing FSE_writeNCount() PR#2779:",
           "status": "blocked",
-          "reason": "FSE normalized-count encoding/normalization API not implemented; decoder alone does not cover it.",
+          "reason": "Checked normalized-count encoding and deterministic normalization exist; this exact upstream regression and any caller-owned output-capacity contract have not yet been mapped.",
           "rust_tests": []
         },
         {
@@ -7547,7 +7547,7 @@
           "line_end": 4304,
           "label": "test%3i : passing wrong full dict should fail on compressStream2 refPrefix",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7557,7 +7557,7 @@
           "line_end": 4331,
           "label": "test%3i : small dictionary with multithreading and LDM",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7567,7 +7567,7 @@
           "line_end": 4345,
           "label": "test%3i : ZSTD_getCParams() + dictionary",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7577,7 +7577,7 @@
           "line_end": 4356,
           "label": "test%3i : ZSTD_adjustCParams() + dictionary",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7587,7 +7587,7 @@
           "line_end": 4372,
           "label": "test%3i : check compression mem usage monotonicity over levels for estimateCCtxSize() :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7597,7 +7597,7 @@
           "line_end": 4394,
           "label": "test%3i : check estimateCCtxSize() always larger or equal to ZSTD_estimateCCtxSize_usingCParams() :",
           "status": "blocked",
-          "reason": "Reusable/static contexts, custom allocation, workspace sizing or shrink/estimate APIs absent.",
+          "reason": "Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported.",
           "rust_tests": []
         },
         {
@@ -7627,7 +7627,7 @@
           "line_end": 4506,
           "label": "longtest%3i : table cleanliness through index reduction :",
           "status": "blocked",
-          "reason": "Persistent streaming match-table index reduction and static context APIs absent.",
+          "reason": "A bounded reusable match table and retained frame history exist. The original persistent long-index reduction and static-context table-cleanliness campaign remains unported.",
           "rust_tests": []
         },
         {
@@ -7647,7 +7647,7 @@
           "line_end": 4664,
           "label": "longtest%3i : testing cdict compression with different attachment strategies :",
           "status": "blocked",
-          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix decoding are available.",
+          "reason": "This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available.",
           "rust_tests": []
         },
         {
@@ -7657,7 +7657,7 @@
           "line_end": 5147,
           "label": "fuzzerTests",
           "status": "partial",
-          "reason": "RNG/noise/profile/sample/mutation algorithms and bounded one-shot checks run with deterministic seeds; original parameter, dictionary, reusable-context, and compression-level paths remain absent.",
+          "reason": "RNG/noise/profile/sample/mutation algorithms and bounded one-shot checks run with deterministic seeds. Reusable contexts and dictionaries now exist, but this original driver's parameter, dictionary, context-reuse and compression-level branches remain unported.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#deterministic_fuzzer_one_shot_cycles",
             "tests/upstream_fuzzer.rs#intensive_fuzzer_one_shot_cycles"
@@ -9591,7 +9591,7 @@
           "line_end": 1293,
           "label": "\\n===>  golden files tests",
           "status": "partial",
-          "reason": "Golden decoding and the no-dictionary compression corpus are covered by Rust tests. Dictionary roundtrip and recursive CLI orchestration remain absent.",
+          "reason": "Golden decoding and the no-dictionary compression corpus run through Rust tests. Dictionary codecs exist, but this shell driver's dictionary roundtrips and recursive CLI orchestration are not ported.",
           "rust_tests": [
             "tests/upstream_golden.rs"
           ]
@@ -10307,7 +10307,7 @@
           "line_end": 80,
           "label": "roundTripTest",
           "status": "partial",
-          "reason": "One-shot content/size roundtrips run with deterministic corpora; original compression-level and reusable context configuration is absent.",
+          "reason": "One-shot content/size roundtrips run on deterministic corpora. Reusable contexts exist, but the original XXH32-derived levels and CCtxParams configuration are not reproduced.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#round_trip_crash_corpora"
           ]
@@ -10319,7 +10319,7 @@
           "line_end": 241,
           "label": "cctxParamRoundTripTest",
           "status": "blocked",
-          "reason": "This named group has not been ported to the available bounded streaming contexts; any original raw-block, dictionary, or C-specific context contract remains unimplemented.",
+          "reason": "Bounded streaming and dictionary contexts now exist, but this helper has not been mapped to a Rust declaration; its original C context setup and caller-buffer checks remain unported.",
           "rust_tests": []
         }
       ]
@@ -10577,7 +10577,7 @@
           "line_end": 420,
           "label": "test%3i : decompress again without init (reuse previous settings):",
           "status": "partial",
-          "reason": "A Decoder accepts concatenated ordinary/skippable frames without reset; original dictionary settings reuse remains absent.",
+          "reason": "A Decoder accepts concatenated ordinary/skippable frames without reset. Persistent dictionaries are available; this group's original dictionary-backed input/settings reuse is not mapped by the current named adapter.",
           "rust_tests": [
             "tests/upstream_streaming.rs#concatenated_frames_report_each_boundary_before_the_next_magic"
           ]
@@ -10589,7 +10589,7 @@
           "line_end": 428,
           "label": "test%3i : check decompressed result :",
           "status": "partial",
-          "reason": "Exact output comparisons run for ordinary official frames; the original dictionary-backed output cannot yet be tested.",
+          "reason": "Exact output comparisons run for ordinary official frames. Dictionary decoding is available; this group's original dictionary-backed source bytes have not been reproduced by the named adapter.",
           "rust_tests": [
             "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
           ]
@@ -10633,7 +10633,7 @@
           "line_end": 494,
           "label": "test%3i : decompress byte-by-byte :",
           "status": "partial",
-          "reason": "Input/output fragmentation including zero capacities, skippable frames, and exact output are tested; the original dictionary-backed normal frame remains unavailable.",
+          "reason": "Fragmentation, zero capacities, skippable frames and exact output are tested. Dictionary-backed frames are supported separately; the original normal-frame fixture in this group has not been reproduced.",
           "rust_tests": [
             "tests/upstream_streaming.rs#concatenated_frames_report_each_boundary_before_the_next_magic",
             "tests/upstream_streaming.rs#every_official_generated_frame_survives_independent_input_output_chunks"
@@ -11013,7 +11013,7 @@
           "line_end": 1197,
           "label": "test%3i : dictionary source size and level :",
           "status": "blocked",
-          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
+          "reason": "Dictionary compression exists; the original source-size sweep across levels 1..16, prepared-dictionary parameter setup and saved-C-context comparisons remain unported.",
           "rust_tests": []
         },
         {
@@ -11238,7 +11238,7 @@
           "line_end": 1530,
           "label": "test%3i : compress %u bytes with multiple threads + dictionary :",
           "status": "blocked",
-          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
+          "reason": "Dictionary compression exists; this original two-worker 8-MiB job/overlap campaign and specialized prepared-dictionary parameters require unsupported worker and strategy controls.",
           "rust_tests": []
         },
         {
@@ -11248,7 +11248,7 @@
           "line_end": 1550,
           "label": "test%3i : decompress large frame created from multiple threads + dictionary :",
           "status": "blocked",
-          "reason": "The original training/COVER/fastCover algorithm, optimization controls or downstream compression workload is not implemented or ported; parsing and decoding C-trained dictionaries is separate coverage.",
+          "reason": "Prepared dictionary streaming decode exists; the exact upstream multi-worker-generated frame and its one-byte-then-complete-input schedule have not been reproduced.",
           "rust_tests": []
         },
         {
@@ -11466,7 +11466,7 @@
           "line_end": 2846,
           "label": "fuzzerTests",
           "status": "partial",
-          "reason": "128 seeded directive/context campaigns use five deterministic content profiles, exact output/consumption, reset, mutation and truncation checks; original RDG selection, dictionaries, levels and extended timed campaign remain absent.",
+          "reason": "128 seeded directive/context campaigns use five deterministic profiles, exact progress/output, reset, mutation and truncation checks. Dictionary APIs exist separately, but the original RDG/dictionary/level selection and extended timed campaign are not part of this adapter.",
           "rust_tests": [
             "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism",
             "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics"
@@ -11479,7 +11479,7 @@
           "line_end": 2916,
           "label": "fuzzerTests_newAPI",
           "status": "partial",
-          "reason": "Each of 128 supported-option schedules is repeated twice for byte-identical encoding and independently fragmented exact decoding; original opaque parameters, dictionaries, workers and algorithm choices remain absent.",
+          "reason": "Each of 128 supported-option schedules is repeated for byte-identical encoding and fragmented exact decoding. The original dictionary/opaque-parameter/worker/strategy matrix is not part of this adapter; basic dictionaries and reusable contexts exist.",
           "rust_tests": [
             "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism"
           ]
@@ -11491,7 +11491,7 @@
           "line_end": 3467,
           "label": "***  Test %u  *** \\n",
           "status": "partial",
-          "reason": "The supported-option subset of the enclosing new-API randomized driver is covered; its full dictionaries, opaque parameters, worker and strategy matrix is absent.",
+          "reason": "The supported-option subset of the enclosing new-API randomized driver runs. Its original dictionary, opaque-parameter, worker and strategy matrix remains unported rather than unavailable in its entirety.",
           "rust_tests": [
             "tests/upstream_streaming.rs#many_seeded_directive_schedules_preserve_data_and_compression_determinism"
           ]

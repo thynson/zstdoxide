@@ -91,9 +91,12 @@ when explicitly run today, it fails with `InvalidMagic`. That known failure
 must not be reported as a passing legacy port. The legacy streaming and frame
 inspection contracts remain separate pending work.
 
-No dictionary success or constructor-rejection test can call a Rust dictionary
-API yet; those preserved inputs remain pending. Decoder rejection of dictionary
-bytes as a frame would not test the upstream constructor contract.
+The preserved dictionary inputs now run through the validated `Dictionary`
+preparer and dictionary codecs in `src/dictionary.rs` and
+`tests/upstream_dictionary.rs`. Exact malformed repeat/header constructor
+rejections and fixed-dictionary metadata are mapped in the main inventory.
+Rejecting dictionary bytes as an ordinary frame is still not a substitute for
+the upstream dictionary-construction contract.
 
 ```sh
 cargo test --test upstream_inline_regressions

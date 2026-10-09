@@ -216,7 +216,7 @@ exercise the explicitly chosen poisoning, sealing, progress, and memory limits.
 | `tests/zstreamtest.c:554` | `encoder_accepts_two_source_bytes_before_any_output_is_available` | Original two-byte source, zero output, Finish retry, and legal zero-output decoder call. |
 | `tests/zstreamtest.c:584` | `encoder_header_reports_pledge_window_and_checksum_options` | Supported encoder strategy and explicit advertised-window API. |
 | `tests/zstreamtest.c:607`, `:625`, `:641` | `encoder_enforces_pledges_even_when_content_size_is_not_written` | Both error directions and both content-size flag values; supported strategy. |
-| `tests/zstreamtest.c:1443` | `zero_pledge_accepts_only_an_empty_frame` | Typed pledge contract; C advanced initialization/dictionary branches remain absent. |
+| `tests/zstreamtest.c:1443` | `zero_pledge_accepts_only_an_empty_frame` | Typed pledge contract; this no-dictionary adapter does not reproduce the original C advanced initialization/dictionary branches. Dictionary pledge behavior is mapped separately. |
 | `tests/fuzzer.c:1577` | `flush_of_empty_unknown_size_frame_does_not_close_the_frame` | Unknown-size empty Flush/Finish and zero-output decoding; no level-selection API. |
 | `tests/zstreamtest.c:1008` | `flush_exposes_all_source_to_a_live_decoder_before_finish` | Original input ranges 18..100, 100..200, 200..518, with Flush in between; stable-input pointer contract absent. |
 | `tests/zstreamtest.c:657` | `reset_clears_pledge_and_frame_state_but_retains_supported_options` | Original 513/1025-byte reuse sizes; level 19 remains absent. |
