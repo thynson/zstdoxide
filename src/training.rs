@@ -4,10 +4,11 @@
 //! serves the content-selection role of upstream dictionary builders. It does
 //! not reproduce COVER/fastCover parameters or byte-identical trained output.
 
-use alloc::collections::BinaryHeap;
+use alloc::alloc::Global;
 use alloc::vec::Vec;
 use core::cmp::Ordering;
 
+use crate::heap::MaxHeap;
 use crate::{Dictionary, Error, Result};
 
 const HASH_BITS: u32 = 16;
@@ -65,22 +66,19 @@ pub fn train_raw_dictionary(samples: &[&[u8]], options: RawTrainingOptions) -> R
     for window in &windows {
         frequencies.count(&samples[window.sample][..window.length])?;
     }
-    let mut candidates = BinaryHeap::new();
+    let mut candidates = MaxHeap::new_in(Global);
     for window in &windows {
         let source = &samples[window.sample][..window.length];
         let length = options.segment_size.min(source.len());
         let mut start = 0;
         loop {
             let end = start + length;
-            candidates
-                .try_reserve(1)
-                .map_err(|_| Error::AllocationFailed)?;
-            candidates.push(Candidate {
+            candidates.try_push(Candidate {
                 sample: window.sample,
                 start,
                 end,
                 score: frequencies.score(&source[start..end]),
-            });
+            })?;
             if end == source.len() {
                 break;
             }
@@ -99,7 +97,7 @@ pub fn train_raw_dictionary(samples: &[&[u8]], options: RawTrainingOptions) -> R
         candidate.score = frequencies.score(&source[candidate.start..candidate.end]);
         if candidates.peek().is_some_and(|next| candidate < *next) {
             // Popping freed a slot, so reinserting a stale bound cannot allocate.
-            candidates.push(candidate);
+            candidates.try_push(candidate)?;
             continue;
         }
         if candidate.score == 0 {
@@ -297,6 +295,52 @@ mod tests {
     }
 
     #[test]
+    fn trained_content_preserves_the_pre_allocator_queue_baseline() {
+        let messages = [
+            &b"common prefix, category one, region east, end!"[..],
+            &b"common prefix, category two, region west, end!"[..],
+            &b"common prefix, category three, region east, end!"[..],
+        ];
+        let binary: Vec<_> = (0..512).map(|index| (index * 19) as u8).collect();
+        let binary_samples = [&binary[..256], &binary[13..]];
+        let repeated = [b'x'; 256];
+        let repeated_samples = [&repeated[..], &repeated[..128]];
+        let mut fingerprint = 0xcbf29ce484222325_u64;
+        let mut cases = 0_u32;
+        for samples in [&messages[..], &binary_samples[..], &repeated_samples[..]] {
+            for capacity in [8, 9, 16, 17, 31, 64, 99, 128] {
+                for budget in [128, 1024] {
+                    for segment_size in [8, 16, 64] {
+                        let dictionary = train_raw_dictionary(
+                            samples,
+                            RawTrainingOptions {
+                                dictionary_size: capacity,
+                                max_sample_bytes: budget,
+                                segment_size,
+                            },
+                        )
+                        .unwrap();
+                        for byte in (dictionary.content().len() as u32)
+                            .to_le_bytes()
+                            .iter()
+                            .chain(dictionary.content())
+                        {
+                            fingerprint =
+                                (fingerprint ^ u64::from(*byte)).wrapping_mul(0x100000001b3);
+                        }
+                        cases += 1;
+                    }
+                }
+            }
+        }
+        assert_eq!(cases, 144);
+        // Captured from the Global std BinaryHeap implementation before the
+        // allocator-compatible queue replaced it. Includes quotas, clipped
+        // capacities, coverage exhaustion, binary bytes and equal-score ties.
+        assert_eq!(fingerprint, 11_733_226_933_974_065_203);
+    }
+
+    #[test]
     fn invalid_limits_are_rejected_before_reading_samples() {
         for options in [
             RawTrainingOptions {
@@ -423,19 +467,64 @@ mod tests {
 
     #[test]
     fn heap_ties_prefer_earlier_sample_and_start_indices() {
-        let mut heap = BinaryHeap::new();
-        for (sample, start) in [(2, 0), (1, 4), (0, 4), (0, 0)] {
-            heap.push(Candidate {
+        let mut heap = MaxHeap::new_in(Global);
+        for (sample, start, end) in [(2, 0, 8), (1, 4, 12), (0, 4, 12), (0, 0, 9), (0, 0, 8)] {
+            heap.try_push(Candidate {
                 sample,
                 start,
-                end: start + 8,
+                end,
                 score: 100,
-            });
+            })
+            .unwrap();
         }
         let order: Vec<_> = core::iter::from_fn(|| heap.pop())
-            .map(|item| (item.sample, item.start))
+            .map(|item| (item.sample, item.start, item.end))
             .collect();
-        assert_eq!(order, [(0, 0), (0, 4), (1, 4), (2, 0)]);
+        assert_eq!(
+            order,
+            [(0, 0, 8), (0, 0, 9), (0, 4, 12), (1, 4, 12), (2, 0, 8)]
+        );
+    }
+
+    #[test]
+    fn stale_score_reinsertions_match_the_standard_candidate_queue() {
+        use alloc::collections::BinaryHeap;
+
+        let mut actual = MaxHeap::new_in(Global);
+        let mut expected = BinaryHeap::new();
+        for index in 0..257 {
+            let value = Candidate {
+                sample: index % 7,
+                start: index % 11,
+                end: index % 11 + 8 + index % 5,
+                score: 1 + (index * 19 % 13) as u64,
+            };
+            actual.try_push(value).unwrap();
+            expected.push(value);
+        }
+        let mut reinsertions = 0;
+        let mut accepted = 0;
+        while let Some(mut candidate) = expected.pop() {
+            assert_eq!(actual.pop(), Some(candidate));
+            assert_eq!(actual.peek(), expected.peek());
+            // Coverage removes positive contributions; clipping can also alter
+            // the final tie component. Each recomputation strictly reduces the
+            // bound until it can be selected, so this campaign terminates.
+            candidate.score = candidate.score.saturating_sub(1);
+            candidate.end = candidate.end.min(candidate.start + 9);
+            if expected.peek().is_some_and(|next| candidate < *next) {
+                expected.push(candidate);
+                actual.try_push(candidate).unwrap();
+                reinsertions += 1;
+            } else {
+                accepted += 1;
+            }
+            assert_eq!(actual.peek(), expected.peek());
+            assert_eq!(actual.len(), expected.len());
+        }
+        assert_eq!(accepted, 257);
+        assert!(reinsertions > accepted);
+        assert_eq!(actual.pop(), None);
     }
 
     #[test]

@@ -32,6 +32,12 @@ impl<T: Ord, A: Allocator> MaxHeap<T, A> {
         self.values.len()
     }
 
+    /// Borrow the highest-priority initialized value without removing it.
+    /// The shared heap borrow prevents mutation while the result is in use.
+    pub(crate) fn peek(&self) -> Option<&T> {
+        self.values.first()
+    }
+
     pub(crate) fn try_reserve(&mut self, additional: usize) -> Result<()> {
         self.values
             .try_reserve(additional)
@@ -168,6 +174,30 @@ mod tests {
         assert_eq!(heap.pop(), None);
         drop(heap);
         assert_eq!(monitor.snapshot().failures, 2);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn peek_and_reinsertion_use_the_slot_freed_by_pop_without_allocating() {
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        let mut heap = MaxHeap::new_in(allocator);
+        assert_eq!(heap.peek(), None);
+        heap.try_reserve(4).unwrap();
+        let capacity = heap.values.capacity();
+        for rank in 0..capacity {
+            heap.try_push(rank).unwrap();
+        }
+        assert_eq!(heap.peek(), Some(&(capacity - 1)));
+        assert_eq!(heap.pop(), Some(capacity - 1));
+        let attempts = monitor.snapshot().attempts;
+        assert!(monitor.fail_next());
+        heap.try_push(0).unwrap();
+        assert_eq!(heap.peek(), Some(&(capacity - 2)));
+        assert_eq!(monitor.snapshot().attempts, attempts);
+        assert_eq!(monitor.snapshot().failures, 0);
+        monitor.clear_failure();
+        drop(heap);
         monitor.assert_released();
     }
 

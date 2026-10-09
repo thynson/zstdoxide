@@ -51,7 +51,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Parameterize dictionary bytes and prepared tables, explicitly documenting any Global shared-handle allocation.
 - [x] Define allocation-free borrowed dictionary views and a sealed immutable handle contract.
 - [ ] Add a caller-owned dictionary contract for contexts that require all codec allocation through the chosen allocator, preserving prefix and reset lifetimes.
-- [ ] Replace the training priority queue with checked storage and preserve ties and stale-score ordering.
+- [x] Replace the training priority queue with checked storage and preserve ties and stale-score ordering.
 - [ ] Parameterize raw-training sample windows, frequencies, candidates, ranges, and output without changing selected bytes.
 - [ ] Parameterize formatted finalization and all validation copies, preserving dictionary bytes, IDs, and C acceptance.
 - [ ] Inject failure at each observed codec allocation, including HUF/FSE candidates, history growth, dictionary preparation, reset, and final drop.

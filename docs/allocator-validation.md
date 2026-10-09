@@ -343,6 +343,24 @@ output. Reset releases overrides and restores repeats while keeping the selected
 allocator. This is the decoder's existing failure contract, distinct from an
 encoder's transactional candidate commit.
 
+Raw training now uses the checked setup heap, with allocator parameterization
+kept as the next separate item. The
+[queue evidence](evidence/2026-10-09-allocator-training-queue.json) and
+[23 command records](evidence/2026-10-09-allocator-training-queue-results.json)
+report 91 passing test executions, including safe/unsafe-training/all and both
+no_std configurations, raw/formatted integration, C CLI checks in safe/all,
+and three strict-provenance Miri tests. Formatting, strict Clippy, and no_std
+compilation passed.
+
+Before changing the queue, 144 deterministic dictionaries were captured from
+the standard BinaryHeap implementation. Their aggregate FNV64 remains
+11733226933974065203, covering quotas, clipping, coverage exhaustion, binary
+content and ties. The [capture source](evidence/2026-10-09-allocator-training-queue-baseline.rs.gz)
+and [passing log](evidence/2026-10-09-allocator-training-queue-baseline.log.gz)
+are preserved. Candidate ordering is unchanged; tests add end-index ties and
+stale-score reinsertion against the standard heap. Checked peek allocates
+nothing, and reinsertion consumes the slot freed by pop without a request.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The
