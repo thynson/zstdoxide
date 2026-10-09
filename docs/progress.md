@@ -193,3 +193,73 @@ memory schedules are analyzed before implementation, with small items retained
 in TODO. The actual Rust 1.100 distribution was unavailable (HTTP 404); a
 standard-API no_std probe compiled on the installed 1.101 nightly without
 feature gates. The next compiler decision must preserve that distinction.
+
+
+## Module 9: allocator ownership and focused platform validation
+
+Completed on 2026-10-09. The core now uses the standard `Allocator` and typed
+`Vec<T, A>` owners throughout one-shot/streaming compression and decompression,
+dictionary preparation, raw/formatted training, and temporary entropy/match
+storage. Convenience APIs retain Global. The original allocator moves with
+returned output; each other owner retains its exact allocator clone, without
+requiring clones to be interchangeable. Borrowed non-Clone allocators and
+allocator-independent `DictionaryView` attachments are supported. The default
+codec remains entirely safe Rust and no_std plus alloc.
+
+The Huffman and training heaps use checked allocator-compatible storage.
+Failure sweeps cover each observed allocation in selected leaf/public workloads,
+including preparation, reset recovery and final release. Unsafe access retains
+runtime bounds/initialization checks and local proofs. An independent source
+review found no open ownership, routing or unsafe-proof issue in its recorded
+final source; this is scoped evidence, not a universal safety proof.
+
+The actual compiler pin is `nightly-2026-10-08`, reporting Rust 1.101.0-nightly
+at `1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6`. The package conservatively declares
+1.101; neither a stable 1.101 release nor unavailable Rust 1.100 was tested.
+No unstable feature gate or bootstrap flag is used for the chosen allocation
+API subset. Earlier Module 8 Rust 1.89 evidence remains historical.
+
+The final immutable codec snapshot `8703ff4` passed 58 validation commands:
+15 complete suites each had 699 passed and 50 ignored, for 10,485 passed
+executions; each individual unsafe backend and their combination compiled
+without std. Strict Clippy, formatting, helper tests, standalone usage examples,
+pinned-source inventory integrity and all 312 imported fixtures passed. Explicit
+safe/all-feature official v1.5.7 checks made 814 complete decoded-byte comparisons.
+The later allocator benchmark harness had its own strict Clippy, formatting,
+parser checks and 14-configuration smoke validation.
+
+Focused platform evidence comprises 38 earlier selected Miri executions and
+12 final encoder/API follow-ups across 32-bit little-endian and 64-bit big-endian
+targets. The no-pointer-atomics ARM target compiled both safe/all library and
+caller paths, including exact Rc selection. These are interpreted Miri and
+compile-only ARM checks, not native foreign execution or firmware qualification.
+The original 89,456,640-byte allocator source was also preserved and validated
+with explicit seed and supported Rust strategies, with independent C decoding;
+upstream numeric levels and worker schedules remain separate obligations.
+
+The frozen allocator benchmark source at `2e12c18` produced 462 rows and 2,310
+samples across 14 backends, eleven workloads and three allocator modes. Output,
+allocation counts, cumulative peaks and retained capacities agreed across
+backends; all tracked final drops released every payload. Global counters are
+uninstrumented. The Global one-shot encode/decode medians were 12.055/1.386
+ns per byte safe versus 9.724/1.120 with all features; other changes were smaller
+and dictionary preparation was slightly slower. These fixed-order host-specific
+observations include reported sample ranges and establish no universal speedup
+or C-throughput parity.
+
+Standard shared dictionaries retain an explicit infallible Global allocation
+for their counts and inline object; borrowed views avoid that ownership layer.
+Static workspaces, required-size estimators, automatic shrinking, stable caller
+sessions, actual Rust 1.100 verification and broader native qualification remain
+open. The complete official migration gate still reports 188 unfinished source
+units and partial/blocked external targets. Module 9 does not mark that gate
+complete.
+
+Evidence and reproducible details: [final codec matrix](allocator-final-validation.md),
+[failure coverage](allocator-failure-validation.md),
+[platform checks](allocator-platform-validation.md),
+[allocator measurements](allocator-benchmarks.md), and
+[compiler/ownership boundaries](allocators.md). Completed Module 9 tasks are
+removed from TODO and retained in Git history. Module 10's parameter inspection
+and supported encoder lifecycle are analyzed and decomposed before implementation;
+operational numeric algorithms and later roadmap work remain explicit follow-ons.

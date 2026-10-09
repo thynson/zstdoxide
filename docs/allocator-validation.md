@@ -1,8 +1,11 @@
 # Allocator and platform validation
 
-Module 9 is in progress. This report separates the compiler checkpoint, custom
-allocation migration, and platform execution. None of these checkpoints claims
-complete upstream API or test parity. The active work items are in `TODO.md`.
+Module 9 is complete within its documented allocator/platform scope. This
+chronological report separates the compiler checkpoint, owner migration and
+platform execution; intermediate pending statements describe their checkpoint
+time. [The final matrix](allocator-final-validation.md) and
+[measurements](allocator-benchmarks.md) record integrated results. None claims
+complete upstream API or test parity. The next work items are in `TODO.md`.
 
 ## Compiler checkpoint: 2026-10-09
 
@@ -656,8 +659,8 @@ The final focused platform follow-up is recorded in
 [allocator overview](allocators.md) records the final compiler/safety evidence
 and distinct remaining contracts. The [final integrated codec matrix](allocator-final-validation.md) now passes
 all 58 recorded commands, including 15 complete suites and 814 independent
-official-codec comparisons. Timed allocator comparisons remain pending their
-separate completion record. The
+official-codec comparisons. The [timed allocator comparisons](allocator-benchmarks.md)
+also completed across all fourteen backend configurations. The
 [upstream allocation plan](upstream-allocation-plan.md) distinguishes ordinary
 allocator control from static workspaces, shrinking policies, estimators,
 stable buffers, and C numeric compression levels.

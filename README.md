@@ -64,7 +64,7 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
 | Training | Bounded deterministic raw content selection, learned full-alphabet Huffman metadata, predefined sequence priors, custom or automatic IDs, formatted finalization |
-| Portability | Rust 2024, pinned `nightly-2026-10-08` for allocator work; `no_std` plus `alloc` core |
+| Portability | Rust 2024, pinned `nightly-2026-10-08`; `no_std` plus `alloc` core |
 
 Remaining work includes COVER/fastCover and advanced dictionary training,
 advanced compression strategies and
@@ -126,11 +126,14 @@ allocator in its result and releases all temporary workspace before returning.
 [Allocator usage](docs/allocator-usage.md) demonstrates caller-owned dictionaries
 and output lifetimes. [The allocator plan](docs/allocators.md) records the exact API and validation
 boundaries, including the unavailable Rust 1.100 verification.
+The completed [allocator feature/oracle matrix](docs/allocator-final-validation.md)
+and [allocation/performance comparisons](docs/allocator-benchmarks.md) retain
+exact scope, raw evidence and the separate unfinished upstream-migration gate.
 
 ## Building and checking
 
 The checked-in toolchain file selects `nightly-2026-10-08` (Rust 1.101.0-nightly,
-commit `1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6`) for allocator work. The package
+commit `1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6`) for allocator support. The package
 declares `rust-version = "1.101"` as a conservative version floor; the supported
 compiler is this exact dated toolchain, not an untested stable release. The
 allocator implementation uses the standard API without unstable feature gates.

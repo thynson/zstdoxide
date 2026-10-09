@@ -1,7 +1,7 @@
 # Recorded backend comparisons
 
 The [allocator-aware benchmark report](allocator-benchmarks.md) records the
-Module 9 harness, accounting boundaries, and validation status.
+Module 9 measurements, accounting boundaries, and raw validation evidence.
 
 ## Module 8 entropy and strategy measurements
 
