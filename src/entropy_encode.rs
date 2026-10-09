@@ -125,6 +125,63 @@ pub(crate) fn write_normalized_counts(counts: &[i16], table_log: u8) -> Result<V
     Ok(bits.into_bytes())
 }
 
+/// Allocate exact FSE mass with positive units and integer largest remainders.
+///
+/// Every nonzero frequency receives at least one state. Remaining states are
+/// proportional to the original frequencies; equal fractional remainders prefer
+/// the lower symbol. Unit allocations use the format's `-1` marker. This
+/// deterministic policy does not reproduce upstream `FSE_normalizeCount`.
+/// Zero-only alphabets or more positive symbols than states are invalid.
+pub(crate) fn normalize_frequencies(counts: &[u64], table_log: u8) -> Result<Vec<i16>> {
+    if !(5..=12).contains(&table_log) || counts.is_empty() || counts.len() > 256 {
+        return Err(Error::InvalidParameter);
+    }
+    let table_size = 1_usize << table_log;
+    let present = counts.iter().filter(|&&count| count != 0).count();
+    if present == 0 || present > table_size {
+        return Err(Error::InvalidParameter);
+    }
+    // With at most 256 u64 inputs, their sum fits in 72 bits. Multiplying a
+    // frequency by the at-most 4096 remaining states fits in 76 bits.
+    let total: u128 = counts.iter().map(|&count| u128::from(count)).sum();
+    let remaining = table_size - present;
+    let mut normalized = Vec::new();
+    normalized
+        .try_reserve_exact(counts.len())
+        .map_err(|_| Error::AllocationFailed)?;
+    normalized.resize(counts.len(), 0_i16);
+    let mut remainders = Vec::new();
+    remainders
+        .try_reserve_exact(present)
+        .map_err(|_| Error::AllocationFailed)?;
+    let mut allocated = 0;
+    for (symbol, &count) in counts.iter().enumerate() {
+        if count == 0 {
+            continue;
+        }
+        let product = u128::from(count) * remaining as u128;
+        let share = 1 + (product / total) as usize;
+        // A share is at most the table's 4096 states and therefore fits i16.
+        normalized[symbol] = share as i16;
+        allocated += share;
+        remainders.push((product % total, symbol));
+    }
+    remainders.sort_unstable_by(|&(left, left_symbol), &(right, right_symbol)| {
+        right
+            .cmp(&left)
+            .then_with(|| left_symbol.cmp(&right_symbol))
+    });
+    for &(_, symbol) in remainders.iter().take(table_size - allocated) {
+        normalized[symbol] += 1;
+    }
+    for count in &mut normalized {
+        if *count == 1 {
+            *count = -1;
+        }
+    }
+    Ok(normalized)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -249,5 +306,95 @@ mod tests {
         assert_eq!(bits.position, 35);
         bits.push(1, 1).unwrap();
         assert_eq!(bits.into_bytes(), [0xc5, 0xb3, 0xa2, 0x91, 0x08]);
+    }
+
+    #[test]
+    fn normalization_has_exact_mass_sparse_support_and_lower_symbol_ties() {
+        assert_eq!(normalize_frequencies(&[1, 1, 1], 5).unwrap(), [11, 11, 10]);
+        assert_eq!(normalize_frequencies(&[2, 1, 0], 5).unwrap(), [21, 11, 0]);
+        assert_eq!(normalize_frequencies(&[0, 1, 0], 5).unwrap(), [0, 32, 0]);
+        assert_eq!(normalize_frequencies(&[1; 32], 5).unwrap(), [-1; 32]);
+        assert_eq!(normalize_frequencies(&[1; 256], 8).unwrap(), [-1; 256]);
+    }
+
+    #[test]
+    fn normalization_uses_wide_arithmetic_for_maximum_frequency_inputs() {
+        assert_eq!(normalize_frequencies(&[u64::MAX, 1], 5).unwrap(), [31, -1]);
+        assert_eq!(
+            normalize_frequencies(&[u64::MAX; 256], 8).unwrap(),
+            [-1; 256]
+        );
+        assert_eq!(
+            normalize_frequencies(&[u64::MAX; 2], 12).unwrap(),
+            [2048, 2048]
+        );
+        let small = [0, 1, 2, 3, 4];
+        let scaled = small.map(|value| value * 1_000_000_000_000);
+        assert_eq!(
+            normalize_frequencies(&small, 6).unwrap(),
+            normalize_frequencies(&scaled, 6).unwrap()
+        );
+    }
+
+    #[test]
+    fn normalized_frequencies_preserve_support_and_serialize_at_every_table_log() {
+        for log in 5..=12 {
+            for symbols in [1, 2, 17, 32, 64, 128, 256] {
+                if symbols > 1 << log {
+                    continue;
+                }
+                let counts: Vec<_> = (0..symbols)
+                    .map(|index| {
+                        if index % 3 == 0 {
+                            0
+                        } else {
+                            (index * index + 1) as u64
+                        }
+                    })
+                    .collect();
+                if counts.iter().all(|&count| count == 0) {
+                    continue;
+                }
+                let normalized = normalize_frequencies(&counts, log).unwrap();
+                assert_eq!(normalized.len(), counts.len());
+                assert_eq!(
+                    normalized
+                        .iter()
+                        .map(|count| u32::from(count.unsigned_abs()))
+                        .sum::<u32>(),
+                    1 << log
+                );
+                for (&frequency, &count) in counts.iter().zip(&normalized) {
+                    assert_eq!(frequency == 0, count == 0);
+                    assert!(count >= -1);
+                }
+                let header = write_normalized_counts(&normalized, log).unwrap();
+                let parsed = read_normalized_counts(&header, 255, 12).unwrap();
+                assert_eq!(&parsed.counts[..normalized.len()], normalized);
+                assert_eq!(normalize_frequencies(&counts, log).unwrap(), normalized);
+            }
+        }
+    }
+
+    #[test]
+    fn normalization_rejects_invalid_logs_empty_support_and_oversized_alphabets() {
+        for log in [0, 4, 13, 255] {
+            assert_eq!(
+                normalize_frequencies(&[1], log),
+                Err(Error::InvalidParameter)
+            );
+        }
+        for counts in [
+            &[][..],
+            &[0][..],
+            &[0; 256][..],
+            &[1; 257][..],
+            &[1; 33][..],
+        ] {
+            assert_eq!(
+                normalize_frequencies(counts, 5),
+                Err(Error::InvalidParameter)
+            );
+        }
     }
 }
