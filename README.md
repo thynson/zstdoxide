@@ -224,6 +224,12 @@ per workload and reports medians and ranges. See
 [benchmark design](docs/benchmark-design.md) and [recorded measurements](docs/benchmarks.md).
 Unsafe implementations remain opt-in even when a benchmark favors them.
 
+Configurable named search has a separate 27-case public Encoder benchmark,
+with clock-free validation by default, explicit Global timing and an independent
+allocation survey. See [search measurements](docs/match-search-benchmarks.md)
+for every profile/backend comparison and reproduction commands. This driver
+requires Python 3.11 or newer and the pinned Rust toolchain.
+
 ## Development workflow
 
 [AGENTS.md](AGENTS.md) defines English project language, safety documentation,

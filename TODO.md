@@ -48,7 +48,7 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 - [x] Add a clock-free validated benchmark harness for identical default/tuned workloads, explicit capacity/allocation accounting and complete backend comparisons.
 - [x] Reconcile public strategy and dictionary documentation with configurable search defaults and existing prepared-entropy reuse.
 - [x] Validate bounds, owners, feature combinations, no_std and target layouts; update relevant official coverage without claiming new reference strategies.
-- [ ] Measure the frozen default/tuned benchmark matrix across safe, individual unsafe and all-feature builds; record ratios, sample ranges, allocation and retained-capacity effects.
+- [x] Measure the frozen default/tuned benchmark matrix across safe, individual unsafe and all-feature builds; record ratios, sample ranges, allocation and retained-capacity effects.
 
 Numeric profile execution, additional reference algorithms, long-distance matches,
 threading, static workspaces and the remaining official migration stay open.

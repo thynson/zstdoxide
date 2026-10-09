@@ -1,0 +1,1838 @@
+{
+  "scope": "Frozen Global search measurements; separate owned allocation surveys. No concurrent task builds/tests/Miri; host scheduling/thermal noise remains.",
+  "environment": {
+    "schema_version": 1,
+    "timestamp_utc": "2026-10-09T08:01:33.042327+00:00",
+    "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "toolchain": "nightly-2026-10-08",
+    "host_target": "aarch64-apple-darwin",
+    "compiler": {
+      "command": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "-vV"
+      ],
+      "exit_code": 0,
+      "stdout": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+      "stderr": ""
+    },
+    "head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "bb41ac072fd912da50a99c24dc81bfb28c82582b\n",
+      "stderr": ""
+    },
+    "status": {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "configuration_order": [
+      "safe",
+      "unsafe-byte-cursor",
+      "unsafe-bitstream",
+      "unsafe-history",
+      "unsafe-ring-history",
+      "unsafe-fse",
+      "unsafe-fse-encoder",
+      "unsafe-huffman",
+      "unsafe-huffman-codebook",
+      "unsafe-match-table",
+      "unsafe-match-chain",
+      "unsafe-dictionary",
+      "unsafe-training",
+      "all"
+    ],
+    "timed": true,
+    "samples": 5,
+    "minimum_ms": 100,
+    "base_environment": {
+      "HOME": "/Users/lanxingcan",
+      "LOGNAME": "lanxingcan",
+      "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+      "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+      "USER": "lanxingcan",
+      "LC_ALL": "C",
+      "LANG": "C",
+      "TZ": "UTC",
+      "CARGO_INCREMENTAL": "0",
+      "CARGO_ENCODED_RUSTFLAGS": "",
+      "RUSTFLAGS": "",
+      "RUSTDOCFLAGS": "",
+      "RUSTC": "rustc",
+      "RUSTDOC": "rustdoc",
+      "RUSTC_WRAPPER": "",
+      "RUSTC_WORKSPACE_WRAPPER": ""
+    },
+    "cargo_configs": [
+      {
+        "path": "/Users/lanxingcan/.cargo/config.toml",
+        "bytes": 1131,
+        "sha256": "54523ec655a982d1a8eead631437b06318a57366ab4c772410ad40b9f30485a3"
+      }
+    ],
+    "campaign_directory": "/private/tmp/zstdoxide-module11-search-timed-final",
+    "repository_root": "/Users/lanxingcan/Workspace/zstdoxize"
+  },
+  "source": {
+    "sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13",
+    "files": [
+      {
+        "path": "Cargo.lock",
+        "bytes": 266,
+        "sha256": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d"
+      },
+      {
+        "path": "Cargo.toml",
+        "bytes": 969,
+        "sha256": "0fd0cf08eb2c8dd08f4cc527ee49b761185dd0171808868e176b00d60aad2d9b"
+      },
+      {
+        "path": "benches/search.rs",
+        "bytes": 22757,
+        "sha256": "08c3109741b578c7c3d4e0ef394c6e0d95310d7e9237d02fc71032f0db002063"
+      },
+      {
+        "path": "rust-toolchain.toml",
+        "bytes": 118,
+        "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20"
+      },
+      {
+        "path": "scripts/benchmark_search.py",
+        "bytes": 39521,
+        "sha256": "ed5b3c7ddc9737ade86ba3637f5b6d20e335a30d8d2bbf146d4cae26020ea4be"
+      },
+      {
+        "path": "src/bitstream.rs",
+        "bytes": 5025,
+        "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6"
+      },
+      {
+        "path": "src/bitwriter.rs",
+        "bytes": 10794,
+        "sha256": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d"
+      },
+      {
+        "path": "src/constants.rs",
+        "bytes": 1542,
+        "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+      },
+      {
+        "path": "src/cursor.rs",
+        "bytes": 2412,
+        "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f"
+      },
+      {
+        "path": "src/decode.rs",
+        "bytes": 25995,
+        "sha256": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403"
+      },
+      {
+        "path": "src/dictionary.rs",
+        "bytes": 37284,
+        "sha256": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1"
+      },
+      {
+        "path": "src/dictionary_train.rs",
+        "bytes": 25999,
+        "sha256": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6"
+      },
+      {
+        "path": "src/encode.rs",
+        "bytes": 157242,
+        "sha256": "64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9"
+      },
+      {
+        "path": "src/entropy_encode.rs",
+        "bytes": 46189,
+        "sha256": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53"
+      },
+      {
+        "path": "src/entropy_output.rs",
+        "bytes": 30938,
+        "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+      },
+      {
+        "path": "src/error.rs",
+        "bytes": 2528,
+        "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+      },
+      {
+        "path": "src/frame.rs",
+        "bytes": 4396,
+        "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e"
+      },
+      {
+        "path": "src/fse.rs",
+        "bytes": 40545,
+        "sha256": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864"
+      },
+      {
+        "path": "src/fse_encode.rs",
+        "bytes": 26973,
+        "sha256": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68"
+      },
+      {
+        "path": "src/fse_select.rs",
+        "bytes": 28875,
+        "sha256": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3"
+      },
+      {
+        "path": "src/heap.rs",
+        "bytes": 10052,
+        "sha256": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8"
+      },
+      {
+        "path": "src/history.rs",
+        "bytes": 13893,
+        "sha256": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999"
+      },
+      {
+        "path": "src/huffman.rs",
+        "bytes": 51802,
+        "sha256": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc"
+      },
+      {
+        "path": "src/huffman_codebook.rs",
+        "bytes": 48091,
+        "sha256": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b"
+      },
+      {
+        "path": "src/huffman_encode.rs",
+        "bytes": 40632,
+        "sha256": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf"
+      },
+      {
+        "path": "src/lib.rs",
+        "bytes": 3291,
+        "sha256": "bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a"
+      },
+      {
+        "path": "src/literal_encode.rs",
+        "bytes": 18735,
+        "sha256": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78"
+      },
+      {
+        "path": "src/literal_header.rs",
+        "bytes": 7030,
+        "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03"
+      },
+      {
+        "path": "src/match_key.rs",
+        "bytes": 14429,
+        "sha256": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2"
+      },
+      {
+        "path": "src/match_parse.rs",
+        "bytes": 69729,
+        "sha256": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac"
+      },
+      {
+        "path": "src/match_search.rs",
+        "bytes": 21947,
+        "sha256": "14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b"
+      },
+      {
+        "path": "src/matchchain.rs",
+        "bytes": 50933,
+        "sha256": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22"
+      },
+      {
+        "path": "src/matchfinder.rs",
+        "bytes": 24248,
+        "sha256": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb"
+      },
+      {
+        "path": "src/parameters/presets.rs",
+        "bytes": 13712,
+        "sha256": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4"
+      },
+      {
+        "path": "src/parameters.rs",
+        "bytes": 62222,
+        "sha256": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc"
+      },
+      {
+        "path": "src/ring_history.rs",
+        "bytes": 45791,
+        "sha256": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2"
+      },
+      {
+        "path": "src/sequence_context.rs",
+        "bytes": 45618,
+        "sha256": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6"
+      },
+      {
+        "path": "src/sequence_encode.rs",
+        "bytes": 27994,
+        "sha256": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61"
+      },
+      {
+        "path": "src/sequence_plan.rs",
+        "bytes": 7646,
+        "sha256": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06"
+      },
+      {
+        "path": "src/sequences.rs",
+        "bytes": 25515,
+        "sha256": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb"
+      },
+      {
+        "path": "src/strategy.rs",
+        "bytes": 1584,
+        "sha256": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626"
+      },
+      {
+        "path": "src/stream.rs",
+        "bytes": 1452,
+        "sha256": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c"
+      },
+      {
+        "path": "src/stream_decode.rs",
+        "bytes": 59352,
+        "sha256": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21"
+      },
+      {
+        "path": "src/stream_encode.rs",
+        "bytes": 111445,
+        "sha256": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e"
+      },
+      {
+        "path": "src/training.rs",
+        "bytes": 29658,
+        "sha256": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e"
+      },
+      {
+        "path": "src/xxhash.rs",
+        "bytes": 28427,
+        "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+      },
+      {
+        "path": "test-support/allocator/Cargo.toml",
+        "bytes": 412,
+        "sha256": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292"
+      },
+      {
+        "path": "test-support/allocator/src/lib.rs",
+        "bytes": 49773,
+        "sha256": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971"
+      },
+      {
+        "path": "tests/upstream/dictionaries/formatted.dict",
+        "bytes": 2197,
+        "sha256": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281"
+      },
+      {
+        "path": "tests/upstream/dictionaries/manifest.json",
+        "bytes": 90188,
+        "sha256": "eb6eda57abc976e0a9086593b37b4d86ba5cdeb2673aa025f554417ae2baa761"
+      }
+    ]
+  },
+  "inputs": {
+    "schema_version": 1,
+    "recipe": "xorshift64-and-contiguous-dictionary-runs-v1",
+    "seed": "5eed5ea2c1202026",
+    "dictionary_fixture": "tests/upstream/dictionaries/formatted.dict",
+    "dictionary_fixture_sha256": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281",
+    "dictionary_content_offset": 149,
+    "dictionary_content_bytes": 2048,
+    "dictionary_boundary_reference": "tests/upstream/dictionaries/manifest.json",
+    "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+    "workloads": {
+      "block": {
+        "source_bytes": 32768,
+        "source_fnv1a64": "8e2f9283049eacd8",
+        "source_sha256": "f62a7f5980b867d640cf8ddbbcd8f0a10b725ae4ee22d84d04c1a484ca71833b",
+        "dictionary_bytes": 0,
+        "dictionary_fnv1a64": "cbf29ce484222325",
+        "dictionary_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "history": {
+        "source_bytes": 393216,
+        "source_fnv1a64": "a0f43a4eab5c6e2d",
+        "source_sha256": "668bee3ff532d0f9cca3ee528736ef44da22f46e448e15388e75e942cf065df8",
+        "dictionary_bytes": 0,
+        "dictionary_fnv1a64": "cbf29ce484222325",
+        "dictionary_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "dictionary": {
+        "source_bytes": 32768,
+        "source_fnv1a64": "cc6272e6ae396202",
+        "source_sha256": "481bf8c0dbb2787163c7072476d7433f3afccc225f3253b7c94879158461d1f6",
+        "dictionary_bytes": 2197,
+        "dictionary_fnv1a64": "d5e098c680a7348e",
+        "dictionary_sha256": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281"
+      }
+    }
+  },
+  "commands": [
+    {
+      "stage": "build",
+      "backend": "safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/safe",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "safe.build.jsonl",
+      "stdout_sha256": "dcf8198803baeee13fe832d06306a12f98fcf96dd7d0e1beda069fb5cf801b43",
+      "stderr": "safe.build.log",
+      "stderr_sha256": "0d2b62aa4a4721c08bff3dd06468bac339154d5d84d8598d438a56f488b61416",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "safe",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/safe/aarch64-apple-darwin/release/build/zstdoxide/558d9f401cc17bda/out/search-558d9f401cc17bda"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "cfc22f9f67c601f253260c539f8e1b02ae61a4f9f8f2ec7f60db1d6815d28727",
+      "exit_code": 0,
+      "stdout": "safe.jsonl",
+      "stdout_sha256": "97d9b16baddc609a854e3d9c034a7f63e3ace346a282a8a87f47f3be00223e6e",
+      "stderr": "safe.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-byte-cursor",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-byte-cursor"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-byte-cursor",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-byte-cursor.build.jsonl",
+      "stdout_sha256": "14507774ecdcf6b261fa93d6aa27f5eb657d6ae43f7b9f9f3d21a8f8491b4d6b",
+      "stderr": "unsafe-byte-cursor.build.log",
+      "stderr_sha256": "2e40bebaa45991e9d3d1739c415fd921bb4f022c809f67c031f30156b82a1600",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-byte-cursor",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-byte-cursor/aarch64-apple-darwin/release/build/zstdoxide/d8072ebcf103be5d/out/search-d8072ebcf103be5d"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "615ec832c870d6ca52a3e973b493b1b6decb556c391f5279e39abca90d337486",
+      "exit_code": 0,
+      "stdout": "unsafe-byte-cursor.jsonl",
+      "stdout_sha256": "1785bbc7166bda4cbdd753612f8b9ec20f9d266dfad6819e4ac0e0fc6090574d",
+      "stderr": "unsafe-byte-cursor.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-bitstream",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-bitstream.build.jsonl",
+      "stdout_sha256": "0a1d8c704581aa3a23b9ef2f2361464310b17d187a43c950d977b1be9c50ad2f",
+      "stderr": "unsafe-bitstream.build.log",
+      "stderr_sha256": "5c9d8f4f152a514a74f36c2f4215f166d6e189de81dd6af04dc2f1eca72c1024",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-bitstream",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-bitstream/aarch64-apple-darwin/release/build/zstdoxide/753c1480aa5cd57a/out/search-753c1480aa5cd57a"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "3484bc78060b0c9bc69264363069da28e9a39ac5f08c23c31dcab40b1f497401",
+      "exit_code": 0,
+      "stdout": "unsafe-bitstream.jsonl",
+      "stdout_sha256": "0f3b99688cffdbcef65f94ce01d5326c224c99ec5c07ff8c7650ba75fd61487e",
+      "stderr": "unsafe-bitstream.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-history",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-history"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-history",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-history.build.jsonl",
+      "stdout_sha256": "ec5d129c1fc84c0650ff2920cfa91b6c0bcd9e40ffbff097a9790528047aab67",
+      "stderr": "unsafe-history.build.log",
+      "stderr_sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-history",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-history/aarch64-apple-darwin/release/build/zstdoxide/64234b7a0a91f7d9/out/search-64234b7a0a91f7d9"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "9f436b16a294973783168354e084ef70cc046a4528b9a15ca66dbd37cdd06c0e",
+      "exit_code": 0,
+      "stdout": "unsafe-history.jsonl",
+      "stdout_sha256": "02b9190790dbe754dda6d179d4c1690f2b83872fa0bb0eced89ed0c692a0c731",
+      "stderr": "unsafe-history.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-ring-history",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-ring-history"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-ring-history",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-ring-history.build.jsonl",
+      "stdout_sha256": "51b9de5311b0694fe4803bf38a3ee6270b3e0e2c2c5ba37c992159092b51863e",
+      "stderr": "unsafe-ring-history.build.log",
+      "stderr_sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-ring-history",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-ring-history/aarch64-apple-darwin/release/build/zstdoxide/86295bb072047201/out/search-86295bb072047201"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "9f952fb3cf6a58822d99476aa11ddb71430f68a3d100641218e16e9886d98428",
+      "exit_code": 0,
+      "stdout": "unsafe-ring-history.jsonl",
+      "stdout_sha256": "e695014c0b0e997b7466b5d876f131a5fca14ef74c2b3708d8fb4803cb2d5b27",
+      "stderr": "unsafe-ring-history.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-fse"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-fse",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-fse.build.jsonl",
+      "stdout_sha256": "393e253d8df6b6da9fb205f14ce937f762cec3da04426b01979e211d3b1e902f",
+      "stderr": "unsafe-fse.build.log",
+      "stderr_sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-fse",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-fse/aarch64-apple-darwin/release/build/zstdoxide/26d93d7107e7acb2/out/search-26d93d7107e7acb2"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "8f78c38aa05c41b849ba2d33f43b492dabd169884c27de4509e920f8450445c4",
+      "exit_code": 0,
+      "stdout": "unsafe-fse.jsonl",
+      "stdout_sha256": "8feec5ebe39999a9aab5877003665a8c39c25adcb8b0f36665dab1b6fdedef3e",
+      "stderr": "unsafe-fse.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-fse-encoder"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-fse-encoder",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-fse-encoder.build.jsonl",
+      "stdout_sha256": "13019f91bef14003fe9f8d0b0df57273a90532ba431fde8bd07731559d594ddf",
+      "stderr": "unsafe-fse-encoder.build.log",
+      "stderr_sha256": "e886e3fe2ad13c5caa0e90334335da245b7353d5d0ac230fb11d7fe1b45a5808",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-fse-encoder",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-fse-encoder/aarch64-apple-darwin/release/build/zstdoxide/5bb5a739959a741f/out/search-5bb5a739959a741f"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "68d8dbc3c8c293b75e246acda1896d1be8e217e01a388c33602a8f20accb2e78",
+      "exit_code": 0,
+      "stdout": "unsafe-fse-encoder.jsonl",
+      "stdout_sha256": "1220b11b08fa72a48451b3f42ee3510078364643229e8f1bed4031f567a4d4d3",
+      "stderr": "unsafe-fse-encoder.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-huffman",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-huffman"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-huffman",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-huffman.build.jsonl",
+      "stdout_sha256": "478595a178a5d7c327133e0e9751818e0c9fd6f5c19d5f5981076d32247a5204",
+      "stderr": "unsafe-huffman.build.log",
+      "stderr_sha256": "e886e3fe2ad13c5caa0e90334335da245b7353d5d0ac230fb11d7fe1b45a5808",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-huffman",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-huffman/aarch64-apple-darwin/release/build/zstdoxide/035666bb2a36933e/out/search-035666bb2a36933e"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "be22973af080e58ddd68266d12f3c045d2a5d9fa15174faccdddbd6b04a6ac3f",
+      "exit_code": 0,
+      "stdout": "unsafe-huffman.jsonl",
+      "stdout_sha256": "d711825d2ba2793036d4e02e68cbf05400b7d586948e07e73fd26ec2f44ff975",
+      "stderr": "unsafe-huffman.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-huffman-codebook"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-huffman-codebook",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-huffman-codebook.build.jsonl",
+      "stdout_sha256": "f17b4d4fd158aad81ad17923171739fd68a1db4857faf0f9dcf3bb2890132740",
+      "stderr": "unsafe-huffman-codebook.build.log",
+      "stderr_sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-huffman-codebook",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-huffman-codebook/aarch64-apple-darwin/release/build/zstdoxide/f8dbddcae44a239d/out/search-f8dbddcae44a239d"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "00bd64602611caad9a2fac7100c8a578b6755fd58659a084b3aa280a478223d1",
+      "exit_code": 0,
+      "stdout": "unsafe-huffman-codebook.jsonl",
+      "stdout_sha256": "e313158919fd5485e95239cef1794bb4ace00c22a508e2ab83b3b84b952eb6e4",
+      "stderr": "unsafe-huffman-codebook.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-match-table",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-match-table"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-match-table",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-match-table.build.jsonl",
+      "stdout_sha256": "dac39f98263118ff8f1d1f8b699169c82bd3cd4227d68d1ebea999c76b68e87f",
+      "stderr": "unsafe-match-table.build.log",
+      "stderr_sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-match-table",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-match-table/aarch64-apple-darwin/release/build/zstdoxide/c919e53d1fe44e5d/out/search-c919e53d1fe44e5d"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "f554621cf5afcfd9066385dd2b182a537b8a90e139044906d5d8c6229ee79839",
+      "exit_code": 0,
+      "stdout": "unsafe-match-table.jsonl",
+      "stdout_sha256": "0970af4d0b86b26df7bec88a82e1460e04c5277cb382fd35c660ff4b3309addd",
+      "stderr": "unsafe-match-table.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-match-chain",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-match-chain"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-match-chain",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-match-chain.build.jsonl",
+      "stdout_sha256": "670f817135a49a5f87404193a99f9ec70d3cdecf65d3a5682bcee58820050dd6",
+      "stderr": "unsafe-match-chain.build.log",
+      "stderr_sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-match-chain",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-match-chain/aarch64-apple-darwin/release/build/zstdoxide/630cdf1833201a6d/out/search-630cdf1833201a6d"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "5258eb88c528d747f607b0dca05193d891bfdb911f65e7392aeefbc99213b783",
+      "exit_code": 0,
+      "stdout": "unsafe-match-chain.jsonl",
+      "stdout_sha256": "b8b0dd224571f2a92d005c4bbcc3619a0d225be77091acf88ff3dcf64b99523e",
+      "stderr": "unsafe-match-chain.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-dictionary",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-dictionary"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-dictionary",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-dictionary.build.jsonl",
+      "stdout_sha256": "cd56f597a26551acc5de3e3fbbf52421c6b8f4e034dff4b7fd86d61bb4e4bcca",
+      "stderr": "unsafe-dictionary.build.log",
+      "stderr_sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-dictionary",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-dictionary/aarch64-apple-darwin/release/build/zstdoxide/93b655f3d4e3d57b/out/search-93b655f3d4e3d57b"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "08347a071df75eeb264defed78536baa0d95501de052000d927a25b9694ad2b6",
+      "exit_code": 0,
+      "stdout": "unsafe-dictionary.jsonl",
+      "stdout_sha256": "c54b15abc0ba7971ed1031ed2d777c9cfdfb730bee58d3ded65012a1dc569ae8",
+      "stderr": "unsafe-dictionary.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "unsafe-training",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--features",
+        "unsafe-training"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-training",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "unsafe-training.build.jsonl",
+      "stdout_sha256": "e135d096a59fa236ec6d1784d471d224c806c5873ba4b14ea756f5e1da0aa8fe",
+      "stderr": "unsafe-training.build.log",
+      "stderr_sha256": "e886e3fe2ad13c5caa0e90334335da245b7353d5d0ac230fb11d7fe1b45a5808",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "unsafe-training",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/unsafe-training/aarch64-apple-darwin/release/build/zstdoxide/3628d1ebbe6e3a12/out/search-3628d1ebbe6e3a12"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "013ee6678b47f31518c53982eef9341b1f0f68c40ee1b1bf007a1a1f35ecdeca",
+      "exit_code": 0,
+      "stdout": "unsafe-training.jsonl",
+      "stdout_sha256": "939b4c060efc0498b2d7a47090a198f1ba56e6a738a69d9a1d4f9b8625f664a5",
+      "stderr": "unsafe-training.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "build",
+      "backend": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "bench",
+        "--offline",
+        "--locked",
+        "--bench",
+        "search",
+        "--no-run",
+        "--message-format=json",
+        "--target",
+        "aarch64-apple-darwin",
+        "--all-features"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-module11-search-timed-final/targets/all",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "stdout": "all.build.jsonl",
+      "stdout_sha256": "eac210feea2a40c6fe3b885b3c0c3600a48d31ef18d247b1c9d693fddff54546",
+      "stderr": "all.build.log",
+      "stderr_sha256": "2e40bebaa45991e9d3d1739c415fd921bb4f022c809f67c031f30156b82a1600",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    },
+    {
+      "stage": "run",
+      "backend": "all",
+      "command": [
+        "/private/tmp/zstdoxide-module11-search-timed-final/targets/all/aarch64-apple-darwin/release/build/zstdoxide/7c206814edf139ae/out/search-7c206814edf139ae"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "HOME": "/Users/lanxingcan",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "USER": "lanxingcan",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "RUSTFLAGS": "",
+        "RUSTDOCFLAGS": "",
+        "RUSTC": "rustc",
+        "RUSTDOC": "rustdoc",
+        "RUSTC_WRAPPER": "",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "ZSTDOXIDE_SEARCH_BENCH_TIMED": "1",
+        "ZSTDOXIDE_SEARCH_BENCH_SAMPLES": "5",
+        "ZSTDOXIDE_SEARCH_BENCH_MS": "100"
+      },
+      "executable_sha256": "7d234d910bfac3744ce36e45f36b663028953173a6f1e925d796bc5382d8876e",
+      "exit_code": 0,
+      "stdout": "all.jsonl",
+      "stdout_sha256": "929ea9deb63c54b26e184017b19455a3113c648da02774d86e71eff33cb42a5b",
+      "stderr": "all.run.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "296a5e13d6415520d2daa99581e8a9f03965ddaeaf9bedb468a2e913591b9c13"
+    }
+  ],
+  "configurations": 14,
+  "rows": 378,
+  "samples": 1890,
+  "minimum_sample_ms": 100,
+  "normal_replay": {
+    "command": [
+      "python3",
+      "scripts/benchmark_search.py",
+      "/tmp/zstdoxide-module11-search-timed-final",
+      "--timed",
+      "--samples",
+      "5",
+      "--minimum-ms",
+      "100",
+      "--validate-only"
+    ],
+    "exit_code": 0,
+    "stdout": "Verified 27 rows across 14 configurations: /private/tmp/zstdoxide-module11-search-timed-final/summary.md\n",
+    "provenance": "Observed coordinator tool result; replay completed before optimized replay."
+  },
+  "optimized_replay": {
+    "command": [
+      "python3",
+      "-O",
+      "scripts/benchmark_search.py",
+      "/tmp/zstdoxide-module11-search-timed-final",
+      "--timed",
+      "--samples",
+      "5",
+      "--minimum-ms",
+      "100",
+      "--validate-only"
+    ],
+    "exit_code": 0,
+    "stdout": "Verified 27 rows across 14 configurations: /private/tmp/zstdoxide-module11-search-timed-final/summary.md\n",
+    "stderr": ""
+  },
+  "archive": {
+    "file": "2026-10-09-match-search-measurements.tar.gz",
+    "sha256": "b320387ecf637c71d33bc9ea4eceb28cca01b6736bfed0d544f6dcf0d737f4ad",
+    "bytes": 316171,
+    "members": {
+      "all.build.jsonl": {
+        "sha256": "eac210feea2a40c6fe3b885b3c0c3600a48d31ef18d247b1c9d693fddff54546",
+        "bytes": 3286
+      },
+      "all.build.log": {
+        "sha256": "2e40bebaa45991e9d3d1739c415fd921bb4f022c809f67c031f30156b82a1600",
+        "bytes": 60
+      },
+      "all.jsonl": {
+        "sha256": "929ea9deb63c54b26e184017b19455a3113c648da02774d86e71eff33cb42a5b",
+        "bytes": 84113
+      },
+      "all.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "backend-comparison.tsv": {
+        "sha256": "1ed27d45b1aedbb78c8bec3f2b01ff14963a67aacd4a189ad9d767a3b280580c",
+        "bytes": 75521
+      },
+      "commands.json": {
+        "sha256": "c2ddf699ed8b4c5610f23e413da40fad3d745e0d61c57f9897cf1bc91b3b8d0f",
+        "bytes": 90331
+      },
+      "environment.json": {
+        "sha256": "7f527ba062b53ad31c31776072fd25d1a7166aab05de19dcba16cad2fbfa4407",
+        "bytes": 3958
+      },
+      "inputs.json": {
+        "sha256": "ce5e4f7a47c6568fc15cef1a1c75c42d98eb106b89e209163bdcefc28387d9fd",
+        "bytes": 1607
+      },
+      "optimized-replay.json": {
+        "sha256": "f7545aa7454b484fabcb9a97ff236904d1fc6a97aed896e365f909b6d9956a6f",
+        "bytes": 383
+      },
+      "prebuild-evidence.tar.gz": {
+        "sha256": "241aa246013b1da72d229e8a8e669855f95e97da724910877023ee4b041f7c55",
+        "bytes": 34333
+      },
+      "reproduction/benchmark_search.py": {
+        "sha256": "ed5b3c7ddc9737ade86ba3637f5b6d20e335a30d8d2bbf146d4cae26020ea4be",
+        "bytes": 39521
+      },
+      "reproduction/search.rs": {
+        "sha256": "08c3109741b578c7c3d4e0ef394c6e0d95310d7e9237d02fc71032f0db002063",
+        "bytes": 22757
+      },
+      "results.json": {
+        "sha256": "2459758f563ea5b8ca1ee43719306369639a4906a61d4445be23f2b84ee447ba",
+        "bytes": 2062579
+      },
+      "safe.build.jsonl": {
+        "sha256": "dcf8198803baeee13fe832d06306a12f98fcf96dd7d0e1beda069fb5cf801b43",
+        "bytes": 2820
+      },
+      "safe.build.log": {
+        "sha256": "0d2b62aa4a4721c08bff3dd06468bac339154d5d84d8598d438a56f488b61416",
+        "bytes": 60
+      },
+      "safe.jsonl": {
+        "sha256": "97d9b16baddc609a854e3d9c034a7f63e3ace346a282a8a87f47f3be00223e6e",
+        "bytes": 83892
+      },
+      "safe.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "source.json": {
+        "sha256": "81154829b186e5cc21163956a1ab434ef693352c9e528b3d133e092b15cedc8c",
+        "bytes": 7813
+      },
+      "summary.md": {
+        "sha256": "c5dbf896d86261a336b86ad9b5787b98d738301c9a9eaece46d29515252fc3b8",
+        "bytes": 5230
+      },
+      "unsafe-bitstream.build.jsonl": {
+        "sha256": "0a1d8c704581aa3a23b9ef2f2361464310b17d187a43c950d977b1be9c50ad2f",
+        "bytes": 2930
+      },
+      "unsafe-bitstream.build.log": {
+        "sha256": "5c9d8f4f152a514a74f36c2f4215f166d6e189de81dd6af04dc2f1eca72c1024",
+        "bytes": 60
+      },
+      "unsafe-bitstream.jsonl": {
+        "sha256": "0f3b99688cffdbcef65f94ce01d5326c224c99ec5c07ff8c7650ba75fd61487e",
+        "bytes": 83910
+      },
+      "unsafe-bitstream.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-byte-cursor.build.jsonl": {
+        "sha256": "14507774ecdcf6b261fa93d6aa27f5eb657d6ae43f7b9f9f3d21a8f8491b4d6b",
+        "bytes": 2946
+      },
+      "unsafe-byte-cursor.build.log": {
+        "sha256": "2e40bebaa45991e9d3d1739c415fd921bb4f022c809f67c031f30156b82a1600",
+        "bytes": 60
+      },
+      "unsafe-byte-cursor.jsonl": {
+        "sha256": "1785bbc7166bda4cbdd753612f8b9ec20f9d266dfad6819e4ac0e0fc6090574d",
+        "bytes": 83909
+      },
+      "unsafe-byte-cursor.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-dictionary.build.jsonl": {
+        "sha256": "cd56f597a26551acc5de3e3fbbf52421c6b8f4e034dff4b7fd86d61bb4e4bcca",
+        "bytes": 2938
+      },
+      "unsafe-dictionary.build.log": {
+        "sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+        "bytes": 60
+      },
+      "unsafe-dictionary.jsonl": {
+        "sha256": "c54b15abc0ba7971ed1031ed2d777c9cfdfb730bee58d3ded65012a1dc569ae8",
+        "bytes": 83905
+      },
+      "unsafe-dictionary.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-fse-encoder.build.jsonl": {
+        "sha256": "13019f91bef14003fe9f8d0b0df57273a90532ba431fde8bd07731559d594ddf",
+        "bytes": 2946
+      },
+      "unsafe-fse-encoder.build.log": {
+        "sha256": "e886e3fe2ad13c5caa0e90334335da245b7353d5d0ac230fb11d7fe1b45a5808",
+        "bytes": 60
+      },
+      "unsafe-fse-encoder.jsonl": {
+        "sha256": "1220b11b08fa72a48451b3f42ee3510078364643229e8f1bed4031f567a4d4d3",
+        "bytes": 83918
+      },
+      "unsafe-fse-encoder.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-fse.build.jsonl": {
+        "sha256": "393e253d8df6b6da9fb205f14ce937f762cec3da04426b01979e211d3b1e902f",
+        "bytes": 2882
+      },
+      "unsafe-fse.build.log": {
+        "sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+        "bytes": 60
+      },
+      "unsafe-fse.jsonl": {
+        "sha256": "8feec5ebe39999a9aab5877003665a8c39c25adcb8b0f36665dab1b6fdedef3e",
+        "bytes": 83910
+      },
+      "unsafe-fse.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-history.build.jsonl": {
+        "sha256": "ec5d129c1fc84c0650ff2920cfa91b6c0bcd9e40ffbff097a9790528047aab67",
+        "bytes": 2914
+      },
+      "unsafe-history.build.log": {
+        "sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+        "bytes": 60
+      },
+      "unsafe-history.jsonl": {
+        "sha256": "02b9190790dbe754dda6d179d4c1690f2b83872fa0bb0eced89ed0c692a0c731",
+        "bytes": 83905
+      },
+      "unsafe-history.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-huffman-codebook.build.jsonl": {
+        "sha256": "f17b4d4fd158aad81ad17923171739fd68a1db4857faf0f9dcf3bb2890132740",
+        "bytes": 2986
+      },
+      "unsafe-huffman-codebook.build.log": {
+        "sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+        "bytes": 60
+      },
+      "unsafe-huffman-codebook.jsonl": {
+        "sha256": "e313158919fd5485e95239cef1794bb4ace00c22a508e2ab83b3b84b952eb6e4",
+        "bytes": 83918
+      },
+      "unsafe-huffman-codebook.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-huffman.build.jsonl": {
+        "sha256": "478595a178a5d7c327133e0e9751818e0c9fd6f5c19d5f5981076d32247a5204",
+        "bytes": 2914
+      },
+      "unsafe-huffman.build.log": {
+        "sha256": "e886e3fe2ad13c5caa0e90334335da245b7353d5d0ac230fb11d7fe1b45a5808",
+        "bytes": 60
+      },
+      "unsafe-huffman.jsonl": {
+        "sha256": "d711825d2ba2793036d4e02e68cbf05400b7d586948e07e73fd26ec2f44ff975",
+        "bytes": 83907
+      },
+      "unsafe-huffman.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-match-chain.build.jsonl": {
+        "sha256": "670f817135a49a5f87404193a99f9ec70d3cdecf65d3a5682bcee58820050dd6",
+        "bytes": 2946
+      },
+      "unsafe-match-chain.build.log": {
+        "sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+        "bytes": 60
+      },
+      "unsafe-match-chain.jsonl": {
+        "sha256": "b8b0dd224571f2a92d005c4bbcc3619a0d225be77091acf88ff3dcf64b99523e",
+        "bytes": 83912
+      },
+      "unsafe-match-chain.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-match-table.build.jsonl": {
+        "sha256": "dac39f98263118ff8f1d1f8b699169c82bd3cd4227d68d1ebea999c76b68e87f",
+        "bytes": 2946
+      },
+      "unsafe-match-table.build.log": {
+        "sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+        "bytes": 60
+      },
+      "unsafe-match-table.jsonl": {
+        "sha256": "0970af4d0b86b26df7bec88a82e1460e04c5277cb382fd35c660ff4b3309addd",
+        "bytes": 83905
+      },
+      "unsafe-match-table.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-ring-history.build.jsonl": {
+        "sha256": "51b9de5311b0694fe4803bf38a3ee6270b3e0e2c2c5ba37c992159092b51863e",
+        "bytes": 2954
+      },
+      "unsafe-ring-history.build.log": {
+        "sha256": "c22c09d85544579724d98ce6ffc50910060eab2cb6d2595390d6e41353a790b5",
+        "bytes": 60
+      },
+      "unsafe-ring-history.jsonl": {
+        "sha256": "e695014c0b0e997b7466b5d876f131a5fca14ef74c2b3708d8fb4803cb2d5b27",
+        "bytes": 83917
+      },
+      "unsafe-ring-history.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "unsafe-training.build.jsonl": {
+        "sha256": "e135d096a59fa236ec6d1784d471d224c806c5873ba4b14ea756f5e1da0aa8fe",
+        "bytes": 2922
+      },
+      "unsafe-training.build.log": {
+        "sha256": "e886e3fe2ad13c5caa0e90334335da245b7353d5d0ac230fb11d7fe1b45a5808",
+        "bytes": 60
+      },
+      "unsafe-training.jsonl": {
+        "sha256": "939b4c060efc0498b2d7a47090a198f1ba56e6a738a69d9a1d4f9b8625f664a5",
+        "bytes": 83906
+      },
+      "unsafe-training.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  }
+}
