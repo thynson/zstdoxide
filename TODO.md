@@ -32,7 +32,7 @@ after oracle capture; each completed item receives its own verified commit.
 - [x] Analyze requested/resolved value records, exact pinned semantics, live configuration boundaries, and subsequent search/storage milestones.
 - [x] Freeze pinned C oracle fixtures for bounds, presets, scalar resolution, mutation failures, and reset outcomes before implementing their Rust counterparts.
 - [x] Add allocation-free validated parameter records, source-size and reference-strategy types, and checked mutation boundaries.
-- [ ] Add attributed preset tables and internal tier/level/acceleration selection without changing current compression policies.
+- [x] Add attributed preset tables and internal tier/level/acceleration selection without changing current compression policies.
 - [ ] Implement complete parameter adjustment and pure level/request queries, preserving explicit overrides, source hints, platform bounds, and checked size arithmetic.
 - [x] Add atomic supported encoder configuration replacement at the documented pre-header boundary.
 - [ ] Add parameter-only and full encoder reset, verifying phase, pledge, dictionary/prefix release, retained workspace, and allocator ownership.

@@ -311,3 +311,9 @@ Safe/all encoder suites each pass 22 tests, the new boundary/ownership tests pas
 four additional feature/std configurations, and 36 configured frames pass exact
 independent C decoding across safe/all release builds. Default frame bytes remain
 unchanged. Parameter reset and full reset remain separate work items.
+
+The unadjusted preset foundation now matches all 92 pinned C table entries and
+their selected forms, with checked tier arithmetic and negative acceleration.
+Twenty-two parameter tests pass in each of four configurations; no_std, strict
+Clippy and formatting checks pass. The lookup remains test-only until complete
+query adjustment is implemented, and does not change the live encoder.

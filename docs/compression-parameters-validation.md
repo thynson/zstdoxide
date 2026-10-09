@@ -66,3 +66,23 @@ pinned C. All three streaming documentation examples pass under both builds.
 [Configuration evidence](evidence/2026-10-09-encoder-configuration.json) retains
 commands, logs, the frozen owned source hash and precise counts. Parameter-only
 and full reset are not part of this checkpoint.
+
+## Unadjusted preset foundation
+
+All 92 table entries retain the pinned source attribution and match the
+independently captured C rows. The internal selector checks known source plus
+dictionary and unknown-source dictionary plus 499 arithmetic, rejects the
+reserved known-size sentinel, and normalizes negative levels before negation.
+It returns an unadjusted record; request resolution must still perform its two
+adjustments in the correct order.
+
+Nine new tests verify both stored and selected forms of every preset, inclusive
+tier boundaries, source-size knowledge, negative acceleration and exact-limit
+arithmetic. Together with the thirteen earlier tests, all 22 pass under safe,
+all-feature, no_std safe and no_std with all unsafe flags: 88 executions. Both
+no_std library checks, strict safe/all-feature Clippy, formatting and diff checks
+pass. The selector is compiled under `cfg(test)` until the complete public query
+uses it, so this checkpoint introduces neither an incomplete query nor unused
+production lookup code. No new C execution, Miri or benchmark is claimed.
+[Preset evidence](evidence/2026-10-09-parameter-presets.json) records the frozen
+sources and all ten focused commands and logs.

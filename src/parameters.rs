@@ -7,6 +7,9 @@
 
 use crate::{Error, Result};
 
+#[cfg(test)]
+mod presets;
+
 // Bounds correspond to lib/zstd.h:1263-1279 and zstd_compress.c:7673-7674
 // in facebook/zstd v1.5.7. The pinned C API distinguishes 32-bit size_t from
 // other supported (64-bit) targets; these are parameter bounds, not limits on
@@ -158,6 +161,14 @@ impl RawCompressionParameters {
     }
 }
 
+fn normalized_level(level: i32) -> i32 {
+    if level == 0 {
+        LEVEL_DEFAULT
+    } else {
+        level.clamp(LEVEL_MIN, LEVEL_MAX)
+    }
+}
+
 fn checked_log(value: u32, minimum: u8, maximum: u8) -> Result<u8> {
     if (u32::from(minimum)..=u32::from(maximum)).contains(&value) {
         // The inclusive upper bound is a u8, so this conversion is exact.
@@ -280,11 +291,7 @@ impl CompressionParameterRequest {
     /// `ZSTD_CCtxParams_setParameter`. Explicit overrides and source hints are
     /// preserved. No negation is performed, so `i32::MIN` is accepted safely.
     pub fn set_level(&mut self, level: i32) {
-        self.level = if level == 0 {
-            LEVEL_DEFAULT
-        } else {
-            level.clamp(LEVEL_MIN, LEVEL_MAX)
-        };
+        self.level = normalized_level(level);
     }
 
     /// Return the normalized requested reference level.

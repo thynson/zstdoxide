@@ -1,0 +1,334 @@
+{
+  "checkpoint": "Module 10 stage 2: unadjusted reference presets",
+  "base_revision": "d163c4534e57deba359392fd17d052f9f16ed6e8",
+  "source_files": {
+    "src/parameters.rs": "156109b72a1173e5c5ca2bbddffaa31a4b1c9ad84bd5644d3118fd5eabc7ca0a",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4"
+  },
+  "fixture_revision": "c30ede1",
+  "fixture_file": "tests/upstream/parameters/presets.tsv",
+  "fixture_sha256": "4e188cc16826c6665dcd440ae9d153484aeb4e561321a089be2aec260667881d",
+  "reference_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "reference_file": "lib/compress/clevels.h",
+  "reference_sha256": "d764daa89b7a636d26fe96ff3536c5075e9867fb5dddbf8c9d57023a8ff4a155",
+  "validation": {
+    "sources": {
+      "src/parameters.rs": "156109b72a1173e5c5ca2bbddffaa31a4b1c9ad84bd5644d3118fd5eabc7ca0a",
+      "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4"
+    },
+    "base_revision": "d163c4534e57deba359392fd17d052f9f16ed6e8",
+    "fixture_revision": "c30ede1",
+    "reference_query_implemented": false,
+    "preset_compilation": "cfg(test)",
+    "commands": [
+      {
+        "name": "format",
+        "command": [
+          "rustfmt",
+          "+nightly-2026-10-08",
+          "--edition",
+          "2024",
+          "--check",
+          "src/parameters.rs",
+          "src/parameters/presets.rs"
+        ],
+        "command_shell": "rustfmt +nightly-2026-10-08 --edition 2024 --check src/parameters.rs src/parameters/presets.rs",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.19594224984757602,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-format.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_summaries": [],
+        "expected_test_count": null,
+        "sources_unchanged": true,
+        "log_text": ""
+      },
+      {
+        "name": "safe",
+        "command": [
+          "cargo",
+          "+nightly-2026-10-08",
+          "test",
+          "--offline",
+          "--locked",
+          "--lib",
+          "parameters::"
+        ],
+        "command_shell": "cargo +nightly-2026-10-08 test --offline --locked --lib parameters::",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.11059000017121434,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-safe.log",
+        "log_sha256": "831ed4f6e722386b177f99f3beef5c30e95c5a16bcf6b73fe672e085d9dcff01",
+        "test_summaries": [
+          {
+            "passed": 22,
+            "failed": 0,
+            "ignored": 0
+          }
+        ],
+        "expected_test_count": 22,
+        "sources_unchanged": true,
+        "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running unittests src/lib.rs (target/module10-parameters/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 22 tests\ntest parameters::presets::tests::pointer_width_only_limits_dictionary_input_not_u64_tier_arithmetic ... ok\ntest parameters::presets::tests::reserved_known_size_and_overflow_are_errors_without_modular_tiers ... ok\ntest parameters::presets::tests::known_source_and_dictionary_sum_cross_every_inclusive_tier_boundary ... ok\ntest parameters::presets::tests::known_empty_is_distinct_and_selection_does_not_perform_adjustment ... ok\ntest parameters::presets::tests::unknown_source_uses_the_nonempty_dictionary_plus_499_tier ... ok\ntest parameters::presets::tests::level_zero_and_extremes_share_request_normalization ... ok\ntest parameters::presets::tests::negative_levels_change_only_acceleration_in_every_tier ... ok\ntest parameters::request_tests::default_and_const_construction_leave_every_override_automatic ... ok\ntest parameters::request_tests::level_clamps_extremes_without_negation_or_clearing_overrides ... ok\ntest parameters::request_tests::typed_setters_accept_target_width_bounds_and_keep_hint_independent ... ok\ntest parameters::request_tests::invalid_scalar_setters_preserve_the_complete_request ... ok\ntest parameters::request_tests::zero_clears_overrides_and_hint_without_changing_level ... ok\ntest parameters::validation_tests::each_raw_field_validates_boundaries_without_clamping ... ok\ntest parameters::validation_tests::reference_strategy_codes_are_explicit_and_reject_non_strategies ... ok\ntest parameters::validation_tests::resolved_getters_preserve_all_concrete_fields_including_zero_target ... ok\ntest parameters::validation_tests::source_size_keeps_unknown_distinct_from_known_empty_and_reserved_value ... ok\ntest parameters::validation_tests::bounds_match_host_oracle_and_separately_labeled_width_macros ... ok\ntest parameters::presets::tests::every_frozen_row_is_reachable_without_adjustment ... ok\ntest parameters::presets::tests::every_attributed_entry_matches_the_92_independent_c_rows ... ok\ntest parameters::frame_tests::reference_defaults_match_query_flags_without_changing_encoder_defaults ... ok\ntest parameters::validation_tests::all_225_recorded_raw_inputs_match_c_validation_only ... ok\ntest parameters::request_tests::c_scalar_trace_accounts_for_typed_inputs_and_outside_surface_rows ... ok\n\ntest result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 479 filtered out; finished in 0.01s\n\n"
+      },
+      {
+        "name": "all",
+        "command": [
+          "cargo",
+          "+nightly-2026-10-08",
+          "test",
+          "--offline",
+          "--locked",
+          "--lib",
+          "--all-features",
+          "parameters::"
+        ],
+        "command_shell": "cargo +nightly-2026-10-08 test --offline --locked --lib --all-features parameters::",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 4.021215458866209,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-all.log",
+        "log_sha256": "861faa659b88c81de857845fcb9fd8324d16efa7364fd12d40293368cd3262fb",
+        "test_summaries": [
+          {
+            "passed": 22,
+            "failed": 0,
+            "ignored": 0
+          }
+        ],
+        "expected_test_count": 22,
+        "sources_unchanged": true,
+        "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.46s\n     Running unittests src/lib.rs (target/module10-parameters/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 22 tests\ntest parameters::presets::tests::reserved_known_size_and_overflow_are_errors_without_modular_tiers ... ok\ntest parameters::presets::tests::known_empty_is_distinct_and_selection_does_not_perform_adjustment ... ok\ntest parameters::presets::tests::known_source_and_dictionary_sum_cross_every_inclusive_tier_boundary ... ok\ntest parameters::presets::tests::pointer_width_only_limits_dictionary_input_not_u64_tier_arithmetic ... ok\ntest parameters::presets::tests::level_zero_and_extremes_share_request_normalization ... ok\ntest parameters::presets::tests::unknown_source_uses_the_nonempty_dictionary_plus_499_tier ... ok\ntest parameters::presets::tests::negative_levels_change_only_acceleration_in_every_tier ... ok\ntest parameters::request_tests::default_and_const_construction_leave_every_override_automatic ... ok\ntest parameters::request_tests::invalid_scalar_setters_preserve_the_complete_request ... ok\ntest parameters::request_tests::level_clamps_extremes_without_negation_or_clearing_overrides ... ok\ntest parameters::request_tests::typed_setters_accept_target_width_bounds_and_keep_hint_independent ... ok\ntest parameters::presets::tests::every_frozen_row_is_reachable_without_adjustment ... ok\ntest parameters::request_tests::zero_clears_overrides_and_hint_without_changing_level ... ok\ntest parameters::presets::tests::every_attributed_entry_matches_the_92_independent_c_rows ... ok\ntest parameters::validation_tests::bounds_match_host_oracle_and_separately_labeled_width_macros ... ok\ntest parameters::validation_tests::each_raw_field_validates_boundaries_without_clamping ... ok\ntest parameters::validation_tests::reference_strategy_codes_are_explicit_and_reject_non_strategies ... ok\ntest parameters::frame_tests::reference_defaults_match_query_flags_without_changing_encoder_defaults ... ok\ntest parameters::validation_tests::resolved_getters_preserve_all_concrete_fields_including_zero_target ... ok\ntest parameters::validation_tests::source_size_keeps_unknown_distinct_from_known_empty_and_reserved_value ... ok\ntest parameters::request_tests::c_scalar_trace_accounts_for_typed_inputs_and_outside_surface_rows ... ok\ntest parameters::validation_tests::all_225_recorded_raw_inputs_match_c_validation_only ... ok\n\ntest result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 479 filtered out; finished in 0.00s\n\n"
+      },
+      {
+        "name": "no-std-safe-tests",
+        "command": [
+          "cargo",
+          "+nightly-2026-10-08",
+          "test",
+          "--offline",
+          "--locked",
+          "--no-default-features",
+          "--lib",
+          "parameters::"
+        ],
+        "command_shell": "cargo +nightly-2026-10-08 test --offline --locked --no-default-features --lib parameters::",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 2.975725374883041,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-no-std-safe-tests.log",
+        "log_sha256": "c17fe0386034b53627ac20aec4b32be2ed13fb4e2b88f78d889406588ecd4293",
+        "test_summaries": [
+          {
+            "passed": 22,
+            "failed": 0,
+            "ignored": 0
+          }
+        ],
+        "expected_test_count": 22,
+        "sources_unchanged": true,
+        "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.59s\n     Running unittests src/lib.rs (target/module10-parameters/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 22 tests\ntest parameters::presets::tests::pointer_width_only_limits_dictionary_input_not_u64_tier_arithmetic ... ok\ntest parameters::presets::tests::reserved_known_size_and_overflow_are_errors_without_modular_tiers ... ok\ntest parameters::presets::tests::known_empty_is_distinct_and_selection_does_not_perform_adjustment ... ok\ntest parameters::presets::tests::unknown_source_uses_the_nonempty_dictionary_plus_499_tier ... ok\ntest parameters::presets::tests::known_source_and_dictionary_sum_cross_every_inclusive_tier_boundary ... ok\ntest parameters::presets::tests::level_zero_and_extremes_share_request_normalization ... ok\ntest parameters::presets::tests::negative_levels_change_only_acceleration_in_every_tier ... ok\ntest parameters::presets::tests::every_frozen_row_is_reachable_without_adjustment ... ok\ntest parameters::request_tests::invalid_scalar_setters_preserve_the_complete_request ... ok\ntest parameters::request_tests::default_and_const_construction_leave_every_override_automatic ... ok\ntest parameters::presets::tests::every_attributed_entry_matches_the_92_independent_c_rows ... ok\ntest parameters::request_tests::level_clamps_extremes_without_negation_or_clearing_overrides ... ok\ntest parameters::request_tests::typed_setters_accept_target_width_bounds_and_keep_hint_independent ... ok\ntest parameters::request_tests::zero_clears_overrides_and_hint_without_changing_level ... ok\ntest parameters::validation_tests::bounds_match_host_oracle_and_separately_labeled_width_macros ... ok\ntest parameters::frame_tests::reference_defaults_match_query_flags_without_changing_encoder_defaults ... ok\ntest parameters::validation_tests::each_raw_field_validates_boundaries_without_clamping ... ok\ntest parameters::validation_tests::reference_strategy_codes_are_explicit_and_reject_non_strategies ... ok\ntest parameters::validation_tests::resolved_getters_preserve_all_concrete_fields_including_zero_target ... ok\ntest parameters::validation_tests::source_size_keeps_unknown_distinct_from_known_empty_and_reserved_value ... ok\ntest parameters::request_tests::c_scalar_trace_accounts_for_typed_inputs_and_outside_surface_rows ... ok\ntest parameters::validation_tests::all_225_recorded_raw_inputs_match_c_validation_only ... ok\n\ntest result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 455 filtered out; finished in 0.00s\n\n"
+      },
+      {
+        "name": "no-std-all-tests",
+        "command": [
+          "cargo",
+          "+nightly-2026-10-08",
+          "test",
+          "--offline",
+          "--locked",
+          "--no-default-features",
+          "--features",
+          "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+          "--lib",
+          "parameters::"
+        ],
+        "command_shell": "cargo +nightly-2026-10-08 test --offline --locked --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training --lib parameters::",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 3.0741209171246737,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-no-std-all-tests.log",
+        "log_sha256": "573a71c9e90ce13563e33985643efcd671cc247ea7b811dbf4b9bcf338bc8573",
+        "test_summaries": [
+          {
+            "passed": 22,
+            "failed": 0,
+            "ignored": 0
+          }
+        ],
+        "expected_test_count": 22,
+        "sources_unchanged": true,
+        "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.40s\n     Running unittests src/lib.rs (target/module10-parameters/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 22 tests\ntest parameters::presets::tests::reserved_known_size_and_overflow_are_errors_without_modular_tiers ... ok\ntest parameters::presets::tests::level_zero_and_extremes_share_request_normalization ... ok\ntest parameters::presets::tests::known_source_and_dictionary_sum_cross_every_inclusive_tier_boundary ... ok\ntest parameters::presets::tests::unknown_source_uses_the_nonempty_dictionary_plus_499_tier ... ok\ntest parameters::presets::tests::negative_levels_change_only_acceleration_in_every_tier ... ok\ntest parameters::presets::tests::pointer_width_only_limits_dictionary_input_not_u64_tier_arithmetic ... ok\ntest parameters::presets::tests::known_empty_is_distinct_and_selection_does_not_perform_adjustment ... ok\ntest parameters::presets::tests::every_frozen_row_is_reachable_without_adjustment ... ok\ntest parameters::request_tests::default_and_const_construction_leave_every_override_automatic ... ok\ntest parameters::request_tests::invalid_scalar_setters_preserve_the_complete_request ... ok\ntest parameters::presets::tests::every_attributed_entry_matches_the_92_independent_c_rows ... ok\ntest parameters::request_tests::level_clamps_extremes_without_negation_or_clearing_overrides ... ok\ntest parameters::request_tests::typed_setters_accept_target_width_bounds_and_keep_hint_independent ... ok\ntest parameters::request_tests::zero_clears_overrides_and_hint_without_changing_level ... ok\ntest parameters::frame_tests::reference_defaults_match_query_flags_without_changing_encoder_defaults ... ok\ntest parameters::validation_tests::bounds_match_host_oracle_and_separately_labeled_width_macros ... ok\ntest parameters::validation_tests::each_raw_field_validates_boundaries_without_clamping ... ok\ntest parameters::validation_tests::reference_strategy_codes_are_explicit_and_reject_non_strategies ... ok\ntest parameters::request_tests::c_scalar_trace_accounts_for_typed_inputs_and_outside_surface_rows ... ok\ntest parameters::validation_tests::resolved_getters_preserve_all_concrete_fields_including_zero_target ... ok\ntest parameters::validation_tests::source_size_keeps_unknown_distinct_from_known_empty_and_reserved_value ... ok\ntest parameters::validation_tests::all_225_recorded_raw_inputs_match_c_validation_only ... ok\n\ntest result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 455 filtered out; finished in 0.00s\n\n"
+      },
+      {
+        "name": "no-std-safe-check",
+        "command": [
+          "cargo",
+          "+nightly-2026-10-08",
+          "check",
+          "--offline",
+          "--locked",
+          "--no-default-features",
+          "--lib"
+        ],
+        "command_shell": "cargo +nightly-2026-10-08 check --offline --locked --no-default-features --lib",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.3833890841342509,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-no-std-safe-check.log",
+        "log_sha256": "9c76db3fff1203fa0a260ee6e0ea47a264af7b0c855f963ee77a2c795465bdb1",
+        "test_summaries": [],
+        "expected_test_count": null,
+        "sources_unchanged": true,
+        "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.35s\n"
+      },
+      {
+        "name": "no-std-all-check",
+        "command": [
+          "cargo",
+          "+nightly-2026-10-08",
+          "check",
+          "--offline",
+          "--locked",
+          "--no-default-features",
+          "--features",
+          "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+          "--lib"
+        ],
+        "command_shell": "cargo +nightly-2026-10-08 check --offline --locked --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training --lib",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.3746582088060677,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-no-std-all-check.log",
+        "log_sha256": "493032c093ddee497ac505e8b92695183899be8b6ae64c4228a5a9cd8d0ee692",
+        "test_summaries": [],
+        "expected_test_count": null,
+        "sources_unchanged": true,
+        "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.33s\n"
+      },
+      {
+        "name": "clippy-safe",
+        "command": [
+          "cargo",
+          "+nightly-2026-10-08",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "command_shell": "cargo +nightly-2026-10-08 clippy --offline --locked --all-targets -- -D warnings",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 2.0052551669068635,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-clippy-safe.log",
+        "log_sha256": "a3035c484e3854c01c6ac60083063d7064af97972659c63ba4eab247c901e60b",
+        "test_summaries": [],
+        "expected_test_count": null,
+        "sources_unchanged": true,
+        "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.91s\n"
+      },
+      {
+        "name": "clippy-all",
+        "command": [
+          "cargo",
+          "+nightly-2026-10-08",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--all-targets",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "command_shell": "cargo +nightly-2026-10-08 clippy --offline --locked --all-targets --all-features -- -D warnings",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 2.0640095418784767,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-clippy-all.log",
+        "log_sha256": "5e0f7fb9cfee62fb69f2b240fedb8a4a408c76c7371b32f5eb07d0e450fb99ef",
+        "test_summaries": [],
+        "expected_test_count": null,
+        "sources_unchanged": true,
+        "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.98s\n"
+      },
+      {
+        "name": "diff",
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "--",
+          "src/parameters.rs",
+          "src/parameters/presets.rs"
+        ],
+        "command_shell": "git diff --check -- src/parameters.rs src/parameters/presets.rs",
+        "environment": {
+          "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameters",
+          "CARGO_TERM_COLOR": "never"
+        },
+        "exit_code": 0,
+        "seconds": 0.012897917069494724,
+        "log": "/tmp/zstdoxide-module10-parameters-stage2-diff.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_summaries": [],
+        "expected_test_count": null,
+        "sources_unchanged": true,
+        "log_text": ""
+      }
+    ],
+    "running": false,
+    "complete": true,
+    "sources_unchanged": true,
+    "exit_code": 0
+  },
+  "scope": {
+    "normal_stage2_tests": 9,
+    "normal_parameter_tests": 22,
+    "parameter_test_configurations": 4,
+    "successful_test_executions": 88,
+    "preset_rows_compared_to_c": 92,
+    "preset_rows_selected_and_compared_to_c": 92,
+    "new_unsafe": false,
+    "module_compiled_only_for_tests": true,
+    "public_query_adjust_resolve_implemented": false,
+    "numeric_encoder_execution": false
+  },
+  "limitations": [
+    "C fixtures are pinned generated reference data; no new live C process was run for this checkpoint.",
+    "Preset selection returns unadjusted records. Complete query and request adjustment are a separate next work item.",
+    "Arithmetic is checked only for tier selection expressions. Raw adjustment must independently check the expressions it actually evaluates.",
+    "No new unsafe code or performance-sensitive allocation structure was introduced, so no Miri or benchmark run was performed."
+  ],
+  "original_evidence_sha256": "d758a27f18f90c2c330ae61a4944373f1083d7b05d3809af6d02403a984cf647"
+}
