@@ -6,6 +6,7 @@
 
 use alloc::vec::Vec;
 
+use crate::fse::FseTable;
 use crate::{Error, Result};
 
 /// A setup-only little-endian bit buffer with initialized, owned byte storage.
@@ -180,6 +181,90 @@ pub(crate) fn normalize_frequencies(counts: &[u64], table_log: u8) -> Result<Vec
         }
     }
     Ok(normalized)
+}
+
+/// Encode explicit Huffman weights as a normalized header and two-state FSE
+/// payload, excluding the leading Huffman payload-length byte.
+///
+/// Accepts between 2 and 255 weights in 0..=11, with at least two distinct values.
+/// The fixed table log is 6. Setup scans invert checked decoding transitions;
+/// FseTable supplies its existing safe or unsafe backend under the same API.
+/// Payloads may exceed 127 bytes; the caller selects a bounded tree fallback when
+/// necessary. Corresponds to the weight-stream role of upstream FSE_compress_wksp.
+pub(crate) fn encode_weights(weights: &[u8]) -> Result<Vec<u8>> {
+    if !(2..=255).contains(&weights.len()) {
+        return Err(Error::InvalidParameter);
+    }
+    let mut frequencies = [0_u64; 12];
+    let mut maximum = 0;
+    for &weight in weights {
+        if weight > 11 {
+            return Err(Error::InvalidParameter);
+        }
+        frequencies[usize::from(weight)] += 1;
+        maximum = maximum.max(usize::from(weight));
+    }
+    if frequencies.iter().filter(|&&count| count != 0).count() < 2 {
+        return Err(Error::InvalidParameter);
+    }
+    const TABLE_LOG: u8 = 6;
+    let normalized = normalize_frequencies(&frequencies[..=maximum], TABLE_LOG)?;
+    let table = FseTable::from_normalized(&normalized, TABLE_LOG)?;
+    let mut states = [0; 2];
+    // No transition bits follow the terminal pair. Requiring a positive width
+    // in both states makes the decoder stop exactly when it reaches that pair,
+    // even when earlier states consume zero bits or the sequence length is odd.
+    for position in weights.len() - 2..weights.len() {
+        states[position & 1] = terminal_state(&table, weights[position])?;
+    }
+    let mut bits = EntropyBits::new();
+    for position in (0..weights.len() - 2).rev() {
+        let current = position & 1;
+        let (state, value, width) = inverse_transition(&table, weights[position], states[current])?;
+        bits.push(value, width)?;
+        states[current] = state;
+    }
+    // The reverse reader consumes state 0 first, then state 1. A final high bit
+    // marks the exact payload extent, so byte padding cannot add FSE symbols.
+    bits.push(states[1] as u32, TABLE_LOG)?;
+    bits.push(states[0] as u32, TABLE_LOG)?;
+    bits.push(1, 1)?;
+    let payload = bits.into_bytes();
+    let mut output = write_normalized_counts(&normalized, TABLE_LOG)?;
+    output
+        .try_reserve_exact(payload.len())
+        .map_err(|_| Error::AllocationFailed)?;
+    output.extend_from_slice(&payload);
+    Ok(output)
+}
+
+fn terminal_state(table: &FseTable, symbol: u8) -> Result<usize> {
+    for state in 0..1_usize << table.table_log() {
+        let entry = table.entry(state)?;
+        if entry.symbol == symbol && entry.bits != 0 {
+            return Ok(state);
+        }
+    }
+    // Every present symbol in a nondegenerate normalized table has at least
+    // one positive-width transition. Failure would violate that invariant.
+    Err(Error::CorruptData)
+}
+
+/// Find the predecessor whose decoded symbol and update reach the given state.
+/// Table construction partitions the full next-state space for every symbol.
+fn inverse_transition(table: &FseTable, symbol: u8, next: usize) -> Result<(usize, u32, u8)> {
+    for state in 0..1_usize << table.table_log() {
+        let entry = table.entry(state)?;
+        if entry.symbol != symbol {
+            continue;
+        }
+        if let Some(value) = next.checked_sub(usize::from(entry.base))
+            && value < 1_usize << entry.bits
+        {
+            return Ok((state, value as u32, entry.bits));
+        }
+    }
+    Err(Error::CorruptData)
 }
 
 #[cfg(test)]
@@ -396,5 +481,172 @@ mod tests {
                 Err(Error::InvalidParameter)
             );
         }
+    }
+
+    fn weight_cases() -> Vec<Vec<u8>> {
+        let mut cases = Vec::new();
+        for length in 2..=255 {
+            cases.push((0..length).map(|index| (index % 12) as u8).collect());
+        }
+        for first in 0..=11 {
+            for second in 0..=11 {
+                let mut weights: Vec<_> = (0..=11).collect();
+                weights.extend_from_slice(&[first, second]);
+                cases.push(weights);
+            }
+        }
+        for length in [3, 5, 31, 32, 33, 63, 64, 65, 127, 128, 129, 254, 255] {
+            for rare in [0, length / 2, length - 1] {
+                let mut weights = alloc::vec![11; length];
+                weights[rare] = 0;
+                cases.push(weights);
+            }
+        }
+        cases
+    }
+
+    #[test]
+    fn weight_streams_preserve_odd_even_lengths_terminal_pairs_and_zero_bit_updates() {
+        let cases = weight_cases();
+        assert_eq!(cases.len(), 437);
+        for (case, weights) in cases.iter().enumerate() {
+            let encoded = encode_weights(weights).unwrap();
+            assert_eq!(
+                crate::fse::decode_weights(&encoded).unwrap(),
+                *weights,
+                "case {case}"
+            );
+            assert_eq!(encode_weights(weights).unwrap(), encoded, "case {case}");
+            let header_size = read_normalized_counts(&encoded, 255, 6).unwrap().bytes_read;
+            // A single payload byte cannot contain both six-bit initial
+            // states plus the stop marker, regardless of its bit pattern.
+            for end in 0..header_size + 2 {
+                assert!(
+                    crate::fse::decode_weights(&encoded[..end]).is_err(),
+                    "case {case}, prefix {end}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn near_flat_literal_tree_weights_fit_the_huffman_payload_limit() {
+        let mut weights = alloc::vec![2; 255];
+        weights[0] = 3;
+        weights[254] = 1;
+        let encoded = encode_weights(&weights).unwrap();
+        assert!(encoded.len() < 128);
+        assert_eq!(crate::fse::decode_weights(&encoded).unwrap(), weights);
+    }
+
+    #[test]
+    fn weight_streams_reject_unrepresentable_alphabets_and_lengths() {
+        for weights in [
+            &[][..],
+            &[1][..],
+            &[1, 1][..],
+            &[0; 255][..],
+            &[0, 12][..],
+            &[255, 1][..],
+            &[1; 256][..],
+        ] {
+            assert_eq!(encode_weights(weights), Err(Error::InvalidParameter));
+        }
+    }
+
+    /// Compile only the independent test oracle. The crate never links to C.
+    #[cfg(feature = "std")]
+    #[test]
+    #[ignore = "requires ZSTD_UPSTREAM pointing to pinned v1.5.7 with built lib/libzstd.a and a C compiler"]
+    fn official_fse_decoder_accepts_generated_weight_streams() {
+        use std::io::Write;
+        use std::process::{Command, Stdio};
+        let upstream = std::path::PathBuf::from(
+            std::env::var_os("ZSTD_UPSTREAM").expect("ZSTD_UPSTREAM is required"),
+        );
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        struct Directory(std::path::PathBuf);
+        impl Drop for Directory {
+            fn drop(&mut self) {
+                // This test removes only a directory it created exclusively.
+                let _ = std::fs::remove_dir_all(&self.0);
+            }
+        }
+        let directory = std::env::temp_dir().join(alloc::format!(
+            "zstdoxide-entropy-oracle-{}-{stamp}",
+            std::process::id()
+        ));
+        std::fs::create_dir(&directory).unwrap();
+        let directory = Directory(directory);
+        let source = directory.0.join("decode.c");
+        let executable = directory.0.join("decode");
+        std::fs::write(&source, r#"
+#define FSE_STATIC_LINKING_ONLY
+#define HUF_STATIC_LINKING_ONLY
+#include "fse.h"
+#include "huf.h"
+#include "zstd.h"
+#include <stdio.h>
+#include <string.h>
+int main(int argc, char** argv) {
+    unsigned char input[512], output[256];
+    unsigned workspace[FSE_DECOMPRESS_WKSP_SIZE_U32(6, 255)];
+    size_t size = fread(input, 1, sizeof(input), stdin), decoded;
+    if (ZSTD_versionNumber() != 10507 || ferror(stdin) || fgetc(stdin) != EOF) return 2;
+    if (argc > 1 && !strcmp(argv[1], "huffman")) {
+        unsigned ranks[HUF_TABLELOG_MAX + 1] = {0}, symbols = 0, log = 0;
+        decoded = HUF_readStats(output, sizeof(output), ranks, &symbols, &log, input, size);
+        if (HUF_isError(decoded) || decoded != size || symbols > 256) return 3;
+        if (fputc((int)log, stdout) == EOF || fputc((int)(symbols & 255), stdout) == EOF ||
+            fputc((int)(symbols >> 8), stdout) == EOF) return 4;
+        return fwrite(output, 1, symbols, stdout) != symbols;
+    }
+    decoded = FSE_decompress_wksp_bmi2(output, 255, input, size, 6, workspace, sizeof(workspace), 0);
+    if (FSE_isError(decoded)) { fprintf(stderr, "%s\n", FSE_getErrorName(decoded)); return 5; }
+    return fwrite(output, 1, decoded, stdout) != decoded;
+}
+"#).unwrap();
+        let compiler = std::env::var_os("CC").unwrap_or_else(|| "cc".into());
+        let compiled = Command::new(compiler)
+            .arg("-I")
+            .arg(upstream.join("lib/common"))
+            .arg("-I")
+            .arg(upstream.join("lib"))
+            .arg(&source)
+            .arg(upstream.join("lib/libzstd.a"))
+            .arg("-o")
+            .arg(&executable)
+            .output()
+            .unwrap();
+        assert!(
+            compiled.status.success(),
+            "{}",
+            std::string::String::from_utf8_lossy(&compiled.stderr)
+        );
+        let cases = weight_cases();
+        for (case, weights) in cases.iter().enumerate() {
+            let encoded = encode_weights(weights).unwrap();
+            let mut child = Command::new(&executable)
+                .stdin(Stdio::piped())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .spawn()
+                .unwrap();
+            child.stdin.take().unwrap().write_all(&encoded).unwrap();
+            let result = child.wait_with_output().unwrap();
+            assert!(
+                result.status.success(),
+                "case {case}: {}",
+                std::string::String::from_utf8_lossy(&result.stderr)
+            );
+            assert_eq!(result.stdout, *weights, "case {case}");
+        }
+        std::eprintln!(
+            "Official v1.5.7 FSE decoder verified {} weight streams",
+            cases.len()
+        );
     }
 }

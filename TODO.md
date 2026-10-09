@@ -53,7 +53,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Validate formatted-training options and share bounded sample-prefix observation.
 - [x] Serialize normalized FSE counts with checked forward bit output.
 - [x] Normalize sample frequencies deterministically with bounded integer arithmetic.
-- [ ] Encode two-state FSE weight streams using checked transition inversion.
+- [x] Encode two-state FSE weight streams using checked transition inversion.
 - [x] Build complete full-alphabet literal trees with a bounded maximum depth.
 - [ ] Serialize validated dictionary Huffman weights through two-state FSE.
 - [x] Assemble formatted dictionary IDs, sequence priors, repeat offsets, padding, and suffix bounds.
