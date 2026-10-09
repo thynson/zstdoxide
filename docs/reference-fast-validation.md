@@ -549,3 +549,29 @@ python3 scripts/check_reference_fast_interop.py --check-plan
 python3 scripts/check_reference_fast_interop.py \
   --upstream /path/to/zstd-v1.5.7 --output /tmp/fresh-fast-interop
 ```
+
+## Executable admitted official Fast subsets
+
+The separate `upstream_reference_fast` target now compares all 81 captured
+selector tuples, including every intermediate remaining-byte count. It executes
+57 admitted simple inputs twice, checks complete deterministic frame bytes and
+the captured C compression-size budget, and decodes with original packet length
+as the output limit. Twenty simple profiles reject explicitly; four advanced
+branches remain unconsumed. The original empty-input -1..22 loop has three
+admitted and 21 unsupported profiles; the exact 30-byte source and 1..19 loop
+have two admitted and 17 unsupported profiles. Existing named-policy adapters
+and their corpus are unchanged.
+
+Nine tests pass in each of eight configurations (safe, four relevant individual
+unsafe backends, all, no-default, and no-default with all twelve unsafe flags):
+72 passes, zero ignored. Each configuration performs 126 frame encodes, 62 exact
+decodes and 96 unsupported-error assertions. Strict focused Clippy safe/all,
+no_std library checks and formatting pass. The immutable source snapshot,
+command records and complete results are in [evidence](evidence/2026-10-09-fast-official-subsets.json)
+and its [archive](evidence/2026-10-09-fast-official-subsets.tar.gz).
+
+All four affected anchors and both source units remain partial. Source-length
+budgets do not establish atomic caller-buffer errors, CCtx/DCtx reuse, mutable
+decoder settings, advanced parameter schedules or in-place overlap. The structural
+inventory still has 188 unfinished source units; the complete-migration gate is
+not satisfied by these bounded successes.

@@ -1,0 +1,94 @@
+{
+  "all_task_sessions_ended": true,
+  "base": "30d0cafec1cd7e9a16411ce2cdb64dea49fbe369",
+  "configurations": 8,
+  "failures": "No failed workload hypothesis, test, Clippy or formatting check. Shared producer expected-panic test logs are successful tests, not failures.",
+  "ignored_total": 0,
+  "independent_frozen_C_TSV": {
+    "path": "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/reference-fast-fuzz/observations.tsv",
+    "sha256": "77a868913331f7e9edd4a73a60634eebd97d83b5b57050b6945fbde5b317b4e5",
+    "size": 10811
+  },
+  "initial_checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "upstream_reference_fast",
+        "--",
+        "--nocapture"
+      ],
+      "log": {
+        "path": "/tmp/zstdoxide-upstream-reference-fast-initial.log",
+        "sha256": "e5f9dff69ed253a21fe114de8e495ed3e7d6e95c3b5500af6eab4f0262ee4419",
+        "size": 1581
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--test",
+        "upstream_reference_fast",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": {
+        "path": "/tmp/zstdoxide-upstream-reference-fast-clippy-initial.log",
+        "sha256": "b020b988ad090d22613850b8f70cbe78bf140795e237f9cec2b6a467726f491e",
+        "size": 250
+      }
+    }
+  ],
+  "inventory_proposal": {
+    "path": "/tmp/zstdoxide-upstream-reference-fast-inventory-proposal.json",
+    "sha256": "76e782239a088e7ea011803043bee2dca8ac78edd114cad334b6a567f97fc623",
+    "size": 5925
+  },
+  "matrix": {
+    "path": "/tmp/zstdoxide-upstream-reference-fast-checkpoint/evidence.json",
+    "sha256": "9e67af7d0f89ca281e07a3392bfd4bed00211920b8619e8fdd1b874cbaa979b6",
+    "size": 264527
+  },
+  "new_source_assertion_functions": 4,
+  "normal_test_functions": 9,
+  "owned_source": {
+    "path": "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream_reference_fast.rs",
+    "sha256": "366dbb1c1458763715917b5df7a9df4331fd4ca7d04c0f9aa947432b4df89592",
+    "size": 13588
+  },
+  "passed_total": 72,
+  "per_configuration": {
+    "advanced_unconsumed": 4,
+    "empty_levels_admitted": 3,
+    "empty_levels_unsupported": 21,
+    "exact_Rust_decodes": 62,
+    "frame_encodes": 126,
+    "initial_match_levels_admitted": 2,
+    "initial_match_levels_unsupported": 17,
+    "selected_inputs": 81,
+    "simple_admitted": 57,
+    "simple_unsupported": 20,
+    "unsupported_error_results": 96
+  },
+  "qualifications": [
+    "C capture contains selectors and compressBound observations only, not C codec runs.",
+    "Vec size budget inequality does not implement caller-buffer capacity/failure, reusable CCtx/DCtx, mutable max-block decoder setting, advanced parameters or overlapping in-place decode.",
+    "Every affected original source/case remains partial; unsupported levels and advanced branches are counted explicitly."
+  ],
+  "source_immutable": true,
+  "status": "passed",
+  "unchanged_producer": {
+    "path": "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/fuzz_support.rs",
+    "sha256": "6dd985c9ad50d1cee6f65437514945cb4e5c174370564f64b4a9ed00c4149dc8",
+    "size": 7027
+  },
+  "unchanged_shared_producer_tests": 5
+}

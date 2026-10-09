@@ -58,7 +58,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Adapt the frozen negative-level size-equality assertion through both public Rust entry points and decode both original C frames, retaining the live-context gap.
 - [x] Reproduce complete admitted Fast frames across Rust backends and independent C encoding/decoding with bounded, pinned request recipes.
 - [x] Freeze the original simple-round-trip fuzz selector order, tail boundaries and C capacity observations without consuming unimplemented advanced branches.
-- [ ] Port admitted simple-round-trip profiles and the original empty/30-byte numeric subsets with explicit unsupported counts and remaining context/capacity gaps.
+- [x] Port admitted simple-round-trip profiles and the original empty/30-byte numeric subsets with explicit unsupported counts and remaining context/capacity gaps.
 - [ ] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.
 - [ ] Validate feature/platform boundaries and measure a frozen Fast-specific deterministic safe/unsafe benchmark before recording this bounded module complete.
 

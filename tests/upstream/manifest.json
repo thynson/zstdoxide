@@ -4978,9 +4978,11 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Original random parameters/levels, atomic smaller-output destinations, one-shot-context variants, max-block settings, sequence producers, and overlapping in-place buffers remain unported.",
+      "reason": "The existing named-policy adapter remains. A separate 81-packet capture using the unchanged pinned C data producer verifies original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption, including exhaustion and one/two/three-byte reservation boundaries. The public reference Fast port compresses 57 admitted selected cases at -3/-2/-1/1/2 twice with identical full bytes, fits the captured C bound minus the selected reduction, and exactly decodes with original N as output limit. It explicitly rejects 20 unsupported simple profiles and leaves four advanced branches unconsumed. Captured size inequalities do not implement atomic caller-buffer failure, reusable CCtx/DCtx, mutable decoder max-block settings, sequence producers or overlapping in-place buffers; the advanced random-parameter branch and unimplemented numeric strategies remain absent.",
       "rust_tests": [
-        "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
+        "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
+        "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
+        "tests/upstream_reference_fast.rs#original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_budgets"
       ],
       "line_count": 182,
       "cases": [
@@ -4991,9 +4993,11 @@
           "line_end": 140,
           "label": "roundTripTest",
           "status": "partial",
-          "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Original random parameters/levels, atomic smaller-output destinations, one-shot-context variants, max-block settings, sequence producers, and overlapping in-place buffers remain unported.",
+          "reason": "The existing named-policy adapter remains. A separate 81-packet capture using the unchanged pinned C data producer verifies original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption, including exhaustion and one/two/three-byte reservation boundaries. The public reference Fast port compresses 57 admitted selected cases at -3/-2/-1/1/2 twice with identical full bytes, fits the captured C bound minus the selected reduction, and exactly decodes with original N as output limit. It explicitly rejects 20 unsupported simple profiles and leaves four advanced branches unconsumed. Captured size inequalities do not implement atomic caller-buffer failure, reusable CCtx/DCtx, mutable decoder max-block settings, sequence producers or overlapping in-place buffers; the advanced random-parameter branch and unimplemented numeric strategies remain absent.",
           "rust_tests": [
-            "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
+            "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
+            "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
+            "tests/upstream_reference_fast.rs#original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_budgets"
           ]
         },
         {
@@ -5003,9 +5007,11 @@
           "line_end": 182,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Tail-selected input, repeated byte-identical compression, and exact decoded size/content run. Original random parameters/levels, atomic smaller-output destinations, one-shot-context variants, max-block settings, sequence producers, and overlapping in-place buffers remain unported.",
+          "reason": "The existing named-policy adapter remains. A separate 81-packet capture using the unchanged pinned C data producer verifies original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption, including exhaustion and one/two/three-byte reservation boundaries. The public reference Fast port compresses 57 admitted selected cases at -3/-2/-1/1/2 twice with identical full bytes, fits the captured C bound minus the selected reduction, and exactly decodes with original N as output limit. It explicitly rejects 20 unsupported simple profiles and leaves four advanced branches unconsumed. Captured size inequalities do not implement atomic caller-buffer failure, reusable CCtx/DCtx, mutable decoder max-block settings, sequence producers or overlapping in-place buffers; the advanced random-parameter branch and unimplemented numeric strategies remain absent.",
           "rust_tests": [
-            "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus"
+            "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
+            "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
+            "tests/upstream_reference_fast.rs#original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_budgets"
           ]
         }
       ]
@@ -5187,7 +5193,9 @@
         "tests/upstream_parameters.rs",
         "tests/upstream_parameter_lifecycle.rs",
         "tests/upstream_search_lifecycle.rs",
-        "tests/upstream_negative_level.rs"
+        "tests/upstream_negative_level.rs",
+        "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_preserves_three_admitted_and_21_unsupported_profiles",
+        "tests/upstream_reference_fast.rs#fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equalities"
       ],
       "line_count": 5147,
       "cases": [
@@ -5879,9 +5887,10 @@
           "line_end": 1566,
           "label": "test%3i : compress a NULL input with each level :",
           "status": "partial",
-          "reason": "Empty input encoded; every-level parameter sweep absent.",
+          "reason": "The exact original -1..22 range is enumerated. Empty-slice level and detached-request APIs produce equivalent valid empty frames for the three admitted Fast levels (-1, 1, 2); the remaining 21 levels are explicitly rejected as UnsupportedFeature. This does not execute all numeric strategies, NULL-pointer contracts, reusable C contexts or caller-owned destinations. Existing empty-frame coverage is retained.",
           "rust_tests": [
-            "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames"
+            "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames",
+            "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_preserves_three_admitted_and_21_unsupported_profiles"
           ]
         },
         {
@@ -5924,9 +5933,10 @@
           "line_end": 1680,
           "label": "test%3d : re-using a CCtx should compress the same :",
           "status": "partial",
-          "reason": "The exact 20 unique bytes plus repeated first 10 source is reused with deterministic identical streaming schedules. The original levels 1..19 and equivalence matrix across C one-shot/context/stream entry points remain unported.",
+          "reason": "The exact original 30-byte source (0..19 followed by 0..9) and 1..19 range are preserved. Levels 1 and 2 produce identical complete bytes across repeated level calls and detached-request calls, followed by exact decoding; 17 other profiles are explicitly unsupported. Earlier deterministic named streaming reset coverage remains. Reusable numeric CCtx, the caller-destination compressBound-1 branch, forced streaming, and complete one-shot/context/stream equivalence remain unported.",
           "rust_tests": [
-            "tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically"
+            "tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically",
+            "tests/upstream_reference_fast.rs#fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equalities"
           ]
         },
         {
