@@ -7,9 +7,10 @@ commit `f8745da6ff1ad1e7bab384bd1f9d742439278e99`.
 
 This is an initial working codec milestone, **not full parity with upstream
 zstd**. Its one-shot and streaming decoders handle standard frames with raw or
-formatted dictionaries. Its encoder
-uses an initial greedy compression strategy; upstream compression levels and
-compression ratios are not reproduced.
+formatted dictionaries. Its encoder provides independent Greedy, Chain and Lazy
+strategies, Huffman literal compression and reuse, and adaptive sequence entropy
+tables. Greedy is the default. These policies do not reproduce upstream numeric
+compression levels or promise its compression ratios.
 
 ## Using the library
 

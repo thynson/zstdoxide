@@ -77,25 +77,64 @@ caller-owned nine-byte destination behavior remains unported. Successful
 Huffman payload encoding and supplied-table sequence encoding do not change
 either status.
 
-The separate `huf_round_trip.c` target now has a partial executable mapping:
-thirty official descriptions yield byte-identical Rust 1X and 4X streams,
-and live C checks validate new sparse descriptions, log-12 prepared tables
-and both decoding engines. `tests/entropy_encoding.rs` additionally proves
-zero-sequence compression, inline/treeless lifetime, raw/RLE preservation,
-dictionary replacement and fragmented output through public APIs. These are
-format regressions, not implementations of the fuzzer's level-19 block
-splitter, `minMatch=7`, `splitAfterSequences`, btultra2, superblock, target
-compressed-block-size or numeric level controls.
+The separate `huf_round_trip.c` target now has a complete adapted driver while
+its source mapping remains partial. Exact tail selectors run in both BMI
+consumption layouts, including requested depths, original-length capacities,
+256 KiB source limits, early exits and guarded caller-output failure paths.
+Independent Rust optimal trees, selected-description copying and one Rust
+decoder remain distinct from C's tree policy, capacity-dependent serialization
+and CPU/X1/X2 engines. All 833 pinned files ran both layouts under safe and
+all-feature release builds: 1,666 identical per-file records per build, 3,332
+total executions and no skipped files. The
+[Huffman replay evidence](../../docs/evidence/2026-10-09-huffman-corpus.json)
+retains each outcome and qualification.
 
-The inverse FSE/sequence foundations exercise all 27 supplied
-predefined/RLE/new channel combinations followed by repeat, long literal
-lengths, zero-literal repeat rules and duplicate offsets. The independent C
-oracle decodes all 27 frames/54 sections. Those synthetic combinations do not
-reproduce the complete original dictionary/training/strategy setup at
-`zstreamtest.c:1551`, `:1831` or `:1884`, or `fuzzer.c:3265`. Their existing
-partial statuses remain in force. See
+Thirty official descriptions also yield byte-identical Rust 1X and 4X streams;
+live C checks validate new sparse descriptions, standalone depths through
+twelve, prepared dictionary trees, native-word capacity thresholds and both
+C decoding engines. `tests/entropy_encoding.rs` proves zero-sequence
+compression, inline/treeless lifetime, raw/RLE preservation, dictionary
+replacement and fragmented output through public APIs. The inverse FSE and
+sequence foundations separately exercise all 27 supplied predefined/RLE/new
+channel combinations followed by repeat, long literal lengths, zero-literal
+repeat rules and duplicate offsets. Their independent C oracle decodes all
+27 frames and 54 sections.
+
+The original dictionary campaigns now run separately from those synthetic
+foundation tests. `tests/upstream_entropy_lifetimes.rs` preserves both prior
+RNG paths at `zstreamtest.c:1831`, including the exact RDG bytes and serialized
+dictionary ranges. It also executes all 43,691 six-byte flushes and nine
+128-byte dictionary ranges at `:1884`. Independent C comparisons verify the
+complete source/output bytes and frame boundaries; Rust's RLE small blocks
+remain distinct from the original C raw blocks.
+
+`tests/upstream/sequence_generator.rs` and
+`tests/upstream/sequence_sweep.rs` preserve the
+complete `zstreamtest.c:1551` schedule: 971 requests, 34,639,743 source bytes,
+1,024-byte buffers and full-width XXH64 `d6a9522c4b14b2a5`. Every named Rust
+strategy restores all source bytes. The actual C frame window is log 21,
+inherited from explicit level-5 parameters before the later level-3 request
+and session-only reset; the CDict, decoder limit and offset schedule reach log
+24. Rust matches the advertised log-21 window. The C baseline retains two
+workers and 4 MiB jobs; Rust remains single-threaded. Numeric levels, borrowed
+CDict ownership and nondefault training profiles remain qualified, and the
+bounded Rust search does not establish that every suggested offset code was
+actually emitted.
+
+Greedy, Chain and Lazy also passed all 512 pinned Silesia/GitHub directory
+inputs, 12,407,963 bytes each, under safe and all-feature release builds with
+no skipped files. Complete per-strategy frame fingerprints and retained
+capacities agree across backends; see the
+[strategy replay evidence](../../docs/evidence/2026-10-09-strategy-corpora.json).
+This ports content checks with reused Rust contexts, not the upstream method,
+level, dictionary, CLI or historical compressed-size CSV matrix.
+
+These tests do not implement the fuzzer's level-19 block splitter,
+`minMatch=7`, `splitAfterSequences`, btultra2, superblock, target compressed
+block size or numeric level controls. In particular, `fuzzer.c:3265` retains
+its original level-19 optimal-parser qualification. See
 [the entropy coverage plan](../../docs/upstream-entropy-plan.md) for exact
-selectors and the next bounded upstream campaigns.
+completed checkpoints and remaining upstream obligations.
 
 ## Complete diagnostic-label inventory
 
@@ -118,14 +157,14 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | ---: | --- | --- | --- |
 | 497 | compressBound | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
 | 519 | decompressBound | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
-| 576 | ZSTD_CCtx_setCParams | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 576 | ZSTD_CCtx_setCParams | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 592 | Check block splitter doesn't oversplit incompressible data (seed %u) | blocked | Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent. |
 | 670 | ZSTD_getErrorName | not-applicable | C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version. |
 | 675 | ZSTD_getErrorName with wrong value | not-applicable | C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version. |
-| 680 | min compression level | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
-| 685 | default compression level | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 680 | min compression level | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
+| 685 | default compression level | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 691 | ZSTD_versionNumber | not-applicable | C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version. |
-| 702 | ZSTD_adjustCParams | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 702 | ZSTD_adjustCParams | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 715 | compress %u bytes | adapted | `tests/upstream_fuzzer.rs#basic_compression_and_decompression`. Original 5-MiB RDG input and full output comparison run through the one-shot adapter. Level 1 is unsupported; reusable contexts exist but this original context setup is not mapped by that adapter. |
 | 723 | size of cctx for level 1 | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |
 | 730 | decompress skippable frame -8 size | ported | `skippable_frame_minus_eight_size`. Exact malformed eight-byte input; rejects its overflowing declared payload. |
@@ -138,7 +177,7 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 775 | decompress %u bytes with Huffman assembly disabled | partial | `basic_compression_and_decompression`. Byte-correct decoding covered; Rust has no assembly-selection parameter. |
 | 786 | check decompressed result | ported | `basic_compression_and_decompression`. Every decompressed byte compared. |
 | 793 | invalid endDirective | blocked | Typed Continue/Flush/Finish directives exist. The original C test injects invalid integer enum values 3 and -1, which the safe Rust enum does not represent; that numeric-ABI assertion is not ported or reclassified here. |
-| 804 | ZSTD_checkCParams | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 804 | ZSTD_checkCParams | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 811 | ZSTD_createDCtx_advanced and ZSTD_sizeof_DCtx | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |
 | 820 | misc unaccounted for zstd symbols | not-applicable | C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version. |
 | 861 | decompress with null dict | partial | `tests/upstream_fuzzer.rs#basic_compression_and_decompression`. No-dictionary one-shot content behavior is covered; the original reusable context call with explicit null dictionary selection is not yet mapped. |
@@ -150,10 +189,10 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 909 | decompress with corrupted checksum | partial | `decompress_with_corrupted_checksum`. All four checksum-byte corruptions rejected; forceIgnoreChecksum API absent. |
 | 948 | ZSTD_decompressBound test with content size missing | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
 | 968 | check DCtx size is reduced after many oversized calls | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |
-| 1015 | ZSTD_compressCCtx() doesn't use advanced parameters | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 1015 | ZSTD_compressCCtx() doesn't use advanced parameters | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 1020 | ZSTD_compress_usingDict() doesn't use advanced parameters | blocked | The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available. |
 | 1025 | ZSTD_compress_usingCDict() doesn't use advanced parameters | blocked | This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available. |
-| 1030 | ZSTD_compress_advanced() doesn't use advanced parameters | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 1030 | ZSTD_compress_advanced() doesn't use advanced parameters | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 1035 | ZSTD_compress_usingCDict_advanced() doesn't use advanced parameters | blocked | This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available. |
 | 1044 | maxBlockSize = 2K | blocked | Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent. |
 | 1063 | ldm fill dict out-of-bounds check | blocked | The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available. |
@@ -171,15 +210,15 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 1554 | compress a NULL input with each level | partial | `compress_and_decompress_empty_frames`. Empty input encoded; every-level parameter sweep absent. |
 | 1567 | check CCtx size after compressing empty input | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |
 | 1577 | decompress empty frame into NULL | partial | `tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames`, `tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame`. Known/unknown-size empty one-shot frames are covered. Streaming APIs exist, but this named group's exact original streaming subcase is not mapped here. |
-| 1620 | reuse CCtx with expanding block size | blocked | Reusable encoder context/reset state and associated parameter controls absent. |
+| 1620 | reuse CCtx with expanding block size | blocked | Reusable encoder contexts, reset and source pledges exist. The original level-1 bufferless compressBegin_advanced/compressEnd reuse from a one-byte pledged source to 256 KiB of unknown-size CNBuffer remains unported. |
 | 1637 | re-using a CCtx should compress the same | blocked | `tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically`. The exact 20 unique bytes plus repeated first 10 source is reused with deterministic identical streaming schedules. The original levels 1..19 and equivalence matrix across C one-shot/context/stream entry points remain unported. |
 | 1681 | btultra2 & 1st block | blocked | Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent. |
-| 1721 | ZSTD_CCtx_getParameter() | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
-| 1764 | ZSTD_CCtx_setCParams() | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
-| 1808 | ZSTD_CCtx_setFParams() | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
-| 1832 | ZSTD_CCtx_setParams() | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 1721 | ZSTD_CCtx_getParameter() | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
+| 1764 | ZSTD_CCtx_setCParams() | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
+| 1808 | ZSTD_CCtx_setFParams() | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
+| 1832 | ZSTD_CCtx_setParams() | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 1891 | ldm conditionally enabled by default doesn't change cctx params | blocked | Long-distance matching and optimal parser configuration/size comparison absent. |
-| 1912 | overflow protection with large windowLog | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 1912 | overflow protection with large windowLog | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 1929 | size down context | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |
 | 1964 | create static CCtx for level %u | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |
 | 1988 | compress small input with small static CCtx | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |
@@ -285,9 +324,9 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 3440 | Check input length for magic number | ported | `check_input_length_for_magic_number`. Every source length below four is rejected. |
 | 3446 | Check magic Number | ported | `check_magic_number`. Original corrupted first magic byte rejected. |
 | 3453 | Content size verification | blocked | Pledged-size validation exists. The original bufferless compressBegin_advanced/compressEnd test pledges 6000 bytes and ends with 5000 CNBuffer bytes at level 1; its exact workload and C error-code assertion are not mapped. |
-| 3469 | negative compression level | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
-| 3496 | parameters in order | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
-| 3513 | parameters disordered | blocked | Reusable Encoder and typed window/checksum/pledge options exist; the original compression-level, strategy, numeric parameter-query/adjustment or C context-configuration contract remains unported. |
+| 3469 | negative compression level | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
+| 3496 | parameters in order | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
+| 3513 | parameters disordered | blocked | Reusable Encoder, independent Greedy/Chain/Lazy policies and typed window/checksum/pledge options exist; the original numeric compression-level/strategy, parameter-query/adjustment or C context-configuration contract remains unported. |
 | 3533 | get dParameter bounds | blocked | Typed DecodeOptions validation and reusable Decoder reset exist; the original C numeric parameter-bound/query/reset contract remains unported. |
 | 3539 | wrong dParameter | blocked | Typed DecodeOptions validation and reusable Decoder reset exist; the original C numeric parameter-bound/query/reset contract remains unported. |
 | 3548 | out of bound dParameter | blocked | Typed DecodeOptions validation and reusable Decoder reset exist; the original C numeric parameter-bound/query/reset contract remains unported. |
@@ -359,9 +398,9 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | Source / entry point | Status and executable mapping |
 | --- | --- |
 | `roundTripCrash.c::roundTripTest`, `roundTripCheck`, `checkBuffers` | Adapted in `round_trip_crash_corpora`: exact length/byte equality across fifty deterministic corpora. XXH32-derived level selection is pending encoder levels. |
-| `roundTripCrash.c::cctxParamRoundTripTest` | Blocked: reusable parameter context, streaming, two-worker compression and overlap controls. |
+| `roundTripCrash.c::cctxParamRoundTripTest` | Reusable streaming contexts exist; the original parameter-object setup, two-worker compression and overlap-control schedule remain unported. |
 | `roundTripCrash.c::loadFile`, `fileCheck`, `main` | C command-line/file diagnostics are test-driver glue; Rust integration harness supplies deterministic slices. No user-file reader is claimed. |
-| `longmatch.c::main`, `compress` | Only its 256-KiB source layout is adapted in `long_match_input_layout`. Continuous 8-GiB streaming, randomized flush boundaries, level/strategy controls, and index rollover remain blocked. A smaller one-shot test is not an index-overflow port. |
+| `longmatch.c::main`, `compress` | Only its 256-KiB source layout is adapted in `long_match_input_layout`. The original continuous 8-GiB campaign, randomized flush boundaries, numeric level/strategy controls and index rollover remain unported; bounded streaming and independent named Rust policies exist. A smaller one-shot test is not an index-overflow port. |
 | `invalidDictionaries.c::main` | Ported: the exact original bytes fail shared Auto/Formatted dictionary preparation. Both Rust encoding and decoding require this same validated Dictionary type; there is no second unchecked formatted constructor. |
 | `largeDictionary.c::main`, `compress` | Blocked: original 2-GiB buffer, 1-GiB chunks, 31-bit window, worker/optimal-parser configuration and continuous stream history. The code executes ten continued chunks plus one final chunk; its comment says 30 GB. |
 | `legacy.c::testSimpleAPI` | Blocked: successful decoding of the embedded historical format versions is required; rejecting their magic does not satisfy the test. |

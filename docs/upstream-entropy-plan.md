@@ -3,23 +3,24 @@
 This plan separates executable evidence from the remaining test migration.
 The reference is facebook/zstd v1.5.7 revision
 `f8745da6ff1ad1e7bab384bd1f9d742439278e99`. It does not redefine the production
-design in `entropy-encoder-design.md` or close the complete-migration gate.
+design in [entropy-encoder-design.md](entropy-encoder-design.md) or close the complete-migration gate.
 
 ## Test data and ownership
 
 The current tests borrow immutable fixture descriptions and sources, own their
 encoded buffers in `Vec<u8>`, and inspect wire positions with checked indices.
 The standalone C oracle owns bounded input/output buffers in an external
-temporary process. It is never linked into the Rust library. Future selector
+temporary process. It is never linked into the Rust library. Selector
 records contain scalar booleans, depths, capacities and source ranges; they
 need no artificial unsafe backend. The existing checked `DataProducer`
 preserves the original tail-consumption order without non-owning pointers.
 
-Decompose new work before implementation: exact selector vectors; the bounded
-supported roundtrip driver; missing standalone depth/capacity contracts; a
+The completed work was decomposed before implementation into exact selector
+vectors; standalone depth/capacity contracts; the bounded adapted driver; a
 separately pinned complete corpus replay; original dictionary/sequence
-schedules; and implemented strategy adapters. Each is a separate reviewable
-checkpoint. No new test implementation is included in this mapping checkpoint.
+schedules; and implemented strategy adapters. Each was a separate reviewable
+checkpoint. The sections below record their executable scope and retained
+upstream obligations, rather than treating fixture presence as test coverage.
 
 ## Exact Huffman target boundary
 
@@ -29,45 +30,50 @@ Its single inventory case remains partial.
 
 | Source lines | Original contract | Current evidence or remaining work |
 | --- | --- | --- |
-| 27–38, 68–80 | Histogram, highest nonzero symbol, and adjusted requested table depth | Sparse Rust histograms and valid descriptions exist. The exact target adjustment is not yet driven: minimum depth is `ceil(log2(max_symbol + 1)) + 1`, using highest symbol rather than cardinality. |
-| 43–57 | Tail selectors, in exact order | Not yet ported for this target. Reuse the independently verified producer; preserve both BMI-dependent byte-consumption layouts. |
-| 55, 58–61 | Capacity in `0..=4*original_input_len`, remaining source capped at 256 KiB | Capacity uses the original length before selector consumption/capping. Owned Rust output does not exercise the caller's destination. Production four-stream encoding currently limits sources to 128 KiB. |
-| 63–77 | Empty/single-byte and uniform-source early exits | Existing encoder boundary tests are useful, but the exact target's selector-dependent early exits remain part of the new driver. |
-| 90–93 | Heuristic or optimal requested-depth selection, then successful table construction with log at most twelve | The inline builder fixes its maximum to eleven. Encoding an already prepared twelve-bit dictionary tree is verified; constructing standalone requested-depth trees through twelve is a separate missing contract. |
-| 94–99 | Write the table into the selected destination; accept a reported failure | Sparse descriptions are independently accepted by C. Random insufficient destination and unrepresentable-description return paths are not exercised by the owned-output builder. |
-| 100–108 | Read the written table through X1 or X2; explicitly fall back on the specific X2 table-log error | The same-description C oracle performs both reads and explicit fallback. Current cases required no fallback. Rust uses one checked table representation. |
-| 113–127 | Encode 1X/4X; when nonzero, decode exact source length and bytes | Thirty stored tables reproduce both C streams byte for byte. Live C checks cover successful streams and boundaries. Exact zero-result/capacity paths and the full parameter driver remain incomplete. |
+| 27–38, 68–80 | Histogram, highest nonzero symbol, and adjusted requested table depth | The driver preserves the original histogram and highest-symbol adjustment: `max(requested, ceil(log2(max_symbol + 1)) + 1)`. Independent C vectors also verify the cheap-depth arithmetic and its two-byte unsigned corner. |
+| 43–57 | Tail selectors, in exact order | Exact selectors and source-prefix ranges are checked against independent C vectors under both BMI-dependent byte-consumption layouts. CPU flags are recorded observations, not invented Rust engine controls. |
+| 55, 58–61 | Capacity in `0..=4*original_input_len`, remaining source capped at 256 KiB | The driver uses the original length before selector consumption/capping, with an explicit 1 MiB harness input limit. Its standalone encoder accepts sources through 256 KiB and checks guarded caller destinations; the production frame-block limit remains 128 KiB. |
+| 63–77 | Empty/single-byte and uniform-source early exits | Separate normal witnesses and full-corpus outcome records cover all three exits after the original selector consumption. |
+| 90–93 | Heuristic or optimal requested-depth selection, then successful table construction with log at most twelve | Cheap-depth selection matches the pinned scalar heuristic. Standalone Rust construction supports a hard cap through twelve; the optimal branch uses an independent complete-description/weighted-bit cost search. C tree identity and early-stop policy are not claimed. New inline trees remain limited to eleven. |
+| 94–99 | Write the table into the selected destination; accept a reported failure | Rust copies the paired selected description with an exact-fit contract and explicit capacity failure, then reuses that same buffer for the stream. Independent C comparisons document that this differs from C's destination-dependent raw/FSE serialization and possible partial writes. |
+| 100–108 | Read the written table through X1 or X2; explicitly fall back on the specific X2 table-log error | Rust reads back the exact selected description with one checked table representation. The separate same-description C oracle executes both table loaders and implements the specific X2 error fallback; the Rust corpus driver does not claim distinct X1/X2 engines. |
+| 113–127 | Encode 1X/4X; when nonzero, decode exact source length and bytes | Thirty stored tables reproduce both C streams byte for byte. Live C checks cover stream bytes and capacity/zero-return boundaries; the complete adapted driver verifies exact output or a documented zero result for every selected source. |
 
 The selector order is streams, decoder variant, optional BMI2 bit, optimal
 depth, prefer-repeat, suspect-uncompressible, disable-assembly, disable-fast,
 capacity, and requested depth. The BMI2 selector consumes a byte only when the
 C host reports BMI2. No prefix-reservation selector precedes this sequence.
 The remaining source begins at the original input start, not at the consumed
-tail. A future portable driver should execute both consumption layouts and
-compare them with independent C-produced parameter vectors.
+tail. The portable driver executes both consumption layouts and
+compares them with independent C-produced parameter vectors.
 
-`optimalDepth` changes `HUF_optimalTableLog` in the original target and needs
-a meaningful equivalent test policy before its branch can be called complete.
+`optimalDepth` changes `HUF_optimalTableLog` in the original target. The Rust
+driver exercises its independent estimated-size policy; this is a meaningful
+adaptation, not a claim of identical C optimal-table selection.
 `preferRepeat` and `suspectUncompressible` are still consumed, but their policy
 branches are in `HUF_compress_internal`, which this target never calls. They
 must not be advertised as missing active controls for this particular target.
 BMI2, X1/X2, disable-assembly and disable-fast choose C implementations or
-table layouts. Independent C comparisons can exercise those selectors without
-inventing Rust knobs for engines the Rust implementation does not have.
+table layouts. Independent C comparisons exercise host-supported selections;
+no Rust knobs are invented for engines the Rust implementation does not have.
+Both selector-consumption layouts run on every Rust host, which does not imply
+that an unavailable native BMI2 engine was executed.
 
-The original 1X compressor returns zero for a destination below eight bytes;
-4X returns zero below seventeen bytes or below twelve source bytes. These
-are C compressor contracts, not wire-format minimum sizes. Rust's successful
+The caller-output adapter preserves the original minimum destination guards:
+1X returns zero below eight bytes, and 4X below seventeen bytes or below twelve
+source bytes. It also preserves native-word slack and every quarter's 16-bit
+size bound, including the fourth quarter. These are C compressor contracts,
+not wire-format minimum sizes. Rust's successful
 six- and nine-byte 4X cases have an empty final segment and a marker; the C
 oracle verifies them by assembling four independent 1X quarters. Do not call
 that a successful invocation of the original C 4X branch. Similarly, the empty
 1X `01` marker is checked without claiming a successful C zero-output decode.
 
-Extending a test-only roundtrip by truncating every source to 128 KiB would
-silently discard a real upstream contract. The target admits 256 KiB sources.
-Some larger 4X streams also fail the sixteen-bit quarter-size limit. Test
-the corresponding accepted or explicit failed result; do not split one
-standalone stream into independent frame blocks and call it the same input.
+The standalone tests preserve the full 256 KiB source contract without
+truncating it to the production frame-block limit. Large 4X streams that exceed
+the sixteen-bit quarter-size limit return an explicit zero result through the
+capacity adapter. A standalone stream is never split into independent frame
+blocks to bypass that contract.
 
 ## Executed evidence
 
@@ -108,44 +114,45 @@ policy, description copying and C engine qualifications below still apply.
 
 ### Standalone driver checkpoint
 
-The exact selector vectors, requested-depth builder, and 256 KiB wire encoder
-are now implemented in separate verified checkpoints. The remaining driver
-first applies the original highest-symbol adjustment:
+The driver in
+[`tests/upstream/huffman_round_trip.rs`](../tests/upstream/huffman_round_trip.rs)
+applies the original highest-symbol adjustment:
 `max(requested, ceil(log2(max_symbol + 1)) + 1)`. For the non-optimal branch,
-preserve the scalar `FSE_optimalTableLog_internal(..., 1)` heuristic from
-v1.5.7: limit by `floor(log2(source_len - 1)) - 1`, raise to the lesser of
+it preserves `FSE_optimalTableLog_internal(..., 1)` from v1.5.7: limit by
+`floor(log2(source_len - 1)) - 1`, raise to the lesser of
 `floor(log2(source_len)) + 1` and `floor(log2(max_symbol)) + 2`, then clamp
-to 5 through 12. Handle the two-byte C unsigned-subtraction corner explicitly
-without Rust overflow. The optimal branch uses the independent Rust complete
-description-plus-weighted-bits search under the adjusted cap. Its tree and
-early-stop policy need not match C's; the branch must affect actual selection.
+to 5 through 12. The two-byte C unsigned-subtraction corner is handled
+explicitly without Rust overflow. The optimal branch applies the independent
+Rust complete-description-plus-weighted-bits search under the adjusted cap;
+a normal witness proves that this selector changes actual table selection.
 
-After histogram validation, build and pair a standalone table, copy its exact
-description into the selected guarded destination, read that description back,
-and reuse the same destination for 1X/4X output. This preserves the original
-buffer reuse, including failure branches. Successful streams must reconstruct
-the complete selected source. Record short/RLE exits, unrepresentable tables,
-description-capacity failures, zero stream returns, and successful roundtrips
-as separate outcomes. An error outside those documented outcomes fails the
-test rather than silently skipping input. Normal tests must witness every
-outcome before the corpus run is a separate completed work item.
+After histogram validation, the driver builds and pairs a standalone table,
+copies its exact description into the selected guarded destination, reads the
+description back, and reuses the same destination for 1X/4X output. Successful
+streams reconstruct the complete selected source. Empty, single-byte, uniform,
+unrepresentable-table, description-capacity failure, zero-stream and successful
+roundtrip outcomes are recorded separately. Normal tests witness all seven
+outcomes, including the unavailable-table branch absent from the corpus. An
+unexpected codec or allocation error fails the case instead of skipping input.
 
-Replay all 833 files from the pinned `huf_round_trip` archive, in stable path
-order, in both BMI selector layouts with safe and all-feature backends. Compare
-counts, source and output hashes, requested/adjusted/actual depth coverage,
-source/capacity maxima, and zero/skipped accounting. The capacity adapter
-preserves caller bytes on failure, a stronger Rust guarantee than C's internal
-partial writes. The paired-description copy intentionally does not reproduce
-C's destination-dependent raw/FSE serialization choice. CPU flags and X1/X2
-remain qualified engine selectors supported by the independent C checks;
-the corpus run alone does not promote this source to complete migration.
+The caller-output adapter preserves caller bytes on failure, a stronger Rust
+guarantee than C's internal partial writes. Its native-word threshold formula
+is tested for 32- and 64-bit word sizes; live C comparisons validate the host
+width. The paired-description copy intentionally does not reproduce C's
+destination-dependent raw/FSE serialization choice. CPU flags and X1/X2
+remain qualified engine selectors supported by separate independent C checks;
+the complete corpus replay does not promote this source to full parity.
 
 `tests/upstream/huffman_encode.rs` has thirty exact 1X and thirty exact 4X
-fixture comparisons. Its three explicit C tests passed with safe and
-all-feature builds: 85 same-table invocations, 55 sparse-builder invocations,
-and 59 Rust-4X invocations. The counts overlap in source tables and are not
-independent upstream cases. The maximum prepared-log-12 4X case encodes a
-128 KiB source into 196,618 bytes with three 49,153-byte jump entries.
+fixture comparisons plus five explicit C oracle tests. The first three checks
+passed safe and all-feature builds with 85 same-table invocations, 55
+sparse-builder invocations and 59 Rust-4X invocations. Two later checks cover
+48 standalone descriptions under both depth policies with 96 exact 1X/4X
+streams, and six standalone streams through 256 KiB with 393,217-byte 1X output
+and exact 65,535-byte 4X jumps. They also passed safe and all-feature builds.
+These counts overlap in source tables and are not independent upstream cases.
+The maximum prepared-log-12 4X case at the production 128 KiB block limit
+encodes to 196,618 bytes with three 49,153-byte jump entries.
 
 `tests/entropy_encoding.rs` has eight normal public tests plus two independently
 exercised CLI tests. The ordinary suite passed safe, codebook-unsafe alone,
@@ -169,73 +176,143 @@ because C rejects its nine-byte destination despite emitting a nine-byte
 header when given more destination slack. Existing Module 7 evidence records
 remain historical snapshots and are not rewritten as current suite counts.
 
-## Next original campaigns and strategy obligations
+## Completed original dictionary and sequence campaigns
 
-The sequence-source checkpoint is separate from its public codec campaign.
-Implement the three generator shapes from `tests/seqgen.c` with a typed phase
-and checked output indices, preserving one `0x87654321` random state across the
-whole schedule. Match-length requests produce a different guard byte, `value+1`
+### Exact incremental sequence source and line 1551 codec sweep
+
+[`tests/upstream/sequence_generator.rs`](../tests/upstream/sequence_generator.rs)
+implements the three shapes from unchanged `tests/seqgen.c` with a typed phase,
+checked output indices and one `0x87654321` random state across the full
+schedule. Match-length requests produce a different guard byte, `value+1`
 copies of the match byte, and a final different guard. Literal-length requests
 save the random state, produce `min(value,128)` high-alphabet bytes, the remaining
 low-alphabet literals, and replay the saved high-alphabet prefix. Offset requests
-use zero padding instead of low-alphabet literals. The exact wrapping recurrence
-and full-width seed-zero XXH64 digest are checked against unchanged C `seqgen.c`,
-including zero-capacity and fragmented continuation boundaries.
+use zero padding instead of low-alphabet literals. Unsigned wrapping, saved-state
+replay, unfinished-request identity and zero-capacity phase changes match C.
+All 971 stored per-request C vectors preserve byte counts, request/cumulative
+XXH64 hashes and seeds. Live comparisons also check 6,459 fragmented calls,
+including output capacities 0, 1, 2, 127, 128, 129, 1,023 and 1,024.
 
-The codec checkpoint runs all three kinds for values 0..299, each power 2^8
-through 2^16 and its quarter-offset value, then offsets `2^log-1` for every log
-8..24: 971 requests and 34,639,743 source bytes. Use 1,024-byte generation,
+[`tests/upstream/sequence_sweep.rs`](../tests/upstream/sequence_sweep.rs) runs
+all three kinds for values 0..299, each power 2^8 through 2^16 and its
+quarter-offset value, then offsets `2^log-1` for every log 8..24. This is the
+complete `zstreamtest.c:1551-1599` source schedule: **971 requests**,
+**34,639,743 bytes**, **34,593 generation calls**, final XXH64
+`d6a9522c4b14b2a5` and final random seed `0f900e80`. It uses 1,024-byte source,
 compression-output and decompression-output buffers, one persistent prepared
-dictionary and one frame, with Continue until final Finish. Verify complete
-byte equality incrementally, the final full-width digest, counters, canaries
-and finalization. Repeat for Greedy, Chain and Lazy and compare independent
-official decoding; preserve the original C level-3/by-reference campaign as
-oracle evidence. Rust's bounded 128 KiB search history does not guarantee
-choosing the long matches the source was designed to suggest. Inspect actual
-sequence coverage where claimed, and retain that qualification in inventory
-rather than claiming every OF code was emitted by each Rust strategy.
+dictionary and one frame, with Continue until final Finish. A second generator
+compares every decoded byte incrementally without retaining the full source.
+All three Rust strategies check counters, output canaries and finalization.
 
-The regression content adapter gets a separate named-strategy checkpoint.
-Retain its existing bounded, sorted file plan and one-shot baseline. Reuse one
-encoder for each of Greedy, Chain and Lazy, reset between complete input files,
-pledge the original size, and drain caller-owned output until Finish completes.
-Check progress, total counters, output canaries and full decoded bytes, including
-empty and multiblock inputs. Aggregate complete source/frame fingerprints with
-explicit length delimiters so safe and unsafe runs can be compared per strategy.
-The following replay checkpoint processes all 512 pinned Silesia/GitHub files,
-12,407,963 bytes, under both safe and all-feature builds. This extends the
-original content-equality assertion; it does not implement upstream numeric
-levels, C method variants, or historical CSV compression-ratio baselines.
+The original C context inherits explicit level-5 parameters from the advanced
+initializer at `:1444`, followed by a level-3 request, two workers and a 4 MiB
+job size at `:1506-1508`. The `:1568` session-only reset preserves those
+settings. Although the new CDict requests window log 24, the emitted frame
+advertises **window log 21**; Rust matches that actual window. The original
+decoder maximum and complete offset schedule still reach log 24. The oracle
+reconstructs all of these controls instead of starting from a fresh level-3
+context. Rust's named policies are independent and single-threaded: numeric
+level 3, borrowed CDict ownership and the inherited multithreaded setup remain
+C oracle evidence, not Rust API parity.
 
-1. Preserve every original Huffman selector and remaining source range with
-   independent C vectors, both BMI layouts, empty/RLE inputs and every requested
-   depth. Add the supported roundtrip driver with explicit unsupported-branch
-   accounting; a full external run alone cannot erase those qualifications.
-2. Design standalone bounded entropy output and depth control independently of
-   frame limits. Verify exact-fit/too-small destination writes and failure
-   bounds before mapping the original capacity branches. Keep twelve-bit
-   prepared tables distinct from new inline tables limited to eleven bits.
-3. Run the complete independently pinned `huf_round_trip` corpus only after
-   the matching driver exists, with no files skipped and both safe/unsafe
-   builds. Preserve capacity, source-size and depth outcomes in the result.
-4. Reproduce `zstreamtest.c:1831` exactly: a 128 KiB RDG(0,0,seed) block, a
-   128 KiB-minus-256 RDG(.05,0,seed) region, then two 128-byte dictionary
-   regions at offsets 256 and 128. Preserve prepared-dictionary setup and
-   exact output comparison; the original level/by-reference setup remains
-   qualified until equivalent APIs exist.
-5. Reproduce `zstreamtest.c:1884`: 43,691 flushes of six `aa` bytes, then nine
-   128-byte dictionary regions from offset 1,024 down to zero. Verify consumed
-   source, finalization and independent decoding. The current synthetic
-   raw/RLE Huffman lifetime witness is not this offset-table campaign.
-6. Reproduce the complete sequence-generator sweep at `zstreamtest.c:1551`,
-   including all values below 300, powers and quarter-offset values through
-   `2^17`, and offsets through window log 24. Local inverse-table coverage
-   and hand-written supplied-table sequences do not replace this campaign.
-7. Pair each implemented named strategy with original input/assertion ports.
-   `fuzzer.c:1398` also requires level 19, minimum match seven and post-sequence
-   splitting; `:3265` uses the level-19 optimal parser with repeat offsets
-   10/10/10. Block-splitter, superblock, multithread and numeric-level rows
-   remain blocked/partial until their actual contracts are implemented.
+Three normal sweep tests passed in each of safe, all-feature, no-default and
+twelve individual unsafe-feature configurations: **45 complete strategy
+campaigns**. Safe and all-feature release C checks each decoded the complete
+34,639,743-byte C baseline with Rust and three Rust frames with C, totaling
+103,919,229 Rust-to-C output bytes per configuration. An isolated temporary
+multithreaded C-library build also passed the oracle. Frame observations are:
+
+| Encoder | Frame bytes | Complete frame XXH64 |
+| --- | ---: | --- |
+| Original C with inherited controls | 350,954 | `edb8a88a3d01d60a` |
+| Rust Greedy | 348,912 | `dbb1ad7ed4898eea` |
+| Rust Chain | 349,055 | `e125a29d7329804b` |
+| Rust Lazy | 348,567 | `3a7548eab319e174` |
+
+These frames need not be byte-identical across strategies. Rust's bounded
+128 KiB search history does not guarantee choosing every long match suggested
+by the source generator. This campaign checks every original source byte; it
+does not claim that every OF code is emitted by each Rust strategy.
+
+### Original entropy lifetimes at lines 1831 and 1884
+
+[`tests/upstream_entropy_lifetimes.rs`](../tests/upstream_entropy_lifetimes.rs)
+uses the exact 49,152-byte default trained dictionary, including serialized
+header bytes in the original source ranges. Its
+[fixture provenance and reproduction notes](../tests/upstream/entropy-lifetimes/README.md)
+record the training source, both earlier RNG paths and C frame parameters.
+
+At `zstreamtest.c:1831`, both preceding window-sweep modes run: 339,966 RNG
+draws yield seed 437,141,494, and 399,960 draws yield seed 3,173,672,436.
+Each source contains 131,072 RDG(0,0,seed) bytes, 130,816 fresh RDG(.05,0,seed)
+bytes, then serialized dictionary ranges `[256..384]` and `[128..256]`.
+The complete source is 262,144 bytes. C's initial dictionary parameters report
+window log 17, but the single-segment output advertises 262,144 bytes; Rust
+streaming uses log 18. Greedy, Chain and Lazy preserve the two-block boundary,
+raw first block, compressed second block, exact decoded bytes and demonstrated
+dictionary-content dependence. Each safe/all-feature C run checks two original
+C frames with Rust and six Rust streaming plus two one-shot frames with C.
+
+At `:1884`, every one of **43,691** Flush operations submits six `0xaa` bytes,
+including the original two-byte overshoot. Nine 128-byte serialized dictionary
+ranges follow, with offsets 1,024 down to zero: eight Continue operations and
+one Finish. Total source size is **263,298 bytes**. C's actual frame window is
+2 MiB/log 21 despite initial CDict parameters of log 17; Rust matches log 21.
+The original C frame has 43,691 raw small blocks and one final compressed block;
+Rust emits RLE small blocks but preserves every boundary and all eight buffered
+Continue operations. Tests inspect final sequence modes and verify dictionary
+content dependence, rather than relying solely on roundtrip success. Each
+safe/all-feature C run checks the original frame with Rust and all three Rust
+strategy frames with C, totaling 789,894 Rust-to-C decoded bytes.
+
+The normal lifetime tests passed safe, all-feature and no-default builds;
+the six-byte flush case also passed each of the twelve individual unsafe
+features. These default-profile campaigns do not implement numeric C level 3,
+borrowed by-reference CDict ownership or upstream's nondefault training profiles.
+
+## Completed named-strategy corpus adaptation
+
+The regression adapter retains its bounded sorted file plan and one-shot
+baseline. Its separate
+[`external_regression_corpus_named_strategies`](../tests/upstream_regression_corpora.rs)
+runner reuses one encoder for each of Greedy, Chain and Lazy, resets between
+complete files, pledges the original size and drains Finish through guarded
+caller-owned output. It checks progress, total counters and every decoded byte.
+Length-delimited full-source and full-frame fingerprints make backend results
+comparable without requiring different strategies to emit the same frame.
+
+All **512** pinned Silesia/GitHub directory files, **12,407,963 bytes** per
+strategy, passed under safe and all-feature release builds with no skips.
+Every strategy's source/frame fingerprints, byte counts and retained capacities
+agree between builds. The [recorded evidence](evidence/2026-10-09-strategy-corpora.json)
+and [regression scope](../tests/upstream/REGRESSION.md) preserve commands,
+hashes and exact dataset limits. This is functional content replay, not a
+throughput benchmark or the original compressed-size regression matrix.
+The separately downloaded GitHub dictionary and complete tar-byte datasets
+are not substituted for their still-unported method branches.
+
+## Remaining upstream obligations
+
+- Keep the Huffman target partial for independent optimal-tree policy,
+  exact-fit selected-description copying instead of C's capacity-dependent
+  serialization, and the single Rust decoder instead of X1/X2/CPU engines.
+  A successful full corpus run does not remove these distinctions.
+- `fuzzer.c:4190` still requires C's caller-owned normalized-header destination
+  behavior. Huffman caller-output support does not provide that FSE API.
+- `fuzzer.c:1398` requires level 19, minimum match seven and post-sequence
+  splitting; `:3265` uses the level-19 optimal parser with repeat offsets
+  10/10/10. Independent Chain/Lazy policies and duplicate-repeat unit tests
+  do not implement those original strategy contracts.
+- Block-splitter, superblock, target block-size, numeric-level, long-distance
+  matching, context-copy/static workspace and multithreaded encoder groups
+  remain blocked or partial until their actual contracts are implemented.
+- The regression suite still lacks the complete C method/configuration matrix,
+  original numeric levels, dictionary and CLI branches, exact streaming-method
+  schedules, complete tar inputs and historical compressed-size CSV comparisons.
+
+The full upstream migration gate remains open. Completed source schedules and
+content assertions are kept distinct from unavailable API setup and unsupported
+engine or strategy branches; historical validation reports remain unchanged.
 
 The byte fixture at `zstreamtest.c:1743` is already a complete decoder port.
 Its comment describes three blocks, but the actual 51-byte frame contains
