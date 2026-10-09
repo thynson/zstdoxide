@@ -53,7 +53,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [ ] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
 - [x] Add bounded multi-candidate storage with checked stale-link and tag validation.
 - [x] Add unsafe-match-chain with equivalent candidate order and search limits.
-- [ ] Add the bounded multi-candidate parser with deterministic ties and source-independent resolution.
+- [x] Add the bounded multi-candidate parser with deterministic ties and source-independent resolution.
 - [ ] Integrate bounded chain matching with dictionary/history eligibility and documented budgets.
 - [ ] Implement one-byte lazy lookahead with ratio and source-boundary witnesses.
 - [ ] Expose completed named strategies and port supported upstream assertions and corpora.

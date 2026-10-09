@@ -55,6 +55,8 @@ mod huffman_encode;
 mod literal_encode;
 mod literal_header;
 #[cfg(test)]
+mod match_parse;
+#[cfg(test)]
 mod matchchain;
 mod matchfinder;
 mod ring_history;
