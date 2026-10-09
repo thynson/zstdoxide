@@ -45,6 +45,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Plan repeat-offset values forward with exact triples and checked arithmetic.
 - [x] Encode sequences using supplied predefined, new, reused, and RLE tables.
 - [x] Select adaptive per-channel distributions with deterministic complete cost comparisons.
+- [ ] Own pending sequence-table replacements and repeat triples in a resettable transactional context.
 - [ ] Publish FSE and repeat updates only for accepted blocks; verify dictionary/reset lifetimes.
 - [x] Add bounded multi-candidate storage with checked stale-link and tag validation.
 - [x] Add unsafe-match-chain with equivalent candidate order and search limits.
