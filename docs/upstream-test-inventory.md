@@ -117,8 +117,8 @@ existence of a local file.
 | Single-file DXT1 and kernel empty-frame fixtures | `tests/upstream_testcard.rs` | Exact original bytes and output contracts; maximum-level selection, browser rendering, and kernel workspace APIs remain missing |
 | Ordinary streaming and context reuse | `tests/upstream_streaming.rs`, `tests/upstream_window.rs` | Bounded fragmented progress, flush/finish/reset, pledge and checksum failures, official window-distance fixtures and matching external adapters; specialized parameter/control paths remain separate |
 | Prepared dictionaries and prefixes | `src/dictionary.rs`, `tests/upstream_dictionary.rs`, `tests/upstream_dictionary_encode.rs` | Exact malformed/prepared metadata, raw/formatted matches, first-block decoding entropy/repeat offsets, IDs, persistent selection, one-use prefixes and resource/state boundaries; original level/strategy and broader random schedules remain incomplete |
-| Raw and formatted dictionary training | `tests/upstream_training.rs`, `tests/upstream_formatted_training.rs` | Bounded deterministic content selection, generated sample-derived literal metadata, exact cyclic input construction, held-out improvement and bidirectional C interoperability; original CNBuffer, COVER/fastCover, shrink and worker optimization remain incomplete |
-| Dictionary loader and raw roundtrip fuzz targets | `tests/upstream_dictionary_fuzz.rs` | Original tail-selected bytes and supported API assertions; by-reference C lifetimes, advanced random parameters and external sequence producers remain partial |
+| Raw and formatted dictionary training | `tests/upstream_training.rs`, `tests/upstream_formatted_training.rs` | Bounded deterministic content selection, generated sample-derived literal metadata, exact cyclic input construction, held-out improvement and bidirectional C interoperability; COVER/fastCover, shrink, worker optimization and strategy-specific parameter schedules remain incomplete |
+| Dictionary fuzz targets | `tests/upstream_dictionary_fuzz.rs`, `tests/upstream_trained_dictionary_fuzz.rs` | All five pinned target corpora replayed through supported APIs with exact source/sample selectors; original fastCover, by-reference lifetimes, advanced parameters and external sequence producers remain partial |
 
 The dictionary decoder checkpoint runs **40 integration tests** and **11 parser
 unit tests**. The mapped dictionary encoder checkpoints add **24 regular
@@ -128,8 +128,9 @@ tests and a bidirectional 16-frame official-C check on held-out inputs; this is
 an independent raw selection strategy. Formatted training adds seven regular
 tests and a separately exercised C check accepting eight Rust-built dictionaries
 and 36 source/dictionary pairs in both directions. Its cyclic assertion preserves
-the exact original 1 MiB sample layout. Neither trainer implements COVER/fastCover
-optimization. The fixtures include the original HTTP/fixed-training/invalid
+the exact original 1 MiB sample layout. A second independent C-backed campaign
+trains on the original CNBuffer sample layout and verifies all five complete
+5 MiB sources. Neither trainer implements COVER/fastCover optimization. The fixtures include the original HTTP/fixed-training/invalid
 dictionaries plus **48** reproducible dictionary-related files backed by **123**
 independent C oracle outcomes. C acceptance and the selected format lifetime rule
 remain separate: dictionary references at P==W are accepted and references at
@@ -179,19 +180,22 @@ release builds with all unsafe features enabled and no skipped files:
 | `stream_round_trip` | 24,223 | Complete selected source bytes, randomized supported chunk/directive schedules and exact decoded content |
 | `dictionary_loader` | 2,271 | Exact tail-selected load modes; 1,919 exact roundtrips and 352 formatted-dictionary parse rejections |
 | `raw_dictionary_round_trip` | 13,876 | Exact source/dictionary regions, prefix selection, checksum disabling, compression-bound destination and exact decoded content |
+| `dictionary_decompress` | 12,063 | 11,768 trained dictionaries, 295 expected empty fallbacks; 20 bounded successful decodes and 12,043 malformed-source rejections |
+| `dictionary_round_trip` | 30,925 | 30,722 trained dictionaries, 203 expected empty fallbacks; every source roundtrips exactly |
+| `dictionary_stream_round_trip` | 24,223 | 23,821 trained dictionaries, 402 expected empty fallbacks; every adapted directive schedule restores exact content |
 
 These are partial adapters for the original C targets because their missing
 API/control paths remain absent. The 79-input FSE corpus is downloaded and
 pinned; the upstream writer-based target has not been replayed. The source
 inventory keeps those distinctions even when all inputs in a selected
-supported adapter pass. Both streaming corpora and both dictionary corpora also passed safe release
+supported adapter pass. Both streaming corpora and all five dictionary corpora also passed safe release
 builds; their random C compression parameters, stable-buffer, in-place,
 by-reference and sequence-producer branches are not claimed by the adapters.
-The pinned dictionary decompression (12,063 inputs), trained dictionary
-roundtrip (30,925), and trained dictionary streaming roundtrip (24,223) corpora
-have not yet been replayed. The latter archive is byte-identical to the ordinary
-streaming roundtrip snapshot; its different target still requires a separate
-adapter and replay.
+The three trained-target adapters preserve all 100 original sample-range
+selectors, verified against C, and use independent Rust training with the same
+explicit training-failure fallback. Their fastCover path is still partial.
+The dictionary streaming archive is byte-identical to the ordinary streaming
+roundtrip snapshot and has now also passed its separate dictionary target.
 
 The fifteen selected archives contain 2,682,880,516 unpacked bytes. The importer
 allows a 4 GiB combined snapshot while retaining its 1 GiB per-archive ceiling.

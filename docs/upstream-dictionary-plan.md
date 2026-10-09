@@ -228,7 +228,7 @@ the existing partial streaming mapping without claiming additional C case parity
 `tests/upstream_training.rs` exercises four regular raw-training contracts and
 16 held-out bidirectional official-C roundtrips. Independent C compression totals
 decreased from 2,263 to 609 bytes with the Rust-selected content. Training maps as
-partial for the original CNBuffer campaign and COVER/fastCover optimization.
+partial for COVER/fastCover optimization and strategy-specific controls.
 The raw-only API intentionally emits content; the separate formatted trainer
 constructs its entropy metadata algorithmically as described below.
 
@@ -237,9 +237,13 @@ The formatted-training checkpoint adds seven regular tests in
 uses 1 MiB of index-modulo-256 bytes, 128 samples of 8 KiB and a 16 KiB output cap;
 it successfully constructs a bounded dictionary with a nonzero ID and a usable
 entropy header. This completes the named construction-success assertion without
-requiring the Rust training algorithm to reproduce C output bytes. The broader
-`fuzzer.c:2675` CNBuffer campaign remains partial. COVER/fastCover, shrink,
-worker and randomized strategy groups remain blocked.
+requiring the Rust training algorithm to reproduce C output bytes. The generic
+`fuzzer.c:2675` assertion also runs on exact C-generated CNBuffer data: five
+5 MiB seed/profile sources, each trained from its first 1 MiB as 128 samples of
+8 KiB with a 16 KiB cap. Independent C verifies IDs/header sizes and decodes every
+source byte; the five campaigns cover 26,214,400 bytes in safe and all-feature
+release. The original level-4 compression setup remains partial. COVER/fastCover,
+shrink, worker and randomized strategy groups remain blocked.
 
 Generated ID and header assertions now exercise both newly built dictionaries
 and the original fixed dictionary. The ID/header groups are tracked separately
@@ -266,9 +270,10 @@ parameters and external sequence producers remain explicit omissions. The entire
 2,271-input loader corpus passed safe and all-feature release: 1,919 exact
 roundtrips and 352 expected formatted parse rejections. The raw-target corpus
 also passed both builds with 13,876 exact roundtrips. Neither replay skips files.
-`dictionary_decompress`, trained roundtrip and trained streaming-roundtrip drivers
-still require target adapters for their original `FUZZ_train` sample schedules
-and parameter branches; the independent Rust formatted trainer itself is now available.
+The three training-dependent targets now have adapters and full safe/all-feature
+release replays. Their original sample selection is C-verified. Rust training
+replaces fastCover, and unsupported advanced-parameter consumption shifts later
+scheduling selectors where documented; these target mappings remain partial.
 
 External corpus pinning and replay are separate checkpoints. A completed download
 or manifest hash does not change a target's replay status. The structural source
@@ -285,15 +290,18 @@ sizes are recorded in `tests/upstream/external-corpora.json`.
 | --- | ---: | ---: | ---: | --- |
 | `dictionary_loader` | 2,271 | 16,884,318 | 21,830 | Safe and all-feature release; 1,919 roundtrips, 352 formatted rejections |
 | `raw_dictionary_round_trip` | 13,876 | 348,323,083 | 1,000,000 | Safe and all-feature release; all exact roundtrips |
-| `dictionary_decompress` | 12,063 | 353,411,091 | 1,048,576 | Target adapter/replay pending |
-| `dictionary_round_trip` | 30,925 | 683,621,507 | 1,048,578 | Target adapter/replay pending |
-| `dictionary_stream_round_trip` | 24,223 | 469,442,481 | 1,048,688 | Target adapter/replay pending |
+| `dictionary_decompress` | 12,063 | 353,411,091 | 1,048,576 | Safe/all-feature release; 11,768 trained, 295 empty fallbacks, 20 decoded inputs |
+| `dictionary_round_trip` | 30,925 | 683,621,507 | 1,048,578 | Safe/all-feature release; 30,722 trained, 203 empty fallbacks, all exact roundtrips |
+| `dictionary_stream_round_trip` | 24,223 | 469,442,481 | 1,048,688 | Safe/all-feature release; 23,821 trained, 402 empty fallbacks, all exact roundtrips |
 
-The two completed targets accept every selected file without skipping. They use
-a 2 MiB input bound and 65,536-file cap. The three remaining original targets
+All five target adapters process every selected file without skipping. They use
+a 2 MiB input bound and 65,536-file cap. The three training-dependent original targets
 call `zstd_helpers.c:168` `FUZZ_train`, which consumes 100 tail-selected sample
-offsets and invokes fixed fastCover parameters. Their corpus availability does
-not establish a Rust adaptation of that training path or its advanced controls.
+offsets and invokes fixed fastCover parameters. Independent C verifies all
+3,600 selected ranges across 36 helper cases. The adapters preserve that sample
+loop while substituting independent Rust training; their fastCover and advanced
+parameter paths remain partial. See [trained-dictionary-fuzz-design.md](trained-dictionary-fuzz-design.md)
+for exact adapter boundaries, full replay counts and log hashes.
 
 The dictionary streaming archive shares its complete bytes with the separately
 named ordinary streaming archive. Separate target records preserve the different
@@ -317,7 +325,7 @@ python3 scripts/fetch_upstream_corpora.py --offline \
   --cache /path/to/external-cache --zstd /path/to/zstd-v1.5.7
 ```
 
-Replay the two available dictionary targets separately, adding `--all-features`
+Replay the loader/raw dictionary targets separately, adding `--all-features`
 to repeat with every unsafe backend enabled:
 
 ```sh

@@ -66,7 +66,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Map implemented parser/decoder assertions to pinned upstream source groups.
 - [x] Port dictionary encoder lifetime, effectiveness, ID, window, and interoperability assertions.
 - [x] Map encoder, raw-training, and dictionary fuzz assertions to pinned upstream groups.
-- [ ] Port applicable official dictionary preparation and training assertions.
+- [x] Port applicable official dictionary preparation and training assertions.
 - [x] Map generated dictionary metadata and exact cyclic training assertions to upstream.
 - [x] Correct stale capability descriptions without changing unverified coverage statuses.
 - [x] Port the exact generated CNBuffer training sample campaign and roundtrip assertions.
@@ -79,7 +79,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Preserve the trained fuzz helper's 100 sample ranges, capacity, and failure fallback.
 - [x] Adapt trained dictionary decompression and deterministic roundtrip fuzz assertions.
 - [x] Adapt trained streaming dictionaries with fragmented progress and prefix lifetime assertions.
-- [ ] Replay matching external dictionary corpora with explicit coverage mappings.
+- [x] Replay matching external dictionary corpora with explicit coverage mappings.
 - [x] Extend deterministic benchmark workloads for dictionary access, codec contexts, and training.
 - [x] Measure all eleven backend configurations and preserve dictionary/training timing and memory results.
 - [x] Include dictionary and training backends and C oracles in the validation scripts.

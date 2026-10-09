@@ -16,12 +16,13 @@
       "url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/",
       "manifest": "tests/upstream/external-corpora.json",
       "status": "partial",
-      "reason": "Twelve rolling fuzz archives are independently SHA-256 pinned. Release all-feature adapters replayed every selected simple_decompress (11631), zstd_frame_info (2395), too-small destination (1173), huf_decompress (605, both parameter-consumption modes), stream_decompress (12462), and stream_round_trip (24223) input without skips. Both streaming adapters also passed safe release. Dictionary loader (2271: 1919 exact roundtrips and 352 formatted parse rejections) and raw dictionary roundtrip (13876 exact roundtrips) passed safe and all-feature release without skips. Their C parameter/by-reference/sequence-producer paths remain partial. Dictionary decompress (12063), trained roundtrip (30925), trained streaming roundtrip (24223) and the 79-input FSE writer-based target are pinned but not replayed. Snapshots are not asserted to originate from the v1.5.7 tag; dictionary_stream_round_trip shares archive bytes with stream_round_trip but retains a separate target contract.",
+      "reason": "Twelve rolling fuzz archives are independently SHA-256 pinned. Every selected simple_decompress(11631),zstd_frame_info(2395),too-small destination(1173) and huf_decompress(605,both parameter modes) input passed all-feature release. Both ordinary streaming targets passed safe/all-feature release:12462 decompression and24223 roundtrip inputs. All five dictionary targets passed safe/all-feature release:2271 loader,13876 raw roundtrip,12063 trained decompression,30925 trained roundtrip and24223 trained streaming inputs; no files skipped. Training/fallback counts and partial parameter/by-reference/fastCover coverage remain explicit in the source records. The 79-input FSE writer-based target is pinned but not yet replayed. Snapshots are independent of the v1.5.7 tag; shared archive bytes do not establish another target's coverage.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#external_file_corpus",
         "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus",
         "tests/upstream_streaming.rs#external_official_streaming_corpus",
-        "tests/upstream_dictionary_fuzz.rs#external_dictionary_file_corpus"
+        "tests/upstream_dictionary_fuzz.rs#external_dictionary_file_corpus",
+        "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
       ]
     },
     {
@@ -4366,12 +4367,15 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Prepared/raw/prefix bounded decoding, malformed frames and output limits run on deterministic official fixtures. Independent raw/formatted trainers now exist, but the original FUZZ_train fastCover path, tail-consumption schedule and arbitrary source/context corpus replay remain unported.",
+      "reason": "Exact reserved source,100 training-sample offsets, prepared/loaded/prefix mode and output-limit selectors run through owned shared dictionaries. Successful decoding has bounded progress/output and canaries; malformed source may fail. Safe/all-feature release each replayed 12063 files:11768 trained,295 TrainingFailed empty fallbacks,20 successful decodes and 12043 source rejections; no skips. Training uses the independent Rust algorithm instead of fastCover, and C by-reference/constructor variants share the owned Rust handle.",
       "rust_tests": [
         "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
         "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
         "tests/upstream_dictionary.rs#one_shot_dictionary_helper_rejects_every_incomplete_frame_prefix",
-        "tests/upstream_dictionary.rs#dictionaries_do_not_relax_advertised_window_or_output_limits"
+        "tests/upstream_dictionary.rs#dictionaries_do_not_relax_advertised_window_or_output_limits",
+        "tests/upstream_trained_dictionary_fuzz.rs#trained_decompression_covers_prepared_loaded_prefix_modes_and_valid_controls",
+        "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
+        "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
       ],
       "line_count": 77,
       "cases": [
@@ -4382,12 +4386,15 @@
           "line_end": 77,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Prepared/raw/prefix bounded decoding, malformed frames and output limits run on deterministic official fixtures. Independent raw/formatted trainers now exist, but the original FUZZ_train fastCover path, tail-consumption schedule and arbitrary source/context corpus replay remain unported.",
+          "reason": "Exact reserved source,100 training-sample offsets, prepared/loaded/prefix mode and output-limit selectors run through owned shared dictionaries. Successful decoding has bounded progress/output and canaries; malformed source may fail. Safe/all-feature release each replayed 12063 files:11768 trained,295 TrainingFailed empty fallbacks,20 successful decodes and 12043 source rejections; no skips. Training uses the independent Rust algorithm instead of fastCover, and C by-reference/constructor variants share the owned Rust handle.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
             "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
             "tests/upstream_dictionary.rs#one_shot_dictionary_helper_rejects_every_incomplete_frame_prefix",
-            "tests/upstream_dictionary.rs#dictionaries_do_not_relax_advertised_window_or_output_limits"
+            "tests/upstream_dictionary.rs#dictionaries_do_not_relax_advertised_window_or_output_limits",
+            "tests/upstream_trained_dictionary_fuzz.rs#trained_decompression_covers_prepared_loaded_prefix_modes_and_valid_controls",
+            "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
+            "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
           ]
         }
       ]
@@ -4429,9 +4436,13 @@
       "sha256": "374c0ab4314bb104a9e29b35f528fff8a2ce19b597f05aec724f9da804efe8b5",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "blocked",
-      "reason": "Independent raw/formatted training and dictionary encoding now exist, but the original FUZZ_train fastCover path, randomized C parameter schedule and complete target driver remain unported.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Source reservation, smaller compression-bound destination,100 sample offsets, prefix/content-mode choice, repeated byte-identical compression and exact decoding run. Safe/all-feature release each replayed 30925 files:30722 trained,203 TrainingFailed empty fallbacks and 30925 exact roundtrips; no skips. Rust training replaces fastCover. Unsupported levels/random parameters and external sequence producers remain partial; selectors following omitted advanced-parameter consumption are not claimed at original C tail positions.",
+      "rust_tests": [
+        "tests/upstream_trained_dictionary_fuzz.rs#trained_roundtrip_covers_modes_prefixes_reduced_bounds_and_training_fallback",
+        "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
+        "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
+      ],
       "line_count": 155,
       "cases": [
         {
@@ -4440,9 +4451,13 @@
           "line_start": 29,
           "line_end": 109,
           "label": "roundTripTest",
-          "status": "blocked",
-          "reason": "Independent raw/formatted training and dictionary encoding now exist, but the original FUZZ_train fastCover path, randomized C parameter schedule and complete target driver remain unported.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Source reservation, smaller compression-bound destination,100 sample offsets, prefix/content-mode choice, repeated byte-identical compression and exact decoding run. Safe/all-feature release each replayed 30925 files:30722 trained,203 TrainingFailed empty fallbacks and 30925 exact roundtrips; no skips. Rust training replaces fastCover. Unsupported levels/random parameters and external sequence producers remain partial; selectors following omitted advanced-parameter consumption are not claimed at original C tail positions.",
+          "rust_tests": [
+            "tests/upstream_trained_dictionary_fuzz.rs#trained_roundtrip_covers_modes_prefixes_reduced_bounds_and_training_fallback",
+            "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
+            "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
+          ]
         },
         {
           "id": "tests/fuzz/dictionary_round_trip.c:110",
@@ -4450,9 +4465,13 @@
           "line_start": 110,
           "line_end": 155,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "blocked",
-          "reason": "Independent raw/formatted training and dictionary encoding now exist, but the original FUZZ_train fastCover path, randomized C parameter schedule and complete target driver remain unported.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Source reservation, smaller compression-bound destination,100 sample offsets, prefix/content-mode choice, repeated byte-identical compression and exact decoding run. Safe/all-feature release each replayed 30925 files:30722 trained,203 TrainingFailed empty fallbacks and 30925 exact roundtrips; no skips. Rust training replaces fastCover. Unsupported levels/random parameters and external sequence producers remain partial; selectors following omitted advanced-parameter consumption are not claimed at original C tail positions.",
+          "rust_tests": [
+            "tests/upstream_trained_dictionary_fuzz.rs#trained_roundtrip_covers_modes_prefixes_reduced_bounds_and_training_fallback",
+            "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
+            "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
+          ]
         }
       ]
     },
@@ -4462,9 +4481,13 @@
       "sha256": "a405de5ac5b31c8f7ca262505c9164e5878899ef8d8b29d3981a6d8ab9b1cd1d",
       "suite": "libfuzzer",
       "role": "fuzz_target",
-      "status": "blocked",
-      "reason": "Independent raw/formatted training and dictionary encoding now exist, but the original FUZZ_train fastCover path, randomized C parameter schedule and complete target driver remain unported.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "Pre-training mode,100 sample offsets and prefix selectors are exact. Continue/Flush/Finish schedules preserve progress, canaries, source order, dictionary persistence, one-use prefixes and exact concatenated output. Safe/all-feature release each replayed 24223 files:23821 trained,402 TrainingFailed empty fallbacks and 24223 exact decodes; no skips. Rust training replaces fastCover; unsupported random C parameter consumption shifts the subsequent adapted schedule tail, and worker/strategy/sequence-producer branches remain partial.",
+      "rust_tests": [
+        "tests/upstream_trained_dictionary_fuzz.rs#trained_stream_schedules_cover_every_mode_and_prefix_lifetime_across_reset",
+        "tests/upstream_trained_dictionary_fuzz.rs#trained_stream_target_covers_modes_prefixes_empty_sources_and_noise",
+        "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
+      ],
       "line_count": 209,
       "cases": [
         {
@@ -4473,9 +4496,13 @@
           "line_start": 149,
           "line_end": 209,
           "label": "LLVMFuzzerTestOneInput",
-          "status": "blocked",
-          "reason": "Independent raw/formatted training and dictionary encoding now exist, but the original FUZZ_train fastCover path, randomized C parameter schedule and complete target driver remain unported.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Pre-training mode,100 sample offsets and prefix selectors are exact. Continue/Flush/Finish schedules preserve progress, canaries, source order, dictionary persistence, one-use prefixes and exact concatenated output. Safe/all-feature release each replayed 24223 files:23821 trained,402 TrainingFailed empty fallbacks and 24223 exact decodes; no skips. Rust training replaces fastCover; unsupported random C parameter consumption shifts the subsequent adapted schedule tail, and worker/strategy/sequence-producer branches remain partial.",
+          "rust_tests": [
+            "tests/upstream_trained_dictionary_fuzz.rs#trained_stream_schedules_cover_every_mode_and_prefix_lifetime_across_reset",
+            "tests/upstream_trained_dictionary_fuzz.rs#trained_stream_target_covers_modes_prefixes_empty_sources_and_noise",
+            "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus"
+          ]
         }
       ]
     },
@@ -5043,9 +5070,14 @@
       "sha256": "45431059584f9719d4c7ee2657f85c2b3955755abcdd58c840aeec7e153e780c",
       "suite": "libfuzzer",
       "role": "support",
-      "status": "non_applicable",
-      "reason": "Upstream harness support or C/C++ helper implementation; observable tests are tracked separately and Rust helpers own their buffers.",
-      "rust_tests": [],
+      "status": "partial",
+      "reason": "FUZZ_train sample selection at 168-208 is ported with 100 exact tail-selected ranges, original capacity/remaining-sample rules and explicit empty fallback only for TrainingFailed. Independent C verifies 36 cases/3,600 ranges and producer positions. Dictionary construction uses independent Rust training; original fastCover and FUZZ_setRandomParameters helpers remain unported.",
+      "rust_tests": [
+        "tests/upstream_trained_dictionary_fuzz.rs#training_sample_ranges_match_pinned_c_vectors_and_producer_positions",
+        "tests/upstream_trained_dictionary_fuzz.rs#training_samples_cover_empty_exhausted_and_full_capacity_sources",
+        "tests/upstream_trained_dictionary_fuzz.rs#training_succeeds_or_uses_only_the_explicit_empty_fallback",
+        "tests/upstream_trained_dictionary_fuzz.rs#official_training_sample_loop_matches_every_selected_range"
+      ],
       "line_count": 208,
       "cases": []
     },
@@ -5111,7 +5143,8 @@
         "tests/upstream_formatted_training.rs#malformed_options_and_insufficient_selection_fail_with_specific_errors",
         "tests/upstream_formatted_training.rs#large_caps_do_not_force_large_allocations_and_dictionary_bytes_own_their_sources",
         "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
-        "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions"
+        "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+        "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
       ],
       "line_count": 5147,
       "cases": [
@@ -6445,15 +6478,16 @@
           "line_start": 2675,
           "line_end": 2681,
           "label": "test%3i : dictBuilder :",
-          "status": "partial",
-          "reason": "Raw and formatted training construct deterministic owned useful dictionaries, learn literal metadata from samples, and pass held-out Rust and independent C roundtrips. The original CNBuffer sample campaign and ZDICT/COVER/fastCover optimization algorithms are not reproduced.",
+          "status": "ported",
+          "reason": "The original generic training-success assertion runs on exact official RDG-generated 5-MiB CNBuffer sources: first 1 MiB as 128 samples of 8 KiB and 16 KiB dictionary capacity. Five seed/profile campaigns train successfully, match independently C-read IDs/header sizes, and recover every source byte with Rust and C. Independent Rust training need not reproduce upstream dictionary bytes; strategy-specific COVER/fastCover groups remain blocked.",
           "rust_tests": [
             "tests/upstream_training.rs#trained_content_improves_held_out_messages_and_roundtrips_exactly",
             "tests/upstream_training.rs#official_codec_uses_rust_trained_content_for_independent_held_out_roundtrips",
             "tests/upstream_training.rs#training_is_independent_of_allocation_addresses_and_releases_sample_borrows",
             "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
             "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
-            "tests/upstream_formatted_training.rs#large_caps_do_not_force_large_allocations_and_dictionary_bytes_own_their_sources"
+            "tests/upstream_formatted_training.rs#large_caps_do_not_force_large_allocations_and_dictionary_bytes_own_their_sources",
+            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
           ]
         },
         {
@@ -6545,13 +6579,14 @@
           "line_end": 2764,
           "label": "test%3i : compress with dictionary :",
           "status": "partial",
-          "reason": "Useful compression with C-generated and Rust-trained formatted dictionaries is verified by exact Rust and independent C decoding. The original level 4/CNBuffer campaign and specialized C preparation/strategy setup remain unported.",
+          "reason": "Useful dictionary compression covers exact official CNBuffer campaigns and C/Rust-generated formatted dictionaries, with full Rust and independent C decoding. Original level 4 and specialized C preparation/strategy parameter setup remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#raw_and_formatted_dictionary_matches_reduce_size_for_independent_source_bytes",
             "tests/upstream_dictionary_encode.rs#official_codec_decodes_raw_prepared_and_omitted_id_dictionary_frames",
             "tests/upstream_dictionary_encode.rs#official_codec_decodes_one_shot_dictionary_frames_across_content_size_boundaries",
             "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
-            "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions"
+            "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
           ]
         },
         {
@@ -6590,12 +6625,13 @@
           "line_end": 2787,
           "label": "test%3i : frame built with dictionary should be decompressible :",
           "status": "partial",
-          "reason": "C-generated and Rust-trained dictionaries decode exact one-shot and fragmented content, with bidirectional official-C checks for generated metadata. The original CNBuffer and compression-parameter campaign remains unported.",
+          "reason": "C-generated and Rust-trained dictionaries decode exact one-shot/fragmented content; five full 5-MiB official CNBuffer campaigns match both Rust and independent C decoding. Original level 4/C-specific frame-construction parameters remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
             "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
             "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
-            "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions"
+            "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
           ]
         },
         {
@@ -6615,13 +6651,14 @@
           "line_end": 2808,
           "label": "test%3i : compress with CDict",
           "status": "partial",
-          "reason": "Useful compression with C-generated and Rust-trained formatted dictionaries is verified by exact Rust and independent C decoding. The original level 4/CNBuffer campaign and specialized C preparation/strategy setup remain unported.",
+          "reason": "Useful dictionary compression covers exact official CNBuffer campaigns and C/Rust-generated formatted dictionaries, with full Rust and independent C decoding. Original level 4 and specialized C preparation/strategy parameter setup remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#raw_and_formatted_dictionary_matches_reduce_size_for_independent_source_bytes",
             "tests/upstream_dictionary_encode.rs#official_codec_decodes_raw_prepared_and_omitted_id_dictionary_frames",
             "tests/upstream_dictionary_encode.rs#official_codec_decodes_one_shot_dictionary_frames_across_content_size_boundaries",
             "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
-            "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions"
+            "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
           ]
         },
         {
@@ -6646,12 +6683,13 @@
           "line_end": 2825,
           "label": "test%3i : frame built with dictionary should be decompressible :",
           "status": "partial",
-          "reason": "C-generated and Rust-trained dictionaries decode exact one-shot and fragmented content, with bidirectional official-C checks for generated metadata. The original CNBuffer and compression-parameter campaign remains unported.",
+          "reason": "C-generated and Rust-trained dictionaries decode exact one-shot/fragmented content; five full 5-MiB official CNBuffer campaigns match both Rust and independent C decoding. Original level 4/C-specific frame-construction parameters remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
             "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
             "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
-            "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions"
+            "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
+            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
           ]
         },
         {
