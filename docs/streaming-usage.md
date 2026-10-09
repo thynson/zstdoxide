@@ -81,6 +81,60 @@ session and install validated settings together, use `reset_with_options`.
 Reference numeric levels and reference strategies belong to parameter
 inspection; this method accepts only the implemented named Rust policies.
 
+## Resetting an encoder
+
+The reset operations have separate session and parameter effects:
+
+| Operation | Session and counters | Settings | Dictionary and prefix selection |
+| --- | --- | --- | --- |
+| `reset()` | Discard the session; ready with zero counters | Preserve persistent options; clear the source pledge | Preserve a persistent dictionary or unclaimed prefix; release a claimed prefix |
+| `reset_with_options(options)` | Validate first, then discard the session | Install supplied options, including their pledge | Preserve the same selection contract as `reset()` |
+| `reset_parameters()` | Accept only fresh or finished; preserve counters and phase | Restore Rust defaults, including no pledge | Clear all selected and workspace attachments and cached dictionary seeds |
+| `reset_all()` | Discard any session, including a failed one; ready with zero counters | Restore Rust defaults | Clear all attachments and dictionary seeds |
+
+A completed encoder remains finished after `reset_parameters()`. Its `options()`
+now reports the newly configured defaults, while its counters still describe
+the completed session. Use `reset()` or `reset_all()` before another frame.
+
+```rust
+use zstdoxide::{Encoder, EncoderOptions, EndDirective, StreamStatus, decompress};
+
+let mut encoder = Encoder::with_options(EncoderOptions {
+    window_log: 10,
+    checksum: false,
+    pledged_size: Some(3),
+    ..EncoderOptions::default()
+})?;
+let mut output = [0; 32];
+let progress = encoder.process(b"abc", &mut output, EndDirective::Finish)?;
+assert_eq!(progress.status, StreamStatus::FrameFinished);
+let counters = (encoder.total_input(), encoder.total_output());
+encoder.reset_parameters()?;
+assert_eq!(encoder.options(), EncoderOptions::default());
+assert_eq!((encoder.total_input(), encoder.total_output()), counters);
+assert_eq!(encoder.process(&[], &mut [], EndDirective::Finish)?.status,
+           StreamStatus::FrameFinished);
+
+encoder.reset_all();
+assert_eq!((encoder.total_input(), encoder.total_output()), (0, 0));
+let progress = encoder.process(b"after", &mut output, EndDirective::Finish)?;
+assert_eq!(progress.status, StreamStatus::FrameFinished);
+assert_eq!(decompress(&output[..progress.produced], 5)?, b"after");
+# Ok::<(), zstdoxide::Error>(())
+```
+
+Parameter/full reset retain owned codec buffers and their allocator values;
+they do not allocate, clone allocators or shrink workspace. Clearing the last
+shared dictionary handle can release that dictionary's separately owned
+payload. Clearing a borrowed `DictionaryView` does not shorten the lifetime
+required by the context type. `reset_parameters()` rejects active and failed
+sessions unchanged; `reset_all()` explicitly recovers them.
+
+These are the Rust encoder's contracts. The reference C parameter reset has
+different pledge/checksum defaults and C automatically accepts a subsequent
+frame. Decoder output/window limits remain governed by `DecodeOptions` and its
+existing session-reset API.
+
 ## Selecting bounded match effort
 
 Set `EncoderOptions::strategy` to `CompressionStrategy::Chain` to search up to

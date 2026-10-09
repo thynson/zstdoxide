@@ -332,3 +332,12 @@ public API, including the original adjustment and dictionary-size equalities.
 All eleven pass in four safe/feature/std configurations, with strict focused
 Clippy and formatting. The adapters label detached-request and frame-default
 subsets precisely; live lifecycle tests and inventory updates remain separate.
+
+Parameter-only and full encoder resets now implement their documented phase
+contracts, clear every selected/active dictionary handle and both seed caches,
+and preserve exact codec allocator owners without allocation or cloning. Five
+new tests cover phase legality, ownership and allocation-failure recovery;
+safe/all streaming suites each pass 26 tests. Focused feature/no_std checks,
+strict Clippy, two narrow strict-provenance Miri tests and 36 independent C frame
+decodes pass. All four streaming usage examples pass safe/all. Public official
+lifecycle adaptations remain the next independent migration checkpoint.

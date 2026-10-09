@@ -141,3 +141,37 @@ embeds exact commands and logs. The adapters distinguish detached request values
 from live context reset, and do not claim a seven-field bulk setter, LDM-enabled
 compressed equality or numeric-level execution. Lifecycle integration and
 case-inventory promotion remain separate work items.
+
+## Parameter-only and full encoder reset
+
+`reset_parameters` restores Rust defaults and clears dictionary/prefix state at
+a fresh boundary or after frame completion. A finished session keeps its phase,
+counters and checksum bookkeeping until session reset. Other phases reject
+without mutation. `reset_all` accepts every phase, restores defaults and returns
+a fresh session. Both clear workspace handles and both dictionary seed families
+in place, retaining every codec allocation and its exact allocator owner. They
+perform no allocation or allocator clone. C's fresh parameter reset retains its
+pledge and differs in checksum defaults; the Rust contract states this explicitly.
+
+Five new tests cover ten concrete phases, sixteen shared dictionary/prefix
+combinations, distinct allocator domains, borrowed non-Clone owners, final-handle
+release, armed allocation failures, failure recovery before/after prefix claim,
+seed invalidation and unchanged next-frame default bytes. The final seed test
+probes a strictly later coordinate so equal-position filtering cannot mask stale
+state. Its initial coordinate correction and final strengthening remain in
+[reset evidence](evidence/2026-10-09-encoder-resets.json).
+
+Complete safe/all streaming suites each pass 26 tests with one explicit oracle
+ignored. The focused reset tests also pass under no_std, no_std with all unsafe
+backends, and five relevant individual unsafe features. The final seed assertion
+passes all nine focused configurations. Both no_std library checks, strict
+all-target/all-feature Clippy, formatting and diff checks pass. All four streaming
+usage examples pass safe/all. Independent read-only review found no issue in
+phase legality, handle release, seed invalidation or allocator preservation.
+
+Two narrow all-feature strict-provenance Miri executions cover allocation failure
+around prefix claim and borrowed-owner prefix clearing. They do not cover the
+large shared/formatted dictionary or chain phase matrix under Miri. Existing
+pinned-C regression runs decode 18 generated frames exactly per safe/all release
+build; these are interoperability checks, not identical C/Rust reset protocols.
+Source-anchored public lifecycle integration is the next separate checkpoint.

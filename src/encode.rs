@@ -358,6 +358,20 @@ impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
         self.window_size = MAX_BLOCK_SIZE as u64;
     }
 
+    /// Invalidate cached dictionary indices after resetting the active frame.
+    ///
+    /// Seeds own only initialized indices/tags, never dictionary references.
+    /// Parameter resets clear those values while preserving both storage
+    /// families and their exact allocator owners for later frame preparation.
+    pub(crate) fn clear_dictionary_seeds(&mut self) {
+        if let Some(seed) = &mut self.dictionary_seed {
+            seed.reset();
+        }
+        if let Some(seed) = &mut self.chain_seed {
+            seed.reset();
+        }
+    }
+
     /// Codec payload capacity owned by the workspace, excluding inline values,
     /// opaque allocator bookkeeping, and dictionary/control-block storage whose
     /// ownership or borrow is accounted for separately by the enclosing context.
@@ -837,6 +851,71 @@ mod tests {
             fail_at: None,
         })
         .unwrap()
+    }
+
+    #[test]
+    fn parameter_reset_clears_both_dictionary_seed_families_without_allocating() {
+        let owner = block_allocator();
+        let monitor = owner.monitor();
+        let dictionary = Dictionary::raw(b"abcdabcdabcdabcd").unwrap().into_shared();
+        let mut encoder = BlockEncoder::<_, SharedDictionary>::new_in(owner);
+        encoder.start_frame(Some(dictionary.clone()), 1024).unwrap();
+        assert!(
+            encoder
+                .dictionary_seed
+                .as_mut()
+                .unwrap()
+                .replace(*b"abcd", 128)
+                .is_some()
+        );
+        encoder.set_strategy(CompressionStrategy::Chain);
+        encoder.start_frame(Some(dictionary.clone()), 1024).unwrap();
+        assert!(
+            encoder
+                .chain_seed
+                .as_ref()
+                .unwrap()
+                .candidates(*b"abcd", u64::MAX, 8)
+                .unwrap()
+                .next()
+                .is_some()
+        );
+        let before = monitor.snapshot();
+        let capacity = encoder.retained_capacity();
+        assert!(monitor.fail_next());
+        encoder.reset();
+        encoder.clear_dictionary_seeds();
+        assert_eq!(monitor.snapshot(), before);
+        assert_eq!(encoder.retained_capacity(), capacity);
+        assert_eq!(SharedDictionary::strong_count(&dictionary), 1);
+        assert_eq!(
+            encoder
+                .dictionary_seed
+                .as_mut()
+                .unwrap()
+                .replace(*b"abcd", 129),
+            None
+        );
+        assert_eq!(
+            encoder
+                .chain_seed
+                .as_ref()
+                .unwrap()
+                .candidates(*b"abcd", u64::MAX, 8)
+                .unwrap()
+                .next(),
+            None
+        );
+        let mut witness = Vec::<u8, _>::new_in(&encoder.allocator);
+        assert!(witness.try_reserve_exact(1).is_err());
+        drop(witness);
+        assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
+        drop(encoder);
+        monitor.assert_released();
+        assert_eq!(
+            monitor.snapshot().identities_created,
+            monitor.snapshot().owners_dropped
+        );
     }
 
     // The independent pre-migration helper intentionally repeats only the first

@@ -1,0 +1,823 @@
+{
+  "schema_version": 1,
+  "checkpoint": "Module 10 live encoder parameter-only and full reset",
+  "recorded_utc": "2026-10-09T06:09:13.616120+00:00",
+  "base_head_at_final_verification": "9da0976a25e32edf09c6da40f618433bebbd15af",
+  "toolchain": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3",
+  "owned_files": {
+    "src/stream_encode.rs": "13b15e564b781542cec4647eedeaae19c5dfd82a16c5e67d1c61b384d4c4c98a",
+    "src/encode.rs": "416ffa147ba55c2f06da6fd609b9759114d588634c38da2449b419452a71e2b7"
+  },
+  "implementation": {
+    "reset_parameters": "Fresh configuration boundary or Finished only; phase-first rejection is atomic/nonpoisoning. Restores Rust EncoderOptions defaults, drops all dictionary/prefix/workspace handles, clears both cached seed families, retains Finished/counters/session bookkeeping and exact allocation owners/capacities.",
+    "reset_all": "Every phase, including Failed. Restores defaults, clears session/pending/directive/checksum/counters and all dictionary/prefix/workspace handles/seeds. Retains exact allocation owners/capacities; recovers poison.",
+    "existing_contracts": "reset and reset_with_options unchanged. No numeric level API, no new unsafe operations. Borrowed handle lifetime remains part of the context type."
+  },
+  "coverage": {
+    "new_native_tests": 5,
+    "complete_stream_suite_per_safe_all_build": {
+      "passed": 26,
+      "ignored": 1
+    },
+    "new_test_contracts": [
+      "Ten actual fresh/header/buffer/flush/finish/failure phases; Finished idempotent Finish and preserved counters after parameter reset.",
+      "Sixteen prepared shared dictionary/prefix cases across Greedy/Chain; last Arc/Rc strong handle release, independent dictionary allocator balance, retained codec capacities and pointer stability.",
+      "Armed next allocation remains armed through accepted resets; unchanged allocator snapshots prove no allocation or allocator clone during reset.",
+      "Allocation failure ordinals 1 and 2 around prefix claim; full reset recovers and drops selected/active/workspace handles.",
+      "Borrowed NonClone context/dictionary allocator domains remain separate; unclaimed session-only prefix behavior retained.",
+      "Greedy and chain seed content is empty after helper reset; capacities and owners retained. Post-reset MatchTable query uses strictly later coordinate so stale content is observable.",
+      "Next default frames match fresh Global encoders byte for byte."
+    ],
+    "interop": "Existing pinned CLI regression passed 18 frames per safe/all release build (36 total); this is format/allocator/strategy interoperability, not an assertion of identical C reset lifecycle semantics.",
+    "miri": "Only two all-feature strict-provenance tests: allocation failure around prefix claim and borrowed NonClone prefix reuse. No large Chain/shared-phase campaign was interpreted."
+  },
+  "verification": [
+    {
+      "name": "safe-stream",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "stream_encode::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 7.457,
+      "log": "/tmp/zstdoxide-module10-reset-safe-stream.log",
+      "sha256": "25c545d5cb62b6395447e2b4718419b4d38c5247262c830a4ae0dbab86f97d62",
+      "test_summaries": [
+        "test result: ok. 26 passed; 0 failed; 1 ignored; 0 measured; 476 filtered out; finished in 7.29s"
+      ],
+      "archived_log_sha256": "25c545d5cb62b6395447e2b4718419b4d38c5247262c830a4ae0dbab86f97d62",
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.06s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 27 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 26 passed; 0 failed; 1 ignored; 0 measured; 476 filtered out; finished in 7.29s\n\n"
+    },
+    {
+      "name": "all-stream",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--lib",
+        "stream_encode::tests::"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 18.247,
+      "log": "/tmp/zstdoxide-module10-reset-all-stream.log",
+      "sha256": "e92305a7291e3cb48d71bd93d32af139c744885af705fe9c81cf12fd928950d3",
+      "test_summaries": [
+        "test result: ok. 26 passed; 0 failed; 1 ignored; 0 measured; 476 filtered out; finished in 8.26s"
+      ],
+      "archived_log_sha256": "e92305a7291e3cb48d71bd93d32af139c744885af705fe9c81cf12fd928950d3",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.45s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 27 tests\ntest stream_encode::tests::allocator_small_borrowed_context_uses_no_dictionary_storage_after_attachment ... ok\ntest stream_encode::tests::allocator_small_raw_frame_failures_recover_after_move_and_option_validation ... ok\ntest stream_encode::tests::allocator_constructor_validation_precedes_clones_and_reset_keeps_buffer_owners ... ok\ntest stream_encode::tests::allocator_header_failure_claims_prefix_only_after_pending_storage_succeeds ... ok\ntest stream_encode::tests::empty_frame_has_independent_known_checksum_and_optional_pledge ... ok\ntest stream_encode::tests::empty_output_stages_input_and_completion_waits_for_checksum_drain ... ok\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ignored, requires ZSTD_BIN pointing to the pinned upstream CLI\ntest stream_encode::tests::non_single_segment_header_encodes_every_content_size_field_boundary ... ok\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::latched_directive_rejects_switches_and_extra_source_until_reset ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::latched_finish_allows_smaller_suffixes_and_empty_output_drain_calls ... ok\ntest stream_encode::tests::pledges_are_enforced_even_when_not_emitted_and_reset_clears_them ... ok\ntest stream_encode::tests::allocator_shared_dictionary_outlives_original_handle_and_releases_on_replacement ... ok\ntest stream_encode::tests::rejected_reset_options_preserve_the_live_frame_and_its_staged_source ... ok\ntest stream_encode::tests::set_options_invalid_values_are_atomic_and_pledge_policy_is_unchanged ... ok\ntest stream_encode::tests::set_options_preserves_custom_owners_capacity_and_pending_allocation_failure ... ok\ntest stream_encode::tests::prefix_lifetime_and_failed_encoder_configuration_preserve_existing_state ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::chunked_checksums_cover_all_accepted_source_and_detect_corruption ... ok\ntest stream_encode::tests::dictionary_header_widths_and_omission_preserve_dictionary_configuration ... ok\ntest stream_encode::tests::set_options_rejects_each_started_phase_without_poisoning_or_mutation ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\ntest stream_encode::tests::set_options_applies_supported_fields_and_preserves_selected_handles ... ok\ntest stream_encode::tests::allocator_borrowed_context_and_dictionary_are_independent_across_flush_schedules ... ok\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\ntest stream_encode::tests::allocator_every_observed_stream_failure_poison_resets_and_releases ... ok\n\ntest result: ok. 26 passed; 0 failed; 1 ignored; 0 measured; 476 filtered out; finished in 8.26s\n\n"
+    },
+    {
+      "name": "all-reset",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--lib",
+        "parameter_reset"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 0.437,
+      "log": "/tmp/zstdoxide-module10-reset-all-reset.log",
+      "sha256": "e28f176860a41a2ef10b822720e2f6c52c9acfdbaa14ee0ff03819396419278f",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.36s"
+      ],
+      "archived_log_sha256": "e28f176860a41a2ef10b822720e2f6c52c9acfdbaa14ee0ff03819396419278f",
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.36s\n\n"
+    },
+    {
+      "name": "nostd-reset",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--no-default-features",
+        "--lib",
+        "parameter_reset"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 7.648,
+      "log": "/tmp/zstdoxide-module10-reset-nostd-reset.log",
+      "sha256": "13024fc74b1c5899d843994d3c20b0dcfc775c610084b46874ea93d5dc2ecd4f",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 474 filtered out; finished in 0.15s"
+      ],
+      "archived_log_sha256": "13024fc74b1c5899d843994d3c20b0dcfc775c610084b46874ea93d5dc2ecd4f",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.10s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 474 filtered out; finished in 0.15s\n\n"
+    },
+    {
+      "name": "nostd-all-reset",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib",
+        "parameter_reset"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 7.367,
+      "log": "/tmp/zstdoxide-module10-reset-nostd-all-reset.log",
+      "sha256": "5d8b095f88f8d29533cccc1cca8c484a05c23e78584dc7e276939adb9f74c053",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 474 filtered out; finished in 0.16s"
+      ],
+      "archived_log_sha256": "5d8b095f88f8d29533cccc1cca8c484a05c23e78584dc7e276939adb9f74c053",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.81s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 474 filtered out; finished in 0.16s\n\n"
+    },
+    {
+      "name": "unsafe-match-table",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-match-table",
+        "--lib",
+        "parameter_reset"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 9.301,
+      "log": "/tmp/zstdoxide-module10-reset-unsafe-match-table.log",
+      "sha256": "de51682f082449ddf88315cf7d85badcc8fe4646dedd1ca3a37b43559d8f03d8",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.23s"
+      ],
+      "archived_log_sha256": "de51682f082449ddf88315cf7d85badcc8fe4646dedd1ca3a37b43559d8f03d8",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.55s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/fbd7fa6c50597489/out/zstdoxide-fbd7fa6c50597489)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.23s\n\n"
+    },
+    {
+      "name": "unsafe-match-chain",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-match-chain",
+        "--lib",
+        "parameter_reset"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 8.531,
+      "log": "/tmp/zstdoxide-module10-reset-unsafe-match-chain.log",
+      "sha256": "3977c9a454aa5d378533501d56eb113a79f2d0830520bed44bf3315b0c310871",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.16s"
+      ],
+      "archived_log_sha256": "3977c9a454aa5d378533501d56eb113a79f2d0830520bed44bf3315b0c310871",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.96s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/ef32ef0c462b872c/out/zstdoxide-ef32ef0c462b872c)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.16s\n\n"
+    },
+    {
+      "name": "unsafe-dictionary",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-dictionary",
+        "--lib",
+        "parameter_reset"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 9.942,
+      "log": "/tmp/zstdoxide-module10-reset-unsafe-dictionary.log",
+      "sha256": "55144034685a4b87e91ab88852445e297a853292e01e91d617e6ddc6a6e911ce",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.15s"
+      ],
+      "archived_log_sha256": "55144034685a4b87e91ab88852445e297a853292e01e91d617e6ddc6a6e911ce",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.38s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/42c5e42647031de4/out/zstdoxide-42c5e42647031de4)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.15s\n\n"
+    },
+    {
+      "name": "unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-fse-encoder",
+        "--lib",
+        "parameter_reset"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 8.088,
+      "log": "/tmp/zstdoxide-module10-reset-unsafe-fse-encoder.log",
+      "sha256": "adb7831a5fbd72bf10ca44aa8355c4d71e39c8eac090cf00df9c04ff9269497f",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.15s"
+      ],
+      "archived_log_sha256": "adb7831a5fbd72bf10ca44aa8355c4d71e39c8eac090cf00df9c04ff9269497f",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.54s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/fbdd762883c2478b/out/zstdoxide-fbdd762883c2478b)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.15s\n\n"
+    },
+    {
+      "name": "unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-huffman-codebook",
+        "--lib",
+        "parameter_reset"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 12.441,
+      "log": "/tmp/zstdoxide-module10-reset-unsafe-huffman-codebook.log",
+      "sha256": "fd3f73dad43cd60a4949b9d7853331b9b4d89b8cc7dc73f6499acf119ddc725c",
+      "test_summaries": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.15s"
+      ],
+      "archived_log_sha256": "fd3f73dad43cd60a4949b9d7853331b9b4d89b8cc7dc73f6499acf119ddc725c",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.89s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/1c381cba8f8b1baa/out/zstdoxide-1c381cba8f8b1baa)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.15s\n\n"
+    },
+    {
+      "name": "nostd-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 0.702,
+      "log": "/tmp/zstdoxide-module10-reset-nostd-lib.log",
+      "sha256": "5b2db8bcc27792e66ceb567c22ba42776b0799677ffe8337c0b608a48baffd97",
+      "test_summaries": [],
+      "archived_log_sha256": "5b2db8bcc27792e66ceb567c22ba42776b0799677ffe8337c0b608a48baffd97",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.64s\n"
+    },
+    {
+      "name": "nostd-all-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 0.76,
+      "log": "/tmp/zstdoxide-module10-reset-nostd-all-lib.log",
+      "sha256": "889b1812906ded2eb3554af127d5204bc8fc42ce6f0d8db0299c4260a1734327",
+      "test_summaries": [],
+      "archived_log_sha256": "889b1812906ded2eb3554af127d5204bc8fc42ce6f0d8db0299c4260a1734327",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.71s\n"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 6.524,
+      "log": "/tmp/zstdoxide-module10-reset-clippy.log",
+      "sha256": "ec6cd502a36f9f32333bb056212fcc4f7a04aac1b941edacbed11c332c73a672",
+      "test_summaries": [],
+      "archived_log_sha256": "ec6cd502a36f9f32333bb056212fcc4f7a04aac1b941edacbed11c332c73a672",
+      "log_text": "    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.42s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/stream_encode.rs",
+        "src/encode.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 0.12,
+      "log": "/tmp/zstdoxide-module10-reset-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": [],
+      "archived_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/stream_encode.rs",
+        "src/encode.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 0.031,
+      "log": "/tmp/zstdoxide-module10-reset-diff.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": [],
+      "archived_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "miri": [
+    {
+      "name": "miri-failure",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--all-features",
+        "--lib",
+        "stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-miri-target",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 7.697,
+      "log": "/tmp/zstdoxide-module10-reset-miri-failure.log",
+      "sha256": "63d6e0506e88744b68f7e2b9d65615c7a85c999fbec94cd782b2f519ca3cc02c",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 1.75s"
+      ],
+      "archived_log_sha256": "63d6e0506e88744b68f7e2b9d65615c7a85c999fbec94cd782b2f519ca3cc02c",
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.49s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-miri-target/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 1.75s\n\n"
+    },
+    {
+      "name": "miri-borrowed",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--all-features",
+        "--lib",
+        "stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-miri-target",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 43.34,
+      "log": "/tmp/zstdoxide-module10-reset-miri-borrowed.log",
+      "sha256": "d45a66890f6efc27eed631815eb8e2c81c8e58d82868b6408e254deb3b7cea3a",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 56.67s"
+      ],
+      "archived_log_sha256": "d45a66890f6efc27eed631815eb8e2c81c8e58d82868b6408e254deb3b7cea3a",
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-miri-target/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\n\nrunning 1 test\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 56.67s\n\n"
+    }
+  ],
+  "interop": [
+    {
+      "name": "c-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--lib",
+        "stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners",
+        "--",
+        "--exact",
+        "--ignored",
+        "--nocapture"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 20.381,
+      "log": "/tmp/zstdoxide-module10-reset-c-safe.log",
+      "sha256": "15cab748e3fb71b4fae50498d009e9f91968febfabfd88843e96d3d70e269446",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.12s"
+      ],
+      "archived_log_sha256": "15cab748e3fb71b4fae50498d009e9f91968febfabfd88843e96d3d70e269446",
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 19.77s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/release/build/zstdoxide/e1626a9536adb678/out/zstdoxide-e1626a9536adb678)\n\nrunning 1 test\nC decoded 18 custom allocator streams exactly across three strategies, empty/raw/prepared dictionaries, and both dictionary-ID policies\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.12s\n\n"
+    },
+    {
+      "name": "c-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--lib",
+        "stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners",
+        "--",
+        "--exact",
+        "--ignored",
+        "--nocapture"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 26.499,
+      "log": "/tmp/zstdoxide-module10-reset-c-all.log",
+      "sha256": "672d4be058c0984c1b0fdec65ae7d02ad38001398d0b1b3aa7df84890702cbf7",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.11s"
+      ],
+      "archived_log_sha256": "672d4be058c0984c1b0fdec65ae7d02ad38001398d0b1b3aa7df84890702cbf7",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 26.01s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/release/build/zstdoxide/8fca094558319608/out/zstdoxide-8fca094558319608)\n\nrunning 1 test\nC decoded 18 custom allocator streams exactly across three strategies, empty/raw/prepared dictionaries, and both dictionary-ID policies\ntest stream_encode::tests::official_codec_decodes_custom_allocator_streams_with_independent_dictionary_owners ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.11s\n\n"
+    }
+  ],
+  "final_seed_assertion_followup": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 6.294,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-safe.log",
+      "sha256": "ffb2b3dafb66958a1ef23b97772c8184de1dac5c5e5873c21cb91001927520d8",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "ffb2b3dafb66958a1ef23b97772c8184de1dac5c5e5873c21cb91001927520d8",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.83s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 4.159,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-all.log",
+      "sha256": "875a895810c97cfb10adefe6c855b2f159c2087eca7875b8db631810cda98e81",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "875a895810c97cfb10adefe6c855b2f159c2087eca7875b8db631810cda98e81",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.75s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "nostd",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--no-default-features",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 3.204,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-nostd.log",
+      "sha256": "e017d5144753543fd120eeb777259b035e5a7abcffd73edde1803c4163762da1",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 488 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "e017d5144753543fd120eeb777259b035e5a7abcffd73edde1803c4163762da1",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.73s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 488 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "nostd-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 3.52,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-nostd-all.log",
+      "sha256": "1eb4cb51d3e0c820e0fdbdc6d1c34a050fa10a865014800e9066dd7a7d0ca413",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 488 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "1eb4cb51d3e0c820e0fdbdc6d1c34a050fa10a865014800e9066dd7a7d0ca413",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.02s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 488 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "unsafe-match-table",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-match-table",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 5.196,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-unsafe-match-table.log",
+      "sha256": "eda05a52c52e0b52d27002f2d3047fa0bd6f7d7df117f1ea8456657351cd1d8f",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "eda05a52c52e0b52d27002f2d3047fa0bd6f7d7df117f1ea8456657351cd1d8f",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.71s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/fbd7fa6c50597489/out/zstdoxide-fbd7fa6c50597489)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "unsafe-match-chain",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-match-chain",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 5.254,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-unsafe-match-chain.log",
+      "sha256": "82e04a502cf0ef0bfb8775265287007e28bce96760e19b5f2b50172eef6e979c",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "82e04a502cf0ef0bfb8775265287007e28bce96760e19b5f2b50172eef6e979c",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.81s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/ef32ef0c462b872c/out/zstdoxide-ef32ef0c462b872c)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "unsafe-dictionary",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-dictionary",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 3.277,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-unsafe-dictionary.log",
+      "sha256": "ef5ac215aaad961cb5eaf3b2f5a9efd0c038554dec4e18cd7edf4237782149eb",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "ef5ac215aaad961cb5eaf3b2f5a9efd0c038554dec4e18cd7edf4237782149eb",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.87s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/42c5e42647031de4/out/zstdoxide-42c5e42647031de4)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-fse-encoder",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 2.705,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-unsafe-fse-encoder.log",
+      "sha256": "0d5c6bbe8bbb06a0199cd7e51151b8cf5e9f594a1d7afff1c470256256502b66",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "0d5c6bbe8bbb06a0199cd7e51151b8cf5e9f594a1d7afff1c470256256502b66",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.29s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/fbdd762883c2478b/out/zstdoxide-fbdd762883c2478b)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "unsafe-huffman-codebook",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--features",
+        "unsafe-huffman-codebook",
+        "--lib",
+        "encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 2.975,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-unsafe-huffman-codebook.log",
+      "sha256": "a67ee6bec0d9ec25d4ddedc42e221209d67a08548c6d36256d05b7c1ef8bccc5",
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s"
+      ],
+      "archived_log_sha256": "a67ee6bec0d9ec25d4ddedc42e221209d67a08548c6d36256d05b7c1ef8bccc5",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.43s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/1c381cba8f8b1baa/out/zstdoxide-1c381cba8f8b1baa)\n\nrunning 1 test\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 2.741,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-clippy.log",
+      "sha256": "f3fc49e1d63118884d1df43f44a20feaf22830a8dec9b6c9a8cc3b1f00350cd5",
+      "test_summaries": [],
+      "archived_log_sha256": "f3fc49e1d63118884d1df43f44a20feaf22830a8dec9b6c9a8cc3b1f00350cd5",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.58s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/stream_encode.rs",
+        "src/encode.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 0.102,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": [],
+      "archived_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/stream_encode.rs",
+        "src/encode.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-reset-target"
+      },
+      "exit_code": 0,
+      "seconds": 0.016,
+      "log": "/tmp/zstdoxide-module10-reset-seed-followup-diff.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": [],
+      "archived_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "test_repair_history": [
+    {
+      "log": "/tmp/zstdoxide-module10-reset-initial.log",
+      "sha256": "ba9835d9912badae300cb226d8150b967331c0be80445e69bf360ff216b53804",
+      "outcome": "Four reset tests passed; seed precondition failed because MatchTable only returns strictly earlier coordinates and the probe used zero. Corrected probe; production unchanged.",
+      "archived_log_sha256": "ba9835d9912badae300cb226d8150b967331c0be80445e69bf360ff216b53804",
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.98s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... FAILED\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\nfailures:\n\n---- encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating stdout ----\n\nthread 'encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating' (123552047) panicked at src/encode.rs:863:9:\nassertion failed: encoder.dictionary_seed.as_mut().unwrap().replace(*b\"abcd\", 0).is_some()\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating\n\ntest result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.16s\n\nerror: test failed, to rerun pass `--lib`\n"
+    },
+    {
+      "log": "/tmp/zstdoxide-module10-reset-initial-fixed.log",
+      "sha256": "d59ed41676254411b1fde5eb4f8072c02aef282aaca462545f8360ebe1660cc5",
+      "outcome": "All five tests passed after using a later coordinate.",
+      "archived_log_sha256": "d59ed41676254411b1fde5eb4f8072c02aef282aaca462545f8360ebe1660cc5",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.70s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module10-reset-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 5 tests\ntest stream_encode::tests::parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim ... ok\ntest encode::tests::parameter_reset_clears_both_dictionary_seed_families_without_allocating ... ok\ntest stream_encode::tests::parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains ... ok\ntest stream_encode::tests::parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase ... ok\ntest stream_encode::tests::parameter_resets_release_all_shared_dictionary_handles_without_reallocating ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.16s\n\n"
+    },
+    {
+      "outcome": "Final static review strengthened the post-reset query from 128 to 129, preventing same-coordinate filtering from masking an uncleared seed. The final exact seed test passed all nine focused configurations plus strict Clippy/format/diff. Production and other tests were unchanged; no redundant Miri or C rerun."
+    }
+  ],
+  "limitations": [
+    "No full module-wide all-integration suite run in this checkpoint. Focused safe/all, relevant individual feature flags, and no_std configurations are recorded exactly.",
+    "Rust checksum/pledge defaults and Finished behavior deliberately differ from C; official lifecycle fixture facts remain unchanged.",
+    "Clearing shared attachments can release external dictionary payload capacity; retained codec capacity and exact allocator values remain unchanged.",
+    "Other agents changed unrelated scalar parameter files during verification; only the listed owned source files belong to this checkpoint."
+  ],
+  "running_sessions": [],
+  "original_evidence_sha256": "01fab2b9679e7f00cd08da9779fdb7e7fb6272f9ad41b5bc93ff9e59d7991974"
+}

@@ -199,7 +199,9 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
         }
     }
 
-    /// Return the settings of the current frame.
+    /// Return the configured settings for this session or its next frame.
+    /// After a completed frame's parameter reset, these settings do not describe
+    /// the previously emitted frame.
     pub fn options(&self) -> EncoderOptions {
         self.options
     }
@@ -266,6 +268,52 @@ impl<A: Allocator + Clone, D: DictionaryHandle> Encoder<A, D> {
         self.options = options.validate()?;
         self.clear_frame();
         Ok(())
+    }
+
+    /// Restore default settings and remove dictionary/prefix selection.
+    ///
+    /// Corresponds to the supported role of `ZSTD_reset_parameters`. Only a
+    /// clean configuration boundary or a completed frame accepts this operation.
+    /// An active or failed session returns [`Error::InvalidState`] without any
+    /// mutation or recovery. A completed session remains finished and retains
+    /// its counters: call [`Self::reset`] before processing another frame.
+    ///
+    /// Defaults are Rust's [`EncoderOptions::default`], including checksum
+    /// enabled and no source pledge. C's parameter-only reset can retain a
+    /// fresh session's pledge and uses different checksum defaults.
+    ///
+    /// Every selected/active dictionary handle and cached seed is cleared,
+    /// including workspace attachments. Owned allocations and their exact
+    /// allocator values are retained; this neither allocates nor clones them.
+    /// Clearing a borrowed view does not shorten the context type's lifetime.
+    pub fn reset_parameters(&mut self) -> Result<()> {
+        if self.phase != Phase::Finished {
+            self.check_configuration_boundary()?;
+        }
+        self.options = EncoderOptions::default();
+        self.dictionary = None;
+        self.prefix = None;
+        self.active_dictionary = None;
+        self.workspace.reset();
+        self.workspace.clear_dictionary_seeds();
+        Ok(())
+    }
+
+    /// Discard the session, restore defaults, and remove dictionary/prefix state.
+    ///
+    /// Corresponds to `ZSTD_reset_session_and_parameters`. This accepts every
+    /// phase, including processing failures, and returns a ready context with
+    /// zero counters and no pending source, output, or directive. All reusable
+    /// allocations retain their exact allocator owners without allocating or
+    /// cloning. Dictionary-backed reachable capacity may fall when its handle
+    /// is released; owned codec capacity is retained. A borrowed dictionary's
+    /// compile-time lifetime remains part of the context type after its fields clear.
+    pub fn reset_all(&mut self) {
+        self.options = EncoderOptions::default();
+        self.dictionary = None;
+        self.prefix = None;
+        self.clear_frame();
+        self.workspace.clear_dictionary_seeds();
     }
 
     fn clear_frame(&mut self) {
@@ -629,6 +677,18 @@ mod tests {
         options: EncoderOptions,
         error: Error,
     ) {
+        reject_configuration_without_mutation(
+            encoder,
+            |encoder| encoder.set_options(options),
+            error,
+        );
+    }
+
+    fn reject_configuration_without_mutation<A: Allocator + Clone>(
+        encoder: &mut Encoder<A>,
+        operation: impl FnOnce(&mut Encoder<A>) -> Result<()>,
+        error: Error,
+    ) {
         let snapshot = |encoder: &Encoder<A>| {
             (
                 encoder.options,
@@ -663,7 +723,7 @@ mod tests {
             )
         };
         let before = snapshot(encoder);
-        assert_eq!(encoder.set_options(options), Err(error));
+        assert_eq!(operation(encoder), Err(error));
         assert_eq!(snapshot(encoder), before);
     }
 
@@ -871,6 +931,360 @@ mod tests {
         check(&allocator, &monitor);
         drop(allocator);
         monitor.assert_released();
+    }
+
+    #[test]
+    fn parameter_reset_preserves_completed_session_but_all_reset_recovers_every_phase() {
+        let source = b"abcabcabcabcabcabc";
+        for case in 0..10 {
+            let mut encoder = Encoder::with_options(EncoderOptions {
+                strategy: CompressionStrategy::Lazy,
+                window_log: 10,
+                checksum: false,
+                pledged_size: Some(source.len() as u64),
+                include_content_size: false,
+                include_dictionary_id: false,
+            })
+            .unwrap();
+            match case {
+                0 => {} // A fresh context accepts parameter-only reset.
+                1 => {
+                    encoder
+                        .process(&[], &mut [], EndDirective::Continue)
+                        .unwrap();
+                }
+                2 => {
+                    encoder
+                        .process(&[], &mut [0; 1], EndDirective::Continue)
+                        .unwrap();
+                }
+                3 => {
+                    encoder
+                        .process(source, &mut [0; 64], EndDirective::Continue)
+                        .unwrap();
+                }
+                4 => {
+                    assert_eq!(
+                        encoder
+                            .process(source, &mut [0; 64], EndDirective::Flush)
+                            .unwrap()
+                            .status,
+                        StreamStatus::Flushed
+                    );
+                }
+                5 => {
+                    encoder
+                        .process(source, &mut [], EndDirective::Flush)
+                        .unwrap();
+                }
+                6 => {
+                    encoder
+                        .process(source, &mut [], EndDirective::Finish)
+                        .unwrap();
+                }
+                7 => {
+                    encoder
+                        .process(source, &mut [0; 6], EndDirective::Finish)
+                        .unwrap();
+                    assert_eq!(encoder.phase, Phase::Finishing);
+                }
+                8 => {
+                    finish(&mut encoder, source, 1);
+                    assert_eq!(encoder.phase, Phase::Finished);
+                }
+                9 => {
+                    assert_eq!(
+                        encoder.process(&[], &mut [], EndDirective::Finish),
+                        Err(Error::ContentSizeMismatch)
+                    );
+                    assert_eq!(encoder.phase, Phase::Failed);
+                }
+                _ => unreachable!(),
+            }
+            if case == 0 || case == 8 {
+                let session = (
+                    encoder.phase,
+                    encoder.header_started,
+                    encoder.total_input(),
+                    encoder.total_output(),
+                    encoder.checksum.digest(),
+                );
+                encoder.reset_parameters().unwrap();
+                assert_eq!(encoder.options(), EncoderOptions::default());
+                assert_eq!(
+                    (
+                        encoder.phase,
+                        encoder.header_started,
+                        encoder.total_input(),
+                        encoder.total_output(),
+                        encoder.checksum.digest()
+                    ),
+                    session
+                );
+                if case == 8 {
+                    assert_eq!(
+                        encoder
+                            .process(&[], &mut [], EndDirective::Finish)
+                            .unwrap()
+                            .status,
+                        StreamStatus::FrameFinished
+                    );
+                    assert_eq!(
+                        encoder.set_options(EncoderOptions::default()),
+                        Err(Error::InvalidState)
+                    );
+                }
+            } else {
+                reject_configuration_without_mutation(
+                    &mut encoder,
+                    Encoder::reset_parameters,
+                    Error::InvalidState,
+                );
+            }
+            let capacity = encoder.retained_capacity();
+            let pointers = (encoder.block.as_ptr(), encoder.pending.as_ptr());
+            encoder.reset_all();
+            assert_eq!(encoder.options(), EncoderOptions::default());
+            assert_eq!(encoder.phase, Phase::Active);
+            assert!(!encoder.header_started);
+            assert!(encoder.block.is_empty() && encoder.pending.is_empty());
+            assert_eq!(encoder.pending_position, 0);
+            assert!(encoder.latched.is_none());
+            assert_eq!((encoder.total_input(), encoder.total_output()), (0, 0));
+            assert_eq!(encoder.checksum.digest(), XxHash64::new().digest());
+            assert_eq!(encoder.retained_capacity(), capacity);
+            assert_eq!((encoder.block.as_ptr(), encoder.pending.as_ptr()), pointers);
+            assert_eq!(
+                finish(&mut encoder, b"independent default frame", 1),
+                finish(&mut Encoder::new(), b"independent default frame", 7)
+            );
+        }
+    }
+
+    #[test]
+    fn parameter_resets_release_all_shared_dictionary_handles_without_reallocating() {
+        let bytes = include_bytes!("../tests/upstream/dictionaries/formatted.dict");
+        for strategy in [CompressionStrategy::Greedy, CompressionStrategy::Chain] {
+            for prefix in [false, true] {
+                // Fresh and Finished allow parameter-only reset; the two
+                // in-progress cases require full reset and retain workspace
+                // handles even after a single-use prefix has been claimed.
+                for phase in 0..4 {
+                    let dictionary_allocator = tracking();
+                    let dictionary_monitor = dictionary_allocator.monitor();
+                    let dictionary = crate::Dictionary::from_bytes_in(bytes, dictionary_allocator)
+                        .unwrap()
+                        .into_shared();
+                    let weak = SharedDictionary::downgrade(&dictionary);
+                    let dictionary_capacity = dictionary.retained_capacity();
+                    let owner = tracking();
+                    let monitor = owner.monitor();
+                    let mut encoder = Encoder::with_dictionary_in(
+                        EncoderOptions {
+                            strategy,
+                            ..EncoderOptions::default()
+                        },
+                        dictionary.clone(),
+                        owner,
+                    )
+                    .unwrap();
+                    if prefix {
+                        encoder.set_prefix(dictionary.clone()).unwrap();
+                    }
+                    drop(dictionary);
+                    match phase {
+                        0 => {}
+                        1 => {
+                            finish(&mut encoder, b"dictionary frame", 1);
+                        }
+                        2 => {
+                            encoder
+                                .process(b"dictionary frame", &mut [], EndDirective::Continue)
+                                .unwrap();
+                        }
+                        3 => {
+                            encoder
+                                .process(b"dictionary frame", &mut [], EndDirective::Flush)
+                                .unwrap();
+                            assert_eq!(
+                                encoder.process(&[], &mut [], EndDirective::Finish),
+                                Err(Error::InvalidState)
+                            );
+                        }
+                        _ => unreachable!(),
+                    }
+                    // A completed prefix frame already released its last handle.
+                    assert_eq!(weak.upgrade().is_some(), !(prefix && phase == 1));
+                    let selected_capacity = if weak.upgrade().is_some() {
+                        dictionary_capacity
+                    } else {
+                        0
+                    };
+                    let before_capacity = encoder.retained_capacity();
+                    let before = monitor.snapshot();
+                    let pointers = (encoder.block.as_ptr(), encoder.pending.as_ptr());
+                    assert!(monitor.fail_next());
+                    if phase < 2 {
+                        encoder.reset_parameters().unwrap();
+                    } else {
+                        encoder.reset_all();
+                    }
+                    assert!(
+                        encoder.dictionary.is_none()
+                            && encoder.prefix.is_none()
+                            && encoder.active_dictionary.is_none()
+                    );
+                    assert!(
+                        weak.upgrade().is_none(),
+                        "a workspace must not retain a cleared shared handle"
+                    );
+                    dictionary_monitor.assert_released();
+                    assert_eq!(
+                        dictionary_monitor.snapshot().identities_created,
+                        dictionary_monitor.snapshot().owners_dropped
+                    );
+                    assert_eq!(
+                        encoder.retained_capacity(),
+                        before_capacity - selected_capacity
+                    );
+                    assert_eq!((encoder.block.as_ptr(), encoder.pending.as_ptr()), pointers);
+                    assert_eq!(monitor.snapshot(), before);
+                    // Reset did not consume the pending request. Borrowing the
+                    // retained exact owner needs no fresh allocator clone.
+                    let mut witness = Vec::<u8, _>::new_in(encoder.block.allocator());
+                    assert!(witness.try_reserve_exact(1).is_err());
+                    drop(witness);
+                    assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
+                    if phase == 1 {
+                        assert_eq!(encoder.phase, Phase::Finished);
+                        encoder.reset();
+                    }
+                    let encoded = finish(&mut encoder, b"without dictionary", 1);
+                    assert_eq!(
+                        encoded,
+                        finish(&mut Encoder::new(), b"without dictionary", 7)
+                    );
+                    assert_eq!(decompress(&encoded, 18).unwrap(), b"without dictionary");
+                    drop(encoder);
+                    monitor.assert_released();
+                    assert_eq!(
+                        monitor.snapshot().identities_created,
+                        monitor.snapshot().owners_dropped
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn parameter_reset_all_recovers_allocation_failure_before_and_after_prefix_claim() {
+        for ordinal in [1, 2] {
+            let dictionary_owner = tracking().into_non_clone();
+            let dictionary_monitor = dictionary_owner.monitor();
+            let dictionary = crate::Dictionary::raw_in(b"prefix", dictionary_owner)
+                .unwrap()
+                .into_shared();
+            let weak = SharedDictionary::downgrade(&dictionary);
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 128,
+                fail_at: NonZeroU64::new(ordinal),
+            })
+            .unwrap();
+            let monitor = owner.monitor();
+            let mut encoder = Encoder::with_dictionary_in(
+                EncoderOptions {
+                    checksum: false,
+                    window_log: 10,
+                    ..EncoderOptions::default()
+                },
+                dictionary.clone(),
+                owner,
+            )
+            .unwrap();
+            encoder.set_prefix(dictionary).unwrap();
+            assert_eq!(
+                encoder.process(b"xxx", &mut [], EndDirective::Continue),
+                Err(Error::AllocationFailed)
+            );
+            assert_eq!(encoder.phase, Phase::Failed);
+            assert_eq!(encoder.prefix.is_some(), ordinal == 1);
+            assert_eq!(encoder.active_dictionary.is_some(), ordinal == 2);
+            assert_eq!(encoder.reset_parameters(), Err(Error::InvalidState));
+            assert!(weak.upgrade().is_some());
+            let before = monitor.snapshot();
+            let owned_capacity = encoder.block.capacity()
+                + encoder.pending.capacity()
+                + encoder.workspace.retained_capacity();
+            encoder.reset_all();
+            assert_eq!(monitor.snapshot(), before);
+            assert_eq!(encoder.retained_capacity(), owned_capacity);
+            assert!(weak.upgrade().is_none());
+            dictionary_monitor.assert_released();
+            assert_eq!(encoder.options(), EncoderOptions::default());
+            assert_eq!((encoder.total_input(), encoder.total_output()), (0, 0));
+            let encoded = finish(&mut encoder, b"xxx", 1);
+            assert_eq!(encoded, finish(&mut Encoder::new(), b"xxx", 1));
+            assert_eq!(decompress(&encoded, 3).unwrap(), b"xxx");
+            drop(encoder);
+            monitor.assert_released();
+            assert_eq!(
+                monitor.snapshot().identities_created,
+                monitor.snapshot().owners_dropped
+            );
+        }
+    }
+
+    #[test]
+    fn parameter_resets_clear_borrowed_prefixes_without_changing_owner_domains() {
+        let dictionary_owner = tracking().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary =
+            crate::Dictionary::raw_in(b"borrowed prefix content", &dictionary_owner).unwrap();
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let mut encoder =
+            Encoder::with_dictionary_in(EncoderOptions::default(), dictionary.view(), &owner)
+                .unwrap();
+        for claimed in [false, true] {
+            encoder.reset_all();
+            encoder.set_prefix(dictionary.view()).unwrap();
+            // Existing session-only reset preserves an unclaimed prefix.
+            encoder.reset();
+            assert!(encoder.prefix.is_some());
+            if claimed {
+                encoder
+                    .process(&[], &mut [], EndDirective::Continue)
+                    .unwrap();
+                assert!(encoder.prefix.is_none() && encoder.active_dictionary.is_some());
+            }
+            let before = monitor.snapshot();
+            let dictionary_before = dictionary_monitor.snapshot();
+            if claimed {
+                encoder.reset_all();
+            } else {
+                encoder.reset_parameters().unwrap();
+            }
+            assert!(
+                encoder.dictionary.is_none()
+                    && encoder.prefix.is_none()
+                    && encoder.active_dictionary.is_none()
+            );
+            assert_eq!(monitor.snapshot(), before);
+            assert_eq!(dictionary_monitor.snapshot(), dictionary_before);
+            let encoded = finish(&mut encoder, b"borrow no longer selected", 1);
+            assert_eq!(
+                encoded,
+                finish(&mut Encoder::new(), b"borrow no longer selected", 1)
+            );
+        }
+        // Runtime clearing does not shorten D's borrowed lifetime: keep the
+        // dictionary owner alive until the typed context has been dropped.
+        drop(encoder);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        drop(owner);
+        drop(dictionary);
+        dictionary_monitor.assert_released();
     }
 
     #[test]
