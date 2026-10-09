@@ -40,7 +40,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Verify public literal-only frames and literal size boundaries with independent C decoding.
 - [x] Verify treeless lifetime, dictionary replacement, and fragmented output with C.
 - [x] Map verified Huffman/FSE encoder contracts and decompose remaining entropy fuzz assertions.
-- [ ] Pin the official Huffman corpus independently and verify archive metadata without claiming replay.
+- [x] Pin the official Huffman corpus independently and verify archive metadata without claiming replay.
 - [ ] Preserve exact Huffman tail selectors with independent C parameter vectors for both BMI layouts.
 - [ ] Add standalone Huffman depth, source-size, and caller-capacity contracts before complete corpus replay.
 - [x] Generalize inverse FSE construction with absent-symbol rejection and explicit RLE.

@@ -390,23 +390,52 @@
       "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/dictionary_stream_round_trip.c",
       "upstream_checksum_pin": null,
       "shared_snapshot_note": "This official release asset is byte-identical to stream_round_trip_seed_corpus.zip. Each target consumes the shared seeds through its own adapter; replay coverage is tracked separately."
+    },
+    {
+      "id": "huf_round_trip",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/huf_round_trip_seed_corpus.zip",
+      "compressed_bytes": 857229,
+      "sha256": "0a865a54eb80d629ea8639925f92aeab078650f93ac215714460fc6d55de6c22",
+      "observed_date": "2026-10-09",
+      "response_headers": {
+        "Content-Length": "857229",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A275689C78\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:56:05 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 833,
+      "file_count": 833,
+      "unpacked_bytes": 2350233,
+      "largest_member_bytes": 238262,
+      "format": "zip",
+      "name": "huf_round_trip_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/huf_round_trip.c",
+      "upstream_checksum_pin": null,
+      "release_asset_id": 41611378,
+      "observation_note": "Same-day cached GitHub API record; live API request was rate limited. Archive headers and bytes checked independently.",
+      "coverage_note": "Archive integrity pin only. This checkpoint does not replay the Huffman roundtrip target or change its partial source/case coverage."
     }
   ],
   "reproduction": {
     "fetch": "python3 scripts/fetch_upstream_corpora.py --cache /path/to/external-cache",
     "verify_cached": "python3 scripts/fetch_upstream_corpora.py --cache /path/to/external-cache --offline",
-    "selection": "Repeat --target ID to select archives. Default selects all ten.",
-    "bounds": "--max-unpacked-bytes limits aggregate extracted bytes and must be at most 1073741824. All members must be regular files or directories; symbolic/hard links, special files, traversal names, duplicate files, and oversized expansion are rejected."
+    "selection": "Repeat --target ID to select archives. Default selects all sixteen.",
+    "bounds": "--max-unpacked-bytes limits aggregate extracted bytes to at most 4294967296 (4 GiB). Each archive remains limited to 1073741824 (1 GiB), further bounded by its pinned unpacked size. All members must be regular files or directories; symbolic/hard links, special files, traversal names, duplicate files, and oversized expansion are rejected."
   },
   "validation": {
-    "archive_pins_verified": 10,
-    "compressed_bytes": 157546348,
-    "extracted_bytes": 811198036,
-    "offline_reextraction_and_existing_directory_comparison": "passed for all ten archives",
+    "archive_pins_verified": 16,
+    "compressed_bytes": 685009530,
+    "extracted_bytes": 2685230749,
+    "offline_reextraction_and_existing_directory_comparison": "passed for all sixteen archives; the newly added huf_round_trip archive was extracted and then re-extracted for an explicit existing-cache comparison",
     "malicious_zip_and_tar_cases_rejected": 12,
     "fresh_network_fetch_test": "fse_read_ncount passed in a fresh external cache",
     "official_regression_xxhash64_checks": "all three pins passed using an external verifier built against upstream xxhash.h; no verifier or C dependency is part of the Rust library",
-    "streaming_corpora_network_fetch": "stream_decompress and stream_round_trip passed exact release-size downloads, SHA-256 verification, bounded extraction, ZIP CRC/member validation, and offline re-extraction comparison"
+    "streaming_corpora_network_fetch": "stream_decompress and stream_round_trip passed exact release-size downloads, SHA-256 verification, bounded extraction, ZIP CRC/member validation, and offline re-extraction comparison",
+    "verification_date": "2026-10-09",
+    "huffman_roundtrip_pin": "833 files and 2350233 bytes verified through bounded extraction and offline cache comparison; no Huffman target replay is claimed",
+    "prior_importer_checks_note": "The malicious archive, fresh network fetch, regression XXH64 and streaming network-fetch checks recorded here are preserved earlier results, not rerun by this pin checkpoint."
   },
   "max_archive_unpacked_bytes": 1073741824
 }

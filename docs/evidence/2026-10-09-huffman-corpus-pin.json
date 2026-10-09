@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-10-09",
+  "purpose": "Archive integrity pin and bounded offline extraction only; no Huffman roundtrip target execution or coverage upgrade.",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "upstream_target": "tests/fuzz/huf_round_trip.c:41-137",
+  "snapshot_kind": "rolling external release assets, independently hash-pinned",
+  "provenance_note": "The release archives are maintained independently of tagged zstd source. Observation and SHA-256 pinning do not establish that these bytes belong to v1.5.7.",
+  "license_note": "The code repository BSD/GPL licenses describe upstream test harness source. The external release pages do not declare separate licenses for each corpus input. In particular Silesia and GitHub content must not be assumed to inherit the codec source license. Archives stay in an external cache and are not redistributed in this repository.",
+  "archive": {
+    "id": "huf_round_trip",
+    "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/huf_round_trip_seed_corpus.zip",
+    "compressed_bytes": 857229,
+    "sha256": "0a865a54eb80d629ea8639925f92aeab078650f93ac215714460fc6d55de6c22",
+    "observed_date": "2026-10-09",
+    "response_headers": {
+      "Content-Length": "857229",
+      "Content-Type": "application/octet-stream",
+      "ETag": "\"0x8D9B9A275689C78\"",
+      "Last-Modified": "Tue, 07 Dec 2021 16:56:05 GMT",
+      "Accept-Ranges": "bytes"
+    },
+    "member_count": 833,
+    "file_count": 833,
+    "unpacked_bytes": 2350233,
+    "largest_member_bytes": 238262,
+    "format": "zip",
+    "name": "huf_round_trip_seed_corpus.zip",
+    "release": "fuzz-corpora",
+    "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/huf_round_trip.c",
+    "upstream_checksum_pin": null,
+    "release_asset_id": 41611378,
+    "observation_note": "Same-day cached GitHub API record; live API request was rate limited. Archive headers and bytes checked independently.",
+    "coverage_note": "Archive integrity pin only. This checkpoint does not replay the Huffman roundtrip target or change its partial source/case coverage."
+  },
+  "observation": {
+    "release_metadata_source": "/tmp/zstdoxide-dictionary-release-assets-2026-10-09.json",
+    "release_metadata_sha256": "b604caf9ab5a3b7099c37cb49b9aa158b960c75a5a2fce31b2f36c138c2705b1",
+    "live_api_result": "HTTP 403 rate limit; used the same-day previously fetched API record, then independently verified live HEAD size/headers and exact downloaded archive size/hash.",
+    "download_preflight_max_bytes": 1048576,
+    "downloaded_bytes": 857229
+  },
+  "limits": {
+    "aggregate_unpacked_bytes": 4294967296,
+    "per_archive_unpacked_bytes": 1073741824,
+    "selected_archive_unpacked_bytes": 2350233,
+    "changes_to_importer_limits": false
+  },
+  "verified_totals": {
+    "archives": 16,
+    "compressed_bytes": 685009530,
+    "files": 137272,
+    "unpacked_bytes": 2685230749
+  },
+  "extracted_cache": {
+    "path": "/tmp/zstdoxide-external-corpora/extracted/huf_round_trip",
+    "files": 833,
+    "bytes": 2350233,
+    "inventory_sha256": "8480157439ea294f1226a74a593ff54e2b0deb7cee6fcdebf562013b7012ea11",
+    "inventory_hash_format": "SHA-256 of compact ensure_ascii JSON sorted by relative path: [[path, size, file_sha256], ...], separators comma/colon, followed by newline."
+  },
+  "target_replay_performed": false,
+  "coverage_status": "partial; unchanged",
+  "external_manifest_sha256": "84eb21526bab32b33b14cca90194716c71f574be7a1344c2b970b59112a730d5",
+  "importer_sha256": "f5b2f734714ec9d76db9a37ee47c5680c845f3ac8cd339d9f3ebcf3543018ca6",
+  "checks": [
+    {
+      "command": "python3 -u scripts/fetch_upstream_corpora.py --cache /tmp/zstdoxide-external-corpora --offline --zstd /tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+      "exit_code": 0,
+      "summary": "Verified 16 archive pins; 2685230749 total extracted bytes",
+      "log": "/tmp/zstdoxide-all-sixteen-corpora-offline.log",
+      "sha256": "1ea13b93f49b98ac4ee00babed3cf5b77d3bc3da21720b10e9aff17d8822eb61"
+    },
+    {
+      "command": "python3 -u scripts/fetch_upstream_corpora.py --cache /tmp/zstdoxide-external-corpora --target huf_round_trip --offline",
+      "exit_code": 0,
+      "summary": "Verified 1 archive pins; 2350233 total extracted bytes",
+      "log": "/tmp/zstdoxide-huffman-corpus-offline-comparison.log",
+      "sha256": "278bb60edb5944e7b7999778e3ba505237db84ebfca3191311d0e4a9de191d14"
+    },
+    {
+      "command": "python3 scripts/audit_upstream_tests.py --upstream /tmp/zstdoxize-upstream-1.5.7",
+      "exit_code": 0,
+      "summary": "639 source files and 615 case anchors verified; migration remains incomplete",
+      "log": "/tmp/zstdoxide-huffman-pin-inventory-audit.log",
+      "sha256": "f274d001764b2e68868d2c0023814caf15f3640d2b81a35891aa23cbdba27970"
+    },
+    {
+      "command": "python3 scripts/check_upstream_fixtures.py",
+      "exit_code": 0,
+      "summary": "Fixture integrity valid: 311 files in 7 collections",
+      "log": "/tmp/zstdoxide-huffman-pin-fixture-audit.log",
+      "sha256": "5d06bb806e16e10569ba0c2a2975c3705401adf50a2cb86ce83a04964ac84988"
+    }
+  ]
+}
