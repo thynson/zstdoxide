@@ -1,15 +1,17 @@
 //! Bounded frame state machine with caller-owned output and indexed history.
 
+#[cfg(test)]
+use crate::Dictionary;
 use crate::cursor::ByteCursor;
+use crate::dictionary::{DictionaryHandle, DictionaryView};
 use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
 use crate::history::SequenceOutput;
-use crate::huffman::{HuffmanTable, decode_literals_with_dictionary};
+use crate::huffman::{HuffmanTable, decode_literals_with_dictionary_view_in};
 use crate::ring_history::RingHistory;
 use crate::sequences::SequenceState;
 use crate::xxhash::XxHash64;
-use crate::{
-    DecodeOptions, Dictionary, Error, FrameHeader, Progress, Result, SharedDictionary, StreamStatus,
-};
+use crate::{DecodeOptions, Error, FrameHeader, Progress, Result, SharedDictionary, StreamStatus};
+use alloc::alloc::{Allocator, Global};
 use alloc::vec::Vec;
 
 #[derive(Clone, Copy, Eq, PartialEq)]
@@ -30,12 +32,14 @@ enum Phase {
 
 /// Incrementally decode concatenated standard and skippable frames.
 ///
-/// The context owns its bounded window and block storage, never caller slices.
+/// The context owns its bounded window and block storage. Input/output slices
+/// are never retained; a borrowed dictionary handle retains its explicit borrow.
 /// Every frame boundary is reported before consuming the next frame's magic.
 /// Output is provisional until that frame's checksum has been validated. An
 /// error poisons the context until reset; output touched by a failing call must
 /// be discarded. Corresponds to `ZSTD_DCtx` and `ZSTD_decompressStream`.
-pub struct Decoder {
+pub struct Decoder<A: Allocator = Global, D: DictionaryHandle = SharedDictionary> {
+    allocator: A,
     options: DecodeOptions,
     phase: Phase,
     scratch: [u8; 18],
@@ -45,25 +49,56 @@ pub struct Decoder {
     last_block: bool,
     remaining: usize,
     rle_byte: u8,
-    history: RingHistory,
-    huffman: Option<HuffmanTable>,
-    sequences: SequenceState,
-    encoded: Vec<u8>,
-    pending: Vec<u8>,
+    history: RingHistory<A>,
+    huffman: Option<HuffmanTable<A>>,
+    sequences: SequenceState<A>,
+    encoded: Vec<u8, A>,
+    pending: Vec<u8, A>,
     pending_position: usize,
     checksum: XxHash64,
     decoded_total: u64,
     input_total: u64,
     output_total: u64,
     completed_frames: u64,
-    dictionary: Option<SharedDictionary>,
-    prefix: Option<SharedDictionary>,
-    active_dictionary: Option<SharedDictionary>,
+    dictionary: Option<D>,
+    prefix: Option<D>,
+    active_dictionary: Option<D>,
 }
 
-impl Decoder {
+impl Decoder<Global, SharedDictionary> {
     /// Create an allocation-free context with explicit stream resource limits.
     pub fn new(options: DecodeOptions) -> Self {
+        Self::new_in(options, Global)
+    }
+
+    /// Create a context with a persistent immutable dictionary for every frame.
+    pub fn with_dictionary(options: DecodeOptions, dictionary: SharedDictionary) -> Self {
+        Self::with_dictionary_in(options, dictionary, Global)
+    }
+}
+
+impl<A: Allocator + Clone> Decoder<A, SharedDictionary> {
+    /// Retain an allocator and construct empty workspace owners without
+    /// allocating their payloads. Each cloned allocator owns only fresh storage;
+    /// ordinary allocator cloning has the caller's own panic/allocation policy.
+    pub fn new_in(options: DecodeOptions, allocator: A) -> Self {
+        Self::empty_in(options, allocator)
+    }
+}
+
+impl<A: Allocator + Clone, D: DictionaryHandle> Decoder<A, D> {
+    /// Attach a persistent shared owner or borrowed dictionary view independently
+    /// of the workspace allocator. Prepared tables are borrowed during decoding;
+    /// neither attachment nor frame reset copies their allocations. A borrowed
+    /// view must remain valid for the context's lifetime. Shared ownership keeps
+    /// its existing Global Arc/Rc control allocation outside the selected domain.
+    pub fn with_dictionary_in(options: DecodeOptions, dictionary: D, allocator: A) -> Self {
+        let mut decoder = Self::empty_in(options, allocator);
+        decoder.dictionary = Some(dictionary);
+        decoder
+    }
+
+    fn empty_in(options: DecodeOptions, allocator: A) -> Self {
         Self {
             options,
             phase: Phase::Header,
@@ -74,13 +109,14 @@ impl Decoder {
             last_block: false,
             remaining: 0,
             rle_byte: 0,
-            history: RingHistory::new(
+            history: RingHistory::new_in(
                 usize::try_from(options.max_window_size).unwrap_or(usize::MAX),
+                allocator.clone(),
             ),
             huffman: None,
-            sequences: SequenceState::new(),
-            encoded: Vec::new(),
-            pending: Vec::new(),
+            sequences: SequenceState::new_in(allocator.clone()),
+            encoded: Vec::new_in(allocator.clone()),
+            pending: Vec::new_in(allocator.clone()),
             pending_position: 0,
             checksum: XxHash64::new(),
             decoded_total: 0,
@@ -90,14 +126,8 @@ impl Decoder {
             dictionary: None,
             prefix: None,
             active_dictionary: None,
+            allocator,
         }
-    }
-
-    /// Create a context with a persistent immutable dictionary for every frame.
-    pub fn with_dictionary(options: DecodeOptions, dictionary: SharedDictionary) -> Self {
-        let mut decoder = Self::new(options);
-        decoder.dictionary = Some(dictionary);
-        decoder
     }
 
     /// Replace the persistent dictionary and clear an unclaimed prefix.
@@ -105,8 +135,8 @@ impl Decoder {
     /// Configure only at a clean frame boundary, before any next header byte
     /// has been accepted. Limits and counters remain unchanged. Rejection leaves
     /// the context unchanged; a failed or sealed context must first be reset.
-    /// Corresponds to `ZSTD_DCtx_refDDict` with shared, owned lifetime.
-    pub fn set_dictionary(&mut self, dictionary: Option<SharedDictionary>) -> Result<()> {
+    /// Corresponds to `ZSTD_DCtx_refDDict` with the attachment's enforced lifetime.
+    pub fn set_dictionary(&mut self, dictionary: Option<D>) -> Result<()> {
         self.check_configuration_boundary()?;
         self.dictionary = dictionary;
         self.prefix = None;
@@ -118,9 +148,9 @@ impl Decoder {
     /// Skippable frames do not claim this handle. Once a standard frame claims
     /// it, completion or reset releases it. Reset preserves an unclaimed prefix.
     /// Configuration is accepted only at a clean boundary, as for
-    /// [`Self::set_dictionary`]. Use [`Dictionary::raw`] for uninterpreted bytes.
-    /// Corresponds to `ZSTD_DCtx_refPrefix_advanced` with owned lifetime.
-    pub fn set_prefix(&mut self, prefix: SharedDictionary) -> Result<()> {
+    /// [`Self::set_dictionary`]. Use [`crate::Dictionary::raw`] for uninterpreted bytes.
+    /// Corresponds to `ZSTD_DCtx_refPrefix_advanced` with the attachment's lifetime.
+    pub fn set_prefix(&mut self, prefix: D) -> Result<()> {
         self.check_configuration_boundary()?;
         self.dictionary = None;
         self.prefix = Some(prefix);
@@ -208,7 +238,7 @@ impl Decoder {
         self.rle_byte = 0;
         self.history.clear();
         self.huffman = None;
-        self.sequences = SequenceState::new();
+        self.sequences.reset([1, 4, 8]);
         self.encoded.clear();
         self.pending.clear();
         self.pending_position = 0;
@@ -222,8 +252,10 @@ impl Decoder {
     /// Reset and apply new limits. A changed window cap releases old storage.
     pub fn reset_with_options(&mut self, options: DecodeOptions) {
         if options.max_window_size != self.options.max_window_size {
-            self.history =
-                RingHistory::new(usize::try_from(options.max_window_size).unwrap_or(usize::MAX));
+            self.history = RingHistory::new_in(
+                usize::try_from(options.max_window_size).unwrap_or(usize::MAX),
+                self.allocator.clone(),
+            );
         }
         self.options = options;
         self.reset();
@@ -242,8 +274,9 @@ impl Decoder {
         self.output_total
     }
     /// Reachable heap capacity, excluding inline state and caller buffers.
-    /// Shared dictionary allocations are included once for this context, even
-    /// when another context holds the same dictionary.
+    /// Attached dictionary payloads are included once even when borrowed or
+    /// shared elsewhere. This is reachable capacity, not ownership accounting;
+    /// shared Arc/Rc control storage is excluded.
     pub fn retained_capacity(&self) -> usize {
         self.history.retained_capacity()
             + self.encoded.capacity()
@@ -258,7 +291,7 @@ impl Decoder {
                 .as_ref()
                 .or(self.dictionary.as_ref())
                 .or(self.prefix.as_ref())
-                .map_or(0, |dictionary| dictionary.retained_capacity())
+                .map_or(0, |dictionary| dictionary.view().retained_capacity())
     }
     /// Initialized bytes currently available for backward references.
     pub fn history_size(&self) -> usize {
@@ -337,7 +370,7 @@ impl Decoder {
                             .active_dictionary
                             .as_ref()
                             .ok_or(Error::DictionaryRequired)?;
-                        if dictionary.id() != header.dictionary_id {
+                        if dictionary.view().id() != header.dictionary_id {
                             return Err(Error::DictionaryMismatch);
                         }
                     }
@@ -354,10 +387,10 @@ impl Decoder {
                     // in this session. Avoid reserving unreachable window bytes.
                     self.history.start_frame(window.min(budget as usize))?;
                     self.max_block = window.min(MAX_BLOCK_SIZE);
-                    self.sequences = SequenceState::with_repeat(
+                    self.sequences.reset(
                         self.active_dictionary
-                            .as_deref()
-                            .and_then(Dictionary::entropy)
+                            .as_ref()
+                            .and_then(|dictionary| dictionary.view().entropy())
                             .map_or([1, 4, 8], |entropy| entropy.repeat),
                     );
                     self.frame = Some(header);
@@ -421,8 +454,11 @@ impl Decoder {
                 }
                 Phase::Compressed => {
                     let count = self.remaining.min(input.len() - *consumed);
-                    self.encoded
-                        .extend_from_slice(&input[*consumed..*consumed + count]);
+                    // BlockHeader reserved the full bounded encoded size;
+                    // individual Copy pushes cannot allocate within that capacity.
+                    for &byte in &input[*consumed..*consumed + count] {
+                        self.encoded.push(byte);
+                    }
                     *consumed += count;
                     self.remaining -= count;
                     if self.remaining != 0 {
@@ -430,15 +466,14 @@ impl Decoder {
                     }
                     let budget =
                         (self.options.max_output_size as u64 - self.decoded_total) as usize;
-                    let initial = self
-                        .active_dictionary
-                        .as_deref()
-                        .and_then(Dictionary::entropy);
-                    let (literals, offset) = decode_literals_with_dictionary(
+                    let dictionary = self.active_dictionary.as_ref().map(DictionaryHandle::view);
+                    let initial = dictionary.and_then(|dictionary| dictionary.entropy());
+                    let (literals, offset) = decode_literals_with_dictionary_view_in(
                         &self.encoded,
                         &mut self.huffman,
                         self.max_block.min(budget),
-                        initial.map(|entropy| &entropy.huffman),
+                        initial.map(|entropy| entropy.huffman),
+                        self.allocator.clone(),
                     )?;
                     self.pending.clear();
                     self.pending
@@ -450,14 +485,14 @@ impl Decoder {
                         .map(|size| size.saturating_sub(self.history.frame_len()));
                     let mut sink = BlockSink {
                         history: &self.history,
-                        dictionary: self.active_dictionary.as_deref(),
+                        dictionary,
                         window: self.frame.ok_or(Error::InvalidState)?.window_size,
                         output: &mut self.pending,
                         budget,
                         frame_remaining,
                         max_block: self.max_block,
                     };
-                    self.sequences.decode_with_dictionary(
+                    self.sequences.decode_with_dictionary_view(
                         &self.encoded[offset..],
                         &literals,
                         &mut sink,
@@ -588,7 +623,7 @@ impl Decoder {
         self.active_dictionary = None;
         self.history.clear();
         self.huffman = None;
-        self.sequences = SequenceState::new();
+        self.sequences.reset([1, 4, 8]);
         Ok(())
     }
 }
@@ -597,17 +632,17 @@ impl Decoder {
 /// The complete block is committed only after sequence execution succeeds.
 /// Keeping old history unchanged also preserves dictionary-to-frame sources.
 /// Vector growth is checked before mutation and never exceeds one block.
-struct BlockSink<'a> {
-    history: &'a RingHistory,
-    dictionary: Option<&'a Dictionary>,
+struct BlockSink<'a, A: Allocator> {
+    history: &'a RingHistory<A>,
+    dictionary: Option<DictionaryView<'a>>,
     window: u64,
-    output: &'a mut Vec<u8>,
+    output: &'a mut Vec<u8, A>,
     budget: usize,
     frame_remaining: Option<u64>,
     max_block: usize,
 }
 
-impl BlockSink<'_> {
+impl<A: Allocator> BlockSink<'_, A> {
     fn extend(&mut self, count: usize) -> Result<usize> {
         let start = self.output.len();
         let end = start.checked_add(count).ok_or(Error::ResourceLimit)?;
@@ -623,7 +658,11 @@ impl BlockSink<'_> {
         self.output
             .try_reserve_exact(count)
             .map_err(|_| Error::AllocationFailed)?;
-        self.output.resize(end, 0);
+        // Initialization follows the successful reservation; each push stays
+        // within capacity and cannot invoke another allocator request.
+        for _ in start..end {
+            self.output.push(0);
+        }
         Ok(start)
     }
 
@@ -642,7 +681,7 @@ impl BlockSink<'_> {
     }
 }
 
-impl SequenceOutput for BlockSink<'_> {
+impl<A: Allocator> SequenceOutput for BlockSink<'_, A> {
     fn len(&self) -> usize {
         self.output.len()
     }
@@ -708,6 +747,557 @@ impl SequenceOutput for BlockSink<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    // Fixture records contain only borrowed bytes/scalars; they own no codec storage.
+    #[derive(Clone, Copy)]
+    struct Case {
+        dictionary: &'static [u8],
+        encoded: &'static [u8],
+        expected: &'static [u8],
+    }
+
+    macro_rules! fixture {
+        ($name:literal) => {
+            include_bytes!(concat!("../tests/upstream/dictionaries/", $name))
+        };
+    }
+
+    fn prepared_cases() -> [Case; 9] {
+        [
+            Case {
+                dictionary: fixture!("boundary-dictionary.raw"),
+                encoded: fixture!("raw-small-window.zst"),
+                expected: fixture!("raw-small-window.expected"),
+            },
+            Case {
+                dictionary: fixture!("formatted.dict"),
+                encoded: fixture!("formatted-id.zst"),
+                expected: fixture!("formatted-id.expected"),
+            },
+            Case {
+                dictionary: fixture!("formatted.dict"),
+                encoded: fixture!("persistent-concatenation.zst"),
+                expected: fixture!("persistent-concatenation.expected"),
+            },
+            Case {
+                dictionary: fixture!("formatted.dict"),
+                encoded: fixture!("dictionary-treeless-literals.zst"),
+                expected: fixture!("dictionary-treeless-literals.expected"),
+            },
+            Case {
+                dictionary: fixture!("formatted.dict"),
+                encoded: fixture!("dictionary-treeless-four-streams.zst"),
+                expected: fixture!("dictionary-treeless-four-streams.expected"),
+            },
+            Case {
+                dictionary: fixture!("trained.dict"),
+                encoded: fixture!("dictionary-repeat-sequences.zst"),
+                expected: fixture!("dictionary-repeat-sequences.expected"),
+            },
+            Case {
+                dictionary: fixture!("duplicate-reps.dict"),
+                encoded: fixture!("duplicate-reps-initial.zst"),
+                expected: fixture!("duplicate-reps-initial.expected"),
+            },
+            Case {
+                dictionary: fixture!("boundary-dictionary.raw"),
+                encoded: fixture!("dictionary-to-frame-eviction.zst"),
+                expected: fixture!("dictionary-to-frame-eviction.expected"),
+            },
+            Case {
+                dictionary: include_bytes!(
+                    "../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols"
+                ),
+                encoded: include_bytes!("../tests/upstream/data/generated/http-dictionary.zst"),
+                expected: include_bytes!("../tests/upstream/data/golden-compression/http"),
+            },
+        ]
+    }
+
+    fn tracking() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig::default()).unwrap()
+    }
+
+    /// Compare incremental output directly, without a hidden output allocation.
+    /// Periodic empty input/output calls test state-only progress and draining.
+    fn check_decode<A: Allocator + Clone, D: DictionaryHandle>(
+        decoder: &mut Decoder<A, D>,
+        encoded: &[u8],
+        expected: &[u8],
+        input_chunk: usize,
+        output_chunk: usize,
+    ) -> Result<usize> {
+        assert!(input_chunk > 0 && (1..=129).contains(&output_chunk));
+        let before_input = decoder.total_input();
+        let before_output = decoder.total_output();
+        let mut consumed = 0;
+        let mut produced = 0;
+        let mut frames = 0;
+        for call in 0..16 * (encoded.len() + expected.len() + 1) {
+            let end = if call % 5 == 0 {
+                consumed
+            } else {
+                encoded.len().min(consumed + input_chunk)
+            };
+            let capacity = if call % 7 == 0 { 0 } else { output_chunk };
+            let mut guarded = [0xa5; 131];
+            let result = decoder.process(&encoded[consumed..end], &mut guarded[1..1 + capacity]);
+            assert_eq!(guarded[0], 0xa5);
+            assert!(guarded[1 + capacity..].iter().all(|&byte| byte == 0xa5));
+            let progress = result?;
+            assert!(progress.consumed <= end - consumed);
+            assert!(progress.produced <= capacity);
+            assert!(
+                guarded[1 + progress.produced..]
+                    .iter()
+                    .all(|&byte| byte == 0xa5)
+            );
+            let next = produced + progress.produced;
+            assert_eq!(
+                &guarded[1..1 + progress.produced],
+                expected.get(produced..next).unwrap()
+            );
+            consumed += progress.consumed;
+            produced = next;
+            if progress.status == StreamStatus::FrameFinished {
+                frames += 1;
+            }
+            if consumed == encoded.len()
+                && matches!(
+                    progress.status,
+                    StreamStatus::FrameFinished | StreamStatus::NeedInput
+                )
+            {
+                decoder.finish()?;
+                assert_eq!(produced, expected.len());
+                assert_eq!(decoder.total_input() - before_input, encoded.len() as u64);
+                assert_eq!(
+                    decoder.total_output() - before_output,
+                    expected.len() as u64
+                );
+                return Ok(frames);
+            }
+        }
+        panic!("decoder failed to make bounded progress")
+    }
+
+    #[test]
+    fn custom_decoder_construction_reset_and_window_changes_keep_exact_owners() {
+        let owner = tracking();
+        let identity = owner.identity();
+        let monitor = owner.monitor();
+        let mut decoder = Decoder::new_in(DecodeOptions::new(3), owner);
+        assert_eq!(monitor.snapshot().attempts, 0);
+        assert_eq!(monitor.snapshot().identities_created, 5);
+        assert_eq!(decoder.allocator.identity(), identity);
+        assert_ne!(decoder.encoded.allocator().identity(), identity);
+        assert_ne!(
+            decoder.pending.allocator().identity(),
+            decoder.encoded.allocator().identity()
+        );
+        let frame = [0x28, 0xb5, 0x2f, 0xfd, 0x20, 3, 25, 0, 0, b'a', b'b', b'c'];
+        check_decode(&mut decoder, &frame, b"abc", 1, 1).unwrap();
+        let capacity = decoder.retained_capacity();
+        let before = monitor.snapshot();
+        decoder.reset();
+        assert_eq!(decoder.retained_capacity(), capacity);
+        check_decode(&mut decoder, &frame, b"abc", 2, 3).unwrap();
+        assert_eq!(monitor.snapshot().attempts, before.attempts);
+        assert_eq!(
+            monitor.snapshot().identities_created,
+            before.identities_created
+        );
+        assert!(monitor.fail_next());
+        decoder.reset_with_options(DecodeOptions {
+            max_output_size: 3,
+            max_window_size: 1024,
+        });
+        assert_eq!(decoder.history.retained_capacity(), 0);
+        assert_eq!(monitor.snapshot().live_blocks, 0);
+        assert_eq!(
+            monitor.snapshot().identities_created,
+            before.identities_created + 1
+        );
+        assert_eq!(monitor.snapshot().owners_dropped, before.owners_dropped + 1);
+        assert_eq!(
+            check_decode(&mut decoder, &frame, b"abc", 2, 3),
+            Err(Error::AllocationFailed)
+        );
+        assert_eq!(decoder.process(&[], &mut []), Err(Error::InvalidState));
+        decoder.reset();
+        check_decode(&mut decoder, &frame, b"abc", 2, 3).unwrap();
+        assert_eq!(decoder.allocator.identity(), identity);
+        drop(decoder);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_decoder_borrows_all_prepared_fixture_tables_across_fragment_schedules() {
+        for case in prepared_cases() {
+            let dictionary_owner = tracking().into_non_clone();
+            let dictionary_monitor = dictionary_owner.monitor();
+            let dictionary = Dictionary::from_bytes_in(case.dictionary, &dictionary_owner).unwrap();
+            let before = dictionary_monitor.snapshot();
+            assert!(dictionary_monitor.fail_next());
+            for (input_chunk, output_chunk) in [(1, 1), (2, 3), (17, 7), (128, 129)] {
+                let owner = tracking().into_non_clone();
+                let monitor = owner.monitor();
+                let mut decoder = Decoder::with_dictionary_in(
+                    DecodeOptions::new(case.expected.len()),
+                    dictionary.view(),
+                    &owner,
+                );
+                assert_eq!(decoder.retained_capacity(), dictionary.retained_capacity());
+                let frames = check_decode(
+                    &mut decoder,
+                    case.encoded,
+                    case.expected,
+                    input_chunk,
+                    output_chunk,
+                )
+                .unwrap();
+                assert!(frames >= 1);
+                decoder.reset();
+                check_decode(
+                    &mut decoder,
+                    case.encoded,
+                    case.expected,
+                    input_chunk,
+                    output_chunk,
+                )
+                .unwrap();
+                assert_eq!(monitor.snapshot().identities_created, 1);
+                drop(decoder);
+                monitor.assert_released();
+            }
+            assert_eq!(dictionary_monitor.snapshot().attempts, before.attempts);
+            assert_eq!(
+                dictionary_monitor.snapshot().identities_created,
+                before.identities_created
+            );
+            drop(dictionary);
+            dictionary_monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn custom_decoder_shared_dictionary_keeps_its_distinct_allocator_alive() {
+        let case = prepared_cases()[4];
+        let dictionary_owner = tracking();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let shared = Dictionary::from_bytes_in(case.dictionary, dictionary_owner)
+            .unwrap()
+            .into_shared();
+        let dictionary_before = dictionary_monitor.snapshot();
+        let weak = SharedDictionary::downgrade(&shared);
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let mut decoder =
+            Decoder::with_dictionary_in(DecodeOptions::new(case.expected.len()), shared, &owner);
+        assert!(weak.upgrade().is_some());
+        check_decode(&mut decoder, case.encoded, case.expected, 3, 7).unwrap();
+        decoder.reset();
+        check_decode(&mut decoder, case.encoded, case.expected, 17, 129).unwrap();
+        assert_eq!(
+            dictionary_monitor.snapshot().attempts,
+            dictionary_before.attempts
+        );
+        assert_eq!(
+            dictionary_monitor.snapshot().identities_created,
+            dictionary_before.identities_created
+        );
+        decoder.reset();
+        decoder.set_dictionary(None).unwrap();
+        assert!(weak.upgrade().is_none());
+        dictionary_monitor.assert_released();
+        drop(decoder);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_decoder_every_observed_allocation_failure_poison_resets_and_releases() {
+        let plain = Case {
+            dictionary: b"",
+            encoded: include_bytes!("../tests/upstream/data/generated/http.zst"),
+            expected: include_bytes!("../tests/upstream/data/golden-compression/http"),
+        };
+        for case in [
+            plain,
+            prepared_cases()[1],
+            prepared_cases()[4],
+            prepared_cases()[5],
+        ] {
+            let dictionary = Dictionary::from_bytes(case.dictionary).unwrap();
+            let owner = tracking();
+            let monitor = owner.monitor();
+            let mut baseline = Decoder::with_dictionary_in(
+                DecodeOptions::new(case.expected.len()),
+                dictionary.view(),
+                owner,
+            );
+            check_decode(&mut baseline, case.encoded, case.expected, 17, 129).unwrap();
+            let attempts = monitor.snapshot().attempts;
+            assert!(attempts >= 3);
+            drop(baseline);
+            monitor.assert_released();
+            for ordinal in 1..=attempts {
+                let owner = TrackingAllocator::new(AllocatorConfig {
+                    fail_at: NonZeroU64::new(ordinal),
+                    ..AllocatorConfig::default()
+                })
+                .unwrap();
+                let monitor = owner.monitor();
+                let mut decoder = Decoder::with_dictionary_in(
+                    DecodeOptions::new(case.expected.len()),
+                    dictionary.view(),
+                    owner,
+                );
+                assert_eq!(
+                    check_decode(&mut decoder, case.encoded, case.expected, 17, 129),
+                    Err(Error::AllocationFailed),
+                    "request {ordinal}"
+                );
+                assert_eq!(monitor.snapshot().attempts, ordinal);
+                assert_eq!(monitor.snapshot().failures, 1);
+                assert_eq!(decoder.process(&[], &mut []), Err(Error::InvalidState));
+                assert_eq!(decoder.finish(), Err(Error::InvalidState));
+                assert_eq!(decoder.set_dictionary(None), Err(Error::InvalidState));
+                decoder.reset();
+                assert_eq!(decoder.total_input(), 0);
+                assert_eq!(decoder.total_output(), 0);
+                assert!(decoder.active_dictionary.is_none());
+                assert!(decoder.dictionary.is_some());
+                check_decode(&mut decoder, case.encoded, case.expected, 17, 129).unwrap();
+                drop(decoder);
+                monitor.assert_released();
+            }
+        }
+    }
+
+    #[test]
+    fn custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers() {
+        // Three raw literals and one RLE-coded sequence: the complete six-byte
+        // output is abcabc. This bounded frame isolates the four workspace
+        // allocations without external fixture or filesystem dependencies.
+        let frame = [
+            0x28, 0xb5, 0x2f, 0xfd, 0, 0, 85, 0, 0, 24, b'a', b'b', b'c', 1, 0x54, 3, 2, 0, 6,
+        ];
+        let dictionary_owner = tracking().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary = Dictionary::raw_in(b"unused", dictionary_owner)
+            .unwrap()
+            .into_shared();
+        let weak = SharedDictionary::downgrade(&dictionary);
+        for ordinal in 1..=4 {
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                fail_at: NonZeroU64::new(ordinal),
+                ..AllocatorConfig::default()
+            })
+            .unwrap();
+            let monitor = owner.monitor();
+            let mut decoder =
+                Decoder::with_dictionary_in(DecodeOptions::new(6), dictionary.clone(), owner);
+            assert_eq!(
+                check_decode(&mut decoder, &frame, b"abcabc", 3, 7),
+                Err(Error::AllocationFailed)
+            );
+            assert_eq!(monitor.snapshot().attempts, ordinal);
+            assert_eq!(decoder.finish(), Err(Error::InvalidState));
+            decoder.reset();
+            assert!(weak.upgrade().is_some());
+            check_decode(&mut decoder, &frame, b"abcabc", 3, 7).unwrap();
+            drop(decoder);
+            monitor.assert_released();
+        }
+        drop(dictionary);
+        assert!(weak.upgrade().is_none());
+        dictionary_monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_decoder_prefix_claim_failure_and_skippable_frames_preserve_lifetimes() {
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let dictionary_owner = tracking();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let shared = Dictionary::raw_in(fixture!("boundary-dictionary.raw"), dictionary_owner)
+            .unwrap()
+            .into_shared();
+        let weak = SharedDictionary::downgrade(&shared);
+        let mut decoder =
+            Decoder::with_dictionary_in(DecodeOptions::new(512), shared.clone(), &owner);
+        decoder.set_prefix(shared).unwrap();
+        decoder.reset();
+        let skip = [0x50, 0x2a, 0x4d, 0x18, 0, 0, 0, 0];
+        assert_eq!(
+            decoder.process(&skip, &mut []).unwrap().status,
+            StreamStatus::FrameFinished
+        );
+        assert!(decoder.prefix.is_some());
+        assert!(monitor.fail_next());
+        assert_eq!(
+            decoder.process(fixture!("prefix-first.zst"), &mut []),
+            Err(Error::AllocationFailed)
+        );
+        assert!(decoder.prefix.is_none());
+        assert!(decoder.active_dictionary.is_some());
+        assert!(weak.upgrade().is_some());
+        decoder.reset();
+        assert!(weak.upgrade().is_none());
+        dictionary_monitor.assert_released();
+        assert!(decoder.dictionary.is_none());
+        assert!(decoder.prefix.is_none());
+        drop(decoder);
+        monitor.assert_released();
+
+        let dictionary_owner = tracking().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary =
+            Dictionary::raw_in(fixture!("boundary-dictionary.raw"), &dictionary_owner).unwrap();
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let mut decoder =
+            Decoder::with_dictionary_in(DecodeOptions::new(512), dictionary.view(), &owner);
+        decoder.set_prefix(dictionary.view()).unwrap();
+        check_decode(
+            &mut decoder,
+            fixture!("prefix-once-concatenation.zst"),
+            fixture!("prefix-once-concatenation.expected"),
+            1,
+            7,
+        )
+        .unwrap();
+        assert!(
+            decoder.prefix.is_none()
+                && decoder.active_dictionary.is_none()
+                && decoder.dictionary.is_none()
+        );
+        drop(decoder);
+        monitor.assert_released();
+        drop(dictionary);
+        dictionary_monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_decoder_resource_checks_precede_allocation_and_errors_require_reset() {
+        let owner = tracking().into_non_clone();
+        let monitor = owner.monitor();
+        let mut decoder = Decoder::new_in(
+            DecodeOptions {
+                max_output_size: 2,
+                max_window_size: 2,
+            },
+            &owner,
+        );
+        let raw = [0x28, 0xb5, 0x2f, 0xfd, 0x20, 3, 25, 0, 0, b'a', b'b', b'c'];
+        assert!(monitor.fail_next());
+        assert_eq!(
+            decoder.process(&raw, &mut [0; 3]),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(monitor.snapshot().attempts, 0);
+        decoder.reset_with_options(DecodeOptions::new(3));
+        assert_eq!(
+            decoder.process(&raw, &mut [0; 3]),
+            Err(Error::AllocationFailed)
+        );
+        decoder.reset();
+        check_decode(&mut decoder, &raw, b"abc", 1, 1).unwrap();
+        decoder.reset();
+        assert_eq!(decoder.process(&[0xff], &mut []), Err(Error::InvalidMagic));
+        assert_eq!(decoder.process(&raw, &mut [0; 3]), Err(Error::InvalidState));
+        decoder.reset();
+        decoder.process(&raw[..5], &mut []).unwrap();
+        assert_eq!(decoder.finish(), Err(Error::UnexpectedEof));
+        assert_eq!(decoder.process(&raw, &mut [0; 3]), Err(Error::InvalidState));
+        decoder.reset();
+        check_decode(&mut decoder, &raw, b"abc", 17, 7).unwrap();
+        drop(decoder);
+        monitor.assert_released();
+    }
+
+    #[cfg(feature = "std")]
+    #[test]
+    #[ignore = "requires official zstd v1.5.7 CLI; set ZSTD_BIN"]
+    fn official_frames_decode_through_custom_shared_and_borrowed_allocators() {
+        use std::io::Write;
+        use std::process::{Command, Stdio};
+        let executable =
+            std::env::var_os("ZSTD_BIN").expect("set ZSTD_BIN to the pinned v1.5.7 CLI");
+        let version = Command::new(&executable).arg("--version").output().unwrap();
+        assert!(version.status.success());
+        assert!(std::string::String::from_utf8_lossy(&version.stdout).contains("v1.5.7"));
+        let dictionary_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests/upstream/dictionaries/formatted.dict");
+        let mut checked = 0;
+        for dictionary_enabled in [false, true] {
+            for length in [0, 1, 4096, 8193] {
+                let source: Vec<u8> = (0..length)
+                    .map(|index| ((index * 79) ^ (index >> 4)) as u8 & 31)
+                    .collect();
+                let mut command = Command::new(&executable);
+                command.args(["-q", "-f", "-c", "--check", "-3"]);
+                if dictionary_enabled {
+                    command.arg("-D").arg(&dictionary_path);
+                }
+                let mut child = command
+                    .stdin(Stdio::piped())
+                    .stdout(Stdio::piped())
+                    .stderr(Stdio::piped())
+                    .spawn()
+                    .unwrap();
+                let mut input = child.stdin.take().unwrap();
+                let sent = source.clone();
+                let writer = std::thread::spawn(move || input.write_all(&sent));
+                let output = child.wait_with_output().unwrap();
+                writer.join().unwrap().unwrap();
+                assert!(
+                    output.status.success(),
+                    "{}",
+                    std::string::String::from_utf8_lossy(&output.stderr)
+                );
+                let dictionary_bytes: &[u8] = if dictionary_enabled {
+                    fixture!("formatted.dict")
+                } else {
+                    b""
+                };
+                let dictionary_owner = tracking();
+                let dictionary_monitor = dictionary_owner.monitor();
+                let dictionary = Dictionary::from_bytes_in(dictionary_bytes, dictionary_owner)
+                    .unwrap()
+                    .into_shared();
+                let before = dictionary_monitor.snapshot();
+                let owner = tracking().into_non_clone();
+                let monitor = owner.monitor();
+                let mut borrowed = Decoder::with_dictionary_in(
+                    DecodeOptions::new(source.len()),
+                    dictionary.view(),
+                    &owner,
+                );
+                check_decode(&mut borrowed, &output.stdout, &source, 3, 7).unwrap();
+                drop(borrowed);
+                monitor.assert_released();
+                let mut shared = Decoder::with_dictionary_in(
+                    DecodeOptions::new(source.len()),
+                    dictionary.clone(),
+                    &owner,
+                );
+                check_decode(&mut shared, &output.stdout, &source, 17, 129).unwrap();
+                drop(shared);
+                monitor.assert_released();
+                assert_eq!(dictionary_monitor.snapshot().attempts, before.attempts);
+                drop(dictionary);
+                dictionary_monitor.assert_released();
+                checked += 2;
+            }
+        }
+        std::eprintln!(
+            "Decoded 8 official checksum frames through 16 custom-allocator borrowed/shared contexts; no dictionary table copies"
+        );
+        assert_eq!(checked, 16);
+    }
 
     #[test]
     fn dictionary_configuration_is_transactional_and_prefix_claims_only_standard_frames() {

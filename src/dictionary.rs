@@ -50,13 +50,6 @@ pub(crate) struct DictionaryEntropy<A: Allocator = Global> {
 
 /// Validated immutable entropy borrowed independently of allocator type.
 #[derive(Clone, Copy, Debug)]
-#[cfg_attr(
-    not(test),
-    allow(
-        dead_code,
-        reason = "allocator-aware contexts consume borrowed entropy next"
-    )
-)]
 pub(crate) struct DictionaryEntropyView<'a> {
     pub(crate) huffman: HuffmanTableView<'a>,
     pub(crate) offsets: FseTableView<'a>,
@@ -139,14 +132,12 @@ impl<'a> DictionaryView<'a> {
         read_content_byte(self.content(), index)
     }
 
-    #[cfg_attr(not(test), allow(dead_code, reason = "context integration follows"))]
     pub(crate) fn entropy(&self) -> Option<DictionaryEntropyView<'a>> {
         self.entropy
     }
 
     /// Reachable payload capacity of the original owner, not memory owned by
     /// this view. Shared control storage and inline values remain excluded.
-    #[cfg_attr(not(test), allow(dead_code, reason = "context integration follows"))]
     pub(crate) fn retained_capacity(&self) -> usize {
         self.retained_capacity
     }

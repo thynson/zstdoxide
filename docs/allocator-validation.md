@@ -441,6 +441,27 @@ Resolver errors retain the same documented partial scratch/table state as the
 Global implementation. No search policy, visit budget, or coordinate arithmetic
 changed. Production copies use individual pushes after reservation.
 
+`Decoder<A, D>` now retains its allocator and a sealed shared/borrowed dictionary
+handle type. The [streaming evidence](evidence/2026-10-09-allocator-stream-decoder.json)
+records 13 normal tests across ten configurations: safe, six relevant unsafe
+features separately, all features, and safe/all no_std. Four all-feature
+strict-provenance Miri cases passed. Safe/all integration each passed 93 tests
+with four optional external checks explicitly ignored; the new C oracle was
+run separately and each configuration decoded eight C frames through both
+borrowed and shared custom contexts. Strict all-target Clippy, no_std, benchmark
+compilation, and scoped formatting passed. An isolated committed baseline with
+only the three checkpoint files also passed Clippy, no_std, and all 13 tests.
+
+The new cases cover nine stored dictionary fixtures across fragmented schedules
+and reset replay, every observed allocation ordinal on representative workloads,
+independent dictionary/workspace owners, prefix claim/release, limits before
+allocation, and changed-window storage release. Prepared tables use temporary
+validated views without per-frame copies. Process errors still poison the
+context until reset; reset retains allocator-bearing owners and clears partial
+frame state. Reachable dictionary capacity is reported even for a borrowed view;
+it is not a claim that the context owns those bytes. Standard shared ownership
+still has the documented Global outer allocation.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

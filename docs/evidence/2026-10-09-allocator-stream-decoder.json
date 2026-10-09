@@ -1,0 +1,570 @@
+{
+  "schema_version": 1,
+  "checkpoint": "Module 9 allocator-aware streaming Decoder and dictionary attachments",
+  "date": "2026-10-09",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "repository": "/Users/lanxingcan/Workspace/zstdoxize",
+  "sources": {
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/dictionary.rs": "e04767e6811e4a7fed3bce4780dbfd57ad81f93b06410731285f1616c164c89b"
+  },
+  "source_scope": {
+    "src/stream_decode.rs": "Generic Decoder<A,D>, constructors and complete typed allocator ownership, per-call dictionary views, strict reserved Copy pushes, seven normal allocator tests and one ignored live C test.",
+    "src/sequences.rs": "Only migration annotations: remove reset allowance now consumed; add narrow compatibility allowances for Global new/with_repeat and owning dictionary wrapper.",
+    "src/dictionary.rs": "Only parent-authorized removal of three obsolete migration allowances on DictionaryEntropyView and DictionaryView entropy/capacity accessors."
+  },
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-safe.log",
+      "sha256": "208f2ef94dffb56ed75154df43f5d6a8e290cb148cc4521dfae0f758fef6c88a",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 420 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-byte-cursor",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-unsafe-byte-cursor.log",
+      "sha256": "4d4388a18dc5952220590bc5f8010ebab87e74e946f717f69c6510c89f260ec6",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 420 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-bitstream",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-unsafe-bitstream.log",
+      "sha256": "f9e50d9f96cee45c76e739d70a857338f22c8c3e7b78ddef3d845e65215f857e",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 420 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-ring-history",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-unsafe-ring-history.log",
+      "sha256": "76b77404b045061a313fa31cb30836b4289e55d54a6ae819874c497f95943e14",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 420 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-unsafe-fse.log",
+      "sha256": "105136c99ad4191e824d982cdafd9dc034340ae1d437c2e0a8206272d0b89200",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 420 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-huffman",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-unsafe-huffman.log",
+      "sha256": "e82aeced81cc60032afc5369c3392f6c21189deeb49a485838f065215eab9966",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 420 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-dictionary",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-unsafe-dictionary.log",
+      "sha256": "30fe72b59bc3cd8224f73e7db413e56fe4c6a7aa18d0bcb13482b67fb6e27f6f",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 420 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-all.log",
+      "sha256": "d80bd1f9cb5c05e40190cee5ecd9cfef6d5bd466bd8d693a1b987a6825021d73",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 420 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-no-default.log",
+      "sha256": "2396e774c33f7fb66b19cefcdb1e15d4915986dbe78b0cb066a05f7f08a3f2a7",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 400 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "stream_decode::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-no-default-all.log",
+      "sha256": "d6c62d805cff0aeb5f6dbaf6140c5e47976d24f9d7000ca8a9e73be1ab15b3df",
+      "summaries": [
+        "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 400 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--lib",
+        "stream_decode::tests::official_frames_decode_through_custom_shared_and_borrowed_allocators",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-oracle-safe.log",
+      "sha256": "97e3eba30849dbf1545e0c4f94b4d7c8ae743ac57c28962f1538b4157ee3b124",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 437 filtered out; finished in 0.08s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--lib",
+        "--all-features",
+        "stream_decode::tests::official_frames_decode_through_custom_shared_and_borrowed_allocators",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-oracle-all.log",
+      "sha256": "26c1bbcfe7c2369ece6bbe3e8cca1c9037a8b5192f4247c80806294ecab9f0c8",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 437 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "stream_decode::tests::custom_decoder_construction_reset_and_window_changes_keep_exact_owners"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-miri-construction_reset_and_window_changes_keep_exact_owners.log",
+      "sha256": "08d18f914df5885eba4f455ffdedc3d3ef631340e76ad24aa3b54553abdb9549",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 433 filtered out; finished in 6.42s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-miri-small_failure_sweep_preserves_shared_owner_and_recovers.log",
+      "sha256": "6df6427dd2702803fad5a968c583eb77e01b0940ee4f3a8240a939d565b4948b",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 433 filtered out; finished in 32.53s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "stream_decode::tests::custom_decoder_shared_dictionary_keeps_its_distinct_allocator_alive"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-miri-shared_dictionary_keeps_its_distinct_allocator_alive.log",
+      "sha256": "01279b73bb97843fb2dd59a3a6bfd97cdad306eda572c8a38d293114e9f321e0",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 433 filtered out; finished in 29.07s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "stream_decode::tests::custom_decoder_prefix_claim_failure_and_skippable_frames_preserve_lifetimes"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-miri-prefix_claim_failure_and_skippable_frames_preserve_lifetimes.log",
+      "sha256": "af533f403dada41d3d4d75783e44e641ac90ae2f381862dfe43388a1c8aa4607",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 437 filtered out; finished in 24.64s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-nostd.log",
+      "sha256": "e61a2bdaf97e8c22e5cd950c479f4ca34df4f70f5f7e91940ff2bc1e70a7f879",
+      "summaries": []
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-nostd-all.log",
+      "sha256": "e61a2bdaf97e8c22e5cd950c479f4ca34df4f70f5f7e91940ff2bc1e70a7f879",
+      "summaries": []
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "upstream_streaming",
+        "--test",
+        "upstream_dictionary",
+        "--test",
+        "upstream_decodecorpus",
+        "--test",
+        "sequence_encoding"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-integration-safe.log",
+      "sha256": "1b662a34a1c1e6e75c257de5be3cbc9065d367d5f0b2035dd2db5576e2832e86",
+      "summaries": [
+        "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.03s",
+        "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.04s",
+        "test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 39 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 4.28s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--test",
+        "upstream_streaming",
+        "--test",
+        "upstream_dictionary",
+        "--test",
+        "upstream_decodecorpus",
+        "--test",
+        "sequence_encoding"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-integration-all.log",
+      "sha256": "5d49b7502c76ac4b0456bf04142bbb5db8aab66256a47728466e5c31fb497ad4",
+      "summaries": [
+        "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.04s",
+        "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.94s",
+        "test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 39 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 4.45s"
+      ]
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--bench",
+        "backends",
+        "--all-features"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-bench.log",
+      "sha256": "7058e15ec33011fd9b7aad5ddaceedc175387a76e821616125449a83d1e35f07",
+      "summaries": []
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "src/stream_decode.rs",
+        "src/sequences.rs",
+        "src/dictionary.rs"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": []
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/stream_decode.rs",
+        "src/sequences.rs",
+        "src/dictionary.rs"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": []
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-stream-decoder-target"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-stream-decoder-clippy.log",
+      "sha256": "1bf6b44abae85e058009c7fbfb4bb55bb88ff150846274bb61e9307d5ed6d70f",
+      "summaries": []
+    }
+  ],
+  "oracle": {
+    "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+    "executable": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+    "sha256": "eb20e7f4cb5c93836d7b1a8508dad08d1ced73762ca8f8abb9d8dc1e5df7b5b2",
+    "version": "*** Zstandard CLI (64-bit) v1.5.7, by Yann Collet ***",
+    "frames_per_backend": 8,
+    "custom_decodes_per_backend": 16
+  },
+  "qualifications": [
+    "Ten focused configurations each passed all 13 normal streaming decoder tests: safe, unsafe-byte-cursor, unsafe-bitstream, unsafe-ring-history, unsafe-fse, unsafe-huffman, unsafe-dictionary, all features, and no-default-features safe/all. The eight std configurations list the single live oracle as ignored in the ordinary suite; both release oracle invocations separately passed it.",
+    "Seven new normal tests cover zero-payload construction and fresh owner identities, reset and changed window-cap ownership, all nine prepared fixtures over four fragment schedules with reset replay, independent shared/borrowed dictionary domains, every observed allocation request on four representative decode workloads, a small four-request failure sweep, prefix claim/reset/drop and skippable handling, and resource validation before allocation.",
+    "Four targeted strict-provenance all-feature Miri checks passed: constructor/reset/window owner changes; small allocation-failure recovery sweep; shared custom dictionary lifetime; prefix/skippable/error lifetime. Full fixture and failure campaigns ran natively across all ten configurations, not entirely under Miri.",
+    "Existing sequence_encoding, upstream_decodecorpus, upstream_dictionary and upstream_streaming integration suites passed both safe/all: 93 normal tests with four explicitly ignored external/oracle tests in each run. No additional ignored tests are claimed as run.",
+    "Live oracle used the existing pinned v1.5.7 executable outside the repository. Each safe/all release invocation compressed eight checksum frames with/without a formatted dictionary and decoded all eight through both borrowed/shared custom allocator contexts, 16 decodes per invocation. This is C-to-Rust decoder interoperability, not C byte-identical compression or a benchmark.",
+    "Prepared dictionary table payloads are never copied per frame. Borrowed views keep original lifetimes; Global Arc/Rc control ownership remains an explicit exception around custom-allocated dictionary payloads.",
+    "Process errors retain poisoning-until-reset and provisional-output semantics. Retained capacity includes reachable attached dictionary payloads once, excluding inline and Arc/Rc control storage.",
+    "The context retains an allocator factory A; ordinary cloning may follow caller panic/allocation policy, but existing payloads never move between different allocator instances.",
+    "Parent/sibling source updates changed filtered-out totals during verification; selected normal decoder counts remained 13.",
+    "The checked compiler is nightly-2026-10-08 reporting 1.101.0-nightly. No unavailable Rust 1.100 execution is claimed."
+  ],
+  "coordinator_isolated_review": {
+    "baseline": "54d2060",
+    "scope": "Only the three frozen streaming checkpoint files over the committed baseline; excludes concurrent collector/finalizer work.",
+    "checks": [
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "output": "    Checking zstdoxide-test-allocator v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-review-_ui0fvd0/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-review-_ui0fvd0)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.47s\n"
+      },
+      {
+        "command": [
+          "cargo",
+          "check",
+          "--locked",
+          "--no-default-features"
+        ],
+        "exit_code": 0,
+        "output": "    Checking zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-review-_ui0fvd0)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.51s\n"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--lib",
+          "stream_decode::tests"
+        ],
+        "exit_code": 0,
+        "output": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-review-_ui0fvd0/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/zstdoxide-stream-review-_ui0fvd0)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.53s\n     Running unittests src/lib.rs (/tmp/zstdoxide-stream-review-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 14 tests\ntest stream_decode::tests::dictionary_configuration_is_transactional_and_prefix_claims_only_standard_frames ... ok\ntest stream_decode::tests::custom_decoder_resource_checks_precede_allocation_and_errors_require_reset ... ok\ntest stream_decode::tests::every_partial_header_and_checksum_split_is_resumable ... ok\ntest stream_decode::tests::official_frames_decode_through_custom_shared_and_borrowed_allocators ... ignored, requires official zstd v1.5.7 CLI; set ZSTD_BIN\ntest stream_decode::tests::explicit_dictionary_ids_are_checked_before_block_processing ... ok\ntest stream_decode::tests::headers_raw_and_rle_resume_at_single_byte_boundaries ... ok\ntest stream_decode::tests::processing_after_eof_poisoning_requires_reset ... ok\ntest stream_decode::tests::skip_does_not_consume_the_following_prefix ... ok\ntest stream_decode::tests::custom_decoder_construction_reset_and_window_changes_keep_exact_owners ... ok\ntest stream_decode::tests::custom_decoder_prefix_claim_failure_and_skippable_frames_preserve_lifetimes ... ok\ntest stream_decode::tests::custom_decoder_shared_dictionary_keeps_its_distinct_allocator_alive ... ok\ntest stream_decode::tests::custom_decoder_small_failure_sweep_preserves_shared_owner_and_recovers ... ok\ntest stream_decode::tests::custom_decoder_every_observed_allocation_failure_poison_resets_and_releases ... ok\ntest stream_decode::tests::custom_decoder_borrows_all_prepared_fixture_tables_across_fragment_schedules ... ok\n\ntest result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 424 filtered out; finished in 0.03s\n\n"
+      }
+    ]
+  }
+}

@@ -19,10 +19,24 @@ pub(crate) struct SequenceState<A: Allocator = Global> {
 }
 
 impl SequenceState<Global> {
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "compatibility convenience for direct sequence callers"
+        )
+    )]
     pub(crate) fn new() -> Self {
         Self::new_in(Global)
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "compatibility convenience for direct sequence callers"
+        )
+    )]
     pub(crate) fn with_repeat(repeat: [usize; 3]) -> Self {
         Self::with_repeat_in(repeat, Global)
     }
@@ -55,13 +69,6 @@ impl<A: Allocator> SequenceState<A> {
     /// Release frame overrides and restore repeats while retaining the allocator.
     /// This also clears partially published tables after a failed decode; it
     /// does not roll back output that was already appended to the caller's sink.
-    #[cfg_attr(
-        not(test),
-        allow(
-            dead_code,
-            reason = "allocator-aware frame drivers adopt reset separately"
-        )
-    )]
     pub(crate) fn reset(&mut self, repeat: [usize; 3]) {
         self.literal_lengths = None;
         self.offsets = None;
@@ -86,6 +93,13 @@ impl<A: Allocator + Clone> SequenceState<A> {
     }
 
     /// Use immutable prepared tables until a block overrides each distribution.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "compatibility convenience for direct sequence callers"
+        )
+    )]
     pub(crate) fn decode_with_dictionary<O: SequenceOutput, B: Allocator>(
         &mut self,
         input: &[u8],
