@@ -528,3 +528,14 @@ candidate clears exposed payload and pending publication without changing
 committed tables/tree/repeats. Sampled match history and source/window eligibility
 remain the parser's responsibility. Checked raw output reservation precedes the
 later infallible append and commit; preparation alone publishes nothing.
+
+The direct-oracle Rust test adapter uses a versioned binary value stream derived
+only from frozen JSON observations and deterministic recipes. A checked reader
+borrows the initialized static byte slice, bounds every scalar/count/range and
+requires exact end-of-input. Each decoded case borrows its source/identifier and
+owns only test metadata vectors for seeds, sequences and sorted table changes.
+No C memory, pointers, native padding or uninitialized values are serialized.
+These test-only records and their safe reader share one representation; they are
+not a performance-sensitive codec data structure and need no unsafe feature.
+The converter revalidates the frozen collection before generating or checking
+the binary; normal Cargo tests need no C/Python process or new crate dependency.

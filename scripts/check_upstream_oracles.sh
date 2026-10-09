@@ -20,6 +20,7 @@ python3 scripts/import_match_search_fixtures.py "$ZSTD_UPSTREAM" --check
 python3 scripts/check_upstream_fixtures.py
 python3 scripts/import_fast_parser_smoke.py --check
 python3 scripts/import_fast_parser_families.py --check
+python3 scripts/pack_fast_parser_fixtures.py --check
 python3 scripts/check_match_search_baseline.py
 
 # Select oracle tests explicitly: legacy success assertions remain blocked.

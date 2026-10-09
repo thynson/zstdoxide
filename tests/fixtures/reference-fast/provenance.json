@@ -1,0 +1,17 @@
+{
+  "binary_format": "ZFAST03: checked little-endian test records",
+  "fixture": {
+    "path": "cases.bin",
+    "sha256": "d733d71e748f3398edab4f8172d83e3062fa99f2f0036f406dc6ac2ce0948e66",
+    "size": 1104309
+  },
+  "generator": "scripts/pack_fast_parser_fixtures.py",
+  "generator_sha256": "5d49e0ba506fac106471b0e7955f5225096ac1c1f5058366909bc7c412180e59",
+  "policy": "Derived from frozen unchanged-C observations; no new C capture, parser implementation or frame-publication claim.",
+  "recipes": 142,
+  "represented_c_observations": 284,
+  "schema_version": 1,
+  "source_catalog_sha256": "acb3b9de9e647e15bd81cc563b144f010046239b7cc8f8b7a29b783942ebfd2d",
+  "source_manifest_sha256": "41bae7a66a7daee6e7f2da78cfd144d091fc8d64245e43bfcd808f022a427751",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

@@ -326,3 +326,34 @@ review. Executable/debug bytes are omitted with hashes retained. Repeated runs
 add validation executions, not new distinct corpus coverage. Collector and
 ordinary-frame state publication are separate prerequisites; Rust Fast and
 complete upstream migration are not established by this fixture checkpoint.
+
+## Dependency-free Rust access to direct observations
+
+`tests/fixtures/reference-fast/cases.bin` projects all 142 recipes into a
+1,104,309-byte versioned little-endian stream. It preserves source bytes, seeds,
+literal/sequence records with explicit offBase, parser/wire repeats, long-length
+metadata and full reconstructible table state. One representative of each
+previously verified equal padding pair is stored. The converter first runs the
+frozen collection's complete offline validation; its `--check` then requires
+identical binary bytes and provenance. Both routine check scripts include it.
+
+The test-only safe Rust reader checks structural lengths/counts before slicing
+or fallible allocation, validates domains and requires exact record/stream
+exhaustion. Separate tests replay all source bytes, repeat transitions and
+long-length markers, then reconstruct every seed/table delta and compare bucket
+values and canonical hashes using the existing Rust key primitive. No C/Python
+process or new Cargo dependency is required for these tests. This validates
+fixture access and existing hash semantics; it does not run a Rust Fast parser.
+
+Eleven commands pass on a frozen `f1dc0b1` plus owned-overlay snapshot. Four
+tests pass in safe/all/no_std-safe/no_std-all configurations, and one exact i686
+strict-provenance Miri check exercises count and record-end guards: seventeen
+test executions, no ignores. Strict all-target Clippy safe/all, no_std library
+compilation, formatting and ordinary/optimized Python packing checks pass.
+All snapshot inputs and workspace overlays remain unchanged. Independent
+review found no structural/serialization issue.
+
+[Rust fixture evidence](evidence/2026-10-09-fast-rust-fixtures.json) and its
+[archive](evidence/2026-10-09-fast-rust-fixtures.tar.gz) retain overlays, provenance,
+commands, compiler, logs and runner. The i686 check is interpreted, not native
+foreign execution. No new C observation or production ownership is introduced.
