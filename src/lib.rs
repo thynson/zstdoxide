@@ -36,6 +36,8 @@ mod cursor;
 mod decode;
 mod dictionary;
 mod encode;
+#[cfg(test)]
+mod entropy_encode;
 mod error;
 mod frame;
 mod fse;
