@@ -60,10 +60,15 @@ This is the next implementation module after Module 11 validation/measurement.
 Existing named APIs and default frame bytes remain compatibility inputs.
 
 - [x] Analyze reference Fast ownership, sampling, repeat publication, whole-buffer profile admission and independently review the implementation boundaries.
-- [ ] Freeze attributed direct-C Fast observations and normal-frame publication witnesses before Rust Fast implementation.
+- [x] Specify separate direct-parser, collector and ordinary-frame oracle contracts and the checked explicit-offset interface.
+- [ ] Add a bounded direct-C Fast helper with independent sequence replay and reviewed source/literal capacity guards.
+- [ ] Freeze deterministic direct Fast sequence/state recipe families with attributed normal/sanitizer reproduction and offline integrity checks.
+- [ ] Corroborate direct candidates through the official sequence collector, retaining its distinct publication, tiny-input and delimiter behavior.
+- [ ] Capture ordinary Fast frame publication witnesses across compressed/raw/RLE transitions and full independent decoding before Rust Fast implementation.
 - [ ] Add a plain checked Fast execution plan using existing known-size request resolution and explicit strategy/resource admission.
 - [ ] Extend private small hash layouts and separate checked table lookup/store for persistent sampled Fast state, preserving named bounds and both access backends.
-- [ ] Add checked explicit wire-offset intent and transactional sequence preparation while retaining canonical named planning.
+- [ ] Add checked explicit wire-offset value transitions and planning while preserving canonical named plans.
+- [ ] Add committed-repeat snapshots and transactional preparation of intent-bearing sequences with complete ownership/failure coverage.
 - [ ] Implement safe single-block Fast sampling, repeat probes, backward/forward matches, tails and acceleration against frozen observations.
 - [ ] Preserve sampled Fast state across blocks with checked whole-source ranges and raw/RLE/compressed transition coverage.
 - [ ] Integrate Fast literal policy, minimum-gain decisions and truthful source/window headers without altering named output.

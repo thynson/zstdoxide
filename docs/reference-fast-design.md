@@ -303,3 +303,14 @@ and borrowed-source APIs before concurrent edits.
 No complete-migration status promotion follows automatically. Explicitly report
 which actual sequence/control assertions are newly executable, which are
 adapted, and which still need dictionary/DoubleFast/live-context/LDM support.
+
+
+## Prerequisite interface specifications
+
+[The C oracle design](reference-fast-oracle-design.md) separates direct parser
+state, collector corroboration and ordinary frame publication, including
+bounded initialized C arenas and canonical observation schemas. The
+[explicit offset design](sequence-offset-intent-design.md) defines the pure
+wire transition, one intent-bearing sequence vector, committed-state snapshot
+and allocation-preserving preparation path. Their smaller checkpoints are
+recorded separately in `TODO.md` before any implementation begins.

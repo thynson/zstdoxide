@@ -463,3 +463,20 @@ explicit. On failure, drop all unreturned output and scratch without changing
 input or request. Compare every observed allocation-failure ordinal, safe and
 unsafe table access, named default frames, and actual C parser/frame observations
 before publishing numeric compression APIs.
+
+
+Module 12's [offset interface](sequence-offset-intent-design.md) uses plain
+`OffsetIntent` / `ResolvedOffset` values and `SequenceWithOffset` records.
+Repeat variants denote wire values, whose distance depends on whether literal
+length is zero. One Fast parser vector owns each sequence and its intent;
+existing named sequence records, vector sizes and owner counts stay unchanged.
+The sequence context reuses its current allocations and introduces no additional
+owner or committed-repeat field. Its snapshot is a value-consistency check,
+not a token proving frame identity or source eligibility.
+
+The [oracle metadata](reference-fast-oracle-design.md) consists of owned fixture
+bytes and checked scalar/range records. C pointer addresses, padding bytes and
+uninitialized delimiter fields are never serialized. Actual sequence/state
+observations are distinct from chronological instruction traces; collector
+candidate publication is distinct from ordinary frame selection. These test
+records need no artificial unsafe Rust representation.
