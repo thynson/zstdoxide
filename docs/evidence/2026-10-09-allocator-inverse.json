@@ -1,0 +1,789 @@
+{
+  "date": "2026-10-09",
+  "toolchain": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "scope": [
+    "src/fse_encode.rs",
+    "src/fse_select.rs",
+    "src/entropy_encode.rs"
+  ],
+  "source_sha256": {
+    "src/fse_encode.rs": "260265b9e174f46969e2a8dab38fdac218a5e800a6350818c018198dbf4fa568",
+    "src/fse_select.rs": "3fba96b62fafa5374c53d3b1446850fe0417210c7c45c27ed92bf098a4a2de25",
+    "src/entropy_encode.rs": "967289d75d71d948c658476b0995c5f1e9e380651b4b243eea17e0e210e3d65a"
+  },
+  "checks": [
+    {
+      "config": "default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_encode::tests"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_encode-default.log",
+      "exit_code": 0,
+      "sha256": "04b3514ed03025d395192647a25d06b3b27ea9a1c2699b22b5fc5069655b1371",
+      "test_counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_select::tests"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_select-default.log",
+      "exit_code": 0,
+      "sha256": "3a14e27eeb32a3fb8be07504aa3fb65da8e8b805257832568369aa4ab79376dc",
+      "test_counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-entropy_encode-default.log",
+      "exit_code": 0,
+      "sha256": "3a4393cc3cd979be35d3d9e809a8f5003c3c70e5d2a90c684d2b5e9402801adf",
+      "test_counts": {
+        "passed": 23,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_encode::tests",
+        "--features",
+        "unsafe-fse"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_encode-unsafe-fse.log",
+      "exit_code": 0,
+      "sha256": "289c691e82056984d89b7e43fd906c347670427517e9bb66c3cc5e78ee2a6a97",
+      "test_counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_select::tests",
+        "--features",
+        "unsafe-fse"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_select-unsafe-fse.log",
+      "exit_code": 0,
+      "sha256": "58322452d5c1754fd9effacad9987b585f1ae6e55f0386a0a4f8ef5f1f626ff3",
+      "test_counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests",
+        "--features",
+        "unsafe-fse"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-entropy_encode-unsafe-fse.log",
+      "exit_code": 0,
+      "sha256": "2ea0b224bcdb972c35c8c093b9e644438e0b1bedb9f328016bee7fedfe5d34e5",
+      "test_counts": {
+        "passed": 23,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_encode::tests",
+        "--features",
+        "unsafe-fse-encoder"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_encode-unsafe-fse-encoder.log",
+      "exit_code": 0,
+      "sha256": "42b9d8de6de332682cc30595ce3714239a8ec676540d9cdeedc555fb746d035e",
+      "test_counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_select::tests",
+        "--features",
+        "unsafe-fse-encoder"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_select-unsafe-fse-encoder.log",
+      "exit_code": 0,
+      "sha256": "26216012d58322204b83b12c456182f900d0b4c74a082892cb5f3a6bf7628cfc",
+      "test_counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-fse-encoder",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests",
+        "--features",
+        "unsafe-fse-encoder"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-entropy_encode-unsafe-fse-encoder.log",
+      "exit_code": 0,
+      "sha256": "e4ce627f2c47533f19ef8ab389c0ad3bbad50acf303f33bc1b426f850d57af5e",
+      "test_counts": {
+        "passed": 23,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_encode::tests",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_encode-unsafe-bitstream.log",
+      "exit_code": 0,
+      "sha256": "1939fa4c3abf9cfbf0ddeb25fffd6c29e315e6073f09a0d2e0365d017c73e90a",
+      "test_counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_select::tests",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_select-unsafe-bitstream.log",
+      "exit_code": 0,
+      "sha256": "dee60ea04d60ff17b041853029183e4509684a56f90abbf619466abad2f0eae2",
+      "test_counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests",
+        "--features",
+        "unsafe-bitstream"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-entropy_encode-unsafe-bitstream.log",
+      "exit_code": 0,
+      "sha256": "db712d677ea6389bb96a875935f60c0589e1b685aff1dd88a1bbc29be746cd4d",
+      "test_counts": {
+        "passed": 23,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_encode::tests",
+        "--all-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_encode-all.log",
+      "exit_code": 0,
+      "sha256": "e248392cd128f14d25cd5d4b445fc47117ded09f11425f4e29785b64ab67bc02",
+      "test_counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_select::tests",
+        "--all-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_select-all.log",
+      "exit_code": 0,
+      "sha256": "cfdb9ec6c85b5b07d21df2a874df4bd55818539585a7eb31519c9d5dc01d9bb6",
+      "test_counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests",
+        "--all-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-entropy_encode-all.log",
+      "exit_code": 0,
+      "sha256": "b8d9f50efaf0d822ff6275ff829525218ba48fca93007abf8e1e6fd920b85e32",
+      "test_counts": {
+        "passed": 23,
+        "failed": 0,
+        "ignored": 1
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "no-default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_encode::tests",
+        "--no-default-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_encode-no-default.log",
+      "exit_code": 0,
+      "sha256": "938483066d8a23df72a612f77d1ad2e053b7dd7b365578bf2c76893d0ddd9fef",
+      "test_counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "no-default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_select::tests",
+        "--no-default-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse_select-no-default.log",
+      "exit_code": 0,
+      "sha256": "11ee17cac9864816185687c466d8f3ca46cbf5ca8d4fc91e9860a29962fb20ef",
+      "test_counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "no-default",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests",
+        "--no-default-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-entropy_encode-no-default.log",
+      "exit_code": 0,
+      "sha256": "23121eca6a5fb29bb4bd9a8d4242ce6693e3b69bef98c03b456a8cc60c5356f6",
+      "test_counts": {
+        "passed": 23,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "config": "no_std",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--no-default-features"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-no_std.log",
+      "exit_code": 0,
+      "sha256": "8fb10a843668755410e7dbe8aa622384b70c15e88d76b5be99434f17f991bf40",
+      "warnings_present": false
+    },
+    {
+      "config": "no_std_relevant_unsafe_features",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-fse,unsafe-fse-encoder,unsafe-bitstream"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-no_std_all.log",
+      "exit_code": 0,
+      "sha256": "a10bacc2f1cfa84ccc40078acc86246c37945cd697d9f1040d87e3b9b7cf8aff",
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "fse_select::tests::allocator_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-miri-0.log",
+      "exit_code": 0,
+      "sha256": "dc295eac441b34bfc65636d3b511a311430151ba2aed15880723cfef9de25058",
+      "test_counts": {
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "entropy_encode::tests::allocator_normalization_and_weights_keep_distinct_owners_and_exact_bytes"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-miri-1.log",
+      "exit_code": 0,
+      "sha256": "f7c5fa9ff738b1f88ccab8e8ca92f394c7eda5005c698f4a5bd8bac3cdc7fe08",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "entropy_encode::tests::allocator_normalization_and_weight_failure_sweeps_release_every_temporary"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-miri-2.log",
+      "exit_code": 0,
+      "sha256": "f3a7fef65841b3c8927e4ad91642bc036db85b539de89aa4166a61527e41c89a",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_select::tests::official_codec_decodes_automatically_selected_channel_tables",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-oracle-default-fse_select.log",
+      "exit_code": 0,
+      "sha256": "4ec5611720d9b6a3845be77d2a6214b1e8c8cfa238cf43d2c4d908d55e601a19",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests::official_fse_and_huffman_readers_accept_generated_headers",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-oracle-default-entropy_encode.log",
+      "exit_code": 0,
+      "sha256": "f3a3d27969f93e761dc57bc1f9349dddff9f7b9ffd463d42bbcf837297f2f1ae",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "fse_select::tests::official_codec_decodes_automatically_selected_channel_tables",
+        "--all-features",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-oracle-all-fse_select.log",
+      "exit_code": 0,
+      "sha256": "3c080754d25da518dc62939314c3212c73327e612059d7027ad0313f541525d4",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--lib",
+        "entropy_encode::tests::official_fse_and_huffman_readers_accept_generated_headers",
+        "--all-features",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target",
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-oracle-all-entropy_encode.log",
+      "exit_code": 0,
+      "sha256": "91add983ba244044ff900cc30305a5978344150507b99dbef78a618638833ff0",
+      "test_counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--all-features",
+        "--lib",
+        "fse_encode::tests::allocator_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "log": "/tmp/zstdoxide-allocator-fse-encode-miri.log",
+      "exit_code": 0,
+      "sha256": "4a419c35f67915ba6d0d43d1a422dec637f62af409105ecf80f77bac526932b5",
+      "test_counts": {
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0
+      },
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-allocator-inverse-target"
+      },
+      "log": "/tmp/zstdoxide-allocator-inverse-clippy.log",
+      "exit_code": 0,
+      "sha256": "27c5025bb18ecb98780dc23d44ed0aee12bc72866c63dc0d21371a320ed3d6ab",
+      "warnings_present": false
+    },
+    {
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/fse_encode.rs",
+        "src/fse_select.rs",
+        "src/entropy_encode.rs"
+      ],
+      "log": "/tmp/zstdoxide-allocator-inverse-fmt.log",
+      "exit_code": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "warnings_present": false
+    }
+  ],
+  "facts": {
+    "custom_weight_vectors": 521,
+    "frozen_custom_normalized_count_headers": 512,
+    "c_weight_streams_per_backend": 521,
+    "c_complete_huffman_headers_per_backend": 68,
+    "c_sparse_weight12_headers_per_backend": 1,
+    "c_adaptive_new_rle_repeat_frame_output_bytes_per_backend": 576,
+    "oracle_backends": [
+      "default",
+      "all-features"
+    ],
+    "miri_ownership_and_failure_tests": 8
+  },
+  "qualifications": [
+    "Ordinary Allocator+Clone may panic or allocate internally; returned Vec allocation errors map to AllocationFailed, without promising Clone is fallible/non-unwinding.",
+    "Read-only table access and cost/transition helpers require Allocator only; construction uses retained fresh clones, which may be non-equivalent.",
+    "Selection current/predefined tables share an allocator type, but tested instances belong to independent accounting domains.",
+    "Global RLE constructor remains const; Global RLE/normalization/weight convenience wrappers have narrowly scoped non-test dead_code expectations during allocator migration.",
+    "EntropyBits Global new is test-only once production weight serialization uses new_in; count writer runtime semantics and BitWriter remain unchanged.",
+    "After the runtime matrix/Miri/oracles, the concurrent Huffman migration made Global encode_weights unused. Only a non-test dead_code expectation was added; final strict Clippy/no_std/fmt were rerun successfully.",
+    "No sequence_context/sequence_encode/root manifest/docs/TODO edits and no commits."
+  ],
+  "coordinator_review": {
+    "original_evidence_sha256": "3220307d8a7c50ae35ff586d4f506e0832efdb0b0ed7a09929dd94de28a108e1",
+    "non_behavioral_change": "Global encode_weights uses a narrow allow(dead_code), rather than expect(dead_code), so this commit passes independently while the prior Huffman builder still calls it. No executable statement or test changed.",
+    "final_source_sha256": {
+      "src/fse_encode.rs": "260265b9e174f46969e2a8dab38fdac218a5e800a6350818c018198dbf4fa568",
+      "src/fse_select.rs": "3fba96b62fafa5374c53d3b1446850fe0417210c7c45c27ed92bf098a4a2de25",
+      "src/entropy_encode.rs": "709558f36a3ee48c680075eadfd284afc6361108c303ec05150be21f6c27a756"
+    },
+    "isolated_checks": {
+      "base": "c2723cb",
+      "scope": "HEAD plus inverse FSE, normalization and selector files only; Huffman builder changes excluded",
+      "checks": [
+        {
+          "command": [
+            "cargo",
+            "clippy",
+            "--locked",
+            "--all-targets",
+            "--all-features",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "seconds": 1.7789969169534743,
+          "output": "    Checking zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-inverse-commit-check/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-inverse-commit-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.71s\n"
+        },
+        {
+          "command": [
+            "cargo",
+            "check",
+            "--locked",
+            "--lib",
+            "--no-default-features"
+          ],
+          "exit_code": 0,
+          "seconds": 0.3364482920151204,
+          "output": "    Checking zstdoxide v0.1.0 (/private/tmp/zstdoxide-inverse-commit-check)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s\n"
+        },
+        {
+          "command": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--check",
+            "src/entropy_encode.rs",
+            "src/fse_encode.rs",
+            "src/fse_select.rs"
+          ],
+          "exit_code": 0,
+          "seconds": 0.0528245831374079,
+          "output": ""
+        }
+      ]
+    }
+  }
+}

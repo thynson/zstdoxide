@@ -248,3 +248,10 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   test-only `BuiltStandaloneTable<A>` retain their exact serialized allocation;
   validation borrows its allocator temporarily and drops scratch before moving
   the description. Inline canonical codes remain plain values.
+- `FseEncodingTable<A>` owns transitions and initial states separately. It can
+  invert a `FseTable<B>` without retaining a borrow or adopting storage. Inline
+  RLE remains allocation-free. Normalized counts and ranking scratch use fresh
+  owners; weight serialization returns the original requested allocator.
+  `Selection<'_, A>` borrows current/predefined tables or owns a complete
+  replacement with its description. Exact cost/tie decisions are unchanged;
+  failed selection publishes nothing and drops all temporary owners.

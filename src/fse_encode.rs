@@ -4,7 +4,8 @@
 //! `FSE_initCState2`, and `FSE_encodeSymbol` in facebook/zstd v1.5.7. This
 //! implementation owns typed rows instead of adopting C's packed table layout.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 use crate::fse::{FseEntry, FseTable};
 use crate::{Error, Result};
@@ -38,30 +39,37 @@ impl FseEncodingTransition {
 /// `unsafe-fse-encoder` changes only checked dense-row access, independently
 /// of the decoder's `unsafe-fse` feature. Scalar RLE uses the shared safe path.
 #[derive(Debug)]
-pub(crate) struct FseEncodingTable {
-    transitions: Vec<FseEncodingTransition>,
-    initial: Vec<u16>,
+pub(crate) struct FseEncodingTable<A: Allocator = Global> {
+    transitions: Vec<FseEncodingTransition, A>,
+    initial: Vec<u16, A>,
     repeated: Option<u8>,
     state_count: usize,
     table_log: u8,
 }
 
-impl FseEncodingTable {
+impl FseEncodingTable<Global> {
     /// Build an ordinary normalized table with the decoder's mass and alphabet
     /// validation. Single-symbol normalized dictionary tables enter through
     /// `from_decoding`; an inline RLE table enters through `rle`.
     pub(crate) fn new(counts: &[i16], table_log: u8) -> Result<Self> {
-        Self::from_decoding(&FseTable::from_normalized(counts, table_log)?)
+        Self::new_in(counts, table_log, Global)
     }
 
     /// Invert an immutable validated decoding table without retaining a borrow.
     /// The first decoding state for each symbol is its terminal initialization,
     /// preserving the previous predefined encoder's exact initial selection.
     pub(crate) fn from_decoding(decoding: &FseTable) -> Result<Self> {
-        Self::from_relation(decoding.table_log(), |state| decoding.entry(state))
+        Self::from_decoding_in(decoding, Global)
     }
 
     /// Construct the wire's inline RLE mode, which has no state or payload bits.
+    #[cfg_attr(
+        not(test),
+        expect(
+            dead_code,
+            reason = "Global convenience constructor retained during allocator migration"
+        )
+    )]
     pub(crate) const fn rle(symbol: u8) -> Self {
         Self {
             transitions: Vec::new(),
@@ -72,6 +80,13 @@ impl FseEncodingTable {
         }
     }
 
+    #[cfg(test)]
+    fn from_relation(table_log: u8, entry_at: impl Fn(usize) -> Result<FseEntry>) -> Result<Self> {
+        Self::from_relation_in(table_log, entry_at, Global)
+    }
+}
+
+impl<A: Allocator> FseEncodingTable<A> {
     pub(crate) fn table_log(&self) -> u8 {
         self.table_log
     }
@@ -102,7 +117,7 @@ impl FseEncodingTable {
         let state = self.initial[symbol];
         #[cfg(feature = "unsafe-fse-encoder")]
         // SAFETY: the runtime check proves symbol < initial.len(). Every
-        // element was initialized by extend_from_slice during construction.
+        // element was initialized by reserved pushes during construction.
         // The Vec owns the live, properly aligned u16 allocation throughout
         // this shared borrow; no mutation or reallocation can overlap it.
         // Copying this scalar neither creates aliases nor extends a reference.
@@ -152,17 +167,56 @@ impl FseEncodingTable {
             Ok(transition)
         }
     }
+}
+
+impl<A: Allocator + Clone> FseEncodingTable<A> {
+    /// Build fresh decoder scratch and inverse owners with this allocator type.
+    /// Allocator clones may be non-equivalent: every Vec allocates and releases
+    /// only through the exact value it retains. Ordinary Clone may itself panic
+    /// or allocate; only returned reservation errors map to AllocationFailed.
+    pub(crate) fn new_in(counts: &[i16], table_log: u8, allocator: A) -> Result<Self> {
+        let decoding = FseTable::from_normalized_in(counts, table_log, allocator.clone())?;
+        Self::from_decoding_in(&decoding, allocator)
+    }
+
+    /// Invert a validated table from an independent allocation domain. No source
+    /// borrow or allocation moves into the result; failure leaves it unchanged.
+    pub(crate) fn from_decoding_in<B: Allocator>(
+        decoding: &FseTable<B>,
+        allocator: A,
+    ) -> Result<Self> {
+        Self::from_relation_in(
+            decoding.table_log(),
+            |state| decoding.entry(state),
+            allocator,
+        )
+    }
+
+    /// Retain two empty typed owners without allocating an inline RLE payload.
+    pub(crate) fn rle_in(symbol: u8, allocator: A) -> Self {
+        Self {
+            transitions: Vec::new_in(allocator.clone()),
+            initial: Vec::new_in(allocator),
+            repeated: Some(symbol),
+            state_count: 1,
+            table_log: 0,
+        }
+    }
 
     /// The relation callback reads the same immutable table on both passes.
     /// Keeping this checked setup separate permits malformed-relation tests
     /// without exposing unvalidated constructors on the decoding table.
-    fn from_relation(table_log: u8, entry_at: impl Fn(usize) -> Result<FseEntry>) -> Result<Self> {
+    fn from_relation_in(
+        table_log: u8,
+        entry_at: impl Fn(usize) -> Result<FseEntry>,
+        allocator: A,
+    ) -> Result<Self> {
         if table_log == 0 {
             let entry = entry_at(0)?;
             if entry.bits != 0 || entry.base != 0 {
                 return Err(Error::CorruptData);
             }
-            return Ok(Self::rle(entry.symbol));
+            return Ok(Self::rle_in(entry.symbol, allocator));
         }
         if !(5..=12).contains(&table_log) {
             return Err(Error::CorruptData);
@@ -187,16 +241,22 @@ impl FseEncodingTable {
         transition_count
             .checked_mul(core::mem::size_of::<FseEncodingTransition>())
             .ok_or(Error::ResourceLimit)?;
-        let mut transitions = Vec::new();
+        let mut transitions = Vec::new_in(allocator.clone());
         transitions
             .try_reserve_exact(transition_count)
             .map_err(|_| Error::AllocationFailed)?;
-        transitions.resize(transition_count, FseEncodingTransition::UNAVAILABLE);
-        let mut initial = Vec::new();
+        // Reservation bounds every initialization push; allocator identity never
+        // changes and no infallible bulk resize can request another allocation.
+        for _ in 0..transition_count {
+            transitions.push(FseEncodingTransition::UNAVAILABLE);
+        }
+        let mut initial = Vec::new_in(allocator);
         initial
             .try_reserve_exact(symbol_count)
             .map_err(|_| Error::AllocationFailed)?;
-        initial.extend_from_slice(&first_states[..symbol_count]);
+        for &state in &first_states[..symbol_count] {
+            initial.push(state);
+        }
 
         for state in 0..state_count {
             let entry = entry_at(state)?;
@@ -260,6 +320,124 @@ mod tests {
     use super::*;
     use crate::constants::{LL_DEFAULT, ML_DEFAULT, OF_DEFAULT};
     use crate::entropy_encode::write_normalized_counts;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 8,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    #[test]
+    fn allocator_inverse_owns_distinct_clones_and_outlives_independent_decoder() {
+        let source_allocator = allocator().into_non_clone();
+        let source_monitor = source_allocator.monitor();
+        let decoding = FseTable::from_normalized_in(&[16, 0, 16], 5, source_allocator).unwrap();
+        let entries: Vec<_> = (0..32)
+            .map(|state| decoding.entry(state).unwrap())
+            .collect();
+        let destination = allocator();
+        let destination_monitor = destination.monitor();
+        let destination_id = destination.identity();
+        let inverse = FseEncodingTable::from_decoding_in(&decoding, destination).unwrap();
+        assert_eq!(inverse.initial.allocator().identity(), destination_id);
+        assert_ne!(inverse.transitions.allocator().identity(), destination_id);
+        assert_eq!(source_monitor.snapshot().live_blocks, 1);
+        assert_eq!(destination_monitor.snapshot().live_blocks, 2);
+        drop(decoding);
+        source_monitor.assert_released();
+        for symbol in [0, 2] {
+            for next in 0..32 {
+                let transition = inverse.transition(symbol, next).unwrap();
+                let decoded = entries[usize::from(transition.state)];
+                assert_eq!(usize::from(decoded.symbol), symbol);
+                assert_eq!(decoded.bits, transition.bits);
+                assert_eq!(decoded.base + transition.value, next);
+            }
+        }
+        assert_eq!(inverse.initial(1), Err(Error::CorruptData));
+        drop(inverse);
+        destination_monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_borrowed_nonclone_preserves_rle_singletons_and_safe_lookup_errors() {
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        let repeated = FseEncodingTable::rle_in(7, &allocator);
+        assert_eq!(monitor.snapshot().attempts, 0);
+        assert_eq!(repeated.transition(7, 0).unwrap().bits, 0);
+        assert_eq!(repeated.initial(6), Err(Error::CorruptData));
+        assert_eq!(repeated.transition(7, 1), Err(Error::CorruptData));
+        let header = write_normalized_counts(&[0, 32], 5).unwrap();
+        let decoder = FseTable::read_dictionary(&header, 1, 5).unwrap().0;
+        let singleton = FseEncodingTable::from_decoding_in(&decoder, &allocator).unwrap();
+        assert_eq!(singleton.table_log(), 5);
+        for next in 0..32 {
+            assert_eq!(
+                singleton.transition(1, next).unwrap(),
+                FseEncodingTransition {
+                    state: next,
+                    value: 0,
+                    bits: 0
+                }
+            );
+        }
+        assert_eq!(singleton.initial(usize::MAX), Err(Error::CorruptData));
+        assert_eq!(singleton.transition(1, u16::MAX), Err(Error::CorruptData));
+        drop(singleton);
+        drop(repeated);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_inverse_failures_release_scratch_and_preserve_source_table() {
+        let source = FseTable::from_normalized(&[16, 0, 16], 5).unwrap();
+        let before: Vec<_> = (0..32).map(|state| source.entry(state).unwrap()).collect();
+        for use_source in [false, true] {
+            let baseline = allocator();
+            let monitor = baseline.monitor();
+            let table = if use_source {
+                FseEncodingTable::from_decoding_in(&source, baseline).unwrap()
+            } else {
+                FseEncodingTable::new_in(&[16, 0, 16], 5, baseline).unwrap()
+            };
+            let attempts = monitor.snapshot().attempts;
+            assert_eq!(attempts, if use_source { 2 } else { 3 });
+            drop(table);
+            monitor.assert_released();
+            for ordinal in 1..=attempts {
+                let allocator = TrackingAllocator::new(AllocatorConfig {
+                    max_live_allocations: 8,
+                    fail_at: NonZeroU64::new(ordinal),
+                })
+                .unwrap();
+                let monitor = allocator.monitor();
+                let result = if use_source {
+                    FseEncodingTable::from_decoding_in(&source, allocator)
+                } else {
+                    FseEncodingTable::new_in(&[16, 0, 16], 5, allocator)
+                };
+                assert!(matches!(result, Err(Error::AllocationFailed)));
+                assert_eq!(monitor.snapshot().attempts, ordinal);
+                for (state, &entry) in before.iter().enumerate() {
+                    assert_eq!(source.entry(state).unwrap(), entry);
+                }
+                monitor.assert_released();
+            }
+        }
+        let invalid = allocator();
+        let monitor = invalid.monitor();
+        assert!(matches!(
+            FseEncodingTable::new_in(&[31], 5, invalid),
+            Err(Error::CorruptData)
+        ));
+        assert_eq!(monitor.snapshot().attempts, 0);
+        monitor.assert_released();
+    }
 
     fn verify_inverse(decoding: &FseTable) {
         let encoding = FseEncodingTable::from_decoding(decoding).unwrap();

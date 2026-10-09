@@ -201,6 +201,27 @@ a temporary borrow of its own non-Clone allocator and retains its original
 pointer and owner. This checkpoint does not claim a new live C or full external
 corpus run, nor a public allocator-aware decoder.
 
+Inverse FSE tables, frequency normalization, weight descriptions, and channel
+selection now retain their own allocator values. The
+[inverse/selection evidence](evidence/2026-10-09-allocator-inverse.json) records
+nine inverse-table, eight selector, and 23 entropy tests passing in each of six
+configurations: safe, each of the three relevant unsafe backends, all features,
+and no default features. Eight all-feature strict-provenance Miri cases passed.
+Safe and relevant-unsafe no_std builds, strict all-target/all-feature Clippy,
+and formatting passed. A separate snapshot containing only this commit's code
+changes also passed strict Clippy, no_std compilation, and formatting, without
+the concurrently developed Huffman builder.
+
+The two independent C oracles were explicitly executed in safe and all-feature
+builds. Each accepted 521 weight streams, 68 complete Huffman headers, a sparse
+weight-twelve header, and a selected new/RLE/repeat frame decoding to 576 bytes.
+Custom allocation also preserved all 521 weight-vector outputs and 512 saved
+C normalized-count headers. Failure sweeps retain immutable source tables and
+release every partial candidate. Distinct clones own fresh transition, initial,
+normalization, ranking, and description storage; moving a selected replacement
+moves its allocator. Ordinary Clone itself retains its documented caller-owned
+panic/allocation boundary. Sequence-context integration is still pending.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

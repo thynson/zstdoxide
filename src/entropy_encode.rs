@@ -21,6 +21,7 @@ struct EntropyBits<A: Allocator = Global> {
     position: usize,
 }
 
+#[cfg(test)]
 impl EntropyBits<Global> {
     fn new() -> Self {
         Self::new_in(Global)
@@ -155,7 +156,24 @@ pub(crate) fn write_normalized_counts_in<A: Allocator>(
 /// the lower symbol. Unit allocations use the format's `-1` marker. This
 /// deterministic policy does not reproduce upstream `FSE_normalizeCount`.
 /// Zero-only alphabets or more positive symbols than states are invalid.
+#[cfg_attr(
+    not(test),
+    expect(
+        dead_code,
+        reason = "Global convenience wrapper retained during allocator migration"
+    )
+)]
 pub(crate) fn normalize_frequencies(counts: &[u64], table_log: u8) -> Result<Vec<i16>> {
+    normalize_frequencies_in(counts, table_log, Global)
+}
+
+/// Normalize with independently owned result and remainder-ranking scratch.
+/// Ordinary allocator Clone need not be equivalent; each Vec keeps its owner.
+pub(crate) fn normalize_frequencies_in<A: Allocator + Clone>(
+    counts: &[u64],
+    table_log: u8,
+    allocator: A,
+) -> Result<Vec<i16, A>> {
     if !(5..=12).contains(&table_log) || counts.is_empty() || counts.len() > 256 {
         return Err(Error::InvalidParameter);
     }
@@ -168,12 +186,20 @@ pub(crate) fn normalize_frequencies(counts: &[u64], table_log: u8) -> Result<Vec
     // frequency by the at-most 4096 remaining states fits in 76 bits.
     let total: u128 = counts.iter().map(|&count| u128::from(count)).sum();
     let remaining = table_size - present;
-    let mut normalized = Vec::new();
+    let mut remainders = Vec::new_in(allocator.clone());
+    let mut normalized = Vec::new_in(allocator);
     normalized
         .try_reserve_exact(counts.len())
         .map_err(|_| Error::AllocationFailed)?;
-    normalized.resize(counts.len(), 0_i16);
-    let mut remainders = Vec::new();
+    // Initialize only within the reserved custom allocation; no Global vec!
+    // or infallible resize may substitute another allocation path here.
+    #[allow(
+        clippy::same_item_push,
+        reason = "initialize reserved allocator-owned storage without a hidden allocation"
+    )]
+    for _ in 0..counts.len() {
+        normalized.push(0_i16);
+    }
     remainders
         .try_reserve_exact(present)
         .map_err(|_| Error::AllocationFailed)?;
@@ -216,7 +242,24 @@ pub(crate) fn normalize_frequencies(counts: &[u64], table_log: u8) -> Result<Vec
 /// FseTable supplies its existing safe or unsafe backend under the same API.
 /// Payloads may exceed 127 bytes; the caller selects a bounded tree fallback when
 /// necessary. Corresponds to the weight-stream role of upstream FSE_compress_wksp.
+#[cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "Global convenience wrapper retained during allocator migration"
+    )
+)]
 pub(crate) fn encode_weights(weights: &[u8]) -> Result<Vec<u8>> {
+    encode_weights_in(weights, Global)
+}
+
+/// Encode through fresh normalized counts, decoder transitions, payload and
+/// returned description owners using the caller's allocator. Clone may itself
+/// panic or allocate; only fallible Vec requests produce AllocationFailed.
+pub(crate) fn encode_weights_in<A: Allocator + Clone>(
+    weights: &[u8],
+    allocator: A,
+) -> Result<Vec<u8, A>> {
     if !(2..=255).contains(&weights.len()) {
         return Err(Error::InvalidParameter);
     }
@@ -237,8 +280,9 @@ pub(crate) fn encode_weights(weights: &[u8]) -> Result<Vec<u8>> {
     // log five fits all thirteen weight values and its smaller table fits the
     // same workspace. Existing zero-through-eleven streams retain exact bytes.
     let table_log = if maximum == 12 { 5 } else { 6 };
-    let normalized = normalize_frequencies(&frequencies[..=maximum], table_log)?;
-    let table = FseTable::from_normalized(&normalized, table_log)?;
+    let normalized =
+        normalize_frequencies_in(&frequencies[..=maximum], table_log, allocator.clone())?;
+    let table = FseTable::from_normalized_in(&normalized, table_log, allocator.clone())?;
     let mut states = [0; 2];
     // No transition bits follow the terminal pair. Requiring a positive width
     // in both states makes the decoder stop exactly when it reaches that pair,
@@ -246,7 +290,7 @@ pub(crate) fn encode_weights(weights: &[u8]) -> Result<Vec<u8>> {
     for position in weights.len() - 2..weights.len() {
         states[position & 1] = terminal_state(&table, weights[position])?;
     }
-    let mut bits = EntropyBits::new();
+    let mut bits = EntropyBits::new_in(allocator.clone());
     for position in (0..weights.len() - 2).rev() {
         let current = position & 1;
         let (state, value, width) = inverse_transition(&table, weights[position], states[current])?;
@@ -259,15 +303,17 @@ pub(crate) fn encode_weights(weights: &[u8]) -> Result<Vec<u8>> {
     bits.push(states[0] as u32, table_log)?;
     bits.push(1, 1)?;
     let payload = bits.into_bytes();
-    let mut output = write_normalized_counts(&normalized, table_log)?;
+    let mut output = write_normalized_counts_in(&normalized, table_log, allocator)?;
     output
         .try_reserve_exact(payload.len())
         .map_err(|_| Error::AllocationFailed)?;
-    output.extend_from_slice(&payload);
+    for &byte in &payload {
+        output.push(byte);
+    }
     Ok(output)
 }
 
-fn terminal_state(table: &FseTable, symbol: u8) -> Result<usize> {
+fn terminal_state<A: Allocator>(table: &FseTable<A>, symbol: u8) -> Result<usize> {
     for state in 0..1_usize << table.table_log() {
         let entry = table.entry(state)?;
         if entry.symbol == symbol && entry.bits != 0 {
@@ -281,7 +327,11 @@ fn terminal_state(table: &FseTable, symbol: u8) -> Result<usize> {
 
 /// Find the predecessor whose decoded symbol and update reach the given state.
 /// Table construction partitions the full next-state space for every symbol.
-fn inverse_transition(table: &FseTable, symbol: u8, next: usize) -> Result<(usize, u32, u8)> {
+fn inverse_transition<A: Allocator>(
+    table: &FseTable<A>,
+    symbol: u8,
+    next: usize,
+) -> Result<(usize, u32, u8)> {
     for state in 0..1_usize << table.table_log() {
         let entry = table.entry(state)?;
         if entry.symbol != symbol {
@@ -561,6 +611,134 @@ mod tests {
             assert_eq!(monitor.snapshot().failures, 1);
             monitor.assert_released();
         }
+    }
+
+    #[test]
+    fn allocator_normalization_and_weights_keep_distinct_owners_and_exact_bytes() {
+        let counts = [u64::MAX, 0, 1, 1, 19];
+        let owner = allocator();
+        let identity = owner.identity();
+        let monitor = owner.monitor();
+        let normalized = normalize_frequencies_in(&counts, 6, owner).unwrap();
+        assert_eq!(normalized.allocator().identity(), identity);
+        assert_eq!(normalized, normalize_frequencies(&counts, 6).unwrap());
+        assert_eq!(monitor.snapshot().identities_created, 2);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(normalized);
+        monitor.assert_released();
+
+        let weights = twelve_bit_tree_weights();
+        let owner = allocator();
+        let identity = owner.identity();
+        let monitor = owner.monitor();
+        let encoded = encode_weights_in(&weights, owner).unwrap();
+        assert_eq!(encoded.allocator().identity(), identity);
+        assert_eq!(encoded, encode_weights(&weights).unwrap());
+        assert_eq!(crate::fse::decode_weights(&encoded).unwrap(), weights);
+        assert!(monitor.snapshot().identities_created > 3);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(encoded);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_weight_and_normalization_corpora_preserve_frozen_global_results() {
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        for log in 5..=12 {
+            for length in [2, 17, 32, 64, 128, 256] {
+                let counts: Vec<_> = (0..length)
+                    .map(|symbol| {
+                        if symbol % 3 == 0 {
+                            0
+                        } else {
+                            symbol as u64 + 1
+                        }
+                    })
+                    .collect();
+                if counts.iter().filter(|&&count| count != 0).count() > 1 << log {
+                    continue;
+                }
+                assert_eq!(
+                    normalize_frequencies_in(&counts, log, &allocator).unwrap(),
+                    normalize_frequencies(&counts, log).unwrap()
+                );
+            }
+        }
+        let mut cases = 0;
+        for weights in weight_cases().into_iter().chain(twelve_bit_weight_cases()) {
+            let encoded = encode_weights_in(&weights, &allocator).unwrap();
+            assert_eq!(encoded, encode_weights(&weights).unwrap(), "case {cases}");
+            assert_eq!(
+                crate::fse::decode_weights(&encoded).unwrap(),
+                weights,
+                "case {cases}"
+            );
+            cases += 1;
+        }
+        assert_eq!(cases, 521);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_normalization_and_weight_failure_sweeps_release_every_temporary() {
+        let weights = twelve_bit_tree_weights();
+        for encode in [false, true] {
+            let baseline = allocator();
+            let monitor = baseline.monitor();
+            if encode {
+                drop(encode_weights_in(&weights, baseline).unwrap());
+            } else {
+                drop(normalize_frequencies_in(&[1, 1, 3, 9], 6, baseline).unwrap());
+            }
+            let attempts = monitor.snapshot().attempts;
+            assert!(attempts > 1);
+            monitor.assert_released();
+            for ordinal in 1..=attempts {
+                let failing = TrackingAllocator::new(AllocatorConfig {
+                    max_live_allocations: 4,
+                    fail_at: NonZeroU64::new(ordinal),
+                })
+                .unwrap();
+                let monitor = failing.monitor();
+                if encode {
+                    assert_eq!(
+                        encode_weights_in(&weights, failing),
+                        Err(Error::AllocationFailed)
+                    );
+                } else {
+                    assert_eq!(
+                        normalize_frequencies_in(&[1, 1, 3, 9], 6, failing),
+                        Err(Error::AllocationFailed)
+                    );
+                }
+                assert_eq!(monitor.snapshot().attempts, ordinal);
+                assert_eq!(monitor.snapshot().failures, 1);
+                monitor.assert_released();
+            }
+        }
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        for (counts, log) in [
+            (&[][..], 5),
+            (&[0][..], 5),
+            (&[1; 33][..], 5),
+            (&[1, 1][..], 13),
+        ] {
+            assert_eq!(
+                normalize_frequencies_in(counts, log, &allocator),
+                Err(Error::InvalidParameter)
+            );
+        }
+        for weights in [&[][..], &[1][..], &[1, 1][..], &[1, 13][..]] {
+            assert_eq!(
+                encode_weights_in(weights, &allocator),
+                Err(Error::InvalidParameter)
+            );
+        }
+        assert_eq!(monitor.snapshot().attempts, 0);
+        monitor.assert_released();
     }
 
     #[test]

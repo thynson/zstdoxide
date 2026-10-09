@@ -1,8 +1,9 @@
 //! Bounded per-channel FSE selection without publishing frame entropy state.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
-use crate::entropy_encode::{normalize_frequencies, write_normalized_counts};
+use crate::entropy_encode::{normalize_frequencies_in, write_normalized_counts_in};
 use crate::frame::MAX_BLOCK_SIZE;
 use crate::fse_encode::FseEncodingTable;
 use crate::{Error, Result};
@@ -19,26 +20,26 @@ pub(crate) enum Mode {
 
 /// No candidate clones a table or retains the source symbols. Borrowed choices
 /// remain tied to their immutable owners; new/RLE candidates own replacements.
-enum TableChoice<'a> {
-    Borrowed(&'a FseEncodingTable),
-    Owned(FseEncodingTable),
+enum TableChoice<'a, A: Allocator> {
+    Borrowed(&'a FseEncodingTable<A>),
+    Owned(FseEncodingTable<A>),
 }
 
-pub(crate) struct Selection<'a> {
+pub(crate) struct Selection<'a, A: Allocator = Global> {
     mode: Mode,
-    table: TableChoice<'a>,
-    description: Vec<u8>,
+    table: TableChoice<'a, A>,
+    description: Vec<u8, A>,
     #[cfg(test)]
     stream_bits: usize,
     bit_cost: usize,
 }
 
-impl Selection<'_> {
+impl<A: Allocator> Selection<'_, A> {
     pub(crate) fn mode(&self) -> Mode {
         self.mode
     }
 
-    pub(crate) fn table(&self) -> &FseEncodingTable {
+    pub(crate) fn table(&self) -> &FseEncodingTable<A> {
         match &self.table {
             TableChoice::Borrowed(table) => table,
             TableChoice::Owned(table) => table,
@@ -66,7 +67,7 @@ impl Selection<'_> {
     /// Transfer a selected new/RLE table after its metadata and stream have
     /// been emitted. Predefined/repeat choices retain their existing owners;
     /// the caller uses the mode to publish the appropriate cached table.
-    pub(crate) fn into_replacement(self) -> Option<FseEncodingTable> {
+    pub(crate) fn into_replacement(self) -> Option<FseEncodingTable<A>> {
         match self.table {
             TableChoice::Borrowed(_) => None,
             TableChoice::Owned(table) => Some(table),
@@ -93,6 +94,28 @@ pub(crate) fn select<'a>(
     maximum_symbol: u8,
     maximum_log: u8,
 ) -> Result<Selection<'a>> {
+    select_in(
+        symbols,
+        predefined,
+        previous,
+        maximum_symbol,
+        maximum_log,
+        Global,
+    )
+}
+
+/// Select fresh candidates with explicit allocator ownership. Borrowed table
+/// instances may come from independent allocation domains of the same type;
+/// no table or description changes allocator identity, and failure publishes
+/// no candidate or mutation to any source table.
+pub(crate) fn select_in<'a, A: Allocator + Clone>(
+    symbols: &[u8],
+    predefined: &'a FseEncodingTable<A>,
+    previous: Option<&'a FseEncodingTable<A>>,
+    maximum_symbol: u8,
+    maximum_log: u8,
+    allocator: A,
+) -> Result<Selection<'a, A>> {
     if !(5..=12).contains(&maximum_log) {
         return Err(Error::InvalidParameter);
     }
@@ -134,7 +157,7 @@ pub(crate) fn select<'a>(
                 Selection {
                     mode,
                     table: TableChoice::Borrowed(table),
-                    description: Vec::new(),
+                    description: Vec::new_in(allocator.clone()),
                     #[cfg(test)]
                     stream_bits,
                     bit_cost: stream_bits,
@@ -144,7 +167,7 @@ pub(crate) fn select<'a>(
     }
     if present == 1 {
         let symbol = symbols[0];
-        let mut description = Vec::new();
+        let mut description = Vec::new_in(allocator.clone());
         description
             .try_reserve_exact(1)
             .map_err(|_| Error::AllocationFailed)?;
@@ -153,7 +176,7 @@ pub(crate) fn select<'a>(
             &mut best,
             owned_choice(
                 Mode::Rle,
-                FseEncodingTable::rle(symbol),
+                FseEncodingTable::rle_in(symbol, allocator.clone()),
                 description,
                 symbols,
             )?,
@@ -164,9 +187,9 @@ pub(crate) fn select<'a>(
             if present > 1_usize << log {
                 continue;
             }
-            let normalized = normalize_frequencies(frequencies, log)?;
-            let table = FseEncodingTable::new(&normalized, log)?;
-            let description = write_normalized_counts(&normalized, log)?;
+            let normalized = normalize_frequencies_in(frequencies, log, allocator.clone())?;
+            let table = FseEncodingTable::new_in(&normalized, log, allocator.clone())?;
+            let description = write_normalized_counts_in(&normalized, log, allocator.clone())?;
             consider(
                 &mut best,
                 owned_choice(Mode::Compressed, table, description, symbols)?,
@@ -176,7 +199,11 @@ pub(crate) fn select<'a>(
     best.ok_or(Error::CorruptData)
 }
 
-fn validate_table(table: &FseEncodingTable, maximum_symbol: u8, maximum_log: u8) -> Result<()> {
+fn validate_table<A: Allocator>(
+    table: &FseEncodingTable<A>,
+    maximum_symbol: u8,
+    maximum_log: u8,
+) -> Result<()> {
     if table.max_symbol() > maximum_symbol
         || (table.table_log() != 0 && !(5..=maximum_log).contains(&table.table_log()))
     {
@@ -185,14 +212,14 @@ fn validate_table(table: &FseEncodingTable, maximum_symbol: u8, maximum_log: u8)
     Ok(())
 }
 
-fn supports(table: &FseEncodingTable, frequencies: &[u64]) -> bool {
+fn supports<A: Allocator>(table: &FseEncodingTable<A>, frequencies: &[u64]) -> bool {
     frequencies
         .iter()
         .enumerate()
         .all(|(symbol, &count)| count == 0 || table.initial(symbol).is_ok())
 }
 
-fn stream_cost(table: &FseEncodingTable, symbols: &[u8]) -> Result<usize> {
+fn stream_cost<A: Allocator>(table: &FseEncodingTable<A>, symbols: &[u8]) -> Result<usize> {
     let (&last, rest) = symbols.split_last().ok_or(Error::CorruptData)?;
     let mut state = table.initial(usize::from(last))?;
     let mut bits = usize::from(table.table_log());
@@ -206,12 +233,12 @@ fn stream_cost(table: &FseEncodingTable, symbols: &[u8]) -> Result<usize> {
     Ok(bits)
 }
 
-fn owned_choice<'a>(
+fn owned_choice<'a, A: Allocator>(
     mode: Mode,
-    table: FseEncodingTable,
-    description: Vec<u8>,
+    table: FseEncodingTable<A>,
+    description: Vec<u8, A>,
     symbols: &[u8],
-) -> Result<Selection<'a>> {
+) -> Result<Selection<'a, A>> {
     let stream_bits = stream_cost(&table, symbols)?;
     let bit_cost = description
         .len()
@@ -228,7 +255,7 @@ fn owned_choice<'a>(
     })
 }
 
-fn consider<'a>(best: &mut Option<Selection<'a>>, candidate: Selection<'a>) {
+fn consider<'a, A: Allocator>(best: &mut Option<Selection<'a, A>>, candidate: Selection<'a, A>) {
     if best
         .as_ref()
         .is_none_or(|best| candidate.bit_cost < best.bit_cost)
@@ -243,14 +270,170 @@ mod tests {
     use crate::bitstream::ReverseBits;
     use crate::bitwriter::BitWriter;
     use crate::constants::{LL_DEFAULT, ML_DEFAULT, OF_DEFAULT};
+    use crate::entropy_encode::write_normalized_counts;
     use crate::fse::FseTable;
     use crate::history::History;
     use crate::sequence_encode::encode_sequences;
     use crate::sequence_plan::PlannedSequence;
     use crate::sequences::SequenceState;
     use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
-    fn measured_stream_bits(table: &FseEncodingTable, symbols: &[u8]) -> usize {
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 16,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    fn snapshot<A: Allocator>(table: &FseEncodingTable<A>) -> Vec<(usize, u16, u16, u16, u8)> {
+        let mut entries = Vec::new();
+        for symbol in 0..=usize::from(table.max_symbol()) {
+            if table.initial(symbol).is_ok() {
+                for next in 0..1_u16 << table.table_log() {
+                    let value = table.transition(symbol, next).unwrap();
+                    entries.push((symbol, next, value.state, value.value, value.bits));
+                }
+            }
+        }
+        entries
+    }
+
+    #[test]
+    fn allocator_selection_preserves_all_modes_costs_and_independent_owner_domains() {
+        let source_allocator = allocator();
+        let source_monitor = source_allocator.monitor();
+        let predefined = FseEncodingTable::new_in(&LL_DEFAULT, 6, source_allocator).unwrap();
+        let original = snapshot(&predefined);
+        let workspace = allocator();
+        let monitor = workspace.monitor();
+        let global = FseEncodingTable::new(&LL_DEFAULT, 6).unwrap();
+        for (symbols, mode) in [
+            (vec![0], Mode::Predefined),
+            (vec![7; 64], Mode::Rle),
+            (
+                (0..256).map(|index| (index % 2) as u8).collect(),
+                Mode::Compressed,
+            ),
+        ] {
+            let selected =
+                select_in(&symbols, &predefined, None, 35, 9, workspace.clone()).unwrap();
+            let expected = select(&symbols, &global, None, 35, 9).unwrap();
+            assert_eq!(selected.mode(), mode);
+            assert_eq!(selected.mode(), expected.mode());
+            assert_eq!(selected.bit_cost(), expected.bit_cost());
+            assert_eq!(selected.description(), expected.description());
+            assert_eq!(snapshot(selected.table()), snapshot(expected.table()));
+            verify_cost(&selected, &symbols);
+            if mode == Mode::Predefined {
+                assert!(core::ptr::eq(selected.table(), &predefined));
+            }
+            if mode == Mode::Compressed {
+                let previous = selected.into_replacement().unwrap();
+                let previous_snapshot = snapshot(&previous);
+                let repeat_workspace = allocator();
+                let repeat_monitor = repeat_workspace.monitor();
+                let repeated = select_in(
+                    &symbols,
+                    &predefined,
+                    Some(&previous),
+                    35,
+                    9,
+                    repeat_workspace,
+                )
+                .unwrap();
+                assert_eq!(repeated.mode(), Mode::Repeat);
+                assert!(core::ptr::eq(repeated.table(), &previous));
+                verify_cost(&repeated, &symbols);
+                assert!(repeated.into_replacement().is_none());
+                repeat_monitor.assert_released();
+                assert_eq!(snapshot(&previous), previous_snapshot);
+                drop(previous);
+            } else {
+                drop(selected);
+            }
+            assert_eq!(snapshot(&predefined), original);
+            monitor.assert_released();
+        }
+        drop(predefined);
+        source_monitor.assert_released();
+        drop(workspace);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_selection_accepts_borrowed_nonclone_and_keeps_dictionary_state_width() {
+        let source = allocator().into_non_clone();
+        let source_monitor = source.monitor();
+        let workspace = allocator().into_non_clone();
+        let monitor = workspace.monitor();
+        let predefined = FseEncodingTable::new_in(&LL_DEFAULT, 6, &source).unwrap();
+        let header = write_normalized_counts(&[0, 32], 5).unwrap();
+        let decoded = FseTable::read_dictionary(&header, 1, 5).unwrap().0;
+        let previous = FseEncodingTable::from_decoding_in(&decoded, &source).unwrap();
+        let selected =
+            select_in(&[1; 64], &predefined, Some(&previous), 35, 9, &workspace).unwrap();
+        assert_eq!(selected.mode(), Mode::Repeat);
+        assert_eq!(selected.table().table_log(), 5);
+        assert_eq!(selected.stream_bits(), 5);
+        assert!(core::ptr::eq(selected.table(), &previous));
+        drop(selected);
+        monitor.assert_released();
+        drop(previous);
+        drop(predefined);
+        source_monitor.assert_released();
+    }
+
+    #[test]
+    fn allocator_selection_failures_release_candidates_and_leave_borrowed_tables_unchanged() {
+        let source = allocator();
+        let source_monitor = source.monitor();
+        let predefined = FseEncodingTable::new_in(&LL_DEFAULT, 6, source.clone()).unwrap();
+        let previous = FseEncodingTable::new_in(&[32, 32], 6, source).unwrap();
+        let source_bytes = source_monitor.snapshot().live_bytes;
+        let before_default = snapshot(&predefined);
+        let before_previous = snapshot(&previous);
+        let symbols: Vec<_> = (0..64).map(|index| (index % 2) as u8).collect();
+        let baseline = allocator();
+        let monitor = baseline.monitor();
+        let selected = select_in(&symbols, &predefined, Some(&previous), 35, 6, baseline).unwrap();
+        let attempts = monitor.snapshot().attempts;
+        assert!(attempts > 1);
+        drop(selected);
+        monitor.assert_released();
+        for ordinal in 1..=attempts {
+            let failing = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 16,
+                fail_at: NonZeroU64::new(ordinal),
+            })
+            .unwrap();
+            let monitor = failing.monitor();
+            assert!(matches!(
+                select_in(&symbols, &predefined, Some(&previous), 35, 6, failing),
+                Err(Error::AllocationFailed)
+            ));
+            assert_eq!(monitor.snapshot().attempts, ordinal);
+            monitor.assert_released();
+            assert_eq!(snapshot(&predefined), before_default);
+            assert_eq!(snapshot(&previous), before_previous);
+            assert_eq!(source_monitor.snapshot().live_bytes, source_bytes);
+        }
+        let invalid = allocator();
+        let monitor = invalid.monitor();
+        assert!(matches!(
+            select_in(&[36], &predefined, Some(&previous), 35, 6, invalid),
+            Err(Error::CorruptData)
+        ));
+        assert_eq!(monitor.snapshot().attempts, 0);
+        monitor.assert_released();
+        drop(previous);
+        drop(predefined);
+        source_monitor.assert_released();
+    }
+
+    fn measured_stream_bits<A: Allocator>(table: &FseEncodingTable<A>, symbols: &[u8]) -> usize {
         let mut writer = BitWriter::new();
         let mut state = table
             .initial(usize::from(*symbols.last().unwrap()))
@@ -267,7 +450,7 @@ mod tests {
         ReverseBits::new(writer.as_bytes()).unwrap().remaining()
     }
 
-    fn verify_cost(choice: &Selection<'_>, symbols: &[u8]) {
+    fn verify_cost<A: Allocator>(choice: &Selection<'_, A>, symbols: &[u8]) {
         let bits = measured_stream_bits(choice.table(), symbols);
         assert_eq!(choice.stream_bits(), bits);
         assert_eq!(choice.bit_cost(), 8 * choice.description().len() + bits);
