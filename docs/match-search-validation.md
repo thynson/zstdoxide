@@ -94,3 +94,29 @@ The script uses explicit errors, so optimization cannot disable its checks.
 commands, logs and the isolated mutation reproducer. This checkpoint does not
 rerun C: the original archive retains the 152 independent complete C decodes.
 Future implementation changes must continue satisfying these saved inputs.
+
+## Exact-width copied keys and hashes
+
+`MatchKey` carries an initialized little-endian word and explicit width, with
+no source reference or allocation. Extraction copies only four through eight
+selected bytes and returns `None` for a shorter slice. Hashing rejects a width
+mismatch before applying the pinned wrapping arithmetic. Four-byte array
+conversion preserves existing private callers; keys may be reused at another
+hash log only when their width remains compatible. This implementation is
+entirely safe and shared by all access backends.
+
+Six tests pass in each of four safe/feature/no_std configurations. Each replays
+all 2,880 C vectors, 2,304 unused-byte pairs with full-width controls and 64
+historical compatibility guards, with complete tuple/count checks. Strict
+library Clippy, no_std compilation and owned formatting pass. Three focused
+tests pass under strict-provenance Miri on the host, i686 and s390x: nine
+interpreted executions covering exact five-/six-/seven-byte allocations,
+unaligned sources, short tails, width identity and frozen endian/wrapping
+witnesses. No physical eight-byte source read is required for shorter keys.
+
+[Key evidence](evidence/2026-10-09-match-search-keys.json) embeds fourteen command
+logs. The initial i686 automatic-sysroot cache permission failure ran no tests;
+the recorded successful foreign-target runs use existing sysroots and an
+isolated `f08fceb` foundation with the identical key source. No target installation
+or source change was required. These tests establish primitive correctness;
+dynamic leaf storage and real policy consumers remain separate checkpoints.

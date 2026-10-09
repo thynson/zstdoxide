@@ -473,6 +473,14 @@ BlockEncoder, stitched source, and live Encoder integration should have one
 coordinating owner or sequential checkpoints because they share source/state.
 Do not let separate agents reshape the same context files concurrently.
 
+Implementation refinement: the borrowed dictionary/history/input key-extraction
+work is verified as its own small checkpoint after parser probes and before
+frame-local storage integration. It first establishes checked coordinates and
+incomplete-tail behavior while the existing four-byte default consumers remain
+active. Storage integration then selects those helpers, and the following
+history checkpoint changes the retained horizon. This keeps source-boundary
+correctness separately reviewable from allocation and context configuration.
+
 ## Acceptance boundary and remaining obligations
 
 Module 11 is complete when each accepted option controls its actual existing

@@ -415,3 +415,10 @@ pass. A registered standalone SHA-256 auditor connects the original archive,
 reproduction sources, TSVs and current recipe inputs; normal and optimized
 Python pass two positive audits and forty expected isolated rejections. The
 original independent C evidence remains unchanged.
+
+Exact-width keys and all five pinned unsalted hashes are now implemented in
+safe Rust. All 2,880 primary vectors, 2,304 paired controls and 64 historical
+guards pass in four configurations. Nine focused strict-provenance Miri
+executions pass across host, i686 and s390x, including exact short allocations
+and little-endian witnesses. Key widths are checked independently from bucket
+counts; no padded missing input or unsafe extraction is introduced.

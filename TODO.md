@@ -53,12 +53,13 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 - [x] Activate the captured default-frame fingerprints as an offline regression before changing match storage.
 - [x] Add validated plain search options, key-layout/shape records and checked requested-storage calculations with target-layout tests.
 - [x] Freeze attributed pinned-C hash vectors and reproduction/provenance checks before implementing the new hash primitives.
-- [ ] Add safe exact-width key extraction and unsalted four-through-eight-byte hashing, preserving current four-byte values and rejecting incomplete keys.
+- [x] Add safe exact-width key extraction and unsalted four-through-eight-byte hashing, preserving current four-byte values and rejecting incomplete keys.
 - [ ] Make MatchTable dimensions and layout configurable, preserving exact owners and logical state on failure, checked seed copying and equivalent safe/unsafe access.
 - [ ] Make MatchChain heads/nodes configurable with compatible seed transfer, bounded tags/visits and allocator-failure/resize coverage in both backends.
 - [ ] Route selected key width and explicit Chain/Lazy effort through parser probes, preserving lookahead, insertion, tie and failure contracts.
+- [ ] Add exact-width borrowed dictionary/history/input key extraction, with checked coordinates and explicit incomplete tails before storage integration.
 - [ ] Integrate frame-local storage shape with working tables and dictionary seeds, preserving default insertion order and transactional entropy publication.
-- [ ] Integrate selected output-history retention and width-aware dictionary/history/input crossings, including short Flush tails and checked virtual coordinates.
+- [ ] Integrate selected output-history retention, including width-aware short Flush tails and dictionary/history/input crossings.
 - [ ] Expose meaningful Encoder search configuration and capacity reporting, with existing boundary/reset/allocator contracts and runnable documentation.
 - [ ] Add public default-compatibility and actual-control-effect tests, pinned-C decoding and representative complete allocation-failure campaigns.
 - [ ] Validate bounds, owners, feature combinations, no_std and target layouts; update relevant official coverage without claiming new reference strategies.

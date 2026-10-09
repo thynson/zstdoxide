@@ -56,6 +56,7 @@ mod huffman_codebook;
 mod huffman_encode;
 mod literal_encode;
 mod literal_header;
+mod match_key;
 mod match_parse;
 mod match_search;
 mod matchchain;

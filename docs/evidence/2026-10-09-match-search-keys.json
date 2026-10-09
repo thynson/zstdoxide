@@ -1,0 +1,331 @@
+{
+  "scope": "Safe MatchKey extraction/hash only; consumers and codec algorithms unchanged by this checkpoint",
+  "head": "f08fcebb3f26f86cec9fa90b6759a27796498838",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "source_before": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+  "input_hashes": {
+    "src/match_search.rs": "6998a15614095eab5c230d8d8de845300c09a87bf03ed9ff0ab9488557b6bd92",
+    "Cargo.toml": "659ce726a22f6cc6360e76eb5bc5de8eb593fb2e0fb046688e28afc14755d402",
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "tests/upstream/match-search/README.md": "7adf67603b2c2e3cba9ea00d0181fbd78055635e7b38fbbdc1a3e2c2d20d80c6",
+    "tests/upstream/match-search/compatibility.tsv": "7031c8ad88fa9ee3a4d67a300e9c40bec780d505c1358ab3150840ca53a46444",
+    "tests/upstream/match-search/hash_oracle.c": "004e5e82466efa1c87f216f140dd86bef6eb546812eb067ca8a8d79c340c79b0",
+    "tests/upstream/match-search/invariance.tsv": "e14d722aeef553d4c5e8bfac521b1489f91a849947095db75083a0b5c00ca299",
+    "tests/upstream/match-search/manifest.json": "e788ef5fb5e3a01606b062edd7750916876816b208bcc355ca2ba2b8c28be526",
+    "tests/upstream/match-search/patterns.bin": "1081bb9bf9f8165786c86c63c227ad9e7450c0a87a83dd4645a3bddac6771ac3",
+    "tests/upstream/match-search/patterns.tsv": "e2922e8559fc4a73dcbc7367a0045d9c7a71d026d5917ee182440548fe91a83a",
+    "tests/upstream/match-search/vectors.tsv": "628ff9df0d3b6c972233c43e5ffbc4aa11a1445908054c5d30da47b3afd078ce"
+  },
+  "records": [
+    {
+      "label": "tests-safe",
+      "command": "cargo test --locked --lib match_key::tests::",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 6.5543,
+      "test_results": [
+        {
+          "passed": 6,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 521
+        }
+      ],
+      "log": "/tmp/zstdoxide-match-key-validation/tests-safe.log",
+      "sha256": "93411520a8b075e5521f1932d9b80e876b97d5c146258f9eceef329635638d27",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nwarning: methods `layout`, `node_limit`, and `reconfigure` are never used\n   --> src/matchchain.rs:145:19\n    |\n 91 | impl<A: Allocator> MatchChain<A> {\n    | -------------------------------- methods in this implementation\n...\n145 |     pub(crate) fn layout(&self) -> SearchKeyLayout {\n    |                   ^^^^^^\n...\n156 |     pub(crate) fn node_limit(&self) -> usize {\n    |                   ^^^^^^^^^^\n...\n173 |     pub(crate) fn reconfigure(&mut self, layout: SearchKeyLayout, node_limit: usize) -> Result<()> {\n    |                   ^^^^^^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `zstdoxide` (lib test) generated 1 warning\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.07s\n     Running unittests src/lib.rs (target/module11-match-key/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 6 tests\ntest match_key::tests::every_historical_four_byte_guard_preserves_existing_hash_buckets ... ok\ntest match_key::tests::portability_exact_allocations_short_tails_unaligned_and_extra_bytes ... ok\ntest match_key::tests::portability_pinned_little_endian_wrapping_witnesses_at_log_extremes ... ok\ntest match_key::tests::portability_width_identity_rejects_mismatch_and_allows_different_hash_logs ... ok\ntest match_key::tests::every_pinned_primitive_vector_matches_exact_width_and_padded_inputs ... ok\ntest match_key::tests::every_pinned_unused_byte_pair_preserves_keys_and_width_eight_controls ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 521 filtered out; finished in 0.02s\n\n"
+    },
+    {
+      "label": "tests-all",
+      "command": "cargo test --locked --lib --all-features match_key::tests::",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 15.2803,
+      "test_results": [
+        {
+          "passed": 6,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 521
+        }
+      ],
+      "log": "/tmp/zstdoxide-match-key-validation/tests-all.log",
+      "sha256": "16571d2f3e9eb9424b78382436f44485297e95bfa770e82404bd3f77cff08732",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nwarning: methods `layout`, `node_limit`, and `reconfigure` are never used\n   --> src/matchchain.rs:145:19\n    |\n 91 | impl<A: Allocator> MatchChain<A> {\n    | -------------------------------- methods in this implementation\n...\n145 |     pub(crate) fn layout(&self) -> SearchKeyLayout {\n    |                   ^^^^^^\n...\n156 |     pub(crate) fn node_limit(&self) -> usize {\n    |                   ^^^^^^^^^^\n...\n173 |     pub(crate) fn reconfigure(&mut self, layout: SearchKeyLayout, node_limit: usize) -> Result<()> {\n    |                   ^^^^^^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `zstdoxide` (lib test) generated 1 warning\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.45s\n     Running unittests src/lib.rs (target/module11-match-key/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 6 tests\ntest match_key::tests::portability_width_identity_rejects_mismatch_and_allows_different_hash_logs ... ok\ntest match_key::tests::every_historical_four_byte_guard_preserves_existing_hash_buckets ... ok\ntest match_key::tests::portability_pinned_little_endian_wrapping_witnesses_at_log_extremes ... ok\ntest match_key::tests::portability_exact_allocations_short_tails_unaligned_and_extra_bytes ... ok\ntest match_key::tests::every_pinned_primitive_vector_matches_exact_width_and_padded_inputs ... ok\ntest match_key::tests::every_pinned_unused_byte_pair_preserves_keys_and_width_eight_controls ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 521 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "label": "tests-no-std",
+      "command": "cargo test --locked --lib --no-default-features match_key::tests::",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 8.0109,
+      "test_results": [
+        {
+          "passed": 6,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 496
+        }
+      ],
+      "log": "/tmp/zstdoxide-match-key-validation/tests-no-std.log",
+      "sha256": "3092bf8808aa9de884e854ac29b6e2e4ef59300b152a3aa6d19d9e5d33122702",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nwarning: methods `layout`, `node_limit`, and `reconfigure` are never used\n   --> src/matchchain.rs:145:19\n    |\n 91 | impl<A: Allocator> MatchChain<A> {\n    | -------------------------------- methods in this implementation\n...\n145 |     pub(crate) fn layout(&self) -> SearchKeyLayout {\n    |                   ^^^^^^\n...\n156 |     pub(crate) fn node_limit(&self) -> usize {\n    |                   ^^^^^^^^^^\n...\n173 |     pub(crate) fn reconfigure(&mut self, layout: SearchKeyLayout, node_limit: usize) -> Result<()> {\n    |                   ^^^^^^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `zstdoxide` (lib test) generated 1 warning\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.46s\n     Running unittests src/lib.rs (target/module11-match-key/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 6 tests\ntest match_key::tests::portability_pinned_little_endian_wrapping_witnesses_at_log_extremes ... ok\ntest match_key::tests::portability_width_identity_rejects_mismatch_and_allows_different_hash_logs ... ok\ntest match_key::tests::every_historical_four_byte_guard_preserves_existing_hash_buckets ... ok\ntest match_key::tests::portability_exact_allocations_short_tails_unaligned_and_extra_bytes ... ok\ntest match_key::tests::every_pinned_primitive_vector_matches_exact_width_and_padded_inputs ... ok\ntest match_key::tests::every_pinned_unused_byte_pair_preserves_keys_and_width_eight_controls ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 496 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "label": "tests-no-std-all",
+      "command": "cargo test --locked --lib --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training match_key::tests::",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 7.8495,
+      "test_results": [
+        {
+          "passed": 6,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 496
+        }
+      ],
+      "log": "/tmp/zstdoxide-match-key-validation/tests-no-std-all.log",
+      "sha256": "969ac202211f2adc7c4ccc7fd5471f30ff4cfbeef4bdac62d03730599c4197bd",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\nwarning: methods `layout`, `node_limit`, and `reconfigure` are never used\n   --> src/matchchain.rs:145:19\n    |\n 91 | impl<A: Allocator> MatchChain<A> {\n    | -------------------------------- methods in this implementation\n...\n145 |     pub(crate) fn layout(&self) -> SearchKeyLayout {\n    |                   ^^^^^^\n...\n156 |     pub(crate) fn node_limit(&self) -> usize {\n    |                   ^^^^^^^^^^\n...\n173 |     pub(crate) fn reconfigure(&mut self, layout: SearchKeyLayout, node_limit: usize) -> Result<()> {\n    |                   ^^^^^^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `zstdoxide` (lib test) generated 1 warning\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.23s\n     Running unittests src/lib.rs (target/module11-match-key/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 6 tests\ntest match_key::tests::portability_width_identity_rejects_mismatch_and_allows_different_hash_logs ... ok\ntest match_key::tests::portability_pinned_little_endian_wrapping_witnesses_at_log_extremes ... ok\ntest match_key::tests::every_historical_four_byte_guard_preserves_existing_hash_buckets ... ok\ntest match_key::tests::portability_exact_allocations_short_tails_unaligned_and_extra_bytes ... ok\ntest match_key::tests::every_pinned_primitive_vector_matches_exact_width_and_padded_inputs ... ok\ntest match_key::tests::every_pinned_unused_byte_pair_preserves_keys_and_width_eight_controls ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 496 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "label": "clippy-safe",
+      "command": "cargo clippy --locked --lib -- -D warnings",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 0.9217,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-match-key-validation/clippy-safe.log",
+      "sha256": "89b9a02578874fe096870cc087eb06a41866d0731370a8b86ce3553d2d3d455d",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.83s\n"
+    },
+    {
+      "label": "clippy-all",
+      "command": "cargo clippy --locked --lib --all-features -- -D warnings",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 0.9926,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-match-key-validation/clippy-all.log",
+      "sha256": "89b9a02578874fe096870cc087eb06a41866d0731370a8b86ce3553d2d3d455d",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.83s\n"
+    },
+    {
+      "label": "check-no-std",
+      "command": "cargo check --locked --lib --no-default-features",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 0.7832,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-match-key-validation/check-no-std.log",
+      "sha256": "dab50c4b8f1e9f6a582aa5901a49f27dfe00c6ae0c98f4acf181ed8635521871",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.74s\n"
+    },
+    {
+      "label": "check-no-std-all",
+      "command": "cargo check --locked --lib --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 1.1644,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-match-key-validation/check-no-std-all.log",
+      "sha256": "71bddf2a58ecc0ccbf65f42af4f37529c677c586d1d5799c0758f45647310138",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.11s\n"
+    },
+    {
+      "label": "format",
+      "command": "rustfmt --edition 2024 --check src/match_key.rs",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 0.0672,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-match-key-validation/format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "label": "miri-native",
+      "command": "cargo miri test --locked --lib --all-features match_key::tests::portability_",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 0,
+      "seconds": 12.9879,
+      "test_results": [
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 524
+        }
+      ],
+      "log": "/tmp/zstdoxide-match-key-validation/miri-native.log",
+      "sha256": "bf9c7e5ed269f5c772ab7e7fab4e9728744878c950ff1e561ba0581410b714c5",
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.67s\n     Running unittests src/lib.rs (target/module11-match-key/miri/aarch64-apple-darwin/debug/build/zstdoxide/d8e99727923aa8cf/out/zstdoxide-d8e99727923aa8cf)\nwarning: methods `layout`, `node_limit`, and `reconfigure` are never used\n   --> src/matchchain.rs:145:19\n    |\n 91 | impl<A: Allocator> MatchChain<A> {\n    | -------------------------------- methods in this implementation\n...\n145 |     pub(crate) fn layout(&self) -> SearchKeyLayout {\n    |                   ^^^^^^\n...\n156 |     pub(crate) fn node_limit(&self) -> usize {\n    |                   ^^^^^^^^^^\n...\n173 |     pub(crate) fn reconfigure(&mut self, layout: SearchKeyLayout, node_limit: usize) -> Result<()> {\n    |                   ^^^^^^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\n\nrunning 3 tests\ntest match_key::tests::portability_exact_allocations_short_tails_unaligned_and_extra_bytes ... ok\ntest match_key::tests::portability_pinned_little_endian_wrapping_witnesses_at_log_extremes ... ok\ntest match_key::tests::portability_width_identity_rejects_mismatch_and_allows_different_hash_logs ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 524 filtered out; finished in 0.85s\n\nwarning: 1 warning emitted\n\n"
+    },
+    {
+      "label": "miri-i686",
+      "command": "cargo miri test --locked --lib --all-features --target i686-unknown-linux-gnu match_key::tests::portability_",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-match-key"
+      },
+      "exit_code": 1,
+      "seconds": 0.4933,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-match-key-validation/miri-i686.log",
+      "sha256": "1b60c0a0f15503a81f3a0cfe305f24a4fd2aa317ddf2a87ab35a7e038ebb2709",
+      "log_text": "Preparing a sysroot for Miri (target: i686-unknown-linux-gnu)... fatal error: failed to build sysroot: failed to create un-staging dir\n\nCaused by:\n    Operation not permitted (os error 1) at path \"/Users/lanxingcan/Library/Caches/org.rust-lang.miri/.tmpcIVpjX\"\n"
+    },
+    {
+      "label": "miri-i686-cached-isolated",
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --lib --all-features --target i686-unknown-linux-gnu match_key::tests::portability_ -- --test-threads=1",
+      "cwd": "/tmp/zstdoxide-match-key-foundation-f08fceb",
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-match-key-miri-i686",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-i686",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 33.9516,
+      "test_results": [
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 517
+        }
+      ],
+      "log": "/tmp/zstdoxide-match-key-validation/miri-i686-cached-isolated.log",
+      "sha256": "c3f6b79ea489727109f9a81a6ea4c0a2ac5d79071eee8269b1ad2133c90958d8",
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-match-key-foundation-f08fceb/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-match-key-foundation-f08fceb)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.67s\n     Running unittests src/lib.rs (/tmp/zstdoxide-match-key-miri-i686/miri/i686-unknown-linux-gnu/debug/build/zstdoxide/b3ef6e12d48a0bc1/out/zstdoxide-b3ef6e12d48a0bc1)\n\nrunning 3 tests\ntest match_key::tests::portability_exact_allocations_short_tails_unaligned_and_extra_bytes ... ok\ntest match_key::tests::portability_pinned_little_endian_wrapping_witnesses_at_log_extremes ... ok\ntest match_key::tests::portability_width_identity_rejects_mismatch_and_allows_different_hash_logs ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 517 filtered out; finished in 0.82s\n\n"
+    },
+    {
+      "label": "miri-s390x-cached-isolated",
+      "command": "cargo +nightly-2026-10-08 miri test --offline --locked --lib --all-features --target s390x-unknown-linux-gnu match_key::tests::portability_ -- --test-threads=1",
+      "cwd": "/tmp/zstdoxide-match-key-foundation-f08fceb",
+      "environment": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-match-key-miri-s390x",
+        "MIRI_SYSROOT": "/tmp/zstdoxide-platform-sysroot-s390x",
+        "MIRIFLAGS": "-Zmiri-strict-provenance",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 19.3493,
+      "test_results": [
+        {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 524
+        }
+      ],
+      "log": "/tmp/zstdoxide-match-key-validation/miri-s390x-cached-isolated.log",
+      "sha256": "8315773dcd9b08dca2f6a2b0fd50d090b7e0cae0749a6d36b7f6d88888c86a88",
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/private/tmp/zstdoxide-match-key-foundation-f08fceb/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/private/tmp/zstdoxide-match-key-foundation-f08fceb)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.15s\n     Running unittests src/lib.rs (/tmp/zstdoxide-match-key-miri-s390x/miri/s390x-unknown-linux-gnu/debug/build/zstdoxide/e4715997d90fb03a/out/zstdoxide-e4715997d90fb03a)\n\nrunning 3 tests\ntest match_key::tests::portability_exact_allocations_short_tails_unaligned_and_extra_bytes ... ok\ntest match_key::tests::portability_pinned_little_endian_wrapping_witnesses_at_log_extremes ... ok\ntest match_key::tests::portability_width_identity_rejects_mismatch_and_allows_different_hash_logs ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 524 filtered out; finished in 0.86s\n\n"
+    },
+    {
+      "label": "diff-check",
+      "command": "git diff --check -- src/match_key.rs",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-match-key-validation/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "log_text": ""
+    }
+  ],
+  "isolated_miri": {
+    "base": "f08fcebb3f26f86cec9fa90b6759a27796498838",
+    "archive_sha256": "c78a307a53556769caefafb848f246b011c93632eb64b111fc45d55be704c0c8",
+    "cwd": "/tmp/zstdoxide-match-key-foundation-f08fceb",
+    "changes": {
+      "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+      "src/lib.rs": "01866b4c939ff47e5f91acc93e9530fd3495f3b983510460d3a44237843723b5"
+    },
+    "registration_change": "Add mod match_key; immediately before mod match_search;",
+    "scope": "Frozen MatchKey and existing committed scalar records/fixtures; no concurrent dynamic match leaf changes."
+  },
+  "environment_failure": {
+    "record": "miri-i686",
+    "classification": "Miri automatic sysroot staging was blocked by sandbox cache-directory permissions before any tests ran. Preserved; subsequent checks use pre-existing target sysroots."
+  },
+  "source_after": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+  "input_hashes_after": {
+    "src/match_search.rs": "6998a15614095eab5c230d8d8de845300c09a87bf03ed9ff0ab9488557b6bd92",
+    "Cargo.toml": "659ce726a22f6cc6360e76eb5bc5de8eb593fb2e0fb046688e28afc14755d402",
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "tests/upstream/match-search/README.md": "7adf67603b2c2e3cba9ea00d0181fbd78055635e7b38fbbdc1a3e2c2d20d80c6",
+    "tests/upstream/match-search/compatibility.tsv": "7031c8ad88fa9ee3a4d67a300e9c40bec780d505c1358ab3150840ca53a46444",
+    "tests/upstream/match-search/hash_oracle.c": "004e5e82466efa1c87f216f140dd86bef6eb546812eb067ca8a8d79c340c79b0",
+    "tests/upstream/match-search/invariance.tsv": "e14d722aeef553d4c5e8bfac521b1489f91a849947095db75083a0b5c00ca299",
+    "tests/upstream/match-search/manifest.json": "e788ef5fb5e3a01606b062edd7750916876816b208bcc355ca2ba2b8c28be526",
+    "tests/upstream/match-search/patterns.bin": "1081bb9bf9f8165786c86c63c227ad9e7450c0a87a83dd4645a3bddac6771ac3",
+    "tests/upstream/match-search/patterns.tsv": "e2922e8559fc4a73dcbc7367a0045d9c7a71d026d5917ee182440548fe91a83a",
+    "tests/upstream/match-search/vectors.tsv": "628ff9df0d3b6c972233c43e5ffbc4aa11a1445908054c5d30da47b3afd078ce"
+  },
+  "summary": {
+    "commands": 14,
+    "passing_commands": 13,
+    "preserved_environment_failures": 1,
+    "normal_configurations": 4,
+    "normal_tests_per_configuration": 6,
+    "normal_passed_executions": 24,
+    "fixture_rows_per_configuration": {
+      "primitive": 2880,
+      "invariance": 2304,
+      "historical_guard": 64
+    },
+    "miri_targets": [
+      "aarch64-apple-darwin",
+      "i686-unknown-linux-gnu",
+      "s390x-unknown-linux-gnu"
+    ],
+    "miri_tests_per_target": 3,
+    "miri_passed_executions": 9,
+    "total_passed_test_executions": 33,
+    "final_checks_passed": true,
+    "qualifications": "Cross-target observations are Miri interpretation, not native i686/s390x execution. Full TSVs run in normal native configurations; Miri uses exact allocations and literal pinned endian/wrapping witnesses. Native Miri used the frozen shared source before dynamic leaf migration; cross-target Miri used the recorded f08fceb isolated foundation plus identical MatchKey source."
+  },
+  "original_evidence_sha256": "c5a1727dcd5c4bd0b3219de840cbdeef8d1dd7ba08bb904b99fcfeeb72e07ee4",
+  "root_review": "Exact initialized widths, key identity, LE extraction, wrapping constants, shift/conversion bounds and complete fixture schemas inspected; no findings."
+}
