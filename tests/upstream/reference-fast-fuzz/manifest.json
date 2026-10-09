@@ -1,0 +1,67 @@
+{
+  "capture": {
+    "archive_sha256": "2a6a6b22f5c98389d4c3cac3ab65ac77386ae529aa6fcdb8dbdbe267210a640d",
+    "compiler": {
+      "path": "/usr/bin/cc",
+      "sha256": "7f30f076d0e9c38f772a76449fca9da8cf97f6a3d43b94c90a00e4f9ce7ad39e",
+      "version": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n"
+    },
+    "host": {
+      "int_bits": 32,
+      "size_t_bits": 64,
+      "version": 10507
+    },
+    "included_sources": [
+      "lib/common/debug.h",
+      "lib/common/xxhash.h",
+      "lib/common/zstd_common.c",
+      "lib/compress/zstd_compress.c",
+      "lib/zstd.h",
+      "lib/zstd_errors.h",
+      "tests/fuzz/fuzz.h",
+      "tests/fuzz/fuzz_data_producer.c",
+      "tests/fuzz/fuzz_data_producer.h",
+      "tests/fuzz/fuzz_helpers.c",
+      "tests/fuzz/fuzz_helpers.h",
+      "tests/fuzz/simple_round_trip.c",
+      "tests/fuzz/zstd_helpers.c"
+    ],
+    "policy": "Historical capture host/compiler/archive; regeneration checks exact logical rows and independently records current environment. No native unexecuted-platform claim.",
+    "sanitized_equal": true
+  },
+  "expected_rust_classifications": {
+    "admitted": 57,
+    "advanced": 4,
+    "unsupported": 20
+  },
+  "fixtures": [
+    {
+      "path": "observations.tsv",
+      "rows": 81,
+      "sha256": "77a868913331f7e9edd4a73a60634eebd97d83b5b57050b6945fbde5b317b4e5",
+      "size": 10811
+    }
+  ],
+  "generator": "tests/upstream/reference-fast-fuzz/selector_oracle.c",
+  "generator_sha256": "04165d992ce347980e9487a9088d717d00162879bc4460ae7f23d14fc4828ee3",
+  "importer": "scripts/import_reference_fast_fuzz.py",
+  "importer_sha256": "cbbbc0d8b4c8709b3002c7d55d995ed61477fbfa42f2ee624952d0d4c814adbc",
+  "policy": "Selector-only C observations. Simple-branch numeric levels are selected exactly; advanced parameters remain unconsumed after the branch. Captured size budgets do not establish caller-owned destination, context reuse, mutable decoder settings or overlapping in-place behavior. Expected admission counts are Rust policy assertions for the later integration test, not a C codec run.",
+  "schema_version": 1,
+  "source_sha256": {
+    "lib/common/debug.h": "8260cd5087b8309679c61b772b535688993c61a675a30481b8ae55b45740ba15",
+    "lib/common/xxhash.h": "8cb837b21a8fe9a6b9dbcd0961ab16e733bfcbfa9e003f3a496ce07ae80aa8ee",
+    "lib/common/zstd_common.c": "f49eb8023a90d3de925373bd9ee0d36ed46b26c529840b64220397446cd73795",
+    "lib/compress/zstd_compress.c": "10c315ae609d49b2fc431521aa95908086e69fd917991c5ed9a875af3d1208e8",
+    "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b",
+    "lib/zstd_errors.h": "66a8c3f71d12ea6e797e4f622f31f3f8f81c41b36f48cad4f5de7d8bfb6aac0a",
+    "tests/fuzz/fuzz.h": "d1f23c155ad8c78a09dd36aa3603b2c84e5dfb3d6792a84341dc4df32cd4744f",
+    "tests/fuzz/fuzz_data_producer.c": "9d5b2085b1d56b982659ac931f0c7ce0c154decb0e93b0be4819063fbc370cf6",
+    "tests/fuzz/fuzz_data_producer.h": "42ebc1c8e355747f2627daa1998e1823668ae1ce899b3ad36dda105ae03b3da4",
+    "tests/fuzz/fuzz_helpers.c": "9425ffd8b57508382442b54cbc5b2c20719952cbd3cbc85d2414d56d096b6055",
+    "tests/fuzz/fuzz_helpers.h": "a75575c9f3034569c157ad63adfdc118c219203a583aa3433e64fa393faec4a9",
+    "tests/fuzz/simple_round_trip.c": "f33eebadcc96ada06f58dd6c1065e9b659612bc59e4706950470503b98515412",
+    "tests/fuzz/zstd_helpers.c": "45431059584f9719d4c7ee2657f85c2b3955755abcdd58c840aeec7e153e780c"
+  },
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

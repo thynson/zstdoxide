@@ -6,6 +6,7 @@ python3 scripts/check_upstream_fixtures.py
 python3 scripts/import_fast_parser_smoke.py --check
 python3 scripts/import_fast_collector.py --check
 python3 scripts/import_negative_level_fixture.py --check
+python3 scripts/import_reference_fast_fuzz.py --check
 python3 scripts/import_fast_frame_publication.py --check
 python3 scripts/import_fast_parser_families.py --check
 python3 scripts/pack_fast_parser_fixtures.py --check

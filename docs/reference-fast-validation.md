@@ -465,3 +465,31 @@ The [evidence record](evidence/2026-10-09-negative-level-fixtures.json) and
 preserve original and relocated successful captures and the initial strict-C
 compile failure caused by redundant local macros. Removing those definitions
 did not change any extracted writer or target statement.
+
+## Frozen original simple-round-trip selectors
+
+The separate `reference-fast-fuzz` collection records 81 deterministic packets
+through unchanged upstream data-producer code. It preserves the original order:
+use complete packet length for C capacities, reserve the data prefix, subtract
+zero/one from compression capacity, select the branch, then consume the simple
+branch level and decoder toggle. Advanced rows stop after branch selection.
+One-, two-, and three-byte reservation tails and exhausted inputs are included.
+The observed classifications are 57 admitted simple profiles, 20 unsupported
+simple profiles and four advanced branches; these are planned Rust admission
+checks, not C compression executions.
+
+Original capture and fresh regeneration agree in normal and scoped ASan/UBSan
+builds. The instrumentation covers the helper and unchanged producer/helpers;
+the codec archive is not instrumented, and only version/compressBound queries
+are executed there. All 112 normal/optimized-Python controls pass, including
+changed-and-rehashed C capacity observations, no-subprocess offline checks,
+advanced sentinels and malformed packet rejection. The offline importer pins
+the complete observation digest independently of the fixture manifest. Actual
+shared registration verifies 529 files across 16 collections.
+
+The [evidence record](evidence/2026-10-09-fast-fuzz-selectors.json) and
+[reproduction/control archive](evidence/2026-10-09-fast-fuzz-selectors.tar.gz)
+retain source hashes and complete observed tuples. This checkpoint does not
+establish reusable contexts, destination-buffer failure behavior, mutable
+decoder settings or overlapping in-place decoding. The separately decomposed
+Rust port will make the admitted source/level assertions executable.
