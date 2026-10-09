@@ -2,6 +2,8 @@
 //!
 //! The cyclic case preserves tests/fuzzer.c:2665's exact sample layout and
 //! success assertion, followed by its nonzero-ID/header and roundtrip checks.
+//! The ignored CNBuffer campaign preserves tests/fuzzer.c:667 and :2675's
+//! generated source, sample layout, and training-success assertion.
 //! Content selection and entropy construction are independent Rust algorithms;
 //! these tests do not claim COVER/fastCover, shrink, threading, or level parity.
 #![forbid(unsafe_code)]
@@ -399,5 +401,230 @@ fn official_codec_loads_learned_metadata_and_roundtrips_in_both_directions() {
     );
     eprintln!(
         "C accepted 8 Rust-built formatted dictionaries; {cases} bidirectional frames; held-out bytes formatted={trained_total}, ordinary={ordinary_total}"
+    );
+}
+
+/// Source: facebook/zstd v1.5.7 tests/fuzzer.c:650-667, :2641-2679 and
+/// :2742-2789, under the upstream BSD license preserved in root LICENSE.zstd.
+/// Only this external test oracle compiles programs/datagen.c and links to C.
+/// Rust owns training, generated dictionaries, and both codec operations.
+/// The separate level-4, COVER, fastCover, threading and shrink controls in
+/// the upstream sequence are outside this sample-construction assertion.
+#[test]
+#[ignore = "requires ZSTD_UPSTREAM pointing to pinned v1.5.7 with built lib/libzstd.a and a C compiler"]
+fn official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source() {
+    use std::fs;
+    use std::path::PathBuf;
+    use std::process::Command;
+    use std::time::{Instant, SystemTime, UNIX_EPOCH};
+
+    const SOURCE_SIZE: usize = 5 * 1024 * 1024;
+    const SAMPLE_SIZE: usize = 8192;
+    const SAMPLE_COUNT: usize = 128;
+    const CAPACITY: usize = 16 * 1024;
+    // Each pair is an explicit basicUnitTests(seed, compressibility) campaign.
+    // The default profile is included alongside both probability endpoints.
+    const CAMPAIGNS: [(u32, &str); 5] = [
+        (0, "0.50"),
+        (1, "0.00"),
+        (0x1234_5678, "0.05"),
+        (0x9abc_def0, "0.95"),
+        (u32::MAX, "1.00"),
+    ];
+
+    struct Directory(PathBuf);
+    impl Drop for Directory {
+        fn drop(&mut self) {
+            // Remove only the temporary directory created by this test.
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+    let upstream =
+        PathBuf::from(std::env::var_os("ZSTD_UPSTREAM").expect("ZSTD_UPSTREAM is required"));
+    let path = std::env::temp_dir().join(format!(
+        "zstdoxide-cnbuffer-training-{}-{}",
+        std::process::id(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos(),
+    ));
+    fs::create_dir(&path).unwrap();
+    let directory = Directory(path);
+    let c_source = directory.0.join("oracle.c");
+    let executable = directory.0.join("oracle");
+    let dictionary_path = directory.0.join("trained.dict");
+    let frame_path = directory.0.join("frame.zst");
+    fs::write(
+        &c_source,
+        r#"
+#define ZDICT_STATIC_LINKING_ONLY
+#include "datagen.h"
+#include "zdict.h"
+#include "zstd.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define SOURCE_SIZE (5U * 1024U * 1024U)
+#define DICTIONARY_CAPACITY (16U * 1024U)
+
+static int read_file(const char* path, void* buffer, size_t capacity, size_t* size) {
+    FILE* file = fopen(path, "rb");
+    int failed;
+    if (file == NULL) return 1;
+    *size = fread(buffer, 1, capacity, file);
+    failed = ferror(file) || fgetc(file) != EOF;
+    return fclose(file) != 0 || failed;
+}
+
+int main(int argc, char** argv) {
+    unsigned char dictionary[DICTIONARY_CAPACITY];
+    size_t dictionary_size;
+    if (ZSTD_versionNumber() != 10507 || argc < 3) return 2;
+    if (!strcmp(argv[1], "generate")) {
+        unsigned char* source;
+        unsigned seed;
+        double compressibility;
+        int failed;
+        if (argc != 4) return 3;
+        seed = (unsigned)strtoul(argv[2], NULL, 10);
+        compressibility = strtod(argv[3], NULL);
+        source = (unsigned char*)malloc(SOURCE_SIZE);
+        if (source == NULL) return 4;
+        RDG_genBuffer(source, SOURCE_SIZE, compressibility, 0., seed);
+        failed = fwrite(source, 1, SOURCE_SIZE, stdout) != SOURCE_SIZE;
+        free(source);
+        return failed;
+    }
+    if (read_file(argv[2], dictionary, sizeof(dictionary), &dictionary_size)) return 5;
+    if (!strcmp(argv[1], "inspect")) {
+        unsigned id = ZDICT_getDictID(dictionary, dictionary_size);
+        size_t header_size = ZDICT_getDictHeaderSize(dictionary, dictionary_size);
+        if (id == 0 || ZDICT_isError(header_size) || header_size == 0) return 6;
+        return printf("%u %zu\n", id, header_size) < 0;
+    }
+    if (!strcmp(argv[1], "decode") && argc == 4) {
+        size_t const capacity = ZSTD_compressBound(SOURCE_SIZE);
+        unsigned char* frame = (unsigned char*)malloc(capacity);
+        unsigned char* output = (unsigned char*)malloc(SOURCE_SIZE);
+        ZSTD_DCtx* context = ZSTD_createDCtx();
+        size_t frame_size, decoded;
+        int failed;
+        if (frame == NULL || output == NULL || context == NULL) return 7;
+        if (read_file(argv[3], frame, capacity, &frame_size)) return 8;
+        decoded = ZSTD_decompress_usingDict(context, output, SOURCE_SIZE,
+                                           frame, frame_size, dictionary, dictionary_size);
+        if (ZSTD_isError(decoded) || decoded != SOURCE_SIZE) return 9;
+        failed = fwrite(output, 1, decoded, stdout) != decoded;
+        ZSTD_freeDCtx(context);
+        free(output);
+        free(frame);
+        return failed;
+    }
+    return 10;
+}
+"#,
+    )
+    .unwrap();
+    let compiled = Command::new(std::env::var_os("CC").unwrap_or_else(|| "cc".into()))
+        .args(["-std=c99", "-O2", "-Wall", "-Wextra", "-Werror"])
+        .arg("-I")
+        .arg(upstream.join("programs"))
+        .arg("-I")
+        .arg(upstream.join("lib"))
+        .arg(&c_source)
+        .arg(upstream.join("programs/datagen.c"))
+        .arg(upstream.join("lib/libzstd.a"))
+        .arg("-o")
+        .arg(&executable)
+        .output()
+        .unwrap();
+    assert!(
+        compiled.status.success(),
+        "external CNBuffer oracle compilation: {}",
+        String::from_utf8_lossy(&compiled.stderr)
+    );
+
+    let start = Instant::now();
+    let mut verified_bytes = 0;
+    for (seed, compressibility) in CAMPAIGNS {
+        let generated = Command::new(&executable)
+            .args(["generate", &seed.to_string(), compressibility])
+            .output()
+            .unwrap();
+        assert!(generated.status.success(), "generate seed={seed}");
+        let source = generated.stdout;
+        assert_eq!(source.len(), SOURCE_SIZE);
+        let samples: Vec<_> = source[..SAMPLE_SIZE * SAMPLE_COUNT]
+            .chunks_exact(SAMPLE_SIZE)
+            .collect();
+        assert_eq!(samples.len(), SAMPLE_COUNT);
+        let dictionary = train_dictionary(
+            &samples,
+            DictionaryTrainingOptions {
+                selection: RawTrainingOptions {
+                    dictionary_size: CAPACITY,
+                    max_sample_bytes: SAMPLE_SIZE * SAMPLE_COUNT,
+                    segment_size: 64,
+                },
+                dictionary_id: None,
+            },
+        )
+        .unwrap_or_else(|error| {
+            panic!("CNBuffer seed={seed}, p={compressibility}: training failed: {error}")
+        })
+        .into_shared();
+        assert!(dictionary.is_formatted());
+        assert!((32768..1 << 31).contains(&dictionary.id()));
+        assert!(dictionary.as_bytes().len() <= CAPACITY);
+        assert!(dictionary.content().len() >= 8);
+        let header_size = dictionary.as_bytes().len() - dictionary.content().len();
+        assert!(header_size > 8);
+        fs::write(&dictionary_path, dictionary.as_bytes()).unwrap();
+        let metadata = Command::new(&executable)
+            .arg("inspect")
+            .arg(&dictionary_path)
+            .output()
+            .unwrap();
+        assert!(metadata.status.success(), "C metadata seed={seed}");
+        assert_eq!(
+            String::from_utf8(metadata.stdout).unwrap(),
+            format!("{} {header_size}\n", dictionary.id())
+        );
+        let encoded = compress_with_dictionary(&source, &dictionary).unwrap();
+        assert_eq!(
+            FrameHeader::parse(&encoded).unwrap().0.dictionary_id,
+            dictionary.id()
+        );
+        assert_eq!(
+            decompress_with_dictionary(&encoded, &dictionary, DecodeOptions::new(SOURCE_SIZE))
+                .unwrap(),
+            source,
+            "Rust decode seed={seed}, p={compressibility}"
+        );
+        fs::write(&frame_path, &encoded).unwrap();
+        let decoded = Command::new(&executable)
+            .arg("decode")
+            .arg(&dictionary_path)
+            .arg(&frame_path)
+            .output()
+            .unwrap();
+        assert!(decoded.status.success(), "C decode seed={seed}");
+        assert_eq!(decoded.stdout, source, "C decode seed={seed}");
+        verified_bytes += source.len();
+        eprintln!(
+            "CNBuffer seed={seed}, p={compressibility}: {} samples, {} dictionary bytes, {} header bytes, {} frame bytes; full Rust/C decode matched",
+            samples.len(),
+            dictionary.as_bytes().len(),
+            header_size,
+            encoded.len(),
+        );
+    }
+    assert_eq!(verified_bytes, CAMPAIGNS.len() * SOURCE_SIZE);
+    eprintln!(
+        "Verified {} exact CNBuffer training campaigns / {verified_bytes} source bytes in {:?}",
+        CAMPAIGNS.len(),
+        start.elapsed()
     );
 }
