@@ -14,6 +14,13 @@ root = pathlib.Path(".")
 files = [*root.glob("src/**/*.rs"), *root.glob("benches/**/*.rs"),
          *root.glob("tests/fixtures/*.zst"), pathlib.Path("Cargo.toml"),
          pathlib.Path("scripts/benchmark.sh")]
+files.extend(pathlib.Path(name) for name in (
+    "tests/upstream/dictionaries/formatted.dict",
+    "tests/upstream/dictionaries/training-samples.bin",
+    "tests/upstream/data/golden-dictionaries/http-dict-missing-symbols",
+    "tests/upstream/data/generated/http-dictionary.zst",
+    "tests/upstream/data/golden-compression/http",
+))
 if pathlib.Path("Cargo.lock").exists():
     files.append(pathlib.Path("Cargo.lock"))
 digest = hashlib.sha256()
@@ -37,7 +44,7 @@ printf '%s\n' "$code_fingerprint" > "$output_dir/source.sha256"
     fi
 } > "$output_dir/environment.txt"
 
-for configuration in safe unsafe-byte-cursor unsafe-bitstream unsafe-fse unsafe-huffman unsafe-history unsafe-ring-history unsafe-match-table all; do
+for configuration in safe unsafe-byte-cursor unsafe-bitstream unsafe-fse unsafe-huffman unsafe-history unsafe-ring-history unsafe-match-table unsafe-dictionary unsafe-training all; do
     printf 'Benchmarking %s\n' "$configuration"
     case "$configuration" in
         safe)
@@ -69,6 +76,8 @@ configurations = {
     "unsafe-history": "history_overlap",
     "unsafe-ring-history": "ring_overlap",
     "unsafe-match-table": "match_table",
+    "unsafe-dictionary": "dictionary_content",
+    "unsafe-training": "raw_training",
 }
 
 def read(name):
@@ -92,13 +101,21 @@ def read(name):
                 "minimum": float(minimum),
                 "maximum": float(maximum),
                 "fingerprint": fingerprint,
+                "kind": "timed",
             }
+        elif fields[0] == "CHECK":
+            _, case, unit, count, fingerprint = fields
+            if case in rows:
+                raise SystemExit("Duplicate smoke case: " + case)
+            rows[case] = {"unit": unit, "count": count, "fingerprint": fingerprint, "kind": "smoke"}
     expected_cases = {"byte_cursor", "reverse_bits", "fse_lookup", "huffman_decode",
                       "history_overlap", "ring_overlap", "match_table", "compress",
-                      "decompress", "stream_compress", "stream_decompress"}
+                      "decompress", "stream_compress", "stream_decompress",
+                      "dictionary_content", "dictionary_compress", "dictionary_decompress",
+                      "raw_training"}
     if rows.keys() != expected_cases:
-        raise SystemExit("Expected all eleven benchmark cases in " + name)
-    required = ("seed", "samples", "sample_ms", "compress_original_bytes",
+        raise SystemExit("Expected all fifteen benchmark cases in " + name)
+    required = ("mode", "features", "seed", "samples", "sample_ms", "compress_original_bytes",
                 "compress_encoded_bytes", "compress_output_fnv1a64",
                 "decompress_encoded_bytes", "decompress_decoded_bytes",
                 "decompress_output_fnv1a64", "ring_output_fnv1a64", "ring_window_bytes",
@@ -113,9 +130,27 @@ def read(name):
                 "stream_decompress_single_frame_short_bytes",
                 "stream_decompress_single_frame_long_bytes",
                 "stream_decompress_single_frame_short_retained_bytes",
-                "stream_decompress_single_frame_long_retained_bytes")
+                "stream_decompress_single_frame_long_retained_bytes",
+                "dictionary_serialized_bytes", "dictionary_content_bytes", "dictionary_id",
+                "dictionary_fnv1a64", "dictionary_content_read_bytes", "dictionary_content_output_fnv1a64",
+                "dictionary_compress_original_bytes", "dictionary_compress_original_fnv1a64",
+                "dictionary_compress_encoded_bytes", "dictionary_compress_without_dictionary_bytes",
+                "dictionary_compress_output_fnv1a64", "dictionary_compress_reset_retained_bytes",
+                "dictionary_decompress_dictionary_bytes", "dictionary_decompress_dictionary_content_bytes",
+                "dictionary_decompress_dictionary_id", "dictionary_decompress_dictionary_fnv1a64",
+                "dictionary_decompress_frames", "dictionary_decompress_encoded_bytes",
+                "dictionary_decompress_decoded_bytes", "dictionary_decompress_output_fnv1a64",
+                "dictionary_decompress_peak_retained_bytes", "dictionary_decompress_reset_retained_bytes",
+                "raw_training_sample_count", "raw_training_input_bytes", "raw_training_input_fnv1a64",
+                "raw_training_sample_bytes_limit", "raw_training_dictionary_bytes_limit",
+                "raw_training_segment_bytes", "raw_training_output_bytes", "raw_training_output_fnv1a64")
     if any(key not in metadata for key in required):
         raise SystemExit("Missing workload metadata in " + name)
+    if metadata["mode"] not in {"smoke", "timed"} or any(row["kind"] != metadata["mode"] for row in rows.values()):
+        raise SystemExit("Mixed or invalid measurement modes in " + name)
+    expected_features = {"safe"} if name == "safe" else set(configurations) if name == "all" else {name}
+    if set(metadata["features"].split(",")) != expected_features:
+        raise SystemExit("Enabled features differ from requested configuration: " + name)
     return rows, {key: value for key, value in metadata.items() if key != "features"}
 
 safe, reference_metadata = read("safe")
@@ -131,10 +166,24 @@ for name, (cases, metadata) in parsed.items():
             if row[key] != safe[case][key]:
                 raise SystemExit(f"Mismatch: {name} / {case} / {key}")
 
+if reference_metadata["mode"] == "smoke":
+    lines = ["# Backend smoke checks", "",
+             "All fifteen deterministic operations and complete workload metadata agree across",
+             "the safe build, nine independent unsafe-feature builds and the combined build.",
+             "No timing clocks were started and no throughput comparisons were collected.", "",
+             "| Case | Unit | Units per operation | Fingerprint |", "| --- | --- | ---: | --- |"]
+    for case, row in safe.items():
+        lines.append(f"| {case} | {row['unit']} | {row['count']} | `{row['fingerprint']}` |")
+    lines.extend(["", "Full dictionary/output hashes, resource caps and retained-context capacities",
+                  "are recorded in the adjacent TSV files; source/input identity is in source.sha256.", ""])
+    (root / "summary.md").write_text("\n".join(lines))
+    print("Verified backend smoke fingerprints and all metadata without collecting timings. Summary: " + str(root / "summary.md"))
+    sys.exit(0)
+
 lines = [
     "# Backend measurements",
     "",
-    "All eleven cases produced identical deterministic fingerprints in every build.",
+    "All fifteen cases produced identical deterministic fingerprints in every build.",
     "Whole-codec output sizes and full-output FNV-1a checksums also match across builds.",
     "These noncryptographic checksums supplement full-output interoperability tests.",
     "Each table entry is the median of the configured timed samples. Higher relative",
@@ -150,6 +199,8 @@ lines = [
     f"| Official text decompression fixture | {reference_metadata['decompress_decoded_bytes']} | {reference_metadata['decompress_encoded_bytes']} | {int(reference_metadata['decompress_encoded_bytes']) / int(reference_metadata['decompress_decoded_bytes']):.4%} | `{reference_metadata['decompress_output_fnv1a64']}` |",
     f"| Streaming compression input | {reference_metadata['stream_compress_original_bytes']} | {reference_metadata['stream_compress_encoded_bytes']} | {int(reference_metadata['stream_compress_encoded_bytes']) / int(reference_metadata['stream_compress_original_bytes']):.4%} | `{reference_metadata['stream_compress_output_fnv1a64']}` |",
     f"| Streaming official text fixture | {reference_metadata['stream_decompress_decoded_bytes']} | {reference_metadata['stream_decompress_encoded_bytes']} | {int(reference_metadata['stream_decompress_encoded_bytes']) / int(reference_metadata['stream_decompress_decoded_bytes']):.4%} | `{reference_metadata['stream_decompress_output_fnv1a64']}` |",
+    f"| Formatted-dictionary compression | {reference_metadata['dictionary_compress_original_bytes']} | {reference_metadata['dictionary_compress_encoded_bytes']} | {int(reference_metadata['dictionary_compress_encoded_bytes']) / int(reference_metadata['dictionary_compress_original_bytes']):.4%} | `{reference_metadata['dictionary_compress_output_fnv1a64']}` |",
+    f"| Prepared HTTP dictionary decoding | {reference_metadata['dictionary_decompress_decoded_bytes']} | {reference_metadata['dictionary_decompress_encoded_bytes']} | {int(reference_metadata['dictionary_decompress_encoded_bytes']) / int(reference_metadata['dictionary_decompress_decoded_bytes']):.4%} | `{reference_metadata['dictionary_decompress_output_fnv1a64']}` |",
     "",
     "| Feature | Target workload | Safe ns/unit | Feature ns/unit | Relative throughput |",
     "| --- | --- | ---: | ---: | ---: |",
@@ -183,6 +234,9 @@ lines.extend([
     f"The encoder accepted {reference_metadata['stream_compress_memory_input_bytes']} bytes in {reference_metadata['stream_compress_memory_block_bytes']}-byte blocks.",
     f"Streaming input/output chunks are {reference_metadata['stream_decode_input_chunk_bytes']}/{reference_metadata['stream_decode_output_chunk_bytes']} bytes for decoding and {reference_metadata['stream_encode_input_chunk_bytes']}/{reference_metadata['stream_encode_output_chunk_bytes']} bytes for encoding.",
     f"After reset, the timed decoder retains {reference_metadata['stream_decompress_reset_retained_bytes']} bytes and the timed encoder {reference_metadata['stream_compress_reset_retained_bytes']} bytes.",
+    f"With persistent prepared dictionaries, decoder/encoder reset retains {reference_metadata['dictionary_decompress_reset_retained_bytes']}/{reference_metadata['dictionary_compress_reset_retained_bytes']} bytes respectively, including each selected dictionary once per context report.",
+    f"Raw training admits at most {reference_metadata['raw_training_sample_bytes_limit']} bytes from {reference_metadata['raw_training_sample_count']} samples ({reference_metadata['raw_training_input_bytes']} input bytes), with {reference_metadata['raw_training_segment_bytes']}-byte segments and a {reference_metadata['raw_training_dictionary_bytes_limit']}-byte output cap.",
+    f"The selected raw dictionary contains {reference_metadata['raw_training_output_bytes']} bytes with full-output FNV-1a `{reference_metadata['raw_training_output_fnv1a64']}`. Training timings include scratch allocation and the complete selection algorithm.",
     "",
     "Raw sample ranges and fingerprints are recorded in the adjacent TSV files.",
     "Compiler, machine, and timestamp are recorded in `environment.txt`.",

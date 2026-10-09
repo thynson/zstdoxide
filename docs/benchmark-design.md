@@ -11,6 +11,25 @@
 
 The coordinating agent tracks and commits these items through `TODO.md`.
 
+The Module 7 extension is decomposed before changing benchmark code:
+
+1. Add checked dictionary content reads, reusable dictionary encoder/decoder
+   workloads, and bounded raw training over exact pinned sample bytes.
+2. Report full input/output hashes, dictionary identities and sizes, training
+   resource caps, and context retained capacity; compare these values across
+   safe, each of nine independent unsafe features, and the combined build.
+3. Add an explicit smoke mode which verifies deterministic operations and
+   metadata without collecting or reporting timings. Compile and smoke-check
+   this checkpoint while codec work continues; run timed comparisons only after
+   the coordinating agent freezes the measured sources.
+
+New workload records are plain sizes, owned byte buffers, `Dictionary` shared
+handles and borrowed sample slices. Dictionary construction occurs outside
+timing; contexts retain their configured owned handle across reset. The trainer
+owns its scratch through its normal public call, returns an owned raw dictionary,
+and borrows samples only during that call. The benchmark introduces no raw
+pointers or additional unsafe operations.
+
 ## Structures and workloads
 
 The benchmark owns immutable deterministic input buffers and borrows them for
@@ -32,6 +51,26 @@ invariants are in `data-structures.md` and the linked module design documents.
 | decompress | Decode an official zstd fixture when present | Decoded byte |
 | stream_compress | Reuse an encoder with 4 KiB input and 1 KiB output slices | Original byte |
 | stream_decompress | Reuse a decoder with 257-byte input and 4 KiB output slices | Decoded byte |
+| dictionary_content | Checked indexed reads from prepared immutable dictionary content | Content byte |
+| dictionary_compress | Reuse an encoder with a formatted dictionary and exact dictionary-derived input | Original byte |
+| dictionary_decompress | Decode 64 official HTTP frames with one persistent prepared dictionary | Decoded byte |
+| raw_training | Select raw dictionary content from 256 pinned samples with explicit sample/output caps | Sample byte admitted by the budget |
+
+Dictionary encode/decode output is verified in full before timing. Their
+metadata identifies serialized/content dictionary sizes, IDs, full dictionary
+checksums, frame counts, exact input/output checksums, and retained capacities
+before/after reset. Raw training uses 256 independent 512-byte sample slices,
+a 64-KiB sample budget, a 2-KiB output cap and 64-byte candidate segments.
+The training operation includes its allocations and selection algorithm; it is
+not a measurement of just one private frequency-table lookup. The returned raw
+content is fingerprinted, hashed in full outside timing, and checked against its
+cap. No formatted metadata or COVER/fastCover equivalence is inferred.
+
+`ZSTDOXIDE_BENCH_SMOKE=1` runs each deterministic operation twice and emits
+`CHECK` rows. It never starts a timing clock or creates throughput ratios.
+The comparison script validates the same complete case and metadata set in
+smoke and timed modes; all fixture files consumed by these workloads participate
+in the source/input fingerprint that prevents comparisons across changing code.
 
 A fixed xorshift generator and seed construct inputs once outside the timed
 region. FSE and Huffman tables are constructed outside the timed region.
@@ -50,7 +89,8 @@ correctness is not inferred from sampled fingerprints.
 
 By default each case runs five samples of at least 150 ms each, then reports the
 median throughput and minimum/maximum sample durations per work unit. This is
-about nine seconds per complete feature configuration, excluding compilation.
+at least eleven seconds per complete feature configuration, excluding setup,
+memory trials and compilation.
 Environment overrides permit longer measurements. Wall-clock measurements on a
 shared workstation include noise and should not imply universal speedups.
 
@@ -61,7 +101,7 @@ measured after four and 64 blocks of a single frame. Their fixed caller buffers
 and transient per-call allocations are excluded from `retained_capacity()`;
 bounded retained capacity is not a measurement of allocator-call count or peak
 process memory. Each streaming operation resets logical state while retaining
-its allocated primary buffers. All nine feature configurations must report
+its allocated primary buffers. All eleven feature configurations must report
 identical workload/output/capacity metadata before throughput is compared.
 
 ## Entropy safety review

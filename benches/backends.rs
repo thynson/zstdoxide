@@ -7,7 +7,10 @@ extern crate alloc;
 
 use std::hint::black_box;
 use std::time::{Duration, Instant};
-use zstdoxide::{DecodeOptions, Decoder, Encoder, EndDirective, Error, Result, StreamStatus};
+use zstdoxide::{
+    DecodeOptions, Decoder, Dictionary, Encoder, EncoderOptions, EndDirective, Error,
+    RawTrainingOptions, Result, StreamStatus, train_raw_dictionary,
+};
 
 #[path = "../src/bitstream.rs"]
 mod bitstream;
@@ -30,6 +33,7 @@ const INPUT_SIZE: usize = 64 * 1024;
 struct Settings {
     samples: usize,
     duration: Duration,
+    smoke: bool,
 }
 
 impl Settings {
@@ -47,6 +51,7 @@ impl Settings {
         Self {
             samples,
             duration: Duration::from_millis(milliseconds),
+            smoke: std::env::var("ZSTDOXIDE_BENCH_SMOKE").is_ok_and(|value| value == "1"),
         }
     }
 }
@@ -58,8 +63,16 @@ fn main() {
     println!("META\tsample_ms\t{}", settings.duration.as_millis());
     println!("META\tfeatures\t{}", enabled_features());
     println!(
-        "COLUMNS\tcase\tunit\tunits_per_iteration\tmedian_ns_per_unit\tminimum_ns_per_unit\tmaximum_ns_per_unit\tfingerprint"
+        "META\tmode\t{}",
+        if settings.smoke { "smoke" } else { "timed" }
     );
+    if settings.smoke {
+        println!("COLUMNS\tcase\tunit\tunits_per_operation\tfingerprint");
+    } else {
+        println!(
+            "COLUMNS\tcase\tunit\tunits_per_iteration\tmedian_ns_per_unit\tminimum_ns_per_unit\tmaximum_ns_per_unit\tfingerprint"
+        );
+    }
 
     let input = deterministic_bytes(INPUT_SIZE);
     measure(&settings, "byte_cursor", "byte", INPUT_SIZE, || {
@@ -178,6 +191,237 @@ fn main() {
     });
 
     measure_streaming(&settings, &original, frame, &expected);
+    measure_dictionaries(&settings, &input);
+    measure_raw_training(&settings);
+}
+
+/// Compare public dictionary operations with shared preparation outside timing.
+fn measure_dictionaries(settings: &Settings, indices: &[u8]) {
+    let serialized = include_bytes!("../tests/upstream/dictionaries/formatted.dict");
+    let dictionary = Dictionary::from_bytes(serialized).unwrap().into_shared();
+    println!("META\tdictionary_serialized_bytes\t{}", serialized.len());
+    println!(
+        "META\tdictionary_content_bytes\t{}",
+        dictionary.content().len()
+    );
+    println!("META\tdictionary_id\t{}", dictionary.id());
+    println!(
+        "META\tdictionary_fnv1a64\t{:016x}",
+        full_checksum(serialized)
+    );
+    let positions: Vec<_> = indices
+        .chunks_exact(2)
+        .map(|pair| {
+            usize::from(u16::from_le_bytes([pair[0], pair[1]])) % dictionary.content().len()
+        })
+        .collect();
+    let expected_reads: Vec<_> = positions
+        .iter()
+        .map(|&index| dictionary.content()[index])
+        .collect();
+    assert_eq!(
+        positions
+            .iter()
+            .map(|&index| dictionary.content_byte(index).unwrap())
+            .collect::<Vec<_>>(),
+        expected_reads
+    );
+    println!("META\tdictionary_content_read_bytes\t{}", positions.len());
+    println!(
+        "META\tdictionary_content_output_fnv1a64\t{:016x}",
+        full_checksum(&expected_reads)
+    );
+    measure(
+        settings,
+        "dictionary_content",
+        "byte",
+        positions.len(),
+        || {
+            let mut digest = 0_u64;
+            for &index in black_box(&positions) {
+                digest = digest.rotate_left(3) ^ u64::from(dictionary.content_byte(index).unwrap());
+            }
+            digest
+        },
+    );
+
+    let original: Vec<_> = dictionary
+        .content()
+        .iter()
+        .copied()
+        .cycle()
+        .take(32 * 1024)
+        .collect();
+    let mut encoder =
+        Encoder::with_dictionary(EncoderOptions::default(), dictionary.clone()).unwrap();
+    let mut encoded = vec![0; original.len() * 2 + 1024];
+    let size = encode_stream_frame(&mut encoder, &original, &mut encoded);
+    assert_eq!(
+        zstdoxide::decompress_with_dictionary(
+            &encoded[..size],
+            &dictionary,
+            DecodeOptions::new(original.len())
+        )
+        .unwrap(),
+        original
+    );
+    let no_dictionary_size = zstdoxide::compress(&original).unwrap().len();
+    assert!(
+        size < no_dictionary_size,
+        "dictionary benchmark must exercise useful matches"
+    );
+    let retained = encoder.retained_capacity();
+    encoder.reset();
+    assert_eq!(encoder.retained_capacity(), retained);
+    println!(
+        "META\tdictionary_compress_original_bytes\t{}",
+        original.len()
+    );
+    println!(
+        "META\tdictionary_compress_original_fnv1a64\t{:016x}",
+        full_checksum(&original)
+    );
+    println!("META\tdictionary_compress_encoded_bytes\t{size}");
+    println!("META\tdictionary_compress_without_dictionary_bytes\t{no_dictionary_size}");
+    println!(
+        "META\tdictionary_compress_output_fnv1a64\t{:016x}",
+        full_checksum(&encoded[..size])
+    );
+    println!("META\tdictionary_compress_reset_retained_bytes\t{retained}");
+    measure(
+        settings,
+        "dictionary_compress",
+        "byte",
+        original.len(),
+        || {
+            encoder.reset();
+            let produced = encode_stream_frame(&mut encoder, black_box(&original), &mut encoded);
+            assert_eq!(produced, size);
+            fingerprint(&encoded[..produced])
+        },
+    );
+
+    const FRAMES: usize = 64;
+    let http_dictionary_bytes =
+        include_bytes!("../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols");
+    let frame = include_bytes!("../tests/upstream/data/generated/http-dictionary.zst");
+    let expected_frame = include_bytes!("../tests/upstream/data/golden-compression/http");
+    let http = Dictionary::from_bytes(http_dictionary_bytes)
+        .unwrap()
+        .into_shared();
+    let mut decoded = vec![0; expected_frame.len() * FRAMES];
+    let expected: Vec<_> = expected_frame
+        .iter()
+        .copied()
+        .cycle()
+        .take(decoded.len())
+        .collect();
+    let mut decoder = Decoder::with_dictionary(DecodeOptions::new(decoded.len()), http.clone());
+    let mut peak = 0;
+    for output in decoded.chunks_exact_mut(expected_frame.len()) {
+        let (produced, retained) = decode_stream_frame(&mut decoder, frame, output);
+        assert_eq!(produced, expected_frame.len());
+        peak = peak.max(retained);
+    }
+    decoder.finish().unwrap();
+    assert_eq!(decoded, expected);
+    let retained = decoder.retained_capacity();
+    decoder.reset();
+    assert_eq!(decoder.retained_capacity(), retained);
+    println!(
+        "META\tdictionary_decompress_dictionary_bytes\t{}",
+        http_dictionary_bytes.len()
+    );
+    println!(
+        "META\tdictionary_decompress_dictionary_content_bytes\t{}",
+        http.content().len()
+    );
+    println!("META\tdictionary_decompress_dictionary_id\t{}", http.id());
+    println!(
+        "META\tdictionary_decompress_dictionary_fnv1a64\t{:016x}",
+        full_checksum(http_dictionary_bytes)
+    );
+    println!("META\tdictionary_decompress_frames\t{FRAMES}");
+    println!(
+        "META\tdictionary_decompress_encoded_bytes\t{}",
+        frame.len() * FRAMES
+    );
+    println!(
+        "META\tdictionary_decompress_decoded_bytes\t{}",
+        decoded.len()
+    );
+    println!(
+        "META\tdictionary_decompress_output_fnv1a64\t{:016x}",
+        full_checksum(&decoded)
+    );
+    println!("META\tdictionary_decompress_peak_retained_bytes\t{peak}");
+    println!("META\tdictionary_decompress_reset_retained_bytes\t{retained}");
+    measure(
+        settings,
+        "dictionary_decompress",
+        "byte",
+        decoded.len(),
+        || {
+            decoder.reset();
+            for output in decoded.chunks_exact_mut(expected_frame.len()) {
+                let (produced, _) = decode_stream_frame(&mut decoder, black_box(frame), output);
+                assert_eq!(produced, expected_frame.len());
+            }
+            decoder.finish().unwrap();
+            fingerprint(&decoded)
+        },
+    );
+}
+
+/// This measures the complete allocating selector, not only its frequency reads.
+fn measure_raw_training(settings: &Settings) {
+    let input = include_bytes!("../tests/upstream/dictionaries/training-samples.bin");
+    let samples: Vec<_> = input.chunks_exact(512).collect();
+    let options = RawTrainingOptions {
+        dictionary_size: 2048,
+        max_sample_bytes: 64 * 1024,
+        segment_size: 64,
+    };
+    assert_eq!(samples.len(), 256);
+    let dictionary = train_raw_dictionary(&samples, options).unwrap();
+    assert!(!dictionary.is_formatted());
+    assert!((8..=options.dictionary_size).contains(&dictionary.content().len()));
+    let expected = dictionary.content();
+    assert_eq!(
+        train_raw_dictionary(&samples, options).unwrap().content(),
+        expected
+    );
+    println!("META\traw_training_sample_count\t{}", samples.len());
+    println!("META\traw_training_input_bytes\t{}", input.len());
+    println!(
+        "META\traw_training_input_fnv1a64\t{:016x}",
+        full_checksum(input)
+    );
+    println!(
+        "META\traw_training_sample_bytes_limit\t{}",
+        options.max_sample_bytes
+    );
+    println!(
+        "META\traw_training_dictionary_bytes_limit\t{}",
+        options.dictionary_size
+    );
+    println!("META\traw_training_segment_bytes\t{}", options.segment_size);
+    println!("META\traw_training_output_bytes\t{}", expected.len());
+    println!(
+        "META\traw_training_output_fnv1a64\t{:016x}",
+        full_checksum(expected)
+    );
+    measure(
+        settings,
+        "raw_training",
+        "byte",
+        options.max_sample_bytes,
+        || {
+            let trained = train_raw_dictionary(black_box(&samples), options).unwrap();
+            assert_eq!(trained.content().len(), expected.len());
+            fingerprint(trained.content())
+        },
+    );
 }
 
 /// Reuse a small ring across frames while emitting much more than its window.
@@ -527,6 +771,15 @@ fn measure(
     mut operation: impl FnMut() -> u64,
 ) {
     let expected = black_box(operation());
+    if settings.smoke {
+        assert_eq!(
+            black_box(operation()),
+            expected,
+            "nondeterministic output in {name}"
+        );
+        println!("CHECK\t{name}\t{unit}\t{units}\t{expected:016x}");
+        return;
+    }
     let mut measurements = Vec::with_capacity(settings.samples);
     for _ in 0..settings.samples {
         let start = Instant::now();
@@ -630,6 +883,8 @@ fn enabled_features() -> String {
         ("unsafe-history", cfg!(feature = "unsafe-history")),
         ("unsafe-ring-history", cfg!(feature = "unsafe-ring-history")),
         ("unsafe-match-table", cfg!(feature = "unsafe-match-table")),
+        ("unsafe-dictionary", cfg!(feature = "unsafe-dictionary")),
+        ("unsafe-training", cfg!(feature = "unsafe-training")),
     ];
     let selected: Vec<_> = features
         .iter()
