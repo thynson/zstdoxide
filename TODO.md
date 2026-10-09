@@ -39,7 +39,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Extend indexed match search to dictionary content and first-block crossing.
 - [x] Retain committed encoder block input in a reusable bounded history ring.
 - [x] Search indexed retained output and cross-boundary dictionary/history matches.
-- [ ] Verify encoder history eviction, reset isolation, and independent interoperability.
+- [x] Verify encoder history eviction, reset isolation, and independent interoperability.
 - [x] Write dictionary frame IDs with explicit omission and smallest field widths.
 - [x] Produce interoperable raw/prepared dictionary compression.
 - [x] Expose one-shot dictionary compression with known size and minimal ID width.

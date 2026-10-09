@@ -716,3 +716,80 @@ fn official_codec_decodes_one_shot_dictionary_frames_across_content_size_boundar
     assert_eq!(cases, 20);
     eprintln!("Official zstd v1.5.7 decoded {cases} one-shot dictionary frames byte-exactly");
 }
+
+/// An independent block repeats after an automatic 128 KiB boundary. Its
+/// pseudorandom bytes have few intra-block matches, so this size bound requires
+/// useful search over retained output from the preceding block.
+#[test]
+fn retained_output_compresses_repeated_independent_blocks_without_a_dictionary() {
+    let mut state = 0xa55a_1234_u32;
+    let block: Vec<_> = (0..131_072)
+        .map(|_| {
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            state as u8
+        })
+        .collect();
+    let source = [block.as_slice(), block.as_slice()].concat();
+    let dictionary = Dictionary::raw(&[]).unwrap().into_shared();
+    let frame = encode(
+        &source,
+        dictionary.clone(),
+        EncoderOptions {
+            window_log: 17,
+            ..options(source.len())
+        },
+    );
+    assert_round_trip(&frame, &source, &dictionary);
+    assert_eq!(decompress(&frame, source.len()).unwrap(), source);
+    assert!(
+        frame.len() * 4 < source.len() * 3,
+        "retained output must supply useful matches: {} encoded for {} source bytes",
+        frame.len(),
+        source.len()
+    );
+}
+
+/// The first block is a two-byte raw flush. A zero-literal second block proves
+/// its match begins in retained output, before any second-block source exists.
+fn assert_second_block_has_no_literals(frame: &[u8]) {
+    let first = FrameHeader::parse(frame).unwrap().1;
+    let header = u32::from_le_bytes([frame[first], frame[first + 1], frame[first + 2], 0]);
+    assert_eq!((header >> 1) & 3, 0);
+    assert_eq!(header & 1, 0);
+    assert_eq!(header >> 3, 2);
+    let second = first + 3 + 2;
+    assert_eq!((frame[second] >> 1) & 3, 2);
+    assert_eq!(
+        frame[second + 3],
+        0,
+        "the second block must start with zero raw literals"
+    );
+}
+
+#[test]
+fn retained_history_keys_cross_a_short_flush_into_current_input() {
+    let dictionary = Dictionary::raw(&[]).unwrap().into_shared();
+    let later = b"ab".repeat(100);
+    let source = [b"ab".as_slice(), &later].concat();
+    let mut encoder = Encoder::with_dictionary(options(source.len()), dictionary.clone()).unwrap();
+    let mut frame = action(&mut encoder, b"ab", EndDirective::Flush, 1);
+    frame.extend(action(&mut encoder, &later, EndDirective::Finish, 1));
+    assert_second_block_has_no_literals(&frame);
+    assert_round_trip(&frame, &source, &dictionary);
+    assert_eq!(decompress(&frame, source.len()).unwrap(), source);
+}
+
+#[test]
+fn a_later_block_dictionary_match_crosses_retained_frame_zero_and_current_output() {
+    let dictionary = Dictionary::raw(b"xyz").unwrap().into_shared();
+    let later = b"xyzab".repeat(100);
+    let source = [b"ab".as_slice(), &later].concat();
+    let mut encoder = Encoder::with_dictionary(options(source.len()), dictionary.clone()).unwrap();
+    let mut frame = action(&mut encoder, b"ab", EndDirective::Flush, 1);
+    frame.extend(action(&mut encoder, &later, EndDirective::Finish, 1));
+    assert_second_block_has_no_literals(&frame);
+    assert_round_trip(&frame, &source, &dictionary);
+    assert!(decompress(&frame, source.len()).is_err());
+}
