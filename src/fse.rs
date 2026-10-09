@@ -25,6 +25,16 @@ pub(crate) struct FseTable<A: Allocator = Global> {
     table_log: u8,
 }
 
+/// An immutable validated transition view independent of its owner's allocator.
+/// Its borrowed slice cannot outlive the table; inline RLE remains distinct from
+/// a normalized singleton table with a nonzero state width.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct FseTableView<'a> {
+    entries: &'a [FseEntry],
+    repeated: Option<FseEntry>,
+    table_log: u8,
+}
+
 impl FseTable<Global> {
     pub(crate) fn from_normalized(counts: &[i16], table_log: u8) -> Result<Self> {
         Self::from_normalized_in(counts, table_log, Global)
@@ -34,6 +44,13 @@ impl FseTable<Global> {
         Self::read_in(data, max_symbol, max_log, Global)
     }
 
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "Global convenience retained for direct dictionary-table callers"
+        )
+    )]
     pub(crate) fn read_dictionary(
         data: &[u8],
         max_symbol: usize,
@@ -216,6 +233,25 @@ impl<A: Allocator> FseTable<A> {
         })
     }
 
+    /// Borrow validated entries without allocating, copying, or cloning an owner.
+    pub(crate) fn view(&self) -> FseTableView<'_> {
+        FseTableView {
+            entries: &self.entries,
+            repeated: self.repeated,
+            table_log: self.table_log,
+        }
+    }
+
+    pub(crate) fn table_log(&self) -> u8 {
+        self.view().table_log()
+    }
+
+    pub(crate) fn entry(&self, state: usize) -> Result<FseEntry> {
+        self.view().entry(state)
+    }
+}
+
+impl FseTableView<'_> {
     pub(crate) fn table_log(&self) -> u8 {
         self.table_log
     }
@@ -235,10 +271,11 @@ impl<A: Allocator> FseTable<A> {
         let entry = self.entries[state];
         #[cfg(feature = "unsafe-fse")]
         // SAFETY: the runtime check above proves `state < entries.len()`.
-        // Every entry was initialized during construction. The Vec retains
-        // its allocator and properly aligned allocation for this borrow;
-        // copying through a shared reference neither mutates nor extends its
-        // lifetime, and no allocator or entry is accessed through another owner.
+        // The private view constructor borrows only initialized entries from
+        // a validated table. The slice guarantees their alignment and lifetime,
+        // keeping the owning table and its allocator borrowed while used.
+        // Copying through a shared reference neither mutates the entries nor
+        // extends any borrow; no pointer or reference escapes this access.
         let entry = unsafe { *self.entries.get_unchecked(state) };
         Ok(entry)
     }
@@ -443,6 +480,64 @@ mod tests {
 
         fn number(&mut self) -> usize {
             u32::from_le_bytes(self.take(4).try_into().unwrap()) as usize
+        }
+    }
+
+    #[test]
+    fn table_views_preserve_rle_and_normalized_singleton_states_without_allocating() {
+        let owner = allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let rle = FseTable::rle_in(1, &owner);
+        let singleton = FseTable::build_normalized_in(&[0, 32], 5, true, &owner).unwrap();
+        let ordinary = FseTable::from_normalized_in(&[16, 16], 5, &owner).unwrap();
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        let views = [rle.view(), singleton.view(), ordinary.view()];
+        let copied = views;
+        assert_eq!(copied[0].table_log(), 0);
+        assert_eq!(copied[1].table_log(), 5);
+        assert_eq!(copied[1].entry(31).unwrap().symbol, 1);
+        assert!(copied[0].entry(1).is_err());
+        for (table, view) in [&rle, &singleton, &ordinary].into_iter().zip(copied) {
+            assert_eq!(view.table_log(), table.table_log());
+            assert_eq!(view.entries.as_ptr(), table.entries.as_ptr());
+            for state in 0..1_usize << view.table_log() {
+                assert_eq!(view.entry(state), table.entry(state));
+            }
+            assert_eq!(
+                view.entry(1_usize << view.table_log()),
+                Err(Error::CorruptData)
+            );
+            assert_eq!(view.entry(usize::MAX), Err(Error::CorruptData));
+        }
+        assert_eq!(monitor.snapshot().attempts, before.attempts);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        // The pending failure was not consumed by borrowing or reading views.
+        assert!(matches!(
+            ordinary.try_clone_in(&owner),
+            Err(Error::AllocationFailed)
+        ));
+        assert_eq!(views[1].entry(31).unwrap().symbol, 1);
+        drop((rle, singleton, ordinary));
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn table_views_keep_every_supported_dense_state_and_extreme_bounds() {
+        for log in 5..=12 {
+            let count = 1_i16 << (log - 1);
+            let table = FseTable::from_normalized(&[count, count], log).unwrap();
+            let view = table.view();
+            assert_eq!(view.table_log(), log);
+            for state in 0..1_usize << log {
+                let entry = view.entry(state).unwrap();
+                assert_eq!(entry, table.entry(state).unwrap());
+                assert!(entry.symbol < 2);
+                assert!(usize::from(entry.base) + (1_usize << entry.bits) <= 1_usize << log);
+            }
+            for state in [1_usize << log, usize::MAX - 1, usize::MAX] {
+                assert_eq!(view.entry(state), Err(Error::CorruptData));
+            }
         }
     }
 

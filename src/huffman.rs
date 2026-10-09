@@ -27,6 +27,14 @@ pub(crate) struct HuffmanTable<A: Allocator = Global> {
     table_log: u8,
 }
 
+/// A validated immutable prefix table borrowed independently of its allocator.
+/// The slice lifetime prevents destruction or mutation of the original owner.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct HuffmanTableView<'a> {
+    entries: &'a [DecodeEntry],
+    table_log: u8,
+}
+
 impl HuffmanTable<Global> {
     /// Read an inline description using the global allocator.
     #[cfg_attr(
@@ -41,6 +49,13 @@ impl HuffmanTable<Global> {
     }
 
     /// Read a prepared dictionary's description using the global allocator.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "Global convenience retained for direct dictionary-table callers"
+        )
+    )]
     pub(crate) fn read_dictionary(input: &[u8]) -> Result<(Self, usize)> {
         Self::read_dictionary_in(input, Global)
     }
@@ -51,15 +66,17 @@ impl<A: Allocator> HuffmanTable<A> {
         self.entries.capacity() * core::mem::size_of::<DecodeEntry>()
     }
 
-    /// Copy validated per-symbol lengths for checked encoding-table setup.
-    /// Every lookup entry for one symbol has the same bit count; absent symbols
-    /// remain zero. No reference into this decoding table escapes the call.
-    pub(crate) fn code_lengths(&self) -> [u8; MAX_SYMBOLS] {
-        let mut lengths = [0; MAX_SYMBOLS];
-        for entry in &self.entries {
-            lengths[usize::from(entry.symbol)] = entry.bits;
+    /// Borrow the complete initialized table without allocating or cloning.
+    pub(crate) fn view(&self) -> HuffmanTableView<'_> {
+        HuffmanTableView {
+            entries: &self.entries,
+            table_log: self.table_log,
         }
-        lengths
+    }
+
+    /// Copy per-symbol lengths from the borrowed validated table.
+    pub(crate) fn code_lengths(&self) -> [u8; MAX_SYMBOLS] {
+        self.view().code_lengths()
     }
 
     /// Copy initialized entries into a fresh owner without assuming allocator
@@ -193,27 +210,9 @@ impl<A: Allocator + Clone> HuffmanTable<A> {
 }
 
 impl<A: Allocator> HuffmanTable<A> {
-    /// Checked access has the same contract in both table implementations.
-    #[inline]
+    #[cfg(test)]
     fn lookup(&self, index: usize) -> Result<DecodeEntry> {
-        #[cfg(not(feature = "unsafe-huffman"))]
-        {
-            self.entries.get(index).copied().ok_or(Error::CorruptData)
-        }
-        #[cfg(feature = "unsafe-huffman")]
-        {
-            if index >= self.entries.len() {
-                return Err(Error::CorruptData);
-            }
-            // SAFETY: The runtime check proves index is inside the initialized
-            // Vec allocation. Its pointer is non-null and aligned for DecodeEntry,
-            // and add(index) stays within that allocation. The shared self borrow
-            // keeps storage and its exact allocator alive and prevents mutation
-            // for the load. DecodeEntry
-            // is Copy, so reading it neither moves ownership nor creates aliases
-            // permitting mutation. No pointer or reference escapes this block.
-            Ok(unsafe { *self.entries.as_ptr().add(index) })
-        }
+        self.view().lookup(index)
     }
 
     /// Decode exactly `output_len` symbols from one terminated reverse stream.
@@ -228,6 +227,59 @@ impl<A: Allocator> HuffmanTable<A> {
     )]
     pub(crate) fn decode_stream(&self, input: &[u8], output_len: usize) -> Result<Vec<u8>> {
         self.decode_stream_in(input, output_len, Global)
+    }
+
+    /// Decode into an independently allocated output, borrowing only this table.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "owner convenience for direct entropy callers")
+    )]
+    pub(crate) fn decode_stream_in<B: Allocator>(
+        &self,
+        input: &[u8],
+        output_len: usize,
+        allocator: B,
+    ) -> Result<Vec<u8, B>> {
+        self.view().decode_stream_in(input, output_len, allocator)
+    }
+}
+
+impl HuffmanTableView<'_> {
+    pub(crate) fn table_log(&self) -> u8 {
+        self.table_log
+    }
+
+    /// Copy validated symbol lengths; absent symbols remain zero.
+    pub(crate) fn code_lengths(&self) -> [u8; MAX_SYMBOLS] {
+        let mut lengths = [0; MAX_SYMBOLS];
+        for entry in self.entries {
+            lengths[usize::from(entry.symbol)] = entry.bits;
+        }
+        lengths
+    }
+
+    /// Checked access has the same contract in both table implementations.
+    #[inline]
+    fn lookup(&self, index: usize) -> Result<DecodeEntry> {
+        #[cfg(not(feature = "unsafe-huffman"))]
+        {
+            self.entries.get(index).copied().ok_or(Error::CorruptData)
+        }
+        #[cfg(feature = "unsafe-huffman")]
+        {
+            if index >= self.entries.len() {
+                return Err(Error::CorruptData);
+            }
+            // SAFETY: The runtime check proves index is inside the initialized
+            // borrowed slice. The private view constructor only borrows initialized
+            // DecodeEntry values from a validated table; the slice guarantees
+            // proper alignment and validity throughout its lifetime. add(index)
+            // remains inside that allocation. The shared borrow prevents table
+            // mutation or destruction (and keeps its allocator alive). Reading
+            // this Copy value creates no mutable aliases and moves no ownership.
+            // No pointer or reference escapes this block.
+            Ok(unsafe { *self.entries.as_ptr().add(index) })
+        }
     }
 
     /// Decode with an independent output allocator; no table allocation or
@@ -255,12 +307,12 @@ impl<A: Allocator> HuffmanTable<A> {
     ) -> Result<()> {
         let mut bits = ReverseBits::new(input)?;
         for _ in 0..output_len {
-            let available = bits.remaining().min(usize::from(self.table_log)) as u8;
+            let available = bits.remaining().min(usize::from(self.table_log())) as u8;
             // A short final code is repeated across all possible suffixes in the
             // table. Zero-extension chooses one equivalent entry without reading
             // past the beginning of the encoded stream.
             let prefix = bits.peek_bits(available)?;
-            let index = (prefix << (self.table_log - available)) as usize;
+            let index = (prefix << (self.table_log() - available)) as usize;
             let entry = self.lookup(index)?;
             if usize::from(entry.bits) > bits.remaining() {
                 return Err(Error::CorruptData);
@@ -316,6 +368,24 @@ pub(crate) fn decode_literals_with_dictionary_in<A: Allocator + Clone, B: Alloca
     previous: &mut Option<HuffmanTable<A>>,
     max_output: usize,
     initial: Option<&HuffmanTable<B>>,
+    allocator: A,
+) -> Result<(Vec<u8, A>, usize)> {
+    decode_literals_with_dictionary_view_in(
+        input,
+        previous,
+        max_output,
+        initial.map(HuffmanTable::view),
+        allocator,
+    )
+}
+
+/// Decode with a validated prepared view from any dictionary allocator.
+/// Only the view is copied; previous tables remain owned by their exact allocator.
+pub(crate) fn decode_literals_with_dictionary_view_in<A: Allocator + Clone>(
+    input: &[u8],
+    previous: &mut Option<HuffmanTable<A>>,
+    max_output: usize,
+    initial: Option<HuffmanTableView<'_>>,
     allocator: A,
 ) -> Result<(Vec<u8, A>, usize)> {
     let first = *input.first().ok_or(Error::UnexpectedEof)?;
@@ -375,15 +445,12 @@ pub(crate) fn decode_literals_with_dictionary_in<A: Allocator + Clone, B: Alloca
         *previous = Some(table);
         output
     } else {
-        // The two tables can have different allocator types. Select explicitly
-        // rather than coercing either owner or copying prepared storage.
-        if let Some(table) = previous.as_ref() {
-            decode_streams_in(table, encoded, regenerated, four_streams, allocator)?
-        } else if let Some(table) = initial {
-            decode_streams_in(table, encoded, regenerated, four_streams, allocator)?
-        } else {
-            return Err(Error::CorruptData);
-        }
+        let table = previous
+            .as_ref()
+            .map(HuffmanTable::view)
+            .or(initial)
+            .ok_or(Error::CorruptData)?;
+        table.decode_streams_in(encoded, regenerated, four_streams, allocator)?
     };
     Ok((output, header_len + compressed))
 }
@@ -430,39 +497,54 @@ pub(crate) fn decode_streams_in<A: Allocator, B: Allocator>(
     four_streams: bool,
     allocator: A,
 ) -> Result<Vec<u8, A>> {
-    if !four_streams {
-        return table.decode_stream_in(input, output_len, allocator);
+    table
+        .view()
+        .decode_streams_in(input, output_len, four_streams, allocator)
+}
+
+impl HuffmanTableView<'_> {
+    /// Decode checked quarter streams into one independent output allocation.
+    pub(crate) fn decode_streams_in<A: Allocator>(
+        &self,
+        input: &[u8],
+        output_len: usize,
+        four_streams: bool,
+        allocator: A,
+    ) -> Result<Vec<u8, A>> {
+        if !four_streams {
+            return self.decode_stream_in(input, output_len, allocator);
+        }
+        if input.len() < 10 || output_len < 6 {
+            return Err(Error::CorruptData);
+        }
+        let segment_len = output_len.div_ceil(4);
+        let final_len = output_len
+            .checked_sub(3 * segment_len)
+            .ok_or(Error::CorruptData)?;
+        let lengths = [
+            usize::from(u16::from_le_bytes([input[0], input[1]])),
+            usize::from(u16::from_le_bytes([input[2], input[3]])),
+            usize::from(u16::from_le_bytes([input[4], input[5]])),
+        ];
+        let final_start = 6 + lengths.iter().sum::<usize>();
+        if final_start >= input.len() || lengths.contains(&0) {
+            return Err(Error::CorruptData);
+        }
+        let mut output = Vec::new_in(allocator);
+        output
+            .try_reserve_exact(output_len)
+            .map_err(|_| Error::AllocationFailed)?;
+        let mut start = 6;
+        for length in lengths {
+            let end = start + length;
+            let stream = input.get(start..end).ok_or(Error::CorruptData)?;
+            self.append_stream(stream, segment_len, &mut output)?;
+            start = end;
+        }
+        let stream = input.get(start..).ok_or(Error::CorruptData)?;
+        self.append_stream(stream, final_len, &mut output)?;
+        Ok(output)
     }
-    if input.len() < 10 || output_len < 6 {
-        return Err(Error::CorruptData);
-    }
-    let segment_len = output_len.div_ceil(4);
-    let final_len = output_len
-        .checked_sub(3 * segment_len)
-        .ok_or(Error::CorruptData)?;
-    let lengths = [
-        usize::from(u16::from_le_bytes([input[0], input[1]])),
-        usize::from(u16::from_le_bytes([input[2], input[3]])),
-        usize::from(u16::from_le_bytes([input[4], input[5]])),
-    ];
-    let final_start = 6 + lengths.iter().sum::<usize>();
-    if final_start >= input.len() || lengths.contains(&0) {
-        return Err(Error::CorruptData);
-    }
-    let mut output = Vec::new_in(allocator);
-    output
-        .try_reserve_exact(output_len)
-        .map_err(|_| Error::AllocationFailed)?;
-    let mut start = 6;
-    for length in lengths {
-        let end = start + length;
-        let stream = input.get(start..end).ok_or(Error::CorruptData)?;
-        table.append_stream(stream, segment_len, &mut output)?;
-        start = end;
-    }
-    let stream = input.get(start..).ok_or(Error::CorruptData)?;
-    table.append_stream(stream, final_len, &mut output)?;
-    Ok(output)
 }
 
 #[cfg(test)]
@@ -486,6 +568,128 @@ mod tests {
         }
         assert!(left.lookup(left.entries.len()).is_err());
         assert!(left.lookup(usize::MAX).is_err());
+    }
+
+    #[test]
+    fn table_view_output_uses_an_independent_owner_and_recovers_after_failure() {
+        for description in [&[128, 0x10][..], &[4, 0x10, 0x3f, 3, 4][..]] {
+            let owner = tracking().into_non_clone();
+            let monitor = owner.monitor();
+            let (table, _) = HuffmanTable::read_in(description, &owner).unwrap();
+            let before = monitor.snapshot();
+            assert!(monitor.fail_next());
+            let view = table.view();
+            let copied = view;
+            assert_eq!(view.entries.as_ptr(), table.entries.as_ptr());
+            assert_eq!(copied.table_log(), table.table_log);
+            assert_eq!(copied.code_lengths(), table.code_lengths());
+            for state in 0..table.entries.len() {
+                let actual = view.lookup(state).unwrap();
+                let expected = table.lookup(state).unwrap();
+                assert_eq!(
+                    (actual.symbol, actual.bits),
+                    (expected.symbol, expected.bits)
+                );
+            }
+            assert!(view.lookup(table.entries.len()).is_err());
+            assert!(view.lookup(usize::MAX).is_err());
+            let output_owner = tracking().into_non_clone();
+            let output_monitor = output_owner.monitor();
+            assert!(output_monitor.fail_next());
+            assert_eq!(
+                view.decode_stream_in(&[0x16], 4, &output_owner),
+                Err(Error::AllocationFailed)
+            );
+            let output = copied.decode_stream_in(&[0x16], 4, output_owner).unwrap();
+            assert_eq!(output.as_slice(), table.decode_stream(&[0x16], 4).unwrap());
+            let four = [1, 0, 1, 0, 1, 0, 5, 6, 4, 1];
+            let expected = decode_streams(&table, &four, 6, true).unwrap();
+            assert_eq!(
+                view.decode_streams_in(&four, 6, true, Global).unwrap(),
+                expected
+            );
+            assert_eq!(monitor.snapshot().attempts, before.attempts);
+            assert_eq!(monitor.snapshot().identities_created, 1);
+            assert!(matches!(
+                table.try_clone_in(&owner),
+                Err(Error::AllocationFailed)
+            ));
+            assert_eq!(view.code_lengths(), copied.code_lengths());
+            drop(table);
+            monitor.assert_released();
+            // The successful output owns a different allocator and outlives the table.
+            assert_eq!(output.len(), 4);
+            drop(output);
+            output_monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn table_view_literal_fallback_remains_borrowed_until_frame_replacement() {
+        let dictionary_owner = tracking().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let (dictionary, _) = HuffmanTable::read_in(&[128, 0x10], &dictionary_owner).unwrap();
+        let dictionary_before = dictionary_monitor.snapshot();
+        assert!(dictionary_monitor.fail_next());
+        let owner = tracking();
+        let monitor = owner.monitor();
+        let mut previous = None;
+        let repeated = compressed_literals(&[0x16], 4, 0, 3);
+        assert!(monitor.fail_next());
+        assert_eq!(
+            decode_literals_with_dictionary_view_in(
+                &repeated,
+                &mut previous,
+                4,
+                Some(dictionary.view()),
+                &owner,
+            ),
+            Err(Error::AllocationFailed)
+        );
+        assert!(previous.is_none());
+        let output = decode_literals_with_dictionary_view_in(
+            &repeated,
+            &mut previous,
+            4,
+            Some(dictionary.view()),
+            &owner,
+        )
+        .unwrap()
+        .0;
+        assert_eq!(output.as_slice(), [0, 1, 1, 0]);
+        drop(output);
+        let replacement = compressed_literals(&[4, 0x10, 0x3f, 3, 4, 0x16], 4, 0, 2);
+        decode_literals_with_dictionary_view_in(
+            &replacement,
+            &mut previous,
+            4,
+            Some(dictionary.view()),
+            &owner,
+        )
+        .unwrap();
+        let output = decode_literals_with_dictionary_view_in(
+            &repeated,
+            &mut previous,
+            4,
+            Some(dictionary.view()),
+            &owner,
+        )
+        .unwrap()
+        .0;
+        assert_eq!(output.as_slice(), [1, 2, 2, 1]);
+        drop(output);
+        assert_eq!(
+            dictionary_monitor.snapshot().attempts,
+            dictionary_before.attempts
+        );
+        assert!(matches!(
+            dictionary.try_clone_in(&dictionary_owner),
+            Err(Error::AllocationFailed)
+        ));
+        drop(previous);
+        monitor.assert_released();
+        drop(dictionary);
+        dictionary_monitor.assert_released();
     }
 
     #[test]

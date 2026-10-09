@@ -255,6 +255,22 @@ Clippy, and formatting passed. Source and output owners remain independent
 across moves; malformed plans preserve a closed writer, and every observed
 writer allocation failure preserves source tables and permits exact retry.
 
+Validated FSE/Huffman views now borrow initialized slices independently of
+allocator type. Their [view evidence](evidence/2026-10-09-allocator-table-views.json)
+records 23 FSE tests in six configurations. The broader Huffman filter passed
+85 tests in each of four std configurations (ten explicit oracle/corpus ignores)
+and 84 tests in each of two no_std configurations; these totals include
+neighboring module tests. All four new view tests passed all-feature
+strict-provenance Miri. Strict Clippy, safe/all no_std builds, benchmark
+compilation, formatting, and diff checks passed. No new live C run is claimed.
+
+Owner methods delegate to the same view access algorithm, retaining the existing
+safe/unsafe feature behavior. Borrowing and lookup consume no allocator requests
+or clones. Tests preserve normalized singleton state widths, inspect every dense
+FSE state size, reject extreme bounds, and exercise independent non-Clone output
+owners and dictionary fallback followed by frame-local replacement. The views
+retain ordinary Rust slice lifetimes; no raw ownership transfer is involved.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The
