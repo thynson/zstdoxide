@@ -59,6 +59,8 @@ mod matchchain;
 mod matchfinder;
 mod ring_history;
 #[cfg(test)]
+mod sequence_context;
+#[cfg(test)]
 mod sequence_encode;
 #[cfg(test)]
 mod sequence_plan;

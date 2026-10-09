@@ -265,6 +265,16 @@ that dictionary table with another treeless block. Repeat FSE modes obey the
 same per-channel rule. Frame reset restores initial dictionary/default state;
 block boundaries and flush calls alone do not.
 
+`SequenceEncoder` implements those roles with three current and three spare
+owned table slots, scalar availability tags, and three lazily cached predefined
+tables. A successful preparation owns the complete sequence section; commit is
+infallible and idempotent, including for zero sequences. Discard and reset clear
+availability without freeing any slot or scratch buffer. Every retained table,
+plan, symbol vector, stream and section is included in capacity accounting.
+Constructing a new immutable candidate or installing a prepared dictionary may
+replace a bounded slot with a fresh allocation; retaining workspace does not
+claim that all subsequent table construction is allocation-free.
+
 ## Bounded candidate storage and lazy parsing
 
 `MatchChain` owns a fixed-size hash-head array and a bounded initialized node
