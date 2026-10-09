@@ -191,7 +191,7 @@ training algorithms, automatic dictionary maps, static workspaces, or workers.
 
 ## Decoder/parser mapping checkpoint
 
-The initial prepared-decoder checkpoint passes 39 integration tests in
+The prepared-decoder checkpoint passes 40 integration tests in
 `tests/upstream_dictionary.rs` and 11 parser tests in `src/dictionary.rs`.
 The machine inventory maps those declarations to the source groups above.
 The exact fixed dictionary's 115-byte header, dictionary/frame IDs, malformed
@@ -208,12 +208,37 @@ exhaustive sequence-value and compressor table-validity schedules even though
 first-block Huffman/FSE defaults and per-frame repeat offsets are now exercised.
 
 `tests/invalidDictionaries.c` now rejects its exact invalid-repeat fixture during
-shared preparation; its original compression-constructor branch remains a
-separate pending encoder assertion. Dictionary loader/decompress fuzz sources
-map to deterministic parser/decoder portions only. Their exact tail producer,
-training, randomized configurations and external runners are not established by
-these fixed-input tests. C-generated trained dictionaries prove interoperable
-decoding, not a completed Rust trainer.
+shared Auto/Formatted preparation. Both encoding and decoding require that same
+validated `Dictionary`, so the original two constructor failures share one Rust
+validation boundary. The malformed fixture is never merely rejected as a frame.
+The exact official omitted-ID/prefix-first negative controls now assert failure
+without selected content, while the independent prefix-second frame succeeds.
+
+The initial encoder mapping includes 21 regular tests plus independently executed
+CLI checks for 96 streaming and 20 one-shot frames. Useful raw/formatted matches,
+all dictionary-ID widths and omission, content-size/checksum/window options,
+prefix replacement/lifetime, resets and error recovery run through the public
+Rust encoder. Original level/strategy/CDict parameter setup and exact C encoded
+byte comparisons remain partial rather than being inferred from interoperability.
+
+`tests/upstream_training.rs` exercises four regular raw-training contracts and
+16 held-out bidirectional official-C roundtrips. Independent C compression totals
+decreased from 2,263 to 609 bytes with the Rust-selected content. Training maps as
+partial: this bounded deterministic selector does not produce formatted entropy
+metadata or implement COVER/fastCover optimization. C-generated formatted
+dictionaries remain decoder/interoperability fixtures, not evidence of a complete
+Rust formatted trainer.
+
+The dictionary loader/raw roundtrip adapter preserves the original tail selectors
+and selected source bytes. Loader mode/prefix/loading-method consumption and raw
+success are exercised; immutable owned handles replace C by-reference lifetimes.
+The raw target preserves source/dictionary splitting, prefix choice, checksum
+disabling and a smaller compression-bound destination. Unsupported random C
+parameters and external sequence producers remain explicit omissions. The entire
+2,271-input loader corpus passed: 1,919 exact roundtrips and 352 expected formatted
+parse rejections, with no skipped files. Full raw-target corpus replay is pending.
+`dictionary_decompress`, trained roundtrip and trained streaming-roundtrip drivers
+still require their original formatted `FUZZ_train` path and parameter schedules.
 
 External corpus pinning and replay are separate checkpoints. A completed download
 or manifest hash does not change a target's replay status. The structural source

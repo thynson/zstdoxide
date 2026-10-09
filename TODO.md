@@ -62,6 +62,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Preserve exact omitted-ID and first-prefix missing-dictionary failure controls.
 - [x] Map implemented parser/decoder assertions to pinned upstream source groups.
 - [x] Port dictionary encoder lifetime, effectiveness, ID, window, and interoperability assertions.
+- [x] Map encoder, raw-training, and dictionary fuzz assertions to pinned upstream groups.
 - [ ] Port applicable official dictionary preparation and training assertions.
 - [x] Adapt dictionary loader and raw-dictionary fuzz contracts with exact source selectors.
 - [ ] Replay matching external dictionary corpora with explicit coverage mappings.
