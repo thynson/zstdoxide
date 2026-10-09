@@ -30,7 +30,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Add the checked canonical codebook and exact serialized-description pairing.
 - [x] Add unsafe-huffman-codebook with bounds, missing-symbol, and Miri checks.
 - [x] Add an independent bounded C oracle for exact Huffman tables and streams.
-- [ ] Encode one Huffman stream and verify exact C streams, including dictionary log twelve.
+- [x] Encode one Huffman stream and verify exact C streams, including dictionary log twelve.
 - [ ] Encode four streams and checked jump tables, including minimum and size boundaries.
 - [ ] Build sparse literal tables while preserving formatted dictionary-training output.
 - [x] Serialize checked raw, RLE, and Huffman literal headers at every field boundary.

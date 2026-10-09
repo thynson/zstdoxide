@@ -5,6 +5,7 @@
 
 use alloc::vec::Vec;
 
+use crate::bitwriter::BitWriter;
 use crate::huffman::HuffmanTable;
 use crate::{Error, Result};
 
@@ -131,6 +132,26 @@ impl HuffmanCodebook {
     pub(crate) fn covers(&self, input: &[u8]) -> bool {
         input.iter().all(|&symbol| self.code(symbol).is_ok())
     }
+
+    /// Encode one reverse-consumed stream and its terminal marker.
+    ///
+    /// Corresponds to `HUF_compress1X_usingCTable`. Coverage is checked before
+    /// changing the caller-owned writer, so an absent symbol preserves its
+    /// contents and open/closed state. On valid input, reset retains the writer's
+    /// allocation; subsequent allocation failure may leave partial scratch
+    /// output. Numeric codewords are appended little-endian without reversing
+    /// their individual bits. Empty input still produces the marker byte `1`.
+    pub(crate) fn encode_stream(&self, input: &[u8], writer: &mut BitWriter) -> Result<()> {
+        if !self.covers(input) {
+            return Err(Error::CorruptData);
+        }
+        writer.reset();
+        for &symbol in input.iter().rev() {
+            let code = self.code(symbol)?;
+            writer.write(u32::from(code.value), code.bits)?;
+        }
+        writer.finish()
+    }
 }
 
 /// A new inline table and the exact bytes that establish its codes for decoding.
@@ -211,6 +232,95 @@ mod tests {
         for symbol in 1..255 {
             assert_eq!(codes.code(symbol), Err(Error::CorruptData));
             assert!(!codes.covers(&[0, symbol, 255]));
+        }
+    }
+
+    #[test]
+    fn single_stream_matches_the_two_symbol_example_and_empty_marker() {
+        let mut lengths = [0; SYMBOLS];
+        lengths[..2].fill(1);
+        let codes = HuffmanCodebook::from_lengths(&lengths, 1).unwrap();
+        let mut writer = BitWriter::new();
+        codes.encode_stream(&[0, 1, 1, 0], &mut writer).unwrap();
+        assert_eq!(writer.as_bytes(), &[0x16]);
+        assert_eq!(writer.write(0, 0), Err(Error::CorruptData));
+        let capacity = writer.retained_capacity();
+        codes.encode_stream(&[], &mut writer).unwrap();
+        assert_eq!(writer.as_bytes(), &[1]);
+        assert_eq!(writer.retained_capacity(), capacity);
+    }
+
+    #[test]
+    fn single_stream_missing_symbols_preserve_pending_and_closed_writer_state() {
+        let mut lengths = [0; SYMBOLS];
+        lengths[0] = 1;
+        lengths[255] = 1;
+        let codes = HuffmanCodebook::from_lengths(&lengths, 1).unwrap();
+        let mut writer = BitWriter::new();
+        writer.write(0x52, 8).unwrap();
+        writer.write(5, 3).unwrap();
+        for input in [&[1, 0, 255][..], &[0, 1, 255], &[0, 255, 254]] {
+            assert_eq!(
+                codes.encode_stream(input, &mut writer),
+                Err(Error::CorruptData)
+            );
+            assert_eq!(writer.as_bytes(), &[0x52]);
+        }
+        // A following write observes the original three pending bits; checking
+        // as_bytes alone would not detect a reset of that partial reservoir.
+        writer.write(3, 5).unwrap();
+        writer.finish().unwrap();
+        assert_eq!(writer.as_bytes(), &[0x52, 0x1d, 1]);
+        assert_eq!(
+            codes.encode_stream(&[255, 1, 0], &mut writer),
+            Err(Error::CorruptData)
+        );
+        assert_eq!(writer.as_bytes(), &[0x52, 0x1d, 1]);
+        assert_eq!(writer.write(0, 0), Err(Error::CorruptData));
+    }
+
+    #[test]
+    fn single_stream_byte_width_codes_have_exact_reverse_order_at_size_boundaries() {
+        let codes = HuffmanCodebook::from_lengths(&[8; SYMBOLS], 11).unwrap();
+        let mut writer = BitWriter::new();
+        for length in [0, 1, 7, 8, 9, 15, 16, 17, 255, 256, 257, 1023, 1024, 4095] {
+            let source: Vec<_> = (0..length).map(|index| index as u8).collect();
+            codes.encode_stream(&source, &mut writer).unwrap();
+            let mut expected: Vec<_> = source.iter().rev().copied().collect();
+            expected.push(1);
+            assert_eq!(writer.as_bytes(), expected, "source length {length}");
+        }
+    }
+
+    #[test]
+    fn single_stream_dictionary_twelve_bit_codes_round_trip_every_present_symbol_at_the_end() {
+        let dictionary =
+            include_bytes!("../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols");
+        let (table, _) = HuffmanTable::read_dictionary(&dictionary[8..]).unwrap();
+        let codes = HuffmanCodebook::from_decoding_table(&table).unwrap();
+        assert_eq!(codes.table_log(), 12);
+        let present: Vec<_> = (0..=255)
+            .filter(|&symbol| codes.code(symbol).is_ok())
+            .collect();
+        let mut writer = BitWriter::new();
+        for &last in &present {
+            for prefix_length in 0..8 {
+                let mut source = present[..prefix_length].to_vec();
+                source.push(last);
+                codes.encode_stream(&source, &mut writer).unwrap();
+                let bits: usize = source
+                    .iter()
+                    .map(|&symbol| usize::from(codes.code(symbol).unwrap().bits))
+                    .sum();
+                assert_eq!(writer.as_bytes().len(), (bits + 1).div_ceil(8));
+                assert_eq!(
+                    table
+                        .decode_stream(writer.as_bytes(), source.len())
+                        .unwrap(),
+                    source,
+                    "last symbol {last}, prefix length {prefix_length}"
+                );
+            }
         }
     }
 
