@@ -1,0 +1,548 @@
+{
+  "schema": 1,
+  "scope": "FSE decoding allocation owner checkpoint; only src/fse.rs modified by this agent. No commits.",
+  "status": "passed",
+  "owned_file": "src/fse.rs",
+  "owned_file_sha256": "eb6530dc0b3629624af4abdb0f6f47230c720f0aef40ffea6d4b4aa6bfa06b2d",
+  "api": [
+    "FseTable<A: Allocator = Global>",
+    "from_normalized_in(counts, table_log, allocator)",
+    "read_in(data, max_symbol, max_log, allocator)",
+    "read_dictionary_in(data, max_symbol, max_log, allocator)",
+    "rle_in(symbol, allocator)",
+    "try_clone_in<B: Allocator>(&self, allocator: B) -> Result<FseTable<B>>",
+    "decode_weights_in<A: Allocator + Clone>(data, allocator) -> Result<Vec<u8,A>>"
+  ],
+  "tests_per_configuration": 21,
+  "test_configuration_count": 6,
+  "test_executions_passed": 126,
+  "miri_exact_tests_passed": 6,
+  "miri_flags": "-Zmiri-strict-provenance",
+  "no_std_compile_configurations": 2,
+  "strict_all_target_clippy_configurations": 2,
+  "format_check": "passed",
+  "fixture_counts": {
+    "normalized_count_headers": 512,
+    "huffman_descriptions_scanned": 30,
+    "fse_compressed_weight_payloads": 12,
+    "direct_weight_descriptions_without_FSE_payload": 18
+  },
+  "fixture_sha256": {
+    "tests/upstream/entropy-data/fse.bin": "5e1862eebf3e6f5e7d5184062672a761aba126f2b491718dd3b96aee8d5e910e",
+    "tests/upstream/entropy-data/huffman.bin": "3033e495f394e8ad3e23c3407c7c34d0b7d5e9e5f6f7b57da99ce3ac293def80"
+  },
+  "stages": [
+    {
+      "path": "/tmp/zstdoxide-module9-fse-results.json",
+      "sha256": "743f4f084eb5a984c3cd3380212a320b90bc28a0395f5e5219155c50374b6949",
+      "exit_code": 1,
+      "seconds": 16.253294333117083,
+      "log_path": "/tmp/zstdoxide-module9-fse.log",
+      "log_sha256": "b05e6847b5e7a138b730d24d4adfe35881272ecf5a10210bb109d9bd31101d91"
+    },
+    {
+      "path": "/tmp/zstdoxide-module9-fse-clippy-results.json",
+      "sha256": "df132bf84bedf4c249544815f518ec7567430d0c00703ba4dde4b833337fad87",
+      "exit_code": 0,
+      "seconds": 2.416699375025928,
+      "log_path": "/tmp/zstdoxide-module9-fse-clippy.log",
+      "log_sha256": "3cbfbe1a6b3056d510bdf429382604f0f84ade33dc7ffd7d7786313a228634a8"
+    },
+    {
+      "path": "/tmp/zstdoxide-module9-fse-miri-results.json",
+      "sha256": "a2b83902c9274f6a7ad74db3af8dca981af8d233a2a7407294c6472f22f731e0",
+      "exit_code": 0,
+      "seconds": 6.439195417100564,
+      "log_path": "/tmp/zstdoxide-module9-fse-miri.log",
+      "log_sha256": "c367b17c465631c4f51a643989b04a8b3a0aaf3b2efbd01539b7e7db8365427e"
+    }
+  ],
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 0.36741433292627335,
+      "log_path": "/tmp/zstdoxide-module9-fse-00-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_summaries": []
+    },
+    {
+      "name": "test-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "fse::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 1.767827209085226,
+      "log_path": "/tmp/zstdoxide-module9-fse-01-test-safe.log",
+      "log_sha256": "fc2ade447611ccbac2c45a4c3432cff5cc6ec87597bcd052b4b0f2be6b5dcb85",
+      "test_summaries": [
+        {
+          "passed": 21,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "test-unsafe-fse",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse",
+        "fse::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 2.544624000089243,
+      "log_path": "/tmp/zstdoxide-module9-fse-02-test-unsafe-fse.log",
+      "log_sha256": "06a294551e8b68e20a3c946d3d743f4a844150f05b07b9275062a3044cd9b9e6",
+      "test_summaries": [
+        {
+          "passed": 21,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "test-unsafe-bitstream",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-bitstream",
+        "fse::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 2.495456042001024,
+      "log_path": "/tmp/zstdoxide-module9-fse-03-test-unsafe-bitstream.log",
+      "log_sha256": "dcf3c86bfbd8387732eb359e200014223c1af138e62bc49507c5af54fb8498b3",
+      "test_summaries": [
+        {
+          "passed": 21,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "test-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "fse::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 2.5321007499005646,
+      "log_path": "/tmp/zstdoxide-module9-fse-04-test-all.log",
+      "log_sha256": "0d3d8c7042e384d3d0e896fa4a6c4c015b3c23c02b79c183c530cadd2c317c64",
+      "test_summaries": [
+        {
+          "passed": 21,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "test-no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "fse::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 2.4241462079808116,
+      "log_path": "/tmp/zstdoxide-module9-fse-05-test-no-std-safe.log",
+      "log_sha256": "f1bf260df7e29f9467dc03f1442c942d61c21d0f2f999a94b20fd2beaa955675",
+      "test_summaries": [
+        {
+          "passed": 21,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "test-no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "fse::tests"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 2.2612974161747843,
+      "log_path": "/tmp/zstdoxide-module9-fse-06-test-no-std-all.log",
+      "log_sha256": "201decf24c675fbfc937bb361dc1905437c196b475c49ffcbda1688a6603faec",
+      "test_summaries": [
+        {
+          "passed": 21,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "check-no-std-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--locked",
+        "--no-default-features"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 0.295223583932966,
+      "log_path": "/tmp/zstdoxide-module9-fse-07-check-no-std-safe.log",
+      "log_sha256": "eff36244fa6aaf283a8723d22742400dfe3873677ad52cb9dc2162282ecf6267",
+      "test_summaries": []
+    },
+    {
+      "name": "check-no-std-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 0.3056087498553097,
+      "log_path": "/tmp/zstdoxide-module9-fse-08-check-no-std-all.log",
+      "log_sha256": "736b9896a4e40b66f27cce23dc31720ef213eb464e1ce583714a768526229e98",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 101,
+      "seconds": 1.2427447082009166,
+      "log_path": "/tmp/zstdoxide-module9-fse-09-clippy-safe.log",
+      "log_sha256": "4d1b787d3ff0bbc058c798eaa68436ea6934f6b0c15bd3a993fa563050e1b5d9",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 1.7231577499769628,
+      "log_path": "/tmp/zstdoxide-module9-fse-clippy-00-clippy-safe.log",
+      "log_sha256": "c48bf6409227460d4372a721a1383a2159315c656c7d70d22e1a6965e957cf4c",
+      "test_summaries": []
+    },
+    {
+      "name": "clippy-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse"
+      },
+      "exit_code": 0,
+      "seconds": 0.6823182499501854,
+      "log_path": "/tmp/zstdoxide-module9-fse-clippy-01-clippy-all.log",
+      "log_sha256": "9f5ac6f5b3731234447b787f23bcc12a69881676fa5e66313c788ba60ef44570",
+      "test_summaries": []
+    },
+    {
+      "name": "miri-non_clone_allocator_is_owned_by_one_table_and_borrowed_by_weight_scratch",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse,unsafe-bitstream",
+        "fse::tests::non_clone_allocator_is_owned_by_one_table_and_borrowed_by_weight_scratch",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 2.336527124978602,
+      "log_path": "/tmp/zstdoxide-module9-fse-miri-00-miri-non_clone_allocator_is_owned_by_one_table_and_borrowed_by_weight_scratch.log",
+      "log_sha256": "8dc26649430c7b8fe992447ee8d2c735db35a768f3e60c03bbc6458760989146",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-weight_table_and_output_use_their_distinct_allocator_owners",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse,unsafe-bitstream",
+        "fse::tests::weight_table_and_output_use_their_distinct_allocator_owners",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 0.8785444579552859,
+      "log_path": "/tmp/zstdoxide-module9-fse-miri-01-miri-weight_table_and_output_use_their_distinct_allocator_owners.log",
+      "log_sha256": "87c89ef2ae9cd06485af451b656982d42379484164f65a658b63ad26abbcb759",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-either_weight_allocation_failure_releases_every_completed_owner",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse,unsafe-bitstream",
+        "fse::tests::either_weight_allocation_failure_releases_every_completed_owner",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 0.8169210420455784,
+      "log_path": "/tmp/zstdoxide-module9-fse-miri-02-miri-either_weight_allocation_failure_releases_every_completed_owner.log",
+      "log_sha256": "7dd18cdb5fa28f9d356f800dbfc9bbec375f3ea71bd718588eb4c9725d1ec67b",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-fallible_table_copy_keeps_each_allocation_with_its_original_owner",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse,unsafe-bitstream",
+        "fse::tests::fallible_table_copy_keeps_each_allocation_with_its_original_owner",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 0.7955885829869658,
+      "log_path": "/tmp/zstdoxide-module9-fse-miri-03-miri-fallible_table_copy_keeps_each_allocation_with_its_original_owner.log",
+      "log_sha256": "e25fc5100c17567f7e6076f48ab64d4c855724c4b356fed6a364d72988110288",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-failed_table_copy_preserves_source_storage_and_transitions",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse,unsafe-bitstream",
+        "fse::tests::failed_table_copy_preserves_source_storage_and_transitions",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 0.7980984579771757,
+      "log_path": "/tmp/zstdoxide-module9-fse-miri-04-miri-failed_table_copy_preserves_source_storage_and_transitions.log",
+      "log_sha256": "3eaf8bcb510501be022c97193485347402f0d95b318289702d949ed852cc8a6a",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    {
+      "name": "miri-custom_rle_construction_and_copy_never_allocate",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-fse,unsafe-bitstream",
+        "fse::tests::custom_rle_construction_and_copy_never_allocate",
+        "--",
+        "--exact"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "target/module9-fse-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "seconds": 0.7997058329638094,
+      "log_path": "/tmp/zstdoxide-module9-fse-miri-05-miri-custom_rle_construction_and_copy_never_allocate.log",
+      "log_sha256": "e564be5c11a1598e88a795e5fb168d030ee3dbc5c2d97c06fd5bfe95d2386401",
+      "test_summaries": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    }
+  ],
+  "transient_failure": {
+    "command": [
+      "cargo",
+      "+nightly-2026-10-08",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "log_path": "/tmp/zstdoxide-module9-fse-09-clippy-safe.log",
+    "log_sha256": "4d1b787d3ff0bbc058c798eaa68436ea6934f6b0c15bd3a993fa563050e1b5d9",
+    "reason": "Concurrent src/matchfinder.rs:37 same_item_push lint outside FSE ownership; coordinator corrected it. Both final strict Clippy commands then passed without changing src/fse.rs."
+  },
+  "limitations": [
+    "The non-test try_clone_in dead-code expectation is temporary until allocator-aware contexts consume validated table copies.",
+    "This is a leaf ownership checkpoint; it does not claim all codec allocations are migrated.",
+    "Concurrent source changes outside src/fse.rs are recorded in each stage manifest; the owned file hash remained identical across every final check."
+  ]
+}

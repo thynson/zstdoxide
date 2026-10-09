@@ -225,3 +225,9 @@ Completed leaf checkpoints retain the existing Global constructors and algorithm
   pushes; failed writes preserve the complete old state. The const Global
   forward-writer constructor remains for existing const contexts, while its
   generic runtime constructor awaits those contexts' migration.
+- `FseTable<A>` owns its decoding entries, with allocation-free inline RLE and
+  fallible `try_clone_in<B>` into a separately owned allocator domain. Table
+  construction/copy requires only Allocator. Weight decoding uses independent
+  table/output owners with Allocator + Clone; a borrowed non-Clone allocator
+  works without cloning the underlying value. Bounds and initialization proofs
+  remain identical across `unsafe-fse` and safe lookup.

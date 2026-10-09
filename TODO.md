@@ -33,7 +33,7 @@ compiler evidence is recorded separately. Do not claim a tested 1.100 build.
 - [x] Parameterize complete output history while preserving Global return ownership, overlap behavior, limits, and failed-growth state.
 - [x] Parameterize ring history and verify wrap, reserve-before-reset, window changes, and retained capacity.
 - [x] Parameterize forward/count bit writers with identical bits and reservation-failure guarantees.
-- [ ] Parameterize FSE decoding entries and weight scratch, including fallible table copies.
+- [x] Parameterize FSE decoding entries and weight scratch, including fallible table copies.
 - [ ] Parameterize inverse FSE tables, normalization, descriptions, and channel-selection temporaries.
 - [ ] Parameterize Huffman decoding, literal buffers, and paired-description validation storage.
 - [ ] Replace the Huffman builder's Global-only priority queue with checked allocator-compatible storage and preserve all tree/tie vectors.

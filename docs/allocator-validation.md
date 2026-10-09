@@ -143,6 +143,22 @@ The generic `BitWriter::new_in` has a narrow temporary dead-code expectation
 until allocator-aware contexts call it; its const Global constructor remains
 available to the existing const context constructors.
 
+`FseTable<A>` and FSE weight scratch now use the selected allocator. The
+[FSE evidence](evidence/2026-10-09-allocator-fse.json) records 21 focused tests
+in each of six configurations: safe, `unsafe-fse`, `unsafe-bitstream`, all
+features, no_std safe, and no_std with all unsafe backends (126 executions).
+Both no_std builds, formatting, both strict all-target Clippy configurations,
+and six exact strict-provenance Miri tests passed.
+
+The tests include all 512 saved count headers and all 12 FSE-compressed weight
+payloads among 30 Huffman descriptions. They exercise twelve-bit state widths,
+owned/borrowed non-Clone table owners, distinct allocator instances for scratch
+and returned weights, each of the two weight allocation failures, failed-copy
+source preservation, dictionary singleton copies, allocation-free RLE, and
+malformed-input cleanup. The existing Global wrappers preserve earlier callers;
+the generic copy helper has a narrow temporary unused-code expectation until
+allocator-aware contexts consume it.
+
 The owner-by-owner implementation and failure-injection results will be added
 as their focused checks complete. Whole-codec custom allocation, 32-bit and
 big-endian execution, and no-pointer-atomics compilation remain open. The

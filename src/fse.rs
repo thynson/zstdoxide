@@ -3,7 +3,8 @@
 //! Wire constants and table construction follow facebook/zstd v1.5.7,
 //! `lib/common/entropy_common.c` and `lib/common/fse_decompress.c`.
 
-use alloc::vec::Vec;
+use alloc::{alloc::Global, vec::Vec};
+use core::alloc::Allocator;
 
 use crate::bitstream::ReverseBits;
 use crate::{Error, Result};
@@ -18,13 +19,35 @@ pub(crate) struct FseEntry {
 
 /// An owned transition table, or one inline RLE transition without allocation.
 #[derive(Debug)]
-pub(crate) struct FseTable {
-    entries: Vec<FseEntry>,
+pub(crate) struct FseTable<A: Allocator = Global> {
+    entries: Vec<FseEntry, A>,
     repeated: Option<FseEntry>,
     table_log: u8,
 }
 
-impl FseTable {
+impl FseTable<Global> {
+    pub(crate) fn from_normalized(counts: &[i16], table_log: u8) -> Result<Self> {
+        Self::from_normalized_in(counts, table_log, Global)
+    }
+
+    pub(crate) fn read(data: &[u8], max_symbol: usize, max_log: u8) -> Result<(Self, usize)> {
+        Self::read_in(data, max_symbol, max_log, Global)
+    }
+
+    pub(crate) fn read_dictionary(
+        data: &[u8],
+        max_symbol: usize,
+        max_log: u8,
+    ) -> Result<(Self, usize)> {
+        Self::read_dictionary_in(data, max_symbol, max_log, Global)
+    }
+
+    pub(crate) fn rle(symbol: u8) -> Self {
+        Self::rle_in(symbol, Global)
+    }
+}
+
+impl<A: Allocator> FseTable<A> {
     pub(crate) fn retained_capacity(&self) -> usize {
         self.entries.capacity() * core::mem::size_of::<FseEntry>()
     }
@@ -32,14 +55,19 @@ impl FseTable {
     /// Build a decoding table from a validated normalized distribution.
     ///
     /// Corresponds to upstream `FSE_buildDTable_internal`.
-    pub(crate) fn from_normalized(counts: &[i16], table_log: u8) -> Result<Self> {
-        Self::build_normalized(counts, table_log, false)
+    pub(crate) fn from_normalized_in(counts: &[i16], table_log: u8, allocator: A) -> Result<Self> {
+        Self::build_normalized_in(counts, table_log, false, allocator)
     }
 
     /// Build prepared dictionary transitions, which may have one symbol while
     /// retaining a nonzero state width. Ordinary weights/sequence constructors
     /// retain their existing multi-symbol validation boundary.
-    fn build_normalized(counts: &[i16], table_log: u8, dictionary: bool) -> Result<Self> {
+    fn build_normalized_in(
+        counts: &[i16],
+        table_log: u8,
+        dictionary: bool,
+        allocator: A,
+    ) -> Result<Self> {
         if !(5..=12).contains(&table_log) || counts.is_empty() || counts.len() > 256 {
             return Err(Error::CorruptData);
         }
@@ -56,11 +84,15 @@ impl FseTable {
         if total != table_size || present == 0 || (present == 1 && !dictionary) {
             return Err(Error::CorruptData);
         }
-        let mut entries = Vec::new();
+        let mut entries = Vec::new_in(allocator);
         entries
             .try_reserve_exact(table_size)
             .map_err(|_| Error::AllocationFailed)?;
-        entries.resize(table_size, FseEntry::default());
+        // Each push stays within the successfully reserved capacity. Unlike a
+        // bulk resize, this initialization cannot request another allocation.
+        for _ in 0..table_size {
+            entries.push(FseEntry::default());
+        }
         let mut next_states = [0_u16; 256];
         let mut low_probability_start = table_size;
         for (symbol, &count) in counts.iter().enumerate() {
@@ -109,28 +141,43 @@ impl FseTable {
     /// Read a normalized-count header and return its rounded-up byte length.
     ///
     /// `max_symbol` is inclusive. Corresponds to upstream `FSE_readNCount`.
-    pub(crate) fn read(data: &[u8], max_symbol: usize, max_log: u8) -> Result<(Self, usize)> {
+    pub(crate) fn read_in(
+        data: &[u8],
+        max_symbol: usize,
+        max_log: u8,
+        allocator: A,
+    ) -> Result<(Self, usize)> {
         let parsed = read_normalized_counts(data, max_symbol, max_log)?;
-        let table = Self::from_normalized(&parsed.counts[..parsed.symbols], parsed.table_log)?;
+        let table = Self::from_normalized_in(
+            &parsed.counts[..parsed.symbols],
+            parsed.table_log,
+            allocator,
+        )?;
         Ok((table, parsed.bytes_read))
     }
 
     /// Read a formatted dictionary distribution, including a single-symbol
     /// table with its original state width. Corresponds to `ZSTD_loadDEntropy`.
-    pub(crate) fn read_dictionary(
+    pub(crate) fn read_dictionary_in(
         data: &[u8],
         max_symbol: usize,
         max_log: u8,
+        allocator: A,
     ) -> Result<(Self, usize)> {
         let parsed = read_normalized_counts(data, max_symbol, max_log)?;
-        let table =
-            Self::build_normalized(&parsed.counts[..parsed.symbols], parsed.table_log, true)?;
+        let table = Self::build_normalized_in(
+            &parsed.counts[..parsed.symbols],
+            parsed.table_log,
+            true,
+            allocator,
+        )?;
         Ok((table, parsed.bytes_read))
     }
 
-    pub(crate) fn rle(symbol: u8) -> Self {
+    /// Keep the allocator with the owner without allocating an RLE payload.
+    pub(crate) fn rle_in(symbol: u8, allocator: A) -> Self {
         Self {
-            entries: Vec::new(),
+            entries: Vec::new_in(allocator),
             repeated: Some(FseEntry {
                 symbol,
                 bits: 0,
@@ -138,6 +185,35 @@ impl FseTable {
             }),
             table_log: 0,
         }
+    }
+
+    /// Copy validated transitions into fresh storage owned by `allocator`.
+    ///
+    /// The source and its allocator remain unchanged on success or failure.
+    /// Neither allocator needs to be Clone or equivalent to the other. Inline
+    /// RLE copies remain allocation-free and preserve their zero-width state.
+    #[cfg_attr(
+        not(test),
+        expect(
+            dead_code,
+            reason = "Allocator-aware contexts adopt table copies in a later checkpoint"
+        )
+    )]
+    pub(crate) fn try_clone_in<B: Allocator>(&self, allocator: B) -> Result<FseTable<B>> {
+        let mut entries = Vec::new_in(allocator);
+        entries
+            .try_reserve_exact(self.entries.len())
+            .map_err(|_| Error::AllocationFailed)?;
+        // The exact length was reserved before any initialized entry is copied;
+        // each Copy push stays within that capacity and cannot allocate again.
+        for &entry in &self.entries {
+            entries.push(entry);
+        }
+        Ok(FseTable {
+            entries,
+            repeated: self.repeated,
+            table_log: self.table_log,
+        })
     }
 
     pub(crate) fn table_log(&self) -> u8 {
@@ -159,9 +235,10 @@ impl FseTable {
         let entry = self.entries[state];
         #[cfg(feature = "unsafe-fse")]
         // SAFETY: the runtime check above proves `state < entries.len()`.
-        // Every entry was initialized during construction, the Vec owns its
-        // properly aligned allocation for this borrow, and copying an entry
-        // through a shared reference neither mutates nor extends its lifetime.
+        // Every entry was initialized during construction. The Vec retains
+        // its allocator and properly aligned allocation for this borrow;
+        // copying through a shared reference neither mutates nor extends its
+        // lifetime, and no allocator or entry is accessed through another owner.
         let entry = unsafe { *self.entries.get_unchecked(state) };
         Ok(entry)
     }
@@ -286,14 +363,25 @@ impl ForwardBits<'_> {
 /// stream has its own termination rule: after emitting a symbol whose state
 /// update would exceed the bitstream, emit the other state's final symbol.
 pub(crate) fn decode_weights(data: &[u8]) -> Result<Vec<u8>> {
-    let (table, header_size) = FseTable::read(data, 255, 6)?;
+    decode_weights_in(data, Global)
+}
+
+/// Decode weights with both scratch-table and output storage in the selected
+/// allocator family. The clone allocates its own table; it never receives an
+/// allocation owned by the original allocator. Borrowing a non-Clone allocator
+/// also works because a shared reference is Clone and retains its identity.
+pub(crate) fn decode_weights_in<A: Allocator + Clone>(
+    data: &[u8],
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    let (table, header_size) = FseTable::read_in(data, 255, 6, allocator.clone())?;
     let mut bits = ReverseBits::new(data.get(header_size..).ok_or(Error::UnexpectedEof)?)?;
     // Both initial states must be completely present, even for a terminal pair.
     let mut states = [
         bits.read_bits(table.table_log())? as usize,
         bits.read_bits(table.table_log())? as usize,
     ];
-    let mut weights = Vec::new();
+    let mut weights = Vec::new_in(allocator);
     weights
         .try_reserve_exact(255)
         .map_err(|_| Error::AllocationFailed)?;
@@ -319,6 +407,395 @@ pub(crate) fn decode_weights(data: &[u8]) -> Result<Vec<u8>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+
+    fn allocator() -> TrackingAllocator {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 4,
+            fail_at: None,
+        })
+        .unwrap()
+    }
+
+    fn assert_same_table<A: Allocator, B: Allocator>(left: &FseTable<A>, right: &FseTable<B>) {
+        assert_eq!(left.table_log(), right.table_log());
+        assert_eq!(left.repeated, right.repeated);
+        assert_eq!(left.entries.len(), right.entries.len());
+        for state in 0..1 << left.table_log() {
+            assert_eq!(left.entry(state), right.entry(state), "state {state}");
+        }
+        for state in [1 << left.table_log(), usize::MAX] {
+            assert_eq!(left.entry(state), Err(Error::CorruptData));
+            assert_eq!(right.entry(state), Err(Error::CorruptData));
+        }
+    }
+
+    struct FixtureBytes<'a>(&'a [u8]);
+
+    impl<'a> FixtureBytes<'a> {
+        fn take(&mut self, count: usize) -> &'a [u8] {
+            let (bytes, rest) = self.0.split_at(count);
+            self.0 = rest;
+            bytes
+        }
+
+        fn number(&mut self) -> usize {
+            u32::from_le_bytes(self.take(4).try_into().unwrap()) as usize
+        }
+    }
+
+    #[test]
+    fn custom_tables_match_global_transitions_at_every_state_width() {
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        for table_log in 5..=12 {
+            let size = 1_i16 << table_log;
+            for counts in [
+                &[size / 2, size / 2][..],
+                &[size - 2, -1, -1][..],
+                &[0, size / 4, -1, size / 2, size / 4 - 1][..],
+            ] {
+                let global = FseTable::from_normalized(counts, table_log).unwrap();
+                let custom = FseTable::from_normalized_in(counts, table_log, &allocator).unwrap();
+                assert_same_table(&global, &custom);
+                assert_eq!(
+                    custom.retained_capacity(),
+                    (1 << table_log) * core::mem::size_of::<FseEntry>()
+                );
+                drop(custom);
+                monitor.assert_released();
+            }
+        }
+        for counts in [&[-1; 32][..], &[0, 5, -1, 17, 9][..]] {
+            let global = FseTable::from_normalized(counts, 5).unwrap();
+            let custom = FseTable::from_normalized_in(counts, 5, &allocator).unwrap();
+            assert_same_table(&global, &custom);
+        }
+        assert_eq!(monitor.snapshot().attempts, 26);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        assert_eq!(monitor.snapshot().grow_calls, 0);
+        drop(allocator);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn all_official_count_headers_match_with_a_custom_allocator() {
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        let mut fixture = FixtureBytes(include_bytes!("../tests/upstream/entropy-data/fse.bin"));
+        assert_eq!(fixture.take(8), b"ZFSE0001");
+        assert_eq!(fixture.number(), 512);
+        for _ in 0..512 {
+            let table_log = fixture.take(1)[0];
+            let maximum = usize::from(fixture.take(1)[0]);
+            let size = usize::from(u16::from_le_bytes(fixture.take(2).try_into().unwrap()));
+            let mut counts = [0_i16; 256];
+            for count in &mut counts[..=maximum] {
+                *count = i16::from_le_bytes(fixture.take(2).try_into().unwrap());
+            }
+            let header = fixture.take(size);
+            let (global, consumed) = FseTable::read_dictionary(header, maximum, table_log).unwrap();
+            let (custom, custom_consumed) =
+                FseTable::read_dictionary_in(header, maximum, table_log, &allocator).unwrap();
+            assert_eq!(consumed, size);
+            assert_eq!(custom_consumed, consumed);
+            assert_same_table(&global, &custom);
+            if counts.iter().filter(|&&count| count != 0).count() >= 2 {
+                let (ordinary, consumed) =
+                    FseTable::read_in(header, maximum, table_log, &allocator).unwrap();
+                let built =
+                    FseTable::from_normalized_in(&counts[..=maximum], table_log, &allocator)
+                        .unwrap();
+                assert_eq!(consumed, size);
+                assert_same_table(&ordinary, &custom);
+                assert_same_table(&built, &custom);
+            } else {
+                assert_eq!(
+                    FseTable::read_in(header, maximum, table_log, &allocator).err(),
+                    Some(Error::CorruptData)
+                );
+            }
+            drop(custom);
+            monitor.assert_released();
+        }
+        assert!(fixture.0.is_empty());
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        assert_eq!(monitor.snapshot().grow_calls, 0);
+        drop(allocator);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn non_clone_allocator_is_owned_by_one_table_and_borrowed_by_weight_scratch() {
+        let owned = allocator().into_non_clone();
+        let owned_monitor = owned.monitor();
+        let identity = owned.identity();
+        let table = FseTable::from_normalized_in(&[16, 16], 5, owned).unwrap();
+        assert_eq!(table.entries.allocator().identity(), identity);
+        assert_same_table(&table, &FseTable::from_normalized(&[16, 16], 5).unwrap());
+        assert_eq!(owned_monitor.snapshot().live_blocks, 1);
+        drop(table);
+        assert_eq!(owned_monitor.snapshot().identities_created, 1);
+        assert_eq!(owned_monitor.snapshot().owners_dropped, 1);
+        owned_monitor.assert_released();
+
+        let borrowed = allocator().into_non_clone();
+        let monitor = borrowed.monitor();
+        let weights = decode_weights_in(&[0x10, 0x3f, 12, 16], &borrowed).unwrap();
+        assert_eq!(weights.as_slice(), [0, 1, 0, 0]);
+        assert_eq!(weights.allocator().identity(), borrowed.identity());
+        assert_eq!(monitor.snapshot().attempts, 2);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        drop(weights);
+        monitor.assert_released();
+        drop(borrowed);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn weight_table_and_output_use_their_distinct_allocator_owners() {
+        let allocator = allocator();
+        let monitor = allocator.monitor();
+        let original_identity = allocator.identity();
+        let weights = decode_weights_in(&[0x10, 0x3f, 3, 4], allocator).unwrap();
+        assert_eq!(weights.as_slice(), [0, 1]);
+        assert_eq!(weights.allocator().identity(), original_identity);
+        let snapshot = monitor.snapshot();
+        assert_eq!(snapshot.identities_created, 2);
+        assert_eq!(snapshot.owners_dropped, 1);
+        assert_eq!(snapshot.attempts, 2);
+        assert_eq!(snapshot.successes, 2);
+        assert_eq!(snapshot.peak_live_blocks, 2);
+        assert_eq!(snapshot.live_blocks, 1);
+        assert_eq!(snapshot.deallocate_calls, 1);
+        assert_eq!(
+            snapshot.requested_bytes,
+            (32 * core::mem::size_of::<FseEntry>() + 255) as u128
+        );
+        assert_eq!(snapshot.grow_calls, 0);
+        assert!(!snapshot.violations.any());
+        drop(weights);
+        assert_eq!(monitor.snapshot().owners_dropped, 2);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn either_weight_allocation_failure_releases_every_completed_owner() {
+        for ordinal in 1..=2 {
+            let allocator = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 4,
+                fail_at: NonZeroU64::new(ordinal),
+            })
+            .unwrap();
+            let monitor = allocator.monitor();
+            assert_eq!(
+                decode_weights_in(&[0x10, 0x3f, 3, 4], allocator).err(),
+                Some(Error::AllocationFailed)
+            );
+            let snapshot = monitor.snapshot();
+            assert_eq!(snapshot.attempts, ordinal);
+            assert_eq!(snapshot.failures, 1);
+            assert_eq!(snapshot.successes, ordinal - 1);
+            assert_eq!(snapshot.deallocate_calls, ordinal - 1);
+            assert_eq!(snapshot.identities_created, 2);
+            assert_eq!(snapshot.owners_dropped, 2);
+            monitor.assert_released();
+        }
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        assert!(monitor.fail_next());
+        assert_eq!(
+            FseTable::from_normalized_in(&[16, 16], 5, allocator).err(),
+            Some(Error::AllocationFailed)
+        );
+        assert_eq!(monitor.snapshot().attempts, 1);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn fallible_table_copy_keeps_each_allocation_with_its_original_owner() {
+        let first = allocator();
+        let monitor = first.monitor();
+        let second = first.clone().into_non_clone();
+        assert_ne!(first.identity(), second.identity());
+        let original = FseTable::from_normalized_in(&[30, -1, -1], 5, first).unwrap();
+        let copied = original.try_clone_in(second).unwrap();
+        assert_ne!(original.entries.as_ptr(), copied.entries.as_ptr());
+        assert_ne!(
+            original.entries.allocator().identity(),
+            copied.entries.allocator().identity()
+        );
+        assert_same_table(&original, &copied);
+        assert_eq!(monitor.snapshot().live_blocks, 2);
+        drop(original);
+        assert_same_table(
+            &copied,
+            &FseTable::from_normalized(&[30, -1, -1], 5).unwrap(),
+        );
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        drop(copied);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 2);
+
+        let custom = allocator().into_non_clone();
+        let monitor = custom.monitor();
+        let (singleton, _) = FseTable::read_dictionary(&[0xf0, 0x03], 255, 12).unwrap();
+        let copied = singleton.try_clone_in(custom).unwrap();
+        assert_same_table(&singleton, &copied);
+        assert_eq!(copied.table_log(), 5);
+        drop(copied);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn failed_table_copy_preserves_source_storage_and_transitions() {
+        let allocator = allocator();
+        let monitor = allocator.monitor();
+        let destination = allocator.clone();
+        let source = FseTable::from_normalized_in(&[0, 5, -1, 17, 9], 5, allocator).unwrap();
+        let pointer = source.entries.as_ptr();
+        let capacity = source.retained_capacity();
+        assert!(monitor.fail_next());
+        assert_eq!(
+            source.try_clone_in(destination).err(),
+            Some(Error::AllocationFailed)
+        );
+        assert_eq!(source.entries.as_ptr(), pointer);
+        assert_eq!(source.retained_capacity(), capacity);
+        assert_same_table(
+            &source,
+            &FseTable::from_normalized(&[0, 5, -1, 17, 9], 5).unwrap(),
+        );
+        assert_eq!(monitor.snapshot().attempts, 2);
+        assert_eq!(monitor.snapshot().failures, 1);
+        assert_eq!(monitor.snapshot().live_blocks, 1);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+        drop(source);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn custom_rle_construction_and_copy_never_allocate() {
+        let allocator = allocator();
+        let monitor = allocator.monitor();
+        let destination = allocator.clone().into_non_clone();
+        assert!(monitor.fail_next());
+        let original = FseTable::rle_in(255, allocator.into_non_clone());
+        let copied = original.try_clone_in(destination).unwrap();
+        assert_same_table(&original, &copied);
+        assert_same_table(&original, &FseTable::rle(255));
+        assert_eq!(copied.retained_capacity(), 0);
+        assert_eq!(monitor.snapshot().allocate_calls, 0);
+        assert_eq!(monitor.snapshot().attempts, 0);
+        drop(original);
+        drop(copied);
+        assert_eq!(monitor.snapshot().owners_dropped, 2);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn malformed_custom_table_inputs_do_not_allocate() {
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        assert!(monitor.fail_next());
+        for (counts, log) in [
+            (&[32][..], 5),
+            (&[17, 16][..], 5),
+            (&[-2, 30][..], 5),
+            (&[16, 16][..], 4),
+            (&[][..], 5),
+        ] {
+            assert_eq!(
+                FseTable::from_normalized_in(counts, log, &allocator).err(),
+                FseTable::from_normalized(counts, log).err()
+            );
+        }
+        for (data, maximum, log) in [
+            (&[][..], 255, 6),
+            (&[0x10][..], 1, 5),
+            (&[0x10, 0x3f][..], 0, 5),
+            (&[0x0f][..], 255, 6),
+            (&[0xf0, 0x03][..], 255, 12),
+        ] {
+            assert_eq!(
+                FseTable::read_in(data, maximum, log, &allocator).err(),
+                FseTable::read(data, maximum, log).err()
+            );
+        }
+        assert_eq!(
+            FseTable::read_dictionary_in(&[0xf0], 255, 12, &allocator).err(),
+            FseTable::read_dictionary(&[0xf0], 255, 12).err()
+        );
+        assert_eq!(monitor.snapshot().attempts, 0);
+        drop(allocator);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn malformed_custom_weight_streams_release_scratch_and_output() {
+        let mut too_many = [0; 36];
+        too_many[..2].copy_from_slice(&[0x10, 0x3f]);
+        too_many[35] = 1;
+        for input in [
+            &[0x10, 0x3f][..],
+            &[0x10, 0x3f, 0][..],
+            &[0x10, 0x3f, 1][..],
+            &[0x10, 0x3f, 0, 1][..],
+            &too_many,
+        ] {
+            let allocator = allocator();
+            let monitor = allocator.monitor();
+            assert_eq!(
+                decode_weights_in(input, allocator).err(),
+                decode_weights(input).err()
+            );
+            assert!((1..=2).contains(&monitor.snapshot().attempts));
+            assert_eq!(monitor.snapshot().identities_created, 2);
+            assert_eq!(monitor.snapshot().owners_dropped, 2);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn official_huffman_weight_payloads_match_with_custom_scratch() {
+        let allocator = allocator().into_non_clone();
+        let monitor = allocator.monitor();
+        let mut fixture =
+            FixtureBytes(include_bytes!("../tests/upstream/entropy-data/huffman.bin"));
+        assert_eq!(fixture.take(8), b"ZHUF0001");
+        assert_eq!(fixture.number(), 30);
+        let mut compressed = 0;
+        for _ in 0..30 {
+            let source_size = fixture.number();
+            let description_size = fixture.number();
+            let single_size = fixture.number();
+            let four_size = fixture.number();
+            fixture.take(source_size);
+            let description = fixture.take(description_size);
+            fixture.take(single_size);
+            fixture.take(four_size);
+            // Direct weight descriptions contain no FSE table or weight stream.
+            if description[0] < 128 {
+                assert_eq!(description.len(), usize::from(description[0]) + 1);
+                let global = decode_weights(&description[1..]).unwrap();
+                let custom = decode_weights_in(&description[1..], &allocator).unwrap();
+                assert_eq!(custom.as_slice(), global);
+                drop(custom);
+                monitor.assert_released();
+                compressed += 1;
+            }
+        }
+        assert!(fixture.0.is_empty());
+        assert_eq!(compressed, 12);
+        assert_eq!(monitor.snapshot().attempts, compressed * 2);
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        drop(allocator);
+        monitor.assert_released();
+    }
 
     #[test]
     fn normalized_metadata_preserves_single_symbol_and_consumed_size() {
