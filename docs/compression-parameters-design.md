@@ -37,12 +37,15 @@ definitions are `lib/zstd.h:322-415`,
 `lib/compress/zstd_compress_internal.h:373`, and
 `lib/compress/zstd_compress.c:1623-1650`.
 
-The present Rust `Greedy` probes one four-byte hash candidate. `Chain` examines
+At the Module 10 design checkpoint, Rust `Greedy` probes one four-byte hash candidate. `Chain` examines
 eight candidates, and `Lazy` examines sixteen at current/next positions. Heads,
 node limits, key width, and history retention are fixed; seeds/history are
 rebuilt for each block. These names are not aliases for the reference's nine
 strategies. Exposing reference hash/search/chain parameters without changing
 their consumers would create ineffective controls.
+
+Module 11 subsequently made those named-policy dimensions and efforts
+operationally configurable; see [match-search design](match-search-design.md).
 
 ## Value records and ownership
 

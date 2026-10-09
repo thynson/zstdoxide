@@ -46,6 +46,7 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 - [x] Port supported live search/reset/dictionary-order assertions from relevant official groups, retaining explicit numeric-level and attachment gaps.
 - [x] Define deterministic benchmark profiles, work schedules, ownership accounting and separate harness/measurement checkpoints.
 - [x] Add a clock-free validated benchmark harness for identical default/tuned workloads, explicit capacity/allocation accounting and complete backend comparisons.
+- [x] Reconcile public strategy and dictionary documentation with configurable search defaults and existing prepared-entropy reuse.
 - [ ] Validate bounds, owners, feature combinations, no_std and target layouts; update relevant official coverage without claiming new reference strategies.
 - [ ] Measure the frozen default/tuned benchmark matrix across safe, individual unsafe and all-feature builds; record ratios, sample ranges, allocation and retained-capacity effects.
 

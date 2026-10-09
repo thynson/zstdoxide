@@ -22,8 +22,8 @@ struct ParsePolicy {
 /// Parse one block with longest-match selection and deterministic distance ties.
 ///
 /// Fulfills the bounded chain-search role of `ZSTD_HcFindBestMatch`, with this
-/// implementation's own policy. The named chain strategy supplies eight visits;
-/// this foundation accepts zero through sixty-four. The caller seeds dictionary
+/// implementation's own policy. The named chain strategy defaults to eight
+/// visits; this helper accepts zero through sixty-four. The caller seeds dictionary
 /// and retained-output positions before calling; this function never resets the
 /// chain or owns any source bytes beyond its literal output.
 ///

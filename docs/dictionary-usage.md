@@ -72,9 +72,12 @@ for caller-buffer, progress, Flush/Finish and EOF contracts.
 
 Dictionary content does not count toward output or checksum limits. Decoder
 window limits still apply to advertised frame history. The retained encoder
-search horizon is currently at most 128 KiB of prior output, while dictionary
-content is kept separately. Prepared encoder entropy reuse and compression-level
-selection remain later improvements. Context capacity accounting includes the
+search horizon is configurable up to 1 MiB of prior output, defaults to 128 KiB,
+and is also bounded by the advertised frame window; dictionary content is kept
+separately. Prepared dictionaries supply initial Huffman and sequence entropy
+tables to the encoder. Operational numeric compression levels remain unsupported.
+See [search configuration](match-search-usage.md) for the live controls.
+Context capacity accounting includes the
 shared dictionary allocation once per context; summing multiple contexts may
 count the same shared object more than once.
 
