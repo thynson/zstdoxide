@@ -365,6 +365,18 @@ external corpora. Case counts are 53 ported, 117 partial, 430 blocked and
 15 non-applicable. The complete Module 10 feature matrix is the remaining
 validation checkpoint.
 
+Module 10 is now complete within that scalar/lifecycle scope. Its immutable
+`0111aef` snapshot passes fifteen full suites, each with 759 tests passed and
+52 explicitly ignored, plus fourteen no_std configurations, strict Clippy,
+formatting and sixteen usage examples in safe/all builds. Pinned C decodes
+sixty complete lifecycle frames; both independent parameter probes and all
+934 fixture rows agree with their classified outcomes. All 677 snapshot files
+and external oracle inputs remain unchanged. Independent post-verification
+checks every log hash and excludes zero-test selector success. The separate
+complete-migration gate still reports 188 unfinished source units; numerical
+encoder execution and the remaining official migration are not claimed.
+See [final parameter validation](compression-parameters-validation.md).
+
 ## Module 11: design and pre-change compatibility inputs
 
 While the immutable Module 10 matrix runs, the next module's ownership and

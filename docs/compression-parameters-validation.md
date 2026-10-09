@@ -1,8 +1,9 @@
 # Parameter and encoder lifecycle validation
 
-Module 10 is in progress. Each checkpoint below identifies its implementation
-and evidence boundaries; the complete feature/width matrix and official test
-migration update remain pending.
+Module 10 is complete within its documented scalar-inspection and supported
+encoder-lifecycle scope. Each historical checkpoint below identifies its own
+implementation and evidence boundaries. The final immutable matrix and precise
+remaining upstream migration gaps are recorded at the end of this report.
 
 ## Frozen reference observations
 
@@ -258,3 +259,38 @@ rerun and historical measurements retain their original source hashes.
 [Repair evidence](evidence/2026-10-09-benchmark-format-repair.json) preserves the
 initial failed matrix record, full formatting diagnostic and focused repair
 checks. The complete matrix restarts from the subsequent committed snapshot.
+
+## Final immutable Module 10 matrix
+
+The completed matrix executes committed `0111aef` from an isolated Git archive,
+with all 677 archived files unchanged before, during and after its 45 commands.
+Concurrent Module 11 work is outside this snapshot. The pinned compiler is
+Rust 1.101.0-nightly (`1d81eb4ad`, toolchain `nightly-2026-10-08`) on Apple
+AArch64. This is not a stable-toolchain or native foreign-platform claim.
+
+| Validation | Result |
+| --- | --- |
+| Safe, twelve individual unsafe flags, all-feature debug and all-feature release | 759 passed, zero failed and 52 explicitly ignored in each of fifteen full suites |
+| Full-suite aggregate | 11,385 passing executions; 780 ignored executions |
+| no_std library compilation | Fourteen configurations passed |
+| Strict all-target Clippy and runnable usage examples | Safe/all passed; sixteen examples per build |
+| Supported lifecycle C oracle | Thirty complete frames per safe/all build; sixty total and 6,144,000 decoded bytes |
+| Independent parameter review probe | Forty-six rows per safe/all build: 41 exact profiles and five deliberate reserved/overflow errors |
+| Pinned parameter fixture reproduction | All 934 recorded rows reproduced |
+| Snapshot fixture and pinned inventory audits | 319 files in nine collections; all source hashes and anchors valid |
+| Complete upstream migration gate | Expected failure: 188 unfinished source units and partial external corpora |
+
+Every focused oracle selector executed exactly one test, with no zero-test
+success. An independent post-run check validates all log hashes, positive test
+counts, consistent full-suite totals and both thirty-frame lifecycle messages.
+The CLI and independent review TSV hashes remain unchanged. Full commands,
+logs, source manifests, execution plan and both verification programs are kept
+in [final matrix evidence](evidence/2026-10-09-parameter-final-matrix.json).
+
+The module completes reference profile inspection, checked supported live option
+replacement, parameter-only/full resets, source-anchored scalar/lifecycle
+adaptations and platform qualifications. It does not implement numerical
+reference compression strategies or complete the full upstream migration.
+Case counts remain 53 ported, 117 partial, 430 blocked and 15 non-applicable.
+The 52 ignored tests are not silently treated as successes. Later Module 11
+fixtures and code have separate evidence and are not covered by this snapshot.

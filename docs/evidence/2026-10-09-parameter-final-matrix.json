@@ -1,0 +1,91 @@
+{
+  "purpose": "Final immutable Module 10 validation, isolated from subsequent Module 11 work.",
+  "codec_revision": "0111aef8a862e36d8b4a812ee1c9a31032ee3fef",
+  "tracked_files": 677,
+  "source_archive_sha256": "305fe9b480cbfac8feb174f9b80c2cbfa0fc8f31bb06a8b6f83968896be9ce66",
+  "environment": {
+    "CARGO_TARGET_DIR": "/tmp/zstdoxide-module10-final-0111aef/target",
+    "RUSTUP_TOOLCHAIN": "nightly-2026-10-08",
+    "CARGO_TERM_COLOR": "never",
+    "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+    "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+    "ZSTDOXIDE_PARAMETER_REVIEW_PROBE": "/tmp/zstdoxide-parameter-review-probe.tsv"
+  },
+  "external_input_hashes": {
+    "/tmp/zstdoxize-upstream-1.5.7/programs/zstd": "eb20e7f4cb5c93836d7b1a8508dad08d1ced73762ca8f8abb9d8dc1e5df7b5b2",
+    "/tmp/zstdoxide-parameter-review-probe.tsv": "1daaa8df582812c61035873d325b1af347c69cbafd5ae93869a770dbd0a5c671"
+  },
+  "commands": 45,
+  "expected_results": {
+    "successful_checks": 44,
+    "known_incomplete_migration_gate": {
+      "exit_code": 1,
+      "unfinished_source_units": 188,
+      "partial_external_corpora": 2
+    }
+  },
+  "full_suites": {
+    "configurations": 15,
+    "coverage": "safe, twelve individual unsafe features, all features debug and all features release",
+    "per_configuration": {
+      "passed": 759,
+      "failed": 0,
+      "ignored": 52,
+      "measured": 0,
+      "filtered_out": 0
+    },
+    "aggregate": {
+      "passed": 11385,
+      "failed": 0,
+      "ignored": 780
+    }
+  },
+  "other_validation": {
+    "no_std_library_configurations": 14,
+    "strict_all_target_clippy_configurations": 2,
+    "usage_examples_per_configuration": 16,
+    "usage_configurations": 2,
+    "focused_oracle_tests": 4,
+    "lifecycle_complete_frames": 60,
+    "lifecycle_decoded_bytes": 6144000,
+    "independent_parameter_probe_rows_per_configuration": 46,
+    "probe_configurations": 2,
+    "probe_exact_profiles_per_configuration": 41,
+    "probe_explicit_reserved_or_overflow_rejections_per_configuration": 5,
+    "parameter_fixture_rows": 934,
+    "offline_fixture_files": 319,
+    "offline_fixture_collections": 9
+  },
+  "migration": {
+    "sources": {
+      "ported": 14,
+      "partial": 34,
+      "blocked": 149,
+      "planned": 5,
+      "non_applicable": 216
+    },
+    "cases": {
+      "ported": 53,
+      "partial": 117,
+      "blocked": 430,
+      "non_applicable": 15
+    }
+  },
+  "integrity": {
+    "sources_unchanged": true,
+    "external_inputs_unchanged": true,
+    "independent_post_verification": "Every log hash, positive test count and exact focused oracle selection checked; both lifecycle logs confirm 30 complete frames each.",
+    "original_evidence_sha256": "42f9a36fb17c49407ad242b55be60397f8b866a5838f57757cfb38f73164582f"
+  },
+  "archive": {
+    "path": "docs/evidence/2026-10-09-parameter-final-matrix.tar.gz",
+    "sha256": "a3625c226f586f07b78d68d92da62e3cc3c1ca6d7253de120308db667b0fac43",
+    "files": 52
+  },
+  "limits": [
+    "Validation applies to immutable0111aef, not subsequent Module11 code or newly added fixture collections.",
+    "52 tests per full suite remain explicitly ignored; four focused oracle executions are selected separately, not a claim that all ignored assertions passed.",
+    "Pure reference profiles do not enable numeric encoding strategies. The complete upstream migration gate remains intentionally failing.",
+    "No new unsafe storage family or performance claim in Module10; previous benchmark evidence retains original source hashes."
+  ]
+}
