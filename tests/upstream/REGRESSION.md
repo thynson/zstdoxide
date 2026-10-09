@@ -105,6 +105,29 @@ rejection, and explicit symlink rejection on Unix.
 
 ## Recorded complete data run
 
+The Module 8 named-strategy replay on 2026-10-09 processed the same complete
+512-file, 12,407,963-byte selection under safe and all-feature release builds.
+Every strategy restored every byte, with no skipped files. The source hash,
+each strategy's complete frame hash, sizes and retained capacities agreed
+between the two backends. Archive and extracted-cache verification passed
+offline against the pinned manifest. Machine-readable commands, hashes and
+results are in
+[`2026-10-09-strategy-corpora.json`](../../docs/evidence/2026-10-09-strategy-corpora.json).
+
+| Strategy | Compressed bytes | Compressed/original | Peak retained bytes | Frame FNV-1a |
+| --- | ---: | ---: | ---: | --- |
+| Greedy | 5,280,917 | 42.56% | 3,609,357 | `3f1239fc5ab02cb8` |
+| Chain | 4,945,104 | 39.85% | 12,431,212 | `a9d6ac79b868c4d7` |
+| Lazy | 4,853,648 | 39.12% | 12,409,205 | `82b83c1b3842cb4c` |
+
+All three used source FNV-1a `e67d76daccd0c28a`, which includes each file's
+length before its bytes. The extra retained storage for Chain and Lazy includes
+their bounded candidate index. These are independent Rust strategies and this
+finite corpus does not establish numeric C level equivalence or a general
+compression-ratio guarantee.
+
+### Historical one-shot checkpoint
+
 On 2026-10-08, the release build with all six unsafe features enabled passed all
 content assertions for both complete extracted directory assets:
 

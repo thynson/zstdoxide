@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-09",
+  "revision": "6e8ff42adaefc6bbf1d98268c28ab20a9ceea528",
+  "adapter_sha256": "eb3bf30d3ff5be448548e71b65dcb44bc506560b0874b83965a48289f29a6ab5",
+  "archives": [
+    {
+      "id": "silesia",
+      "format": "tar.zst",
+      "name": "silesia.tar.zst",
+      "release": "regression-data",
+      "source_url": "https://github.com/facebook/zstd/releases/download/regression-data/silesia.tar.zst",
+      "compressed_bytes": 4288008,
+      "sha256": "c9e5947e2f869c4fb4612944251801d086be6d42174db4c70608cd57b44fc0b9",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "4288008",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A26052B888\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:30 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "decoded_bytes": 12021760,
+      "member_count": 13,
+      "file_count": 12,
+      "unpacked_bytes": 12000000,
+      "largest_member_bytes": 1000000,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/regression/data.c",
+      "upstream_checksum_pin": {
+        "algorithm": "XXH64",
+        "seed": 0,
+        "hex": "48a199f92f93e977",
+        "scope": "compressed archive bytes",
+        "verified": true
+      }
+    },
+    {
+      "id": "github",
+      "format": "tar.zst",
+      "name": "github.tar.zst",
+      "release": "regression-data",
+      "source_url": "https://github.com/facebook/zstd/releases/download/regression-data/github.tar.zst",
+      "compressed_bytes": 33575,
+      "sha256": "aa3a49084cfaff5b3ada174fef43bf57d2f480448598be53e7351177dea03162",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "33575",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A264DE4BBE\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:37 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "decoded_bytes": 757760,
+      "member_count": 501,
+      "file_count": 500,
+      "unpacked_bytes": 407963,
+      "largest_member_bytes": 963,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/regression/data.c",
+      "upstream_checksum_pin": {
+        "algorithm": "XXH64",
+        "seed": 0,
+        "hex": "a9b1b44b020df292",
+        "scope": "compressed archive bytes",
+        "verified": true
+      }
+    }
+  ],
+  "pin_check": {
+    "command": "python3 scripts/fetch_upstream_corpora.py --cache /tmp/zstdoxide-external-corpora --target silesia --target github --offline --zstd /tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+    "exit_code": 0,
+    "output": "silesia: 12 files, 12000000 bytes, /private/tmp/zstdoxide-external-corpora/extracted/silesia\ngithub: 500 files, 407963 bytes, /private/tmp/zstdoxide-external-corpora/extracted/github\nVerified 2 archive pins; 12407963 total extracted bytes\n"
+  },
+  "runs": [
+    {
+      "configuration": "safe",
+      "command": "ZSTDOXIDE_REGRESSION_CORPUS=/tmp/zstdoxide-external-corpora/extracted/silesia:/tmp/zstdoxide-external-corpora/extracted/github cargo test --release --test upstream_regression_corpora external_regression_corpus_named_strategies -- --ignored --nocapture",
+      "exit_code": 0,
+      "log_sha256": "cb8760d47ee4794e73a2f07600f625dde5a129b28eed28d929d706a6e0884116",
+      "strategies": [
+        {
+          "strategy": "Greedy",
+          "files": 512,
+          "source_bytes": 12407963,
+          "encoded_bytes": 5280917,
+          "source_fnv1a64": "e67d76daccd0c28a",
+          "frame_fnv1a64": "3f1239fc5ab02cb8",
+          "peak_retained_bytes": 3609357,
+          "skipped": 0
+        },
+        {
+          "strategy": "Chain",
+          "files": 512,
+          "source_bytes": 12407963,
+          "encoded_bytes": 4945104,
+          "source_fnv1a64": "e67d76daccd0c28a",
+          "frame_fnv1a64": "a9d6ac79b868c4d7",
+          "peak_retained_bytes": 12431212,
+          "skipped": 0
+        },
+        {
+          "strategy": "Lazy",
+          "files": 512,
+          "source_bytes": 12407963,
+          "encoded_bytes": 4853648,
+          "source_fnv1a64": "e67d76daccd0c28a",
+          "frame_fnv1a64": "82b83c1b3842cb4c",
+          "peak_retained_bytes": 12409205,
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "configuration": "all",
+      "command": "ZSTDOXIDE_REGRESSION_CORPUS=/tmp/zstdoxide-external-corpora/extracted/silesia:/tmp/zstdoxide-external-corpora/extracted/github cargo test --release --all-features --test upstream_regression_corpora external_regression_corpus_named_strategies -- --ignored --nocapture",
+      "exit_code": 0,
+      "log_sha256": "155467b9893120d6726565a5ef3b9d4f7d1f67be3e71e402bb82cee0b422373d",
+      "strategies": [
+        {
+          "strategy": "Greedy",
+          "files": 512,
+          "source_bytes": 12407963,
+          "encoded_bytes": 5280917,
+          "source_fnv1a64": "e67d76daccd0c28a",
+          "frame_fnv1a64": "3f1239fc5ab02cb8",
+          "peak_retained_bytes": 3609357,
+          "skipped": 0
+        },
+        {
+          "strategy": "Chain",
+          "files": 512,
+          "source_bytes": 12407963,
+          "encoded_bytes": 4945104,
+          "source_fnv1a64": "e67d76daccd0c28a",
+          "frame_fnv1a64": "a9d6ac79b868c4d7",
+          "peak_retained_bytes": 12431212,
+          "skipped": 0
+        },
+        {
+          "strategy": "Lazy",
+          "files": 512,
+          "source_bytes": 12407963,
+          "encoded_bytes": 4853648,
+          "source_fnv1a64": "e67d76daccd0c28a",
+          "frame_fnv1a64": "82b83c1b3842cb4c",
+          "peak_retained_bytes": 12409205,
+          "skipped": 0
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Content-equality adaptation of regression directory data, not the original level/method/CSV size matrix.",
+    "Every strategy processes identical complete sources; safe and all-feature output fingerprints and retained capacities match.",
+    "Independent C interoperability of named strategies is covered separately; this corpus adapter performs Rust roundtrips.",
+    "Retained capacity excludes inline state, caller buffers, allocator overhead and transient scratch.",
+    "Corpus source assets stay outside the repository; historical measurement reports remain unchanged."
+  ]
+}
