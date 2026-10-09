@@ -11340,10 +11340,15 @@
           "line_end": 1598,
           "label": "test%3i : check dictionary FSE tables can represent every code :",
           "status": "partial",
-          "reason": "First-block treeless Huffman and repeat LL/OF/ML decoding use prepared dictionary tables and reset them between frames. The exhaustive sequence producer sweep over all code values and windows is not yet ported.",
+          "reason": "The complete 971-request SEQ_gen schedule, 34,639,743 bytes, original 1,024-byte buffers, shared prepared dictionary and one-frame lifetime run through Greedy/Chain/Lazy with full-byte streaming comparison. Independent C reconstructs inherited explicit level-5 parameters, the level-3 request, two workers and 4 MiB jobs; its effective frame window is log 21 despite the CDict log-24 request. Safe/all-feature bidirectional decoding passes. Rust retains independent single-thread strategies, shared ownership and a 128 KiB search history; numeric C level, by-reference CDict, multithreading and emission of every offset code remain unimplemented qualifications.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#first_block_treeless_literals_use_prepared_huffman_in_one_and_four_stream_modes",
-            "tests/upstream_dictionary.rs#first_block_repeat_sequence_tables_are_restored_for_every_prepared_frame"
+            "tests/upstream_dictionary.rs#first_block_repeat_sequence_tables_are_restored_for_every_prepared_frame",
+            "tests/upstream/sequence_generator.rs#stored_c_schedule_matches_every_request_hash_seed_and_complete_source_length",
+            "tests/upstream/sequence_sweep.rs#complete_original_sequence_sweep_greedy",
+            "tests/upstream/sequence_sweep.rs#complete_original_sequence_sweep_chain",
+            "tests/upstream/sequence_sweep.rs#complete_original_sequence_sweep_lazy",
+            "tests/upstream/sequence_sweep.rs#original_c_baseline_and_all_named_strategies_decode_both_directions"
           ]
         },
         {

@@ -86,6 +86,10 @@ mod upstream_huffman_round_trip_tests;
 #[path = "../tests/upstream/sequence_generator.rs"]
 mod upstream_sequence_generator_tests;
 
+#[cfg(test)]
+#[path = "../tests/upstream/sequence_sweep.rs"]
+mod upstream_sequence_sweep_tests;
+
 pub use decode::{DecodeOptions, decompress, decompress_with_dictionary, decompress_with_options};
 pub use dictionary::{Dictionary, DictionaryMode, SharedDictionary};
 pub use dictionary_train::{DictionaryTrainingOptions, finalize_dictionary, train_dictionary};
