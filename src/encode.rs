@@ -220,7 +220,7 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
                     seed.reset();
                     let start = content.len().saturating_sub(MAX_DICTIONARY_DISTANCE);
                     for position in start..=content.len() - 4 {
-                        seed.replace(word_at(content, position), position);
+                        seed.replace(word_at(content, position), position)?;
                     }
                 }
                 CompressionStrategy::Chain | CompressionStrategy::Lazy => {
@@ -540,7 +540,7 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
     if source.dictionary.is_some()
         && let Some(seed) = seed
     {
-        match_table.reset_from(seed);
+        match_table.reset_from(seed)?;
     } else {
         match_table.reset();
     }
@@ -549,7 +549,7 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
         // makes one-, two-, and three-byte raw prefixes useful.
         for position in source.dictionary_size.saturating_sub(3)..source.dictionary_size {
             let word = source.dictionary_boundary_word(position)?;
-            match_table.replace(word, position);
+            match_table.replace(word, position)?;
         }
     }
     for position in 0..source.history_size {
@@ -561,7 +561,7 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
                 .dictionary_size
                 .checked_add(position)
                 .ok_or(Error::ResourceLimit)?,
-        );
+        )?;
     }
     literals.clear();
     literals
@@ -575,7 +575,7 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
     let mut literal_start = 0;
     while position + 4 <= block.len() {
         let virtual_position = source.virtual_position(position)?;
-        let candidate = match_table.replace(word_at(block, position), virtual_position);
+        let candidate = match_table.replace(word_at(block, position), virtual_position)?;
         if let Some(previous) = candidate
             && let Some((distance, match_length)) = source.find_match(previous, position)?
         {
@@ -590,7 +590,8 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
             let match_end = position + match_length;
             position += 1;
             while position < match_end && position + 4 <= block.len() {
-                match_table.replace(word_at(block, position), source.virtual_position(position)?);
+                match_table
+                    .replace(word_at(block, position), source.virtual_position(position)?)?;
                 position += 1;
             }
             position = match_end;
@@ -866,6 +867,7 @@ mod tests {
                 .as_mut()
                 .unwrap()
                 .replace(*b"abcd", 128)
+                .unwrap()
                 .is_some()
         );
         encoder.set_strategy(CompressionStrategy::Chain);
@@ -893,7 +895,8 @@ mod tests {
                 .dictionary_seed
                 .as_mut()
                 .unwrap()
-                .replace(*b"abcd", 129),
+                .replace(*b"abcd", 129)
+                .unwrap(),
             None
         );
         assert_eq!(
@@ -1513,14 +1516,18 @@ mod tests {
         );
         assert_eq!(monitor.snapshot().live_bytes, before.live_bytes);
         let mut inspection = MatchTable::new().unwrap();
-        inspection.reset_from(encoder.dictionary_seed.as_ref().unwrap());
-        assert!(inspection.replace(*b"ZZZZ", usize::MAX).is_some());
-        assert_eq!(inspection.replace(*b"aaaa", usize::MAX), None);
+        inspection
+            .reset_from(encoder.dictionary_seed.as_ref().unwrap())
+            .unwrap();
+        assert!(inspection.replace(*b"ZZZZ", usize::MAX).unwrap().is_some());
+        assert_eq!(inspection.replace(*b"aaaa", usize::MAX).unwrap(), None);
         monitor.clear_failure();
         encoder.reset();
         encoder.start_frame(Some(first.view()), 1024).unwrap();
-        inspection.reset_from(encoder.dictionary_seed.as_ref().unwrap());
-        assert!(inspection.replace(*b"aaaa", usize::MAX).is_some());
+        inspection
+            .reset_from(encoder.dictionary_seed.as_ref().unwrap())
+            .unwrap();
+        assert!(inspection.replace(*b"aaaa", usize::MAX).unwrap().is_some());
         let mut output = Vec::new();
         encoder.encode(first.content(), true, &mut output).unwrap();
         let mut reference = BlockEncoder::<_, DictionaryView<'_>>::new_in(Global);
@@ -2086,8 +2093,13 @@ mod tests {
         let capacity = encoder.retained_capacity();
         assert!(capacity > 0);
         let mut working = MatchTable::new().unwrap();
-        working.reset_from(encoder.dictionary_seed.as_ref().unwrap());
-        assert_eq!(working.replace(*b"dict", first.content().len()), Some(0));
+        working
+            .reset_from(encoder.dictionary_seed.as_ref().unwrap())
+            .unwrap();
+        assert_eq!(
+            working.replace(*b"dict", first.content().len()).unwrap(),
+            Some(0)
+        );
         encoder.reset();
         assert_eq!(SharedDictionary::strong_count(&first), 1);
         assert!(encoder.active_dictionary.is_none());
@@ -2098,14 +2110,24 @@ mod tests {
             .start_frame(Some(SharedDictionary::clone(&second)), 4096)
             .unwrap();
         assert_eq!(SharedDictionary::strong_count(&second), 2);
-        working.reset_from(encoder.dictionary_seed.as_ref().unwrap());
-        assert_eq!(working.replace(*b"repl", second.content().len()), Some(0));
-        assert_eq!(working.replace(*b"dict", second.content().len()), None);
+        working
+            .reset_from(encoder.dictionary_seed.as_ref().unwrap())
+            .unwrap();
+        assert_eq!(
+            working.replace(*b"repl", second.content().len()).unwrap(),
+            Some(0)
+        );
+        assert_eq!(
+            working.replace(*b"dict", second.content().len()).unwrap(),
+            None
+        );
         assert_eq!(encoder.retained_capacity(), capacity);
         encoder.start_frame(None, 128 * 1024).unwrap();
         assert_eq!(SharedDictionary::strong_count(&second), 1);
-        working.reset_from(encoder.dictionary_seed.as_ref().unwrap());
-        assert_eq!(working.replace(*b"repl", 100), None);
+        working
+            .reset_from(encoder.dictionary_seed.as_ref().unwrap())
+            .unwrap();
+        assert_eq!(working.replace(*b"repl", 100).unwrap(), None);
     }
 
     #[test]

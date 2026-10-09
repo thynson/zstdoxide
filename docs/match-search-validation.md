@@ -120,3 +120,28 @@ the recorded successful foreign-target runs use existing sysroots and an
 isolated `f08fceb` foundation with the identical key source. No target installation
 or source change was required. These tests establish primitive correctness;
 dynamic leaf storage and real policy consumers remain separate checkpoints.
+
+## Dynamic Greedy candidate table
+
+`MatchTable` now owns a checked active layout alongside its positions. Default
+constructors retain the old dimensions. Reconfiguration validates and reserves
+through the exact owner before clearing entries or publishing metadata;
+in-capacity shrink/regrow makes no allocation request. Seed copying checks both
+layouts and initialized lengths before mutation. Every safe or unsafe replacement
+checks key width and its computed index against live length, including malformed
+shortened internal test states with retained spare capacity. Existing block
+callers now propagate these checked errors; benchmark inputs remain unchanged.
+
+All 22 recorded commands pass: fourteen leaf tests in six configurations,
+three no_std checks, strict all-target Clippy safe/all, two exact release bounds
+checks, safe/all default-frame replay and six exact strict-provenance Miri
+checks. This totals 106 passing test executions. The new cases cover all 45
+hash-log/key-width combinations, seed/key mismatch, grow failures, shrink/regrow,
+borrowed non-Clone owners, independent allocation domains and every request in
+the selected constructor/two-growth campaign. Default replay still verifies all
+76 logical frames per backend against the original records.
+
+[Table evidence](evidence/2026-10-09-match-table-layouts.json) embeds command logs,
+the frozen owned source and the integration source hashes shared with the
+candidate-chain validation. Concurrent root commits are recorded accurately;
+this focused checkpoint does not claim an immutable whole-repository matrix.

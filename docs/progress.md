@@ -422,3 +422,10 @@ guards pass in four configurations. Nine focused strict-provenance Miri
 executions pass across host, i686 and s390x, including exact short allocations
 and little-endian witnesses. Key widths are checked independently from bucket
 counts; no padded missing input or unsafe extraction is introduced.
+
+The Greedy candidate table now supports checked dynamic layouts with exact-owner
+reconfiguration and fallible compatible seed transfer. Both access backends
+check live initialized bounds before reading or writing. Fourteen leaf tests
+pass in six configurations; no_std, strict Clippy, release bounds and six narrow
+Miri checks pass. Safe/all default frames still match their original records.
+The public encoder continues using default dimensions until context integration.

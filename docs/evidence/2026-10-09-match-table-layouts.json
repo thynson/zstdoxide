@@ -1,0 +1,650 @@
+{
+  "purpose": "Dynamic MatchTable leaf validation; no new unsafe backend family; no performance claims",
+  "owned_sha256_before": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "head_before": "aab163eff00da8fdf8ed76c6199e513b0c0c8610",
+  "commands": [
+    {
+      "label": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "src/matchfinder.rs"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 0.105,
+      "log": "/tmp/zstdoxide-module11-match-table-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": [],
+      "expected_passed": 0,
+      "observed_passed": 0,
+      "passed": true,
+      "log_text": ""
+    },
+    {
+      "label": "test-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "matchfinder::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 0.138,
+      "log": "/tmp/zstdoxide-module11-match-table-test-safe.log",
+      "sha256": "e8b28677d2350d850471cd3aa7cd2067d25f830cf76967e3ea9174b706f777ee",
+      "summaries": [
+        "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 527 filtered out; finished in 0.05s"
+      ],
+      "expected_passed": 14,
+      "observed_passed": 14,
+      "passed": true,
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (target/module11-match-table/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 14 tests\ntest matchfinder::tests::custom_constructor_failure_drops_non_clone_owner_without_live_blocks ... ok\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\ntest matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing ... ok\ntest matchfinder::tests::collisions_remain_candidates_that_need_byte_verification ... ok\ntest matchfinder::tests::copying_seed_indices_retains_independent_working_storage ... ok\ntest matchfinder::tests::dynamic_allocation_ordinals_release_constructor_and_growth_failures ... ok\ntest matchfinder::tests::custom_distinct_owners_survive_moves_and_swaps ... ok\ntest matchfinder::tests::dynamic_key_and_seed_mismatches_preserve_working_candidates ... ok\ntest matchfinder::tests::custom_non_clone_table_matches_global_without_requests_after_setup ... ok\ntest matchfinder::tests::custom_seed_copies_accept_independent_allocator_types_without_allocation ... ok\ntest matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests ... ok\ntest matchfinder::tests::empty_sentinel_cannot_escape_as_a_candidate ... ok\ntest matchfinder::tests::returns_only_prior_candidates_and_reset_discards_them ... ok\ntest matchfinder::tests::dynamic_layouts_initialize_and_reconfigure_every_supported_dimension ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 527 filtered out; finished in 0.05s\n\n"
+    },
+    {
+      "label": "test-unsafe-match-table",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 17.494,
+      "log": "/tmp/zstdoxide-module11-match-table-test-unsafe-match-table.log",
+      "sha256": "6cdbb4c99548b69dd2320d83b03ac7cac12077065b141e053322a5232deff256",
+      "summaries": [
+        "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 527 filtered out; finished in 0.04s"
+      ],
+      "expected_passed": 14,
+      "observed_passed": 14,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.46s\n     Running unittests src/lib.rs (target/module11-match-table/debug/build/zstdoxide/fbd7fa6c50597489/out/zstdoxide-fbd7fa6c50597489)\n\nrunning 14 tests\ntest matchfinder::tests::custom_constructor_failure_drops_non_clone_owner_without_live_blocks ... ok\ntest matchfinder::tests::dynamic_key_and_seed_mismatches_preserve_working_candidates ... ok\ntest matchfinder::tests::dynamic_allocation_ordinals_release_constructor_and_growth_failures ... ok\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\ntest matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing ... ok\ntest matchfinder::tests::collisions_remain_candidates_that_need_byte_verification ... ok\ntest matchfinder::tests::copying_seed_indices_retains_independent_working_storage ... ok\ntest matchfinder::tests::custom_distinct_owners_survive_moves_and_swaps ... ok\ntest matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests ... ok\ntest matchfinder::tests::custom_seed_copies_accept_independent_allocator_types_without_allocation ... ok\ntest matchfinder::tests::empty_sentinel_cannot_escape_as_a_candidate ... ok\ntest matchfinder::tests::returns_only_prior_candidates_and_reset_discards_them ... ok\ntest matchfinder::tests::custom_non_clone_table_matches_global_without_requests_after_setup ... ok\ntest matchfinder::tests::dynamic_layouts_initialize_and_reconfigure_every_supported_dimension ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 527 filtered out; finished in 0.04s\n\n"
+    },
+    {
+      "label": "test-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "matchfinder::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 30.693,
+      "log": "/tmp/zstdoxide-module11-match-table-test-all.log",
+      "sha256": "b2e8c87d44f2288c9b52cc2171ef4f5cabd9171fb100363e05e4a306ce8710d5",
+      "summaries": [
+        "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 527 filtered out; finished in 0.06s"
+      ],
+      "expected_passed": 14,
+      "observed_passed": 14,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 28.71s\n     Running unittests src/lib.rs (target/module11-match-table/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 14 tests\ntest matchfinder::tests::collisions_remain_candidates_that_need_byte_verification ... ok\ntest matchfinder::tests::custom_constructor_failure_drops_non_clone_owner_without_live_blocks ... ok\ntest matchfinder::tests::copying_seed_indices_retains_independent_working_storage ... ok\ntest matchfinder::tests::custom_distinct_owners_survive_moves_and_swaps ... ok\ntest matchfinder::tests::dynamic_allocation_ordinals_release_constructor_and_growth_failures ... ok\ntest matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing ... ok\ntest matchfinder::tests::dynamic_key_and_seed_mismatches_preserve_working_candidates ... ok\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\ntest matchfinder::tests::custom_seed_copies_accept_independent_allocator_types_without_allocation ... ok\ntest matchfinder::tests::custom_non_clone_table_matches_global_without_requests_after_setup ... ok\ntest matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests ... ok\ntest matchfinder::tests::empty_sentinel_cannot_escape_as_a_candidate ... ok\ntest matchfinder::tests::returns_only_prior_candidates_and_reset_discards_them ... ok\ntest matchfinder::tests::dynamic_layouts_initialize_and_reconfigure_every_supported_dimension ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 527 filtered out; finished in 0.06s\n\n"
+    },
+    {
+      "label": "test-no-default-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "matchfinder::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 14.388,
+      "log": "/tmp/zstdoxide-module11-match-table-test-no-default-safe.log",
+      "sha256": "7b4af94b082b77cae129347dfff24028a651751d773dd0cf745d7c5e08db00c5",
+      "summaries": [
+        "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.04s"
+      ],
+      "expected_passed": 14,
+      "observed_passed": 14,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.76s\n     Running unittests src/lib.rs (target/module11-match-table/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 14 tests\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\ntest matchfinder::tests::dynamic_key_and_seed_mismatches_preserve_working_candidates ... ok\ntest matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing ... ok\ntest matchfinder::tests::custom_constructor_failure_drops_non_clone_owner_without_live_blocks ... ok\ntest matchfinder::tests::collisions_remain_candidates_that_need_byte_verification ... ok\ntest matchfinder::tests::dynamic_allocation_ordinals_release_constructor_and_growth_failures ... ok\ntest matchfinder::tests::custom_distinct_owners_survive_moves_and_swaps ... ok\ntest matchfinder::tests::copying_seed_indices_retains_independent_working_storage ... ok\ntest matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests ... ok\ntest matchfinder::tests::custom_seed_copies_accept_independent_allocator_types_without_allocation ... ok\ntest matchfinder::tests::empty_sentinel_cannot_escape_as_a_candidate ... ok\ntest matchfinder::tests::returns_only_prior_candidates_and_reset_discards_them ... ok\ntest matchfinder::tests::custom_non_clone_table_matches_global_without_requests_after_setup ... ok\ntest matchfinder::tests::dynamic_layouts_initialize_and_reconfigure_every_supported_dimension ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.04s\n\n"
+    },
+    {
+      "label": "test-no-default-unsafe-match-table",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 12.858,
+      "log": "/tmp/zstdoxide-module11-match-table-test-no-default-unsafe-match-table.log",
+      "sha256": "ff1a50cacdb93848f8ec901b32ed0a4b6bd0785023bca9a5f9cb4cc5237d0068",
+      "summaries": [
+        "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.03s"
+      ],
+      "expected_passed": 14,
+      "observed_passed": 14,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.25s\n     Running unittests src/lib.rs (target/module11-match-table/debug/build/zstdoxide/0c964aeec5348fca/out/zstdoxide-0c964aeec5348fca)\n\nrunning 14 tests\ntest matchfinder::tests::custom_constructor_failure_drops_non_clone_owner_without_live_blocks ... ok\ntest matchfinder::tests::dynamic_allocation_ordinals_release_constructor_and_growth_failures ... ok\ntest matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing ... ok\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\ntest matchfinder::tests::dynamic_key_and_seed_mismatches_preserve_working_candidates ... ok\ntest matchfinder::tests::collisions_remain_candidates_that_need_byte_verification ... ok\ntest matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests ... ok\ntest matchfinder::tests::empty_sentinel_cannot_escape_as_a_candidate ... ok\ntest matchfinder::tests::custom_distinct_owners_survive_moves_and_swaps ... ok\ntest matchfinder::tests::returns_only_prior_candidates_and_reset_discards_them ... ok\ntest matchfinder::tests::custom_seed_copies_accept_independent_allocator_types_without_allocation ... ok\ntest matchfinder::tests::copying_seed_indices_retains_independent_working_storage ... ok\ntest matchfinder::tests::custom_non_clone_table_matches_global_without_requests_after_setup ... ok\ntest matchfinder::tests::dynamic_layouts_initialize_and_reconfigure_every_supported_dimension ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.03s\n\n"
+    },
+    {
+      "label": "test-no-default-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "matchfinder::tests"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 9.895,
+      "log": "/tmp/zstdoxide-module11-match-table-test-no-default-all.log",
+      "sha256": "a1600c36e9678417fdd4a9a312b708df180e885c3a14e30d06c518d8e260c078",
+      "summaries": [
+        "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.04s"
+      ],
+      "expected_passed": 14,
+      "observed_passed": 14,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.35s\n     Running unittests src/lib.rs (target/module11-match-table/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 14 tests\ntest matchfinder::tests::custom_constructor_failure_drops_non_clone_owner_without_live_blocks ... ok\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\ntest matchfinder::tests::dynamic_key_and_seed_mismatches_preserve_working_candidates ... ok\ntest matchfinder::tests::collisions_remain_candidates_that_need_byte_verification ... ok\ntest matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests ... ok\ntest matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing ... ok\ntest matchfinder::tests::custom_distinct_owners_survive_moves_and_swaps ... ok\ntest matchfinder::tests::dynamic_allocation_ordinals_release_constructor_and_growth_failures ... ok\ntest matchfinder::tests::copying_seed_indices_retains_independent_working_storage ... ok\ntest matchfinder::tests::empty_sentinel_cannot_escape_as_a_candidate ... ok\ntest matchfinder::tests::returns_only_prior_candidates_and_reset_discards_them ... ok\ntest matchfinder::tests::custom_seed_copies_accept_independent_allocator_types_without_allocation ... ok\ntest matchfinder::tests::custom_non_clone_table_matches_global_without_requests_after_setup ... ok\ntest matchfinder::tests::dynamic_layouts_initialize_and_reconfigure_every_supported_dimension ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 502 filtered out; finished in 0.04s\n\n"
+    },
+    {
+      "label": "check-no-default-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--offline",
+        "--locked",
+        "--no-default-features"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 1.15,
+      "log": "/tmp/zstdoxide-module11-match-table-check-no-default-safe.log",
+      "sha256": "71bddf2a58ecc0ccbf65f42af4f37529c677c586d1d5799c0758f45647310138",
+      "summaries": [],
+      "expected_passed": 0,
+      "observed_passed": 0,
+      "passed": true,
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.11s\n"
+    },
+    {
+      "label": "check-no-default-unsafe-match-table",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--offline",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-match-table"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 1.152,
+      "log": "/tmp/zstdoxide-module11-match-table-check-no-default-unsafe-match-table.log",
+      "sha256": "71bddf2a58ecc0ccbf65f42af4f37529c677c586d1d5799c0758f45647310138",
+      "summaries": [],
+      "expected_passed": 0,
+      "observed_passed": 0,
+      "passed": true,
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.11s\n"
+    },
+    {
+      "label": "check-no-default-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "check",
+        "--offline",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 1.179,
+      "log": "/tmp/zstdoxide-module11-match-table-check-no-default-all.log",
+      "sha256": "71bddf2a58ecc0ccbf65f42af4f37529c677c586d1d5799c0758f45647310138",
+      "summaries": [],
+      "expected_passed": 0,
+      "observed_passed": 0,
+      "passed": true,
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.11s\n"
+    },
+    {
+      "label": "clippy-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 7.817,
+      "log": "/tmp/zstdoxide-module11-match-table-clippy-safe.log",
+      "sha256": "46efd2453e7b9be5738c30f9c27584457c6943245e93f9e62aab8f42c3b4c9c0",
+      "summaries": [],
+      "expected_passed": 0,
+      "observed_passed": 0,
+      "passed": true,
+      "log_text": "    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 7.55s\n"
+    },
+    {
+      "label": "clippy-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 6.714,
+      "log": "/tmp/zstdoxide-module11-match-table-clippy-all.log",
+      "sha256": "495a175c99b50518b6f8c3a294704c28c8ebf35ccef42de26435a467e0088289",
+      "summaries": [],
+      "expected_passed": 0,
+      "observed_passed": 0,
+      "passed": true,
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.60s\n"
+    },
+    {
+      "label": "release-bounds-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--release",
+        "--lib",
+        "matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity",
+        "--",
+        "--exact"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 20.814,
+      "log": "/tmp/zstdoxide-module11-match-table-release-bounds-safe.log",
+      "sha256": "31e41fad3d12e7ee05e8642a06ef37ace06c36282a77685c4ec49a3443225e5d",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 0.00s"
+      ],
+      "expected_passed": 1,
+      "observed_passed": 1,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 20.34s\n     Running unittests src/lib.rs (target/module11-match-table/release/build/zstdoxide/e1626a9536adb678/out/zstdoxide-e1626a9536adb678)\n\nrunning 1 test\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "label": "release-bounds-unsafe-match-table",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--release",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity",
+        "--",
+        "--exact"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 24.936,
+      "log": "/tmp/zstdoxide-module11-match-table-release-bounds-unsafe-match-table.log",
+      "sha256": "f53eee4c3f2678855f4be94b04e2e4c77a642fb2e4a715a98636a65b54f8af56",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 0.00s"
+      ],
+      "expected_passed": 1,
+      "observed_passed": 1,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 24.53s\n     Running unittests src/lib.rs (target/module11-match-table/release/build/zstdoxide/712c4ebcb953b09b/out/zstdoxide-712c4ebcb953b09b)\n\nrunning 1 test\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "label": "baseline-safe",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "match_search_defaults"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 18.579,
+      "log": "/tmp/zstdoxide-module11-match-table-baseline-safe.log",
+      "sha256": "f475da5ec0225e7a4a565b4be5431aa6b864d5991d3aec95277cec5363755e83",
+      "summaries": [
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.25s"
+      ],
+      "expected_passed": 7,
+      "observed_passed": 7,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.98s\n     Running tests/match_search_defaults.rs (target/module11-match-table/debug/build/zstdoxide/8e248037f9ed31d7/out/match_search_defaults-8e248037f9ed31d7)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.25s\n\n"
+    },
+    {
+      "label": "baseline-all",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "match_search_defaults",
+        "--all-features"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 25.561,
+      "log": "/tmp/zstdoxide-module11-match-table-baseline-all.log",
+      "sha256": "290a15572b6bce2e8613fce7fddc03b607f4b0dac7290e140f68f696e014a26a",
+      "summaries": [
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 20.92s"
+      ],
+      "expected_passed": 7,
+      "observed_passed": 7,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.20s\n     Running tests/match_search_defaults.rs (target/module11-match-table/debug/build/zstdoxide/037ece48e3eddc9f/out/match_search_defaults-037ece48e3eddc9f)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 20.92s\n\n"
+    },
+    {
+      "label": "miri-safe-1",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity",
+        "--",
+        "--exact"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 7.144,
+      "log": "/tmp/zstdoxide-module11-match-table-miri-safe-1.log",
+      "sha256": "b75097c037c26511b6547018f74109a8eece2a9d928208bb523447cf86286fec",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 0.84s"
+      ],
+      "expected_passed": 1,
+      "observed_passed": 1,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.67s\n     Running unittests src/lib.rs (target/module11-match-table-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/0471a00cbfcd8cb4/out/zstdoxide-0471a00cbfcd8cb4)\n\nrunning 1 test\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 0.84s\n\n"
+    },
+    {
+      "label": "miri-safe-2",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests",
+        "--",
+        "--exact"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 4.998,
+      "log": "/tmp/zstdoxide-module11-match-table-miri-safe-2.log",
+      "sha256": "544f62499b5632acd93fe8beca80994e523f3700e20dbec96acff35ee794a328",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 3.95s"
+      ],
+      "expected_passed": 1,
+      "observed_passed": 1,
+      "passed": true,
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (target/module11-match-table-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/0471a00cbfcd8cb4/out/zstdoxide-0471a00cbfcd8cb4)\n\nrunning 1 test\ntest matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 3.95s\n\n"
+    },
+    {
+      "label": "miri-safe-3",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing",
+        "--",
+        "--exact"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 6.115,
+      "log": "/tmp/zstdoxide-module11-match-table-miri-safe-3.log",
+      "sha256": "93d5bd54bf68001ef8b857fd6765a23cb0d2e26e5adbe4c7bdf064bdf64fc7ef",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 3.78s"
+      ],
+      "expected_passed": 1,
+      "observed_passed": 1,
+      "passed": true,
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (target/module11-match-table-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/0471a00cbfcd8cb4/out/zstdoxide-0471a00cbfcd8cb4)\n\nrunning 1 test\ntest matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 3.78s\n\n"
+    },
+    {
+      "label": "miri-unsafe-match-table-1",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity",
+        "--",
+        "--exact"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 12.532,
+      "log": "/tmp/zstdoxide-module11-match-table-miri-unsafe-match-table-1.log",
+      "sha256": "20cf9f4f4aaa701f4e3a8831ffe0037870ba2cf34a3c38fb089b332c2e0897a6",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 0.82s"
+      ],
+      "expected_passed": 1,
+      "observed_passed": 1,
+      "passed": true,
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.06s\n     Running unittests src/lib.rs (target/module11-match-table-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/df7d6a595da93ac5/out/zstdoxide-df7d6a595da93ac5)\n\nrunning 1 test\ntest matchfinder::tests::dynamic_bounds_use_initialized_length_even_with_large_spare_capacity ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 0.82s\n\n"
+    },
+    {
+      "label": "miri-unsafe-match-table-2",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests",
+        "--",
+        "--exact"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 9.353,
+      "log": "/tmp/zstdoxide-module11-match-table-miri-unsafe-match-table-2.log",
+      "sha256": "e1cb57aabf35b3c88990887780990efc66087c7fa02454636ee4bb7cdfc9f2e3",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 3.95s"
+      ],
+      "expected_passed": 1,
+      "observed_passed": 1,
+      "passed": true,
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (target/module11-match-table-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/df7d6a595da93ac5/out/zstdoxide-df7d6a595da93ac5)\n\nrunning 1 test\ntest matchfinder::tests::dynamic_owner_grow_failure_preserves_state_and_shrink_regrow_make_no_requests ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 3.95s\n\n"
+    },
+    {
+      "label": "miri-unsafe-match-table-3",
+      "command": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "miri",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing",
+        "--",
+        "--exact"
+      ],
+      "environment": {
+        "CARGO_TARGET_DIR": "target/module11-match-table-miri",
+        "MIRIFLAGS": "-Zmiri-strict-provenance"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 8.54,
+      "log": "/tmp/zstdoxide-module11-match-table-miri-unsafe-match-table-3.log",
+      "sha256": "beb3c8cc8b56027c8c9012fb7c816c20f3f9daff0e57400d3e840900c5bbd3c1",
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 3.74s"
+      ],
+      "expected_passed": 1,
+      "observed_passed": 1,
+      "passed": true,
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (target/module11-match-table-miri/miri/aarch64-apple-darwin/debug/build/zstdoxide/df7d6a595da93ac5/out/zstdoxide-df7d6a595da93ac5)\n\nrunning 1 test\ntest matchfinder::tests::dynamic_borrowed_and_distinct_seed_owners_survive_independent_resizing ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 540 filtered out; finished in 3.74s\n\n"
+    }
+  ],
+  "owned_sha256_after": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+  "owned_unchanged": true,
+  "head_after": "3d65d2143953272558d34ba4647869473dc3fcd5",
+  "all_requested_commands_passed": true,
+  "miri_scope": "Six exact-selector executions, three bounded runtime-bounds/owner tests under safe and unsafe-match-table, strict provenance. Broad 45-layout native sweep and old full suites not repeated under Miri in this campaign.",
+  "integration_source_hashes": {
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/encode.rs": "e4b77657644ccd70f1536f1114c652b6b99e792e4ec61673bdc3c3e4800b5db6",
+    "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a",
+    "src/lib.rs": "51d023b26da4c403f64785a86782dfdc67d4e4cecbfe18b2fa33a40b07dff878"
+  },
+  "original_evidence_sha256": "9326bca0f9a782216b5c89c75ce81b20b1012e55bdc47c96659856fccf6e8d6e",
+  "root_review": "Dynamic reserve/shrink/seed validation, runtime initialized bounds and full unsafe proof reviewed; no findings. Root adapted existing block consumers to propagate new checked errors and retained benchmark default workload semantics.",
+  "summary": {
+    "native_unit_configurations": 6,
+    "unit_tests_per_configuration": 14,
+    "release_exact_checks": 2,
+    "native_miri_exact_checks": 6,
+    "offline_default_configurations": 2,
+    "offline_default_tests_per_configuration": 7,
+    "passing_test_executions": 106,
+    "no_std_library_checks": 3,
+    "strict_all_target_clippy_configurations": 2
+  }
+}

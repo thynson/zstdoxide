@@ -34,6 +34,10 @@ mod history;
 mod huffman;
 #[path = "../src/huffman_codebook.rs"]
 mod huffman_codebook;
+#[path = "../src/match_key.rs"]
+mod match_key;
+#[path = "../src/match_search.rs"]
+mod match_search;
 #[path = "../src/matchchain.rs"]
 mod matchchain;
 #[path = "../src/matchfinder.rs"]
@@ -165,7 +169,7 @@ fn main() {
             table.reset();
             let mut digest = 0_u64;
             for (index, &word) in black_box(&words).iter().chain(words.iter()).enumerate() {
-                let old = table.replace(word, index * 4);
+                let old = table.replace(word, index * 4).unwrap();
                 digest = digest.rotate_left(3) ^ old.map_or(0, |position| position as u64 + 1);
             }
             digest

@@ -54,7 +54,7 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 - [x] Add validated plain search options, key-layout/shape records and checked requested-storage calculations with target-layout tests.
 - [x] Freeze attributed pinned-C hash vectors and reproduction/provenance checks before implementing the new hash primitives.
 - [x] Add safe exact-width key extraction and unsalted four-through-eight-byte hashing, preserving current four-byte values and rejecting incomplete keys.
-- [ ] Make MatchTable dimensions and layout configurable, preserving exact owners and logical state on failure, checked seed copying and equivalent safe/unsafe access.
+- [x] Make MatchTable dimensions and layout configurable, preserving exact owners and logical state on failure, checked seed copying and equivalent safe/unsafe access.
 - [ ] Make MatchChain heads/nodes configurable with compatible seed transfer, bounded tags/visits and allocator-failure/resize coverage in both backends.
 - [ ] Route selected key width and explicit Chain/Lazy effort through parser probes, preserving lookahead, insertion, tie and failure contracts.
 - [ ] Add exact-width borrowed dictionary/history/input key extraction, with checked coordinates and explicit incomplete tails before storage integration.
