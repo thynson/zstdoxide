@@ -6,7 +6,8 @@ The pinned reference and test oracle is [facebook/zstd v1.5.7](https://github.co
 commit `f8745da6ff1ad1e7bab384bd1f9d742439278e99`.
 
 This is an initial working codec milestone, **not full parity with upstream
-zstd**. Its one-shot and streaming decoders handle non-dictionary standard frames. Its encoder
+zstd**. Its one-shot and streaming decoders handle standard frames with raw or
+formatted dictionaries. Its encoder
 uses an initial greedy compression strategy; upstream compression levels and
 compression ratios are not reproduced.
 
@@ -43,6 +44,13 @@ more input, more output space, or a frame boundary was reached. See
 [streaming usage and lifecycle contracts](docs/streaming-usage.md) for complete
 examples, Flush/Finish retry rules, pledged sizes, reset, and EOF validation.
 
+`Dictionary` prepares owned raw or formatted content for shared reuse. One-shot
+and streaming operations support persistent dictionaries and streaming single-use
+prefixes. `train_raw_dictionary`, `train_dictionary`, and `finalize_dictionary`
+provide bounded independent Rust content selection and formatted metadata.
+See [dictionary use and training](docs/dictionary-usage.md) for runnable examples,
+ID selection, reset behavior, capacity limits, and training algorithm boundaries.
+
 ## Current support
 
 | Area | Implemented |
@@ -51,17 +59,20 @@ examples, Flush/Finish retry rules, pledged sizes, reset, and EOF validation.
 | Blocks | Raw, RLE, and compressed blocks; block/window/output bounds |
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
-| Compression | Greedy four-byte hash matching, raw literals, predefined FSE sequence encoding, raw/RLE fallback |
+| Compression | Greedy four-byte hash matching over dictionary content and up to 128 KiB of retained output, raw literals, predefined FSE sequence encoding, raw/RLE fallback |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
+| Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
+| Training | Bounded deterministic raw content selection, learned full-alphabet Huffman metadata, predefined sequence priors, custom or automatic IDs, formatted finalization |
 | Portability | Rust 2024, tested with Rust 1.89.0; `no_std` plus `alloc` core |
 
-Remaining work includes raw/prepared dictionaries, dictionary training,
-Huffman literal encoding, adaptive FSE encoding, repeat-offset selection during
-compression, cross-block match search, advanced compression strategies and
+Remaining work includes Huffman literal payload encoding, adaptive FSE sequence
+encoding, repeat-offset selection during compression, COVER/fastCover and
+advanced dictionary training, advanced compression strategies and
 levels, long-distance matching, threading, legacy formats, C ABI, and CLI parity.
-There is no command-line compressor yet. Nonzero dictionary IDs return
-`DictionaryRequired`; frames with an implicit external dictionary are also
-unsupported and may fail history or entropy validation.
+There is no command-line compressor yet. Nonzero frame dictionary IDs require
+a matching selected dictionary; an omitted ID still uses configured content.
+Dictionary lifetime boundary behavior is recorded in
+[the dictionary design](docs/dictionary-design.md).
 
 The implementation is new and has not completed a long-running fuzz campaign or
 cross-platform release qualification. The checked-in tests, oracle checks, and
@@ -70,8 +81,8 @@ Miri runs establish the tested cases, not universal compatibility.
 ## Safe and unsafe data structures
 
 Default builds enforce `forbid(unsafe_code)`. Slice borrows and indices replace
-non-owning pointers; `Vec` owns growable storage. Fixed/shared future structures
-use `Box`/`Arc` where appropriate. An opt-in feature selects an alternative access
+non-owning pointers; `Vec` owns growable storage and `Arc`/`Rc` shares immutable
+prepared dictionaries. An opt-in feature selects an alternative access
 implementation for exactly one data structure family, preserving its checked API.
 
 | Feature | Data structure family |
@@ -83,6 +94,8 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-fse` | FSE decoding and inverse encoding tables |
 | `unsafe-huffman` | Huffman lookup table |
 | `unsafe-match-table` | Hash-indexed prior-position table |
+| `unsafe-dictionary` | Validated immutable dictionary-content access |
+| `unsafe-training` | Bounded raw-training frequency cells |
 
 Plain scalar records share a representation; they have no pointer access to
 replace. Every unsafe block has a local proof, and no unsafe operation is exposed
@@ -127,7 +140,7 @@ library. The complete source/case catalog is in
 [the upstream test inventory](docs/upstream-test-inventory.md), with executable
 coverage and measured runs in [the validation report](docs/upstream-test-validation.md).
 Streaming contracts now have direct incremental tests and near-window oracle
-fixtures. Dictionary, CLI, legacy, advanced encoder, and other unavailable API
+fixtures. Advanced dictionary/training, CLI, legacy, advanced encoder, and other unavailable API
 contracts remain explicitly open. A successful normal test run does not
 mean every official test has been migrated.
 
