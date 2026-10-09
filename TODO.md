@@ -50,8 +50,9 @@ Operational search settings remain separate from reference profile inspection.
 Existing default bytes, ownership and reset semantics are compatibility inputs.
 
 - [x] Record the approved API, ownership/resource formulas, width-aware seed boundaries and independent pre-change default baseline.
+- [ ] Activate the captured default-frame fingerprints as an offline regression before changing match storage.
 - [ ] Add validated plain search options, key-layout/shape records and checked requested-storage calculations with target-layout tests.
-- [ ] Freeze attributed pinned-C hash vectors and reproduction/provenance checks before implementing the new hash primitives.
+- [x] Freeze attributed pinned-C hash vectors and reproduction/provenance checks before implementing the new hash primitives.
 - [ ] Add safe exact-width key extraction and unsalted four-through-eight-byte hashing, preserving current four-byte values and rejecting incomplete keys.
 - [ ] Make MatchTable dimensions and layout configurable, preserving exact owners and logical state on failure, checked seed copying and equivalent safe/unsafe access.
 - [ ] Make MatchChain heads/nodes configurable with compatible seed transfer, bounded tags/visits and allocator-failure/resize coverage in both backends.

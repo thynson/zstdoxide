@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "generator": "tests/upstream/match-search/hash_oracle.c",
+  "generator_sha256": "004e5e82466efa1c87f216f140dd86bef6eb546812eb067ca8a8d79c340c79b0",
+  "importer": "scripts/import_match_search_fixtures.py",
+  "importer_sha256": "d72d112d769f926127d920f045f22c706ed1cc6c96b140e6cd4f3489a43cb9e3",
+  "source_sha256": {
+    "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b",
+    "lib/zstd_errors.h": "66a8c3f71d12ea6e797e4f622f31f3f8f81c41b36f48cad4f5de7d8bfb6aac0a",
+    "lib/common/allocations.h": "6a718e8edaca112abdc0bdfa7de67edefaa44c8d9e514b79672ab58ab3a9118a",
+    "lib/common/bits.h": "5bb7693a35d7ce03f8715c0b1e237062285e052250fdd34f72f38e7e92365090",
+    "lib/common/bitstream.h": "a9461685c9add6f609078acc950a08db4c02e6e6a849d550f45182ba2ae38556",
+    "lib/common/compiler.h": "d19829705d8039437ffba873df2b58d20d7b876d58da479121d2e515df55cbf7",
+    "lib/common/cpu.h": "23d520b536a6f23114e66549d03a967b1f24b15560c5b1ebd47ee392ccee4a1c",
+    "lib/common/debug.h": "8260cd5087b8309679c61b772b535688993c61a675a30481b8ae55b45740ba15",
+    "lib/common/error_private.h": "ae077bb433eb150ee247410a0357f910b9c07be839c6a9abe0b2e6b18ceb716d",
+    "lib/common/fse.h": "5235ce1e512bf80204d013b1f4cecd776fdaa9effddb48308bce08f6d0b84499",
+    "lib/common/huf.h": "9a83d899c8c9bf03389d482562090ec2443bc0f87f27864a2b891b180333f2d4",
+    "lib/common/mem.h": "4dd5fe76fa30a020cd4b3af3134ae143920300a1fe54baac1a5da73297e66783",
+    "lib/common/portability_macros.h": "75e2b43968b70decc6bd17876833be04894035594ddc1e745cd6b70be8265637",
+    "lib/common/xxhash.h": "8cb837b21a8fe9a6b9dbcd0961ab16e733bfcbfa9e003f3a496ce07ae80aa8ee",
+    "lib/common/zstd_deps.h": "9c77ea7d0afa8d5c868a7839e178a446a82d88eb75fd56f2fd7d9d96c5ab7c11",
+    "lib/common/zstd_internal.h": "ad3d95ce2b81a8c5c6b00cfe6323d8e80cacb690d3b5883725cd0d939f4f576f",
+    "lib/common/zstd_trace.h": "17f6daa4c7e97055cd1ed7bcf4d9241a4e79b465f083c5d732fda1df2f0be11e",
+    "lib/compress/zstd_compress_internal.h": "ab7754413cef565da559bda7eb738bc2b3708c48877cb9ec37aff767d32c57d1",
+    "lib/compress/zstd_cwksp.h": "ed77c2739b18b9800b97785262526a1dd4f385311ca5c2caa20b6f2a35f3735d",
+    "lib/compress/zstd_preSplit.h": "910facb2e3442e42a6952c514223c4502d95ed957bf7dc73982b3b03785b361b"
+  },
+  "compatibility_reference": {
+    "kind": "Historical arithmetic guard, not independent Rust execution",
+    "repository_revision": "0111aef8a862e36d8b4a812ee1c9a31032ee3fef",
+    "source_sha256": {
+      "src/matchfinder.rs": "8f5e28b2127533638947744917078c929a9e2da785b6c38fd7e6c13ada00f9a6",
+      "src/matchchain.rs": "dbf5c8f65b8f6dedfaaa3907e22bb0e932029793bc0e1cbe412189113fc78e80"
+    },
+    "expression": "little_endian_u32.wrapping_mul(0x9e3779b1) >> 16",
+    "policy": "Historical source attribution; these are not dependencies on mutable current Rust sources. The TSV current_rust_expression_bucket column means current at this recorded pre-Module-11 revision."
+  },
+  "fixtures": [
+    {
+      "path": "compatibility.tsv",
+      "size": 1439,
+      "sha256": "7031c8ad88fa9ee3a4d67a300e9c40bec780d505c1358ab3150840ca53a46444",
+      "rows": 64
+    },
+    {
+      "path": "invariance.tsv",
+      "size": 142548,
+      "sha256": "e14d722aeef553d4c5e8bfac521b1489f91a849947095db75083a0b5c00ca299",
+      "rows": 2304
+    },
+    {
+      "path": "patterns.bin",
+      "size": 512,
+      "sha256": "1081bb9bf9f8165786c86c63c227ad9e7450c0a87a83dd4645a3bddac6771ac3",
+      "records": 64
+    },
+    {
+      "path": "patterns.tsv",
+      "size": 2169,
+      "sha256": "e2922e8559fc4a73dcbc7367a0045d9c7a71d026d5917ee182440548fe91a83a",
+      "rows": 64
+    },
+    {
+      "path": "vectors.tsv",
+      "size": 85501,
+      "sha256": "628ff9df0d3b6c972233c43e5ffbc4aa11a1445908054c5d30da47b3afd078ce",
+      "rows": 2880
+    }
+  ],
+  "sensitivity_pairs_by_width": {
+    "4": 576,
+    "5": 576,
+    "6": 576,
+    "7": 576
+  },
+  "policy": "C-only unsalted hash observations for widths 4..8/logs 10..18, with fully initialized eight-byte C inputs. Unused-high-byte pairs and historical four-byte arithmetic guards do not establish Rust execution, permit Rust overreads, or prove codec/candidate/strategy/ratio parity.",
+  "capture": {
+    "compiler_command": [
+      "cc"
+    ],
+    "compiler_executable": "/usr/bin/cc",
+    "compiler_executable_sha256": "7f30f076d0e9c38f772a76449fca9da8cf97f6a3d43b94c90a00e4f9ce7ad39e",
+    "compiler_version": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+    "compile_command_template": [
+      "cc",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-unused-function",
+      "-isysroot",
+      "<sdk>",
+      "-I",
+      "<upstream>/lib/compress",
+      "-MMD",
+      "-MF",
+      "<temporary>/optimized.d",
+      "<root>/tests/upstream/match-search/hash_oracle.c",
+      "<upstream>/lib/libzstd.a",
+      "-o",
+      "<temporary>/optimized"
+    ],
+    "host_system": "Darwin",
+    "host_machine": "arm64",
+    "observed_c_host": {
+      "version": "1.5.7",
+      "size_t_bits": "64",
+      "int_bits": "32",
+      "byte_order": "little"
+    },
+    "static_archive_sha256": "2a6a6b22f5c98389d4c3cac3ab65ac77386ae529aa6fcdb8dbdbe267210a640d",
+    "cli": {
+      "sha256": "eb20e7f4cb5c93836d7b1a8508dad08d1ced73762ca8f8abb9d8dc1e5df7b5b2",
+      "version": "*** Zstandard CLI (64-bit) v1.5.7, by Yann Collet ***\n",
+      "role": "Optional provenance only; never supplies hash observations"
+    },
+    "compiler_included_sources": [
+      "lib/common/allocations.h",
+      "lib/common/bits.h",
+      "lib/common/bitstream.h",
+      "lib/common/compiler.h",
+      "lib/common/cpu.h",
+      "lib/common/debug.h",
+      "lib/common/error_private.h",
+      "lib/common/fse.h",
+      "lib/common/huf.h",
+      "lib/common/mem.h",
+      "lib/common/portability_macros.h",
+      "lib/common/xxhash.h",
+      "lib/common/zstd_deps.h",
+      "lib/common/zstd_internal.h",
+      "lib/common/zstd_trace.h",
+      "lib/compress/zstd_compress_internal.h",
+      "lib/compress/zstd_cwksp.h",
+      "lib/compress/zstd_preSplit.h",
+      "lib/zstd.h",
+      "lib/zstd_errors.h"
+    ],
+    "sanitizer_output_equal": null,
+    "policy": "Capture compiler/archive/host are historical metadata; --check compares stable provenance/data and reports the current environment separately. Only the recorded host was executed; no inferred native platform coverage."
+  }
+}

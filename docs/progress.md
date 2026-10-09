@@ -391,3 +391,12 @@ encoded bytes. Future offline fingerprint comparisons remain distinct from the
 original complete C byte comparisons. Historical capacity observations include
 all codec and selected dictionary storage; a future search-only metric is not
 inferred from them. This checkpoint implements no new controls or algorithms.
+
+The independent hash-oracle checkpoint now freezes 2,880 pinned C observations,
+2,304 unused-byte pairs with full-width controls, and 64 historical arithmetic
+guards. Optimized and ASan/UBSan reproduction agree; source provenance and
+immutable checks pass. Isolated corruption/report-overwrite tests and three
+independent generic-audit rejection checks pass. The offline inventory now
+verifies 324 fixtures in ten collections. This is primitive C evidence only;
+the Rust hash implementation and live controls remain separate work items.
+See [match-search validation](match-search-validation.md).

@@ -1,0 +1,53 @@
+{
+  "purpose": "New match-search C-only hash fixtures/importer; no Rust validation or codec parity claims",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "summary": {
+    "commands": 10,
+    "all_expected_results": true,
+    "negative_commands": 2,
+    "collection_files_unchanged_by_checks": true,
+    "isolated_corrupt_collection_unchanged_by_rejection": true,
+    "upstream_headers_verified": 20,
+    "primitive_rows": 2880,
+    "invariance_pairs": 2304,
+    "width_eight_sensitivity_controls": 2304,
+    "historical_four_byte_arithmetic_guards": 64,
+    "input_patterns": 64,
+    "original_external_fixture_bytes_preserved": true,
+    "codec_tests_run": 0,
+    "rust_implementation_tests_run": 0
+  },
+  "root_review": {
+    "commands": 6,
+    "all_expected_results": true,
+    "isolated_rejections": [
+      "fixture SHA change",
+      "importer SHA change",
+      "missing required collection"
+    ],
+    "owned_source_review": "No correctness findings; exact wrapper calls, explicit C readability, independent stable provenance and runtime validation inspected."
+  },
+  "collection_sha256": {
+    "scripts/import_match_search_fixtures.py": "d72d112d769f926127d920f045f22c706ed1cc6c96b140e6cd4f3489a43cb9e3",
+    "tests/upstream/match-search/README.md": "7adf67603b2c2e3cba9ea00d0181fbd78055635e7b38fbbdc1a3e2c2d20d80c6",
+    "tests/upstream/match-search/compatibility.tsv": "7031c8ad88fa9ee3a4d67a300e9c40bec780d505c1358ab3150840ca53a46444",
+    "tests/upstream/match-search/hash_oracle.c": "004e5e82466efa1c87f216f140dd86bef6eb546812eb067ca8a8d79c340c79b0",
+    "tests/upstream/match-search/invariance.tsv": "e14d722aeef553d4c5e8bfac521b1489f91a849947095db75083a0b5c00ca299",
+    "tests/upstream/match-search/manifest.json": "e788ef5fb5e3a01606b062edd7750916876816b208bcc355ca2ba2b8c28be526",
+    "tests/upstream/match-search/patterns.bin": "1081bb9bf9f8165786c86c63c227ad9e7450c0a87a83dd4645a3bddac6771ac3",
+    "tests/upstream/match-search/patterns.tsv": "e2922e8559fc4a73dcbc7367a0045d9c7a71d026d5917ee182440548fe91a83a",
+    "tests/upstream/match-search/vectors.tsv": "628ff9df0d3b6c972233c43e5ffbc4aa11a1445908054c5d30da47b3afd078ce"
+  },
+  "validation_evidence_sha256": "6bd952c9bb21e9877a598c43573602b28e48e469b191c55c0e378f83c53c0b41",
+  "root_checks_sha256": "1f88d7cc97bf237c276b4dd89f72a40694155720cb72d0d94ad8485af03f0fc8",
+  "archive": {
+    "path": "docs/evidence/2026-10-09-match-search-oracle.tar.gz",
+    "sha256": "8fa5de816794685adcb1abf9d1c0b896f500462d3627d0e58d8b7e9e7101ee4e",
+    "files": 25
+  },
+  "limits": [
+    "C hash observations on arm64 macOS only; no native 32-bit or big-endian execution.",
+    "Historical four-byte expression guards are arithmetic attribution, not a Rust implementation run.",
+    "No complete upstream test case status promoted by this fixture-only work item."
+  ]
+}
