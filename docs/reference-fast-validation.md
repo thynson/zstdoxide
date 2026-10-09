@@ -66,3 +66,28 @@ inputs stayed frozen; independent working-tree edits mean this is not the final
 immutable whole-repository matrix. Context snapshots and intent-bearing sequence
 preparation remain their own item. No additional C, Miri or performance execution
 is attributed to these tests.
+
+## Known-size Fast profile admission
+
+`FastExecutionPlan` resolves the existing request against actual known input
+length and dictionary size zero before admitting a strategy or allocating any
+owner. It derives a checked private layout, actual usize-cell table payload,
+window/block limits, paired sampling step, literal policy and reference frame
+defaults. Valid non-Fast strategies return UnsupportedFeature; Fast window/hash
+requirements beyond the documented execution caps return ResourceLimit. Existing
+scalar validity and known-size rules remain in the reference resolver.
+
+Thirteen tests distinguish the captured four source tiers, negative levels,
+level-two Fast/DoubleFast transitions, explicit strategy overrides, actual size
+versus misleading hints, resource caps after adjustment and unused-but-validated
+chain/search fields. Fixture-backed observations and additional source-derived
+combinations are labeled separately. The new execution plan neither changes the
+named policy APIs nor allocates a chain for unused reference fields.
+
+All nine checks pass with 52 unchanged recorded source/dependency inputs: each
+of four safe/feature/no_std configurations passes all thirteen tests, strict
+library Clippy safe/all passes, both no_std library checks pass and owned
+formatting passes. [Admission evidence](evidence/2026-10-09-fast-profile-admission.json)
+retains commands, complete logs, compiler/environment, before/after hashes and
+count guards. No new parser, public compression function or C campaign is
+claimed by this allocation-free foundation.
