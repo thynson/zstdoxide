@@ -1,0 +1,31 @@
+{
+  "command": [
+    "bash",
+    "scripts/benchmark.sh",
+    "docs/measurements/2026-10-09-entropy"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 288.9999625829514,
+  "log": "/tmp/zstdoxide-module8-benchmarks.log",
+  "sha256": "d49fe563ff1e46d238d6659c526f2163bb0283adc68de26a7f60043acc444c4b",
+  "files": {
+    "docs/measurements/2026-10-09-entropy/all.tsv": "95f76fb47297e85348f46641398b8181258bf490b1cfb8089ee8a17810101915",
+    "docs/measurements/2026-10-09-entropy/environment.txt": "e2aedec4e76adfa32ecbecc5a703a658040e371471d2b1a2957ffb9d061b8ded",
+    "docs/measurements/2026-10-09-entropy/safe.tsv": "a6bef5c70df1b2371101905ef9cd38728e0d97210e692c451c43da474f9877a6",
+    "docs/measurements/2026-10-09-entropy/source.sha256": "e44396045edaab727d6f691af8ca9bb1841f49ee477fac0e91d5fafa137e275f",
+    "docs/measurements/2026-10-09-entropy/summary.md": "0f8255d36de9311a363df854298614de05f2ee29cea6c375504cc6d33bebd6b6",
+    "docs/measurements/2026-10-09-entropy/unsafe-bitstream.tsv": "a7ed61b65098c557ac9e621571e3ad5a42acbe139a43504a7dcb84a1db2d8709",
+    "docs/measurements/2026-10-09-entropy/unsafe-byte-cursor.tsv": "da42f14b3d2b34ab16025f9458f803fa427a127f34a4d87cc6be6f31166f8252",
+    "docs/measurements/2026-10-09-entropy/unsafe-dictionary.tsv": "9281458b3130aae6a5b0c51d470dd5b21b26c33963ce48c4a1546b72aa8dfa5b",
+    "docs/measurements/2026-10-09-entropy/unsafe-fse-encoder.tsv": "676302224e78169986f5e661e9668cd27a13c75dbeb473afbe504adedba7850f",
+    "docs/measurements/2026-10-09-entropy/unsafe-fse.tsv": "564ddb09cdac79495cfe47ba45591fe7a451f70547f9d42fa0ce977516b26786",
+    "docs/measurements/2026-10-09-entropy/unsafe-history.tsv": "9e993cf938c4454a0791563825b7d97fb33563c848f6ddd7613b21fd2eeb8b5c",
+    "docs/measurements/2026-10-09-entropy/unsafe-huffman-codebook.tsv": "81fe6166033a16f6f6939847a20b7746917f97310f9e89f84ea8c5e313f6c447",
+    "docs/measurements/2026-10-09-entropy/unsafe-huffman.tsv": "f679f3fb80a5f272df4fb99f03a85ad64e87853cb3c815d472cb8e3b452f6f0b",
+    "docs/measurements/2026-10-09-entropy/unsafe-match-chain.tsv": "4b1d4358ceaaf67ec6ea5c38607c747a3f465f7676b59db82f14d3614470ab02",
+    "docs/measurements/2026-10-09-entropy/unsafe-match-table.tsv": "bf8bf3b0f77ceb9d8fc711f3224e6c84821d33a9a0a3960d02b380bd379f1333",
+    "docs/measurements/2026-10-09-entropy/unsafe-ring-history.tsv": "140cebf4132086a590be0b21126a1704fb48fc7d727cc81afc6a51552c6fd018",
+    "docs/measurements/2026-10-09-entropy/unsafe-training.tsv": "d9b5260b761f1ce55ea45be158071c8101d71763eea54e1f88374b739aecf371"
+  },
+  "source_sha256": "d7730800b32fdabe1ecd4a225a8240b91bbd894dda206fea5058045de79467ad"
+}

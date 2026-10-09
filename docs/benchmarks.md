@@ -1,5 +1,64 @@
 # Recorded backend comparisons
 
+## Module 8 entropy and strategy measurements
+
+The 2026-10-09 entropy run used Rust 1.89.0 on `aarch64-apple-darwin`, release
+overflow checks, five samples of at least 150 ms, fourteen configurations and
+twenty-four workloads. Safe, each of twelve independent unsafe features, and
+all features produced identical per-workload fingerprints, complete output
+hashes, sizes and retained-capacity metadata. Source and benchmark inputs stayed
+unchanged throughout. The [complete summary and raw measurements](measurements/2026-10-09-entropy/summary.md)
+include every earlier backend and the three new access families plus six named
+strategy/source pairs.
+
+| New feature alone | Workload | Safe ns/unit | Feature ns/unit | Relative throughput |
+| --- | --- | ---: | ---: | ---: |
+| `unsafe-fse-encoder` | Inverse FSE transition | 1.1416 | 1.2306 | 0.928x |
+| `unsafe-huffman-codebook` | Canonical code lookup | 0.7454 | 0.7618 | 0.978x |
+| `unsafe-match-chain` | Candidate lookup | 2.3919 | 2.3657 | 1.011x |
+
+The FSE and codebook opt-ins were slower in isolation; the chain difference is
+small. These sequential workstation measurements do not establish a general
+benefit for the new unsafe families. Safe Rust remains the default. All-feature
+results include interactions and noise: one-shot text decoding improves from
+1.1892 to 0.9460 ns/byte (1.257x), while dictionary compression changes from
+4.9111 to 5.6150 ns/byte (0.875x). The complete raw ranges are retained; no C
+throughput or universal speedup is claimed.
+
+| Strategy | Source | Safe ns/input byte | Encoded bytes | Reset retained bytes |
+| --- | --- | ---: | ---: | ---: |
+| Greedy | 99,328 compressible bytes | 3.0672 | 1,198 | 1,351,457 |
+| Chain | Same compressible source | 4.4887 | 1,203 | 10,259,371 |
+| Lazy | Same compressible source | 6.0918 | 1,206 | 10,266,865 |
+| Greedy | 8,320 ambiguous bytes | 11.5277 | 403 | 1,425,572 |
+| Chain | Same ambiguous source | 24.9433 | 369 | 12,959,340 |
+| Lazy | Same ambiguous source | 21.6123 | 279 | 12,942,794 |
+
+The ambiguous workload uses the same 8,960-byte raw dictionary for all three
+strategies; the compressible workload has no dictionary. The named strategies
+are independent Rust algorithms, not upstream numeric levels. Greedy wins both
+time and size on this compressible input. Chain and Lazy spend more time and
+memory to improve size on the ambiguous input. These workload-specific tradeoffs
+do not imply that a higher search budget always improves compression. The
+complete 512-input regression content comparison is recorded separately in
+[the upstream regression adaptation](../tests/upstream/REGRESSION.md).
+
+Memory trials show the decoder retaining 263,841 bytes for both 512 KiB and
+8 MiB of single-frame output, and 509,902 bytes for both four and sixty-four
+concatenated frames. Greedy encoding retains 1,510,177 bytes for both four and
+sixty-four 128 KiB input blocks. These are observed context heap capacities,
+excluding inline state, caller buffers, allocator overhead and transient scratch;
+they are not universal process-memory limits. The persistent dictionary
+decoder/encoder retains 17,099 / 1,827,319 bytes after reset.
+
+The measured source/input SHA-256 is
+`d7730800b32fdabe1ecd4a225a8240b91bbd894dda206fea5058045de79467ad`,
+at revision `84fef7606e12898f2fc53b2fd8158dd1c42b676f`. Other agents stopped
+compilation and tests during timing. CPU model access was unavailable; the
+compiler, host, timestamp and dirty documentation paths are recorded in the
+environment file. [Benchmark execution evidence](evidence/2026-10-09-entropy-benchmarks.json)
+includes the successful script status and hashes of every measurement file.
+
 ## Module 7 dictionary and training measurements
 
 The 2026-10-09 run used Rust 1.89.0 on `aarch64-apple-darwin`, release overflow

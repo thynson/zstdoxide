@@ -1,0 +1,31 @@
+Timestamp: 2026-10-09 03:46:27 UTC
+rustc 1.89.0 (29483883e 2025-08-04)
+binary: rustc
+commit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2
+commit-date: 2025-08-04
+host: aarch64-apple-darwin
+release: 1.89.0
+LLVM version: 20.1.7
+Darwin MacBook-Air-2.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:18:13 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_ARM64_T8132 arm64
+84fef7606e12898f2fc53b2fd8158dd1c42b676f
+?? docs/entropy-encoder-validation.md
+?? docs/evidence/2026-10-09-entropy-focused-index.json
+?? docs/evidence/2026-10-09-entropy-matrix-after.json
+?? docs/evidence/2026-10-09-entropy-matrix-before.json
+?? docs/evidence/2026-10-09-entropy-matrix-results.json
+?? docs/evidence/2026-10-09-entropy-migration-gate.json
+?? docs/evidence/2026-10-09-entropy-oracles.json
+?? docs/evidence/2026-10-09-entropy-output-results.json
+?? docs/evidence/2026-10-09-huffman-selector-final-results.json
+?? docs/evidence/2026-10-09-module8-benchmark-harness-results.json
+?? docs/evidence/2026-10-09-module8-entropy-1831-results.json
+?? docs/evidence/2026-10-09-module8-entropy-1884-results.json
+?? docs/evidence/2026-10-09-module8-fse-accessor-results.json
+?? docs/evidence/2026-10-09-module8-fse-select-results.json
+?? docs/evidence/2026-10-09-module8-huffman-checkpoints.json
+?? docs/evidence/2026-10-09-module8-public-sequence-results.json
+?? docs/evidence/2026-10-09-module8-sequence-context-results.json
+?? docs/evidence/2026-10-09-module8-sequence-results.json
+?? docs/evidence/2026-10-09-sequence-generator-results.json
+?? docs/measurements/2026-10-09-entropy/
+CPU model unavailable under current permissions.
