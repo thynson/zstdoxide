@@ -48,6 +48,9 @@ mod entropy_output;
 mod error;
 mod fast_frame;
 #[cfg(test)]
+#[path = "../tests/support/fast_frame_oracle.rs"]
+mod fast_frame_oracle_fixture;
+#[cfg(test)]
 #[path = "../tests/support/fast_oracle.rs"]
 mod fast_oracle_fixture;
 #[cfg(test)]

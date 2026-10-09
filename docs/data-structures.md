@@ -553,3 +553,14 @@ may leave scratch/table changes; the enclosing one-shot caller discards them.
 The direct parser admits blocks of at least seven bytes; ordinary tiny blocks
 are handled by the future frame wrapper. The parser itself forbids unsafe code
 and relies on the already independently gated sampled MatchTable accessors.
+
+The ordinary-frame trajectory adapter separately packs 23 frozen cases and 64
+nonempty blocks, preserving zero-size source calls and tiny stale-candidate
+markers. Its safe test reader regenerates each bounded source once, verifies
+captured fingerprints, replays literal/match bytes and full wire publication,
+and validates every sorted table delta and complete table fingerprint. Raw C
+repeat cells remain separate from full wire semantics. Its scalar/range records
+and owned test vectors need no unsafe backend; source, sequence and table counts
+are checked before fallible reservation. Normal Cargo tests consume the derived
+binary without JSON/gzip dependencies or processes. This adapter excludes the
+partial headers and is not a compressed-frame decoder.

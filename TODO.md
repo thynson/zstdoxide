@@ -46,6 +46,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Add checked explicit wire-offset value transitions and planning while preserving canonical named plans.
 - [x] Add committed-repeat snapshots and transactional preparation of intent-bearing sequences with complete ownership/failure coverage.
 - [x] Implement safe single-block Fast sampling, repeat probes, backward/forward matches, tails and acceleration against frozen observations.
+- [x] Derive a dependency-free, hash-bound reader of the frozen ordinary-frame candidate trajectories for persistent-state comparisons.
 - [ ] Preserve sampled Fast state across blocks with checked whole-source ranges and raw/RLE/compressed transition coverage.
 - [x] Extract the parser-independent block entropy owner while preserving named bytes, allocator identities, clone/reserve order and capacities.
 - [x] Add an allocation-free known-size Fast frame header and checked raw-frame bound, preserving the named header bytes.

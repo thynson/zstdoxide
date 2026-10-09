@@ -8,6 +8,7 @@ python3 scripts/import_fast_collector.py --check
 python3 scripts/import_fast_frame_publication.py --check
 python3 scripts/import_fast_parser_families.py --check
 python3 scripts/pack_fast_parser_fixtures.py --check
+python3 scripts/pack_fast_frame_trajectories.py --check
 python3 scripts/check_match_search_baseline.py
 
 # Each backend alone must compile without std and pass the same test suite.
