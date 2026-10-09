@@ -28,6 +28,7 @@ pub(crate) struct Selection<'a> {
     mode: Mode,
     table: TableChoice<'a>,
     description: Vec<u8>,
+    #[cfg(test)]
     stream_bits: usize,
     bit_cost: usize,
 }
@@ -50,12 +51,14 @@ impl Selection<'_> {
 
     /// Final state width plus reverse transition widths, without the shared
     /// terminal marker, byte padding, mode/count fields or sequence extra bits.
+    #[cfg(test)]
     pub(crate) fn stream_bits(&self) -> usize {
         self.stream_bits
     }
 
     /// Eight times the description length plus `stream_bits`. All exclusions
     /// documented on `stream_bits` also apply to this exact channel cost.
+    #[cfg(test)]
     pub(crate) fn bit_cost(&self) -> usize {
         self.bit_cost
     }
@@ -132,6 +135,7 @@ pub(crate) fn select<'a>(
                     mode,
                     table: TableChoice::Borrowed(table),
                     description: Vec::new(),
+                    #[cfg(test)]
                     stream_bits,
                     bit_cost: stream_bits,
                 },
@@ -218,6 +222,7 @@ fn owned_choice<'a>(
         mode,
         table: TableChoice::Owned(table),
         description,
+        #[cfg(test)]
         stream_bits,
         bit_cost,
     })

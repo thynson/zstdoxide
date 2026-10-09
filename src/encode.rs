@@ -2,17 +2,16 @@
 
 use alloc::vec::Vec;
 
-use crate::bitwriter::BitWriter;
-use crate::constants::{LL_BASE, LL_BITS, LL_DEFAULT, ML_BASE, ML_BITS, ML_DEFAULT, OF_DEFAULT};
-use crate::fse_encode::FseEncodingTable as EncodingTable;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
+use crate::sequence_context::{LogicalSequence, SequenceEncoder};
 use crate::{Dictionary, Error, Result, SharedDictionary, frame::MAX_BLOCK_SIZE, xxhash};
 
-/// Predefined offset tables provide symbols 0..=28. Larger dictionaries remain
-/// valid, but the initial encoder searches only this addressable suffix.
+/// Dictionary search retains the initial parser's bounded distance policy.
+/// Adaptive tables support wider offset codes, but searching more distant
+/// content is a separate strategy decision; larger dictionaries remain valid.
 const MAX_DICTIONARY_DISTANCE: usize = (1 << 29) - 4;
 
 /// Compresses input into one checksummed Zstandard frame with known content size.
@@ -27,9 +26,9 @@ pub fn compress(input: &[u8]) -> Result<Vec<u8>> {
 ///
 /// A formatted dictionary's nonzero identifier is written using its smallest
 /// field; a raw dictionary has no identifier. Input size excludes dictionary
-/// bytes. Matches use this encoder's greedy parser and predefined sequence
-/// distributions. Literals may reuse the dictionary's prepared Huffman table;
-/// matches currently use explicit offset values rather than initial repeats.
+/// bytes. Matches use this encoder's greedy parser. Literal and sequence tables
+/// may reuse the dictionary's exact prepared entropy; repeat offsets are planned
+/// forward and published only when their compressed block is emitted.
 /// Corresponds to the one-shot contract of upstream `ZSTD_compress_usingCDict`.
 pub fn compress_with_dictionary(input: &[u8], dictionary: &SharedDictionary) -> Result<Vec<u8>> {
     compress_frame(input, Some(dictionary))
@@ -73,14 +72,13 @@ pub(crate) struct BlockEncoder {
     history: Option<RingHistory>,
     frame_position: u64,
     window_size: u64,
-    entropy_tables: Option<EncodingTables>,
     literals: Vec<u8>,
     literal_encoder: LiteralEncoder,
     literal_table: Option<HuffmanCodebook>,
     pending_literal_table: Option<HuffmanCodebook>,
-    sequences: Vec<Sequence>,
+    sequences: Vec<LogicalSequence>,
+    sequence_encoder: SequenceEncoder,
     payload: Vec<u8>,
-    writer: BitWriter,
 }
 
 impl BlockEncoder {
@@ -92,14 +90,13 @@ impl BlockEncoder {
             history: None,
             frame_position: 0,
             window_size: MAX_BLOCK_SIZE as u64,
-            entropy_tables: None,
             literals: Vec::new(),
             literal_encoder: LiteralEncoder::new(),
             literal_table: None,
             pending_literal_table: None,
             sequences: Vec::new(),
+            sequence_encoder: SequenceEncoder::new(),
             payload: Vec::new(),
-            writer: BitWriter::new(),
         }
     }
 
@@ -135,6 +132,7 @@ impl BlockEncoder {
         } else if let Some(seed) = &mut self.dictionary_seed {
             seed.reset();
         }
+        self.sequence_encoder.start_frame(dictionary.as_deref())?;
         self.literal_table = literal_table;
         self.pending_literal_table = None;
         self.active_dictionary = dictionary;
@@ -151,6 +149,7 @@ impl BlockEncoder {
         self.active_dictionary = None;
         self.literal_table = None;
         self.pending_literal_table = None;
+        self.sequence_encoder.reset();
         if let Some(history) = &mut self.history {
             history.clear();
         }
@@ -193,6 +192,7 @@ impl BlockEncoder {
 
     fn encode_block(&mut self, block: &[u8], last: bool, output: &mut Vec<u8>) -> Result<()> {
         self.pending_literal_table = None;
+        self.sequence_encoder.discard();
         output
             .try_reserve(block.len() + 3)
             .map_err(|_| Error::AllocationFailed)?;
@@ -210,9 +210,11 @@ impl BlockEncoder {
             if let Some(table) = self.pending_literal_table.take() {
                 self.literal_table = Some(table);
             }
+            self.sequence_encoder.commit();
             return Ok(());
         }
         self.pending_literal_table = None;
+        self.sequence_encoder.discard();
         write_block_header(output, block.len(), 0, last);
         output.extend_from_slice(block);
         Ok(())
@@ -228,16 +230,11 @@ impl BlockEncoder {
                 .dictionary_seed
                 .as_ref()
                 .map_or(0, MatchTable::retained_capacity)
-            + self.entropy_tables.as_ref().map_or(0, |tables| {
-                tables.literals.retained_capacity()
-                    + tables.matches.retained_capacity()
-                    + tables.offsets.retained_capacity()
-            })
             + self.literals.capacity()
             + self.literal_encoder.retained_capacity()
-            + self.sequences.capacity() * core::mem::size_of::<Sequence>()
+            + self.sequences.capacity() * core::mem::size_of::<LogicalSequence>()
+            + self.sequence_encoder.retained_capacity()
             + self.payload.capacity()
-            + self.writer.retained_capacity()
             + self
                 .history
                 .as_ref()
@@ -278,14 +275,6 @@ fn dictionary_field(dictionary_id: u32) -> (u8, usize) {
 fn write_block_header(output: &mut Vec<u8>, size: usize, kind: u8, last: bool) {
     let header = ((size as u32) << 3) | (u32::from(kind) << 1) | u32::from(last);
     output.extend_from_slice(&header.to_le_bytes()[..3]);
-}
-
-/// A plain sequence with block-bounded lengths and an encodable match distance.
-#[derive(Clone, Copy, Debug)]
-struct Sequence {
-    literal_length: u32,
-    match_length: u32,
-    distance: u32,
 }
 
 /// Selects matches greedily, chooses literal sections, and encodes sequences.
@@ -355,7 +344,7 @@ impl BlockEncoder {
                 && let Some((distance, match_length)) = source.find_match(previous, position)?
             {
                 literals.extend_from_slice(&block[literal_start..position]);
-                sequences.push(Sequence {
+                sequences.push(LogicalSequence {
                     literal_length: (position - literal_start) as u32,
                     match_length: match_length as u32,
                     distance: distance as u32,
@@ -377,23 +366,12 @@ impl BlockEncoder {
         self.pending_literal_table = self
             .literal_encoder
             .select(literals, self.literal_table.as_ref())?;
-        if !sequences.is_empty() {
-            let tables = match self.entropy_tables.as_ref() {
-                Some(tables) => tables,
-                None => self.entropy_tables.insert(EncodingTables::new()?),
-            };
-            encode_sequences(sequences, tables, &mut self.writer)?;
-        }
-        let stream = if sequences.is_empty() {
-            &[][..]
-        } else {
-            self.writer.as_bytes()
-        };
+        self.sequence_encoder.prepare(sequences)?;
+        let stream = self.sequence_encoder.as_bytes();
         let section = self.literal_encoder.as_bytes();
         let capacity = section
             .len()
             .checked_add(stream.len())
-            .and_then(|size| size.checked_add(4))
             .ok_or(Error::ResourceLimit)?;
         let payload = &mut self.payload;
         payload.clear();
@@ -401,11 +379,7 @@ impl BlockEncoder {
             .try_reserve_exact(capacity)
             .map_err(|_| Error::AllocationFailed)?;
         payload.extend_from_slice(section);
-        write_sequence_count(payload, sequences.len());
-        if !sequences.is_empty() {
-            payload.push(0); // Sequence distributions remain predefined here.
-            payload.extend_from_slice(stream);
-        }
+        payload.extend_from_slice(stream);
         Ok(payload.len() < block.len())
     }
 }
@@ -586,93 +560,65 @@ fn word_at(block: &[u8], position: usize) -> [u8; 4] {
     ]
 }
 
-/// Writes the variable-width count used by `ZSTD_encodeSequences`.
-fn write_sequence_count(output: &mut Vec<u8>, count: usize) {
-    if count < 128 {
-        output.push(count as u8);
-    } else if count < 0x7f00 {
-        output.extend_from_slice(&[(128 + (count >> 8)) as u8, count as u8]);
-    } else {
-        output.push(255);
-        output.extend_from_slice(&((count - 0x7f00) as u16).to_le_bytes());
-    }
-}
-
-struct EncodingTables {
-    literals: EncodingTable,
-    matches: EncodingTable,
-    offsets: EncodingTable,
-}
-
-impl EncodingTables {
-    fn new() -> Result<Self> {
-        Ok(Self {
-            literals: EncodingTable::new(&LL_DEFAULT, 6)?,
-            matches: EncodingTable::new(&ML_DEFAULT, 6)?,
-            offsets: EncodingTable::new(&OF_DEFAULT, 5)?,
-        })
-    }
-}
-
-/// Finds the code whose interval includes a previously bounded length.
-fn length_code(length: u32, bases: &[u32]) -> usize {
-    bases.partition_point(|&base| base <= length) - 1
-}
-
-/// Writes sequences backward so their symbols and extra fields decode forward.
-/// Corresponds to the format contract of `ZSTD_encodeSequences`.
-fn encode_sequences(
-    sequences: &[Sequence],
-    tables: &EncodingTables,
-    writer: &mut BitWriter,
-) -> Result<()> {
-    writer.reset();
-    let (mut literal_state, mut match_state, mut offset_state) = (0, 0, 0);
-    for (index, sequence) in sequences.iter().rev().enumerate() {
-        let literal_code = length_code(sequence.literal_length, &LL_BASE);
-        let match_code = length_code(sequence.match_length, &ML_BASE);
-        let offset_value = sequence.distance + 3;
-        let offset_code = (31 - offset_value.leading_zeros()) as usize;
-        if index == 0 {
-            literal_state = tables.literals.initial(literal_code)?;
-            match_state = tables.matches.initial(match_code)?;
-            offset_state = tables.offsets.initial(offset_code)?;
-        } else {
-            // Decoder updates LL, ML, then OF. Write their inverse transitions
-            // in the opposite order, before this sequence's extra fields.
-            let offset = tables.offsets.transition(offset_code, offset_state)?;
-            let matches = tables.matches.transition(match_code, match_state)?;
-            let literals = tables.literals.transition(literal_code, literal_state)?;
-            writer.write(u32::from(offset.value), offset.bits)?;
-            writer.write(u32::from(matches.value), matches.bits)?;
-            writer.write(u32::from(literals.value), literals.bits)?;
-            offset_state = offset.state;
-            match_state = matches.state;
-            literal_state = literals.state;
-        }
-        // Decoder consumes OF, ML, then LL extra fields.
-        writer.write(
-            sequence.literal_length - LL_BASE[literal_code],
-            LL_BITS[literal_code],
-        )?;
-        writer.write(
-            sequence.match_length - ML_BASE[match_code],
-            ML_BITS[match_code],
-        )?;
-        writer.write(offset_value - (1_u32 << offset_code), offset_code as u8)?;
-    }
-    writer.write(u32::from(match_state), tables.matches.table_log())?;
-    writer.write(u32::from(offset_state), tables.offsets.table_log())?;
-    writer.write(u32::from(literal_state), tables.literals.table_log())?;
-    writer.finish()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::constants::{LL_DEFAULT, ML_DEFAULT, OF_DEFAULT};
     use crate::fse::FseTable;
+    use crate::fse_encode::FseEncodingTable as EncodingTable;
     use crate::{DecodeOptions, Dictionary, decompress_with_dictionary};
     use alloc::vec;
+
+    #[test]
+    fn sequence_state_is_published_only_for_accepted_blocks_and_reset_for_new_frames() {
+        let probe = [LogicalSequence {
+            literal_length: 1,
+            match_length: 4,
+            distance: 4,
+        }];
+        let mut initial = SequenceEncoder::new();
+        initial.prepare(&probe).unwrap();
+        let initial_bytes = initial.as_bytes().to_vec();
+        let mut encoder = BlockEncoder::new();
+        let mut output = Vec::new();
+        // This candidate has a real sequence but cannot repay its headers.
+        encoder.encode(b"abcdabcd", false, &mut output).unwrap();
+        assert!(!encoder.sequences.is_empty());
+        assert_eq!((output[0] >> 1) & 3, 0);
+        encoder.sequence_encoder.prepare(&probe).unwrap();
+        assert_eq!(encoder.sequence_encoder.as_bytes(), initial_bytes);
+        output.clear();
+        encoder.encode(&[42; 32], false, &mut output).unwrap();
+        assert_eq!((output[0] >> 1) & 3, 1);
+        encoder.sequence_encoder.prepare(&probe).unwrap();
+        assert_eq!(encoder.sequence_encoder.as_bytes(), initial_bytes);
+
+        encoder.reset();
+        let block = b"abcd".repeat(1024);
+        output.clear();
+        encoder.encode(&block, false, &mut output).unwrap();
+        assert_eq!((output[0] >> 1) & 3, 2);
+        let mut expected = SequenceEncoder::new();
+        expected.prepare(&encoder.sequences).unwrap();
+        expected.commit();
+        expected.prepare(&probe).unwrap();
+        encoder.sequence_encoder.prepare(&probe).unwrap();
+        let committed_bytes = encoder.sequence_encoder.as_bytes().to_vec();
+        assert_eq!(committed_bytes, expected.as_bytes());
+        assert_ne!(committed_bytes, initial_bytes);
+        for block in [&b"xyz"[..], &[9; 32][..]] {
+            output.clear();
+            encoder.encode(block, false, &mut output).unwrap();
+            encoder.sequence_encoder.prepare(&probe).unwrap();
+            assert_eq!(encoder.sequence_encoder.as_bytes(), committed_bytes);
+        }
+        encoder.reset();
+        encoder.sequence_encoder.prepare(&probe).unwrap();
+        assert_eq!(encoder.sequence_encoder.as_bytes(), initial_bytes);
+        encoder.start_frame(None, 1024).unwrap();
+        encoder.sequence_encoder.prepare(&probe).unwrap();
+        assert_eq!(encoder.sequence_encoder.as_bytes(), initial_bytes);
+    }
 
     #[test]
     fn only_emitted_compressed_blocks_publish_pending_literal_tables() {
@@ -1013,7 +959,7 @@ mod tests {
     }
 
     #[test]
-    fn formatted_dictionary_matches_ignore_custom_initial_repeat_offsets() {
+    fn formatted_dictionary_matches_plan_custom_initial_repeat_offsets() {
         let bytes = include_bytes!("../tests/upstream/inline-regressions/fixed-training.dict");
         let mut changed = bytes.to_vec();
         for position in (103..115).step_by(4) {
@@ -1047,7 +993,7 @@ mod tests {
     }
 
     #[test]
-    fn dictionary_candidate_lifetime_and_predefined_offset_limits_are_checked_at_start() {
+    fn dictionary_candidate_lifetime_and_search_distance_limits_are_checked_at_start() {
         let dictionary = Dictionary::raw(b"abcd").unwrap();
         let mut source = MatchSource {
             block: b"abcdabcdabcd",
@@ -1293,10 +1239,9 @@ mod tests {
 
     #[test]
     fn sequence_count_boundaries_and_overlapping_expansion_round_trip() {
-        let tables = EncodingTables::new().unwrap();
         for count in [1, 127, 128, 255, 256, 0x7eff, 0x7f00] {
             let mut sequences = vec![
-                Sequence {
+                LogicalSequence {
                     literal_length: 0,
                     match_length: 4,
                     distance: 1
@@ -1304,17 +1249,14 @@ mod tests {
                 count
             ];
             sequences[0].literal_length = 1;
-            let mut section = Vec::new();
-            write_sequence_count(&mut section, count);
-            section.push(0);
-            let mut writer = BitWriter::new();
-            encode_sequences(&sequences, &tables, &mut writer).unwrap();
-            section.extend_from_slice(writer.as_bytes());
+            let mut context = SequenceEncoder::new();
+            context.prepare(&sequences).unwrap();
+            let section = context.as_bytes();
             let length = count * 4 + 1;
             let mut history = crate::history::History::new(length);
             history.start_frame(length);
             crate::sequences::SequenceState::new()
-                .decode(&section, b"x", &mut history, MAX_BLOCK_SIZE)
+                .decode(section, b"x", &mut history, MAX_BLOCK_SIZE)
                 .unwrap();
             assert_eq!(history.into_bytes(), vec![b'x'; length]);
         }

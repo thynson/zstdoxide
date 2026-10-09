@@ -77,7 +77,6 @@ impl FseEncodingTable {
     }
 
     /// Highest present symbol; dense construction trims absent trailing rows.
-    #[cfg(test)]
     pub(crate) fn max_symbol(&self) -> u8 {
         self.repeated
             .unwrap_or_else(|| (self.initial.len() - 1) as u8)

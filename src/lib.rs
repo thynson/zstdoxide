@@ -46,7 +46,6 @@ mod error;
 mod frame;
 mod fse;
 mod fse_encode;
-#[cfg(test)]
 mod fse_select;
 mod history;
 mod huffman;
@@ -60,11 +59,8 @@ mod match_parse;
 mod matchchain;
 mod matchfinder;
 mod ring_history;
-#[cfg(test)]
 mod sequence_context;
-#[cfg(test)]
 mod sequence_encode;
-#[cfg(test)]
 mod sequence_plan;
 mod sequences;
 mod stream;

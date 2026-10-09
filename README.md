@@ -59,15 +59,14 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Blocks | Raw, RLE, and compressed blocks; block/window/output bounds |
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
-| Compression | Greedy four-byte hash matching over dictionary content and up to 128 KiB of retained output, raw literals, predefined FSE sequence encoding, raw/RLE fallback |
+| Compression | Greedy four-byte hash matching over dictionary content and up to 128 KiB of retained output, raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
 | Training | Bounded deterministic raw content selection, learned full-alphabet Huffman metadata, predefined sequence priors, custom or automatic IDs, formatted finalization |
 | Portability | Rust 2024, tested with Rust 1.89.0; `no_std` plus `alloc` core |
 
-Remaining work includes Huffman literal payload encoding, adaptive FSE sequence
-encoding, repeat-offset selection during compression, COVER/fastCover and
-advanced dictionary training, advanced compression strategies and
+Remaining work includes COVER/fastCover and advanced dictionary training,
+advanced compression strategies and
 levels, long-distance matching, threading, legacy formats, C ABI, and CLI parity.
 There is no command-line compressor yet. Nonzero frame dictionary IDs require
 a matching selected dictionary; an omitted ID still uses configured content.
@@ -93,8 +92,10 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-ring-history` | Bounded wraparound history reads and stores |
 | `unsafe-fse` | FSE decoding tables |
 | `unsafe-fse-encoder` | Validated inverse FSE encoding tables |
-| `unsafe-huffman` | Huffman lookup table |
+| `unsafe-huffman` | Huffman decoding table |
+| `unsafe-huffman-codebook` | Validated canonical encoding codebooks |
 | `unsafe-match-table` | Hash-indexed prior-position table |
+| `unsafe-match-chain` | Bounded tagged candidate-chain storage (strategy integration in progress) |
 | `unsafe-dictionary` | Validated immutable dictionary-content access |
 | `unsafe-training` | Bounded raw-training frequency cells |
 
