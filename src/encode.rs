@@ -6,8 +6,8 @@ use core::alloc::Allocator;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::match_key::MatchKey;
-use crate::match_parse::{parse_chain, parse_lazy};
-use crate::match_search::SearchKeyLayout;
+use crate::match_parse::{parse_chain, parse_lazy_with_budget};
+use crate::match_search::{MatchSearchOptions, SearchKeyLayout, SearchShape};
 use crate::matchchain::MatchChain;
 use crate::matchfinder::MatchTable;
 use crate::ring_history::RingHistory;
@@ -21,8 +21,6 @@ use crate::{
 /// Adaptive tables support wider offset codes, but searching more distant
 /// content is a separate strategy decision; larger dictionaries remain valid.
 const MAX_DICTIONARY_DISTANCE: usize = (1 << 29) - 4;
-const CHAIN_NODES: usize = 262_144;
-const CHAIN_SEED_NODES: usize = 65_536;
 
 /// Compresses input into one checksummed Zstandard frame with known content size.
 ///
@@ -116,6 +114,7 @@ fn compress_frame_in<A: Allocator + Clone, D: DictionaryHandle>(
 /// `ZSTD_CCtx`; input references never survive an `encode` call.
 pub(crate) struct BlockEncoder<A: Allocator = Global, D: DictionaryHandle = SharedDictionary> {
     strategy: CompressionStrategy,
+    search_options: MatchSearchOptions,
     match_table: Option<MatchTable<A>>,
     dictionary_seed: Option<MatchTable<A>>,
     chain: Option<MatchChain<A>>,
@@ -142,6 +141,7 @@ impl BlockEncoder<Global, SharedDictionary> {
     pub(crate) const fn new() -> Self {
         Self {
             strategy: CompressionStrategy::Greedy,
+            search_options: MatchSearchOptions::new(),
             match_table: None,
             dictionary_seed: None,
             chain: None,
@@ -169,6 +169,7 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
     pub(crate) fn new_in(allocator: A) -> Self {
         Self {
             strategy: CompressionStrategy::Greedy,
+            search_options: MatchSearchOptions::new(),
             match_table: None,
             dictionary_seed: None,
             chain: None,
@@ -198,6 +199,11 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
     /// must reset and successfully start a frame before encoding again; setup
     /// does not promise rollback of the previous frame's scratch state.
     pub(crate) fn start_frame(&mut self, dictionary: Option<D>, window_size: u64) -> Result<()> {
+        // Complete requested dimensions are validated before any seed, entropy
+        // or attachment mutation and before cloning an allocator or reserving.
+        let shape = SearchShape::new(self.search_options, self.strategy, window_size)?;
+        let layout = shape.layout();
+        let width = usize::from(layout.key_bytes());
         let dictionary_view = dictionary.as_ref().map(DictionaryHandle::view);
         let entropy = dictionary_view.and_then(|view| view.entropy());
         let literal_table = entropy
@@ -208,35 +214,49 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
             })
             .transpose()?;
         if let Some(dictionary) = dictionary_view
-            && dictionary.content().len() >= 4
+            && dictionary.content().len() >= width
         {
             let content = dictionary.content();
             match self.strategy {
                 CompressionStrategy::Greedy => {
                     let seed = match self.dictionary_seed.as_mut() {
-                        Some(seed) => seed,
+                        Some(seed) => {
+                            seed.reconfigure(layout)?;
+                            seed
+                        }
                         None => self
                             .dictionary_seed
-                            .insert(MatchTable::new_in(self.allocator.clone())?),
+                            .insert(MatchTable::with_layout_in(layout, self.allocator.clone())?),
                     };
-                    seed.reset();
                     let start = content.len().saturating_sub(MAX_DICTIONARY_DISTANCE);
-                    for position in start..=content.len() - 4 {
-                        seed.replace(word_at(content, position), position)?;
+                    for position in start..=content.len() - width {
+                        let key = layout
+                            .read_key(&content[position..])
+                            .ok_or(Error::InvalidState)?;
+                        seed.replace(key, position)?;
                     }
                 }
                 CompressionStrategy::Chain | CompressionStrategy::Lazy => {
                     let seed = match self.chain_seed.as_mut() {
-                        Some(seed) => seed,
-                        None => self.chain_seed.insert(MatchChain::new_in(
-                            CHAIN_SEED_NODES,
+                        Some(seed) => {
+                            seed.reconfigure(layout, shape.seed_nodes())?;
+                            seed
+                        }
+                        None => self.chain_seed.insert(MatchChain::with_layout_in(
+                            layout,
+                            shape.seed_nodes(),
                             self.allocator.clone(),
                         )?),
                     };
-                    seed.reset();
-                    let start = content.len().saturating_sub(CHAIN_SEED_NODES + 3);
-                    for position in start..=content.len() - 4 {
-                        seed.insert(word_at(content, position), position as u64)?;
+                    if let Some(range) =
+                        chain_dictionary_seed_range(content.len(), shape.seed_nodes(), layout)?
+                    {
+                        for position in range {
+                            let key = layout
+                                .read_key(&content[position..])
+                                .ok_or(Error::InvalidState)?;
+                            seed.insert(key, position as u64)?;
+                        }
                     }
                 }
             }
@@ -270,6 +290,9 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
         last: bool,
         output: &mut Vec<u8, O>,
     ) -> Result<()> {
+        // Direct BlockEncoder users may encode without start_frame. Validate
+        // the current default or selected shape before history/output work.
+        SearchShape::new(self.search_options, self.strategy, self.window_size)?;
         let next = self
             .frame_position
             .checked_add(block.len() as u64)
@@ -347,6 +370,53 @@ impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
         self.strategy = strategy;
     }
 
+    /// Configured controls for the next prepared frame.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "public encoder search controls follow storage integration"
+        )
+    )]
+    pub(crate) const fn search_options(&self) -> MatchSearchOptions {
+        self.search_options
+    }
+
+    /// Copy validated controls without allocating or reshaping existing owners.
+    /// The enclosing Encoder enforces the supported fresh-frame boundary.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "public encoder search controls follow storage integration"
+        )
+    )]
+    pub(crate) fn set_search_options(&mut self, options: MatchSearchOptions) {
+        self.search_options = options;
+    }
+
+    /// Search-owner capacities only: both Greedy vectors, both Chain head/node
+    /// pairs, and the retained ring, including inactive cached families.
+    /// This excludes dictionary bytes, entropy/output scratch and allocator data.
+    pub(crate) fn search_retained_capacity(&self) -> usize {
+        self.match_table
+            .as_ref()
+            .map_or(0, MatchTable::retained_capacity)
+            + self
+                .dictionary_seed
+                .as_ref()
+                .map_or(0, MatchTable::retained_capacity)
+            + self.chain.as_ref().map_or(0, MatchChain::retained_capacity)
+            + self
+                .chain_seed
+                .as_ref()
+                .map_or(0, MatchChain::retained_capacity)
+            + self
+                .history
+                .as_ref()
+                .map_or(0, RingHistory::retained_capacity)
+    }
+
     /// Drop active-frame ownership while retaining reusable workspace storage.
     pub(crate) fn reset(&mut self) {
         self.active_dictionary = None;
@@ -378,27 +448,12 @@ impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
     /// opaque allocator bookkeeping, and dictionary/control-block storage whose
     /// ownership or borrow is accounted for separately by the enclosing context.
     pub(crate) fn retained_capacity(&self) -> usize {
-        self.match_table
-            .as_ref()
-            .map_or(0, MatchTable::retained_capacity)
-            + self
-                .dictionary_seed
-                .as_ref()
-                .map_or(0, MatchTable::retained_capacity)
-            + self.chain.as_ref().map_or(0, MatchChain::retained_capacity)
-            + self
-                .chain_seed
-                .as_ref()
-                .map_or(0, MatchChain::retained_capacity)
+        self.search_retained_capacity()
             + self.literals.capacity()
             + self.literal_encoder.retained_capacity()
             + self.sequences.capacity() * core::mem::size_of::<LogicalSequence>()
             + self.sequence_encoder.retained_capacity()
             + self.payload.capacity()
-            + self
-                .history
-                .as_ref()
-                .map_or(0, RingHistory::retained_capacity)
     }
 }
 
@@ -456,6 +511,9 @@ fn write_block_header<O: Allocator>(output: &mut Vec<u8, O>, size: usize, kind: 
 /// an independent greedy parser and table inversion instead of C table layout.
 impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
     fn compress_block(&mut self, block: &[u8]) -> Result<bool> {
+        let shape = SearchShape::new(self.search_options, self.strategy, self.window_size)?;
+        let layout = shape.layout();
+        let width = usize::from(layout.key_bytes());
         let dictionary = self
             .active_dictionary
             .as_ref()
@@ -475,31 +533,48 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
         match self.strategy {
             CompressionStrategy::Greedy => {
                 let table = match self.match_table.as_mut() {
-                    Some(table) => table,
+                    Some(table) => {
+                        if table.layout() != layout {
+                            table.reconfigure(layout)?;
+                        }
+                        table
+                    }
                     None => self
                         .match_table
-                        .insert(MatchTable::new_in(self.allocator.clone())?),
+                        .insert(MatchTable::with_layout_in(layout, self.allocator.clone())?),
                 };
                 parse_greedy(
                     &source,
                     table,
-                    self.dictionary_seed.as_ref(),
+                    self.dictionary_seed
+                        .as_ref()
+                        .filter(|_| source.dictionary_size >= width),
                     &mut self.literals,
                     &mut self.sequences,
                 )?;
             }
             CompressionStrategy::Chain | CompressionStrategy::Lazy => {
                 let table = match self.chain.as_mut() {
-                    Some(table) => table,
-                    None => self
-                        .chain
-                        .insert(MatchChain::new_in(CHAIN_NODES, self.allocator.clone())?),
+                    Some(table) => {
+                        if table.layout() != layout || table.node_limit() != shape.chain_nodes() {
+                            table.reconfigure(layout, shape.chain_nodes())?;
+                        }
+                        table
+                    }
+                    None => self.chain.insert(MatchChain::with_layout_in(
+                        layout,
+                        shape.chain_nodes(),
+                        self.allocator.clone(),
+                    )?),
                 };
                 parse_seeded_chain(
                     &source,
                     table,
-                    self.chain_seed.as_ref(),
+                    self.chain_seed
+                        .as_ref()
+                        .filter(|_| source.dictionary_size >= width),
                     self.strategy,
+                    shape.visits(),
                     &mut self.literals,
                     &mut self.sequences,
                 )?;
@@ -530,6 +605,26 @@ impl<A: Allocator + Clone, D: DictionaryHandle> BlockEncoder<A, D> {
     }
 }
 
+/// Ascending regular starts preserve at most the newest `nodes` complete keys.
+/// The extra width-1 bytes determine starts, not additional retained positions.
+fn chain_dictionary_seed_range(
+    dictionary_size: usize,
+    nodes: usize,
+    layout: SearchKeyLayout,
+) -> Result<Option<core::ops::RangeInclusive<usize>>> {
+    if nodes == 0 {
+        return Err(Error::InvalidParameter);
+    }
+    let width = usize::from(layout.key_bytes());
+    let covered = nodes.checked_add(width - 1).ok_or(Error::ResourceLimit)?;
+    if dictionary_size < width {
+        return Ok(None);
+    }
+    Ok(Some(
+        dictionary_size.saturating_sub(covered)..=dictionary_size - width,
+    ))
+}
+
 /// Keep the original single-candidate policy independent of chain storage.
 fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Allocator>(
     source: &MatchSource<'_, H>,
@@ -539,6 +634,8 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
     sequences: &mut Vec<LogicalSequence, S>,
 ) -> Result<()> {
     let block = source.block;
+    let layout = match_table.layout();
+    let width = usize::from(layout.key_bytes());
     if source.dictionary.is_some()
         && let Some(seed) = seed
     {
@@ -547,23 +644,22 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
         match_table.reset();
     }
     if source.dictionary.is_some() && source.retains_frame_start() {
-        // Keys may straddle dictionary end and retained frame[0]. This also
-        // makes one-, two-, and three-byte raw prefixes useful.
-        for position in source.dictionary_size.saturating_sub(3)..source.dictionary_size {
-            let word = source.dictionary_boundary_word(position)?;
-            match_table.replace(word, position)?;
+        for position in source.dictionary_size.saturating_sub(width - 1)..source.dictionary_size {
+            if let Some(key) = source.dictionary_boundary_key(position, layout)? {
+                match_table.replace(key, position)?;
+            }
         }
     }
     for position in 0..source.history_size {
-        // Include the final three history positions: their four-byte keys
-        // can cross into current input, which remains borrowed immutably.
-        match_table.replace(
-            source.output_word(position)?,
-            source
-                .dictionary_size
-                .checked_add(position)
-                .ok_or(Error::ResourceLimit)?,
-        )?;
+        if let Some(key) = source.output_key(position, layout)? {
+            match_table.replace(
+                key,
+                source
+                    .dictionary_size
+                    .checked_add(position)
+                    .ok_or(Error::ResourceLimit)?,
+            )?;
+        }
     }
     literals.clear();
     literals
@@ -575,9 +671,9 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
         .map_err(|_| Error::AllocationFailed)?;
     let mut position = 0;
     let mut literal_start = 0;
-    while position + 4 <= block.len() {
+    while let Some(key) = layout.read_key(&block[position..]) {
         let virtual_position = source.virtual_position(position)?;
-        let candidate = match_table.replace(word_at(block, position), virtual_position)?;
+        let candidate = match_table.replace(key, virtual_position)?;
         if let Some(previous) = candidate
             && let Some((distance, match_length)) = source.find_match(previous, position)?
         {
@@ -591,9 +687,10 @@ fn parse_greedy<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S: Alloc
             });
             let match_end = position + match_length;
             position += 1;
-            while position < match_end && position + 4 <= block.len() {
-                match_table
-                    .replace(word_at(block, position), source.virtual_position(position)?)?;
+            while position < match_end
+                && let Some(consumed_key) = layout.read_key(&block[position..])
+            {
+                match_table.replace(consumed_key, source.virtual_position(position)?)?;
                 position += 1;
             }
             position = match_end;
@@ -615,9 +712,12 @@ fn parse_seeded_chain<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S:
     chain: &mut MatchChain<M>,
     seed: Option<&MatchChain<B>>,
     strategy: CompressionStrategy,
+    visits: usize,
     literals: &mut Vec<u8, L>,
     sequences: &mut Vec<LogicalSequence, S>,
 ) -> Result<()> {
+    let layout = chain.layout();
+    let width = usize::from(layout.key_bytes());
     if source.dictionary.is_some()
         && let Some(seed) = seed
     {
@@ -626,16 +726,20 @@ fn parse_seeded_chain<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S:
         chain.reset();
     }
     if source.dictionary.is_some() && source.retains_frame_start() {
-        for position in source.dictionary_size.saturating_sub(3)..source.dictionary_size {
-            chain.insert(source.dictionary_boundary_word(position)?, position as u64)?;
+        for position in source.dictionary_size.saturating_sub(width - 1)..source.dictionary_size {
+            if let Some(key) = source.dictionary_boundary_key(position, layout)? {
+                chain.insert(key, position as u64)?;
+            }
         }
     }
     for position in 0..source.history_size {
-        let virtual_position = source
-            .dictionary_size
-            .checked_add(position)
-            .ok_or(Error::ResourceLimit)?;
-        chain.insert(source.output_word(position)?, virtual_position as u64)?;
+        if let Some(key) = source.output_key(position, layout)? {
+            let virtual_position = source
+                .dictionary_size
+                .checked_add(position)
+                .ok_or(Error::ResourceLimit)?;
+            chain.insert(key, virtual_position as u64)?;
+        }
     }
     let resolve = |previous, position| {
         let previous = usize::try_from(previous).map_err(|_| Error::ResourceLimit)?;
@@ -651,12 +755,24 @@ fn parse_seeded_chain<H: Allocator, M: Allocator, B: Allocator, L: Allocator, S:
     };
     let base = source.virtual_position(0)? as u64;
     match strategy {
-        CompressionStrategy::Chain => {
-            parse_chain(source.block, chain, base, 8, resolve, literals, sequences)
-        }
-        CompressionStrategy::Lazy => {
-            parse_lazy(source.block, chain, base, resolve, literals, sequences)
-        }
+        CompressionStrategy::Chain => parse_chain(
+            source.block,
+            chain,
+            base,
+            visits,
+            resolve,
+            literals,
+            sequences,
+        ),
+        CompressionStrategy::Lazy => parse_lazy_with_budget(
+            source.block,
+            chain,
+            base,
+            visits,
+            resolve,
+            literals,
+            sequences,
+        ),
         CompressionStrategy::Greedy => Err(Error::InvalidState),
     }
 }
@@ -697,13 +813,6 @@ impl<A: Allocator> MatchSource<'_, A> {
     /// stays u64. A very long frame does not need to fit usize when its borrowed
     /// dictionary, retained history and current input still have a valid local
     /// indexed extent. These checks do not change either borrowed owner.
-    #[cfg_attr(
-        not(test),
-        allow(
-            dead_code,
-            reason = "variable-width parser integration follows this source checkpoint"
-        )
-    )]
     fn key_extents(&self) -> Result<(usize, usize)> {
         let output_size = self
             .history_size
@@ -734,13 +843,6 @@ impl<A: Allocator> MatchSource<'_, A> {
     /// A valid tail shorter than the selected width returns None. Arithmetic
     /// overflow returns ResourceLimit before copying any bytes. Missing source
     /// storage is reported by the same checked dictionary/history byte readers.
-    #[cfg_attr(
-        not(test),
-        allow(
-            dead_code,
-            reason = "variable-width parser integration follows this source checkpoint"
-        )
-    )]
     fn dictionary_boundary_key(
         &self,
         position: usize,
@@ -780,13 +882,6 @@ impl<A: Allocator> MatchSource<'_, A> {
     /// the indexed region is CorruptData. Extent or absolute-frame overflow is
     /// ResourceLimit. A malformed retained-history coordinate remains an error
     /// from the checked output reader rather than being replaced with padding.
-    #[cfg_attr(
-        not(test),
-        allow(
-            dead_code,
-            reason = "variable-width parser integration follows this source checkpoint"
-        )
-    )]
     fn output_key(&self, position: usize, layout: SearchKeyLayout) -> Result<Option<MatchKey>> {
         let (output_size, _) = self.key_extents()?;
         if position > output_size {
@@ -804,6 +899,7 @@ impl<A: Allocator> MatchSource<'_, A> {
     }
 
     /// Read a four-byte key across dictionary/frame-zero while it remains live.
+    #[cfg(test)]
     fn dictionary_boundary_word(&self, position: usize) -> Result<[u8; 4]> {
         if !self.retains_frame_start() {
             return Err(Error::InvalidState);
@@ -848,6 +944,7 @@ impl<A: Allocator> MatchSource<'_, A> {
         }
     }
 
+    #[cfg(test)]
     fn output_word(&self, position: usize) -> Result<[u8; 4]> {
         let mut word = [0; 4];
         for (offset, byte) in word.iter_mut().enumerate() {
@@ -937,16 +1034,6 @@ impl<A: Allocator> MatchSource<'_, A> {
         }
         Ok((length >= 4).then_some((distance as usize, length)))
     }
-}
-
-/// Reads a four-byte match key from a previously bounded position.
-fn word_at(block: &[u8], position: usize) -> [u8; 4] {
-    [
-        block[position],
-        block[position + 1],
-        block[position + 2],
-        block[position + 3],
-    ]
 }
 
 #[cfg(test)]
@@ -2788,5 +2875,519 @@ mod tests {
         drop(history_owner);
         dictionary_monitor.assert_released();
         history_monitor.assert_released();
+    }
+
+    fn search_storage_options(
+        hash_log: u8,
+        chain_log: u8,
+        width: u8,
+        visits: u8,
+    ) -> MatchSearchOptions {
+        let mut options = MatchSearchOptions::new();
+        options.set_hash_log(hash_log).unwrap();
+        options.set_chain_log(chain_log).unwrap();
+        options.set_key_bytes(width).unwrap();
+        options.set_chain_visits(visits).unwrap();
+        options.set_lazy_visits(visits).unwrap();
+        options
+    }
+
+    fn search_storage_frame<'d, A: Allocator + Clone>(
+        encoder: &mut BlockEncoder<A, DictionaryView<'d>>,
+        dictionary: Option<DictionaryView<'d>>,
+        blocks: &[&[u8]],
+    ) -> Vec<u8> {
+        let source: Vec<_> = blocks
+            .iter()
+            .flat_map(|block| block.iter().copied())
+            .collect();
+        let mut frame = Vec::with_capacity(source.len() + 64);
+        write_frame_header(
+            &mut frame,
+            source.len(),
+            dictionary.map_or(0, |view| view.id()),
+        );
+        encoder
+            .start_frame(dictionary, source.len() as u64)
+            .unwrap();
+        for (index, block) in blocks.iter().enumerate() {
+            encoder
+                .encode(block, index + 1 == blocks.len(), &mut frame)
+                .unwrap();
+        }
+        frame.extend_from_slice(&(xxhash::checksum(&source) as u32).to_le_bytes());
+        let decoded = if let Some(dictionary) = dictionary {
+            crate::decompress_with_dictionary_in(
+                &frame,
+                &dictionary,
+                DecodeOptions::new(source.len()),
+                Global,
+            )
+            .unwrap()
+        } else {
+            crate::decompress(&frame, source.len()).unwrap()
+        };
+        assert_eq!(decoded, source);
+        frame
+    }
+
+    #[test]
+    fn search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes() {
+        for width in 4..=8 {
+            let layout = SearchKeyLayout::new(10, width).unwrap();
+            let width = usize::from(width);
+            for nodes in [1, 2, 1024, 65_536] {
+                for size in [
+                    0,
+                    width - 1,
+                    width,
+                    width + 1,
+                    nodes + width - 2,
+                    nodes + width - 1,
+                    nodes + width,
+                    nodes + width + 1,
+                    usize::MAX,
+                ] {
+                    let range = chain_dictionary_seed_range(size, nodes, layout).unwrap();
+                    if size < width {
+                        assert!(range.is_none());
+                    } else {
+                        let range = range.unwrap();
+                        assert_eq!(*range.end(), size - width);
+                        assert_eq!(range.end() - range.start() + 1, nodes.min(size - width + 1));
+                        assert!(*range.start() <= *range.end());
+                    }
+                }
+            }
+            assert_eq!(
+                chain_dictionary_seed_range(width, 0, layout),
+                Err(Error::InvalidParameter)
+            );
+            assert_eq!(
+                chain_dictionary_seed_range(width, usize::MAX, layout),
+                Err(Error::ResourceLimit)
+            );
+        }
+        assert_eq!(
+            chain_dictionary_seed_range(10, 2, SearchKeyLayout::new(10, 4).unwrap()).unwrap(),
+            Some(5..=6)
+        );
+        assert_eq!(
+            chain_dictionary_seed_range(10, 2, SearchKeyLayout::new(10, 8).unwrap()).unwrap(),
+            Some(1..=2)
+        );
+    }
+
+    #[test]
+    fn search_storage_options_are_deferred_and_empty_frames_need_no_search_owner() {
+        let owner = block_allocator();
+        let monitor = owner.monitor();
+        let mut encoder = BlockEncoder::<_, SharedDictionary>::new_in(owner);
+        assert_eq!(encoder.search_options(), MatchSearchOptions::new());
+        assert_eq!(
+            BlockEncoder::new().search_options(),
+            MatchSearchOptions::new()
+        );
+        let options = search_storage_options(18, 19, 8, 64);
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        encoder.set_search_options(options);
+        encoder.reset();
+        assert_eq!(encoder.search_options(), options);
+        encoder.start_frame(None, 0).unwrap();
+        let mut output = Vec::new();
+        encoder.encode(&[], true, &mut output).unwrap();
+        assert_eq!(output, [1, 0, 0]);
+        assert_eq!(encoder.search_retained_capacity(), 0);
+        assert!(encoder.history.is_none());
+        assert_eq!(monitor.snapshot(), before);
+        let mut witness = Vec::<u8, _>::new_in(&encoder.allocator);
+        assert!(witness.try_reserve_exact(1).is_err());
+        drop(witness);
+        drop(encoder);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles() {
+        let dictionary = Dictionary::raw(b"abcdefgh01234567abcdefghijklmnop").unwrap();
+        let input = b"abcdefgh01234567abcdef01234567----".repeat(32);
+        let owner = block_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(&owner);
+        for options in [
+            search_storage_options(10, 10, 5, 1),
+            search_storage_options(18, 19, 8, 64),
+            search_storage_options(10, 10, 4, 8),
+        ] {
+            encoder.set_search_options(options);
+            let layout = SearchKeyLayout::new(options.hash_log(), options.key_bytes()).unwrap();
+            for strategy in [
+                CompressionStrategy::Greedy,
+                CompressionStrategy::Chain,
+                CompressionStrategy::Lazy,
+                CompressionStrategy::Greedy,
+            ] {
+                encoder.set_strategy(strategy);
+                search_storage_frame(&mut encoder, Some(dictionary.view()), &[&input]);
+                match strategy {
+                    CompressionStrategy::Greedy => {
+                        assert_eq!(encoder.match_table.as_ref().unwrap().layout(), layout);
+                        assert_eq!(encoder.dictionary_seed.as_ref().unwrap().layout(), layout);
+                    }
+                    CompressionStrategy::Chain | CompressionStrategy::Lazy => {
+                        let nodes = 1usize << options.chain_log();
+                        assert_eq!(encoder.chain.as_ref().unwrap().layout(), layout);
+                        assert_eq!(encoder.chain.as_ref().unwrap().node_limit(), nodes);
+                        assert_eq!(encoder.chain_seed.as_ref().unwrap().layout(), layout);
+                        assert_eq!(
+                            encoder.chain_seed.as_ref().unwrap().node_limit(),
+                            nodes.min(65_536)
+                        );
+                    }
+                }
+                let search = encoder
+                    .match_table
+                    .as_ref()
+                    .map_or(0, MatchTable::retained_capacity)
+                    + encoder
+                        .dictionary_seed
+                        .as_ref()
+                        .map_or(0, MatchTable::retained_capacity)
+                    + encoder
+                        .chain
+                        .as_ref()
+                        .map_or(0, MatchChain::retained_capacity)
+                    + encoder
+                        .chain_seed
+                        .as_ref()
+                        .map_or(0, MatchChain::retained_capacity)
+                    + encoder
+                        .history
+                        .as_ref()
+                        .map_or(0, RingHistory::retained_capacity);
+                assert_eq!(encoder.search_retained_capacity(), search);
+                assert!(encoder.retained_capacity() > search);
+                assert_eq!(
+                    monitor.snapshot().live_bytes,
+                    encoder.retained_capacity() as u128
+                );
+                let capacity = encoder.search_retained_capacity();
+                encoder.reset();
+                assert_eq!(encoder.search_options(), options);
+                assert_eq!(encoder.search_retained_capacity(), capacity);
+            }
+        }
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        drop(encoder);
+        drop(owner);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end() {
+        // Each dictionary outlives its frame by using a fresh context below;
+        // these real seeds verify the helper's arithmetic controls stored starts.
+        for width in 4..=8 {
+            let options = search_storage_options(10, 10, width, 64);
+            let w = usize::from(width);
+            let layout = SearchKeyLayout::new(10, width).unwrap();
+            for size in [
+                w - 1,
+                w,
+                w + 1,
+                1024 + w - 2,
+                1024 + w - 1,
+                1024 + w,
+                1024 + w + 1,
+            ] {
+                let content = vec![b'a'; size];
+                let dictionary = Dictionary::raw(&content).unwrap();
+                let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(Global);
+                encoder.set_strategy(CompressionStrategy::Chain);
+                encoder.set_search_options(options);
+                encoder.start_frame(Some(dictionary.view()), 1024).unwrap();
+                if size < w {
+                    assert!(encoder.chain_seed.is_none());
+                } else {
+                    let seed = encoder.chain_seed.as_ref().unwrap();
+                    let key = layout.read_key(&content).unwrap();
+                    let actual: Vec<_> = seed.candidates(key, u64::MAX, 64).unwrap().collect();
+                    let expected: Vec<_> = (0..=size - w)
+                        .rev()
+                        .take(64)
+                        .map(|position| position as u64)
+                        .collect();
+                    assert_eq!(actual, expected);
+                    assert_eq!(seed.node_limit(), 1024);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe() {
+        let full = Dictionary::raw(b"abcdefghabcdefghabcdefgh").unwrap();
+        let short = Dictionary::raw(b"abc").unwrap();
+        let source = b"abc".repeat(64);
+        let owner = block_allocator();
+        let monitor = owner.monitor();
+        let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(owner);
+        let old = search_storage_options(10, 10, 4, 8);
+        encoder.set_search_options(old);
+        for strategy in [CompressionStrategy::Greedy, CompressionStrategy::Chain] {
+            encoder.set_strategy(strategy);
+            search_storage_frame(&mut encoder, Some(full.view()), &[&source]);
+        }
+        let old_layout = SearchKeyLayout::new(10, 4).unwrap();
+        let new = search_storage_options(11, 11, 8, 64);
+        encoder.set_search_options(new);
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            encoder.set_strategy(strategy);
+            let before = monitor.snapshot();
+            let seed_capacity = encoder
+                .dictionary_seed
+                .as_ref()
+                .unwrap()
+                .retained_capacity()
+                + encoder.chain_seed.as_ref().unwrap().retained_capacity();
+            assert!(monitor.fail_next());
+            encoder
+                .start_frame(Some(short.view()), source.len() as u64)
+                .unwrap();
+            assert_eq!(monitor.snapshot(), before);
+            assert_eq!(
+                encoder.dictionary_seed.as_ref().unwrap().layout(),
+                old_layout
+            );
+            assert_eq!(encoder.chain_seed.as_ref().unwrap().layout(), old_layout);
+            assert_eq!(
+                encoder
+                    .dictionary_seed
+                    .as_ref()
+                    .unwrap()
+                    .retained_capacity()
+                    + encoder.chain_seed.as_ref().unwrap().retained_capacity(),
+                seed_capacity
+            );
+            monitor.clear_failure();
+            search_storage_frame(&mut encoder, Some(short.view()), &[&source]);
+            assert!(
+                encoder
+                    .sequences
+                    .iter()
+                    .any(|sequence| sequence.distance == 3)
+            );
+        }
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        encoder.start_frame(None, 1024).unwrap();
+        assert_eq!(monitor.snapshot(), before);
+        assert!(
+            encoder
+                .chain_seed
+                .as_ref()
+                .unwrap()
+                .candidates(*b"abcd", u64::MAX, 64)
+                .unwrap()
+                .next()
+                .is_none()
+        );
+        drop(encoder);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn search_storage_visit_controls_reach_both_chain_and_lazy_selection() {
+        for width in [4, 8] {
+            let prefix = &b"ABCDEFGH"[..usize::from(width)];
+            let mut content = prefix.to_vec();
+            content.extend_from_slice(&[b'a'; 64][..64 - usize::from(width)]);
+            let input = content.clone();
+            content.extend_from_slice(prefix);
+            content.extend_from_slice(&[b'b'; 64][..64 - usize::from(width)]);
+            let dictionary = Dictionary::raw(&content).unwrap();
+            for strategy in [CompressionStrategy::Chain, CompressionStrategy::Lazy] {
+                let mut first = Vec::new();
+                for visits in [1, 64] {
+                    let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(Global);
+                    encoder.set_strategy(strategy);
+                    encoder.set_search_options(search_storage_options(10, 10, width, visits));
+                    search_storage_frame(&mut encoder, Some(dictionary.view()), &[&input]);
+                    assert!(!encoder.sequences.is_empty());
+                    first.push(encoder.sequences[0]);
+                }
+                assert_eq!(first[1].literal_length, 0);
+                assert_eq!(first[1].match_length, 64);
+                match strategy {
+                    CompressionStrategy::Chain => {
+                        assert_eq!(first[0].literal_length, 0);
+                        assert_eq!(first[0].match_length, u32::from(width));
+                    }
+                    CompressionStrategy::Lazy => {
+                        assert_eq!(first[0].literal_length, 1);
+                        assert_eq!(first[0].match_length, 63);
+                    }
+                    CompressionStrategy::Greedy => unreachable!(),
+                }
+            }
+        }
+    }
+
+    fn search_storage_warm<'d, A: Allocator + Clone>(
+        encoder: &mut BlockEncoder<A, DictionaryView<'d>>,
+        dictionary: DictionaryView<'d>,
+        input: &[u8],
+    ) {
+        encoder.set_search_options(search_storage_options(10, 10, 4, 8));
+        search_storage_frame(encoder, Some(dictionary), &[input]);
+        encoder.reset();
+        encoder.set_search_options(search_storage_options(11, 11, 8, 64));
+    }
+
+    #[test]
+    fn search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners() {
+        let dictionary = Dictionary::raw(b"ABCDEFGHabcdefgh01234567abcdefgh").unwrap();
+        let input = b"ABCDEFGHabcdefgh01234567abcdefgh".repeat(8);
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            let probe_owner = block_allocator();
+            let probe_monitor = probe_owner.monitor();
+            let mut probe = BlockEncoder::<_, DictionaryView<'_>>::new_in(probe_owner);
+            probe.set_strategy(strategy);
+            search_storage_warm(&mut probe, dictionary.view(), &input);
+            let warm_attempts = probe_monitor.snapshot().attempts;
+            let mut expected = vec![0xee, 0x55];
+            probe
+                .start_frame(Some(dictionary.view()), input.len() as u64)
+                .unwrap();
+            probe.encode(&input, true, &mut expected).unwrap();
+            let total_attempts = probe_monitor.snapshot().attempts;
+            assert!(
+                total_attempts
+                    >= warm_attempts
+                        + if strategy == CompressionStrategy::Greedy {
+                            2
+                        } else {
+                            4
+                        }
+            );
+            drop(probe);
+            probe_monitor.assert_released();
+            for ordinal in warm_attempts + 1..=total_attempts {
+                let owner = TrackingAllocator::new(AllocatorConfig {
+                    max_live_allocations: 128,
+                    fail_at: NonZeroU64::new(ordinal),
+                })
+                .unwrap();
+                let monitor = owner.monitor();
+                let mut encoder = BlockEncoder::<_, DictionaryView<'_>>::new_in(owner);
+                encoder.set_strategy(strategy);
+                search_storage_warm(&mut encoder, dictionary.view(), &input);
+                assert_eq!(monitor.snapshot().attempts, warm_attempts);
+                let mut output = vec![0xee, 0x55];
+                let result = encoder
+                    .start_frame(Some(dictionary.view()), input.len() as u64)
+                    .and_then(|()| encoder.encode(&input, true, &mut output));
+                assert_eq!(
+                    result,
+                    Err(Error::AllocationFailed),
+                    "{strategy:?}, allocation {ordinal}"
+                );
+                assert_eq!(monitor.snapshot().attempts, ordinal);
+                assert_eq!(output, [0xee, 0x55]);
+                assert_eq!(encoder.frame_position, 0);
+                assert_eq!(
+                    encoder.history.as_ref().map_or(0, RingHistory::frame_len),
+                    0
+                );
+                assert_eq!(
+                    monitor.snapshot().live_bytes,
+                    encoder.retained_capacity() as u128
+                );
+                monitor.clear_failure();
+                encoder.reset();
+                assert_eq!(
+                    encoder.search_options(),
+                    search_storage_options(11, 11, 8, 64)
+                );
+                encoder
+                    .start_frame(Some(dictionary.view()), input.len() as u64)
+                    .unwrap();
+                encoder.encode(&input, true, &mut output).unwrap();
+                assert_eq!(output, expected);
+                assert_eq!(
+                    monitor.snapshot().live_bytes,
+                    encoder.retained_capacity() as u128
+                );
+                drop(encoder);
+                monitor.assert_released();
+                assert_eq!(
+                    monitor.snapshot().identities_created,
+                    monitor.snapshot().owners_dropped
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn search_storage_nondefault_shapes_preserve_literal_and_sequence_publication() {
+        let mut lengths = [0; 256];
+        lengths[2] = 1;
+        lengths[3] = 1;
+        for strategy in [
+            CompressionStrategy::Greedy,
+            CompressionStrategy::Chain,
+            CompressionStrategy::Lazy,
+        ] {
+            let mut encoder = BlockEncoder::new();
+            encoder.set_strategy(strategy);
+            let options = search_storage_options(10, 10, 8, 1);
+            encoder.set_search_options(options);
+            encoder.literal_table = Some(HuffmanCodebook::from_lengths(&lengths, 11).unwrap());
+            let rejected = [0, 0, 0, 0, 1, 0, 0, 1];
+            assert!(!encoder.compress_block(&rejected).unwrap());
+            assert!(encoder.pending_literal_table.is_some());
+            let mut encoded = Vec::new();
+            encoder.encode(&rejected, false, &mut encoded).unwrap();
+            assert_eq!((encoded[0] >> 1) & 3, 0);
+            assert!(encoder.pending_literal_table.is_none());
+            assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+            encoded.clear();
+            encoder.encode(&[42; 32], false, &mut encoded).unwrap();
+            assert_eq!((encoded[0] >> 1) & 3, 1);
+            assert!(encoder.literal_table.as_ref().unwrap().covers(&[2, 3]));
+            encoder.reset();
+            assert_eq!(encoder.search_options(), options);
+            let block = b"abcdefgh".repeat(128);
+            encoded.clear();
+            encoder.encode(&block, false, &mut encoded).unwrap();
+            assert_eq!((encoded[0] >> 1) & 3, 2);
+            let probe = [LogicalSequence {
+                literal_length: 1,
+                match_length: 4,
+                distance: 4,
+            }];
+            let mut expected = SequenceEncoder::new();
+            expected.prepare(&encoder.sequences).unwrap();
+            expected.commit();
+            expected.prepare(&probe).unwrap();
+            encoder.sequence_encoder.prepare(&probe).unwrap();
+            let committed = encoder.sequence_encoder.as_bytes().to_vec();
+            assert_eq!(committed, expected.as_bytes());
+            for raw in [&b"xyz"[..], &[9; 32][..]] {
+                encoded.clear();
+                encoder.encode(raw, false, &mut encoded).unwrap();
+                encoder.sequence_encoder.prepare(&probe).unwrap();
+                assert_eq!(encoder.sequence_encoder.as_bytes(), committed);
+            }
+        }
     }
 }

@@ -79,6 +79,13 @@ pub(crate) fn parse_chain<A: Allocator, L: Allocator, S: Allocator>(
 /// each probe's actual position and never change entropy or repeat state here.
 /// Source verification, preflight validation and partial-error behavior follow
 /// `parse_chain`. The caller remains responsible for actual window eligibility.
+#[cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "default-effort wrapper retained for focused callers"
+    )
+)]
 pub(crate) fn parse_lazy<A: Allocator, L: Allocator, S: Allocator>(
     input: &[u8],
     table: &mut MatchChain<A>,

@@ -1,0 +1,718 @@
+{
+  "schema_version": 1,
+  "scope": "Module 11 BlockEncoder match storage, key width, dictionary seeds and visit integration; fixed existing history horizon",
+  "repository_head_at_freeze": "fcedecd52a7777f7c7f96d8435e5582d14b4d38e",
+  "owned_changed_files": [
+    "src/encode.rs"
+  ],
+  "mechanical_dependency": "Root preserved the default parse_lazy wrapper with a narrow non-test dead_code allowance in src/match_parse.rs; encode now calls parse_lazy_with_budget.",
+  "source_sha256": {
+    "src/encode.rs": "2e635f6e049d05bb6c9d374657cb32a9ec062a3eef1a260e745a17a3eebca04c",
+    "src/match_parse.rs": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818",
+    "src/match_search.rs": "6998a15614095eab5c230d8d8de845300c09a87bf03ed9ff0ab9488557b6bd92",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/lib.rs": "51d023b26da4c403f64785a86782dfdc67d4e4cecbfe18b2fa33a40b07dff878",
+    "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a"
+  },
+  "source_hashes_after_checks": {
+    "src/encode.rs": "2e635f6e049d05bb6c9d374657cb32a9ec062a3eef1a260e745a17a3eebca04c",
+    "src/match_parse.rs": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818",
+    "src/match_search.rs": "6998a15614095eab5c230d8d8de845300c09a87bf03ed9ff0ab9488557b6bd92",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/lib.rs": "51d023b26da4c403f64785a86782dfdc67d4e4cecbfe18b2fa33a40b07dff878",
+    "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a"
+  },
+  "source_unchanged_during_final_checks": true,
+  "base_source": {
+    "source": "src/encode.rs",
+    "sha256": "8a1f1f41c27bdc12e6c02bdeeed5cce7486e4932b1f83a8bcda609351a6ea072"
+  },
+  "api": [
+    "BlockEncoder::search_options() -> MatchSearchOptions",
+    "BlockEncoder::set_search_options(options), infallible copied private controls",
+    "BlockEncoder::search_retained_capacity() -> usize, all seven search vectors including inactive caches and ring"
+  ],
+  "contracts": [
+    "Both constructors preserve exact default dimensions; reset preserves selected search options.",
+    "SearchShape resolution precedes frame preparation and encode allocations; direct new().encode callers remain supported.",
+    "Selected dictionary seeds reshape through retained owners; working owners reshape only for changed layout or node count. No dictionary or a dictionary shorter than the selected width clears seeds without forced inactive reshaping.",
+    "Chain regular seed starts are D.saturating_sub(S+W-1)..=D-W when D>=W; small private range tests include S=1/2, and real seeds verify width-adjusted threshold positions.",
+    "Only dictionary content containing a complete regular key permits seed copying. Short dictionaries can still contribute complete boundary keys without copying stale-layout caches.",
+    "Greedy and Chain/Lazy use exact-width typed source keys, skip valid short tails and retain the minimum emitted match of four bytes. Concrete visits reach both Chain and Lazy current/lookahead selection.",
+    "Search retained capacity includes both Greedy vectors, both Chain head/node pairs and history. The wider codec capacity reuses that accounting once.",
+    "History remains bounded by the prior fixed128KiB horizon in this checkpoint. Configurable history and public Encoder controls are subsequent separate work items."
+  ],
+  "checks": [
+    {
+      "name": "safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.13,
+      "log": "/tmp/zstdoxide-module11-storage-safe.log",
+      "sha256": "4ab9072d8e9cb9c02abd3205977bb66a3a89b27247a1f1704ae365d036e8aaaf",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.03
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.53s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.03s\n\n"
+    },
+    {
+      "name": "table",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-table",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 4.084,
+      "log": "/tmp/zstdoxide-module11-storage-table.log",
+      "sha256": "e93bf2009ae081d04524c16079f3319f9ccd86c04175eaa55eb6c0bb1644c84b",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.04
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.57s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/fbd7fa6c50597489/out/zstdoxide-fbd7fa6c50597489)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.04s\n\n"
+    },
+    {
+      "name": "chain",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--features",
+        "unsafe-match-chain",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 4.135,
+      "log": "/tmp/zstdoxide-module11-storage-chain.log",
+      "sha256": "2f5e2142ddb8ed1f862b898b11a57a3ca82269fc3d15ae9bf6041ddab7ae358c",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.03
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.65s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ef32ef0c462b872c/out/zstdoxide-ef32ef0c462b872c)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.03s\n\n"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 4.083,
+      "log": "/tmp/zstdoxide-module11-storage-all.log",
+      "sha256": "8d961dac068b1d5055c6d41d94341a9556c511c625af17b95a52746ec5de5269",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.04
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.62s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.04s\n\n"
+    },
+    {
+      "name": "nostd",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 3.679,
+      "log": "/tmp/zstdoxide-module11-storage-nostd.log",
+      "sha256": "01d6e802f7feafa469e7d0a85115468ec872c6a034087dc55d309b60db216087",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.03
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.25s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/a0e2482a49be5bfc/out/zstdoxide-a0e2482a49be5bfc)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 530 filtered out; finished in 0.03s\n\n"
+    },
+    {
+      "name": "nostd-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 3.819,
+      "log": "/tmp/zstdoxide-module11-storage-nostd-all.log",
+      "sha256": "0565d28b9d741dec32d2964d44c1947f07ea734ec6b9cfab35ed94c00db3e264",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.04
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.32s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/edc380a391a29cdd/out/zstdoxide-edc380a391a29cdd)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 530 filtered out; finished in 0.04s\n\n"
+    },
+    {
+      "name": "release-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--release",
+        "--all-features",
+        "encode::tests::search_storage_"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 8.286,
+      "log": "/tmp/zstdoxide-module11-storage-release-all.log",
+      "sha256": "2332c40c6291347c17eb40cf8f0d9cc6c32b9e61d2181d566ef8c941203bb4b6",
+      "passed": 8,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.01
+        }
+      ],
+      "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 7.87s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/release/build/zstdoxide/8fca094558319608/out/zstdoxide-8fca094558319608)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.01s\n\n"
+    },
+    {
+      "name": "defaults-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--test",
+        "match_search_defaults"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 6.213,
+      "log": "/tmp/zstdoxide-module11-storage-defaults-safe.log",
+      "sha256": "902e9a379081ceefee8615b5eaaf5c80aa566a4e951ef7bbfff34ac86cfdcdc5",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 4.87
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.99s\n     Running tests/match_search_defaults.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/8e248037f9ed31d7/out/match_search_defaults-8e248037f9ed31d7)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.87s\n\n"
+    },
+    {
+      "name": "defaults-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--all-features",
+        "--test",
+        "match_search_defaults"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 6.728,
+      "log": "/tmp/zstdoxide-module11-storage-defaults-all.log",
+      "sha256": "00e786f36c1b065c788a924d442bc5eb4e65df4b424ce434e4af289d04514395",
+      "passed": 7,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 5.25
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.08s\n     Running tests/match_search_defaults.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/037ece48e3eddc9f/out/match_search_defaults-037ece48e3eddc9f)\n\nrunning 7 tests\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest archived_record_schema_counts_and_capacity_qualifications_are_explicit ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\ntest strategy_cycle_preserves_default_bytes_and_retains_both_search_families ... ok\ntest greedy_default_frames_match_both_captured_backends_after_reset ... ok\ntest chain_default_frames_match_both_captured_backends_after_reset ... ok\ntest lazy_default_frames_match_both_captured_backends_after_reset ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.25s\n\n"
+    },
+    {
+      "name": "existing-safe-setupfail",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.311,
+      "log": "/tmp/zstdoxide-module11-storage-existing-safe-setupfail.log",
+      "sha256": "334f8b10cf468873c8bd969b2dab80ee03ab33463927fac36fa0b0dac965d6d4",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.27
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 1.27s\n\n"
+    },
+    {
+      "name": "existing-safe-one-shot",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.282,
+      "log": "/tmp/zstdoxide-module11-storage-existing-safe-one-shot.log",
+      "sha256": "6aa30689c6fb339265dea5dd39237f310065be5fb28c13a66d068a6396a28f97",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.25
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.25s\n\n"
+    },
+    {
+      "name": "existing-safe-sequence",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::sequence_state_is_published_only_for_accepted_blocks_and_reset_for_new_frames",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.034,
+      "log": "/tmp/zstdoxide-module11-storage-existing-safe-sequence.log",
+      "sha256": "124cb305970e14f0b2e9968b591f4abc0be17f915699f62507308d91d7a4f431",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::sequence_state_is_published_only_for_accepted_blocks_and_reset_for_new_frames ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-safe-literal",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "encode::tests::only_emitted_compressed_blocks_publish_pending_literal_tables",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.033,
+      "log": "/tmp/zstdoxide-module11-storage-existing-safe-literal.log",
+      "sha256": "e8c2f4243731b145aa964f9d8086bac17c1260821ae584b8a94811db7972d600",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::only_emitted_compressed_blocks_publish_pending_literal_tables ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-all-setupfail",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.305,
+      "log": "/tmp/zstdoxide-module11-storage-existing-all-setupfail.log",
+      "sha256": "473f1e0a8063cde8aec77a6268aaa76f30f59b587afa82b855ddd7f462c66526",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 1.27
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::allocator_block_every_setup_and_encode_failure_recovers_after_reset ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 1.27s\n\n"
+    },
+    {
+      "name": "existing-all-one-shot",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.284,
+      "log": "/tmp/zstdoxide-module11-storage-existing-all-one-shot.log",
+      "sha256": "bbfa7b5db7758e19f81f28070a15d4a7e93c9773eaaa7d3f87b7426d9136af31",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.25
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.25s\n\n"
+    },
+    {
+      "name": "existing-all-sequence",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::sequence_state_is_published_only_for_accepted_blocks_and_reset_for_new_frames",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.035,
+      "log": "/tmp/zstdoxide-module11-storage-existing-all-sequence.log",
+      "sha256": "187913306635b29804f5707d59a14f7da2a2ce1ea94729e200625df3c229cfc5",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::sequence_state_is_published_only_for_accepted_blocks_and_reset_for_new_frames ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "existing-all-literal",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--lib",
+        "--all-features",
+        "encode::tests::only_emitted_compressed_blocks_publish_pending_literal_tables",
+        "--",
+        "--exact"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.033,
+      "log": "/tmp/zstdoxide-module11-storage-existing-all-literal.log",
+      "sha256": "5b030279ab5c315996c4774eae0397722cb85eddf84c5d290a0228ae967fce81",
+      "passed": 1,
+      "test_summaries": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "harness_seconds": 0.0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::only_emitted_compressed_blocks_publish_pending_literal_tables ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "name": "nostd-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.648,
+      "log": "/tmp/zstdoxide-module11-storage-nostd-lib.log",
+      "sha256": "692fe3941a5fc15919f2b82e353e3d6c36db21845b60df9dcb2488314dc6cbc9",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.62s\n"
+    },
+    {
+      "name": "nostd-all-lib",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+        "--lib"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.393,
+      "log": "/tmp/zstdoxide-module11-storage-nostd-all-lib.log",
+      "sha256": "b5c8890c763bd06826267a8dd6b0691cb7f80d85d081a8e8b9a325fe9b6a1179",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.36s\n"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 2.529,
+      "log": "/tmp/zstdoxide-module11-storage-clippy.log",
+      "sha256": "69655639d4c21afabb49679f4216ea2d4db19ad01754bcca41aeb4c0e2e22021",
+      "log_text": "    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.46s\n"
+    },
+    {
+      "name": "format",
+      "command": [
+        "rustfmt",
+        "+nightly-2026-10-08",
+        "--edition",
+        "2024",
+        "--check",
+        "src/encode.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.05,
+      "log": "/tmp/zstdoxide-module11-storage-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/encode.rs"
+      ],
+      "env": {
+        "CARGO_TARGET_DIR": "/tmp/zstdoxide-module11-storage-target",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.011,
+      "log": "/tmp/zstdoxide-module11-storage-diff.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "test_recipe_correction": {
+    "log": "/tmp/zstdoxide-module11-storage-initial.log",
+    "sha256": "94dfa82ac23b57f45b649c0cabf5aee94b682dca49dff9d7ede3e8f4ebbd465c",
+    "initial_result": "7 passed, 1 failed",
+    "cause": "The initial Lazy witness used an eight-byte common dictionary prefix for the width-four case, so its lookahead key was also shared and it correctly kept the current match. The corrected test shares exactly the selected key width, making the next key distinguish the older long candidate. No production change was needed.",
+    "final_observations": "With one visit, Chain selects a match of the chosen width and Lazy selects a one-literal/63-byte match; with64 visits both select the complete64-byte match, at widths4 and8.",
+    "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.62s\n     Running unittests src/lib.rs (/tmp/zstdoxide-module11-storage-target/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 8 tests\ntest encode::tests::search_storage_seed_ranges_preserve_exact_counts_for_wide_and_tiny_shapes ... ok\ntest encode::tests::search_storage_options_are_deferred_and_empty_frames_need_no_search_owner ... ok\ntest encode::tests::search_storage_short_dictionary_replacement_keeps_inactive_seed_layouts_safe ... ok\ntest encode::tests::search_storage_regular_chain_seed_thresholds_use_width_adjusted_start_and_end ... ok\ntest encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection ... FAILED\ntest encode::tests::search_storage_nondefault_shapes_preserve_literal_and_sequence_publication ... ok\ntest encode::tests::search_storage_every_growth_failure_preserves_output_and_recovers_with_exact_owners ... ok\ntest encode::tests::search_storage_active_dimensions_and_seven_owner_capacity_survive_strategy_cycles ... ok\n\nfailures:\n\n---- encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection stdout ----\n\nthread 'encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection' (123949435) panicked at src/encode.rs:3231:25:\nassertion `left == right` failed\n  left: 0\n right: 1\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    encode::tests::search_storage_visit_controls_reach_both_chain_and_lazy_selection\n\ntest result: FAILED. 7 passed; 1 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.04s\n\nerror: test failed, to rerun pass `--lib`\n"
+  },
+  "summary": {
+    "native_storage_configurations": 7,
+    "new_storage_tests_per_configuration": 8,
+    "archived_default_configurations": 2,
+    "archived_default_tests_per_configuration": 7,
+    "archived_default_frames_per_configuration": 76,
+    "existing_regression_tests_per_configuration": 4,
+    "existing_regression_configurations": 2,
+    "no_std_library_checks": 2,
+    "strict_all_target_all_feature_clippy": true,
+    "format_and_diff": true,
+    "running_sessions": []
+  },
+  "qualifications": [
+    "No new unsafe operations or new unsafe feature were introduced. Prior leaf/source checkpoints contain their focused Miri evidence; this aggregate checkpoint adds native integration tests rather than repeating those interpreted campaigns.",
+    "New configured frames are verified with the Rust decoder. This checkpoint did not run a new pinned-C process; the default fixtures were independently C-validated when captured.",
+    "Maximum configured storage is tested natively; no maximum-size Miri execution is claimed.",
+    "Every observed growth request is failed in turn after deterministic warming, with output canaries, frame/history counters, capacity accounting, recovery and balanced distinct allocator owners asserted.",
+    "Test durations are validation timings, not performance measurements."
+  ],
+  "runner_sha256": "9a129a4aaffcc934bcf90020141edb174295ca2b95fa4874a019ddc063169647",
+  "independent_production_review": {
+    "sha256": "b69354a75b561842cf636439faa814bcf749147632dd651ef43ade70c5667b32",
+    "bytes": 41670,
+    "scope": "Bytes before the newline immediately preceding #[cfg(test)] mod tests",
+    "result": "Root confirmed byte identity between the independently reviewed initial draft383cc9a and final2e635f6. The intervening corrections changed only tests. Root and a second agent reported no actionable production finding."
+  },
+  "original_evidence_sha256": "af30496f7d814247d4e49f5f00301a17796df2957f569c6bad76151a973853da",
+  "root_verification": {
+    "source_and_log_hashes_verified": true,
+    "passing_test_executions": 78,
+    "reviewed_production_unchanged": true
+  }
+}

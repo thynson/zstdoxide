@@ -462,3 +462,11 @@ Seven new tests pass in six configurations, six existing boundary executions
 pass, and eight focused Miri executions pass. Both no_std checks, strict Clippy
 and formatting pass. Existing consumers remain unchanged before storage wiring;
 no new C execution is attributed to this helper-only checkpoint.
+
+Frame-local search shapes now drive working tables, dictionary seeds, exact-width
+source keys and both bounded parser efforts. Short dictionaries cannot revive
+old-layout seeds, and a separate capacity sum counts all seven possible search
+vectors. Eight new tests pass in seven configurations; safe/all default replay,
+eight existing ownership/entropy executions, no_std and strict Clippy pass.
+All 22 checks succeed, with 78 passing test executions. The selected history
+horizon and public boundary remain the next separately committed consumers.

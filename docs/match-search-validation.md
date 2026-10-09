@@ -226,3 +226,36 @@ logs and verifies the unchanged source hash. Existing four-byte helpers and
 consumers remain intact at this checkpoint. No new C oracle or complete archived
 default replay was run for this addition; storage and live-control integration
 remain subsequent work items.
+
+## Frame-local search storage and dictionary seeds
+
+Block preparation now resolves the selected shape before mutation or allocator
+cloning. Active Greedy/Chain owners reshape through their exact retained
+allocators, while dictionary seeds use the selected hash layout and key width.
+Chain seeds retain exactly the newest `min(S, D-W+1)` complete starts when `D>=W`.
+Short or missing dictionaries clear both seed families, and stale inactive
+layouts are excluded from regular seed copying. Complete boundary keys remain
+eligible. Parser probes receive selected widths and concrete Chain/Lazy budgets.
+
+Default insertion order and entropy publication remain unchanged. A separate
+search-capacity measurement sums exactly the seven potential search vectors,
+including inactive caches; total capacity reuses that sum with other workspaces.
+Reset preserves the plain search record. Controls remain private until the next
+history checkpoint consumes the selected horizon and the public boundary is
+implemented. This checkpoint intentionally retains 128 KiB history.
+
+Eight new storage tests pass in seven native feature/std/release configurations.
+They cover maximum dimensions, all width-dependent seed thresholds and tiny
+private ranges, short-dictionary replacement, actual effort-dependent selection,
+every observed warmed-growth allocation failure, balanced exact owners, empty
+frame preparation and entropy commit/discard. Safe/all replay all 76 archived
+default frames, and eight existing ownership/entropy regression executions pass.
+Both no_std checks, strict all-target/all-feature Clippy and formatting pass.
+The checkpoint totals 78 passing executions across 22 successful commands.
+
+[Storage evidence](evidence/2026-10-09-match-search-storage.json) preserves logs,
+eight source hashes and two independent production reviews. The initial Lazy
+test recipe accidentally shared the next key too, correctly preventing delay;
+only that recipe was repaired. The reviewed production bytes stayed identical.
+No new C process or maximum-size Miri campaign ran at this integration step;
+leaf Miri and original default-frame C evidence retain their separate scopes.
