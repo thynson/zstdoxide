@@ -481,6 +481,12 @@ active. Storage integration then selects those helpers, and the following
 history checkpoint changes the retained horizon. This keeps source-boundary
 correctness separately reviewable from allocation and context configuration.
 
+The benchmark work is also split into a clock-free harness checkpoint and a
+separate final timed campaign. The harness is validated before the complete
+immutable feature matrix, so measurements add no unverified implementation.
+See [the benchmark design](match-search-benchmark-design.md) for deterministic
+profiles, workloads, accounting scope and sampling rules.
+
 ## Acceptance boundary and remaining obligations
 
 Module 11 is complete when each accepted option controls its actual existing

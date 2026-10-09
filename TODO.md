@@ -43,8 +43,10 @@ Existing default bytes, ownership and reset semantics are compatibility inputs.
 - [ ] Integrate selected output-history retention, including width-aware short Flush tails and dictionary/history/input crossings.
 - [ ] Expose meaningful Encoder search configuration and capacity reporting, with existing boundary/reset/allocator contracts and runnable documentation.
 - [ ] Add public default-compatibility and actual-control-effect tests, pinned-C decoding and representative complete allocation-failure campaigns.
+- [x] Define deterministic benchmark profiles, work schedules, ownership accounting and separate harness/measurement checkpoints.
+- [ ] Add a clock-free validated benchmark harness for identical default/tuned workloads, explicit capacity/allocation accounting and complete backend comparisons.
 - [ ] Validate bounds, owners, feature combinations, no_std and target layouts; update relevant official coverage without claiming new reference strategies.
-- [ ] Benchmark identical deterministic default/tuned workloads across safe, individual unsafe and all-feature builds; record ratios, sample ranges, allocation and retained-capacity effects.
+- [ ] Measure the frozen default/tuned benchmark matrix across safe, individual unsafe and all-feature builds; record ratios, sample ranges, allocation and retained-capacity effects.
 
 Numeric profile execution, additional reference algorithms, long-distance matches,
 threading, static workspaces and the remaining official migration stay open.
