@@ -157,9 +157,9 @@ can enable actual assertions without losing the upstream correspondence.
 
 ## External corpus snapshots
 
-`tests/upstream/external-corpora.json` separately pins ten rolling release
-archives: seven fuzz target corpora and three regression inputs. They are
-external release snapshots observed on 2026-10-08, not files proven to belong
+`tests/upstream/external-corpora.json` separately pins fifteen rolling release
+archives: twelve fuzz target corpora and three regression inputs. They are
+external release snapshots observed on 2026-10-08 and 2026-10-09, not files proven to belong
 to the v1.5.7 tag. Archives and extracted inputs remain in an external cache.
 Their original source notices are independent of the codec's root license.
 
@@ -174,14 +174,27 @@ release builds with all unsafe features enabled and no skipped files:
 | `huf_decompress` | 605 | Both BMI-dependent parameter-consumption layouts; 604 successful table parses across both layouts |
 | `stream_decompress` | 12,462 | Tail-selected chunks, bounded streaming progress, dictionary-free output/error parity and complete input replay |
 | `stream_round_trip` | 24,223 | Complete selected source bytes, randomized supported chunk/directive schedules and exact decoded content |
+| `dictionary_loader` | 2,271 | Exact tail-selected load modes; 1,919 exact roundtrips and 352 formatted-dictionary parse rejections |
+| `raw_dictionary_round_trip` | 13,876 | Exact source/dictionary regions, prefix selection, checksum disabling, compression-bound destination and exact decoded content |
 
 These are partial adapters for the original C targets because their missing
 API/control paths remain absent. The 79-input FSE corpus is downloaded and
 pinned; the upstream writer-based target has not been replayed. The source
 inventory keeps those distinctions even when all inputs in a selected
-supported adapter pass. Both streaming corpora also passed safe release builds;
-their random C compression parameters, stable-buffer and in-place branches are
-not claimed by the supported API adapters.
+supported adapter pass. Both streaming corpora and both dictionary corpora also passed safe release
+builds; their random C compression parameters, stable-buffer, in-place,
+by-reference and sequence-producer branches are not claimed by the adapters.
+The pinned dictionary decompression (12,063 inputs), trained dictionary
+roundtrip (30,925), and trained dictionary streaming roundtrip (24,223) corpora
+have not yet been replayed. The latter archive is byte-identical to the ordinary
+streaming roundtrip snapshot; its different target still requires a separate
+adapter and replay.
+
+The fifteen selected archives contain 2,682,880,516 unpacked bytes. The importer
+allows a 4 GiB combined snapshot while retaining its 1 GiB per-archive ceiling.
+Each extraction is further bounded by that archive's pinned unpacked size, and
+all member paths, sizes, CRCs, archive hashes and extracted-cache bytes are
+verified before publication. Archives remain outside the repository.
 
 The selected regression-directory adapter also passed all **512** Silesia and
 GitHub inputs (**12,407,963 bytes**) in a release build with all unsafe features.

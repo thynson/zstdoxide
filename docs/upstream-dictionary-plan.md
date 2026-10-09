@@ -214,12 +214,16 @@ validation boundary. The malformed fixture is never merely rejected as a frame.
 The exact official omitted-ID/prefix-first negative controls now assert failure
 without selected content, while the independent prefix-second frame succeeds.
 
-The initial encoder mapping includes 21 regular tests plus independently executed
+The encoder mapping includes 24 regular tests plus independently executed
 CLI checks for 96 streaming and 20 one-shot frames. Useful raw/formatted matches,
 all dictionary-ID widths and omission, content-size/checksum/window options,
 prefix replacement/lifetime, resets and error recovery run through the public
 Rust encoder. Original level/strategy/CDict parameter setup and exact C encoded
 byte comparisons remain partial rather than being inferred from interoperability.
+Three additional independent regressions require useful retained-output matches
+across automatic block boundaries, a flushed two-byte prefix, and a dictionary
+match spanning retained frame output into the current block. These strengthen
+the existing partial streaming mapping without claiming additional C case parity.
 
 `tests/upstream_training.rs` exercises four regular raw-training contracts and
 16 held-out bidirectional official-C roundtrips. Independent C compression totals
@@ -235,8 +239,9 @@ success are exercised; immutable owned handles replace C by-reference lifetimes.
 The raw target preserves source/dictionary splitting, prefix choice, checksum
 disabling and a smaller compression-bound destination. Unsupported random C
 parameters and external sequence producers remain explicit omissions. The entire
-2,271-input loader corpus passed: 1,919 exact roundtrips and 352 expected formatted
-parse rejections, with no skipped files. Full raw-target corpus replay is pending.
+2,271-input loader corpus passed safe and all-feature release: 1,919 exact
+roundtrips and 352 expected formatted parse rejections. The raw-target corpus
+also passed both builds with 13,876 exact roundtrips. Neither replay skips files.
 `dictionary_decompress`, trained roundtrip and trained streaming-roundtrip drivers
 still require their original formatted `FUZZ_train` path and parameter schedules.
 
@@ -244,3 +249,59 @@ External corpus pinning and replay are separate checkpoints. A completed downloa
 or manifest hash does not change a target's replay status. The structural source
 audit likewise verifies links, source bytes and classification; it does not run
 the referenced Rust tests.
+
+## Dictionary corpus pin checkpoint
+
+Five official rolling release assets were independently verified in the external
+cache. Their SHA-256 hashes, source URLs, observed HTTP headers and exact member
+sizes are recorded in `tests/upstream/external-corpora.json`.
+
+| Target | Files | Unpacked bytes | Largest input | Replay checkpoint |
+| --- | ---: | ---: | ---: | --- |
+| `dictionary_loader` | 2,271 | 16,884,318 | 21,830 | Safe and all-feature release; 1,919 roundtrips, 352 formatted rejections |
+| `raw_dictionary_round_trip` | 13,876 | 348,323,083 | 1,000,000 | Safe and all-feature release; all exact roundtrips |
+| `dictionary_decompress` | 12,063 | 353,411,091 | 1,048,576 | Target adapter/replay pending |
+| `dictionary_round_trip` | 30,925 | 683,621,507 | 1,048,578 | Target adapter/replay pending |
+| `dictionary_stream_round_trip` | 24,223 | 469,442,481 | 1,048,688 | Target adapter/replay pending |
+
+The two completed targets accept every selected file without skipping. They use
+a 2 MiB input bound and 65,536-file cap. The three remaining original targets
+call `zstd_helpers.c:168` `FUZZ_train`, which consumes 100 tail-selected sample
+offsets and invokes fixed fastCover parameters. Their corpus availability does
+not establish a Rust adaptation of that training path or its advanced controls.
+
+The dictionary streaming archive shares its complete bytes with the separately
+named ordinary streaming archive. Separate target records preserve the different
+input interpretation and prevent the ordinary target's replay from satisfying
+the dictionary target automatically.
+
+Archive bytes own no codec data structures. Imported metadata comprises immutable
+value records; member paths are validated relative paths. The expanded fifteen-
+archive snapshot needs 2,682,880,516 unpacked bytes, so the importer raises only
+its aggregate limit to 4 GiB. Every archive retains a 1 GiB ceiling and its exact
+pinned unpacked-byte bound. Filesystem writes occur in temporary directories;
+complete hashes, ZIP CRCs, counts, sizes, path checks and existing-cache byte
+comparisons must all pass before an extracted directory is published. Partial
+network downloads and range chunks stay outside the project.
+
+The full offline check passed for all 15 archives and all 2,682,880,516 unpacked
+bytes on 2026-10-09. Reproduce it without network access after fetching:
+
+```sh
+python3 scripts/fetch_upstream_corpora.py --offline \
+  --cache /path/to/external-cache --zstd /path/to/zstd-v1.5.7
+```
+
+Replay the two available dictionary targets separately, adding `--all-features`
+to repeat with every unsafe backend enabled:
+
+```sh
+ZSTDOXIDE_DICTIONARY_CORPUS=/path/to/external-cache/extracted/dictionary_loader \
+ZSTDOXIDE_DICTIONARY_TARGET=loader ZSTDOXIDE_DICTIONARY_MAX_FILES=65536 \
+  cargo test --release --test upstream_dictionary_fuzz \
+  external_dictionary_file_corpus -- --ignored --nocapture
+ZSTDOXIDE_DICTIONARY_CORPUS=/path/to/external-cache/extracted/raw_dictionary_round_trip \
+ZSTDOXIDE_DICTIONARY_TARGET=raw_round_trip ZSTDOXIDE_DICTIONARY_MAX_FILES=65536 \
+  cargo test --release --test upstream_dictionary_fuzz \
+  external_dictionary_file_corpus -- --ignored --nocapture
+```

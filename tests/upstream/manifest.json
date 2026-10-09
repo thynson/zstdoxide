@@ -16,11 +16,12 @@
       "url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/",
       "manifest": "tests/upstream/external-corpora.json",
       "status": "partial",
-      "reason": "Seven rolling fuzz archives are independently SHA-256 pinned. Release all-feature adapters replayed every selected simple_decompress (11631), zstd_frame_info (2395), too-small destination (1173), huf_decompress (605, both parameter-consumption modes), stream_decompress (12462), and stream_round_trip (24223) input without skips. Both streaming adapters also passed safe release; their stable-buffer/random-parameter/in-place branches remain partial. The 79-input FSE archive is pinned but its writer-based target is not ported/replayed. Other target families require missing APIs; snapshots are not asserted to originate from the v1.5.7 tag.",
+      "reason": "Twelve rolling fuzz archives are independently SHA-256 pinned. Release all-feature adapters replayed every selected simple_decompress (11631), zstd_frame_info (2395), too-small destination (1173), huf_decompress (605, both parameter-consumption modes), stream_decompress (12462), and stream_round_trip (24223) input without skips. Both streaming adapters also passed safe release. Dictionary loader (2271: 1919 exact roundtrips and 352 formatted parse rejections) and raw dictionary roundtrip (13876 exact roundtrips) passed safe and all-feature release without skips. Their C parameter/by-reference/sequence-producer paths remain partial. Dictionary decompress (12063), trained roundtrip (30925), trained streaming roundtrip (24223) and the 79-input FSE writer-based target are pinned but not replayed. Snapshots are not asserted to originate from the v1.5.7 tag; dictionary_stream_round_trip shares archive bytes with stream_round_trip but retains a separate target contract.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#external_file_corpus",
         "tests/upstream/entropy.rs#replays_official_huffman_decoder_corpus",
-        "tests/upstream_streaming.rs#external_official_streaming_corpus"
+        "tests/upstream_streaming.rs#external_official_streaming_corpus",
+        "tests/upstream_dictionary_fuzz.rs#external_dictionary_file_corpus"
       ]
     },
     {
@@ -4398,7 +4399,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "The exact tail-selected prefix/load-method/content-mode fields, raw success and successful size/content roundtrip assertions run. Rust always owns immutable dictionary bytes instead of exposing C by-reference lifetimes; external sequence-producer and C-specific constructor paths remain partial. The verified 2271-input external corpus passed with 1919 roundtrips and 352 formatted parse rejections; no files skipped.",
+      "reason": "The exact tail-selected prefix/load-method/content-mode fields, raw success and successful size/content roundtrip assertions run. Rust always owns immutable dictionary bytes instead of exposing C by-reference lifetimes; external sequence-producer and C-specific constructor paths remain partial. The verified 2271-input external corpus passed safe and all-feature release with 1919 roundtrips and 352 formatted parse rejections; no files skipped.",
       "rust_tests": [
         "tests/upstream_dictionary_fuzz.rs#dictionary_loader_covers_all_modes_prefixes_and_load_method_selectors",
         "tests/upstream_dictionary_fuzz.rs#dictionary_fuzz_adapters_replay_deterministic_noise_and_truncated_dictionaries",
@@ -4413,7 +4414,7 @@
           "line_end": 106,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "The exact tail-selected prefix/load-method/content-mode fields, raw success and successful size/content roundtrip assertions run. Rust always owns immutable dictionary bytes instead of exposing C by-reference lifetimes; external sequence-producer and C-specific constructor paths remain partial. The verified 2271-input external corpus passed with 1919 roundtrips and 352 formatted parse rejections; no files skipped.",
+          "reason": "The exact tail-selected prefix/load-method/content-mode fields, raw success and successful size/content roundtrip assertions run. Rust always owns immutable dictionary bytes instead of exposing C by-reference lifetimes; external sequence-producer and C-specific constructor paths remain partial. The verified 2271-input external corpus passed safe and all-feature release with 1919 roundtrips and 352 formatted parse rejections; no files skipped.",
           "rust_tests": [
             "tests/upstream_dictionary_fuzz.rs#dictionary_loader_covers_all_modes_prefixes_and_load_method_selectors",
             "tests/upstream_dictionary_fuzz.rs#dictionary_fuzz_adapters_replay_deterministic_noise_and_truncated_dictionaries",
@@ -4690,10 +4691,11 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Exact tail-selected source/dictionary slices, prefix selection, disabled checksum and smaller compression-bound destination are exercised with exact output comparisons. Advanced randomized C parameters/external sequence producers remain unsupported; external full-corpus replay is not yet run.",
+      "reason": "Exact tail-selected source/dictionary slices, prefix selection, disabled checksum and smaller compression-bound destination are exercised with exact output comparisons. Advanced randomized C parameters/external sequence producers remain unsupported; the full 13876-input corpus passed safe and all-feature release with exact roundtrips and no skipped files.",
       "rust_tests": [
         "tests/upstream_dictionary_fuzz.rs#raw_dictionary_round_trip_covers_empty_short_large_and_formatted_looking_content",
-        "tests/upstream_dictionary_fuzz.rs#dictionary_fuzz_adapters_replay_deterministic_noise_and_truncated_dictionaries"
+        "tests/upstream_dictionary_fuzz.rs#dictionary_fuzz_adapters_replay_deterministic_noise_and_truncated_dictionaries",
+        "tests/upstream_dictionary_fuzz.rs#external_dictionary_file_corpus"
       ],
       "line_count": 119,
       "cases": [
@@ -4704,10 +4706,11 @@
           "line_end": 69,
           "label": "roundTripTest",
           "status": "partial",
-          "reason": "Exact tail-selected source/dictionary slices, prefix selection, disabled checksum and smaller compression-bound destination are exercised with exact output comparisons. Advanced randomized C parameters/external sequence producers remain unsupported; external full-corpus replay is not yet run.",
+          "reason": "Exact tail-selected source/dictionary slices, prefix selection, disabled checksum and smaller compression-bound destination are exercised with exact output comparisons. Advanced randomized C parameters/external sequence producers remain unsupported; the full 13876-input corpus passed safe and all-feature release with exact roundtrips and no skipped files.",
           "rust_tests": [
             "tests/upstream_dictionary_fuzz.rs#raw_dictionary_round_trip_covers_empty_short_large_and_formatted_looking_content",
-            "tests/upstream_dictionary_fuzz.rs#dictionary_fuzz_adapters_replay_deterministic_noise_and_truncated_dictionaries"
+            "tests/upstream_dictionary_fuzz.rs#dictionary_fuzz_adapters_replay_deterministic_noise_and_truncated_dictionaries",
+            "tests/upstream_dictionary_fuzz.rs#external_dictionary_file_corpus"
           ]
         },
         {
@@ -4717,10 +4720,11 @@
           "line_end": 119,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Exact tail-selected source/dictionary slices, prefix selection, disabled checksum and smaller compression-bound destination are exercised with exact output comparisons. Advanced randomized C parameters/external sequence producers remain unsupported; external full-corpus replay is not yet run.",
+          "reason": "Exact tail-selected source/dictionary slices, prefix selection, disabled checksum and smaller compression-bound destination are exercised with exact output comparisons. Advanced randomized C parameters/external sequence producers remain unsupported; the full 13876-input corpus passed safe and all-feature release with exact roundtrips and no skipped files.",
           "rust_tests": [
             "tests/upstream_dictionary_fuzz.rs#raw_dictionary_round_trip_covers_empty_short_large_and_formatted_looking_content",
-            "tests/upstream_dictionary_fuzz.rs#dictionary_fuzz_adapters_replay_deterministic_noise_and_truncated_dictionaries"
+            "tests/upstream_dictionary_fuzz.rs#dictionary_fuzz_adapters_replay_deterministic_noise_and_truncated_dictionaries",
+            "tests/upstream_dictionary_fuzz.rs#external_dictionary_file_corpus"
           ]
         }
       ]
@@ -10416,7 +10420,10 @@
         "tests/upstream_dictionary_encode.rs#large_stream_roundtrip_stays_bounded_after_dictionary_lifetime_expires",
         "tests/upstream_dictionary_encode.rs#one_shot_and_streaming_dictionary_compression_both_use_real_dictionary_matches",
         "tests/upstream_dictionary_encode.rs#one_shot_dictionary_id_widths_and_empty_raw_dictionary_match_the_public_contract",
-        "tests/upstream_dictionary_encode.rs#official_codec_decodes_one_shot_dictionary_frames_across_content_size_boundaries"
+        "tests/upstream_dictionary_encode.rs#official_codec_decodes_one_shot_dictionary_frames_across_content_size_boundaries",
+        "tests/upstream_dictionary_encode.rs#retained_output_compresses_repeated_independent_blocks_without_a_dictionary",
+        "tests/upstream_dictionary_encode.rs#retained_history_keys_cross_a_short_flush_into_current_input",
+        "tests/upstream_dictionary_encode.rs#a_later_block_dictionary_match_crosses_retained_frame_zero_and_current_output"
       ],
       "line_count": 3467,
       "cases": [

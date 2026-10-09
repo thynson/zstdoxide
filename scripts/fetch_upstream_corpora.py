@@ -12,6 +12,11 @@ extract with bounded copies, verify observed member counts/sizes, publish only
 complete directories. The official CLI is an import oracle for .zst archives,
 never a fallback inside the Rust implementation. Corpora are rolling release
 snapshots and are not claimed to be versioned with zstd v1.5.7.
+
+The expanded dictionary corpus collection shares a 4 GiB aggregate budget.
+Each archive retains its original 1 GiB expansion ceiling, further restricted
+by its pinned unpacked size. These scalar bounds share one representation;
+the importer has no unchecked-memory backend.
 """
 
 import argparse
@@ -28,7 +33,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "tests" / "upstream" / "external-corpora.json"
-MAX_UNPACKED = 1 << 30
+MAX_ARCHIVE_UNPACKED = 1 << 30
+MAX_UNPACKED = 4 << 30
 CHUNK = 1 << 20
 
 
@@ -188,14 +194,14 @@ def main():
     parser.add_argument("--cache", required=True, type=Path, help="external cache, outside this repository")
     parser.add_argument("--target", action="append", help="manifest ID; repeat to choose multiple (default: every pinned archive)")
     parser.add_argument("--offline", action="store_true", help="require cached archives; never access the network")
-    parser.add_argument("--max-unpacked-bytes", type=int, default=MAX_UNPACKED, help="aggregate extraction limit, at most 1 GiB")
+    parser.add_argument("--max-unpacked-bytes", type=int, default=MAX_UNPACKED, help="aggregate extraction limit, at most 4 GiB; every archive remains limited to 1 GiB")
     parser.add_argument("--zstd", default=os.environ.get("ZSTD_BIN", "zstd"), help="official v1.5.7 archive decoder")
     args = parser.parse_args()
     cache = args.cache.expanduser().resolve()
     if cache.is_relative_to(ROOT):
         parser.error("corpus cache must be outside the repository")
     if not 0 < args.max_unpacked_bytes <= MAX_UNPACKED:
-        parser.error("max-unpacked-bytes must be between 1 and 1073741824")
+        parser.error(f"max-unpacked-bytes must be between 1 and {MAX_UNPACKED}")
     manifest = json.loads(MANIFEST.read_text())
     records = manifest["archives"]
     if args.target:
@@ -206,6 +212,8 @@ def main():
         records = [record for record in records if record["id"] in requested]
     if sum(record["unpacked_bytes"] for record in records) > args.max_unpacked_bytes:
         parser.error("selected corpora exceed aggregate unpacked-byte bound")
+    if any(not 0 <= record["unpacked_bytes"] <= MAX_ARCHIVE_UNPACKED for record in records):
+        parser.error("each selected archive must expand to between 0 bytes and 1 GiB")
     if any(record["format"] != "zip" for record in records):
         version = subprocess.check_output([args.zstd, "--version"], text=True)
         if "v1.5.7" not in version:
@@ -224,12 +232,15 @@ def main():
             scratch = Path(temporary)
             work = scratch / "files"
             work.mkdir()
-            remaining = args.max_unpacked_bytes - total
+            # Raising the whole snapshot limit must not weaken the original
+            # per-archive expansion bound. Pinned sizes further tighten each
+            # extraction, including every member copied by the ZIP/TAR readers.
+            remaining = min(MAX_ARCHIVE_UNPACKED, record["unpacked_bytes"], args.max_unpacked_bytes - total)
             if record["format"] == "zip":
                 observed = extract_zip(archive, work, remaining)
             else:
                 decoded = scratch / "decoded"
-                decoded_size = decode_zstd(archive, decoded, args.zstd, min(MAX_UNPACKED, record["decoded_bytes"]))
+                decoded_size = decode_zstd(archive, decoded, args.zstd, min(MAX_ARCHIVE_UNPACKED, record["decoded_bytes"]))
                 if decoded_size != record["decoded_bytes"]:
                     raise ValueError("decoded archive size differs from pin")
                 if record["format"] == "tar.zst":

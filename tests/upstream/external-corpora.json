@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot_kind": "rolling external release assets, independently hash-pinned",
-  "observed_date": "2026-10-08",
+  "observed_date": "2026-10-09",
   "target_source_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
   "provenance_note": "The release archives are maintained independently of tagged zstd source. Observation and SHA-256 pinning do not establish that these bytes belong to v1.5.7.",
   "license_note": "The code repository BSD/GPL licenses describe upstream test harness source. The external release pages do not declare separate licenses for each corpus input. In particular Silesia and GitHub content must not be assumed to inherit the codec source license. Archives stay in an external cache and are not redistributed in this repository.",
@@ -13,7 +13,7 @@
     "https://github.com/facebook/zstd/releases/tag/regression-data",
     "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/regression/data.c"
   ],
-  "max_unpacked_bytes": 1073741824,
+  "max_unpacked_bytes": 4294967296,
   "archives": [
     {
       "id": "simple_decompress",
@@ -266,6 +266,130 @@
       "largest_member_bytes": 1048688,
       "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/stream_round_trip.c",
       "upstream_checksum_pin": null
+    },
+    {
+      "id": "dictionary_loader",
+      "format": "zip",
+      "name": "dictionary_loader_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/dictionary_loader_seed_corpus.zip",
+      "compressed_bytes": 3043545,
+      "sha256": "88e1cf89450f16981040457f194a4d25aa1173c171716319d6e70406d79bea9e",
+      "observed_date": "2026-10-08",
+      "response_headers": {
+        "Content-Length": "3043545",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A2758F7FAD\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:56:05 GMT",
+        "Accept-Ranges": "bytes"
+      },
+      "member_count": 2272,
+      "file_count": 2271,
+      "unpacked_bytes": 16884318,
+      "largest_member_bytes": 21830,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/dictionary_loader.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "dictionary_decompress",
+      "format": "zip",
+      "name": "dictionary_decompress_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/dictionary_decompress_seed_corpus.zip",
+      "compressed_bytes": 117184521,
+      "sha256": "4165df80490877b9b8f32dc0460d49896a362e192369cdc77ad1a0fd54e263e8",
+      "observed_date": "2026-10-09",
+      "response_headers": {
+        "Content-Length": "792585",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A275EAFFB1\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:56:06 GMT",
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 116391936-117184520/117184521"
+      },
+      "range_download_note": "Content-Length/Content-Range describe the final verified HTTP range; compressed_bytes records the complete assembled archive. Release asset identity/size/update time matched the pre-pause snapshot, and all range ETags matched.",
+      "member_count": 12064,
+      "file_count": 12063,
+      "unpacked_bytes": 353411091,
+      "largest_member_bytes": 1048576,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/dictionary_decompress.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "raw_dictionary_round_trip",
+      "format": "zip",
+      "name": "raw_dictionary_round_trip_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/raw_dictionary_round_trip_seed_corpus.zip",
+      "compressed_bytes": 89617111,
+      "sha256": "4f17153956f211892a13a5cb1357ed185c8e1b0b90d5786c4f4078f001ed3453",
+      "observed_date": "2026-10-09",
+      "response_headers": {
+        "Content-Length": "1536727",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A2634B8B16\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:35 GMT",
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 88080384-89617110/89617111"
+      },
+      "range_download_note": "Content-Length/Content-Range describe the final verified HTTP range; compressed_bytes records the complete assembled archive. Release asset identity/size/update time matched the pre-pause snapshot, and all range ETags matched.",
+      "member_count": 13876,
+      "file_count": 13876,
+      "unpacked_bytes": 348323083,
+      "largest_member_bytes": 1000000,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/raw_dictionary_round_trip.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "dictionary_round_trip",
+      "format": "zip",
+      "name": "dictionary_round_trip_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/dictionary_round_trip_seed_corpus.zip",
+      "compressed_bytes": 213270332,
+      "sha256": "143bd88b7c8b8c199aa2bc410c37e0af18695e772bfba668f26bbbfb0b5736d6",
+      "observed_date": "2026-10-09",
+      "response_headers": {
+        "Content-Length": "1457980",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A26C34074C\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:50 GMT",
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 211812352-213270331/213270332"
+      },
+      "range_download_note": "Content-Length/Content-Range describe the final verified HTTP range; compressed_bytes records the complete assembled archive. Release asset identity/size/update time matched the pre-pause snapshot, and all range ETags matched.",
+      "member_count": 30926,
+      "file_count": 30925,
+      "unpacked_bytes": 683621507,
+      "largest_member_bytes": 1048578,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/dictionary_round_trip.c",
+      "upstream_checksum_pin": null
+    },
+    {
+      "id": "dictionary_stream_round_trip",
+      "format": "zip",
+      "name": "dictionary_stream_round_trip_seed_corpus.zip",
+      "release": "fuzz-corpora",
+      "source_url": "https://github.com/facebook/zstd/releases/download/fuzz-corpora/dictionary_stream_round_trip_seed_corpus.zip",
+      "compressed_bytes": 103490444,
+      "sha256": "f966c49e0f425ceb614411d8e470cd1e08248f11d53dc22d121fac14b63e6705",
+      "observed_date": "2026-10-09",
+      "response_headers": {
+        "Content-Length": "729996",
+        "Content-Type": "application/octet-stream",
+        "ETag": "\"0x8D9B9A26F6C9897\"",
+        "Last-Modified": "Tue, 07 Dec 2021 16:55:55 GMT",
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 102760448-103490443/103490444"
+      },
+      "range_download_note": "Content-Length/Content-Range describe the final verified HTTP range; compressed_bytes records the complete assembled archive. Release asset identity/size/update time matched the pre-pause snapshot, and all range ETags matched.",
+      "member_count": 24224,
+      "file_count": 24223,
+      "unpacked_bytes": 469442481,
+      "largest_member_bytes": 1048688,
+      "target_source": "https://github.com/facebook/zstd/blob/f8745da6ff1ad1e7bab384bd1f9d742439278e99/tests/fuzz/dictionary_stream_round_trip.c",
+      "upstream_checksum_pin": null,
+      "shared_snapshot_note": "This official release asset is byte-identical to stream_round_trip_seed_corpus.zip. Each target consumes the shared seeds through its own adapter; replay coverage is tracked separately."
     }
   ],
   "reproduction": {
@@ -283,5 +407,6 @@
     "fresh_network_fetch_test": "fse_read_ncount passed in a fresh external cache",
     "official_regression_xxhash64_checks": "all three pins passed using an external verifier built against upstream xxhash.h; no verifier or C dependency is part of the Rust library",
     "streaming_corpora_network_fetch": "stream_decompress and stream_round_trip passed exact release-size downloads, SHA-256 verification, bounded extraction, ZIP CRC/member validation, and offline re-extraction comparison"
-  }
+  },
+  "max_archive_unpacked_bytes": 1073741824
 }

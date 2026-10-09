@@ -67,6 +67,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Map encoder, raw-training, and dictionary fuzz assertions to pinned upstream groups.
 - [ ] Port applicable official dictionary preparation and training assertions.
 - [x] Adapt dictionary loader and raw-dictionary fuzz contracts with exact source selectors.
+- [x] Pin all five dictionary corpora and replay loader/raw targets with safe and unsafe backends.
 - [x] Record trained dictionary fuzz sample ownership, selectors, and adapter boundaries.
 - [ ] Preserve the trained fuzz helper's 100 sample ranges, capacity, and failure fallback.
 - [ ] Adapt trained dictionary decompression and deterministic roundtrip fuzz assertions.
