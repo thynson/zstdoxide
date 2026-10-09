@@ -208,7 +208,7 @@ impl TrainingFrequencies {
 
     fn count(&mut self, sample: &[u8]) -> Result<()> {
         for key in sample.windows(4) {
-            let count = &mut self.counts[Self::index(key)];
+            let count = self.cell_mut(key);
             *count = count.checked_add(1).ok_or(Error::ResourceLimit)?;
         }
         Ok(())
@@ -218,13 +218,49 @@ impl TrainingFrequencies {
         // Segments contain at most 4096 bytes, so 4093*u32::MAX fits u64.
         segment
             .windows(4)
-            .map(|key| u64::from(self.counts[Self::index(key)]))
+            .map(|key| u64::from(*self.cell(key)))
             .sum()
     }
 
     fn cover(&mut self, segment: &[u8]) {
         for key in segment.windows(4) {
-            self.counts[Self::index(key)] = 0;
+            *self.cell_mut(key) = 0;
+        }
+    }
+
+    fn cell(&self, key: &[u8]) -> &u32 {
+        let index = Self::index(key);
+        #[cfg(not(feature = "unsafe-training"))]
+        {
+            &self.counts[index]
+        }
+        #[cfg(feature = "unsafe-training")]
+        {
+            // SAFETY: index is a u32 hash shifted by 32-HASH_BITS, hence less
+            // than 2^HASH_BITS = FREQUENCY_CELLS. Construction initializes that
+            // many properly aligned u32 cells and no method changes length or
+            // allocation. The shared self borrow keeps the allocation live and
+            // prevents mutation for the returned reference's entire lifetime.
+            // The reference cannot outlive self and only grants shared access.
+            unsafe { self.counts.get_unchecked(index) }
+        }
+    }
+
+    fn cell_mut(&mut self, key: &[u8]) -> &mut u32 {
+        let index = Self::index(key);
+        #[cfg(not(feature = "unsafe-training"))]
+        {
+            &mut self.counts[index]
+        }
+        #[cfg(feature = "unsafe-training")]
+        {
+            // SAFETY: the fixed-width hash proves index < FREQUENCY_CELLS.
+            // All FREQUENCY_CELLS u32 entries were initialized by construction,
+            // have Vec-provided alignment, and remain in the same live allocation
+            // with unchanged length. The exclusive self borrow prevents any
+            // competing references or access during the returned unique borrow.
+            // Its lifetime is tied to self; this call does not reallocate.
+            unsafe { self.counts.get_unchecked_mut(index) }
         }
     }
 }

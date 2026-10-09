@@ -17,6 +17,7 @@ unsafe-fse = []
 unsafe-huffman = []
 unsafe-match-table = []
 unsafe-dictionary = []
+unsafe-training = []
 
 [lints.rust]
 unsafe_op_in_unsafe_fn = "deny"

@@ -22,7 +22,8 @@
         feature = "unsafe-fse",
         feature = "unsafe-huffman",
         feature = "unsafe-match-table",
-        feature = "unsafe-dictionary"
+        feature = "unsafe-dictionary",
+        feature = "unsafe-training"
     )),
     forbid(unsafe_code)
 )]
