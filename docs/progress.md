@@ -486,3 +486,12 @@ both defaults. Five new stream tests join 31 passing tests in eight builds,
 totaling 248 executions. Both no_std checks, strict library Clippy and all 18
 registered usage examples safe/all pass. Separate public control-effect and C
 interoperability campaigns follow before the final module matrix.
+
+All six public search controls now have independent actual-effect witnesses.
+Ten tests pass in each of eight configurations, including all 82 observed
+allocation-failure ordinals per build and exact-owner recovery. Pinned C
+independently decodes 54 complete configured frames across safe/all builds,
+comparing 1,208,638 source bytes exactly. All 16 focused commands pass; no
+production or stored-default fixture change was needed. Original applicable
+search lifecycle assertions, final platform/matrix validation and benchmark
+harness/measurement remain before Module 11 completion.

@@ -316,3 +316,32 @@ export and documentation checks. It preserves the corrected runner expectation
 for the cfg(std)-only ignored test; the successful no_std run was not repeated.
 Public actual-effect/failure and pinned-C frame campaigns remain separate next
 items, followed by the complete feature/platform matrix and benchmarks.
+
+## Public control effects, complete failure ordinals and pinned-C decoding
+
+Eight public tests demonstrate every operational knob with designed inputs.
+An independently verified C hash pair collides at log ten and separates at
+fourteen; public Greedy selection changes accordingly. Changing chain capacity
+keeps the first block identical but changes the repeated block after cyclic
+history reseeding. Four-/five-byte dictionary tails distinguish selected widths;
+older-longer candidate ladders distinguish Chain and Lazy budgets 1/8/16/64.
+Changing the other policy's unused budget preserves bytes. Each named policy
+benefits on the deliberate A/B/A history witness, and fragmented caller buffers
+preserve complete frames. These observations are input-specific, not universal
+ratio guarantees or reproduction of C candidate selection.
+
+Eight feature/std configurations each pass ten tests (eight new plus two shared
+generator checks), with the explicit CLI oracle ignored. Every build enumerates
+and rejects all 82 observed allocation requests across four configuration,
+strategy and dictionary stages. All 656 failure/recovery trials release exact
+owners; all recorded non-timing witness observations agree across backends.
+
+The ignored oracle is separately executed in release safe/all builds. Pinned
+v1.5.7 C decodes all 27 complete configured frames per build with their exact
+raw/prepared dictionaries: 54 full comparisons and 1,208,638 source bytes total.
+Scoped strict Clippy, no_std compilation and formatting pass. All 16 commands
+pass, totaling 82 passing test executions. [Public effect evidence](evidence/2026-10-09-match-search-public-effects.json)
+embeds full logs, 47 unchanged dependency hashes, the independent hash probe and
+all commands. It retains a metrics-only correction for interleaved successful
+harness output; no codec run failed or was repeated. Relevant original lifecycle
+assertions and their remaining gaps are recorded in a subsequent migration item.

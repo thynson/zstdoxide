@@ -1,0 +1,573 @@
+{
+  "scope": "Public operational match-search controls: six isolated setting effects, complete bounded allocation failure campaign, and independent pinned C decoding. No C candidate, strategy, or ratio equivalence.",
+  "head": "bd5fd8f915b15c8427a06184b15f67f0ba291154",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "source_before": "99ec64f172614586fa08f5b45e473221b4d8d6d44dba30fe54aa904fdd67fada",
+  "input_hashes_before": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "659ce726a22f6cc6360e76eb5bc5de8eb593fb2e0fb046688e28afc14755d402",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a",
+    "src/literal_encode.rs": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/match_parse.rs": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818",
+    "src/match_search.rs": "14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/upstream/dictionaries/formatted.dict": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281",
+    "tests/upstream/support/mod.rs": "78ec1663c4873dba095a6ba24e5787d545a1ccffccb95b3edfd940c7142c3d2a"
+  },
+  "initial_probe": {
+    "command": "CARGO_TARGET_DIR=target/module11-public-search cargo +nightly-2026-10-08 test --offline --locked --test match_search_options -- --nocapture",
+    "log": "/tmp/zstdoxide-public-search-initial.log",
+    "sha256": "b5f2958584237166f105f4899cf6d68ab0be277ee48912eeb491c747ea451a28",
+    "scope": "Before final logging-only test changes; 10 passed/1 ignored, all hypotheses succeeded.",
+    "log_text": "   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.99s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/cb9d7221c97d4121/out/match_search_options-cb9d7221c97d4121)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.28s\n\n"
+  },
+  "independent_hash_relation": {
+    "path": "/tmp/zstdoxide-search-public-hash-probe.json",
+    "sha256": "0f00aad0cac9c60149c3fccf64a946ba8231a87e2f3a0b1d767ba1cbe791279f",
+    "evidence": {
+      "scope": "Independent pinned-C relation for public hash-log witness; no encoded-frame observation",
+      "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+      "source": "/tmp/zstdoxide-search-public-hash-probe.c",
+      "source_sha256": "30d271b948adb177370388d7b21c9f399cbd6fc9d87831266d04264cd2a4c9df",
+      "source_text": "#define main captured_oracle_main\n#include \"/Users/lanxingcan/Workspace/zstdoxize/tests/upstream/match-search/hash_oracle.c\"\n#undef main\nint main(void) {\n    const unsigned char original[8] = {0};\n    const unsigned char collision[8] = {0, 0, 0x10, 0xf5, 0, 0, 0, 0};\n    const unsigned logs[2] = {10, 14};\n    unsigned i;\n    check(ZSTD_versionNumber() == 10507, \"not pinned v1.5.7\");\n    puts(\"log\\toriginal_bucket\\tcollision_bucket\");\n    for (i = 0; i < 2; ++i) {\n        size_t a = observe(original, 4, logs[i]);\n        size_t b = observe(collision, 4, logs[i]);\n        check(i == 0 ? a == b : a != b, \"unexpected public-witness hash relation\");\n        printf(\"%u\\t%zu\\t%zu\\n\", logs[i], a, b);\n    }\n    return 0;\n}\n",
+      "included_oracle_sha256": "004e5e82466efa1c87f216f140dd86bef6eb546812eb067ca8a8d79c340c79b0",
+      "included_pinned_headers": {
+        "lib/compress/zstd_compress_internal.h": "ab7754413cef565da559bda7eb738bc2b3708c48877cb9ec37aff767d32c57d1",
+        "lib/common/zstd_internal.h": "ad3d95ce2b81a8c5c6b00cfe6323d8e80cacb690d3b5883725cd0d939f4f576f",
+        "lib/common/compiler.h": "d19829705d8039437ffba873df2b58d20d7b876d58da479121d2e515df55cbf7",
+        "lib/common/portability_macros.h": "75e2b43968b70decc6bd17876833be04894035594ddc1e745cd6b70be8265637",
+        "lib/common/cpu.h": "23d520b536a6f23114e66549d03a967b1f24b15560c5b1ebd47ee392ccee4a1c",
+        "lib/common/mem.h": "4dd5fe76fa30a020cd4b3af3134ae143920300a1fe54baac1a5da73297e66783",
+        "lib/common/debug.h": "8260cd5087b8309679c61b772b535688993c61a675a30481b8ae55b45740ba15",
+        "lib/common/zstd_deps.h": "9c77ea7d0afa8d5c868a7839e178a446a82d88eb75fd56f2fd7d9d96c5ab7c11",
+        "lib/common/error_private.h": "ae077bb433eb150ee247410a0357f910b9c07be839c6a9abe0b2e6b18ceb716d",
+        "lib/zstd_errors.h": "66a8c3f71d12ea6e797e4f622f31f3f8f81c41b36f48cad4f5de7d8bfb6aac0a",
+        "lib/zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b",
+        "lib/common/fse.h": "5235ce1e512bf80204d013b1f4cecd776fdaa9effddb48308bce08f6d0b84499",
+        "lib/common/bitstream.h": "a9461685c9add6f609078acc950a08db4c02e6e6a849d550f45182ba2ae38556",
+        "lib/common/bits.h": "5bb7693a35d7ce03f8715c0b1e237062285e052250fdd34f72f38e7e92365090",
+        "lib/common/huf.h": "9a83d899c8c9bf03389d482562090ec2443bc0f87f27864a2b891b180333f2d4",
+        "lib/common/xxhash.h": "8cb837b21a8fe9a6b9dbcd0961ab16e733bfcbfa9e003f3a496ce07ae80aa8ee",
+        "lib/common/zstd_trace.h": "17f6daa4c7e97055cd1ed7bcf4d9241a4e79b465f083c5d732fda1df2f0be11e",
+        "lib/compress/zstd_cwksp.h": "ed77c2739b18b9800b97785262526a1dd4f385311ca5c2caa20b6f2a35f3735d",
+        "lib/common/allocations.h": "6a718e8edaca112abdc0bdfa7de67edefaa44c8d9e514b79672ab58ab3a9118a",
+        "lib/compress/zstd_preSplit.h": "910facb2e3442e42a6952c514223c4502d95ed957bf7dc73982b3b03785b361b"
+      },
+      "archive_sha256": "2a6a6b22f5c98389d4c3cac3ab65ac77386ae529aa6fcdb8dbdbe267210a640d",
+      "commands": [
+        {
+          "name": "compile",
+          "command": [
+            "cc",
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wno-unused-function",
+            "-isysroot",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+            "-I",
+            "/private/tmp/zstdoxize-upstream-1.5.7/lib/compress",
+            "-MMD",
+            "-MF",
+            "/tmp/zstdoxide-search-public-hash-probe.d",
+            "/tmp/zstdoxide-search-public-hash-probe.c",
+            "/private/tmp/zstdoxize-upstream-1.5.7/lib/libzstd.a",
+            "-o",
+            "/tmp/zstdoxide-search-public-hash-probe"
+          ],
+          "exit_code": 0,
+          "log": "/tmp/zstdoxide-search-public-hash-probe-compile.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "log_text": ""
+        },
+        {
+          "name": "run",
+          "command": [
+            "/tmp/zstdoxide-search-public-hash-probe"
+          ],
+          "exit_code": 0,
+          "log": "/tmp/zstdoxide-search-public-hash-probe-run.log",
+          "sha256": "b401a5a2b944526c9e8062c8deaa530d556ee8f6570c165bdcf5be631157dbe3",
+          "log_text": "log\toriginal_bucket\tcollision_bucket\n10\t0\t0\n14\t0\t4\n"
+        }
+      ],
+      "provenance_repair": "Compilation and execution succeeded initially; provenance postprocessing needed canonicalized header paths before git lookup. No C rerun or source change was required."
+    }
+  },
+  "records": [
+    {
+      "label": "public-safe",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test match_search_options -- --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.4454,
+      "test_results": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/public-safe.log",
+      "sha256": "59c8082bb299331295ffa8f759b4d448a36140d68f92946dbcec5179a25c6058",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.70s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/cb9d7221c97d4121/out/match_search_options-cb9d7221c97d4121)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\nhash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\nwidth tail 4: widths 4/5/8 frames [24, 25, 25] bytes\nLazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes\nChain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\nchain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\nwidth tail 5: widths 4/5/8 frames [24, 24, 26] bytes\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nhistory Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\nhistory Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\nhistory Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.27s\n\n"
+    },
+    {
+      "label": "public-table",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test match_search_options --features unsafe-match-table -- --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.7782,
+      "test_results": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/public-table.log",
+      "sha256": "6992b1ae25077724145aeb5838792d5b844a9785063a80f98f21fb235022ab4f",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.18s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/21820c3ceaab2c0c/out/match_search_options-21820c3ceaab2c0c)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\nLazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes\nhash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\nwidth tail 4: widths 4/5/8 frames [24, 25, 25] bytes\nChain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\nwidth tail 5: widths 4/5/8 frames [24, 24, 26] bytes\nchain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nhistory Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\nhistory Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\nhistory Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.28s\n\n"
+    },
+    {
+      "label": "public-chain",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test match_search_options --features unsafe-match-chain -- --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.7282,
+      "test_results": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/public-chain.log",
+      "sha256": "57a9849cb2ae86e0e2462e1a6debfa13d71a07856b1bc5522b5c0236d939732f",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.14s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/3a5e3f6f2d23bf8c/out/match_search_options-3a5e3f6f2d23bf8c)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\nhash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\nwidth tail 4: widths 4/5/8 frames [24, 25, 25] bytes\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\nChain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes\nLazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\nwidth tail 5: widths 4/5/8 frames [24, 24, 26] bytes\nchain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nhistory Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\nhistory Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\nhistory Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.28s\n\n"
+    },
+    {
+      "label": "public-ring",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test match_search_options --features unsafe-ring-history -- --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.6493,
+      "test_results": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/public-ring.log",
+      "sha256": "50f4b73374fb593622366c0fce84e6035e997188d13b8043a417504dda776651",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.06s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/98d8127b36ab90fe/out/match_search_options-98d8127b36ab90fe)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\nhash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes\nwidth tail 4: widths 4/5/8 frames [24, 25, 25] bytes\nChain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes\nLazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\nwidth tail 5: widths 4/5/8 frames [24, 24, 26] bytes\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\nchain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nhistory Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\nhistory Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\nhistory Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.28s\n\n"
+    },
+    {
+      "label": "public-dictionary",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test match_search_options --features unsafe-dictionary -- --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.67,
+      "test_results": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/public-dictionary.log",
+      "sha256": "4a366fee701d8dedf474fcb609ecb11a4d49baab70096f766cc55cf26d9177fd",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.07s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/872061dbebeebefa/out/match_search_options-872061dbebeebefa)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\nhash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\nwidth tail 4: widths 4/5/8 frames [24, 25, 25] bytes\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\nChain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\nwidth tail 5: widths 4/5/8 frames [24, 24, 26] bytes\nLazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\nchain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nhistory Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\nhistory Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\nhistory Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.29s\n\n"
+    },
+    {
+      "label": "public-all",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test match_search_options --all-features -- --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.7433,
+      "test_results": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/public-all.log",
+      "sha256": "d9b6bd89b897a6cb6add3c99e85acff132a75146ee1c5021bd10b06b1da78cf7",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.12s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/e6def10c17ba264b/out/match_search_options-e6def10c17ba264b)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\nhash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\nChain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes\nLazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\nwidth tail 4: widths 4/5/8 frames [24, 25, 25] bytes\nchain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\nwidth tail 5: widths 4/5/8 frames [24, 24, 26] bytes\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nhistory Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\nhistory Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\nhistory Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.29s\n\n"
+    },
+    {
+      "label": "public-no-std",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test match_search_options --no-default-features -- --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.7124,
+      "test_results": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/public-no-std.log",
+      "sha256": "d4aa41674cbadb4410419cfc059a1f4d63d5a0ad772d46849aaec08211b2b366",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.09s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/ecf9ef48947924e7/out/match_search_options-ecf9ef48947924e7)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\nwidth tail 4: widths 4/5/8 frames [24, 25, 25] bytes\ntest support::tests::fuzzer_rng_matches_upstream_vectors ... ok\nhash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\nLazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\nChain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\nwidth tail 5: widths 4/5/8 frames [24, 24, 26] bytes\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\nchain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nhistory Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\nhistory Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\nhistory Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.29s\n\n"
+    },
+    {
+      "label": "public-no-std-all",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --test match_search_options --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training -- --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 1.8898,
+      "test_results": [
+        {
+          "passed": 10,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/public-no-std-all.log",
+      "sha256": "ef23c98e9d3855c11d56bb014e1426382e772a3e485d8a4da67f36899984b5bd",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.09s\n     Running tests/match_search_options.rs (target/module11-public-search/debug/build/zstdoxide/07393b3adafaa663/out/match_search_options-07393b3adafaa663)\n\nrunning 11 tests\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ignored, requires pinned zstd v1.5.7 CLI; set ZSTD_BIN; independently decodes selected complete frames\nwidth tail 4: widths 4/5/8 frames [test support::tests::fuzzer_rng_matches_upstream_vectors ... ok\n24, 25, 25] bytes\nhash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes\ntest search_hash_dimension_changes_greedy_candidate_selection_on_a_designed_collision ... ok\nLazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes\ntest search_hash_and_chain_dimensions_change_actual_retained_search_storage ... ok\ntest search_lazy_effort_changes_frames_on_the_next_position_dictionary_ladder ... ok\nChain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes\nwidth tail 5: widths 4/5/8 frames [24, 24, 26] bytes\ntest search_chain_effort_changes_frames_on_the_older_longer_dictionary_ladder ... ok\nchain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes\ntest search_chain_node_dimension_changes_the_repeated_block_after_cyclic_eviction ... ok\ntest search_key_width_changes_whether_isolated_short_dictionary_tails_are_searched ... ok\ntest support::tests::noise_matches_upstream_generated_vectors ... ok\nhistory Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes\nsearch allocation campaign: 82 observed ordinals, each rejected then recovered; 4 stages per cycle\ntest search_every_observed_allocation_failure_in_shape_cycles_recovers_and_releases_owners ... ok\nhistory Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\nhistory Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes\ntest search_history_horizon_reaches_repeated_blocks_beyond_the_short_retained_suffix ... ok\n\ntest result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.33s\n\n"
+    },
+    {
+      "label": "clippy-safe",
+      "command": "cargo +nightly-2026-10-08 clippy --offline --locked --test match_search_options -- -D warnings",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.6715,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/clippy-safe.log",
+      "sha256": "6b40b22f8081c6a36a1b4abca1a9447824f2395d566bd7fa90d41e3128c15cc3",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Checking zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s\n"
+    },
+    {
+      "label": "oracle-safe",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --release --test match_search_options official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames -- --exact --ignored --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 2.3104,
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 10
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/oracle-safe.log",
+      "sha256": "a2eea061fa706c4a507b3df70561cde461eaf76cce1399e6ccadd66f73141f9e",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n   Compiling zstdoxide-test-allocator v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize/test-support/allocator)\n    Finished `release` profile [optimized] target(s) in 1.72s\n     Running tests/match_search_options.rs (target/module11-public-search/release/build/zstdoxide/5b51c8df40d68cb2/out/match_search_options-5b51c8df40d68cb2)\n\nrunning 1 test\nofficial v1.5.7 search-option decoding: 27 frames/604319 source bytes\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.15s\n\n"
+    },
+    {
+      "label": "clippy-all",
+      "command": "cargo +nightly-2026-10-08 clippy --offline --locked --test match_search_options --all-features -- -D warnings",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.6113,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/clippy-all.log",
+      "sha256": "9e2ad24cb7cc5402daa9b8a574883e42496fb26ba12cadd1b7b9bc9a4df92fac",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.56s\n"
+    },
+    {
+      "label": "oracle-all",
+      "command": "cargo +nightly-2026-10-08 test --offline --locked --release --test match_search_options --all-features official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames -- --exact --ignored --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 2.1544,
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 10
+        }
+      ],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/oracle-all.log",
+      "sha256": "30a7ec04e14c822a486743d43195c527500dfe8c091ab2a73d7f9561015a25d7",
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `release` profile [optimized] target(s) in 1.70s\n     Running tests/match_search_options.rs (target/module11-public-search/release/build/zstdoxide/3f45bbfb4c032040/out/match_search_options-3f45bbfb4c032040)\n\nrunning 1 test\nofficial v1.5.7 search-option decoding: 27 frames/604319 source bytes\ntest official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.15s\n\n"
+    },
+    {
+      "label": "check-no-std",
+      "command": "cargo +nightly-2026-10-08 check --offline --locked --lib --no-default-features",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.4126,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/check-no-std.log",
+      "sha256": "3fcadad19d9770089ebcaac5acc223cce5f3c1a00e0c5d4e23afab20c1587ce6",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.39s\n"
+    },
+    {
+      "label": "check-no-std-all",
+      "command": "cargo +nightly-2026-10-08 check --offline --locked --lib --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.3797,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/check-no-std-all.log",
+      "sha256": "b5c8890c763bd06826267a8dd6b0691cb7f80d85d081a8e8b9a325fe9b6a1179",
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.36s\n"
+    },
+    {
+      "label": "format",
+      "command": "rustfmt +nightly-2026-10-08 --edition 2024 --check tests/match_search_options.rs",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.0333,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    },
+    {
+      "label": "diff-check",
+      "command": "git diff --check -- tests/match_search_options.rs",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module11-public-search",
+        "CARGO_TERM_COLOR": "never"
+      },
+      "exit_code": 0,
+      "seconds": 0.0067,
+      "test_results": [],
+      "log": "/tmp/zstdoxide-module11-public-search-validation/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_text": ""
+    }
+  ],
+  "source_after": "99ec64f172614586fa08f5b45e473221b4d8d6d44dba30fe54aa904fdd67fada",
+  "input_hashes_after": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "659ce726a22f6cc6360e76eb5bc5de8eb593fb2e0fb046688e28afc14755d402",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "64b95cf0c649b0a4dd4ac08e7af0a05d39666c633a134db0085894d4f43085d9",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "bd8b9b6949d1ab94d9a553e42d869c8d087f92ba1f17e6d00b15987e1d01e37a",
+    "src/literal_encode.rs": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "32d12bae0d7f4d881dbebe686f76dfed7670179e3c55aee0b51415173d3f1ea2",
+    "src/match_parse.rs": "f0bdce35a4f3f72e4210c5740c0500857209f7560849536e5527db0f7fa92818",
+    "src/match_search.rs": "14c63605ec1ce08f81933bf08ce62de71b9881a19a5a637b693bc8b39310bd7b",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88f246a6991b07facd25d9cd49b2a63210ec4a029fca65a15d032cf63c44b6eb",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/upstream/dictionaries/formatted.dict": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281",
+    "tests/upstream/support/mod.rs": "78ec1663c4873dba095a6ba24e5787d545a1ccffccb95b3edfd940c7142c3d2a"
+  },
+  "summaries": {
+    "commands": 16,
+    "normal_configurations": 8,
+    "new_public_tests_per_configuration": 8,
+    "shared_generator_tests_per_configuration": 2,
+    "normal_passed_executions": 80,
+    "ordinary_ignored_oracle_executions": 8,
+    "explicit_oracle_passed_executions": 2,
+    "explicit_C_frames_per_configuration": 27,
+    "explicit_C_configurations": [
+      "safe",
+      "all"
+    ],
+    "explicit_C_total_frame_comparisons": 54,
+    "complete_failure_ordinals_per_configuration": 82,
+    "complete_failure_ordinal_executions": 656,
+    "total_passed_test_executions": 82,
+    "all_passed": true,
+    "qualification": "Default prior fingerprint files are untouched; this checkpoint has actual pinned-C decode observations for selected configured frames. Broader backend/frame fingerprints belong to their separately recorded checkpoints. No Miri or timing benchmark was run here.",
+    "witness_metrics_equal_across_all_configurations": true,
+    "witness_metrics": [
+      "Chain effort: visits 1/8/16/64 frames [60, 43, 41, 34] bytes",
+      "Lazy effort: visits 1/8/16/64 frames [59, 46, 43, 35] bytes",
+      "chain eviction: log 10/12 repeated block 131/11 bytes, search capacity 4231168/4329472 bytes",
+      "hash collision: log 10/14 frames 21/20 bytes, search capacity 20480/266240 bytes",
+      "history Chain: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes",
+      "history Greedy: 8/64 KiB frames 98323/65564 bytes, search capacity 2105344/2162688 bytes",
+      "history Lazy: 8/64 KiB frames 98323/65564 bytes, search capacity 8396800/8454144 bytes",
+      "width tail 4: widths 4/5/8 frames [24, 25, 25] bytes",
+      "width tail 5: widths 4/5/8 frames [24, 24, 26] bytes"
+    ],
+    "explicit_C_source_bytes_per_configuration": 604319,
+    "explicit_C_total_source_bytes": 1208638,
+    "complete_failure_ordinals_observed": [
+      82,
+      82,
+      82,
+      82,
+      82,
+      82,
+      82,
+      82
+    ]
+  },
+  "metric_extraction": {
+    "qualification": "Parallel test-harness stdout interrupted one stderr metric line in public-no-std-all. Initial strict whole-line comparison rejected this; the summary strips only successful harness test lines before parsing the nine metric lines. Original logs are unchanged, all test commands already passed, and no test rerun occurred.",
+    "script": "/tmp/zstdoxide-module11-public-search-summarize.py",
+    "sha256": "f8357802c2ce258892cfe6307208cb261f3db6984bb1abbf7d525128354240d2",
+    "text": "import hashlib,json,pathlib,re,subprocess\np=pathlib.Path('/tmp/zstdoxide-module11-public-search-validation/evidence.json');e=json.loads(p.read_text());sha=lambda p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()\nmetrics=[];ordinals=[]\nfor r in e['records']:\n if r['label'].startswith('public-'):\n  s=pathlib.Path(r['log']).read_text();n=re.findall(r'search allocation campaign: (\\d+) observed ordinals',s);assert n==['82'];ordinals.append(int(n[0]))\n  s=re.sub(r'test [\\w:]+ \\.\\.\\. ok\\n','',s)\n  metrics.append(sorted(l for l in s.splitlines() if l.startswith(('hash collision:','chain eviction:','width tail ','Chain effort:','Lazy effort:','history '))))\nassert len(metrics[0])==9 and all(x==metrics[0] for x in metrics)\nfor r in e['records']:\n if r['label'].startswith('oracle-'):\n  assert '27 frames/604319 source bytes' in pathlib.Path(r['log']).read_text()\ne['summaries']['witness_metrics_equal_across_all_configurations']=True\ne['summaries']['witness_metrics']=metrics[0]\ne['summaries']['explicit_C_source_bytes_per_configuration']=604319\ne['summaries']['explicit_C_total_source_bytes']=1208638\ne['summaries']['complete_failure_ordinals_observed']=ordinals\ne['metric_extraction']={'qualification':'Parallel test-harness stdout interrupted one stderr metric line in public-no-std-all. Initial strict whole-line comparison rejected this; the summary strips only successful harness test lines before parsing the nine metric lines. Original logs are unchanged, all test commands already passed, and no test rerun occurred.', 'script':'/tmp/zstdoxide-module11-public-search-summarize.py','sha256':sha('/tmp/zstdoxide-module11-public-search-summarize.py')}\ne['cli']={'path':'/tmp/zstdoxize-upstream-1.5.7/programs/zstd','sha256':sha('/tmp/zstdoxize-upstream-1.5.7/programs/zstd'),'version':subprocess.check_output(['/tmp/zstdoxize-upstream-1.5.7/programs/zstd','--version'],text=True).strip()}\ne['runner']={'path':'/tmp/zstdoxide-module11-public-search-checks.py','sha256':sha('/tmp/zstdoxide-module11-public-search-checks.py')}\np.write_text(json.dumps(e,indent=2)+'\\n');print(sha(p))\n"
+  },
+  "cli": {
+    "path": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+    "sha256": "eb20e7f4cb5c93836d7b1a8508dad08d1ced73762ca8f8abb9d8dc1e5df7b5b2",
+    "version": "*** Zstandard CLI (64-bit) v1.5.7, by Yann Collet ***"
+  },
+  "runner": {
+    "path": "/tmp/zstdoxide-module11-public-search-checks.py",
+    "sha256": "c17d8614e7326b315f5ac602f0c004301ca9e3ff3631e05378dc60a0417316be",
+    "text": "import hashlib, json, os, pathlib, re, shlex, subprocess, time\nroot = pathlib.Path('/Users/lanxingcan/Workspace/zstdoxize')\nout = pathlib.Path('/tmp/zstdoxide-module11-public-search-validation'); out.mkdir(exist_ok=True)\nsha = lambda p: hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()\nsource = root / 'tests/match_search_options.rs'\nenv = dict(os.environ, CARGO_TARGET_DIR=str(root/'target/module11-public-search'), CARGO_TERM_COLOR='never')\nfeatures = ','.join(re.findall(r'^(unsafe-[\\w-]+) =', (root/'Cargo.toml').read_text(), re.M))\ninputs = sorted([p for p in (root/'src').rglob('*.rs')] + [p for p in (root/'test-support/allocator').rglob('*.rs') if 'target' not in p.parts] + [root/p for p in ['Cargo.toml','Cargo.lock','rust-toolchain.toml','tests/upstream/support/mod.rs','tests/upstream/dictionaries/formatted.dict']])\ninput_hashes = lambda: {str(p.relative_to(root)):sha(p) for p in inputs}\ne = {'scope':'Public operational match-search controls: six isolated setting effects, complete bounded allocation failure campaign, and independent pinned C decoding. No C candidate, strategy, or ratio equivalence.', 'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(), 'compiler':subprocess.check_output(['rustc','+nightly-2026-10-08','-Vv'],cwd=root,text=True), 'source_before':sha(source), 'input_hashes_before':input_hashes(), 'initial_probe':{'command':'CARGO_TARGET_DIR=target/module11-public-search cargo +nightly-2026-10-08 test --offline --locked --test match_search_options -- --nocapture','log':'/tmp/zstdoxide-public-search-initial.log','sha256':sha('/tmp/zstdoxide-public-search-initial.log'),'scope':'Before final logging-only test changes; 10 passed/1 ignored, all hypotheses succeeded.'}, 'independent_hash_relation':{'path':'/tmp/zstdoxide-search-public-hash-probe.json','sha256':sha('/tmp/zstdoxide-search-public-hash-probe.json'),'evidence':json.loads(pathlib.Path('/tmp/zstdoxide-search-public-hash-probe.json').read_text())},'records':[]}\ndef save(): (out/'evidence.json').write_text(json.dumps(e,indent=2)+'\\n')\ndef run(label,cmd,passed=None,ignored=0,extra=None):\n    log=out/(label+'.log'); selected=dict(env); selected.update(extra or {}); start=time.monotonic()\n    with log.open('wb') as f: r=subprocess.run(cmd,cwd=root,env=selected,stdout=f,stderr=subprocess.STDOUT)\n    text=log.read_text(); counts=[dict(zip(['passed','failed','ignored','measured','filtered'],map(int,x))) for x in re.findall(r'test result: ok\\. (\\d+) passed; (\\d+) failed; (\\d+) ignored; (\\d+) measured; (\\d+) filtered out',text)]\n    record={'label':label,'command':shlex.join(cmd),'cwd':str(root),'environment':{'CARGO_TARGET_DIR':selected['CARGO_TARGET_DIR'],'CARGO_TERM_COLOR':'never',**(extra or {})},'exit_code':r.returncode,'seconds':round(time.monotonic()-start,4),'test_results':counts,'log':str(log),'sha256':sha(log)}\n    e['records'].append(record); save(); print(json.dumps(record),flush=True)\n    if r.returncode: raise RuntimeError((label,text[-5000:]))\n    if passed is not None and not (len(counts)==1 and counts[0]['passed']==passed and counts[0]['failed']==0 and counts[0]['ignored']==ignored): raise RuntimeError((label,counts))\nbase=['cargo','+nightly-2026-10-08']\nconfigs=[('safe',[]),('table',['--features','unsafe-match-table']),('chain',['--features','unsafe-match-chain']),('ring',['--features','unsafe-ring-history']),('dictionary',['--features','unsafe-dictionary']),('all',['--all-features']),('no-std',['--no-default-features']),('no-std-all',['--no-default-features','--features',features])]\nfor label,flags in configs: run('public-'+label,base+['test','--offline','--locked','--test','match_search_options',*flags,'--','--nocapture'],10,1)\nfor label,flags in [configs[0],configs[5]]:\n    run('clippy-'+label,base+['clippy','--offline','--locked','--test','match_search_options',*flags,'--','-D','warnings'])\n    run('oracle-'+label,base+['test','--offline','--locked','--release','--test','match_search_options',*flags,'official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames','--','--exact','--ignored','--nocapture'],1,extra={'ZSTD_BIN':'/tmp/zstdoxize-upstream-1.5.7/programs/zstd'})\nfor label,flags in configs[-2:]: run('check-'+label,base+['check','--offline','--locked','--lib',*flags])\nrun('format',['rustfmt','+nightly-2026-10-08','--edition','2024','--check','tests/match_search_options.rs'])\nrun('diff-check',['git','diff','--check','--','tests/match_search_options.rs'])\ne['source_after']=sha(source); e['input_hashes_after']=input_hashes()\nif e['source_before']!=e['source_after'] or e['input_hashes_before']!=e['input_hashes_after']: raise RuntimeError('source/input changed during final validation')\ne['summaries']={'commands':len(e['records']),'normal_configurations':8,'new_public_tests_per_configuration':8,'shared_generator_tests_per_configuration':2,'normal_passed_executions':80,'ordinary_ignored_oracle_executions':8,'explicit_oracle_passed_executions':2,'explicit_C_frames_per_configuration':27,'explicit_C_configurations':['safe','all'],'explicit_C_total_frame_comparisons':54,'complete_failure_ordinals_per_configuration':82,'complete_failure_ordinal_executions':656,'total_passed_test_executions':82,'all_passed':True,'qualification':'Default prior fingerprint files are untouched; this checkpoint has actual pinned-C decode observations for selected configured frames. Broader backend/frame fingerprints belong to their separately recorded checkpoints. No Miri or timing benchmark was run here.'}\nsave(); print('COMPLETE evidence SHA256 '+sha(out/'evidence.json'),flush=True)\n"
+  },
+  "original_evidence_sha256": "5bc2962c885308914ef4357c9ec31769d5e03f1eaa1c3a788b66cc8d46914177",
+  "root_review": "Verified every frozen source/log hash, independent C primitive relation, complete-frame oracle comparisons, and all observed failure-ordinal coverage. Relative output witnesses do not claim universal size ordering or C strategy parity."
+}
