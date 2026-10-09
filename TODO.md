@@ -38,7 +38,7 @@ one-shot adaptations do not complete the upstream test migration.
 - [x] Add reusable dictionary seed tables and an owned encoder dictionary lifecycle.
 - [x] Extend indexed match search to dictionary content and first-block crossing.
 - [x] Retain committed encoder block input in a reusable bounded history ring.
-- [ ] Search indexed retained output and cross-boundary dictionary/history matches.
+- [x] Search indexed retained output and cross-boundary dictionary/history matches.
 - [ ] Verify encoder history eviction, reset isolation, and independent interoperability.
 - [x] Write dictionary frame IDs with explicit omission and smallest field widths.
 - [x] Produce interoperable raw/prepared dictionary compression.

@@ -47,12 +47,7 @@ fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result
         .map_err(|_| Error::AllocationFailed)?;
     write_frame_header(&mut output, input.len(), dictionary_id);
     let mut encoder = BlockEncoder::new();
-    if let Some(dictionary) = dictionary {
-        encoder.start_frame(
-            Some(SharedDictionary::clone(dictionary)),
-            input.len() as u64,
-        )?;
-    }
+    encoder.start_frame(dictionary.cloned(), input.len() as u64)?;
     if input.is_empty() {
         encoder.encode(&[], true, &mut output)?;
     }
@@ -63,7 +58,7 @@ fn compress_frame(input: &[u8], dictionary: Option<&SharedDictionary>) -> Result
     Ok(output)
 }
 
-/// Reusable block-local match and predefined-entropy state.
+/// Reusable frame match history and block-local predefined-entropy state.
 ///
 /// Corresponds to the independently owned block-compression workspace of
 /// `ZSTD_CCtx`; input references never survive an `encode` call.
@@ -278,6 +273,8 @@ impl BlockEncoder {
             block,
             dictionary,
             dictionary_size: dictionary.map_or(0, |dictionary| dictionary.content().len()),
+            history: self.history.as_ref(),
+            history_size: self.history.as_ref().map_or(0, RingHistory::available),
             frame_position: self.frame_position,
             window_size: self.window_size,
         };
@@ -292,13 +289,24 @@ impl BlockEncoder {
         } else {
             match_table.reset();
         }
-        if dictionary.is_some() && self.frame_position == 0 {
-            // At frame start, keys may straddle dictionary end and frame[0].
-            // This also makes one-, two-, and three-byte raw prefixes useful.
+        if dictionary.is_some() && source.retains_frame_start() {
+            // Keys may straddle dictionary end and retained frame[0]. This also
+            // makes one-, two-, and three-byte raw prefixes useful.
             for position in source.dictionary_size.saturating_sub(3)..source.dictionary_size {
-                let word = source.first_block_word(position)?;
+                let word = source.dictionary_boundary_word(position)?;
                 match_table.replace(word, position);
             }
+        }
+        for position in 0..source.history_size {
+            // Include the final three history positions: their four-byte keys
+            // can cross into current input, which remains borrowed immutably.
+            match_table.replace(
+                source.output_word(position)?,
+                source
+                    .dictionary_size
+                    .checked_add(position)
+                    .ok_or(Error::ResourceLimit)?,
+            );
         }
         let literals = &mut self.literals;
         literals.clear();
@@ -366,15 +374,20 @@ impl BlockEncoder {
     }
 }
 
-/// A temporary indexed view of immutable dictionary content and the input block.
+/// A temporary indexed view of dictionary content, retained output, and input.
 ///
 /// No reference escapes the current encode call. Dictionary positions are in
-/// `0..D`; block positions are checked `D + local_position` coordinates. Frame
-/// position remains a separate u64 so long streams never truncate into indices.
+/// `0..D`, retained history in `D..D+H`, and block positions use checked
+/// `D + H + local_position` coordinates. Frame position remains a separate u64
+/// so long streams never truncate into indices. The ring is immutable until
+/// matching completes; later current-block positions may still refer to its
+/// oldest byte if the advertised window permits that complete distance.
 struct MatchSource<'a> {
     block: &'a [u8],
     dictionary: Option<&'a Dictionary>,
     dictionary_size: usize,
+    history: Option<&'a RingHistory>,
+    history_size: usize,
     frame_position: u64,
     window_size: u64,
 }
@@ -382,13 +395,18 @@ struct MatchSource<'a> {
 impl MatchSource<'_> {
     fn virtual_position(&self, position: usize) -> Result<usize> {
         self.dictionary_size
-            .checked_add(position)
+            .checked_add(self.history_size)
+            .and_then(|start| start.checked_add(position))
             .ok_or(Error::ResourceLimit)
     }
 
-    /// Read a four-byte key across dictionary/frame-zero only in the first block.
-    fn first_block_word(&self, position: usize) -> Result<[u8; 4]> {
-        if self.frame_position != 0 {
+    fn retains_frame_start(&self) -> bool {
+        self.frame_position == self.history_size as u64
+    }
+
+    /// Read a four-byte key across dictionary/frame-zero while it remains live.
+    fn dictionary_boundary_word(&self, position: usize) -> Result<[u8; 4]> {
+        if !self.retains_frame_start() {
             return Err(Error::InvalidState);
         }
         let mut word = [0; 4];
@@ -399,11 +417,42 @@ impl MatchSource<'_> {
                     .ok_or(Error::InvalidState)?
                     .content_byte(index)?
             } else {
-                *self
-                    .block
-                    .get(index - self.dictionary_size)
-                    .ok_or(Error::CorruptData)?
+                self.frame_byte((index - self.dictionary_size) as u64)?
             };
+        }
+        Ok(word)
+    }
+
+    /// Read a frame byte without mutating the retained prefix or input block.
+    fn frame_byte(&self, position: u64) -> Result<u8> {
+        if position < self.frame_position {
+            self.history.ok_or(Error::CorruptData)?.byte_at(position)
+        } else {
+            let local =
+                usize::try_from(position - self.frame_position).map_err(|_| Error::CorruptData)?;
+            self.block.get(local).copied().ok_or(Error::CorruptData)
+        }
+    }
+
+    fn output_byte(&self, position: usize) -> Result<u8> {
+        if position >= self.history_size {
+            self.block
+                .get(position - self.history_size)
+                .copied()
+                .ok_or(Error::CorruptData)
+        } else {
+            let frame_start = self
+                .frame_position
+                .checked_sub(self.history_size as u64)
+                .ok_or(Error::CorruptData)?;
+            self.frame_byte(frame_start + position as u64)
+        }
+    }
+
+    fn output_word(&self, position: usize) -> Result<[u8; 4]> {
+        let mut word = [0; 4];
+        for (offset, byte) in word.iter_mut().enumerate() {
+            *byte = self.output_byte(position.checked_add(offset).ok_or(Error::ResourceLimit)?)?;
         }
         Ok(word)
     }
@@ -420,22 +469,37 @@ impl MatchSource<'_> {
         }
         if previous >= self.dictionary_size {
             let previous = previous - self.dictionary_size;
-            if previous >= position {
+            let current = self
+                .history_size
+                .checked_add(position)
+                .ok_or(Error::ResourceLimit)?;
+            if previous >= current {
                 return Ok(None);
             }
-            let distance = position - previous;
-            if distance as u64 > self.window_size
-                || self.block[previous..previous + 4] != self.block[position..position + 4]
-            {
+            let distance = current - previous;
+            if distance as u64 > self.window_size {
                 return Ok(None);
             }
-            let mut length = 4;
+            if previous >= self.history_size {
+                let previous = previous - self.history_size;
+                if self.block[previous..previous + 4] != self.block[position..position + 4] {
+                    return Ok(None);
+                }
+                let mut length = 4;
+                while length < available
+                    && self.block[previous + length] == self.block[position + length]
+                {
+                    length += 1;
+                }
+                return Ok(Some((distance, length)));
+            }
+            let mut length = 0;
             while length < available
-                && self.block[previous + length] == self.block[position + length]
+                && self.output_byte(previous + length)? == self.block[position + length]
             {
                 length += 1;
             }
-            return Ok(Some((distance, length)));
+            return Ok((length >= 4).then_some((distance, length)));
         }
         let produced = self
             .frame_position
@@ -452,10 +516,10 @@ impl MatchSource<'_> {
             return Ok(None);
         }
         let dictionary = self.dictionary.ok_or(Error::InvalidState)?;
-        // Before retained prior-block output is available, only the first block
-        // can extend a dictionary match through frame byte zero. Later blocks
-        // clip at dictionary end. This is a search limit, not a decoder limit.
-        let maximum = if self.frame_position == 0 {
+        // The bounded ring may evict frame byte zero even while a larger
+        // advertised window still allows dictionary references. In that case,
+        // clip at dictionary end; this is a search limit, not a format limit.
+        let maximum = if self.retains_frame_start() {
             available
         } else {
             available.min(tail)
@@ -465,7 +529,7 @@ impl MatchSource<'_> {
             let expected = if length < tail {
                 dictionary.content_byte(previous + length)?
             } else {
-                self.block[length - tail]
+                self.frame_byte((length - tail) as u64)?
             };
             if expected != self.block[position + length] {
                 break;
@@ -742,6 +806,96 @@ mod tests {
     use alloc::vec;
 
     #[test]
+    fn retained_candidates_cross_input_boundaries_and_obey_the_advertised_window() {
+        let mut history = RingHistory::new(8);
+        history.start_frame(8).unwrap();
+        history.commit(b"abababab").unwrap();
+        let mut source = MatchSource {
+            block: b"abababab",
+            dictionary: None,
+            dictionary_size: 0,
+            history: Some(&history),
+            history_size: 8,
+            frame_position: 8,
+            window_size: 8,
+        };
+        assert_eq!(source.output_word(6).unwrap(), *b"abab");
+        assert_eq!(source.find_match(6, 0).unwrap(), Some((2, 8)));
+        assert_eq!(source.find_match(0, 0).unwrap(), Some((8, 8)));
+        source.block = b"!!!!abab";
+        assert_eq!(source.find_match(0, 4).unwrap(), None);
+        source.window_size = 16;
+        assert_eq!(source.find_match(0, 4).unwrap(), Some((12, 4)));
+        assert_eq!(source.find_match(usize::MAX, 0).unwrap(), None);
+        assert_eq!(
+            source.virtual_position(usize::MAX),
+            Err(Error::ResourceLimit)
+        );
+
+        history.commit(b"cdef").unwrap();
+        let source = MatchSource {
+            block: b"ababcdef",
+            dictionary: None,
+            dictionary_size: 0,
+            history: Some(&history),
+            history_size: 8,
+            frame_position: 12,
+            window_size: 8,
+        };
+        assert_eq!(source.find_match(0, 0).unwrap(), Some((8, 8)));
+        assert_eq!(source.frame_byte(3), Err(Error::CorruptData));
+    }
+
+    #[test]
+    fn dictionary_crossing_clips_only_after_frame_zero_leaves_the_retained_horizon() {
+        let dictionary = Dictionary::raw(b"abcd").unwrap();
+        let mut history = RingHistory::new(MAX_BLOCK_SIZE);
+        history.start_frame(MAX_BLOCK_SIZE).unwrap();
+        history.commit(&vec![0; MAX_BLOCK_SIZE]).unwrap();
+        for (extra, expected_length) in [(0, 8), (1, 4)] {
+            history.commit(&vec![0; extra]).unwrap();
+            let source = MatchSource {
+                block: b"abcd\0\0\0\0",
+                dictionary: Some(&dictionary),
+                dictionary_size: 4,
+                history: Some(&history),
+                history_size: history.available(),
+                frame_position: history.frame_len(),
+                window_size: 1 << 20,
+            };
+            // The immutable ring still contains this source even though its
+            // distance after four current-block bytes exceeds 128 KiB.
+            assert_eq!(
+                source.find_match(4, 4).unwrap(),
+                Some((MAX_BLOCK_SIZE + 4, 4))
+            );
+            assert_eq!(
+                source.find_match(0, 0).unwrap(),
+                Some((MAX_BLOCK_SIZE + extra + 4, expected_length))
+            );
+        }
+    }
+
+    #[test]
+    fn old_output_is_not_searched_after_a_full_horizon_of_other_input() {
+        let pattern: Vec<_> = (0..256).map(|index| index as u8).collect();
+        let mut encoder = BlockEncoder::new();
+        encoder.start_frame(None, 1 << 20).unwrap();
+        let mut encoded = Vec::new();
+        encoder.encode(&pattern, false, &mut encoded).unwrap();
+        encoder
+            .encode(&vec![7; MAX_BLOCK_SIZE], false, &mut encoded)
+            .unwrap();
+        encoded.clear();
+        encoder.encode(&pattern, true, &mut encoded).unwrap();
+        assert_eq!((encoded[0] >> 1) & 3, 0);
+        let history = encoder.history.as_ref().unwrap();
+        assert_eq!(history.window_size(), MAX_BLOCK_SIZE);
+        assert_eq!(history.available(), MAX_BLOCK_SIZE);
+        assert_eq!(history.byte_at(0), Err(Error::CorruptData));
+    }
+
+    #[test]
     fn history_commits_every_block_kind_and_reset_reuses_bounded_storage() {
         let mut encoder = BlockEncoder::new();
         encoder.start_frame(None, 1_u64 << 31).unwrap();
@@ -952,6 +1106,8 @@ mod tests {
             block: b"abcdabcdabcd",
             dictionary: Some(&dictionary),
             dictionary_size: 4,
+            history: None,
+            history_size: 0,
             frame_position: 0,
             window_size: 1024,
         };
@@ -981,7 +1137,13 @@ mod tests {
         assert_eq!((output[0] >> 1) & 3, 2); // P == W can still reference the dictionary.
         output.clear();
         encoder.encode(&content, true, &mut output).unwrap();
-        assert_eq!((output[0] >> 1) & 3, 0); // P > W, with no internal four-byte repeats.
+        assert_eq!((output[0] >> 1) & 3, 2); // P > W can now use ordinary retained output.
+        assert!(
+            encoder
+                .sequences
+                .iter()
+                .all(|sequence| sequence.distance <= 1024)
+        );
         let (source, encoded) =
             dictionary_blocks(&[&vec![0; 1024], &content, &content], &dictionary);
         assert_eq!(
@@ -1129,7 +1291,7 @@ mod tests {
     }
 
     #[test]
-    fn block_workspace_reuses_capacity_without_preserving_previous_matches() {
+    fn block_workspace_reuses_capacity_and_reset_discards_previous_matches() {
         let block: Vec<_> = (0..MAX_BLOCK_SIZE)
             .map(|index| b"periodic-pattern"[index % 16])
             .collect();
@@ -1144,6 +1306,7 @@ mod tests {
             encoder
                 .encode(b"a different preceding block", false, &mut encoded)
                 .unwrap();
+            encoder.reset();
             encoded.clear();
             encoder.encode(&block, true, &mut encoded).unwrap();
             assert_eq!(encoded, expected);
