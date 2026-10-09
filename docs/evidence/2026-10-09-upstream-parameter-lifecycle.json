@@ -1,0 +1,407 @@
+{
+  "scope": "Module 10 live lifecycle integration; exact owned file only; no production mutation",
+  "owned_source": "/Users/lanxingcan/Workspace/zstdoxize/tests/upstream_parameter_lifecycle.rs",
+  "source_before": "1d3bd0e88c4b659b2a3dea0d671da226347ab151d3ce13a8231513bcb1d4659b",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "cargo": "cargo 1.101.0-nightly (f3865b2a4 2026-09-29)\n",
+  "head": "f8eab7a3fe6eff3dd5ecab2e99c6d23d1c67c03e",
+  "oracle": {
+    "path": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd",
+    "sha256": "eb20e7f4cb5c93836d7b1a8508dad08d1ced73762ca8f8abb9d8dc1e5df7b5b2",
+    "version": "*** Zstandard CLI (64-bit) v1.5.7, by Yann Collet ***"
+  },
+  "inputs": {
+    "Cargo.toml": "659ce726a22f6cc6360e76eb5bc5de8eb593fb2e0fb046688e28afc14755d402",
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "tests/upstream/support/mod.rs": "78ec1663c4873dba095a6ba24e5787d545a1ccffccb95b3edfd940c7142c3d2a",
+    "tests/upstream/dictionaries/formatted.dict": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281"
+  },
+  "records": [
+    {
+      "label": "tests-safe",
+      "command": "cargo test --locked --test upstream_parameter_lifecycle",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 1.296,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/tests-safe.log",
+      "sha256": "f78f4a593df7acf5248df35f2411848d0d726919349eb9f4b3f6d85eaaae36ad",
+      "test_results": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running tests/upstream_parameter_lifecycle.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/e6693bb55fbbbee7/out/upstream_parameter_lifecycle-e6693bb55fbbbee7)\n\nrunning 9 tests\ntest official_codec_decodes_configured_session_and_parameter_reset_frames ... ignored, requires ZSTD_BIN pointing to the pinned official v1.5.7 CLI\ntest upstream_support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest upstream_support::tests::noise_matches_upstream_generated_vectors ... ok\ntest dictionary_and_supported_options_order_produce_identical_complete_frames ... ok\ntest frame_flags_and_invalid_windows_preserve_atomic_supported_configuration ... ok\ntest full_reset_discards_unclaimed_and_claimed_prefixes_before_plain_encoding ... ok\ntest settings_survive_partial_output_flush_finish_and_rejected_configuration ... ok\ntest session_reset_preserves_dictionary_and_parameter_reset_clears_it ... ok\ntest session_reset_preserves_unclaimed_prefix_and_parameter_reset_removes_it ... ok\n\ntest result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.19s\n\n"
+    },
+    {
+      "label": "tests-all",
+      "command": "cargo test --locked --test upstream_parameter_lifecycle --all-features",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 5.027,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/tests-all.log",
+      "sha256": "436cd1982aecdd0f6a316375e813ac269a012cc8196cda0d5779cbd5078f7461",
+      "test_results": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.06s\n     Running tests/upstream_parameter_lifecycle.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/4cc04313132615b5/out/upstream_parameter_lifecycle-4cc04313132615b5)\n\nrunning 9 tests\ntest official_codec_decodes_configured_session_and_parameter_reset_frames ... ignored, requires ZSTD_BIN pointing to the pinned official v1.5.7 CLI\ntest upstream_support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest upstream_support::tests::noise_matches_upstream_generated_vectors ... ok\ntest dictionary_and_supported_options_order_produce_identical_complete_frames ... ok\ntest frame_flags_and_invalid_windows_preserve_atomic_supported_configuration ... ok\ntest full_reset_discards_unclaimed_and_claimed_prefixes_before_plain_encoding ... ok\ntest settings_survive_partial_output_flush_finish_and_rejected_configuration ... ok\ntest session_reset_preserves_dictionary_and_parameter_reset_clears_it ... ok\ntest session_reset_preserves_unclaimed_prefix_and_parameter_reset_removes_it ... ok\n\ntest result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.43s\n\n"
+    },
+    {
+      "label": "tests-no-std",
+      "command": "cargo test --locked --test upstream_parameter_lifecycle --no-default-features",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 3.908,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/tests-no-std.log",
+      "sha256": "1aa957b55f3ff2766a2eda38f8b17f74aa6bdc574e9bd6f0f480c5bf9243c813",
+      "test_results": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.70s\n     Running tests/upstream_parameter_lifecycle.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/3495bb0a2e771567/out/upstream_parameter_lifecycle-3495bb0a2e771567)\n\nrunning 9 tests\ntest official_codec_decodes_configured_session_and_parameter_reset_frames ... ignored, requires ZSTD_BIN pointing to the pinned official v1.5.7 CLI\ntest upstream_support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest upstream_support::tests::noise_matches_upstream_generated_vectors ... ok\ntest dictionary_and_supported_options_order_produce_identical_complete_frames ... ok\ntest frame_flags_and_invalid_windows_preserve_atomic_supported_configuration ... ok\ntest full_reset_discards_unclaimed_and_claimed_prefixes_before_plain_encoding ... ok\ntest settings_survive_partial_output_flush_finish_and_rejected_configuration ... ok\ntest session_reset_preserves_dictionary_and_parameter_reset_clears_it ... ok\ntest session_reset_preserves_unclaimed_prefix_and_parameter_reset_removes_it ... ok\n\ntest result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.83s\n\n"
+    },
+    {
+      "label": "tests-no-std-all",
+      "command": "cargo test --locked --test upstream_parameter_lifecycle --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 4.432,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/tests-no-std-all.log",
+      "sha256": "cdbaf541b4dc1eba8d4a79fa4d79e25da30d17d19fd0ec196669f44ba9f64dd5",
+      "test_results": [
+        {
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered": 0
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.40s\n     Running tests/upstream_parameter_lifecycle.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/db2aff42c5019f0a/out/upstream_parameter_lifecycle-db2aff42c5019f0a)\n\nrunning 9 tests\ntest official_codec_decodes_configured_session_and_parameter_reset_frames ... ignored, requires ZSTD_BIN pointing to the pinned official v1.5.7 CLI\ntest upstream_support::tests::fuzzer_rng_matches_upstream_vectors ... ok\ntest upstream_support::tests::noise_matches_upstream_generated_vectors ... ok\ntest dictionary_and_supported_options_order_produce_identical_complete_frames ... ok\ntest frame_flags_and_invalid_windows_preserve_atomic_supported_configuration ... ok\ntest full_reset_discards_unclaimed_and_claimed_prefixes_before_plain_encoding ... ok\ntest settings_survive_partial_output_flush_finish_and_rejected_configuration ... ok\ntest session_reset_preserves_dictionary_and_parameter_reset_clears_it ... ok\ntest session_reset_preserves_unclaimed_prefix_and_parameter_reset_removes_it ... ok\n\ntest result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.63s\n\n"
+    },
+    {
+      "label": "clippy-safe",
+      "command": "cargo clippy --locked --test upstream_parameter_lifecycle -- -D warnings",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 1.277,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/clippy-safe.log",
+      "sha256": "506788a7c9bb70f52227de18d6a6c78e200ab719c6f051dbb771d90b84499635",
+      "test_results": [],
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.17s\n"
+    },
+    {
+      "label": "clippy-all",
+      "command": "cargo clippy --locked --test upstream_parameter_lifecycle --all-features -- -D warnings",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 0.306,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/clippy-all.log",
+      "sha256": "713ca6b5e52fce75caeb34be2fe78cb308ff69e3d1e92286a93e70524794432c",
+      "test_results": [],
+      "log_text": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s\n"
+    },
+    {
+      "label": "format",
+      "command": "rustfmt --edition 2024 --check tests/upstream_parameter_lifecycle.rs",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 0.085,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "log_text": ""
+    },
+    {
+      "label": "fingerprint-stream-safe",
+      "command": "cargo test --locked --lib stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline -- --exact",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 14.051,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/fingerprint-stream-safe.log",
+      "sha256": "24869c88b27a520d4753342bd553af5407fe341e78ea986dc1f68b9ee19f8638",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 513
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.56s\n     Running unittests src/lib.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 4.88s\n\n"
+    },
+    {
+      "label": "fingerprint-one-shot-safe",
+      "command": "cargo test --locked --lib encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner -- --exact",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 0.592,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/fingerprint-one-shot-safe.log",
+      "sha256": "3f5ae352171a505674fe994a62c28e8c99173f64acf5d37dbb0ab47067444534",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 513
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d)\n\nrunning 1 test\ntest encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.53s\n\n"
+    },
+    {
+      "label": "fingerprint-stream-all",
+      "command": "cargo test --locked --lib --all-features stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline -- --exact",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 14.619,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/fingerprint-stream-all.log",
+      "sha256": "24e6aaec27b30e0137f0bc0b8cb640f8bd2189331c2a14b02a86aad57f0dde46",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 513
+        }
+      ],
+      "log_text": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.44s\n     Running unittests src/lib.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 5.53s\n\n"
+    },
+    {
+      "label": "fingerprint-one-shot-all",
+      "command": "cargo test --locked --lib --all-features encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner -- --exact",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 0.548,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/fingerprint-one-shot-all.log",
+      "sha256": "f25ec5fe0d4b6e24b15c5fa49f1b7258beae5dfd56e49b81e971bdae21682c19",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 513
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/ba4deb358eee8860/out/zstdoxide-ba4deb358eee8860)\n\nrunning 1 test\ntest encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 513 filtered out; finished in 0.44s\n\n"
+    },
+    {
+      "label": "official-c-safe",
+      "command": "cargo test --locked --test upstream_parameter_lifecycle official_codec_decodes_configured_session_and_parameter_reset_frames -- --ignored --exact --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 2.812,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/official-c-safe.log",
+      "sha256": "6fb01b8e16ab6a2b5b2b618af3e860bce861b825c52bc032e7612bbeca528372",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 8
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running tests/upstream_parameter_lifecycle.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/e6693bb55fbbbee7/out/upstream_parameter_lifecycle-e6693bb55fbbbee7)\n\nrunning 1 test\nofficial lifecycle decode: 30 complete frames / 3072000 decoded bytes\n18 frames use their selected named policy; 12 parameter/full-reset frames restore Greedy defaults\ntest official_codec_decodes_configured_session_and_parameter_reset_frames ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 2.74s\n\n"
+    },
+    {
+      "label": "official-c-all",
+      "command": "cargo test --locked --test upstream_parameter_lifecycle --all-features official_codec_decodes_configured_session_and_parameter_reset_frames -- --ignored --exact --nocapture",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle",
+        "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+      },
+      "exit_code": 0,
+      "seconds": 3.189,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/official-c-all.log",
+      "sha256": "2c8bf2b6bf41ea3ec1fd967c98b19a460f1c037db3a7867c82479097eb8e5c04",
+      "test_results": [
+        {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 8
+        }
+      ],
+      "log_text": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running tests/upstream_parameter_lifecycle.rs (target/module10-parameter-lifecycle/debug/build/zstdoxide/4cc04313132615b5/out/upstream_parameter_lifecycle-4cc04313132615b5)\n\nrunning 1 test\nofficial lifecycle decode: 30 complete frames / 3072000 decoded bytes\n18 frames use their selected named policy; 12 parameter/full-reset frames restore Greedy defaults\ntest official_codec_decodes_configured_session_and_parameter_reset_frames ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 3.11s\n\n"
+    },
+    {
+      "label": "diff-check",
+      "command": "git diff --check -- tests/upstream_parameter_lifecycle.rs",
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module10-parameter-lifecycle"
+      },
+      "exit_code": 0,
+      "seconds": 0.011,
+      "log": "/tmp/zstdoxide-parameter-lifecycle-validation/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "log_text": ""
+    }
+  ],
+  "production_before": {
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "416ffa147ba55c2f06da6fd609b9759114d588634c38da2449b419452a71e2b7",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "a2e9c8346f880c0361c9ce8ac7b4050b4bba3a4251a9b7a34e310849c51eca17",
+    "src/literal_encode.rs": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_parse.rs": "5b1f02c688d31aa996103fa4f5a3473f5de7c27a72491aed29169fb7dc52807f",
+    "src/matchchain.rs": "dbf5c8f65b8f6dedfaaa3907e22bb0e932029793bc0e1cbe412189113fc78e80",
+    "src/matchfinder.rs": "8f5e28b2127533638947744917078c929a9e2da785b6c38fd7e6c13ada00f9a6",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "13b15e564b781542cec4647eedeaae19c5dfd82a16c5e67d1c61b384d4c4c98a",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+  },
+  "source_after": "1d3bd0e88c4b659b2a3dea0d671da226347ab151d3ce13a8231513bcb1d4659b",
+  "production_after": {
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "416ffa147ba55c2f06da6fd609b9759114d588634c38da2449b419452a71e2b7",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "a2e9c8346f880c0361c9ce8ac7b4050b4bba3a4251a9b7a34e310849c51eca17",
+    "src/literal_encode.rs": "471f440df7ca255460bb580fc7d67ae6f1a3ff91a38e0aebd6d7fdf45535dd78",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_parse.rs": "5b1f02c688d31aa996103fa4f5a3473f5de7c27a72491aed29169fb7dc52807f",
+    "src/matchchain.rs": "dbf5c8f65b8f6dedfaaa3907e22bb0e932029793bc0e1cbe412189113fc78e80",
+    "src/matchfinder.rs": "8f5e28b2127533638947744917078c929a9e2da785b6c38fd7e6c13ada00f9a6",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "e2979c4ba3ab89889c7f3345d7d226dbbdebc09f03e78b4735249ad7ff5491c6",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "9a7041cf32e411764ebc2ce445a0d4bb017861bde5d834a4aab11f7914aa0d06",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "c3ed6e6874e556dd812bd94dafa21c3f849f165718e29c8ef7cbc2d7c59f78ab",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "13b15e564b781542cec4647eedeaae19c5dfd82a16c5e67d1c61b384d4c4c98a",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+  },
+  "production_immutable": true,
+  "summary": {
+    "commands": 14,
+    "normal_target_per_configuration": {
+      "passed": 8,
+      "ignored": 1,
+      "own_normal_tests": 6,
+      "shared_generator_tests": 2
+    },
+    "normal_configurations": 4,
+    "fingerprint_test_executions": 4,
+    "fingerprint_frame_comparisons": 288,
+    "official_c_test_executions": 2,
+    "official_c_frame_comparisons": 60,
+    "official_c_decoded_bytes": 6144000,
+    "selected_named_policy_frames": 36,
+    "greedy_default_reset_frames": 24,
+    "total_passed_executions": 38,
+    "total_ignored_executions": 4,
+    "all_passed": true
+  },
+  "original_evidence_sha256": "5e051c0827a70f4995545b416b367dda92f2062eee83da774df99fb5e6f56434",
+  "reproduction_runner_text": "import hashlib,json,os,pathlib,re,shlex,subprocess,time\nroot=pathlib.Path('/Users/lanxingcan/Workspace/zstdoxize')\nout=pathlib.Path('/tmp/zstdoxide-parameter-lifecycle-validation'); out.mkdir(exist_ok=True)\nowned=root/'tests/upstream_parameter_lifecycle.rs'\nsha=lambda p: hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()\nenv=dict(os.environ,CARGO_TARGET_DIR=str(root/'target/module10-parameter-lifecycle'))\ncli='/tmp/zstdoxize-upstream-1.5.7/programs/zstd'\nfeatures=','.join(re.findall(r'^(unsafe-[\\w-]+) =', (root/'Cargo.toml').read_text(),re.M))\nevidence={'scope':'Module 10 live lifecycle integration; exact owned file only; no production mutation', 'owned_source':str(owned),'source_before':sha(owned),'compiler':subprocess.check_output(['rustc','-Vv'],cwd=root,text=True),'cargo':subprocess.check_output(['cargo','-V'],cwd=root,text=True),'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'oracle':{'path':cli,'sha256':sha(cli),'version':subprocess.check_output([cli,'--version'],text=True).strip()},'inputs':{},'records':[]}\nfor p in ['Cargo.toml','Cargo.lock','rust-toolchain.toml','tests/upstream/support/mod.rs','tests/upstream/dictionaries/formatted.dict']:\n evidence['inputs'][p]=sha(root/p)\nevidence['production_before']={str(p.relative_to(root)):sha(p) for p in sorted((root/'src').rglob('*.rs'))}\ndef save(): (out/'evidence.json').write_text(json.dumps(evidence,indent=2)+'\\n')\ndef run(label,args,passed=None,ignored=None,filtered=None,extra=None):\n e=dict(env); e.update(extra or {}); log=out/(label+'.log'); start=time.monotonic()\n with log.open('wb') as f:\n  result=subprocess.run(args,cwd=root,env=e,stdout=f,stderr=subprocess.STDOUT)\n text=log.read_text(); counts=[dict(zip(['passed','failed','ignored','measured','filtered'],map(int,x))) for x in re.findall(r'test result: ok\\. (\\d+) passed; (\\d+) failed; (\\d+) ignored; (\\d+) measured; (\\d+) filtered out',text)]\n record={'label':label,'command':shlex.join(args),'cwd':str(root),'environment':{'CARGO_TARGET_DIR':env['CARGO_TARGET_DIR'],**(extra or {})},'exit_code':result.returncode,'seconds':round(time.monotonic()-start,3),'log':str(log),'sha256':sha(log),'test_results':counts}\n evidence['records'].append(record);save();print(json.dumps(record),flush=True)\n if result.returncode: raise SystemExit('FAILED '+label)\n if passed is not None:\n  assert len(counts)==1,(label,counts)\n  assert counts[0]['passed']==passed and counts[0]['failed']==0,(label,counts)\n  if ignored is not None: assert counts[0]['ignored']==ignored,(label,counts)\n  if filtered is not None: assert counts[0]['filtered']==filtered,(label,counts)\n return text\nconfigs=[('safe',[]),('all',['--all-features']),('no-std',['--no-default-features']),('no-std-all',['--no-default-features','--features',features])]\nfor name,flags in configs:\n run('tests-'+name,['cargo','test','--locked','--test','upstream_parameter_lifecycle',*flags],8,1,0)\nfor name,flags in configs[:2]:\n run('clippy-'+name,['cargo','clippy','--locked','--test','upstream_parameter_lifecycle',*flags,'--','-D','warnings'])\nrun('format',['rustfmt','--edition','2024','--check','tests/upstream_parameter_lifecycle.rs'])\nfor name,flags in configs[:2]:\n for short,test in [('stream','stream_encode::tests::allocator_stream_bytes_preserve_the_pre_migration_baseline'),('one-shot','encode::tests::allocator_one_shot_preserves_36_pre_migration_frames_and_original_output_owner')]:\n  run('fingerprint-'+short+'-'+name,['cargo','test','--locked','--lib',*flags,test,'--','--exact'],1,0)\nfor name,flags in configs[:2]:\n text=run('official-c-'+name,['cargo','test','--locked','--test','upstream_parameter_lifecycle',*flags,'official_codec_decodes_configured_session_and_parameter_reset_frames','--','--ignored','--exact','--nocapture'],1,0,8,{'ZSTD_BIN':cli})\n assert '30 complete frames / 3072000 decoded bytes' in text\n assert '18 frames use their selected named policy; 12 parameter/full-reset frames restore Greedy defaults' in text\nrun('diff-check',['git','diff','--check','--','tests/upstream_parameter_lifecycle.rs'])\nevidence['source_after']=sha(owned);assert evidence['source_after']==evidence['source_before']\nevidence['production_after']={str(p.relative_to(root)):sha(p) for p in sorted((root/'src').rglob('*.rs'))}\nevidence['production_immutable']=evidence['production_before']==evidence['production_after']\nevidence['summary']={'commands':len(evidence['records']),'normal_target_per_configuration':{'passed':8,'ignored':1,'own_normal_tests':6,'shared_generator_tests':2},'normal_configurations':4,'fingerprint_test_executions':4,'fingerprint_frame_comparisons':288,'official_c_test_executions':2,'official_c_frame_comparisons':60,'official_c_decoded_bytes':6144000,'selected_named_policy_frames':36,'greedy_default_reset_frames':24,'total_passed_executions':38,'total_ignored_executions':4,'all_passed':True}\nsave(); print('COMPLETE '+str(out/'evidence.json')+' sha256='+sha(out/'evidence.json'),flush=True)\n",
+  "reproduction_runner_sha256": "e019a2c7020ddb636af0f7055aeba9dd8625f8feb3c41a8fb47728c9b50edbd7"
+}

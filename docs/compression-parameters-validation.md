@@ -201,3 +201,29 @@ QEMU, firmware or cross-target C execution. No codec benchmark is claimed.
 compiler/target configuration, selected test names, full logs and hashes. Its
 [archive](evidence/2026-10-09-parameter-platform.tar.gz) retains the complete
 snapshot manifest and reproduction runner.
+
+## Official lifecycle assertion adapters
+
+Six new public tests preserve dictionary/options ordering, settings across
+fragmented processing and rejected mutation, session-reset dictionary retention,
+parameter/full-reset clearing, prefix lifetime, frame flags and invalid-window
+atomicity. The original 10 KiB dictionary / 100 KiB source dimensions and
+dictionary-versus-cleared-frame size inequality are retained. The corpus is an
+explicit deterministic RDG adaptation, not the inherited C `CNBuffer` identity.
+The prepared-dictionary flag cases separately use the pinned formatted fixture.
+
+Each of four safe/feature/std configurations passes eight tests: six lifecycle
+tests plus two shared generator tests. One C oracle is ignored in each normal
+run and then executed explicitly in safe/all release builds. Focused strict
+Clippy, formatting and diff checks pass. Existing 108-frame streaming and
+36-frame one-shot fingerprints pass in both configurations, totaling 288
+comparisons without replacing the established baselines.
+
+The C oracle independently decodes thirty complete frames per build, or sixty
+exact comparisons and 6,144,000 decoded bytes. Across both builds, 36 frames use
+their selected named policy; the other 24 follow parameter/full reset and use
+restored Greedy defaults. This is interoperable output from the supported Rust
+lifecycle, not C numeric-level or reset-protocol equivalence. All production Rust
+sources and the owned test file remained unchanged during the fourteen focused
+commands. [Lifecycle integration evidence](evidence/2026-10-09-upstream-parameter-lifecycle.json)
+retains their exact commands, full logs, counts and reproduction runner.

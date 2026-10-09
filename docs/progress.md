@@ -348,3 +348,11 @@ twelve selected big-endian s390x executions. Six host-64-only normal tests are
 explicitly excluded on i686. Safe/all thumbv6m no_std compilation also passes.
 The isolated snapshot remained unchanged; this qualifies interpreted Rust and
 compile-only targets, not native C/platform release behavior.
+
+Six official lifecycle adaptations now pass through public APIs in four
+configurations, preserving the original dictionary/source dimensions and size
+inequality with a declared RDG corpus. Existing 288 safe/all default fingerprint
+comparisons remain unchanged. The pinned CLI exactly decodes sixty configured,
+session-reset, parameter-reset, prefix and full-reset frames. Coverage explicitly
+distinguishes selected named policies from the Greedy defaults restored by reset.
+The source/case inventory update and complete feature matrix remain open.
