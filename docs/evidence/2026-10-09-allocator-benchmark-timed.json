@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "task": "Module 9 final allocator benchmark",
+  "status": "complete",
+  "revision": "2e12c1862bf7c8b882977ee1daf2a73037a0f47b",
+  "harness_commit": "d003d36",
+  "initial_worktree_clean": true,
+  "source_sha256": "2b2c51a395d53d658db1089fdbbc7937c28f5543759c5962a09729d808d11686",
+  "source_file_count": 49,
+  "identical_smoke_source_sha256": true,
+  "toolchain": "nightly-2026-10-08",
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)",
+  "target": "aarch64-apple-darwin",
+  "os": "macOS 15.7.7 (24G720)",
+  "configurations": [
+    "safe",
+    "unsafe-byte-cursor",
+    "unsafe-bitstream",
+    "unsafe-history",
+    "unsafe-ring-history",
+    "unsafe-fse",
+    "unsafe-fse-encoder",
+    "unsafe-huffman",
+    "unsafe-huffman-codebook",
+    "unsafe-match-table",
+    "unsafe-match-chain",
+    "unsafe-dictionary",
+    "unsafe-training",
+    "all"
+  ],
+  "workloads": 11,
+  "allocator_modes": 3,
+  "rows": 462,
+  "samples": 2310,
+  "samples_per_row": 5,
+  "minimum_sample_ms": 150,
+  "completed_exit_zero_commands": 14,
+  "cross_configuration_all_non_timing_fields_equal": true,
+  "all_payload_released_no_failures_no_violations": true,
+  "owned_borrowed_same_payload_metrics_distinct_owner_semantics": true,
+  "global_counters": null,
+  "checks": [
+    "all per-row output bytes equal Global reference before and after timed campaign",
+    "all configurations match source/input/dictionary/output fingerprints and sizes",
+    "all configurations match complete cold/reset/final-drop allocation surveys and retained capacities",
+    "all308 tracked final-drop records have zero live blocks/bytes/requested bytes and balanced owner identities",
+    "all2310 samples meet150ms minimum and recomputed median/min/max arithmetic",
+    "validate-only rerun passed",
+    "source manifest remained equal during and after run and equals14-configuration smoke source",
+    "every archived raw artifact read back and SHA256 verified"
+  ],
+  "limitations": [
+    "One fixed-order sequential run; five samples per row; no randomized interleaving or statistical significance analysis.",
+    "Host scheduling, caches, frequency and thermal drift not instrumented. Other project CPU-heavy tasks held idle by coordinator.",
+    "TrackingAllocator forwards to Global and includes lock/ledger/owner-clone overhead; it is not an alternative heap.",
+    "Global allocation counters uninstrumented; no inferred allocation counts.",
+    "Cumulative payload peaks exclude underlying heap rounding and transient Global resize overlap; prepared dictionary/control blocks/helper state/caller buffers outside measured context allocation domain.",
+    "Streaming timings are warm reset/process; whole-buffer/parsing/training timings are fresh operation allocation/drop.",
+    "No C throughput or universal performance-parity claims.",
+    "Sandbox denied CPU/memory hardware sysctl probes; exact failed probes retained."
+  ],
+  "directory": "/tmp/zstdoxide-allocator-bench-timed-all",
+  "report": {
+    "path": "/tmp/zstdoxide-allocator-bench-timed-all/comparison.md",
+    "sha256": "5f54d7d5c6dae1e784df064d393da823cf05ecd1d9a14232a6a16ad0fe71d18d"
+  },
+  "artifact_manifest": {
+    "path": "/tmp/zstdoxide-allocator-bench-timed-all/artifact-manifest.json",
+    "sha256": "569af239d573d8b2673b1863bfcf15491a4561b07d80ef9f7024e9780eca0eeb"
+  },
+  "archive": {
+    "path": "/tmp/zstdoxide-allocator-bench-timed-all.tar.gz",
+    "bytes": 314804,
+    "sha256": "995967c527d92e9529340317fc80ad08215dc76e0ec351a94e2ab53fc2ec9d58"
+  },
+  "summary": {
+    "path": "/tmp/zstdoxide-allocator-bench-timed-all/summary.md",
+    "sha256": "418b9769a150791193be2f574087028191053b42ec100d07487a6f12eb69f1d0"
+  },
+  "raw_results": {
+    "path": "/tmp/zstdoxide-allocator-bench-timed-all/results.json",
+    "sha256": "9d2868c062f23939ca002d013fa22d43f524b155f4de5affcfb217c924e0ab92"
+  },
+  "running_sessions": []
+}
