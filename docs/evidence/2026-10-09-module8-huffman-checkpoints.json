@@ -1,0 +1,259 @@
+{
+  "schema": 1,
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "evidence_limit": "Historical tool outputs only; absent log files/hashes are explicitly null. Commit hashes identify accepted checkpoint files, not a claim that the later commit existed during each run. Corpus replay evidence is separate.",
+  "checkpoints": [
+    {
+      "checkpoint": "weight_twelve",
+      "revision": "3cae84e",
+      "source_sha256": {
+        "src/entropy_encode.rs": "eefcc7f88b69cc0ee539e2e226ac655b70fb8f241b3976000ea9772b56914ad6"
+      },
+      "checks": [
+        {
+          "command": "cargo test --locked --lib entropy_encode::tests",
+          "exit_code": 0,
+          "result": "16 passed, 1 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib entropy_encode::tests --all-features",
+          "exit_code": 0,
+          "result": "16 passed, 1 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib entropy_encode::tests --no-default-features --features unsafe-fse",
+          "exit_code": 0,
+          "result": "16 passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 cargo test --locked --lib entropy_encode::tests::official_fse_and_huffman_readers_accept_generated_headers -- --ignored --exact --nocapture",
+          "exit_code": 0,
+          "result": "1 passed; independent C accepted 521 FSE streams, 68 existing HUF headers, and one sparse weight-twelve HUF header",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 cargo test --locked --lib entropy_encode::tests::official_fse_and_huffman_readers_accept_generated_headers --all-features -- --ignored --exact --nocapture",
+          "exit_code": 0,
+          "result": "1 passed; independent C accepted 521 FSE streams, 68 existing HUF headers, and one sparse weight-twelve HUF header",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo +nightly miri test --locked --lib --features unsafe-fse,unsafe-huffman entropy_encode::tests::weight_twelve_builds_a_valid_description_without_broadening_inline_limits -- --exact",
+          "exit_code": 0,
+          "result": "1 passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted.",
+          "test_seconds": 4.82
+        }
+      ],
+      "preserved_437_stream_fnv1a": "5470459091833037505"
+    },
+    {
+      "checkpoint": "standalone_huffman_depths",
+      "revision": "3cd1752",
+      "source_sha256": {
+        "src/huffman_encode.rs": "f6dec95441fd9aac4eb0ebbe34e19eb46438dcf41543014f23a8d18339cf7ede",
+        "src/huffman_codebook.rs": "883d62ebae5f07ba6357536b14b2d771ebc3d67c4280867d6b7b546460b78946",
+        "tests/upstream/huffman_encode.rs": "ff9ec902c8496529ebc08d75b90ba1008c8b2e90dd386312d9ff48968d0bfeca"
+      },
+      "checks": [
+        {
+          "command": "cargo test --locked --lib huffman_",
+          "exit_code": 0,
+          "result": "42 passed, 8 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib huffman_ --features unsafe-huffman-codebook",
+          "exit_code": 0,
+          "result": "42 passed, 8 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib huffman_ --features unsafe-huffman",
+          "exit_code": 0,
+          "result": "42 passed, 8 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib huffman_ --features unsafe-fse",
+          "exit_code": 0,
+          "result": "42 passed, 8 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib huffman_ --all-features",
+          "exit_code": 0,
+          "result": "42 passed, 8 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib huffman_ --no-default-features",
+          "exit_code": 0,
+          "result": "42 passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 cargo test --locked --lib official_oracle_verifies_standalone_depth_policies_and_twelve_bit_weights -- --ignored --nocapture",
+          "exit_code": 0,
+          "result": "1 passed; 48 descriptions and 96 exact C 1X/4X streams, two depth-twelve descriptions",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 cargo test --locked --lib upstream_huffman_encode_tests::oracle --all-features -- --ignored --nocapture",
+          "exit_code": 0,
+          "result": "5 passed; groups 85, 55, 59, 6, 96 exact C stream checks",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo +nightly miri test --locked --lib --features unsafe-huffman-codebook,unsafe-huffman,unsafe-fse huffman_encode::tests::standalone_trees_obey_every_hard_depth_and_preserve_sparse_support -- --exact",
+          "exit_code": 0,
+          "result": "1 passed; 24 direct/FSE tree cases spanning every depth 1..12",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted.",
+          "test_seconds": 101.02
+        },
+        {
+          "command": "cargo check --locked --lib --no-default-features",
+          "exit_code": 0,
+          "result": "passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo check --locked --lib --no-default-features --features unsafe-huffman-codebook,unsafe-huffman,unsafe-fse",
+          "exit_code": 0,
+          "result": "passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo clippy --locked --lib --tests --all-features -- -D warnings",
+          "exit_code": 0,
+          "result": "passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo fmt --check",
+          "exit_code": 0,
+          "result": "passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        }
+      ],
+      "preserved_dictionary_fnv1a": "17806659356530344110"
+    },
+    {
+      "checkpoint": "complete_adapted_driver",
+      "revision": "d1e6710",
+      "source_sha256": {
+        "tests/upstream/huffman_round_trip.rs": "482a3879e0aefc1be3d625b329bf5b4f16aa6bfde3bbb35c490d0323573caa81",
+        "scripts/oracles/huffman_depths.c": "9307a2d6fb302aa9aa93d1010085e2b0a790812201f6375880fd68c8f324c5bc"
+      },
+      "checks": [
+        {
+          "command": "cargo test --locked --lib upstream_huffman_round_trip_tests",
+          "exit_code": 0,
+          "result": "7 passed, 2 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib upstream_huffman_round_trip_tests --all-features",
+          "exit_code": 0,
+          "result": "7 passed, 2 ignored",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo test --locked --lib upstream_huffman_round_trip_tests --no-default-features",
+          "exit_code": 0,
+          "result": "7 passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 cargo test --locked --lib upstream_huffman_round_trip_tests::oracle -- --ignored --nocapture",
+          "exit_code": 0,
+          "result": "2 passed; 4,674 exact C selector records and 1,344 adjusted/cheap-depth combinations",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 cargo test --locked --lib upstream_huffman_round_trip_tests::oracle --all-features -- --ignored --nocapture",
+          "exit_code": 0,
+          "result": "2 passed; 4,674 exact C selector records and 1,344 adjusted/cheap-depth combinations",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo +nightly miri test --locked --lib --features unsafe-bitstream,unsafe-huffman-codebook,unsafe-huffman,unsafe-fse upstream_huffman_round_trip_tests::complete_huffman_driver_records_every_early_exit_and_round_trip -- --exact",
+          "exit_code": 0,
+          "result": "1 passed; all seven outcomes under both BMI layouts",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted.",
+          "test_seconds": 31.67,
+          "note": "This run preceded the subsequent test-helper-only AtomicUsize temporary-directory suffix change. Both C tests and strict Clippy/fmt were rerun afterward; Miri was not rerun because codec/driver behavior did not change."
+        },
+        {
+          "command": "cargo clippy --locked --lib --tests --all-features -- -D warnings",
+          "exit_code": 0,
+          "result": "passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        },
+        {
+          "command": "cargo fmt --check",
+          "exit_code": 0,
+          "result": "passed",
+          "log_path": null,
+          "log_sha256": null,
+          "evidence": "Observed tool-session output; no standalone shell log was persisted."
+        }
+      ]
+    }
+  ]
+}

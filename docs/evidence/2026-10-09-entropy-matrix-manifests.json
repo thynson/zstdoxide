@@ -1,0 +1,14 @@
+[
+  {
+    "file": "docs/evidence/2026-10-09-entropy-matrix-before.json.gz",
+    "sha256": "6781c3325dcbaa6a6f588137b563bd2697088dbca514ff8935da3b4121746f62",
+    "uncompressed_sha256": "6019de25fc489d4f61246b2cf141df4fa48be4a6767c74eb193ab193dcf2a484",
+    "uncompressed_bytes": 75849
+  },
+  {
+    "file": "docs/evidence/2026-10-09-entropy-matrix-after.json.gz",
+    "sha256": "837e2da1aacf6523797b6be5114cc2466530c4df56d0b8f89f6a15bf5ad090f3",
+    "uncompressed_sha256": "4507d634192c0d77938784e394765b18453395c2d79c81f82e6e300dadde3ae6",
+    "uncompressed_bytes": 76804
+  }
+]

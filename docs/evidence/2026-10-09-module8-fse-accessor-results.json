@@ -1,0 +1,62 @@
+[
+  {
+    "configuration": "safe",
+    "command": "cargo test --lib fse_encode::tests",
+    "status": 0,
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 177 filtered out; finished in 0.11s"
+    ],
+    "log": "/tmp/zstdoxide-module8-fse-accessor-safe.log",
+    "sha256": "af93917585b78567eec85d90d9bc29d50d73deb3172d9c9267ae233957d484e8"
+  },
+  {
+    "configuration": "encoder",
+    "command": "cargo test --lib --features unsafe-fse-encoder fse_encode::tests",
+    "status": 0,
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 177 filtered out; finished in 0.12s"
+    ],
+    "log": "/tmp/zstdoxide-module8-fse-accessor-encoder.log",
+    "sha256": "47caa289a587562116b2939b44d814633e8b4f1d743bc5b1f93e46d4ed7ee47f"
+  },
+  {
+    "configuration": "decoder",
+    "command": "cargo test --lib --features unsafe-fse fse_encode::tests",
+    "status": 0,
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 177 filtered out; finished in 0.14s"
+    ],
+    "log": "/tmp/zstdoxide-module8-fse-accessor-decoder.log",
+    "sha256": "c3808c7c4e2be41b40de3898c67100c19a4723b2cc63d6f1108a050b9d1c3223"
+  },
+  {
+    "configuration": "all",
+    "command": "cargo test --lib --all-features fse_encode::tests",
+    "status": 0,
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 177 filtered out; finished in 0.14s"
+    ],
+    "log": "/tmp/zstdoxide-module8-fse-accessor-all.log",
+    "sha256": "f021d55f624c8bb7f5a2961824623ed3fcf2877ca308ab3ab75f2593062f8c8e"
+  },
+  {
+    "configuration": "no-std",
+    "command": "cargo test --lib --no-default-features fse_encode::tests",
+    "status": 0,
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 174 filtered out; finished in 0.12s"
+    ],
+    "log": "/tmp/zstdoxide-module8-fse-accessor-no-std.log",
+    "sha256": "d8fc361e65662d7c1b29581f5b4ea3a83aeae507798081dfa41f214981e4f986"
+  },
+  {
+    "configuration": "no-std-encoder",
+    "command": "cargo test --lib --no-default-features --features unsafe-fse-encoder fse_encode::tests",
+    "status": 0,
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 174 filtered out; finished in 0.23s"
+    ],
+    "log": "/tmp/zstdoxide-module8-fse-accessor-no-std-encoder.log",
+    "sha256": "bfff94fe02c12725881f987f8337c1b6bc1758d72f12061df6fd93c04e0e0fcc"
+  }
+]

@@ -1,0 +1,108 @@
+{
+  "owned_files": [
+    {
+      "path": "src/entropy_output.rs",
+      "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61"
+    },
+    {
+      "path": "scripts/oracles/huffman_capacity.c",
+      "sha256": "f09acaf459f164822ec18d3603b2bbc5760b7944f65ada8359f026924aa8eb15"
+    }
+  ],
+  "normal_tests": 6,
+  "normal_configurations": [
+    "safe",
+    "all",
+    "no-default",
+    "unsafe-bitstream",
+    "unsafe-huffman-codebook"
+  ],
+  "normal_matrix": {
+    "path": "/tmp/zstdoxide-entropy-output-focused-results.json",
+    "sha256": "ca92928e28ef7f99680f6a5ca51455a9adb6c077378484b055bc5500d46a8f53"
+  },
+  "oracles": [
+    {
+      "configuration": "safe",
+      "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 cargo test --release --lib entropy_output::tests::oracle -- --ignored --nocapture",
+      "exit_code": 0,
+      "tests": 2,
+      "evidence": {
+        "path": "/tmp/zstdoxide-entropy-output-oracle-safe.log",
+        "sha256": "05159540d0d261257db4c1b4e202c0c83b7496b7727354e6613d167f861e28a1"
+      },
+      "successful_streams": 1554,
+      "zero_results": 3479,
+      "zero_results_with_C_destination_modifications": 1583,
+      "flag_patterns": 32,
+      "native_word_bytes": 8,
+      "C_table_write_successes": 69,
+      "C_table_write_errors": 26,
+      "C_table_errors_where_selected_Rust_description_fit": 9
+    },
+    {
+      "configuration": "all",
+      "command": "ZSTD_UPSTREAM=/tmp/zstdoxize-upstream-1.5.7 cargo test --release --all-features --lib entropy_output::tests::oracle -- --ignored --nocapture",
+      "exit_code": 0,
+      "tests": 2,
+      "evidence": {
+        "path": "/tmp/zstdoxide-entropy-output-oracle-all.log",
+        "sha256": "2ed03a37e9c37316522386d32d857ca0ac580bc6e93430b7f8a8b05431f6b561"
+      },
+      "successful_streams": 1554,
+      "zero_results": 3479,
+      "zero_results_with_C_destination_modifications": 1583,
+      "flag_patterns": 32,
+      "native_word_bytes": 8,
+      "C_table_write_successes": 69,
+      "C_table_write_errors": 26,
+      "C_table_errors_where_selected_Rust_description_fit": 9
+    }
+  ],
+  "negative_C_requests": 11,
+  "negative_evidence": {
+    "path": "/tmp/zstdoxide-entropy-output-oracle-negative.json",
+    "sha256": "466bcf61967c490a5cbd737ee44c0411dc8cb62299ec26432e9b901a49306fa9"
+  },
+  "strict_clippy": {
+    "command": "cargo clippy --lib --tests --all-features -- -D warnings",
+    "exit_code": 0,
+    "evidence": {
+      "path": "/tmp/zstdoxide-entropy-output-clippy.log",
+      "sha256": "8a010c133fe66520e550e9754db98ffc55c31098b0d85bc669205a355ef307c4"
+    }
+  },
+  "other_checks": [
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "src/entropy_output.rs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/entropy_output.rs",
+        "scripts/oracles/huffman_capacity.c"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "earlier_failure": "Concurrent oracle tests generated equal wall-clock temporary-directory names. Added test-only atomic unique suffix; both final paired executions pass. No codec mismatch occurred.",
+  "limits": [
+    "Module currently registered cfg(test) by root; no public standalone API claim.",
+    "32-bit and64-bit formula cases checked in Rust; independent C host was64-bit with noBMI2. All32 supported non-BMI flag masks exercised.",
+    "Selected description copying is an exact-bound independent Rust contract; C capacity-dependent FSE/raw choice is explicitly separate.",
+    "No additional unsafe operations or feature flags; existing writer/codebook backends are reused.",
+    "No production inline tree/block/source limit was increased by this module."
+  ]
+}

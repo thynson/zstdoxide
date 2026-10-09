@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "scripts/audit_upstream_tests.py",
+    "--upstream",
+    "/tmp/zstdoxize-upstream-1.5.7",
+    "--require-complete"
+  ],
+  "exit_code": 1,
+  "expected_failure": true,
+  "output": "ERROR: Migration incomplete: 188 source units remain unported\nERROR: Migration incomplete: external upstream corpus target coverage remains partial or blocked\n"
+}

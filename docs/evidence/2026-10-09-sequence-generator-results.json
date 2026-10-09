@@ -1,0 +1,215 @@
+{
+  "owned_files": [
+    {
+      "path": "tests/upstream/sequence_generator.rs",
+      "sha256": "cb78abfee77b12d9498f3366f4ec7e20983e9a5d6695d4a75861f9e96df2e1bc"
+    },
+    {
+      "path": "scripts/oracles/sequence_generator.c",
+      "sha256": "6db407e4e21d2f253bdf9226477c510715440b1821f8fc42fffb0d2b5df2592d"
+    }
+  ],
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "unchanged_reference_files": [
+    {
+      "path": "/tmp/zstdoxize-upstream-1.5.7/tests/seqgen.c",
+      "sha256": "f57190da11bca49821e099be7e516c674974cedab886b95670eabccedcae3a03"
+    },
+    {
+      "path": "/tmp/zstdoxize-upstream-1.5.7/tests/seqgen.h",
+      "sha256": "e85dfeeffecce5d77310a6efecc6a49303f2e5781327f9004cbb231c00220a23"
+    }
+  ],
+  "schedule": {
+    "requests": 971,
+    "source_bytes": 34639743,
+    "final_xxh64": "d6a9522c4b14b2a5",
+    "final_seed": "0f900e80",
+    "request_vectors": {
+      "path": "/tmp/zstdoxide-sequence-generator-schedule.txt",
+      "sha256": "cf01566caefc87d75cc5bc0d301a2676a2cca413d53aa2d6966d3972973e82c7"
+    },
+    "stored_fields": [
+      "kind",
+      "value",
+      "length",
+      "request_xxh64",
+      "cumulative_xxh64",
+      "seed"
+    ]
+  },
+  "stored_call_vectors": {
+    "calls": 27,
+    "response_bytes": 2185,
+    "binary": {
+      "path": "/tmp/zstdoxide-sequence-generator-focused.bin",
+      "sha256": "5300c34751ef90532498d8b865d3e52bc545357f1acd0efcd48bff280f304697"
+    },
+    "observations": {
+      "path": "/tmp/zstdoxide-sequence-generator-focused.json",
+      "sha256": "37945c9678334ed41b08201da6d739ffba62d9567ad0d87b9000e30137a54ed8"
+    }
+  },
+  "live_oracle_per_configuration": {
+    "configurations": [
+      "safe release",
+      "all features release"
+    ],
+    "tests": 2,
+    "schedule_requests": 971,
+    "source_bytes": 34639743,
+    "focused_calls": 6459,
+    "focused_initialized_bytes": 105321,
+    "capacities": [
+      0,
+      1,
+      2,
+      127,
+      128,
+      129,
+      1023,
+      1024
+    ],
+    "seeds": [
+      0,
+      2271560481,
+      4294967295
+    ],
+    "unsigned_extrema": [
+      4294967294,
+      4294967295
+    ]
+  },
+  "normal_tests": 6,
+  "normal_configurations": [
+    "safe",
+    "all features",
+    "no default features"
+  ],
+  "safe_command": "cargo test --lib upstream_sequence_generator_tests -- --nocapture",
+  "safe_exit_code": 0,
+  "safe_log": {
+    "path": "/tmp/zstdoxide-sequence-generator-safe.log",
+    "sha256": "ae192095456dcfbfe2448a0bfbd2fa21760b4144e90ef043ac4d472b5fc835e3"
+  },
+  "checks": [
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--all-features",
+        "upstream_sequence_generator_tests",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {},
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-sequence-generator-all.log",
+      "sha256": "8c04a73b973ce37848351b44ae16606d65546a7f64fa856bf6c00552e18e29c4"
+    },
+    {
+      "name": "no-default",
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--no-default-features",
+        "upstream_sequence_generator_tests",
+        "--",
+        "--nocapture"
+      ],
+      "environment": {},
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-sequence-generator-no-default.log",
+      "sha256": "4cc29254a69d3211867245d676b2051ac750fab64c5dd86d2e995b2ac679b2df"
+    },
+    {
+      "name": "oracle-safe",
+      "command": [
+        "cargo",
+        "test",
+        "--release",
+        "--lib",
+        "upstream_sequence_generator_tests::oracle",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment": {
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-sequence-generator-oracle-safe.log",
+      "sha256": "ed3842b3731f24993587a1af1114e32e599363f7ba15c02d7b686b1477dccd3f"
+    },
+    {
+      "name": "oracle-all",
+      "command": [
+        "cargo",
+        "test",
+        "--release",
+        "--all-features",
+        "--lib",
+        "upstream_sequence_generator_tests::oracle",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "environment": {
+        "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+      },
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-sequence-generator-oracle-all.log",
+      "sha256": "7ffff66fb011a3c32060b46ab476b5975804b307cdaf75a9b829024255856c36"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--lib",
+        "--tests",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "environment": {},
+      "exit_code": 0,
+      "log": "/tmp/zstdoxide-sequence-generator-clippy.log",
+      "sha256": "fe138dc7f68ea278818bede11a6c9d9eaee67a10f2c732e794b0d5e2f5c60807"
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "tests/upstream/sequence_generator.rs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "tests/upstream/sequence_generator.rs",
+        "scripts/oracles/sequence_generator.c"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "negative_requests": 10,
+  "negative_evidence": {
+    "path": "/tmp/zstdoxide-sequence-generator-negative.json",
+    "sha256": "7b34981ac9cf8c53d94dcfdd5fcf47587aba0e5b96f9ec47403be670182da857"
+  },
+  "scope": "Exact incremental source generator only; no codec sweep or emitted-sequence-coverage claim. Public helpers are crate-internal test APIs. No new unsafe operations or allocations in generation.",
+  "limits": "C initializes otherwise inactive saved/bytesLeft fields only for deterministic observation. The Rust API additionally rejects changing an unfinished request. Unsigned-extrema requests compare bounded prefixes except wrapping ML; the complete original 971-request campaign is never truncated."
+}

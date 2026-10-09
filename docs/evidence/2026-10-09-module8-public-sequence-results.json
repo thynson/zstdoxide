@@ -1,0 +1,114 @@
+[
+  {
+    "configuration": "safe",
+    "command": "cargo test --test sequence_encoding",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-safe.log",
+    "sha256": "feeb9e4d13720ba4d5fefa185cb144b55aee2e2e939c888b6674592d89384b51",
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.05s"
+    ]
+  },
+  {
+    "configuration": "all",
+    "command": "cargo test --test sequence_encoding --all-features",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-all.log",
+    "sha256": "5e61a193d7d522e4d29acdb0f58cb36dca354de939fdb826118f17a20f22bcd8",
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.05s"
+    ]
+  },
+  {
+    "configuration": "no-std",
+    "command": "cargo test --test sequence_encoding --no-default-features",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-no-std.log",
+    "sha256": "3c16d1b7af24ef58e5cbe3cd8a98045faf7061fab0a56af73b80361714897dae",
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s"
+    ]
+  },
+  {
+    "configuration": "encoder",
+    "command": "cargo test --test sequence_encoding --features unsafe-fse-encoder",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-encoder.log",
+    "sha256": "fc707e1ffd66d06f233b853d5379d21608261b787310d7e979908c947f0f7379",
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.05s"
+    ]
+  },
+  {
+    "configuration": "decoder",
+    "command": "cargo test --test sequence_encoding --features unsafe-fse",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-decoder.log",
+    "sha256": "1036184101aa338c60d6937e9811ee9e0954203216fc831147327bfbce5d83c6",
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.05s"
+    ]
+  },
+  {
+    "configuration": "writer",
+    "command": "cargo test --test sequence_encoding --features unsafe-bitstream",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-writer.log",
+    "sha256": "57b46c9cac45342588494f859b7b359d60efef931f3f03d318c4c25ea7bb7474",
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.05s"
+    ]
+  },
+  {
+    "configuration": "oracle-safe",
+    "command": "cargo test --release --test sequence_encoding -- --ignored --nocapture",
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-oracle-safe.log",
+    "sha256": "d88050719f6870302cbf57b4f8ad3367f6b1213b8a483a4b51d5ab75743043aa",
+    "summary": [
+      "C decoded 14 public sequence frames, 19577 output bytes: predefined/new/RLE/repeat, raw/RLE/empty preservation, singleton dictionaries, reset and prefix isolation",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.09s"
+    ]
+  },
+  {
+    "configuration": "oracle-all",
+    "command": "cargo test --release --test sequence_encoding --all-features -- --ignored --nocapture",
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-oracle-all.log",
+    "sha256": "90a5cbb2b40a7a5d7e7f04b3e281cfb925a6a3392248155159b08d6b7ab81fbb",
+    "summary": [
+      "C decoded 14 public sequence frames, 19577 output bytes: predefined/new/RLE/repeat, raw/RLE/empty preservation, singleton dictionaries, reset and prefix isolation",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.06s"
+    ]
+  },
+  {
+    "configuration": "clippy",
+    "command": "cargo clippy --lib --tests --all-features -- -D warnings",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-clippy.log",
+    "sha256": "59ff8e6fc4362896195340c782df7c287bd7a015fc49f76fefd9d066441fd0f5",
+    "summary": []
+  },
+  {
+    "configuration": "format",
+    "command": "rustfmt --edition 2024 --check tests/sequence_encoding.rs",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-public-sequence-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "summary": []
+  }
+]

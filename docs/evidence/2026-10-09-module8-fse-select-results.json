@@ -1,0 +1,81 @@
+[
+  {
+    "configuration": "safe",
+    "command": "cargo test --lib fse_select::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-fse-select-safe.log",
+    "sha256": "9c2e68943342abc5c96e6e67a819b177d8547b0d98b3f15bfe1684c7b129dac4",
+    "summary": [
+      "test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 227 filtered out; finished in 0.03s"
+    ]
+  },
+  {
+    "configuration": "all",
+    "command": "cargo test --lib --all-features fse_select::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-fse-select-all.log",
+    "sha256": "0ccbac7587f087b852fde34244834c175325470784212932e4bd211813740a1a",
+    "summary": [
+      "test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 227 filtered out; finished in 0.03s"
+    ]
+  },
+  {
+    "configuration": "no-std",
+    "command": "cargo test --lib --no-default-features fse_select::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-fse-select-no-std.log",
+    "sha256": "6fd0f494eea9dd5d702e3586dd2085f0644c5d3ae734676de11faf8726022d62",
+    "summary": [
+      "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 220 filtered out; finished in 0.03s"
+    ]
+  },
+  {
+    "configuration": "oracle-all",
+    "command": "cargo test --release --lib --all-features fse_select::tests::official_codec_decodes_automatically_selected_channel_tables -- --ignored --nocapture",
+    "environment": {
+      "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+    },
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-fse-select-oracle-all.log",
+    "sha256": "06e23e2c757994b7ea32ef98575636352347e8fa0261ca3c28b510f344dfdb9c",
+    "summary": [
+      "Official v1.5.7 decoded adaptive new/RLE/repeat frame: 576 output bytes",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 232 filtered out; finished in 0.01s"
+    ]
+  },
+  {
+    "configuration": "clippy",
+    "command": "cargo clippy --lib --tests --all-features -- -D warnings",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-fse-select-clippy.log",
+    "sha256": "02db5a66fa0c60ca8618bd08aac556eac4f3ec863e8630a0d353dba6a0f6e126",
+    "summary": []
+  },
+  {
+    "configuration": "format",
+    "command": "rustfmt --edition 2024 --check src/fse_select.rs",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-fse-select-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "summary": []
+  },
+  {
+    "configuration": "oracle-safe",
+    "command": "cargo test --release --lib fse_select::tests::official_codec_decodes_automatically_selected_channel_tables -- --ignored --nocapture",
+    "environment": {
+      "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+    },
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-fse-select-oracle-safe.log",
+    "sha256": "35d6c2b7b3aa3eabbd29534aea38f6e88c7fe467f753c77b5d55f453c14e9d6e",
+    "summary": [
+      "Official v1.5.7 decoded adaptive new/RLE/repeat frame: 576 output bytes",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 230 filtered out; finished in 0.01s"
+    ]
+  }
+]

@@ -1,0 +1,3919 @@
+{
+  "schema": 1,
+  "command": "sh -x scripts/check.sh",
+  "exit_code": 0,
+  "matrix_exit_code": 0,
+  "supplementary_streaming_rustdoc_exit_code": 0,
+  "matrix_seconds": 1079.2455712920055,
+  "seconds": 1080.1503812919836,
+  "log_path": "/tmp/zstdoxide-module8-check.log",
+  "log_sha256": "b2154bed96b4c6828c99e556bf788ec33ed2f85498534759ac8f2bc8656e81af",
+  "toolchain": {
+    "rustc": "rustc 1.89.0 (29483883e 2025-08-04)\nbinary: rustc\ncommit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2\ncommit-date: 2025-08-04\nhost: aarch64-apple-darwin\nrelease: 1.89.0\nLLVM version: 20.1.7",
+    "cargo": "cargo 1.89.0 (c24e10642 2025-06-23)",
+    "rustdoc": "rustdoc 1.89.0 (29483883e 2025-08-04)",
+    "rustfmt": "rustfmt 1.8.0-stable (29483883ee 2025-08-04)",
+    "clippy": "clippy 0.1.89 (29483883ee 2025-08-04)"
+  },
+  "pre_manifest": "/tmp/zstdoxide-module8-check-before.json",
+  "pre_manifest_sha256": "6019de25fc489d4f61246b2cf141df4fa48be4a6767c74eb193ab193dcf2a484",
+  "post_manifest": "/tmp/zstdoxide-module8-check-after.json",
+  "post_manifest_sha256": "4507d634192c0d77938784e394765b18453395c2d79c81f82e6e300dadde3ae6",
+  "pre_source_fingerprint": "53c233ef8c0edd7a1f42963ae7f994b67761d67ba4e13edbf642a6912334f360",
+  "post_source_fingerprint": "53c233ef8c0edd7a1f42963ae7f994b67761d67ba4e13edbf642a6912334f360",
+  "source_and_test_inputs_unchanged": true,
+  "changed_inputs": [],
+  "before_documentation_hashes": {
+    "docs/dictionary-usage.md": "0efc27f9d016752cd7c5c9f30b2a7d023a9b85c616fba0fc235de1d1737b03e4",
+    "docs/streaming-usage.md": "6007425c1e55adbfaf8acbd1a833a828c99fe4bfa428608cf039be4f73bd2b49"
+  },
+  "after_documentation_hashes": {
+    "docs/dictionary-usage.md": "0efc27f9d016752cd7c5c9f30b2a7d023a9b85c616fba0fc235de1d1737b03e4",
+    "docs/streaming-usage.md": "6007425c1e55adbfaf8acbd1a833a828c99fe4bfa428608cf039be4f73bd2b49"
+  },
+  "documentation_exclusion": "Markdown/rst excluded from source/test manifest. Compiled usage documents are separately hashed. All Cargo/source/test fixtures+manifests/bench/script/CI non-Markdown inputs are included, including untracked files.",
+  "suite_run_count": 15,
+  "expected_suite_commands_match": true,
+  "no_std_configuration_count": 14,
+  "all_ignored_cases": 675,
+  "sections": [
+    {
+      "command": "python3 scripts/audit_upstream_tests.py",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "a8fb543e0088291d0ace0996ba81b38ca1c405f974b3d41afcff069b97fb80ed"
+    },
+    {
+      "command": "python3 scripts/check_upstream_fixtures.py",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "a70dfddf2879381e490b35b0fb092a09013162420933bcc87e9c72637e64a736"
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "command": "cargo test",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-aafe6aad11edde8a)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 5.38
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-8ebdb563c04d817d)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.94
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-b07bc9f546625333)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.15
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-34215c4d9bde16a4)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.82
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-a4c2633c319f0f54)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.08
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-93f6bf3f5c4ac021)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-b20408621467e384)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.22
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-830d44462585ce72)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-822311d4399bbccc)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.21
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-6b6c6fda0a4a973d)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.2
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-3c19ef2bb57fad79)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.95
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-16489f2e84e114eb)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.22
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-b70836be1db314a7)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.47
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-252d5dcec80dc448)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 18.65
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-d26fc14b53d34939)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.14
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-d8e9f586510b1c67)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-39c02e7fd662f14c)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.71
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-4d0113c077101ec0)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 6.55
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-c67e582d409f80e9)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-8cb485b704e8959a)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.49
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-8943f085e41c79c4)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.08
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-8bd76d69f25b441d)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.25
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "47740d4460379efa08bc1d5d5e07c3500cec59ac840b0e4444173b7cfc5ce255"
+    },
+    {
+      "command": "cargo build",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "23b9a21bbaf189889e08dc27ed8eba521021280c5852db22205f721db08b2c7c"
+    },
+    {
+      "command": "rustdoc --edition 2024 --test docs/dictionary-usage.md --extern zstdoxide=target/debug/libzstdoxide.rlib -L dependency=target/debug/deps",
+      "test_binaries": [
+        {
+          "binary": "rustdoc --edition 2024 --test docs/dictionary-usage.md --extern zstdoxide=target/debug/libzstdoxide.rlib -L dependency=target/debug/deps",
+          "status": "ok",
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "21a5609cb85a4cc3b91eb4457aea23573a8ea85f10f13004d0f09ad2fbfc183f"
+    },
+    {
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "664cbecbd98a599f73ac0a837f19a6809e0b60b30fe6a00b8e678003e441623b"
+    },
+    {
+      "command": "cargo check --no-default-features",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "a437a006a3d276a55309fc81696feba638b7c3d3af6bf1db98c6e365fb417d43"
+    },
+    {
+      "command": "cargo test --features unsafe-byte-cursor",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-a226d37ada0257f0)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 5.01
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-ba3a084c55f03520)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.06
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-0da26ceea34beac9)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.22
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-3f7d9378ac127a3b)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.57
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-1c981162d97b506f)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.28
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-c276964cabd122cc)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-de6148eb30a30da6)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.96
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-bd3a789495646d14)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-a5fb69dd6febe159)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.29
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-3e3b3851d9195720)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.32
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-11498f5f66d24112)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.88
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-30439cac46b1e21a)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.23
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-4c984aa69a32b161)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.58
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-6333d317f84ac52c)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 20.86
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-3ae27b0eb108563e)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.15
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-c69e4720f4b6b679)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-455e91dd248effae)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.94
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-2711567a7198dc56)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 9.45
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-91784c6d982556e3)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-f96615f2fad3f227)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.62
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-48298db77c2f7036)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.09
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-3c00f0161dcc8abb)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.26
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "b2d3f9340a6e71df467de52c762d45b6589b3031df34225fc59a4bccf012556c"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-byte-cursor",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "e753b04dfef80f5b8c274c6060881d18e208eb0cf1be2098be0bd78d1a2162c6"
+    },
+    {
+      "command": "cargo test --features unsafe-bitstream",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-7513e3712bf91aa7)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 7.16
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-7aa62bc65480d9af)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.38
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-5eab57b8495cdbee)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.21
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-f810a65cb01cffba)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.05
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-ff9cce82c5adca51)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.89
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-47e91a0af9401eeb)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.04
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-45b7f37ec3d1bf39)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.16
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-0285505085630ceb)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-3839f1bf6066e285)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.68
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-c3d8d4c031499e06)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.87
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-64bba48b8cf9cb9b)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.35
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-ef203f7f084b1c47)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.27
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-f579e9b239d1c085)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.62
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-b67beb3c31523486)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 26.65
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-dd63418c8dcc0f18)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.2
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-2e0ef97fa393a545)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-f3445ed845d8a11d)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.87
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-78bcf85532f56386)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 9.78
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-a813acc4867b22f3)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-2872cdb2cdba32cb)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.58
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-70f827ecae97d639)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.1
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-af7e7562e2cabae5)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.37
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "7ea3e83e381bd72f97c3ce6795f2da0157e46ee3f25714393e100e7eb2341127"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-bitstream",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "148a2bdd7c3663ba26ff6376c22cde34690e5a2a6ca70c41fe686f1c4e9a7e22"
+    },
+    {
+      "command": "cargo test --features unsafe-history",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-70f1ce2d974283d5)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 10.81
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-450be5c27dbd5bef)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.45
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-46135e7501cc4115)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.21
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-a805cc677e3cab77)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.88
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-dfeec32962083380)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.03
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-297d3e5f8976fe5f)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.04
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-2c2746f280102494)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.03
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-93f8e853e146966d)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-36e153aed8fb8d76)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.56
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-843cc8327c0eb11d)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.72
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-d22515c3e4509b93)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.14
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-2b2cd115543ea80e)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.29
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-310838c3caa2321e)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.59
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-f09aa385ae7ccae8)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 24.26
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-cdb3b6acc1c8220a)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.18
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-7dbdcfce9b684349)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-1c2b57cec794badd)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.82
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-11412ab98c18f308)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 9.26
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-d49ed6598cd9ab46)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-c616bf2ad3cd2cdf)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.62
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-96ad0360802723df)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.09
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-5d5f240569c96326)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.26
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "2f06d4fb3d94cba4973988e1b0d1f452a51a7aa7d49c11defd22d37c165773ee"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-history",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "f946d3387284d2ec1d905be5a5ea00c0784a73af80d8667ebe8e425502d2a0d1"
+    },
+    {
+      "command": "cargo test --features unsafe-ring-history",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-6bf327d6a2a0973c)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 8.87
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-0077c62b2790784c)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.19
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-8df500aab4f40950)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.19
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-eec710303c191e41)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.1
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-6ea86179f3d90f33)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.49
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-b78674bd344b79c4)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.04
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-4c4e74af4edcc1eb)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.26
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-1fe34da93cd7d77f)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-94fbd455f292c662)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.71
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-7b705e1419953ab6)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.71
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-00baa1d5b6ac21b3)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.14
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-86346d4c0a88f3a6)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.27
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-c4d504245e2a40fb)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.61
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-4e38d0b808de78cd)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 23.62
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-d6cb8700e1396011)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.19
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-b29c52ddeeb6c31b)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-804c5029fb38d318)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.72
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-7da706f7f40dba76)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 11.6
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-3256d49023dd147a)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-a9da89fcf39b6658)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.55
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-37aa510b734d24fb)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.1
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-70e734a6e502fa42)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.38
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "e15c48b453b00c6f36ea64efc198e7e5f377f662d44c51365fc5694bf1ffff71"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-ring-history",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "e753b04dfef80f5b8c274c6060881d18e208eb0cf1be2098be0bd78d1a2162c6"
+    },
+    {
+      "command": "cargo test --features unsafe-fse",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-00f7453963b73e12)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 9.53
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-dd14d53b238b4455)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.82
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-0273bad2c06c9afc)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.42
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-005bf2bfdc3ec419)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.53
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-084b8a835c3d9f85)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.8
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-a004dd69ffb48dd4)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-d58adae347faf504)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.04
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-9838c25e1118a98b)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-af3bdf1cfa1a6ba4)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.34
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-43c24eaa03e59426)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.7
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-0d9f512867f55758)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.02
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-443375b515d59d76)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.23
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-2fe119ea948e36be)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-70426d1afa3e886c)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 23.34
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-2e5837ec01c8e0a2)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.15
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-972a246731dda651)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-52693fe1039e727c)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.7
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-d442469a82aa8ea4)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 8.73
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-510dc601a1092d17)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-d1cf078e74b107bc)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-d200f83f8dbdb37e)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.1
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-4f002ef61b2908ac)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.26
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "32bba2eae8898c81424e077ff9894f28fa861ed697651a115975ea3b6e7e03cc"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-fse",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "a3d0dfd410230c6c6c16dacc3691f93630c367b19c98634ed46abeb70529d941"
+    },
+    {
+      "command": "cargo test --features unsafe-fse-encoder",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-166c3ee625d5318f)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 6.55
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-b81b95a415ec549f)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.1
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-f661462b0835cc83)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.17
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-7557d484d64f69a0)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.72
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-28190a978e83d62d)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.4
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-bab7484209db979d)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-946ff527d5059064)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.87
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-1785110ff3d1f681)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-5d4e58560e29294f)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.25
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-2e8725bedd91b172)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.21
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-6624afd95ff0675c)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.82
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-74840bb5925d2485)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.23
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-db30897d71966730)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-ad11c09b4f6d30d4)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 21.75
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-d6b1c54a26aa1999)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.16
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-a1d1dafc6e21bc56)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-e0e5ff28521ba8a1)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.69
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-6fa917092691fa9c)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 7.66
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-549ce6b09bcf7ddf)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-dfd4418d8501be37)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.47
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-2e7b3be633cebd2e)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.1
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-f993c47eeb0eb909)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.26
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "fdd99d80a7ba1d04069d4f180951d08d51fdbcfa21c5945d43544a8c5a836e11"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-fse-encoder",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "3fcadad19d9770089ebcaac5acc223cce5f3c1a00e0c5d4e23afab20c1587ce6"
+    },
+    {
+      "command": "cargo test --features unsafe-huffman",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-bd14d2ab41163126)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 10.8
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-2b2ade2187851b40)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.22
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-e8493d7ec05959a3)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.18
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-c0967a3414ef03b9)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.75
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-9053acde9a8aa020)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.02
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-06e0a653c8d0c558)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-3eebdd0748a7a0e4)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.89
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-2cf503ab780f3a68)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-53efaaf320d7b2f3)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.17
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-32ad376b7b2433a8)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.28
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-b5dec673bc423144)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.82
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-ca5fd6ddb6524e82)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.23
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-5dc7fbed5bd8bc22)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.47
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-e4bc51edda49aea4)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 20.31
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-3f978d8d1e8a8f96)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.14
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-15507cb95c23513e)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-a2d9d49e96e564e3)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.69
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-2ce6a2b7c958b460)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 7.62
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-17214271d39df060)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-d26731d5397f0c55)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.46
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-197f99aba186a6c5)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.1
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-fa99081886ce881e)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.25
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "bad4eac705c638846ff649d9681a8e4fe8eeba3f63c1234dfc30234223fb6605"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-huffman",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "ba8e367644a51b282078cf1eb870fe1c3ce6c63e06b64e625eb2dcf11146ef9c"
+    },
+    {
+      "command": "cargo test --features unsafe-huffman-codebook",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-36c595871b9ba6e3)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 10.34
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-78e172310575607f)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.02
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-1832b8f614e51952)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.18
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-e4b7b1c612ca8426)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.73
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-eda4e48522253110)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.08
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-2549a04bfe07e926)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-7cfa4c61088d2129)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.9
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-95da20aeb60119e4)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-af33556e1a98abd2)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.12
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-14a06ff909dc8794)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.18
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-cd3c4a02b5a3da42)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.53
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-e5b280d85bd555f9)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.23
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-7e5a2a0d5a4737a1)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-99aebc0bd304baa7)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 22.57
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-51cd010b93db67cc)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.14
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-b8564ce28e9e6312)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-e7c953fa4b312cca)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.7
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-94a754855fadb673)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 7.96
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-4606662f43abab5c)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-f4212e59ccbadbc3)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.46
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-d2373dd644db9640)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.11
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-859af3070e61b87e)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.27
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "fbb114dd3a532b646e32afe3cec8e034e520de00284c55f4654709ab384d1a96"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-huffman-codebook",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "ba8e367644a51b282078cf1eb870fe1c3ce6c63e06b64e625eb2dcf11146ef9c"
+    },
+    {
+      "command": "cargo test --features unsafe-match-table",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-57c5aab8ac24d767)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 6.4
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-10a5b295fd0ff66c)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.9
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-04e48bd1f7d47ea0)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.17
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-1f4a772f2764a177)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.72
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-1c2696ef2b048c6d)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.2
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-cea21e0cd32c52ec)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.04
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-d87dc2b900d94019)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.98
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-e63d5ee091ce5358)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-06974ee1bbc6f971)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.15
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-d4f0a6bbbdb84e6b)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.5
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-62b3ef6be7f2ba10)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.91
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-ae035b6264d05478)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.24
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-c7f8032ec28304a9)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-9b75daf0d5ee9308)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 22.02
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-a56b01f68ab0be1b)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.15
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-e752eaeeb24a4db9)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-f85d56c901c03cf4)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.7
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-9aa54bdc1093f803)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 7.66
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-ba594c2b77c92763)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-c364b1b1251d68fc)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.47
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-0931059c1edc7d35)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.09
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-7843ec675491b9b7)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.27
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "e3a627bceb3a940acdaa201479cecf99e60c8b32083c1c66a1d5f9e4c34474f9"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-match-table",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "a3d0dfd410230c6c6c16dacc3691f93630c367b19c98634ed46abeb70529d941"
+    },
+    {
+      "command": "cargo test --features unsafe-match-chain",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-782668699f338181)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 8.59
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-3e1bd918c5b529ff)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.22
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-e86afe5a7c245265)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.17
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-7eee657001907954)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.73
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-c02678eb493e9f17)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.4
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-fb40f807b48a1d6f)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-5253666f5235ade8)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.9
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-1e5be2180d53bb83)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-87a7739adc8532b3)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.14
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-798d29504abe31f0)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.13
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-e232c6324fbb523b)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.06
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-6cd274adf0c76bae)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.24
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-0547a442408e345c)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-8a4049aadb5273f9)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 21.66
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-0c8471c684f1e630)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.16
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-443c83fc29812c02)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-efa5eb01647d3470)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.71
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-00305dde1d7156b6)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 8.37
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-615ca2ab877e7132)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-ba30907dd5992b44)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.65
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-c88d4996ea99b4e5)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.09
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-98e65a0c46847037)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.26
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "01bb4dd868ed751463305f682465f7d27ee74e1da6719e57924e188aae1b90d0"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-match-chain",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "8fb10a843668755410e7dbe8aa622384b70c15e88d76b5be99434f17f991bf40"
+    },
+    {
+      "command": "cargo test --features unsafe-dictionary",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-7f8c8b9d0fcc4633)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 6.38
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-cf582c1c59b61c14)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.89
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-5b5ce663260314a8)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.17
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-77407546d4d5bc79)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.73
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-1fe4cb4fdd93efe0)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.04
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-998aa604125538f3)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-739e790c075a8d4e)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.89
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-2c9f861372149a37)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-06c26ae97626f1ee)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.11
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-1598c2178b7ec271)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.14
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-b58896fb37c80d21)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.77
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-bbf56dcfbb6bd12b)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.24
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-9c022f7868790bdd)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.5
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-0fe32f67efc08cf5)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 19.12
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-641a2f5bd81dfbbd)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.13
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-d071066439ab7587)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-bc1456f71308ef6e)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.69
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-8b8727959f6e3288)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 6.38
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-0e602efbd8b3ed54)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-46ff387e71d6fd2c)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.47
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-0a6ce832eb779120)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.11
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-ef430b7586e72e2b)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.26
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "9ba6288f564753d4effe35b3ea5c09f0a30994fa8721cad562b464fe40ee1306"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-dictionary",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "747d3b67742a3398f54c2c27ace7f64f1c2e3097801b47cf763035fb16b81ee4"
+    },
+    {
+      "command": "cargo test --features unsafe-training",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-12a1d79c68cd87f0)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 7.97
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-8da6b2ff01df0344)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.97
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-bc19018cf3f12994)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.17
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-cb93849fda64277a)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.73
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-860f099ae9b6103e)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 2.07
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-7ba4643927b5a8d0)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.04
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-d23dec18462ce69b)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.89
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-72be865aed3c8898)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-9db6a186fd4ea5ca)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.13
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-7abc297fcbc499bd)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.1
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-e51d9d1c77d99dbd)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.75
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-87006a301375d690)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.25
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-bf887af58b2c0b81)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.47
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-115549066075d046)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 16.73
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-b821501e39e434fc)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.16
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-39ea149e91774328)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-7fc296f9c71b98a6)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.69
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-a22984093101d1c1)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 5.82
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-7824162f85f686c8)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-ce263f2404cd2f24)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-095e0a7e5db89366)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.1
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-d711c352c11f431d)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.24
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "0f85c6858a85308e5cf561ec9484eb6a02fe91ffc7ea6e98d7539023ad8ef45b"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-training",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "3fcadad19d9770089ebcaac5acc223cce5f3c1a00e0c5d4e23afab20c1587ce6"
+    },
+    {
+      "command": "cargo test --all-features",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/debug/deps/zstdoxide-46b909f82a242aea)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 6.27
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/debug/deps/compression_strategies-4c4f05d2e10e48e6)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.08
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/debug/deps/entropy_encoding-c91ad6988300a724)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.17
+        },
+        {
+          "binary": "Running tests/interop.rs (target/debug/deps/interop-efd9c3a610cf9d0e)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.53
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/debug/deps/malformed-e881eaac9b07b900)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.61
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/debug/deps/sequence_encoding-ebcc5c8f02c77211)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/debug/deps/upstream_decodecorpus-d626c63834b1867a)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.81
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/debug/deps/upstream_dictionary-e60efc17ad4df9ac)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/debug/deps/upstream_dictionary_encode-27880f59e9af79c6)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.11
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/debug/deps/upstream_dictionary_fuzz-a1ee35f1a996db9f)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 1.1
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/debug/deps/upstream_entropy_lifetimes-f5de8040145f081d)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.76
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/debug/deps/upstream_formatted_training-9cbf6724a0495416)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.24
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/debug/deps/upstream_fuzz_targets-ea09d8f21b72269a)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/debug/deps/upstream_fuzzer-a5c951d7aff134fc)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 18.29
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/debug/deps/upstream_golden-199076317fed812e)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.16
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/debug/deps/upstream_inline_regressions-08ecee88a97b7a47)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/debug/deps/upstream_regression_corpora-c42e2b8730aa4e69)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.68
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/debug/deps/upstream_streaming-bbb35a98f3bc0cfb)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 5.74
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/debug/deps/upstream_testcard-10a9509510cb4a0a)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/debug/deps/upstream_trained_dictionary_fuzz-559103a531eb8f6f)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.48
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/debug/deps/upstream_training-9e6eabdb67d04e94)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.1
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/debug/deps/upstream_window-71d7d3f5912220c3)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.25
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "0a92588087c2d108d21dfe54a1f84947ec883a55508ade9d85758c1253c71d56"
+    },
+    {
+      "command": "cargo test --release --all-features",
+      "test_binaries": [
+        {
+          "binary": "Running unittests src/lib.rs (target/release/deps/zstdoxide-3b3e58ace00e716a)",
+          "status": "ok",
+          "passed": 289,
+          "failed": 0,
+          "ignored": 19,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.2
+        },
+        {
+          "binary": "Running tests/compression_strategies.rs (target/release/deps/compression_strategies-40874f1f742ec65d)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.07
+        },
+        {
+          "binary": "Running tests/entropy_encoding.rs (target/release/deps/entropy_encoding-3d4026795813f049)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/interop.rs (target/release/deps/interop-53797daf9498678f)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.04
+        },
+        {
+          "binary": "Running tests/malformed.rs (target/release/deps/malformed-46335e6dbc857723)",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.11
+        },
+        {
+          "binary": "Running tests/sequence_encoding.rs (target/release/deps/sequence_encoding-896efc40a4f5142f)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_decodecorpus.rs (target/release/deps/upstream_decodecorpus-931bedfbf9b224f9)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.06
+        },
+        {
+          "binary": "Running tests/upstream_dictionary.rs (target/release/deps/upstream_dictionary-c671ee9a6be471ea)",
+          "status": "ok",
+          "passed": 40,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_encode.rs (target/release/deps/upstream_dictionary_encode-271badca28cb6e2e)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.07
+        },
+        {
+          "binary": "Running tests/upstream_dictionary_fuzz.rs (target/release/deps/upstream_dictionary_fuzz-517d905550eaca88)",
+          "status": "ok",
+          "passed": 8,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.06
+        },
+        {
+          "binary": "Running tests/upstream_entropy_lifetimes.rs (target/release/deps/upstream_entropy_lifetimes-fac9a6a93f66c4eb)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.08
+        },
+        {
+          "binary": "Running tests/upstream_formatted_training.rs (target/release/deps/upstream_formatted_training-d2f01d3f034bd1cd)",
+          "status": "ok",
+          "passed": 7,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_fuzz_targets.rs (target/release/deps/upstream_fuzz_targets-20fcee9a966ae42d)",
+          "status": "ok",
+          "passed": 12,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_fuzzer.rs (target/release/deps/upstream_fuzzer-b525750ac92aa40e)",
+          "status": "ok",
+          "passed": 24,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.87
+        },
+        {
+          "binary": "Running tests/upstream_golden.rs (target/release/deps/upstream_golden-bed9716f8a1fc19d)",
+          "status": "ok",
+          "passed": 20,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.02
+        },
+        {
+          "binary": "Running tests/upstream_inline_regressions.rs (target/release/deps/upstream_inline_regressions-3b820dfb55a66475)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_regression_corpora.rs (target/release/deps/upstream_regression_corpora-b24db52fef40adcb)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.05
+        },
+        {
+          "binary": "Running tests/upstream_streaming.rs (target/release/deps/upstream_streaming-eefe02fc9ab47be7)",
+          "status": "ok",
+          "passed": 39,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.43
+        },
+        {
+          "binary": "Running tests/upstream_testcard.rs (target/release/deps/upstream_testcard-899ee4f0c5e8da77)",
+          "status": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.0
+        },
+        {
+          "binary": "Running tests/upstream_trained_dictionary_fuzz.rs (target/release/deps/upstream_trained_dictionary_fuzz-c12f637cef460b45)",
+          "status": "ok",
+          "passed": 13,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Running tests/upstream_training.rs (target/release/deps/upstream_training-f90e39ecaa002012)",
+          "status": "ok",
+          "passed": 4,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        },
+        {
+          "binary": "Running tests/upstream_window.rs (target/release/deps/upstream_window-8ba6fafb9ba36879)",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.03
+        },
+        {
+          "binary": "Doc-tests zstdoxide",
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 534,
+      "failed": 0,
+      "ignored": 45,
+      "doc_tests_passed": 1,
+      "output_sha256": "89199ea5926d67cd4118bae0ad181a14d9b38044dc93cd7b217900f44ada5098"
+    },
+    {
+      "command": "cargo check --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "ffd8613fd57d29cd6d48fd052cbde83862c2fe1acc6e8c16dd62ed08d28dee8e"
+    },
+    {
+      "command": "cargo clippy --all-targets --all-features -- -D warnings",
+      "test_binaries": [],
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "6b1df0b9b6706615f772e4f2d7835a5ddb1f50dc8f48d89818363f518bf6688b"
+    },
+    {
+      "command": "rustdoc --edition 2024 --test docs/streaming-usage.md --extern zstdoxide=target/debug/libzstdoxide.rlib -L dependency=target/debug/deps",
+      "test_binaries": [
+        {
+          "binary": "rustdoc --edition 2024 --test docs/streaming-usage.md --extern zstdoxide=target/debug/libzstdoxide.rlib -L dependency=target/debug/deps",
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0,
+          "seconds": 0.01
+        }
+      ],
+      "exit_code": 0,
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "doc_tests_passed": 0,
+      "output_sha256": "bffebf19656ab4c759a75a213cea65869db6620b3b0572a6e675c7e1ff6e4c4d"
+    }
+  ],
+  "passed_test_cases_sum": 8010,
+  "test_count_semantics": "Counts are executed Rust test cases, not individual assertions. Repeated cases across configurations are counted once per execution. Ignored tests are not passes.",
+  "per_suite_expected": {
+    "unit_tests_passed": 289,
+    "integration_tests_passed": 244,
+    "crate_doctests_passed": 1,
+    "passed": 534,
+    "ignored": 45,
+    "test_binary_summaries": 23
+  },
+  "scope_limits": [
+    "This matrix runs ordinary tests. Explicitly ignored official-C oracle and external-corpus tests have separate evidence; unsupported ignored cases remain unsupported.",
+    "The matrix source/test/script/CI fingerprint was frozen before a planned CI-only correction from encode::tests::reverse_fields_preserve_zero_and_full_width_values to bitwriter::tests::reverse_fields_preserve_zero_and_full_width_values and the addition of current-family Miri selectors. These later CI edits and their separately recorded focused checks are outside this matrix; no corrected CI selector is claimed to have executed here.",
+    "Documentation-only files are excluded from the source/test fingerprint. Both compiled usage documents have separately verified identical before/after hashes.",
+    "Per-command output hashes use normalized lines rejoined with LF; log_sha256 hashes the complete raw log file."
+  ],
+  "command_exit_code_evidence": "The shell uses set -eu; a later traced command establishes successful completion of its predecessor. Both the complete shell process and the supplementary rustdoc process returned zero.",
+  "script_used_for_recording": {
+    "path": "/tmp/zstdoxide-module8-matrix.py",
+    "sha256": "fa5fd0477800f676fac81c44266742bc94b2fcc2d79284212b2d0c916be1e3d2"
+  }
+}

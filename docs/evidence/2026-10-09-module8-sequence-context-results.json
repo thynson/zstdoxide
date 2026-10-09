@@ -1,0 +1,116 @@
+[
+  {
+    "configuration": "safe",
+    "command": "cargo test --lib sequence_context::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-safe.log",
+    "sha256": "ac55a56876d12c79a377607ba1daa00d58318e8de1b921201e060789ee4cb426",
+    "summary": [
+      "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 245 filtered out; finished in 0.17s"
+    ]
+  },
+  {
+    "configuration": "all",
+    "command": "cargo test --lib --all-features sequence_context::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-all.log",
+    "sha256": "6527cf11bdc76678ed6f4c6b903b92d83bddbc8713c90d3cadc3c3119f9fe1be",
+    "summary": [
+      "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 245 filtered out; finished in 0.20s"
+    ]
+  },
+  {
+    "configuration": "no-std",
+    "command": "cargo test --lib --no-default-features sequence_context::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-no-std.log",
+    "sha256": "36b7b58e325bacad67d58bab538efb8facf99a7233c885dadf0a7f150e968f30",
+    "summary": [
+      "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 237 filtered out; finished in 0.19s"
+    ]
+  },
+  {
+    "configuration": "encoder",
+    "command": "cargo test --lib --features unsafe-fse-encoder sequence_context::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-encoder.log",
+    "sha256": "e7cabcbb87e371c4d3159d4b30648b864d0224f810bd602cd02dce42a11adffa",
+    "summary": [
+      "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 245 filtered out; finished in 0.20s"
+    ]
+  },
+  {
+    "configuration": "decoder",
+    "command": "cargo test --lib --features unsafe-fse sequence_context::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-decoder.log",
+    "sha256": "2af8db8b5bf3bfb31b0ecbf59da0bb6d8d7e2aaaebd282870d62faa23226fc04",
+    "summary": [
+      "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 245 filtered out; finished in 0.20s"
+    ]
+  },
+  {
+    "configuration": "writer",
+    "command": "cargo test --lib --features unsafe-bitstream sequence_context::tests",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-writer.log",
+    "sha256": "84a8d7e488167d3cb7b36e59659f9950e6c43340626485439a6c70c7d4bbd50d",
+    "summary": [
+      "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 245 filtered out; finished in 0.19s"
+    ]
+  },
+  {
+    "configuration": "oracle-safe",
+    "command": "cargo test --release --lib sequence_context::tests::official_codec_decodes_transactional_and_dictionary_frames -- --ignored --nocapture",
+    "environment": {
+      "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+    },
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-oracle-safe.log",
+    "sha256": "1f07bb19f057a08bbcb35bed841144b8a547ec438660f26e992d87dcc5b70fef",
+    "summary": [
+      "Official v1.5.7 decoded transactional 7-block frame: 876 output bytes",
+      "Official v1.5.7 decoded duplicate-repeat dictionary frame: 4 output bytes",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 254 filtered out; finished in 0.01s"
+    ]
+  },
+  {
+    "configuration": "oracle-all",
+    "command": "cargo test --release --lib --all-features sequence_context::tests::official_codec_decodes_transactional_and_dictionary_frames -- --ignored --nocapture",
+    "environment": {
+      "ZSTD_BIN": "/tmp/zstdoxize-upstream-1.5.7/programs/zstd"
+    },
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-oracle-all.log",
+    "sha256": "e2cf554cb03786a563ca91af572109f140167c17e16f28ab16d69057c09ec4dc",
+    "summary": [
+      "Official v1.5.7 decoded transactional 7-block frame: 876 output bytes",
+      "Official v1.5.7 decoded duplicate-repeat dictionary frame: 4 output bytes",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 254 filtered out; finished in 0.03s"
+    ]
+  },
+  {
+    "configuration": "clippy",
+    "command": "cargo clippy --lib --tests --all-features -- -D warnings",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-clippy.log",
+    "sha256": "02db5a66fa0c60ca8618bd08aac556eac4f3ec863e8630a0d353dba6a0f6e126",
+    "summary": []
+  },
+  {
+    "configuration": "format",
+    "command": "rustfmt --edition 2024 --check src/sequence_context.rs",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-sequence-context-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "summary": []
+  }
+]

@@ -1,0 +1,67 @@
+{
+  "workloads": 24,
+  "old_workloads_preserved": 15,
+  "new_accessors": 3,
+  "new_strategy_source_pairs": 6,
+  "metadata_fields": 131,
+  "metadata_fields_excluding_features": 130,
+  "row_schema": "Existing CHECK/RESULT fields unchanged; additive META only",
+  "configured_matrix": "safe +12 independent unsafe features +all features (14 builds)",
+  "focused_executed_matrix": [
+    "safe",
+    "all",
+    "unsafe-fse-encoder",
+    "unsafe-huffman-codebook",
+    "unsafe-match-chain"
+  ],
+  "workload_checks": "Full inverse FSE relation, exact canonical codewords, independently enumerated candidate coordinates, full public decoded byte equality, exact output equality after reset; real parser compares all rows and metadata across five builds.",
+  "safe_command": "ZSTDOXIDE_BENCH_SMOKE=1 cargo bench --bench backends",
+  "safe_exit_code": 0,
+  "safe_output": {
+    "path": "/tmp/zstdoxide-module8-bench-smoke-safe.tsv",
+    "sha256": "c4f9d1f4e13eb81eea9e63fa3231e53a2a73aaf0013a8d10c9f3be50e50e159b"
+  },
+  "other_smoke_results": {
+    "path": "/tmp/zstdoxide-module8-bench-smoke-results.json",
+    "sha256": "219c98999613c070a39a8786070a55d27d2b9f82d1852ebb66ea715c3584bc1f"
+  },
+  "parser_results": {
+    "path": "/tmp/zstdoxide-module8-bench-parser-results.json",
+    "sha256": "aa02a1c503bf7398f335588c3ed4cc8350f05f0898a2ce89c3964490cd11b52c"
+  },
+  "final_checks": [
+    {
+      "command": "cargo clippy --bench backends --all-features -- -D warnings",
+      "exit_code": 0
+    },
+    {
+      "command": "rustfmt --edition 2024 --config skip_children=true --check benches/backends.rs",
+      "exit_code": 0
+    },
+    {
+      "command": "bash -n scripts/benchmark.sh",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check -- benches/backends.rs scripts/benchmark.sh",
+      "exit_code": 0
+    }
+  ],
+  "earlier_clippy_failure": "Only live library HuffmanCodebook::table_log dead_code; root guarded accessor and final strict rerun passed.",
+  "files": [
+    {
+      "path": "benches/backends.rs",
+      "sha256": "76737904aaa24d50b835b758664435486e2231f52fbb14f5a4a59ae8aaa821e3"
+    },
+    {
+      "path": "scripts/benchmark.sh",
+      "sha256": "787f0a0702a4efd3b37fb065feac5b541dc49e3498bb826716e1f8f20bab5c4b"
+    }
+  ],
+  "limits": [
+    "No timing clocks were started in smoke runs. No final throughput measurements claimed.",
+    "Full fourteen-configuration benchmark script not run while other source edits were active; source fingerprint guard remains intact.",
+    "Sources and row counts preserve existing workloads, but this production codec now emits different bytes from historical Module7 snapshots.",
+    "No no_std benchmark target exists; backends requires std. No production files edited by this work item."
+  ]
+}

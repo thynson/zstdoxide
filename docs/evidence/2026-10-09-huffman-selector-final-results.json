@@ -1,0 +1,136 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--lib",
+      "upstream_huffman_round_trip_tests"
+    ],
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-huffman-selector-final-0.log",
+    "sha256": "228104238e299664df0dfc7e5bb4c78b7ae7c4b4f8a340b4084d6d9465740d42"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--all-features",
+      "--lib",
+      "upstream_huffman_round_trip_tests"
+    ],
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-huffman-selector-final-1.log",
+    "sha256": "04440fe1118a77c2fdbc801ba28e0a8b55103120bb6a6f442d8f9c2c0538dd4c"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--no-default-features",
+      "--lib",
+      "upstream_huffman_round_trip_tests"
+    ],
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-huffman-selector-final-2.log",
+    "sha256": "419c5493731ad5f86a37ddab0067e5afc111afccb47c5091a7979e4844a15c32"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--lib",
+      "upstream_huffman_round_trip_tests",
+      "--",
+      "--ignored",
+      "--nocapture"
+    ],
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-huffman-selector-final-3.log",
+    "sha256": "c3c8d56d5b0d847a1867c8c5dd47596822ae46e748f6206842816e98761da14d"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--all-features",
+      "--lib",
+      "upstream_huffman_round_trip_tests",
+      "--",
+      "--ignored",
+      "--nocapture"
+    ],
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-huffman-selector-final-4.log",
+    "sha256": "c5cdddc4864d37c6cfb3e8fc86796c2af53a897adadfe56284fe7de2ef53a842"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--lib",
+      "--tests",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "exit_code": 101,
+    "log": "/tmp/zstdoxide-huffman-selector-final-5.log",
+    "sha256": "7ee0b4f90de3d14a0ae28918af99dcc5c96df1d743fad4c91eb89e56cbcdd649"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--lib",
+      "--tests",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-huffman-selector-clean-0.log",
+    "sha256": "65c456cefbc65dedcf4e1c84e8a4579cf1555b45e6a3a7773257a7729b615581"
+  },
+  {
+    "command": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "tests/upstream/huffman_round_trip.rs"
+    ],
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-huffman-selector-clean-1.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "log": "/tmp/zstdoxide-huffman-selector-clean-2.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

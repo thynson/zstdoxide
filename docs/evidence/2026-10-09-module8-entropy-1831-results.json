@@ -1,0 +1,126 @@
+[
+  {
+    "configuration": "safe",
+    "command": "cargo test --test upstream_entropy_lifetimes",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-safe.log",
+    "sha256": "a82432ea440aae75dd6cdf52bb1d851f36cc9475278813cf4249618cca1d2c5f",
+    "summary": [
+      "test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.75s"
+    ]
+  },
+  {
+    "configuration": "all",
+    "command": "cargo test --test upstream_entropy_lifetimes --all-features",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-all.log",
+    "sha256": "9b41b5a61ac34caa13e232bcecc1a52e9c2200c5d699fe2d0322cd7fcb07da2f",
+    "summary": [
+      "test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.77s"
+    ]
+  },
+  {
+    "configuration": "no-std",
+    "command": "cargo test --test upstream_entropy_lifetimes --no-default-features",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-no-std.log",
+    "sha256": "094b244a72e033265b8aee80537ea12d6a09e4dbe93644b64517a8c0167b6f83",
+    "summary": [
+      "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.77s"
+    ]
+  },
+  {
+    "configuration": "chain",
+    "command": "cargo test --test upstream_entropy_lifetimes --features unsafe-match-chain",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-chain.log",
+    "sha256": "458c9b6ddbe727253de7a11b4f89b63fd8c3826144e2b4bcf89f307da74ecc91",
+    "summary": [
+      "test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.79s"
+    ]
+  },
+  {
+    "configuration": "dictionary",
+    "command": "cargo test --test upstream_entropy_lifetimes --features unsafe-dictionary",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-dictionary.log",
+    "sha256": "7c0b7ebb8db64e8f1d8f25b644538917ddd2a989441341a0b61107ab30c4e110",
+    "summary": [
+      "test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.82s"
+    ]
+  },
+  {
+    "configuration": "encoder",
+    "command": "cargo test --test upstream_entropy_lifetimes --features unsafe-fse-encoder",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-encoder.log",
+    "sha256": "29e718d4d156bfce3f322168abad2a4c3808638605a56113c37e33b54cc52720",
+    "summary": [
+      "test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.78s"
+    ]
+  },
+  {
+    "configuration": "oracle-safe",
+    "command": "cargo test --release --test upstream_entropy_lifetimes -- --ignored --nocapture",
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-oracle-safe.log",
+    "sha256": "ff1f7dc9173c55c7c3e2aa806c17e8f5c70e21149cb6d015591af149de5ca26f",
+    "summary": [
+      "zstreamtest:1831 small seed=437141494 Greedy: 230127 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 small seed=437141494 Chain: 230183 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 small seed=437141494 Lazy: 230182 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 big seed=3173672436 Greedy: 232940 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 big seed=3173672436 Chain: 233053 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 big seed=3173672436 Lazy: 233049 encoded bytes, 262144 exact output bytes",
+      "Original C :1831 baseline: 2 frames; C decoded 8 Rust frames / 2097152 bytes; exact dictionary and both RDG schedules regenerated",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.85s"
+    ]
+  },
+  {
+    "configuration": "oracle-all",
+    "command": "cargo test --release --test upstream_entropy_lifetimes --all-features -- --ignored --nocapture",
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-oracle-all.log",
+    "sha256": "26be9581d77c081dd536ef6afba084e527180e58c86d617000f05e33886b94ce",
+    "summary": [
+      "zstreamtest:1831 small seed=437141494 Greedy: 230127 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 small seed=437141494 Chain: 230183 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 small seed=437141494 Lazy: 230182 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 big seed=3173672436 Greedy: 232940 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 big seed=3173672436 Chain: 233053 encoded bytes, 262144 exact output bytes",
+      "zstreamtest:1831 big seed=3173672436 Lazy: 233049 encoded bytes, 262144 exact output bytes",
+      "Original C :1831 baseline: 2 frames; C decoded 8 Rust frames / 2097152 bytes; exact dictionary and both RDG schedules regenerated",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.63s"
+    ]
+  },
+  {
+    "configuration": "clippy",
+    "command": "cargo clippy --lib --tests --all-features -- -D warnings",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-clippy.log",
+    "sha256": "ec58ccb89b92d0625345ab0bb595cfc6bb8040d976e20fe055e1b703cea2e452",
+    "summary": []
+  },
+  {
+    "configuration": "format",
+    "command": "rustfmt --edition 2024 --check tests/upstream_entropy_lifetimes.rs",
+    "environment": {},
+    "status": 0,
+    "log": "/tmp/zstdoxide-module8-entropy-1831-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "summary": []
+  }
+]

@@ -1,0 +1,107 @@
+{
+  "checkpoint_records": [
+    {
+      "file": "docs/evidence/2026-10-09-module8-huffman-checkpoints.json",
+      "sha256": "b7b1ac6a146b4c5924363ba14781feb6e8f43206a2034e2545effcc0c6cfc010",
+      "source_record": "/tmp/zstdoxide-module8-huffman-checkpoints.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-entropy-output-results.json",
+      "sha256": "e2cc291a89d3b9cc57cc4f37b9a5ea1eb15962144530b5c7b0fad5cf1d947cba",
+      "source_record": "/tmp/zstdoxide-entropy-output-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-huffman-selector-final-results.json",
+      "sha256": "b8608cc7e43b91aa36e3a0118d549e6d8e045cfcc843bd1a8f0c6d0b02c96924",
+      "source_record": "/tmp/zstdoxide-huffman-selector-final-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-module8-entropy-1831-results.json",
+      "sha256": "63cfa603462f680c6858c0535e317f93a653a128d1a50944fbda22c0ab4b52e3",
+      "source_record": "/tmp/zstdoxide-module8-entropy-1831-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-module8-entropy-1884-results.json",
+      "sha256": "8b51f6ac7a7bb26b3fb24d4676d9eebbb41edbefaa96f30ad4c2de6e1053120d",
+      "source_record": "/tmp/zstdoxide-module8-entropy-1884-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-sequence-generator-results.json",
+      "sha256": "0ff909975f05bbd2710ca9fba50673bccb46a162cf1911fc975ace14f6e7d138",
+      "source_record": "/tmp/zstdoxide-sequence-generator-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-module8-fse-accessor-results.json",
+      "sha256": "9c352edd0de17f6db5d7cc7569b9ca1d3005ae6d4bbd600c3d7005c8aa6ce7d5",
+      "source_record": "/tmp/zstdoxide-module8-fse-accessor-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-module8-sequence-results.json",
+      "sha256": "52b95ee92ee3a9e21edbfef93cd45a7541e9a790638ebfa83f918ef0f566636e",
+      "source_record": "/tmp/zstdoxide-module8-sequence-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-module8-fse-select-results.json",
+      "sha256": "be1d976e31d9a15904ff2fc5732441fbe8b67b2de644e8e8cd4bdec89c94bf4b",
+      "source_record": "/tmp/zstdoxide-module8-fse-select-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-module8-sequence-context-results.json",
+      "sha256": "96469e61dfc50a1d70eababde3b02ac41e289b381158b7c11a82faec5e3f855d",
+      "source_record": "/tmp/zstdoxide-module8-sequence-context-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-module8-public-sequence-results.json",
+      "sha256": "dc62ad273c4f717cc33e927e30a285f126e3cdb2d17eddec065c5fc5d60cc5cf",
+      "source_record": "/tmp/zstdoxide-module8-public-sequence-results.json"
+    },
+    {
+      "file": "docs/evidence/2026-10-09-module8-benchmark-harness-results.json",
+      "sha256": "d4e6c1dbd0e95512b09dc8d9348c9a437e0303b3c051dd0c0edf946e69d561d9",
+      "source_record": "/tmp/zstdoxide-module8-benchmark-harness-results.json"
+    }
+  ],
+  "miri_logs": [
+    {
+      "log": "/tmp/zstdoxide-module8-fse-accessor-miri.log",
+      "sha256": "b05ffe8c7fe21ba000c668ce9f9e0d6966a63fd93dc299362766128d474bc67b",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 182 filtered out; finished in 0.34s"
+      ],
+      "transcript": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s\n     Running unittests src/lib.rs (target/miri/aarch64-apple-darwin/debug/build/zstdoxide/8f8d4da1e9a884fe/out/zstdoxide-8f8d4da1e9a884fe)\n\nrunning 1 test\ntest fse_encode::tests::lookup_bounds_reject_extreme_indices_without_reading_absent_rows ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 182 filtered out; finished in 0.34s\n\n"
+    },
+    {
+      "log": "/tmp/zstdoxide-module8-miri-bitwriter.log",
+      "sha256": "d7f4a6372d19d005edf8df84df418276f061862e3e7207c07c2cb6ae2e9edcd6",
+      "result_lines": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 159 filtered out; finished in 3.64s"
+      ],
+      "transcript": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s\n     Running unittests src/lib.rs (target/miri/aarch64-apple-darwin/debug/build/zstdoxide/fef6400ba457c7d7/out/zstdoxide-fef6400ba457c7d7)\n\nrunning 3 tests\ntest bitwriter::tests::closing_is_single_use_and_reset_reuses_storage ... ok\ntest bitwriter::tests::every_reservoir_alignment_matches_an_independent_bit_vector ... ok\ntest bitwriter::tests::reverse_fields_preserve_zero_and_full_width_values ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 159 filtered out; finished in 3.64s\n\n"
+    },
+    {
+      "log": "/tmp/zstdoxide-module8-miri-chain-accessors.log",
+      "sha256": "cbf890b20f6749fe473e9e8ca9741c776a76e9e671063ffcc37a812a641ac79a",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 299 filtered out; finished in 10.33s"
+      ],
+      "transcript": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (target/miri/aarch64-apple-darwin/debug/build/zstdoxide/76009d8ede611af0/out/zstdoxide-76009d8ede611af0)\n\nrunning 1 test\ntest matchchain::tests::checked_accessors_cover_extreme_indices_and_reject_invalid_writes ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 299 filtered out; finished in 10.33s\n\n"
+    },
+    {
+      "log": "/tmp/zstdoxide-module8-miri-chain-reuse.log",
+      "sha256": "7fdbb2e1ed9c5a8378cd7ce0e655eded8ec18a21a63550c69f517a01420a2b8b",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 299 filtered out; finished in 20.52s"
+      ],
+      "transcript": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (target/miri/aarch64-apple-darwin/debug/build/zstdoxide/76009d8ede611af0/out/zstdoxide-76009d8ede611af0)\n\nrunning 1 test\ntest matchchain::tests::cyclic_slot_reuse_rejects_stale_heads_and_older_links ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 299 filtered out; finished in 20.52s\n\n"
+    },
+    {
+      "log": "/tmp/zstdoxide-module8-miri-lazy-coordinates.log",
+      "sha256": "c6f687dd96ab0d2735a0fcc9deaa5f06101e55d46e191bcafb4a96664252e828",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 299 filtered out; finished in 10.43s"
+      ],
+      "transcript": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running unittests src/lib.rs (target/miri/aarch64-apple-darwin/debug/build/zstdoxide/76009d8ede611af0/out/zstdoxide-76009d8ede611af0)\n\nrunning 1 test\ntest match_parse::tests::lazy_delayed_overlap_inserts_every_start_once_at_full_width_coordinates ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 299 filtered out; finished in 10.43s\n\n"
+    }
+  ],
+  "limits": "Checkpoint records refer to their original source snapshots; historical absent logs remain null. Final full-matrix evidence is recorded separately."
+}

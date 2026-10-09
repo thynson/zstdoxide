@@ -1,0 +1,384 @@
+[
+  {
+    "name": "default",
+    "command": [
+      "cargo",
+      "test",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.474,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-default.log",
+    "sha256": "a8e5a9bae5212937ebf1790fb2b73877d1ba0c3d6c6c3cdfede8a5619136a052"
+  },
+  {
+    "name": "all",
+    "command": [
+      "cargo",
+      "test",
+      "--all-features",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.351,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-all.log",
+    "sha256": "2b9bf6ef1b672edb00faa97a8b4a69029f1ec44e7ec88ed3f58b68b8a957c5fb"
+  },
+  {
+    "name": "no-default",
+    "command": [
+      "cargo",
+      "test",
+      "--no-default-features",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.194,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-no-default.log",
+    "sha256": "97fe49816b14c60ec0ba8957a8ce7d2f0ef3f3bb0529b9f34fe19bd6159b16cd"
+  },
+  {
+    "name": "unsafe-byte-cursor",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-byte-cursor",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.293,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-byte-cursor.log",
+    "sha256": "230daf4255980a222ef5c39e98cfba4851f295e30e424a89a8bd562bd0a56b54"
+  },
+  {
+    "name": "unsafe-bitstream",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-bitstream",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 1.944,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-bitstream.log",
+    "sha256": "9dd6f1211f7414c2746ba274caff2dcd056e19a15202e443af31b9f9684b7ea9"
+  },
+  {
+    "name": "unsafe-history",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-history",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.388,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-history.log",
+    "sha256": "8a6d6c58011d378d83de7011bd99008b09a0adfe366cc6b3dd65cfd5bb0c9f00"
+  },
+  {
+    "name": "unsafe-ring-history",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-ring-history",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.27,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-ring-history.log",
+    "sha256": "06834d1ef259a67010412016484d1ba74beec204f4462df05dc2316d9dc2ca8b"
+  },
+  {
+    "name": "unsafe-fse",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-fse",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 1.96,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-fse.log",
+    "sha256": "c1094fb1a68929f60130e7b9cdf8c63f8f058511c4d4ebf5b94c5901212f4a71"
+  },
+  {
+    "name": "unsafe-fse-encoder",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-fse-encoder",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 1.903,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-fse-encoder.log",
+    "sha256": "fbe581d937e4ad6d2f8325b8fc0e982233f8214c02be2ec52a385ec0f637e561"
+  },
+  {
+    "name": "unsafe-huffman",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-huffman",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.225,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-huffman.log",
+    "sha256": "e627fc785447e181c02a386419246da9961f12bb42f068edda60330ce5d683ba"
+  },
+  {
+    "name": "unsafe-huffman-codebook",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-huffman-codebook",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.195,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-huffman-codebook.log",
+    "sha256": "a3879fccbffa8ef1781e08465686e5139a2c05ffa1a775058fedf67d65701c28"
+  },
+  {
+    "name": "unsafe-match-table",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-match-table",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.184,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-match-table.log",
+    "sha256": "7ceaf658fdf4b52c3c63f410b00aac97ecfebdf53d462a9f70c95c52dcd3d738"
+  },
+  {
+    "name": "unsafe-match-chain",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-match-chain",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 1.962,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-match-chain.log",
+    "sha256": "c440b799580e0ea5dbb324b4edf5b2209adbcb223a5e17f2cd0c791c2ddc1e81"
+  },
+  {
+    "name": "unsafe-dictionary",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-dictionary",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 1.951,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-dictionary.log",
+    "sha256": "c9a29be94b2202457ca6e7335aaece04598af25be2441665c7a7eabbfc9bde4b"
+  },
+  {
+    "name": "unsafe-training",
+    "command": [
+      "cargo",
+      "test",
+      "--features",
+      "unsafe-training",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "original_dictionary_ranges_after_43691_six_byte_flushes",
+      "--",
+      "--nocapture"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 2.296,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-unsafe-training.log",
+    "sha256": "895b44bbcd4a619bb25af18ff21f9cb17187255968bd4c3cdde627645637423b"
+  },
+  {
+    "name": "oracle-default",
+    "command": [
+      "cargo",
+      "test",
+      "--release",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "--",
+      "--ignored",
+      "--nocapture"
+    ],
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 1.464,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-oracle-default.log",
+    "sha256": "ce515c6714e079bcc06491655a9b8b8613219a555830f298d9b17b65f88c2467"
+  },
+  {
+    "name": "oracle-all",
+    "command": [
+      "cargo",
+      "test",
+      "--release",
+      "--all-features",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "--",
+      "--ignored",
+      "--nocapture"
+    ],
+    "environment": {
+      "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7"
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 2.098,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-oracle-all.log",
+    "sha256": "12b95c005b722cb4e27fcd6332141ef6e260b542952cbf1ac15509fc6d343d51"
+  },
+  {
+    "name": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--all-features",
+      "--lib",
+      "--tests",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "environment": {},
+    "exit_code": 101,
+    "elapsed_seconds": 1.268,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-clippy.log",
+    "sha256": "ad092d5daa5104d54f7c3dd20e007236f5c1de1f37dcb2cf1d414fdf35626cde"
+  },
+  {
+    "name": "clippy-target",
+    "command": [
+      "cargo",
+      "clippy",
+      "--all-features",
+      "--test",
+      "upstream_entropy_lifetimes",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 0.112,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-clippy-target.log",
+    "sha256": "6d77f64dfc8c5325b90fdbe05d8be367bdd578bcccec24f275c5ffee7d03dd6e"
+  },
+  {
+    "name": "format",
+    "command": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "tests/upstream_entropy_lifetimes.rs"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 0.037,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "fixtures",
+    "command": [
+      "python3",
+      "scripts/check_upstream_fixtures.py"
+    ],
+    "environment": {},
+    "exit_code": 0,
+    "elapsed_seconds": 0.453,
+    "log": "/tmp/zstdoxide-module8-entropy-1884-fixtures.log",
+    "sha256": "a70dfddf2879381e490b35b0fb092a09013162420933bcc87e9c72637e64a736"
+  }
+]

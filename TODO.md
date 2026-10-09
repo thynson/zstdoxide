@@ -77,7 +77,7 @@ Design and source counterparts: `docs/entropy-encoder-design.md` and
 - [x] Include all new entropy and strategy oracle entry points in the reproducible validation script.
 - [x] Run the backend/strategy benchmark matrix and preserve comparable output fingerprints and memory measurements.
 - [x] Refresh CI Miri selectors after module extraction and cover the three new unsafe families.
-- [ ] Run final feature, no_std, Miri, interoperability, and migration checks; record remaining upstream gaps.
+- [x] Run final feature, no_std, Miri, interoperability, and migration checks; record remaining upstream gaps.
 
 ## Roadmap
 

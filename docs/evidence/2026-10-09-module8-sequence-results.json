@@ -1,0 +1,56 @@
+[
+  {
+    "configuration": "all",
+    "log": "/tmp/zstdoxide-module8-sequence-all.log",
+    "sha256": "4e88b7a41aeb67bcfda8589fc0361390ecd8d9831cda650b0d063a34ebd591e4",
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 196 filtered out; finished in 0.01s"
+    ]
+  },
+  {
+    "configuration": "no-std",
+    "log": "/tmp/zstdoxide-module8-sequence-no-std.log",
+    "sha256": "6066fc80c25c88e2f95c87b6e7c23330822491f0c2c82f6480bf10583a216e69",
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 192 filtered out; finished in 0.02s"
+    ]
+  },
+  {
+    "configuration": "oracle-safe",
+    "log": "/tmp/zstdoxide-module8-sequence-oracle-safe.log",
+    "sha256": "00ea1217bb9e9441c7c73fedbf87c2ed7920e683a93cfe6c3981da99be168034",
+    "summary": [
+      "Official v1.5.7 decoded 27 frames /54 supplied-table and repeat sections",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 203 filtered out; finished in 0.08s"
+    ]
+  },
+  {
+    "configuration": "oracle-all",
+    "log": "/tmp/zstdoxide-module8-sequence-oracle-all.log",
+    "sha256": "708a138adacfe7075826e8d88600390eb6784a7ae35fa45dbad0fca147eac817",
+    "summary": [
+      "Official v1.5.7 decoded 27 frames /54 supplied-table and repeat sections",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 203 filtered out; finished in 0.10s"
+    ]
+  },
+  {
+    "configuration": "clippy",
+    "log": "/tmp/zstdoxide-module8-sequence-clippy.log",
+    "sha256": "9020b0db96cab826d8c03feefbcdd824506c29f4d72995dfad7d2345913c9875",
+    "summary": []
+  },
+  {
+    "configuration": "fse-max-symbol",
+    "log": "/tmp/zstdoxide-module8-sequence-fse-max-symbol.log",
+    "sha256": "79ebca6a9be472379f8cf3ab9da94286e44feb7473165bfeb012293d470975f3",
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 198 filtered out; finished in 0.23s"
+    ]
+  },
+  {
+    "configuration": "format",
+    "log": "/tmp/zstdoxide-module8-sequence-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "summary": []
+  }
+]

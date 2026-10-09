@@ -1,0 +1,164 @@
+{
+  "command": [
+    "sh",
+    "-x",
+    "scripts/check_upstream_oracles.sh"
+  ],
+  "environment": {
+    "ZSTD_UPSTREAM": "/tmp/zstdoxize-upstream-1.5.7",
+    "ZSTD_MT_LIBRARY": "/tmp/zstdoxide-upstream-mt/static/libzstd.a",
+    "CARGO_TARGET_DIR": "/Users/lanxingcan/Workspace/zstdoxize/target/module8-oracles"
+  },
+  "exit_code": 0,
+  "elapsed_seconds": 413.15982358297333,
+  "log": "/tmp/zstdoxide-module8-oracles.log",
+  "sha256": "142870900cef55071c907cf5d85e74997e2fb7b018aaf0b27b949813e70c3c87",
+  "tests": [
+    {
+      "command": "cargo test --release --all-features --test interop -- --ignored",
+      "result_lines": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.65s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_golden -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_decodecorpus -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 2.50s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_fuzzer intensive_fuzzer_one_shot_cycles -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 24 filtered out; finished in 344.54s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_streaming official_codec_accepts_streamed_frames_and_stream_decoder_accepts_official_frames -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 40 filtered out; finished in 1.55s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_window -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 1.54s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_dictionary_encode -- --ignored",
+      "result_lines": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 24 filtered out; finished in 0.19s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_training -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.13s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_formatted_training -- --ignored",
+      "result_lines": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 1.95s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib official_fse_and_huffman_readers_accept_generated_headers -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 1.57s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_trained_dictionary_fuzz official_training_sample_loop_matches_every_selected_range -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.81s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib upstream_huffman_encode_tests -- --ignored",
+      "result_lines": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 303 filtered out; finished in 0.96s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib entropy_output::tests::oracle -- --ignored",
+      "result_lines": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 306 filtered out; finished in 1.11s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib upstream_huffman_round_trip_tests::oracle::official_c_producer_matches_huffman_parameters_for_both_bmi_layouts -- --ignored --exact",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 0.59s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib upstream_huffman_round_trip_tests::oracle::official_c_depth_selection_matches_adjustment_and_cheap_policy -- --ignored --exact",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 0.76s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib upstream_sequence_generator_tests::oracle -- --ignored",
+      "result_lines": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 306 filtered out; finished in 1.24s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib upstream_sequence_sweep_tests::oracle -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 1.22s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib sequence_encode::tests::official_codec_decodes_every_supplied_table_mode_and_repeat_combination -- --ignored --exact",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 0.12s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib fse_select::tests::official_codec_decodes_automatically_selected_channel_tables -- --ignored --exact",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --lib sequence_context::tests::official_codec_decodes_transactional_and_dictionary_frames -- --ignored --exact",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 307 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test entropy_encoding -- --ignored",
+      "result_lines": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.70s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test sequence_encoding -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.42s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test compression_strategies -- --ignored",
+      "result_lines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.35s"
+      ]
+    },
+    {
+      "command": "cargo test --release --all-features --test upstream_entropy_lifetimes -- --ignored",
+      "result_lines": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.88s"
+      ]
+    }
+  ],
+  "total_passed": 35,
+  "source_revision": "9b35630ce6ad6e0624fababc730bbf798d6e1ffe"
+}
