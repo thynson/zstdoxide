@@ -41,6 +41,7 @@ mod cursor;
 mod decode;
 mod dictionary;
 mod dictionary_train;
+mod double_fast_block;
 mod double_fast_plan;
 mod encode;
 mod entropy_encode;

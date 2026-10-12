@@ -49,7 +49,9 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Freeze the wider direct-parser observations, both full table maps, provenance and offline rejection controls before Rust parsing.
 - [x] Add the private checked eight-byte long-key layout while preserving current Fast and named layout domains.
 - [x] Add the allocation-free DoubleFast plan, independent table/window caps, target layouts and actual source-tier admission checks.
-- [ ] Add checked borrowed block/cursor records and two-table owner construction with exact-owner failure/reset coverage.
+- [x] Add checked borrowed DoubleFast block/cursor records with exact search-tail transitions and separate ordinary/repeat floors.
+- [ ] Construct independent long/short table owners with exact-owner allocation-failure, move and reset coverage.
+- [ ] Add a dependency-free checked Rust adapter for the frozen direct-parser inputs, sequences and both table maps.
 - [ ] Implement safe single-block DoubleFast parsing against frozen sequences, literals, repeat intents and both complete table observations.
 - [ ] Capture ordinary DoubleFast frame publication trajectories; keep collector corroboration and constructed direct states separately qualified.
 - [ ] Add a dependency-free checked Rust adapter for frozen ordinary trajectories and complete C frames.

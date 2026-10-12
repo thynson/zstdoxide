@@ -600,8 +600,9 @@ roles introduce no unsafe backend beyond their individually gated children.
 
 The [reviewed design](reference-double-fast-design.md) pins the exact upstream
 loop and resource scope. The private long-key descriptor and allocation-free
-DoubleFastExecutionPlan are implemented and verified; other records below remain
-planned. No public DoubleFast encoding path is implemented by this foundation.
+DoubleFastExecutionPlan and borrowed block/cursor records are implemented and
+verified; other records below remain planned. No public DoubleFast encoding path
+is implemented by this foundation.
 
 | Structure | Ownership and invariants | Reference counterpart / unsafe representation |
 | --- | --- | --- |
@@ -609,6 +610,7 @@ planned. No public DoubleFast encoding path is implemented by this foundation.
 | `DoubleFastBlock<'a>` | Borrows one immutable complete source with checked block range and retained prefix floor. All candidate/current/next positions are indices. | No-dictionary parser source/base/end/prefix pointers; no pointer-backed alternate required. |
 | Long `MatchTable<A>` | Owns initialized usize cells indexed by eight-byte hashes at log6..18. EMPTY remains distinct from valid source index zero. Validate layout and initialized access before reads/writes. | `hashTable`, sized by hashLog; existing safe and `unsafe-match-table` implementations. |
 | Short `MatchTable<A>` | A separate complete owner of initialized usize cells, log6..18 and key width max(4,minMatch). It contains positions, not linked predecessors. | `chainTable` in DoubleFast, sized by chainLog; same existing independently gated table type. |
+| `DoubleFastTables<L,S>` | Planned composite of the two complete MatchTable owners, accepting independently owned allocator values without requiring Clone or allocator equivalence. Validate both layouts before either allocation; failed second construction drops the first through its exact owner. Reset both initialized tables without allocation. | The two noDict arrays and their workspace lifetime; composite introduces no unchecked access, and both leaves use the existing unsafe-match-table feature. |
 | Parser cursor/result | Plain checked positions, cached buckets/candidates, step/threshold, two saved repeats, trailing-literal count and separate raw-parser/full-wire triples. | Local no-dictionary DoubleFast state; shared safe values. |
 | `DoubleFastMatchState<'a,A>` | Moves both complete table owners plus separately allocated literal and intent-bearing sequence vectors; borrows source and tracks parsed position/floor/failure. Reset tables once per source. | Match state plus sequence store, with explicit Rust ownership; composite needs no new unsafe flag. |
 | Shared reference frame settings | Plain known content size, selected window/log and block limit, validated before header/output-bound calculation. | Reference standard frame metadata; safe fixed initialized header bytes. |
@@ -644,3 +646,15 @@ all other allocations. DoubleFast's 2-MiB history cap does not widen Fast's
 existing 1-MiB cap. A pair of existing table owners adds no new unsafe operation;
 any future packed/pointer representation would require its own reviewed safety
 contract, backend and feature instead of relying on this composite rationale.
+
+The borrowed block's ordinary floor is max(retained floor, block end-window).
+Its entry position skips one byte only when block start equals that floor;
+repeat availability instead uses max(retained floor, entry position-window).
+Those are separate checked scalar facts, not one interchangeable lower bound.
+A copied search cursor retains current/next positions, positive step, next
+256-byte growth threshold and the last complete eight-byte key start. It is
+created only when both current and next keys fit the logical block end. Advancing
+computes checked scalar positions and returns no cursor when the next pair no
+longer fits; thresholds are never used as source addresses. Key extraction must
+stop at the block end even if the borrowed source contains later blocks.
+These shared safe records neither allocate nor form unchecked pointers.

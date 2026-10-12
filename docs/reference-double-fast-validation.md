@@ -146,3 +146,24 @@ collections. Complete provenance, command failures policy, native metadata,
 sanitizer limits and the distinction between final tables and chronological
 tracing are retained in the report/evidence. The Rust block/owner foundation,
 direct-parser implementation and ordinary-frame publication remain open.
+
+## Borrowed block and search cursor
+
+The allocation-free `DoubleFastBlock` checks the complete source range, retained
+prefix, independent table roles, block cap and window10..21. Reads end at the
+logical block end even if the borrowed source contains later blocks. Ordinary
+candidate and entry repeat floors remain separate. `DoubleFastCursor` uses
+checked integer thresholds and exposes only pairs with complete eight-byte
+keys. Frozen seven-through-ten-byte entry behavior, step3/step4 coordinates and
+the zero-match long-literal candidate's last sampled coordinate all agree.
+
+Four focused tests pass under safe, table-feature, all-feature, no_std safe and
+no_std all-feature configurations:20 executions. The unchanged Fast/named
+baseline suites contribute22 more. Strict all-target Clippy safe/all, no_std
+compilation safe/all and formatting pass; all13 final commands succeed. An
+initial Clippy rejection of intentionally reversed range syntax in a negative
+test was fixed using explicit Range fields; the original failure and final
+logs are retained in the [evidence](evidence/2026-10-12-double-fast-block.json)
+and [archive](evidence/2026-10-12-double-fast-block.tar.gz). These shared scalar
+records introduce no unsafe operation. This checkpoint does not implement
+matching, ordinary frame publication or public DoubleFast admission.
