@@ -5,12 +5,12 @@ use alloc::vec::Vec;
 use core::alloc::Allocator;
 
 use crate::block_entropy::BlockEntropyEncoder;
-use crate::fast_frame::FastFrameHeader;
 use crate::fast_plan::FastExecutionPlan;
 use crate::fast_state::FastMatchState;
 use crate::frame::{BlockKind, MAX_BLOCK_SIZE};
 use crate::literal_encode::LiteralEncoder;
 use crate::matchfinder::MatchTable;
+use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
 use crate::sequence_context::SequenceEncoder;
 use crate::{CompressionParameterRequest, Error, Result};
 
@@ -26,12 +26,13 @@ pub(crate) fn compress_fast_in<A: Allocator + Clone>(
     allocator: A,
 ) -> Result<Vec<u8, A>> {
     let plan = FastExecutionPlan::new(request, input.len())?;
-    let bound = FastFrameHeader::raw_frame_bound(&plan)?;
+    let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
+    let bound = ReferenceFrameHeader::raw_frame_bound(&settings)?;
     let mut output = Vec::new_in(allocator);
     output
         .try_reserve_exact(bound)
         .map_err(|_| Error::AllocationFailed)?;
-    for &byte in FastFrameHeader::new(&plan).as_bytes() {
+    for &byte in ReferenceFrameHeader::new(&settings).as_bytes() {
         output.push(byte);
     }
     if input.is_empty() {
@@ -266,7 +267,9 @@ mod tests {
         allocator: A,
     ) -> (FastEncoderWorkspace<'a, A>, Vec<u8>) {
         let plan = FastExecutionPlan::new(request, input.len()).unwrap();
-        let frame = FastFrameHeader::new(&plan).as_bytes().to_vec();
+        let settings =
+            ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log()).unwrap();
+        let frame = ReferenceFrameHeader::new(&settings).as_bytes().to_vec();
         (
             FastEncoderWorkspace::new(input, plan, allocator).unwrap(),
             frame,

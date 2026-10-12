@@ -58,7 +58,7 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Freeze normal and sanitizer ordinary-frame publication trajectories and complete frames, retaining failed hypotheses and rejection controls; keep optional collector corroboration separate.
 - [x] Add a dependency-free checked Rust adapter for frozen ordinary trajectories and complete C frames.
 - [x] Retain both sampled tables across blocks with separate parsed/emitted state, committed repeats and poison semantics.
-- [ ] Extract common plain frame settings and truthful header/bound writing while preserving Fast/named output and allocator behavior.
+- [x] Extract common plain frame settings and truthful header/bound writing while preserving Fast/named output and allocator behavior.
 - [ ] Extract the shared explicit entropy/gain policy while retaining Fast-only raw-literal acceleration and existing allocation order.
 - [ ] Add small static search/emission dispatch without allocating inactive algorithm state or duplicating committed entropy.
 - [ ] Emit complete DoubleFast frames with window-log-21 metadata, raw/RLE fallback, transactional publication and every observed allocation-failure ordinal.

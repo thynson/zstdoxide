@@ -602,8 +602,8 @@ The [reviewed design](reference-double-fast-design.md) pins the exact upstream
 loop and resource scope. The private long-key descriptor and allocation-free
 DoubleFastExecutionPlan, borrowed block/cursor records and independent table pair
 and single-block parser and persistent search state are implemented and verified;
-shared framing and emission records below remain planned. No public DoubleFast
-encoding path is implemented yet.
+shared plain framing is also implemented. Entropy integration and emission
+remain planned. No public DoubleFast encoding path is implemented yet.
 
 | Structure | Ownership and invariants | Reference counterpart / unsafe representation |
 | --- | --- | --- |
@@ -614,7 +614,7 @@ encoding path is implemented yet.
 | `DoubleFastTables<L,S>` | Composite of the two complete MatchTable owners, accepting independently owned allocator values without requiring Clone or allocator equivalence. Validate both layouts before either allocation; failed second construction drops the first through its exact owner. Reset both initialized tables without allocation. | The two noDict arrays and their workspace lifetime; composite introduces no unchecked access, and both leaves use the existing unsafe-match-table feature. |
 | Parser cursor/result | Plain checked positions, cached buckets/candidates, step/threshold, two saved repeats, trailing-literal count and separate raw-parser/full-wire triples. | Local no-dictionary DoubleFast state; shared safe values. |
 | `DoubleFastMatchState<'a,A>` | Moves both complete table owners plus separately allocated literal and intent-bearing sequence vectors; borrows source and tracks parsed position/floor/failure. Reset tables once per source. | Match state plus sequence store, with explicit Rust ownership; composite needs no new unsafe flag. |
-| Shared reference frame settings | Plain known content size, selected window/log and block limit, validated before header/output-bound calculation. | Reference standard frame metadata; safe fixed initialized header bytes. |
+| `ReferenceFrameSettings` / `ReferenceFrameHeader` | Checked plain known content size, window10..21/log and block limit; no allocation or algorithm admission. Header owns fourteen initialized bytes plus used length. Scalar output-bound overflow is rejected before allocating output. | Shared standard frame metadata; safe values only. Fast still admits at most window20. |
 | Search/emission dispatch | Small static choice of existing Fast or new DoubleFast state; inactive storage is never allocated. Original allocator belongs to returned output; fresh clones own workspace children. | Block-compressor selection and frame loop; safe composite. |
 | Existing entropy owner | One literal/FSE/bitstream/payload aggregate with committed and candidate publication state. DoubleFast uses normal literals even with positive targetLength. | Block entropy state and minimum-gain policy; existing individually gated child implementations. |
 

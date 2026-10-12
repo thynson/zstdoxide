@@ -58,7 +58,6 @@ mod entropy_encode;
 mod entropy_output;
 mod error;
 mod fast_encode;
-mod fast_frame;
 #[cfg(test)]
 #[path = "../tests/support/fast_frame_oracle.rs"]
 mod fast_frame_oracle_fixture;
@@ -86,6 +85,7 @@ mod matchchain;
 mod matchfinder;
 mod parameters;
 mod reference_encode;
+mod reference_frame;
 mod ring_history;
 mod sequence_context;
 mod sequence_encode;

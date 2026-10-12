@@ -375,3 +375,26 @@ The initial seven-test bootstrap also passed without a diagnostic; the final
 suite adds explicit constructor rejection coverage. This checkpoint implements
 search state only; shared framing, entropy publication and public DoubleFast
 encoding remain open. No new C capture, Miri or timing is claimed.
+
+## Shared plain frame metadata
+
+The former Fast-specific frame writer now accepts algorithm-independent checked
+`ReferenceFrameSettings`. Source-size sentinel rejection, window10..21 metadata,
+block limits and raw-frame bounds precede output allocation. Fast first passes
+its unchanged algorithm/resource admission, so common window21 metadata does
+not broaden Fast's window20 limit. Header construction keeps the reference's
+0xffffffff promotion to an eight-byte content-size field.
+
+Seven frame tests pass in five configurations, including exact comparisons with
+all13 original incomplete C header probes on this64-bit host:35 executions.
+Nine existing Fast workspace tests pass safe/all, including fallback publication
+and every small-frame allocation-failure ordinal:18 executions. The unchanged
+Fast/named byte/allocation baselines add22 executions. Clippy safe/all, no_std
+compilation safe/all and formatting pass; all15 final commands succeed.
+
+The [evidence](evidence/2026-10-12-reference-frame.json) and
+[archive](evidence/2026-10-12-reference-frame.tar.gz) preserve exact sources and
+logs. Initial tests passed; Clippy requested fixed-array chunk iteration in the
+test-only hex reader, which was corrected before the final checks. Partial
+header comparisons do not claim huge-frame decoding or native32-bit execution.
+No new C capture, Miri, timing or public DoubleFast encoding is claimed.
