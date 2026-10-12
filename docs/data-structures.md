@@ -770,3 +770,15 @@ fresh-context salt is `0x835892b4bb2cae74`; reuse/dictionary salt behavior remai
 outside this checkpoint. Primitive tests reuse 1,728 independent pinned C hash
 vectors with algebraic salt high-bit expectations, plus all dimension bytes,
 short tails, incompatible widths, reserved row geometry and maximum hash bits.
+
+`ReferenceChain` now owns independent initialized head/link vectors. Insertion
+validates both live indices and a strictly earlier replaced head before either
+write. Its borrowed `ChainCandidates` yields a checked head first, then stops
+following predecessors once the yielded candidate's distance reaches the ring
+size. Each further link must descend strictly; future indices and cycles yield
+one error and terminate. The caller still proves source-byte bounds. Slot
+translation masks before adding the raw-index bias of two, avoiding overflow
+near usize limits without claiming C large-index reduction equivalence. Reset,
+move, swap and either allocation failure retain the exact owner values; no
+allocator clone is required. Safe/all-feature focused tests cover these
+contracts; parser/oracle full-map integration is a later work item.

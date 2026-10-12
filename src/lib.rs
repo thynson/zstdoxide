@@ -84,6 +84,7 @@ mod match_search;
 mod matchchain;
 mod matchfinder;
 mod parameters;
+mod reference_chain;
 mod reference_encode;
 mod reference_frame;
 mod reference_frame_encode;
