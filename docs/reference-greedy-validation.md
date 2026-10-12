@@ -264,6 +264,17 @@ separate records. The [review evidence](evidence/2026-10-12-greedy-frame-helper.
 pins the helper, reviewed sources, compiler and exact syntax commands. No helper
 mode, ordinary frame capture or sanitizer runtime has executed at this item.
 
+
+Further source review before execution found the ordinary frame loop's window
+floor clamp precedes even a tiny candidate bypass. A
+[versioned successor review](reference-greedy-frame-helper-v2-review.md) corrects
+that assertion while retaining the original helper and evidence unexecuted.
+V2 permits only that tiny frontier clamp, preserves both maps and other sampling
+fields, and uses fieldwise equality without C struct-padding assumptions. Strict
+normal/sanitizer-configured syntax checks pass; the
+[evidence](evidence/2026-10-12-greedy-frame-helper-v2.json) records both source
+identities. This is a source correction, not a C runtime finding.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories

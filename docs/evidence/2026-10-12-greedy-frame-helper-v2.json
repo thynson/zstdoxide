@@ -1,0 +1,76 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "clang",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-deprecated-declarations",
+        "-UZSTD_MULTITHREAD",
+        "-DZSTD_DISABLE_ASM",
+        "-DZSTD_LEGACY_SUPPORT=0",
+        "-DXXH_NAMESPACE=ZSTD_",
+        "-I/private/tmp/zstdoxize-upstream-1.5.7/lib",
+        "-fsyntax-only",
+        "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/greedy_frame_v2.c"
+      ],
+      "exit_code": 0,
+      "mode": "normal",
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "clang",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-deprecated-declarations",
+        "-UZSTD_MULTITHREAD",
+        "-DZSTD_DISABLE_ASM",
+        "-DZSTD_LEGACY_SUPPORT=0",
+        "-DXXH_NAMESPACE=ZSTD_",
+        "-I/private/tmp/zstdoxize-upstream-1.5.7/lib",
+        "-O1",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fsyntax-only",
+        "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/greedy_frame_v2.c"
+      ],
+      "exit_code": 0,
+      "mode": "sanitizer-syntax",
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "date": "2026-10-12",
+  "helper": "scripts/oracles/greedy_frame_v2.c",
+  "inputs": {
+    "/Users/lanxingcan/Workspace/zstdoxize/docs/reference-greedy-frame-helper-v2-review.md": {
+      "bytes": 2431,
+      "sha256": "25806b9db2996a75be2d7d3dc483a57f95caef92cee8de13b574c1e679c7e837"
+    },
+    "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/greedy_frame.c": {
+      "bytes": 44872,
+      "sha256": "6fe496e3323a994b95923813c73738b055efd835b6c4210bbbc294af790e0b4c"
+    },
+    "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/greedy_frame_v2.c": {
+      "bytes": 45809,
+      "sha256": "46f3d60e7d65616c163e6938f13d1cf2883a6525897b8755b47f1c47de65d91d"
+    },
+    "/private/tmp/zstdoxize-upstream-1.5.7/lib/compress/zstd_compress.c": {
+      "bytes": 345541,
+      "sha256": "10c315ae609d49b2fc431521aa95908086e69fd917991c5ed9a875af3d1208e8"
+    },
+    "/private/tmp/zstdoxize-upstream-1.5.7/lib/compress/zstd_compress_internal.h": {
+      "bytes": 68505,
+      "sha256": "ab7754413cef565da559bda7eb738bc2b3708c48877cb9ec37aff767d32c57d1"
+    }
+  },
+  "scope": "Pre-execution correction: tiny ordinary calls allow only the frame-loop window-floor clamp. Both helper versions remain unexecuted.",
+  "status": "source-reviewed-syntax-passed",
+  "supersedes_for_execution": "scripts/oracles/greedy_frame.c"
+}

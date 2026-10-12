@@ -894,3 +894,11 @@ complete wire repeats. All new records/composites are safe; they add no unsafe
 representation beyond the existing selected leaf backends. Returned literals
 include the trailing suffix; publication and failure poisoning belong to the
 separately planned ordinary retained context.
+
+Additional ordinary source review establishes two ordered frontier transitions:
+the frame loop first clamps next-to-update to the retained window low limit for
+every positive call, including tiny calls. Only a fresh length>=7 candidate then
+applies the 384/192 long-gap adjustment. A zero call does neither. The direct
+parser already consumes a prepared frontier and must not incorporate either
+ordinary-wrapper transition. The retained state will track this scalar
+separately from table mutation and candidate publication.
