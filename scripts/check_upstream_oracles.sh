@@ -27,6 +27,7 @@ python3 scripts/import_fast_parser_families.py --check
 python3 scripts/pack_fast_parser_fixtures.py --check
 python3 scripts/pack_fast_frame_trajectories.py --check
 python3 scripts/check_match_search_baseline.py
+python3 scripts/check_reference_fast_baseline.py
 
 # Select oracle tests explicitly: legacy success assertions remain blocked.
 cargo test --release --all-features --test interop -- --ignored

@@ -74,7 +74,7 @@ final validation and measurements. Current Fast/named outputs remain regression
 inputs, and historical C observations retain their original admission scope.
 
 - [x] Analyze the two-table ownership, exact source bounds/scheduling, algorithm-specific admission, shared integration and newly admitted official subsets; independently review the design.
-- [ ] Freeze complete current Fast frame bytes and exact allocator counts alongside the existing named baselines.
+- [x] Freeze complete current Fast frame bytes and exact allocator counts from the reviewed clock-free capture alongside the existing named baselines.
 - [x] Specify and independently source-review bounded direct DoubleFast C protocol/arenas and tiny input hypotheses before implementation.
 - [ ] Implement the bounded direct DoubleFast C adapter, review its actual allocations against the protocol proof, then capture tiny observations with scoped sanitizers.
 - [ ] Freeze directed direct-parser families, both full table maps, low-log eight-byte hashes, provenance and offline rejection controls before Rust parsing.

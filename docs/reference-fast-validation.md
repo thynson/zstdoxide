@@ -638,3 +638,31 @@ listed documentation/checklist files differ. No completed test was rerun merely
 because of the pause. See [resume audit](evidence/2026-10-12-fast-final-matrix.json)
 and the [70-member archive](evidence/2026-10-12-fast-final-matrix.tar.gz), which
 retains exact commands/environment, logs, runner and reconstructable overlays.
+
+
+## Permanent pre-DoubleFast compatibility regression
+
+The new `reference_fast_defaults` integration target preserves all nine logical
+Fast cases from the already reviewed clock-free smoke-5, with seven distinct
+complete frames (1,090,164 bytes) and every allocation survey field. Using this
+existing pre-change capture makes the regression independent of the outstanding
+timing campaign. It does not claim timed results or an exact C decode of these
+nine benchmark outputs. The original seven named-policy tests remain unchanged.
+
+Four tests pass in each of safe, unsafe-match-table, all, no-default, and
+no-default plus all unsafe features: 20 executions with no ignored tests.
+The unchanged named baseline contributes fourteen safe/all executions. Focused
+strict Clippy safe/all, formatting and normal/optimized Python audits pass.
+Twenty-six isolated auditor controls include two positive and 24 rejected cases.
+An initial test-only clone-on-Copy Clippy diagnostic was fixed; the complete
+focused command set passed afterward, with the earlier diagnostic retained.
+
+Every target checks full frame bytes, source identities, decoded content,
+resolved requests, allocator categories/owners and final release. Exact full
+allocation counters/bytes are qualified to the captured aarch64-apple-darwin
+64-bit target and pinned compiler; no cross-platform layout equality is assumed.
+The offline auditor binds all fixed bytes and records to the immutable original
+archive and permits current codec source to evolve. Both standard check scripts
+run it. See the [fixture contract](../tests/fixtures/reference-fast-baseline/README.md),
+[validation record](evidence/2026-10-12-fast-baseline-validation.json) and
+[command/control archive](evidence/2026-10-12-fast-baseline-validation.tar.gz).

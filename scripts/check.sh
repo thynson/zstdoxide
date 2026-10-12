@@ -13,6 +13,7 @@ python3 scripts/pack_fast_parser_fixtures.py --check
 python3 scripts/pack_fast_frame_trajectories.py --check
 python3 scripts/check_reference_fast_interop.py --check-plan
 python3 scripts/check_match_search_baseline.py
+python3 scripts/check_reference_fast_baseline.py
 
 # Each backend alone must compile without std and pass the same test suite.
 cargo fmt --all -- --check
