@@ -47,7 +47,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 
 - [x] Analyze source-dependent chain/row selection, ownership, salted hashes, exact parser floors and newly admitted official subsets before implementation.
 - [x] Freeze complete current DoubleFast frames and qualified allocation records from the reviewed clock-free benchmark as permanent compatibility regressions.
-- [ ] Specify a bounded direct Greedy C protocol with separate chain/row arenas, full owner maps and short-input safety proof before execution.
+- [x] Specify a bounded direct Greedy C protocol with separate chain/row arenas, full owner maps and short-input safety proof before execution.
 - [ ] Implement and review the bounded C adapter, then freeze fresh-context salt and tiny chain/row observations with all used C units instrumented.
 - [ ] Pin broader source/initial-state recipes for row widths, hash/chain collisions, cyclic bias, gaps, skipping, floors, repeats and malformed packets.
 - [ ] Capture normal/sanitized direct observations and independently reject changed or malformed evidence offline before Rust parsing.

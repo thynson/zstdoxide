@@ -750,3 +750,13 @@ Explicit dictionary salt zero and context-reset salt changes remain future
 contracts. Candidate raw repeats and committed wire repeats remain separate.
 The source-only admission forecast does not constitute executed Greedy tests
 or completion of any pending upstream migration obligation.
+
+The [direct oracle protocol](reference-greedy-oracle.md) constructs initial
+chain/row maps from strictly increasing seed positions rather than accepting
+arbitrary pointer-like cells. It records complete maps as zero-initialized
+owners plus canonical before cells/deltas and full fingerprints. The std-only
+helper owns guarded 64-byte-aligned arrays with checked aggregate costs; the
+source arena includes initialized leading/suffix slack without extending logical
+history. Fresh-context salt observation has a separately bounded custom C
+allocator and does not share direct-parser table owners. These test records
+and borrowed packet fields introduce no unsafe Rust representation.
