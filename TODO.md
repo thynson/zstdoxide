@@ -70,7 +70,8 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Implement and review the broader bounded C/Rust frame adapters, with syntax, Rust and malformed-packet checks before C execution.
 - [x] Capture the frozen broader bidirectional campaign with normal and fully instrumented C codec builds, preserving failures and exact source identities.
 - [ ] Run the complete correctness matrix with each unsafe feature, no_std and focused interpreted/compile-only platform boundaries.
-- [ ] Freeze and measure deterministic DoubleFast workloads with separate allocation accounting after the CPU barrier; preserve Fast comparisons and qualify results.
+- [x] Freeze deterministic DoubleFast benchmark recipes and validate a clock-free harness with separate allocation accounting and unchanged Fast comparisons.
+- [ ] Measure the frozen benchmark across safe/individual/all backends after the CPU barrier, independently replay evidence and qualify results.
 - [ ] Reconcile inventory and validation evidence, record the bounded milestone, and clear its completed checklist.
 
 ## Roadmap
