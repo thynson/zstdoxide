@@ -2,7 +2,7 @@
 
 Module 14 is in progress. Source design, pre-Greedy regression baselines and the
 tiny and broader direct C oracle checkpoints are complete. Shared Rust hash
-values and safe reference-chain storage are implemented. Row storage, Greedy
+values, reference-chain backends and safe row storage are implemented. Greedy
 parsing, ordinary-frame state, public Greedy admission and broader test migration
 remain in progress. The existing independent named Greedy policy is not
 an implementation of this reference strategy.
@@ -148,10 +148,21 @@ failure ordinals and complete moves/swaps/reset. Safe/all focused runs, strict
 safe Clippy and no_std compilation pass. Parser/full-oracle integration and
 performance comparison remain separate tasks.
 
+The independently gated `unsafe-reference-chain` backend preserves those owner
+contracts and checks every access at runtime before entering a documented unsafe
+block. Six tests now include an unbounded source-history model of sparse cyclic
+traversal, and pass on safe, isolated-feature and all-feature builds; isolated
+no_std and strict feature/all Clippy pass. Safe row storage also passes six
+safe/all tests covering complete position/tag maps at every row width, snapshots
+across insertion, mixed tags, empty/expired/future cells, budget limits, malformed
+heads, both owner extents and all allocation failure ordinals. Its strict safe
+Clippy and no_std check pass. Full frozen parser/map integration and deterministic
+performance comparisons remain pending.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories
-or automatic public branch selection. Rust row backends, complete
+or automatic public branch selection. The Rust unsafe row backend, complete
 Greedy parsing, ordinary publication, public admission and related official
 assertions remain in progress. No new official source-unit obligation is marked
 complete. Final every-feature/platform/interoperability matrices and Greedy

@@ -92,6 +92,7 @@ mod reference_frame_encode;
 mod reference_policy;
 mod reference_search;
 mod ring_history;
+mod row_table;
 mod sequence_context;
 mod sequence_encode;
 mod sequence_plan;

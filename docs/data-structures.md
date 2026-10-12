@@ -792,3 +792,16 @@ all-feature builds, including an independent unbounded source-history model for
 sparse cyclic traversals; focused no_std and strict feature/all Clippy pass.
 The feature is included in the normal every-feature/no_std matrix. No speedup
 is claimed before the separately planned deterministic Greedy benchmarks.
+
+The safe `RowTable` now owns initialized positions and independent tag/head
+bytes with natural alignment. It checks the complete row against both live
+owner lengths before access, validates the reserved head, and rejects invalid
+or nonincreasing updates before either owner changes. Candidate collection
+starts at the head, skips reserved cell zero, follows cyclic tag order and stops
+on the first matching empty/expired position. A future position rejects the
+state before any source access. `CandidateSnapshot` owns at most 64 copied
+indices, so inserting the query cannot overwrite saved candidates. Six focused
+safe/all-feature tests cover complete row maps and wrap for all widths, mixed
+tags against a source-history model, zero tags, budgets/floors, malformed cells,
+truncated owners, independent non-clone allocators, both allocation failures,
+and moves/swaps/reset. Strict safe Clippy and no_std compilation pass.
