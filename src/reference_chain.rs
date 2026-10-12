@@ -3,7 +3,7 @@
 //! Unlike the named MatchChain, slots belong to source positions (with the C
 //! bias of two), not insertion generations. Links are indices into borrowed
 //! source; this leaf never reads source bytes or treats a collision as a match.
-#![forbid(unsafe_code)]
+#![cfg_attr(not(feature = "unsafe-reference-chain"), forbid(unsafe_code))]
 #![cfg_attr(
     not(test),
     allow(dead_code, reason = "reference Greedy parsing follows")
@@ -92,14 +92,40 @@ impl<H: Allocator, L: Allocator> ReferenceChain<H, L> {
 
     fn head(&self, key: GreedyKey) -> Result<usize> {
         let bucket = self.key.bucket(key)?;
-        self.heads.get(bucket).copied().ok_or(Error::CorruptData)
+        if bucket >= self.heads.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-reference-chain"))]
+        let value = self.heads[bucket];
+        #[cfg(feature = "unsafe-reference-chain")]
+        let value = {
+            // SAFETY: The runtime check proves bucket is below initialized
+            // length, not capacity. Vec owns valid, aligned, initialized usize
+            // cells through its exact allocator. The shared self borrow excludes
+            // mutation/reallocation for this access. The reference is immediately
+            // copied and cannot escape or outlive the owner borrow.
+            unsafe { *self.heads.get_unchecked(bucket) }
+        };
+        Ok(value)
     }
 
     fn predecessor(&self, position: usize) -> Result<usize> {
-        self.links
-            .get(self.slot(position))
-            .copied()
-            .ok_or(Error::CorruptData)
+        let slot = self.slot(position);
+        if slot >= self.links.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-reference-chain"))]
+        let value = self.links[slot];
+        #[cfg(feature = "unsafe-reference-chain")]
+        let value = {
+            // SAFETY: slot < links.len() is checked at runtime independently of
+            // the position or stored links. Vec's exact allocator owns aligned,
+            // valid initialized usize cells. Shared self keeps storage live and
+            // excludes writes/reallocation; only a copied value escapes this
+            // temporary reference. No source pointer is formed from that value.
+            unsafe { *self.links.get_unchecked(slot) }
+        };
+        Ok(value)
     }
 
     /// Append one sampled source index, preserving the replaced head in the
@@ -116,12 +142,39 @@ impl<H: Allocator, L: Allocator> ReferenceChain<H, L> {
         if bucket >= self.heads.len() || slot >= self.links.len() {
             return Err(Error::CorruptData);
         }
+        #[cfg(not(feature = "unsafe-reference-chain"))]
         let previous = self.heads[bucket];
+        #[cfg(feature = "unsafe-reference-chain")]
+        let previous = {
+            // SAFETY: Both live bounds were checked above before any access.
+            // heads owns initialized, aligned usize storage, retained by self.
+            // The exclusive self borrow excludes mutation or reallocation by
+            // any other access. This read's temporary shared reference is copied
+            // and ends before either table is mutated.
+            unsafe { *self.heads.get_unchecked(bucket) }
+        };
         if previous != EMPTY && previous >= position {
             return Err(Error::CorruptData);
         }
-        self.links[slot] = previous;
-        self.heads[bucket] = position;
+        #[cfg(not(feature = "unsafe-reference-chain"))]
+        {
+            self.links[slot] = previous;
+            self.heads[bucket] = position;
+        }
+        #[cfg(feature = "unsafe-reference-chain")]
+        {
+            // SAFETY: bucket < heads.len() and slot < links.len() were checked
+            // before the read and remain true: no allocation, resizing or
+            // callbacks intervened. The two Vec owners retain separate valid,
+            // aligned allocations of initialized usize cells. Exclusive self
+            // excludes aliases/concurrent accesses. Each mutable reference ends
+            // at its assignment; none escapes. Copy writes preserve initialization
+            // without drop, ownership transfer, or calling an allocator.
+            unsafe {
+                *self.links.get_unchecked_mut(slot) = previous;
+                *self.heads.get_unchecked_mut(bucket) = position;
+            }
+        }
         Ok(())
     }
 
@@ -388,6 +441,46 @@ mod tests {
             ));
             assert_eq!(monitor.snapshot().attempts, 0);
             monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn sparse_cyclic_traversals_match_an_independent_source_history_model() {
+        // The model retains every historical insertion, with no cyclic slots.
+        // It filters actual source age only after yielding each candidate, so
+        // it distinguishes this structure from an insertion-generation chain.
+        let mut chain = empty();
+        let mut history = Vec::new();
+        for position in (0..385).step_by(7) {
+            let bytes = ((position * 37 % 23) as u32).to_le_bytes();
+            let key = layout().read_key(&bytes).unwrap();
+            let bucket = layout().bucket(key).unwrap();
+            history.push((bucket, position));
+            chain.insert(key, position).unwrap();
+        }
+        for value in 0_u32..32 {
+            let key = layout().read_key(&value.to_le_bytes()).unwrap();
+            let bucket = layout().bucket(key).unwrap();
+            for floor in [0, 300, 350, 385] {
+                for budget in [1, 2, 7, 256] {
+                    let mut expected = Vec::new();
+                    for &(b, position) in history.iter().rev() {
+                        if b != bucket {
+                            continue;
+                        }
+                        if position < floor || expected.len() == budget {
+                            break;
+                        }
+                        expected.push(position);
+                        if 390 - position >= 64 {
+                            break;
+                        }
+                    }
+                    let observed: Result<Vec<_>> =
+                        chain.candidates(key, 390, floor, budget).unwrap().collect();
+                    assert_eq!(observed.unwrap(), expected);
+                }
+            }
         }
     }
 

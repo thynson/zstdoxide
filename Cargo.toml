@@ -19,6 +19,7 @@ unsafe-huffman = []
 unsafe-huffman-codebook = []
 unsafe-match-table = []
 unsafe-match-chain = []
+unsafe-reference-chain = []
 unsafe-dictionary = []
 unsafe-training = []
 

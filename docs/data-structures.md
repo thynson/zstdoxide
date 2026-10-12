@@ -782,3 +782,13 @@ near usize limits without claiming C large-index reduction equivalence. Reset,
 move, swap and either allocation failure retain the exact owner values; no
 allocator clone is required. Safe/all-feature focused tests cover these
 contracts; parser/oracle full-map integration is a later work item.
+
+The `unsafe-reference-chain` leaf selects checked unchecked-access operations
+for the same head/link owners. Every initialized bound is checked at runtime
+before access, and each local proof covers alignment, initialization, exact
+ownership, aliasing and temporary-reference lifetime. No unsafe function is
+exposed to callers. Six focused tests pass with safe, isolated-feature and
+all-feature builds, including an independent unbounded source-history model for
+sparse cyclic traversals; focused no_std and strict feature/all Clippy pass.
+The feature is included in the normal every-feature/no_std matrix. No speedup
+is claimed before the separately planned deterministic Greedy benchmarks.
