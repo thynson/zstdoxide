@@ -57,3 +57,64 @@ succeed; no tests are ignored. The explicit source catalog and fixed query
 fixture are preserved in [evidence](evidence/2026-10-12-double-fast-plan.json)
 and its [archive](evidence/2026-10-12-double-fast-plan.tar.gz). No foreign-target
 execution or new algorithm performance is attributed to this checkpoint.
+
+## Initial constructed direct observations
+
+The ZDFST01 helper was checked against the twelve-owner allocation and
+same-arena pointer proof before its first execution. The exact reviewed helper
+identity and reasoning are recorded in
+[the adapter review](reference-double-fast-adapter-review.md). Both builds
+explicitly compile unchanged `zstd_double_fast.c`, then link the recorded pinned
+archive for support. The driver verifies all 89 inventoried lib C/header files,
+records compiler/dependency/command identities, checks its inputs before and
+after every command, and limits command time and both output streams.
+
+All 37 capture commands succeed. Fifteen recipes run with two padding patterns
+under normal and scoped ASan/UBSan builds: 60 C case executions. The complete
+normal/sanitized outputs agree, and each pair of padding observations agrees
+after removing only its padding field. C and independent Python replay verify
+the complete source, expanded sequences, stored literals, raw parser repeats,
+full wire repeats and both complete table maps. Sanitizers cover the helper,
+explicitly compiled DoubleFast and inline headers; the remaining support
+archive is not instrumented and LeakSanitizer is disabled.
+
+The measured consequences of the isolated recipes are:
+
+| Recipe | Observed sequence (LL, ML, distance) | Trailing literals |
+| --- | --- | ---: |
+| fresh-seven / eight / nine | none; no table changes | 7 / 8 / 9 |
+| fresh-ten | none; one changed cell in each table | 10 |
+| prefix-nine / ten | (0, 9 / 10, 16) | 0 |
+| repeat-one | (2, 62, 1), repeat intent | 0 |
+| repeat-four / dispatch-three / ignored-controls | (4, 60, 4) | 0 |
+| current-long-floor | (0, 16, 16) | 0 |
+| current-short-floor | (0, 4, 16) | 12 |
+| later-floor | (0, 4, 8) | 12 |
+| later-above-floor | (1, 15, 25) | 0 |
+| extend-to-floor | (0, 32, 16) | 0 |
+
+The minMatch3 and unused search/target controls match the complete period4
+observation after removing only their differing declared input scalar fields.
+Final table deltas do not reveal intermediate write chronology. These manually
+seeded cases do not claim realistic whole-context publication, ordinary-frame
+compression, dictionary behavior or complete branch coverage.
+
+The frozen sixteen-file collection has an independently pinned catalog and a
+compiler-free checker that verifies its recipe module before importing it.
+Normal and optimized Python each pass 17 positive/equivalence controls and
+102 rejection controls. These include both-build malformed packet rejection,
+invalid sequence/long-marker/repeat/table observations, duplicate JSON fields,
+repaired but forged fixture catalogs, forbidden destination overlap, offline
+live options, and bounded process timeout/output/OSError evidence. All packet
+rejections occur before observation output and emit no sanitizer diagnostic.
+
+The new checker and complete fixture registry pass in normal and optimized
+Python. Registry totals are now 545 files in 17 collections. Both standard
+check scripts include this collection. C/Rust formatting and diff whitespace
+checks pass. No Rust codec source changes accompany this oracle checkpoint;
+no new production-code tests, Clippy, no_std execution, platform run or timing
+claim is attributed to it. Those foundations were verified separately above.
+The [capture evidence](evidence/2026-10-12-double-fast-tiny.json) and
+[source/log/control archive](evidence/2026-10-12-double-fast-tiny.tar.gz) retain
+the observations and qualifications. Directed families, explicit low-log hash
+vectors and the Rust parser remain separate open items.

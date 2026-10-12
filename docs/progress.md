@@ -3,6 +3,19 @@
 Detailed completed work items are preserved in Git history. `TODO.md` contains
 only active module checklists and the remaining roadmap.
 
+## 2026-10-12: initial DoubleFast direct oracle
+
+The bounded ZDFST01 helper and pre-execution allocation review are complete.
+Fifteen constructed cases match across two padding patterns and normal/scoped
+ASan/UBSan builds (60 C case executions). Independent replay checks both full
+table maps and wire/parser repeat states. A frozen compiler-free collection
+and checker add sixteen files to the registry, now 545 files in 17 collections.
+Normal and optimized Python each pass 17 positive and 102 rejection controls.
+See `docs/reference-double-fast-validation.md` for observed boundaries, retained
+evidence and sanitizer limitations. This completes only the initial oracle
+work item; wider families, Rust parsing and public DoubleFast execution remain
+open. It does not complete Module 13 or the upstream test migration.
+
 ## Foundation
 
 Project instructions, the pinned v1.5.7 data structure inventory, architecture,

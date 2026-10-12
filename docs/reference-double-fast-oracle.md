@@ -8,6 +8,11 @@ ordinary candidate needs to be strictly above the floor are superseded.
 Reference: facebook/zstd v1.5.7, revision
 `f8745da6ff1ad1e7bab384bd1f9d742439278e99`.
 
+The above is the initial design checkpoint. Implementation, pre-execution
+allocation review and the first fifteen captured cases were subsequently
+completed on 2026-10-12; see [adapter review](reference-double-fast-adapter-review.md)
+and [validation](reference-double-fast-validation.md). Wider families remain open.
+
 Call only unchanged `ZSTD_compressBlock_doubleFast` from
 `lib/compress/zstd_double_fast.c:568-585`, entering its noDict implementation
 at :105-324. This initial helper does not construct ordinary frames, use the

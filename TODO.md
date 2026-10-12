@@ -43,7 +43,7 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Analyze the two-table ownership, exact source bounds/scheduling, algorithm-specific admission, shared integration and newly admitted official subsets; independently review the design.
 - [x] Freeze complete current Fast frame bytes and exact allocator counts from the reviewed clock-free capture alongside the existing named baselines.
 - [x] Specify and independently source-review bounded direct DoubleFast C protocol/arenas and tiny input hypotheses before implementation.
-- [ ] Implement the bounded direct DoubleFast C adapter, review its actual allocations against the protocol proof, then capture tiny observations with scoped sanitizers.
+- [x] Implement the bounded direct DoubleFast C adapter, review its actual allocations against the protocol proof, then capture tiny observations with scoped sanitizers.
 - [ ] Freeze directed direct-parser families, both full table maps, low-log eight-byte hashes, provenance and offline rejection controls before Rust parsing.
 - [x] Add the private checked eight-byte long-key layout while preserving current Fast and named layout domains.
 - [x] Add the allocation-free DoubleFast plan, independent table/window caps, target layouts and actual source-tier admission checks.
