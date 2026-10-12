@@ -49,3 +49,54 @@ The [preflight evidence](evidence/2026-10-12-lazy-tiny-preflight.json) and
 scripts, control driver and results. Source review removed a stale variable
 reference and made sanitizer diagnostics fatal for malformed-input probes
 before the completed checks and before any C execution.
+
+## Qualified tiny C observations
+
+The first real capture passes all 422 commands. Both builds compile each of the
+26 used C units directly; ASan/UBSan instrumentation includes every linked unit
+and the helper, while retaining upstream per-function annotations and disabling
+LeakSanitizer. There are 552 direct observations (138 recipes, two padding fills,
+two builds), 12 fresh contexts and 78 malformed-packet rejections. Every direct
+observation byte agrees between builds. All 36 depth-zero predecessor cases
+match their original full observations, including this host's qualified owner
+layout. The 576,102-byte permanent pack stores each direct result once and all
+six strategy/build-specific fresh-context groups.
+
+The tail records establish these logical final update frontiers on the frozen
+repeated-byte sources. Values subtract the C helper's two-position bias:
+
+| Branch and input | Greedy | Lazy | Lazy2 |
+| --- | ---: | ---: | ---: |
+| Chain fresh, one position below main limit | 0 | 2 | 2 |
+| Chain fresh, two positions below main limit | 0 | 2 | 3 |
+| Row fresh, one position below main limit | 0 | 3 | 3 |
+| Row fresh, two positions below main limit | 0 | 3 | 4 |
+| Chain prefixed, one position below main limit | 8 | 9 | 9 |
+| Chain prefixed, two positions below main limit | 8 | 9 | 10 |
+| Row prefixed, one position below main limit | 8 | 10 | 10 |
+| Row prefixed, two positions below main limit | 8 | 10 | 11 |
+
+Each strict-limit fresh input produces zero sequences and a zero update
+frontier at all three depths. Every other row above produces one sequence.
+The complete maps support later Rust equivalence checks; final frontiers alone
+are not a chronological trace of individual probes.
+
+Normal and optimized Python independently audit the campaign, each accept two
+positive campaigns and reject 50 changed campaigns with child creation blocked
+and zero attempts. A separate immutable-fixture checker accepts two positive
+packs and rejects 15 changed packs per mode. Controls include depth/strategy,
+completion, bounded frontiers, table identities, wire repeats, command order,
+compile/link instrumentation, required objects/executables, hidden environment
+settings, malformed-input sanitizer diagnostics and coherently rehashed logs.
+The temporary control driver initially used the nonexistent negative label
+`depth-high`; after correcting that driver-only name to frozen `depth-three`,
+both entire control runs pass. No helper, capture or expected output changed.
+
+The [capture evidence](evidence/2026-10-12-lazy-tiny.json) and
+[archive](evidence/2026-10-12-lazy-tiny.tar.gz) preserve every raw capture file,
+including the actual objects and executables, complete input/observation packs,
+source identities, independent audits and controls. Downloaded reference source
+remains outside the repository; its pinned revision, source/header hashes,
+dependency closure and exact compiler commands remain in the archive. This is
+private direct-parser evidence, with no Rust Lazy execution, ordinary/public
+frame or timing claim.

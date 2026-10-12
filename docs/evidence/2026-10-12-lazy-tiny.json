@@ -1,0 +1,69 @@
+{
+  "all_linked_units_instrumented_in_sanitized_build": true,
+  "archive": "2026-10-12-lazy-tiny.tar.gz",
+  "archive_bytes": 7039369,
+  "archive_members": 1113,
+  "archive_sha256": "af3101b5b054c5d412f371f5a5fc5b1d98c67d2f7ca4daf9aafa1cb343d8a479",
+  "archive_uncompressed_bytes": 21875807,
+  "binary_retention": "Every used compiled object and executable retained with SHA256 identities. Reference C source remains outside the repository; its pinned revision, source/header hashes, dependency closure and exact build commands are retained.",
+  "capture_auditor_sha256": "ba5462b9fc26f8471b5b465009c3068b673a3985172d68812ae594ce2fd2e994",
+  "commands": 422,
+  "compiled_translation_units_per_mode": 26,
+  "context_peak_guarded_bytes": {
+    "normal": {
+      "0": [
+        149198,
+        149198
+      ],
+      "1": [
+        149198,
+        149198
+      ],
+      "2": [
+        149198,
+        149198
+      ]
+    },
+    "sanitized": {
+      "0": [
+        151502,
+        151502
+      ],
+      "1": [
+        151502,
+        151502
+      ],
+      "2": [
+        151502,
+        151502
+      ]
+    }
+  },
+  "date": "2026-10-12",
+  "direct_build_bytes_identical": true,
+  "exact_predecessor_owner_layouts": 36,
+  "fixture_checker_sha256": "835b0689b61debf480612f8778fc6b339f427c51b389bb6495bef540523d6eba",
+  "leak_sanitizer": false,
+  "observed_tail_cases": 30,
+  "offline_controls_per_mode": {
+    "capture_positive": 2,
+    "capture_rejected": 50,
+    "child_processes": 0,
+    "fixture_positive": 2,
+    "fixture_rejected": 15
+  },
+  "pack_bytes": 576102,
+  "pack_sha256": "5d25e610ba0d6bb1379d38fce19208c558873e9cfd5a1696e0e8534b1179997d",
+  "predecessor_controls": 36,
+  "qualification": "Real private direct Greedy/Lazy/Lazy2 observations and fresh-context salt only. Complete final maps/frontiers do not establish chronological probes. No Rust Lazy parser or ordinary/public-frame interoperability or timing claim. Initial temporary control-driver filename typo is preserved; no C capture failure occurred.",
+  "raw_capture_files": 1083,
+  "source_unchanged": true,
+  "status": "passed",
+  "totals": {
+    "direct_observations": 552,
+    "fresh_contexts": 12,
+    "negative_rejections": 78,
+    "recipes": 138
+  },
+  "upstream_sanitizer_annotations_retained": true
+}
