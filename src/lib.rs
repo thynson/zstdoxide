@@ -78,6 +78,7 @@ mod greedy_key;
 #[path = "../tests/support/greedy_oracle.rs"]
 mod greedy_oracle_fixture;
 mod greedy_plan;
+mod greedy_search;
 mod heap;
 mod history;
 mod huffman;

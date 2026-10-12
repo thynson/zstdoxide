@@ -859,3 +859,14 @@ unsafe-reference-chain alone, unsafe-row-table alone and all features; strict
 safe/all Clippy, formatting and no_std compilation pass. Truncation, dimensions,
 counts, semantic forgeries and coherently rehashed bad heads/positions reject.
 The reader is excluded from production builds; full Greedy parsing is pending.
+
+The next search layer borrows one checked `GreedyBlock` and one exclusive table
+owner; a copied `GreedyMatch` contains only an earlier source index and length.
+The caller owns the next-to-update scalar. Chain search validates branch, key
+identity, budget and probe coordinates before inserting pending indices, then
+borrows the chain for bounded candidate traversal. Skipping inserts only the
+first pending index. Byte comparison uses checked source slices and strictly
+longer matches, preserving newest-candidate ties. No source pointers, new
+allocations or unsafe composite are needed. A table corruption error after an
+update leaves partial search writes; the future retained context must poison
+itself instead of publishing/reusing that state.

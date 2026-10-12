@@ -199,6 +199,18 @@ heads. Strict safe/all Clippy, formatting and no_std compilation pass. These
 checks establish the reader and initial storage states, not complete Rust Greedy
 search/parsing or final parser-state equivalence.
 
+
+The safe chain search passes four tests on safe, unsafe-reference-chain alone
+and all features. Complete final heads, links and update frontiers agree with
+22 frozen no-match schedules (including two final skipping states) and 14
+first-probe full-block matches, including a 2-MiB head outside the chain ring.
+Independent byte/argument tests cover strict tie preservation, bounded attempts,
+logical tails and rejection before scalar-invalid mutations. A full-block
+sequence alone does not prove a first-probe match: cases with later frontiers
+and backward extension are reserved for complete parser validation. Strict
+safe/all Clippy and safe/isolated-chain no_std compilation pass. Full parsing
+and ordinary state retention remain separate work items.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories
