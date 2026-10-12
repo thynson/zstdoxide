@@ -614,3 +614,27 @@ The coordinator checked all 29 catalogued archive members and both external
 record/report copies. See [platform evidence](evidence/2026-10-09-fast-platform.json),
 [scope report](evidence/2026-10-09-fast-platform-report.md) and
 [reproduction archive](evidence/2026-10-09-fast-platform.tar.gz).
+
+
+## Final complete correctness matrix
+
+The immutable `00ef0d4` plus recorded overlays snapshot completed all 53 commands
+on 2026-10-09. Fifteen full suites (safe, all twelve individual unsafe backends,
+combined debug and combined release) each report 956 passed, zero failed and
+54 explicitly ignored tests: 14,340 passing test executions in total. All
+fourteen no_std configurations, strict all-target Clippy safe/all, formatting,
+13 allocator-helper tests and 21 registered examples in each of safe/all pass.
+Offline fixture/importer/baseline checks and the pinned-source inventory audit
+also pass. The complete-migration gate intentionally returns one and reports
+188 unfinished source units; it is not included as a successful migration.
+
+The user pause marker was written after the runner had completed every command
+and its final unchanged-source check. It records no interrupted command and no
+remaining process. The original `interrupted_by_user_pause` record is preserved
+unaltered. On 2026-10-12 the coordinator verified all command log hashes, parsed
+test counts, source catalogs and overlays, and compared all codec, test, fixture,
+script, example and Cargo inputs with the delivered tree. They agree; only
+listed documentation/checklist files differ. No completed test was rerun merely
+because of the pause. See [resume audit](evidence/2026-10-12-fast-final-matrix.json)
+and the [70-member archive](evidence/2026-10-12-fast-final-matrix.tar.gz), which
+retains exact commands/environment, logs, runner and reconstructable overlays.
