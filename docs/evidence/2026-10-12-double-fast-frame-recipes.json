@@ -1,0 +1,25 @@
+{
+  "aligned_whole_comparisons_requested": 7,
+  "archive": "2026-10-12-double-fast-frame-recipes.tar.gz",
+  "archive_bytes": 18639,
+  "archive_members": 17,
+  "archive_sha256": "cc5efb29c60801ff0a60cf1ca14a733c06ae84831a76dad8699ac821d859462c",
+  "controls_per_mode": {
+    "positive": 2,
+    "rejected": 39
+  },
+  "date": "2026-10-12",
+  "generator_sha256": "ac10609d7fe7c0f4983899238dc8a852ca437e35aff42b317599a0286c8ea656",
+  "incomplete_header_probes": 13,
+  "manifest_sha256": "1ac2fe6ddfe66aef7a72f387f0fb8db6e1109ef137f33c1ef63b8496f5fa0667",
+  "modes": [
+    "normal",
+    "optimized"
+  ],
+  "positive_calls": 160,
+  "recipes": 51,
+  "scheduled_calls": 164,
+  "scope": "Ordinary DoubleFast protocol and source-only input hypotheses before C execution. No frame outcomes, parser changes, fresh codec tests or timing.",
+  "source_bytes": 6348944,
+  "status": "passed"
+}

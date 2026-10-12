@@ -53,7 +53,9 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Construct independent long/short table owners with exact-owner allocation-failure, move and reset coverage.
 - [x] Add a dependency-free checked Rust adapter for the frozen direct-parser inputs, sequences and both table maps.
 - [x] Implement safe single-block DoubleFast parsing against frozen sequences, literals, repeat intents and both complete table observations.
-- [ ] Capture ordinary DoubleFast frame publication trajectories; keep collector corroboration and constructed direct states separately qualified.
+- [x] Pin the ordinary DoubleFast frame observation protocol and independent source/schedule recipes before C execution.
+- [ ] Implement and review the bounded ordinary-frame helper, two-table observations and offline replay validator without changing frozen direct/Fast assets.
+- [ ] Freeze normal and sanitizer ordinary-frame publication trajectories and complete frames, retaining failed hypotheses and rejection controls; keep optional collector corroboration separate.
 - [ ] Add a dependency-free checked Rust adapter for frozen ordinary trajectories and complete C frames.
 - [ ] Retain both sampled tables across blocks with separate parsed/emitted state, committed repeats and poison semantics.
 - [ ] Extract common plain frame settings and truthful header/bound writing while preserving Fast/named output and allocator behavior.

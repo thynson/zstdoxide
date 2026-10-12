@@ -244,3 +244,26 @@ expectation was corrected. Native-host Miri cache setup was initially denied
 before tests ran; the successful campaign used the existing external i686
 sysroot. No new C capture, timing, ordinary-frame publication or public
 DoubleFast encoding is claimed at this checkpoint.
+
+## Ordinary-frame input protocol
+
+The separate [ordinary-frame protocol](reference-double-fast-frame-oracle.md)
+now specifies context-owned storage, both independent table observations,
+candidate/committed state boundaries, fresh/tiny/empty behavior, full replay,
+frame decoding and complete used-C sanitizer scope before helper execution.
+The fixed [source-only recipes](../tests/fixtures/reference-double-fast-frame-recipes/README.md)
+contain51 cases and6,348,944 source bytes:164 scheduled calls,160 positive blocks,
+seven requested aligned whole-buffer comparisons and13 incomplete header probes.
+The larger window hypotheses cross1MiB and2MiB; no outcome is inferred from
+the existing Rust parser or from an intended witness name.
+
+Normal and optimized Python independently regenerate the manifest and each
+pass two positive/39 rejection controls, including source/schedule/parameter
+bounds, bool scalars, JSON duplicates/nonfinite values, changed manifest data
+and verification of generator identity before import. Both standard check
+scripts include the compiler-free input check. The original fixture registry
+and official-source completion counts are unchanged. The
+[evidence](evidence/2026-10-12-double-fast-frame-recipes.json) and
+[archive](evidence/2026-10-12-double-fast-frame-recipes.tar.gz) preserve the fixed
+protocol, input manifest, generator and controls. Helper implementation/review,
+C capture and ordinary-frame outcomes remain open.
