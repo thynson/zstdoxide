@@ -674,3 +674,28 @@ caller artifact identities are verified. The [platform evidence](evidence/2026-1
 and [archive](evidence/2026-10-12-double-fast-platform.tar.gz) retain exact source
 catalogs, reconstructable test overlay, commands, environments, selected names,
 logs and caller sources. This platform checkpoint contains no timing result.
+
+## Complete correctness matrix
+
+The immutable b505237 snapshot plus the public platform-test overlay completes
+all 66 commands. Fifteen full suites (safe, each of twelve individual unsafe
+features, combined debug and combined release) each report 1,021 passed, zero
+failed and 54 explicitly ignored: 15,315 passing executions in total. All fourteen
+no_std configurations, strict all-target Clippy safe/all, formatting, thirteen
+allocator-helper tests and 22 registered examples per safe/all mode pass.
+Offline fixture, importer, policy and permanent baseline checks also pass.
+The pinned-source audit succeeds; the complete-migration gate intentionally
+rejects 188 unfinished source units and incomplete external corpus coverage.
+
+Every tested codec, test, fixture, script, example and Cargo input matches the
+delivered tree. The new std-only DoubleFast benchmark example/driver was added
+after this snapshot; its separate clock-free, output/owner, Clippy and formatting
+evidence applies rather than retroactively including it in the matrix. README
+prose and milestone reports can evolve without changing the tested code.
+
+The [matrix evidence](evidence/2026-10-12-double-fast-matrix.json) and
+[76-member archive](evidence/2026-10-12-double-fast-matrix.tar.gz) preserve every
+command/log, source catalog, runner, Git base and reconstructable overlay.
+All log digests, parsed harness counts, source identities and archive bytes were
+independently verified. This matrix adds no ignored oracle campaigns or timing
+claim; the separately qualified C and interpreted-platform records remain above.
