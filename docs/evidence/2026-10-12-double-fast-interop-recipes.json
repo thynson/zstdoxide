@@ -1,0 +1,29 @@
+{
+  "archive": "2026-10-12-double-fast-interop-recipes.tar.gz",
+  "archive_bytes": 15886,
+  "archive_members": 15,
+  "archive_sha256": "650efdb33e4dc20625237090a0918f098f7b2dbd4a7b366e791263dca16e187f",
+  "classifications": {
+    "resource": 4,
+    "success": 113,
+    "unsupported": 42
+  },
+  "controls_per_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 34
+  },
+  "date": "2026-10-12",
+  "recipes": 159,
+  "rust_equivalence_groups": 16,
+  "scope": "Source-only broader public-frame protocol and input hypotheses. Normal/optimized Python with child creation disabled; no C/Rust codec, Clippy/no_std, Miri or timing result.",
+  "source": {
+    "docs/reference-double-fast-interop-protocol.md": "0dede1d2475a12fdd57c47f1e4e9c98a1e32c996b9f984cc2340e9a33f139a73",
+    "scripts/check_double_fast_interop_recipes.py": "83af1fd5b89b0d512a3a1294492b6b5a9e73ad61f0bb992c043f839da3ae0fcf",
+    "scripts/oracles/double_fast_interop.py": "05eefcf492ce7dca0741d3348d165aca8a48e402aa63710d1c043775125705f3",
+    "tests/fixtures/reference-double-fast-interop-recipes/README.md": "dd94b5d4719f71a96fb69a362babbf1091948ab1f85e22816aeb4febc5c32697",
+    "tests/fixtures/reference-double-fast-interop-recipes/recipes.json": "81f39a8303c41232b5d4993168f986f967aa2b1034efc77b5f86c4b401373add"
+  },
+  "source_bytes": 38855519,
+  "status": "passed"
+}

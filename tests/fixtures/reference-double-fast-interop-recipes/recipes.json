@@ -1,0 +1,2968 @@
+{
+  "classifications": {
+    "resource": 4,
+    "success": 113,
+    "unsupported": 42
+  },
+  "expected_rust_frame_equivalence": [
+    [
+      "tier-0-level-0",
+      "tier-0-level-3"
+    ],
+    [
+      "tier-6-level-0",
+      "tier-6-level-3"
+    ],
+    [
+      "tier-7-level-0",
+      "tier-7-level-3"
+    ],
+    [
+      "tier-16384-level-0",
+      "tier-16384-level-3"
+    ],
+    [
+      "tier-16385-level-0",
+      "tier-16385-level-3"
+    ],
+    [
+      "tier-131072-level-0",
+      "tier-131072-level-3"
+    ],
+    [
+      "tier-131073-level-0",
+      "tier-131073-level-3"
+    ],
+    [
+      "tier-262144-level-0",
+      "tier-262144-level-3"
+    ],
+    [
+      "tier-262145-level-0",
+      "tier-262145-level-3"
+    ],
+    [
+      "tier-2097153-level-0",
+      "tier-2097153-level-3"
+    ],
+    [
+      "unequal-h6-c18-m3",
+      "unequal-h6-c18-m4"
+    ],
+    [
+      "unequal-h18-c6-m3",
+      "unequal-h18-c6-m4"
+    ],
+    [
+      "control-s1-t0",
+      "control-s30-t0",
+      "control-s1-t1",
+      "control-s30-t131072"
+    ],
+    [
+      "hint-baseline",
+      "hint-1",
+      "hint-16384",
+      "hint-2147483647"
+    ],
+    [
+      "ordinary-literal_tree",
+      "ordinary-literal_target4",
+      "ordinary-literal_target_max",
+      "ordinary-literal_search29"
+    ],
+    [
+      "ordinary-short_width3",
+      "ordinary-short_width4"
+    ]
+  ],
+  "frame_limit": 5242880,
+  "input_sha256": {
+    "scripts/import_reference_fast_fuzz.py": "cbbbc0d8b4c8709b3002c7d55d995ed61477fbfa42f2ee624952d0d4c814adbc",
+    "scripts/oracles/double_fast_frames.py": "ac10609d7fe7c0f4983899238dc8a852ca437e35aff42b317599a0286c8ea656",
+    "tests/fixtures/reference-admission-v2/loops.tsv": "c5c2bed1fe2dcf8631d89eecf98510cab81b9c115d365e6a5dadef216245ce6d",
+    "tests/upstream/reference-fast-fuzz/observations.tsv": "77a868913331f7e9edd4a73a60634eebd97d83b5b57050b6945fbde5b317b4e5"
+  },
+  "qualification": "No resolved scalar or wire-byte prediction. Complete public frames replace no existing internal-state/schedule observations.",
+  "recipe_count": 159,
+  "recipes": [
+    {
+      "expected": "success",
+      "id": "ordinary-empty",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-first_uniform",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-zero_uniform",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-compressed_uniform_repeat",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "8844015fc4c5e34eefd4efa36b907726aa31927d4ed917d4a00281896b190c51"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_then_copy",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262144,
+      "source_sha256": "d063bfd8edd48cefc4f2bc5f346e00abff27f16585513c1022a7316c8a17681d"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-mixed_fallback",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 16384,
+      "source_sha256": "3cdce884c0b1a5c382551d9e4745ce407af930b954a7cfb8b49fad24d5009fb2"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-tiny_stale",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 8247,
+      "source_sha256": "2683daf8cfba6ce9add5a09559e99197ef09db3963bf684fd7754127f10ec24d"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-literal_tree",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        7,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-literal_target4",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        7,
+        4,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-literal_target_max",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        7,
+        131072,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-literal_search29",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        29,
+        7,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-window_expiry17",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        17,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 393216,
+      "source_sha256": "b356eab1e165e29dca402be9992bea8b59557779b837c1057f3e94eae86dfcbb"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-window_retained19",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 393216,
+      "source_sha256": "b356eab1e165e29dca402be9992bea8b59557779b837c1057f3e94eae86dfcbb"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-window_expiry20",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        20,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 1310720,
+      "source_sha256": "db7f4665ab3d2824f5e9320a2109b577ee0d73ca0b0034f48522dee2bd422191"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-window_retained21",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        21,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 1310720,
+      "source_sha256": "db7f4665ab3d2824f5e9320a2109b577ee0d73ca0b0034f48522dee2bd422191"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-window_expiry21",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        21,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 2359296,
+      "source_sha256": "928507b1f4804e2c631e9ff6aba383149f7461e819a86a01336c48f657af9096"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length1",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 1,
+      "source_sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length2",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 2,
+      "source_sha256": "fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length3",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 3,
+      "source_sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length4",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 4,
+      "source_sha256": "88d4266fd4e6338d13b845fcf289579d209c897823b9217da3e161936f031589"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length5",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 5,
+      "source_sha256": "36bbe50ed96841d10443bcb670d6554f0a34b761be67ec9c4a8ad2c0c44ca42c"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length6",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 6,
+      "source_sha256": "bef57ec7f53a6d40beb640a780a639c83bc29ac8a9816f1fc6c5c6dcd93c4721"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length7",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 7,
+      "source_sha256": "7d1a54127b222502f5b79b5fb0803061152a44f92b37e23c6527baf665d4da9a"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length8",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 8,
+      "source_sha256": "9c56cc51b374c3ba189210d5b6d4bf57790d351c96c47c02190ecf1e430635ab"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length9",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9,
+      "source_sha256": "19cc02f26df43cc571bc9ed7b0c4d29224a3ec229529221725ef76d021c8326f"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-fresh_length10",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 10,
+      "source_sha256": "72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-prefix_length7",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 4103,
+      "source_sha256": "1fd0b6d28694ea49a135ef1283c4ca6740e783c7d7a8d03db475a6053aa63511"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-prefix_length8",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 4104,
+      "source_sha256": "77134c1ac039a049cd35ce2310a35b74086b6b73d8fcae92b8451e53615ed7b5"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-prefix_length9",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 4105,
+      "source_sha256": "5a6c54c4bdec15ff8ea2464cd4b0acf233abcb91b0bfc2a96cadf02259457674"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-prefix_length10",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 4106,
+      "source_sha256": "1539f53fd5736b5657a9f9ed4197d20b6bb889ae1743b6858b999ae5034776ee"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-short_width3",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        3,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-short_width4",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-short_width5",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        5,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-short_width6",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        6,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-short_width7",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        12,
+        14,
+        1,
+        7,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-table_l6_s18",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        18,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-table_l18_s6",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        6,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-table_l6_s7",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        7,
+        6,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-table_l7_s6",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        6,
+        7,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 12288,
+      "source_sha256": "7c2f3491f6952a6b291f1f050c2aa75b60c57bdae118f4c9cd229a4a418100d3"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k4_d128",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "5b683d7f57e253f12a46871da9463069b351ece2fda04e735ee2ff472cce601b"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k4_d192",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "d08192cf925623a5102fa058070539b63ff19e54c1443f68226c613d2257b596"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k4_d256",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "878715b3d80fe00ac22e8962d53030e267420e628a3719c7f009e1cd58c66faa"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k4_d320",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "8b05f67e348080c30e58813840e360aabfdfa036479e84ad9484d99c4dd5091f"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k8_d128",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "35135bbf8081c272659d83893dcde848b97c66ad9bf4bee53ccf9eded8467b32"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k8_d192",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "ae886beedc2148218d0f263a51a11373cc222600870aa338fb47b882dd09979e"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k8_d256",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "d575f31316458894017015155d62e537c1d890b8624dbd3da3ad1cf50477171c"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k8_d320",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "61ec9d4bdf4be48f2a2dc37abfbcc0d8183a301a9520a8407f99d9d65ea2e23d"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k12_d128",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "cd14abb20c19b392770a273d3ae054c140079fb4ef4d3431e422fcf5a4cc1ebe"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k12_d192",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "a6a7e89cc40c5746dfc9d356af0643a337c8b9b689b85abf9d8a25d3aa4af44e"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k12_d256",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "9e62e94382b17d27f3330977dc7b6aa8e9281687d95923e83688734a9c0205f7"
+    },
+    {
+      "expected": "success",
+      "id": "ordinary-raw_candidate_k12_d320",
+      "origin": "Frozen ordinary recipe source, now one public known-size call. Its original schedule and internal applied tuple are not reused as public observations.",
+      "request": [
+        3,
+        19,
+        16,
+        18,
+        1,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 9216,
+      "source_sha256": "846aa816de6bbc39506407309ccd2882683efef5cf8522257faa7d2913fdb035"
+    },
+    {
+      "expected": "success",
+      "id": "tier-0-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "tier-0-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "tier-0-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "tier-0-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "tier-6-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 6,
+      "source_sha256": "17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43"
+    },
+    {
+      "expected": "success",
+      "id": "tier-6-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 6,
+      "source_sha256": "17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43"
+    },
+    {
+      "expected": "success",
+      "id": "tier-6-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 6,
+      "source_sha256": "17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43"
+    },
+    {
+      "expected": "unsupported",
+      "id": "tier-6-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 6,
+      "source_sha256": "17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43"
+    },
+    {
+      "expected": "success",
+      "id": "tier-7-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 7,
+      "source_sha256": "57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b"
+    },
+    {
+      "expected": "success",
+      "id": "tier-7-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 7,
+      "source_sha256": "57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b"
+    },
+    {
+      "expected": "success",
+      "id": "tier-7-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 7,
+      "source_sha256": "57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b"
+    },
+    {
+      "expected": "unsupported",
+      "id": "tier-7-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 7,
+      "source_sha256": "57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b"
+    },
+    {
+      "expected": "success",
+      "id": "tier-16384-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 16384,
+      "source_sha256": "4348e3b98e8a327b34ced39c1da9e67cdb4cd5e48e4d7960607a3ae403d35f0c"
+    },
+    {
+      "expected": "success",
+      "id": "tier-16384-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 16384,
+      "source_sha256": "4348e3b98e8a327b34ced39c1da9e67cdb4cd5e48e4d7960607a3ae403d35f0c"
+    },
+    {
+      "expected": "success",
+      "id": "tier-16384-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 16384,
+      "source_sha256": "4348e3b98e8a327b34ced39c1da9e67cdb4cd5e48e4d7960607a3ae403d35f0c"
+    },
+    {
+      "expected": "unsupported",
+      "id": "tier-16384-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 16384,
+      "source_sha256": "4348e3b98e8a327b34ced39c1da9e67cdb4cd5e48e4d7960607a3ae403d35f0c"
+    },
+    {
+      "expected": "success",
+      "id": "tier-16385-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "ba4f9b37402df1e3ad948a794ab43a9ed887d63e3a389c208ca4314fdd5add58"
+    },
+    {
+      "expected": "success",
+      "id": "tier-16385-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "ba4f9b37402df1e3ad948a794ab43a9ed887d63e3a389c208ca4314fdd5add58"
+    },
+    {
+      "expected": "success",
+      "id": "tier-16385-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "ba4f9b37402df1e3ad948a794ab43a9ed887d63e3a389c208ca4314fdd5add58"
+    },
+    {
+      "expected": "success",
+      "id": "tier-16385-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "ba4f9b37402df1e3ad948a794ab43a9ed887d63e3a389c208ca4314fdd5add58"
+    },
+    {
+      "expected": "success",
+      "id": "tier-131072-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131072,
+      "source_sha256": "feb1e4409d009e0ec502eaabe321f86b5197a881e9b765252ec8a75d6957596d"
+    },
+    {
+      "expected": "success",
+      "id": "tier-131072-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131072,
+      "source_sha256": "feb1e4409d009e0ec502eaabe321f86b5197a881e9b765252ec8a75d6957596d"
+    },
+    {
+      "expected": "success",
+      "id": "tier-131072-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131072,
+      "source_sha256": "feb1e4409d009e0ec502eaabe321f86b5197a881e9b765252ec8a75d6957596d"
+    },
+    {
+      "expected": "success",
+      "id": "tier-131072-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131072,
+      "source_sha256": "feb1e4409d009e0ec502eaabe321f86b5197a881e9b765252ec8a75d6957596d"
+    },
+    {
+      "expected": "success",
+      "id": "tier-131073-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131073,
+      "source_sha256": "dd84db969f4ff2abb79c8c2fbc06e8d8e02c46d6481c958e057f7ad7a24c58a7"
+    },
+    {
+      "expected": "success",
+      "id": "tier-131073-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131073,
+      "source_sha256": "dd84db969f4ff2abb79c8c2fbc06e8d8e02c46d6481c958e057f7ad7a24c58a7"
+    },
+    {
+      "expected": "success",
+      "id": "tier-131073-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131073,
+      "source_sha256": "dd84db969f4ff2abb79c8c2fbc06e8d8e02c46d6481c958e057f7ad7a24c58a7"
+    },
+    {
+      "expected": "unsupported",
+      "id": "tier-131073-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131073,
+      "source_sha256": "dd84db969f4ff2abb79c8c2fbc06e8d8e02c46d6481c958e057f7ad7a24c58a7"
+    },
+    {
+      "expected": "success",
+      "id": "tier-262144-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262144,
+      "source_sha256": "31a1f9dea0169551092d05e8bf4a446228c8c3eb4c9b713c66adcb7fd53c89be"
+    },
+    {
+      "expected": "success",
+      "id": "tier-262144-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262144,
+      "source_sha256": "31a1f9dea0169551092d05e8bf4a446228c8c3eb4c9b713c66adcb7fd53c89be"
+    },
+    {
+      "expected": "success",
+      "id": "tier-262144-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262144,
+      "source_sha256": "31a1f9dea0169551092d05e8bf4a446228c8c3eb4c9b713c66adcb7fd53c89be"
+    },
+    {
+      "expected": "unsupported",
+      "id": "tier-262144-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262144,
+      "source_sha256": "31a1f9dea0169551092d05e8bf4a446228c8c3eb4c9b713c66adcb7fd53c89be"
+    },
+    {
+      "expected": "success",
+      "id": "tier-262145-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "6a102a35ef13d267bf487c1520d82b4ff541787bc8c288ccf98aeebe7686016a"
+    },
+    {
+      "expected": "success",
+      "id": "tier-262145-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "6a102a35ef13d267bf487c1520d82b4ff541787bc8c288ccf98aeebe7686016a"
+    },
+    {
+      "expected": "success",
+      "id": "tier-262145-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "6a102a35ef13d267bf487c1520d82b4ff541787bc8c288ccf98aeebe7686016a"
+    },
+    {
+      "expected": "success",
+      "id": "tier-262145-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "6a102a35ef13d267bf487c1520d82b4ff541787bc8c288ccf98aeebe7686016a"
+    },
+    {
+      "expected": "success",
+      "id": "tier-2097153-level-0",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "success",
+      "id": "tier-2097153-level-2",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "success",
+      "id": "tier-2097153-level-3",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "success",
+      "id": "tier-2097153-level-4",
+      "origin": "Pinned clevels.h four source tiers; level0/3 equivalence and level2/4 strategy boundaries.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "success",
+      "id": "unequal-h6-c18-m3",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        19,
+        18,
+        6,
+        0,
+        3,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "unequal-h6-c18-m4",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        19,
+        18,
+        6,
+        0,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "unequal-h6-c18-m7",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        19,
+        18,
+        6,
+        0,
+        7,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "unequal-h18-c6-m3",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        19,
+        6,
+        18,
+        0,
+        3,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "unequal-h18-c6-m4",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        19,
+        6,
+        18,
+        0,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "unequal-h18-c6-m7",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        19,
+        6,
+        18,
+        0,
+        7,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "control-s1-t0",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        -7,
+        19,
+        14,
+        16,
+        1,
+        5,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "control-s30-t0",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        -7,
+        19,
+        14,
+        16,
+        30,
+        5,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "control-s1-t1",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        -7,
+        19,
+        14,
+        16,
+        1,
+        5,
+        1,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "control-s30-t131072",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        -7,
+        19,
+        14,
+        16,
+        30,
+        5,
+        131072,
+        2,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "hint-1",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "hint-16384",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        16384
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "hint-2147483647",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2147483647
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "hint-baseline",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262145,
+      "source_sha256": "99d3cfd2931b1417e1b13025c9e33d2a9a2815dd373211505c740d93e7d72548"
+    },
+    {
+      "expected": "success",
+      "id": "cap-w21-c18-h18-s2",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        21,
+        18,
+        18,
+        0,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "resource",
+      "id": "cap-w22-c18-h18-s2",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        22,
+        18,
+        18,
+        0,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "resource",
+      "id": "cap-w21-c19-h18-s2",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        21,
+        19,
+        18,
+        0,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "resource",
+      "id": "cap-w21-c18-h19-s2",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        21,
+        18,
+        19,
+        0,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "resource",
+      "id": "cap-w21-c18-h18-s1",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        21,
+        18,
+        18,
+        0,
+        4,
+        0,
+        1,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "unsupported",
+      "id": "cap-w22-c19-h19-s3",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        22,
+        19,
+        19,
+        0,
+        4,
+        0,
+        3,
+        0
+      ],
+      "source_bytes": 2097153,
+      "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844"
+    },
+    {
+      "expected": "success",
+      "id": "maximum-source",
+      "origin": "Independent deterministic public-profile input.",
+      "request": [
+        3,
+        21,
+        18,
+        18,
+        0,
+        4,
+        0,
+        2,
+        0
+      ],
+      "source_bytes": 4194304,
+      "source_sha256": "a117210941a0b00dcb2d8577e680d84b6fa0eaf760d2afc654c953b9859d54fa"
+    },
+    {
+      "expected": "success",
+      "id": "fuzzer-empty-level--1",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "fuzzer-empty-level-0",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "fuzzer-empty-level-1",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "fuzzer-empty-level-2",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "fuzzer-empty-level-3",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-4",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-5",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-6",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-7",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-8",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        8,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-9",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-10",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        10,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-11",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        11,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-12",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-13",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        13,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-14",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        14,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-15",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        15,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-16",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        16,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-17",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        17,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-18",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        18,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-19",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        19,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-20",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        20,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-21",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        21,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-empty-level-22",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        22,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "expected": "success",
+      "id": "fuzzer-initial_match-level-1",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "success",
+      "id": "fuzzer-initial_match-level-2",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "success",
+      "id": "fuzzer-initial_match-level-3",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-4",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-5",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-6",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-7",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-8",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        8,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-9",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-10",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        10,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-11",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        11,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-12",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-13",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        13,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-14",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        14,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-15",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        15,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-16",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        16,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-17",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        17,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-18",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        18,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "unsupported",
+      "id": "fuzzer-initial_match-level-19",
+      "origin": "Original fuzzer.c:1554/1637 one-shot subset; no NULL, reusable-context or caller-output claim.",
+      "request": [
+        19,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33"
+    },
+    {
+      "expected": "success",
+      "id": "selector-tier-44",
+      "origin": "Exact newly admitted simple_round_trip.c source prefix and selected level from frozen C producer.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 131073,
+      "source_sha256": "13d19c8aeac5ce9bf83987ea57fa440a91345f7f888595118c4b2511ec62fa7e"
+    },
+    {
+      "expected": "success",
+      "id": "selector-tier-49",
+      "origin": "Exact newly admitted simple_round_trip.c source prefix and selected level from frozen C producer.",
+      "request": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 262144,
+      "source_sha256": "225cfaaffae03548a18a99f4d4cdc947ebd36a98c36c1dd08fef18ec7fbe7923"
+    },
+    {
+      "expected": "success",
+      "id": "selector-unsupported-55",
+      "origin": "Exact newly admitted simple_round_trip.c source prefix and selected level from frozen C producer.",
+      "request": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "1d01358a85167f2c11a1702e5d7b22f27cc6177268d8bbf9881c5243e0f79713"
+    },
+    {
+      "expected": "success",
+      "id": "selector-unsupported-56",
+      "origin": "Exact newly admitted simple_round_trip.c source prefix and selected level from frozen C producer.",
+      "request": [
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_bytes": 30,
+      "source_sha256": "1d01358a85167f2c11a1702e5d7b22f27cc6177268d8bbf9881c5243e0f79713"
+    }
+  ],
+  "request_fields": [
+    "level",
+    "window",
+    "chain",
+    "hash",
+    "search",
+    "minimum",
+    "target",
+    "strategy",
+    "hint"
+  ],
+  "schema_version": 1,
+  "source_bytes": 38855519,
+  "source_limit": 4194304,
+  "status": "Source-only pre-execution inputs and hypotheses.",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

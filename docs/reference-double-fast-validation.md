@@ -569,3 +569,24 @@ forced-streaming and in-place gaps remain explicit. The
 [evidence](evidence/2026-10-12-double-fast-official.json) and
 [archive](evidence/2026-10-12-double-fast-official.tar.gz) retain exact logs/source.
 This checkpoint adds no C capture, Miri or timing claim.
+
+## Broader public-frame input plan
+
+A separate versioned [protocol](reference-double-fast-interop-protocol.md) and
+source-only fixture freeze159 requests,38,855,519 source bytes,4MiB per-source
+and5MiB frame bounds. Expected113 successes,42 unsupported profiles,4 resource
+errors and16 Rust frame-equivalence groups remain hypotheses before execution.
+The inputs include all51 ordinary source recipes as whole public calls, all four
+numeric tiers, independent maximum table directions, window21 retention/expiry,
+controls, the43 original fuzzer-loop entries and four exact new selector prefixes.
+Original internal schedules, applied tuples and historical observations remain
+unchanged. The protocol requires26 independently built C units under ASan/UBSan,
+with no prebuilt archive; implementation/review/capture are separate next work.
+
+Normal and optimized Python each pass two positive and34 rejection controls
+with child process creation disabled. Both source regeneration checks, the
+existing838-file/20-collection registry and successor policy check pass. The
+[evidence](evidence/2026-10-12-double-fast-interop-recipes.json) and
+[archive](evidence/2026-10-12-double-fast-interop-recipes.tar.gz) preserve inputs,
+source identities and controls. No new codec, Clippy/no_std, C, Miri or timing
+execution is claimed at this source-only checkpoint.

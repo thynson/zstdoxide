@@ -639,6 +639,18 @@ tuples; archived interop tuples remain explicitly historical Rust observations.
 No pointer representation or unsafe alternate is needed for these test records.
 Six additive C obligations remain separate from their formerly unexecuted cases.
 
+The broader public-frame oracle plan uses a separate bounded packet version.
+A Rust adapter owns its initialized input/output vectors and borrows checked
+source/frame ranges; its nine-field request is a plain record. The source-only
+recipe generator owns immutable bytes and tuples, with prior source identities
+checked before importing generators. No private C table or pointer is exposed.
+The C helper has three complete guarded buffer owners with a conservative
+13,631,872-byte aggregate payload/guard limit, excluding opaque codec workspace.
+All helpers remain std/process test infrastructure, outside the alloc-only core.
+The [protocol review](reference-double-fast-interop-protocol.md) specifies bounds
+before implementation and execution; no new unsafe Rust structure is required.
+
+
 Ordinary current-long/current-short candidates accept indices equal to the
 block-end floor, because `ZSTD_selectAddr` uses `>=`. The later-long candidate
 uses an explicit strict `>` condition. Backward extension may finish at the
