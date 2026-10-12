@@ -439,3 +439,25 @@ Cargo paths by exact hashes without rebuilding. All tested production inputs
 and both added tests match the immutable snapshot and delivered files. Every
 one of the archive's 34 members was verified. Full feature checks, measurements
 and complete upstream migration remain separate obligations.
+
+## Completed immutable feature matrix
+
+The immutable snapshot completes all 88 commands. Safe, each of fourteen unsafe
+features, all features in debug and all features in release each pass 1,098 tests
+with 54 documented ignored tests: 17 full suites, 18,666 passes, 918 ignored and
+zero failures. Sixteen no_std configurations compile. Formatting and strict
+safe/all Clippy pass, allocator support passes 13 tests, and usage documentation
+passes 22 examples per safe/all mode. The explicit migration-completion gate
+correctly reports 188 unfinished upstream source units; this is not full
+upstream parity and the ignored campaigns were not rerun by this matrix.
+
+Every pre-existing codec, test, script and dependency input still matches the
+snapshot. Later additive benchmark and Module 15 oracle-preparation files are
+not retroactively part of it. The nine added `reference_greedy_defaults` tests
+have separate safe/chain/row/all checks; their complete frame and allocator
+baselines also passed all sixteen clock-free benchmark configurations.
+
+The [matrix evidence](evidence/2026-10-12-greedy-matrix.json) and
+[archive](evidence/2026-10-12-greedy-matrix.tar.gz) preserve the runner, snapshot
+identity/overlays, every command/log and independently recounted test totals.
+The 99-member archive is 625,624 bytes and has been verified byte-for-byte.
