@@ -70,6 +70,7 @@ mod frame;
 mod fse;
 mod fse_encode;
 mod fse_select;
+mod greedy_key;
 mod heap;
 mod history;
 mod huffman;

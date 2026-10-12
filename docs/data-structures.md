@@ -760,3 +760,13 @@ source arena includes initialized leading/suffix slack without extending logical
 history. Fresh-context salt observation has a separately bounded custom C
 allocator and does not share direct-parser table owners. These test records
 and borrowed packet fields introduce no unsafe Rust representation.
+
+The implemented `GreedyKeyLayout` admits H6..19 and validates minMatch 3..7
+before selecting effective width 4..6. `RowLayout` selects 16/32/64 cells and
+at most 64 visits without a chain allocation. Its salted `RowKey` retains the
+layout identity; higher unused bytes never enter exact-width loads. These
+records share safe scalar code across every backend. The previously captured
+fresh-context salt is `0x835892b4bb2cae74`; reuse/dictionary salt behavior remains
+outside this checkpoint. Primitive tests reuse 1,728 independent pinned C hash
+vectors with algebraic salt high-bit expectations, plus all dimension bytes,
+short tails, incompatible widths, reserved row geometry and maximum hash bits.

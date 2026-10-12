@@ -53,7 +53,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Capture and independently verify fresh-context salt and tiny chain/row observations with all used C units instrumented.
 - [x] Pin broader source/initial-state recipes for row widths, hash/chain collisions, cyclic bias, gaps, skipping, floors, repeats and malformed packets.
 - [ ] Capture normal/sanitized direct observations and independently reject changed or malformed evidence offline before Rust parsing.
-- [ ] Add checked salted row-key/layout value records without changing existing Fast/DoubleFast key domains.
+- [x] Add checked salted row-key/layout value records without changing existing Fast/DoubleFast key domains.
 - [ ] Add initialized safe reference-chain storage with exact independent owners, cyclic slot translation and bounded traversal.
 - [ ] Add the equivalent opt-in unsafe-reference-chain backend with complete access proofs and corruption/owner equivalence tests.
 - [ ] Add initialized safe row-table storage with reserved heads, cyclic tag ordering, candidate snapshots and exact owners.
