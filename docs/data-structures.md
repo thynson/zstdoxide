@@ -982,3 +982,17 @@ still occur before allocator cloning or allocation. Test-only inspection helpers
 replace temporary integration-wide dead-code allowances. Four public Greedy
 tests cover both selected families, source hints, resource/error ordering,
 equivalent settings and exact owned/borrowed allocator lifetimes.
+
+The next public interoperability adapter owns three initialized C buffer bases
+(source, compressed input, output), each with checked capacity and 64-byte guards
+on both sides. Only live within-allocation pointers reach the public C APIs;
+the context owns its opaque tables and is freed before buffer owners. The new
+Rust adapter owns a bounded packet vector and returns owned frame/decoded vectors,
+borrowing validated source/frame ranges by index. Python recipe records own
+deterministic bytes and immutable scalar tuples; manifests retain historical
+source/request identities separately from successor admission. A separately
+versioned wire magic prevents old-policy transport confusion. Source/frame and
+stream caps do not claim a total bound on arbitrary C workspace. The controller
+will send C encode requests only from the frozen admitted set. Detailed bounds
+and implementation work items are in `reference-greedy-interop-protocol.md` and
+`TODO.md`; these tools remain outside the no_std codec and add no unsafe Rust.

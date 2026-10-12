@@ -81,7 +81,11 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Freeze successor v3 admission mappings over unchanged selectors, numeric loops and both historical interop sets before changing public behavior.
 - [x] Extend public request admission and truthful documentation with resolved Greedy scope and unchanged unsupported/resource precedence.
 - [x] Port newly admitted official numeric/fuzz assertions without rewriting historical C tuples or closing unrelated obligations.
-- [ ] Specify/review a separately versioned bounded public-frame adapter and capture broader bidirectional normal/full-sanitizer C interoperability.
+- [x] Specify the successor public-frame protocol, ownership bounds and source-family plan before implementation.
+- [ ] Freeze successor public-frame recipes over both unchanged historical sets and additive Greedy sources before codec execution.
+- [ ] Implement and review separately versioned public C/Rust adapters, checked transport and malformed-packet controls before first C execution.
+- [ ] Implement the bounded public Greedy capture controller and independent offline auditor with preflight rejection controls.
+- [ ] Capture broader bidirectional public Greedy interoperability with normal/instrumented C, reject forged evidence offline and preserve the complete campaign.
 - [ ] Verify focused chain/row ownership and parser bounds on interpreted i686/s390x and compile-only no-atomics callers.
 - [ ] Run the full safe/each-feature/all/no_std correctness matrix with unchanged Fast/DoubleFast/named regression baselines.
 - [ ] Freeze and validate clock-free row/chain benchmark workloads with separate allocation accounting before measuring after a CPU barrier.
