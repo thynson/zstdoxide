@@ -996,3 +996,11 @@ stream caps do not claim a total bound on arbitrary C workspace. The controller
 will send C encode requests only from the frozen admitted set. Detailed bounds
 and implementation work items are in `reference-greedy-interop-protocol.md` and
 `TODO.md`; these tools remain outside the no_std codec and add no unsafe Rust.
+
+The Module 14 benchmark harness is std-only and owns initialized source/frame
+Vec values and separate allocator-survey snapshots. It adds no unsafe data
+structure: chain and row accesses still use the independently gated codec
+leaves. Frozen requests, source identities, ownership accounting and clock
+boundaries precede implementation in `docs/reference-greedy-benchmarks.md`.
+The full 32-case plan retains eight historical Fast/DoubleFast controls and
+requires row-64/row-capped complete-frame and owner equivalence on each source.
