@@ -13,6 +13,7 @@ python3 scripts/import_fast_frame_publication.py --check
 python3 scripts/import_fast_parser_families.py --check
 python3 scripts/check_double_fast_tiny.py --check
 python3 scripts/check_greedy_tiny_recipes.py --check
+python3 scripts/check_greedy_family_recipes.py --check
 python3 scripts/capture_greedy_tiny.py --check-plan
 python3 scripts/check_greedy_tiny_capture.py --check-fixture
 python3 scripts/check_double_fast_hashes.py --check
