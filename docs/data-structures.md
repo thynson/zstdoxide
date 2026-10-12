@@ -816,3 +816,15 @@ row tests pass in safe, isolated-feature and all-feature modes, including full
 maps and the independent source-history model. Strict feature/all Clippy,
 isolated-feature no_std and all fourteen unsafe features together without std
 pass. The feature is included in the normal matrix; performance remains unmeasured.
+
+`GreedyExecutionPlan` now resolves the actual known size once and selects rows
+only for the resolved window above 14. Its copied `GreedyTablePlan` retains only
+the selected family's dimensions and budget. Before any allocation or clone,
+planning checks W21/H19, chain-only C18/S8, both independent target payload
+layouts, their sum, and the complete raw-frame bound including the output's
+isize allocation limit. Row mode never rejects an unused chain size or an
+otherwise valid search log above six. Six safe/all tests reuse five frozen C
+Greedy query tuples and check source-tier transitions, exact owner costs,
+strategy/resource precedence, key clamping, target independence, empty hints
+and nontruncated source sizes above u32 on 64-bit hosts. Strict safe Clippy and
+no_std compilation pass. This private plan does not yet change public admission.

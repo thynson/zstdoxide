@@ -163,6 +163,13 @@ isolated-feature no_std and all fourteen unsafe features without std pass.
 Full frozen parser/map integration and deterministic performance comparisons
 remain pending.
 
+The private Greedy admission plan passes six safe/all tests plus strict safe
+Clippy and no_std compilation. Five previously frozen C Greedy query tuples
+select one chain and four row plans. Tests cover actual known-source adjustment,
+branch-specific resource caps, independent target payloads and complete output
+bounds, unsupported-strategy precedence, empty hints and nontruncated large
+source scalars. This does not expose Greedy in the public request API.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories

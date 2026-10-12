@@ -73,6 +73,7 @@ mod fse;
 mod fse_encode;
 mod fse_select;
 mod greedy_key;
+mod greedy_plan;
 mod heap;
 mod history;
 mod huffman;
