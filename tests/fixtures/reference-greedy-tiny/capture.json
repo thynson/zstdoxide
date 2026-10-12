@@ -1,0 +1,230 @@
+{
+  "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+  "compiler_sha256": "7f30f076d0e9c38f772a76449fca9da8cf97f6a3d43b94c90a00e4f9ce7ad39e",
+  "context_peak_guarded_bytes": {
+    "normal": [
+      149198,
+      149198
+    ],
+    "sanitized": [
+      151502,
+      151502
+    ]
+  },
+  "pack_bytes": 147120,
+  "pack_sha256": "a2bac02eeeb65292b92892605d15b043097ed94651b4be494fec0427b73b6fff",
+  "qualification": "Direct observations are byte-identical between normal and ASan/UBSan builds. Fresh-context peak bytes are retained per mode because upstream adds internal ASan redzones; all other salt fields match. The first full capture failed only an overbroad comparison of that peak and is preserved separately.",
+  "records": {
+    "chain-fresh-10": {
+      "bytes": 3829,
+      "offset": 11412,
+      "sha256": "dec7a50b521f93d030434f7b8330ebfdad750270ecfa2f0808a678378de287cb"
+    },
+    "chain-fresh-15": {
+      "bytes": 3909,
+      "offset": 15241,
+      "sha256": "20d3446274916d12dfdbb210d6cbcdb86ad1a8d02b83efdd78e9541e4f1dc7b3"
+    },
+    "chain-fresh-16": {
+      "bytes": 3925,
+      "offset": 19150,
+      "sha256": "c7aba67ae67dcb0f98523c52bee48fccca7cfa908959c10d1c0d7cbb2bacd929"
+    },
+    "chain-fresh-17": {
+      "bytes": 3943,
+      "offset": 23075,
+      "sha256": "394bdd06f9499113288405fe21f3457af3e95efe815509e7544f2a7f9ce89fd6"
+    },
+    "chain-fresh-18": {
+      "bytes": 3963,
+      "offset": 27018,
+      "sha256": "1045ee0cd45ddd1a7bd3b032b58ba32872591879a9c23e358ff3d6bdac5b5368"
+    },
+    "chain-fresh-7": {
+      "bytes": 3804,
+      "offset": 0,
+      "sha256": "1236cf199087264ae456a610a1a12b9e1b675edece63d0c13e4f8fcfdff99ac3"
+    },
+    "chain-fresh-8": {
+      "bytes": 3804,
+      "offset": 3804,
+      "sha256": "4f5313596f03ea4cc3aec6fa6263899123a67b47a48caaa54e8f939bc9d036bb"
+    },
+    "chain-fresh-9": {
+      "bytes": 3804,
+      "offset": 7608,
+      "sha256": "0132464b79f40679481c6fa9558e6c9ca53beac858655b0f1e39665b1db6bc91"
+    },
+    "chain-minimum-seven": {
+      "bytes": 4090,
+      "offset": 59347,
+      "sha256": "5d230da09ba47f9f78caa5f66e562a333c242ff1e23a2d8290080a4b8e7337a9"
+    },
+    "chain-minimum-three": {
+      "bytes": 4090,
+      "offset": 55257,
+      "sha256": "abc3e567bd1e9b4eec9edd6069d782b6d45ede78c0b0cdcb4537da27cf2fedf6"
+    },
+    "chain-period-four": {
+      "bytes": 4084,
+      "offset": 51173,
+      "sha256": "b208de9c38632c38435dddc531e23c155c5b1d9b69ca14ae42904397499d37fd"
+    },
+    "chain-period-one": {
+      "bytes": 4003,
+      "offset": 47170,
+      "sha256": "600315e756a2ae4a1e33e9c9e302c92f65716ae98b235b92667d617c84c84990"
+    },
+    "chain-prefix-10": {
+      "bytes": 4048,
+      "offset": 35022,
+      "sha256": "2ff335a347597aad8f5e89296e99de0ae39ec2742c7396a9547166828d9a1008"
+    },
+    "chain-prefix-16": {
+      "bytes": 4050,
+      "offset": 39070,
+      "sha256": "632ce7a992cac6af8022009161d5e6d6852e4114827d7b6e37d466e0d244dedf"
+    },
+    "chain-prefix-17": {
+      "bytes": 4050,
+      "offset": 43120,
+      "sha256": "c1c94066905f600d48a4a4234e395949f5b6493e0c392ee243123d225d823444"
+    },
+    "chain-prefix-9": {
+      "bytes": 4041,
+      "offset": 30981,
+      "sha256": "a3e3c6b3c6421b005c472cf3b8b3ba704967d23cb06769abf297d66a7fbf608f"
+    },
+    "chain-unavailable-repeats": {
+      "bytes": 4136,
+      "offset": 63437,
+      "sha256": "410b84e6fb72a91d4a9e1cd8cd33d7821e3e2d9abd72ede7d2002e39bec9816c"
+    },
+    "row-fresh-10": {
+      "bytes": 3811,
+      "offset": 78979,
+      "sha256": "5223ac73f46b3adfb708df1f49fabb74cd381327998de6d5b5fa0b6d647d9819"
+    },
+    "row-fresh-15": {
+      "bytes": 3811,
+      "offset": 82790,
+      "sha256": "b8e22e34869690edc76c3a2c347eaa060999dbeee2feccfb91e61e5b76fdb5e9"
+    },
+    "row-fresh-16": {
+      "bytes": 3815,
+      "offset": 86601,
+      "sha256": "55c9a9194a6566a5e99b287a50a21c5126323650d1a41fa4277aa28ea0e6c9a6"
+    },
+    "row-fresh-17": {
+      "bytes": 3819,
+      "offset": 90416,
+      "sha256": "59669e192554d6d7a0bf0223b501043ae22853288b74d071a46932e56ec7159e"
+    },
+    "row-fresh-18": {
+      "bytes": 3923,
+      "offset": 94235,
+      "sha256": "bd2dfc05ee69febb84ea292d05f5f4632f49babf894076797d1355d324552be9"
+    },
+    "row-fresh-7": {
+      "bytes": 3802,
+      "offset": 67573,
+      "sha256": "a2579277debc017b1609f8c93f247016249fe30948460787fdeaa2ef3d56bc60"
+    },
+    "row-fresh-8": {
+      "bytes": 3802,
+      "offset": 71375,
+      "sha256": "9d1ac8c667f9bb6f2e395c1e440c442959095210015312ddd65c23f1aa32e9dc"
+    },
+    "row-fresh-9": {
+      "bytes": 3802,
+      "offset": 75177,
+      "sha256": "33f8fbb8a0a6dbb864c0b38baca53ba3e70eb420c39769241314f902e7ccdf46"
+    },
+    "row-minimum-seven": {
+      "bytes": 4288,
+      "offset": 126650,
+      "sha256": "2a77bac4de7276b9175bc6d14cf281b61d5df3587b91d3a368c3fe0cd1184d96"
+    },
+    "row-minimum-three": {
+      "bytes": 4312,
+      "offset": 122338,
+      "sha256": "c634dabfef4f1475293e5c53010871672efa062c4f85ed3b00d50a2bc7a44af9"
+    },
+    "row-period-four": {
+      "bytes": 4306,
+      "offset": 118032,
+      "sha256": "d621d0f91a53165d1eeefb0f31648aa24cc892973697848a4c2d9e8b2adc6fa9"
+    },
+    "row-period-one": {
+      "bytes": 4017,
+      "offset": 114015,
+      "sha256": "f5070f6343cd24e8c6b850908dcff1163512ee523c9f5d9b06820e9adbf598c8"
+    },
+    "row-period-salted": {
+      "bytes": 4302,
+      "offset": 139460,
+      "sha256": "7f4907d61d04456c2e03fddc8c34d0e7684038096aa26eaf4310f0412dc7fc9a"
+    },
+    "row-prefix-10": {
+      "bytes": 3904,
+      "offset": 102055,
+      "sha256": "59912c1bf37068b5771b868eb876b437c6cf1fe93c5bd219efe7375ba905c760"
+    },
+    "row-prefix-16": {
+      "bytes": 3908,
+      "offset": 105959,
+      "sha256": "674fe3f94d793719c014a8cffc11addb3f8acbac45c6aa77622feb43d361e340"
+    },
+    "row-prefix-17": {
+      "bytes": 4148,
+      "offset": 109867,
+      "sha256": "c0998f7ebd30baf61d84c097777950890dda364bce565e04eb32d3009c2ef6b0"
+    },
+    "row-prefix-9": {
+      "bytes": 3897,
+      "offset": 98158,
+      "sha256": "95518e3d5072a66b84f82d7379cf94ce5244949b6e863b6f0b2c2400b36dbc0a"
+    },
+    "row-prefix-salted": {
+      "bytes": 4164,
+      "offset": 135296,
+      "sha256": "fb71abcefa9526ada1a2b4d6877e2fe6d187498e461710bf9d267ca790aeeb2b"
+    },
+    "row-unavailable-repeats": {
+      "bytes": 4358,
+      "offset": 130938,
+      "sha256": "7349a5b0d364d01d41db9ff713476e260cc64ff46de27be81b26938b1bf09513"
+    },
+    "salt-normal": {
+      "bytes": 1679,
+      "offset": 143762,
+      "sha256": "0c17253d4e1801fa4d39b65397c18de6e6a13bacbe87955ec834a9a7d2f63083"
+    },
+    "salt-sanitized": {
+      "bytes": 1679,
+      "offset": 145441,
+      "sha256": "692e305fb99c260de992fe9d7c6f4afaaaf315a87dbdc0c8389ca08008a3cbf3"
+    }
+  },
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1,
+  "scope": "Direct Greedy C sequence/table observations and fresh-context salt. No Rust Greedy execution or ordinary-frame capture.",
+  "source": {
+    "docs/reference-greedy-adapter-review.md": "8b40b4227ae9e224fe01676b073980d8a80d90c7afa04b609c459369a83444f5",
+    "docs/reference-greedy-oracle.md": "b563ef7714dea7ee84e5131bc21fa58a507dd784e8700280e1a4880120974046",
+    "scripts/capture_greedy_tiny.py": "27a82f1ac1dc2413a2f345a83beed293d1fb44a6c8c5b332f1dce404b22df21e",
+    "scripts/check_greedy_tiny_recipes.py": "8d87ccbde9e958e3866a9bf6411ba795afa5f7bc117e07be5a152e4623c9d1b0",
+    "scripts/oracles/greedy_direct.c": "51bfb1d124fbdaf72612f8802f271218f30da478358cd1610b8961f6a1748828",
+    "scripts/oracles/greedy_direct.py": "616248428077b4b90b873aaef1282fdf4cea5bf39388e027d882c0aa1a1f9114",
+    "tests/fixtures/reference-greedy-tiny/recipes.json": "d617a8e8ea7c92772e8bb9961d0e1baacac07adcc9b619f968df2a1a75dd3006",
+    "tests/upstream/manifest.json": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+  },
+  "status": "passed",
+  "target": "arm64-apple-darwin24.6.0",
+  "totals": {
+    "direct_observations": 144,
+    "fresh_contexts": 4,
+    "negative_rejections": 74,
+    "recipes": 36
+  }
+}

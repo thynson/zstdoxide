@@ -1,0 +1,47 @@
+{
+  "archive": "2026-10-12-greedy-tiny.tar.gz",
+  "archive_bytes": 1140444,
+  "archive_sha256": "26b361a9b10bec58fd1f74d58eaa1146359a63c8b01683de07393e01fd918ccc",
+  "checker_sha256": "e26fef9b209b4e6cb1d0a13b513cc580923242567cdc850fe45f27e986f77dd5",
+  "compiled_binary_retention": "Binaries/objects omitted; exact identities and compile/link argv retained. All logs, packets, source closure, first failure, controls and immutable complete observations retained.",
+  "context_peak_guarded_bytes": {
+    "normal": [
+      149198,
+      149198
+    ],
+    "sanitized": [
+      151502,
+      151502
+    ]
+  },
+  "controls_per_python_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 30
+  },
+  "first_attempt": {
+    "commands": 210,
+    "error": "ValueError('instrumentation changed observations')",
+    "preserved": true,
+    "status": "failed"
+  },
+  "fixture": {
+    "capture.json": "18e0ff3d695627c20ef159ecda1ee027ce535d98a55e0b84c261a0ef34c0ffa4",
+    "observations.ndjson": "a2bac02eeeb65292b92892605d15b043097ed94651b4be494fec0427b73b6fff",
+    "recipes.json": "d617a8e8ea7c92772e8bb9961d0e1baacac07adcc9b619f968df2a1a75dd3006"
+  },
+  "fresh_context_salt": "835892b4bb2cae74",
+  "members": 1079,
+  "qualification": "Only opaque CCtx peak_guarded_bytes is excluded from cross-build salt equality because upstream adds ASan redzones. All direct observations and all other fresh-context fields match. Both memory peaks are frozen and verified.",
+  "qualified_commands": 210,
+  "qualified_totals": {
+    "direct_observations": 144,
+    "fresh_contexts": 4,
+    "negative_rejections": 74,
+    "recipes": 36
+  },
+  "reference_source_files": 63,
+  "scope": "First direct Greedy chain/row C capture and fresh-context salt; no Rust Greedy implementation or ordinary-frame claim. All linked C units instrumented, retaining upstream per-function sanitizer exclusions.",
+  "status": "passed",
+  "uncompressed_bytes": 7648534
+}

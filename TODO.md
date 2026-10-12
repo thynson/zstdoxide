@@ -50,7 +50,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Specify a bounded direct Greedy C protocol with separate chain/row arenas, full owner maps and short-input safety proof before execution.
 - [x] Implement and source-review the bounded direct/fresh-salt C adapter; complete syntax checks before its first execution.
 - [x] Implement the independent packet/record validator and freeze tiny chain/row recipes without generating expected output.
-- [ ] Capture and independently verify fresh-context salt and tiny chain/row observations with all used C units instrumented.
+- [x] Capture and independently verify fresh-context salt and tiny chain/row observations with all used C units instrumented.
 - [ ] Pin broader source/initial-state recipes for row widths, hash/chain collisions, cyclic bias, gaps, skipping, floors, repeats and malformed packets.
 - [ ] Capture normal/sanitized direct observations and independently reject changed or malformed evidence offline before Rust parsing.
 - [ ] Add checked salted row-key/layout value records without changing existing Fast/DoubleFast key domains.

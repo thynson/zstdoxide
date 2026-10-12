@@ -86,3 +86,9 @@ python3 scripts/check_reference_interop_v2.py --upstream "$ZSTD_UPSTREAM" --outp
 double_fast_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-double-fast-interop.XXXXXX")
 python3 scripts/capture_double_fast_interop.py --upstream "$ZSTD_UPSTREAM" --output "$double_fast_output/capture"
 python3 scripts/check_double_fast_interop_capture.py --capture "$double_fast_output/capture"
+
+# Module 14 direct Greedy state and fresh salt, with per-mode CCtx memory
+# accounting because upstream ASan workspace redzones change its peak size.
+greedy_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-greedy-tiny.XXXXXX")
+python3 scripts/capture_greedy_tiny.py --upstream "$ZSTD_UPSTREAM" --output "$greedy_output/capture"
+python3 scripts/check_greedy_tiny_capture.py "$greedy_output/capture"
