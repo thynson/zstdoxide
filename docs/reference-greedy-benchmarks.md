@@ -108,4 +108,21 @@ python3 scripts/benchmark_greedy.py /tmp/new-greedy-smoke --validate-only
 python3 -O scripts/benchmark_greedy.py /tmp/new-greedy-smoke --validate-only
 ```
 
-All-backend clock-free validation and measured campaigns remain pending.
+## Every backend without clocks
+
+The complete clock-free campaign passes all sixteen configurations: safe, each
+of fourteen individual unsafe flags, and all together. All 512 case records
+(384 Greedy) retain the reviewed smoke's complete frame bytes, resolved tuples
+and every allocation counter. The eight historical controls and four capped-row
+equivalence pairs hold for each backend. All sample arrays remain empty.
+
+The controller validates all 37 ordered commands and their effective environment;
+optimized Python also replays the full evidence offline. Independent packaging
+compares every complete frame and owner record against the original smoke,
+checks unchanged source hashes, and verifies every reconstructed archive file.
+The [all-backend evidence](evidence/2026-10-12-greedy-clock-free.json) and
+[archive](evidence/2026-10-12-greedy-clock-free.tar.gz) preserve 669 raw files in
+20,672,495 bytes, with build identities retained and compiled outputs omitted.
+This provides correctness and owner equivalence, without a speed conclusion.
+
+Measured campaigns remain pending until the full correctness matrix finishes.
