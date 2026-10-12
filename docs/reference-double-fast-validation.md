@@ -499,3 +499,13 @@ registry modes pass; original artifacts are unchanged. The
 and controls. These are intended admission expectations frozen before changing
 public execution, not successful new codec or C interoperability runs. No new
 Rust/Clippy/no_std, Miri or timing result is claimed at this source-only checkpoint.
+
+The additive successor driver reuses the immutable original bounded protocol
+and92 source recipes, replacing only their expected admission. Its source
+manifest includes the successor policy and historical pins. It checks every
+completed Rust scalar observation against the historical tuple before saving
+evidence and restores the original driver even on rejection. Normal/optimized
+Python pass offline plan checks and in-process valid/rejected observation
+controls with child processes disabled. The [driver evidence](evidence/2026-10-12-reference-interop-v2-driver.json)
+and [archive](evidence/2026-10-12-reference-interop-v2-driver.tar.gz) make no new
+codec, C or sanitizer execution claim. The live job switches with public admission.

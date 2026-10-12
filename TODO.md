@@ -63,6 +63,7 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Add small static search/emission dispatch without allocating inactive algorithm state or duplicating committed entropy.
 - [x] Emit complete DoubleFast frames with window-log-21 metadata, raw/RLE fallback, transactional publication and every observed allocation-failure ordinal.
 - [x] Freeze a versioned successor admission policy over historical selector/interop inputs before changing public execution, preserving original classifications and identifying additive C obligations.
+- [x] Add an offline-checked successor interop driver over the unchanged bounded protocol before switching live oracle jobs to the new policy.
 - [ ] Extend public level/request admission with level0/default3 equivalence, tier-specific levels2/4 and qualified usage documentation.
 - [ ] Port newly admitted official numeric/fuzz assertions through a successor policy layer while preserving frozen C tuples and all remaining context/dictionary/capacity gaps.
 - [ ] Validate complete bidirectional C/Rust frames, all individual unsafe features, no_std and focused interpreted/compile-only platform boundaries.

@@ -1,0 +1,37 @@
+{
+  "archive": "2026-10-12-reference-interop-v2-driver.tar.gz",
+  "archive_sha256": "bb3348fb9e9c36da209fc5cab11bb143d29a86b15b8c5c5b7edfb6454c59943e",
+  "date": "2026-10-12",
+  "results": [
+    {
+      "checks": [
+        "valid scoped evidence and restored driver",
+        "changed tuple rejected before persistence; restored driver"
+      ],
+      "child_processes": 0,
+      "driver_sha256": "01e7e095808bf0e7cf414cf60eb8a0ef1baa380b558168ca66fa299b3dfb2094",
+      "mode": "normal",
+      "recipes": 92,
+      "source_bytes": 11148196
+    },
+    {
+      "checks": [
+        "valid scoped evidence and restored driver",
+        "changed tuple rejected before persistence; restored driver"
+      ],
+      "child_processes": 0,
+      "driver_sha256": "01e7e095808bf0e7cf414cf60eb8a0ef1baa380b558168ca66fa299b3dfb2094",
+      "mode": "optimized",
+      "recipes": 92,
+      "source_bytes": 11148196
+    }
+  ],
+  "scope": "Offline successor driver plans and in-process observation controls in normal/optimized Python. Child process execution disabled; no codec or C runs.",
+  "source": {
+    "controls.py": "07cf39a328a3c5cd8dfc7ccdfe1f61389fc8453909ece9113377887934e28dd9",
+    "normal.log": "675acd1c6c3e2b094a4ad70937eba449f2865fe122881e70671f60ae6009ef13",
+    "optimized.log": "12b8152ee169558ace85434532e8e6b4bb7b7eb51b5e063ddeffb223552e359b",
+    "scripts/check_reference_interop_v2.py": "01e7e095808bf0e7cf414cf60eb8a0ef1baa380b558168ca66fa299b3dfb2094"
+  },
+  "status": "passed"
+}
