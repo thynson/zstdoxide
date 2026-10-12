@@ -167,3 +167,21 @@ logs are retained in the [evidence](evidence/2026-10-12-double-fast-block.json)
 and [archive](evidence/2026-10-12-double-fast-block.tar.gz). These shared scalar
 records introduce no unsafe operation. This checkpoint does not implement
 matching, ordinary frame publication or public DoubleFast admission.
+
+## Independent table owners
+
+`DoubleFastTables<L,S>` owns two existing MatchTable values, with separately
+checked roles and allocator values. Both layouts and their summed payload cost
+are checked before the first allocation. Four tests cover invalid role rejection
+without allocator requests, either allocation failure with exact-owner release,
+unequal minimum/maximum dimensions at every short-key width, borrowed non-clone
+ownership, allocation-free reset and moves/swaps among distinct clone identities.
+The composite adds no unsafe operation; its table leaves use the existing
+independent `unsafe-match-table` feature.
+
+All four tests pass in the same five configurations above:20 executions, plus
+22 unchanged Fast/named baseline executions. All13 commands succeed, including
+strict all-target Clippy safe/all, no_std compilation safe/all and formatting.
+The [evidence](evidence/2026-10-12-double-fast-tables.json) and
+[archive](evidence/2026-10-12-double-fast-tables.tar.gz) record exact source and
+command identities. Direct parsing and public DoubleFast execution remain open.

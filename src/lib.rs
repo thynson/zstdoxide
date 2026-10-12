@@ -43,6 +43,7 @@ mod dictionary;
 mod dictionary_train;
 mod double_fast_block;
 mod double_fast_plan;
+mod double_fast_tables;
 mod encode;
 mod entropy_encode;
 #[cfg(test)]
