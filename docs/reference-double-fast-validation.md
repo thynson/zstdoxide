@@ -645,3 +645,32 @@ and executables are omitted, with their source/build commands and executable
 hashes retained. The archive is20,795,123 bytes. The standard oracle job now
 runs this bounded capture and its offline replay. This establishes the specified
 public-frame scope, not full upstream parity, Miri coverage or performance.
+
+## Focused interpreted and no-atomics platform checks
+
+The fixed b505237 snapshot plus the new `reference_double_fast_platform` target
+passes32 strict-provenance Miri executions: eight selected tests in each of
+safe/all on i686 (32-bit little-endian) and s390x (64-bit big-endian). Six existing
+unit tests check invalid/future/expired parser candidates, both parser reserve
+failures, either table-owner failure, exact frame size-field boundaries,
+0xffffffff promotion and usize output-bound overflow. Two public tests check
+empty/tiny exact allocation ordinals and borrowed non-clone output lifetimes,
+then complete96-byte frames with unequal tables and effective widths4/7.
+The public tests also pass a two-test native smoke run. All selectors require
+exact names and nonzero counts; this is focused interpretation, not full native
+foreign-target execution or a rerun of the large frozen parser corpus.
+
+Four thumbv6m checks pass: safe/all no_std library compilation and caller rlib
+code generation through both allocator-aware numeric APIs at level3. A separate
+Rc type assertion covers the existing no-pointer-atomics dictionary fallback;
+it introduces no reference dictionary capability. This does not prove target
+runtime behavior, final firmware linking, hardware memory fit or stable-toolchain
+support. The temporary caller uses the pinned compiler's available Allocator API
+without an unnecessary feature attribute.
+
+All19 recorded commands pass. Production/dependency inputs and the delivered
+public test match their snapshot, both cached Miri sysroots are hashed, and
+caller artifact identities are verified. The [platform evidence](evidence/2026-10-12-double-fast-platform.json)
+and [archive](evidence/2026-10-12-double-fast-platform.tar.gz) retain exact source
+catalogs, reconstructable test overlay, commands, environments, selected names,
+logs and caller sources. This platform checkpoint contains no timing result.
