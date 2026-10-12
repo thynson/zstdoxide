@@ -1,0 +1,292 @@
+{
+  "basis": "ZSTD_compress_frameChunk clamps nextToUpdate before the tiny ZSTD_buildSeqStore return.",
+  "branches": {
+    "chain": 6,
+    "row": 6
+  },
+  "positive_calls": 48,
+  "recipe_count": 12,
+  "recipes": [
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "chain_window_floor_tiny1",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        1024,
+        1024,
+        1,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 2082,
+      "source_sha256": "7431cbc09ff958f308d1cc71bace03e1e88a1b27318b868e0b34e39992000c64",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "chain_window_floor_tiny2",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        1024,
+        1024,
+        2,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 2083,
+      "source_sha256": "f665cce3daaa894eb60051a196d913422b7071f57ececbefd08523e4a711f2a6",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "chain_window_floor_tiny3",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        1024,
+        1024,
+        3,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 2084,
+      "source_sha256": "1320e5beda87ef09701d7b9762d5b77900b65f6343a8f33fcc3ca09ca16eb030",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "chain_window_floor_tiny4",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        1024,
+        1024,
+        4,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 2085,
+      "source_sha256": "bbc458bf093f4432c1dae7ac11ad8c5c8928e9990cb5df87b60a43b4606f307f",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "chain_window_floor_tiny5",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        1024,
+        1024,
+        5,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 2086,
+      "source_sha256": "99e7b7cddc4be32f87e90486b910baab14e4d017c380a82565621c67c8efab92",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "chain_window_floor_tiny6",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        1024,
+        1024,
+        6,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 2087,
+      "source_sha256": "26f58b956f07663133f84fa422d1a3ac5dc33faa3e6e906acb3a9a86e8def63f",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "row_window_floor_tiny1",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        32768,
+        32768,
+        1,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65570,
+      "source_sha256": "b7dc1d32a3e107d2205159af9e752f5080bd153f149e4463e3691240ad34d7dc",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "row_window_floor_tiny2",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        32768,
+        32768,
+        2,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65571,
+      "source_sha256": "54d55ab031f97fc255782e742114d4dc5209640fc4783e7fb53c065b097e648e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "row_window_floor_tiny3",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        32768,
+        32768,
+        3,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65572,
+      "source_sha256": "e0dfe4528a171e62460af6b24c58e3c8c6eab8c087f22ff49a391793b620ec7b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "row_window_floor_tiny4",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        32768,
+        32768,
+        4,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65573,
+      "source_sha256": "bfb714385b3ffaf98adc178dd330148c64a9d7888551472686fc40087f109189",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "row_window_floor_tiny5",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        32768,
+        32768,
+        5,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65574,
+      "source_sha256": "9ab16dc34b141f9c37324cf95a3ba4051eb9110207061c80e4e6133188cad60c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "row_window_floor_tiny6",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        32768,
+        32768,
+        6,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65575,
+      "source_sha256": "6750d5c26266bd6e25be18017f405d81a109e8625b215933e856bdad586d70e1",
+      "whole_compare": false
+    }
+  ],
+  "scheduled_calls": 48,
+  "schema_version": 1,
+  "source_bytes": 405942,
+  "status": "source-only pre-execution additive hypotheses",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

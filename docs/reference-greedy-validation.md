@@ -275,6 +275,17 @@ normal/sanitizer-configured syntax checks pass; the
 [evidence](evidence/2026-10-12-greedy-frame-helper-v2.json) records both source
 identities. This is a source correction, not a C runtime finding.
 
+
+Twelve additive source-only floor recipes now place lengths1..6 after two
+uniform window-sized blocks, then resume fresh search: six chain W10 and six
+row W15 cases, 405,942 source bytes and 48 positive calls. Original input hashes
+remain unchanged. Normal Python and `-O` each reject eight mutations with zero
+child-process attempts; the [evidence](evidence/2026-10-12-greedy-frame-floor-recipes.json)
+retains identities and the blocked-process driver. Combined future ordinary
+capture comprises 138 cases and 403 scheduled calls (395 positive), with no
+ordinary runtime observations yet. The unchanged complete DoubleFast frame/owner
+baseline also passes all five tests after the new private Greedy parser work.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories

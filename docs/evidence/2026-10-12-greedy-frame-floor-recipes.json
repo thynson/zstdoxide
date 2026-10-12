@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-12",
+  "driver": {
+    "sha256": "f437eacc94e822c9f9b80a148b0778b7e2b296df4759812ecb1b435fd43a9d28",
+    "source": "import hashlib, importlib.util, json, os, subprocess, sys\nfrom pathlib import Path\nroot = Path('/Users/lanxingcan/Workspace/zstdoxize')\nchild_attempts = []\ndef forbidden(*args, **kwargs):\n    child_attempts.append('blocked')\n    raise RuntimeError('process creation forbidden during offline input checking')\nsubprocess.Popen = forbidden\nfor name in ['system', 'fork', 'forkpty', 'posix_spawn', 'posix_spawnp', 'spawnl', 'spawnle', 'spawnlp', 'spawnlpe', 'spawnv', 'spawnve', 'spawnvp', 'spawnvpe', 'execl', 'execle', 'execlp', 'execlpe', 'execv', 'execve', 'execvp', 'execvpe']:\n    if hasattr(os, name): setattr(os, name, forbidden)\np = root / 'scripts/check_greedy_frame_floor_recipes.py'\nspec = importlib.util.spec_from_file_location('greedy_frame_input_checker', p)\nm = importlib.util.module_from_spec(spec); sys.modules[spec.name] = m; spec.loader.exec_module(m)\nmanifest = m.check(); controls = m.controls()\nif child_attempts or controls != {'rejected_controls': 8, 'codec_executions': 0}:\n    raise ValueError('offline control outcome')\nprint(json.dumps({'status': 'passed', 'python': sys.version, 'optimization': sys.flags.optimize, 'child_attempts': len(child_attempts), 'controls': controls, 'recipe_count': manifest['recipe_count'], 'checker_sha256': hashlib.sha256(p.read_bytes()).hexdigest()}, sort_keys=True))\n"
+  },
+  "envelope": {
+    "chain": 6,
+    "positive_calls": 48,
+    "recipes": 12,
+    "row": 6,
+    "scheduled_calls": 48,
+    "source_bytes": 405942
+  },
+  "inputs": {
+    "scripts/check_greedy_frame_floor_recipes.py": {
+      "bytes": 4602,
+      "sha256": "f29c9960a5f99373a4da11f18a9b7c5be345d48a52396bcbaaef77fa2ba93578"
+    },
+    "scripts/oracles/greedy_frame_floor_recipes.py": {
+      "bytes": 2107,
+      "sha256": "e30cb2c60762b333d6e4b510e9c9a5384c43a20e93209e89d52716f099bae2c4"
+    },
+    "scripts/oracles/greedy_frames.py": {
+      "bytes": 9935,
+      "sha256": "360bf5139b7e2a886e9d2359c1ea258317238bd1906cfe9d123be33df7a0ce44"
+    },
+    "tests/fixtures/reference-greedy-frame-floor-recipes/recipes.json": {
+      "bytes": 7556,
+      "sha256": "8414ea9f5f9eee715b22f473023a299331df5f8abe11f974202bda03af58cfbd"
+    },
+    "tests/fixtures/reference-greedy-frame-recipes/recipes.json": {
+      "bytes": 64127,
+      "sha256": "f833a7015aba52bf9a43fc941f1e766ab0bec5ea8c8e285eb970de1f2d702f13"
+    }
+  },
+  "runs": [
+    {
+      "checker_sha256": "f29c9960a5f99373a4da11f18a9b7c5be345d48a52396bcbaaef77fa2ba93578",
+      "child_attempts": 0,
+      "controls": {
+        "codec_executions": 0,
+        "rejected_controls": 8
+      },
+      "optimization": 0,
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "recipe_count": 12,
+      "status": "passed"
+    },
+    {
+      "checker_sha256": "f29c9960a5f99373a4da11f18a9b7c5be345d48a52396bcbaaef77fa2ba93578",
+      "child_attempts": 0,
+      "controls": {
+        "codec_executions": 0,
+        "rejected_controls": 8
+      },
+      "optimization": 1,
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "recipe_count": 12,
+      "status": "passed"
+    }
+  ],
+  "scope": "Twelve additive ordinary tiny-window-floor source hypotheses before C execution; the original 126 inputs remain unchanged.",
+  "status": "passed"
+}

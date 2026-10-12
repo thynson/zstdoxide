@@ -68,7 +68,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Specify and pin ordinary Greedy frame/schedule recipes before C execution.
 - [x] Implement and source-review the bounded ordinary Greedy frame helper; complete syntax checks before execution.
 - [x] Version the unexecuted ordinary helper to distinguish tiny window-floor clamping from long-gap/parser updates.
-- [ ] Pin additive ordinary chain/row tiny-window-floor recipes before C execution.
+- [x] Pin additive ordinary chain/row tiny-window-floor recipes before C execution.
 - [ ] Implement the ordinary Greedy offline replay validator and capture controller with malformed-input controls.
 - [ ] Capture normal/instrumented ordinary publication trajectories and complete C frames, then independently reject forged evidence offline.
 - [ ] Add a dependency-free checked Rust adapter for frozen ordinary Greedy trajectories and frames.
