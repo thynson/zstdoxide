@@ -105,7 +105,7 @@ successor admission mapping and independent oracle checks.
 - [x] Freeze complete Greedy frames and qualified allocator records as permanent regressions from the reviewed clock-free archive.
 - [x] Specify bounded direct Lazy/Lazy2 packets, arena bounds and independent observation validation before C execution.
 - [x] Implement and review the versioned direct C adapter, completing normal/instrumented syntax checks before execution.
-- [ ] Add checked Python transport and independent replay with malformed depth/schema controls and no child execution.
+- [x] Add checked Python transport and independent replay with malformed depth/schema controls and no child execution.
 - [ ] Freeze tiny depth/branch recipes and predecessor controls before C execution.
 - [ ] Capture normal/instrumented tiny observations and fresh-context salt, then independently reject changed evidence offline.
 - [ ] Freeze broader recipes covering repeat ties, gain thresholds, successive lookahead, tail equality, skipping, floors and table trajectories.

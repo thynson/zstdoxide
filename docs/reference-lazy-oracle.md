@@ -162,3 +162,26 @@ identity/target/syntax commands and unchanged inputs are preserved in the
 [archive](evidence/2026-10-12-lazy-helper-review.tar.gz). No helper executable has
 run at this checkpoint. Python transport, frozen recipes and capture validation
 are the next separate gates.
+
+## Checked transport before new observations
+
+`scripts/oracles/lazy_direct.py` now validates the new packet and all selectors
+before reusing the unchanged common table/sequence/owner replay. It projects
+only independently checked protocol, depth, strategy and entry-point fields;
+every source, delta, repeat, literal and allocation observation still reaches
+the complete predecessor validator. The frozen Greedy module remains unchanged.
+
+Normal and optimized Python each accept 259 controls and reject 52 malformed
+or changed inputs, with child creation blocked and zero attempts. Positives
+include 108 packet round trips, 108 synthetic selector metadata records, 36
+translated depth-zero Greedy observations, six synthetic salt-schema records
+and one restored positive. The synthetic depth-one/two records test the schema;
+they are not new C observations or expected Lazy/Lazy2 results. Rejections cover
+old magic, malformed depth and reserved fields, bool/float selectors, wrong
+strategy/entry point/completion, common table/sequence/owner corruption, JSON
+ambiguity and incomplete records.
+
+The [transport evidence](evidence/2026-10-12-lazy-transport.json) and
+[archive](evidence/2026-10-12-lazy-transport.tar.gz) preserve both complete runs,
+the reviewed source closure and control driver. Frozen new recipes and actual
+C capture remain separate gates; no helper executable has run here.

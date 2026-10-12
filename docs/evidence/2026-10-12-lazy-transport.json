@@ -1,0 +1,25 @@
+{
+  "accepted_per_mode": 259,
+  "archive": "2026-10-12-lazy-transport.tar.gz",
+  "archive_bytes": 14139,
+  "archive_members": 8,
+  "archive_sha256": "d47c7baf95227b267300538aa70c4a580d9244247b464ecea6907accc34e23d5",
+  "child_processes": 0,
+  "date": "2026-10-12",
+  "packet_roundtrips_per_mode": 108,
+  "qualification": "Packets and checked replay only. Depth-zero outputs are source-only schema projections of frozen Greedy observations. Depth-one/two metadata and salt-schema positives are synthetic structural controls, not new C observations or expected Lazy/Lazy2 outputs. No helper executable runs.",
+  "rejected_per_mode": 52,
+  "source": {
+    "scripts/check_greedy_tiny_capture.py": "e26fef9b209b4e6cb1d0a13b513cc580923242567cdc850fe45f27e986f77dd5",
+    "scripts/check_greedy_tiny_recipes.py": "8d87ccbde9e958e3866a9bf6411ba795afa5f7bc117e07be5a152e4623c9d1b0",
+    "scripts/oracles/greedy_direct.py": "616248428077b4b90b873aaef1282fdf4cea5bf39388e027d882c0aa1a1f9114",
+    "scripts/oracles/lazy_direct.py": "9a3e1cdb77e8e3d392cf2a3e6975ca53f69c73ae6e8d70a147e5a3950843314e",
+    "tests/fixtures/reference-greedy-tiny/capture.json": "18e0ff3d695627c20ef159ecda1ee027ce535d98a55e0b84c261a0ef34c0ffa4",
+    "tests/fixtures/reference-greedy-tiny/observations.ndjson": "a2bac02eeeb65292b92892605d15b043097ed94651b4be494fec0427b73b6fff",
+    "tests/fixtures/reference-greedy-tiny/recipes.json": "d617a8e8ea7c92772e8bb9961d0e1baacac07adcc9b619f968df2a1a75dd3006"
+  },
+  "status": "passed",
+  "synthetic_metadata_cases_per_mode": 108,
+  "synthetic_salt_schema_cases_per_mode": 6,
+  "translated_depth_zero_cases_per_mode": 36
+}
