@@ -173,6 +173,18 @@ impl SearchKeyLayout {
         Self::with_bounds(hash_log, key_bytes, 6, 7)
     }
 
+    /// DoubleFast's independent long table always hashes eight initialized
+    /// bytes, including at private logs 6..=9. Its short table uses the existing
+    /// four-through-seven-byte layout. Neither domain expands named settings
+    /// or Fast's accepted widths. This copied descriptor owns no storage.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "DoubleFast plan and table integration follows")
+    )]
+    pub(crate) fn for_double_fast_long(hash_log: u8) -> Result<Self> {
+        Self::with_bounds(hash_log, 8, 6, 8)
+    }
+
     fn with_bounds(
         hash_log: u8,
         key_bytes: u8,
@@ -506,6 +518,32 @@ mod tests {
                     assert_eq!(options.set_hash_log(log), Err(Error::InvalidParameter));
                     assert_eq!(options, DEFAULTS);
                 }
+            }
+        }
+    }
+
+    #[test]
+    fn double_fast_long_layout_keeps_fast_and_named_domains_separate() {
+        for log in 0..=u8::MAX {
+            let result = SearchKeyLayout::for_double_fast_long(log);
+            if (6..=18).contains(&log) {
+                let layout = result.unwrap();
+                assert_eq!((layout.hash_log(), layout.key_bytes()), (log, 8));
+                assert_eq!(layout.bucket_count(), 1_usize << log);
+                assert!(layout.read_key(b"1234567").is_none());
+                assert!(layout.read_key(b"12345678").is_some());
+                if log >= 10 {
+                    assert_eq!(SearchKeyLayout::new(log, 8), Ok(layout));
+                }
+            } else {
+                assert_eq!(result, Err(Error::InvalidParameter));
+            }
+            assert_eq!(
+                SearchKeyLayout::for_fast(log, 8),
+                Err(Error::InvalidParameter)
+            );
+            if log < 10 {
+                assert_eq!(SearchKeyLayout::new(log, 8), Err(Error::InvalidParameter));
             }
         }
     }

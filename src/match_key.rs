@@ -178,6 +178,43 @@ mod tests {
     }
 
     #[test]
+    fn double_fast_long_layouts_preserve_pinned_eight_byte_hash_bits() {
+        let mut count = 0;
+        for line in VECTORS.lines().skip(1) {
+            let [width, log, _, bytes, expected] = fields(line);
+            if width != "8" {
+                continue;
+            }
+            let log: u8 = log.parse().unwrap();
+            let bytes = hex8(bytes);
+            let expected: usize = expected.parse().unwrap();
+            let layout = SearchKeyLayout::for_double_fast_long(log).unwrap();
+            assert_eq!(
+                layout.bucket(layout.read_key(&bytes).unwrap()),
+                Ok(expected)
+            );
+            count += 1;
+            if log == 10 {
+                // Derived high-bit expectations from existing C log-ten
+                // observations, not a new direct low-log C capture. Dedicated
+                // DoubleFast direct-oracle observations follow separately.
+                for small_log in 6..=9 {
+                    let layout = SearchKeyLayout::for_double_fast_long(small_log).unwrap();
+                    let key = layout.read_key(&bytes).unwrap();
+                    assert_eq!(layout.bucket(key), Ok(expected >> (10 - small_log)));
+                    let short = SearchKeyLayout::for_fast(small_log, 7)
+                        .unwrap()
+                        .read_key(&bytes)
+                        .unwrap();
+                    assert_eq!(layout.bucket(short), Err(Error::InvalidParameter));
+                    count += 1;
+                }
+            }
+        }
+        assert_eq!(count, 13 * 64);
+    }
+
+    #[test]
     fn every_pinned_unused_byte_pair_preserves_keys_and_width_eight_controls() {
         let mut lines = PAIRS.lines();
         assert_eq!(

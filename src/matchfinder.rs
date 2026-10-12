@@ -502,6 +502,31 @@ mod tests {
     }
 
     #[test]
+    fn double_fast_long_and_short_tables_keep_independent_initialized_owners() {
+        for log in [6, 7, 8, 9, 18] {
+            let long_layout = SearchKeyLayout::for_double_fast_long(log).unwrap();
+            let short_layout = SearchKeyLayout::for_fast(log, 4).unwrap();
+            let mut long = MatchTable::with_layout_in(long_layout, Global).unwrap();
+            let mut short = MatchTable::with_layout_in(short_layout, Global).unwrap();
+            let long_key = long_layout.read_key(b"same-key").unwrap();
+            let short_key = short_layout.read_key(b"same-key").unwrap();
+            assert_eq!(long.lookup(long_key), Ok(None));
+            assert_eq!(short.lookup(short_key), Ok(None));
+            long.store(long_key, 0).unwrap();
+            short.store(short_key, 19).unwrap();
+            assert_eq!(long.lookup(long_key), Ok(Some(0)));
+            assert_eq!(short.lookup(short_key), Ok(Some(19)));
+            assert_eq!(long.store(short_key, 31), Err(Error::InvalidParameter));
+            assert_eq!(short.store(long_key, 31), Err(Error::InvalidParameter));
+            assert_eq!(long.lookup(long_key), Ok(Some(0)));
+            assert_eq!(short.lookup(short_key), Ok(Some(19)));
+            long.reset();
+            assert!(long.positions.iter().all(|&entry| entry == EMPTY));
+            assert_eq!(short.lookup(short_key), Ok(Some(19)));
+        }
+    }
+
+    #[test]
     fn dynamic_key_and_seed_mismatches_preserve_working_candidates() {
         let layout = SearchKeyLayout::new(10, 4).unwrap();
         let mut working = MatchTable::with_layout_in(layout, Global).unwrap();
