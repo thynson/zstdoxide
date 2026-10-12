@@ -1,4 +1,4 @@
-//! Shared scalar entropy policy for bounded reference Fast/DoubleFast encoding.
+//! Shared scalar entropy policy for bounded reference search encoding.
 //!
 //! These values select existing owners; they allocate no storage and need no
 //! alternate unsafe representation. Algorithm admission remains the caller's
@@ -8,7 +8,7 @@
 use crate::{ReferenceStrategy, ResolvedCompressionParameters};
 
 /// Automatic literal compression is disabled only for accelerated Fast.
-/// A positive DoubleFast target length does not disable Huffman or literal RLE.
+/// A positive DoubleFast or Greedy target does not disable Huffman or literal RLE.
 /// Corresponds to `ZSTD_literalsCompressionIsDisabled` for automatic literal
 /// mode in pinned zstd_compress_internal.h:685-698. Explicit caller overrides
 /// from the upstream context API are outside this bounded reference API.
@@ -16,7 +16,7 @@ pub(crate) const fn raw_literals(parameters: ResolvedCompressionParameters) -> b
     matches!(parameters.strategy(), ReferenceStrategy::Fast) && parameters.target_length() > 0
 }
 
-/// Strict payload gain shared by the admitted Fast and DoubleFast strategies.
+/// Strict payload gain shared by Fast, DoubleFast and private Greedy execution.
 /// Excludes the relevant section or outer block header, according to the caller.
 /// Corresponds to the strategy-below-BtUltra branch of `ZSTD_minGain` in pinned
 /// zstd_compress_internal.h:673-683. This is not a policy for future BtUltra paths.
@@ -31,7 +31,7 @@ mod tests {
     use crate::RawCompressionParameters;
 
     #[test]
-    fn double_fast_positive_targets_keep_huffman_and_literal_rle_candidates() {
+    fn non_fast_positive_targets_keep_huffman_and_literal_rle_candidates() {
         use crate::literal_encode::LiteralEncoder;
 
         let mut patterned = [0; 4096];
@@ -50,6 +50,9 @@ mod tests {
                 (2, 0, normal_kind),
                 (2, 4, normal_kind),
                 (2, 131_072, normal_kind),
+                (3, 0, normal_kind),
+                (3, 4, normal_kind),
+                (3, 131_072, normal_kind),
             ] {
                 let parameters = RawCompressionParameters {
                     window_log: 21,

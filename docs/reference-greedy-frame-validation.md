@@ -65,8 +65,25 @@ The immutable packed collection and full capture archive allow replay without
 rerunning C. Source/hash and artifact identities are recorded in their manifests
 and the accompanying machine-readable evidence.
 
-This checkpoint establishes ordinary C expectations. It does not yet validate
-Rust Greedy frame emission, public parameter resolution, collector behavior,
-intermediate per-probe chronology, or complete upstream test migration. The
-next work items project checked Rust records, implement retained sampling state
-and frame publication, and extend admission only after the frozen v3 mapping.
+The subsequent checked Rust projection validates all 151 C frames and retains
+full table/sequence trajectories. Retained Greedy state reproduces all 395
+positive blocks without reseeding tables. Complete private frame tests decode
+274 Rust frames over the same 138 inputs. Scheduled block choices and committed
+wire repeats match C, including all 25 raw and 12 RLE discarded repeat changes.
+The encoder uses its existing entropy implementation; complete compressed bytes
+are not claimed identical to C.
+
+All 6,184 allocation requests observed across the 138 whole-frame encodes are
+failed individually. Every failure returns the allocation error and releases
+every exact owner. Separate chain/row append failures preserve previously
+published output and repeats, discard pending Huffman state and poison the
+workspace. Empty/tiny allocation counts, invalid schedules, borrowed non-clone
+allocators, target and match-width equivalences, and retained-window effects
+are checked. All six frame tests pass for safe, each isolated new unsafe leaf,
+and all features. Strict safe/all Clippy, formatting and safe/combined-leaf
+no_std compilation pass.
+
+Public Greedy admission still rejects at this checkpoint. Public parameter
+resolution, broader public C interoperability, collector behavior, intermediate
+per-probe chronology and complete upstream test migration are separate remaining
+obligations. Admission follows the frozen v3 mapping.

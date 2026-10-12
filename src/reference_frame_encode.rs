@@ -20,6 +20,10 @@ use crate::{Error, Result};
 #[path = "../tests/support/double_fast_frame_encode.rs"]
 mod double_fast_tests;
 
+#[cfg(test)]
+#[path = "../tests/support/greedy_frame_encode.rs"]
+mod greedy_tests;
+
 /// Encode one known-size, no-dictionary frame with an admitted Fast profile.
 ///
 /// Admission and output-bound checks precede allocator operations. The original

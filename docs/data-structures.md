@@ -962,3 +962,15 @@ counts/bytes, source mismatch before clones, borrowed non-clone allocators and
 ordinary mixed-fallback candidates. All nine frozen Fast/DoubleFast baseline
 tests retain complete frame bytes and owner observations. Strict safe/all Clippy,
 formatting and no_std pass; public Greedy requests still reject until v3 mapping.
+
+The shared frame workspace now verifies private Greedy execution without adding
+an owner or unsafe composite. Sampling state advances independently of entropy
+publication; failed output append preserves the previous output and committed
+repeats, clears tentative Huffman state, and poisons the workspace. Six focused
+tests pass in safe, isolated chain, isolated row and all-feature builds. They
+decode 274 Rust frames and reproduce the ordinary C schedule's 181 raw, 38 RLE
+and 176 compressed choices, including 25/12 discarded repeat changes. Every one
+of 6,184 observed whole-frame allocation ordinals is failed independently, with
+all exact owners released. Borrowed non-clone allocators and invalid schedules
+retain their contracts. Strict safe/all Clippy, formatting and safe/combined-leaf
+no_std pass. Complete Rust entropy bytes are not claimed equal to C frames.
