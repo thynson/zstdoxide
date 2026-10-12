@@ -109,7 +109,8 @@ successor admission mapping and independent oracle checks.
 - [x] Freeze tiny depth/branch recipes and predecessor controls before C execution.
 - [x] Implement the bounded tiny capture controller and independent offline auditor with preflight rejection controls before first C execution.
 - [x] Capture normal/instrumented tiny observations and fresh-context salt, then independently reject changed evidence offline.
-- [ ] Freeze broader recipes covering repeat ties, gain thresholds, successive lookahead, tail equality, skipping, floors and table trajectories.
+- [x] Freeze broader recipes covering repeat ties, gain thresholds, successive lookahead, tail equality, skipping, floors and table trajectories.
+- [ ] Implement and preflight the broader capture controller and offline auditor with exact tiny/predecessor controls before execution.
 - [ ] Capture and independently validate the broader direct observations before Rust parsing.
 - [ ] Project direct observations into checked Rust records with complete maps, sequence replay and source provenance.
 - [ ] Add shared copied depth/candidate/score records and explicit inclusive lookahead coordinates, preserving Greedy's strict main-search contract.

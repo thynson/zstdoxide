@@ -100,3 +100,28 @@ remains outside the repository; its pinned revision, source/header hashes,
 dependency closure and exact compiler commands remain in the archive. This is
 private direct-parser evidence, with no Rust Lazy execution, ordinary/public
 frame or timing claim.
+
+## Frozen broader input hypotheses
+
+The successor input collection has 645 cases, 303 chain and 342 row, with 215
+at each depth. It preserves all 138 tiny inputs, expands all 137 broader Greedy
+inputs at all three depths, and adds 96 score-oriented source constructions.
+There are 173 explicit depth-zero predecessor controls, 18,900,771 source bytes
+and 19,019,595 packet bytes. The inherited families cover layouts, collisions,
+row wrap and capped budgets, floors, skipping and long-length/history bounds.
+
+Constructed sources place disjoint byte copies with explicit stopping and
+backward-extension sentinels. Exact-power-of-two OffBase values give independent
+closed-form gain checks immediately below, equal to and above both explicit and
+repeat thresholds. Baseline repeat/table ties and successive longer copies are
+also present. These records describe source geometry and arithmetic, not
+observed parser choices; the later campaign must establish actual coverage.
+
+Normal and optimized Python each pass two complete checks and reject 33 changed
+source/manifest cases with child creation blocked and zero attempts. Each check
+round-trips all packets, rejects 55 malformed packets, verifies all 96 placed
+copy/seed extents and scores, and verifies fresh salt against the actual tiny
+context at each depth. The [input evidence](evidence/2026-10-12-lazy-family-inputs.json)
+and [archive](evidence/2026-10-12-lazy-family-inputs.tar.gz) preserve the frozen
+source closure, manifest, generator, checks and controls. No broader C execution
+or Rust-generated expected Lazy result is included.

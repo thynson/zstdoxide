@@ -1,0 +1,51 @@
+{
+  "archive": "2026-10-12-lazy-family-inputs.tar.gz",
+  "archive_bytes": 162983,
+  "archive_members": 29,
+  "archive_sha256": "de9d363e307947dac1e285945eb4a4ff3677a533b17744e13d975bd8273e139a",
+  "branches": {
+    "chain": 303,
+    "row": 342
+  },
+  "child_processes": 0,
+  "constructed_score_sources": 96,
+  "date": "2026-10-12",
+  "depth_counts": [
+    215,
+    215,
+    215
+  ],
+  "malformed_packets_rejected": 55,
+  "packet_bytes": 19019595,
+  "positive_runs_per_mode": 2,
+  "predecessor_controls": 173,
+  "qualification": "Frozen broader source hypotheses and input controls only. Prior tiny C observations supply fresh salt and retain 138 input identities; no new broader Lazy output or Rust expected result. Placed-copy score arithmetic is not evidence of a parser branch hit.",
+  "recipes": 645,
+  "reference_executions": 0,
+  "rejected_input_forgeries_per_mode": 33,
+  "source": {
+    "docs/evidence/2026-10-12-lazy-helper-review.json": "58a21fa9463f6bce62440d9d8dd0c2a810abdde8050d261eac107edeb413bea6",
+    "docs/evidence/2026-10-12-lazy-transport.json": "a40a64612296089fde473d498607085fcdd05a46e8fe892b63439c39ef6705b4",
+    "docs/reference-lazy-oracle.md": "ce404295e890520e691ff7d773c00b517b700be48c7bb019184d18a3c9823e97",
+    "scripts/check_greedy_family_recipes.py": "b1edd15038de0fa3b4af0d1d03d7fb15ec636f83ead060cc7578c82449c1a207",
+    "scripts/check_greedy_tiny_recipes.py": "8d87ccbde9e958e3866a9bf6411ba795afa5f7bc117e07be5a152e4623c9d1b0",
+    "scripts/check_lazy_family_recipes.py": "1269920726bf2a4210cdc05b4777e9eddfaa93a34a5c3bd1c5a47b43ac5ac718",
+    "scripts/check_lazy_tiny_capture.py": "ba5462b9fc26f8471b5b465009c3068b673a3985172d68812ae594ce2fd2e994",
+    "scripts/check_lazy_tiny_fixture.py": "835b0689b61debf480612f8778fc6b339f427c51b389bb6495bef540523d6eba",
+    "scripts/check_lazy_tiny_recipes.py": "950e9c2ab5e864d8c1fce5d8e9f5e0b67a0c3b7ffe20d77b2a880920637a2069",
+    "scripts/oracles/greedy_direct.py": "616248428077b4b90b873aaef1282fdf4cea5bf39388e027d882c0aa1a1f9114",
+    "scripts/oracles/greedy_families.py": "b8f5be9467988ef60d1a8b9bbdfe7007c08512bc53753cc4ad2e18818b6a0e1f",
+    "scripts/oracles/lazy_direct.c": "c637a9eab81bf48af509c3cbe772ebf64b183e4a418fe11b8e12aabb6156ed1e",
+    "scripts/oracles/lazy_direct.py": "9a3e1cdb77e8e3d392cf2a3e6975ca53f69c73ae6e8d70a147e5a3950843314e",
+    "scripts/oracles/lazy_families.py": "f1c392d298ad51ff3b19894679c9dcee9a56f1fe22e6b15503a8bb14d3ca3ce3",
+    "scripts/oracles/lazy_tiny.py": "6250504d4d87fd545e4b9dbd12b9e31e61dc132e8297da6587bfe468f205ca49",
+    "tests/fixtures/reference-greedy-families/recipes.json": "389903b9ffcefb8fd39e144649111ce561daebba6845de06479ef6c47e3970d7",
+    "tests/fixtures/reference-greedy-tiny/recipes.json": "d617a8e8ea7c92772e8bb9961d0e1baacac07adcc9b619f968df2a1a75dd3006",
+    "tests/fixtures/reference-lazy-families/recipes.json": "f44c9baa055d3efd0720508d78e4fd681984fefe8e7639f3d9e3be4fb574bdf5",
+    "tests/fixtures/reference-lazy-tiny/capture.json": "5f7cf83d440e22cf581b59b7e1b592b9b2db4b2d522ac9efcc57b7753f5736dc",
+    "tests/fixtures/reference-lazy-tiny/observations.ndjson": "5d25e610ba0d6bb1379d38fce19208c558873e9cfd5a1696e0e8534b1179997d",
+    "tests/fixtures/reference-lazy-tiny/recipes.json": "f1bc0ab9185648892ae9c56f1b5ebd2c8f744edef9a1c87d160aa7e313eedd9c"
+  },
+  "source_bytes": 18900771,
+  "status": "passed"
+}
