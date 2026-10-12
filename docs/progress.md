@@ -527,3 +527,51 @@ The Module 11 checklist is cleared; Module 12's reviewed reference-Fast design
 and decomposition are retained. The upstream inventory still reports 188
 unfinished source units. Neither full official-test migration nor roadmap
 completion is claimed.
+
+
+## Module 12 completed: bounded reference Fast execution
+
+Completed on 2026-10-12 after the pause. The allocator-aware whole-buffer level
+and request APIs execute the pinned reference's no-dictionary Fast profiles,
+including level 1 and negative levels across the source tiers. The bounded
+implementation preserves sampled cross-block history, explicit repeat intent,
+negative-level acceleration and raw-literal policy, truthful known-size frame
+metadata and transactional raw/RLE/compressed publication. Its entropy output
+is independent; higher reference algorithms, dictionaries on these numeric APIs
+and live numeric streaming remain outside this milestone. Named defaults retain
+their original behavior.
+
+The official negative-level size assertion, inherited source and both C frames,
+81 original simple-round-trip selector observations, admitted simple profiles
+and original empty/30-byte numeric subsets are preserved and executable with
+explicit remaining context/capacity/advanced-branch gaps. Two fresh complete
+public interoperability campaigns each checked 316 C decodes of Rust frames and
+316 Rust decodes of C frames with exact source comparisons. These successes do
+not promote the 188 unfinished upstream source units to complete migration.
+
+The frozen final matrix completed fifteen full suites at 956 passed, zero
+failed and 54 explicitly ignored each. Fourteen no_std configurations, strict
+Clippy safe/all, formatting, thirteen allocator-helper tests and 42 registered
+example executions pass. A separate platform checkpoint passes 24 focused
+strict-provenance Miri executions on i686/s390x and four thumb library/caller
+compilation checks, with interpretation and compile-only limits explicit.
+The pause marker was applied after every matrix command finished; the resume
+audit preserved it and verified unchanged inputs rather than rerunning checks.
+
+All fourteen backend configurations were then measured on nine deterministic
+cases with five samples each. A short safe/all diagnostic added ninety samples
+to the initial 630. Identical executable hashes produced materially different
+relative timings, so no repeatable unsafe speedup or causal individual-backend
+ranking is claimed. All 144 non-timing frame/allocation records match the frozen
+clock-free baseline. Both campaigns, including the unfavorable repeat, remain
+in the evidence archives. See [validation](reference-fast-validation.md) and
+[measurements](reference-fast-benchmarks.md).
+
+Module 13 preparation freezes nine complete Fast frames and exact qualified
+allocator records in four permanent tests, passing twenty executions across
+five configurations plus fourteen unchanged named-baseline executions. Its
+offline provenance checker passes normal/optimized controls. The independently
+reviewed DoubleFast ownership and direct-C arena protocol are also recorded.
+The Module 12 completed checklist is cleared; Module 13's remaining work items
+are retained. Full official-test migration and the rest of the roadmap remain
+open.

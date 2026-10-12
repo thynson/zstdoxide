@@ -26,51 +26,18 @@ platform evidence and remaining migration gaps are recorded in
 `docs/match-search-validation.md`; frozen measurements and their limits are in
 `docs/match-search-benchmarks.md`.
 
-## Module 12: bounded reference Fast profile execution
-
-Design: `docs/reference-fast-design.md` and `docs/data-structures.md`.
-This module follows the completed Module 11 validation and measurements.
-Existing named APIs and default frame bytes remain compatibility inputs.
-
-- [x] Analyze reference Fast ownership, sampling, repeat publication, whole-buffer profile admission and independently review the implementation boundaries.
-- [x] Specify separate direct-parser, collector and ordinary-frame oracle contracts and the checked explicit-offset interface.
-- [x] Specify shared entropy-owner extraction, reconstruction checks, Fast literal/gain policy and truthful known-size headers.
-- [x] Add a bounded direct-C Fast helper with independent sequence replay and reviewed source/literal capacity guards.
-- [x] Freeze deterministic direct Fast sequence/state recipe families with attributed normal/sanitizer reproduction and offline integrity checks.
-- [x] Adapt frozen direct observations into a checked dependency-free Rust fixture reader for later parser comparisons.
-- [x] Corroborate direct candidates through the official sequence collector, retaining its distinct publication, tiny-input and delimiter behavior.
-- [x] Capture ordinary Fast frame publication witnesses across compressed/raw/RLE transitions and full independent decoding before Rust Fast implementation.
-- [x] Decode every captured complete ordinary Fast C frame in normal Cargo tests with dependency-free fixture access.
-- [x] Add a plain checked Fast execution plan using existing known-size request resolution and explicit strategy/resource admission.
-- [x] Extend private small hash layouts and separate checked table lookup/store for persistent sampled Fast state, preserving named bounds and both access backends.
-- [x] Add checked explicit wire-offset value transitions and planning while preserving canonical named plans.
-- [x] Add committed-repeat snapshots and transactional preparation of intent-bearing sequences with complete ownership/failure coverage.
-- [x] Implement safe single-block Fast sampling, repeat probes, backward/forward matches, tails and acceleration against frozen observations.
-- [x] Derive a dependency-free, hash-bound reader of the frozen ordinary-frame candidate trajectories for persistent-state comparisons.
-- [x] Preserve sampled Fast state across blocks with checked whole-source ranges and raw/RLE/compressed transition coverage.
-- [x] Extract the parser-independent block entropy owner while preserving named bytes, allocator identities, clone/reserve order and capacities.
-- [x] Add an allocation-free known-size Fast frame header and checked raw-frame bound, preserving the named header bytes.
-- [x] Add Fast raw-only/minimum-gain literal selection while preserving named output and allocator behavior.
-- [x] Add transactional explicit block preparation with reconstruction, snapshot and allocation-failure checks.
-- [x] Integrate persistent Fast parsing with selected block emission and truthful frame headers without altering named output.
-- [x] Publish allocator-aware level/request one-shot entry points with complete failure-ordinal, ownership and no_std coverage.
-- [x] Capture the official negative-level assertion's inherited source using a bounded attributed writer replay, preserving its original C size-equality contract.
-- [x] Adapt the frozen negative-level size-equality assertion through both public Rust entry points and decode both original C frames, retaining the live-context gap.
-- [x] Reproduce complete admitted Fast frames across Rust backends and independent C encoding/decoding with bounded, pinned request recipes.
-- [x] Freeze the original simple-round-trip fuzz selector order, tail boundaries and C capacity observations without consuming unimplemented advanced branches.
-- [x] Port admitted simple-round-trip profiles and the original empty/30-byte numeric subsets with explicit unsupported counts and remaining context/capacity gaps.
-- [x] Port relevant official numeric assertions and run independent complete C/Rust frame comparisons, retaining explicit algorithm/attachment gaps.
-- [x] Add a clock-free-by-default nine-case Fast benchmark with separate allocation accounting, independent corpus fingerprints and reviewed safe/unsafe result validation.
-- [x] Validate focused Fast ownership/bounds with strict-provenance i686/s390x Miri and thumbv6m no_std library/caller compilation; preserve qualified platform evidence.
-- [x] Run the immutable final full feature/no_std/lint/example matrix and reconcile its source identity with the delivered code.
-- [x] Measure and independently validate the frozen nine-case safe/unsafe Fast benchmark after all task-owned correctness jobs finish.
-- [ ] Record the bounded Fast milestone and clear its completed checklist while retaining the next module's decomposition.
+Module 12 is complete within its bounded no-dictionary reference Fast scope.
+Completed items are archived in Git history and `docs/progress.md`. The complete
+correctness/platform evidence and migration gaps are recorded in
+`docs/reference-fast-validation.md`; both timing campaigns and their inconclusive
+unsafe-speedup comparison are retained in `docs/reference-fast-benchmarks.md`.
 
 ## Module 13: bounded reference DoubleFast profile execution
 
 Design: `docs/reference-double-fast-design.md` and `docs/data-structures.md`.
-Only preparation is complete. Implementation and C capture wait for Module 12
-final validation and measurements. Current Fast/named outputs remain regression
+The design, oracle protocol and pre-change compatibility baseline are complete.
+Module 12 validation and measurements are complete; implementation follows the
+remaining decomposition below. Current Fast/named outputs remain regression
 inputs, and historical C observations retain their original admission scope.
 
 - [x] Analyze the two-table ownership, exact source bounds/scheduling, algorithm-specific admission, shared integration and newly admitted official subsets; independently review the design.

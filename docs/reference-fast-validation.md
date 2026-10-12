@@ -666,3 +666,14 @@ archive and permits current codec source to evolve. Both standard check scripts
 run it. See the [fixture contract](../tests/fixtures/reference-fast-baseline/README.md),
 [validation record](evidence/2026-10-12-fast-baseline-validation.json) and
 [command/control archive](evidence/2026-10-12-fast-baseline-validation.tar.gz).
+
+
+## Bounded milestone closure
+
+Module 12 was recorded complete on 2026-10-12 after final matrix/platform
+reconciliation and both frozen measurement campaigns. The measurements preserve
+all output/allocation equivalence while finding no repeatable unsafe speedup;
+see [results and limitations](reference-fast-benchmarks.md). The completed
+checklist is archived in Git history and the next DoubleFast decomposition is
+retained. This closure covers the documented Fast scope, not complete upstream
+test migration, all reference strategies or full CLI/library parity.
