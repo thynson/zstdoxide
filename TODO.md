@@ -89,7 +89,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [ ] Verify focused chain/row ownership and parser bounds on interpreted i686/s390x and compile-only no-atomics callers.
 - [ ] Run the full safe/each-feature/all/no_std correctness matrix with unchanged Fast/DoubleFast/named regression baselines.
 - [x] Freeze the Greedy benchmark sources, request profiles and measurement/ownership contract before implementation.
-- [ ] Implement the separate clock-free Greedy harness and independent evidence validator with historical frame/owner controls.
+- [x] Implement the separate clock-free Greedy harness and independent evidence validator with historical frame/owner controls.
 - [ ] Validate all fourteen individual unsafe backends, safe and all together on the frozen clock-free workloads.
 - [ ] Measure every backend after a completed CPU barrier and repeat safe/all with all raw samples retained.
 - [ ] Reconcile tests, inventory, evidence and qualified measurements, record the bounded milestone and clear its completed checklist.

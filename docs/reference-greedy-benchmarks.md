@@ -70,4 +70,42 @@ changes remain limitations. A backend unused by a profile cannot be assigned a
 causal benefit from that profile's timing. No C throughput, C ratio equivalence,
 universal unsafe speedup or foreign-native performance is implied.
 
-Implementation, clock-free validation and measurements remain pending.
+## Verified harness
+
+The separate example and Python driver pass all 32 clock-free cases in safe/all
+builds. Complete frames and all allocation counters agree between backends.
+Eight pre-Greedy Fast/DoubleFast frames and qualified owner records remain exact;
+the three earlier Fast controls also pass. Every source's row-64 and row-capped
+frames and owner counters agree despite their different resolved requests.
+Formatting and strict example Clippy pass in safe/all builds.
+
+Normal and optimized Python independently replay the complete evidence. Each
+also accepts two positive captures and rejects 43 changed captures with child
+creation blocked and zero attempts. Controls cover commands, environment,
+features, source identities, exact parameters, allocation leaks/owners, saved
+frames, summaries and inappropriate smoke clocks/barriers. Coherently changing
+both backends' Fast/DoubleFast bytes or allocator peaks still fails the historical
+baselines; coherently changing only capped-row output or owners fails its paired
+equivalence. The original capture passes again after the controls.
+
+The [harness evidence](evidence/2026-10-12-greedy-benchmark-harness.json) and
+[archive](evidence/2026-10-12-greedy-benchmark-harness.tar.gz) preserve all nine
+commands, complete frames, surveys, source identities, independent controls and
+their exact modified inputs. The 30,121,924-byte archive uses 4-KiB deduplication
+for 7,640 files representing 3,101,167,916 bytes. Every member and reconstructed
+file was verified. Compiled outputs are omitted with executable hashes retained;
+archived reconstruction code is not run automatically. The design document in
+the archive predates this checkpoint, and its measurement contract is unchanged.
+
+The default run has no clocks. Timed runs additionally require a recorded CPU
+barrier containing passed, unchanged platform, full-matrix and all-backend
+clock-free evidence. This records the coordinator's task-owned job observation;
+it does not prove that unrelated desktop work is idle.
+
+```sh
+python3 scripts/benchmark_greedy.py /tmp/new-greedy-smoke --configs safe,all
+python3 scripts/benchmark_greedy.py /tmp/new-greedy-smoke --validate-only
+python3 -O scripts/benchmark_greedy.py /tmp/new-greedy-smoke --validate-only
+```
+
+All-backend clock-free validation and measured campaigns remain pending.
