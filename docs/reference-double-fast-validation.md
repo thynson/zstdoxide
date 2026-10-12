@@ -446,3 +446,34 @@ The first workspace bootstrap passed with a temporary unconstructed-variant
 warning before the dispatch tests were added; final checks have no diagnostic.
 Complete DoubleFast frame/failure qualification and public admission remain
 open. No new C capture, Miri or timing is claimed.
+
+## Private complete DoubleFast frames
+
+The shared frame loop now executes complete private DoubleFast frames over all51
+fixed source recipes. Each configuration decodes101 main whole/scheduled frames
+with the existing Rust decoder and validates truthful window21/content metadata.
+The scheduled160 blocks currently select88 raw,6 RLE and66 compressed blocks,
+including13 raw and3 RLE changed-repeat discards. These observed counts agree
+with the C snapshot, but the tests preserve independent entropy selection and
+do not require C-identical payload bytes. Target/search/minimum-match equivalence
+pairs and window20 expiry versus window21 retention also pass.
+
+Seven bounded allocation workloads inject failure at every observed request,
+including both unequal maximum-table directions. Safe/table/all std logs each
+record271 rejected ordinals:1 empty,25 first-uniform,50 literal-tree,56 mixed,
+39 raw-then-copy and50 for each unequal-table direction. Both no_std configurations
+also inject every observed ordinal without std counter logging. All errors
+release through the exact owners. Empty frames allocate only output; tiny frames
+allocate output and their two selected tables. Output append failure preserves
+existing bytes and committed repeats, discards pending entropy and poisons the
+workspace. Invalid scheduling precedes allocator requests; borrowed non-clone
+results outlive temporary source storage.
+
+Six new tests pass in five configurations:30 executions. Existing safe/all Fast
+workspace and frozen Fast/named baselines add40, for70 total. All15 commands
+pass, including strict Clippy, no_std compilation and formatting. The
+[evidence](evidence/2026-10-12-double-fast-frame-encode.json) and
+[archive](evidence/2026-10-12-double-fast-frame-encode.tar.gz) retain exact source
+identities and logs. The initial four-test bootstrap passed without diagnostics.
+Public admission, independent C decoding of new Rust frames, full platform
+qualification and timing remain open. No new C capture or Miri is claimed.

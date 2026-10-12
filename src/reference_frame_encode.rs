@@ -13,6 +13,10 @@ use crate::reference_search::{ReferenceSearchPlan, ReferenceSearchState};
 use crate::sequence_context::SequenceEncoder;
 use crate::{CompressionParameterRequest, Error, Result};
 
+#[cfg(test)]
+#[path = "../tests/support/double_fast_frame_encode.rs"]
+mod double_fast_tests;
+
 /// Encode one known-size, no-dictionary frame with an admitted Fast profile.
 ///
 /// Admission and output-bound checks precede allocator operations. The original

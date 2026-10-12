@@ -603,8 +603,9 @@ loop and resource scope. The private long-key descriptor and allocation-free
 DoubleFastExecutionPlan, borrowed block/cursor records and independent table pair
 and single-block parser and persistent search state are implemented and verified;
 shared plain framing, scalar entropy policy and static dispatch are also
-implemented. Complete DoubleFast frame qualification and public admission remain
-open. No public DoubleFast encoding path is implemented yet.
+implemented. Private complete DoubleFast framing and bounded allocation-failure
+tests pass; public admission and independent C decoding remain open. No public
+DoubleFast encoding path is implemented yet.
 
 | Structure | Ownership and invariants | Reference counterpart / unsafe representation |
 | --- | --- | --- |
