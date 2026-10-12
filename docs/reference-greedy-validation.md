@@ -177,6 +177,18 @@ anchor-relative skipping. The final coordinates/flags on six no-match noise
 schedules agree with the frozen direct C observations. This is a scalar schedule
 check, not yet a complete parser or full table-map comparison.
 
+The direct projection now freezes all 173 tiny/broader cases into 7,985,140
+little-endian bytes, SHA256
+`5bc0e95cd395d8be489638b2f03ead1494172d92c7c1b0ede49c97cf3e4a0064`.
+The generator checks immutable source checkers before importing them. An
+independent binary reader compares every projected field and case extent with
+those C observations; both Python modes pass two positives and reject 24
+mutations with process creation disabled. Separate publication-policy controls
+pass two positives and reject four overwrite/partial-write/symlink cases per
+mode. Their byte-source substitution is explicitly qualified in the
+[evidence](evidence/2026-10-12-greedy-projection.json); it does not replace source
+verification. The Rust fixture reader and full parser remain pending.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories

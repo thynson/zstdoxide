@@ -60,7 +60,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Add the equivalent opt-in unsafe-row-table backend with complete access proofs and full-map equivalence tests.
 - [x] Add allocation-free Greedy admission planning with actual source-tier chain/row selection and independent resource caps.
 - [x] Add borrowed Greedy block/cursor records with per-probe floors and distinct chain/row search-tail transitions.
-- [ ] Project frozen direct Greedy inputs/observations into bounded little-endian records with independently checked provenance.
+- [x] Project frozen direct Greedy inputs/observations into bounded little-endian records with independently checked provenance.
 - [ ] Add a dependency-free checked Rust adapter for frozen direct Greedy inputs and complete table/sequence observations.
 - [ ] Implement safe reference chain search against full frozen heads/links and update/skipping transitions.
 - [ ] Implement safe reference row search against frozen salted hashes, full positions/tags, head wrap and long-gap updates.
