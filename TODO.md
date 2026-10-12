@@ -67,7 +67,8 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Extend public level/request admission with level0/default3 equivalence, tier-specific levels2/4 and qualified usage documentation.
 - [x] Port newly admitted official numeric/fuzz assertions through a successor policy layer while preserving frozen C tuples and all remaining context/dictionary/capacity gaps.
 - [x] Specify a separate broader whole-frame interop protocol and pin DoubleFast source recipes for window21, unequal tables, scalar controls and newly admitted original test inputs.
-- [ ] Implement and review the broader bounded C/Rust frame adapters, then capture bidirectional normal and fully instrumented C codec runs.
+- [x] Implement and review the broader bounded C/Rust frame adapters, with syntax, Rust and malformed-packet checks before C execution.
+- [ ] Capture the frozen broader bidirectional campaign with normal and fully instrumented C codec builds, preserving failures and exact source identities.
 - [ ] Run the complete correctness matrix with each unsafe feature, no_std and focused interpreted/compile-only platform boundaries.
 - [ ] Freeze and measure deterministic DoubleFast workloads with separate allocation accounting after the CPU barrier; preserve Fast comparisons and qualify results.
 - [ ] Reconcile inventory and validation evidence, record the bounded milestone, and clear its completed checklist.

@@ -590,3 +590,24 @@ existing838-file/20-collection registry and successor policy check pass. The
 [archive](evidence/2026-10-12-double-fast-interop-recipes.tar.gz) preserve inputs,
 source identities and controls. No new codec, Clippy/no_std, C, Miri or timing
 execution is claimed at this source-only checkpoint.
+
+## Broader adapters before C execution
+
+The separately named C/Rust adapters implement the frozen packet version and
+bounded initialized-buffer contract. The [implementation review](reference-double-fast-interop-adapter-review.md)
+records exact source identities and checks C allocation arithmetic, initialization,
+nonoverlapping owners, header reads, signed conversion, codec lifetimes, guarded
+extents and frees. C receives strict syntax checking only at this checkpoint;
+no C oracle executable is run. The Rust example forbids unsafe code and validates
+metadata plus exact outer frame extent before encode output or decode input.
+
+Safe/all Rust each completes159 requests with113 success,42 unsupported and4
+resource errors, preserving identical status, resolved tuple and full frame bytes.
+Each configuration self-decodes27,959,660 source bytes, satisfies all16 equivalence
+groups and rejects38 malformed packets with exit2 and no successful response.
+Focused Clippy, no_std compilation, formatting and22 frozen Fast/named baseline
+executions pass. The [evidence](evidence/2026-10-12-double-fast-interop-adapters.json)
+and [archive](evidence/2026-10-12-double-fast-interop-adapters.tar.gz) retain630
+commands, all raw responses/logs, reviewed source and exact binary identities.
+This is not C interoperability or full platform qualification; the instrumented
+C build/capture remains the next work item.
