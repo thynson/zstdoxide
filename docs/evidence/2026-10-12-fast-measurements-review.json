@@ -1,0 +1,41 @@
+{
+  "campaigns": {
+    "-diagnostic": {
+      "all_feature_safe_over_all_cost_range": [
+        0.7886679762762157,
+        1.0281247295101759
+      ],
+      "all_frames_and_allocator_records_match_frozen_baseline": true,
+      "archive": "2026-10-12-fast-measurements-diagnostic.tar.gz",
+      "archive_bytes": 1418322,
+      "archive_sha256": "918d2e5da456e3a4d06f7194b2018cfb32d97a398b06e06c3ec77f96800365b7",
+      "configurations": 2,
+      "deduplicated_complete_frame_objects": 7,
+      "evidence_sha256": "6b754985bef93946438e86de620f744259055e5858dabb9b9531630872f3e790",
+      "rows": 18,
+      "samples": 90
+    },
+    "full": {
+      "all_feature_safe_over_all_cost_range": [
+        1.215299259051146,
+        1.8500994038471448
+      ],
+      "all_frames_and_allocator_records_match_frozen_baseline": true,
+      "archive": "2026-10-12-fast-measurements.tar.gz",
+      "archive_bytes": 1436295,
+      "archive_sha256": "ec5a1ee6e8651e88d28b3f74a6dcec1948fa568e661a5af5b775ee51c2b561ba",
+      "configurations": 14,
+      "deduplicated_complete_frame_objects": 7,
+      "evidence_sha256": "df8dce76d3acf13520131675fd0178e54bbc785aa93b030c6050d03cba9df3f2",
+      "rows": 126,
+      "samples": 630
+    }
+  },
+  "date": "2026-10-12",
+  "identical_executable_hashes_across_campaigns": {
+    "all": true,
+    "safe": true
+  },
+  "qualification": "Performance observations vary strongly between sequential campaigns on this uncontrolled desktop host. The short diagnostic reverses most apparent all-feature gains. These data establish deterministic output/allocation comparisons, not a repeatable unsafe speedup or per-feature causal ranking.",
+  "status": "passed"
+}

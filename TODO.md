@@ -63,7 +63,7 @@ Existing named APIs and default frame bytes remain compatibility inputs.
 - [x] Add a clock-free-by-default nine-case Fast benchmark with separate allocation accounting, independent corpus fingerprints and reviewed safe/unsafe result validation.
 - [x] Validate focused Fast ownership/bounds with strict-provenance i686/s390x Miri and thumbv6m no_std library/caller compilation; preserve qualified platform evidence.
 - [x] Run the immutable final full feature/no_std/lint/example matrix and reconcile its source identity with the delivered code.
-- [ ] Measure and independently validate the frozen nine-case safe/unsafe Fast benchmark after all task-owned correctness jobs finish.
+- [x] Measure and independently validate the frozen nine-case safe/unsafe Fast benchmark after all task-owned correctness jobs finish.
 - [ ] Record the bounded Fast milestone and clear its completed checklist while retaining the next module's decomposition.
 
 ## Module 13: bounded reference DoubleFast profile execution

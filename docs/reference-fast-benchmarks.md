@@ -46,8 +46,75 @@ timing boundaries remain unchanged. Strict example Clippy and formatting pass.
 
 See the [harness evidence](evidence/2026-10-09-fast-benchmark-harness.json) and
 [55-member archive](evidence/2026-10-09-fast-benchmark-harness.tar.gz). This
-checkpoint contains no timing measurements. The full fourteen-configuration
-measurement campaign is the next separately validated step.
+checkpoint contains no timing measurements. The separately verified campaigns
+below retain their later execution dates and results.
+
+## Measured campaigns on 2026-10-12
+
+The full campaign completed all fourteen builds before its sequential runs:
+126 case records and 630 samples. A subsequent safe/all diagnostic used the
+same sources, requests and **identical executable hashes** and added eighteen
+records and ninety samples. All 144 complete frames and allocation surveys
+match the permanent pre-DoubleFast baseline. Four normal/optimized-Python
+campaign replays pass; summary medians were also recomputed separately from
+the raw elapsed/iteration records. No output expectation was refreshed.
+
+The host reports macOS 15.7.7, aarch64-apple-darwin. The pinned compiler is
+nightly-2026-10-08, rustc 1.101.0-nightly (1d81eb4ad). Before each campaign,
+process checks found no active project test/compiler; two unrelated streaming
+test invocations had previously delayed the first campaign and exited without
+intervention. No other work from this task ran during clocks. This desktop host
+was not isolated from unrelated system activity, frequency changes or scheduler
+placement, and configuration order was fixed rather than randomized.
+
+**The timing evidence does not establish a repeatable unsafe speedup.** The
+full campaign's safe/all median-cost ratio ranges from 1.215 to 1.850, while the
+short repeat ranges from 0.789 to 1.028 and reverses most apparent gains. The
+ratio is safe ns/byte divided by all-feature ns/byte; greater than one means
+all features were faster in that observation. Individual flags also vary,
+including flags whose structures are absent from this compression path.
+These sequential observations cannot assign that variation causally to an
+unsafe backend. Both campaigns are retained without selecting only favorable
+samples; there is no basis here for changing the safe default.
+
+| Workload / request | Full safe MiB/s | Full all MiB/s | Repeat safe MiB/s | Repeat all MiB/s |
+| --- | ---: | ---: | ---: | ---: |
+| skewed / level-1 | 93.87 | 128.08 | 115.68 | 107.82 |
+| skewed / level-minus-7 | 140.71 | 202.99 | 187.87 | 175.02 |
+| skewed / window-17 | 91.92 | 116.50 | 117.80 | 92.91 |
+| history / level-1 | 260.88 | 317.05 | 357.01 | 290.15 |
+| history / level-minus-7 | 447.84 | 665.88 | 702.57 | 644.49 |
+| history / window-17 | 137.90 | 233.84 | 258.22 | 237.65 |
+| mixed / level-1 | 195.64 | 361.96 | 343.35 | 338.76 |
+| mixed / level-minus-7 | 302.61 | 531.39 | 482.76 | 487.00 |
+| mixed / window-17 | 222.03 | 304.19 | 299.70 | 308.13 |
+
+The deterministic size/allocation observations are stable across both campaigns
+and every tested backend. Peak values below are allocator-visible returned
+bytes, with the returned frame resident, under the survey scope above.
+
+| Workload / request | Source bytes | Frame bytes | Peak bytes | Allocations / grows |
+| --- | ---: | ---: | ---: | ---: |
+| skewed / level-1 | 32,768 | 3,149 | 602,041 | 117 / 20 |
+| skewed / level-minus-7 | 32,768 | 6,191 | 505,472 | 105 / 11 |
+| skewed / window-17 | 32,768 | 3,149 | 667,577 | 117 / 20 |
+| history / level-1 | 393,216 | 262,172 | 1,482,103 | 44 / 6 |
+| history / level-minus-7 | 393,216 | 262,172 | 1,416,567 | 24 / 2 |
+| history / window-17 | 393,216 | 393,235 | 1,447,965 | 37 / 6 |
+| mixed / level-1 | 524,288 | 135,514 | 1,987,978 | 224 / 40 |
+| mixed / level-minus-7 | 524,288 | 151,682 | 1,959,587 | 192 / 29 |
+| mixed / window-17 | 524,288 | 138,221 | 1,944,060 | 224 / 37 |
+
+See the [full raw evidence](evidence/2026-10-12-fast-measurements.json),
+[repeat raw evidence](evidence/2026-10-12-fast-measurements-diagnostic.json), and
+[separate reconciliation](evidence/2026-10-12-fast-measurements-review.json).
+The [full archive](evidence/2026-10-12-fast-measurements.tar.gz) and
+[repeat archive](evidence/2026-10-12-fast-measurements-diagnostic.tar.gz) retain
+all measured source files, commands/environment, compiler/executable hashes,
+raw sample logs, offline validations and process-barrier records. Each stores
+seven unique complete frames plus a map for every original frame path;
+every mapped byte extent was verified. Build artifacts and executable copies
+are omitted, while their identities and reproduction commands remain.
 
 ## Reproduction
 

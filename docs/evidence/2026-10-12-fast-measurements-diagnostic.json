@@ -1,0 +1,1018 @@
+{
+  "base_environment": {
+    "CARGO_ENCODED_RUSTFLAGS": "",
+    "CARGO_INCREMENTAL": "0",
+    "HOME": "/Users/lanxingcan",
+    "LANG": "C",
+    "LC_ALL": "C",
+    "LOGNAME": "lanxingcan",
+    "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+    "RUSTC": "rustc",
+    "RUSTC_WORKSPACE_WRAPPER": "",
+    "RUSTC_WRAPPER": "",
+    "RUSTDOC": "rustdoc",
+    "RUSTDOCFLAGS": "",
+    "RUSTFLAGS": "",
+    "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+    "TZ": "UTC",
+    "USER": "lanxingcan"
+  },
+  "campaign_directory": "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12",
+  "cargo_configs": [
+    {
+      "bytes": 1131,
+      "path": "/Users/lanxingcan/.cargo/config.toml",
+      "sha256": "54523ec655a982d1a8eead631437b06318a57366ab4c772410ad40b9f30485a3"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "-vV"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "compiler",
+      "stderr": "compiler.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "compiler.stdout",
+      "stdout_sha256": "a4bb13dccabda9ebf5294b8144f22400733afc06744ab8062bcf43b7254e0c03"
+    },
+    {
+      "argv": [
+        "rustup",
+        "which",
+        "--toolchain",
+        "nightly-2026-10-08",
+        "rustc"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "compiler-path",
+      "stderr": "compiler-path.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "compiler-path.stdout",
+      "stdout_sha256": "4d882cde615807e2a1a31ce7270cf3e307fec28bfbbc9e6d4fc56f585140386a"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "head",
+      "stderr": "head.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "head.stdout",
+      "stdout_sha256": "ea6354fda7cac26746c096d468d27289038a3a7dd40a8efcc5a289734101c5e6"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "status",
+      "stderr": "status.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "status.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "rustc",
+        "+nightly-2026-10-08",
+        "--print",
+        "host-tuple"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "host",
+      "stderr": "host.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "host.stdout",
+      "stdout_sha256": "19afaf54e1c73ed8d742a22e5ad23c0fc9875c0697df22365652435250dd2496"
+    },
+    {
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "--example",
+        "fast_benchmark",
+        "--target",
+        "aarch64-apple-darwin"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12/targets/safe",
+        "CARGO_TERM_COLOR": "never",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "build-safe",
+      "stderr": "build-safe.stderr",
+      "stderr_sha256": "fc2c9a4646efc08e07088d4a3ad4f037052c90bc60ee13e6d8dd0361a5a20e4f",
+      "stdout": "build-safe.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "cargo",
+        "+nightly-2026-10-08",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "--example",
+        "fast_benchmark",
+        "--target",
+        "aarch64-apple-darwin",
+        "--all-features"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_TARGET_DIR": "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12/targets/all",
+        "CARGO_TERM_COLOR": "never",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "build-all",
+      "stderr": "build-all.stderr",
+      "stderr_sha256": "7a9cac4edf08a66bc26e97d69805d35e0b6fb6d7ad1a7f4721d3d2fc31d01377",
+      "stdout": "build-all.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12/targets/safe/aarch64-apple-darwin/release/examples/fast_benchmark"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan",
+        "ZSTDOXIDE_FAST_BENCH_FRAMES": "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12/frames/safe",
+        "ZSTDOXIDE_FAST_BENCH_TIMED": "1"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "run-safe",
+      "stderr": "run-safe.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "run-safe.stdout",
+      "stdout_sha256": "31f745aea61d5f68b2e2cdd26cc7cb222e858f519691f654eb59d15791321ed2"
+    },
+    {
+      "argv": [
+        "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12/targets/all/aarch64-apple-darwin/release/examples/fast_benchmark"
+      ],
+      "cwd": "/Users/lanxingcan/Workspace/zstdoxize",
+      "environment": {
+        "CARGO_ENCODED_RUSTFLAGS": "",
+        "CARGO_INCREMENTAL": "0",
+        "HOME": "/Users/lanxingcan",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "LOGNAME": "lanxingcan",
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin/:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/usr/local/bin:/Library/Application Support/Yunshu/Yunshu.app/Contents/Public:/Applications/Yunshu.app/Contents/Public:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/lanxingcan/.codex/tmp/arg0/codex-arg0yy5OTQ:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/lanxingcan/.grok/bin:/Users/lanxingcan/.qlty/bin:/Users/lanxingcan/.ept/bin:/Users/lanxingcan/Library/pnpm:/Users/lanxingcan/Library/Python/3.14/bin:/Users/lanxingcan/.cargo/bin:/opt/homebrew/bin:/Users/lanxingcan/.nvm/versions/node/v24.20.0/bin:/Users/lanxingcan/.npm-packages/bin:/Users/lanxingcan/.local/bin:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts:/Users/lanxingcan/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/lanxingcan/Library/Application Support/JetBrains/Toolbox/scripts",
+        "RUSTC": "rustc",
+        "RUSTC_WORKSPACE_WRAPPER": "",
+        "RUSTC_WRAPPER": "",
+        "RUSTDOC": "rustdoc",
+        "RUSTDOCFLAGS": "",
+        "RUSTFLAGS": "",
+        "TMPDIR": "/var/folders/74/5v_kygjn183__w488ngm5zz00000gp/T/",
+        "TZ": "UTC",
+        "USER": "lanxingcan",
+        "ZSTDOXIDE_FAST_BENCH_FRAMES": "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12/frames/all",
+        "ZSTDOXIDE_FAST_BENCH_TIMED": "1"
+      },
+      "exception": null,
+      "exit_code": 0,
+      "label": "run-all",
+      "stderr": "run-all.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "run-all.stdout",
+      "stdout_sha256": "12968e18aa273ea7c294c5a5c9f951fd6640b3bfb5bc44f40ffed1409a0ce289"
+    }
+  ],
+  "compiler": "rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)\nbinary: rustc\ncommit-hash: 1d81eb4ad9cd207e3e638bd32b17ec4fce8412a6\ncommit-date: 2026-10-07\nhost: aarch64-apple-darwin\nrelease: 1.101.0-nightly\nLLVM version: 23.1.3\n",
+  "compiler_sha256": "eb3147b0fd9629eba4886d6c4072d0ba21ae493b43b776871c1645f0e977916e",
+  "configs": [
+    "safe",
+    "all"
+  ],
+  "executables": {
+    "all": {
+      "path": "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12/targets/all/aarch64-apple-darwin/release/examples/fast_benchmark",
+      "sha256": "a96f0c5021a499cf2b7148c6d807eba029b31b298b8abe562ceb40ee0b7dc228"
+    },
+    "safe": {
+      "path": "/private/tmp/zstdoxide-fast-measurements-diagnostic-2026-10-12/targets/safe/aarch64-apple-darwin/release/examples/fast_benchmark",
+      "sha256": "e6c7c4f715911a672da163afb69f8d1aac51b1d5aae852a77302ae904a771cc1"
+    }
+  },
+  "frames": {
+    "all": {
+      "history-level-1.zst": {
+        "bytes": 262172,
+        "sha256": "29ede94cf93120b99e16eec2cc8f1b380dc42b22867219ba25bc1b59a069af05"
+      },
+      "history-level-minus-7.zst": {
+        "bytes": 262172,
+        "sha256": "29ede94cf93120b99e16eec2cc8f1b380dc42b22867219ba25bc1b59a069af05"
+      },
+      "history-window-17.zst": {
+        "bytes": 393235,
+        "sha256": "5aa5fc77844915fad451e28379324410e58828d8cc3a0e6cd0f71a806b0c8512"
+      },
+      "mixed-level-1.zst": {
+        "bytes": 135514,
+        "sha256": "fe99b6e697a02edc7354988d8851a81e1128f5aae06ae49d56e517e90b408339"
+      },
+      "mixed-level-minus-7.zst": {
+        "bytes": 151682,
+        "sha256": "9771c889ed11eb4c36d14b99c40a06213caa9a1b6398b00cb2a9861407b47f90"
+      },
+      "mixed-window-17.zst": {
+        "bytes": 138221,
+        "sha256": "2ccdcb08ecad7ed12c22f24523b070ffd3b2b7fc1fc7d88af7c2dc886798a7cc"
+      },
+      "skewed-level-1.zst": {
+        "bytes": 3149,
+        "sha256": "0a575c7664a00e44c5b92c8ef67323868a44eb00f26b4971b0b6b9ef83e6cd20"
+      },
+      "skewed-level-minus-7.zst": {
+        "bytes": 6191,
+        "sha256": "5297ae67eb3db7023048e83a9232c9e7afbb7b9868ff124017da0da8821d20d2"
+      },
+      "skewed-window-17.zst": {
+        "bytes": 3149,
+        "sha256": "0a575c7664a00e44c5b92c8ef67323868a44eb00f26b4971b0b6b9ef83e6cd20"
+      }
+    },
+    "safe": {
+      "history-level-1.zst": {
+        "bytes": 262172,
+        "sha256": "29ede94cf93120b99e16eec2cc8f1b380dc42b22867219ba25bc1b59a069af05"
+      },
+      "history-level-minus-7.zst": {
+        "bytes": 262172,
+        "sha256": "29ede94cf93120b99e16eec2cc8f1b380dc42b22867219ba25bc1b59a069af05"
+      },
+      "history-window-17.zst": {
+        "bytes": 393235,
+        "sha256": "5aa5fc77844915fad451e28379324410e58828d8cc3a0e6cd0f71a806b0c8512"
+      },
+      "mixed-level-1.zst": {
+        "bytes": 135514,
+        "sha256": "fe99b6e697a02edc7354988d8851a81e1128f5aae06ae49d56e517e90b408339"
+      },
+      "mixed-level-minus-7.zst": {
+        "bytes": 151682,
+        "sha256": "9771c889ed11eb4c36d14b99c40a06213caa9a1b6398b00cb2a9861407b47f90"
+      },
+      "mixed-window-17.zst": {
+        "bytes": 138221,
+        "sha256": "2ccdcb08ecad7ed12c22f24523b070ffd3b2b7fc1fc7d88af7c2dc886798a7cc"
+      },
+      "skewed-level-1.zst": {
+        "bytes": 3149,
+        "sha256": "0a575c7664a00e44c5b92c8ef67323868a44eb00f26b4971b0b6b9ef83e6cd20"
+      },
+      "skewed-level-minus-7.zst": {
+        "bytes": 6191,
+        "sha256": "5297ae67eb3db7023048e83a9232c9e7afbb7b9868ff124017da0da8821d20d2"
+      },
+      "skewed-window-17.zst": {
+        "bytes": 3149,
+        "sha256": "0a575c7664a00e44c5b92c8ef67323868a44eb00f26b4971b0b6b9ef83e6cd20"
+      }
+    }
+  },
+  "host": "aarch64-apple-darwin",
+  "inputs": {
+    "history": {
+      "bytes": 393216,
+      "fnv1a64": "63af07be4a3a8c7c",
+      "sha256": "9cc84f81533a4a4d2e16b59f04213ff5da07e716391b0d8d6314d32345937c98"
+    },
+    "mixed": {
+      "bytes": 524288,
+      "fnv1a64": "b3aeb6510bbe33c8",
+      "sha256": "b2153d35b896544d8086e4bb03600fdc07d3e84723a26545a878a45c7a275ce3"
+    },
+    "skewed": {
+      "bytes": 32768,
+      "fnv1a64": "eb099b718ab7e75b",
+      "sha256": "613ad2caf8e6b161d48f0ce4aee8f29eaa1c45b9978876a4f9577e149ef607b2"
+    }
+  },
+  "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+  "scope": "Global one-shot compression and output destruction; allocation survey and validation outside clocks",
+  "source": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "0fd0cf08eb2c8dd08f4cc527ee49b761185dd0171808868e176b00d60aad2d9b",
+    "examples/fast_benchmark.rs": "3135aca55c3b62b1f7d7b2d864d803d0c81e8e8cb5b8c186d61fa5ef1d9da739",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "scripts/benchmark_fast.py": "71dd2442e251f37ebb514280bb56366076262ce91a0e661763f2243bd5ec0d45",
+    "scripts/benchmark_search.py": "ed5b3c7ddc9737ade86ba3637f5b6d20e335a30d8d2bbf146d4cae26020ea4be",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/block_entropy.rs": "51e3139dd998bfeae7640bdcd8af05ad835e1e8fa427c79909e085fa968d20e5",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/fast_encode.rs": "cbdc261b7318fbf609eff83625f624ddb88fdd8f466da2da5b68704dcffb759c",
+    "src/fast_frame.rs": "38b69b31487a4134e3a0ac0c6d14bf61d8ae2396cec96639907367e8b6add066",
+    "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+    "src/fast_plan.rs": "7ef25ee91ebb724d404d70521cb58e8479fdd1e56aef6ac2bca2f8df55d234ca",
+    "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "b19136dc432f9dcfe1db0b70c98a33b5354573ea62ab738ff1e3c5263b85f311",
+    "src/literal_encode.rs": "a66d087af6da1e6f439f7e12aec3a87f9b9d341c2cc48d1d839ad35f271585c9",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "354376bc1f6da58b8b2d999610f232d0792a86421c89010f52a848304c194dd4",
+    "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+    "src/match_search.rs": "b47d7566c2c56623d99b0d729a6ea9b2aa4ff1a0573ca2a5a95fa72a122e3e94",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "333dd96afaa6576551cda69036d534ba75d2334f22cd08051e6f3a55f245a1e5",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/reference_encode.rs": "5bf6010bfe2ad2a3231afab1799d87d29b390dea3c51b9f676aa6af02d0c5838",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/sequence_context.rs": "5824fea99f85b3cc1c63a62bb68f79873d1e3818af487b7107cf1bdda5f9c81c",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "2dbd16ebb375017938bcf53e949f5e369eeae708e5eea0f48ffd437e3da8da48",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "test-support/allocator/Cargo.toml": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971"
+  },
+  "source_unchanged": true,
+  "started_utc": "2026-10-12T02:13:01.165162+00:00",
+  "status": "passed",
+  "summary": {
+    "all": [
+      {
+        "allocation": {
+          "allocate_calls": 117,
+          "attempts": 137,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 20,
+          "identities_created": 121,
+          "owners_dropped": 121,
+          "peak_bytes": 602041,
+          "peak_live_blocks": 30,
+          "peak_requested_bytes": 602041,
+          "returned_bytes": 32778,
+          "returned_requested_bytes": 32778,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.096099853515625,
+        "frame_bytes": 3149,
+        "profile": "level-1",
+        "timing": {
+          "maximum_ns_per_byte": 8.886448172635811,
+          "median_mib_per_second": 107.8226469680516,
+          "median_ns_per_byte": 8.844842370534908,
+          "minimum_ns_per_byte": 8.424823771495136
+        },
+        "workload": "skewed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 105,
+          "attempts": 116,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 11,
+          "identities_created": 114,
+          "owners_dropped": 114,
+          "peak_bytes": 505472,
+          "peak_live_blocks": 28,
+          "peak_requested_bytes": 505472,
+          "returned_bytes": 32778,
+          "returned_requested_bytes": 32778,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.188934326171875,
+        "frame_bytes": 6191,
+        "profile": "level-minus-7",
+        "timing": {
+          "maximum_ns_per_byte": 5.580658014775194,
+          "median_mib_per_second": 175.01992444290653,
+          "median_ns_per_byte": 5.448947138114834,
+          "minimum_ns_per_byte": 5.287478437060716
+        },
+        "workload": "skewed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 117,
+          "attempts": 137,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 20,
+          "identities_created": 121,
+          "owners_dropped": 121,
+          "peak_bytes": 667577,
+          "peak_live_blocks": 30,
+          "peak_requested_bytes": 667577,
+          "returned_bytes": 32778,
+          "returned_requested_bytes": 32778,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.096099853515625,
+        "frame_bytes": 3149,
+        "profile": "window-17",
+        "timing": {
+          "maximum_ns_per_byte": 11.207454807155734,
+          "median_mib_per_second": 92.90724208652784,
+          "median_ns_per_byte": 10.264800622518306,
+          "minimum_ns_per_byte": 8.97197036519428
+        },
+        "workload": "skewed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 44,
+          "attempts": 50,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 6,
+          "identities_created": 53,
+          "owners_dropped": 53,
+          "peak_bytes": 1482103,
+          "peak_live_blocks": 18,
+          "peak_requested_bytes": 1482103,
+          "returned_bytes": 393234,
+          "returned_requested_bytes": 393234,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.6667378743489584,
+        "frame_bytes": 262172,
+        "profile": "level-1",
+        "timing": {
+          "maximum_ns_per_byte": 3.704643839223373,
+          "median_mib_per_second": 290.1505062754347,
+          "median_ns_per_byte": 3.2868263049003406,
+          "minimum_ns_per_byte": 2.907553123705315
+        },
+        "workload": "history"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 24,
+          "attempts": 26,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 2,
+          "identities_created": 39,
+          "owners_dropped": 39,
+          "peak_bytes": 1416567,
+          "peak_live_blocks": 18,
+          "peak_requested_bytes": 1416567,
+          "returned_bytes": 393234,
+          "returned_requested_bytes": 393234,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.6667378743489584,
+        "frame_bytes": 262172,
+        "profile": "level-minus-7",
+        "timing": {
+          "maximum_ns_per_byte": 1.4977648417154947,
+          "median_mib_per_second": 644.4916572053792,
+          "median_ns_per_byte": 1.4797310496485512,
+          "minimum_ns_per_byte": 1.469693735641538
+        },
+        "workload": "history"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 37,
+          "attempts": 43,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 6,
+          "identities_created": 36,
+          "owners_dropped": 36,
+          "peak_bytes": 1447965,
+          "peak_live_blocks": 11,
+          "peak_requested_bytes": 1447965,
+          "returned_bytes": 393235,
+          "returned_requested_bytes": 393235,
+          "violations": false
+        },
+        "compressed_size_ratio": 1.000048319498698,
+        "frame_bytes": 393235,
+        "profile": "window-17",
+        "timing": {
+          "maximum_ns_per_byte": 4.0342691739400225,
+          "median_mib_per_second": 237.64778127278447,
+          "median_ns_per_byte": 4.012973785400391,
+          "minimum_ns_per_byte": 3.8870014999852036
+        },
+        "workload": "history"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 224,
+          "attempts": 264,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 40,
+          "identities_created": 242,
+          "owners_dropped": 242,
+          "peak_bytes": 1987978,
+          "peak_live_blocks": 39,
+          "peak_requested_bytes": 1987978,
+          "returned_bytes": 524309,
+          "returned_requested_bytes": 524309,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.2584724426269531,
+        "frame_bytes": 135514,
+        "profile": "level-1",
+        "timing": {
+          "maximum_ns_per_byte": 2.847352440677472,
+          "median_mib_per_second": 338.7626693501984,
+          "median_ns_per_byte": 2.8151694466085995,
+          "minimum_ns_per_byte": 2.7089936162384465
+        },
+        "workload": "mixed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 192,
+          "attempts": 221,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 29,
+          "identities_created": 220,
+          "owners_dropped": 220,
+          "peak_bytes": 1959587,
+          "peak_live_blocks": 37,
+          "peak_requested_bytes": 1959587,
+          "returned_bytes": 524309,
+          "returned_requested_bytes": 524309,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.2893104553222656,
+        "frame_bytes": 151682,
+        "profile": "level-minus-7",
+        "timing": {
+          "maximum_ns_per_byte": 1.988357146581014,
+          "median_mib_per_second": 487.004919743577,
+          "median_ns_per_byte": 1.958243700922752,
+          "minimum_ns_per_byte": 1.8744866053263347
+        },
+        "workload": "mixed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 224,
+          "attempts": 261,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 37,
+          "identities_created": 244,
+          "owners_dropped": 244,
+          "peak_bytes": 1944060,
+          "peak_live_blocks": 30,
+          "peak_requested_bytes": 1944060,
+          "returned_bytes": 524310,
+          "returned_requested_bytes": 524310,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.26363563537597656,
+        "frame_bytes": 138221,
+        "profile": "window-17",
+        "timing": {
+          "maximum_ns_per_byte": 3.1435620042144277,
+          "median_mib_per_second": 308.12544184318654,
+          "median_ns_per_byte": 3.095084621060279,
+          "minimum_ns_per_byte": 3.064472198486328
+        },
+        "workload": "mixed"
+      }
+    ],
+    "safe": [
+      {
+        "allocation": {
+          "allocate_calls": 117,
+          "attempts": 137,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 20,
+          "identities_created": 121,
+          "owners_dropped": 121,
+          "peak_bytes": 602041,
+          "peak_live_blocks": 30,
+          "peak_requested_bytes": 602041,
+          "returned_bytes": 32778,
+          "returned_requested_bytes": 32778,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.096099853515625,
+        "frame_bytes": 3149,
+        "profile": "level-1",
+        "timing": {
+          "maximum_ns_per_byte": 8.517213104163039,
+          "median_mib_per_second": 115.67607207710576,
+          "median_ns_per_byte": 8.244352520636792,
+          "minimum_ns_per_byte": 7.519147299780634
+        },
+        "workload": "skewed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 105,
+          "attempts": 116,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 11,
+          "identities_created": 114,
+          "owners_dropped": 114,
+          "peak_bytes": 505472,
+          "peak_live_blocks": 28,
+          "peak_requested_bytes": 505472,
+          "returned_bytes": 32778,
+          "returned_requested_bytes": 32778,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.188934326171875,
+        "frame_bytes": 6191,
+        "profile": "level-minus-7",
+        "timing": {
+          "maximum_ns_per_byte": 5.131408947856486,
+          "median_mib_per_second": 187.87457821720272,
+          "median_ns_per_byte": 5.076122195221657,
+          "minimum_ns_per_byte": 5.035350114549011
+        },
+        "workload": "skewed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 117,
+          "attempts": 137,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 20,
+          "identities_created": 121,
+          "owners_dropped": 121,
+          "peak_bytes": 667577,
+          "peak_live_blocks": 30,
+          "peak_requested_bytes": 667577,
+          "returned_bytes": 32778,
+          "returned_requested_bytes": 32778,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.096099853515625,
+        "frame_bytes": 3149,
+        "profile": "window-17",
+        "timing": {
+          "maximum_ns_per_byte": 8.19213572647872,
+          "median_mib_per_second": 117.80273179747937,
+          "median_ns_per_byte": 8.095519533840351,
+          "minimum_ns_per_byte": 7.781535917869355
+        },
+        "workload": "skewed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 44,
+          "attempts": 50,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 6,
+          "identities_created": 53,
+          "owners_dropped": 53,
+          "peak_bytes": 1482103,
+          "peak_live_blocks": 18,
+          "peak_requested_bytes": 1482103,
+          "returned_bytes": 393234,
+          "returned_requested_bytes": 393234,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.6667378743489584,
+        "frame_bytes": 262172,
+        "profile": "level-1",
+        "timing": {
+          "maximum_ns_per_byte": 2.7167757724193815,
+          "median_mib_per_second": 357.01136858076825,
+          "median_ns_per_byte": 2.671271562576294,
+          "minimum_ns_per_byte": 2.6264562180771454
+        },
+        "workload": "history"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 24,
+          "attempts": 26,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 2,
+          "identities_created": 39,
+          "owners_dropped": 39,
+          "peak_bytes": 1416567,
+          "peak_live_blocks": 18,
+          "peak_requested_bytes": 1416567,
+          "returned_bytes": 393234,
+          "returned_requested_bytes": 393234,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.6667378743489584,
+        "frame_bytes": 262172,
+        "profile": "level-minus-7",
+        "timing": {
+          "maximum_ns_per_byte": 1.366676493762011,
+          "median_mib_per_second": 702.570567184322,
+          "median_ns_per_byte": 1.3574071573027482,
+          "minimum_ns_per_byte": 1.3439340290270352
+        },
+        "workload": "history"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 37,
+          "attempts": 43,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 6,
+          "identities_created": 36,
+          "owners_dropped": 36,
+          "peak_bytes": 1447965,
+          "peak_live_blocks": 11,
+          "peak_requested_bytes": 1447965,
+          "returned_bytes": 393235,
+          "returned_requested_bytes": 393235,
+          "violations": false
+        },
+        "compressed_size_ratio": 1.000048319498698,
+        "frame_bytes": 393235,
+        "profile": "window-17",
+        "timing": {
+          "maximum_ns_per_byte": 3.9220875275440705,
+          "median_mib_per_second": 258.222472147201,
+          "median_ns_per_byte": 3.693227427017286,
+          "minimum_ns_per_byte": 3.6593467349097843
+        },
+        "workload": "history"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 224,
+          "attempts": 264,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 40,
+          "identities_created": 242,
+          "owners_dropped": 242,
+          "peak_bytes": 1987978,
+          "peak_live_blocks": 39,
+          "peak_requested_bytes": 1987978,
+          "returned_bytes": 524309,
+          "returned_requested_bytes": 524309,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.2584724426269531,
+        "frame_bytes": 135514,
+        "profile": "level-1",
+        "timing": {
+          "maximum_ns_per_byte": 3.119393071820659,
+          "median_mib_per_second": 343.35205434699725,
+          "median_ns_per_byte": 2.777540732121122,
+          "minimum_ns_per_byte": 2.6634004380967884
+        },
+        "workload": "mixed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 192,
+          "attempts": 221,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 29,
+          "identities_created": 220,
+          "owners_dropped": 220,
+          "peak_bytes": 1959587,
+          "peak_live_blocks": 37,
+          "peak_requested_bytes": 1959587,
+          "returned_bytes": 524309,
+          "returned_requested_bytes": 524309,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.2893104553222656,
+        "frame_bytes": 151682,
+        "profile": "level-minus-7",
+        "timing": {
+          "maximum_ns_per_byte": 2.337393714160454,
+          "median_mib_per_second": 482.7585952903405,
+          "median_ns_per_byte": 1.9754683307765686,
+          "minimum_ns_per_byte": 1.8607435874568605
+        },
+        "workload": "mixed"
+      },
+      {
+        "allocation": {
+          "allocate_calls": 224,
+          "attempts": 261,
+          "final_live_blocks": 0,
+          "final_live_bytes": 0,
+          "grow_calls": 37,
+          "identities_created": 244,
+          "owners_dropped": 244,
+          "peak_bytes": 1944060,
+          "peak_live_blocks": 30,
+          "peak_requested_bytes": 1944060,
+          "returned_bytes": 524310,
+          "returned_requested_bytes": 524310,
+          "violations": false
+        },
+        "compressed_size_ratio": 0.26363563537597656,
+        "frame_bytes": 138221,
+        "profile": "window-17",
+        "timing": {
+          "maximum_ns_per_byte": 3.255444057917191,
+          "median_mib_per_second": 299.69655723579876,
+          "median_ns_per_byte": 3.1821330388387046,
+          "minimum_ns_per_byte": 3.036218976217603
+        },
+        "workload": "mixed"
+      }
+    ]
+  },
+  "timed": true,
+  "toolchain": "nightly-2026-10-08"
+}
