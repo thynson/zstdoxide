@@ -805,3 +805,14 @@ safe/all-feature tests cover complete row maps and wrap for all widths, mixed
 tags against a source-history model, zero tags, budgets/floors, malformed cells,
 truncated owners, independent non-clone allocators, both allocation failures,
 and moves/swaps/reset. Strict safe Clippy and no_std compilation pass.
+
+The independent `unsafe-row-table` backend uses the same checked row and owner
+contracts. Before unchecked reads/writes, runtime checks prove the entire row
+fits both initialized owner lengths; head validation and power-of-two masks
+bound every relative index. Local proofs cover both allocations, alignment,
+initialized values, aliasing, overflow and the lifetime of every temporary
+reference. Candidate snapshots continue to use only safe array access. All six
+row tests pass in safe, isolated-feature and all-feature modes, including full
+maps and the independent source-history model. Strict feature/all Clippy,
+isolated-feature no_std and all fourteen unsafe features together without std
+pass. The feature is included in the normal matrix; performance remains unmeasured.

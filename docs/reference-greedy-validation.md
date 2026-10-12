@@ -2,7 +2,7 @@
 
 Module 14 is in progress. Source design, pre-Greedy regression baselines and the
 tiny and broader direct C oracle checkpoints are complete. Shared Rust hash
-values, reference-chain backends and safe row storage are implemented. Greedy
+values, reference-chain and row storage backends are implemented. Greedy
 parsing, ordinary-frame state, public Greedy admission and broader test migration
 remain in progress. The existing independent named Greedy policy is not
 an implementation of this reference strategy.
@@ -156,14 +156,17 @@ no_std and strict feature/all Clippy pass. Safe row storage also passes six
 safe/all tests covering complete position/tag maps at every row width, snapshots
 across insertion, mixed tags, empty/expired/future cells, budget limits, malformed
 heads, both owner extents and all allocation failure ordinals. Its strict safe
-Clippy and no_std check pass. Full frozen parser/map integration and deterministic
-performance comparisons remain pending.
+Clippy and no_std check pass. The `unsafe-row-table` backend passes the same six tests in isolation and with
+all features. Runtime row/owner checks precede every locally documented unchecked
+access; candidate snapshots remain safe values. Strict feature/all Clippy,
+isolated-feature no_std and all fourteen unsafe features without std pass.
+Full frozen parser/map integration and deterministic performance comparisons
+remain pending.
 
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories
-or automatic public branch selection. The Rust unsafe row backend, complete
-Greedy parsing, ordinary publication, public admission and related official
+or automatic public branch selection. Complete Rust Greedy parsing, ordinary publication, public admission and related official
 assertions remain in progress. No new official source-unit obligation is marked
 complete. Final every-feature/platform/interoperability matrices and Greedy
 measurements remain open, as do the complete roadmap and upstream migration.

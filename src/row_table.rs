@@ -1,7 +1,7 @@
 //! Independent position/tag owners for reference Greedy's scalar row search.
 //! Row zero cells retain the head byte and never store a candidate position.
 //! Candidate snapshots own copied indices so insertion cannot overwrite them.
-#![forbid(unsafe_code)]
+#![cfg_attr(not(feature = "unsafe-row-table"), forbid(unsafe_code))]
 #![cfg_attr(not(test), allow(dead_code, reason = "reference row parsing follows"))]
 
 use alloc::{alloc::Global, vec::Vec};
@@ -88,12 +88,42 @@ impl<P: Allocator, T: Allocator> RowTable<P, T> {
         if end > self.positions.len() || end > self.tags.len() {
             return Err(Error::CorruptData);
         }
-        let head = usize::from(self.tags[base]);
-        if head >= self.layout.row_len() || self.positions[base] != EMPTY {
+        #[cfg(not(feature = "unsafe-row-table"))]
+        let (head, reserved) = (usize::from(self.tags[base]), self.positions[base]);
+        #[cfg(feature = "unsafe-row-table")]
+        let (head, reserved) = {
+            // SAFETY: The runtime checks prove base + row_len <= both live
+            // initialized lengths; row_len is a nonzero 16/32/64. Thus base is
+            // in both owners. Vec retains valid naturally aligned initialized
+            // u8/usize storage. Shared self prevents mutation/reallocation and
+            // keeps both allocations live. Both references are immediately
+            // copied and cannot escape their owner borrow.
+            unsafe {
+                (
+                    usize::from(*self.tags.get_unchecked(base)),
+                    *self.positions.get_unchecked(base),
+                )
+            }
+        };
+        if head >= self.layout.row_len() || reserved != EMPTY {
             return Err(Error::CorruptData);
         }
-        if head != 0 && self.positions[base + head] == EMPTY {
-            return Err(Error::CorruptData);
+        if head != 0 {
+            #[cfg(not(feature = "unsafe-row-table"))]
+            let newest = self.positions[base + head];
+            #[cfg(feature = "unsafe-row-table")]
+            let newest = {
+                // SAFETY: The preceding runtime checks established head <
+                // row_len and the full row's initialized extent, so base+head
+                // cannot overflow and is below positions.len(). The Vec owns
+                // aligned initialized usize values. Shared self retains the
+                // allocation and excludes writes/reallocation; the temporary
+                // reference is only copied, with no escaping alias.
+                unsafe { *self.positions.get_unchecked(base + head) }
+            };
+            if newest == EMPTY {
+                return Err(Error::CorruptData);
+            }
         }
         Ok((base, head))
     }
@@ -120,10 +150,30 @@ impl<P: Allocator, T: Allocator> RowTable<P, T> {
         };
         for step in 0..width {
             let relative = (head + step) & (width - 1);
-            if relative == 0 || self.tags[base + relative] != key.tag() {
+            if relative == 0 {
                 continue;
             }
-            let position = self.positions[base + relative];
+            #[cfg(not(feature = "unsafe-row-table"))]
+            let (tag, position) = (self.tags[base + relative], self.positions[base + relative]);
+            #[cfg(feature = "unsafe-row-table")]
+            let (tag, position) = {
+                // SAFETY: checked_row verified this entire row against both
+                // initialized owner lengths at runtime. Masking bounds relative
+                // below width, and base+width was checked without overflow. The
+                // Vec owners retain aligned initialized u8/usize cells. Shared
+                // self prevents changes to either length/allocation or values
+                // throughout this loop. Both short-lived references are copied;
+                // no reference or source pointer escapes these reads.
+                unsafe {
+                    (
+                        *self.tags.get_unchecked(base + relative),
+                        *self.positions.get_unchecked(base + relative),
+                    )
+                }
+            };
+            if tag != key.tag() {
+                continue;
+            }
             if position == EMPTY {
                 break;
             }
@@ -154,17 +204,50 @@ impl<P: Allocator, T: Allocator> RowTable<P, T> {
             return Err(Error::InvalidParameter);
         }
         let (base, head) = self.checked_row(key)?;
-        if head != 0 && self.positions[base + head] >= position {
-            return Err(Error::CorruptData);
+        if head != 0 {
+            #[cfg(not(feature = "unsafe-row-table"))]
+            let newest = self.positions[base + head];
+            #[cfg(feature = "unsafe-row-table")]
+            let newest = {
+                // SAFETY: checked_row established head < row_len and both
+                // complete initialized extents without overflow. positions owns
+                // aligned initialized usize cells, and exclusive self prevents
+                // aliases, mutation or reallocation by another access. The
+                // temporary shared reference is copied and ends before writes.
+                unsafe { *self.positions.get_unchecked(base + head) }
+            };
+            if newest >= position {
+                return Err(Error::CorruptData);
+            }
         }
         let next = if head <= 1 {
             self.layout.row_len() - 1
         } else {
             head - 1
         };
-        self.positions[base + next] = position;
-        self.tags[base + next] = key.tag();
-        self.tags[base] = next as u8;
+        #[cfg(not(feature = "unsafe-row-table"))]
+        {
+            self.positions[base + next] = position;
+            self.tags[base + next] = key.tag();
+            self.tags[base] = next as u8;
+        }
+        #[cfg(feature = "unsafe-row-table")]
+        {
+            // SAFETY: checked_row validated both full initialized owner extents
+            // and head < row_len. Both branches select next in 1..row_len, so
+            // base+next and base are in bounds and cannot overflow. No allocation,
+            // resizing or callbacks have occurred since those runtime checks.
+            // The Vec owners retain separate valid aligned initialized usize/u8
+            // allocations. Exclusive self excludes aliases or concurrent access;
+            // each temporary mutable reference ends at its assignment. Copy
+            // writes preserve initialization, invoke no destructor/allocator,
+            // and never publish a reference or reinterpret an allocation.
+            unsafe {
+                *self.positions.get_unchecked_mut(base + next) = position;
+                *self.tags.get_unchecked_mut(base + next) = key.tag();
+                *self.tags.get_unchecked_mut(base) = next as u8;
+            }
+        }
         Ok(())
     }
 
