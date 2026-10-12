@@ -135,3 +135,30 @@ improvements, repeat versus explicit lookahead, multiple improvements, row
 widths, long gaps, cyclic wrap, skipping, floor expiry and entropy wrapping.
 Depth-zero packets with otherwise unchanged inputs provide predecessor controls.
 Freeze inputs before C capture; no Rust encoder may manufacture expectations.
+
+## Implemented helper review before execution
+
+`scripts/oracles/lazy_direct.c` now implements this separate packet and all six
+unchanged upstream entry points. The added depth is validated before variable
+allocation, maps through statically asserted strategy values 3/4/5, and appears
+in metadata, case, salt and completion records. The old reserved word at 144 is
+read only under the new magic; word 148 remains zero. The exact salt-option
+string checks establish the digit's index and range before reading it.
+
+Source review confirms unchanged owners, aggregate costs, pointer setup, map
+validation and independent sequence replay. Twenty-four ownership/hash/replay
+function bodies are token-equivalent to the reviewed Greedy predecessor after
+discarding whitespace/comments and normalizing adjacent string concatenation.
+The intentional differences are depth/strategy dispatch, the packet/schema and
+fresh-context strategy selection. Direct calls use the existing bounded source
+block; the helper performs no lookahead or match selection itself. The additional
+lookahead-at-equality proof above applies to the original selected C functions.
+
+Normal and ASan/UBSan syntax modes pass for the helper and all 26 used pinned C
+units. The helper also passes `-Wall -Wextra -Werror`. This is syntax validation,
+not an instrumented execution or a new output observation. All six compiler
+identity/target/syntax commands and unchanged inputs are preserved in the
+[review evidence](evidence/2026-10-12-lazy-helper-review.json) and
+[archive](evidence/2026-10-12-lazy-helper-review.tar.gz). No helper executable has
+run at this checkpoint. Python transport, frozen recipes and capture validation
+are the next separate gates.

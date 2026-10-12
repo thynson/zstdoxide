@@ -104,9 +104,12 @@ successor admission mapping and independent oracle checks.
 - [x] Review depth-one/two parsing, inclusive lookahead bounds, score arithmetic and shared ownership before implementation.
 - [x] Freeze complete Greedy frames and qualified allocator records as permanent regressions from the reviewed clock-free archive.
 - [x] Specify bounded direct Lazy/Lazy2 packets, arena bounds and independent observation validation before C execution.
-- [ ] Implement and review the versioned direct C adapter and checked transport; complete syntax and negative-input checks before execution.
-- [ ] Freeze tiny and broader depth/branch recipes covering repeat ties, gain thresholds, successive lookahead, tail equality, skipping, floors and table trajectories.
-- [ ] Capture normal/instrumented direct observations and independently reject changed evidence offline.
+- [x] Implement and review the versioned direct C adapter, completing normal/instrumented syntax checks before execution.
+- [ ] Add checked Python transport and independent replay with malformed depth/schema controls and no child execution.
+- [ ] Freeze tiny depth/branch recipes and predecessor controls before C execution.
+- [ ] Capture normal/instrumented tiny observations and fresh-context salt, then independently reject changed evidence offline.
+- [ ] Freeze broader recipes covering repeat ties, gain thresholds, successive lookahead, tail equality, skipping, floors and table trajectories.
+- [ ] Capture and independently validate the broader direct observations before Rust parsing.
 - [ ] Project direct observations into checked Rust records with complete maps, sequence replay and source provenance.
 - [ ] Add shared copied depth/candidate/score records and explicit inclusive lookahead coordinates, preserving Greedy's strict main-search contract.
 - [ ] Implement depth-one selection and repeated improvement against frozen observations.

@@ -1012,3 +1012,10 @@ reuse the exact two selected table owners and separate output scratch, adding
 no owner or unsafe leaf. Strict main-search and inclusive speculative queries
 need distinct checked contracts. Rejected speculative candidates still mutate
 sampling, while frame publication retains the existing transactional boundary.
+
+The versioned direct Lazy C oracle adds only a copied depth scalar to its
+existing Recipe. All guarded owning arenas and initialized before-images keep
+their exact predecessor contracts. The new scalar selects one of six unchanged
+upstream entry points; it creates no new pointer relationship or owner. The
+packet, inclusive lookahead arena proof and source review precede execution in
+`docs/reference-lazy-oracle.md`.
