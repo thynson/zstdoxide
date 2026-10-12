@@ -253,6 +253,17 @@ process creation disabled and zero child attempts. The
 checker driver and input identities. No ordinary C execution, block-kind or
 repeat-discard witness is claimed; helper review and capture are next.
 
+
+The new ordinary helper now has a completed
+[pre-execution source/ownership review](reference-greedy-frame-helper-review.md)
+and strict normal/sanitizer-configured C11 syntax checks. Its selected table
+extents are checked against initialized workspace bounds before observation;
+row mode never reads the inactive chain reservation. Complete owner deltas,
+raw/expanded lengths, sampling metadata and candidate/publication states are
+separate records. The [review evidence](evidence/2026-10-12-greedy-frame-helper.json)
+pins the helper, reviewed sources, compiler and exact syntax commands. No helper
+mode, ordinary frame capture or sanitizer runtime has executed at this item.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories

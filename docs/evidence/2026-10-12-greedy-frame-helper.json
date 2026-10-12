@@ -1,0 +1,90 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "clang",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-deprecated-declarations",
+        "-UZSTD_MULTITHREAD",
+        "-DZSTD_DISABLE_ASM",
+        "-DZSTD_LEGACY_SUPPORT=0",
+        "-DXXH_NAMESPACE=ZSTD_",
+        "-I/private/tmp/zstdoxize-upstream-1.5.7/lib",
+        "-fsyntax-only",
+        "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/greedy_frame.c"
+      ],
+      "exit_code": 0,
+      "mode": "normal",
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "clang",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-deprecated-declarations",
+        "-UZSTD_MULTITHREAD",
+        "-DZSTD_DISABLE_ASM",
+        "-DZSTD_LEGACY_SUPPORT=0",
+        "-DXXH_NAMESPACE=ZSTD_",
+        "-I/private/tmp/zstdoxize-upstream-1.5.7/lib",
+        "-O1",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fsyntax-only",
+        "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/greedy_frame.c"
+      ],
+      "exit_code": 0,
+      "mode": "sanitizer-syntax",
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "compiler": "Apple clang version 17.0.0 (clang-1700.4.4.1)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+  "date": "2026-10-12",
+  "helper_sha256": "6fe496e3323a994b95923813c73738b055efd835b6c4210bbbc294af790e0b4c",
+  "persistent_helper_byte_bound": 22546649,
+  "reviewed_files": {
+    "/Users/lanxingcan/Workspace/zstdoxize/docs/reference-greedy-frame-helper-review.md": {
+      "bytes": 7491,
+      "sha256": "9f61d0c857f50faad447b97f682037b0b700f0b9b03a50347f88d4c487074297"
+    },
+    "/Users/lanxingcan/Workspace/zstdoxize/docs/reference-greedy-frame-oracle.md": {
+      "bytes": 9403,
+      "sha256": "199e1a2b2739b72749cbd0b9d84093dc3d28faeae31a5463b8a03b96f8041a95"
+    },
+    "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/double_fast_frame.c": {
+      "bytes": 35899,
+      "sha256": "90e8a70d27bc79d36443033659918fc5458ad70dc8b8006277e39f04168a22dd"
+    },
+    "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/greedy_frame.c": {
+      "bytes": 44872,
+      "sha256": "6fe496e3323a994b95923813c73738b055efd835b6c4210bbbc294af790e0b4c"
+    },
+    "/private/tmp/zstdoxize-upstream-1.5.7/lib/compress/zstd_compress.c": {
+      "bytes": 345541,
+      "sha256": "10c315ae609d49b2fc431521aa95908086e69fd917991c5ed9a875af3d1208e8"
+    },
+    "/private/tmp/zstdoxize-upstream-1.5.7/lib/compress/zstd_compress_internal.h": {
+      "bytes": 68505,
+      "sha256": "ab7754413cef565da559bda7eb738bc2b3708c48877cb9ec37aff767d32c57d1"
+    },
+    "/private/tmp/zstdoxize-upstream-1.5.7/lib/compress/zstd_cwksp.h": {
+      "bytes": 28892,
+      "sha256": "ed77c2739b18b9800b97785262526a1dd4f385311ca5c2caa20b6f2a35f3735d"
+    },
+    "/private/tmp/zstdoxize-upstream-1.5.7/lib/compress/zstd_lazy.c": {
+      "bytes": 102821,
+      "sha256": "dd6ccf357165dc8cb574ea56a34ff1db57b7b31728b32103d0c6b72319fd45b1"
+    }
+  },
+  "scope": "Pre-execution source/ownership review only. No helper mode, compression, decoding, sanitizer runtime or performance executed.",
+  "status": "syntax-passed-source-reviewed",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}
