@@ -601,8 +601,8 @@ roles introduce no unsafe backend beyond their individually gated children.
 The [reviewed design](reference-double-fast-design.md) pins the exact upstream
 loop and resource scope. The private long-key descriptor and allocation-free
 DoubleFastExecutionPlan, borrowed block/cursor records and independent table pair
-are implemented and verified; other records below remain planned. No public
-DoubleFast encoding path is implemented by this foundation.
+and single-block parser are implemented and verified; persistent/frame records
+below remain planned. No public DoubleFast encoding path is implemented yet.
 
 | Structure | Ownership and invariants | Reference counterpart / unsafe representation |
 | --- | --- | --- |

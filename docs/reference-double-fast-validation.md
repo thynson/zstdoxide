@@ -213,3 +213,34 @@ reader/converter identities and logs. A bootstrap shift-literal inference error
 was corrected to explicit usize before the passing checks. This fixture adapter
 does not implement the matching loop, ordinary frame publication or public
 DoubleFast encoding, and introduces no production dependency.
+
+## Single-block DoubleFast parser
+
+The private indexed parser now matches all184 frozen constructed cases, each
+using both an exact source slice and a slice exposing32 initialized later bytes
+outside the logical block. Each configuration checks368 parser calls and736
+complete table comparisons, alongside every expanded LL/ML/distance/offBase,
+literal byte, trailing length, raw parser repeat and full wire repeat. The
+frozen cases exercise both candidate floors, collisions, cached/deferred stores,
+sampling, short-versus-later-long preference, immediate repeats and long markers.
+The parser preserves full lengths; the test adapter independently checks their
+raw C field representation. No oracle expectations were changed for Rust.
+
+Five tests also cover output reuse with a borrowed non-clone allocator,
+invalid layout/repeat rejection before requests, preservation of both logical
+outputs and tables on either reserve failure, and expired/future/out-of-range
+candidate rejection. They pass in five configurations:25 executions, plus22
+unchanged Fast/named baseline executions. Clippy safe/all, no_std compilation
+safe/all and formatting pass. Two bounded candidate/failure tests additionally
+pass under strict-provenance i686 Miri in safe and table-feature builds:four
+interpreted executions. This is not native i686 or full platform validation.
+
+The [evidence](evidence/2026-10-12-double-fast-parse.json) and
+[archive](evidence/2026-10-12-double-fast-parse.tar.gz) retain all18 successful
+final commands, exact source identities and initial diagnostics. The first
+bootstrap already passed all frozen cases; a separate negative test incorrectly
+assumed a positive leading literal despite legal backward extension. Its
+expectation was corrected. Native-host Miri cache setup was initially denied
+before tests ran; the successful campaign used the existing external i686
+sysroot. No new C capture, timing, ordinary-frame publication or public
+DoubleFast encoding is claimed at this checkpoint.
