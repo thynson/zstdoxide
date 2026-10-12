@@ -345,3 +345,33 @@ a named alias for the generated frame-file tuple type. That correction changes
 no oracle data, and all final checks were rerun successfully. This adapter adds
 no production dependency or new C capture. Persistent parsing, public
 DoubleFast emission, Miri and timing are not claimed at this checkpoint.
+
+## Persistent DoubleFast search state
+
+The private borrowed-source state now retains both complete sampled tables
+across ordinary blocks. It resets both owners once when binding a source,
+accepts only the caller's committed incoming wire repeats and keeps parsed
+position separate from future frame publication. Empty calls leave state
+unchanged; lengths1..6 preserve old literal/sequence scratch. Retained floors
+advance from block starts without clearing expired table entries. Parser errors
+poison the state, including subsequent empty calls; invalid arguments leave it
+usable before any allocator request.
+
+All51 frozen ordinary trajectories match160 blocks,148 fresh candidates and320
+complete table comparisons per configuration, including all13 raw and3 RLE
+repeat-discard witnesses. Exact literals, sequences, offset intents, trailing
+lengths and first-two raw/full wire repeats agree. The unused raw C third cell
+is explicitly distinct from Rust's real incoming wire third. Tests additionally
+cover independent source/table binding rejection, either output reserve failure,
+exact owner release and allocation-free source rebinding with a borrowed
+non-clone allocator.
+
+Eight tests pass in each of five configurations:40 executions, plus22 unchanged
+Fast/named baseline executions. All13 final commands pass, including Clippy
+safe/all, no_std compilation safe/all and formatting. The
+[evidence](evidence/2026-10-12-double-fast-state.json) and
+[archive](evidence/2026-10-12-double-fast-state.tar.gz) bind the source and logs.
+The initial seven-test bootstrap also passed without a diagnostic; the final
+suite adds explicit constructor rejection coverage. This checkpoint implements
+search state only; shared framing, entropy publication and public DoubleFast
+encoding remain open. No new C capture, Miri or timing is claimed.

@@ -50,6 +50,7 @@ mod double_fast_frame_oracle_fixture;
 mod double_fast_oracle_fixture;
 mod double_fast_parse;
 mod double_fast_plan;
+mod double_fast_state;
 mod double_fast_tables;
 mod encode;
 mod entropy_encode;

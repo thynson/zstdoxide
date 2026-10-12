@@ -56,6 +56,21 @@ impl DoubleFastExecutionPlan {
         Self::admit(parameters, source_len, source_size)
     }
 
+    /// Preserve the ordinary C helper's explicitly applied internal-begin tuple.
+    /// Public known-source adjustment remains a separate tested boundary; all
+    /// algorithm and resource checks still apply to this test-only constructor.
+    #[cfg(test)]
+    pub(crate) fn from_observed_parameters(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+    ) -> Result<Self> {
+        let source_size = u64::try_from(source_len).map_err(|_| Error::ResourceLimit)?;
+        if source_size == u64::MAX {
+            return Err(Error::InvalidParameter);
+        }
+        Self::admit(parameters, source_len, source_size)
+    }
+
     fn admit(
         parameters: ResolvedCompressionParameters,
         source_len: usize,
