@@ -1004,3 +1004,11 @@ leaves. Frozen requests, source identities, ownership accounting and clock
 boundaries precede implementation in `docs/reference-greedy-benchmarks.md`.
 The full 32-case plan retains eight historical Fast/DoubleFast controls and
 requires row-64/row-capped complete-frame and owner equivalence on each source.
+
+Module 15 preparation analyzes shared Lazy/Lazy2 selection in
+`docs/reference-lazy-design.md` before implementation. New records are copied
+lookahead depth, candidate, checked gain and bounded query coordinates. They
+reuse the exact two selected table owners and separate output scratch, adding
+no owner or unsafe leaf. Strict main-search and inclusive speculative queries
+need distinct checked contracts. Rejected speculative candidates still mutate
+sampling, while frame publication retains the existing transactional boundary.

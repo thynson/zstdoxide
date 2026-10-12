@@ -94,6 +94,36 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [ ] Measure every backend after a completed CPU barrier and repeat safe/all with all raw samples retained.
 - [ ] Reconcile tests, inventory, evidence and qualified measurements, record the bounded milestone and clear its completed checklist.
 
+## Module 15 preparation: bounded reference Lazy and Lazy2
+
+Module 14's immutable full matrix and measurements remain the current milestone
+gate. Source review and fixture preparation may proceed without changing its
+measured codec inputs. Do not enable new public strategies before their own
+successor admission mapping and independent oracle checks.
+
+- [x] Review depth-one/two parsing, inclusive lookahead bounds, score arithmetic and shared ownership before implementation.
+- [ ] Freeze complete Greedy frames and qualified allocator records as permanent regressions from the reviewed clock-free archive.
+- [ ] Specify bounded direct Lazy/Lazy2 packets, arena bounds and independent observation validation before C execution.
+- [ ] Implement and review the versioned direct C adapter and checked transport; complete syntax and negative-input checks before execution.
+- [ ] Freeze tiny and broader depth/branch recipes covering repeat ties, gain thresholds, successive lookahead, tail equality, skipping, floors and table trajectories.
+- [ ] Capture normal/instrumented direct observations and independently reject changed evidence offline.
+- [ ] Project direct observations into checked Rust records with complete maps, sequence replay and source provenance.
+- [ ] Add shared copied depth/candidate/score records and explicit inclusive lookahead coordinates, preserving Greedy's strict main-search contract.
+- [ ] Implement depth-one selection and repeated improvement against frozen observations.
+- [ ] Implement depth-two selection, repeat bias and exact speculative sampling against frozen observations.
+- [ ] Specify and freeze ordinary frame/schedule recipes and versioned C observation protocol before execution.
+- [ ] Review, capture and independently validate ordinary Lazy/Lazy2 trajectories and complete frames with instrumented C.
+- [ ] Retain shared lazy-family state across blocks with exact owners, tiny handling and failure poisoning.
+- [ ] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
+- [ ] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.
+- [ ] Enable bounded public Lazy/Lazy2 requests and document exact source-dependent level/resource behavior.
+- [ ] Port newly admitted original selector and numeric assertions without closing unrelated upstream obligations.
+- [ ] Capture and independently validate broader bidirectional public interoperability with normal/instrumented C.
+- [ ] Verify exact owner release, allocation failures, malformed state, no_std and interpreted i686/s390x bounds plus no-atomics caller compilation.
+- [ ] Run safe, each unsafe feature and all-feature correctness checks with every predecessor regression intact.
+- [ ] Freeze and verify clock-free workloads, then compare all backends and repeat safe/all after a CPU barrier.
+- [ ] Reconcile the bounded milestone, official-test gaps and measurements; clear completed items and retain the next decomposition.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
