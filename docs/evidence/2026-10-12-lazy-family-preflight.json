@@ -1,0 +1,20 @@
+{
+  "archive": "2026-10-12-lazy-family-preflight.tar.gz",
+  "archive_bytes": 15300,
+  "archive_members": 9,
+  "archive_sha256": "9e6fbe06f64f8a1d37864d684ef2d9f32d6a9d0bfc632e48a71794404cc598bd",
+  "child_processes": 0,
+  "date": "2026-10-12",
+  "planned_commands": 1468,
+  "positive_preflights_per_mode": 2,
+  "qualification": "Controller preflight and early offline rejection checks before first C helper execution. Actual command and observation checks require the future capture. The reviewed successor preserves bounded transport and strengthens complete tiny-output plus all 173 depth-zero predecessor comparisons before broader execution.",
+  "recipes": 645,
+  "reference_executions": 0,
+  "rejected_controls_per_mode": 23,
+  "source": {
+    "scripts/capture_lazy_families.py": "9d368f2c5dbf9b2138336128f623f172aae19d85fd28154558c9e289b22b65d6",
+    "scripts/check_lazy_family_capture.py": "8021050285b64f04d0495cbabd60d4e4eb2ec701892be61931e59cd590293921",
+    "scripts/check_lazy_family_recipes.py": "1269920726bf2a4210cdc05b4777e9eddfaa93a34a5c3bd1c5a47b43ac5ac718"
+  },
+  "status": "passed"
+}

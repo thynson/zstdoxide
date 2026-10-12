@@ -125,3 +125,16 @@ context at each depth. The [input evidence](evidence/2026-10-12-lazy-family-inpu
 and [archive](evidence/2026-10-12-lazy-family-inputs.tar.gz) preserve the frozen
 source closure, manifest, generator, checks and controls. No broader C execution
 or Rust-generated expected Lazy result is included.
+
+## Broader capture preflight
+
+The separate broader controller and auditor retain the reviewed bounded
+transport and freeze 1,468 commands: two complete builds, six fresh-context
+invocations, 645 direct cases per build and 55 malformed packets per build.
+The independent auditor requires all 138 prior tiny outputs byte-for-byte and
+all 173 depth-zero predecessor controls, with qualified owner-layout comparison.
+Normal and optimized Python each accept two read-only preflights and reject
+23 invalid inputs with child creation blocked and zero attempts. The
+[preflight evidence](evidence/2026-10-12-lazy-family-preflight.json) and
+[archive](evidence/2026-10-12-lazy-family-preflight.tar.gz) preserve reviewed
+scripts, checks and drivers. Broader C execution remains a separate work item.
