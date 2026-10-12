@@ -143,7 +143,10 @@ fn assert_frame(input: &[u8], request: &Request, frame: &[u8]) -> Vec<Block> {
     let resolved = request
         .resolve(SourceSize::Known(input.len() as u64), 0)
         .unwrap();
-    assert_eq!(resolved.strategy(), ReferenceStrategy::Fast);
+    assert!(matches!(
+        resolved.strategy(),
+        ReferenceStrategy::Fast | ReferenceStrategy::DoubleFast
+    ));
     let (header, _) = FrameHeader::parse(frame).unwrap();
     assert_eq!(header.content_size, Some(input.len() as u64));
     assert_eq!(
@@ -178,28 +181,16 @@ fn level_one_and_negative_profiles_execute_every_size_tier() {
 }
 
 #[test]
-fn level_two_admission_follows_the_actual_double_fast_gap() {
+fn level_two_and_explicit_overrides_follow_the_resolved_search_strategy() {
     // queries.tsv:127–159 records the tier edges, not a level allowlist.
     for size in [0, 16_384, 131_072, 131_073, 262_144, 262_145] {
         let input = text(size);
         let request = Request::with_level(2);
-        let level = compress_at_level(&input, 2);
-        let explicit = compress_with_parameters(&input, &request);
-        assert_eq!(level, explicit);
-        if (131_073..=262_144).contains(&size) {
-            assert_eq!(level, Err(Error::UnsupportedFeature));
-        } else {
-            assert_frame(&input, &request, &level.unwrap());
-        }
-        for unsupported in [0, 3] {
-            assert_eq!(
-                compress_at_level(&input, unsupported),
-                Err(Error::UnsupportedFeature)
-            );
-        }
+        let frame = compress_at_level(&input, 2).unwrap();
+        assert_eq!(frame, compress_with_parameters(&input, &request).unwrap());
+        assert_frame(&input, &request, &frame);
     }
-    // A valid explicit Fast strategy on default level 3 is executable; a level
-    // 1 request explicitly selecting DoubleFast is not.
+    // Explicit strategy overrides select the algorithm independently of level.
     let input = text(16_385);
     let mut request = Request::new();
     request.set_strategy(Some(ReferenceStrategy::Fast));
@@ -210,9 +201,10 @@ fn level_two_admission_follows_the_actual_double_fast_gap() {
     );
     request.set_level(1);
     request.set_strategy(Some(ReferenceStrategy::DoubleFast));
-    assert_eq!(
-        compress_with_parameters(&input, &request),
-        Err(Error::UnsupportedFeature)
+    assert_frame(
+        &input,
+        &request,
+        &compress_with_parameters(&input, &request).unwrap(),
     );
 }
 
@@ -321,13 +313,14 @@ fn unsupported_and_resource_failures_precede_allocator_clone_or_requests() {
     window.set_window_log(21).unwrap();
     let mut hash = Request::with_level(1);
     hash.set_hash_log(19).unwrap();
-    let mut both_unsupported = window;
-    both_unsupported.set_hash_log(19).unwrap();
-    both_unsupported.set_strategy(Some(ReferenceStrategy::DoubleFast));
+    let mut double_resource = window;
+    double_resource.set_hash_log(19).unwrap();
+    double_resource.set_strategy(Some(ReferenceStrategy::DoubleFast));
+    let mut unsupported = double_resource;
+    unsupported.set_strategy(Some(ReferenceStrategy::Greedy));
     for (request, error) in [
-        (Request::new(), Error::UnsupportedFeature),
-        (Request::with_level(0), Error::UnsupportedFeature),
-        (both_unsupported, Error::UnsupportedFeature),
+        (unsupported, Error::UnsupportedFeature),
+        (double_resource, Error::ResourceLimit),
         (window, Error::ResourceLimit),
         (hash, Error::ResourceLimit),
     ] {

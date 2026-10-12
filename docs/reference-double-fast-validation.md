@@ -509,3 +509,40 @@ Python pass offline plan checks and in-process valid/rejected observation
 controls with child processes disabled. The [driver evidence](evidence/2026-10-12-reference-interop-v2-driver.json)
 and [archive](evidence/2026-10-12-reference-interop-v2-driver.tar.gz) make no new
 codec, C or sanitizer execution claim. The live job switches with public admission.
+
+## Public reference admission and bounded successor interoperability
+
+The public level/request APIs now resolve actual known input with dictionary
+size zero once and dispatch the resulting Fast or DoubleFast profile. Default
+levels 0/3 are equivalent; level 2 executes all tiers. Level 4 executes DoubleFast
+for 16 KiB < size <=128 KiB and size >256 KiB; the other two tiers remain
+unsupported Greedy. Effective limits remain Fast window20/hash18 and DoubleFast
+window21/hash18/chain18, checked after resolution and before allocator activity.
+A source hint cannot override known input. The output retains its original
+allocator, and inactive search storage is never allocated.
+
+Five public DoubleFast tests cover all four source tiers, source hints, window21,
+unequal maximum table directions, minimum-match dispatch, nonoperative controls,
+independent resource failures before allocator clones, every observed request
+failure on a bounded public workload, and borrowed non-clone output lifetimes.
+Together with existing public Fast and successor official tests, 27 tests pass
+in five configurations: default, unsafe-match-table, all, no_std, no_std/all.
+Safe/all plan, workspace, frozen Fast/named baselines and doc examples bring the
+final total to229 executions across24 commands. Clippy, no_std compilation,
+formatting and inventory checks pass. The [public evidence](evidence/2026-10-12-reference-public.json)
+and [archive](evidence/2026-10-12-reference-public.tar.gz) retain initial test
+corrections, including the initially omitted level4 >256KiB admission tier.
+No production algorithm change was needed for those corrections.
+
+The successor live job independently completes all92 original inputs with
+85 admitted,4 unsupported and3 resource errors. Safe/all Rust frames agree;
+340 C decodes of Rust frames and340 Rust decodes of C frames reproduce70,212,360
+source bytes. All six additive positive C obligations pass, all historical Rust
+resolved tuples remain unchanged, and32 malformed protocol inputs are rejected.
+The [interop evidence](evidence/2026-10-12-reference-interop-v2.json) and
+[archive](evidence/2026-10-12-reference-interop-v2.tar.gz) retain1,171 commands and
+the exact capture source. One obsolete cfg(test) unsupported-level3 assertion
+was removed after that capture; production code was unchanged. The C helper
+alone is ASan/UBSan instrumented; its pinned prebuilt library is not. This
+bounded successor campaign does not establish broader DoubleFast workload,
+full C instrumentation, foreign-target or timing coverage.

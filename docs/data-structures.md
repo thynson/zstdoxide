@@ -596,7 +596,7 @@ effective candidate-size-below-25 RLE gate. Internal failures invalidate the
 private wrapper; preflight argument errors leave it usable. These composite
 roles introduce no unsafe backend beyond their individually gated children.
 
-## Module 13: bounded no-dictionary DoubleFast (planned)
+## Module 13: bounded no-dictionary DoubleFast
 
 The [reviewed design](reference-double-fast-design.md) pins the exact upstream
 loop and resource scope. The private long-key descriptor and allocation-free
@@ -604,8 +604,11 @@ DoubleFastExecutionPlan, borrowed block/cursor records and independent table pai
 and single-block parser and persistent search state are implemented and verified;
 shared plain framing, scalar entropy policy and static dispatch are also
 implemented. Private complete DoubleFast framing and bounded allocation-failure
-tests pass; public admission and independent C decoding remain open. No public
-DoubleFast encoding path is implemented yet.
+tests pass. Public request execution resolves actual known input and dictionary
+size zero once, then selects an admitted Fast or DoubleFast plan. Strategy
+selection precedes algorithm-specific resource checks; output-bound checks
+precede allocator clones or requests. Independent C, platform and performance
+evidence is qualified separately in the validation report.
 
 | Structure | Ownership and invariants | Reference counterpart / unsafe representation |
 | --- | --- | --- |

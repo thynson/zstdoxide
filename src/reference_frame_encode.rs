@@ -4,14 +4,17 @@
 use alloc::vec::Vec;
 use core::alloc::Allocator;
 
+#[cfg(test)]
+use crate::CompressionParameterRequest;
 use crate::block_entropy::BlockEntropyEncoder;
+#[cfg(test)]
 use crate::fast_plan::FastExecutionPlan;
 use crate::frame::{BlockKind, MAX_BLOCK_SIZE};
 use crate::literal_encode::LiteralEncoder;
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
 use crate::reference_search::{ReferenceSearchPlan, ReferenceSearchState};
 use crate::sequence_context::SequenceEncoder;
-use crate::{CompressionParameterRequest, Error, Result};
+use crate::{Error, Result};
 
 #[cfg(test)]
 #[path = "../tests/support/double_fast_frame_encode.rs"]
@@ -23,7 +26,8 @@ mod double_fast_tests;
 /// allocator owns the result; all scratch owners retain separate fresh clones.
 /// No source or request borrow escapes. This private entry point does not alter
 /// the existing named policies or their checksummed frame defaults.
-pub(crate) fn compress_fast_in<A: Allocator + Clone>(
+#[cfg(test)]
+fn compress_fast_in<A: Allocator + Clone>(
     input: &[u8],
     request: &CompressionParameterRequest,
     allocator: A,
@@ -34,7 +38,7 @@ pub(crate) fn compress_fast_in<A: Allocator + Clone>(
 
 /// Encode using a pre-admitted static search plan without resolving it again.
 /// Source/metadata/bound errors precede output allocation; empty frames allocate
-/// no workspace. The public facade still admits only its existing Fast scope.
+/// no workspace. Both public strategies use this same publication path.
 pub(crate) fn compress_reference_in<A: Allocator + Clone>(
     input: &[u8],
     plan: ReferenceSearchPlan,

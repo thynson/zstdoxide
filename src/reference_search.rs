@@ -11,18 +11,38 @@ use crate::fast_plan::FastExecutionPlan;
 use crate::fast_state::FastMatchState;
 use crate::matchfinder::MatchTable;
 use crate::sequence_context::SequenceWithOffset;
-use crate::{Error, ResolvedCompressionParameters, Result};
+use crate::{
+    CompressionParameterRequest, Error, ReferenceStrategy, ResolvedCompressionParameters, Result,
+    SourceSize,
+};
 
-/// Each variant contains an already admitted algorithm plan. No resolver is
-/// called here, and inactive algorithms allocate no table or parser storage.
+/// Each variant contains an admitted algorithm plan. Resolve the known input
+/// once before dispatch; inactive algorithms allocate no table or parser storage.
 #[derive(Clone, Copy)]
 pub(crate) enum ReferenceSearchPlan {
     Fast(FastExecutionPlan),
-    #[cfg_attr(not(test), allow(dead_code, reason = "DoubleFast frame entry follows"))]
     DoubleFast(DoubleFastExecutionPlan),
 }
 
 impl ReferenceSearchPlan {
+    pub(crate) fn new(request: &CompressionParameterRequest, source_len: usize) -> Result<Self> {
+        let source_size = u64::try_from(source_len).map_err(|_| Error::ResourceLimit)?;
+        if source_size == u64::MAX {
+            return Err(Error::InvalidParameter);
+        }
+        let parameters = request.resolve(SourceSize::Known(source_size), 0)?;
+        match parameters.strategy() {
+            ReferenceStrategy::Fast => {
+                FastExecutionPlan::from_resolved_parameters(parameters, source_len).map(Self::Fast)
+            }
+            ReferenceStrategy::DoubleFast => {
+                DoubleFastExecutionPlan::from_resolved_parameters(parameters, source_len)
+                    .map(Self::DoubleFast)
+            }
+            _ => Err(Error::UnsupportedFeature),
+        }
+    }
+
     pub(crate) fn source_len(self) -> usize {
         match self {
             Self::Fast(plan) => plan.source_len(),

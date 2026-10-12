@@ -1,22 +1,25 @@
-//! Bounded execution of the pinned reference's no-dictionary Fast profiles.
+//! Bounded execution of pinned no-dictionary Fast and DoubleFast profiles.
 
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
-use crate::reference_frame_encode::compress_fast_in;
+use crate::reference_frame_encode::compress_reference_in;
+use crate::reference_search::ReferenceSearchPlan;
 use crate::{CompressionParameterRequest, Result};
 
-/// Compress one known-size frame using an admitted reference Fast level.
+/// Compress one known-size frame using an admitted reference level.
 ///
 /// Level 1 and negative levels select Fast for every source-size tier. Level 2
-/// is supported except when the source is larger than 128 KiB and no larger
-/// than 256 KiB, where the pinned profile selects the unimplemented DoubleFast
-/// algorithm. Level 0 means level 3, which is also currently unsupported.
-/// Other levels are admitted only if their fully resolved strategy is Fast.
+/// selects DoubleFast for inputs larger than 128 KiB and no larger than 256 KiB,
+/// and Fast otherwise. Level 0 means level 3; both select DoubleFast. Level 4
+/// selects DoubleFast for inputs larger than 16 KiB and no larger than 128 KiB,
+/// and for inputs larger than 256 KiB. Other source tiers and levels need
+/// unsupported strategies unless explicitly overridden. Admission uses the fully resolved strategy and its
+/// resource limits, rather than a level allowlist.
 /// Unsupported strategies return [`crate::Error::UnsupportedFeature`].
 ///
 /// Frames include the actual content size, omit a checksum and dictionary ID,
-/// and advertise a window no larger than the resolved Fast window. The parser
+/// and advertise a window no larger than the resolved window. The parser
 /// follows pinned zstd v1.5.7 sampling and repeat-offset behavior; entropy choices
 /// are independent Rust implementations, so C-identical bytes or compression
 /// ratios are not promised. This API does not change [`crate::compress`] or the
@@ -27,8 +30,8 @@ use crate::{CompressionParameterRequest, Result};
 ///
 /// ```
 /// use zstdoxide::{compress_at_level, decompress};
-/// let input = b"reference Fast, reference Fast, reference Fast";
-/// let frame = compress_at_level(input, -3)?;
+/// let input = b"reference DoubleFast, reference DoubleFast, reference DoubleFast";
+/// let frame = compress_at_level(input, 0)?;
 /// assert_eq!(decompress(&frame, input.len())?, input);
 /// # Ok::<(), zstdoxide::Error>(())
 /// ```
@@ -36,7 +39,7 @@ pub fn compress_at_level(input: &[u8], level: i32) -> Result<Vec<u8>> {
     compress_at_level_in(input, level, Global)
 }
 
-/// Allocate a level-selected Fast frame and all scratch through this allocator.
+/// Allocate a level-selected reference frame and scratch through this allocator.
 ///
 /// Behavior and admission match [`compress_at_level`]. The returned vector
 /// retains the original allocator value; every temporary owns a fresh clone and
@@ -61,22 +64,27 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 ///
 /// Resolve `request` using the actual source length and dictionary size zero.
 /// A source-size hint never overrides that known length, including known empty
-/// input. The request is unchanged. Only effective [`crate::ReferenceStrategy::Fast`]
-/// is implemented here; another valid strategy returns
+/// input. The request is unchanged. Effective [`crate::ReferenceStrategy::Fast`]
+/// and [`crate::ReferenceStrategy::DoubleFast`] are implemented; another valid strategy returns
 /// [`crate::Error::UnsupportedFeature`] before resource admission.
 ///
-/// Effective window logs 10..=20, hash logs 6..=18, minimum-match settings 3..=7,
-/// and target lengths 0..=131072 are supported. An otherwise valid Fast profile
-/// outside the operational caps returns [`crate::Error::ResourceLimit`]. Caps
+/// Fast supports effective window logs 10..=20 and hash logs 6..=18. DoubleFast
+/// supports window logs 10..=21 and independent hash/chain logs 6..=18. Both
+/// support minimum-match settings 3..=7 and target lengths 0..=131072. An otherwise
+/// valid implemented profile outside these caps returns [`crate::Error::ResourceLimit`]. Caps
 /// apply after known-size adjustment, not to the unadjusted requested values.
-/// The search table contains `2^hash_log` usize indices into the borrowed source;
-/// no source copy or unused chain table is allocated. Chain/search fields remain
-/// validated reference parameters but create no additional Fast search storage.
+/// Fast owns one table of `2^hash_log` usize indices into the borrowed source.
+/// DoubleFast owns separate long/short hash tables of `2^hash_log` and
+/// `2^chain_log` indices; its chain log sizes a hash table, not a chain. No source
+/// copy or inactive algorithm storage is allocated. Search log is validated but
+/// creates no visit budget for either strategy; Fast also ignores chain log.
 ///
 /// Minimum-match setting 3 selects four-byte search keys; settings 4..=7 choose
-/// their respective key widths. Emitted matches have a four-byte minimum.
-/// Positive target length controls Fast acceleration and disables literal
-/// Huffman/RLE selection; complete block RLE remains independently available.
+/// their respective key widths. DoubleFast additionally samples eight-byte long
+/// keys. Emitted matches have a four-byte minimum. Positive target length controls
+/// Fast acceleration and disables literal Huffman/RLE selection. DoubleFast
+/// ignores this control and retains normal literal selection. Complete block
+/// RLE remains independently available for both strategies.
 /// Block size is the smaller of the selected window and 128 KiB.
 ///
 /// Frame flags and independent entropy qualifications match [`compress_at_level`].
@@ -101,7 +109,7 @@ pub fn compress_with_parameters(
     compress_with_parameters_in(input, request, Global)
 }
 
-/// Allocate a requested Fast frame and all temporary codec storage in `A`.
+/// Allocate a requested reference frame and temporary codec storage in `A`.
 ///
 /// Admission and frame behavior match [`compress_with_parameters`]. Ownership,
 /// failure ordering and allocator-clone semantics match [`compress_at_level_in`].
@@ -114,5 +122,6 @@ pub fn compress_with_parameters_in<A: Allocator + Clone>(
     request: &CompressionParameterRequest,
     allocator: A,
 ) -> Result<Vec<u8, A>> {
-    compress_fast_in(input, request, allocator)
+    let plan = ReferenceSearchPlan::new(request, input.len())?;
+    compress_reference_in(input, plan, allocator)
 }

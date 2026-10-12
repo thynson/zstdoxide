@@ -2,7 +2,7 @@
 // Copyright (c) zstdoxide contributors.
 // Derived assertions: facebook/zstd v1.5.7 tests/fuzz/simple_round_trip.c and
 // tests/fuzzer.c. BSD-3-Clause option; see root LICENSE.zstd.
-//! Supported numeric Fast assertions from the original one-shot tests.
+//! Supported numeric reference assertions from the original one-shot tests.
 //!
 //! The C selector capture predates these Rust tests. This port preserves input
 //! selection, levels, determinism and exact decoded content. An owned return
@@ -266,7 +266,7 @@ fn check_decode(frame: &[u8], source: &[u8], original_capacity: usize) {
 }
 
 #[test]
-fn original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_budgets() {
+fn original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets() {
     let cases = cases();
     let expected = observations(&cases);
     let (mut admitted, mut unsupported, mut advanced) = (0, 0, 0);
@@ -279,8 +279,7 @@ fn original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_
             continue;
         };
         let source = &case.input[..actual.prefix];
-        let supported = [-3, -2, -1, 1, 2].contains(&simple.level)
-            && !(simple.level == 2 && (131_073..=262_144).contains(&source.len()));
+        let supported = successor_fuzz_status(&case.name, source.len(), simple.level) == "success";
         if !supported {
             assert_eq!(
                 compress_at_level(source, simple.level),
@@ -309,12 +308,15 @@ fn original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_
         selected_levels.insert(simple.level);
         admitted += 1;
     }
-    assert_eq!((admitted, unsupported, advanced), (57, 20, 4));
-    assert_eq!(selected_levels, [-3, -2, -1, 1, 2].into_iter().collect());
+    assert_eq!((admitted, unsupported, advanced), (61, 16, 4));
+    assert_eq!(
+        selected_levels,
+        [-3, -2, -1, 0, 1, 2, 3].into_iter().collect()
+    );
 }
 
 #[test]
-fn fuzzer_empty_level_loop_preserves_three_admitted_and_21_unsupported_profiles() {
+fn fuzzer_empty_level_loop_uses_the_frozen_successor_admission() {
     // fuzzer.c:1554-1566: exact -1..22 range. An empty slice replaces NULL input;
     // Vec output and detached requests do not port NULL destinations or CCtx reuse.
     assert_eq!(CompressionParameterRequest::MAX_LEVEL, 22);
@@ -323,7 +325,7 @@ fn fuzzer_empty_level_loop_preserves_three_admitted_and_21_unsupported_profiles(
         let request = CompressionParameterRequest::with_level(level);
         let direct = compress_at_level(&[], level);
         let requested = compress_with_parameters(&[], &request);
-        if [-1, 1, 2].contains(&level) {
+        if successor_loop_status("empty", 0, level) == "success" {
             let frame = direct.unwrap();
             assert_eq!(requested.unwrap(), frame);
             check_decode(&frame, &[], 0);
@@ -334,7 +336,7 @@ fn fuzzer_empty_level_loop_preserves_three_admitted_and_21_unsupported_profiles(
             unsupported += 1;
         }
     }
-    assert_eq!((admitted, unsupported), (3, 21));
+    assert_eq!((admitted, unsupported), (5, 19));
 }
 
 #[test]
@@ -348,7 +350,7 @@ fn fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equal
     for level in 1..=19 {
         let first = compress_at_level(&source, level);
         let request = CompressionParameterRequest::with_level(level);
-        if [1, 2].contains(&level) {
+        if successor_loop_status("initial_match", source.len(), level) == "success" {
             let first = first.unwrap();
             assert_eq!(compress_at_level(&source, level).unwrap(), first);
             assert_eq!(compress_with_parameters(&source, &request).unwrap(), first);
@@ -363,5 +365,34 @@ fn fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equal
             unsupported += 1;
         }
     }
-    assert_eq!((admitted, unsupported), (2, 17));
+    assert_eq!((admitted, unsupported), (3, 16));
+}
+
+// Version2 expectations are additive fixtures. Original C selector tuples and
+// Module12 success/failure evidence retain their historical policy unchanged.
+fn successor_fuzz_status(name: &str, size: usize, level: i32) -> &'static str {
+    let mut rows = include_str!("fixtures/reference-admission-v2/fuzz.tsv")
+        .lines()
+        .skip(1)
+        .map(|line| line.split('\t').collect::<Vec<_>>())
+        .filter(|row| row[0] == name);
+    let row = rows.next().unwrap();
+    assert!(rows.next().is_none());
+    assert_eq!(row.len(), 9);
+    assert_eq!(row[2].parse::<usize>().unwrap(), size);
+    assert_eq!(row[3].parse::<i32>().unwrap(), level);
+    row[5]
+}
+
+fn successor_loop_status(family: &str, size: usize, level: i32) -> &'static str {
+    let mut rows = include_str!("fixtures/reference-admission-v2/loops.tsv")
+        .lines()
+        .skip(1)
+        .map(|line| line.split('\t').collect::<Vec<_>>())
+        .filter(|row| row[0] == family && row[2].parse::<i32>().unwrap() == level);
+    let row = rows.next().unwrap();
+    assert!(rows.next().is_none());
+    assert_eq!(row.len(), 8);
+    assert_eq!(row[1].parse::<usize>().unwrap(), size);
+    row[4]
 }

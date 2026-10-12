@@ -4982,7 +4982,7 @@
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
         "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
-        "tests/upstream_reference_fast.rs#original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_budgets"
+        "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets"
       ],
       "line_count": 182,
       "cases": [
@@ -4997,7 +4997,7 @@
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
             "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
-            "tests/upstream_reference_fast.rs#original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_budgets"
+            "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets"
           ]
         },
         {
@@ -5011,7 +5011,7 @@
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
             "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
-            "tests/upstream_reference_fast.rs#original_simple_branch_selected_fast_levels_are_deterministic_and_fit_c_size_budgets"
+            "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets"
           ]
         }
       ]
@@ -5194,7 +5194,7 @@
         "tests/upstream_parameter_lifecycle.rs",
         "tests/upstream_search_lifecycle.rs",
         "tests/upstream_negative_level.rs",
-        "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_preserves_three_admitted_and_21_unsupported_profiles",
+        "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_uses_the_frozen_successor_admission",
         "tests/upstream_reference_fast.rs#fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equalities"
       ],
       "line_count": 5147,
@@ -5890,7 +5890,7 @@
           "reason": "The exact original -1..22 range is enumerated. Empty-slice level and detached-request APIs produce equivalent valid empty frames for the three admitted Fast levels (-1, 1, 2); the remaining 21 levels are explicitly rejected as UnsupportedFeature. This does not execute all numeric strategies, NULL-pointer contracts, reusable C contexts or caller-owned destinations. Existing empty-frame coverage is retained.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames",
-            "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_preserves_three_admitted_and_21_unsupported_profiles"
+            "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_uses_the_frozen_successor_admission"
           ]
         },
         {

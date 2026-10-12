@@ -1,8 +1,9 @@
-# Reference Fast profiles
+# Reference Fast and DoubleFast profiles
 
 The four reference compression entry points are separate from the existing
 named Greedy/Chain/Lazy encoder. They encode complete borrowed inputs without a
-dictionary, using the pinned v1.5.7 Fast sampling and repeat-offset algorithm.
+dictionary, using the pinned v1.5.7 Fast or DoubleFast sampling and repeat-offset
+algorithm.
 Huffman and sequence entropy choices are independent Rust implementations;
 compressed bytes, block decisions and ratios need not equal the C encoder.
 
@@ -28,8 +29,9 @@ adjustment. It is not a fixed level allowlist:
 | --- | --- |
 | Level 1 | Fast for every source tier |
 | Negative level | Fast with the pinned acceleration and raw literal policy; values below the minimum level normalize to that minimum |
-| Level 2 | Fast except for source sizes 131073..=262144, which resolve to DoubleFast |
-| Level 0 | Normalizes to level 3, which resolves to unsupported DoubleFast |
+| Level 2 | Fast except for source sizes 131073..=262144, which execute DoubleFast |
+| Levels 0 and 3 | Identical DoubleFast execution for all source tiers |
+| Level 4 | DoubleFast for sizes 16385..=131072 and above 262144; unsupported Greedy otherwise |
 | Other resolved strategy | `Error::UnsupportedFeature`; no replacement algorithm |
 
 Frames carry the exact source size, no checksum and no dictionary identifier.
@@ -39,8 +41,8 @@ resolved window. Blocks are at most the smaller of that window and 128 KiB.
 Empty input still has one final empty raw block and allocates no search workspace.
 
 The existing `compress`, `Encoder`, `EncoderOptions` and named strategy defaults
-keep their established behavior. Numeric streaming setters, dictionary Fast,
-DoubleFast, long-distance matching and workers are not provided by these APIs.
+keep their established behavior. Numeric streaming setters, dictionaries,
+long-distance matching and workers are not provided by these reference APIs.
 
 ## Explicit requests
 
@@ -62,21 +64,41 @@ assert_eq!(decompress(&frame, input.len())?, input);
 The source is always known, including known empty input, and dictionary size is
 zero. A source hint cannot override the actual length. Resolution and strategy
 admission happen before allocator cloning or allocation. A valid unsupported
-strategy returns `UnsupportedFeature` before Fast-specific resource checks.
+strategy returns `UnsupportedFeature` before algorithm-specific resource checks.
 
-Effective Fast limits are window logs 10..=20, hash logs 6..=18, minimum-match
-settings 3..=7 and target lengths 0..=131072. Larger otherwise valid Fast
-resources return `ResourceLimit`. The limits apply after adjustment: an
-unadjusted large requested hash can still fit the admitted range for tiny input.
+Effective Fast limits are window logs 10..=20 and hash logs 6..=18. DoubleFast
+supports window logs 10..=21 and independent hash/chain logs 6..=18. Both admit
+minimum-match settings 3..=7 and target lengths 0..=131072. Larger otherwise
+valid implemented resources return `ResourceLimit`. The limits apply after
+adjustment: an unadjusted large requested hash can still fit the admitted range for tiny input.
 Normal scalar setters continue to enforce their reference validity domains.
 
 Minimum-match setting 3 uses the same four-byte key as setting 4; settings
 5..=7 select wider keys while emitted matches still have a four-byte minimum.
-Positive target length accelerates sampling and forces raw literal sections,
-including bypassing literal RLE. Whole block RLE remains a separate decision.
+For Fast, positive target length accelerates sampling and forces raw literal
+sections, including bypassing literal RLE. Whole block RLE remains a separate decision.
 Chain/search fields are validated but do not create a chain or visit budget for
 Fast. The sampled table stores `2^hash_log` usize positions into the borrowed
 whole source, retained across raw, RLE and compressed block decisions.
+
+DoubleFast owns two independent tables: `2^hash_log` positions for eight-byte
+long keys and `2^chain_log` positions for short keys. Its chain log sizes a hash
+table, not a linked chain. Minimum-match 3 uses the same four-byte short key as 4;
+settings 5..=7 widen that key. DoubleFast ignores search log and target length
+after scalar validation, preserving normal Huffman/RLE literal selection.
+Both tables retain sampled source history across block decisions.
+
+```rust
+use zstdoxide::{CompressionParameterRequest, ReferenceStrategy, compress_with_parameters};
+let input = b"two tables, two tables, two tables";
+let mut request = CompressionParameterRequest::with_level(3);
+request.set_strategy(Some(ReferenceStrategy::DoubleFast));
+request.set_window_log(21)?;
+request.set_hash_log(18)?;
+request.set_chain_log(16)?;
+let frame = compress_with_parameters(input, &request)?;
+# Ok::<(), zstdoxide::Error>(())
+```
 
 Candidate entropy tables and wire repeats become committed state only after
 the complete compressed block is appended. Raw/RLE fallback keeps sampled
@@ -111,6 +133,6 @@ contract. See [allocator usage](allocator-usage.md) for owner lifetimes.
 The core requires only `alloc`; filesystem, process and timing code remain in
 test/oracle tooling. `unsafe-match-table`, `unsafe-bitstream`,
 `unsafe-fse-encoder` and `unsafe-huffman-codebook` select the existing individual
-storage backends. The Fast parser, persistent source state and frame supervisor
-themselves forbid unsafe code and use the same checked contracts with every
+storage backends. The Fast/DoubleFast parsers, persistent source states and
+shared frame supervisor themselves forbid unsafe code and use the same checked contracts with every
 backend combination.

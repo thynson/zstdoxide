@@ -68,15 +68,15 @@ rules. These allocation-free queries can describe algorithms not yet implemented
 by the Rust encoder. See [parameter usage](docs/parameter-usage.md) and
 [validation scope](docs/compression-parameters-validation.md).
 
-`compress_at_level` and `compress_with_parameters` execute the profiles whose
-resolved strategy is Fast, with effective windows up to 1 MiB and hash logs up
-to 18. Level 1 and negative levels are supported across all size tiers. Level 2
-rejects inputs larger than 128 KiB and no larger than 256 KiB, whose pinned
-profile requires DoubleFast. Default level 0 resolves to unsupported level 3.
-These APIs write a known-size frame without a checksum and preserve the resolved
-window; they do not change the named APIs or provide live numeric streaming
-settings. See [Fast profile usage](docs/reference-fast-usage.md) for overrides,
-allocator ownership, frame flags, and admission rules.
+`compress_at_level` and `compress_with_parameters` execute resolved Fast and
+DoubleFast profiles. Fast supports windows up to 1 MiB and hash logs up to 18;
+DoubleFast supports windows up to 2 MiB and independent long/short table logs
+up to 18. Levels 0/3 select DoubleFast; levels 1/2 and negative levels are supported
+across all source tiers. Level 4 is supported for inputs larger than 16 KiB
+and no larger than 128 KiB, and for inputs larger than 256 KiB. These APIs write
+a known-size frame without a checksum and preserve the resolved window. They do not change the named APIs or provide
+live numeric streaming settings. See [reference profile usage](docs/reference-fast-usage.md)
+for overrides, allocator ownership, frame flags, and algorithm-specific caps.
 
 `Dictionary` prepares owned raw or formatted content for shared reuse. One-shot
 and streaming operations support persistent dictionaries and streaming single-use
@@ -94,7 +94,7 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
 | Compression | Greedy, bounded Chain, and one-byte Lazy matching over dictionary content and up to 1 MiB of configured retained output (128 KiB by default), raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
-| Reference Fast | Known-size, no-dictionary one-shot level/request execution; persistent sampled history, explicit repeat intent, negative-level acceleration/raw literal policy, strict gain and transactional block selection; independent entropy output |
+| Reference Fast and DoubleFast | Known-size, no-dictionary one-shot level/request execution; one/two sampled tables, explicit repeat intent, Fast-only negative-level acceleration/raw literal policy, strict gain and transactional block selection; independent entropy output |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Parameter inspection | Pinned reference presets, scalar bounds, raw adjustment, explicit request overrides, source hints and checked source/dictionary size arithmetic; independent of live numeric execution |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |

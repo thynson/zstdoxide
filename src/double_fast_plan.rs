@@ -56,11 +56,9 @@ impl DoubleFastExecutionPlan {
         Self::admit(parameters, source_len, source_size)
     }
 
-    /// Preserve the ordinary C helper's explicitly applied internal-begin tuple.
-    /// Public known-source adjustment remains a separate tested boundary; all
-    /// algorithm and resource checks still apply to this test-only constructor.
-    #[cfg(test)]
-    pub(crate) fn from_observed_parameters(
+    /// Admit resolved parameters without repeating known-source adjustment.
+    /// Algorithm, resource and target-layout checks precede any allocation.
+    pub(crate) fn from_resolved_parameters(
         parameters: ResolvedCompressionParameters,
         source_len: usize,
     ) -> Result<Self> {
@@ -69,6 +67,17 @@ impl DoubleFastExecutionPlan {
             return Err(Error::InvalidParameter);
         }
         Self::admit(parameters, source_len, source_size)
+    }
+
+    /// Preserve the ordinary C helper's explicitly applied internal-begin tuple.
+    /// Public known-source adjustment remains a separate tested boundary; all
+    /// algorithm and resource checks still apply to this test-only constructor.
+    #[cfg(test)]
+    pub(crate) fn from_observed_parameters(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+    ) -> Result<Self> {
+        Self::from_resolved_parameters(parameters, source_len)
     }
 
     fn admit(
@@ -333,7 +342,7 @@ mod tests {
     }
 
     #[test]
-    fn source_domain_empty_resolution_and_public_admission_remain_separate() {
+    fn source_domain_and_empty_resolution_preserve_known_size() {
         let zero =
             DoubleFastExecutionPlan::new(&CompressionParameterRequest::with_level(0), 0).unwrap();
         let three = DoubleFastExecutionPlan::new(&request(), 0).unwrap();
@@ -351,11 +360,5 @@ mod tests {
                 Err(Error::InvalidParameter)
             );
         }
-        // A private plan is not an implemented encoder. Keep public behavior
-        // unchanged until parsing, entropy and frame publication are wired.
-        assert_eq!(
-            crate::compress_at_level(b"still unsupported", 3),
-            Err(Error::UnsupportedFeature)
-        );
     }
 }

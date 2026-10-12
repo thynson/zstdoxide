@@ -60,6 +60,19 @@ impl FastExecutionPlan {
         Self::admit(parameters, source_len, source_size)
     }
 
+    /// Admit already resolved parameters without applying source adjustment again.
+    /// The caller supplies the actual known input length used for resolution.
+    pub(crate) fn from_resolved_parameters(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+    ) -> Result<Self> {
+        Self::admit(
+            parameters,
+            source_len,
+            Self::checked_source_size(source_len)?,
+        )
+    }
+
     /// Compare private parser state at the exact applied C oracle parameters.
     /// The ordinary-frame helper calls the internal begin API with explicit
     /// parameters, bypassing public known-source adjustment. This test boundary
@@ -69,11 +82,7 @@ impl FastExecutionPlan {
         parameters: ResolvedCompressionParameters,
         source_len: usize,
     ) -> Result<Self> {
-        Self::admit(
-            parameters,
-            source_len,
-            Self::checked_source_size(source_len)?,
-        )
+        Self::from_resolved_parameters(parameters, source_len)
     }
 
     fn checked_source_size(source_len: usize) -> Result<u64> {

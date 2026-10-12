@@ -76,6 +76,6 @@ cargo test --release --all-features --test upstream_parameter_lifecycle official
 cargo test --release --all-features --test match_search_options official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames -- --ignored --exact
 cargo test --release --all-features --test upstream_search_lifecycle official_codec_decodes_both_original_dictionary_orders_for_each_named_policy -- --ignored --exact
 
-# Module 12 complete admitted Fast frames, with a fresh retained evidence root.
+# Successor admission over the unchanged Module12 bounded source campaign.
 fast_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-fast-interop.XXXXXX")
-python3 scripts/check_reference_fast_interop.py --upstream "$ZSTD_UPSTREAM" --output "$fast_output/capture"
+python3 scripts/check_reference_interop_v2.py --upstream "$ZSTD_UPSTREAM" --output "$fast_output/capture"

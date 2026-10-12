@@ -4,8 +4,8 @@ The parameter API describes facebook/zstd v1.5.7 settings without allocating
 codec storage or changing an encoder. Reference strategies are separate from
 the supported `CompressionStrategy` policies. A valid reference profile does
 not imply that the Rust encoder implements its algorithm or can allocate its
-search tables. The separate [whole-buffer Fast entry points](reference-fast-usage.md)
-execute admitted Fast profiles using these requests; live numeric streaming
+search tables. The separate [whole-buffer reference entry points](reference-fast-usage.md)
+execute admitted Fast and DoubleFast profiles using these requests; live numeric streaming
 configuration and other reference algorithms remain later milestones.
 
 ## Validating concrete values
