@@ -1,0 +1,127 @@
+{
+  "decisions": {
+    "chain_log_max": 18,
+    "chain_search_log_max": 8,
+    "hash_log_max": 19,
+    "new_frame_window_domain": false,
+    "new_unsafe_leaf_features": [
+      "unsafe-reference-chain",
+      "unsafe-row-table"
+    ],
+    "row_selection": "resolved window_log > 14",
+    "window_log_max": 21
+  },
+  "design_sha256": "1a765d28f11e0570853bc341bcd9131be6aca5708a9875da5c54fe80601deab7",
+  "forecast": {
+    "fuzz": {
+      "changes": [
+        {
+          "after": "success",
+          "before": "unsupported",
+          "case": "unsupported-57",
+          "parameters": [
+            10,
+            6,
+            7,
+            4,
+            4,
+            2,
+            3
+          ]
+        }
+      ],
+      "counts": {
+        "advanced": 4,
+        "success": 62,
+        "unsupported": 15
+      }
+    },
+    "interop": {
+      "changes": [
+        {
+          "after": "success",
+          "before": "unsupported",
+          "case": "unsupported-strategy-3",
+          "parameters": [
+            12,
+            12,
+            13,
+            1,
+            5,
+            0,
+            3
+          ]
+        }
+      ],
+      "counts": {
+        "resource": 3,
+        "success": 86,
+        "unsupported": 3
+      }
+    },
+    "loops": {
+      "changes": [
+        {
+          "after": "success",
+          "before": "unsupported",
+          "case": "empty:4",
+          "parameters": [
+            10,
+            6,
+            7,
+            4,
+            4,
+            2,
+            3
+          ]
+        },
+        {
+          "after": "success",
+          "before": "unsupported",
+          "case": "initial_match:4",
+          "parameters": [
+            10,
+            6,
+            7,
+            4,
+            4,
+            2,
+            3
+          ]
+        }
+      ],
+      "counts": {
+        "success": 10,
+        "unsupported": 33
+      },
+      "families": {
+        "empty": {
+          "success": 6,
+          "unsupported": 18
+        },
+        "initial_match": {
+          "success": 4,
+          "unsupported": 15
+        }
+      }
+    },
+    "scope": "Source-only proposed Greedy admission forecast; no Rust Greedy codec or new C execution. v2 fixtures unchanged. These are planning expectations, not a published v3 fixture.",
+    "source_sha256": {
+      "tests/fixtures/reference-admission-v2/fuzz.tsv": "7b2fbce793df15e2185b65bad272e9e6428a614fdb00905f949bfeb8d45bbc13",
+      "tests/fixtures/reference-admission-v2/interop.tsv": "6c1b9c77329cba64893738b92304d5e0020c4bc0a8ff08e6ea2da9d27d0c516c",
+      "tests/fixtures/reference-admission-v2/loops.tsv": "c5c2bed1fe2dcf8631d89eecf98510cab81b9c115d365e6a5dadef216245ce6d",
+      "tests/upstream/parameters/presets.tsv": "4e188cc16826c6665dcd440ae9d153484aeb4e561321a089be2aec260667881d"
+    }
+  },
+  "forecast_script": "from pathlib import Path\nimport collections,csv,hashlib,json\nR=Path('/Users/lanxingcan/Workspace/zstdoxize');D=R/'tests/fixtures/reference-admission-v2'\ndef read(p):return list(csv.DictReader(p.read_text().splitlines(),delimiter='\\t'))\ndef sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()\npreset={(int(r['tier']),int(r['row'])):[int(r[k]) for k in ('window_log','chain_log','hash_log','search_log','min_match','target_length','strategy')] for r in read(R/'tests/upstream/parameters/presets.tsv')}\ndef adjust(p,size):\n p=p[:];w=min(p[0],max(6,(size-1).bit_length() if size else 6));p[1]=min(p[1],w+(p[6]>=6));p[2]=min(p[2],w+1);p[0]=max(10,w);return p\ndef classify(p):\n w,c,h,s,m,t,strategy=p\n if strategy not in (1,2,3):return 'unsupported'\n if w>({1:20,2:21,3:21}[strategy]) or h>(19 if strategy==3 else 18):return 'resource'\n if strategy==2 and c>18:return 'resource'\n if strategy==3 and w<=14 and (c>18 or s>8):return 'resource'\n return 'success'\nresult={'scope':'Source-only proposed Greedy admission forecast; no Rust Greedy codec or new C execution. v2 fixtures unchanged. These are planning expectations, not a published v3 fixture.','source_sha256':{str(p.relative_to(R)):sha(p) for p in [R/'tests/upstream/parameters/presets.tsv',D/'fuzz.tsv',D/'interop.tsv',D/'loops.tsv']}}\nfor name in ('fuzz','interop','loops'):\n rows=[]\n for r in read(D/(name+'.tsv')):\n  if r['successor']=='advanced':p=None;status='advanced'\n  else:\n   p=list(map(int,r['historical_resolved_tuple'].split(','))) if name=='interop' else adjust(preset[int(r['preset_tier']),int(r['preset_row'])],int(r['prefix_size'] if name=='fuzz' else r['source_size']))\n   status=classify(p)\n  rows.append(dict(case=r.get('case',r.get('family','')+':'+r['level']),before=r['successor'],after=status,parameters=p))\n result[name]=dict(counts=dict(collections.Counter(r['after'] for r in rows)),changes=[r for r in rows if r['before']!=r['after']])\n if name=='loops':result[name]['families']={family:dict(collections.Counter(r['after'] for r in rows if r['case'].startswith(family+':'))) for family in ('empty','initial_match')}\nPath('/tmp/zstdoxide-reference-greedy-forecast.json').write_text(json.dumps(result,sort_keys=True,indent=2)+'\\n');print(json.dumps(result,indent=2))\n",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1,
+  "scope": "Reviewed source-only plan before Greedy implementation. No new C executions or runtime checks are claimed. Forecast remains provisional until independent successor capture.",
+  "source": {
+    "lib/compress/clevels.h": "d764daa89b7a636d26fe96ff3536c5075e9867fb5dddbf8c9d57023a8ff4a155",
+    "lib/compress/zstd_compress.c": "10c315ae609d49b2fc431521aa95908086e69fd917991c5ed9a875af3d1208e8",
+    "lib/compress/zstd_compress_internal.h": "ab7754413cef565da559bda7eb738bc2b3708c48877cb9ec37aff767d32c57d1",
+    "lib/compress/zstd_lazy.c": "dd6ccf357165dc8cb574ea56a34ff1db57b7b31728b32103d0c6b72319fd45b1",
+    "lib/compress/zstd_lazy.h": "6f13007fbd6824058a73b097960446defe265e33b22c7c6dc2304dcf53998bbf"
+  }
+}

@@ -707,3 +707,46 @@ entropy/owner observations remain in the immutable NDJSON collection; partial
 header-only probes are excluded from this complete-frame adapter. All records
 use safe slices and plain values, with no new unsafe representation or runtime
 dependency.
+
+## Module 14: bounded no-dictionary reference Greedy
+
+The [source review and design](reference-greedy-design.md) describes the next
+implementation; the structures below are planned, not implemented. Resolved
+window log above 14 selects row search, otherwise reference chain search.
+Both are required before public Greedy admission. The scope is window log at
+most 21 and hash log at most 19, preserving the separate existing Fast and
+DoubleFast caps. The shared frame metadata already covers this window domain.
+
+| Structure | Ownership and invariants | Reference counterpart / unsafe representation |
+| --- | --- | --- |
+| `GreedyExecutionPlan` | Copy values: actual-source-adjusted profile, selected branch, effective key width 4..6, checked layouts, search budget and output bound. No allocation or allocator clone during admission. | Applied parameters and `ZSTD_resolveRowMatchFinderMode`; safe values only. |
+| `GreedyBlock<'a>` and parser cursor | Borrow one complete immutable source, with checked block range and retained prefix floor. Candidate floors are evaluated per probe. Chain and row have distinct eight/sixteen-byte search margins. | `ZSTD_window_t` and depth-zero `ZSTD_compressBlock_lazy_generic`; safe indices and ranges. |
+| Reference chain index | Two independent complete `Vec<usize, A>` owners: hash heads and cyclic predecessor cells, initialized to an invalid sentinel. Slot translation accounts for C's index bias of two. Validate dimensions and summed payload before the first allocation; a failed second owner releases the first through its own allocator. | `hashTable`, `chainTable`, `nextToUpdate`, `ZSTD_HcFindBestMatch`; new `unsafe-reference-chain` leaf. The existing named `MatchChain` has different semantics. |
+| Row match table | Independent initialized position and tag/head owners, `Vec<usize, A>` and `Vec<u8, A>`, each with `2^hashLog` cells. Each row has 16/32/64 cells; cell zero is reserved, and insertion cycles backward through the remaining cells. Snapshot candidates in cyclic tag order before inserting the probe. | `hashTable`, `tagTable`, `ZSTD_row_nextIndex`, `ZSTD_RowFindBestMatch`; new `unsafe-row-table` leaf. |
+| Row layout and salted key | Copy values for row width, bucket, tag and salt; explicit little-endian hashing and checked width arithmetic. A new private layout admits hash log 19 without widening existing named/Fast/DoubleFast key descriptors. | `rowHashLog`, `ZSTD_hashPtrSalted`; shared safe values. |
+| Candidate snapshot | At most 64 plain source positions, with checked count and initialized access. Expired candidates terminate collection; future/invalid positions never authorize a source read. | Local row `matchBuffer`; safe value storage, no artificial unsafe backend. |
+| Greedy search state | Own only the selected complete table family and existing literal/intent vectors, borrow source, track next-to-update and poison state. Scalar hashes may replace the C cache only while preserving every insertion and search boundary. | Match state and sequence store; safe composite, independently gated leaves. |
+| Shared reference frame state | Extend existing static dispatch with one Greedy variant; preserve original output ownership and independent entropy owner. Raw/RLE retains search writes but discards candidate repeats/entropy; only complete compressed append publishes them. | Existing reference frame loop and block-state transaction; no new unsafe composite. |
+
+Chain search is bounded by `2^searchLog` with search log at most 8 and chain
+log at most 18. Row search allocates no chain and caps visits at
+`2^min(searchLog, rowLog)`, at most 64; unused chain capacity is not a reason
+to reject that branch. Table payloads use Rust `usize` widths, not C `u32`
+widths. Both layouts and their checked sum must precede allocator activity.
+Moves, swaps, reset and failure keep the exact allocator with each owner.
+
+Safe and unsafe leaves share checked public contracts, reject malformed indices
+before byte access or mutation, and compare complete table maps under identical
+workloads. Unsafe functions must document validity, bounds, initialization,
+aliasing, lifetime and applicable alignment requirements; every unsafe block
+must prove them. Scalar Rust rows require natural element alignment. The future
+C oracle separately needs 64-byte-aligned hash storage and row-aligned tags for
+its prefetch assertions; that oracle requirement does not justify changing
+Rust owner alignment.
+
+The fresh row salt is derived from a zero-initialized C context and its first
+salt advance; freeze that observation before choosing the Rust constant.
+Explicit dictionary salt zero and context-reset salt changes remain future
+contracts. Candidate raw repeats and committed wire repeats remain separate.
+The source-only admission forecast does not constitute executed Greedy tests
+or completion of any pending upstream migration obligation.

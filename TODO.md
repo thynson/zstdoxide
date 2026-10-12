@@ -43,8 +43,9 @@ and the inconclusive unsafe comparison are retained in
 
 Begin with source review and data-structure design before implementation.
 Preserve all named/Fast/DoubleFast outputs, owner contracts and frozen policies.
+The reviewed scope and ownership design are in `docs/reference-greedy-design.md`.
 
-- [ ] Analyze source-dependent chain/row selection, ownership, salted hashes, exact parser floors and newly admitted official subsets before implementation.
+- [x] Analyze source-dependent chain/row selection, ownership, salted hashes, exact parser floors and newly admitted official subsets before implementation.
 - [ ] Freeze complete current DoubleFast frames and qualified allocation records from the reviewed clock-free benchmark as permanent compatibility regressions.
 - [ ] Specify a bounded direct Greedy C protocol with separate chain/row arenas, full owner maps and short-input safety proof before execution.
 - [ ] Implement and review the bounded C adapter, then freeze fresh-context salt and tiny chain/row observations with all used C units instrumented.
@@ -65,7 +66,6 @@ Preserve all named/Fast/DoubleFast outputs, owner contracts and frozen policies.
 - [ ] Implement/review the ordinary-frame helper and offline replay validator, then capture normal/instrumented publication trajectories and complete C frames.
 - [ ] Add a dependency-free checked Rust adapter for frozen ordinary Greedy trajectories and frames.
 - [ ] Retain selected chain/row state across blocks with ordinary next-to-update adjustment, tiny bypass and failure poisoning.
-- [ ] Extend shared plain frame metadata to window22 with independent header/bound observations and unchanged Fast/DoubleFast admission.
 - [ ] Extend static private search dispatch while preserving existing owner counts and complete frame bytes.
 - [ ] Emit private complete Greedy frames with transactional entropy/repeat publication and all observed allocation-failure ordinals.
 - [ ] Freeze successor v3 admission mappings over unchanged selectors, numeric loops and both historical interop sets before changing public behavior.
