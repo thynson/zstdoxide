@@ -612,3 +612,47 @@ reviewed DoubleFast ownership and direct-C arena protocol are also recorded.
 The Module 12 completed checklist is cleared; Module 13's remaining work items
 are retained. Full official-test migration and the rest of the roadmap remain
 open.
+
+## Module 13 completed: bounded reference DoubleFast execution
+
+Completed on 2026-10-12. The numeric one-shot APIs now execute resolved Fast
+and DoubleFast profiles, with independent window/table limits and complete
+allocator ownership. DoubleFast uses two sampled position tables, an eight-byte
+long key, the pinned repeat/update order and persistent cross-block state.
+Common framing and entropy publication preserve the existing Fast and named
+frames and allocation contracts. Levels 0 and 3 are equivalent, level 2 works
+across all source tiers, and the supported level 4 tiers are documented. Numeric
+dictionaries/streaming and higher reference algorithms remain outside this scope.
+
+The successor official-test layer retains every original C selector and source
+identity. It admits 61 of 81 original selector records (16 unsupported, 4 advanced)
+and the original empty/30-byte loops admit 5/24 and 3/19 profiles. Context reuse,
+capacity, dictionary, in-place and other advanced obligations remain explicit.
+The broader bidirectional campaign completes 159 frozen requests: 113 admitted,
+42 unsupported and 4 resource errors. It performs 452 C decodes of Rust frames
+and 452 Rust decodes of C frames, reproducing 223,677,280 source bytes. All 26
+used C codec units and the helper are instrumented in the ASan/UBSan build;
+normal and instrumented C frames agree. No prebuilt C archive is used there.
+
+The final matrix passes fifteen full suites at 1,021 tests each, zero failed and
+54 explicitly ignored per suite: 15,315 passing executions. All fourteen no_std
+configurations, strict Clippy safe/all, formatting, thirteen allocator-helper
+tests and 44 registered example executions pass. A focused platform checkpoint
+passes 32 strict-provenance Miri executions on i686/s390x and four thumbv6m
+library/caller compilation checks. Interpretation and compile-only results are
+qualified separately from native execution.
+
+All fourteen backend configurations were measured on sixteen frozen cases,
+followed by a safe/all repeat using identical executable hashes: 1,280 samples
+in total. All 256 complete frame/allocation records match the clock-free capture.
+The two campaigns show no repeatable all-feature speedup, so the safe default
+is retained. Individual results, unfavorable samples, exact allocation scope,
+CPU-barrier records and host limitations are preserved in
+[measurements](reference-double-fast-benchmarks.md).
+
+The [validation report](reference-double-fast-validation.md) and
+[closure reconciliation](evidence/2026-10-12-double-fast-closure.json) bind the
+final artifact chains and unchanged measured source. The completed checklist
+is cleared and the next Greedy module's decomposition is retained. The upstream
+inventory still reports 188 unfinished source units; full test migration,
+legacy success assertions and the remainder of the roadmap remain open.

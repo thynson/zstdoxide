@@ -699,3 +699,19 @@ command/log, source catalog, runner, Git base and reconstructable overlay.
 All log digests, parsed harness counts, source identities and archive bytes were
 independently verified. This matrix adds no ignored oracle campaigns or timing
 claim; the separately qualified C and interpreted-platform records remain above.
+
+## Bounded milestone closure
+
+Module 13 is complete within the documented known-size, no-dictionary reference
+DoubleFast scope. The final source matches the complete matrix's codec inputs
+and the independently measured inputs. Six final report/archive chains were
+reconciled in the [closure record](evidence/2026-10-12-double-fast-closure.json).
+The [two measurement campaigns](reference-double-fast-benchmarks.md) preserve
+all output/allocation equivalence and do not establish a repeatable all-feature
+speedup. No partial historical checkpoint was relabeled as a full execution.
+
+The completed checklist is archived in Git history; the next Greedy module
+starts with source/data-structure analysis and separate oracle preparation.
+Higher strategies, numeric dictionaries/streaming, legacy decoding and the
+remaining 188 unfinished upstream source units are still open. This milestone
+is not full official-test migration or upstream library/CLI parity.

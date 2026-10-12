@@ -1,0 +1,47 @@
+{
+  "checked_artifacts": {
+    "2026-10-12-double-fast-interop-full": {
+      "archive": "2026-10-12-double-fast-interop-full.tar.gz",
+      "archive_bytes": 20795123,
+      "archive_sha256": "9a3bede445e00aa88782516b24535da3a990cef001866487b5b36f7e5f569a76",
+      "report_sha256": "b7c90ca59a094c9307ab4b361333b7391a86ad63d73885012fdf0d1b093ea476"
+    },
+    "2026-10-12-double-fast-matrix": {
+      "archive": "2026-10-12-double-fast-matrix.tar.gz",
+      "archive_bytes": 528308,
+      "archive_sha256": "690b6cd572d4f651f7b4ee3e9c45e1fe061121d9a11f76eb30279f3d7c8b64fb",
+      "report_sha256": "a8793d63b48b9d30df76a4db34a478215baf04354e2cc5ebb04aef83513e420b"
+    },
+    "2026-10-12-double-fast-measurements": {
+      "archive": "2026-10-12-double-fast-measurements.tar.gz",
+      "archive_bytes": 6425893,
+      "archive_sha256": "9f18866f581eead2790a61630a843e8d544fbada280fa1a0e079de40b8084ad0",
+      "report_sha256": "077feff43d086e7c50beb94da4979d7ee02b676cfcb4f9601d893f02fd63584c"
+    },
+    "2026-10-12-double-fast-official": {
+      "archive": "2026-10-12-double-fast-official.tar.gz",
+      "archive_bytes": 464726,
+      "archive_sha256": "3952bdb4d5f1813e57c84016dda7c431b06e01a27b12012a2b2c52bb0da6c894",
+      "report_sha256": "4eefa4ffc26fa90a4e180420722cba3a3164a365db25448e26116af8889fbf2a"
+    },
+    "2026-10-12-double-fast-platform": {
+      "archive": "2026-10-12-double-fast-platform.tar.gz",
+      "archive_bytes": 78960,
+      "archive_sha256": "d9c247b3089978ede063bd6a090537866f5a8c6b060babde5d597928c37254d2",
+      "report_sha256": "79b25e4f772ef471671e4494f7b4848d34b070b7a86dd6b9e0e2fc333629ccc0"
+    },
+    "2026-10-12-reference-public": {
+      "archive": "2026-10-12-reference-public.tar.gz",
+      "archive_bytes": 492429,
+      "archive_sha256": "867bf6bb316dd393ddbcd6a59fc437fbd235a86eba91889bb1a8e26b1445fd31",
+      "report_sha256": "b8715f7d72e34e9e77518cd175995e7917dec6b17b38e58a0101de60e4bb7c3e"
+    }
+  },
+  "complete_upstream_migration": false,
+  "date": "2026-10-12",
+  "delivered_source_matches_measured": true,
+  "milestone": "Module13 bounded no-dictionary reference DoubleFast",
+  "qualification": "Scope closure only; numeric dictionaries/streaming, higher reference strategies, legacy decoding and other inventoried APIs remain open. Historical partial checkpoints retain their original scope and unexecuted claims.",
+  "status": "passed",
+  "unfinished_upstream_source_units": 188
+}

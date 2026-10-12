@@ -9,9 +9,10 @@ This is an initial working codec milestone, **not full parity with upstream
 zstd**. Its one-shot and streaming decoders handle standard frames with raw or
 formatted dictionaries. Its encoder provides independent Greedy, Chain and Lazy
 strategies, Huffman literal compression and reuse, and adaptive sequence entropy
-tables. Greedy is the default. Separate whole-buffer entry points execute bounded
-reference Fast profiles, including level 1 and negative levels, without a
-dictionary. Their parser follows the pinned sampling and repeat rules; entropy
+tables. Greedy is the named API default. Separate whole-buffer entry points
+execute bounded reference Fast and DoubleFast profiles, including levels 0–3
+and negative levels, without a dictionary. Their parsers follow the pinned
+sampling and repeat rules; entropy
 choices remain independent, so compressed bytes and ratios may differ from C.
 
 ## Using the library
