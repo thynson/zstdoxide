@@ -46,7 +46,7 @@ inputs, and historical C observations retain their original admission scope.
 - [ ] Implement the bounded direct DoubleFast C adapter, review its actual allocations against the protocol proof, then capture tiny observations with scoped sanitizers.
 - [ ] Freeze directed direct-parser families, both full table maps, low-log eight-byte hashes, provenance and offline rejection controls before Rust parsing.
 - [x] Add the private checked eight-byte long-key layout while preserving current Fast and named layout domains.
-- [ ] Add the allocation-free DoubleFast plan, independent table/window caps, target layouts and actual source-tier admission checks.
+- [x] Add the allocation-free DoubleFast plan, independent table/window caps, target layouts and actual source-tier admission checks.
 - [ ] Add checked borrowed block/cursor records and two-table owner construction with exact-owner failure/reset coverage.
 - [ ] Implement safe single-block DoubleFast parsing against frozen sequences, literals, repeat intents and both complete table observations.
 - [ ] Capture ordinary DoubleFast frame publication trajectories; keep collector corroboration and constructed direct states separately qualified.

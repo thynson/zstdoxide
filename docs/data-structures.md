@@ -599,8 +599,9 @@ roles introduce no unsafe backend beyond their individually gated children.
 ## Module 13: bounded no-dictionary DoubleFast (planned)
 
 The [reviewed design](reference-double-fast-design.md) pins the exact upstream
-loop and resource scope. These records are planned; this section does not claim
-an implemented DoubleFast path or new test result.
+loop and resource scope. The private long-key descriptor and allocation-free
+DoubleFastExecutionPlan are implemented and verified; other records below remain
+planned. No public DoubleFast encoding path is implemented by this foundation.
 
 | Structure | Ownership and invariants | Reference counterpart / unsafe representation |
 | --- | --- | --- |
