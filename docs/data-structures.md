@@ -953,3 +953,12 @@ failure, exact independent non-clone owners and scratch reuse, and an injected
 future candidate that rejects after a pending insertion and poisons all later
 calls. Strict safe/all Clippy, formatting and safe/combined-leaf no_std pass.
 The context does not compare Rust cache machinery with C cache observations.
+
+`ReferenceSearchPlan` and `ReferenceSearchState` now include a private Greedy
+variant, allocating only its selected two tables followed by literal/sequence
+owners. Existing Fast/DoubleFast construction order and request admission are
+unchanged. Five dispatch tests pass in safe/all builds, including exact owner
+counts/bytes, source mismatch before clones, borrowed non-clone allocators and
+ordinary mixed-fallback candidates. All nine frozen Fast/DoubleFast baseline
+tests retain complete frame bytes and owner observations. Strict safe/all Clippy,
+formatting and no_std pass; public Greedy requests still reject until v3 mapping.

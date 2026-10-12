@@ -9,6 +9,8 @@ use crate::double_fast_state::DoubleFastMatchState;
 use crate::double_fast_tables::DoubleFastTables;
 use crate::fast_plan::FastExecutionPlan;
 use crate::fast_state::FastMatchState;
+use crate::greedy_plan::GreedyExecutionPlan;
+use crate::greedy_state::{GreedyMatchState, GreedyTables};
 use crate::matchfinder::MatchTable;
 use crate::sequence_context::SequenceWithOffset;
 use crate::{
@@ -22,6 +24,12 @@ use crate::{
 pub(crate) enum ReferenceSearchPlan {
     Fast(FastExecutionPlan),
     DoubleFast(DoubleFastExecutionPlan),
+    /// Private construction only until the successor admission map is frozen.
+    #[allow(
+        dead_code,
+        reason = "Greedy public admission follows private frame checks"
+    )]
+    Greedy(GreedyExecutionPlan),
 }
 
 impl ReferenceSearchPlan {
@@ -47,18 +55,21 @@ impl ReferenceSearchPlan {
         match self {
             Self::Fast(plan) => plan.source_len(),
             Self::DoubleFast(plan) => plan.source_len(),
+            Self::Greedy(plan) => plan.source_len(),
         }
     }
     pub(crate) fn parameters(self) -> ResolvedCompressionParameters {
         match self {
             Self::Fast(plan) => plan.parameters(),
             Self::DoubleFast(plan) => plan.parameters(),
+            Self::Greedy(plan) => plan.parameters(),
         }
     }
     pub(crate) fn block_limit(self) -> usize {
         match self {
             Self::Fast(plan) => plan.block_limit(),
             Self::DoubleFast(plan) => plan.block_limit(),
+            Self::Greedy(plan) => plan.block_limit(),
         }
     }
 }
@@ -69,12 +80,14 @@ impl ReferenceSearchPlan {
 pub(crate) enum ReferenceSearchState<'a, A: Allocator> {
     Fast(FastMatchState<'a, A>),
     DoubleFast(DoubleFastMatchState<'a, A>),
+    Greedy(GreedyMatchState<'a, A>),
 }
 
 impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
     /// Borrow the factory, cloning exactly once per selected child owner. Fast
     /// retains table/literal/sequence clone order; DoubleFast adds its separate
-    /// short table before the two scratch vectors. No inactive owner is created.
+    /// short table before the two scratch vectors. Greedy retains its selected
+    /// two table owners in the same order. No inactive owner is created.
     pub(crate) fn new(source: &'a [u8], plan: ReferenceSearchPlan, factory: &A) -> Result<Self> {
         if source.len() != plan.source_len() {
             return Err(Error::InvalidParameter);
@@ -101,6 +114,14 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                     source, plan, tables, literals, sequences,
                 )?))
             }
+            ReferenceSearchPlan::Greedy(plan) => {
+                let tables = GreedyTables::new_in(plan.tables(), factory.clone(), factory.clone())?;
+                let literals = Vec::new_in(factory.clone());
+                let sequences = Vec::new_in(factory.clone());
+                Ok(Self::Greedy(GreedyMatchState::from_parts(
+                    source, plan, tables, literals, sequences,
+                )?))
+            }
         }
     }
 }
@@ -117,18 +138,23 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::DoubleFast(state) => state
                 .parse_next(length, committed)
                 .map(|candidate| candidate.is_some()),
+            Self::Greedy(state) => state
+                .parse_next(length, committed)
+                .map(|candidate| candidate.is_some()),
         }
     }
     pub(crate) fn literals(&self) -> &[u8] {
         match self {
             Self::Fast(state) => state.literals(),
             Self::DoubleFast(state) => state.literals(),
+            Self::Greedy(state) => state.literals(),
         }
     }
     pub(crate) fn sequences(&self) -> &[SequenceWithOffset] {
         match self {
             Self::Fast(state) => state.sequences(),
             Self::DoubleFast(state) => state.sequences(),
+            Self::Greedy(state) => state.sequences(),
         }
     }
     #[cfg(test)]
@@ -136,6 +162,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
         match self {
             Self::Fast(state) => state.retained_capacity(),
             Self::DoubleFast(state) => state.retained_capacity(),
+            Self::Greedy(state) => state.retained_capacity(),
         }
     }
 }
@@ -147,7 +174,7 @@ mod tests {
     use alloc::alloc::Global;
     use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
-    fn plans(size: usize) -> [ReferenceSearchPlan; 2] {
+    fn plans(size: usize) -> [ReferenceSearchPlan; 4] {
         let mut request = CompressionParameterRequest::with_level(1);
         request.set_window_log(10).unwrap();
         request.set_hash_log(10).unwrap();
@@ -156,9 +183,30 @@ mod tests {
         let fast = FastExecutionPlan::new(&request, size).unwrap();
         request.set_strategy(Some(crate::ReferenceStrategy::DoubleFast));
         let double = DoubleFastExecutionPlan::new(&request, size).unwrap();
+        let greedy = |window_log| {
+            ReferenceSearchPlan::Greedy(
+                GreedyExecutionPlan::from_resolved_parameters(
+                    RawCompressionParameters {
+                        window_log,
+                        chain_log: 9,
+                        hash_log: 10,
+                        search_log: 4,
+                        min_match: 4,
+                        target_length: 0,
+                        strategy: 3,
+                    }
+                    .validate()
+                    .unwrap(),
+                    size,
+                )
+                .unwrap(),
+            )
+        };
         [
             ReferenceSearchPlan::Fast(fast),
             ReferenceSearchPlan::DoubleFast(double),
+            greedy(10),
+            greedy(15),
         ]
     }
 
@@ -169,6 +217,7 @@ mod tests {
             let (table_count, owner_count, bytes) = match plan {
                 ReferenceSearchPlan::Fast(p) => (1, 4, p.table_bytes()),
                 ReferenceSearchPlan::DoubleFast(p) => (2, 5, p.table_bytes()),
+                ReferenceSearchPlan::Greedy(p) => (2, 5, p.table_bytes()),
             };
             let factory = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
             let monitor = factory.monitor();
@@ -209,6 +258,89 @@ mod tests {
             assert_eq!(monitor.snapshot().identities_created, 1);
             drop(state);
             monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn public_request_dispatch_remains_unchanged_before_v3_admission() {
+        let mut request = CompressionParameterRequest::with_level(3);
+        request.set_strategy(Some(ReferenceStrategy::Greedy));
+        for size in [0, 64, 32768, 131072, 262144] {
+            assert!(matches!(
+                ReferenceSearchPlan::new(&request, size),
+                Err(Error::UnsupportedFeature)
+            ));
+        }
+    }
+
+    #[test]
+    fn private_greedy_dispatch_keeps_exact_selected_owners_and_candidates() {
+        for row in [false, true] {
+            let cases = crate::greedy_frame_oracle_fixture::cases().unwrap();
+            let name = if row {
+                "row_mixed_fallback"
+            } else {
+                "chain_mixed_fallback"
+            };
+            let case = cases.iter().find(|c| c.name == name).unwrap();
+            let parameters = RawCompressionParameters {
+                window_log: u32::from(case.window_log),
+                chain_log: u32::from(case.chain_log),
+                hash_log: u32::from(case.hash_log),
+                search_log: u32::from(case.search_log),
+                min_match: u32::from(case.min_match),
+                target_length: case.target_length,
+                strategy: 3,
+            }
+            .validate()
+            .unwrap();
+            let plan = ReferenceSearchPlan::Greedy(
+                GreedyExecutionPlan::from_resolved_parameters(parameters, case.source.len())
+                    .unwrap(),
+            );
+            assert_eq!(plan.parameters(), parameters);
+            assert_eq!(plan.source_len(), case.source.len());
+            let mut state = ReferenceSearchState::new(case.source, plan, &Global).unwrap();
+            assert!(matches!(state, ReferenceSearchState::Greedy(_)));
+            let mut committed = [1, 4, 8];
+            for block in &case.blocks {
+                assert_eq!(
+                    state.parse_next(block.length, committed).unwrap(),
+                    block.candidate.is_some()
+                );
+                if let Some(candidate) = &block.candidate {
+                    assert_eq!(state.literals(), candidate.literals);
+                    assert_eq!(state.sequences().len(), candidate.sequences.len());
+                    let mut trial = committed;
+                    for (got, want) in state.sequences().iter().zip(&candidate.sequences) {
+                        let s = got.sequence;
+                        let offset = got
+                            .offset
+                            .resolve(s.literal_length, s.distance, trial)
+                            .unwrap();
+                        assert_eq!(
+                            (
+                                s.literal_length,
+                                s.match_length,
+                                s.distance,
+                                offset.offset_value
+                            ),
+                            (
+                                want.literal_length,
+                                want.match_length,
+                                want.distance,
+                                want.offset_value
+                            )
+                        );
+                        trial = offset.next_repeat;
+                    }
+                    assert_eq!(trial, candidate.wire_repeats);
+                    if block.kind == 2 {
+                        committed = trial;
+                    }
+                }
+                assert_eq!(committed, block.wire_after);
+            }
         }
     }
 

@@ -76,7 +76,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Project frozen ordinary Greedy trajectories and frames into bounded little-endian records with checked provenance.
 - [x] Add a dependency-free checked Rust adapter for frozen ordinary Greedy trajectories and frames.
 - [x] Retain selected chain/row state across blocks with ordinary next-to-update adjustment, tiny bypass and failure poisoning.
-- [ ] Extend static private search dispatch while preserving existing owner counts and complete frame bytes.
+- [x] Extend static private search dispatch while preserving existing owner counts and complete frame bytes.
 - [ ] Emit private complete Greedy frames with transactional entropy/repeat publication and all observed allocation-failure ordinals.
 - [ ] Freeze successor v3 admission mappings over unchanged selectors, numeric loops and both historical interop sets before changing public behavior.
 - [ ] Extend public request admission and truthful documentation with resolved Greedy scope and unchanged unsupported/resource precedence.
