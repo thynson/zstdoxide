@@ -286,6 +286,25 @@ capture comprises 138 cases and 403 scheduled calls (395 positive), with no
 ordinary runtime observations yet. The unchanged complete DoubleFast frame/owner
 baseline also passes all five tests after the new private Greedy parser work.
 
+
+The ordinary offline validator now checks exact record shapes/types, selected
+owner geometry/fingerprints and key membership, sampling continuity, ordered
+window-floor/long-gap bounds, raw/expanded sequence lengths and long markers,
+independent overlap replay and compressed-only publication. Zero/tiny records
+are processed in chronological order; tiny frontier clamping remains distinct
+from parser updates. C cache fields are bounded retained evidence rather than
+an inferred intermediate trace, and compressed payload decoding still belongs
+to subsequent C/Rust execution.
+
+Normal Python and `-O` each pass 5,184 frozen/algebraically salted primitive
+checks, six explicitly synthetic structural case checks and one metadata check,
+then reject 81 mutations with process creation disabled and zero child attempts.
+The [evidence](evidence/2026-10-12-greedy-frame-validator.json) preserves exact
+sources and the independent blocked-process driver. These synthetic records
+are not stored as oracle expectations and establish no observed ordinary C
+behavior. Capture-controller review and actual normal/instrumented capture remain
+pending.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories

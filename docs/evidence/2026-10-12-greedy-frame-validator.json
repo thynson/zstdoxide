@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-12",
+  "driver": {
+    "sha256": "9f5d16dcd8677ae6ccfccc7c135675ace9e35cc720f14a22e0efb22e07781704",
+    "source": "import hashlib, importlib.util, json, os, subprocess, sys\nfrom pathlib import Path\nroot = Path('/Users/lanxingcan/Workspace/zstdoxize')\nsys.path.insert(0, str(root / 'scripts'))\nchild_attempts = []\ndef forbidden(*args, **kwargs):\n    child_attempts.append('blocked')\n    raise RuntimeError('process creation forbidden in offline validator checks')\nsubprocess.Popen = forbidden\nfor name in ['system', 'fork', 'forkpty', 'posix_spawn', 'posix_spawnp', 'spawnl', 'spawnle', 'spawnlp', 'spawnlpe', 'spawnv', 'spawnve', 'spawnvp', 'spawnvpe', 'execl', 'execle', 'execlp', 'execlpe', 'execv', 'execve', 'execvp', 'execvpe']:\n    if hasattr(os, name): setattr(os, name, forbidden)\np = root / 'scripts/check_greedy_frame_validator.py'\nspec = importlib.util.spec_from_file_location('greedy_frame_validator_controls', p)\nm = importlib.util.module_from_spec(spec); sys.modules[spec.name] = m; spec.loader.exec_module(m)\nresult = m.check()\nif child_attempts or result['rejected_controls'] != 81 or result['status'] != 'passed':\n    raise ValueError('offline control outcome')\nprint(json.dumps({'python': sys.version, 'optimization': sys.flags.optimize, 'child_attempts': len(child_attempts), 'result': result, 'checker_sha256': hashlib.sha256(p.read_bytes()).hexdigest()}, sort_keys=True))\n"
+  },
+  "inputs": {
+    "scripts/check_greedy_frame_recipes.py": {
+      "bytes": 5630,
+      "sha256": "9f743ed73771914f1d2e44cdc811fb9a05a59dc44ce40e19f09bff5489a8a700"
+    },
+    "scripts/check_greedy_frame_validator.py": {
+      "bytes": 9584,
+      "sha256": "ac39ce8dc61cae6e2f08e2eb34a4fecbecf0d35c5648edfcbbba75aa9db8186c"
+    },
+    "scripts/oracles/fast_frame_publication_support.py": {
+      "bytes": 28126,
+      "sha256": "c1a205a9b7f897232dd7eb1e177f2a318c42da77ac8348226825732b44b0857a"
+    },
+    "scripts/oracles/greedy_frame_v2.c": {
+      "bytes": 45809,
+      "sha256": "46f3d60e7d65616c163e6938f13d1cf2883a6525897b8755b47f1c47de65d91d"
+    },
+    "scripts/oracles/greedy_frame_validation.py": {
+      "bytes": 21731,
+      "sha256": "8e400ccad307b562dd6a41ab02c5d00359d36431cd38a5c51040e08e3903c71f"
+    },
+    "scripts/oracles/greedy_frames.py": {
+      "bytes": 9935,
+      "sha256": "360bf5139b7e2a886e9d2359c1ea258317238bd1906cfe9d123be33df7a0ce44"
+    },
+    "tests/upstream/match-search/vectors.tsv": {
+      "bytes": 85501,
+      "sha256": "628ff9df0d3b6c972233c43e5ffbc4aa11a1445908054c5d30da47b3afd078ce"
+    }
+  },
+  "runs": [
+    {
+      "checker_sha256": "ac39ce8dc61cae6e2f08e2eb34a4fecbecf0d35c5648edfcbbba75aa9db8186c",
+      "child_attempts": 0,
+      "optimization": 0,
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "result": {
+        "codec_executions": 0,
+        "frozen_hash_checks": 5184,
+        "metadata_positives": 1,
+        "qualification": "Synthetic structural replay and primitive checks only; no observed Greedy frame or intermediate sampling claim.",
+        "rejected_controls": 81,
+        "status": "passed",
+        "synthetic_case_positives": 6
+      }
+    },
+    {
+      "checker_sha256": "ac39ce8dc61cae6e2f08e2eb34a4fecbecf0d35c5648edfcbbba75aa9db8186c",
+      "child_attempts": 0,
+      "optimization": 1,
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "result": {
+        "codec_executions": 0,
+        "frozen_hash_checks": 5184,
+        "metadata_positives": 1,
+        "qualification": "Synthetic structural replay and primitive checks only; no observed Greedy frame or intermediate sampling claim.",
+        "rejected_controls": 81,
+        "status": "passed",
+        "synthetic_case_positives": 6
+      }
+    }
+  ],
+  "scope": "Offline Greedy structural validation, frozen primitive vectors and rejection controls before ordinary C capture. No C/Rust codec or child process executed. Synthetic positives are not oracle observations.",
+  "status": "passed"
+}
