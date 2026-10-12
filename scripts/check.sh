@@ -22,6 +22,7 @@ python3 scripts/pack_greedy_parser_fixtures.py --check
 python3 scripts/check_greedy_frame_recipes.py --check --controls
 python3 scripts/check_greedy_frame_floor_recipes.py --check --controls
 python3 scripts/check_greedy_frame_validator.py --check
+python3 scripts/capture_greedy_frames.py --check-plan
 python3 scripts/check_double_fast_hashes.py --check
 python3 scripts/check_double_fast_recipes.py --check
 python3 scripts/check_double_fast_families.py --check

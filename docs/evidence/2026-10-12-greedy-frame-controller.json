@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-12",
+  "driver": {
+    "sha256": "7113b3e6d8db592040917a91c89ba446dc1617354524a95c3ff84ba215b5b385",
+    "source": "import hashlib, json, os, subprocess, sys, tempfile\nfrom pathlib import Path\nfrom types import SimpleNamespace\nroot = Path('/Users/lanxingcan/Workspace/zstdoxize')\nsys.path.insert(0, str(root / 'scripts'))\nchild_attempts = []\ndef forbidden(*args, **kwargs):\n    child_attempts.append('blocked')\n    raise RuntimeError('process creation forbidden in controller preflight')\nsubprocess.Popen = forbidden\nfor name in ['system', 'fork', 'forkpty', 'posix_spawn', 'posix_spawnp', 'spawnl', 'spawnle', 'spawnlp', 'spawnlpe', 'spawnv', 'spawnve', 'spawnvp', 'spawnvpe', 'execl', 'execle', 'execlp', 'execlpe', 'execv', 'execve', 'execvp', 'execvpe']:\n    if hasattr(os, name): setattr(os, name, forbidden)\nimport capture_greedy_frames as m\nplan = m.plan()\nif plan != {'recipes':138, 'source_bytes':7365784, 'scheduled_calls':403, 'positive_calls':395, 'whole_comparisons':13, 'incomplete_headers':15, 'malformed_per_build':35, 'codec_executions':0, 'status':'pre-execution plan checked'}:\n    raise ValueError('unexpected plan')\noriginal_load = m.load_inputs\nloaded = original_load()\nm.load_inputs = lambda: loaded\nrejected = []\nreference = Path('/private/tmp/zstdoxize-upstream-1.5.7')\nwith tempfile.TemporaryDirectory(prefix='zstdoxide-greedy-controller-') as directory:\n    tmp = Path(directory).resolve()\n    existing = tmp / 'existing'; existing.mkdir()\n    link = tmp / 'linked-repository'; link.symlink_to(root, target_is_directory=True)\n    rows = [('repository', root, reference, 'clang'),\n            ('repository_child', root/'must-not-create-greedy-output', reference, 'clang'),\n            ('repository_ancestor', root.parent, reference, 'clang'),\n            ('reference', reference, reference, 'clang'),\n            ('reference_child', reference/'must-not-create-greedy-output', reference, 'clang'),\n            ('existing', existing, reference, 'clang'),\n            ('symlink', link/'must-not-create-greedy-output', reference, 'clang'),\n            ('internal_reference', tmp/'internal-reference-output', root, 'clang'),\n            ('absent_compiler', tmp/'missing-compiler-output', reference, 'zstdoxide-no-such-compiler')]\n    for name, output, upstream, cc in rows:\n        present = output.exists()\n        try:\n            m.run(SimpleNamespace(output=output, upstream=upstream, cc=cc))\n        except ValueError:\n            rejected.append(name)\n        else:\n            raise ValueError('unsafe preflight accepted: '+name)\n        if output.exists() != present:\n            raise ValueError('rejected preflight wrote output: '+name)\n    first = next(iter(m.PINS)); digest = m.PINS[first]; m.PINS[first] = '0'*64\n    try:\n        original_load()\n    except ValueError:\n        rejected.append('changed_pinned_input')\n    else:\n        raise ValueError('changed pin accepted')\n    finally:\n        m.PINS[first] = digest\nif child_attempts or len(rejected) != 10:\n    raise ValueError('offline preflight outcome')\nprint(json.dumps({'python':sys.version, 'optimization':sys.flags.optimize, 'child_attempts':len(child_attempts), 'plan':plan, 'rejected':rejected, 'controller_sha256':hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest()}, sort_keys=True))\n"
+  },
+  "runs": [
+    {
+      "child_attempts": 0,
+      "controller_sha256": "19e122d3a94aa17be4628c943105fb7854d6b30259d08b87141f316b0ef4272b",
+      "optimization": 0,
+      "plan": {
+        "codec_executions": 0,
+        "incomplete_headers": 15,
+        "malformed_per_build": 35,
+        "positive_calls": 395,
+        "recipes": 138,
+        "scheduled_calls": 403,
+        "source_bytes": 7365784,
+        "status": "pre-execution plan checked",
+        "whole_comparisons": 13
+      },
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "rejected": [
+        "repository",
+        "repository_child",
+        "repository_ancestor",
+        "reference",
+        "reference_child",
+        "existing",
+        "symlink",
+        "internal_reference",
+        "absent_compiler",
+        "changed_pinned_input"
+      ]
+    },
+    {
+      "child_attempts": 0,
+      "controller_sha256": "19e122d3a94aa17be4628c943105fb7854d6b30259d08b87141f316b0ef4272b",
+      "optimization": 1,
+      "plan": {
+        "codec_executions": 0,
+        "incomplete_headers": 15,
+        "malformed_per_build": 35,
+        "positive_calls": 395,
+        "recipes": 138,
+        "scheduled_calls": 403,
+        "source_bytes": 7365784,
+        "status": "pre-execution plan checked",
+        "whole_comparisons": 13
+      },
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "rejected": [
+        "repository",
+        "repository_child",
+        "repository_ancestor",
+        "reference",
+        "reference_child",
+        "existing",
+        "symlink",
+        "internal_reference",
+        "absent_compiler",
+        "changed_pinned_input"
+      ]
+    }
+  ],
+  "scope": "Controller plan and preflight only. No C/helper mode, compilation or sanitizer runtime executed. Malformed C campaign is specified, not yet observed.",
+  "status": "passed"
+}

@@ -70,7 +70,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Version the unexecuted ordinary helper to distinguish tiny window-floor clamping from long-gap/parser updates.
 - [x] Pin additive ordinary chain/row tiny-window-floor recipes before C execution.
 - [x] Implement the ordinary Greedy offline replay validator with frozen hash and synthetic structural rejection controls.
-- [ ] Implement the bounded ordinary Greedy capture controller and malformed C-input campaign before execution.
+- [x] Implement the bounded ordinary Greedy capture controller and malformed C-input campaign before execution.
 - [ ] Capture normal/instrumented ordinary publication trajectories and complete C frames, then independently reject forged evidence offline.
 - [ ] Add a dependency-free checked Rust adapter for frozen ordinary Greedy trajectories and frames.
 - [ ] Retain selected chain/row state across blocks with ordinary next-to-update adjustment, tiny bypass and failure poisoning.
