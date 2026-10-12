@@ -224,10 +224,28 @@ Invalid row arguments preserve tables and progress scalars. Strict safe/all
 Clippy and safe/isolated-row no_std compilation pass. Scalar hashing intentionally
 has no Rust counterpart for the preserved C prefetch cache.
 
+
+The complete direct parser passes four tests on safe, unsafe-reference-chain
+alone, unsafe-row-table alone and all features. All 173 frozen cases run with
+both exact source slices and independently padded later bytes: sequences,
+expanded/raw length fields, wire offset intents, literal bytes, long markers,
+raw/wire repeat triples, next-to-update, skipping, row salt entropy and every
+final table cell match C. Independent overlap replay reconstructs every source.
+This covers the later-probe backward-extension cases excluded from single-probe
+search tests. C prefetch-cache cells remain evidence only.
+
+Both output-reservation failures preserve contents, table maps and progress on
+both branches; four independent non-clone owner identities release correctly.
+Borrowed non-clone owners support reuse with exactly four initial allocations,
+no growth calls and no additional requests on the second parse. Invalid entry
+arguments preserve scratch and sampling. Formatting, strict safe/all Clippy,
+safe no_std and combined chain/row no_std compilation pass. The direct parser
+returns candidate wire state only; ordinary retention/publication is pending.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories
-or automatic public branch selection. Complete Rust Greedy parsing, ordinary publication, public admission and related official
-assertions remain in progress. No new official source-unit obligation is marked
+or automatic public branch selection. Ordinary retention/publication, public admission and related official assertions
+remain in progress. No new official source-unit obligation is marked
 complete. Final every-feature/platform/interoperability matrices and Greedy
 measurements remain open, as do the complete roadmap and upstream migration.

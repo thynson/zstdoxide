@@ -19,7 +19,7 @@ pub(crate) struct GreedyMatch {
 /// Return a strictly better byte match, retaining earlier search-order ties.
 /// Corresponds to the four-byte rejection and `ZSTD_count` in
 /// `ZSTD_HcFindBestMatch`/`ZSTD_RowFindBestMatch` (facebook/zstd v1.5.7).
-fn longer_match(
+pub(crate) fn longer_match(
     block: GreedyBlock<'_>,
     current: usize,
     previous: usize,

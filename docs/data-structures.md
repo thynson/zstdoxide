@@ -880,3 +880,17 @@ query, so overwriting a row slot cannot change that search's candidate order.
 Scalar hash computation replaces only C cache/prefetch machinery, preserving
 the sixteen-byte logical tail and insertion schedule. No Rust cache-equivalence
 claim is made; C cache fields remain preserved in the fixture evidence.
+
+The direct parser uses a borrowed `GreedySearch` enum for static chain/row
+dispatch; each variant retains the exact two allocator-parameterized owners by
+exclusive reference. A copied `GreedyProgress` holds next-to-update, row salt
+entropy and skipping. Caller-owned literal/sequence vectors reserve fallibly
+before any logical mutation. Tentative source matches retain indices only;
+repeat-first matching bypasses sampling, while explicit matches may extend back
+to the literal anchor and retained prefix floor. Immediate repeat cleanup
+changes neither sampling table. Raw parser repeats retain their separate saved
+offset restoration, while emitted `OffsetIntent` values independently advance
+complete wire repeats. All new records/composites are safe; they add no unsafe
+representation beyond the existing selected leaf backends. Returned literals
+include the trailing suffix; publication and failure poisoning belong to the
+separately planned ordinary retained context.
