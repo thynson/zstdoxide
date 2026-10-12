@@ -285,3 +285,37 @@ helper and validator identities. No helper mode has been executed at this
 checkpoint. Full trajectory validation, normal/sanitizer agreement and complete
 frame decoding follow in the separate capture item; unchanged Fast/direct
 fixtures remain separate.
+
+## Frozen ordinary-frame publication
+
+The reviewed helper now completes192 capture commands without failure. Normal
+and ASan/UBSan builds agree byte-for-byte on all51 scheduled frames, seven aligned
+whole-buffer frames and their logical observations. Each build independently
+decodes58 complete frames and12,382,352 source bytes. All26 used C translation
+units and the helper are instrumented in the sanitizer build; assembly, legacy
+support and LeakSanitizer are disabled, and no support archive is linked.
+Thirteen additional header probes are intentionally incomplete and undecoded.
+
+The160 positive blocks contain88 raw,6 RLE and66 compressed blocks, with148 fresh
+candidates and12 stale-scratch tiny blocks. Thirteen raw and three RLE blocks
+discard changed candidate repeats while retaining sampled tables. The frozen
+observations demonstrate window20 expiry versus window21 retention for the
+A/1MiB-noise/A source, and expiry at window21 with2MiB of intervening noise.
+Four complete observation/frame equivalence pairs cover target length, search
+log and minimum-match3/4. The original hypotheses and every outcome are retained.
+
+Normal and optimized Python each pass one positive and51 rejection controls,
+including26 invalid C setup commands across both binaries. The offline checker
+validates source replay, state publication and both complete table maps without
+executing C. Both fixture registry modes pass838 files in20 collections. The
+[collection](../tests/upstream/double-fast-frames/README.md),
+[evidence](evidence/2026-10-12-double-fast-frames.json) and
+[archive](evidence/2026-10-12-double-fast-frames.tar.gz) preserve123 data artifacts,
+source/command identities and all raw logs. The archive deduplicates4096-byte
+chunks; its file map and reconstruction script retain all150,333,464 logical
+bytes across1,062 files, verified against the originals after archive creation.
+
+This checkpoint adds ordinary internal-begin C oracles only. Public parameter
+resolution, collector corroboration, new Rust checks, platform interpretation
+and timing are not claimed. Persistent Rust state and complete DoubleFast frame
+emission remain open; no official source unit is newly completed.

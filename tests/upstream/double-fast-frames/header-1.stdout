@@ -1,0 +1,2 @@
+{"type":"header","case":"header_only","pledge":256,"window_log":21,"window":256,"single_segment":1,"fcs_bytes":2,"bytes":"28b52ffd600000"}
+{"type":"partial","completed_frame":false,"decoded":false,"pointer_bits":64,"int_bits":32}

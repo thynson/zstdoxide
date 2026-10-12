@@ -1,0 +1,1 @@
+{"type":"metadata","revision":"f8745da6ff1ad1e7bab384bd1f9d742439278e99","strategy":2,"pointer_bits":64,"int_bits":32,"u32_bytes":4,"source_cap":4194304,"block_cap":131072,"call_cap":64,"leading_bytes":64,"suffix_bytes":262656,"guard_bytes":64,"scratch_bytes":2097152}

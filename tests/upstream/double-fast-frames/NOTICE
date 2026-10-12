@@ -1,0 +1,9 @@
+Observations derived from facebook/zstd v1.5.7
+Revision: f8745da6ff1ad1e7bab384bd1f9d742439278e99
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+The source is dual-licensed BSD-3-Clause/GPL-2.0. This project selects the
+BSD-3-Clause option reproduced in ../../../LICENSE.zstd.
+
+The independent setup/observation helper and checked replay are test scaffolding.
+No upstream compression implementation is copied into the Rust production codec.

@@ -55,7 +55,7 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Implement safe single-block DoubleFast parsing against frozen sequences, literals, repeat intents and both complete table observations.
 - [x] Pin the ordinary DoubleFast frame observation protocol and independent source/schedule recipes before C execution.
 - [x] Implement and review the bounded ordinary-frame helper, two-table observations and offline replay validator without changing frozen direct/Fast assets.
-- [ ] Freeze normal and sanitizer ordinary-frame publication trajectories and complete frames, retaining failed hypotheses and rejection controls; keep optional collector corroboration separate.
+- [x] Freeze normal and sanitizer ordinary-frame publication trajectories and complete frames, retaining failed hypotheses and rejection controls; keep optional collector corroboration separate.
 - [ ] Add a dependency-free checked Rust adapter for frozen ordinary trajectories and complete C frames.
 - [ ] Retain both sampled tables across blocks with separate parsed/emitted state, committed repeats and poison semantics.
 - [ ] Extract common plain frame settings and truthful header/bound writing while preserving Fast/named output and allocator behavior.
