@@ -96,3 +96,9 @@ python3 scripts/check_greedy_tiny_capture.py "$greedy_output/capture"
 greedy_families_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-greedy-families.XXXXXX")
 python3 scripts/capture_greedy_families.py --upstream "$ZSTD_UPSTREAM" --output "$greedy_families_output/capture"
 python3 scripts/check_greedy_family_capture.py "$greedy_families_output/capture"
+
+# Module 14 ordinary Greedy frames and retained state; explicit internal
+# parameters, with the corrected already-resolved automatic row selection.
+greedy_frames_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-greedy-frames.XXXXXX")
+python3 scripts/capture_greedy_frames_v2.py --upstream "$ZSTD_UPSTREAM" --output "$greedy_frames_output/capture"
+python3 scripts/check_greedy_frame_capture.py "$greedy_frames_output/capture"

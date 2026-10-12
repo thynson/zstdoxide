@@ -1,0 +1,325 @@
+{
+  "archive_verification": {
+    "bytes": 55094419,
+    "members": 1384,
+    "sha256": "9ac132b6a452fd545acc68e914e26b3a79479efadb84593b59d592be10e4ced3",
+    "status": "all members byte-identical to independently audited capture",
+    "uncompressed_bytes": 98386656
+  },
+  "capture_controls": {
+    "driver": {
+      "sha256": "e1fda72fe6009d14e28ac96a9829f1bbe23df063fc5c1c521f6bfd7f835ac71c",
+      "source": "from pathlib import Path\nimport copy, hashlib, json, os, subprocess, sys\nroot=Path('/Users/lanxingcan/Workspace/zstdoxize'); capture_root=Path('/private/tmp/zstdoxide-greedy-frames-resolved-2026-10-12')\nsys.path.insert(0,str(root/'scripts')); children=[]\ndef forbidden(*args,**kwargs):\n children.append('blocked'); raise RuntimeError('child creation forbidden during capture audit')\nsubprocess.Popen=forbidden\nfor name in ['system','fork','forkpty','posix_spawn','posix_spawnp','spawnl','spawnle','spawnlp','spawnlpe','spawnv','spawnve','spawnvp','spawnvpe','execl','execle','execlp','execlpe','execv','execve','execvp','execvpe']:\n if hasattr(os,name): setattr(os,name,forbidden)\nimport check_greedy_frame_capture as m\nloaded=m.inputs(); m.inputs=lambda:loaded\ncoverage,artifacts,summaries=m.audit(capture_root)\noriginal_read=m.read; base=json.loads(original_read(capture_root,'evidence.json')); rejected=[]\ndef evidence_control(name,change):\n altered=copy.deepcopy(base); change(altered); encoded=json.dumps(altered,sort_keys=True).encode()\n m.read=lambda r,n,cap=64<<20: encoded if r==capture_root and n=='evidence.json' else original_read(r,n,cap)\n try: m.audit(capture_root)\n except (ValueError,KeyError,TypeError): rejected.append(name)\n else: raise ValueError('forged capture accepted: '+name)\n finally: m.read=original_read\nfor key,value in [('status','running'),('schema_version',True),('reference_revision','0'*40),('support_archive_used',True),('normal_sanitized_equal',False)]:\n evidence_control('scope_'+key,lambda e,k=key,v=value:e.__setitem__(k,v))\nevidence_control('source_after',lambda e:e['source_after'][0].__setitem__('sha256','0'*64))\nevidence_control('missing_command',lambda e:e['commands'].pop())\nevidence_control('duplicate_command',lambda e:e['commands'].__setitem__(-1,e['commands'][0]))\nevidence_control('upstream_hash',lambda e:e['reference_source_sha256'].__setitem__('lib/compress/zstd_lazy.c','0'*64))\nevidence_control('local_before_after',lambda e:(e['source_before'][0].__setitem__('sha256','0'*64),e['source_after'][0].__setitem__('sha256','0'*64)))\nevidence_control('missing_input',lambda e:(e['source_before'].pop(),e['source_after'].pop()))\nfor key,value in [('exit_code',True),('exit_code',1),('timeout_seconds',181),('per_stream_cap',1<<30),('cwd','/wrong')]:\n evidence_control('command_'+key+'_'+str(value),lambda e,k=key,v=value:e['commands'][0].__setitem__(k,v))\nevidence_control('command_error',lambda e:e['commands'][0].__setitem__('error','ignored timeout'))\nevidence_control('unexpected_environment',lambda e:e['commands'][0]['environment'].__setitem__('LD_PRELOAD','bad'))\nevidence_control('missing_sanitizer_environment',lambda e:next(c for c in e['commands'] if c['label']=='sanitized-metadata')['environment'].pop('ASAN_OPTIONS'))\nevidence_control('log_hash',lambda e:e['commands'][0]['stdout'].__setitem__('sha256','0'*64))\nevidence_control('log_size_bool',lambda e:e['commands'][0]['stdout'].__setitem__('bytes',True))\nevidence_control('log_path',lambda e:e['commands'][0]['stdout'].__setitem__('path','../evidence.json'))\nevidence_control('wrong_revision_command',lambda e:e['commands'][0]['argv'].__setitem__(-1,'main'))\nevidence_control('compiled_units',lambda e:e['results']['normal']['compiled_codec_sources'].pop())\nevidence_control('instrumented_units',lambda e:e['results']['normal']['instrumented_codec_sources'].append('lib/compress/zstd_lazy.c'))\nevidence_control('effective_dependency_hash',lambda e:e['results']['normal']['dependencies'].__setitem__(next(iter(e['results']['normal']['dependencies'])),'0'*64))\nevidence_control('compiler_flags',lambda e:next(c for c in e['commands'] if c['label']=='normal-compile-0')['argv'].remove('-O2'))\nevidence_control('linked_units',lambda e:next(c for c in e['commands'] if c['label']=='normal-link')['argv'].remove(next(a for a in next(c for c in e['commands'] if c['label']=='normal-link')['argv'] if a.endswith('upstream-0.o'))))\nevidence_control('binary_hash',lambda e:e['results']['normal'].__setitem__('executable_sha256','0'*64))\n_,_,_,v,_,cases=loaded; by_name={c.name:c for c in cases}\ndef semantic_control(name,case_name,change,frame_change=None):\n case=by_name[case_name]; records=[v.parse_json(s) for s in artifacts[case_name+'.stdout'].splitlines()]; changed=copy.deepcopy(records); change(changed)\n frame=artifacts[case_name+'.zst']; whole=artifacts.get(case_name+'.whole.zst')\n if frame_change: frame=frame_change(frame)\n try: v.validate_case(case,changed,frame,whole)\n except (ValueError,KeyError,TypeError): rejected.append(name)\n else: raise ValueError('forged actual observation accepted: '+name)\nfor branch in ['chain','row']:\n name=branch+'_raw_candidate_k4_d128'\n def block(rows): return [r for r in rows if r['type']=='block'][1]\n semantic_control(branch+'_raw_repeat_publication',name,lambda r:block(r)['after']['raw_repeats'].__setitem__(0,999))\n semantic_control(branch+'_raw_owner_swap',name,lambda r:block(r).__setitem__('prev_owner_after',1-block(r)['prev_owner_before']))\n semantic_control(branch+'_raw_offset',name,lambda r:block(r)['candidate']['sequences'][0].__setitem__(2,2))\n semantic_control(branch+'_raw_length',name,lambda r:block(r)['candidate']['sequences'][0].__setitem__(4,65535))\n semantic_control(branch+'_table_delta',name,lambda r:block(r)['first_table']['changed'].append([0,0,1]))\n semantic_control(branch+'_frame_tail',name,lambda r:None,lambda b:b+b'\\0')\n semantic_control(branch+'_tiny_floor',branch+'_window_floor_tiny1',lambda r:[x for x in r if x['type']=='block'][2]['sampling_after'].__setitem__('next_to_update',2))\n semantic_control(branch+'_tiny_table',branch+'_window_floor_tiny1',lambda r:[x for x in r if x['type']=='block'][2]['second_table']['changed'].append([0,0,1]))\nsemantic_control('row_salt','row_first_uniform',lambda r:r[0]['sampling'].__setitem__('salt','0000000000000000'))\nsemantic_control('row_cache_domain','row_first_uniform',lambda r:[x for x in r if x['type']=='block'][0]['sampling_after']['cache'].__setitem__(0,0xffffffff))\nif children or len(rejected)!=47: raise ValueError(('control count',len(rejected),children))\nprint(json.dumps({'python':sys.version,'optimization':sys.flags.optimize,'child_attempts':len(children),'coverage':coverage,'rejected_controls':rejected,'checker_sha256':hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest()},sort_keys=True))\n"
+    },
+    "runs": [
+      {
+        "checker_sha256": "4ee3c35c99544410b280360da4b7150210d67f99335dd38268f82704a2577f1b",
+        "child_attempts": 0,
+        "coverage": {
+          "block_kinds": {
+            "compressed": 176,
+            "raw": 181,
+            "rle": 38
+          },
+          "candidate_generations": 367,
+          "collector": false,
+          "commands": 440,
+          "complete_frame_decodes_per_build": 151,
+          "decoded_bytes_per_build": 13587614,
+          "discarded_repeat_witnesses": {
+            "raw": 25,
+            "rle": 12
+          },
+          "incomplete_headers_per_build": 15,
+          "negative_rejections_per_build": 35,
+          "positive_blocks": 395,
+          "public_parameter_resolution": false,
+          "recipes": 138,
+          "scheduled_calls": 403,
+          "source_bytes": 7365784
+        },
+        "optimization": 0,
+        "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+        "rejected_controls": [
+          "scope_status",
+          "scope_schema_version",
+          "scope_reference_revision",
+          "scope_support_archive_used",
+          "scope_normal_sanitized_equal",
+          "source_after",
+          "missing_command",
+          "duplicate_command",
+          "upstream_hash",
+          "local_before_after",
+          "missing_input",
+          "command_exit_code_True",
+          "command_exit_code_1",
+          "command_timeout_seconds_181",
+          "command_per_stream_cap_1073741824",
+          "command_cwd_/wrong",
+          "command_error",
+          "unexpected_environment",
+          "missing_sanitizer_environment",
+          "log_hash",
+          "log_size_bool",
+          "log_path",
+          "wrong_revision_command",
+          "compiled_units",
+          "instrumented_units",
+          "effective_dependency_hash",
+          "compiler_flags",
+          "linked_units",
+          "binary_hash",
+          "chain_raw_repeat_publication",
+          "chain_raw_owner_swap",
+          "chain_raw_offset",
+          "chain_raw_length",
+          "chain_table_delta",
+          "chain_frame_tail",
+          "chain_tiny_floor",
+          "chain_tiny_table",
+          "row_raw_repeat_publication",
+          "row_raw_owner_swap",
+          "row_raw_offset",
+          "row_raw_length",
+          "row_table_delta",
+          "row_frame_tail",
+          "row_tiny_floor",
+          "row_tiny_table",
+          "row_salt",
+          "row_cache_domain"
+        ]
+      },
+      {
+        "checker_sha256": "4ee3c35c99544410b280360da4b7150210d67f99335dd38268f82704a2577f1b",
+        "child_attempts": 0,
+        "coverage": {
+          "block_kinds": {
+            "compressed": 176,
+            "raw": 181,
+            "rle": 38
+          },
+          "candidate_generations": 367,
+          "collector": false,
+          "commands": 440,
+          "complete_frame_decodes_per_build": 151,
+          "decoded_bytes_per_build": 13587614,
+          "discarded_repeat_witnesses": {
+            "raw": 25,
+            "rle": 12
+          },
+          "incomplete_headers_per_build": 15,
+          "negative_rejections_per_build": 35,
+          "positive_blocks": 395,
+          "public_parameter_resolution": false,
+          "recipes": 138,
+          "scheduled_calls": 403,
+          "source_bytes": 7365784
+        },
+        "optimization": 1,
+        "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+        "rejected_controls": [
+          "scope_status",
+          "scope_schema_version",
+          "scope_reference_revision",
+          "scope_support_archive_used",
+          "scope_normal_sanitized_equal",
+          "source_after",
+          "missing_command",
+          "duplicate_command",
+          "upstream_hash",
+          "local_before_after",
+          "missing_input",
+          "command_exit_code_True",
+          "command_exit_code_1",
+          "command_timeout_seconds_181",
+          "command_per_stream_cap_1073741824",
+          "command_cwd_/wrong",
+          "command_error",
+          "unexpected_environment",
+          "missing_sanitizer_environment",
+          "log_hash",
+          "log_size_bool",
+          "log_path",
+          "wrong_revision_command",
+          "compiled_units",
+          "instrumented_units",
+          "effective_dependency_hash",
+          "compiler_flags",
+          "linked_units",
+          "binary_hash",
+          "chain_raw_repeat_publication",
+          "chain_raw_owner_swap",
+          "chain_raw_offset",
+          "chain_raw_length",
+          "chain_table_delta",
+          "chain_frame_tail",
+          "chain_tiny_floor",
+          "chain_tiny_table",
+          "row_raw_repeat_publication",
+          "row_raw_owner_swap",
+          "row_raw_offset",
+          "row_raw_length",
+          "row_table_delta",
+          "row_frame_tail",
+          "row_tiny_floor",
+          "row_tiny_table",
+          "row_salt",
+          "row_cache_domain"
+        ]
+      }
+    ]
+  },
+  "date": "2026-10-12",
+  "fixture_controls": {
+    "driver": {
+      "sha256": "2f17eaa53c3624f5eec3379b4a0df7799ba85d0ac36c704ece649f583e9c3366",
+      "source": "from pathlib import Path\nimport hashlib, json, os, shutil, subprocess, sys, tempfile\nroot=Path('/Users/lanxingcan/Workspace/zstdoxize');sys.path.insert(0,str(root/'scripts'));children=[]\ndef forbidden(*args,**kwargs):children.append('blocked');raise RuntimeError('child creation forbidden during frozen fixture validation')\nsubprocess.Popen=forbidden\nfor name in ['system','fork','forkpty','posix_spawn','posix_spawnp','spawnl','spawnle','spawnlp','spawnlpe','spawnv','spawnve','spawnvp','spawnvpe','execl','execle','execlp','execlpe','execv','execve','execvp','execvpe']:\n if hasattr(os,name):setattr(os,name,forbidden)\nimport check_greedy_frames as m\nimport check_greedy_frame_capture as checker\nloaded=checker.inputs();checker.inputs=lambda:loaded\nmanifest,_=m.check();rejected=[]\nwith tempfile.TemporaryDirectory(prefix='zstdoxide-greedy-frame-fixture-') as directory:\n p=Path(directory)\n for f in m.COLLECTION.iterdir():shutil.copyfile(f,p/f.name)\n original_manifest=(p/'capture.json').read_bytes(); original_pack=(p/'artifacts.bin').read_bytes()\n def reject(name):\n  try:m.check(p)\n  except (ValueError,TypeError,KeyError):rejected.append(name)\n  else:raise ValueError('changed fixture accepted: '+name)\n (p/'capture.json').write_bytes(original_manifest+b'\\n');reject('manifest_bytes');(p/'capture.json').write_bytes(original_manifest)\n (p/'artifacts.bin').write_bytes(original_pack[:-1]);reject('truncated_pack')\n (p/'artifacts.bin').write_bytes(original_pack+b'\\0');reject('appended_pack')\n (p/'artifacts.bin').unlink();(p/'artifacts.bin').symlink_to(m.COLLECTION/'artifacts.bin');reject('symlink_pack')\n (p/'artifacts.bin').unlink();(p/'artifacts.bin').write_bytes(original_pack)\n (p/'extra').write_bytes(b'');reject('extra_file')\nif children or len(rejected)!=5:raise ValueError('fixture control outcome')\nprint(json.dumps({'python':sys.version,'optimization':sys.flags.optimize,'child_attempts':len(children),'coverage':manifest['coverage'],'rejected_controls':rejected,'checker_sha256':hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest()},sort_keys=True))\n"
+    },
+    "runs": [
+      {
+        "checker_sha256": "3c82513af6e9ab804b40be9b37781b6849f5b0eb3031edbfcc08f340d5f36e2c",
+        "child_attempts": 0,
+        "coverage": {
+          "block_kinds": {
+            "compressed": 176,
+            "raw": 181,
+            "rle": 38
+          },
+          "candidate_generations": 367,
+          "collector": false,
+          "commands": 440,
+          "complete_frame_decodes_per_build": 151,
+          "decoded_bytes_per_build": 13587614,
+          "discarded_repeat_witnesses": {
+            "raw": 25,
+            "rle": 12
+          },
+          "incomplete_headers_per_build": 15,
+          "negative_rejections_per_build": 35,
+          "positive_blocks": 395,
+          "public_parameter_resolution": false,
+          "recipes": 138,
+          "scheduled_calls": 403,
+          "source_bytes": 7365784
+        },
+        "optimization": 0,
+        "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+        "rejected_controls": [
+          "manifest_bytes",
+          "truncated_pack",
+          "appended_pack",
+          "symlink_pack",
+          "extra_file"
+        ]
+      },
+      {
+        "checker_sha256": "3c82513af6e9ab804b40be9b37781b6849f5b0eb3031edbfcc08f340d5f36e2c",
+        "child_attempts": 0,
+        "coverage": {
+          "block_kinds": {
+            "compressed": 176,
+            "raw": 181,
+            "rle": 38
+          },
+          "candidate_generations": 367,
+          "collector": false,
+          "commands": 440,
+          "complete_frame_decodes_per_build": 151,
+          "decoded_bytes_per_build": 13587614,
+          "discarded_repeat_witnesses": {
+            "raw": 25,
+            "rle": 12
+          },
+          "incomplete_headers_per_build": 15,
+          "negative_rejections_per_build": 35,
+          "positive_blocks": 395,
+          "public_parameter_resolution": false,
+          "recipes": 138,
+          "scheduled_calls": 403,
+          "source_bytes": 7365784
+        },
+        "optimization": 1,
+        "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+        "rejected_controls": [
+          "manifest_bytes",
+          "truncated_pack",
+          "appended_pack",
+          "symlink_pack",
+          "extra_file"
+        ]
+      }
+    ]
+  },
+  "freeze": {
+    "archive": {
+      "bytes": 55094419,
+      "members": 1384,
+      "path": "docs/evidence/2026-10-12-greedy-frames.tar.gz",
+      "sha256": "9ac132b6a452fd545acc68e914e26b3a79479efadb84593b59d592be10e4ced3",
+      "uncompressed_bytes": 98386656
+    },
+    "coverage": {
+      "block_kinds": {
+        "compressed": 176,
+        "raw": 181,
+        "rle": 38
+      },
+      "candidate_generations": 367,
+      "collector": false,
+      "commands": 440,
+      "complete_frame_decodes_per_build": 151,
+      "decoded_bytes_per_build": 13587614,
+      "discarded_repeat_witnesses": {
+        "raw": 25,
+        "rle": 12
+      },
+      "incomplete_headers_per_build": 15,
+      "negative_rejections_per_build": 35,
+      "positive_blocks": 395,
+      "public_parameter_resolution": false,
+      "recipes": 138,
+      "scheduled_calls": 403,
+      "source_bytes": 7365784
+    },
+    "manifest_sha256": "4a6c6b89452f0c22a7f4d9fe9e45255e48c21ab259cfce62a4981e513e63560e",
+    "pack_bytes": 33262001,
+    "pack_sha256": "326bbe16b56ea4f353993707fe45f100804983133ec5f5bda4a9ef3b4bbf758d"
+  },
+  "inputs": {
+    "scripts/capture_greedy_frames_v2.py": {
+      "bytes": 17398,
+      "sha256": "6f4e3ec00d8f2679e4b8bf15be8c837d879e360dc541d11109be593d8e66dddb"
+    },
+    "scripts/check_greedy_frame_capture.py": {
+      "bytes": 14821,
+      "sha256": "4ee3c35c99544410b280360da4b7150210d67f99335dd38268f82704a2577f1b"
+    },
+    "scripts/check_greedy_frames.py": {
+      "bytes": 3728,
+      "sha256": "3c82513af6e9ab804b40be9b37781b6849f5b0eb3031edbfcc08f340d5f36e2c"
+    },
+    "scripts/oracles/greedy_frame_v3.c": {
+      "bytes": 46117,
+      "sha256": "0e7505aa18263f1483320fb697d95ea616daa9b471a217c3445ef154d50598c1"
+    },
+    "scripts/oracles/greedy_frame_validation.py": {
+      "bytes": 21731,
+      "sha256": "8e400ccad307b562dd6a41ab02c5d00359d36431cd38a5c51040e08e3903c71f"
+    },
+    "tests/fixtures/reference-greedy-frame-capture/artifacts.bin": {
+      "bytes": 33262001,
+      "sha256": "326bbe16b56ea4f353993707fe45f100804983133ec5f5bda4a9ef3b4bbf758d"
+    },
+    "tests/fixtures/reference-greedy-frame-capture/capture.json": {
+      "bytes": 121072,
+      "sha256": "4a6c6b89452f0c22a7f4d9fe9e45255e48c21ab259cfce62a4981e513e63560e"
+    }
+  },
+  "publication_driver": {
+    "sha256": "fb7feaaf1ae579e63c4cce36ae6a3dba31899ebab403139b6e2ded2ae6a82909",
+    "source": "from pathlib import Path\nimport gzip, hashlib, io, json, sys, tarfile\nroot=Path('/Users/lanxingcan/Workspace/zstdoxize'); sys.path.insert(0,str(root/'scripts'))\nimport check_greedy_frame_capture as checker\nsource=Path('/private/tmp/zstdoxide-greedy-frames-resolved-2026-10-12')\ncollection=root/'tests/fixtures/reference-greedy-frame-capture'; archive=root/'docs/evidence/2026-10-12-greedy-frames.tar.gz'\nif collection.exists() or archive.exists(): raise ValueError('fresh publication destinations required')\ncoverage,artifacts,cases=checker.audit(source)\nevidence=checker.read(source,'evidence.json',8<<20)\npack=bytearray(); catalog={}\nfor name,data in sorted(artifacts.items()):\n catalog[name]={'offset':len(pack),'bytes':len(data),'sha256':checker.sha(data)};pack.extend(data)\nif len(pack)>64<<20: raise ValueError('pack cap')\n# Preserve the complete capture, including build objects and executables. Source\n# recipes regenerate the input files; no downloaded upstream C source is copied.\nfiles=sorted(p for p in source.rglob('*') if p.is_file())\nif any(p.is_symlink() for p in source.rglob('*')): raise ValueError('unexpected capture symlink')\nwith archive.open('xb') as out, gzip.GzipFile(fileobj=out,mode='wb',mtime=0,filename='') as gz, tarfile.open(fileobj=gz,mode='w') as tar:\n for path in files:\n  data=path.read_bytes(); info=tarfile.TarInfo(path.relative_to(source).as_posix());info.size=len(data);info.mtime=0;info.mode=0o644;tar.addfile(info,io.BytesIO(data))\nmanifest={'schema_version':1,'upstream_revision':'f8745da6ff1ad1e7bab384bd1f9d742439278e99','coverage':coverage,'cases':cases,\n          'controller_sha256':checker.CONTROLLER_SHA,'checker_sha256':checker.sha((root/checker.__file__).read_bytes()) if not Path(checker.__file__).is_absolute() else checker.sha(Path(checker.__file__).read_bytes()),\n          'capture_evidence_sha256':checker.sha(evidence),'capture_archive':{'path':str(archive.relative_to(root)),'sha256':checker.sha(archive.read_bytes()),'bytes':archive.stat().st_size,'members':len(files),'uncompressed_bytes':sum(p.stat().st_size for p in files)},\n          'pack_bytes':len(pack),'pack_sha256':checker.sha(pack),'artifacts':catalog,\n          'policy':'Ordinary explicit-parameter internal-begin trajectories and complete C frames; all 26 used C units plus helper instrumented. Normal/instrumented bytes identical. Not collector, public parameter resolution, per-probe tracing, LeakSanitizer or Rust encoder coverage.'}\nencoded=(json.dumps(manifest,sort_keys=True,indent=2)+'\\n').encode()\ncollection.mkdir()\n(collection/'artifacts.bin').write_bytes(pack);(collection/'capture.json').write_bytes(encoded)\n(collection/'README.md').write_text('''# Frozen ordinary Greedy observations\n\nThese 138 source-only recipes were captured from unchanged facebook/zstd v1.5.7\nthrough the reviewed `greedy_frame_v3.c` helper and versioned capture controller.\n`capture.json` indexes consecutive, SHA256-checked extents in `artifacts.bin`:\nnormal NDJSON, complete scheduled frames, aligned whole-frame comparisons,\nnative metadata and qualified incomplete header probes. The instrumented build\nproduced exactly the same observations and frame bytes. The complete capture,\nincluding every command, rejected-input diagnostic, input and binary, is retained\nin the evidence archive named by the manifest. No Rust encoder generated these\nexpected outputs. Run `scripts/check_greedy_frames.py --check` to replay offline.\n\nThere are 395 positive blocks (181 raw, 38 RLE, 176 compressed), 367 fresh\ncandidate generations and 37 changed-repeat candidates discarded on fallback\n(25 raw, 12 RLE). Each build decoded 151 complete frames / 13,587,614 bytes and\nrejected 35 malformed commands. The 15 header probes are incomplete and were\nnever decoded. Source/sampling/state observations do not trace every parser\nprobe, and these internal explicit parameters do not establish public request\nresolution or collector equivalence. See the Greedy frame validation report.\n''')\n(collection/'NOTICE').write_text('''Fixtures are derived from facebook/zstd v1.5.7, revision\nf8745da6ff1ad1e7bab384bd1f9d742439278e99.\nCopyright (c) Meta Platforms, Inc. and affiliates.\nUpstream source is licensed under the BSD license or GPLv2. See LICENSE-BSD\nin the pinned upstream source. Recipe sources are deterministic project inputs;\nthe archived outputs are observations of the unmodified official codec.\n''')\np=root/'scripts/check_greedy_frames.py';s=p.read_text();\nif 'MANIFEST_PLACEHOLDER' not in s: raise ValueError('already fixed fixture identity')\np.write_text(s.replace('MANIFEST_PLACEHOLDER',checker.sha(encoded)))\nprint(json.dumps({'coverage':coverage,'pack_bytes':len(pack),'pack_sha256':checker.sha(pack),'manifest_sha256':checker.sha(encoded),'archive':manifest['capture_archive']},sort_keys=True))\n"
+  },
+  "scope": "Independent C ordinary Greedy capture, full instrumentation provenance and immutable offline replay. No Rust Greedy encoder or public admission claim.",
+  "status": "passed"
+}
