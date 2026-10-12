@@ -2,7 +2,6 @@
 //! Indices replace C pointers; row and chain search retain their distinct tail
 //! margins. These allocation-free records are safe under every storage backend.
 #![forbid(unsafe_code)]
-#![cfg_attr(not(test), allow(dead_code, reason = "Greedy parsing follows"))]
 
 use crate::frame::MAX_BLOCK_SIZE;
 use crate::greedy_key::{GreedyKey, GreedyKeyLayout};
@@ -159,6 +158,7 @@ impl GreedyCursor {
     pub(crate) const fn current(self) -> usize {
         self.current
     }
+    #[cfg(test)]
     pub(crate) const fn anchor(self) -> usize {
         self.anchor
     }

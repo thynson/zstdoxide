@@ -24,11 +24,6 @@ use crate::{
 pub(crate) enum ReferenceSearchPlan {
     Fast(FastExecutionPlan),
     DoubleFast(DoubleFastExecutionPlan),
-    /// Private construction only until the successor admission map is frozen.
-    #[allow(
-        dead_code,
-        reason = "Greedy public admission follows private frame checks"
-    )]
     Greedy(GreedyExecutionPlan),
 }
 
@@ -46,6 +41,10 @@ impl ReferenceSearchPlan {
             ReferenceStrategy::DoubleFast => {
                 DoubleFastExecutionPlan::from_resolved_parameters(parameters, source_len)
                     .map(Self::DoubleFast)
+            }
+            ReferenceStrategy::Greedy => {
+                GreedyExecutionPlan::from_resolved_parameters(parameters, source_len)
+                    .map(Self::Greedy)
             }
             _ => Err(Error::UnsupportedFeature),
         }
@@ -262,14 +261,20 @@ mod tests {
     }
 
     #[test]
-    fn public_request_dispatch_remains_unchanged_before_v3_admission() {
+    fn public_greedy_dispatch_uses_the_actual_resolved_source_family() {
         let mut request = CompressionParameterRequest::with_level(3);
         request.set_strategy(Some(ReferenceStrategy::Greedy));
-        for size in [0, 64, 32768, 131072, 262144] {
-            assert!(matches!(
-                ReferenceSearchPlan::new(&request, size),
-                Err(Error::UnsupportedFeature)
-            ));
+        for size in [0, 64, 16384, 16385, 32768, 131072, 262144] {
+            let ReferenceSearchPlan::Greedy(plan) =
+                ReferenceSearchPlan::new(&request, size).unwrap()
+            else {
+                panic!("wrong selected strategy");
+            };
+            assert_eq!(plan.tables().is_row(), size > 16384);
+            assert_eq!(
+                plan.parameters(),
+                request.resolve(SourceSize::Known(size as u64), 0).unwrap()
+            );
         }
     }
 

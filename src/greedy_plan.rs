@@ -2,17 +2,12 @@
 //! Parameter resolution and strategy/resource checks precede every allocator
 //! clone or request. Plans are copied scalar values shared by all backends.
 #![forbid(unsafe_code)]
-#![cfg_attr(
-    not(test),
-    allow(dead_code, reason = "Greedy execution integration follows")
-)]
 
 use crate::greedy_key::{GreedyKeyLayout, RowLayout};
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
-use crate::{
-    CompressionParameterRequest, Error, ReferenceStrategy, ResolvedCompressionParameters, Result,
-    SourceSize,
-};
+#[cfg(test)]
+use crate::{CompressionParameterRequest, SourceSize};
+use crate::{Error, ReferenceStrategy, ResolvedCompressionParameters, Result};
 use core::alloc::Layout;
 
 /// Only the selected family contributes owners. Chain has two usize arrays;
@@ -60,7 +55,8 @@ impl GreedyExecutionPlan {
     /// Resolve using the actual known source size, including Known(0); hints
     /// never substitute for it. Corresponds to parameter resolution followed by
     /// `ZSTD_resolveRowMatchFinderMode`: resolved windowLog > 14 selects rows,
-    /// independently of target SIMD. This is not public encoder admission yet.
+    /// independently of target SIMD.
+    #[cfg(test)]
     pub(crate) fn new(request: &CompressionParameterRequest, source_len: usize) -> Result<Self> {
         let source_size = Self::source_size_checked(source_len)?;
         let parameters = request.resolve(SourceSize::Known(source_size), 0)?;
@@ -147,6 +143,7 @@ impl GreedyExecutionPlan {
     pub(crate) const fn source_len(self) -> usize {
         self.settings.source_len()
     }
+    #[cfg(test)]
     pub(crate) const fn source_size(self) -> u64 {
         self.settings.source_size()
     }
@@ -159,15 +156,19 @@ impl GreedyExecutionPlan {
     pub(crate) const fn tables(self) -> GreedyTablePlan {
         self.tables
     }
+    #[cfg(test)]
     pub(crate) const fn first_bytes(self) -> usize {
         self.first_bytes
     }
+    #[cfg(test)]
     pub(crate) const fn second_bytes(self) -> usize {
         self.second_bytes
     }
+    #[cfg(test)]
     pub(crate) const fn table_bytes(self) -> usize {
         self.table_bytes
     }
+    #[cfg(test)]
     pub(crate) const fn frame_bound(self) -> usize {
         self.frame_bound
     }

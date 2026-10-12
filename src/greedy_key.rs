@@ -7,10 +7,6 @@
 //! f8745da6ff1ad1e7bab384bd1f9d742439278e99,
 //! lib/compress/zstd_compress_internal.h:903-960 (LICENSE.zstd).
 #![forbid(unsafe_code)]
-#![cfg_attr(
-    not(test),
-    allow(dead_code, reason = "Greedy storage integration follows")
-)]
 
 use crate::{Error, Result};
 
@@ -49,9 +45,11 @@ impl GreedyKeyLayout {
         })
     }
 
+    #[cfg(test)]
     pub(crate) const fn hash_log(self) -> u8 {
         self.hash_log
     }
+    #[cfg(test)]
     pub(crate) const fn key_bytes(self) -> u8 {
         self.width
     }
@@ -126,6 +124,7 @@ impl RowLayout {
     pub(crate) const fn key_layout(self) -> GreedyKeyLayout {
         self.key
     }
+    #[cfg(test)]
     pub(crate) const fn row_log(self) -> u8 {
         self.row_log
     }

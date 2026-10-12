@@ -2,7 +2,6 @@
 //! Search mutates sampling tables/frontiers and row salt entropy. Frame entropy
 //! coding state and repeat offsets belong to the later parser/publication layer.
 #![forbid(unsafe_code)]
-#![cfg_attr(not(test), allow(dead_code, reason = "Greedy parsing follows"))]
 
 use crate::greedy_block::GreedyBlock;
 use crate::reference_chain::ReferenceChain;

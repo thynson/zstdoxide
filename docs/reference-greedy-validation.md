@@ -1,11 +1,10 @@
 # Bounded reference Greedy validation in progress
 
-Module 14 is in progress. Source design, pre-Greedy regression baselines and the
-tiny and broader direct C oracle checkpoints are complete. Shared Rust hash
-values, reference-chain and row storage backends are implemented. Greedy
-parsing, ordinary-frame state, public Greedy admission and broader test migration
-remain in progress. The existing independent named Greedy policy is not
-an implementation of this reference strategy.
+Module 14 is in progress. Direct and ordinary Greedy parsing, retained state
+and public bounded Greedy admission are implemented and checked below. Broader
+public C interoperability, platform/full-feature qualification and measurement
+remain open. The existing independent named Greedy policy retains its behavior.
+The sections below record successive checkpoints and their historical scope.
 
 ## Preserved behavior before implementation
 
@@ -312,3 +311,38 @@ or automatic public branch selection. Ordinary retention/publication, public adm
 remain in progress. No new official source-unit obligation is marked
 complete. Final every-feature/platform/interoperability matrices and Greedy
 measurements remain open, as do the complete roadmap and upstream migration.
+
+## Public bounded Greedy admission
+
+The public one-shot request/level APIs now admit reference Greedy after resolving
+the actual known source once. The separately committed v3 mappings retain every
+historical input, scalar observation and old result. Greedy admits window logs
+through 21 and hash logs through 19. Resolved windows through 14 select chains
+with chain/search caps 18/8; larger windows select rows with at most 64 visits and
+no allocation or resource cap for the unused chain dimension. Unsupported
+strategies still reject before resource admission, allocation or allocator clones.
+
+Level 4 now executes every source tier: Greedy through 16 KiB and above 128 KiB
+through 256 KiB, DoubleFast elsewhere. Existing Fast/DoubleFast limits and all
+named encoder behavior remain unchanged. Public docs describe these independent
+entry points, source adjustment, key-width clamps, target behavior, ownership
+and independent entropy output. Integration-only dead-code allowances have been
+removed; test inspection helpers are explicitly test-only.
+
+Four public Greedy tests cover known empty/tiny and tier-boundary sources,
+conflicting hints without request mutation, both key-width equivalences, ignored
+targets, row chain-size independence and capped search, supported maximum
+dimensions, pre-allocation error precedence, every observed public allocation
+failure on both families, and results retaining borrowed non-clone allocators
+after source destruction. They pass in safe, isolated chain, isolated row and
+all-feature builds. The 42 combined reference public/baseline/original-selector
+tests pass in safe/all builds; nine of these retain complete frozen Fast and
+DoubleFast frames and qualified allocator observations. Five static dispatch
+tests also pass in both builds. All five Rust documentation tests, strict safe/all
+Clippy, formatting and safe/combined-leaf no_std compilation pass.
+
+Private retained-state and complete-frame evidence is described in
+[ordinary frame validation](reference-greedy-frame-validation.md). Public
+Greedy frames still require the separately planned broader bidirectional C
+campaign. Full feature/platform matrices, measurements and official migration
+obligations remain open; this is not Module 14 completion or upstream parity.

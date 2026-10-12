@@ -974,3 +974,11 @@ of 6,184 observed whole-frame allocation ordinals is failed independently, with
 all exact owners released. Borrowed non-clone allocators and invalid schedules
 retain their contracts. Strict safe/all Clippy, formatting and safe/combined-leaf
 no_std pass. Complete Rust entropy bytes are not claimed equal to C frames.
+
+Public reference dispatch now resolves the actual known source once and admits
+the Greedy plan after the separately frozen v3 policy. No owner layout, parser
+algorithm or entropy supervisor changes are needed. Chain/row resource checks
+still occur before allocator cloning or allocation. Test-only inspection helpers
+replace temporary integration-wide dead-code allowances. Four public Greedy
+tests cover both selected families, source hints, resource/error ordering,
+equivalent settings and exact owned/borrowed allocator lifetimes.

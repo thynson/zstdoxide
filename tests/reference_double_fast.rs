@@ -68,7 +68,14 @@ fn level_four_admission_follows_all_four_pinned_source_tiers() {
         if (16_385..=131_072).contains(&size) || size > 262_144 {
             check(&input, &request, &result.unwrap());
         } else {
-            assert_eq!(result, Err(Error::UnsupportedFeature));
+            assert_eq!(
+                request
+                    .resolve(SourceSize::Known(size as u64), 0)
+                    .unwrap()
+                    .strategy(),
+                ReferenceStrategy::Greedy
+            );
+            assert_eq!(decompress(&result.unwrap(), size).unwrap(), input);
         }
     }
 }
@@ -126,11 +133,7 @@ fn each_resource_cap_and_unsupported_strategy_precede_clones_and_allocation() {
             .unwrap();
         requests.push((changed, Error::ResourceLimit));
     }
-    for strategy in [
-        ReferenceStrategy::Greedy,
-        ReferenceStrategy::Lazy,
-        ReferenceStrategy::Ultra2,
-    ] {
+    for strategy in [ReferenceStrategy::Lazy, ReferenceStrategy::Ultra2] {
         let mut changed = request;
         changed.set_strategy(Some(strategy));
         requests.push((changed, Error::UnsupportedFeature));

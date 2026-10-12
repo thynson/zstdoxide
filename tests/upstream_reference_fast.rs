@@ -308,10 +308,10 @@ fn original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_bu
         selected_levels.insert(simple.level);
         admitted += 1;
     }
-    assert_eq!((admitted, unsupported, advanced), (61, 16, 4));
+    assert_eq!((admitted, unsupported, advanced), (62, 15, 4));
     assert_eq!(
         selected_levels,
-        [-3, -2, -1, 0, 1, 2, 3].into_iter().collect()
+        [-3, -2, -1, 0, 1, 2, 3, 4].into_iter().collect()
     );
 }
 
@@ -336,7 +336,7 @@ fn fuzzer_empty_level_loop_uses_the_frozen_successor_admission() {
             unsupported += 1;
         }
     }
-    assert_eq!((admitted, unsupported), (5, 19));
+    assert_eq!((admitted, unsupported), (6, 18));
 }
 
 #[test]
@@ -365,13 +365,13 @@ fn fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equal
             unsupported += 1;
         }
     }
-    assert_eq!((admitted, unsupported), (3, 16));
+    assert_eq!((admitted, unsupported), (4, 15));
 }
 
-// Version2 expectations are additive fixtures. Original C selector tuples and
-// Module12 success/failure evidence retain their historical policy unchanged.
+// Version3 expectations are additive fixtures. Original C selector tuples and
+// Module12/13 success/failure evidence retain their historical policy unchanged.
 fn successor_fuzz_status(name: &str, size: usize, level: i32) -> &'static str {
-    let mut rows = include_str!("fixtures/reference-admission-v2/fuzz.tsv")
+    let mut rows = include_str!("fixtures/reference-admission-v3/fuzz.tsv")
         .lines()
         .skip(1)
         .map(|line| line.split('\t').collect::<Vec<_>>())
@@ -385,7 +385,7 @@ fn successor_fuzz_status(name: &str, size: usize, level: i32) -> &'static str {
 }
 
 fn successor_loop_status(family: &str, size: usize, level: i32) -> &'static str {
-    let mut rows = include_str!("fixtures/reference-admission-v2/loops.tsv")
+    let mut rows = include_str!("fixtures/reference-admission-v3/loops.tsv")
         .lines()
         .skip(1)
         .map(|line| line.split('\t').collect::<Vec<_>>())

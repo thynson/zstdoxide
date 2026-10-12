@@ -4,10 +4,6 @@
 //! bias of two), not insertion generations. Links are indices into borrowed
 //! source; this leaf never reads source bytes or treats a collision as a match.
 #![cfg_attr(not(feature = "unsafe-reference-chain"), forbid(unsafe_code))]
-#![cfg_attr(
-    not(test),
-    allow(dead_code, reason = "reference Greedy parsing follows")
-)]
 
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::{Allocator, Layout};
@@ -72,6 +68,7 @@ impl<H: Allocator, L: Allocator> ReferenceChain<H, L> {
     pub(crate) const fn chain_log(&self) -> u8 {
         self.chain_log
     }
+    #[cfg(test)]
     pub(crate) fn retained_capacity(&self) -> usize {
         (self.heads.capacity() + self.links.capacity()) * core::mem::size_of::<usize>()
     }

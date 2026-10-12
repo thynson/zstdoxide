@@ -1,8 +1,8 @@
-# Reference Fast and DoubleFast profiles
+# Reference Fast, DoubleFast and Greedy profiles
 
 The four reference compression entry points are separate from the existing
 named Greedy/Chain/Lazy encoder. They encode complete borrowed inputs without a
-dictionary, using the pinned v1.5.7 Fast or DoubleFast sampling and repeat-offset
+dictionary, using the pinned v1.5.7 Fast, DoubleFast or Greedy sampling and repeat-offset
 algorithm.
 Huffman and sequence entropy choices are independent Rust implementations;
 compressed bytes, block decisions and ratios need not equal the C encoder.
@@ -31,7 +31,7 @@ adjustment. It is not a fixed level allowlist:
 | Negative level | Fast with the pinned acceleration and raw literal policy; values below the minimum level normalize to that minimum |
 | Level 2 | Fast except for source sizes 131073..=262144, which execute DoubleFast |
 | Levels 0 and 3 | Identical DoubleFast execution for all source tiers |
-| Level 4 | DoubleFast for sizes 16385..=131072 and above 262144; unsupported Greedy otherwise |
+| Level 4 | DoubleFast for sizes 16385..=131072 and above 262144; Greedy otherwise |
 | Other resolved strategy | `Error::UnsupportedFeature`; no replacement algorithm |
 
 Frames carry the exact source size, no checksum and no dictionary identifier.
@@ -67,7 +67,8 @@ admission happen before allocator cloning or allocation. A valid unsupported
 strategy returns `UnsupportedFeature` before algorithm-specific resource checks.
 
 Effective Fast limits are window logs 10..=20 and hash logs 6..=18. DoubleFast
-supports window logs 10..=21 and independent hash/chain logs 6..=18. Both admit
+supports window logs 10..=21 and independent hash/chain logs 6..=18. Greedy
+supports window logs 10..=21 and hash logs 6..=19. All three admit
 minimum-match settings 3..=7 and target lengths 0..=131072. Larger otherwise
 valid implemented resources return `ResourceLimit`. The limits apply after
 adjustment: an unadjusted large requested hash can still fit the admitted range for tiny input.
@@ -99,6 +100,20 @@ request.set_chain_log(16)?;
 let frame = compress_with_parameters(input, &request)?;
 # Ok::<(), zstdoxide::Error>(())
 ```
+
+Greedy selects chains for resolved window logs through 14 and rows above 14.
+The chain branch owns separate head/link arrays, uses chain log at most 18 and
+search log at most 8, and visits at most `2^search_log` candidates. The row branch
+owns separate position and byte-tag arrays of `2^hash_log` elements. It does not
+allocate a chain or cap its unused log; valid search settings determine row width
+and visits, capped at 64. Scalar row hashing uses the fresh-context salt on all
+targets. Minimum-match settings clamp to key widths 4..=6. Target length is
+validated but does not accelerate Greedy or disable literal compression.
+
+The actual source size controls resolution even when a hint disagrees. For
+example, level 4 selects chain Greedy on 16384 bytes, DoubleFast on 16385 bytes,
+and row Greedy on 131073 bytes. An explicit Greedy strategy keeps Greedy but
+still adjusts its dimensions before choosing chain versus row.
 
 Candidate entropy tables and wire repeats become committed state only after
 the complete compressed block is appended. Raw/RLE fallback keeps sampled
@@ -133,6 +148,7 @@ contract. See [allocator usage](allocator-usage.md) for owner lifetimes.
 The core requires only `alloc`; filesystem, process and timing code remain in
 test/oracle tooling. `unsafe-match-table`, `unsafe-bitstream`,
 `unsafe-fse-encoder` and `unsafe-huffman-codebook` select the existing individual
-storage backends. The Fast/DoubleFast parsers, persistent source states and
+storage backends. `unsafe-reference-chain` and `unsafe-row-table` independently
+select the new Greedy leaves. The Fast/DoubleFast/Greedy parsers, persistent source states and
 shared frame supervisor themselves forbid unsafe code and use the same checked contracts with every
 backend combination.

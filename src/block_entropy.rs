@@ -83,7 +83,7 @@ impl<A: Allocator> BlockEntropyEncoder<A> {
 }
 
 impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
-    /// Prepare a complete reference Fast/DoubleFast candidate without publishing frame state.
+    /// Prepare a complete reference candidate without publishing frame state.
     ///
     /// Snapshot and complete reconstruction checks precede allocation. Offset
     /// intent is checked in source order, but source/window eligibility remains

@@ -1,9 +1,5 @@
 //! Retained selected Greedy tables for one complete contiguous source.
 #![forbid(unsafe_code)]
-#![cfg_attr(
-    not(test),
-    allow(dead_code, reason = "Greedy frame integration follows")
-)]
 
 use alloc::vec::Vec;
 use core::alloc::Allocator;
@@ -48,6 +44,7 @@ impl<A: Allocator> GreedyTables<A> {
             Self::Row(table) => table.reset(),
         }
     }
+    #[cfg(test)]
     pub(crate) fn retained_capacity(&self) -> usize {
         match self {
             Self::Chain(table) => table.retained_capacity(),
@@ -162,7 +159,7 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
                 },
                 GreedyTables::Row(table) => GreedySearch::Row {
                     table,
-                    salt: 0x8358_92b4_bb2c_ae74,
+                    salt: crate::greedy_key::FRESH_ROW_SALT,
                 },
             };
             match parse_block(

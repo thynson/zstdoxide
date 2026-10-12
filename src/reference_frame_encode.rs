@@ -24,7 +24,7 @@ mod double_fast_tests;
 #[path = "../tests/support/greedy_frame_encode.rs"]
 mod greedy_tests;
 
-/// Encode one known-size, no-dictionary frame with an admitted Fast profile.
+/// Encode one known-size, no-dictionary frame with an admitted reference profile.
 ///
 /// Admission and output-bound checks precede allocator operations. The original
 /// allocator owns the result; all scratch owners retain separate fresh clones.

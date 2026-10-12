@@ -2,7 +2,6 @@
 //! Row zero cells retain the head byte and never store a candidate position.
 //! Candidate snapshots own copied indices so insertion cannot overwrite them.
 #![cfg_attr(not(feature = "unsafe-row-table"), forbid(unsafe_code))]
-#![cfg_attr(not(test), allow(dead_code, reason = "reference row parsing follows"))]
 
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::{Allocator, Layout};
@@ -67,6 +66,7 @@ impl<P: Allocator, T: Allocator> RowTable<P, T> {
     pub(crate) const fn layout(&self) -> RowLayout {
         self.layout
     }
+    #[cfg(test)]
     pub(crate) fn retained_capacity(&self) -> usize {
         self.positions.capacity() * core::mem::size_of::<usize>() + self.tags.capacity()
     }

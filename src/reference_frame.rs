@@ -24,7 +24,7 @@ pub(crate) struct ReferenceFrameSettings {
 impl ReferenceFrameSettings {
     /// Check scalar metadata before output bounds and any allocation. The
     /// caller must separately admit the selected algorithm; window21 here does
-    /// not extend Fast's window20 limit or imply public DoubleFast support.
+    /// not extend Fast's window20 limit or admit an unsupported strategy.
     pub(crate) fn new(source_len: usize, window_log: u8) -> Result<Self> {
         let source_size = u64::try_from(source_len).map_err(|_| Error::ResourceLimit)?;
         if source_size == u64::MAX || !(10..=21).contains(&window_log) {

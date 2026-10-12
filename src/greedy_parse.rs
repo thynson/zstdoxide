@@ -2,10 +2,6 @@
 //! Corresponds to the no-dictionary `ZSTD_compressBlock_lazy_generic` in
 //! facebook/zstd v1.5.7. No C pointer, speculative source read or cache is needed.
 #![forbid(unsafe_code)]
-#![cfg_attr(
-    not(test),
-    allow(dead_code, reason = "Greedy frame integration follows")
-)]
 
 use alloc::vec::Vec;
 use core::alloc::Allocator;

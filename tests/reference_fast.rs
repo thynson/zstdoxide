@@ -317,7 +317,7 @@ fn unsupported_and_resource_failures_precede_allocator_clone_or_requests() {
     double_resource.set_hash_log(19).unwrap();
     double_resource.set_strategy(Some(ReferenceStrategy::DoubleFast));
     let mut unsupported = double_resource;
-    unsupported.set_strategy(Some(ReferenceStrategy::Greedy));
+    unsupported.set_strategy(Some(ReferenceStrategy::Lazy));
     for (request, error) in [
         (unsupported, Error::UnsupportedFeature),
         (double_resource, Error::ResourceLimit),

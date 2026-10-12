@@ -1,4 +1,4 @@
-//! Bounded execution of pinned no-dictionary Fast and DoubleFast profiles.
+//! Bounded execution of pinned no-dictionary Fast, DoubleFast and Greedy profiles.
 
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
@@ -13,9 +13,10 @@ use crate::{CompressionParameterRequest, Result};
 /// selects DoubleFast for inputs larger than 128 KiB and no larger than 256 KiB,
 /// and Fast otherwise. Level 0 means level 3; both select DoubleFast. Level 4
 /// selects DoubleFast for inputs larger than 16 KiB and no larger than 128 KiB,
-/// and for inputs larger than 256 KiB. Other source tiers and levels need
-/// unsupported strategies unless explicitly overridden. Admission uses the fully resolved strategy and its
-/// resource limits, rather than a level allowlist.
+/// and for inputs larger than 256 KiB; its remaining source tiers select Greedy.
+/// Higher levels need unsupported strategies unless explicitly overridden.
+/// Admission uses the fully resolved strategy and its resource limits, rather
+/// than a level allowlist.
 /// Unsupported strategies return [`crate::Error::UnsupportedFeature`].
 ///
 /// Frames include the actual content size, omit a checksum and dictionary ID,
@@ -64,13 +65,17 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 ///
 /// Resolve `request` using the actual source length and dictionary size zero.
 /// A source-size hint never overrides that known length, including known empty
-/// input. The request is unchanged. Effective [`crate::ReferenceStrategy::Fast`]
-/// and [`crate::ReferenceStrategy::DoubleFast`] are implemented; another valid strategy returns
+/// input. The request is unchanged. Effective [`crate::ReferenceStrategy::Fast`],
+/// [`crate::ReferenceStrategy::DoubleFast`] and [`crate::ReferenceStrategy::Greedy`]
+/// are implemented; another valid strategy returns
 /// [`crate::Error::UnsupportedFeature`] before resource admission.
 ///
 /// Fast supports effective window logs 10..=20 and hash logs 6..=18. DoubleFast
-/// supports window logs 10..=21 and independent hash/chain logs 6..=18. Both
-/// support minimum-match settings 3..=7 and target lengths 0..=131072. An otherwise
+/// supports window logs 10..=21 and independent hash/chain logs 6..=18. Greedy
+/// supports window logs 10..=21 and hash logs 6..=19. Its resolved window selects
+/// chain storage at logs 10..=14 (chain log <=18, search log <=8), and row storage
+/// at logs 15..=21 (unused chain log is not resource-capped, at most 64 visits).
+/// All support minimum-match settings 3..=7 and target lengths 0..=131072. An otherwise
 /// valid implemented profile outside these caps returns [`crate::Error::ResourceLimit`]. Caps
 /// apply after known-size adjustment, not to the unadjusted requested values.
 /// Fast owns one table of `2^hash_log` usize indices into the borrowed source.
@@ -79,12 +84,20 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// copy or inactive algorithm storage is allocated. Search log is validated but
 /// creates no visit budget for either strategy; Fast also ignores chain log.
 ///
-/// Minimum-match setting 3 selects four-byte search keys; settings 4..=7 choose
-/// their respective key widths. DoubleFast additionally samples eight-byte long
-/// keys. Emitted matches have a four-byte minimum. Positive target length controls
-/// Fast acceleration and disables literal Huffman/RLE selection. DoubleFast
-/// ignores this control and retains normal literal selection. Complete block
-/// RLE remains independently available for both strategies.
+/// Greedy owns two independent tables: chain heads/links of `2^hash_log` and
+/// `2^chain_log` usize positions, or `2^hash_log` usize positions and byte tags
+/// for rows. Rows use a fresh context salt and scalar hashing on every target.
+/// Chain search visits at most `2^search_log` candidates; rows cap that at 64.
+/// Sampled history survives raw/RLE fallback; only complete compressed blocks
+/// publish tentative entropy and wire repeats.
+///
+/// Minimum-match setting 3 selects four-byte search keys; Fast/DoubleFast settings
+/// 4..=7 choose their respective key widths. Greedy clamps key widths to 4..=6.
+/// DoubleFast additionally samples eight-byte long keys. Emitted matches have a
+/// four-byte minimum. Positive target length controls Fast acceleration and
+/// disables literal Huffman/RLE selection. DoubleFast and Greedy ignore this
+/// control and retain normal literal selection. Complete block RLE remains
+/// independently available for all three strategies.
 /// Block size is the smaller of the selected window and 128 KiB.
 ///
 /// Frame flags and independent entropy qualifications match [`compress_at_level`].

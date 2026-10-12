@@ -16,7 +16,7 @@ pub(crate) const fn raw_literals(parameters: ResolvedCompressionParameters) -> b
     matches!(parameters.strategy(), ReferenceStrategy::Fast) && parameters.target_length() > 0
 }
 
-/// Strict payload gain shared by Fast, DoubleFast and private Greedy execution.
+/// Strict payload gain shared by Fast, DoubleFast and Greedy execution.
 /// Excludes the relevant section or outer block header, according to the caller.
 /// Corresponds to the strategy-below-BtUltra branch of `ZSTD_minGain` in pinned
 /// zstd_compress_internal.h:673-683. This is not a policy for future BtUltra paths.
