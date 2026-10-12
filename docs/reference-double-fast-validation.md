@@ -611,3 +611,37 @@ and [archive](evidence/2026-10-12-double-fast-interop-adapters.tar.gz) retain630
 commands, all raw responses/logs, reviewed source and exact binary identities.
 This is not C interoperability or full platform qualification; the instrumented
 C build/capture remains the next work item.
+
+## Broader bidirectional public-frame capture
+
+All159 frozen requests complete with113 admitted profiles,42 unsupported and4
+resource errors. Safe/all Rust agree on status, resolved parameters and every
+frame byte. Normal/sanitized C frames agree. The campaign performs452 C decodes
+of Rust frames and452 Rust decodes of C frames, reproducing223,677,280 source
+bytes. All16 equivalence groups hold. Each of four adapters rejects38 malformed
+packets with exit2, no response and the expected diagnostic prefix.
+
+Both C builds compile all26 used common/compression/decompression translation
+units from the pinned clean v1.5.7 checkout; the sanitizer build instruments
+all26 plus the adapter with ASan/UBSan. No prebuilt archive is linked. Assembly,
+legacy, workers and leak detection are disabled. Recorded dependency hashes,
+compiler identity/macros, commands and executable identities qualify the build.
+The C response deliberately makes no applied-scalar claim, and independent
+entropy decisions do not imply C-identical Rust output.
+
+The independent offline checker verifies every raw artifact and replays all1,600
+protocol exchanges among1,666 recorded commands. Normal and optimized Python
+both pass; each also accepts two positive controls and rejects24 corruptions
+with child process creation disabled. Controls include source replacement,
+omitted instrumentation, archive linkage, duplicate objects, response/hash
+changes, path escape and a forged oversized window rejected before shifting.
+Original raw evidence is unchanged after the controls.
+
+The [evidence](evidence/2026-10-12-double-fast-interop-full.json) and
+[reconstruction archive](evidence/2026-10-12-double-fast-interop-full.tar.gz)
+retain5,016 files/693,004,628 raw bytes through4KiB chunk deduplication; all6,576
+archive members and reconstructed file digests were verified. Compiled objects
+and executables are omitted, with their source/build commands and executable
+hashes retained. The archive is20,795,123 bytes. The standard oracle job now
+runs this bounded capture and its offline replay. This establishes the specified
+public-frame scope, not full upstream parity, Miri coverage or performance.

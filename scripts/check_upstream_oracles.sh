@@ -80,3 +80,9 @@ cargo test --release --all-features --test upstream_search_lifecycle official_co
 # Successor admission over the unchanged Module12 bounded source campaign.
 fast_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-fast-interop.XXXXXX")
 python3 scripts/check_reference_interop_v2.py --upstream "$ZSTD_UPSTREAM" --output "$fast_output/capture"
+
+# Broader Module13 public frames; every used C codec unit is instrumented in
+# the sanitizer build. Retain raw requests/responses for independent replay.
+double_fast_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-double-fast-interop.XXXXXX")
+python3 scripts/capture_double_fast_interop.py --upstream "$ZSTD_UPSTREAM" --output "$double_fast_output/capture"
+python3 scripts/check_double_fast_interop_capture.py --capture "$double_fast_output/capture"
