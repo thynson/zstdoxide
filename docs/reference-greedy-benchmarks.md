@@ -125,4 +125,79 @@ The [all-backend evidence](evidence/2026-10-12-greedy-clock-free.json) and
 20,672,495 bytes, with build identities retained and compiled outputs omitted.
 This provides correctness and owner equivalence, without a speed conclusion.
 
-Measured campaigns remain pending until the full correctness matrix finishes.
+The full correctness matrix and both measured campaigns are now complete.
+
+
+## Measured backend comparison
+
+Both campaigns start after recorded completion of every task-owned correctness,
+platform, capture and build/control job. The first measures all sixteen backends;
+the second repeats safe/all after the first process exits. They contain 576
+case records and 2,880 raw samples in total. Every complete frame and all
+allocator fields still match the clock-free baseline. The native target is
+`aarch64-apple-darwin` with the pinned `nightly-2026-10-08` toolchain. There is no
+concurrent task-owned correctness or oracle campaign during either measurement.
+
+The following ratios divide each backend's median throughput by safe throughput
+on the same input/request. The mean is an equally weighted geometric mean over
+24 Greedy cases; minima/maxima are case ratios, not confidence intervals. The
+eight historical Fast/DoubleFast controls remain in the archive and CSV.
+
+| First campaign configuration | Geometric mean | Minimum case | Maximum case |
+| --- | ---: | ---: | ---: |
+| `safe` | 1.0000 | 1.0000 | 1.0000 |
+| `unsafe-byte-cursor` | 0.9758 | 0.7586 | 1.0155 |
+| `unsafe-bitstream` | 0.9982 | 0.9195 | 1.0379 |
+| `unsafe-history` | 0.9879 | 0.9354 | 1.0421 |
+| `unsafe-ring-history` | 0.9880 | 0.9285 | 1.0296 |
+| `unsafe-fse` | 0.9942 | 0.9493 | 1.0540 |
+| `unsafe-fse-encoder` | 0.9893 | 0.9379 | 1.0587 |
+| `unsafe-huffman` | 0.9910 | 0.9298 | 1.0487 |
+| `unsafe-huffman-codebook` | 0.9928 | 0.9195 | 1.0437 |
+| `unsafe-match-table` | 1.0041 | 0.9391 | 1.0611 |
+| `unsafe-match-chain` | 0.9739 | 0.6559 | 1.0460 |
+| `unsafe-dictionary` | 0.9900 | 0.9256 | 1.0489 |
+| `unsafe-training` | 0.9894 | 0.9347 | 1.0498 |
+| `unsafe-reference-chain` | 0.9704 | 0.7228 | 1.0385 |
+| `unsafe-row-table` | 1.0258 | 0.9247 | 1.1243 |
+| `all` | 1.0480 | 0.9709 | 1.1394 |
+
+All-feature ratios by Greedy request profile, averaged equally over the four
+frozen source families:
+
+| Profile | First all/safe | Repeated all/safe |
+| --- | ---: | ---: |
+| `chain-4` | 1.0075 | 1.0168 |
+| `chain-8` | 1.0191 | 1.0113 |
+| `row-16` | 1.0463 | 1.0129 |
+| `row-32` | 1.0569 | 1.0894 |
+| `row-64` | 1.0945 | 1.1022 |
+| `row-capped` | 1.0663 | 1.1264 |
+
+The all-feature aggregate is 1.0480 in the first campaign and 1.0588 in the
+repeat. Individual repeated cases span 0.8546 (`skewed/row-16`) to 1.2181
+(`skewed/row-capped`), so these measurements do not establish a universal unsafe
+speedup. The isolated reference-chain feature averages 0.9944 over its eight
+chain cases, while the isolated row-table feature averages 1.0484 over its
+sixteen row cases in the first campaign. Those individual flags were not each
+repeated, and a flag unused by a profile cannot be assigned a causal effect.
+The fixed run order, unrelated desktop load, frequency and temperature remain
+uncontrolled. These are observations from one native host, not a ranking that
+applies to other systems or input distributions.
+
+Normal controller and optimized offline validation pass for both campaigns.
+Additional normal/optimized controls each accept two valid measured captures
+and reject 22 forged timing/barrier captures with child creation blocked and
+zero attempts. They cover missing/incomplete prerequisite evidence, coherently
+rehashed failed matrices, active task jobs, too few/short samples, invalid
+iteration types, incorrect medians and disabled timing environments.
+
+The [measurement report](evidence/2026-10-12-greedy-measurements.json),
+[per-case CSV](evidence/2026-10-12-greedy-measurements.csv) and
+[complete archive](evidence/2026-10-12-greedy-measurements.tar.gz) preserve both
+campaigns, every raw sample/frame/owner record, compiler and executable
+identities, the CPU barriers, unchanged input closure and exact offline-control
+inputs. The 27,911,263-byte archive maps 4,745 files through 4-KiB chunks; every
+member and each distinct reconstructed file was verified without executing
+archived reconstruction code. Compiled benchmark outputs are omitted with their
+recorded hashes retained. The default remains safe Rust.

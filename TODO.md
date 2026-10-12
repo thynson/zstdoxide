@@ -91,7 +91,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Freeze the Greedy benchmark sources, request profiles and measurement/ownership contract before implementation.
 - [x] Implement the separate clock-free Greedy harness and independent evidence validator with historical frame/owner controls.
 - [x] Validate all fourteen individual unsafe backends, safe and all together on the frozen clock-free workloads.
-- [ ] Measure every backend after a completed CPU barrier and repeat safe/all with all raw samples retained.
+- [x] Measure every backend after a completed CPU barrier and repeat safe/all with all raw samples retained.
 - [ ] Reconcile tests, inventory, evidence and qualified measurements, record the bounded milestone and clear its completed checklist.
 
 ## Module 15 preparation: bounded reference Lazy and Lazy2

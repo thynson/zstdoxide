@@ -1,0 +1,1150 @@
+{
+  "all_complete_frames_and_allocator_records_match_clock_free": true,
+  "archive": "2026-10-12-greedy-measurements.tar.gz",
+  "archive_bytes": 27911263,
+  "archive_format": "4096-byte SHA256 chunks with a complete file map. Compiled outputs omitted with their recorded identities retained.",
+  "archive_members": 6599,
+  "archive_sha256": "23ec2ba3db5353e48514c5dbeb42407a88adc1d0dc82cab8e121fe54b005b223",
+  "cases_per_configuration": 32,
+  "commands": 46,
+  "csv": "2026-10-12-greedy-measurements.csv",
+  "csv_sha256": "5842d55e1aaefe6d0be05fcef1a536476a3a94b48331e077f01d3d6f68bb52f5",
+  "date": "2026-10-12",
+  "first_configurations": [
+    "safe",
+    "unsafe-byte-cursor",
+    "unsafe-bitstream",
+    "unsafe-history",
+    "unsafe-ring-history",
+    "unsafe-fse",
+    "unsafe-fse-encoder",
+    "unsafe-huffman",
+    "unsafe-huffman-codebook",
+    "unsafe-match-table",
+    "unsafe-match-chain",
+    "unsafe-dictionary",
+    "unsafe-training",
+    "unsafe-reference-chain",
+    "unsafe-row-table",
+    "all"
+  ],
+  "greedy_cases_per_configuration": 24,
+  "per_sample_minimum_ms": 100,
+  "qualification": "Single native host, fixed configuration order and five samples per case after observed task-owned CPU barriers. Unrelated desktop load, clocks and thermal state are uncontrolled. Ratios use each case median throughput and an equally weighted geometric mean across the 24 Greedy cases. Standalone features are not each repeated; unused-feature timing does not establish causal benefit. Samples, full frames, exact owners and both campaigns are retained. No universal unsafe speedup, C throughput or foreign-native performance claim.",
+  "raw_bytes": 1995908700,
+  "raw_files": 4745,
+  "repeat_configurations": [
+    "safe",
+    "all"
+  ],
+  "samples": 2880,
+  "source": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "c809dfe057d78c6b5dec95d8bdea6a62aa0ba3df3f2ca2f0e329144cf81ad87d",
+    "docs/evidence/2026-10-12-double-fast-benchmark-harness.tar.gz": "43b8d17bdf9c43dbc84d4cfc808c656b12ff82d434cebfc5ac2e664553ae04b1",
+    "examples/greedy_benchmark.rs": "790d22541f665d59182e86a02d2d07d893a62e1161c91f9f342b5ed079abead3",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "scripts/benchmark_greedy.py": "4d7990df79ae2fc1b8ee5d34f859dcee276985d94835029c5d38666fa5b5a898",
+    "scripts/benchmark_search.py": "ed5b3c7ddc9737ade86ba3637f5b6d20e335a30d8d2bbf146d4cae26020ea4be",
+    "scripts/check_reference_double_fast_baseline.py": "4b8d83ffb6634b6e64674382874ce4352531257e869de661953006e083d986db",
+    "scripts/check_reference_fast_baseline.py": "3b52a0c402a046466fecbe58040489632045c10abdac42e23b0644de384b9107",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/block_entropy.rs": "a9a25e6bf3ba2b308168b2d1b0de88c4e510eaec1d4162484b4b45f21654faf1",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+    "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+    "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+    "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+    "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+    "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+    "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+    "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/greedy_block.rs": "27f2508890d38d9a25b40907a1dce5775d16bc2955acc519f8a17ceef7e003d1",
+    "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+    "src/greedy_parse.rs": "2f678ce19fe7f6310998427525c69070b35862fa347f8a1344609c1eed9e42e9",
+    "src/greedy_plan.rs": "50c4ffa32d991834b0a01a8d4118dc87dbdc83402034e721b436b70c8b03b312",
+    "src/greedy_search.rs": "597a3319bb3d4090731408fb9df98036610e0cf998bbf589766d4bc7bc7d8062",
+    "src/greedy_state.rs": "2b1339d70afe184e986ed9f9279b4a455488b624939b7d03e7af1f8183e3aa70",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lib.rs": "e7e80b6985cb1f8bdaa3d129fe1319c2503862f52528f7f141ed43e2ef3bb266",
+    "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+    "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+    "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+    "src/reference_encode.rs": "044aa6da335953747dbe17398ca288e6d5b521ade2cfa4d9d3475d9a6c8c71e9",
+    "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+    "src/reference_frame_encode.rs": "ee114a9cee5a43dc85dec04a00591a28952e54c371acf112bdf5ea6ed8796573",
+    "src/reference_policy.rs": "1ab030e7f3a83091c1cfa9708c99274caf889131a75a6991d36b5edb48c4e0f3",
+    "src/reference_search.rs": "9bc0e36e6eebd5accb9362247161478edc2628843713a024ad5db637e92615fd",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+    "src/sequence_context.rs": "5824fea99f85b3cc1c63a62bb68f79873d1e3818af487b7107cf1bdda5f9c81c",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "2dbd16ebb375017938bcf53e949f5e369eeae708e5eea0f48ffd437e3da8da48",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "test-support/allocator/Cargo.toml": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/fixtures/reference-double-fast-baseline/expected.tsv": "d6e1691f9d9358dc84812b5350383f34bc457536ea4215f1f309a9fb5dfe0736",
+    "tests/fixtures/reference-double-fast-baseline/frames.bin": "54830e45b24939cb7e3c0feeb8ec1dfe798537b3693862a20835870abea923cd",
+    "tests/fixtures/reference-double-fast-baseline/provenance.json": "3725cc740ec35f971fb866112a34abc291532f24958dd8bf9989b4facedb3b31",
+    "tests/fixtures/reference-fast-baseline/expected.tsv": "35015cb3e8e6bc21d03deb6f28ea08a736d080a3bfed78ae368036d14788f0d7",
+    "tests/fixtures/reference-fast-baseline/frames.bin": "94f18d272ebf5204a7d320c96abf958b30e4511877b53d2a989e7ae7b847d33d",
+    "tests/fixtures/reference-fast-baseline/provenance.json": "58352c8a0dd7ff4430bde7c40590ee990b518beabbc41369dc616172415f3775"
+  },
+  "source_unchanged": true,
+  "status": "passed",
+  "throughput_ratio_by_profile": {
+    "repeat": {
+      "all": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0168050902162373,
+          "maximum": 1.031400663159022,
+          "minimum": 0.9855060090339537
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0113420367743442,
+          "maximum": 1.0364258919674356,
+          "minimum": 0.9705648815311478
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0332320885830326,
+          "maximum": 1.079383541211674,
+          "minimum": 0.9979646115247554
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.019324776789949,
+          "maximum": 1.0504660639423091,
+          "minimum": 0.993310046595823
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0128860062243699,
+          "maximum": 1.0962437858078202,
+          "minimum": 0.854617013529226
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.089389053986967,
+          "maximum": 1.1341601583413843,
+          "minimum": 1.0373157791141736
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.1021791527149303,
+          "maximum": 1.1491192033300393,
+          "minimum": 1.0612063460735572
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1263890936244325,
+          "maximum": 1.2181276978837587,
+          "minimum": 1.0929489513758313
+        }
+      },
+      "safe": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        }
+      }
+    },
+    "timed": {
+      "all": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.007491539379065,
+          "maximum": 1.0325225891745462,
+          "minimum": 0.9708720284424844
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0190545854938904,
+          "maximum": 1.0590280870710633,
+          "minimum": 0.9909380147343219
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9933260549920218,
+          "maximum": 1.0037291190414925,
+          "minimum": 0.9810470109289591
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0287905883000223,
+          "maximum": 1.0670793589931646,
+          "minimum": 0.9925874632933045
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.04626822405302,
+          "maximum": 1.073311844536895,
+          "minimum": 1.0251647430292876
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0569246656615057,
+          "maximum": 1.0969834130272877,
+          "minimum": 1.006002302804625
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0944867919934567,
+          "maximum": 1.1394367977958881,
+          "minimum": 1.0555619095362978
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0663309337642584,
+          "maximum": 1.091077705482013,
+          "minimum": 1.0415355134498832
+        }
+      },
+      "safe": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        }
+      },
+      "unsafe-bitstream": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9932812220966968,
+          "maximum": 1.0057018779858466,
+          "minimum": 0.9687178383682485
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0044786461931399,
+          "maximum": 1.0246129276303722,
+          "minimum": 0.9795273152134195
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9792668764758822,
+          "maximum": 1.0120175573626955,
+          "minimum": 0.9544661590664286
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.042273109101577,
+          "maximum": 1.1087794581644712,
+          "minimum": 1.003760550960726
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0029348224610497,
+          "maximum": 1.0237513609446964,
+          "minimum": 0.9711672259291272
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.002222985301566,
+          "maximum": 1.03787737036463,
+          "minimum": 0.9837989196686832
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0028048798428832,
+          "maximum": 1.0226301125608044,
+          "minimum": 0.979481623770293
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9834058724571902,
+          "maximum": 1.0208911555310527,
+          "minimum": 0.919457838697191
+        }
+      },
+      "unsafe-byte-cursor": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9769000630918477,
+          "maximum": 0.9874120214192352,
+          "minimum": 0.9689674378576064
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9778075796425324,
+          "maximum": 1.0013907586128,
+          "minimum": 0.950987520924405
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9705643279769587,
+          "maximum": 0.9965310538392952,
+          "minimum": 0.9556055878624258
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0563291167422935,
+          "maximum": 1.0885265218694902,
+          "minimum": 1.028977148134417
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9968949462560389,
+          "maximum": 1.015537876382613,
+          "minimum": 0.9658974609256605
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9919687441478731,
+          "maximum": 1.0129847249272932,
+          "minimum": 0.9796570130114227
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9915224636052066,
+          "maximum": 1.0129097686132933,
+          "minimum": 0.9769298336377477
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9219149202029328,
+          "maximum": 0.994348276413314,
+          "minimum": 0.7586285651142239
+        }
+      },
+      "unsafe-dictionary": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9884662730656278,
+          "maximum": 1.0092447715370823,
+          "minimum": 0.9671409197643104
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9875157516451845,
+          "maximum": 1.0137555506969762,
+          "minimum": 0.953841935603699
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9803956199986211,
+          "maximum": 0.9944662664925792,
+          "minimum": 0.9692165611416567
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0188942751503296,
+          "maximum": 1.0527245050046354,
+          "minimum": 0.9946048188785718
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9883318905980265,
+          "maximum": 1.002082660414538,
+          "minimum": 0.9764106904367099
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9874771313950503,
+          "maximum": 1.003420511033909,
+          "minimum": 0.9764154264053115
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9952036185411791,
+          "maximum": 1.0489462851623725,
+          "minimum": 0.9255638265364184
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9928252858550035,
+          "maximum": 1.007901959817078,
+          "minimum": 0.9821060368358725
+        }
+      },
+      "unsafe-fse": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9987332776522936,
+          "maximum": 1.0125793162495274,
+          "minimum": 0.9791323177109599
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0006305172688226,
+          "maximum": 1.0395974081714803,
+          "minimum": 0.9690208985030782
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9779126706561723,
+          "maximum": 0.9978532388188905,
+          "minimum": 0.9488781913184533
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0129863401918902,
+          "maximum": 1.050229054356258,
+          "minimum": 0.96926937393438
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9874601902808077,
+          "maximum": 1.0057708854711709,
+          "minimum": 0.9693928098880176
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9807660217132196,
+          "maximum": 0.9973387524888243,
+          "minimum": 0.9493218282524974
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0076904263570068,
+          "maximum": 1.0540427806264483,
+          "minimum": 0.9803654814541721
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9901360336927182,
+          "maximum": 1.0057267183518381,
+          "minimum": 0.9738675889778163
+        }
+      },
+      "unsafe-fse-encoder": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9879785490990839,
+          "maximum": 1.0028931986900507,
+          "minimum": 0.9723341547163437
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9850824185059945,
+          "maximum": 1.0087212682894242,
+          "minimum": 0.9424096676611282
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.972587530057807,
+          "maximum": 1.0025901097957428,
+          "minimum": 0.9484353527269216
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.010244176181939,
+          "maximum": 1.0789816232386689,
+          "minimum": 0.9620495624846507
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9848877719769747,
+          "maximum": 0.9971682175523378,
+          "minimum": 0.9647205140495696
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9839014630378231,
+          "maximum": 0.9988557193174843,
+          "minimum": 0.9653682487060509
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0020914872947224,
+          "maximum": 1.0587248031446141,
+          "minimum": 0.9435990725489499
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9921939083898645,
+          "maximum": 1.0298495750544823,
+          "minimum": 0.9379081343331648
+        }
+      },
+      "unsafe-history": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9781168204405223,
+          "maximum": 0.9995795953883753,
+          "minimum": 0.9354063223626956
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0011991184902511,
+          "maximum": 1.0256981984559024,
+          "minimum": 0.969835790857003
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.8448514586463183,
+          "maximum": 0.9771518516849548,
+          "minimum": 0.5779516096403405
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0439896686404058,
+          "maximum": 1.0832802844135323,
+          "minimum": 1.0169348216938774
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9873194644896102,
+          "maximum": 1.0058671870579619,
+          "minimum": 0.9659474542755
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9810703035137882,
+          "maximum": 1.0060459159150845,
+          "minimum": 0.945814858376235
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9952378128486327,
+          "maximum": 1.0421047357028403,
+          "minimum": 0.9491740956917826
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9848214917701458,
+          "maximum": 1.0087787582315533,
+          "minimum": 0.9469482810846535
+        }
+      },
+      "unsafe-huffman": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9886859188800332,
+          "maximum": 1.0046114992149895,
+          "minimum": 0.9723341547163437
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0014797771120478,
+          "maximum": 1.0296900995466196,
+          "minimum": 0.9736186315149863
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9820128669835898,
+          "maximum": 0.9869694068046951,
+          "minimum": 0.9741926005591045
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.013753120840091,
+          "maximum": 1.0513942429797398,
+          "minimum": 0.992554202453979
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9863683598546226,
+          "maximum": 1.0122485019463932,
+          "minimum": 0.9653057941955497
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9852419087087242,
+          "maximum": 1.0051515071713875,
+          "minimum": 0.9681223835838683
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0086297898490453,
+          "maximum": 1.0487495075046314,
+          "minimum": 0.9837973790469051
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.976197123563164,
+          "maximum": 1.0125984311415772,
+          "minimum": 0.9297517295289446
+        }
+      },
+      "unsafe-huffman-codebook": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9946649671842474,
+          "maximum": 1.009153912888703,
+          "minimum": 0.9851661387630019
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.999491341827688,
+          "maximum": 1.0241326049326418,
+          "minimum": 0.9769027270457951
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9806917458114095,
+          "maximum": 1.010886534893501,
+          "minimum": 0.953633126944311
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.011132165760306,
+          "maximum": 1.0641297456840573,
+          "minimum": 0.9855868370200462
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9876396089112438,
+          "maximum": 0.9962827268224221,
+          "minimum": 0.9749173605968253
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.999795259853758,
+          "maximum": 1.0083637703777093,
+          "minimum": 0.9913588679684551
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9979176717831876,
+          "maximum": 1.043652992602621,
+          "minimum": 0.9593687375498248
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9775650937566567,
+          "maximum": 1.0184362552434951,
+          "minimum": 0.9195205915367353
+        }
+      },
+      "unsafe-match-chain": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.900972463482084,
+          "maximum": 1.0067946362668954,
+          "minimum": 0.6558837727245614
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9825992994507846,
+          "maximum": 1.0459725540262947,
+          "minimum": 0.8942182209680687
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9774172518707059,
+          "maximum": 0.9932866155800117,
+          "minimum": 0.9663431600332776
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0312729057787338,
+          "maximum": 1.0813451145023683,
+          "minimum": 0.9964763361656763
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9872285555869282,
+          "maximum": 1.0390563778537287,
+          "minimum": 0.9459533955761289
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9911675851685859,
+          "maximum": 1.0158458329558977,
+          "minimum": 0.9773982154931063
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9930330283378963,
+          "maximum": 1.0423195288043303,
+          "minimum": 0.9452120731889665
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.992178188404884,
+          "maximum": 1.0032829318160312,
+          "minimum": 0.9806734261579345
+        }
+      },
+      "unsafe-match-table": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0015376896837789,
+          "maximum": 1.005829584980574,
+          "minimum": 0.9931369800290896
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0129038849438337,
+          "maximum": 1.047633251492148,
+          "minimum": 0.9952285202834374
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9803726326774281,
+          "maximum": 1.015469030126094,
+          "minimum": 0.958836252612949
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0265082876851637,
+          "maximum": 1.0720201897374813,
+          "minimum": 0.9938020807815464
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0114226077276856,
+          "maximum": 1.050524412024928,
+          "minimum": 0.9905403995607635
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0066328249565843,
+          "maximum": 1.036125841547896,
+          "minimum": 0.9859012831490376
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0006048049903031,
+          "maximum": 1.061052591838217,
+          "minimum": 0.9602304327386594
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9916659762396566,
+          "maximum": 1.0236741929664732,
+          "minimum": 0.9390560375351423
+        }
+      },
+      "unsafe-reference-chain": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.990558083476227,
+          "maximum": 1.0232293720633054,
+          "minimum": 0.9641028982585477
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9982073208158501,
+          "maximum": 1.028478010605282,
+          "minimum": 0.9637217206263057
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9865988381152224,
+          "maximum": 0.9887440361664459,
+          "minimum": 0.9844541254952317
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0181230242407437,
+          "maximum": 1.0584321679222328,
+          "minimum": 0.992478679972162
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9866927590576654,
+          "maximum": 1.0003104641676528,
+          "minimum": 0.9677159102407028
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9020713731283627,
+          "maximum": 1.00452522308587,
+          "minimum": 0.7228196330284822
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9624435935725361,
+          "maximum": 1.0385349590604962,
+          "minimum": 0.9139484363175261
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.985939585595323,
+          "maximum": 1.009684935804763,
+          "minimum": 0.9462151099478128
+        }
+      },
+      "unsafe-ring-history": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9720128497545414,
+          "maximum": 1.0025625807632335,
+          "minimum": 0.928456444184755
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9912281810163599,
+          "maximum": 1.0137032407321314,
+          "minimum": 0.9472992346945417
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.970894939319364,
+          "maximum": 0.9929908275848908,
+          "minimum": 0.9342100806277567
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.020989998387179,
+          "maximum": 1.0505889711347118,
+          "minimum": 1.0063958920520355
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9925519295846524,
+          "maximum": 1.0036822620880017,
+          "minimum": 0.9806052798358135
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9847182734725674,
+          "maximum": 1.0142232482451032,
+          "minimum": 0.9455799168923552
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9983162183717054,
+          "maximum": 1.021503282811835,
+          "minimum": 0.9845279526118706
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9896671746862306,
+          "maximum": 1.0295840321340788,
+          "minimum": 0.951105263792595
+        }
+      },
+      "unsafe-row-table": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.971080060652561,
+          "maximum": 0.9986934856178866,
+          "minimum": 0.9359817484301607
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9933329249110364,
+          "maximum": 1.0209892849935507,
+          "minimum": 0.9706630220643249
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9862466946477971,
+          "maximum": 1.0176388251549568,
+          "minimum": 0.9733552571195081
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0277034406556567,
+          "maximum": 1.0806891829953111,
+          "minimum": 1.0091532339227691
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0328193188162353,
+          "maximum": 1.050019860145249,
+          "minimum": 1.0107595137962264
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0483126188892558,
+          "maximum": 1.093614731053921,
+          "minimum": 1.0069723737428655
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.081941107173686,
+          "maximum": 1.12428786395798,
+          "minimum": 1.0428464865175842
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.031126275070456,
+          "maximum": 1.1089665994799365,
+          "minimum": 0.9247169261285648
+        }
+      },
+      "unsafe-training": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9840760554880287,
+          "maximum": 1.0021459856162218,
+          "minimum": 0.9410509059994643
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0034095202840005,
+          "maximum": 1.0337120066144103,
+          "minimum": 0.9779132426564474
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9910280025272679,
+          "maximum": 1.0125702605584093,
+          "minimum": 0.9758618752607855
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0216307121699788,
+          "maximum": 1.0691335353018159,
+          "minimum": 0.9669073753471447
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9924930427730136,
+          "maximum": 1.0051845822868528,
+          "minimum": 0.9801713065051308
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9758901468161162,
+          "maximum": 1.0104407698164217,
+          "minimum": 0.9443121515573608
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0051639611843886,
+          "maximum": 1.0497891701056659,
+          "minimum": 0.9875854203475709
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9755342454157908,
+          "maximum": 1.0115101033520124,
+          "minimum": 0.9347220537047984
+        }
+      }
+    }
+  },
+  "throughput_ratio_greedy": {
+    "repeat": {
+      "all": {
+        "cases": 24,
+        "geometric_mean": 1.0587741506025297,
+        "maximum": 1.2181276978837587,
+        "minimum": 0.854617013529226
+      },
+      "safe": {
+        "cases": 24,
+        "geometric_mean": 1.0,
+        "maximum": 1.0,
+        "minimum": 1.0
+      }
+    },
+    "timed": {
+      "all": {
+        "cases": 24,
+        "geometric_mean": 1.0480244375835086,
+        "maximum": 1.1394367977958881,
+        "minimum": 0.9708720284424844
+      },
+      "safe": {
+        "cases": 24,
+        "geometric_mean": 1.0,
+        "maximum": 1.0,
+        "minimum": 1.0
+      },
+      "unsafe-bitstream": {
+        "cases": 24,
+        "geometric_mean": 0.9981593360820966,
+        "maximum": 1.03787737036463,
+        "minimum": 0.919457838697191
+      },
+      "unsafe-byte-cursor": {
+        "cases": 24,
+        "geometric_mean": 0.9758297483628809,
+        "maximum": 1.015537876382613,
+        "minimum": 0.7586285651142239
+      },
+      "unsafe-dictionary": {
+        "cases": 24,
+        "geometric_mean": 0.9899655607803652,
+        "maximum": 1.0489462851623725,
+        "minimum": 0.9255638265364184
+      },
+      "unsafe-fse": {
+        "cases": 24,
+        "geometric_mean": 0.9941953138384066,
+        "maximum": 1.0540427806264483,
+        "minimum": 0.9493218282524974
+      },
+      "unsafe-fse-encoder": {
+        "cases": 24,
+        "geometric_mean": 0.9893358061096599,
+        "maximum": 1.0587248031446141,
+        "minimum": 0.9379081343331648
+      },
+      "unsafe-history": {
+        "cases": 24,
+        "geometric_mean": 0.9879286195572867,
+        "maximum": 1.0421047357028403,
+        "minimum": 0.9354063223626956
+      },
+      "unsafe-huffman": {
+        "cases": 24,
+        "geometric_mean": 0.9910418084579844,
+        "maximum": 1.0487495075046314,
+        "minimum": 0.9297517295289446
+      },
+      "unsafe-huffman-codebook": {
+        "cases": 24,
+        "geometric_mean": 0.9928134184960835,
+        "maximum": 1.043652992602621,
+        "minimum": 0.9195205915367353
+      },
+      "unsafe-match-chain": {
+        "cases": 24,
+        "geometric_mean": 0.9739448288211537,
+        "maximum": 1.0459725540262947,
+        "minimum": 0.6558837727245614
+      },
+      "unsafe-match-table": {
+        "cases": 24,
+        "geometric_mean": 1.0041021092060887,
+        "maximum": 1.061052591838217,
+        "minimum": 0.9390560375351423
+      },
+      "unsafe-reference-chain": {
+        "cases": 24,
+        "geometric_mean": 0.9704165355889367,
+        "maximum": 1.0385349590604962,
+        "minimum": 0.7228196330284822
+      },
+      "unsafe-ring-history": {
+        "cases": 24,
+        "geometric_mean": 0.9880479674469566,
+        "maximum": 1.0295840321340788,
+        "minimum": 0.928456444184755
+      },
+      "unsafe-row-table": {
+        "cases": 24,
+        "geometric_mean": 1.0258017088433566,
+        "maximum": 1.12428786395798,
+        "minimum": 0.9247169261285648
+      },
+      "unsafe-training": {
+        "cases": 24,
+        "geometric_mean": 0.989355682371321,
+        "maximum": 1.0497891701056659,
+        "minimum": 0.9347220537047984
+      }
+    }
+  },
+  "timing_controls_per_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 22
+  }
+}
