@@ -628,6 +628,14 @@ Fast/DoubleFast literal and complete-block selection. The explicit flag crosses
 owned by entropy storage. Named literal selection retains its distinct policy.
 These scalar functions need no unsafe alternate or new allocator owner.
 
+The version2 admission fixture keeps immutable historical and successor columns
+for81 C selector records,92 interop inputs and43 original fuzzer-loop levels.
+The offline adapter verifies fixed inputs before import and owns only bounded
+plain records. C preset strategy identity is distinct from known-source-adjusted
+tuples; archived interop tuples remain explicitly historical Rust observations.
+No pointer representation or unsafe alternate is needed for these test records.
+Six additive C obligations remain separate from their formerly unexecuted cases.
+
 Ordinary current-long/current-short candidates accept indices equal to the
 block-end floor, because `ZSTD_selectAddr` uses `>=`. The later-long candidate
 uses an explicit strict `>` condition. Backward extension may finish at the

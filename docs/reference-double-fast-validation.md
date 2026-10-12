@@ -477,3 +477,25 @@ pass, including strict Clippy, no_std compilation and formatting. The
 identities and logs. The initial four-test bootstrap passed without diagnostics.
 Public admission, independent C decoding of new Rust frames, full platform
 qualification and timing remain open. No new C capture or Miri is claimed.
+
+## Successor admission policy before public execution
+
+The separately versioned [policy fixture](../tests/fixtures/reference-admission-v2/README.md)
+preserves all81 original selector tuples and92 historical interop inputs/results.
+Fixed C presets establish selector strategy identity without pretending to be
+applied scalar observations. Historical selector counts57/20/4 become intended
+successor counts61/16/4; historical interop79/11/2 becomes85/4/3. Six formerly
+rejected interop cases require additive positive C execution. The oversized
+DoubleFast/hash19 request becomes a resource error, not a success. Original
+empty and30-byte fuzzer loops predict5/19 and3/16 admitted/unsupported profiles.
+
+Normal and optimized Python each pass8 positive and35 rejection controls,
+including scalar types/bounds, strategy-before-resource precedence, malformed
+artifact identities and verification before importer access. Child process
+creation is disabled in the controls. Both projection and838-file/20-collection
+registry modes pass; original artifacts are unchanged. The
+[evidence](evidence/2026-10-12-reference-admission-v2.json) and
+[archive](evidence/2026-10-12-reference-admission-v2.tar.gz) preserve the source
+and controls. These are intended admission expectations frozen before changing
+public execution, not successful new codec or C interoperability runs. No new
+Rust/Clippy/no_std, Miri or timing result is claimed at this source-only checkpoint.

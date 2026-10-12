@@ -1,0 +1,136 @@
+{
+  "additive_c_required": [
+    "tier-131073-level-2",
+    "tier-262143-level-2",
+    "tier-262144-level-2",
+    "unsupported-level-0",
+    "unsupported-level-3",
+    "unsupported-strategy-2"
+  ],
+  "algorithm_caps": {
+    "DoubleFast": {
+      "chain": 18,
+      "hash": 18,
+      "window": 21
+    },
+    "Fast": {
+      "chain_consumed": false,
+      "hash": 18,
+      "window": 20
+    }
+  },
+  "changed_interop": [
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-131073-level-2"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-262143-level-2"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-262144-level-2"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "unsupported-level-0"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "unsupported-level-3"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "unsupported-strategy-2"
+    },
+    {
+      "after": "resource",
+      "before": "unsupported",
+      "case": "strategy-before-resource"
+    }
+  ],
+  "fixtures": [
+    {
+      "bytes": 8676,
+      "path": "fuzz.tsv",
+      "sha256": "7b2fbce793df15e2185b65bad272e9e6428a614fdb00905f949bfeb8d45bbc13"
+    },
+    {
+      "bytes": 13055,
+      "path": "interop.tsv",
+      "sha256": "6c1b9c77329cba64893738b92304d5e0020c4bc0a8ff08e6ea2da9d27d0c516c"
+    },
+    {
+      "bytes": 1971,
+      "path": "loops.tsv",
+      "sha256": "c5c2bed1fe2dcf8631d89eecf98510cab81b9c115d365e6a5dadef216245ce6d"
+    }
+  ],
+  "generator": "scripts/check_reference_admission_v2.py",
+  "generator_sha256": "8df6864e736337c9150f111c000221975308c0cd72f1775d36981e13d59bef69",
+  "historical_interop": {
+    "resource": 2,
+    "success": 79,
+    "unsupported": 11
+  },
+  "historical_selector": {
+    "advanced": 4,
+    "success": 57,
+    "unsupported": 20
+  },
+  "input_sha256": {
+    "docs/evidence/2026-10-09-reference-fast-interop.json": "648b0c24c2ea716be31bb38a2d3fc9316ecf0a17e912b814af157e9a1bb47d27",
+    "scripts/check_reference_fast_interop.py": "d1b8ee20ae3542df2a1d25748988cd6cba4a5c8c2b57c0c685b632e92dd94553",
+    "scripts/import_reference_fast_fuzz.py": "cbbbc0d8b4c8709b3002c7d55d995ed61477fbfa42f2ee624952d0d4c814adbc",
+    "tests/upstream/parameters/presets.tsv": "4e188cc16826c6665dcd440ae9d153484aeb4e561321a089be2aec260667881d",
+    "tests/upstream/reference-fast-fuzz/observations.tsv": "77a868913331f7e9edd4a73a60634eebd97d83b5b57050b6945fbde5b317b4e5"
+  },
+  "loop_classifications": {
+    "empty": {
+      "historical": {
+        "success": 3,
+        "unsupported": 21
+      },
+      "successor": {
+        "success": 5,
+        "unsupported": 19
+      }
+    },
+    "initial_match": {
+      "historical": {
+        "success": 2,
+        "unsupported": 17
+      },
+      "successor": {
+        "success": 3,
+        "unsupported": 16
+      }
+    }
+  },
+  "newly_admitted_selectors": [
+    "tier-44",
+    "tier-49",
+    "unsupported-55",
+    "unsupported-56"
+  ],
+  "qualification": "Source-only successor expectations before public DoubleFast execution. Selector tuples and C presets remain original; pre-adjustment presets are not applied scalar observations. Interop tuples are historical Rust resolution from the archived Module12 campaign. Six new positive C cases are obligations, not executions; no codec or child process runs.",
+  "schema_version": 2,
+  "successor_interop": {
+    "resource": 3,
+    "success": 85,
+    "unsupported": 4
+  },
+  "successor_selector": {
+    "advanced": 4,
+    "success": 61,
+    "unsupported": 16
+  },
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

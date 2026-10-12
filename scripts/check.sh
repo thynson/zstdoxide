@@ -7,6 +7,7 @@ python3 scripts/import_fast_parser_smoke.py --check
 python3 scripts/import_fast_collector.py --check
 python3 scripts/import_negative_level_fixture.py --check
 python3 scripts/import_reference_fast_fuzz.py --check
+python3 scripts/check_reference_admission_v2.py --check
 python3 scripts/import_fast_frame_publication.py --check
 python3 scripts/import_fast_parser_families.py --check
 python3 scripts/check_double_fast_tiny.py --check
