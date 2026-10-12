@@ -86,7 +86,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Implement and review separately versioned public C/Rust adapters, checked transport and malformed-packet controls before first C execution.
 - [x] Implement the bounded public Greedy capture controller and independent offline auditor with preflight rejection controls.
 - [x] Capture broader bidirectional public Greedy interoperability with normal/instrumented C, reject forged evidence offline and preserve the complete campaign.
-- [ ] Verify focused chain/row ownership and parser bounds on interpreted i686/s390x and compile-only no-atomics callers.
+- [x] Verify focused chain/row ownership and parser bounds on interpreted i686/s390x and compile-only no-atomics callers.
 - [ ] Run the full safe/each-feature/all/no_std correctness matrix with unchanged Fast/DoubleFast/named regression baselines.
 - [x] Freeze the Greedy benchmark sources, request profiles and measurement/ownership contract before implementation.
 - [x] Implement the separate clock-free Greedy harness and independent evidence validator with historical frame/owner controls.

@@ -410,3 +410,32 @@ every reconstructed file against the original capture without running archived
 code. Downloaded upstream sources remain outside the repository. The earlier
 capture tools and evidence remain immutable. Platform/full-feature checks,
 benchmarks and complete upstream migration remain separate open obligations.
+
+## Focused platform validation
+
+All 44 selected strict-provenance Miri executions pass: ten chain/row storage,
+parser, poisoning, ownership and small complete-frame tests plus one public
+tiny-frame test, in safe/all builds on both i686 and s390x. Exact nonempty test
+names and counts are checked for every run. The cases cover cyclic/head bounds,
+future and truncated state, failed reservations, independently owned tables,
+poisoning after mutation, both effective key-width clamps and output that retains
+a borrowed non-clone allocator after the source is gone. A native smoke of the
+public test also passes.
+
+The thumbv6m checks compile the no_std library and generate a caller rlib for
+safe/all builds with all fourteen unsafe flags explicit and std disabled. The
+caller exercises public level 4, explicit Greedy and borrowed Global allocation;
+an Rc type check also retains the existing no-pointer-atomics dictionary fallback.
+These are compilation/code-generation checks, not firmware linking, execution,
+memory-fit or stable Allocator API guarantees. The i686/s390x results are Miri
+interpretation, not native or QEMU execution.
+
+The [platform evidence](evidence/2026-10-12-greedy-platform.json) and
+[archive](evidence/2026-10-12-greedy-platform.tar.gz) preserve all 19 command logs,
+compiler/cached-sysroot identities, exact selectors, test overlays, caller source
+and both originally recorded rlibs. The canonical caller output is overwritten
+by the second build; the safe/all artifacts were recovered from their distinct
+Cargo paths by exact hashes without rebuilding. All tested production inputs
+and both added tests match the immutable snapshot and delivered files. Every
+one of the archive's 34 members was verified. Full feature checks, measurements
+and complete upstream migration remain separate obligations.

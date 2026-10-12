@@ -353,3 +353,52 @@ fn invalid_schedules_preserve_owners_and_borrowed_results_outlive_the_source() {
         monitor.assert_released();
     }
 }
+
+/// Small explicit chain/row plans keep interpreted target checks bounded.
+/// Public source-size adjustment is covered separately by the integration suite.
+#[test]
+fn platform_small_chain_and_row_frames_preserve_exact_owners_and_key_bounds() {
+    let source: Vec<u8> = b"abcdabcd1234abcd"
+        .iter()
+        .copied()
+        .cycle()
+        .take(96)
+        .collect();
+    for window in [10, 15] {
+        for minimum in [3, 7] {
+            let parameters = RawCompressionParameters {
+                window_log: window,
+                chain_log: 6,
+                hash_log: 6,
+                search_log: 4,
+                min_match: minimum,
+                target_length: 0,
+                strategy: 3,
+            }
+            .validate()
+            .unwrap();
+            let plan = ReferenceSearchPlan::Greedy(
+                GreedyExecutionPlan::from_resolved_parameters(parameters, source.len()).unwrap(),
+            );
+            let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+            let identity = owner.identity();
+            let monitor = owner.monitor();
+            let frame = compress_reference_in(&source, plan, owner).unwrap();
+            assert_eq!(frame.allocator().identity(), identity);
+            assert_eq!(monitor.snapshot().live_blocks, 1);
+            let (header, _) = FrameHeader::parse(&frame).unwrap();
+            assert_eq!(header.content_size, Some(96));
+            assert_eq!(header.window_size, 96);
+            assert_eq!(header.dictionary_id, 0);
+            assert!(!header.has_checksum);
+            assert_eq!(crate::decompress(&frame, 96).unwrap(), source);
+            assert!(crate::decompress(&frame, 95).is_err());
+            drop(frame);
+            monitor.assert_released();
+            assert_eq!(
+                monitor.snapshot().identities_created,
+                monitor.snapshot().owners_dropped
+            );
+        }
+    }
+}
