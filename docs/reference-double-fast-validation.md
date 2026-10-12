@@ -422,3 +422,27 @@ The [evidence](evidence/2026-10-12-reference-policy.json) and
 and command identities. This checkpoint shares policy and existing entropy
 owners; static algorithm dispatch and complete DoubleFast frame emission remain
 open. No new C capture, Miri, timing or public DoubleFast support is claimed.
+
+## Static search and shared frame dispatch
+
+`ReferenceSearchPlan` holds one already admitted Fast or DoubleFast plan;
+`ReferenceSearchState` constructs only that parser's complete table/vector owners.
+The common frame workspace keeps one committed entropy owner and separate
+parsed/emitted progress. It consumes the admitted plan without resolving the
+request again. The public facade still selects only its previously supported
+Fast path; private DoubleFast frame qualification follows separately.
+
+Three dispatch tests pass in five configurations:15 executions. They verify
+exactly one Fast or two DoubleFast table allocations, child identities, rejection
+before cloning, borrowed non-clone support and a frozen unequal-table ordinary
+DoubleFast trajectory. All nine existing Fast workspace tests pass in the same
+five configurations:45 executions. The frozen safe/all Fast/named byte and
+allocator baselines add22, for82 total. All18 commands pass, including strict
+Clippy, no_std compilation and formatting.
+
+The [evidence](evidence/2026-10-12-reference-dispatch.json) and
+[archive](evidence/2026-10-12-reference-dispatch.tar.gz) bind the source and logs.
+The first workspace bootstrap passed with a temporary unconstructed-variant
+warning before the dispatch tests were added; final checks have no diagnostic.
+Complete DoubleFast frame/failure qualification and public admission remain
+open. No new C capture, Miri or timing is claimed.

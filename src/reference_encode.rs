@@ -3,7 +3,7 @@
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
-use crate::fast_encode::compress_fast_in;
+use crate::reference_frame_encode::compress_fast_in;
 use crate::{CompressionParameterRequest, Result};
 
 /// Compress one known-size frame using an admitted reference Fast level.

@@ -60,7 +60,7 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Retain both sampled tables across blocks with separate parsed/emitted state, committed repeats and poison semantics.
 - [x] Extract common plain frame settings and truthful header/bound writing while preserving Fast/named output and allocator behavior.
 - [x] Extract the shared explicit entropy/gain policy while retaining Fast-only raw-literal acceleration and existing allocation order.
-- [ ] Add small static search/emission dispatch without allocating inactive algorithm state or duplicating committed entropy.
+- [x] Add small static search/emission dispatch without allocating inactive algorithm state or duplicating committed entropy.
 - [ ] Emit complete DoubleFast frames with window-log-21 metadata, raw/RLE fallback, transactional publication and every observed allocation-failure ordinal.
 - [ ] Extend public level/request admission with level0/default3 equivalence, tier-specific levels2/4 and qualified usage documentation.
 - [ ] Port newly admitted official numeric/fuzz assertions through a successor policy layer while preserving frozen C tuples and all remaining context/dictionary/capacity gaps.

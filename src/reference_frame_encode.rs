@@ -1,4 +1,4 @@
-//! Whole-buffer Fast framing with persistent search and transactional entropy.
+//! Shared reference framing with selected search and one transactional entropy owner.
 #![forbid(unsafe_code)]
 
 use alloc::vec::Vec;
@@ -6,11 +6,10 @@ use core::alloc::Allocator;
 
 use crate::block_entropy::BlockEntropyEncoder;
 use crate::fast_plan::FastExecutionPlan;
-use crate::fast_state::FastMatchState;
 use crate::frame::{BlockKind, MAX_BLOCK_SIZE};
 use crate::literal_encode::LiteralEncoder;
-use crate::matchfinder::MatchTable;
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
+use crate::reference_search::{ReferenceSearchPlan, ReferenceSearchState};
 use crate::sequence_context::SequenceEncoder;
 use crate::{CompressionParameterRequest, Error, Result};
 
@@ -25,7 +24,21 @@ pub(crate) fn compress_fast_in<A: Allocator + Clone>(
     request: &CompressionParameterRequest,
     allocator: A,
 ) -> Result<Vec<u8, A>> {
-    let plan = FastExecutionPlan::new(request, input.len())?;
+    let plan = ReferenceSearchPlan::Fast(FastExecutionPlan::new(request, input.len())?);
+    compress_reference_in(input, plan, allocator)
+}
+
+/// Encode using a pre-admitted static search plan without resolving it again.
+/// Source/metadata/bound errors precede output allocation; empty frames allocate
+/// no workspace. The public facade still admits only its existing Fast scope.
+pub(crate) fn compress_reference_in<A: Allocator + Clone>(
+    input: &[u8],
+    plan: ReferenceSearchPlan,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    if input.len() != plan.source_len() {
+        return Err(Error::InvalidParameter);
+    }
     let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
     let bound = ReferenceFrameHeader::raw_frame_bound(&settings)?;
     let mut output = Vec::new_in(allocator);
@@ -42,7 +55,7 @@ pub(crate) fn compress_fast_in<A: Allocator + Clone>(
         }
         return Ok(output);
     }
-    let mut workspace = FastEncoderWorkspace::new(input, plan, output.allocator().clone())?;
+    let mut workspace = ReferenceEncoderWorkspace::new(input, plan, output.allocator().clone())?;
     while workspace.emitted < input.len() {
         let length = (input.len() - workspace.emitted).min(plan.block_limit());
         let last = length == input.len() - workspace.emitted;
@@ -56,28 +69,25 @@ pub(crate) fn compress_fast_in<A: Allocator + Clone>(
 /// Search advances before emission. `emitted` advances only after an entire
 /// block is appended; any intermediate failure invalidates this workspace.
 /// Committed repeats live exclusively in the entropy child, never here.
-struct FastEncoderWorkspace<'a, A: Allocator> {
+struct ReferenceEncoderWorkspace<'a, A: Allocator> {
     source: &'a [u8],
-    plan: FastExecutionPlan,
-    search: FastMatchState<'a, A>,
+    plan: ReferenceSearchPlan,
+    search: ReferenceSearchState<'a, A>,
     entropy: BlockEntropyEncoder<A>,
     emitted: usize,
     failed: bool,
     finished: bool,
 }
 
-impl<'a, A: Allocator + Clone> FastEncoderWorkspace<'a, A> {
-    fn new(source: &'a [u8], plan: FastExecutionPlan, factory: A) -> Result<Self> {
+impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
+    fn new(source: &'a [u8], plan: ReferenceSearchPlan, factory: A) -> Result<Self> {
         if source.len() != plan.source_len() {
             return Err(Error::InvalidParameter);
         }
-        let table = MatchTable::with_layout_in(plan.layout(), factory.clone())?;
-        let literals = Vec::new_in(factory.clone());
-        let sequences = Vec::new_in(factory.clone());
+        let search = ReferenceSearchState::new(source, plan, &factory)?;
         let literal_encoder = LiteralEncoder::new_in(factory.clone());
         let sequence_encoder = SequenceEncoder::new_in(factory.clone());
         let payload = Vec::new_in(factory);
-        let search = FastMatchState::from_parts(source, plan, table, literals, sequences)?;
         let mut entropy =
             BlockEntropyEncoder::from_parts(literal_encoder, sequence_encoder, payload);
         entropy.start_frame(None, None)?;
@@ -132,13 +142,13 @@ impl<'a, A: Allocator + Clone> FastEncoderWorkspace<'a, A> {
         let block = &self.source[self.emitted..end];
         let initial_repeat = self.entropy.sequence_encoder.committed_repeats();
         let parsed = self.search.parse_next(block.len(), initial_repeat)?;
-        let worthwhile = if parsed.is_some() {
+        let worthwhile = if parsed {
             self.entropy.prepare_reference(
                 self.search.literals(),
                 self.search.sequences(),
                 initial_repeat,
                 block.len(),
-                self.plan.raw_literals(),
+                crate::reference_policy::raw_literals(self.plan.parameters()),
             )?
         } else {
             // One through six bytes bypass fresh entropy, including literal RLE.
@@ -147,7 +157,7 @@ impl<'a, A: Allocator + Clone> FastEncoderWorkspace<'a, A> {
         // The reference gate is after entropy work, even for a uniform block.
         // Rejected gain has effective compressed size zero. Independent entropy
         // may select a different payload/mode from C while preserving the format.
-        let rle = parsed.is_some()
+        let rle = parsed
             && self.emitted != 0
             && (!worthwhile || self.entropy.as_bytes().len() < 25)
             && block.iter().all(|&byte| byte == block[0]);
@@ -265,13 +275,14 @@ mod tests {
         input: &'a [u8],
         request: &CompressionParameterRequest,
         allocator: A,
-    ) -> (FastEncoderWorkspace<'a, A>, Vec<u8>) {
+    ) -> (ReferenceEncoderWorkspace<'a, A>, Vec<u8>) {
         let plan = FastExecutionPlan::new(request, input.len()).unwrap();
         let settings =
             ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log()).unwrap();
         let frame = ReferenceFrameHeader::new(&settings).as_bytes().to_vec();
         (
-            FastEncoderWorkspace::new(input, plan, allocator).unwrap(),
+            ReferenceEncoderWorkspace::new(input, ReferenceSearchPlan::Fast(plan), allocator)
+                .unwrap(),
             frame,
         )
     }
