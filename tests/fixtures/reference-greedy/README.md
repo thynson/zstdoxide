@@ -57,4 +57,7 @@ the original C captures. Normal Python and `-O` each pass two positive reads and
 reject 24 mutations without subprocess creation. Separate publication controls
 reject changed case bytes, changed provenance, partial publication and symlink
 outputs. [Evidence and replay drivers](../../../docs/evidence/2026-10-12-greedy-projection.json)
-retain exact checks and their scope. The Rust reader/parser is the next work item.
+retain exact checks and their scope. The checked Rust reader is in `tests/support/greedy_oracle.rs`; five tests replay
+sequences, complete owner maps and all seeded Rust backends on safe, both new
+unsafe features separately and all features. Full Rust parser execution is the
+next work item.

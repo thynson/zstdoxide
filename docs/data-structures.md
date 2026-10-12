@@ -847,3 +847,15 @@ owns bounded metadata vectors, validates counts before reserving and replays
 sequences/fingerprints without JSON, C bindings or subprocesses. These plain
 fixture records need no unsafe backend. Projection and Rust reader are separate
 work items so immutable provenance can be reviewed before parser execution.
+
+The test-only `greedy_oracle_fixture` now reads the 173 projected cases with
+bounded, fallible metadata allocations and borrowed source/name/literal spans.
+Raw C frontiers are checked before removing the bias of two. Canonical complete
+maps validate owner roles, ordering, byte widths, source bounds, fingerprints,
+reserved row heads and hash/tag membership. Independent sequence replay checks
+raw/expanded lengths, offset intents, long markers and separate raw/wire repeat
+triples. Seeded Rust owners match all 346 C initial maps. Five tests pass on safe,
+unsafe-reference-chain alone, unsafe-row-table alone and all features; strict
+safe/all Clippy, formatting and no_std compilation pass. Truncation, dimensions,
+counts, semantic forgeries and coherently rehashed bad heads/positions reject.
+The reader is excluded from production builds; full Greedy parsing is pending.

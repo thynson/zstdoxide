@@ -187,7 +187,17 @@ mutations with process creation disabled. Separate publication-policy controls
 pass two positives and reject four overwrite/partial-write/symlink cases per
 mode. Their byte-source substitution is explicitly qualified in the
 [evidence](evidence/2026-10-12-greedy-projection.json); it does not replace source
-verification. The Rust fixture reader and full parser remain pending.
+verification. The Rust fixture reader is now checked separately below; full parsing remains pending.
+
+The dependency-free Rust fixture adapter passes five tests on the safe default,
+`unsafe-reference-chain` alone, `unsafe-row-table` alone and all features. It
+replays every sequence and wire repeat, validates complete map fingerprints and
+hash/tag membership, and compares all 346 seeded Rust owner maps with C. Controls
+reject truncated/count/extent errors, malformed dimensions, forged sequences,
+invalid owner roles and coherently rehashed invalid raw positions or reserved
+heads. Strict safe/all Clippy, formatting and no_std compilation pass. These
+checks establish the reader and initial storage states, not complete Rust Greedy
+search/parsing or final parser-state equivalence.
 
 ## Remaining scope
 

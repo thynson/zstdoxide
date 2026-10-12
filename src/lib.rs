@@ -74,6 +74,9 @@ mod fse_encode;
 mod fse_select;
 mod greedy_block;
 mod greedy_key;
+#[cfg(test)]
+#[path = "../tests/support/greedy_oracle.rs"]
+mod greedy_oracle_fixture;
 mod greedy_plan;
 mod heap;
 mod history;
