@@ -1,0 +1,191 @@
+{
+  "algorithm_caps": {
+    "DoubleFast": {
+      "chain": 18,
+      "hash": 18,
+      "window": 21
+    },
+    "Fast": {
+      "hash": 18,
+      "window": 20
+    },
+    "Greedy": {
+      "chain_branch_chain": 18,
+      "chain_branch_search": 8,
+      "hash": 19,
+      "row_attempt_cap": 64,
+      "row_unused_chain_cap": null,
+      "row_when_window_above": 14,
+      "window": 21
+    }
+  },
+  "broader159_additive_c_required": [
+    "tier-0-level-4",
+    "tier-6-level-4",
+    "tier-7-level-4",
+    "tier-16384-level-4",
+    "tier-131073-level-4",
+    "tier-262144-level-4",
+    "fuzzer-empty-level-4",
+    "fuzzer-initial_match-level-4"
+  ],
+  "broader_capture_evidence_sha256": "ee4b36fede5644f2a2765207ef3eb55862c97e98125863cb5d9af5f03cc6ebfa",
+  "changed_broader": [
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-0-level-4"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-6-level-4"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-7-level-4"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-16384-level-4"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-131073-level-4"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "tier-262144-level-4"
+    },
+    {
+      "after": "resource",
+      "before": "unsupported",
+      "case": "cap-w22-c19-h19-s3"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "fuzzer-empty-level-4"
+    },
+    {
+      "after": "success",
+      "before": "unsupported",
+      "case": "fuzzer-initial_match-level-4"
+    }
+  ],
+  "coverage": {
+    "broader159": {
+      "v2": {
+        "resource": 4,
+        "success": 113,
+        "unsupported": 42
+      },
+      "v3": {
+        "resource": 5,
+        "success": 121,
+        "unsupported": 33
+      }
+    },
+    "historical92": {
+      "v2": {
+        "resource": 3,
+        "success": 85,
+        "unsupported": 4
+      },
+      "v3": {
+        "resource": 3,
+        "success": 86,
+        "unsupported": 3
+      }
+    },
+    "loops": {
+      "empty": {
+        "v2": {
+          "success": 5,
+          "unsupported": 19
+        },
+        "v3": {
+          "success": 6,
+          "unsupported": 18
+        }
+      },
+      "initial_match": {
+        "v2": {
+          "success": 3,
+          "unsupported": 16
+        },
+        "v3": {
+          "success": 4,
+          "unsupported": 15
+        }
+      }
+    },
+    "selectors": {
+      "v2": {
+        "advanced": 4,
+        "success": 61,
+        "unsupported": 16
+      },
+      "v3": {
+        "advanced": 4,
+        "success": 62,
+        "unsupported": 15
+      }
+    }
+  },
+  "fixtures": [
+    {
+      "bytes": 23567,
+      "path": "broader.tsv",
+      "sha256": "545ab96911821c87a0dafe2d8ad06b5bdc83de2da8ff08a7a9e69d791c4db24c"
+    },
+    {
+      "bytes": 8641,
+      "path": "fuzz.tsv",
+      "sha256": "e7c8b01438e2bb35cc66a81d42ad4fa2f02203d222c25600efc2205267dae611"
+    },
+    {
+      "bytes": 13009,
+      "path": "interop.tsv",
+      "sha256": "d1297efaeb9496515f41aaab46bc1a903dd652710234bbac4fbc7306463a7f24"
+    },
+    {
+      "bytes": 1936,
+      "path": "loops.tsv",
+      "sha256": "bd35c8a40cc7f0bb01dc7393f1d072ff1240e923ffabe26cea24733e613d410e"
+    }
+  ],
+  "generator": "scripts/check_reference_admission_v3.py",
+  "generator_sha256": "af3818761663797bfd748c50a2f844dca4512d5d274ea367450bcb95f64681ee",
+  "historical92_additive_c_required": [
+    "unsupported-strategy-3"
+  ],
+  "input_sha256": {
+    "docs/evidence/2026-10-12-double-fast-interop-full.json": "b7c90ca59a094c9307ab4b361333b7391a86ad63d73885012fdf0d1b093ea476",
+    "docs/evidence/2026-10-12-double-fast-interop-full.tar.gz": "9a3bede445e00aa88782516b24535da3a990cef001866487b5b36f7e5f569a76",
+    "scripts/check_double_fast_interop_recipes.py": "83af1fd5b89b0d512a3a1294492b6b5a9e73ad61f0bb992c043f839da3ae0fcf",
+    "scripts/check_reference_admission_v2.py": "8df6864e736337c9150f111c000221975308c0cd72f1775d36981e13d59bef69",
+    "scripts/import_reference_fast_fuzz.py": "cbbbc0d8b4c8709b3002c7d55d995ed61477fbfa42f2ee624952d0d4c814adbc",
+    "scripts/oracles/double_fast_frames.py": "ac10609d7fe7c0f4983899238dc8a852ca437e35aff42b317599a0286c8ea656",
+    "scripts/oracles/double_fast_interop.py": "05eefcf492ce7dca0741d3348d165aca8a48e402aa63710d1c043775125705f3",
+    "scripts/oracles/double_fast_interop_protocol.py": "af9562efe67846530ab364ce6c97388af7f407147040b67e330643517e5ad543",
+    "tests/fixtures/reference-admission-v2/README.md": "2aa36ddc6770a65b8391b6f704af054012910ffb0174a6d3a865b504387c410c",
+    "tests/fixtures/reference-admission-v2/fuzz.tsv": "7b2fbce793df15e2185b65bad272e9e6428a614fdb00905f949bfeb8d45bbc13",
+    "tests/fixtures/reference-admission-v2/interop.tsv": "6c1b9c77329cba64893738b92304d5e0020c4bc0a8ff08e6ea2da9d27d0c516c",
+    "tests/fixtures/reference-admission-v2/loops.tsv": "c5c2bed1fe2dcf8631d89eecf98510cab81b9c115d365e6a5dadef216245ce6d",
+    "tests/fixtures/reference-admission-v2/provenance.json": "a0c9899b439992f2e37b85be36276e63aa5a531f2bce012c20305e1ba6d99304",
+    "tests/fixtures/reference-double-fast-interop-recipes/recipes.json": "81f39a8303c41232b5d4993168f986f967aa2b1034efc77b5f86c4b401373add",
+    "tests/upstream/parameters/presets.tsv": "4e188cc16826c6665dcd440ae9d153484aeb4e561321a089be2aec260667881d",
+    "tests/upstream/reference-fast-fuzz/observations.tsv": "77a868913331f7e9edd4a73a60634eebd97d83b5b57050b6945fbde5b317b4e5"
+  },
+  "newly_admitted_selectors": [
+    "unsupported-57"
+  ],
+  "qualification": "Source-only v3 expectations before public Greedy admission. Original81 selectors and43 numeric loop inputs are unchanged; C presets are pre-adjustment values. Both92/159 historical interop sets retain archived Rust-resolved scalar tuples, not newly observed C parameters. New positive C cases remain obligations. No codec, compiler, archived code or child process executes.",
+  "schema_version": 3,
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}
