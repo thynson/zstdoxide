@@ -45,7 +45,7 @@ inputs, and historical C observations retain their original admission scope.
 - [x] Specify and independently source-review bounded direct DoubleFast C protocol/arenas and tiny input hypotheses before implementation.
 - [x] Implement the bounded direct DoubleFast C adapter, review its actual allocations against the protocol proof, then capture tiny observations with scoped sanitizers.
 - [x] Capture low-log eight-byte C hashes for 64 fixed keys at logs6..9 with aligned/unaligned loads, freeze provenance, and compare Rust safe/feature backends.
-- [ ] Specify and pin wider DoubleFast recipe families for widths, unequal tables, step thresholds, collisions, repeat transitions, floors and long markers before capture.
+- [x] Specify and pin wider DoubleFast recipe families for widths, unequal tables, step thresholds, collisions, repeat transitions, floors and long markers before capture.
 - [ ] Freeze the wider direct-parser observations, both full table maps, provenance and offline rejection controls before Rust parsing.
 - [x] Add the private checked eight-byte long-key layout while preserving current Fast and named layout domains.
 - [x] Add the allocation-free DoubleFast plan, independent table/window caps, target layouts and actual source-tier admission checks.

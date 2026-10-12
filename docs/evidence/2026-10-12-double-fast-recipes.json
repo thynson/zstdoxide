@@ -1,0 +1,39 @@
+{
+  "aggregate_source_bytes": 5242885,
+  "archive": {
+    "bytes": 251823,
+    "members": 79,
+    "path": "docs/evidence/2026-10-12-double-fast-recipes.tar.gz",
+    "sha256": "0cc1827780f62a16cef27cb4b82da3842ae2d9f0a4b9d7309df17b4fdd74f178"
+  },
+  "controls": [
+    {
+      "optimized": 0,
+      "positive": 1,
+      "rejected": 52,
+      "report_sha256": "2f678cf0c7f38cd31298fc9518164c150a3e5efdf7657139b61d281999154e6d"
+    },
+    {
+      "optimized": 1,
+      "positive": 1,
+      "rejected": 52,
+      "report_sha256": "0a787030ac18d9598a87ff3a1400c7be06eb58962b08cad435b1d1281f1b44df"
+    }
+  ],
+  "date": "2026-10-12",
+  "diff_whitespace": "passed",
+  "families": 14,
+  "frozen_manifest_sha256": "b2e9b2c8302e99a5974ea5d9d8fba67986c4f3cd94a34810631fa56c04d811e7",
+  "git_base": "f2b9e7c15ab02808a05d5d30efe8989c2cc9636b",
+  "maximum_packet_bytes": 2228372,
+  "offline_check_normal_and_optimized": "passed",
+  "recipes": 168,
+  "schema_version": 1,
+  "scope": "Source-only hypotheses; no new C or Rust parser observations.",
+  "source_pins": {
+    "scripts/oracles/double_fast_direct.c": "e20d452423a3f913831ac04f6edd79be3d0d18fb0fe6609357ef4ea47816d9d4",
+    "scripts/oracles/double_fast_direct.py": "5280b94e6e10e34a263b7ae1b31a24026adfd92327767b776e81344362604065",
+    "scripts/oracles/double_fast_families.py": "56fa1aa0df89cb173c596c94d40ac8aa08c183b2dc8af50c9cc128308877e15e"
+  },
+  "status": "passed"
+}
