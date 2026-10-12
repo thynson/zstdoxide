@@ -129,3 +129,23 @@ selector/numeric-loop assertions and broader bidirectional C interoperability.
 The complete feature/platform checks and measured safe/unsafe comparison remain
 explicit work items. None of these bounded successes alone completes the 188
 unfinished official source units or the full roadmap.
+
+## Preserved predecessor checkpoint
+
+The complete pre-Lazy fixture now derives 32 logical cases, 24 distinct frames
+and 13,723,905 packed bytes from the immutable all-backend Greedy clock-free
+archive. All sixteen captured configurations agree. Nine permanent Rust tests
+pass in safe, isolated reference-chain, isolated row-table and all-feature
+builds: 36 executions, with exact frames/tuples, decoded bytes and qualified
+allocation records. Strict focused Clippy safe/all and formatting pass.
+
+The independent auditor runs no codec or child process. Normal and optimized
+Python each accept two positives and reject 15 altered archive/fixture/provenance
+inputs, with zero child attempts. The initial temporary control runner selected
+the older auditor and failed its own positive count; correcting that runner's
+target and rerunning both complete modes required no expectation or codec change.
+The [evidence](evidence/2026-10-12-greedy-baseline.json) and
+[archive](evidence/2026-10-12-greedy-baseline.tar.gz) preserve source identities,
+commands, logs and controls. These new preparation tests are separately checked;
+they are not retroactively part of Module 14's immutable full matrix. Production
+source and its pending measured inputs remain unchanged.
