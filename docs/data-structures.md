@@ -929,7 +929,7 @@ chain, isolated row and all-feature builds, including coherently rehashed bad
 positions, tiny-floor and cache/salt forgeries. Strict safe/all Clippy, formatting
 and no_std compilation pass. No production encoder admission changes.
 
-The ordinary retained `GreedyMatchState` will own exactly one selected
+The ordinary retained `GreedyMatchState` owns exactly one selected
 `GreedyTables` variant (chain heads/links or row positions/tags) plus separate
 literal/sequence scratch vectors, all preserving their supplied allocator
 values. It borrows one complete contiguous source and stores only logical
@@ -942,3 +942,14 @@ raw/RLE selection never rolls back sampled tables. Invalid arguments precede
 mutation. Any parser/allocation failure poisons the retained context, including
 future empty calls, so partial writes cannot be reused. This safe composite
 adds no new unsafe leaf and must be checked with both existing leaf switches.
+
+All 395 ordinary C blocks now match the Rust retained context without reseeding:
+367 fresh candidates, complete maps, literals/sequences, frontiers, skipping,
+salt entropy and independently committed wire repeats. The 25 raw and 12 RLE
+changed-repeat candidates remain discarded while sampled history survives.
+Seven tests pass on safe, isolated chain, isolated row and all-feature builds.
+They cover invalid arguments before requests, either table/scratch allocation
+failure, exact independent non-clone owners and scratch reuse, and an injected
+future candidate that rejects after a pending insertion and poisons all later
+calls. Strict safe/all Clippy, formatting and safe/combined-leaf no_std pass.
+The context does not compare Rust cache machinery with C cache observations.
