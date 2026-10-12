@@ -902,3 +902,18 @@ applies the 384/192 long-gap adjustment. A zero call does neither. The direct
 parser already consumes a prepared frontier and must not incorporate either
 ordinary-wrapper transition. The retained state will track this scalar
 separately from table mutation and candidate publication.
+
+The ordinary Greedy fixture projection borrows names, source bytes, literals
+and complete frame bytes from an immutable little-endian test file. Bounded
+metadata vectors own schedules, positive-block observations, candidate sequences
+and both table delta streams. Each copied sampling record preserves the raw C
+frontier (bias two), skipping, row geometry, salt/entropy and eight cache values;
+cache retention is evidence, not a Rust cache-equivalence requirement. Zero calls
+remain in the schedule, with their no-change observations verified in the frozen
+source collection. Positive blocks retain before/after sampling, window floor,
+separate raw/wire repeats, raw sequence lengths and long markers. The checked
+reader must reconstruct complete tables and replay source bytes independently
+before production parsing uses any expected value. These test records and
+borrowed spans add no unsafe operations or performance backend. Full entropy
+observations remain in the source collection; exact complete frames cover later
+encoder publication. Projection and reader have separate checked work items.

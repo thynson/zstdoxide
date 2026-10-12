@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-12",
+  "driver": {
+    "sha256": "91f8147bda76d10c198ac5d1093d4b28ce1ed2012450d236cd9bf760c1a0bd29",
+    "source": "from pathlib import Path\nimport hashlib,json,os,subprocess,sys,tempfile\nroot=Path('/Users/lanxingcan/Workspace/zstdoxize');sys.path.insert(0,str(root/'scripts'));children=[]\ndef forbidden(*args,**kwargs):children.append('blocked');raise RuntimeError('child creation forbidden during projection')\nsubprocess.Popen=forbidden\nfor name in ['system','fork','forkpty','posix_spawn','posix_spawnp','spawnl','spawnle','spawnlp','spawnlpe','spawnv','spawnve','spawnvp','spawnvpe','execl','execle','execlp','execlpe','execv','execve','execvp','execvpe']:\n if hasattr(os,name):setattr(os,name,forbidden)\nimport pack_greedy_frame_trajectories as m\nfiles=m.projection()\nfor name,data in files.items():\n if (m.DESTINATION/name).read_bytes()!=data:raise ValueError('projection differs: '+name)\nrejected=[]\nwith tempfile.TemporaryDirectory(prefix='zstdoxide-greedy-projection-') as directory:\n p=Path(directory);target=p/'fresh';m.publish(files,target)\n for name,data in files.items():\n  if (target/name).read_bytes()!=data:raise ValueError('fresh publication differs')\n for label,path,contents in [('existing',target,files),('bad_names',p/'bad',{'../outside':b'x'}),('symlink',p/'alias',files)]:\n  if label=='symlink':path.symlink_to(target,target_is_directory=True)\n  try:m.publish(contents,path)\n  except ValueError:rejected.append(label)\n  else:raise ValueError('publication preflight accepted: '+label)\n if (p/'bad').exists() or (p/'outside').exists():raise ValueError('failed preflight wrote destination')\n if {n:(target/n).read_bytes() for n in files}!=files:raise ValueError('existing output changed')\nif children or len(rejected)!=3:raise ValueError('control outcome')\nprint(json.dumps({'python':sys.version,'optimization':sys.flags.optimize,'child_attempts':len(children),'projected_bytes':len(files['cases.bin']),'projected_sha256':hashlib.sha256(files['cases.bin']).hexdigest(),'rejected_controls':rejected,'generator_sha256':hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest()},sort_keys=True))\n"
+  },
+  "provenance": {
+    "binary_format": "ZGRFR01: checked little-endian ordinary Greedy trajectories and complete C frames",
+    "cases": 138,
+    "checker": "scripts/check_greedy_frames.py",
+    "checker_sha256": "3c82513af6e9ab804b40be9b37781b6849f5b0eb3031edbfcc08f340d5f36e2c",
+    "complete_frames": 151,
+    "excluded_partial_headers": 15,
+    "fixture": {
+      "bytes": 32346153,
+      "path": "cases.bin",
+      "sha256": "b9860b1deb6a5b25803374382f3634045953769563d0f5ef0b7b51ea1ab0d38d"
+    },
+    "generator": "scripts/pack_greedy_frame_trajectories.py",
+    "generator_sha256": "23ca92ff4a6d08c462ca293a61461db12c8299acd9f8435c3cb1e858f80d779c",
+    "policy": "Test-only projection of frozen C inputs/observations. No codec execution. Full entropy/owner/cache observations and zero-call records remain in the original collection. Sampling caches are preserved, not a requirement for Rust caching.",
+    "positive_blocks": 395,
+    "schema_version": 1,
+    "source_bytes": 7365784,
+    "source_manifest_sha256": "4a6c6b89452f0c22a7f4d9fe9e45255e48c21ab259cfce62a4981e513e63560e",
+    "source_pack_sha256": "326bbe16b56ea4f353993707fe45f100804983133ec5f5bda4a9ef3b4bbf758d",
+    "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+  },
+  "runs": [
+    {
+      "child_attempts": 0,
+      "generator_sha256": "23ca92ff4a6d08c462ca293a61461db12c8299acd9f8435c3cb1e858f80d779c",
+      "optimization": 0,
+      "projected_bytes": 32346153,
+      "projected_sha256": "b9860b1deb6a5b25803374382f3634045953769563d0f5ef0b7b51ea1ab0d38d",
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "rejected_controls": [
+        "existing",
+        "bad_names",
+        "symlink"
+      ]
+    },
+    {
+      "child_attempts": 0,
+      "generator_sha256": "23ca92ff4a6d08c462ca293a61461db12c8299acd9f8435c3cb1e858f80d779c",
+      "optimization": 1,
+      "projected_bytes": 32346153,
+      "projected_sha256": "b9860b1deb6a5b25803374382f3634045953769563d0f5ef0b7b51ea1ab0d38d",
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "rejected_controls": [
+        "existing",
+        "bad_names",
+        "symlink"
+      ]
+    }
+  ],
+  "scope": "Immutable C observation projection and publication preflight. No codec or child execution in verification runs.",
+  "status": "passed"
+}
