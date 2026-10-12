@@ -262,7 +262,10 @@ Opaque context allocation must use a checked custom allocator with a separate
 8-MiB live cap and bounded owner tracking; keep allocation metadata separate
 from the direct helper arena accounting. Each allocation must maintain normal
 C alignment, detect overflow and retain the exact original free pointer.
-Record complete releases. A source-derived `ZSTD_bitmix` calculation is an
+Fill returned context payloads with 0x3b for the first context and 0xd1 for
+the second, preserving separate guard patterns. This checks that zeroed state
+and fresh salt come from upstream initialization, not helper calloc behavior.
+Record the fill and complete releases. A source-derived `ZSTD_bitmix` calculation is an
 independent cross-check; it must not replace the observed salt or pre-fill the
 field being observed. This mode tests fresh-context salt only, not salt reuse,
 dictionaries, frames or ordinary block selection.
