@@ -40,6 +40,15 @@ codecs. Preserve failed hypotheses instead of dropping cases. Bound each source
 to4MiB, each frame to5MiB and aggregate recipe source bytes to128MiB. The frozen
 manifest will give exact counts, identities and expected classifications.
 
+The committed successor manifest now fixes 422 requests, 73,016,258 source bytes,
+372 admitted hypotheses, 37 unsupported and 13 resource errors, with 25 Rust
+equivalence groups. The two ordinary `row_search29` and `row_unused_chain29`
+sources are small enough that public adjustment selects chains; their search
+settings therefore reject. Preserve these results independently of the earlier
+explicit internal row observations. Both normal and optimized offline runs
+reconstruct identical manifests and reject 39 malformed controls each with
+child creation blocked and zero child attempts.
+
 ## Versioned binary protocol
 
 Use new 8-byte request magic `ZGOI0001`. Follow it with twelve little-endian u32
