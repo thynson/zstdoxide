@@ -4,11 +4,11 @@ use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
 use crate::bitwriter::BitWriter;
-use crate::fast_plan::FastExecutionPlan;
 use crate::frame::MAX_BLOCK_SIZE;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::huffman_encode::build_sparse_literal_table_in;
 use crate::literal_header::LiteralHeader;
+use crate::reference_policy::minimum_gain;
 use crate::{Error, Result};
 
 /// Reusable owned scratch. Table lifetime belongs to the enclosing block
@@ -30,19 +30,19 @@ struct FormatChoice {
 #[derive(Clone, Copy)]
 enum SelectionPolicy {
     Named,
-    Fast { raw_only: bool },
+    Reference { raw_only: bool },
 }
 
 impl SelectionPolicy {
     fn raw_only(self) -> bool {
-        matches!(self, Self::Fast { raw_only: true })
+        matches!(self, Self::Reference { raw_only: true })
     }
 
     fn accepts_payload(self, input_size: usize, payload_size: usize) -> bool {
         match self {
             Self::Named => true,
-            Self::Fast { .. } => input_size
-                .checked_sub(FastExecutionPlan::minimum_gain(input_size))
+            Self::Reference { .. } => input_size
+                .checked_sub(minimum_gain(input_size))
                 .is_some_and(|limit| payload_size < limit),
         }
     }
@@ -92,22 +92,18 @@ impl<A: Allocator + Clone> LiteralEncoder<A> {
         self.select_with_policy(input, previous, SelectionPolicy::Named)
     }
 
-    /// Apply Fast's raw-only and strict payload-gain rules to the independent
+    /// Apply the explicit raw-only flag and shared strict payload-gain rule to the
     /// Rust entropy selector. Raw-only precedes even uniform-literal detection.
     /// `previous` carries no C Huffman-validity state, so this does not model
     /// the reference's separate minimum-attempt or valid-table scheduling.
     /// A returned codebook remains unpublished until the enclosing block commits.
-    #[cfg_attr(
-        not(test),
-        allow(dead_code, reason = "Fast block emission integration follows")
-    )]
-    pub(crate) fn select_fast(
+    pub(crate) fn select_reference(
         &mut self,
         input: &[u8],
         previous: Option<&HuffmanCodebook>,
         raw_only: bool,
     ) -> Result<Option<HuffmanCodebook>> {
-        self.select_with_policy(input, previous, SelectionPolicy::Fast { raw_only })
+        self.select_with_policy(input, previous, SelectionPolicy::Reference { raw_only })
     }
 
     fn select_with_policy(
@@ -304,7 +300,7 @@ mod tests {
         let source = vec![200; 4096];
         assert!(
             encoder
-                .select_fast(&source, Some(&previous), true)
+                .select_reference(&source, Some(&previous), true)
                 .unwrap()
                 .is_none()
         );
@@ -332,7 +328,7 @@ mod tests {
         // does not construct a histogram/table or allocate stream scratch.
         assert!(
             moved
-                .select_fast(&vec![7; 4096], Some(&previous), true)
+                .select_reference(&vec![7; 4096], Some(&previous), true)
                 .unwrap()
                 .is_none()
         );
@@ -358,18 +354,23 @@ mod tests {
         let mut encoder = LiteralEncoder::new_in(&owner);
         monitor.set_fail_at(NonZeroU64::new(1));
         assert_eq!(
-            encoder.select_fast(&[9; 32], None, true),
+            encoder.select_reference(&[9; 32], None, true),
             Err(Error::AllocationFailed)
         );
         assert_eq!(monitor.snapshot().live_blocks, 0);
         monitor.clear_failure();
-        assert!(encoder.select_fast(&[9; 32], None, true).unwrap().is_none());
+        assert!(
+            encoder
+                .select_reference(&[9; 32], None, true)
+                .unwrap()
+                .is_none()
+        );
         assert_eq!(&encoder.as_bytes()[..2], &[0x04, 0x02]);
         assert_eq!(&encoder.as_bytes()[2..], &[9; 32]);
         let before = encoder.as_bytes().to_vec();
         let snapshot = monitor.snapshot();
         assert_eq!(
-            encoder.select_fast(&vec![0; MAX_BLOCK_SIZE + 1], None, true),
+            encoder.select_reference(&vec![0; MAX_BLOCK_SIZE + 1], None, true),
             Err(Error::CorruptData)
         );
         assert_eq!(encoder.as_bytes(), before);
@@ -407,7 +408,7 @@ mod tests {
                 .unwrap();
             assert_eq!(choice.payload_size, payload);
             assert_eq!(choice.section_size, payload + 3);
-            assert_eq!(64 - FastExecutionPlan::minimum_gain(64), 61);
+            assert_eq!(64 - minimum_gain(64), 61);
             // Both complete sections improve on raw's66 bytes. Only the second
             // strictly beats the Fast payload limit; its complete63-byte section
             // is deliberately larger than61, proving the header is excluded.
@@ -415,7 +416,7 @@ mod tests {
             assert_eq!(encoder.as_bytes()[0] & 3, 3);
             assert!(
                 encoder
-                    .select_fast(&input, Some(&previous), false)
+                    .select_reference(&input, Some(&previous), false)
                     .unwrap()
                     .is_none()
             );
@@ -431,7 +432,7 @@ mod tests {
     #[test]
     fn fast_format_gain_counts_description_jumps_markers_and_checked_small_sizes() {
         let codebook = sixteen_symbol_codebook();
-        let fast = SelectionPolicy::Fast { raw_only: false };
+        let fast = SelectionPolicy::Reference { raw_only: false };
         for size in [0, 1, 2, 3] {
             assert!(
                 choose_format(&codebook, &vec![0; size], 0, true, fast)
@@ -444,7 +445,7 @@ mod tests {
             let plain = choose_format(&codebook, &input, 0, true, fast)
                 .unwrap()
                 .unwrap();
-            let limit = size - FastExecutionPlan::minimum_gain(size);
+            let limit = size - minimum_gain(size);
             let description = limit - plain.payload_size;
             // Adding an exact synthetic description cost reaches equality and
             // must reject; the cost is included for each format before selection.
@@ -473,7 +474,10 @@ mod tests {
     fn fast_pending_trees_are_returned_only_for_selected_new_sections() {
         let mut encoder = LiteralEncoder::new();
         let input: Vec<_> = (0..4096).map(|i| (i % 16) as u8).collect();
-        let previous = encoder.select_fast(&input, None, false).unwrap().unwrap();
+        let previous = encoder
+            .select_reference(&input, None, false)
+            .unwrap()
+            .unwrap();
         let original: [_; 256] = core::array::from_fn(|i| previous.code(i as u8));
         assert_eq!(encoder.as_bytes()[0] & 3, 2);
         let mut decoding = None;
@@ -485,7 +489,7 @@ mod tests {
         );
         assert!(
             encoder
-                .select_fast(&input, Some(&previous), false)
+                .select_reference(&input, Some(&previous), false)
                 .unwrap()
                 .is_none()
         );
@@ -499,7 +503,7 @@ mod tests {
         for (source, raw_only, kind) in [(vec![200; 32], false, 1), (vec![7; 32], true, 0)] {
             assert!(
                 encoder
-                    .select_fast(&source, Some(&previous), raw_only)
+                    .select_reference(&source, Some(&previous), raw_only)
                     .unwrap()
                     .is_none()
             );
@@ -517,7 +521,7 @@ mod tests {
         );
         assert!(
             encoder
-                .select_fast(&input, Some(&previous), false)
+                .select_reference(&input, Some(&previous), false)
                 .unwrap()
                 .is_none()
         );
@@ -528,7 +532,7 @@ mod tests {
     fn fast_allocation_failures_discard_candidates_and_recover_exact_owners() {
         let input: Vec<_> = (0..128).map(|i| (i % 16) as u8).collect();
         for warm in [false, true] {
-            check_selection_failures(&input, warm, SelectionPolicy::Fast { raw_only: false });
+            check_selection_failures(&input, warm, SelectionPolicy::Reference { raw_only: false });
         }
     }
 

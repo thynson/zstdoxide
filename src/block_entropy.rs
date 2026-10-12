@@ -7,10 +7,10 @@ use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
 use crate::dictionary::DictionaryEntropyView;
-use crate::fast_plan::FastExecutionPlan;
 use crate::frame::MAX_BLOCK_SIZE;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
+use crate::reference_policy::minimum_gain;
 use crate::sequence_context::{LogicalSequence, SequenceEncoder, SequenceWithOffset};
 use crate::sequence_plan::PlannedSequence;
 use crate::{Error, Result};
@@ -83,14 +83,13 @@ impl<A: Allocator> BlockEntropyEncoder<A> {
 }
 
 impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
-    /// Prepare a complete Fast candidate without publishing frame state.
+    /// Prepare a complete reference Fast/DoubleFast candidate without publishing frame state.
     ///
     /// Snapshot and complete reconstruction checks precede allocation. Offset
     /// intent is checked in source order, but source/window eligibility remains
     /// the parser's responsibility. Failure or insufficient gain clears exposed
     /// payload and candidate publication; committed state and owners survive.
-    #[cfg_attr(not(test), allow(dead_code, reason = "Fast block emission follows"))]
-    pub(crate) fn prepare_fast(
+    pub(crate) fn prepare_reference(
         &mut self,
         literals: &[u8],
         sequences: &[SequenceWithOffset],
@@ -100,7 +99,7 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
     ) -> Result<bool> {
         self.discard();
         self.payload.clear();
-        let result = self.prepare_fast_inner(
+        let result = self.prepare_reference_inner(
             literals,
             sequences,
             initial_repeat,
@@ -114,7 +113,7 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
         result
     }
 
-    fn prepare_fast_inner(
+    fn prepare_reference_inner(
         &mut self,
         literals: &[u8],
         sequences: &[SequenceWithOffset],
@@ -125,13 +124,18 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
         if initial_repeat != self.sequence_encoder.committed_repeats() {
             return Err(Error::InvalidState);
         }
-        validate_fast_reconstruction(literals.len(), sequences, initial_repeat, regenerated_size)?;
+        validate_reference_reconstruction(
+            literals.len(),
+            sequences,
+            initial_repeat,
+            regenerated_size,
+        )?;
         // The normal C block builder bypasses fresh sequence construction below
         // seven bytes. Avoid entropy work for a candidate that cannot be emitted.
         if regenerated_size < 7 {
             return Ok(false);
         }
-        self.pending_literal_table = self.literal_encoder.select_fast(
+        self.pending_literal_table = self.literal_encoder.select_reference(
             literals,
             self.literal_table.as_ref(),
             raw_literals,
@@ -140,8 +144,8 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
             .prepare_with_offsets(sequences, initial_repeat)?;
         self.join_sections()?;
         // Includes both section headers; excludes the outer three-byte block
-        // header, exactly like Fast's whole-block minimum-gain comparison.
-        Ok(fast_payload_is_worthwhile(
+        // header, as in the shared reference whole-block gain comparison.
+        Ok(reference_payload_is_worthwhile(
             self.payload.len(),
             regenerated_size,
         ))
@@ -199,7 +203,7 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
 
 /// Validate lengths and repeat intent without allocating or reading source data.
 /// Literals includes both each sequence's leading literals and the final tail.
-fn validate_fast_reconstruction(
+fn validate_reference_reconstruction(
     literal_count: usize,
     sequences: &[SequenceWithOffset],
     initial_repeat: [u32; 3],
@@ -242,9 +246,9 @@ fn validate_fast_reconstruction(
     Ok(())
 }
 
-fn fast_payload_is_worthwhile(payload_bytes: usize, source_bytes: usize) -> bool {
+fn reference_payload_is_worthwhile(payload_bytes: usize, source_bytes: usize) -> bool {
     source_bytes
-        .checked_sub(FastExecutionPlan::minimum_gain(source_bytes))
+        .checked_sub(minimum_gain(source_bytes))
         .is_some_and(|limit| payload_bytes < limit)
 }
 
@@ -285,7 +289,7 @@ mod tests {
         let first = [record(10, 90, 10, OffsetIntent::Explicit)];
         assert!(
             entropy
-                .prepare_fast(b"abcdefghij", &first, [1, 4, 8], 100, true)
+                .prepare_reference(b"abcdefghij", &first, [1, 4, 8], 100, true)
                 .unwrap()
         );
         assert_eq!(entropy.sequence_encoder.committed_repeats(), [1, 4, 8]);
@@ -296,7 +300,7 @@ mod tests {
         let second = [record(0, 32, 1, OffsetIntent::Repeat1)];
         assert!(
             entropy
-                .prepare_fast(&[], &second, [10, 1, 4], 32, true)
+                .prepare_reference(&[], &second, [10, 1, 4], 32, true)
                 .unwrap()
         );
         assert_eq!(entropy.sequence_encoder.committed_repeats(), [10, 1, 4]);
@@ -319,13 +323,13 @@ mod tests {
         let valid = [record(10, 90, 10, OffsetIntent::Explicit)];
         assert!(
             entropy
-                .prepare_fast(b"abcdefghij", &valid, [1, 4, 8], 100, true)
+                .prepare_reference(b"abcdefghij", &valid, [1, 4, 8], 100, true)
                 .unwrap()
         );
         let before = monitor.snapshot();
         assert!(monitor.fail_next());
         assert_eq!(
-            entropy.prepare_fast(&[], &[], [9, 4, 8], usize::MAX, false),
+            entropy.prepare_reference(&[], &[], [9, 4, 8], usize::MAX, false),
             Err(Error::InvalidState)
         );
         assert_eq!(monitor.snapshot(), before);
@@ -348,7 +352,7 @@ mod tests {
             ),
         ] {
             assert_eq!(
-                entropy.prepare_fast(literals, sequences, [1, 4, 8], size, false),
+                entropy.prepare_reference(literals, sequences, [1, 4, 8], size, false),
                 Err(Error::CorruptData)
             );
             assert_eq!(monitor.snapshot(), before);
@@ -371,19 +375,19 @@ mod tests {
             (128, 4),
             (131_072, 2050),
         ] {
-            assert_eq!(FastExecutionPlan::minimum_gain(source), gain);
+            assert_eq!(minimum_gain(source), gain);
             if let Some(boundary) = source.checked_sub(gain) {
-                assert!(!fast_payload_is_worthwhile(boundary, source));
-                assert!(fast_payload_is_worthwhile(boundary - 1, source));
+                assert!(!reference_payload_is_worthwhile(boundary, source));
+                assert!(reference_payload_is_worthwhile(boundary - 1, source));
             } else {
-                assert!(!fast_payload_is_worthwhile(0, source));
+                assert!(!reference_payload_is_worthwhile(0, source));
             }
         }
         let mut entropy = context(Global);
         let first = [record(10, 90, 10, OffsetIntent::Explicit)];
         assert!(
             entropy
-                .prepare_fast(b"abcdefghij", &first, [1, 4, 8], 100, true)
+                .prepare_reference(b"abcdefghij", &first, [1, 4, 8], 100, true)
                 .unwrap()
         );
         entropy.commit();
@@ -391,7 +395,7 @@ mod tests {
         for input in [&b"abcdef"[..], &b"abcdefg"[..], &b"abcdefghijklmno"[..]] {
             assert!(
                 !entropy
-                    .prepare_fast(input, &[], committed, input.len(), true)
+                    .prepare_reference(input, &[], committed, input.len(), true)
                     .unwrap()
             );
             assert!(entropy.as_bytes().is_empty());
@@ -406,17 +410,17 @@ mod tests {
     fn fast_reconstruction_counts_final_literals_and_checks_complete_total() {
         let sequence = [record(10, 90, 10, OffsetIntent::Explicit)];
         assert_eq!(
-            validate_fast_reconstruction(13, &sequence, [1, 4, 8], 103),
+            validate_reference_reconstruction(13, &sequence, [1, 4, 8], 103),
             Ok(())
         );
         assert_eq!(
-            validate_fast_reconstruction(13, &sequence, [1, 4, 8], 100),
+            validate_reference_reconstruction(13, &sequence, [1, 4, 8], 100),
             Err(Error::CorruptData)
         );
         let mut entropy = context(Global);
         assert!(
             entropy
-                .prepare_fast(b"abcdefghijXYZ", &sequence, [1, 4, 8], 103, true)
+                .prepare_reference(b"abcdefghijXYZ", &sequence, [1, 4, 8], 103, true)
                 .unwrap()
         );
         let mut frame = Vec::from(&[0x28, 0xb5, 0x2f, 0xfd, 0x20, 103][..]);
@@ -435,7 +439,7 @@ mod tests {
         let first = [record(64, 128, 16, OffsetIntent::Explicit)];
         assert!(
             entropy
-                .prepare_fast(&literals, &first, [1, 4, 8], 192, false)
+                .prepare_reference(&literals, &first, [1, 4, 8], 192, false)
                 .unwrap()
         );
         assert!(entropy.pending_literal_table.is_some());
@@ -477,7 +481,7 @@ mod tests {
         for stale in [true, false] {
             assert!(
                 entropy
-                    .prepare_fast(&literals, &sequences, [16, 1, 4], 128, false)
+                    .prepare_reference(&literals, &sequences, [16, 1, 4], 128, false)
                     .unwrap()
             );
             // The candidate has a different alphabet and repeat triple from
@@ -499,7 +503,7 @@ mod tests {
                 ([16, 1, 4], 127, Error::CorruptData)
             };
             assert_eq!(
-                entropy.prepare_fast(&literals, &sequences, snapshot, size, false),
+                entropy.prepare_reference(&literals, &sequences, snapshot, size, false),
                 Err(error)
             );
             assert_eq!(monitor.snapshot(), before);
@@ -525,7 +529,7 @@ mod tests {
         let before = monitor.snapshot().attempts;
         assert!(
             probe
-                .prepare_fast(&literals, &sequences, [16, 1, 4], 128, false)
+                .prepare_reference(&literals, &sequences, [16, 1, 4], 128, false)
                 .unwrap()
         );
         let ordinal = monitor.snapshot().attempts - before;
@@ -544,7 +548,7 @@ mod tests {
         let original = committed_codes(&entropy);
         monitor.set_fail_at(NonZeroU64::new(monitor.snapshot().attempts + ordinal));
         assert_eq!(
-            entropy.prepare_fast(&literals, &sequences, [16, 1, 4], 128, false),
+            entropy.prepare_reference(&literals, &sequences, [16, 1, 4], 128, false),
             Err(Error::AllocationFailed)
         );
         assert_eq!(monitor.snapshot().failures, 1);
@@ -557,7 +561,7 @@ mod tests {
         monitor.clear_failure();
         assert!(
             entropy
-                .prepare_fast(&literals, &sequences, [16, 1, 4], 128, false)
+                .prepare_reference(&literals, &sequences, [16, 1, 4], 128, false)
                 .unwrap()
         );
         assert_eq!(entropy.as_bytes(), expected);
@@ -586,7 +590,7 @@ mod tests {
         let mut probe = context(owner);
         assert!(
             probe
-                .prepare_fast(b"abcdefghij", &sequences, [1, 4, 8], 100, false)
+                .prepare_reference(b"abcdefghij", &sequences, [1, 4, 8], 100, false)
                 .unwrap()
         );
         let expected = probe.as_bytes().to_vec();
@@ -603,7 +607,7 @@ mod tests {
             let monitor = owner.monitor();
             let mut entropy = context(owner);
             assert_eq!(
-                entropy.prepare_fast(b"abcdefghij", &sequences, [1, 4, 8], 100, false),
+                entropy.prepare_reference(b"abcdefghij", &sequences, [1, 4, 8], 100, false),
                 Err(Error::AllocationFailed),
                 "ordinal {ordinal}"
             );
@@ -615,7 +619,7 @@ mod tests {
             assert_eq!(entropy.sequence_encoder.committed_repeats(), [1, 4, 8]);
             assert!(
                 entropy
-                    .prepare_fast(b"abcdefghij", &sequences, [1, 4, 8], 100, false)
+                    .prepare_reference(b"abcdefghij", &sequences, [1, 4, 8], 100, false)
                     .unwrap()
             );
             assert_eq!(entropy.as_bytes(), expected);
@@ -640,13 +644,13 @@ mod tests {
         let sequences = [record(10, 90, 10, OffsetIntent::Explicit)];
         assert!(monitor.fail_next());
         assert_eq!(
-            entropy.prepare_fast(b"abcdefghij", &sequences, [1, 4, 8], 100, true),
+            entropy.prepare_reference(b"abcdefghij", &sequences, [1, 4, 8], 100, true),
             Err(Error::AllocationFailed)
         );
         assert!(entropy.as_bytes().is_empty());
         assert!(
             entropy
-                .prepare_fast(b"abcdefghij", &sequences, [1, 4, 8], 100, true)
+                .prepare_reference(b"abcdefghij", &sequences, [1, 4, 8], 100, true)
                 .unwrap()
         );
         let expected = entropy.as_bytes().to_vec();
@@ -654,7 +658,7 @@ mod tests {
         entropy.reset();
         assert!(
             entropy
-                .prepare_fast(b"abcdefghij", &sequences, [1, 4, 8], 100, true)
+                .prepare_reference(b"abcdefghij", &sequences, [1, 4, 8], 100, true)
                 .unwrap()
         );
         assert_eq!(entropy.as_bytes(), expected);

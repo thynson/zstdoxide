@@ -398,3 +398,27 @@ logs. Initial tests passed; Clippy requested fixed-array chunk iteration in the
 test-only hex reader, which was corrected before the final checks. Partial
 header comparisons do not claim huge-frame decoding or native32-bit execution.
 No new C capture, Miri, timing or public DoubleFast encoding is claimed.
+
+## Shared reference entropy policy
+
+Literal and block entropy no longer import the Fast execution plan. Shared
+scalar policy supplies strict gain and automatic raw-only literal selection;
+the latter requires both the actual Fast strategy and a positive target.
+`prepare_reference` and `select_reference` preserve their previous explicit
+flag, validation, allocation, section ordering and transactional publication.
+Named selection retains its existing distinct policy and ownership.
+
+The new policy integration test demonstrates Huffman and literal-RLE candidates
+under DoubleFast target0/4/131072, while positive Fast targets keep raw literals.
+All14 literal and9 block entropy tests plus the policy test pass in five
+configurations:120 executions. Safe/all Fast/DoubleFast plans, workspace and frozen
+byte/allocation baselines add78 executions, for198 total. The plan substring
+filter includes13 Fast and6 DoubleFast tests in each configuration. All27 commands pass,
+including strict Clippy safe/all, no_std compilation safe/all and formatting.
+The bootstrap also passed without diagnostics.
+
+The [evidence](evidence/2026-10-12-reference-policy.json) and
+[archive](evidence/2026-10-12-reference-policy.tar.gz) preserve the exact source
+and command identities. This checkpoint shares policy and existing entropy
+owners; static algorithm dispatch and complete DoubleFast frame emission remain
+open. No new C capture, Miri, timing or public DoubleFast support is claimed.

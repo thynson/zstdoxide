@@ -86,6 +86,7 @@ mod matchfinder;
 mod parameters;
 mod reference_encode;
 mod reference_frame;
+mod reference_policy;
 mod ring_history;
 mod sequence_context;
 mod sequence_encode;

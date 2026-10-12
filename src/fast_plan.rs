@@ -177,14 +177,7 @@ impl FastExecutionPlan {
     /// Raw-only literals also bypass literal RLE; block RLE is a separate choice.
     /// Corresponds to automatic `ZSTD_literalsCompressionIsDisabled`.
     pub(crate) const fn raw_literals(&self) -> bool {
-        self.parameters.target_length() > 0
-    }
-
-    /// Minimum payload gain for Fast, excluding the relevant section header.
-    /// Corresponds to `ZSTD_minGain` in zstd_compress_internal.h:673–683.
-    /// Shifting by six leaves room for adding two for every usize value.
-    pub(crate) const fn minimum_gain(source_size: usize) -> usize {
-        (source_size >> 6) + 2
+        crate::reference_policy::raw_literals(self.parameters)
     }
 
     /// Reference defaults for the new entry points, independent of named APIs.
@@ -576,10 +569,10 @@ mod tests {
             (128, 4),
             (131_072, 2050),
         ] {
-            assert_eq!(FastExecutionPlan::minimum_gain(size), gain);
+            assert_eq!(crate::reference_policy::minimum_gain(size), gain);
         }
         assert_eq!(
-            FastExecutionPlan::minimum_gain(usize::MAX),
+            crate::reference_policy::minimum_gain(usize::MAX),
             usize::MAX / 64 + 2
         );
     }

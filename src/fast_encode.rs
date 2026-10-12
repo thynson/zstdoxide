@@ -133,7 +133,7 @@ impl<'a, A: Allocator + Clone> FastEncoderWorkspace<'a, A> {
         let initial_repeat = self.entropy.sequence_encoder.committed_repeats();
         let parsed = self.search.parse_next(block.len(), initial_repeat)?;
         let worthwhile = if parsed.is_some() {
-            self.entropy.prepare_fast(
+            self.entropy.prepare_reference(
                 self.search.literals(),
                 self.search.sequences(),
                 initial_repeat,
