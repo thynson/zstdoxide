@@ -1,0 +1,312 @@
+{
+  "additional_tool_observed_checks": {
+    "all_features": {
+      "existing_fast_tests_passed": 4,
+      "new_tests_passed": 5
+    },
+    "offline_audit_modes": [
+      "normal",
+      "optimized"
+    ],
+    "rejection_controls_per_mode": {
+      "child_processes": 0,
+      "positive": 2,
+      "rejected": 15
+    },
+    "safe": {
+      "existing_fast_tests_passed": 4,
+      "new_tests_passed": 5
+    }
+  },
+  "clock_free_archive_sha256": "43b8d17bdf9c43dbc84d4cfc808c656b12ff82d434cebfc5ac2e664553ae04b1",
+  "control_source": "from pathlib import Path\nimport contextlib,hashlib,json,os,runpy,shutil,subprocess,tempfile\nfrom unittest.mock import patch\nrepo=Path('/Users/lanxingcan/Workspace/zstdoxize')\nm=runpy.run_path(str(repo/'scripts/check_reference_double_fast_baseline.py'))\nroot=Path(tempfile.mkdtemp(prefix='zstdoxide-double-baseline-controls-',dir='/tmp')).resolve()\narchive=root/m['ARCHIVE'];archive.parent.mkdir(parents=True)\nshutil.copyfile(repo/m['ARCHIVE'],archive)\nfixture=root/m['COLLECTION'];shutil.copytree(repo/m['COLLECTION'],fixture)\noriginal={n:p.read_bytes() for n,p in [(n,fixture/n) for n in ('expected.tsv','frames.bin','provenance.json','README.md')]}\noriginal_archive=archive.read_bytes();calls=[];results=[]\ndef denied(*a,**kw):calls.append('process');raise RuntimeError('process creation forbidden')\ndef control(name,edit,undo):\n edit()\n try:\n  try:m['audit'](root)\n  except (ValueError,OSError,KeyError,TypeError):results.append({'case':name,'rejected':True})\n  else:raise RuntimeError('mutation accepted: '+name)\n finally:undo()\ndef file_case(name,file,transform):\n p=fixture/file\n control(name,lambda:p.write_bytes(transform(original[file])),lambda:p.write_bytes(original[file]))\ndef change_json(field,value):\n def transform(b):\n  d=json.loads(b);d[field]=value;return (json.dumps(d)+'\\n').encode()\n return transform\nwith contextlib.ExitStack() as st:\n for module,name in [(subprocess,'Popen'),(os,'system'),(os,'posix_spawn'),(os,'posix_spawnp')]:\n  if hasattr(module,name):st.enter_context(patch.object(module,name,denied))\n if m['audit'](root)!=16:raise RuntimeError('positive count')\n file_case('complete-frame-byte','frames.bin',lambda b:bytes([b[0]^1])+b[1:])\n file_case('truncated-frame-pack','frames.bin',lambda b:b[:-1])\n file_case('extra-frame-byte','frames.bin',lambda b:b+b'\\0')\n file_case('allocation-field','expected.tsv',lambda b:b.replace(b'\\t553\\t453\\t100\\t',b'\\t554\\t453\\t100\\t',1))\n file_case('source-fingerprint','expected.tsv',lambda b:b.replace(b'2023247e1659a142',b'2023247e1659a143',1))\n file_case('missing-row','expected.tsv',lambda b:b.rsplit(b'\\n',2)[0]+b'\\n')\n file_case('provenance-bool-count','provenance.json',change_json('rows',True))\n file_case('provenance-float-count','provenance.json',change_json('rows',16.0))\n file_case('provenance-source','provenance.json',change_json('source',{}))\n file_case('duplicate-json-key','provenance.json',lambda b:b.replace(b'{',b'{\"rows\":16,',1))\n file_case('non-finite-json','provenance.json',lambda b:b.replace(b'\"rows\": 16',b'\"rows\": NaN',1))\n file_case('empty-readme','README.md',lambda b:b'')\n extra=fixture/'unexpected'\n control('extra-fixture',lambda:extra.write_text('x'),lambda:extra.unlink())\n p=fixture/'frames.bin'\n def link():p.unlink();p.symlink_to(repo/m['COLLECTION']/'frames.bin')\n def unlink():p.unlink();p.write_bytes(original['frames.bin'])\n control('escaping-fixture-link',link,unlink)\n control('changed-archive',lambda:archive.write_bytes(bytes([original_archive[0]^1])+original_archive[1:]),lambda:archive.write_bytes(original_archive))\n if m['audit'](root)!=16:raise RuntimeError('restored count')\nif calls:raise RuntimeError('child creation attempted')\nif len(results)!=15:raise RuntimeError('wrong controls')\nreport={'positive':2,'rejected':len(results),'child_processes':len(calls),'cases':results,'optimized':not __debug__,'checker_sha256':hashlib.sha256((repo/'scripts/check_reference_double_fast_baseline.py').read_bytes()).hexdigest()}\nprint(json.dumps(report,sort_keys=True))\nshutil.rmtree(root)\n",
+  "fixture": {
+    "expected.tsv": "d6e1691f9d9358dc84812b5350383f34bc457536ea4215f1f309a9fb5dfe0736",
+    "frames.bin": "54830e45b24939cb7e3c0feeb8ec1dfe798537b3693862a20835870abea923cd"
+  },
+  "recorded_checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-byte-cursor",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-byte-cursor",
+      "log_sha256": "a2cf3b5d0a33e3fac83a8593c3374cb7a6abc2cd2bc0125cd2725e6755c7ddef",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.12s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/d68ef6939f2d0924/out/reference_double_fast_defaults-d68ef6939f2d0924)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s\n\n",
+      "seconds": 1.9301724580582231
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-bitstream",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-bitstream",
+      "log_sha256": "4b308bade323f44f8c31c53aaccff6a85f340372a108edb6cf68f99c389330fc",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.40s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/f2b138a49b5b66f8/out/reference_double_fast_defaults-f2b138a49b5b66f8)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s\n\n",
+      "seconds": 1.1662465420085937
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-history",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-history",
+      "log_sha256": "251dcada04e4c258c599b74faa235e77e96818f30addabe5ccc433a238b406b5",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.42s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/ff9d9e6849d6efb6/out/reference_double_fast_defaults-ff9d9e6849d6efb6)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s\n\n",
+      "seconds": 1.1996959999669343
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-ring-history",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-ring-history",
+      "log_sha256": "fe0b287b5b61ab8cc203fe25742b968cd37d80e15cefffc3c94518eef11701da",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.50s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/8f7fa9a78368b901/out/reference_double_fast_defaults-8f7fa9a78368b901)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s\n\n",
+      "seconds": 1.435471124947071
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-fse",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-fse",
+      "log_sha256": "feaeff5d84d3d6364c49e96136878bc5d0235707eab598300d4f5c9c37b74d96",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.40s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/33753fc8bdead866/out/reference_double_fast_defaults-33753fc8bdead866)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s\n\n",
+      "seconds": 1.2372902079951018
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-fse-encoder",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-fse-encoder",
+      "log_sha256": "12eb881f900e07d714cd20555e3702cd4d298e8e1947c3f9c0ea6e9bef524252",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/801e1bfda18f8c6c/out/reference_double_fast_defaults-801e1bfda18f8c6c)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s\n\n",
+      "seconds": 1.3047375408932567
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-huffman",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-huffman",
+      "log_sha256": "aa25d203be21ed6f5fa4ee656363e30194f64f8d2331d8bd1a3e4873084efa00",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.53s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/579f84be38beb420/out/reference_double_fast_defaults-579f84be38beb420)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s\n\n",
+      "seconds": 1.4791896659880877
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-huffman-codebook",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-huffman-codebook",
+      "log_sha256": "9ce3d545b2175b8fbbaf67693d1e4efbe49675106abb50a2ab3e0ef41928557b",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/1ea7e136c33b281a/out/reference_double_fast_defaults-1ea7e136c33b281a)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s\n\n",
+      "seconds": 1.350515415892005
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-match-table",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-match-table",
+      "log_sha256": "30b92e67bd2ff193983ff71a42744c02e29a2a0828eb86734255a4d5704960be",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.43s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/ccdd298c4805e858/out/reference_double_fast_defaults-ccdd298c4805e858)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s\n\n",
+      "seconds": 1.334786457940936
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-match-chain",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-match-chain",
+      "log_sha256": "43372fbc9d87888405cf64758d4362117b48b8525fc3a5640be9fbac5b6e1b8d",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/7a16928aca1b36ec/out/reference_double_fast_defaults-7a16928aca1b36ec)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s\n\n",
+      "seconds": 1.6021175000350922
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-dictionary",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-dictionary",
+      "log_sha256": "0e8d70f58a73b318c0b78e15bdabc6eea57615d3f663f338ab71550d12f05a68",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/5600fc514dd67107/out/reference_double_fast_defaults-5600fc514dd67107)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.73s\n\n",
+      "seconds": 1.6584696248173714
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-training",
+        "--test",
+        "reference_double_fast_defaults"
+      ],
+      "exit": 0,
+      "label": "test-unsafe-training",
+      "log_sha256": "2d8cb037f5c5d685a98820be46db96d61d86455ee281642730f8da9594bf5a2a",
+      "output": "   Compiling zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s\n     Running tests/reference_double_fast_defaults.rs (/tmp/zstdoxide-module13-final-matrix/target/debug/build/zstdoxide/dfc8870a26b0d03e/out/reference_double_fast_defaults-dfc8870a26b0d03e)\n\nrunning 5 tests\ntest complete_catalog_has_sixteen_rows_and_twelve_consecutive_distinct_extents ... ok\ntest larger_short_table_preserves_complete_frames_and_owners ... ok\ntest level_three_preserves_complete_frames_and_owners ... ok\ntest larger_long_table_preserves_complete_frames_and_owners ... ok\ntest level_one_preserves_complete_frames_and_owners ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s\n\n",
+      "seconds": 1.6591384171042591
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--test",
+        "reference_double_fast_defaults",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "label": "clippy-safe",
+      "log_sha256": "713ca6b5e52fce75caeb34be2fe78cb308ff69e3d1e92286a93e70524794432c",
+      "output": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s\n",
+      "seconds": 0.2873932500369847
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-features",
+        "--test",
+        "reference_double_fast_defaults",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "label": "clippy-all",
+      "log_sha256": "b33c9a192f519356d1b3e646b46984d9c858e3568803733ebb7331dbe10aef2a",
+      "output": "    Checking zstdoxide v0.1.0 (/Users/lanxingcan/Workspace/zstdoxize)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.10s\n",
+      "seconds": 0.20308954105712473
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "label": "no-std-safe",
+      "log_sha256": "ee1d3fffa2022e962e63e0dbe4d35c9c198450a20c29fc09030f635dbb38bfcd",
+      "output": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s\n",
+      "seconds": 0.08726658299565315
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-dictionary,unsafe-training"
+      ],
+      "exit": 0,
+      "label": "no-std-all",
+      "log_sha256": "23b9a21bbaf189889e08dc27ed8eba521021280c5852db22205f721db08b2c7c",
+      "output": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s\n",
+      "seconds": 0.03428337490186095
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "tests/reference_double_fast_defaults.rs"
+      ],
+      "exit": 0,
+      "label": "fmt",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output": "",
+      "seconds": 0.04478212492540479
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_reference_fast_baseline.py"
+      ],
+      "exit": 0,
+      "label": "fast-baseline",
+      "log_sha256": "7fbefec318676e7314193c937c5f86179969bc6162d34a626b81c29bfda99f47",
+      "output": "Verified 9 complete Fast frame/allocator records from the fixed clock-free archive.\n",
+      "seconds": 0.09397779195569456
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_match_search_baseline.py"
+      ],
+      "exit": 0,
+      "label": "named-baseline",
+      "log_sha256": "921a4ee4408bcaa973b11ed9edbda612ca4409299205b8fef711a34cffe15e73",
+      "output": "Verified match-search baseline: 152 records, 12 recipes, 16 archived files, 6 reproduction sources, 2 current inputs.\n",
+      "seconds": 0.05725974985398352
+    }
+  ],
+  "scope": "Pre-Greedy complete DoubleFast/Fast baseline extraction and focused checks; no codec implementation changed. Existing full matrix remains separately qualified.",
+  "source_sha256": {
+    "scripts/check.sh": "bba77c6358ca2352821e98aba83723e6df3507b7f9e300b60ec78cf6d08fd167",
+    "scripts/check_reference_double_fast_baseline.py": "4b8d83ffb6634b6e64674382874ce4352531257e869de661953006e083d986db",
+    "tests/reference_double_fast_defaults.rs": "95eca3b5795ce59bb0cdc6e9a9efebbb91a6799b2257a510f1894200e8427d77"
+  }
+}
