@@ -1,0 +1,38 @@
+{
+  "base_case": "long-literal-candidate",
+  "base_manifest_sha256": "b2e9b2c8302e99a5974ea5d9d8fba67986c4f3cd94a34810631fa56c04d811e7",
+  "change": {
+    "appended_byte": 65,
+    "appended_count": 896
+  },
+  "reason": "The original 128-byte tail produced no sequence; retain that observation and separately extend the matching tail to 1024 bytes.",
+  "recipe": {
+    "block_bytes": 66560,
+    "id": "long-literal-extended-tail",
+    "initial_repeats": [
+      4096,
+      8192,
+      16384
+    ],
+    "long_hash_log": 18,
+    "long_seeds": [
+      0
+    ],
+    "min_match": 4,
+    "packet_bytes": 66764,
+    "packet_sha256": "5aba19436e74ca4b83e7abc6a9fec8c74291481fdcc94978eddb5a0a16af0122",
+    "prefix_bytes": 64,
+    "prefix_floor": 0,
+    "search_log": 1,
+    "short_hash_log": 18,
+    "short_seeds": [
+      0
+    ],
+    "source_bytes": 66624,
+    "source_sha256": "f2dc0c4ec356f72a6336146f445039830c15526e09e55da3a08ca9abc050e59c",
+    "target_length": 0,
+    "window_log": 17
+  },
+  "schema_version": 1,
+  "scope": "source-only refinement, fixed before C execution"
+}

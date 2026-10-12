@@ -3,6 +3,19 @@
 Detailed completed work items are preserved in Git history. `TODO.md` contains
 only active module checklists and the remaining roadmap.
 
+## 2026-10-12: wider DoubleFast direct families
+
+168 predeclared constructed inputs and one separately frozen long-literal
+refinement now have complete unchanged-C sequences and both final table maps.
+All 676 padding-case executions agree across normal/scoped ASan/UBSan builds.
+The initial long-literal candidate's zero-match output remains preserved; its
+refinement observes the long-literal marker without rewriting the first case.
+Normal/optimized offline checks cover all observations, 22 equivalence pairs,
+20 sequence witnesses and 32 rejection controls per mode. The fixture registry
+contains 715 files in 19 collections. See `docs/reference-double-fast-families.md`.
+This completes the direct-oracle data item, not Module 13, public DoubleFast
+execution or the complete official test migration.
+
 ## 2026-10-12: direct DoubleFast small-log hashes
 
 512 direct C width8 observations now cover logs6..9 and aligned/unaligned

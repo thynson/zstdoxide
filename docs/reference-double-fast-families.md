@@ -91,3 +91,61 @@ Both project check scripts now run this input check. No C subprocess, Rust
 parser, performance measurement or extra Clippy/no_std run is attributed to
 this source-only checkpoint. See [evidence](evidence/2026-10-12-double-fast-recipes.json)
 and the [source/control archive](evidence/2026-10-12-double-fast-recipes.tar.gz).
+
+## Completed capture, observed limits and refinement
+
+The original 168 inputs subsequently pass 343 capture commands in normal and
+scoped ASan/UBSan builds. Both builds explicitly compile unchanged DoubleFast
+with the already reviewed helper. All 672 padding-case executions agree across
+builds and padding patterns, with complete independent sequence/literal/repeat
+replay and both entire table maps. Source/header/helper/driver/packet identities
+remain unchanged before and after capture. The remaining support archive is
+uninstrumented, and LeakSanitizer is disabled explicitly.
+
+The original long-literal candidate produces **no sequence**. Its largest final
+sampled table position is block-relative 65298, before the matching tail begins
+at 65536. Both long and short prefix seeds remain present. This result is
+consistent with the growing-step search and its lookahead stop condition; it
+does not establish a chronological probe trace. The failed marker hypothesis
+and complete original output remain frozen.
+
+A separately named `long-literal-extended-tail` input was fixed before its own
+execution, extending the matching tail from 128 to 1024 bytes. Its source and
+packet identities are recorded in `refinement-long-literal.json`, without
+changing the original manifest or generator. Two further commands reuse the
+exact recorded compiled normal/sanitized helpers after checking their binary
+and source identities. Four padding-case executions agree and observe LL65554
+as raw LL18 plus the long-literal marker at sequence0. The sequences are
+(LL65554, ML64, distance65618) and (LL0, ML942, distance2), with no trailing bytes.
+
+Other isolated measured consequences include:
+
+| Boundary | Observation |
+| --- | --- |
+| Step3 deferred long store | Bucket215372 becomes raw index549. |
+| Step4 deferred long store | Isolated bucket69048 stays empty; hypothetical candidate raw index808 is not stored. |
+| Short length12 versus later long11/12 | The current short candidate remains selected in both cases. |
+| Short length12 versus later long13 | The later candidate wins with LL1 and distance33. |
+| Current long16 versus short20 | The seeded long candidate wins; removing it selects short20. |
+| Adjacent long-bucket collision | Colliding input retains short4; the paired control selects later long8. |
+| Immediate repeats | One explicit sequence followed by three zero-LL repeat sequences swaps the first two wire repeats correctly. |
+| Ordinary floor540 | Both current table roles reject539 and accept540/541. |
+| Repeat window | Distance1024 yields a repeat match; distance1025 remains unavailable. |
+| Raw match-base boundary | Block65540 gives raw ML base65535 without a marker; block65541 gives base0 with the long-match marker. |
+
+The combined collection has 169 cases and 338 padding observations, representing
+676 C executions across both builds. The offline checker validates 22 whole-record
+equivalence pairs and 20 sequence witnesses, alongside every generic replay/table
+check. Normal and optimized Python both pass all observations plus 2 positive
+and 32 rejection controls. Rejections include malformed long-marker records,
+changed table cells, false witness/equivalence claims and a repaired but forged
+catalog. The exact fixture catalog is independently pinned, and recipe-code
+identities are verified before import. Both project check scripts include the checker; the registry
+passes in both Python modes with 715 files in 19 collections. Whitespace checks
+pass. This oracle-only checkpoint runs no new Rust parser, performance or
+foreign-platform test, and changes no production Rust code.
+
+See [combined evidence](evidence/2026-10-12-double-fast-families.json) and the
+[source, command, refinement and control archive](evidence/2026-10-12-double-fast-families.tar.gz).
+The next implementation items consume these observations; ordinary frame
+publication trajectories remain a separate capture.

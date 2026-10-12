@@ -129,3 +129,20 @@ tests and old Fast/named baselines total 77 passing executions. Clippy safe/all,
 no_std safe/all and formatting pass. The registry now contains 546 files in18
 collections. This completes the explicit low-log primitive item; wider parser
 families and public execution remain open.
+
+## Wider direct families
+
+The wider [family report](reference-double-fast-families.md) now freezes the
+original 168 inputs plus one separately recorded long-literal refinement. All
+676 C padding-case executions agree between normal/scoped sanitized builds,
+and independent replay checks every sequence and both entire tables. The
+original zero-match long-literal candidate remains preserved. The refinement
+observes LL65554 with the correct raw-field extension. Offline verification
+also checks 22 equivalent-record pairs and 20 isolated sequence witnesses.
+
+Normal and optimized Python both pass all 338 observations and 32 rejection
+controls plus 2 positive controls. The registry now contains 715 files in19
+collections. Complete provenance, command failures policy, native metadata,
+sanitizer limits and the distinction between final tables and chronological
+tracing are retained in the report/evidence. The Rust block/owner foundation,
+direct-parser implementation and ordinary-frame publication remain open.

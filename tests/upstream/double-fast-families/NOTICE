@@ -1,0 +1,7 @@
+Reference implementation: facebook/zstd v1.5.7
+Revision: f8745da6ff1ad1e7bab384bd1f9d742439278e99
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+Observations derive from unchanged upstream DoubleFast and its private
+sequence/hash definitions. This project uses the BSD-3-Clause option;
+see ../../../LICENSE.zstd. The setup/replay helpers are test oracles only.
