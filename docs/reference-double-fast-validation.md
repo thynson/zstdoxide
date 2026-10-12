@@ -546,3 +546,26 @@ was removed after that capture; production code was unchanged. The C helper
 alone is ASan/UBSan instrumented; its pinned prebuilt library is not. This
 bounded successor campaign does not establish broader DoubleFast workload,
 full C instrumentation, foreign-target or timing coverage.
+
+## Successor official numeric and fuzz assertions
+
+The official port now explicitly checks every81-row successor mapping against
+its original C selector/input hash, prefix and level, with unchanged preset
+strategy identity. Exactly tier-44, tier-49, unsupported-55 and unsupported-56
+add DoubleFast success. Original43-row fuzzer loops add only empty levels0/3
+and30-byte level3. Existing execution assertions preserve deterministic bytes,
+the original compression-size inequality and exact decoded content. Historical
+classifications remain57/20/4,3/21 and2/17; current expectations are61/16/4,5/19
+and3/16. Advanced selectors retain their unconsumed tails.
+
+Eleven official tests pass in five configurations, and the frozen Fast/named
+baselines pass in safe/all builds:77 executions across19 commands. Focused
+Clippy, no_std and formatting pass. Normal/optimized inventory audits verify
+the complete pinned Git checkout and source anchors; the fixture audit verifies
+838 files in20 collections. The completion gate rejects188 unfinished source
+units and incomplete external target coverage as expected. No status is promoted
+to complete, and caller-buffer, live numeric context, dictionary, decoder-setting,
+forced-streaming and in-place gaps remain explicit. The
+[evidence](evidence/2026-10-12-double-fast-official.json) and
+[archive](evidence/2026-10-12-double-fast-official.tar.gz) retain exact logs/source.
+This checkpoint adds no C capture, Miri or timing claim.

@@ -4978,11 +4978,12 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "The existing named-policy adapter remains. A separate 81-packet capture using the unchanged pinned C data producer verifies original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption, including exhaustion and one/two/three-byte reservation boundaries. The public reference Fast port compresses 57 admitted selected cases at -3/-2/-1/1/2 twice with identical full bytes, fits the captured C bound minus the selected reduction, and exactly decodes with original N as output limit. It explicitly rejects 20 unsupported simple profiles and leaves four advanced branches unconsumed. Captured size inequalities do not implement atomic caller-buffer failure, reusable CCtx/DCtx, mutable decoder max-block settings, sequence producers or overlapping in-place buffers; the advanced random-parameter branch and unimplemented numeric strategies remain absent.",
+      "reason": "The unchanged 81-packet C selector capture preserves original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption. Version2 admission executes 61 selected Fast/DoubleFast cases at -3/-2/-1/0/1/2/3 twice with identical bytes, fits the captured C bound minus reduction, and decodes exact content with original N as output limit. The additive policy preserves historical 57/20/4 classifications; four new DoubleFast cases are identified explicitly. Sixteen simple profiles remain unsupported and four advanced branches remain unconsumed. The policy test checks every original tuple/input hash and preset strategy. These owned-result calls do not implement caller-buffer atomic failure, reusable CCtx/DCtx, mutable decoder settings, sequence producers or overlapping in-place buffers; advanced random parameters and other strategies remain absent.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
         "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
-        "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets"
+        "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets",
+        "tests/upstream_reference_fast.rs#successor_policy_preserves_original_selectors_and_exact_double_fast_additions"
       ],
       "line_count": 182,
       "cases": [
@@ -4993,11 +4994,12 @@
           "line_end": 140,
           "label": "roundTripTest",
           "status": "partial",
-          "reason": "The existing named-policy adapter remains. A separate 81-packet capture using the unchanged pinned C data producer verifies original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption, including exhaustion and one/two/three-byte reservation boundaries. The public reference Fast port compresses 57 admitted selected cases at -3/-2/-1/1/2 twice with identical full bytes, fits the captured C bound minus the selected reduction, and exactly decodes with original N as output limit. It explicitly rejects 20 unsupported simple profiles and leaves four advanced branches unconsumed. Captured size inequalities do not implement atomic caller-buffer failure, reusable CCtx/DCtx, mutable decoder max-block settings, sequence producers or overlapping in-place buffers; the advanced random-parameter branch and unimplemented numeric strategies remain absent.",
+          "reason": "The unchanged 81-packet C selector capture preserves original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption. Version2 admission executes 61 selected Fast/DoubleFast cases at -3/-2/-1/0/1/2/3 twice with identical bytes, fits the captured C bound minus reduction, and decodes exact content with original N as output limit. The additive policy preserves historical 57/20/4 classifications; four new DoubleFast cases are identified explicitly. Sixteen simple profiles remain unsupported and four advanced branches remain unconsumed. The policy test checks every original tuple/input hash and preset strategy. These owned-result calls do not implement caller-buffer atomic failure, reusable CCtx/DCtx, mutable decoder settings, sequence producers or overlapping in-place buffers; advanced random parameters and other strategies remain absent.",
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
             "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
-            "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets"
+            "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets",
+            "tests/upstream_reference_fast.rs#successor_policy_preserves_original_selectors_and_exact_double_fast_additions"
           ]
         },
         {
@@ -5007,11 +5009,12 @@
           "line_end": 182,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "The existing named-policy adapter remains. A separate 81-packet capture using the unchanged pinned C data producer verifies original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption, including exhaustion and one/two/three-byte reservation boundaries. The public reference Fast port compresses 57 admitted selected cases at -3/-2/-1/1/2 twice with identical full bytes, fits the captured C bound minus the selected reduction, and exactly decodes with original N as output limit. It explicitly rejects 20 unsupported simple profiles and leaves four advanced branches unconsumed. Captured size inequalities do not implement atomic caller-buffer failure, reusable CCtx/DCtx, mutable decoder max-block settings, sequence producers or overlapping in-place buffers; the advanced random-parameter branch and unimplemented numeric strategies remain absent.",
+          "reason": "The unchanged 81-packet C selector capture preserves original-length capacity selection, prefix reservation, reduction/branch selectors, simple signed levels and decoder-toggle consumption. Version2 admission executes 61 selected Fast/DoubleFast cases at -3/-2/-1/0/1/2/3 twice with identical bytes, fits the captured C bound minus reduction, and decodes exact content with original N as output limit. The additive policy preserves historical 57/20/4 classifications; four new DoubleFast cases are identified explicitly. Sixteen simple profiles remain unsupported and four advanced branches remain unconsumed. The policy test checks every original tuple/input hash and preset strategy. These owned-result calls do not implement caller-buffer atomic failure, reusable CCtx/DCtx, mutable decoder settings, sequence producers or overlapping in-place buffers; advanced random parameters and other strategies remain absent.",
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#simple_round_trip_deterministic_corpus",
             "tests/upstream_reference_fast.rs#exact_c_selectors_preserve_all_81_inputs_and_unconsumed_advanced_tails",
-            "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets"
+            "tests/upstream_reference_fast.rs#original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets",
+            "tests/upstream_reference_fast.rs#successor_policy_preserves_original_selectors_and_exact_double_fast_additions"
           ]
         }
       ]
@@ -5143,7 +5146,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Named one-shot/streaming regressions, deterministic corpora, prepared dictionary parsing, dictionary/prefix encode/decode and independent raw/formatted training run. Pure reference parameter validation/query/adjustment groups and qualified supported-options lifecycle assertions are mapped separately; scalar queries do not mutate live contexts; admitted detached requests separately drive whole-buffer no-dictionary Fast compression. Dictionary/options/reset adapters retain original dimensions with a declared RDG corpus and explicit Rust reset/default semantics. Bounded live hash/search settings now cover getter/reset and dictionary-attachment/order subsets; bounded no-dictionary Fast numeric execution now adapts the original negative-level size assertion; other numeric algorithms and remaining advanced live controls, COVER/fastCover optimization, randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
+      "reason": "Named one-shot/streaming regressions, deterministic corpora, prepared dictionary parsing, dictionary/prefix encode/decode and independent raw/formatted training run. Pure reference parameter validation/query/adjustment groups and qualified supported-options lifecycle assertions are mapped separately; scalar queries do not mutate live contexts; admitted detached requests separately drive whole-buffer no-dictionary Fast/DoubleFast compression. Dictionary/options/reset adapters retain original dimensions with a declared RDG corpus and explicit Rust reset/default semantics. Bounded live hash/search settings now cover getter/reset and dictionary-attachment/order subsets; bounded no-dictionary Fast numeric execution now adapts the original negative-level size assertion; default/zero level3 now executes DoubleFast in whole-buffer calls, while other numeric algorithms and remaining advanced live controls, COVER/fastCover optimization, randomized dictionary schedules, context-copy/static workspace variants, long tests and workers remain incomplete.",
       "rust_tests": [
         "tests/upstream_fuzzer.rs",
         "tests/upstream_streaming.rs#flush_of_empty_unknown_size_frame_does_not_close_the_frame",
@@ -5195,7 +5198,8 @@
         "tests/upstream_search_lifecycle.rs",
         "tests/upstream_negative_level.rs",
         "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_uses_the_frozen_successor_admission",
-        "tests/upstream_reference_fast.rs#fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equalities"
+        "tests/upstream_reference_fast.rs#fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equalities",
+        "tests/upstream_reference_fast.rs#original_fuzzer_loops_add_only_default_three_double_fast_profiles"
       ],
       "line_count": 5147,
       "cases": [
@@ -5206,7 +5210,7 @@
           "line_end": 278,
           "label": "FUZ_mallocTests_internal",
           "status": "partial",
-          "reason": "Allocator-aware Rust contexts preserve the exact 89,456,640-byte RDG source (explicit seed 0x12345678, p=0.50, literal argument 0.0), with source/caller buffers outside tracking. Safe/all-feature campaigns pass three named strategies under complete-source Finish and fragmented Continue/Finish schedules, exact Global frames, independent C/Rust decoded bytes, layout-consistent counters and final release. C levels 1..6 and worker groups 1..4 are not implemented; six Rust configurations do not replace the original 60/54/48/24 suffix schedule. Failure injection and balance are additional Rust assertions.",
+          "reason": "Allocator-aware Rust contexts preserve the exact 89,456,640-byte RDG source (explicit seed 0x12345678, p=0.50, literal argument 0.0), with source/caller buffers outside tracking. Safe/all-feature campaigns pass three named strategies under complete-source Finish and fragmented Continue/Finish schedules, exact Global frames, independent C/Rust decoded bytes, layout-consistent counters and final release. The original reusable numeric-context schedule at C levels 1..6 and worker groups 1..4 is unported; six Rust configurations do not replace the original 60/54/48/24 suffix schedule. Failure injection and balance are additional Rust assertions.",
           "rust_tests": [
             "tests/upstream_allocator.rs#custom_context_counters_exclude_caller_buffers_and_balance_for_each_strategy",
             "tests/upstream_allocator.rs#original_custom_context_source_campaign_has_complete_byte_comparisons"
@@ -5219,7 +5223,7 @@
           "line_end": 302,
           "label": "FUZ_mallocTests",
           "status": "partial",
-          "reason": "Allocator-aware Rust contexts preserve the exact 89,456,640-byte RDG source (explicit seed 0x12345678, p=0.50, literal argument 0.0), with source/caller buffers outside tracking. Safe/all-feature campaigns pass three named strategies under complete-source Finish and fragmented Continue/Finish schedules, exact Global frames, independent C/Rust decoded bytes, layout-consistent counters and final release. C levels 1..6 and worker groups 1..4 are not implemented; six Rust configurations do not replace the original 60/54/48/24 suffix schedule. Failure injection and balance are additional Rust assertions.",
+          "reason": "Allocator-aware Rust contexts preserve the exact 89,456,640-byte RDG source (explicit seed 0x12345678, p=0.50, literal argument 0.0), with source/caller buffers outside tracking. Safe/all-feature campaigns pass three named strategies under complete-source Finish and fragmented Continue/Finish schedules, exact Global frames, independent C/Rust decoded bytes, layout-consistent counters and final release. The original reusable numeric-context schedule at C levels 1..6 and worker groups 1..4 is unported; six Rust configurations do not replace the original 60/54/48/24 suffix schedule. Failure injection and balance are additional Rust assertions.",
           "rust_tests": [
             "tests/upstream_allocator.rs#custom_context_counters_exclude_caller_buffers_and_balance_for_each_strategy",
             "tests/upstream_allocator.rs#original_custom_context_source_campaign_has_complete_byte_comparisons"
@@ -5887,10 +5891,11 @@
           "line_end": 1566,
           "label": "test%3i : compress a NULL input with each level :",
           "status": "partial",
-          "reason": "The exact original -1..22 range is enumerated. Empty-slice level and detached-request APIs produce equivalent valid empty frames for the three admitted Fast levels (-1, 1, 2); the remaining 21 levels are explicitly rejected as UnsupportedFeature. This does not execute all numeric strategies, NULL-pointer contracts, reusable C contexts or caller-owned destinations. Existing empty-frame coverage is retained.",
+          "reason": "The exact original -1..22 range is enumerated. Version2 empty-slice level and detached-request APIs produce equivalent valid empty frames for five admitted Fast/DoubleFast levels (-1, 0, 1, 2, 3); the remaining 19 profiles return UnsupportedFeature. A separate fixture preserves historical 3/21 classifications and identifies the two newly admitted DoubleFast profiles. This does not execute all strategies, NULL-pointer contracts, reusable C contexts or caller-owned destinations. Existing empty-frame coverage remains.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#compress_and_decompress_empty_frames",
-            "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_uses_the_frozen_successor_admission"
+            "tests/upstream_reference_fast.rs#fuzzer_empty_level_loop_uses_the_frozen_successor_admission",
+            "tests/upstream_reference_fast.rs#original_fuzzer_loops_add_only_default_three_double_fast_profiles"
           ]
         },
         {
@@ -5933,10 +5938,11 @@
           "line_end": 1680,
           "label": "test%3d : re-using a CCtx should compress the same :",
           "status": "partial",
-          "reason": "The exact original 30-byte source (0..19 followed by 0..9) and 1..19 range are preserved. Levels 1 and 2 produce identical complete bytes across repeated level calls and detached-request calls, followed by exact decoding; 17 other profiles are explicitly unsupported. Earlier deterministic named streaming reset coverage remains. Reusable numeric CCtx, the caller-destination compressBound-1 branch, forced streaming, and complete one-shot/context/stream equivalence remain unported.",
+          "reason": "The exact original 30-byte source (0..19 followed by 0..9) and 1..19 range are preserved. Levels 1, 2 and 3 produce identical complete bytes across repeated level calls and detached-request calls, followed by exact decoding; 16 other profiles remain unsupported. Version2 retains historical 2/17 classifications and identifies the newly admitted DoubleFast level3. Earlier deterministic named streaming reset coverage remains. Reusable numeric CCtx, caller-destination compressBound-1, forced streaming and complete one-shot/context/stream equivalence remain unported.",
           "rust_tests": [
             "tests/upstream_streaming.rs#reset_repeats_identical_directive_and_chunk_schedules_deterministically",
-            "tests/upstream_reference_fast.rs#fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equalities"
+            "tests/upstream_reference_fast.rs#fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equalities",
+            "tests/upstream_reference_fast.rs#original_fuzzer_loops_add_only_default_three_double_fast_profiles"
           ]
         },
         {

@@ -17,7 +17,7 @@ mod fuzz_support;
 
 use fuzz_support::DataProducer;
 use zstdoxide::{
-    CompressionParameterRequest, DecodeOptions, Error, FrameHeader, compress_at_level,
+    CompressionParameterRequest, DecodeOptions, Error, FrameHeader, SourceSize, compress_at_level,
     compress_with_parameters, decompress_with_options,
 };
 
@@ -395,4 +395,99 @@ fn successor_loop_status(family: &str, size: usize, level: i32) -> &'static str 
     assert_eq!(row.len(), 8);
     assert_eq!(row[1].parse::<usize>().unwrap(), size);
     row[4]
+}
+
+#[test]
+fn successor_policy_preserves_original_selectors_and_exact_double_fast_additions() {
+    let cases = cases();
+    let original: Vec<_> = CAPTURE.lines().skip(1).collect();
+    let successor: Vec<_> = include_str!("fixtures/reference-admission-v2/fuzz.tsv")
+        .lines()
+        .skip(1)
+        .collect();
+    assert_eq!(original.len(), 81);
+    assert_eq!(successor.len(), original.len());
+    let mut additions = Vec::new();
+    let mut historical_counts = [0; 3];
+    let mut successor_counts = [0; 3];
+    for ((case, original), successor) in cases.iter().zip(original).zip(successor) {
+        let original: Vec<_> = original.split('\t').collect();
+        let row: Vec<_> = successor.split('\t').collect();
+        assert_eq!(row.len(), 9);
+        assert_eq!(row[0], case.name);
+        assert_eq!(row[0], original[0]);
+        assert_eq!(row[1], original[4]); // Preserve the frozen input SHA256.
+        assert_eq!(row[2], original[6]);
+        assert_eq!(row[3], original[13]);
+        for (status, counts) in [
+            (row[4], &mut historical_counts),
+            (row[5], &mut successor_counts),
+        ] {
+            counts[match status {
+                "success" => 0,
+                "unsupported" => 1,
+                "advanced" => 2,
+                _ => panic!("unexpected admission"),
+            }] += 1;
+        }
+        let selectors = select(&case.input);
+        let Some(simple) = selectors.simple else {
+            assert_eq!(&row[4..], &["advanced", "advanced", "-", "-", "-"]);
+            assert_eq!(selectors.remaining_after_branch, 2);
+            continue;
+        };
+        // Preset strategy remains unchanged by source adjustment. The seven
+        // adjusted scalars are not inferred from these pre-adjustment columns.
+        let request = CompressionParameterRequest::with_level(simple.level);
+        let resolved = request
+            .resolve(SourceSize::Known(selectors.prefix as u64), 0)
+            .unwrap();
+        assert_eq!(resolved.to_raw().strategy, row[8].parse::<u32>().unwrap());
+        if row[4] != row[5] {
+            assert_eq!((row[4], row[5]), ("unsupported", "success"));
+            assert_eq!(resolved.to_raw().strategy, 2);
+            additions.push(case.name.as_str());
+        }
+    }
+    assert_eq!(historical_counts, [57, 20, 4]);
+    assert_eq!(successor_counts, [61, 16, 4]);
+    assert_eq!(
+        additions,
+        ["tier-44", "tier-49", "unsupported-55", "unsupported-56"]
+    );
+}
+
+#[test]
+fn original_fuzzer_loops_add_only_default_three_double_fast_profiles() {
+    let mut rows = include_str!("fixtures/reference-admission-v2/loops.tsv")
+        .lines()
+        .skip(1);
+    let mut additions = Vec::new();
+    let mut totals = [0; 2];
+    for (family, size, levels) in [("empty", 0, -1..=22), ("initial_match", 30, 1..=19)] {
+        for level in levels {
+            let row: Vec<_> = rows.next().unwrap().split('\t').collect();
+            assert_eq!(row.len(), 8);
+            assert_eq!(row[0], family);
+            assert_eq!(row[1].parse::<usize>().unwrap(), size);
+            assert_eq!(row[2].parse::<i32>().unwrap(), level);
+            let resolved = CompressionParameterRequest::with_level(level)
+                .resolve(SourceSize::Known(size as u64), 0)
+                .unwrap();
+            assert_eq!(resolved.to_raw().strategy, row[7].parse::<u32>().unwrap());
+            totals[0] += usize::from(row[3] == "success");
+            totals[1] += usize::from(row[4] == "success");
+            if row[3] != row[4] {
+                assert_eq!((row[3], row[4]), ("unsupported", "success"));
+                assert_eq!(resolved.to_raw().strategy, 2);
+                additions.push((family, level));
+            }
+        }
+    }
+    assert!(rows.next().is_none());
+    assert_eq!(totals, [5, 8]);
+    assert_eq!(
+        additions,
+        [("empty", 0), ("empty", 3), ("initial_match", 3)]
+    );
 }

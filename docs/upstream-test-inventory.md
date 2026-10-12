@@ -271,6 +271,17 @@ Hash integrity does not replace the Rust assertions that actually decode the
 fixtures; oracle regeneration remains available in each fixture importer's
 `--check` mode.
 
+The Module13 successor numeric port preserves all81 original selector packets
+and their historical57/20/4 classifications. Current Fast/DoubleFast admission
+executes61, rejects16 unsupported simple profiles and leaves four advanced
+branches unconsumed. Tests identify exactly four added selector cases and compare
+every original input hash, prefix, level and preset strategy. The original empty
+-1..22 loop now admits five profiles; the30-byte1..19 loop admits three. Historical
+3/21 and2/17 loop expectations remain in separately versioned fixtures. Context
+reuse, caller-owned destination failure, forced streaming, decoder mutation and
+in-place overlap remain explicit gaps; no source or case status is promoted to
+complete merely because a new one-shot algorithm exists.
+
 The completion gate is deliberately stricter:
 
 ```sh
