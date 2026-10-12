@@ -23,6 +23,7 @@ python3 scripts/import_fast_collector.py --check
 python3 scripts/import_negative_level_fixture.py --check
 python3 scripts/import_reference_fast_fuzz.py --check
 python3 scripts/check_reference_admission_v2.py --check
+python3 scripts/check_reference_admission_v3.py --check
 python3 scripts/import_fast_frame_publication.py --check
 python3 scripts/import_fast_parser_families.py --check
 python3 scripts/check_double_fast_tiny.py --check
@@ -77,15 +78,12 @@ cargo test --release --all-features --test upstream_parameter_lifecycle official
 cargo test --release --all-features --test match_search_options official_codec_decodes_configured_width_effort_history_and_prepared_dictionary_frames -- --ignored --exact
 cargo test --release --all-features --test upstream_search_lifecycle official_codec_decodes_both_original_dictionary_orders_for_each_named_policy -- --ignored --exact
 
-# Successor admission over the unchanged Module12 bounded source campaign.
-fast_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-fast-interop.XXXXXX")
-python3 scripts/check_reference_interop_v2.py --upstream "$ZSTD_UPSTREAM" --output "$fast_output/capture"
-
-# Broader Module13 public frames; every used C codec unit is instrumented in
-# the sanitizer build. Retain raw requests/responses for independent replay.
-double_fast_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-double-fast-interop.XXXXXX")
-python3 scripts/capture_double_fast_interop.py --upstream "$ZSTD_UPSTREAM" --output "$double_fast_output/capture"
-python3 scripts/check_double_fast_interop_capture.py --capture "$double_fast_output/capture"
+# Version3 public admission over both unchanged historical input sets and new
+# Greedy sources. Prior controllers and captures retain their historical policy.
+# Every used C codec unit is instrumented in the successor sanitizer build.
+greedy_public_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-greedy-interop.XXXXXX")
+python3 scripts/capture_greedy_interop.py --upstream "$ZSTD_UPSTREAM" --output "$greedy_public_output/capture"
+python3 scripts/check_greedy_interop_capture.py --capture "$greedy_public_output/capture"
 
 # Module 14 direct Greedy state and fresh salt, with per-mode CCtx memory
 # accounting because upstream ASan workspace redzones change its peak size.
