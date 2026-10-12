@@ -365,3 +365,48 @@ equivalence. All 13 tests pass in safe/all builds; strict Clippy passes. The
 structural inventory still has 188 unfinished source units (149 blocked,
 34 partial, five planned). No source-unit status is promoted by these bounded
 one-shot assertions, and no new C execution is claimed in this item.
+
+## Broader public C interoperability
+
+The separately reviewed successor campaign completes all 422 frozen input/request
+pairs: 372 admitted, 37 unsupported and 13 resource errors. It retains both
+historical 92/159 sets with unchanged sources, requests and all 251 Rust-resolved
+tuples, while positively executing their nine newly admitted records. Added
+ordinary source inputs use public resolution and a single known-size call;
+their older forced internal branch and schedules remain separate observations.
+The small `row_search29` and `row_unused_chain29` inputs correctly become
+resource-rejected chain requests after adjustment.
+
+All 4,786 bounded commands pass. Normal/O2 and ASan+UBSan/O1 compile each of the
+26 used C translation units and the helper, without a support archive, assembly,
+legacy codecs or workers. Upstream sanitizer annotations are retained and
+LeakSanitizer is disabled. Each of the four builds rejects all 39 malformed
+packets, including old-protocol magic, with exit 2, no response and no sanitizer
+diagnostic. Safe/all Rust statuses, tuples and complete frames agree; C frames
+agree between normal and sanitized builds. All 25 Rust equivalence groups pass.
+
+C decodes 1,488 Rust frames and Rust decodes 1,488 C frames, reproducing a total
+of 413,994,400 source bytes. These counts include the two directions and four
+build combinations, not distinct source inputs. No identical C/Rust entropy
+bytes, C applied-parameter view, reused-context behavior or performance result
+is claimed.
+
+Independent offline replay checks exact commands, environment, source and
+dependency closure, effective controls, captured binaries, every request and
+response, scalar admission, historical tuples and decoded bytes. Normal and
+optimized Python each reject 37 provenance or actual-artifact forgeries with
+child creation blocked and zero attempts. Controls include removed sanitizer
+flags, unexpected libraries, altered binaries, a coherently changed historical
+target field, changed requests/decoded bytes and injected sanitizer diagnostics.
+Frozen regenerated inputs are reused within the mutation loops; artifact checks
+are still performed. The unchanged original capture passes before and afterward.
+
+The [evidence](evidence/2026-10-12-greedy-public-interop.json) and
+[archive](evidence/2026-10-12-greedy-public-interop.tar.gz) preserve every one of
+14,414 capture files, including objects, executables and Rust build outputs:
+1,305,890,757 original bytes represented by a 35,003,394-byte archive with 4-KiB
+chunk deduplication. Sequential verification checks every archive member and
+every reconstructed file against the original capture without running archived
+code. Downloaded upstream sources remain outside the repository. The earlier
+capture tools and evidence remain immutable. Platform/full-feature checks,
+benchmarks and complete upstream migration remain separate open obligations.
