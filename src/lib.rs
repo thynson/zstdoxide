@@ -43,6 +43,9 @@ mod dictionary;
 mod dictionary_train;
 mod double_fast_block;
 #[cfg(test)]
+#[path = "../tests/support/double_fast_frame_oracle.rs"]
+mod double_fast_frame_oracle_fixture;
+#[cfg(test)]
 #[path = "../tests/support/double_fast_oracle.rs"]
 mod double_fast_oracle_fixture;
 mod double_fast_parse;

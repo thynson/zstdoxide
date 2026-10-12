@@ -319,3 +319,29 @@ This checkpoint adds ordinary internal-begin C oracles only. Public parameter
 resolution, collector corroboration, new Rust checks, platform interpretation
 and timing are not claimed. Persistent Rust state and complete DoubleFast frame
 emission remain open; no official source unit is newly completed.
+
+## Rust-readable ordinary trajectories and complete frames
+
+The dependency-free [adapter](../tests/fixtures/reference-double-fast-frames/README.md)
+projects all51 sources and160 positive blocks into14,663,500 checked binary
+bytes, with both independent table deltas and separate raw/wire publication
+triples. It borrows58 original complete C frames without regenerating them.
+Independent source replay validates all148 fresh candidates,320 complete table
+transitions,12 tiny bypasses and the13 raw/3 RLE repeat-discard witnesses.
+Source-size caps, record extents, malformed counts, fingerprints, table changes,
+offset selectors, publication and stale-candidate forgeries are rejected.
+
+All58 frames decode to12,382,352 expected bytes using the existing Rust decoder
+in each of five configurations: safe, table-feature, all-feature, no_std safe
+and no_std all-feature. Five adapter tests pass in each configuration, adding25
+executions to22 unchanged Fast/named baseline executions. Strict Clippy safe/all,
+no_std compilation safe/all, formatting, normal/optimized projection replay and
+the838-file/20-collection registry all pass:17 final commands succeed.
+
+The [evidence](evidence/2026-10-12-double-fast-frame-adapter.json) and
+[archive](evidence/2026-10-12-double-fast-frame-adapter.tar.gz) retain source
+identities, logs and the derived records. Initial tests passed; Clippy requested
+a named alias for the generated frame-file tuple type. That correction changes
+no oracle data, and all final checks were rerun successfully. This adapter adds
+no production dependency or new C capture. Persistent parsing, public
+DoubleFast emission, Miri and timing are not claimed at this checkpoint.

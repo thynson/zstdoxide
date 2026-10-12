@@ -658,3 +658,18 @@ computes checked scalar positions and returns no cursor when the next pair no
 longer fits; thresholds are never used as source addresses. Key extraction must
 stop at the block end even if the borrowed source contains later blocks.
 These shared safe records neither allocate nor form unchecked pointers.
+
+The ordinary DoubleFast test adapter projects51 fixed source recipes and160
+positive block observations into length-delimited little-endian records. It
+borrows source/literal bytes and the original58 complete C frame files; bounded
+vectors own schedules, sequences and the two independent sorted table deltas.
+Both table maps start empty and are reconstructed with checked C-index bias,
+key extents, bucket identity and full-map fingerprints. Candidate raw repeats
+remain separate from full wire repeats and selected publication state. Empty
+calls stay in the schedule; tiny calls carry no fresh candidate. The adapter
+does not call the production parser to validate expectations. Full compressed
+frame decoding is a separate test against the existing Rust decoder. Original
+entropy/owner observations remain in the immutable NDJSON collection; partial
+header-only probes are excluded from this complete-frame adapter. All records
+use safe slices and plain values, with no new unsafe representation or runtime
+dependency.

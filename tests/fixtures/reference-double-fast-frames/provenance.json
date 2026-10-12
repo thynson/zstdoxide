@@ -1,0 +1,30 @@
+{
+  "binary_format": "ZDFTR01: checked little-endian ordinary DoubleFast trajectories",
+  "cases": 51,
+  "checker": "scripts/check_double_fast_frames.py",
+  "checker_sha256": "45947d2a2b94332d83af07d4e04ac631d881a493dfb9d5253627a479442f5731",
+  "complete_frames": 58,
+  "excluded_partial_headers": 13,
+  "fixtures": [
+    {
+      "bytes": 14663500,
+      "path": "cases.bin",
+      "sha256": "26d250a9a47e1eb216c62e09cd27941bb08765377febd254e0bf779183bd4772"
+    },
+    {
+      "bytes": 6032,
+      "path": "frames.rs",
+      "sha256": "03a02e0ad54bf576ed0b8660dd5d524976a07e3c4c75eb49bbfef55aa4f6dd6c"
+    }
+  ],
+  "generator": "scripts/pack_double_fast_frame_trajectories.py",
+  "generator_sha256": "ff04011dadd3a7e7fb10319aca83850f0ebb47c3057a294138ace1bde9b9c99e",
+  "policy": "Test-only source/candidate/two-table/publication projection. Complete frames borrow the original collection. Full entropy and owner observations remain in original NDJSON. No C execution or production parser use.",
+  "positive_blocks": 160,
+  "schema_version": 1,
+  "source_bytes": 6348944,
+  "source_catalog_sha256": "ae4c678c1a38b39d8e914ef3ab021d2a5f986b98d82756d7f7e8c81d0b3b379d",
+  "source_collection": "tests/upstream/double-fast-frames",
+  "source_manifest_sha256": "3047296dd63dc32ee4bb2a1a93c410c35d36027e7d69ea93319ab38dae118a3d",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}
