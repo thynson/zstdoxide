@@ -267,3 +267,21 @@ and official-source completion counts are unchanged. The
 [archive](evidence/2026-10-12-double-fast-frame-recipes.tar.gz) preserve the fixed
 protocol, input manifest, generator and controls. Helper implementation/review,
 C capture and ordinary-frame outcomes remain open.
+
+## Ordinary-frame helper before execution
+
+The new C helper and independent Python validator are implemented. The
+[pre-execution review](reference-double-fast-frame-helper-review.md) checks the
+actual seven guarded helper buffers, distinct context-owned table dimensions,
+source/pointer extents, initialized-only state snapshots and independent wire
+replay. Strict C11 syntax/diagnostic checks, formatting and frozen source recipe
+checks pass. Normal/optimized Python each pass four positive controls (including
+512 unchanged-C hash vectors) and22 rejection controls using explicitly synthetic
+table/header structures. These controls are not ordinary DoubleFast observations.
+
+The [evidence](evidence/2026-10-12-double-fast-frame-helper.json) and
+[archive](evidence/2026-10-12-double-fast-frame-helper.tar.gz) bind the reviewed
+helper and validator identities. No helper mode has been executed at this
+checkpoint. Full trajectory validation, normal/sanitizer agreement and complete
+frame decoding follow in the separate capture item; unchanged Fast/direct
+fixtures remain separate.

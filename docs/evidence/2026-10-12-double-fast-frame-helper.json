@@ -1,0 +1,38 @@
+{
+  "archive": "2026-10-12-double-fast-frame-helper.tar.gz",
+  "archive_bytes": 33068,
+  "archive_members": 20,
+  "archive_sha256": "b3071262c4a96708421af235e008e3ca05d2128b987096f01c4e1f59d96d1172",
+  "controls_per_mode": {
+    "positive": 4,
+    "rejected": 22
+  },
+  "date": "2026-10-12",
+  "frozen_hash_vectors": 512,
+  "helper_sha256": "90e8a70d27bc79d36443033659918fc5458ad70dc8b8006277e39f04168a22dd",
+  "maximum_persistent_guarded_helper_bytes": 21498073,
+  "modes": [
+    "normal",
+    "optimized"
+  ],
+  "persistent_guarded_helper_buffers": 7,
+  "scope": "Ordinary DoubleFast helper implementation and pre-execution allocation/bounds/state review. Strict C11 syntax, formatting, source recipes and synthetic validator/hash controls only; no helper mode or ordinary C compression executed.",
+  "status": "passed",
+  "syntax_argv": [
+    "clang",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-deprecated-declarations",
+    "-I",
+    "/tmp/zstdoxize-upstream-1.5.7/lib",
+    "-I",
+    "/tmp/zstdoxize-upstream-1.5.7/lib/common",
+    "-I",
+    "/tmp/zstdoxize-upstream-1.5.7/lib/compress",
+    "-fsyntax-only",
+    "scripts/oracles/double_fast_frame.c"
+  ],
+  "validator_sha256": "060ffe4e5d6c552d55eb1114d8220616a8b8ca29f55f9a6321e73bd15518e6a5"
+}
