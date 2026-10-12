@@ -3,6 +3,17 @@
 Detailed completed work items are preserved in Git history. `TODO.md` contains
 only active module checklists and the remaining roadmap.
 
+## 2026-10-12: direct DoubleFast small-log hashes
+
+512 direct C width8 observations now cover logs6..9 and aligned/unaligned
+reads of the existing 64 fixed patterns. Normal and scoped sanitizer captures
+agree. Rust bucket, collision and full-table comparisons pass in five feature
+configurations; the selected foundation and Fast/named baseline tests total 77
+passing executions. Clippy, no_std and formatting checks also pass. The new
+compiler-free fixture brings the registry to 546 files in 18 collections.
+See `docs/reference-double-fast-hashes.md` for complete evidence and scope.
+Wider parser families remain open; no production codec behavior changes here.
+
 ## 2026-10-12: initial DoubleFast direct oracle
 
 The bounded ZDFST01 helper and pre-execution allocation review are complete.

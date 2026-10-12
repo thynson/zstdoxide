@@ -1,0 +1,7 @@
+Reference implementation: facebook/zstd v1.5.7
+Revision: f8745da6ff1ad1e7bab384bd1f9d742439278e99
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+Observed buckets derive from unchanged ZSTD_hashPtr (width eight) in
+lib/compress/zstd_compress_internal.h. This project uses the BSD-3-Clause
+option; see ../../../LICENSE.zstd. The helper is a test oracle only.

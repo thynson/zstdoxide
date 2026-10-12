@@ -10,6 +10,7 @@ python3 scripts/import_reference_fast_fuzz.py --check
 python3 scripts/import_fast_frame_publication.py --check
 python3 scripts/import_fast_parser_families.py --check
 python3 scripts/check_double_fast_tiny.py --check
+python3 scripts/check_double_fast_hashes.py --check
 python3 scripts/pack_fast_parser_fixtures.py --check
 python3 scripts/pack_fast_frame_trajectories.py --check
 python3 scripts/check_reference_fast_interop.py --check-plan

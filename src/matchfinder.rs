@@ -527,6 +527,64 @@ mod tests {
     }
 
     #[test]
+    fn double_fast_direct_low_log_hashes_drive_complete_table_observations() {
+        // Direct unchanged-C observations include aligned and unaligned loads.
+        // Rust copies bytes into a value, so source alignment is not a contract.
+        let patterns = include_bytes!("../tests/upstream/match-search/patterns.bin");
+        let vectors = include_str!("../tests/upstream/double-fast-hashes/vectors.tsv");
+        let mut lines = vectors.lines();
+        assert_eq!(lines.next(), Some("log\tshift\tpattern\tbytes\tbucket"));
+        let mut table =
+            MatchTable::with_layout_in(SearchKeyLayout::for_double_fast_long(6).unwrap(), Global)
+                .unwrap();
+        let mut expected = Vec::new();
+        let mut count = 0;
+        for line in lines {
+            let fields: Vec<_> = line.split('\t').collect();
+            assert_eq!(fields.len(), 5);
+            let log: u8 = fields[0].parse().unwrap();
+            let shift: usize = fields[1].parse().unwrap();
+            let pattern: usize = fields[2].parse().unwrap();
+            let bucket: usize = fields[4].parse().unwrap();
+            assert_eq!(
+                (usize::from(log), shift, pattern),
+                (6 + count / 128, (count / 64) % 2, count % 64)
+            );
+            let layout = SearchKeyLayout::for_double_fast_long(log).unwrap();
+            if pattern == 0 {
+                table.reconfigure(layout).unwrap();
+                expected.resize(layout.bucket_count(), EMPTY);
+                expected.fill(EMPTY);
+            }
+            let bytes = &patterns[8 * pattern..8 * pattern + 8];
+            assert_eq!(fields[3].len(), 16);
+            assert!(fields[3].is_ascii());
+            for (index, byte) in bytes.iter().enumerate() {
+                assert_eq!(
+                    *byte,
+                    u8::from_str_radix(&fields[3][2 * index..2 * index + 2], 16).unwrap()
+                );
+            }
+            let mut padded = [0xa5; 16];
+            padded[shift..shift + 8].copy_from_slice(bytes);
+            let key = layout.read_key(&padded[shift..shift + 8]).unwrap();
+            assert_eq!(layout.read_key(bytes), Some(key));
+            assert_eq!(layout.bucket(key), Ok(bucket));
+            assert!(bucket < expected.len());
+            assert_eq!(
+                table.lookup(key),
+                Ok((expected[bucket] != EMPTY).then_some(expected[bucket]))
+            );
+            table.store(key, pattern).unwrap();
+            expected[bucket] = pattern;
+            assert_eq!(table.lookup(key), Ok(Some(pattern)));
+            assert_eq!(table.test_positions(), expected);
+            count += 1;
+        }
+        assert_eq!(count, 512);
+    }
+
+    #[test]
     fn dynamic_key_and_seed_mismatches_preserve_working_candidates() {
         let layout = SearchKeyLayout::new(10, 4).unwrap();
         let mut working = MatchTable::with_layout_in(layout, Global).unwrap();

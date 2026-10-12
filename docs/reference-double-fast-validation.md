@@ -118,3 +118,14 @@ The [capture evidence](evidence/2026-10-12-double-fast-tiny.json) and
 [source/log/control archive](evidence/2026-10-12-double-fast-tiny.tar.gz) retain
 the observations and qualifications. Directed families, explicit low-log hash
 vectors and the Rust parser remain separate open items.
+
+## Direct small-log hash checkpoint
+
+The subsequent [small-log hash capture](reference-double-fast-hashes.md) adds
+512 unchanged-C width8 observations at logs6..9, with aligned and unaligned
+loads. Normal and scoped sanitized outputs agree. Rust compares the direct
+buckets and full table state under five configurations; the selected foundation
+tests and old Fast/named baselines total 77 passing executions. Clippy safe/all,
+no_std safe/all and formatting pass. The registry now contains 546 files in18
+collections. This completes the explicit low-log primitive item; wider parser
+families and public execution remain open.
