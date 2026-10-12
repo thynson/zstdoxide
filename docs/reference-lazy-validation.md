@@ -27,3 +27,25 @@ input closure, recipes, checks and control driver. There are no new C outputs
 or Rust-generated expected results. The pinned protocol and predecessor sources
 remain unchanged; later capture evidence belongs in this report rather than
 rewriting that contract.
+
+## Tiny capture infrastructure before execution
+
+The bounded controller preflight and independent offline auditor are reviewed
+before the first helper execution. Normal and optimized Python each accept two
+read-only plans and reject 23 invalid path, compiler, source-identity and early
+capture cases with child creation blocked and zero attempts. The plan fixes
+422 commands, two complete 26-unit builds, three strategy-specific fresh-context
+invocations per build, 138 direct cases and 39 malformed packets per build.
+
+The auditor rebuilds packets independently, checks exact command order,
+environment, dependency closure and actual object/executable hashes, then
+replays all observed sequences and final maps. Depth-zero observations must
+match the unchanged 36-case Greedy fixture; platform-dependent owner layouts
+are qualified explicitly. Final frontiers are observations, not a chronological
+probe trace. Full record rejection checks follow the real capture.
+
+The [preflight evidence](evidence/2026-10-12-lazy-tiny-preflight.json) and
+[archive](evidence/2026-10-12-lazy-tiny-preflight.tar.gz) preserve both reviewed
+scripts, control driver and results. Source review removed a stale variable
+reference and made sanitizer diagnostics fatal for malformed-input probes
+before the completed checks and before any C execution.

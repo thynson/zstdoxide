@@ -1,0 +1,20 @@
+{
+  "archive": "2026-10-12-lazy-tiny-preflight.tar.gz",
+  "archive_bytes": 14172,
+  "archive_members": 9,
+  "archive_sha256": "e622b6aacf8f76f1e8ecd7e5862856890dcd1ab150b5c494a562cfbaa646c3b0",
+  "child_processes": 0,
+  "date": "2026-10-12",
+  "planned_commands": 422,
+  "positive_preflights_per_mode": 2,
+  "qualification": "Controller preflight and early offline rejection checks before first C helper execution. Actual command and observation checks require the future capture. Review corrected a stale undefined source variable and added negative-input sanitizer diagnostic rejection before either helper execution or these completed checks.",
+  "recipes": 138,
+  "reference_executions": 0,
+  "rejected_controls_per_mode": 23,
+  "source": {
+    "scripts/capture_lazy_tiny.py": "73e9613746d37a1cebcb35614e8930af1cc8a1d054e74955e8cb459e4a280200",
+    "scripts/check_lazy_tiny_capture.py": "ba5462b9fc26f8471b5b465009c3068b673a3985172d68812ae594ce2fd2e994",
+    "scripts/check_lazy_tiny_recipes.py": "950e9c2ab5e864d8c1fce5d8e9f5e0b67a0c3b7ffe20d77b2a880920637a2069"
+  },
+  "status": "passed"
+}
