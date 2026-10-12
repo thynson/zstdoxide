@@ -13,6 +13,7 @@ python3 scripts/check_double_fast_tiny.py --check
 python3 scripts/check_double_fast_hashes.py --check
 python3 scripts/check_double_fast_recipes.py --check
 python3 scripts/check_double_fast_families.py --check
+python3 scripts/pack_double_fast_parser_fixtures.py --check
 python3 scripts/pack_fast_parser_fixtures.py --check
 python3 scripts/pack_fast_frame_trajectories.py --check
 python3 scripts/check_reference_fast_interop.py --check-plan

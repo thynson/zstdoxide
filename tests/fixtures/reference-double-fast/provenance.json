@@ -1,0 +1,31 @@
+{
+  "binary_format": "ZDFST02: bounded little-endian test records",
+  "checkers": {
+    "scripts/check_double_fast_families.py": "f8bdf18cd81f5b4087e123d53ceab2e787943ea797e916df7df928b7cac2b212",
+    "scripts/check_double_fast_tiny.py": "5b5333e4d09332fea7bdccd3b957afb5b015dabe04727ee4abb1cf0978d8258e"
+  },
+  "fixture": {
+    "bytes": 5910862,
+    "path": "cases.bin",
+    "sha256": "2e8ad7ef3466d30712e1bd563c248cd74f646ae42da5cc7bebfe0e2d564d4298"
+  },
+  "generator": "scripts/pack_double_fast_parser_fixtures.py",
+  "generator_sha256": "0a6abc8ccb52afabd9b922fae25a8bea24889b4967a35f02cbe31677258ba630",
+  "policy": "Test-only projection of both padding-equivalent constructed direct observations; no new C execution, ordinary frames or chronological trace.",
+  "recipes": 184,
+  "represented_padding_observations": 368,
+  "schema_version": 1,
+  "source_collections": [
+    {
+      "catalog_sha256": "d8d61cda4f68e56cc403505d9848d09b4dd03138357457c0b0b68a82472ec94c",
+      "manifest_sha256": "c350ee8603ca752b3148bd6b8040f7b61473530149425a1072addc9cdb45db62",
+      "path": "tests/upstream/double-fast-tiny"
+    },
+    {
+      "catalog_sha256": "e8e48567163737ce8856f07dbca8eea7a30b499e7aefe29b0f9107481756ec0a",
+      "manifest_sha256": "8f4ee8d141f9b38a0b0871742a53383734bae9c02fd1b579ca294ae2144f9934",
+      "path": "tests/upstream/double-fast-families"
+    }
+  ],
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

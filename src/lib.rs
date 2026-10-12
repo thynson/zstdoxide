@@ -42,6 +42,9 @@ mod decode;
 mod dictionary;
 mod dictionary_train;
 mod double_fast_block;
+#[cfg(test)]
+#[path = "../tests/support/double_fast_oracle.rs"]
+mod double_fast_oracle_fixture;
 mod double_fast_plan;
 mod double_fast_tables;
 mod encode;

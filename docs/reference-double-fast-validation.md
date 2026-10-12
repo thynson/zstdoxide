@@ -185,3 +185,31 @@ strict all-target Clippy safe/all, no_std compilation safe/all and formatting.
 The [evidence](evidence/2026-10-12-double-fast-tables.json) and
 [archive](evidence/2026-10-12-double-fast-tables.tar.gz) record exact source and
 command identities. Direct parsing and public DoubleFast execution remain open.
+
+## Rust-readable direct observations
+
+The test-only [projection](../tests/fixtures/reference-double-fast/README.md)
+contains all15 tiny and169 wider recipes, representing368 padding observations.
+It preserves source bytes, ordered seeds, raw and expanded sequences, entry
+bounds, raw/full repeat triples and both independent final table observations.
+The converter checks fixed importer identities before importing them, then
+verifies the original pinned collections before projecting one representative
+of each padding-equivalent pair. The original observations remain unchanged.
+
+Four dependency-free Rust tests validate184 source replays and368 complete
+table reconstructions per configuration, cross-check the borrowed block bounds,
+and reject malformed records and forged length/repeat/intent/table metadata.
+They pass under safe, table-feature, all-feature, no_std safe and no_std
+all-feature configurations:20 test executions. The unchanged Fast/named suites
+add22 passing executions. Strict all-target Clippy safe/all, no_std compilation
+safe/all and formatting pass. Normal/optimized offline projection and fixture
+registry checks also pass:all17 final commands succeed. The original registry
+remains715 files in19 collections; this derived projection is checked separately
+by both standard check scripts. No official source unit is newly completed.
+
+The [evidence](evidence/2026-10-12-double-fast-adapter.json) and
+[archive](evidence/2026-10-12-double-fast-adapter.tar.gz) preserve the binary,
+reader/converter identities and logs. A bootstrap shift-literal inference error
+was corrected to explicit usize before the passing checks. This fixture adapter
+does not implement the matching loop, ordinary frame publication or public
+DoubleFast encoding, and introduces no production dependency.
