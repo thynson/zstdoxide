@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-12",
+  "driver": {
+    "sha256": "b400d2cbca0a70c82c4b3a10357b0520b5789a32fdbcfc766879ead085b7ad19",
+    "source": "import hashlib, importlib.util, json, os, subprocess, sys\nfrom pathlib import Path\nroot = Path('/Users/lanxingcan/Workspace/zstdoxize')\nchild_attempts = []\ndef forbidden(*args, **kwargs):\n    child_attempts.append('blocked')\n    raise RuntimeError('process creation forbidden during offline input checking')\nsubprocess.Popen = forbidden\nfor name in ['system', 'fork', 'forkpty', 'posix_spawn', 'posix_spawnp', 'spawnl', 'spawnle', 'spawnlp', 'spawnlpe', 'spawnv', 'spawnve', 'spawnvp', 'spawnvpe', 'execl', 'execle', 'execlp', 'execlpe', 'execv', 'execve', 'execvp', 'execvpe']:\n    if hasattr(os, name): setattr(os, name, forbidden)\np = root / 'scripts/check_greedy_frame_recipes.py'\nspec = importlib.util.spec_from_file_location('greedy_frame_input_checker', p)\nm = importlib.util.module_from_spec(spec); sys.modules[spec.name] = m; spec.loader.exec_module(m)\nmanifest = m.check(); controls = m.controls()\nif child_attempts or controls != {'valid_metadata_controls': 3, 'rejected_controls': 43, 'codec_executions': 0}:\n    raise ValueError('offline control outcome')\nprint(json.dumps({'status': 'passed', 'python': sys.version, 'optimization': sys.flags.optimize, 'child_attempts': len(child_attempts), 'controls': controls, 'recipe_count': manifest['recipe_count'], 'checker_sha256': hashlib.sha256(p.read_bytes()).hexdigest()}, sort_keys=True))\n"
+  },
+  "envelope": {
+    "chain": 55,
+    "incomplete_header_probes": 15,
+    "positive_calls": 347,
+    "recipes": 126,
+    "row": 71,
+    "scheduled_calls": 355,
+    "source_bytes": 6959842,
+    "whole_comparisons_requested": 13
+  },
+  "inputs": {
+    "docs/reference-greedy-frame-oracle.md": {
+      "bytes": 9403,
+      "sha256": "199e1a2b2739b72749cbd0b9d84093dc3d28faeae31a5463b8a03b96f8041a95"
+    },
+    "scripts/check_greedy_frame_recipes.py": {
+      "bytes": 5630,
+      "sha256": "9f743ed73771914f1d2e44cdc811fb9a05a59dc44ce40e19f09bff5489a8a700"
+    },
+    "scripts/oracles/greedy_frames.py": {
+      "bytes": 9935,
+      "sha256": "360bf5139b7e2a886e9d2359c1ea258317238bd1906cfe9d123be33df7a0ce44"
+    },
+    "tests/fixtures/reference-greedy-frame-recipes/recipes.json": {
+      "bytes": 64127,
+      "sha256": "f833a7015aba52bf9a43fc941f1e766ab0bec5ea8c8e285eb970de1f2d702f13"
+    }
+  },
+  "runs": [
+    {
+      "checker_sha256": "9f743ed73771914f1d2e44cdc811fb9a05a59dc44ce40e19f09bff5489a8a700",
+      "child_attempts": 0,
+      "controls": {
+        "codec_executions": 0,
+        "rejected_controls": 43,
+        "valid_metadata_controls": 3
+      },
+      "optimization": 0,
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "recipe_count": 126,
+      "status": "passed"
+    },
+    {
+      "checker_sha256": "9f743ed73771914f1d2e44cdc811fb9a05a59dc44ce40e19f09bff5489a8a700",
+      "child_attempts": 0,
+      "controls": {
+        "codec_executions": 0,
+        "rejected_controls": 43,
+        "valid_metadata_controls": 3
+      },
+      "optimization": 1,
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "recipe_count": 126,
+      "status": "passed"
+    }
+  ],
+  "scope": "Source-only ordinary Greedy input hypotheses and bounds; no C or Rust codec execution. Frame/publication outcomes remain unobserved.",
+  "status": "passed"
+}

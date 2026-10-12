@@ -1,0 +1,2840 @@
+{
+  "branches": {
+    "chain": 55,
+    "row": 71
+  },
+  "header_only": [
+    {
+      "completed_frame": false,
+      "pledge": 255,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 256,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 65791,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 65792,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 4294967294,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 4294967295,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 4294967296,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 1024,
+      "window_log": 10
+    },
+    {
+      "completed_frame": false,
+      "pledge": 1025,
+      "window_log": 10
+    },
+    {
+      "completed_frame": false,
+      "pledge": 16384,
+      "window_log": 14
+    },
+    {
+      "completed_frame": false,
+      "pledge": 16385,
+      "window_log": 14
+    },
+    {
+      "completed_frame": false,
+      "pledge": 32768,
+      "window_log": 15
+    },
+    {
+      "completed_frame": false,
+      "pledge": 32769,
+      "window_log": 15
+    },
+    {
+      "completed_frame": false,
+      "pledge": 2097152,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 2097153,
+      "window_log": 21
+    }
+  ],
+  "positive_calls": 347,
+  "recipe_count": 126,
+  "recipes": [
+    {
+      "hypothesis": "Complete empty frame without a parser candidate.",
+      "id": "chain_empty",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [],
+      "selected_branch": "chain",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "First uniform block and candidate publication.",
+      "id": "chain_first_uniform",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Zero calls preserve source and publication, including after the first block.",
+      "id": "chain_zero_uniform",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        0,
+        4096,
+        0,
+        0
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Compressed/raw/RLE hypotheses and committed-repeat use after fallback.",
+      "id": "chain_mixed_fallback",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 16384,
+      "source_sha256": "289bbc31ebe66b13dfb5ca9165eac6b113ea12bdd1f04f72e128960f659c3ada",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Incompressible first block retains sampled history for a later copy.",
+      "id": "chain_raw_then_copy",
+      "parameters": [
+        14,
+        14,
+        12,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 8192,
+      "source_sha256": "75b966e55bb2d0bc95ffb86366b3b4657c2534a71e3ec00a98d317d1c1132fa1",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Tiny stale scratch versus fresh candidates and distinct parser tail boundaries.",
+      "id": "chain_tiny_stale",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        0,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 8363,
+      "source_sha256": "90863e6847b2cd85bda306300eb855a6ac28ee56eae56ee0f2f8581bbc6ce5d2",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length1",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        1
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 1,
+      "source_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length6",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        6
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 6,
+      "source_sha256": "17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length7",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        7
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 7,
+      "source_sha256": "57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length8",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        8
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 8,
+      "source_sha256": "8a851ff82ee7048ad09ec3847f1ddf44944104d2cbd17ef4e3db22c6785a0d45",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length9",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        9
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9,
+      "source_sha256": "f8348e0b1df00833cbbbd08f07abdecc10c0efb78829d7828c62a7f36d0cc549",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length10",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        10
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 10,
+      "source_sha256": "1f825aa2f0020ef7cf91dfa30da4668d791c5d4824fc8e41354b89ec05795ab3",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length15",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        15
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 15,
+      "source_sha256": "7071fc3188fde7e7e500d4768f1784bede1a22e991648dcab9dc3219acff1d4c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length16",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        16
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 16,
+      "source_sha256": "be45cb2605bf36bebde684841a28f0fd43c69850a3dce5fedba69928ee3a8991",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length17",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        17
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 17,
+      "source_sha256": "3e5718fea51a8f3f5baca61c77afab473c1810f8b9db330273b4011ce92c787e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "chain_fresh_length18",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        18
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 18,
+      "source_sha256": "7a096cc12702bcfa647ee070d4f3ba4c2d1d715b484b55b825d0edba6545803b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "chain_prefix_length7",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        7
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4103,
+      "source_sha256": "1fd0b6d28694ea49a135ef1283c4ca6740e783c7d7a8d03db475a6053aa63511",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "chain_prefix_length8",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        8
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4104,
+      "source_sha256": "77134c1ac039a049cd35ce2310a35b74086b6b73d8fcae92b8451e53615ed7b5",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "chain_prefix_length9",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        9
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4105,
+      "source_sha256": "5a6c54c4bdec15ff8ea2464cd4b0acf233abcb91b0bfc2a96cadf02259457674",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "chain_prefix_length10",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        10
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4106,
+      "source_sha256": "1539f53fd5736b5657a9f9ed4197d20b6bb889ae1743b6858b999ae5034776ee",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "chain_prefix_length15",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        15
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4111,
+      "source_sha256": "1f2492a34c17c49894bb883180f61d254f89010a89402480f1196bfbbe61bc11",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "chain_prefix_length16",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        16
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4112,
+      "source_sha256": "785a3d1ae4ea7aad7b5ee09c035fce492f8ffe2a232c49caf9cf71d706349a44",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "chain_prefix_length17",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        17
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 4113,
+      "source_sha256": "576b18d8e862cbec4d4460241082a827bee6a7ba08b6f7368fb575d8c833aa81",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "chain_ordinary_gap383",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        383,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 416,
+      "source_sha256": "92c268932feae674a802489e2ddeb1b67adaa1374718dc51e9376333233417ad",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "chain_ordinary_gap384",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        384,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 417,
+      "source_sha256": "527fe932142cfb6a5d8b86ec2241d716654491da981cd245be47bc2b6424ff29",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "chain_ordinary_gap385",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        385,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 418,
+      "source_sha256": "a88815af609dfe7c6835ceee0159f8bd6d576dd0bed2561a33415de7f5bd3256",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "chain_ordinary_gap575",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        575,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 608,
+      "source_sha256": "09406e4c7314d6130bee34812ec7234fe3df3e210ae9328694357f7c31177303",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "chain_ordinary_gap576",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        576,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 609,
+      "source_sha256": "10ff8ae40f160c6e3b01577e792658fdd94cc3bf498052db9496dc7aea516e85",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "chain_ordinary_gap577",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        577,
+        33
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 610,
+      "source_sha256": "b7da24b06ef877262a02944ded84128dc185b9c45dd4c508a885004796936941",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "chain_width3",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        3,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "chain_width4",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "chain_width5",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        5,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "chain_width6",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        6,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "chain_width7",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        7,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "chain_literal_target0",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        7,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "chain_literal_target4",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        7,
+        4,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "chain_literal_target131072",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        7,
+        131072,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k4_d128",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "5b683d7f57e253f12a46871da9463069b351ece2fda04e735ee2ff472cce601b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k4_d192",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "d08192cf925623a5102fa058070539b63ff19e54c1443f68226c613d2257b596",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k4_d256",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "878715b3d80fe00ac22e8962d53030e267420e628a3719c7f009e1cd58c66faa",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k4_d320",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "8b05f67e348080c30e58813840e360aabfdfa036479e84ad9484d99c4dd5091f",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k8_d128",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "35135bbf8081c272659d83893dcde848b97c66ad9bf4bee53ccf9eded8467b32",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k8_d192",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "ae886beedc2148218d0f263a51a11373cc222600870aa338fb47b882dd09979e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k8_d256",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "d575f31316458894017015155d62e537c1d890b8624dbd3da3ad1cf50477171c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k8_d320",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "61ec9d4bdf4be48f2a2dc37abfbcc0d8183a301a9520a8407f99d9d65ea2e23d",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k12_d128",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "cd14abb20c19b392770a273d3ae054c140079fb4ef4d3431e422fcf5a4cc1ebe",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k12_d192",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "a6a7e89cc40c5746dfc9d356af0643a337c8b9b689b85abf9d8a25d3aa4af44e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k12_d256",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "9e62e94382b17d27f3330977dc7b6aa8e9281687d95923e83688734a9c0205f7",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "chain_raw_candidate_k12_d320",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 9216,
+      "source_sha256": "846aa816de6bbc39506407309ccd2882683efef5cf8522257faa7d2913fdb035",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "chain_layout_h6_c18",
+      "parameters": [
+        14,
+        6,
+        18,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "chain_layout_h19_c6",
+      "parameters": [
+        14,
+        19,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "chain_layout_h6_c7",
+      "parameters": [
+        14,
+        6,
+        7,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "chain_layout_h7_c6",
+      "parameters": [
+        14,
+        7,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Incompressible skipping followed by a match resets the skipping flag.",
+      "id": "chain_skip_then_period",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        8192
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 8192,
+      "source_sha256": "1cb25c3b929dc1c6fa12a756f40b305fe7bb7475d2800da145fd133f3e61ce2b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Complete empty frame without a parser candidate.",
+      "id": "row_empty",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [],
+      "selected_branch": "row",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "First uniform block and candidate publication.",
+      "id": "row_first_uniform",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Zero calls preserve source and publication, including after the first block.",
+      "id": "row_zero_uniform",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        0,
+        4096,
+        0,
+        0
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Compressed/raw/RLE hypotheses and committed-repeat use after fallback.",
+      "id": "row_mixed_fallback",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 16384,
+      "source_sha256": "289bbc31ebe66b13dfb5ca9165eac6b113ea12bdd1f04f72e128960f659c3ada",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Incompressible first block retains sampled history for a later copy.",
+      "id": "row_raw_then_copy",
+      "parameters": [
+        15,
+        14,
+        12,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 8192,
+      "source_sha256": "75b966e55bb2d0bc95ffb86366b3b4657c2534a71e3ec00a98d317d1c1132fa1",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Tiny stale scratch versus fresh candidates and distinct parser tail boundaries.",
+      "id": "row_tiny_stale",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        0,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 8363,
+      "source_sha256": "90863e6847b2cd85bda306300eb855a6ac28ee56eae56ee0f2f8581bbc6ce5d2",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length1",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        1
+      ],
+      "selected_branch": "row",
+      "source_bytes": 1,
+      "source_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length6",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        6
+      ],
+      "selected_branch": "row",
+      "source_bytes": 6,
+      "source_sha256": "17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length7",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        7
+      ],
+      "selected_branch": "row",
+      "source_bytes": 7,
+      "source_sha256": "57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length8",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        8
+      ],
+      "selected_branch": "row",
+      "source_bytes": 8,
+      "source_sha256": "8a851ff82ee7048ad09ec3847f1ddf44944104d2cbd17ef4e3db22c6785a0d45",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length9",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        9
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9,
+      "source_sha256": "f8348e0b1df00833cbbbd08f07abdecc10c0efb78829d7828c62a7f36d0cc549",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length10",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        10
+      ],
+      "selected_branch": "row",
+      "source_bytes": 10,
+      "source_sha256": "1f825aa2f0020ef7cf91dfa30da4668d791c5d4824fc8e41354b89ec05795ab3",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length15",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        15
+      ],
+      "selected_branch": "row",
+      "source_bytes": 15,
+      "source_sha256": "7071fc3188fde7e7e500d4768f1784bede1a22e991648dcab9dc3219acff1d4c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length16",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        16
+      ],
+      "selected_branch": "row",
+      "source_bytes": 16,
+      "source_sha256": "be45cb2605bf36bebde684841a28f0fd43c69850a3dce5fedba69928ee3a8991",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length17",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        17
+      ],
+      "selected_branch": "row",
+      "source_bytes": 17,
+      "source_sha256": "3e5718fea51a8f3f5baca61c77afab473c1810f8b9db330273b4011ce92c787e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "row_fresh_length18",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        18
+      ],
+      "selected_branch": "row",
+      "source_bytes": 18,
+      "source_sha256": "7a096cc12702bcfa647ee070d4f3ba4c2d1d715b484b55b825d0edba6545803b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "row_prefix_length7",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        7
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4103,
+      "source_sha256": "1fd0b6d28694ea49a135ef1283c4ca6740e783c7d7a8d03db475a6053aa63511",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "row_prefix_length8",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        8
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4104,
+      "source_sha256": "77134c1ac039a049cd35ce2310a35b74086b6b73d8fcae92b8451e53615ed7b5",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "row_prefix_length9",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        9
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4105,
+      "source_sha256": "5a6c54c4bdec15ff8ea2464cd4b0acf233abcb91b0bfc2a96cadf02259457674",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "row_prefix_length10",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        10
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4106,
+      "source_sha256": "1539f53fd5736b5657a9f9ed4197d20b6bb889ae1743b6858b999ae5034776ee",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "row_prefix_length15",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        15
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4111,
+      "source_sha256": "1f2492a34c17c49894bb883180f61d254f89010a89402480f1196bfbbe61bc11",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "row_prefix_length16",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        16
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4112,
+      "source_sha256": "785a3d1ae4ea7aad7b5ee09c035fce492f8ffe2a232c49caf9cf71d706349a44",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "row_prefix_length17",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        17
+      ],
+      "selected_branch": "row",
+      "source_bytes": 4113,
+      "source_sha256": "576b18d8e862cbec4d4460241082a827bee6a7ba08b6f7368fb575d8c833aa81",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "row_ordinary_gap383",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        383,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 416,
+      "source_sha256": "92c268932feae674a802489e2ddeb1b67adaa1374718dc51e9376333233417ad",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "row_ordinary_gap384",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        384,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 417,
+      "source_sha256": "527fe932142cfb6a5d8b86ec2241d716654491da981cd245be47bc2b6424ff29",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "row_ordinary_gap385",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        385,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 418,
+      "source_sha256": "a88815af609dfe7c6835ceee0159f8bd6d576dd0bed2561a33415de7f5bd3256",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "row_ordinary_gap575",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        575,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 608,
+      "source_sha256": "09406e4c7314d6130bee34812ec7234fe3df3e210ae9328694357f7c31177303",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "row_ordinary_gap576",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        576,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 609,
+      "source_sha256": "10ff8ae40f160c6e3b01577e792658fdd94cc3bf498052db9496dc7aea516e85",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "row_ordinary_gap577",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        577,
+        33
+      ],
+      "selected_branch": "row",
+      "source_bytes": 610,
+      "source_sha256": "b7da24b06ef877262a02944ded84128dc185b9c45dd4c508a885004796936941",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "row_width3",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        3,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "row_width4",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "row_width5",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        5,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "row_width6",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        6,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "row_width7",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        7,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "row_literal_target0",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        7,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "row_literal_target4",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        7,
+        4,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "row_literal_target131072",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        7,
+        131072,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k4_d128",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "5b683d7f57e253f12a46871da9463069b351ece2fda04e735ee2ff472cce601b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k4_d192",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "d08192cf925623a5102fa058070539b63ff19e54c1443f68226c613d2257b596",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k4_d256",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "878715b3d80fe00ac22e8962d53030e267420e628a3719c7f009e1cd58c66faa",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k4_d320",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "8b05f67e348080c30e58813840e360aabfdfa036479e84ad9484d99c4dd5091f",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k8_d128",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "35135bbf8081c272659d83893dcde848b97c66ad9bf4bee53ccf9eded8467b32",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k8_d192",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "ae886beedc2148218d0f263a51a11373cc222600870aa338fb47b882dd09979e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k8_d256",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "d575f31316458894017015155d62e537c1d890b8624dbd3da3ad1cf50477171c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k8_d320",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "61ec9d4bdf4be48f2a2dc37abfbcc0d8183a301a9520a8407f99d9d65ea2e23d",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k12_d128",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "cd14abb20c19b392770a273d3ae054c140079fb4ef4d3431e422fcf5a4cc1ebe",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k12_d192",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "a6a7e89cc40c5746dfc9d356af0643a337c8b9b689b85abf9d8a25d3aa4af44e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k12_d256",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "9e62e94382b17d27f3330977dc7b6aa8e9281687d95923e83688734a9c0205f7",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "row_raw_candidate_k12_d320",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 9216,
+      "source_sha256": "846aa816de6bbc39506407309ccd2882683efef5cf8522257faa7d2913fdb035",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "row_layout_h6_c18",
+      "parameters": [
+        15,
+        6,
+        18,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "row_layout_h19_c6",
+      "parameters": [
+        15,
+        19,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "row_layout_h6_c7",
+      "parameters": [
+        15,
+        6,
+        7,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "row_layout_h7_c6",
+      "parameters": [
+        15,
+        7,
+        6,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Incompressible skipping followed by a match resets the skipping flag.",
+      "id": "row_skip_then_period",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        8192
+      ],
+      "selected_branch": "row",
+      "source_bytes": 8192,
+      "source_sha256": "1cb25c3b929dc1c6fa12a756f40b305fe7bb7475d2800da145fd133f3e61ce2b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "row_search1",
+      "parameters": [
+        15,
+        10,
+        10,
+        1,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "row_search4",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "row_search5",
+      "parameters": [
+        15,
+        10,
+        10,
+        5,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "row_search6",
+      "parameters": [
+        15,
+        10,
+        10,
+        6,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "row_search7",
+      "parameters": [
+        15,
+        10,
+        10,
+        7,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "row_search29",
+      "parameters": [
+        15,
+        10,
+        10,
+        29,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Inactive chain dimension must not allocate a chain owner.",
+      "id": "row_unused_chain29",
+      "parameters": [
+        15,
+        10,
+        29,
+        29,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "row",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "A/B/A retained-prefix visibility versus window expiry.",
+      "id": "row_window17",
+      "parameters": [
+        17,
+        18,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "row",
+      "source_bytes": 393216,
+      "source_sha256": "b356eab1e165e29dca402be9992bea8b59557779b837c1057f3e94eae86dfcbb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "A/B/A retained-prefix visibility versus window expiry.",
+      "id": "row_window19",
+      "parameters": [
+        19,
+        18,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "row",
+      "source_bytes": 393216,
+      "source_sha256": "b356eab1e165e29dca402be9992bea8b59557779b837c1057f3e94eae86dfcbb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "A/1MiB-noise/A distinguishes retention across windows20/21.",
+      "id": "row_window20",
+      "parameters": [
+        20,
+        19,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "row",
+      "source_bytes": 1310720,
+      "source_sha256": "db7f4665ab3d2824f5e9320a2109b577ee0d73ca0b0034f48522dee2bd422191",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "A/1MiB-noise/A distinguishes retention across windows20/21.",
+      "id": "row_window21",
+      "parameters": [
+        21,
+        19,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "row",
+      "source_bytes": 1310720,
+      "source_sha256": "db7f4665ab3d2824f5e9320a2109b577ee0d73ca0b0034f48522dee2bd422191",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "A/2MiB-noise/A advances even the largest admitted prefix floor.",
+      "id": "row_window21_expired",
+      "parameters": [
+        21,
+        19,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "row",
+      "source_bytes": 2359296,
+      "source_sha256": "928507b1f4804e2c631e9ff6aba383149f7461e819a86a01336c48f657af9096",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Chain history expires at its largest automatic-branch window.",
+      "id": "chain_window14_expired",
+      "parameters": [
+        14,
+        14,
+        14,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        16384,
+        16384,
+        16384
+      ],
+      "selected_branch": "chain",
+      "source_bytes": 49152,
+      "source_sha256": "47231fcb8031de266c21d847ddce82c7f6cb563ae65de9fda0a48c3a7b4ca814",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Long match marker and block bound within an ordinary call.",
+      "id": "row_long_match65535",
+      "parameters": [
+        17,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        65535
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65535,
+      "source_sha256": "0a16c4d556327894a2473b32b60cbce4b29c65b28c3a3d26f8018659a702ae56",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Long match marker and block bound within an ordinary call.",
+      "id": "row_long_match65536",
+      "parameters": [
+        17,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        65536
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65536,
+      "source_sha256": "901505cd1d0725d2720de4f9fdc19f114a51d3c7389f033d5e94c9c02fb429a8",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Long match marker and block bound within an ordinary call.",
+      "id": "row_long_match65543",
+      "parameters": [
+        17,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        65543
+      ],
+      "selected_branch": "row",
+      "source_bytes": 65543,
+      "source_sha256": "1d6853537f8bf242c111c7caada8a3fc03c7f2032091b6cd1fbb1b40175e80cb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Long match marker and block bound within an ordinary call.",
+      "id": "row_long_match131072",
+      "parameters": [
+        17,
+        10,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        131072
+      ],
+      "selected_branch": "row",
+      "source_bytes": 131072,
+      "source_sha256": "c50203ed1ac20b625efec53ecb97fec0e7929f304551dccf8bc827c7aab45b8d",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Potential extended literal length followed by a periodic match.",
+      "id": "row_long_literals",
+      "parameters": [
+        17,
+        12,
+        10,
+        4,
+        4,
+        0,
+        3
+      ],
+      "schedule": [
+        69632
+      ],
+      "selected_branch": "row",
+      "source_bytes": 69632,
+      "source_sha256": "cd74cb27f6f97d8ed7ff29c27b4b30d73a4acf4e2dd35a5acbbe58e725001008",
+      "whole_compare": true
+    }
+  ],
+  "scheduled_calls": 355,
+  "schema_version": 1,
+  "source_bytes": 6959842,
+  "status": "source-only pre-execution hypotheses",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "whole_comparisons": 13
+}

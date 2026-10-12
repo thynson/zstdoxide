@@ -65,8 +65,10 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Implement safe reference chain search against full frozen heads/links and update/skipping transitions.
 - [x] Implement safe reference row search against frozen salted hashes, full positions/tags, head wrap and long-gap updates.
 - [x] Implement Greedy repeat-first parsing, tie selection, backward extension and immediate-repeat cleanup against frozen candidates.
-- [ ] Specify and pin ordinary Greedy frame/schedule recipes before C execution.
-- [ ] Implement/review the ordinary-frame helper and offline replay validator, then capture normal/instrumented publication trajectories and complete C frames.
+- [x] Specify and pin ordinary Greedy frame/schedule recipes before C execution.
+- [ ] Implement and source-review the bounded ordinary Greedy frame helper; complete syntax checks before execution.
+- [ ] Implement the ordinary Greedy offline replay validator and capture controller with malformed-input controls.
+- [ ] Capture normal/instrumented ordinary publication trajectories and complete C frames, then independently reject forged evidence offline.
 - [ ] Add a dependency-free checked Rust adapter for frozen ordinary Greedy trajectories and frames.
 - [ ] Retain selected chain/row state across blocks with ordinary next-to-update adjustment, tiny bypass and failure poisoning.
 - [ ] Extend static private search dispatch while preserving existing owner counts and complete frame bytes.

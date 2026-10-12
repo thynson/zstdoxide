@@ -242,6 +242,17 @@ arguments preserve scratch and sampling. Formatting, strict safe/all Clippy,
 safe no_std and combined chain/row no_std compilation pass. The direct parser
 returns candidate wire state only; ordinary retention/publication is pending.
 
+
+The separate [ordinary-frame protocol](reference-greedy-frame-oracle.md) now
+pins 126 source-only inputs: 55 chain and 71 row, 6,959,842 source bytes,
+355 scheduled calls (347 positive), 13 aligned comparison hypotheses and
+15 incomplete-header probes. Both normal Python and `-O` verify the immutable
+manifest/generator, pass three metadata controls and reject 43 mutations with
+process creation disabled and zero child attempts. The
+[evidence](evidence/2026-10-12-greedy-frame-recipes.json) preserves the exact
+checker driver and input identities. No ordinary C execution, block-kind or
+repeat-discard witness is claimed; helper review and capture are next.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories
