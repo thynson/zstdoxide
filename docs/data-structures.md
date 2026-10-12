@@ -870,3 +870,13 @@ longer matches, preserving newest-candidate ties. No source pointers, new
 allocations or unsafe composite are needed. A table corruption error after an
 update leaves partial search writes; the future retained context must poison
 itself instead of publishing/reusing that state.
+
+Row search uses the same safe match record and source comparator. It borrows
+the selected `RowTable` exclusively, with caller-owned update frontier and salt
+entropy scalars. A gap above 384 inserts the first 96 and last 32 pending
+positions; skipping mode inserts no pending positions. The query's salted hash
+contributes wrapping entropy once. Candidates are copied before inserting the
+query, so overwriting a row slot cannot change that search's candidate order.
+Scalar hash computation replaces only C cache/prefetch machinery, preserving
+the sixteen-byte logical tail and insertion schedule. No Rust cache-equivalence
+claim is made; C cache fields remain preserved in the fixture evidence.

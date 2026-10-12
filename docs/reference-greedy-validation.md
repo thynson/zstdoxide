@@ -211,6 +211,19 @@ and backward extension are reserved for complete parser validation. Strict
 safe/all Clippy and safe/isolated-chain no_std compilation pass. Full parsing
 and ordinary state retention remain separate work items.
 
+
+The combined chain/row search suite passes eight tests on safe,
+unsafe-row-table alone and all features. Twenty-five row no-match schedules
+match complete final positions/tags, update frontiers and salt entropy,
+including all six 383/384/385/575/576/577 pending gaps, two final skipping states
+and wrapping entropy. Selected first-probe full-block matches also agree in
+complete maps, including the 2-MiB head. Fourteen separately selected row-width,
+wrap, zero-tag and capped-budget cases choose the frozen newest tie; their
+remaining parser trajectories are not yet covered by this search-only check.
+Invalid row arguments preserve tables and progress scalars. Strict safe/all
+Clippy and safe/isolated-row no_std compilation pass. Scalar hashing intentionally
+has no Rust counterpart for the preserved C prefetch cache.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories

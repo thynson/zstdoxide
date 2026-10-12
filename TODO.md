@@ -63,7 +63,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Project frozen direct Greedy inputs/observations into bounded little-endian records with independently checked provenance.
 - [x] Add a dependency-free checked Rust adapter for frozen direct Greedy inputs and complete table/sequence observations.
 - [x] Implement safe reference chain search against full frozen heads/links and update/skipping transitions.
-- [ ] Implement safe reference row search against frozen salted hashes, full positions/tags, head wrap and long-gap updates.
+- [x] Implement safe reference row search against frozen salted hashes, full positions/tags, head wrap and long-gap updates.
 - [ ] Implement Greedy repeat-first parsing, tie selection, backward extension and immediate-repeat cleanup against frozen candidates.
 - [ ] Specify and pin ordinary Greedy frame/schedule recipes before C execution.
 - [ ] Implement/review the ordinary-frame helper and offline replay validator, then capture normal/instrumented publication trajectories and complete C frames.

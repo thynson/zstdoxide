@@ -1,10 +1,12 @@
 //! Safe source comparison and bounded reference Greedy candidate search.
-//! Search mutates only sampling tables/frontiers, never repeat or entropy state.
+//! Search mutates sampling tables/frontiers and row salt entropy. Frame entropy
+//! coding state and repeat offsets belong to the later parser/publication layer.
 #![forbid(unsafe_code)]
 #![cfg_attr(not(test), allow(dead_code, reason = "Greedy parsing follows"))]
 
 use crate::greedy_block::GreedyBlock;
 use crate::reference_chain::ReferenceChain;
+use crate::row_table::RowTable;
 use crate::{Error, Result};
 use core::alloc::Allocator;
 
@@ -98,6 +100,65 @@ pub(crate) fn find_chain<H: Allocator, L: Allocator>(
     Ok(best)
 }
 
+/// Search a salted row after the direct match-finder's bounded pending updates.
+/// Corresponds to `ZSTD_row_update_internal` and `ZSTD_RowFindBestMatch`,
+/// no-dictionary branch (facebook/zstd v1.5.7). Scalar hashes preserve insertion
+/// order without a cache or speculative reads past the logical block end.
+/// Invalid scalar arguments reject before writes; corruption after pending
+/// updates requires the caller to poison the retained context.
+pub(crate) fn find_row<P: Allocator, T: Allocator>(
+    block: GreedyBlock<'_>,
+    table: &mut RowTable<P, T>,
+    next: &mut usize,
+    current: usize,
+    salt: u64,
+    entropy: &mut u32,
+    skipping: bool,
+) -> Result<Option<GreedyMatch>> {
+    let layout = table.layout();
+    if !block.row_search()
+        || layout.key_layout() != block.key_layout()
+        || *next > current
+        || block.search_from(current, current)?.is_none()
+    {
+        return Err(Error::InvalidParameter);
+    }
+    let following = current.checked_add(1).ok_or(Error::ResourceLimit)?;
+    let key = layout.key(block.key(current)?, salt)?;
+    let floor = block.candidate_floor(current)?;
+    if !skipping {
+        let mut start = *next;
+        if current - start > 384 {
+            // current-start > 384 proves start+96 fits and precedes current-32.
+            for position in start..start + 96 {
+                table.insert(layout.key(block.key(position)?, salt)?, position)?;
+            }
+            start = current - 32;
+        }
+        for position in start..current {
+            table.insert(layout.key(block.key(position)?, salt)?, position)?;
+        }
+    }
+    *next = current;
+    *entropy = entropy.wrapping_add(key.hash());
+    let candidates = table.candidates(key, current, floor)?;
+    table.insert(key, current)?;
+    *next = following;
+
+    let mut best = None;
+    let mut length = 3;
+    for &previous in candidates.as_slice() {
+        if let Some(found) = longer_match(block, current, previous, length)? {
+            length = found.length;
+            best = Some(found);
+            if length == block.range().end - current {
+                break;
+            }
+        }
+    }
+    Ok(best)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -159,6 +220,206 @@ mod tests {
             case.name
         );
         assert_eq!(next, case.final_next, "{} frontier", case.name);
+    }
+
+    fn rows(case: &OracleCase<'_>) -> RowTable {
+        let layout = case.row_layout().unwrap();
+        let mut table = RowTable::new_in(layout, Global, Global).unwrap();
+        let source = block(case);
+        for &position in &case.seeds {
+            let position = position as usize;
+            let key = layout
+                .key(source.key(position).unwrap(), case.initial_salt)
+                .unwrap();
+            table.insert(key, position).unwrap();
+        }
+        table
+    }
+
+    fn final_rows(case: &OracleCase<'_>, table: &RowTable, next: usize, entropy: u32) {
+        let (positions, tags) = table.test_maps();
+        assert_eq!(
+            raw(positions),
+            case.first_table.values(true).unwrap(),
+            "{} positions",
+            case.name
+        );
+        assert_eq!(
+            tags.iter().map(|&t| u32::from(t)).collect::<Vec<_>>(),
+            case.second_table.values(true).unwrap(),
+            "{} tags",
+            case.name
+        );
+        assert_eq!(next, case.final_next, "{} frontier", case.name);
+        assert_eq!(entropy, case.final_entropy, "{} salt entropy", case.name);
+    }
+
+    #[test]
+    fn row_no_match_schedules_match_full_maps_long_gaps_and_wrapping_entropy() {
+        let mut checked = 0;
+        let mut skipping_cases = 0;
+        let mut gap_cases = 0;
+        for case in cases()
+            .unwrap()
+            .iter()
+            .filter(|c| c.row_search && c.sequences.is_empty())
+        {
+            let source = block(case);
+            let mut table = rows(case);
+            let mut next = case.initial_next;
+            let mut entropy = case.initial_entropy;
+            let mut cursor = source.initial_cursor().unwrap();
+            let mut skipping = false;
+            while let Some(probe) = cursor {
+                assert_eq!(
+                    find_row(
+                        source,
+                        &mut table,
+                        &mut next,
+                        probe.current(),
+                        case.initial_salt,
+                        &mut entropy,
+                        skipping
+                    )
+                    .unwrap(),
+                    None,
+                    "{}",
+                    case.name
+                );
+                let miss = probe.miss().unwrap();
+                cursor = miss.next;
+                skipping = miss.skipping;
+            }
+            final_rows(case, &table, next, entropy);
+            assert_eq!(skipping, case.final_skipping, "{}", case.name);
+            skipping_cases += usize::from(skipping);
+            gap_cases += usize::from(case.name.starts_with("row-pending-gap-"));
+            checked += 1;
+        }
+        assert_eq!(checked, 25);
+        assert_eq!(skipping_cases, 2);
+        assert_eq!(gap_cases, 6);
+    }
+
+    #[test]
+    fn row_first_probe_full_matches_agree_with_frozen_candidates_and_maps() {
+        let mut checked = 0;
+        let mut maximum_history = false;
+        for case in cases().unwrap().iter().filter(|c| c.row_search) {
+            let [sequence] = case.sequences.as_slice() else {
+                continue;
+            };
+            // The final update frontier excludes later probes/backward extension.
+            if case.initial_current != case.prefix
+                || case.final_next != case.initial_current + 1
+                || sequence.literal_length != 0
+                || sequence.match_length as usize != case.source.len() - case.prefix
+                || sequence.offset_value < 4
+            {
+                continue;
+            }
+            let mut table = rows(case);
+            let mut next = case.initial_next;
+            let mut entropy = case.initial_entropy;
+            assert_eq!(
+                find_row(
+                    block(case),
+                    &mut table,
+                    &mut next,
+                    case.initial_current,
+                    case.initial_salt,
+                    &mut entropy,
+                    false
+                )
+                .unwrap(),
+                Some(GreedyMatch {
+                    previous: case.prefix - sequence.distance as usize,
+                    length: sequence.match_length as usize,
+                }),
+                "{}",
+                case.name
+            );
+            final_rows(case, &table, next, entropy);
+            maximum_history |= sequence.distance == 2_097_152;
+            checked += 1;
+        }
+        assert!(checked >= 10);
+        assert!(maximum_history);
+    }
+
+    #[test]
+    fn row_wrapped_heads_and_capped_budgets_choose_the_frozen_newest_tie() {
+        let mut checked = 0;
+        for case in cases().unwrap().iter().filter(|c| {
+            c.name.contains("-insertions-")
+                || c.name.starts_with("row-capped-search-")
+                || c.name == "row-zero-tag-and-sentinel"
+        }) {
+            let sequence = &case.sequences[0];
+            assert_eq!(sequence.literal_length, 0);
+            assert_eq!(sequence.match_length, 4);
+            assert_eq!(sequence.distance, 20);
+            let mut table = rows(case);
+            let mut next = case.initial_next;
+            let mut entropy = case.initial_entropy;
+            assert_eq!(
+                find_row(
+                    block(case),
+                    &mut table,
+                    &mut next,
+                    case.prefix,
+                    case.initial_salt,
+                    &mut entropy,
+                    false
+                )
+                .unwrap(),
+                Some(GreedyMatch {
+                    previous: case.prefix - 20,
+                    length: 4
+                }),
+                "{}",
+                case.name
+            );
+            checked += 1;
+        }
+        assert_eq!(checked, 14);
+    }
+
+    #[test]
+    fn row_rejects_invalid_probe_arguments_before_table_or_scalar_mutation() {
+        use crate::greedy_key::RowLayout;
+        let source = [0; 128];
+        let key = GreedyKeyLayout::new(6, 4).unwrap();
+        let layout = RowLayout::new(key, 4).unwrap();
+        for (query, initial, row, other_key) in [
+            (31, 0, true, false),
+            (112, 0, true, false),
+            (32, 33, true, false),
+            (32, 0, false, false),
+            (32, 0, true, true),
+            (usize::MAX, 0, true, false),
+        ] {
+            let mut table = RowTable::new_in(layout, Global, Global).unwrap();
+            table
+                .insert(layout.key(key.read_key(&source).unwrap(), 7).unwrap(), 0)
+                .unwrap();
+            let before = (table.test_maps().0.to_vec(), table.test_maps().1.to_vec());
+            let block_key = if other_key {
+                GreedyKeyLayout::new(7, 4).unwrap()
+            } else {
+                key
+            };
+            let block = GreedyBlock::new(&source, 32..128, 0, block_key, 1024, row).unwrap();
+            let mut next = initial;
+            let mut entropy = 99;
+            assert_eq!(
+                find_row(block, &mut table, &mut next, query, 7, &mut entropy, false),
+                Err(Error::InvalidParameter)
+            );
+            assert_eq!(next, initial);
+            assert_eq!(entropy, 99);
+            assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
+        }
     }
 
     #[test]
