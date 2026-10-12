@@ -72,6 +72,7 @@ mod frame;
 mod fse;
 mod fse_encode;
 mod fse_select;
+mod greedy_block;
 mod greedy_key;
 mod greedy_plan;
 mod heap;

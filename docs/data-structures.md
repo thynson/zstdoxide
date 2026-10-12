@@ -828,3 +828,22 @@ Greedy query tuples and check source-tier transitions, exact owner costs,
 strategy/resource precedence, key clamping, target independence, empty hints
 and nontruncated source sizes above u32 on 64-bit hosts. Strict safe Clippy and
 no_std compilation pass. This private plan does not yet change public admission.
+
+`GreedyBlock` now borrows the complete source with a checked nonempty block
+range, retained floor and window. Key extraction stops at the logical block
+end even if later source bytes exist. Candidate floors advance per probe;
+retained prefix and entry-repeat floors are separate. `GreedyCursor` preserves
+strict main-loop and inclusive cleanup limits with chain/row margins 8/16,
+and derives miss steps from the distance to the literal anchor. `GreedyMiss`
+retains the skipping flag even on loop exit. Five safe/all tests cover tiny
+fresh/prefixed boundaries, moving floors, invalid ranges/counters, truncated
+keys, anchor reset and the frozen no-match C schedules at 2047/2064/4096 bytes.
+Strict safe Clippy and no_std checks pass.
+
+The next direct-fixture projection is test-only: bounded little-endian records
+retain copied scalar metadata and sparse complete table maps, while source,
+name and literal slices borrow immutable fixture bytes. A checked safe reader
+owns bounded metadata vectors, validates counts before reserving and replays
+sequences/fingerprints without JSON, C bindings or subprocesses. These plain
+fixture records need no unsafe backend. Projection and Rust reader are separate
+work items so immutable provenance can be reviewed before parser execution.

@@ -170,6 +170,13 @@ branch-specific resource caps, independent target payloads and complete output
 bounds, unsupported-strategy precedence, empty hints and nontruncated large
 source scalars. This does not expose Greedy in the public request API.
 
+The borrowed block/cursor layer passes five safe/all tests plus strict safe
+Clippy and no_std compilation. It retains distinct 8/16-byte search tails, strict
+main-loop versus inclusive repeat cleanup, per-probe window floors and checked
+anchor-relative skipping. The final coordinates/flags on six no-match noise
+schedules agree with the frozen direct C observations. This is a scalar schedule
+check, not yet a complete parser or full table-map comparison.
+
 ## Remaining scope
 
 Constructed direct states do not establish ordinary context/frame trajectories
