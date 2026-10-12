@@ -49,7 +49,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Freeze complete current DoubleFast frames and qualified allocation records from the reviewed clock-free benchmark as permanent compatibility regressions.
 - [x] Specify a bounded direct Greedy C protocol with separate chain/row arenas, full owner maps and short-input safety proof before execution.
 - [x] Implement and source-review the bounded direct/fresh-salt C adapter; complete syntax checks before its first execution.
-- [ ] Implement the independent packet/record validator and freeze tiny chain/row recipes without generating expected output.
+- [x] Implement the independent packet/record validator and freeze tiny chain/row recipes without generating expected output.
 - [ ] Capture and independently verify fresh-context salt and tiny chain/row observations with all used C units instrumented.
 - [ ] Pin broader source/initial-state recipes for row widths, hash/chain collisions, cyclic bias, gaps, skipping, floors, repeats and malformed packets.
 - [ ] Capture normal/sanitized direct observations and independently reject changed or malformed evidence offline before Rust parsing.
