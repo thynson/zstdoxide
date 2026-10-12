@@ -491,3 +491,96 @@ fn original_fuzzer_loops_add_only_default_three_double_fast_profiles() {
         [("empty", 0), ("empty", 3), ("initial_match", 3)]
     );
 }
+
+#[test]
+fn greedy_successor_preserves_every_selector_and_adds_only_the_frozen_case() {
+    let original = cases();
+    let previous: Vec<_> = include_str!("fixtures/reference-admission-v2/fuzz.tsv")
+        .lines()
+        .skip(1)
+        .collect();
+    let current: Vec<_> = include_str!("fixtures/reference-admission-v3/fuzz.tsv")
+        .lines()
+        .skip(1)
+        .collect();
+    assert_eq!(
+        (original.len(), previous.len(), current.len()),
+        (81, 81, 81)
+    );
+    let mut additions = Vec::new();
+    let mut totals = [0; 3];
+    for ((case, previous), current) in original.iter().zip(previous).zip(current) {
+        let before: Vec<_> = previous.split('\t').collect();
+        let after: Vec<_> = current.split('\t').collect();
+        assert_eq!((before.len(), after.len()), (9, 9));
+        assert_eq!(&before[..4], &after[..4]);
+        assert_eq!(&before[6..], &after[6..]);
+        assert_eq!(before[5], after[4]);
+        assert_eq!(case.name, after[0]);
+        let selectors = select(&case.input);
+        assert_eq!(selectors.prefix, after[2].parse().unwrap());
+        totals[match after[5] {
+            "success" => 0,
+            "unsupported" => 1,
+            "advanced" => 2,
+            _ => panic!("unexpected v3 selector status"),
+        }] += 1;
+        let Some(simple) = selectors.simple else {
+            assert_eq!(&after[4..], &["advanced", "advanced", "-", "-", "-"]);
+            assert_eq!(selectors.remaining_after_branch, 2);
+            continue;
+        };
+        assert_eq!(simple.level, after[3].parse().unwrap());
+        let resolved = CompressionParameterRequest::with_level(simple.level)
+            .resolve(SourceSize::Known(selectors.prefix as u64), 0)
+            .unwrap();
+        assert_eq!(resolved.to_raw().strategy, after[8].parse().unwrap());
+        if after[4] != after[5] {
+            assert_eq!((after[4], after[5]), ("unsupported", "success"));
+            assert_eq!(resolved.to_raw().strategy, 3);
+            additions.push(case.name.as_str());
+        }
+    }
+    assert_eq!(totals, [62, 15, 4]);
+    assert_eq!(additions, ["unsupported-57"]);
+}
+
+#[test]
+fn greedy_successor_keeps_all_original_numeric_loop_inputs_and_adds_level_four() {
+    let mut previous = include_str!("fixtures/reference-admission-v2/loops.tsv")
+        .lines()
+        .skip(1);
+    let mut current = include_str!("fixtures/reference-admission-v3/loops.tsv")
+        .lines()
+        .skip(1);
+    let mut additions = Vec::new();
+    let mut totals = [0; 2];
+    let mut rows = 0;
+    for (family, size, levels) in [("empty", 0, -1..=22), ("initial_match", 30, 1..=19)] {
+        for level in levels {
+            let before: Vec<_> = previous.next().unwrap().split('\t').collect();
+            let after: Vec<_> = current.next().unwrap().split('\t').collect();
+            assert_eq!((before.len(), after.len()), (8, 8));
+            assert_eq!(&before[..3], &after[..3]);
+            assert_eq!(&before[5..], &after[5..]);
+            assert_eq!(before[4], after[3]);
+            assert_eq!(after[0], family);
+            assert_eq!(after[1].parse::<usize>().unwrap(), size);
+            assert_eq!(after[2].parse::<i32>().unwrap(), level);
+            totals[0] += usize::from(after[3] == "success");
+            totals[1] += usize::from(after[4] == "success");
+            rows += 1;
+            if after[3] != after[4] {
+                assert_eq!((after[3], after[4]), ("unsupported", "success"));
+                let resolved = CompressionParameterRequest::with_level(level)
+                    .resolve(SourceSize::Known(size as u64), 0)
+                    .unwrap();
+                assert_eq!(resolved.to_raw().strategy, 3);
+                additions.push((family, level));
+            }
+        }
+    }
+    assert!(previous.next().is_none() && current.next().is_none());
+    assert_eq!((rows, totals), (43, [8, 10]));
+    assert_eq!(additions, [("empty", 4), ("initial_match", 4)]);
+}

@@ -346,3 +346,22 @@ Private retained-state and complete-frame evidence is described in
 Greedy frames still require the separately planned broader bidirectional C
 campaign. Full feature/platform matrices, measurements and official migration
 obligations remain open; this is not Module 14 completion or upstream parity.
+
+## Original selector and numeric-loop assertions
+
+The live adaptations retain all 81 `simple_round_trip.c` selector inputs and
+the exact empty-source levels -1..22 and initial-match levels 1..19 from
+`fuzzer.c:1554-1566` and `fuzzer.c:1637-1664`. Version 3 adds only selector
+`unsupported-57` and level 4 in each loop. The selected source prefixes,
+capacity-reduction budget, original input hashes, preset identity and advanced
+branch's unconsumed bytes remain unchanged. Version 2 provenance tests are
+retained alongside the two new successor-identity tests.
+
+The live selector campaign now checks 62 deterministic admitted round trips,
+15 unsupported results and four advanced branches; loops admit 6/24 and 4/19
+profiles. Repeated complete frame bytes, original C size budgets and exact
+decoded bytes are checked without claiming reused-context or caller-buffer
+equivalence. All 13 tests pass in safe/all builds; strict Clippy passes. The
+structural inventory still has 188 unfinished source units (149 blocked,
+34 partial, five planned). No source-unit status is promoted by these bounded
+one-shot assertions, and no new C execution is claimed in this item.
