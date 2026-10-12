@@ -49,7 +49,33 @@ under both normal Python and `-O`. Thirty-seven are the unchanged tiny packet
 controls; sixteen additional controls address row state and seeded prefixes.
 None executes C or a Rust codec.
 
-Broader normal/instrumented capture, independent record replay and rejection
-controls are the next work item. Preserve these inputs and first diagnostics
-if a hypothesis fails to exercise its intended behavior. Additional witnesses
-must be added explicitly rather than silently changing observed expectations.
+The subsequent normal/ASan-UBSan capture preserves these exact recipes.
+`capture.json` and `observations.ndjson` freeze 139 complete observation groups
+(137 direct cases and two fresh-context groups), totaling 5,104,709 bytes. Every
+direct output matches across C modes. All 26 linked C units plus the helper
+are instrumented in the sanitized build, retaining upstream per-function
+sanitizer exclusions; opaque fresh-context memory peaks remain mode-qualified.
+The permanent checker is `python3 scripts/check_greedy_family_capture.py
+--check-fixture`; a capture-directory argument independently audits all 444
+commands, inputs, compile/link arguments, source identities and complete maps.
+
+The [validation report](../../../docs/reference-greedy-validation.md) distinguishes
+observed consequences from hypotheses. Both branches emit a 64-byte match at
+2 MiB distance; distances 1023/1024 are accepted at W10 and 1025 is rejected.
+Distinct colliding keys separate C6/C7 chain traversal. Row widths 16/32/64 show
+reserved-head wrap and select the newest equal-length candidate. Row pending
+gaps 383/384 produce 384/385 changed position cells, whereas gaps 385 and above
+produce 129. The ordinary cross-block wrapper is not called by these inputs.
+
+Period-four source sizes 65541..65544 bracket the long match-length marker:
+expanded ML 65538 has no marker and ML 65539 does. All three long-literal recipes
+produce LL above 65535 (65760/65795/65796); they do not bracket the exact LL
+cutoff. Both branches finish with skipping enabled at 4096 noise bytes and
+clear it on the later periodic match. These are final state consequences, not
+a trace of every internal probe or proof of an exact attempt count. No input
+was silently changed to improve its coverage. Invalid cyclic/future table cells
+remain separate Rust leaf tests because C inputs allow valid construction only.
+
+The observations are test oracles, not Rust parser output, ordinary frame
+trajectories, public Greedy support or performance measurements. Preserve them
+and add explicitly versioned witnesses when a new boundary needs coverage.

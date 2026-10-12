@@ -16,6 +16,8 @@ python3 scripts/check_greedy_tiny_recipes.py --check
 python3 scripts/check_greedy_family_recipes.py --check
 python3 scripts/capture_greedy_tiny.py --check-plan
 python3 scripts/check_greedy_tiny_capture.py --check-fixture
+python3 scripts/capture_greedy_families.py --check-plan
+python3 scripts/check_greedy_family_capture.py --check-fixture
 python3 scripts/check_double_fast_hashes.py --check
 python3 scripts/check_double_fast_recipes.py --check
 python3 scripts/check_double_fast_families.py --check

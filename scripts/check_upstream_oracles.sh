@@ -92,3 +92,7 @@ python3 scripts/check_double_fast_interop_capture.py --capture "$double_fast_out
 greedy_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-greedy-tiny.XXXXXX")
 python3 scripts/capture_greedy_tiny.py --upstream "$ZSTD_UPSTREAM" --output "$greedy_output/capture"
 python3 scripts/check_greedy_tiny_capture.py "$greedy_output/capture"
+
+greedy_families_output=$(mktemp -d "${TMPDIR:-/tmp}/zstdoxide-greedy-families.XXXXXX")
+python3 scripts/capture_greedy_families.py --upstream "$ZSTD_UPSTREAM" --output "$greedy_families_output/capture"
+python3 scripts/check_greedy_family_capture.py "$greedy_families_output/capture"

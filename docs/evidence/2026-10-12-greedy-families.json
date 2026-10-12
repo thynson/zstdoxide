@@ -1,0 +1,374 @@
+{
+  "archive": "2026-10-12-greedy-families.tar.gz",
+  "archive_bytes": 10550627,
+  "archive_sha256": "9e7df61bc5a604d7ba13a1b8d552f2ea5641b6351a71dd01b6952625b9cdd456",
+  "checker_sha256": "0ad7d93df6b79bd9ad11b1e2bb7f9b51aa65894199405d8a965d7f4e76762754",
+  "commands": 444,
+  "context_peak_guarded_bytes": {
+    "normal": [
+      149198,
+      149198
+    ],
+    "sanitized": [
+      151502,
+      151502
+    ]
+  },
+  "controls_per_python_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 30
+  },
+  "fixture": {
+    "capture.json": "f61e92df7e1b58d548b7058d30cbfb7228f3cc1e4cfd3fbad9b3050e0cc20e41",
+    "observations.ndjson": "0366364cb7a1123cf0e9580770037a50df5c23bcba89a4c47fd1bed8bc3c0d27",
+    "recipes.json": "389903b9ffcefb8fd39e144649111ce561daebba6845de06479ef6c47e3970d7"
+  },
+  "members": 1167,
+  "observed_coverage": {
+    "chain": {
+      "distinct_collision_c6": [],
+      "distinct_collision_c7": [
+        {
+          "distance": 128,
+          "intent": "offset",
+          "ll": 0,
+          "ml": 32,
+          "off_base": 131,
+          "raw_ll": 0,
+          "raw_ml_base": 29
+        }
+      ],
+      "final_skipping": {
+        "2047": 0,
+        "2048": 0,
+        "2049": 0,
+        "2055": 0,
+        "2064": 1,
+        "4096": 1
+      },
+      "long_literal_splits": [
+        [
+          65500,
+          65760
+        ],
+        [
+          65535,
+          65795
+        ],
+        [
+          65536,
+          65796
+        ]
+      ],
+      "long_match_boundary": [
+        [
+          65541,
+          0,
+          65534,
+          65537
+        ],
+        [
+          65542,
+          0,
+          65535,
+          65538
+        ],
+        [
+          65543,
+          2,
+          0,
+          65539
+        ],
+        [
+          65544,
+          2,
+          1,
+          65540
+        ]
+      ],
+      "maximum_history_head": [
+        {
+          "distance": 2097152,
+          "intent": "offset",
+          "ll": 0,
+          "ml": 64,
+          "off_base": 2097155,
+          "raw_ll": 0,
+          "raw_ml_base": 61
+        }
+      ],
+      "moving_floor_distances": [
+        [
+          1023
+        ],
+        [
+          1024
+        ],
+        []
+      ],
+      "pending_gap_changed_positions": {
+        "383": 320,
+        "384": 320,
+        "385": 321,
+        "575": 447,
+        "576": 446,
+        "577": 447
+      },
+      "skip_then_period": [
+        {
+          "distance": 68,
+          "intent": "offset",
+          "ll": 4164,
+          "ml": 188,
+          "off_base": 71,
+          "raw_ll": 4164,
+          "raw_ml_base": 185
+        }
+      ]
+    },
+    "qualification": "Observed final maps and sequences, not chronological per-probe traces. Long LL cases all exceed 65535, not an exact LL cutoff bracket. Pending-gap cases do not exercise the ordinary wrapper. Explicit branches do not establish public selection. Malformed cyclic/future table cells require separate Rust leaf controls; the C helper accepts only valid seed construction.",
+    "row": {
+      "entropy_wrap": {
+        "final": 27664900,
+        "initial": 4294967280,
+        "zero_initial_final": 27664916
+      },
+      "final_skipping": {
+        "2047": 0,
+        "2048": 0,
+        "2049": 0,
+        "2055": 0,
+        "2064": 0,
+        "4096": 1
+      },
+      "long_literal_splits": [
+        [
+          65500,
+          65760
+        ],
+        [
+          65535,
+          65795
+        ],
+        [
+          65536,
+          65796
+        ]
+      ],
+      "long_match_boundary": [
+        [
+          65541,
+          0,
+          65534,
+          65537
+        ],
+        [
+          65542,
+          0,
+          65535,
+          65538
+        ],
+        [
+          65543,
+          2,
+          0,
+          65539
+        ],
+        [
+          65544,
+          2,
+          1,
+          65540
+        ]
+      ],
+      "maximum_history_head": [
+        {
+          "distance": 2097152,
+          "intent": "offset",
+          "ll": 0,
+          "ml": 64,
+          "off_base": 2097155,
+          "raw_ll": 0,
+          "raw_ml_base": 61
+        }
+      ],
+      "moving_floor_distances": [
+        [
+          1023
+        ],
+        [
+          1024
+        ],
+        []
+      ],
+      "pending_gap_changed_positions": {
+        "383": 384,
+        "384": 385,
+        "385": 129,
+        "575": 129,
+        "576": 129,
+        "577": 129
+      },
+      "reserved_head_wrap": [
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 1,
+          "insertions": 15,
+          "occupied_positions": 15,
+          "width": 16
+        },
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 15,
+          "insertions": 16,
+          "occupied_positions": 15,
+          "width": 16
+        },
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 14,
+          "insertions": 17,
+          "occupied_positions": 15,
+          "width": 16
+        },
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 1,
+          "insertions": 31,
+          "occupied_positions": 31,
+          "width": 32
+        },
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 31,
+          "insertions": 32,
+          "occupied_positions": 31,
+          "width": 32
+        },
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 30,
+          "insertions": 33,
+          "occupied_positions": 31,
+          "width": 32
+        },
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 1,
+          "insertions": 63,
+          "occupied_positions": 63,
+          "width": 64
+        },
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 63,
+          "insertions": 64,
+          "occupied_positions": 63,
+          "width": 64
+        },
+        {
+          "first_sequence": {
+            "distance": 20,
+            "intent": "offset",
+            "ll": 0,
+            "ml": 4,
+            "off_base": 23,
+            "raw_ll": 0,
+            "raw_ml_base": 1
+          },
+          "initial_head": 62,
+          "insertions": 65,
+          "occupied_positions": 63,
+          "width": 64
+        }
+      ],
+      "skip_then_period": [
+        {
+          "distance": 68,
+          "intent": "offset",
+          "ll": 4164,
+          "ml": 188,
+          "off_base": 71,
+          "raw_ll": 4164,
+          "raw_ml_base": 185
+        }
+      ]
+    }
+  },
+  "qualification": "Constructed direct states, not ordinary frame trajectories, per-probe instrumentation, public Rust support or performance evidence. Every linked C unit instrumented; upstream per-function exclusions retained. Opaque fresh-context allocation peaks are mode-qualified. Binaries/objects omitted with their identities retained; all logs, packets, sources, controls and complete observations preserved.",
+  "reference_source_files": 63,
+  "scope": "Direct no-dictionary chain/row observations and fresh-context salt. Every linked C unit instrumented in sanitized mode; upstream per-function exclusions retained. No Rust Greedy, ordinary frames or timing claim.",
+  "status": "passed",
+  "totals": {
+    "direct_observations": 548,
+    "fresh_contexts": 4,
+    "negative_rejections": 106,
+    "recipes": 137
+  },
+  "uncompressed_bytes": 26828433
+}

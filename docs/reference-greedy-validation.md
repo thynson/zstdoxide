@@ -1,9 +1,10 @@
 # Bounded reference Greedy validation in progress
 
 Module 14 is in progress. Source design, pre-Greedy regression baselines and the
-first direct C oracle checkpoint are complete. Rust reference chain/row storage,
-Greedy parsing, ordinary-frame state, public Greedy admission and broader test
-migration remain pending. The existing independent named Greedy policy is not
+tiny and broader direct C oracle checkpoints are complete. Shared Rust hash
+values and safe reference-chain storage are implemented. Row storage, Greedy
+parsing, ordinary-frame state, public Greedy admission and broader test migration
+remain in progress. The existing independent named Greedy policy is not
 an implementation of this reference strategy.
 
 ## Preserved behavior before implementation
@@ -88,14 +89,70 @@ local source closures, controls and complete observations. Compiled objects and
 executables are omitted with their identities retained. Every archived member
 was reread and compared to its original bytes.
 
+## Broader direct C checkpoint, 2026-10-12
+
+The 137 pre-frozen recipes (63 chain and 74 row) run with two padding patterns
+under both builds: 548 direct observations, all byte-identical across builds.
+Fifty-three malformed packets per build produce 106 checked rejections. The
+four fresh contexts retain the same salt and qualified memory peaks as the tiny
+capture. All 26 linked C units and the helper are rebuilt in both modes; all
+444 command records, dependency/source identities and raw transports are retained.
+The unchanged helper's sanitizer qualifications above still apply.
+
+Observed consequences include the following; the archived coverage check derives
+them from immutable C records, without implementing the Greedy parser:
+
+- W10 accepts distances 1023/1024 and rejects 1025. Both branches accept a head
+  at distance 2,097,152 for a 64-byte match, even beyond chain ring capacity.
+- Distinct colliding four-byte keys emit no match with C6, but a 32-byte match
+  at distance 128 with C7. Equal-length candidates select the most recent
+  position across the supplied chain budgets and all three row widths.
+- Row initial heads wrap through their 15/31/63 usable cells, preserving cell
+  zero. At direct pending gap 384, 385 positions change; at gap 385, 129 change.
+  This does not establish the separate ordinary wrapper's adjustment.
+- Period-four sources bracket the stored long-ML flag: expanded match length
+  65538 has no flag and 65539 does. The three long-literal hypotheses all produce
+  the long-LL flag at literal lengths 65760, 65795 and 65796; they do not bracket
+  the exact LL cutoff.
+- Both branches retain a skipping flag after 4096 noise bytes and clear it on
+  the later periodic match. Row salt entropy wraps from initial `0xfffffff0`
+  to 27,664,900, exactly sixteen below the zero-initialized control's final value.
+
+These are complete before/after maps and sequence records, not chronological
+probe tracing. The fixed pack is 5,104,709 bytes in 139 groups, SHA256
+`0366364cb7a1123cf0e9580770037a50df5c23bcba89a4c47fd1bed8bc3c0d27`;
+the capture manifest is
+`f61e92df7e1b58d548b7058d30cbfb7228f3cc1e4cfd3fbad9b3050e0cc20e41`.
+The independent offline checker compares every raw observation with this pinned
+pack as well as validating maps, sequence replay, compile/link commands and
+source closure. Coherently rewriting a log and its local checksum cannot update
+expectations. Python and `-O` controls each verify two original/restored positive
+captures and reject thirty forged captures with child-process creation disabled.
+The [evidence report](evidence/2026-10-12-greedy-families.json) retains exact archive
+identity, all logs/packets, 63 used C source/header files, controls and the observed
+coverage audit; compiled objects/executables are omitted with hashes retained.
+Archive verification compares the complete member inventory and original bytes.
+
+## Rust scalar and storage checkpoints
+
+Shared safe Greedy keys/row layouts now admit H6..19 without changing prior key
+domains. Four tests check dimensions, exact-width tails, incompatible keys, row
+geometry and salted high bits against 1,728 prior independent C primitive
+vectors. Safe/all runs, strict safe/all Clippy and safe/all-unsafe no_std
+compilation pass. This value-only layer owns no allocation or pointer.
+
+The safe reference chain owns independently allocated heads and cyclic links.
+Five initial tests cover full maps, raw-index bias, valid old heads, malformed
+indices/links, bounded traversal, independent non-clone owners, both allocation
+failure ordinals and complete moves/swaps/reset. Safe/all focused runs, strict
+safe Clippy and no_std compilation pass. Parser/full-oracle integration and
+performance comparison remain separate tasks.
+
 ## Remaining scope
 
-These are constructed direct-state observations, not ordinary context/frame
-trajectories or a trace of every internal probe. Row widths 32/64, larger
-hash/chain domains, cyclic wrap, tie/collision witnesses, gaps, skipping,
-window floors, entropy wrap and broader repeats still need separately frozen
-recipes. No new official source-unit obligation is marked complete. The next
-items are broader direct observations, Rust safe/unsafe storage and parsing,
-then ordinary-frame/public admission and their related official assertions.
-Final every-feature/platform/interoperability matrices and Greedy timing remain
-open; the complete roadmap and all upstream migration obligations remain open.
+Constructed direct states do not establish ordinary context/frame trajectories
+or automatic public branch selection. Rust row backends, complete
+Greedy parsing, ordinary publication, public admission and related official
+assertions remain in progress. No new official source-unit obligation is marked
+complete. Final every-feature/platform/interoperability matrices and Greedy
+measurements remain open, as do the complete roadmap and upstream migration.
