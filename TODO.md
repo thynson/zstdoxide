@@ -74,7 +74,7 @@ The reviewed scope and ownership design are in `docs/reference-greedy-design.md`
 - [x] Preserve the failed unresolved-auto capture and correct the ordinary helper initialization before retrying.
 - [x] Capture normal/instrumented ordinary publication trajectories and complete C frames, then independently reject forged evidence offline.
 - [x] Project frozen ordinary Greedy trajectories and frames into bounded little-endian records with checked provenance.
-- [ ] Add a dependency-free checked Rust adapter for frozen ordinary Greedy trajectories and frames.
+- [x] Add a dependency-free checked Rust adapter for frozen ordinary Greedy trajectories and frames.
 - [ ] Retain selected chain/row state across blocks with ordinary next-to-update adjustment, tiny bypass and failure poisoning.
 - [ ] Extend static private search dispatch while preserving existing owner counts and complete frame bytes.
 - [ ] Emit private complete Greedy frames with transactional entropy/repeat publication and all observed allocation-failure ordinals.

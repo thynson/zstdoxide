@@ -73,6 +73,9 @@ mod fse;
 mod fse_encode;
 mod fse_select;
 mod greedy_block;
+#[cfg(test)]
+#[path = "../tests/support/greedy_frame_oracle.rs"]
+mod greedy_frame_oracle_fixture;
 mod greedy_key;
 #[cfg(test)]
 #[path = "../tests/support/greedy_oracle.rs"]

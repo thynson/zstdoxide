@@ -917,3 +917,28 @@ before production parsing uses any expected value. These test records and
 borrowed spans add no unsafe operations or performance backend. Full entropy
 observations remain in the source collection; exact complete frames cover later
 encoder publication. Projection and reader have separate checked work items.
+
+The ordinary checked Rust adapter now borrows all source/literal/frame spans
+and owns bounded fallible schedule, block, sequence and delta vectors. A
+separate semantic replay reconstructs every complete table and validates
+sampling continuity, ordered frontier adjustments, raw/expanded lengths, long
+markers, source membership and selected repeat publication without calling the
+Greedy parser. All 151 complete C frames decode to 13,587,614 expected source
+bytes with the existing Rust decoder. Five focused tests pass in safe, isolated
+chain, isolated row and all-feature builds, including coherently rehashed bad
+positions, tiny-floor and cache/salt forgeries. Strict safe/all Clippy, formatting
+and no_std compilation pass. No production encoder admission changes.
+
+The ordinary retained `GreedyMatchState` will own exactly one selected
+`GreedyTables` variant (chain heads/links or row positions/tags) plus separate
+literal/sequence scratch vectors, all preserving their supplied allocator
+values. It borrows one complete contiguous source and stores only logical
+position/floor/progress scalars. Rebinding resets prior indices before sampling
+another source. Empty calls preserve all state; tiny positive calls clamp the
+frontier and advance the source/floor while retaining stale scratch and tables.
+Fresh calls apply the separate long-gap adjustment before direct parsing. The
+caller alone supplies committed wire repeats and chooses candidate publication;
+raw/RLE selection never rolls back sampled tables. Invalid arguments precede
+mutation. Any parser/allocation failure poisons the retained context, including
+future empty calls, so partial writes cannot be reused. This safe composite
+adds no new unsafe leaf and must be checked with both existing leaf switches.
