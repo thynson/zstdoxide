@@ -39,3 +39,21 @@ schedule, packet and manifest cases. Duplicate/non-finite JSON and bool/float
 integer substitutions are rejected. A process audit hook records no attempted
 child execution. All archive members were read back and compared. No production
 codec or C helper has been added by this checkpoint.
+
+## Helper and observation-reader preflight
+
+The [helper review](evidence/2026-10-13-tree-helper-review.json) checks normal and
+ASan/UBSan syntax with warnings denied and binds all 22 actual include dependencies
+to the pinned reference source. No C executable was run at this checkpoint.
+The separate [reader evidence](evidence/2026-10-13-tree-validator.json) records
+two synthetic positive controls and 56 rejected mutations in each Python mode,
+with no attempted child processes. Selected-byte replay, skipped-query immutability,
+complete map continuity, raw node/window floors, exact owner accounting and
+padding-independent records have independent checks.
+
+The reader holds one bounded JSON record at a time plus previous maps and compact
+first-pass fingerprints; stdout and line extents are capped before parsing.
+It checks hash-head/source association, but does not recreate deferred sorting or
+predict the best candidate. Plausible alternative maps require binding to immutable
+captured bytes, not an unsupported claim that structural replay proves unique tree
+semantics. The synthetic records are not reference observations or Rust expectations.
