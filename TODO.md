@@ -106,7 +106,9 @@ the pinned source; public strategy 6 remains unsupported throughout preparation.
 - [x] Specify bounded direct tree operations, deterministic arena ownership and independent observation replay before C execution.
 - [x] Freeze tiny source/operation recipes for unsorted insertion, reversal, truncation, branch ordering, equal-to-end and skipped-frontier cases.
 - [x] Implement the checked direct request transport and qualify source/packet mutations in normal and optimized Python.
-- [ ] Implement and preflight the direct C helper, checked transport, capture controller and offline auditor with normal/instrumented build checks.
+- [x] Implement and review the direct C helper with normal/instrumented syntax checks and pinned dependency identities.
+- [ ] Implement independent tree observation replay and malformed offline controls before execution.
+- [ ] Implement and preflight the direct capture controller and offline auditor before execution.
 - [ ] Capture tiny normal/instrumented observations and reject forged records offline without child execution.
 - [ ] Freeze broader source/ring/window/offset-cost recipes and capture independently checked complete tree trajectories.
 - [ ] Project audited direct records into bounded Rust fixtures with an independent test-only reader and predecessor controls.

@@ -147,3 +147,28 @@ A later broader protocol or ordinary-frame protocol must be versioned if it
 adds prefix/window schedules, arbitrary operation types, full block parsing or
 new caps. Preserve these first capture bytes and their original validator. Public
 admission is a separate successor gate after state and frame integration.
+
+## Helper implementation review before execution
+
+`tree_direct_v1.c` includes the unchanged `compress/zstd_lazy.c` to access its
+static search entry. A future link must omit a separate `zstd_lazy.c` object.
+The helper itself adds only packet checks, five aligned guarded owners per pass,
+snapshots, source replay and JSON output. Its normal and instrumented strict
+syntax checks resolve 22 pinned source/header dependencies. No executable has
+been run at this review checkpoint.
+
+Static source/stdio/schedule storage and state/owner records enter the fixed
+ledger, with a conservative extra 64-KiB allowance for adapter scalar/stack
+records. The 4-MiB cap covers adapter-controlled storage, not libc bookkeeping
+or process resident memory. Dynamic cost is payload plus 191 bytes per owner;
+all five costs are preflighted before the first allocation. Registered cleanup
+uses retained malloc bases on failures and releases each owner once; the stdout
+buffer has static lifetime so exit-time flushing cannot use freed storage.
+
+Metadata uses the exact field names emitted by the helper. Operation records
+contain `before_heads`, `after_heads`, `before_nodes` and `after_nodes`; nodes are
+two-element arrays and raw cells preserve the upstream marker. Frontiers are
+logical zero-based values, while `window_floor_raw` and `tree_floor_raw` retain
+the C bias. The completion record binds both passes, ten allocations/releases,
+zero live dynamic bytes and the peak dynamic ledger. These observed layout fields
+need independent envelope checks before any capture is accepted.
