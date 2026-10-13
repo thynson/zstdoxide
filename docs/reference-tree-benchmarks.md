@@ -45,3 +45,13 @@ are unchanged. All initial logs, frames and the failed record are retained.
 Legacy progress messages inherited from the prior harness say Greedy/thirty-two;
 structured metadata and the checked inventory describe exactly 24 tree cases.
 Evidence is in `evidence/2026-10-13-tree-benchmark-harness.json` and its archive.
+
+## Complete clock-free backend campaign
+
+All seventeen configurations (safe, fifteen individual unsafe leaves, all)
+reproduce every complete frame and exact qualified allocator record from the
+initial v2 smoke campaign. This checks 408 tree cases and four target-equivalence
+pairs per configuration with no sample clocks. Both normal and optimized offline
+replays pass. Exact source, executable identities, outputs and records are in
+`evidence/2026-10-13-tree-clock-free.json` and its read-back-verified archive.
+Timing remains pending the final correctness and task-owned CPU barrier.
