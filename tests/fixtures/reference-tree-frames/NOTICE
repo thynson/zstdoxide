@@ -1,0 +1,3 @@
+Observed using facebook/zstd v1.5.7, revision f8745da6ff1ad1e7bab384bd1f9d742439278e99.
+Upstream format/constants/source attribution: see LICENSE.zstd.
+Only the pinned upstream executable is an oracle; Rust does not bind to C.

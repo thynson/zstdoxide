@@ -302,3 +302,14 @@ storage: all 4,117 members (including compiled outputs and failed audit logs)
 are preserved as SHA-256-addressed chunks with a reconstruction script. Every
 reconstructed member size and digest was checked. The canonical observation
 pack is gzip-stored with its original decompressed identity unchanged.
+
+## Ordinary trajectory projection
+
+The independent normal and optimized Python reprojections produce identical
+90,242,211-byte `ZBTFR01` fixtures, SHA256
+`64dfe4a7f855e9e8dde3720e619b3de715bf93a6c06b45b6f9f2b84c4efd6cab`.
+All 245 sources, 531 positive blocks and 365 complete C frames are retained;
+15 partial headers remain explicitly outside the complete-frame collection.
+The strategy-6 envelope wraps checked original observation fields without codec
+execution. Exact provenance, source snapshots and logs are in
+`evidence/2026-10-13-tree-ordinary-projection.json` and its matching archive.

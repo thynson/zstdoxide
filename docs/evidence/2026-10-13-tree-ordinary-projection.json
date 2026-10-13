@@ -1,0 +1,28 @@
+{
+  "archive": "2026-10-13-tree-ordinary-projection.tar.gz",
+  "archive_bytes": 6073,
+  "archive_sha256": "631387b28c9fa3df924a9d3b19a5843be6c9d5bf450d73ad7690438fdef1bf7f",
+  "cases": 245,
+  "codec_executions": 0,
+  "complete_frames": 365,
+  "excluded_partial_headers": 15,
+  "fixture": {
+    "bytes": 90242211,
+    "sha256": "64dfe4a7f855e9e8dde3720e619b3de715bf93a6c06b45b6f9f2b84c4efd6cab"
+  },
+  "positive_blocks": 531,
+  "python_modes": [
+    "normal",
+    "optimized"
+  ],
+  "qualification": "Each mode independently replays the complete canonical C collection and reproduces the exact bounded binary fixture. No Rust-generated expectation or public admission claim.",
+  "source_bytes": 7640096,
+  "source_sha256": {
+    "scripts/check_tree_frames.py": "86cc5e59e38e5ff7de487b4c10eb0202de44177f89c13b62141c5e48f0e5f87a",
+    "scripts/pack_tree_frame_trajectories.py": "13970537c44e2e43bb459456d4d3f5fa3975ac7fa6c2ea76f93e2a9145ef97ed",
+    "tests/fixtures/reference-tree-frames/NOTICE": "277e95d6f2c6dd490ef1b0c38a791b8b2e4c3d057a952221b73d2bdcf5aeef44",
+    "tests/fixtures/reference-tree-frames/README.md": "bfde776293cb586fd92c46ad5360c7e8536beba7358142c95c895992f8147c0f",
+    "tests/fixtures/reference-tree-frames/provenance.json": "ed08cf52e7b90401173d37d5d1763fce3f6d1b44c67c9e65d8ddd7f145ca0285"
+  },
+  "status": "passed"
+}

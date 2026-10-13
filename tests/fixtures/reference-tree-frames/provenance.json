@@ -1,0 +1,22 @@
+{
+  "binary_format": "ZBTFR01: strategy-tagged checked ordinary binary-tree trajectories and complete C frames",
+  "cases": 245,
+  "checker": "scripts/check_tree_frames.py",
+  "checker_sha256": "86cc5e59e38e5ff7de487b4c10eb0202de44177f89c13b62141c5e48f0e5f87a",
+  "complete_frames": 365,
+  "excluded_partial_headers": 15,
+  "fixture": {
+    "bytes": 90242211,
+    "path": "cases.bin",
+    "sha256": "64dfe4a7f855e9e8dde3720e619b3de715bf93a6c06b45b6f9f2b84c4efd6cab"
+  },
+  "generator": "scripts/pack_tree_frame_trajectories.py",
+  "generator_sha256": "13970537c44e2e43bb459456d4d3f5fa3975ac7fa6c2ea76f93e2a9145ef97ed",
+  "policy": "Test-only projection of frozen C inputs/observations. No codec execution. Full entropy/owner/cache observations and zero-call records remain in the original collection. Sampling caches are preserved, not a requirement for Rust caching.",
+  "positive_blocks": 531,
+  "schema_version": 1,
+  "source_bytes": 7640096,
+  "source_manifest_sha256": "63e7b7c852e01a3618968e162f018271c062367e64c429ab4fe22bef70d9f01d",
+  "source_pack_sha256": "d03552da04c8955527120a9fe51419caef0041318b450726b98267ee648e6478",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}
