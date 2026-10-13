@@ -64,6 +64,12 @@ python3 scripts/check_tree_validator.py
 python3 scripts/capture_tree_tiny.py --check-plan
 python3 scripts/capture_tree_families.py --check-plan
 python3 scripts/pack_tree_fixtures.py
+python3 scripts/check_tree_frame_recipes.py
+python3 scripts/check_tree_frame_validator.py
+python3 scripts/check_tree_frame_plan.py
+python3 scripts/pack_tree_frame_trajectories.py --check
+python3 scripts/check_reference_admission_v5.py --check
+python3 scripts/check_tree_interop_preflight.py --check
 
 # Each backend alone must compile without std and pass the same test suite.
 cargo fmt --all -- --check

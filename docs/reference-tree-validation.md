@@ -427,3 +427,12 @@ files (2,529,318,246 logical bytes), including raw commands, requests, source, C
 objects and all four audited executables. Only redundant Rust build intermediate
 files are omitted and individually listed. Every retained reconstruction was
 verified. Full matrix and timing closure remain separate gates.
+
+## Standard offline driver registration
+
+The standard check driver now includes ordinary tree recipe/validator/plan checks,
+exact retained-frame projection, v5 admission and public-capture preflight. All six
+commands passed against the immutable matrix snapshot. Their logs, 171 unchanged
+script identities and 146 frozen fixture identities are bound in
+`evidence/2026-10-13-tree-driver-checks.json` and its archive. This is an offline
+driver checkpoint; the Rust full-feature matrix and timing remain separate gates.
