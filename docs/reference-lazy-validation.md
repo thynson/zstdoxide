@@ -338,3 +338,26 @@ passes all 56 selected tests, including complete ordinary frames and allocator
 failures. Logs and commands are preserved in
 `docs/evidence/2026-10-13-lazy-records.tar.gz`. No Lazy parser, new C capture,
 public admission, full feature matrix or timing result is claimed here.
+
+
+## Depth-one direct parsing
+
+The shared parser now implements baseline repeat/table selection and repeated
+depth-one improvement. Greedy retains its early repeat and strict main boundary.
+All 215 depth-one observations match literal/sequence bytes, raw and wire repeats,
+long-length markers, final frontier/skipping/entropy and both complete maps,
+with and without extra source padding. Each is also independently replayed.
+Rejected speculative proposals retain sampling writes, and only explicit gain
+restarts the lookahead loop.
+
+Five parser tests pass on safe, isolated reference-chain, isolated row-table and
+all-feature configurations. Allocation-failure/invalid-entry controls include
+both depths; borrowed non-Clone owner reuse is checked against four depth-tagged
+long-literal observations with no new requests on the second parse. Strict
+safe/all all-target Clippy, four no_std builds and formatting pass. The broad
+Greedy selection passes 57 tests on each safe/all build, including the permanent
+ordinary frames and allocation failure campaign. After extending the owner
+reuse test, all focused checks were rerun on the final source. The
+`docs/evidence/2026-10-13-lazy-one.tar.gz` archive retains both command runs and
+the implementation sources. These direct results do not enable public Lazy or
+establish ordinary Lazy frame parity; depth two is still a separate work item.

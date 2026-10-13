@@ -6,8 +6,11 @@
 use alloc::vec::Vec;
 use core::alloc::Allocator;
 
-use crate::greedy_block::GreedyBlock;
-use crate::greedy_search::{GreedyMatch, find_chain, find_row, longer_match};
+use crate::greedy_block::{GreedyBlock, LazyQuery};
+use crate::greedy_search::{
+    GreedyMatch, find_chain, find_chain_lookahead, find_row, find_row_lookahead, longer_match,
+};
+use crate::lazy_select::{LazyCandidate, LazyDepth, LazyGain};
 use crate::reference_chain::ReferenceChain;
 use crate::row_table::RowTable;
 use crate::sequence_context::{LogicalSequence, SequenceWithOffset};
@@ -72,6 +75,32 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
                 table,
                 &mut progress.next,
                 current,
+                *salt,
+                &mut progress.salt_entropy,
+                progress.skipping,
+            ),
+        }
+    }
+    fn find_lookahead(
+        &mut self,
+        block: GreedyBlock<'_>,
+        progress: &mut GreedyProgress,
+        query: LazyQuery,
+    ) -> Result<Option<GreedyMatch>> {
+        match self {
+            Self::Chain { table, attempts } => find_chain_lookahead(
+                block,
+                table,
+                &mut progress.next,
+                query,
+                *attempts,
+                progress.skipping,
+            ),
+            Self::Row { table, salt } => find_row_lookahead(
+                block,
+                table,
+                &mut progress.next,
+                query,
                 *salt,
                 &mut progress.salt_entropy,
                 progress.skipping,
@@ -168,12 +197,37 @@ impl<L: Allocator, S: Allocator> ParseOutput<'_, L, S> {
 /// that state. No candidate repeat or coding-entropy state is published here.
 pub(crate) fn parse_block<A: Allocator, B: Allocator, L: Allocator, S: Allocator>(
     block: GreedyBlock<'_>,
-    mut search: GreedySearch<'_, A, B>,
+    search: GreedySearch<'_, A, B>,
     progress: &mut GreedyProgress,
     initial_repeats: [u32; 3],
     literals: &mut Vec<u8, L>,
     sequences: &mut Vec<SequenceWithOffset, S>,
 ) -> Result<GreedyParseResult> {
+    parse_with_depth(
+        block,
+        search,
+        progress,
+        initial_repeats,
+        literals,
+        sequences,
+        LazyDepth::Greedy,
+    )
+}
+
+/// Shared parser body; depth changes only tentative selection and sampling.
+/// Publication, scratch ownership and poisoning retain the Greedy contract.
+pub(crate) fn parse_with_depth<A: Allocator, B: Allocator, L: Allocator, S: Allocator>(
+    block: GreedyBlock<'_>,
+    mut search: GreedySearch<'_, A, B>,
+    progress: &mut GreedyProgress,
+    initial_repeats: [u32; 3],
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<SequenceWithOffset, S>,
+    depth: LazyDepth,
+) -> Result<GreedyParseResult> {
+    if depth == LazyDepth::Two {
+        return Err(Error::InvalidParameter); // Separate depth-two work item.
+    }
     search.validate(block, progress.next)?;
     if initial_repeats.contains(&0) {
         return Err(Error::CorruptData);
@@ -215,18 +269,52 @@ pub(crate) fn parse_block<A: Allocator, B: Allocator, L: Allocator, S: Allocator
     let mut cursor = block.initial_cursor()?;
     while let Some(probe) = cursor {
         let repeat_position = probe.current().checked_add(1).ok_or(Error::ResourceLimit)?;
-        let (mut position, mut found, intent) =
-            if let Some(found) = repeated(block, repeat_position, first)? {
-                // Depth zero accepts repeat1 before querying or updating any table.
-                (repeat_position, found, OffsetIntent::Repeat1)
-            } else if let Some(found) = search.find(block, progress, probe.current())? {
-                (probe.current(), found, OffsetIntent::Explicit)
-            } else {
-                let miss = probe.miss()?;
-                progress.skipping = miss.skipping;
-                cursor = miss.next;
-                continue;
-            };
+        let mut candidate = repeated(block, repeat_position, first)?
+            .map(|found| LazyCandidate::new(block, repeat_position, found, OffsetIntent::Repeat1))
+            .transpose()?;
+        // Baseline length ties retain repeat1 at q+1. Greedy alone skips
+        // the table query when that repeat was found.
+        if (depth != LazyDepth::Greedy || candidate.is_none())
+            && let Some(found) = search.find(block, progress, probe.current())?
+            && candidate.is_none_or(|old| found.length > old.parts().1.length)
+        {
+            candidate = Some(LazyCandidate::new(
+                block,
+                probe.current(),
+                found,
+                OffsetIntent::Explicit,
+            )?);
+        }
+        let Some(mut candidate) = candidate else {
+            let miss = probe.miss()?;
+            progress.skipping = miss.skipping;
+            cursor = miss.next;
+            continue;
+        };
+        if depth == LazyDepth::One {
+            let mut current = probe.current();
+            while let Some(query) = block.lookahead_after(current)? {
+                current = query.current();
+                if let Some(found) = repeated(block, current, first)? {
+                    let repeat = LazyCandidate::new(block, current, found, OffsetIntent::Repeat1)?;
+                    if LazyGain::RepeatOne.improves(repeat, candidate)? {
+                        candidate = repeat;
+                    }
+                }
+                // Search even after accepting the repeat; rejected proposals
+                // still advance sampling/frontier and row entropy.
+                if let Some(found) = search.find_lookahead(block, progress, query)? {
+                    let explicit =
+                        LazyCandidate::new(block, current, found, OffsetIntent::Explicit)?;
+                    if LazyGain::ExplicitOne.improves(explicit, candidate)? {
+                        candidate = explicit;
+                        continue;
+                    }
+                }
+                break;
+            }
+        }
+        let (mut position, mut found, intent) = candidate.parts();
         if intent == OffsetIntent::Explicit {
             // Both indices come from a verified source match. Backward extension
             // retains distance, and cannot cross the anchor or retained prefix.
@@ -407,108 +495,125 @@ mod tests {
         let cases = cases().unwrap();
         assert_eq!(cases.len(), 173);
         for case in cases {
-            let mut padded = case.source.to_vec();
-            padded.extend_from_slice(&[0xa7; 32]);
-            for source in [case.source, padded.as_slice()] {
-                let block = GreedyBlock::new(
-                    source,
-                    case.prefix..case.source.len(),
-                    case.prefix_floor,
+            check_direct(&case, LazyDepth::Greedy);
+        }
+    }
+
+    #[test]
+    fn every_depth_one_case_matches_full_sampling_and_sequence_observations() {
+        let cases = crate::lazy_oracle_fixture::cases().unwrap();
+        let mut count = 0;
+        for case in cases.iter().filter(|case| case.depth == 1) {
+            check_direct(&case.observation, LazyDepth::One);
+            count += 1;
+        }
+        assert_eq!(count, 215);
+    }
+
+    fn check_direct(case: &OracleCase<'_>, depth: LazyDepth) {
+        let mut padded = case.source.to_vec();
+        padded.extend_from_slice(&[0xa7; 32]);
+        for source in [case.source, padded.as_slice()] {
+            let block = GreedyBlock::new(
+                source,
+                case.prefix..case.source.len(),
+                case.prefix_floor,
+                case.key_layout().unwrap(),
+                1 << case.window_log,
+                case.row_search,
+            )
+            .unwrap();
+            let mut progress = GreedyProgress {
+                next: case.initial_next,
+                salt_entropy: case.initial_entropy,
+                skipping: true,
+            };
+            let mut literals = Vec::new();
+            let mut sequences = Vec::new();
+            let (result, first, second) = if case.row_search {
+                let layout = case.row_layout().unwrap();
+                let mut table = RowTable::new_in(layout, Global, Global).unwrap();
+                for &p in &case.seeds {
+                    let p = p as usize;
+                    table
+                        .insert(
+                            layout
+                                .key(block.key(p).unwrap(), case.initial_salt)
+                                .unwrap(),
+                            p,
+                        )
+                        .unwrap();
+                }
+                let result = parse_with_depth(
+                    block,
+                    GreedySearch::Row {
+                        table: &mut table,
+                        salt: case.initial_salt,
+                    },
+                    &mut progress,
+                    case.initial_repeats,
+                    &mut literals,
+                    &mut sequences,
+                    depth,
+                )
+                .unwrap_or_else(|e| panic!("{}: {e:?}", case.name));
+                let (positions, tags) = table.test_maps();
+                (
+                    result,
+                    raw(positions),
+                    tags.iter().map(|&t| u32::from(t)).collect::<Vec<_>>(),
+                )
+            } else {
+                let mut table = ReferenceChain::new_in(
                     case.key_layout().unwrap(),
-                    1 << case.window_log,
-                    case.row_search,
+                    case.chain_log,
+                    Global,
+                    Global,
                 )
                 .unwrap();
-                let mut progress = GreedyProgress {
-                    next: case.initial_next,
-                    salt_entropy: case.initial_entropy,
-                    skipping: true,
-                };
-                let mut literals = Vec::new();
-                let mut sequences = Vec::new();
-                let (result, first, second) = if case.row_search {
-                    let layout = case.row_layout().unwrap();
-                    let mut table = RowTable::new_in(layout, Global, Global).unwrap();
-                    for &p in &case.seeds {
-                        let p = p as usize;
-                        table
-                            .insert(
-                                layout
-                                    .key(block.key(p).unwrap(), case.initial_salt)
-                                    .unwrap(),
-                                p,
-                            )
-                            .unwrap();
-                    }
-                    let result = parse_block(
-                        block,
-                        GreedySearch::Row {
-                            table: &mut table,
-                            salt: case.initial_salt,
-                        },
-                        &mut progress,
-                        case.initial_repeats,
-                        &mut literals,
-                        &mut sequences,
-                    )
-                    .unwrap_or_else(|e| panic!("{}: {e:?}", case.name));
-                    let (positions, tags) = table.test_maps();
-                    (
-                        result,
-                        raw(positions),
-                        tags.iter().map(|&t| u32::from(t)).collect::<Vec<_>>(),
-                    )
-                } else {
-                    let mut table = ReferenceChain::new_in(
-                        case.key_layout().unwrap(),
-                        case.chain_log,
-                        Global,
-                        Global,
-                    )
-                    .unwrap();
-                    for &p in &case.seeds {
-                        let p = p as usize;
-                        table.insert(block.key(p).unwrap(), p).unwrap();
-                    }
-                    let result = parse_block(
-                        block,
-                        GreedySearch::Chain {
-                            table: &mut table,
-                            attempts: 1 << case.search_log,
-                        },
-                        &mut progress,
-                        case.initial_repeats,
-                        &mut literals,
-                        &mut sequences,
-                    )
-                    .unwrap_or_else(|e| panic!("{}: {e:?}", case.name));
-                    let (heads, links) = table.test_maps();
-                    (result, raw(heads), raw(links))
-                };
-                compare(&case, result, &literals, &sequences);
-                assert_eq!(
-                    progress,
-                    GreedyProgress {
-                        next: case.final_next,
-                        salt_entropy: case.final_entropy,
-                        skipping: case.final_skipping
+                for &p in &case.seeds {
+                    let p = p as usize;
+                    table.insert(block.key(p).unwrap(), p).unwrap();
+                }
+                let result = parse_with_depth(
+                    block,
+                    GreedySearch::Chain {
+                        table: &mut table,
+                        attempts: 1 << case.search_log,
                     },
-                    "{} progress",
-                    case.name
-                );
-                assert_eq!(
-                    first,
-                    case.first_table.values(true).unwrap(),
-                    "{} first owner",
-                    case.name
-                );
-                assert_eq!(
-                    second,
-                    case.second_table.values(true).unwrap(),
-                    "{} second owner",
-                    case.name
-                );
-            }
+                    &mut progress,
+                    case.initial_repeats,
+                    &mut literals,
+                    &mut sequences,
+                    depth,
+                )
+                .unwrap_or_else(|e| panic!("{}: {e:?}", case.name));
+                let (heads, links) = table.test_maps();
+                (result, raw(heads), raw(links))
+            };
+            compare(case, result, &literals, &sequences);
+            assert_eq!(
+                progress,
+                GreedyProgress {
+                    next: case.final_next,
+                    salt_entropy: case.final_entropy,
+                    skipping: case.final_skipping
+                },
+                "{} progress",
+                case.name
+            );
+            assert_eq!(
+                first,
+                case.first_table.values(true).unwrap(),
+                "{} first owner",
+                case.name
+            );
+            assert_eq!(
+                second,
+                case.second_table.values(true).unwrap(),
+                "{} second owner",
+                case.name
+            );
         }
     }
 
@@ -526,9 +631,19 @@ mod tests {
 
     #[test]
     fn reused_outputs_and_borrowed_nonclone_owners_make_no_new_requests() {
-        let all = cases().unwrap();
-        for name in ["chain-long-literals-65536", "row-long-literals-65536"] {
-            let case = all.iter().find(|c| c.name == name).unwrap();
+        let all = crate::lazy_oracle_fixture::cases().unwrap();
+        let mut checked = 0;
+        for lazy in all
+            .iter()
+            .filter(|c| c.depth <= 1 && c.observation.name.ends_with("-long-literals-65536"))
+        {
+            let case = &lazy.observation;
+            let depth = if lazy.depth == 0 {
+                LazyDepth::Greedy
+            } else {
+                LazyDepth::One
+            };
+            checked += 1;
             assert!(case.seeds.is_empty());
             let owner = TrackingAllocator::new(AllocatorConfig::default())
                 .unwrap()
@@ -556,7 +671,7 @@ mod tests {
                         skipping: false,
                     };
                     let before = monitor.snapshot().attempts;
-                    let result = parse_block(
+                    let result = parse_with_depth(
                         block,
                         GreedySearch::Row {
                             table: &mut table,
@@ -566,6 +681,7 @@ mod tests {
                         case.initial_repeats,
                         &mut literals,
                         &mut sequences,
+                        depth,
                     )
                     .unwrap();
                     compare(case, result, &literals, &sequences);
@@ -589,7 +705,7 @@ mod tests {
                         skipping: false,
                     };
                     let before = monitor.snapshot().attempts;
-                    let result = parse_block(
+                    let result = parse_with_depth(
                         block,
                         GreedySearch::Chain {
                             table: &mut table,
@@ -599,6 +715,7 @@ mod tests {
                         case.initial_repeats,
                         &mut literals,
                         &mut sequences,
+                        depth,
                     )
                     .unwrap();
                     compare(case, result, &literals, &sequences);
@@ -616,6 +733,7 @@ mod tests {
             drop(owner);
             assert_eq!(monitor.snapshot().owners_dropped, 1);
         }
+        assert_eq!(checked, 4);
     }
 
     fn sentinel() -> SequenceWithOffset {
@@ -631,93 +749,102 @@ mod tests {
 
     #[test]
     fn either_output_reserve_failure_preserves_progress_contents_and_exact_owners() {
-        for row in [false, true] {
-            for fail_literals in [true, false] {
-                let source = [b'x'; 256];
-                let block = small(&source, row);
-                let first_owner = TrackingAllocator::new(AllocatorConfig::default())
-                    .unwrap()
-                    .into_non_clone();
-                let second_owner = TrackingAllocator::new(AllocatorConfig::default())
-                    .unwrap()
-                    .into_non_clone();
-                let literal_owner = TrackingAllocator::new(AllocatorConfig::default())
-                    .unwrap()
-                    .into_non_clone();
-                let sequence_owner = TrackingAllocator::new(AllocatorConfig::default())
-                    .unwrap()
-                    .into_non_clone();
-                let fm = first_owner.monitor();
-                let tm = second_owner.monitor();
-                let lm = literal_owner.monitor();
-                let sm = sequence_owner.monitor();
-                let mut literals = Vec::new_in(literal_owner);
-                literals.push(71);
-                let mut sequences = Vec::new_in(sequence_owner);
-                sequences.push(sentinel());
-                assert!(if fail_literals {
-                    lm.fail_next()
-                } else {
-                    sm.fail_next()
-                });
-                let original = GreedyProgress {
-                    next: 0,
-                    salt_entropy: 99,
-                    skipping: true,
-                };
-                let mut progress = original;
-                let result = if row {
-                    let layout = RowLayout::new(block.key_layout(), 4).unwrap();
-                    let mut table = RowTable::new_in(layout, first_owner, second_owner).unwrap();
-                    let before = (table.test_maps().0.to_vec(), table.test_maps().1.to_vec());
-                    let result = parse_block(
-                        block,
-                        GreedySearch::Row {
-                            table: &mut table,
-                            salt: 7,
-                        },
-                        &mut progress,
-                        [1, 4, 8],
-                        &mut literals,
-                        &mut sequences,
-                    );
-                    assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
-                    result
-                } else {
-                    let mut table =
-                        ReferenceChain::new_in(block.key_layout(), 6, first_owner, second_owner)
-                            .unwrap();
-                    let before = (table.test_maps().0.to_vec(), table.test_maps().1.to_vec());
-                    let result = parse_block(
-                        block,
-                        GreedySearch::Chain {
-                            table: &mut table,
-                            attempts: 4,
-                        },
-                        &mut progress,
-                        [1, 4, 8],
-                        &mut literals,
-                        &mut sequences,
-                    );
-                    assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
-                    result
-                };
-                assert_eq!(result, Err(Error::AllocationFailed));
-                assert_eq!(progress, original);
-                assert_eq!(literals.as_slice(), &[71]);
-                assert_eq!(sequences.as_slice(), &[sentinel()]);
-                assert_eq!(lm.snapshot().attempts, 2);
-                assert_eq!(sm.snapshot().attempts, if fail_literals { 1 } else { 2 });
-                assert_eq!(fm.snapshot().attempts, 1);
-                assert_eq!(tm.snapshot().attempts, 1);
-                drop(literals);
-                drop(sequences);
-                for monitor in [fm, tm, lm, sm] {
-                    monitor.assert_released();
-                    assert_eq!(
-                        monitor.snapshot().owners_dropped,
-                        monitor.snapshot().identities_created
-                    );
+        for depth in [LazyDepth::Greedy, LazyDepth::One] {
+            for row in [false, true] {
+                for fail_literals in [true, false] {
+                    let source = [b'x'; 256];
+                    let block = small(&source, row);
+                    let first_owner = TrackingAllocator::new(AllocatorConfig::default())
+                        .unwrap()
+                        .into_non_clone();
+                    let second_owner = TrackingAllocator::new(AllocatorConfig::default())
+                        .unwrap()
+                        .into_non_clone();
+                    let literal_owner = TrackingAllocator::new(AllocatorConfig::default())
+                        .unwrap()
+                        .into_non_clone();
+                    let sequence_owner = TrackingAllocator::new(AllocatorConfig::default())
+                        .unwrap()
+                        .into_non_clone();
+                    let fm = first_owner.monitor();
+                    let tm = second_owner.monitor();
+                    let lm = literal_owner.monitor();
+                    let sm = sequence_owner.monitor();
+                    let mut literals = Vec::new_in(literal_owner);
+                    literals.push(71);
+                    let mut sequences = Vec::new_in(sequence_owner);
+                    sequences.push(sentinel());
+                    assert!(if fail_literals {
+                        lm.fail_next()
+                    } else {
+                        sm.fail_next()
+                    });
+                    let original = GreedyProgress {
+                        next: 0,
+                        salt_entropy: 99,
+                        skipping: true,
+                    };
+                    let mut progress = original;
+                    let result = if row {
+                        let layout = RowLayout::new(block.key_layout(), 4).unwrap();
+                        let mut table =
+                            RowTable::new_in(layout, first_owner, second_owner).unwrap();
+                        let before = (table.test_maps().0.to_vec(), table.test_maps().1.to_vec());
+                        let result = parse_with_depth(
+                            block,
+                            GreedySearch::Row {
+                                table: &mut table,
+                                salt: 7,
+                            },
+                            &mut progress,
+                            [1, 4, 8],
+                            &mut literals,
+                            &mut sequences,
+                            depth,
+                        );
+                        assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
+                        result
+                    } else {
+                        let mut table = ReferenceChain::new_in(
+                            block.key_layout(),
+                            6,
+                            first_owner,
+                            second_owner,
+                        )
+                        .unwrap();
+                        let before = (table.test_maps().0.to_vec(), table.test_maps().1.to_vec());
+                        let result = parse_with_depth(
+                            block,
+                            GreedySearch::Chain {
+                                table: &mut table,
+                                attempts: 4,
+                            },
+                            &mut progress,
+                            [1, 4, 8],
+                            &mut literals,
+                            &mut sequences,
+                            depth,
+                        );
+                        assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
+                        result
+                    };
+                    assert_eq!(result, Err(Error::AllocationFailed));
+                    assert_eq!(progress, original);
+                    assert_eq!(literals.as_slice(), &[71]);
+                    assert_eq!(sequences.as_slice(), &[sentinel()]);
+                    assert_eq!(lm.snapshot().attempts, 2);
+                    assert_eq!(sm.snapshot().attempts, if fail_literals { 1 } else { 2 });
+                    assert_eq!(fm.snapshot().attempts, 1);
+                    assert_eq!(tm.snapshot().attempts, 1);
+                    drop(literals);
+                    drop(sequences);
+                    for monitor in [fm, tm, lm, sm] {
+                        monitor.assert_released();
+                        assert_eq!(
+                            monitor.snapshot().owners_dropped,
+                            monitor.snapshot().identities_created
+                        );
+                    }
                 }
             }
         }
@@ -725,49 +852,52 @@ mod tests {
 
     #[test]
     fn invalid_entry_arguments_preserve_scratch_progress_and_sampling() {
-        let source = [b'x'; 64];
-        for (row, key_mismatch, attempts, next, repeats, error) in [
-            (true, false, 4, 0, [1, 4, 8], Error::InvalidParameter),
-            (false, true, 4, 0, [1, 4, 8], Error::InvalidParameter),
-            (false, false, 0, 0, [1, 4, 8], Error::InvalidParameter),
-            (false, false, 257, 0, [1, 4, 8], Error::InvalidParameter),
-            (false, false, 4, 1, [1, 4, 8], Error::InvalidParameter),
-            (false, false, 4, 0, [1, 0, 8], Error::CorruptData),
-        ] {
-            let block = small(&source, row);
-            let key = if key_mismatch {
-                GreedyKeyLayout::new(7, 4).unwrap()
-            } else {
-                block.key_layout()
-            };
-            let mut table = ReferenceChain::new_in(key, 6, Global, Global).unwrap();
-            let before = (table.test_maps().0.to_vec(), table.test_maps().1.to_vec());
-            let original = GreedyProgress {
-                next,
-                salt_entropy: 99,
-                skipping: true,
-            };
-            let mut progress = original;
-            let mut literals = vec![71];
-            let mut sequences = vec![sentinel()];
-            assert_eq!(
-                parse_block(
-                    block,
-                    GreedySearch::Chain {
-                        table: &mut table,
-                        attempts
-                    },
-                    &mut progress,
-                    repeats,
-                    &mut literals,
-                    &mut sequences
-                ),
-                Err(error)
-            );
-            assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
-            assert_eq!(progress, original);
-            assert_eq!(literals, [71]);
-            assert_eq!(sequences, [sentinel()]);
+        for depth in [LazyDepth::Greedy, LazyDepth::One] {
+            let source = [b'x'; 64];
+            for (row, key_mismatch, attempts, next, repeats, error) in [
+                (true, false, 4, 0, [1, 4, 8], Error::InvalidParameter),
+                (false, true, 4, 0, [1, 4, 8], Error::InvalidParameter),
+                (false, false, 0, 0, [1, 4, 8], Error::InvalidParameter),
+                (false, false, 257, 0, [1, 4, 8], Error::InvalidParameter),
+                (false, false, 4, 1, [1, 4, 8], Error::InvalidParameter),
+                (false, false, 4, 0, [1, 0, 8], Error::CorruptData),
+            ] {
+                let block = small(&source, row);
+                let key = if key_mismatch {
+                    GreedyKeyLayout::new(7, 4).unwrap()
+                } else {
+                    block.key_layout()
+                };
+                let mut table = ReferenceChain::new_in(key, 6, Global, Global).unwrap();
+                let before = (table.test_maps().0.to_vec(), table.test_maps().1.to_vec());
+                let original = GreedyProgress {
+                    next,
+                    salt_entropy: 99,
+                    skipping: true,
+                };
+                let mut progress = original;
+                let mut literals = vec![71];
+                let mut sequences = vec![sentinel()];
+                assert_eq!(
+                    parse_with_depth(
+                        block,
+                        GreedySearch::Chain {
+                            table: &mut table,
+                            attempts
+                        },
+                        &mut progress,
+                        repeats,
+                        &mut literals,
+                        &mut sequences,
+                        depth
+                    ),
+                    Err(error)
+                );
+                assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
+                assert_eq!(progress, original);
+                assert_eq!(literals, [71]);
+                assert_eq!(sequences, [sentinel()]);
+            }
         }
     }
 }

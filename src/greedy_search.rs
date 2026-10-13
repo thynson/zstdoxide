@@ -75,7 +75,6 @@ pub(crate) fn find_chain<H: Allocator, L: Allocator>(
 
 /// Speculative probes include the tail limit. Revalidate against this block
 /// before any sampling write, even if the coordinate came from another block.
-#[allow(dead_code)] // Consumed by the next staged Lazy parser work item.
 pub(crate) fn find_chain_lookahead<H: Allocator, L: Allocator>(
     block: GreedyBlock<'_>,
     table: &mut ReferenceChain<H, L>,
@@ -150,7 +149,6 @@ pub(crate) fn find_row<P: Allocator, T: Allocator>(
 
 /// Speculative probes include the tail limit. Revalidate against this block
 /// before any sampling write, even if the coordinate came from another block.
-#[allow(dead_code)] // Consumed by the next staged Lazy parser work item.
 pub(crate) fn find_row_lookahead<P: Allocator, T: Allocator>(
     block: GreedyBlock<'_>,
     table: &mut RowTable<P, T>,

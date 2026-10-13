@@ -1,7 +1,6 @@
 //! Copied selection records for the no-dictionary v1.5.7 lazy family.
 //! These values introduce no allocation, aliasing or unsafe backend.
 #![forbid(unsafe_code)]
-#![allow(dead_code)] // Staged before the independently checked parser integration.
 
 use crate::greedy_block::GreedyBlock;
 use crate::greedy_search::GreedyMatch;
@@ -11,6 +10,7 @@ use crate::{Error, Result};
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) enum LazyDepth {
     Greedy,
+    #[allow(dead_code)] // Ordinary Lazy dispatch is a later work item.
     One,
     Two,
 }
@@ -85,7 +85,9 @@ impl LazyCandidate {
 pub(crate) enum LazyGain {
     RepeatOne,
     ExplicitOne,
+    #[allow(dead_code)] // Separate depth-two parser work item.
     RepeatTwo,
+    #[allow(dead_code)] // Separate depth-two parser work item.
     ExplicitTwo,
 }
 

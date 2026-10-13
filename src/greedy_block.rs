@@ -131,7 +131,6 @@ impl<'a> GreedyBlock<'a> {
 
     /// Advance a lazy probe only after testing the old strict bound. The
     /// returned coordinate may equal the limit; main search still excludes it.
-    #[allow(dead_code)] // Consumed by the next staged Lazy parser work item.
     pub(crate) fn lookahead_after(self, current: usize) -> Result<Option<LazyQuery>> {
         self.search_from(current, current).map(|probe| {
             probe.map(|probe| LazyQuery {
@@ -152,13 +151,11 @@ impl<'a> GreedyBlock<'a> {
 }
 
 /// Copied inclusive speculative position; owns neither source nor table.
-#[allow(dead_code)] // Consumed by the next staged Lazy parser work item.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) struct LazyQuery {
     current: usize,
 }
 
-#[allow(dead_code)]
 impl LazyQuery {
     pub(crate) const fn current(self) -> usize {
         self.current

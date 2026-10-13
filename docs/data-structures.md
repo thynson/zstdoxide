@@ -1066,3 +1066,13 @@ once, so equality is admitted only through explicitly named speculative search
 entry points. Those entry points revalidate the coordinate against their block
 before writes; Greedy's existing main-search functions still reject equality.
 All records are allocation-free safe values shared by both table backends.
+
+
+Depth-one parsing now reuses the Greedy parser's existing scratch owners and
+publication result through `parse_with_depth`. Baseline repeat candidates are
+copied before mandatory table search; strict length ties retain the repeat.
+The speculative loop advances its own query independently of the chosen start,
+updates the incumbent with checked gains, and restarts only on an explicit
+improvement. Rejected probes retain their sampling writes. Backward extension,
+repeat cleanup and wire replay remain shared. The new direct entry point remains
+private; ordinary contexts still select Greedy until their separate capture gate.
