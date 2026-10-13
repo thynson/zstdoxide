@@ -1371,4 +1371,19 @@ size or a name. Historical readers continue selecting their original chain/row
 interpretation. Tree node markers are admitted only in odd edge slots during
 independent full-map replay. Structural replay checks window/frontier and repeat
 publication without calling the production parser; backend comparisons then
-match actual sequences, literals, all map cells and complete frame bytes.
+match actual sequences, literals and all map cells. Every complete C frame is
+decoded independently; emitted Rust frames validate publication and source
+reconstruction. Cross-backend Rust bytes must agree, but independent entropy
+implementations do not promise C-identical compressed bytes.
+
+### Public tree request dispatch
+
+After the ordinary retained-state gate, public dispatch may select the existing
+Tree plan for `ReferenceStrategy::BinaryTreeLazy2`. Known-size parameter
+resolution occurs once, before W21/H19/C19/S8 admission and before cloning or
+allocation. No public request adds a row owner, a source copy or a new allocator
+boundary. Unsupported strategies 7..9 remain separate from implemented strategy
+6 requests exceeding resource bounds. Original preset/selector evidence remains
+immutable; versioned v5 mappings identify newly admitted and newly resource-
+classified requests. Independent pinned-preset tuple reconstruction precedes
+public C execution, whose generic adapter does not report applied tuples.

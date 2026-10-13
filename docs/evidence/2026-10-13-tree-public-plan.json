@@ -1,0 +1,46 @@
+{
+  "admission_scalar_rejections_per_mode": 11,
+  "archive": "2026-10-13-tree-public-plan.tar.gz",
+  "archive_bytes": 101098,
+  "archive_sha256": "f189a255d1321aff1162799894970ebc55cfc208104693cc7374a418a0a581ac",
+  "child_attempts": 0,
+  "classifications": {
+    "resource": 49,
+    "success": 1099,
+    "unsupported": 49
+  },
+  "codec_executions": 0,
+  "historical_requests": 886,
+  "malformed_packet_inventory": 39,
+  "new_independently_resolved_requests": 311,
+  "planned_commands": 13606,
+  "preflight_rejections_per_mode": 18,
+  "python_modes": [
+    "normal",
+    "optimized"
+  ],
+  "qualification": "Source-only independent tuples, status and frame-equivalence hypotheses; public dispatch and capture remain separate. Initial preflight count expected 18 with only 17 controls; added the missing-manifest control and retained both failed logs. No guard was weakened.",
+  "recipes": 1197,
+  "source_bytes": 145529306,
+  "source_sha256": {
+    "docs/reference-tree-interop-adapter-review.md": "b44e98d83bfb8abd05ff029511d3bebe48794a502a68104772037a53b2473026",
+    "docs/reference-tree-interop-protocol.md": "f85efec2c272e6bf02fd3853dd402ef192c9b01f097a38f5f9392f7bc79f8037",
+    "scripts/capture_tree_interop.py": "52310c57a7fa5b83d233c8fbbe17246f82fee9e2a2ba470cbacbfa3b4032c03a",
+    "scripts/check_reference_admission_v5.py": "f016f23bf50a00a529276e506684c4cee1129aebbe222ca5b812cff34537287b",
+    "scripts/check_tree_interop_capture.py": "93812c992cc5618ae86c00ca376e9ba33f104c196f7074c6badcd24113591acd",
+    "scripts/check_tree_interop_preflight.py": "5f7467a19675d694cf5a41889a61a3566a5fa72c3c470f47f365c6fedac0b748",
+    "scripts/check_tree_interop_recipes.py": "3baa01d212e158471f4e9cf89da7ea069fb2a47bcbb6a1fc560a53babc4289bd",
+    "scripts/oracles/tree_interop.py": "0b5a07b558aefaa705628dc328f85228db257a48b71bcc564c7a7c334b324a40",
+    "tests/fixtures/reference-admission-v5/README.md": "9a0f073716215e978c3d18eb0be1c3be665ab5bb4cfeed931396aceff9854a2d",
+    "tests/fixtures/reference-admission-v5/broader.tsv": "987997de3241abd0c07f149f120eb432c2d70ba53a65582a0ea0ae865a3602eb",
+    "tests/fixtures/reference-admission-v5/fuzz.tsv": "3f6cc5d182eef4da8ac8919bbe9c26e06a62148acdeb41ce03a12381598c717d",
+    "tests/fixtures/reference-admission-v5/greedy.tsv": "48aa1e7d6155b3cb9a36ca441dafa9a63e894f97e4b1d6b463387772dc1ace24",
+    "tests/fixtures/reference-admission-v5/interop.tsv": "8d13b0ba3d264e9ea76c3d437dbfc6a7c568c7cd356d7b8b2d7d50edb9a625be",
+    "tests/fixtures/reference-admission-v5/lazy.tsv": "2c210de372c6f918c55bd7fb8883290a8f0cdfc5d2d7b91f81b4182dd21edd20",
+    "tests/fixtures/reference-admission-v5/loops.tsv": "a7725e10501a9190d53c0d15b2ff746f873502f293195f4e335474b4694f3be2",
+    "tests/fixtures/reference-admission-v5/provenance.json": "be264e270bac401b405bd6b18a58cefbc624b59d88ad54e1948abbd55b10c6bc",
+    "tests/fixtures/reference-tree-interop-recipes/README.md": "b8d404809ccd5f87df0bf203202f3f54a853c214d71a96147bf044d46c53a662",
+    "tests/fixtures/reference-tree-interop-recipes/recipes.json": "d6200594584431fe14c7b481ace94d080f6651a9a518d371995182794d9be930"
+  },
+  "status": "passed"
+}

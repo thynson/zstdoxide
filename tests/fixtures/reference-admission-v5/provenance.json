@@ -1,0 +1,459 @@
+{
+  "changed": {
+    "broader.tsv": [
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-9",
+        "historical_resolved_tuple": "10,7,7,5,4,8,6",
+        "request": "9,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "fuzzer-empty-level-10",
+        "historical_resolved_tuple": "10,7,7,9,4,8,6",
+        "request": "10,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "resource"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-9",
+        "historical_resolved_tuple": "10,7,7,5,4,8,6",
+        "request": "9,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "fuzzer-initial_match-level-10",
+        "historical_resolved_tuple": "10,7,7,9,4,8,6",
+        "request": "10,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "resource"
+      }
+    ],
+    "fuzz.tsv": [
+      {
+        "case": "unsupported-62",
+        "input_sha256": "4e423847921188fe18994e8b7cdd257d6741c46e4993eb223e62bfbe8333ea8f",
+        "level": "9",
+        "prefix_size": "30",
+        "preset_row": "9",
+        "preset_strategy": "6",
+        "preset_tier": "3",
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "case": "unsupported-63",
+        "input_sha256": "252034412d0f57ef703fc1a357fce89e0d64787c885e4b62a4840a9ae488f467",
+        "level": "10",
+        "prefix_size": "30",
+        "preset_row": "10",
+        "preset_strategy": "6",
+        "preset_tier": "3",
+        "v4": "unsupported",
+        "v5": "resource"
+      }
+    ],
+    "greedy.tsv": [
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-9",
+        "historical_resolved_tuple": "10,7,7,5,4,8,6",
+        "request": "9,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "fuzzer-empty-level-10",
+        "historical_resolved_tuple": "10,7,7,9,4,8,6",
+        "request": "10,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "resource"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-9",
+        "historical_resolved_tuple": "10,7,7,5,4,8,6",
+        "request": "9,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "fuzzer-initial_match-level-10",
+        "historical_resolved_tuple": "10,7,7,9,4,8,6",
+        "request": "10,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "resource"
+      }
+    ],
+    "interop.tsv": [],
+    "lazy.tsv": [
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-9",
+        "request": "9,0,0,0,0,0,0,0,0",
+        "resolution_origin": "historical Rust tuple",
+        "resolved_tuple": "10,7,7,5,4,8,6",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": 0,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "fuzzer-empty-level-10",
+        "request": "10,0,0,0,0,0,0,0,0",
+        "resolution_origin": "historical Rust tuple",
+        "resolved_tuple": "10,7,7,9,4,8,6",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": 0,
+        "v4": "unsupported",
+        "v5": "resource"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-9",
+        "request": "9,0,0,0,0,0,0,0,0",
+        "resolution_origin": "historical Rust tuple",
+        "resolved_tuple": "10,7,7,5,4,8,6",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": 30,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "fuzzer-initial_match-level-10",
+        "request": "10,0,0,0,0,0,0,0,0",
+        "resolution_origin": "historical Rust tuple",
+        "resolved_tuple": "10,7,7,9,4,8,6",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": 30,
+        "v4": "unsupported",
+        "v5": "resource"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-9-size-0",
+        "request": "9,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "10,7,7,5,4,8,6",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": 0,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "lazy-level-10-size-0",
+        "request": "10,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "10,7,7,9,4,8,6",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": 0,
+        "v4": "unsupported",
+        "v5": "resource"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-9-size-16384",
+        "request": "9,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "14,15,14,5,4,8,6",
+        "source_sha256": "4348e3b98e8a327b34ced39c1da9e67cdb4cd5e48e4d7960607a3ae403d35f0c",
+        "source_size": 16384,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "lazy-level-10-size-16384",
+        "request": "10,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "14,15,14,9,4,8,6",
+        "source_sha256": "4348e3b98e8a327b34ced39c1da9e67cdb4cd5e48e4d7960607a3ae403d35f0c",
+        "source_size": 16384,
+        "v4": "unsupported",
+        "v5": "resource"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-11-size-16385",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "15,16,16,5,4,8,6",
+        "source_sha256": "ba4f9b37402df1e3ad948a794ab43a9ed887d63e3a389c208ca4314fdd5add58",
+        "source_size": 16385,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-12-size-16385",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "15,16,16,7,4,12,6",
+        "source_sha256": "ba4f9b37402df1e3ad948a794ab43a9ed887d63e3a389c208ca4314fdd5add58",
+        "source_size": 16385,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-11-size-131072",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "17,17,17,5,4,8,6",
+        "source_sha256": "feb1e4409d009e0ec502eaabe321f86b5197a881e9b765252ec8a75d6957596d",
+        "source_size": 131072,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-12-size-131072",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "17,18,17,7,4,12,6",
+        "source_sha256": "feb1e4409d009e0ec502eaabe321f86b5197a881e9b765252ec8a75d6957596d",
+        "source_size": 131072,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-11-size-131073",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "18,18,19,5,4,12,6",
+        "source_sha256": "dd84db969f4ff2abb79c8c2fbc06e8d8e02c46d6481c958e057f7ad7a24c58a7",
+        "source_size": 131073,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-12-size-131073",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "18,19,19,7,4,12,6",
+        "source_sha256": "dd84db969f4ff2abb79c8c2fbc06e8d8e02c46d6481c958e057f7ad7a24c58a7",
+        "source_size": 131073,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-11-size-262144",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "18,18,19,5,4,12,6",
+        "source_sha256": "31a1f9dea0169551092d05e8bf4a446228c8c3eb4c9b713c66adcb7fd53c89be",
+        "source_size": 262144,
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "lazy-level-12-size-262144",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "18,19,19,7,4,12,6",
+        "source_sha256": "31a1f9dea0169551092d05e8bf4a446228c8c3eb4c9b713c66adcb7fd53c89be",
+        "source_size": 262144,
+        "v4": "unsupported",
+        "v5": "success"
+      }
+    ],
+    "loops.tsv": [
+      {
+        "family": "empty",
+        "level": "9",
+        "preset_row": "9",
+        "preset_strategy": "6",
+        "preset_tier": "3",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "family": "empty",
+        "level": "10",
+        "preset_row": "10",
+        "preset_strategy": "6",
+        "preset_tier": "3",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "resource"
+      },
+      {
+        "family": "initial_match",
+        "level": "9",
+        "preset_row": "9",
+        "preset_strategy": "6",
+        "preset_tier": "3",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "success"
+      },
+      {
+        "family": "initial_match",
+        "level": "10",
+        "preset_row": "10",
+        "preset_strategy": "6",
+        "preset_tier": "3",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "resource"
+      }
+    ]
+  },
+  "coverage": {
+    "broader.tsv": {
+      "v4": {
+        "resource": 5,
+        "success": 129,
+        "unsupported": 25
+      },
+      "v5": {
+        "resource": 7,
+        "success": 131,
+        "unsupported": 21
+      }
+    },
+    "fuzz.tsv": {
+      "v4": {
+        "advanced": 4,
+        "success": 66,
+        "unsupported": 11
+      },
+      "v5": {
+        "advanced": 4,
+        "resource": 1,
+        "success": 67,
+        "unsupported": 9
+      }
+    },
+    "greedy.tsv": {
+      "v4": {
+        "resource": 14,
+        "success": 381,
+        "unsupported": 27
+      },
+      "v5": {
+        "resource": 16,
+        "success": 383,
+        "unsupported": 23
+      }
+    },
+    "interop.tsv": {
+      "v4": {
+        "resource": 3,
+        "success": 87,
+        "unsupported": 2
+      },
+      "v5": {
+        "resource": 3,
+        "success": 87,
+        "unsupported": 2
+      }
+    },
+    "lazy.tsv": {
+      "v4": {
+        "resource": 32,
+        "success": 811,
+        "unsupported": 43
+      },
+      "v5": {
+        "resource": 36,
+        "success": 823,
+        "unsupported": 27
+      }
+    },
+    "loops.tsv": {
+      "v4": {
+        "success": 18,
+        "unsupported": 25
+      },
+      "v5": {
+        "resource": 2,
+        "success": 20,
+        "unsupported": 21
+      }
+    }
+  },
+  "fixtures": [
+    {
+      "bytes": 23454,
+      "path": "broader.tsv",
+      "sha256": "987997de3241abd0c07f149f120eb432c2d70ba53a65582a0ea0ae865a3602eb"
+    },
+    {
+      "bytes": 8598,
+      "path": "fuzz.tsv",
+      "sha256": "3f6cc5d182eef4da8ac8919bbe9c26e06a62148acdeb41ce03a12381598c717d"
+    },
+    {
+      "bytes": 63339,
+      "path": "greedy.tsv",
+      "sha256": "48aa1e7d6155b3cb9a36ca441dafa9a63e894f97e4b1d6b463387772dc1ace24"
+    },
+    {
+      "bytes": 12997,
+      "path": "interop.tsv",
+      "sha256": "8d13b0ba3d264e9ea76c3d437dbfc6a7c568c7cd356d7b8b2d7d50edb9a625be"
+    },
+    {
+      "bytes": 163919,
+      "path": "lazy.tsv",
+      "sha256": "2c210de372c6f918c55bd7fb8883290a8f0cdfc5d2d7b91f81b4182dd21edd20"
+    },
+    {
+      "bytes": 1850,
+      "path": "loops.tsv",
+      "sha256": "a7725e10501a9190d53c0d15b2ff746f873502f293195f4e335474b4694f3be2"
+    }
+  ],
+  "generator": "scripts/check_reference_admission_v5.py",
+  "generator_sha256": "f016f23bf50a00a529276e506684c4cee1129aebbe222ca5b812cff34537287b",
+  "input_sha256": {
+    "docs/evidence/2026-10-13-lazy-public-interop.json": "e6dc06606c193f17b51d4556a362140d5e995cc78c4139ab9e8afdd4ebe26b46",
+    "scripts/check_lazy_interop_capture_v2.py": "0cb1ea0cef617b732c02537dfda09f5d4ac3080d2f3e2dccab6cb2c399d8410f",
+    "scripts/check_reference_admission_v4.py": "0589976b7ebdc12d132e8e9c1cc785d9952fae0ec158a3a61ca79d39f4785091",
+    "scripts/oracles/lazy_interop.py": "db2f4e9568eff5a2508e7b65e5106404fc03c957ea8cf0afb7d3ab887b56d937",
+    "tests/fixtures/reference-admission-v4/README.md": "8ab0c5337362dc2f33308f842376f692811d7f7c38e23f0f8f2f831bd952e25c",
+    "tests/fixtures/reference-admission-v4/broader.tsv": "b859aaaa9dcc7ccafd3cad3a859524870e9d570fcef86bf8511812471122f7ba",
+    "tests/fixtures/reference-admission-v4/fuzz.tsv": "d82a887c2e9aff5848d2aa9385ced786b91422b239d4817a233b87b97e888f45",
+    "tests/fixtures/reference-admission-v4/greedy.tsv": "3fea6e0c916a1fd8d391f3473fb490db07dc8d746559d57b01e958da7063c765",
+    "tests/fixtures/reference-admission-v4/interop.tsv": "175ee2f09d3646bdf1e27083686eac4d7bb38b593c9dfc1daeed750f46d41110",
+    "tests/fixtures/reference-admission-v4/loops.tsv": "84a06c0ff6794d2e5c5eccc8fb160252dbd72511c6634985a18fa06e1ba92d85",
+    "tests/fixtures/reference-admission-v4/provenance.json": "703418ab6cb62f9cfbbf2c4ac8a8a3ca6524302aa74fc4bbb5a5722a95749460",
+    "tests/upstream/parameters/presets.tsv": "4e188cc16826c6665dcd440ae9d153484aeb4e561321a089be2aec260667881d"
+  },
+  "malformed_rejections": 11,
+  "qualification": "Source-only tree W21/H19/C19/S8 policy. Original selector/numeric and all 886 historical public source/request bytes are unchanged. Presets are pre-adjustment C values; archived tuples remain historical Rust observations; all newly admitted positive-level requests are independently reconstructed. New C execution and public enabling are separate gates.",
+  "schema_version": 5,
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

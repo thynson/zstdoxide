@@ -83,10 +83,12 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [x] Preflight the capture controller, pinned dependencies and normal/instrumented command inventory before execution.
 - [x] Capture and audit ordinary retained-state C tree frames with build/padding equality and offline forgery controls.
 - [x] Project audited ordinary tree frames into bounded binary fixtures with exact provenance.
-- [ ] Add checked tree trajectory reading and match Rust retained sequences, maps and complete frame bytes before public integration.
+- [ ] Add checked tree trajectory reading, match Rust retained sequences/maps and decode complete C frames before public integration.
 - [x] Validate malformed retained tree state, allocation failures and transactional frame/repeat publication.
-- [ ] Freeze successor admission mappings and independently resolve every new public tuple before enabling bounded strategy 6.
-- [ ] Port newly admitted original assertions and capture bidirectional public C interoperability with forged-evidence controls.
+- [x] Freeze successor admission mappings and independently resolve every new public tuple before enabling bounded strategy 6.
+- [ ] Enable the bounded public tree plan and port newly admitted original assertions without changing historical evidence.
+- [ ] Preflight the public capture controller and independently reconstructed tuple auditor with no-child rejection controls.
+- [ ] Capture bidirectional public C interoperability and reject forged evidence offline.
 - [ ] Run safe, every unsafe leaf, all-feature, no_std, Clippy, formatting and selected foreign/no-atomics checks.
 - [ ] Freeze equivalent all-backend workloads, verify clock-free output/owners and record timing plus a separate safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded milestone and remaining official obligations, retaining the next decomposition.

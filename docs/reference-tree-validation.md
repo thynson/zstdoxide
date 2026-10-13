@@ -313,3 +313,24 @@ All 245 sources, 531 positive blocks and 365 complete C frames are retained;
 The strategy-6 envelope wraps checked original observation fields without codec
 execution. Exact provenance, source snapshots and logs are in
 `evidence/2026-10-13-tree-ordinary-projection.json` and its matching archive.
+
+## Source-only public tree admission plan
+
+The v5 policy keeps all earlier selector, numeric-loop and public source/request
+bytes. All 886 Lazy-era public requests remain present: 823 predict success,
+36 resource errors and 27 unsupported outcomes. Twelve historical requests are
+newly admitted, and their tuples are independently reconstructed from pinned
+upstream presets before any new C execution. Original historical outcomes stay
+in the v4 fixtures. The original selector set predicts 67 success, 1 resource,
+9 unsupported and 4 advanced outcomes; the 43 numeric-loop requests predict
+20 success, 2 resource and 21 unsupported outcomes.
+
+The new public recipe set adds 245 ordinary tree inputs, 49 default-level
+boundaries and 17 explicit controls. All 311 new tuples are independently
+resolved. The resulting 1,197 recipes / 145,529,306 source bytes predict 1,099
+success, 49 resource and 49 unsupported outcomes, with 44 frame-equivalence
+hypotheses. Both Python modes reproduce the complete source-only manifests;
+11 malformed admission scalars reject per mode. Planning evidence and the
+separate capture-preflight records are retained in
+`evidence/2026-10-13-tree-public-plan.json` and its archive. This checkpoint
+does not claim a public codec execution or C-observed applied parameters.
