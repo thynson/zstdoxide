@@ -150,3 +150,14 @@ do not expose the chronological internal comparison or reversal trace.
 The next step is a bounded fixture projection and independent Rust test reader.
 No tree storage, tree parser, ordinary tree frame or public strategy 6 support
 is claimed by these direct C observations.
+
+## Binary fixture projection
+
+The [projection evidence](evidence/2026-10-13-tree-projection.json) preserves
+16,542,479 bytes containing all 103 inputs and 2,334 first-padding operations.
+Normal and optimized Python reconstruct the exact fixture from the pinned
+archive; each rejects truncated bytes, changed provenance, archive identity and
+input-owner identity with no children. All maps and source matches are checked
+before serialization. The raw W,C,H parameter order is retained. Before-maps
+reconstruct exactly from zero initial state and consecutive after-maps. Full
+records, source/guard checks and allocation ledgers remain in the capture archive.

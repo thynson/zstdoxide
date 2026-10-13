@@ -1,0 +1,40 @@
+{
+  "archive": "2026-10-13-tree-projection.tar.gz",
+  "archive_bytes": 947056,
+  "archive_members": 14,
+  "archive_sha256": "a7ed5d6b9bca26a12ed27525f052263003454ca07521c039d62f5ebb9254397c",
+  "controls": {
+    "normal": {
+      "child_processes": 0,
+      "optimized": false,
+      "projector_sha256": "1de0c340e9a5024fd8307716648669b40a17707930155e8426fade3bc6595eb1",
+      "rejected": [
+        "truncated",
+        "provenance",
+        "archive",
+        "input-owner"
+      ],
+      "status": "passed"
+    },
+    "optimized": {
+      "child_processes": 0,
+      "optimized": true,
+      "projector_sha256": "1de0c340e9a5024fd8307716648669b40a17707930155e8426fade3bc6595eb1",
+      "rejected": [
+        "truncated",
+        "provenance",
+        "archive",
+        "input-owner"
+      ],
+      "status": "passed"
+    }
+  },
+  "projection": {
+    "bytes": 16542479,
+    "cases": 103,
+    "operations": 2334,
+    "sha256": "3fe94f913c9c22e20e74ea9ef33fede15a172a5105ff70b5d1f548a070f81103"
+  },
+  "qualification": "Immutable C artifact projection, independently compared in both Python modes. A later Rust reader review caught a prose parameter-order typo, corrected to the unchanged upstream W,C,H order before this checkpoint. Captured and projected bytes were unchanged; no tree implementation is claimed.",
+  "status": "passed"
+}

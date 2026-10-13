@@ -113,7 +113,8 @@ the pinned source; public strategy 6 remains unsupported throughout preparation.
 - [x] Freeze broader source/ring/window/offset-cost input recipes while preserving all thirty tiny packets.
 - [x] Preflight a broader controller/auditor with pinned tiny observation controls before execution.
 - [x] Capture and independently check complete broader tree trajectories with offline forgery controls.
-- [ ] Project audited direct records into bounded Rust fixtures with an independent test-only reader and predecessor controls.
+- [x] Project audited direct records into bounded binary fixtures with exact source and predecessor provenance.
+- [ ] Add an independent test-only Rust fixture reader with boundary rejection and selected-match replay.
 - [ ] Add checked tree layout and scalar edge/link records with explicit source and node-floor invariants.
 - [ ] Implement initialized independent hash/node owners with safe storage and an opt-in unsafe-reference-tree leaf.
 - [ ] Implement unsorted insertion, bounded chain reversal and deferred sorting against exact C maps.
