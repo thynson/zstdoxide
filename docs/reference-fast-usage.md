@@ -40,7 +40,7 @@ adjustment. It is not a fixed level allowlist:
 | Level 10 | Resource error through 16384 bytes (tree search log 9); Lazy2 for sizes 16385..=262144; larger inputs exceed resource caps |
 | Levels 11/12 | BinaryTreeLazy2 for sizes 16385..=262144; resource errors above that; unsupported at smaller sizes |
 | Levels 13–15 | Resource errors above 262144 bytes; unsupported strategies at smaller sizes |
-| Levels 13+ | Unsupported strategies |
+| Levels 16+ | Unsupported strategies |
 | Other resolved strategy | `Error::UnsupportedFeature`; no replacement algorithm |
 
 Frames carry the exact source size, no checksum and no dictionary identifier.

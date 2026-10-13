@@ -404,3 +404,26 @@ rejected `-Z build-std`. The v2 caller runner explicitly pins the nightly for al
 commands; failed logs and both runner versions are retained. Production code
 was unchanged. Evidence is in `evidence/2026-10-13-tree-platform-final.json` and
 `evidence/2026-10-13-tree-thumb.json`, with matching archives.
+
+## Bidirectional public interoperability closure
+
+All 1,197 source-only requests pass the independently resolved public admission
+contract: 1,099 admitted, 49 resource-limited and 49 unsupported. Across safe/all
+Rust and normal/ASan+UBSan C builds, C decodes 4,396 Rust frames and Rust decodes
+4,396 C frames, totaling 795,034,136 decoded bytes. All 44 equivalence groups and
+complete within-family backend frames agree. The 26 instrumented C codec units
+and 156 malformed-packet rejections are retained; C/Rust entropy bytes need not
+be identical.
+
+Both normal and optimized Python independently audit all 13,606 commands and
+reject 41 forged command, environment, metadata, artifact or coherently replaced
+tuple records each without child execution. New and newly admitted tuples are
+reconstructed from pinned presets, not accepted from C-reported parameters.
+The historical 886 requests retain their identities; 311 requests are new.
+
+`evidence/2026-10-13-tree-public-interop.json` binds the exact source, results and
+38,510,622-byte archive. Its lossless chunk map reconstructs all 40,945 retained
+files (2,529,318,246 logical bytes), including raw commands, requests, source, C
+objects and all four audited executables. Only redundant Rust build intermediate
+files are omitted and individually listed. Every retained reconstruction was
+verified. Full matrix and timing closure remain separate gates.

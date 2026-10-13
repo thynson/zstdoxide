@@ -89,7 +89,7 @@ complete public interoperability, final matrix and measurement closure follow.
 - [x] Freeze successor admission mappings and independently resolve every new public tuple before enabling bounded strategy 6.
 - [x] Enable the bounded public tree plan and port newly admitted original assertions without changing historical evidence.
 - [x] Preflight the public capture controller and independently reconstructed tuple auditor with no-child rejection controls.
-- [ ] Capture bidirectional public C interoperability and reject forged evidence offline.
+- [x] Capture bidirectional public C interoperability and reject forged evidence offline.
 - [x] Run selected strict-provenance foreign interpretation and no-atomics library/caller checks.
 - [ ] Run safe, every unsafe leaf, all-feature, no_std, Clippy and formatting checks.
 - [x] Prepare and qualify the deterministic tree benchmark harness and offline forgery controls.
