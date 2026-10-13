@@ -82,7 +82,7 @@ successor admission mapping and independent oracle checks.
 - [x] Retain shared lazy-family state across blocks with exact owners, tiny handling and failure poisoning.
 - [x] Correct all-feature/no_std evidence classification and check all fourteen unsafe leaves with std disabled.
 - [x] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
-- [ ] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.
+- [x] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.
 - [ ] Enable bounded public Lazy/Lazy2 requests and document exact source-dependent level/resource behavior.
 - [ ] Port newly admitted original selector and numeric assertions without closing unrelated upstream obligations.
 - [ ] Freeze Lazy-family public interoperability recipes and review unchanged generic transport adapters.

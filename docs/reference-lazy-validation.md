@@ -556,3 +556,18 @@ diff checks. The initial rejected Cargo argument invocation is preserved in the
 archive and is not counted as a passed check. Evidence is in
 `docs/evidence/2026-10-13-lazy-private-frames.json` and its archive. Public
 admission, public C interoperability and final module gates remain separate.
+
+
+## Frozen successor admission
+
+Version 4 preserves all 81 selector, 43 numeric-loop and 92/159/422 historical
+public inputs. Source-only independent reconstruction yields 66 admitted
+selectors, 18 admitted numeric-loop iterations and 87/129/381 admitted public
+requests in those three historical sets. Four selector additions are exactly
+`unsupported-58` through `unsupported-61`; both original numeric loops add
+levels 5 through 8. A high-resource Lazy request changes from unsupported to
+resource-limited rather than becoming admitted. Prior recorded outcomes remain
+immutable. Normal and optimized Python each compare all 797 rows, exhaust
+6,300 boundary classifications and reject 50 malformed/changed controls with
+zero child attempts. Evidence is in `docs/evidence/2026-10-13-lazy-admission.json`
+and its archive; positive new public C execution remains an obligation.

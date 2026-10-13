@@ -1,0 +1,437 @@
+{
+  "changed": {
+    "broader.tsv": [
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-5",
+        "historical_resolved_tuple": "10,6,7,3,4,4,4",
+        "request": "5,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-6",
+        "historical_resolved_tuple": "10,6,7,4,4,8,5",
+        "request": "6,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-7",
+        "historical_resolved_tuple": "10,6,7,6,4,8,5",
+        "request": "7,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-8",
+        "historical_resolved_tuple": "10,6,7,8,4,8,5",
+        "request": "8,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-5",
+        "historical_resolved_tuple": "10,6,7,3,4,4,4",
+        "request": "5,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-6",
+        "historical_resolved_tuple": "10,6,7,4,4,8,5",
+        "request": "6,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-7",
+        "historical_resolved_tuple": "10,6,7,6,4,8,5",
+        "request": "7,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-8",
+        "historical_resolved_tuple": "10,6,7,8,4,8,5",
+        "request": "8,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v3": "unsupported",
+        "v4": "success"
+      }
+    ],
+    "fuzz.tsv": [
+      {
+        "case": "unsupported-58",
+        "input_sha256": "89f8fefa4d3be98e64f727ae84c510eaba99c38b2d83aa9aaa578b5ac3cfb46a",
+        "level": "5",
+        "prefix_size": "30",
+        "preset_row": "5",
+        "preset_strategy": "4",
+        "preset_tier": "3",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "case": "unsupported-59",
+        "input_sha256": "9a32a77ecd1c6c34bb68d49b4fc550fbeb28d5425552e6a57dd2f6bfc0712a16",
+        "level": "6",
+        "prefix_size": "30",
+        "preset_row": "6",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "case": "unsupported-60",
+        "input_sha256": "223df4945a9767da468b781cc70795f06d4d49927c275f2d14273cdd92eed877",
+        "level": "7",
+        "prefix_size": "30",
+        "preset_row": "7",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "case": "unsupported-61",
+        "input_sha256": "bb50fca2d7bff8884fa94b6b5162d278fbf5f3b09f4f52c61f15ef0e1bd690f8",
+        "level": "8",
+        "prefix_size": "30",
+        "preset_row": "8",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "v3": "unsupported",
+        "v4": "success"
+      }
+    ],
+    "greedy.tsv": [
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-5",
+        "historical_resolved_tuple": "10,6,7,3,4,4,4",
+        "request": "5,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": 0,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-6",
+        "historical_resolved_tuple": "10,6,7,4,4,8,5",
+        "request": "6,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": 0,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-7",
+        "historical_resolved_tuple": "10,6,7,6,4,8,5",
+        "request": "7,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": 0,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-empty-level-8",
+        "historical_resolved_tuple": "10,6,7,8,4,8,5",
+        "request": "8,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": 0,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-5",
+        "historical_resolved_tuple": "10,6,7,3,4,4,4",
+        "request": "5,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": 30,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-6",
+        "historical_resolved_tuple": "10,6,7,4,4,8,5",
+        "request": "6,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": 30,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-7",
+        "historical_resolved_tuple": "10,6,7,6,4,8,5",
+        "request": "7,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": 30,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "fuzzer-initial_match-level-8",
+        "historical_resolved_tuple": "10,6,7,8,4,8,5",
+        "request": "8,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": 30,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 1,
+        "case": "historical-unsupported-strategy-5",
+        "historical_resolved_tuple": "12,12,13,1,5,0,5",
+        "request": "1,0,0,0,0,0,0,5,0",
+        "source_sha256": "744fe666a00b8c7d19298a0d51df6e7dd7f2e6349f75190605119cf0f6a194ac",
+        "source_size": 4096,
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "additive_c_required": 0,
+        "case": "greedy-unsupported-before-resource",
+        "historical_resolved_tuple": "22,22,23,30,4,0,4",
+        "request": "4,31,30,30,30,4,0,4,0",
+        "source_sha256": "72bcf8fa6c73c0a650f5c83f47e54290ba2fe60ac6cb0d8fe5b0a41dd57a0844",
+        "source_size": 2097153,
+        "v3": "unsupported",
+        "v4": "resource"
+      }
+    ],
+    "interop.tsv": [
+      {
+        "additive_c_required": 1,
+        "case": "unsupported-strategy-5",
+        "hint": "0",
+        "historical_resolved_tuple": "12,12,13,1,5,0,5",
+        "level": "1",
+        "overrides": "0,0,0,0,0,0,5",
+        "source_sha256": "744fe666a00b8c7d19298a0d51df6e7dd7f2e6349f75190605119cf0f6a194ac",
+        "source_size": "4096",
+        "v3": "unsupported",
+        "v4": "success"
+      }
+    ],
+    "loops.tsv": [
+      {
+        "family": "empty",
+        "level": "5",
+        "preset_row": "5",
+        "preset_strategy": "4",
+        "preset_tier": "3",
+        "source_size": "0",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "family": "empty",
+        "level": "6",
+        "preset_row": "6",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "source_size": "0",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "family": "empty",
+        "level": "7",
+        "preset_row": "7",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "source_size": "0",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "family": "empty",
+        "level": "8",
+        "preset_row": "8",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "source_size": "0",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "family": "initial_match",
+        "level": "5",
+        "preset_row": "5",
+        "preset_strategy": "4",
+        "preset_tier": "3",
+        "source_size": "30",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "family": "initial_match",
+        "level": "6",
+        "preset_row": "6",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "source_size": "30",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "family": "initial_match",
+        "level": "7",
+        "preset_row": "7",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "source_size": "30",
+        "v3": "unsupported",
+        "v4": "success"
+      },
+      {
+        "family": "initial_match",
+        "level": "8",
+        "preset_row": "8",
+        "preset_strategy": "5",
+        "preset_tier": "3",
+        "source_size": "30",
+        "v3": "unsupported",
+        "v4": "success"
+      }
+    ]
+  },
+  "coverage": {
+    "broader.tsv": {
+      "v3": {
+        "resource": 5,
+        "success": 121,
+        "unsupported": 33
+      },
+      "v4": {
+        "resource": 5,
+        "success": 129,
+        "unsupported": 25
+      }
+    },
+    "fuzz.tsv": {
+      "v3": {
+        "advanced": 4,
+        "success": 62,
+        "unsupported": 15
+      },
+      "v4": {
+        "advanced": 4,
+        "success": 66,
+        "unsupported": 11
+      }
+    },
+    "greedy.tsv": {
+      "v3": {
+        "resource": 13,
+        "success": 372,
+        "unsupported": 37
+      },
+      "v4": {
+        "resource": 14,
+        "success": 381,
+        "unsupported": 27
+      }
+    },
+    "interop.tsv": {
+      "v3": {
+        "resource": 3,
+        "success": 86,
+        "unsupported": 3
+      },
+      "v4": {
+        "resource": 3,
+        "success": 87,
+        "unsupported": 2
+      }
+    },
+    "loops.tsv": {
+      "v3": {
+        "success": 10,
+        "unsupported": 33
+      },
+      "v4": {
+        "success": 18,
+        "unsupported": 25
+      }
+    }
+  },
+  "fixtures": [
+    {
+      "bytes": 23500,
+      "path": "broader.tsv",
+      "sha256": "b859aaaa9dcc7ccafd3cad3a859524870e9d570fcef86bf8511812471122f7ba"
+    },
+    {
+      "bytes": 8621,
+      "path": "fuzz.tsv",
+      "sha256": "d82a887c2e9aff5848d2aa9385ced786b91422b239d4817a233b87b97e888f45"
+    },
+    {
+      "bytes": 63392,
+      "path": "greedy.tsv",
+      "sha256": "3fea6e0c916a1fd8d391f3473fb490db07dc8d746559d57b01e958da7063c765"
+    },
+    {
+      "bytes": 13001,
+      "path": "interop.tsv",
+      "sha256": "175ee2f09d3646bdf1e27083686eac4d7bb38b593c9dfc1daeed750f46d41110"
+    },
+    {
+      "bytes": 1896,
+      "path": "loops.tsv",
+      "sha256": "84a06c0ff6794d2e5c5eccc8fb160252dbd72511c6634985a18fa06e1ba92d85"
+    }
+  ],
+  "generator": "scripts/check_reference_admission_v4.py",
+  "generator_sha256": "0589976b7ebdc12d132e8e9c1cc785d9952fae0ec158a3a61ca79d39f4785091",
+  "greedy_capture_evidence_sha256": "99a1fef96271c81684592848d16ac34c27816f7a56afc7b208bf820e8d0e0d11",
+  "input_sha256": {
+    "docs/evidence/2026-10-12-greedy-public-interop.json": "b793c63accfbd2fcd2c013028c4f872282662d8ccf23b8bcf52d9f7b84e24c9a",
+    "docs/evidence/2026-10-12-greedy-public-interop.tar.gz": "3440015eaf7d12504729b6cd225de36dec0543062c78bddb09381cf4deeefee8",
+    "scripts/check_greedy_interop_recipes.py": "f7d699761dfb612a8fa619f8360452205d700b4636c2c3fed920814cc2c87009",
+    "scripts/check_reference_admission_v3.py": "af3818761663797bfd748c50a2f844dca4512d5d274ea367450bcb95f64681ee",
+    "scripts/oracles/greedy_interop.py": "c1eac37d63179fc02dcb2c6ac21d46b3810eb96763c782b59799973db07e6c7a",
+    "tests/fixtures/reference-admission-v3/README.md": "56603e97ef8b1b1021dc00ce0fa2e72635fc97df897c644f3a06b6097ce829aa",
+    "tests/fixtures/reference-admission-v3/broader.tsv": "545ab96911821c87a0dafe2d8ad06b5bdc83de2da8ff08a7a9e69d791c4db24c",
+    "tests/fixtures/reference-admission-v3/fuzz.tsv": "e7c8b01438e2bb35cc66a81d42ad4fa2f02203d222c25600efc2205267dae611",
+    "tests/fixtures/reference-admission-v3/interop.tsv": "d1297efaeb9496515f41aaab46bc1a903dd652710234bbac4fbc7306463a7f24",
+    "tests/fixtures/reference-admission-v3/loops.tsv": "bd35c8a40cc7f0bb01dc7393f1d072ff1240e923ffabe26cea24733e613d410e",
+    "tests/fixtures/reference-admission-v3/provenance.json": "7e3f6d14a546390c525b00e1578e5e83d38f4f3ad5e4f95a2e1b1fc32b5e785f",
+    "tests/fixtures/reference-greedy-interop-recipes/recipes.json": "3f14af699a7128c0e7a504b73190f99803b1ee9ad2772df69ea2ee42cc2cd1ac"
+  },
+  "qualification": "Source-only expectations before public Lazy/Lazy2 admission. All 81 selectors, 43 numeric loops and 92/159/422 historical public requests are unchanged. Presets are pre-adjustment C values; archived tuples are historical Rust resolution observations. Newly positive C execution remains a separate obligation. No codec, compiler, archived program or child executes.",
+  "schema_version": 4,
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

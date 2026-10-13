@@ -1,0 +1,40 @@
+{
+  "archive": {
+    "bytes": 3505,
+    "members": 7,
+    "path": "docs/evidence/2026-10-13-lazy-admission.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "8bc2f8f2f30ed944f9a56cfb4cd694693008149cb79c5bf52605131aeacd879e"
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "/tmp/check-zstdoxide-lazy-admission.py"
+      ],
+      "log": "normal.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-O",
+        "/tmp/check-zstdoxide-lazy-admission.py"
+      ],
+      "log": "optimized.log",
+      "status": 0
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "sources": {
+    "scripts/check_reference_admission_v4.py": "0589976b7ebdc12d132e8e9c1cc785d9952fae0ec158a3a61ca79d39f4785091",
+    "tests/fixtures/reference-admission-v4/README.md": "8ab0c5337362dc2f33308f842376f692811d7f7c38e23f0f8f2f831bd952e25c",
+    "tests/fixtures/reference-admission-v4/broader.tsv": "b859aaaa9dcc7ccafd3cad3a859524870e9d570fcef86bf8511812471122f7ba",
+    "tests/fixtures/reference-admission-v4/fuzz.tsv": "d82a887c2e9aff5848d2aa9385ced786b91422b239d4817a233b87b97e888f45",
+    "tests/fixtures/reference-admission-v4/greedy.tsv": "3fea6e0c916a1fd8d391f3473fb490db07dc8d746559d57b01e958da7063c765",
+    "tests/fixtures/reference-admission-v4/interop.tsv": "175ee2f09d3646bdf1e27083686eac4d7bb38b593c9dfc1daeed750f46d41110",
+    "tests/fixtures/reference-admission-v4/loops.tsv": "84a06c0ff6794d2e5c5eccc8fb160252dbd72511c6634985a18fa06e1ba92d85",
+    "tests/fixtures/reference-admission-v4/provenance.json": "703418ab6cb62f9cfbbf2c4ac8a8a3ca6524302aa74fc4bbb5a5722a95749460"
+  },
+  "test_results": []
+}
