@@ -97,6 +97,36 @@ complete public interoperability, final matrix and measurement closure follow.
 - [ ] Record equivalent all-backend timing and a separate safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded milestone and remaining official obligations, retaining the next decomposition.
 
+## Module 17 preparation: bounded reference Optimal
+
+Keep strategy 7 unsupported while qualifying the independent optimal parser.
+Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline.
+
+- [x] Review optimal ownership, frequency lifecycle, sorted-tree eligibility, short-key frontier, finite prices and path reconstruction before implementation.
+- [ ] Freeze all twenty-four BinaryTreeLazy2 frames and qualified allocator records as permanent predecessor regressions.
+- [ ] Specify bounded frequency/price requests, independent observation replay and malformed transport controls.
+- [ ] Freeze source-only initialization, predefined/dynamic, scaling, symbol and arithmetic-boundary recipes.
+- [ ] Review and preflight the pinned normal/instrumented price helper and complete source closure before execution.
+- [ ] Capture complete frequency/price transitions and reject forged records offline in normal and optimized Python.
+- [ ] Project audited price records into bounded fixtures and add an independent checked Rust reader.
+- [ ] Implement checked scalar prices and explicitly initialized frequency ownership with an isolated safe/unsafe contract.
+- [ ] Specify and freeze sorted-tree/all-match operations, repeat intents, minMatch3 heads and both update frontiers.
+- [ ] Review and preflight direct sorted-tree/all-match capture and independent complete-map replay before C execution.
+- [ ] Capture direct operations and qualify all-match ordering, window/node floors, three-byte tails and forged evidence.
+- [ ] Implement checked sorted insertion and bounded match enumeration with optional short-key ownership.
+- [ ] Specify path transition, sufficient-length, tie, early-abort and backtracking observations before parser implementation.
+- [ ] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.
+- [ ] Implement finite-cost path ownership, phase-aware reconstruction and private optLevel0 parsing.
+- [ ] Freeze and capture ordinary retained optimal blocks with full search/frequency/path and repeat publication state.
+- [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
+- [ ] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
+- [ ] Freeze successor public admission mappings and independently reconstruct every newly admitted tuple.
+- [ ] Enable bounded public Optimal dispatch and preserve original selector/numeric assertion inputs.
+- [ ] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
+- [ ] Run all safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and selected foreign/no-atomics checks.
+- [ ] Freeze equivalent complete frames/owners, then measure all backends and a separate safe/all repeat after CPU barriers.
+- [ ] Reconcile the bounded milestone, outstanding official migration obligations and the next decomposition.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
