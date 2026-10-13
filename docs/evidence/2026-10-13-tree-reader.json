@@ -1,0 +1,20 @@
+{
+  "archive": "2026-10-13-tree-reader.tar.gz",
+  "archive_bytes": 5830,
+  "archive_members": 11,
+  "archive_sha256": "832f72150d45b2c927aafe7be2ca9689e74a519248e017e90130018679a816d7",
+  "clippy": [
+    "safe",
+    "all"
+  ],
+  "configurations": [
+    "safe",
+    "all"
+  ],
+  "fixture_sha256": "3fe94f913c9c22e20e74ea9ef33fede15a172a5105ff70b5d1f548a070f81103",
+  "format": true,
+  "qualification": "Independent safe test-only reader, not a tree search implementation. All 2334 operations replay source/hash/map invariants. Initial parameter-order interpretation failure and initial Clippy diagnostic are retained with corrected final runs. Existing Module 15 immutable matrix does not retroactively include these additive tests. No production codec or feature inventory changed.",
+  "source_sha256": "c7aa13a12fb258bb48df0d3c97544ecb35d73f71bc19c403230ae14b4e40f751",
+  "status": "passed",
+  "tests_per_configuration": 8
+}

@@ -161,3 +161,18 @@ input-owner identity with no children. All maps and source matches are checked
 before serialization. The raw W,C,H parameter order is retained. Before-maps
 reconstruct exactly from zero initial state and consecutive after-maps. Full
 records, source/guard checks and allocation ledgers remain in the capture archive.
+
+## Independent Rust fixture reader
+
+The [reader evidence](evidence/2026-10-13-tree-reader.json) records eight tests
+each in safe and all-feature builds, with focused Clippy in both configurations
+and formatting. The dependency-free reader borrows checked byte ranges, bounds
+every dimension and scalar, independently recomputes stored-head hashes and
+window/node floors, replays selected source matches, and rejects changed maps
+during skipped queries. It checks all 2,334 operations. Negative tests include
+every truncated prefix of the smallest case, invalid header/parameter bounds,
+trailing bytes, duplicate names, invalid markers, impossible match extents and
+otherwise valid changed skipped-state edges. Initial parameter-order and lint
+diagnostics are preserved with the corrected final runs. These sixteen test
+executions are additive and are not included in Module 15's frozen full matrix.
+A production tree backend remains unimplemented.
