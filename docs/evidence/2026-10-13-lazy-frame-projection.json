@@ -1,0 +1,92 @@
+{
+  "commands": [
+    "python3 scripts/pack_lazy_frame_trajectories.py --write",
+    "python3 /tmp/check-zstdoxide-lazy-frame-projection.py",
+    "python3 -O /tmp/check-zstdoxide-lazy-frame-projection.py"
+  ],
+  "controls": {
+    "normal": {
+      "blocks": 1377,
+      "bytes": 100236485,
+      "cases": 510,
+      "child_attempts": 0,
+      "optimization": 0,
+      "rejections": [
+        "truncated_0",
+        "truncated_7",
+        "truncated_8",
+        "truncated_15",
+        "truncated_16",
+        "truncated_19",
+        "truncated_20",
+        "truncated_100236484",
+        "magic",
+        "case_count",
+        "block_count",
+        "extent",
+        "depth",
+        "name_depth",
+        "reserved1",
+        "reserved2",
+        "reserved3",
+        "name_length",
+        "name",
+        "trailing",
+        "existing",
+        "bad_names",
+        "symlink"
+      ],
+      "sha256": "d46f4900c5d43c1f54f8e68a56e228d6aa16b4d364c07a16c294b047c9548e27",
+      "status": "passed"
+    },
+    "optimized": {
+      "blocks": 1377,
+      "bytes": 100236485,
+      "cases": 510,
+      "child_attempts": 0,
+      "optimization": 1,
+      "rejections": [
+        "truncated_0",
+        "truncated_7",
+        "truncated_8",
+        "truncated_15",
+        "truncated_16",
+        "truncated_19",
+        "truncated_20",
+        "truncated_100236484",
+        "magic",
+        "case_count",
+        "block_count",
+        "extent",
+        "depth",
+        "name_depth",
+        "reserved1",
+        "reserved2",
+        "reserved3",
+        "name_length",
+        "name",
+        "trailing",
+        "existing",
+        "bad_names",
+        "symlink"
+      ],
+      "sha256": "d46f4900c5d43c1f54f8e68a56e228d6aa16b4d364c07a16c294b047c9548e27",
+      "status": "passed"
+    }
+  },
+  "files": {
+    "scripts/pack_lazy_frame_trajectories.py": "2b0000d84052854e8c646a006d32077964549934cdf5362cbb1fd3eb164d133e",
+    "tests/fixtures/reference-lazy-frames/NOTICE": "70f3e141841b494ef09b65e91fd78ceeeae48b39fd308c85127a8e71407b5dbf",
+    "tests/fixtures/reference-lazy-frames/README.md": "78a654295054748efc80174494515eeb0533802347ebc4c5d83c0c44e58be60d",
+    "tests/fixtures/reference-lazy-frames/provenance.json": "7d839a163da26e1357a5a397ce2ef2ccc390894fd8faca5e4694f22c5fff4d7f"
+  },
+  "projection": {
+    "blocks": 1377,
+    "cases": 510,
+    "codec_executions": 0,
+    "frames": 549,
+    "packed_bytes": 100236485,
+    "packed_sha256": "d46f4900c5d43c1f54f8e68a56e228d6aa16b4d364c07a16c294b047c9548e27"
+  },
+  "status": "passed"
+}

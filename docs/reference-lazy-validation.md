@@ -450,3 +450,22 @@ trailing-byte mutations with zero child attempts. Evidence, exact control runner
 and publication source are retained in
 `docs/evidence/2026-10-13-lazy-frame-fixture.json` and its archive. Binary projection
 and the Rust reader remain separately checked steps.
+
+
+## Ordinary binary projection
+
+The separately versioned `ZLZFR01` projection stores 510 depth-tagged cases,
+1,377 positive blocks and 549 complete C frames in 100,236,485 bytes, SHA256
+`d46f4900c5d43c1f54f8e68a56e228d6aa16b4d364c07a16c294b047c9548e27`.
+A depth byte and three reserved zero bytes precede each unchanged ordinary
+Greedy body schema. The immutable source pack and generator/checker identities
+are retained in its provenance. The earlier Greedy binary remains unchanged.
+
+An independent Python reader compares every projected source, frame, schedule,
+sampling field, repeat tuple, table delta/hash, literal, sequence and long marker
+against the audited C artifacts. Normal and optimized runs each accept the full
+projection and reject 23 truncated, mismatched-selector/count/name, reserved,
+extent, trailing or publication controls, with zero child attempts. Fresh
+publication uses those validated bytes; existing outputs, symlinks and bad
+output names reject. Evidence and the field reader are retained in
+`docs/evidence/2026-10-13-lazy-frame-projection.json` and its archive.

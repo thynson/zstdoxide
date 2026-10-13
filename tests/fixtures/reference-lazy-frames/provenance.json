@@ -1,0 +1,22 @@
+{
+  "binary_format": "ZLZFR01: depth-tagged checked ordinary lazy-family trajectories and complete C frames",
+  "cases": 510,
+  "checker": "scripts/check_lazy_frames.py",
+  "checker_sha256": "5f53a2aea4379f96f3b18db8b1e9737e11a0c8880306e2d7677bafa6f824cb07",
+  "complete_frames": 549,
+  "excluded_partial_headers": 45,
+  "fixture": {
+    "bytes": 100236485,
+    "path": "cases.bin",
+    "sha256": "d46f4900c5d43c1f54f8e68a56e228d6aa16b4d364c07a16c294b047c9548e27"
+  },
+  "generator": "scripts/pack_lazy_frame_trajectories.py",
+  "generator_sha256": "2b0000d84052854e8c646a006d32077964549934cdf5362cbb1fd3eb164d133e",
+  "policy": "Test-only projection of frozen C inputs/observations. No codec execution. Full entropy/owner/cache observations and zero-call records remain in the original collection. Sampling caches are preserved, not a requirement for Rust caching.",
+  "positive_blocks": 1377,
+  "schema_version": 1,
+  "source_bytes": 22499784,
+  "source_manifest_sha256": "0c9579981f10ec11097fca94f2c3a75223674083d80feeee83ef70bcaf302740",
+  "source_pack_sha256": "aca20fb1f5f2016c05da8fdd8afdcaaf418386cdd63f26bf4b9a3b1b249dc4b3",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}
