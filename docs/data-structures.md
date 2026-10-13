@@ -1097,3 +1097,17 @@ outputs are admitted. The planned C helper extends only the parameter selector
 and metadata while retaining the existing guarded arena, scratch, frame, replay
 and before-map owners. Independent replay remains a separate bounded test-only
 consumer. No production allocation or unsafe leaf is added by these records.
+
+
+The planned ordinary Lazy Rust fixture uses a separate `ZLZFR01` envelope with
+510 cases and 1,377 positive blocks. Each bounded case body begins with copied
+depth 0..2 and three zero reserved bytes, followed by the unchanged Greedy
+ordinary trajectory body. The outer cap is 256 MiB and each body is at most
+32 MiB; existing per-source (4 MiB), per-block (128 KiB), schedule (64 calls) and
+nested record caps stay unchanged. `LazyFrameCase` will own depth and common
+`OracleFrameCase` metadata; source, literal and complete frame bytes borrow the
+immutable pack. Sequence/schedule/sparse-map vectors retain fallible bounded
+allocation. The shared reader gains only test-only crate visibility, and the
+wrapper checks selector/name consistency, duplicate names, exact counts and
+exhausted extents. Shared independent semantic/table/frame replay does not call
+the production parser. Copied depth adds no unsafe backend or production owner.

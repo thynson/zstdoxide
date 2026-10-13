@@ -74,8 +74,10 @@ successor admission mapping and independent oracle checks.
 - [x] Implement and review the versioned ordinary C helper with normal/instrumented syntax checks before execution.
 - [x] Add independent ordinary Lazy record replay and malformed offline controls.
 - [x] Implement and preflight the ordinary capture controller and offline auditor before execution.
-- [ ] Capture and independently validate ordinary Lazy/Lazy2 trajectories and complete frames with instrumented C.
-- [ ] Freeze and project ordinary observations into checked Rust trajectory fixtures.
+- [x] Capture and independently validate ordinary Lazy/Lazy2 trajectories and complete frames with instrumented C.
+- [ ] Freeze audited ordinary observations with immutable artifact identities and offline replay.
+- [ ] Project ordinary depth-tagged trajectories and complete frames into a bounded binary fixture.
+- [ ] Add a checked Rust ordinary fixture adapter with independent replay and predecessor controls.
 - [ ] Retain shared lazy-family state across blocks with exact owners, tiny handling and failure poisoning.
 - [ ] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
 - [ ] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.

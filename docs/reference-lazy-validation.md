@@ -396,3 +396,39 @@ record. Each rejects 332 new mutations plus 81 inherited controls and retains
 records exercise schema/replay only and are never stored as C expectations.
 Evidence is in `docs/evidence/2026-10-13-lazy-frame-validator.json` and its archive.
 The ordinary controller/auditor preflight and actual capture are still pending.
+
+
+## Ordinary C capture and independent audit
+
+The reviewed version-one helper completed all 1,276 planned commands against
+the restored external pinned revision. Normal and ASan/UBSan builds each compile
+all 26 codec units and the helper, run 510 schedules, compare 39 aligned whole
+frames, observe 45 incomplete headers and reject 51 malformed requests. Complete
+records and frame bytes agree across builds; all 138 depth-zero predecessor
+records agree after case-name normalization, and their frame bytes agree exactly.
+Success stderr is empty. Assembly, workers and LeakSanitizer are excluded.
+
+Each build decodes 549 complete frames totaling 41,165,274 source bytes. Across
+1,401 scheduled calls, 1,377 positive blocks comprise 633 raw, 114 RLE and 630
+compressed blocks. There are 1,293 fresh candidates; 165 raw and 36 RLE fallback
+cases discard changed first-two wire repeats. These are actual observed counts,
+not claims that every source hypothesis produced its named score witness.
+
+Normal and optimized Python independently re-audit the complete command/source/
+binary/record inventory and reject 58 mutations each, with zero child attempts.
+Two controls coherently rewrite both build logs and matching hashes/summaries:
+a wrong applied strategy and a semantically valid depth-zero row-cache change.
+The latter passes standalone structural replay but fails exact predecessor
+identity, demonstrating why cross-build equality alone is insufficient.
+
+The [capture evidence](evidence/2026-10-13-lazy-frames.json) retains exact coverage,
+control results and full readback identities for the raw capture archive and
+control archive. The raw archive is stored in three ordered parts of at most 64 MiB; concatenate
+the manifest-listed parts to recover the named gzip stream and verify its full
+SHA256. All parts and every reconstructed archive member were read back. It
+preserves every generated input, binary/object,
+command log and diagnostic; downloaded upstream C sources remain external.
+The audited ordinary observation pack is 103,211,609 bytes, SHA256
+`aca20fb1f5f2016c05da8fdd8afdcaaf418386cdd63f26bf4b9a3b1b249dc4b3`.
+Its immutable publication and Rust projection/reading remain separate work items.
+No Rust ordinary Lazy support, public admission or performance result is claimed.
