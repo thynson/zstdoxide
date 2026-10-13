@@ -95,3 +95,21 @@ unsorted marker. These are predicates on actual recorded state, not an inferred
 comparison count or a claimed chronological reversal trace. Broader offset-score
 and sorting coverage, a Rust tree backend, ordinary frame integration and public
 strategy 6 remain pending.
+
+## Broader input preparation
+
+The [broader input evidence](evidence/2026-10-13-tree-family-inputs.json) freezes
+103 recipes and 270,216 source bytes, including all thirty byte-exact tiny
+controls. The additional inputs cover candidate-cost arithmetic, paired node-ring
+boundaries, strict moving-window floors, matched inclusive tails and long periodic
+frontiers within the unchanged ZTREE01 caps. The 45 conditional score inputs
+contain fifteen below, fifteen equal and fifteen above arithmetic hypotheses.
+These describe an intended incumbent/candidate comparison, not an observed
+search outcome. The design and source-only construction checks are recorded in
+`reference-tree-family-inputs.md`.
+
+Both Python modes verify every packet and candidate extent and reject thirteen
+mutations, including coherent source changes that add a nearer hash-bucket entry.
+There are no child attempts. Broader C execution remains pending behind its
+separate controller/auditor preflight; tiny observations and all earlier source
+files remain immutable.

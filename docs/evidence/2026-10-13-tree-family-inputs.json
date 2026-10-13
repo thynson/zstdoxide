@@ -1,0 +1,86 @@
+{
+  "archive": "2026-10-13-tree-family-inputs.tar.gz",
+  "archive_bytes": 298641,
+  "archive_members": 10,
+  "archive_sha256": "79309fb884907b1a8bc7268c5e3063a2d89d1bb33883dbfeda29532c55c313f7",
+  "controls": {
+    "normal": {
+      "child_processes": 0,
+      "conditional_hypotheses": {
+        "above": 15,
+        "below": 15,
+        "equal": 15
+      },
+      "controls": [
+        "candidate-byte",
+        "terminator",
+        "coherent-nearer-hash",
+        "hypothesis-query",
+        "hypothesis-construction_retry",
+        "hypothesis-weighted_length_gain",
+        "hypothesis-offset_bit_difference",
+        "hypothesis-gain_minus_cost",
+        "duplicate-hypothesis",
+        "changed-dimensions",
+        "escaping-name",
+        "false-predecessor",
+        "changed-tiny-packet"
+      ],
+      "families": {
+        "conditional-offset-cost": 45,
+        "inclusive-matched-tail": 5,
+        "long-periodic-frontier": 5,
+        "node-floor": 12,
+        "tiny-control": 30,
+        "window-floor": 6
+      },
+      "fixture_sha256": "b28cba0d6d827c82e579ce4131dfb6f5d8329094c47f409a41b47614656ce269",
+      "optimized": false,
+      "qualification": "Source-only construction and exact predecessor inputs; no C outcome or branch witness.",
+      "recipes": 103,
+      "rejected": 13,
+      "source_bytes": 270216,
+      "status": "passed"
+    },
+    "optimized": {
+      "child_processes": 0,
+      "conditional_hypotheses": {
+        "above": 15,
+        "below": 15,
+        "equal": 15
+      },
+      "controls": [
+        "candidate-byte",
+        "terminator",
+        "coherent-nearer-hash",
+        "hypothesis-query",
+        "hypothesis-construction_retry",
+        "hypothesis-weighted_length_gain",
+        "hypothesis-offset_bit_difference",
+        "hypothesis-gain_minus_cost",
+        "duplicate-hypothesis",
+        "changed-dimensions",
+        "escaping-name",
+        "false-predecessor",
+        "changed-tiny-packet"
+      ],
+      "families": {
+        "conditional-offset-cost": 45,
+        "inclusive-matched-tail": 5,
+        "long-periodic-frontier": 5,
+        "node-floor": 12,
+        "tiny-control": 30,
+        "window-floor": 6
+      },
+      "fixture_sha256": "b28cba0d6d827c82e579ce4131dfb6f5d8329094c47f409a41b47614656ce269",
+      "optimized": true,
+      "qualification": "Source-only construction and exact predecessor inputs; no C outcome or branch witness.",
+      "recipes": 103,
+      "rejected": 13,
+      "source_bytes": 270216,
+      "status": "passed"
+    }
+  },
+  "scope": "103 input recipes only, including thirty byte-exact tiny controls; no broader C observations or predicted tree result.",
+  "status": "passed"
+}
