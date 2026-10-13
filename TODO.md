@@ -81,7 +81,7 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [x] Freeze ordinary tree frame source/schedule recipes and protocol with explicit retained-state observations.
 - [x] Implement and review the bounded ordinary tree C helper and independent offline replay with forged-record controls.
 - [x] Preflight the capture controller, pinned dependencies and normal/instrumented command inventory before execution.
-- [ ] Capture and audit ordinary retained-state C tree frames with build/padding equality and offline forgery controls.
+- [x] Capture and audit ordinary retained-state C tree frames with build/padding equality and offline forgery controls.
 - [ ] Project audited ordinary tree frames into bounded binary fixtures with exact provenance.
 - [ ] Add checked tree trajectory reading and match Rust retained sequences, maps and complete frame bytes before public integration.
 - [x] Validate malformed retained tree state, allocation failures and transactional frame/repeat publication.

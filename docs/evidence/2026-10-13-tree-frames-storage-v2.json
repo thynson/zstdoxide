@@ -1,0 +1,20 @@
+{
+  "archive": "2026-10-13-tree-frames-storage-v2.tar.gz",
+  "archive_bytes": 74157471,
+  "archive_sha256": "ec0c852741ce2391c86dec7d1efb90f70a98bb0f73dd3c980457217d7383e05a",
+  "canonical_pack_storage": {
+    "bytes": 61748978,
+    "decompressed_bytes": 134754017,
+    "decompressed_sha256": "d03552da04c8955527120a9fe51419caef0041318b450726b98267ee648e6478",
+    "path": "tests/fixtures/reference-tree-frame-capture/artifacts.bin.gz",
+    "sha256": "74edf1be33c9e1e062e1739fdf002979b1bdac4f39a254094607ee8e77bb0e15"
+  },
+  "generator_sha256": "f7aa79b0bafacdbca1545ca009b1c918aecb76a9efd2fccb46619cb148adae9c",
+  "original_archive_sha256": "67cd7e56765da0a9a532b157d7b373ed049aea3306f85a3626b3bda1ffb6da54",
+  "original_member_bytes": 575147023,
+  "original_members": 4117,
+  "policy": "Storage-only lossless 4096-byte deduplication. Every original regular member is retained, including all compiled objects and all four observation sets. Reconstruct using the included script; original gzip container metadata is not reproduced.",
+  "status": "passed",
+  "unique_bytes": 155984454,
+  "unique_chunks": 38660
+}

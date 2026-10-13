@@ -1,0 +1,116 @@
+{
+  "archive": "2026-10-13-tree-frames.tar.gz",
+  "archive_bytes": 258296077,
+  "archive_members": 4117,
+  "archive_sha256": "67cd7e56765da0a9a532b157d7b373ed049aea3306f85a3626b3bda1ffb6da54",
+  "collection_manifest_sha256": "63e7b7c852e01a3618968e162f018271c062367e64c429ab4fe22bef70d9f01d",
+  "collection_pack_bytes": 134754017,
+  "collection_pack_sha256": "d03552da04c8955527120a9fe51419caef0041318b450726b98267ee648e6478",
+  "coverage": {
+    "block_kinds": {
+      "compressed": 219,
+      "raw": 274,
+      "rle": 38
+    },
+    "candidate_generations": 503,
+    "collector": false,
+    "commands": 1162,
+    "complete_frame_decodes_per_build": 730,
+    "decoded_bytes_per_build": 28272476,
+    "discarded_repeat_witnesses": {
+      "raw": 38,
+      "rle": 32
+    },
+    "incomplete_headers_per_build": 15,
+    "negative_rejections_per_build": 44,
+    "padding_passes": [
+      106,
+      195
+    ],
+    "positive_blocks": 531,
+    "public_parameter_resolution": false,
+    "recipes": 245,
+    "scheduled_calls": 539,
+    "source_bytes": 7640096,
+    "strategy": 6
+  },
+  "forgery_rejections_per_mode": 41,
+  "qualification": "All 1162 commands and four observation passes audited. v1 remains preserved with its 256 MiB aggregate-cap rejection; v2 uses 512 MiB while retaining 64 MiB stream bounds and all semantic/provenance rules. No public tuple resolution claim.",
+  "raw_bytes": 574120578,
+  "raw_files": 4092,
+  "source": {
+    "docs/evidence/2026-10-13-tree-frame-helper.json": {
+      "bytes": 3720,
+      "sha256": "3805044e64539ed91c09334628e5afe7e8c35d16ff5aacbb81e4edb67296f5c6"
+    },
+    "docs/evidence/2026-10-13-tree-frame-recipes.json": {
+      "bytes": 1497,
+      "sha256": "8809068e76991cae9e3e70af8cfc118bec42f27ec1e73d6deb6a085995af63b2"
+    },
+    "docs/reference-tree-frame-helper-review.md": {
+      "bytes": 2876,
+      "sha256": "101a15b22764c00af220e70df2f2a57b4a86f230335539ccf2d44c1bd36767c5"
+    },
+    "docs/reference-tree-frame-oracle.md": {
+      "bytes": 5337,
+      "sha256": "4357ec5e4cf813a387bed53acb89a01e9fb048f1fe0607827d2a71b2b8715a34"
+    },
+    "scripts/capture_double_fast_tiny.py": {
+      "bytes": 10457,
+      "sha256": "5dea723222db1171e6302411d4d59870e01a09dfd7df74bf47c51cc6978bef19"
+    },
+    "scripts/capture_tree_frames.py": {
+      "bytes": 17255,
+      "sha256": "d767bbaca27ce7bee6f88c31ce9bc805d5b7beaad77e69bd15a2bb3b9eff1c10"
+    },
+    "scripts/check_tree_frame_capture.py": {
+      "bytes": 15055,
+      "sha256": "1d9746ce521d6df7b957091b977f8c3318717b997117395133d16c9b63d9e858"
+    },
+    "scripts/check_tree_frame_capture_controls.py": {
+      "bytes": 5508,
+      "sha256": "178220f7689039b35685e04b695e93ef7b270cd0fd8984c89525ffe1327d0277"
+    },
+    "scripts/check_tree_frame_capture_v2.py": {
+      "bytes": 15496,
+      "sha256": "32ab218ed5376831605569dacb58ad0586a8d47994629c4e089fe7f5601c10f1"
+    },
+    "scripts/check_tree_frame_recipes.py": {
+      "bytes": 2047,
+      "sha256": "5eb2cfed52c665213c4536c13d0955ae74ad78ce503166b7e9a7a65e40530890"
+    },
+    "scripts/check_tree_frame_validator.py": {
+      "bytes": 4590,
+      "sha256": "9b05bf897c8965d98fe7d2e27615e502ad16d95092497cb093de60569299c940"
+    },
+    "scripts/freeze_tree_frames.py": {
+      "bytes": 7680,
+      "sha256": "f3ba7ff7c2a62693a0d7b028e8f0f1e6f546e7cc4dbb85c387a5124667bff3fc"
+    },
+    "scripts/oracles/double_fast_direct.py": {
+      "bytes": 15879,
+      "sha256": "5280b94e6e10e34a263b7ae1b31a24026adfd92327767b776e81344362604065"
+    },
+    "scripts/oracles/fast_frame_publication_support.py": {
+      "bytes": 28126,
+      "sha256": "c1a205a9b7f897232dd7eb1e177f2a318c42da77ac8348226825732b44b0857a"
+    },
+    "scripts/oracles/tree_frame_v1.c": {
+      "bytes": 46869,
+      "sha256": "8625b969eb3ba3871271ddb56ab835ec1d9581b3a2c4461b682f06769db8e85e"
+    },
+    "scripts/oracles/tree_frame_validation.py": {
+      "bytes": 20091,
+      "sha256": "91bb1f8e4c0ea00ec096788287892dd86da5a03758465eed9ee0a6b16806e51f"
+    },
+    "scripts/oracles/tree_frames.py": {
+      "bytes": 4797,
+      "sha256": "7a4bdbc669c8d0a512870fd6198ae94e780af3f7540e265cea42c84cd1d28353"
+    },
+    "tests/fixtures/reference-tree-frame-recipes/recipes.json": {
+      "bytes": 127367,
+      "sha256": "ce758ddf23bb87a8e4862e1c1b5ad251977d2c3d14436c51ad21cd7da019548e"
+    }
+  },
+  "status": "passed"
+}

@@ -276,3 +276,29 @@ pass. Evidence is in `evidence/2026-10-13-tree-failure.json` and its archive.
 An initial synthetic poisoning source had colliding first/query buckets; changing
 its first byte made the intended after-insertion failure observable. This was a
 test-input correction, not a changed codec expectation or captured C fixture.
+
+## Ordinary tree C capture checkpoint
+
+The ordinary tree capture completed 1,162 commands across normal and fully
+ASan/UBSan-instrumented builds (26 codec translation units), each with padding
+106 and 195. All four observation/frame sets agree. The 245 recipes contain
+7,640,096 source bytes and 539 calls: 531 nonempty blocks comprise 274 raw,
+38 RLE and 219 compressed blocks. There are 503 fresh candidates and 38 raw /
+32 RLE discarded-repeat witnesses. Each build decoded 730 complete frames and
+28,272,476 bytes; 15 partial headers remain explicitly incomplete. Both builds
+rejected all 44 malformed C requests without sanitizer diagnostics.
+
+The initial auditor's aggregate 256 MiB log bound rejected the otherwise
+complete capture (492,555,244 log bytes). Its source and failed logs are retained.
+The versioned v2 auditor only raises that aggregate bound to 512 MiB, retaining
+64 MiB per-stream bounds, exact command inventories and independent replay.
+Normal and optimized Python audits pass, as do 41 offline forged-evidence
+rejections per mode with zero child execution. No public tuple resolution or
+Rust/C ordinary-frame equality is claimed at this checkpoint.
+
+`evidence/2026-10-13-tree-frames.json` records the original capture container.
+`evidence/2026-10-13-tree-frames-storage-v2.json` describes lossless repository
+storage: all 4,117 members (including compiled outputs and failed audit logs)
+are preserved as SHA-256-addressed chunks with a reconstruction script. Every
+reconstructed member size and digest was checked. The canonical observation
+pack is gzip-stored with its original decompressed identity unchanged.
