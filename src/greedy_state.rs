@@ -5,7 +5,7 @@ use alloc::vec::Vec;
 use core::alloc::Allocator;
 
 use crate::greedy_block::GreedyBlock;
-use crate::greedy_parse::{GreedyParseResult, GreedyProgress, GreedySearch, parse_block};
+use crate::greedy_parse::{GreedyParseResult, GreedyProgress, GreedySearch, parse_with_depth};
 use crate::greedy_plan::{GreedyExecutionPlan, GreedyTablePlan};
 use crate::reference_chain::ReferenceChain;
 use crate::row_table::RowTable;
@@ -162,13 +162,14 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
                     salt: crate::greedy_key::FRESH_ROW_SALT,
                 },
             };
-            match parse_block(
+            match parse_with_depth(
                 block,
                 search,
                 &mut self.progress,
                 committed,
                 &mut self.literals,
                 &mut self.sequences,
+                self.plan.depth(),
             ) {
                 Ok(result) => Some(result),
                 Err(error) => {
@@ -203,8 +204,8 @@ mod tests {
     use alloc::{alloc::Global, vec};
     use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
-    fn plan(length: usize, row: bool) -> GreedyExecutionPlan {
-        GreedyExecutionPlan::from_resolved_parameters(
+    fn plan(length: usize, row: bool, depth: u8) -> GreedyExecutionPlan {
+        GreedyExecutionPlan::from_family_parameters(
             RawCompressionParameters {
                 window_log: if row { 15 } else { 10 },
                 chain_log: 10,
@@ -212,7 +213,7 @@ mod tests {
                 search_log: 4,
                 min_match: 4,
                 target_length: 0,
-                strategy: 3,
+                strategy: u32::from(depth) + 3,
             }
             .validate()
             .unwrap(),
@@ -220,8 +221,8 @@ mod tests {
         )
         .unwrap()
     }
-    fn observed_plan(case: &OracleFrameCase<'_>) -> GreedyExecutionPlan {
-        GreedyExecutionPlan::from_resolved_parameters(
+    fn observed_plan(case: &OracleFrameCase<'_>, depth: u8) -> GreedyExecutionPlan {
+        GreedyExecutionPlan::from_family_parameters(
             RawCompressionParameters {
                 window_log: u32::from(case.window_log),
                 chain_log: u32::from(case.chain_log),
@@ -229,7 +230,7 @@ mod tests {
                 search_log: u32::from(case.search_log),
                 min_match: u32::from(case.min_match),
                 target_length: case.target_length,
-                strategy: 3,
+                strategy: u32::from(depth) + 3,
             }
             .validate()
             .unwrap(),
@@ -263,13 +264,14 @@ mod tests {
         }
     }
 
-    #[test]
-    fn all_ordinary_c_candidates_tables_and_frontiers_match_without_reseeding() {
+    fn check_ordinary_cases<'a>(
+        cases: impl IntoIterator<Item = (u8, OracleFrameCase<'a>)>,
+    ) -> (usize, usize, [usize; 2]) {
         let mut blocks = 0;
         let mut fresh = 0;
         let mut discarded = [0; 2];
-        for case in crate::greedy_frame_oracle_fixture::cases().unwrap() {
-            let plan = observed_plan(&case);
+        for (depth, case) in cases {
+            let plan = observed_plan(&case, depth);
             let mut state = GreedyMatchState::from_parts(
                 case.source,
                 plan,
@@ -393,7 +395,7 @@ mod tests {
                         }
                         assert_eq!(actual.trailing_literals, candidate.trailing_literals);
                         assert_eq!(actual.parser_repeats[..2], candidate.parser_repeats[..2]);
-                        // Greedy never reads the raw third C cell. Rust carries
+                        // The lazy family never reads the raw third C cell. Rust carries
                         // the incoming semantic third and publishes full wire repeats.
                         assert_eq!(actual.parser_repeats[2], committed[2]);
                         assert_eq!(actual.wire_repeats, candidate.wire_repeats);
@@ -443,16 +445,42 @@ mod tests {
             assert!(observations.next().is_none());
             assert_eq!(state.position, case.source.len());
         }
-        assert_eq!((blocks, fresh, discarded), (395, 367, [25, 12]));
+        (blocks, fresh, discarded)
+    }
+
+    #[test]
+    fn all_ordinary_c_candidates_tables_and_frontiers_match_without_reseeding() {
+        assert_eq!(
+            check_ordinary_cases(
+                crate::greedy_frame_oracle_fixture::cases()
+                    .unwrap()
+                    .into_iter()
+                    .map(|c| (0, c)),
+            ),
+            (395, 367, [25, 12]),
+        );
+    }
+
+    #[test]
+    fn all_lazy_family_ordinary_trajectories_retain_exact_state() {
+        assert_eq!(
+            check_ordinary_cases(
+                crate::lazy_frame_oracle_fixture::cases()
+                    .unwrap()
+                    .into_iter()
+                    .map(|c| (c.depth, c.observation)),
+            ),
+            (1377, 1293, [165, 36]),
+        );
     }
 
     #[test]
     fn invalid_arguments_precede_allocation_and_leave_state_usable() {
-        for row in [false, true] {
+        for (depth, row) in (0..=2).flat_map(|depth| [false, true].map(|row| (depth, row))) {
             let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
             let monitor = owner.monitor();
             let input = [b'z'; 96];
-            let plan = plan(input.len(), row);
+            let plan = plan(input.len(), row, depth);
             let mut state = GreedyMatchState::from_parts(
                 &input,
                 plan,
@@ -500,8 +528,8 @@ mod tests {
         // Separate the first pending row from the next query row while keeping
         // the source free of four-byte repeats.
         input[0] = 200;
-        for row in [false, true] {
-            let plan = plan(input.len(), row);
+        for (depth, row) in (0..=2).flat_map(|depth| [false, true].map(|row| (depth, row))) {
+            let plan = plan(input.len(), row, depth);
             let mut state = GreedyMatchState::from_parts(
                 &input,
                 plan,
@@ -545,7 +573,7 @@ mod tests {
 
     #[test]
     fn either_scratch_allocation_failure_poisons_and_releases_exact_owners() {
-        for row in [false, true] {
+        for (depth, row) in (0..=2).flat_map(|depth| [false, true].map(|row| (depth, row))) {
             for failing in [0, 1] {
                 let first = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
                 let fm = first.monitor();
@@ -556,7 +584,7 @@ mod tests {
                 let sequences = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
                 let qm = sequences.monitor();
                 let input = [b'z'; 96];
-                let plan = plan(input.len(), row);
+                let plan = plan(input.len(), row, depth);
                 let mut state = GreedyMatchState::from_parts(
                     &input,
                     plan,
@@ -592,7 +620,7 @@ mod tests {
 
     #[test]
     fn selected_table_allocation_failures_release_only_the_supplied_owners() {
-        for row in [false, true] {
+        for (depth, row) in (0..=2).flat_map(|depth| [false, true].map(|row| (depth, row))) {
             for failing in [0, 1] {
                 let first = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
                 let fm = first.monitor();
@@ -604,7 +632,7 @@ mod tests {
                     sm.fail_next()
                 });
                 assert!(matches!(
-                    GreedyTables::new_in(plan(96, row).tables(), first, second),
+                    GreedyTables::new_in(plan(96, row, depth).tables(), first, second),
                     Err(Error::AllocationFailed)
                 ));
                 for m in [fm, sm] {
@@ -617,7 +645,7 @@ mod tests {
 
     #[test]
     fn binding_resets_indices_with_nonclone_owners_and_reuses_scratch() {
-        for row in [false, true] {
+        for (depth, row) in (0..=2).flat_map(|depth| [false, true].map(|row| (depth, row))) {
             let owners: [_; 4] = core::array::from_fn(|_| {
                 TrackingAllocator::new(AllocatorConfig::default())
                     .unwrap()
@@ -625,7 +653,7 @@ mod tests {
             });
             let monitors = owners.each_ref().map(|a| a.monitor());
             let input = [b'x'; 192];
-            let plan = plan(input.len(), row);
+            let plan = plan(input.len(), row, depth);
             let mut tables = GreedyTables::new_in(plan.tables(), &owners[0], &owners[1]).unwrap();
             let key = plan.tables().key_layout().read_key(&input).unwrap();
             match &mut tables {
@@ -669,13 +697,13 @@ mod tests {
 
     #[test]
     fn mismatched_source_or_selected_geometry_reject_before_reset_or_requests() {
-        for row in [false, true] {
+        for (depth, row) in (0..=2).flat_map(|depth| [false, true].map(|row| (depth, row))) {
             for wrong in 0..3 {
                 let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
                 let monitor = owner.monitor();
                 let input = [b'z'; 64];
-                let expected = plan(64, row);
-                let mut actual = plan(64, !row).tables();
+                let expected = plan(64, row, depth);
+                let mut actual = plan(64, !row, depth).tables();
                 if wrong != 0 {
                     actual = expected.tables();
                 }

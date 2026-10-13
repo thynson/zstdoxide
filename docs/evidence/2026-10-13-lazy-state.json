@@ -1,0 +1,199 @@
+{
+  "archive": {
+    "bytes": 2727,
+    "members": 18,
+    "path": "docs/evidence/2026-10-13-lazy-state.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "7a7c323e8c93df88d2d671e53d9e2c21024da5fd7681be8c10f988dc222c9b1d"
+  },
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "log": "00.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": "01.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": "02.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "greedy_state"
+      ],
+      "log": "03.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "log": "04.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-reference-chain",
+        "greedy_state"
+      ],
+      "log": "05.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-reference-chain"
+      ],
+      "log": "06.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-row-table",
+        "greedy_state"
+      ],
+      "log": "07.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-row-table"
+      ],
+      "log": "08.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--all-features",
+        "greedy_state"
+      ],
+      "log": "09.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--all-features"
+      ],
+      "log": "10.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "greedy_plan"
+      ],
+      "log": "11.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--test",
+        "reference_greedy_defaults"
+      ],
+      "log": "12.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--all-features",
+        "greedy_plan"
+      ],
+      "log": "13.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-features",
+        "--test",
+        "reference_greedy_defaults"
+      ],
+      "log": "14.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "log": "15.log",
+      "status": 0
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "sources": {
+    "src/greedy_parse.rs": "95f1fdf8b2eaf1a4d65d0036479b5642c762d9a0a868e6dd0ebb025d13193f5f",
+    "src/greedy_plan.rs": "fd2a92039fe022c1a95ef55666348bc86b2c0227c0d92d7d36fdfed321d093d6",
+    "src/greedy_state.rs": "44073e0db3fc6060a0f535cf44886f01ea5b3be7ca4eeaf5eb173d8bee3a6dcd",
+    "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586"
+  },
+  "test_results": [
+    "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 786 filtered out; finished in 37.03s",
+    "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.96s",
+    "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 786 filtered out; finished in 36.23s",
+    "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.66s",
+    "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 787 filtered out; finished in 0.00s",
+    "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 786 filtered out; finished in 36.21s",
+    "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 787 filtered out; finished in 0.01s",
+    "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 786 filtered out; finished in 35.68s"
+  ]
+}

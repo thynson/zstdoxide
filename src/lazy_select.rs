@@ -10,9 +10,7 @@ use crate::{Error, Result};
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) enum LazyDepth {
     Greedy,
-    #[allow(dead_code)] // Ordinary Lazy dispatch is a later work item.
     One,
-    #[allow(dead_code)] // Ordinary Lazy2 dispatch is a later work item.
     Two,
 }
 

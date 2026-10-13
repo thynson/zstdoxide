@@ -1120,3 +1120,35 @@ check all 510 depth-tagged observations, lossless equality of 138 predecessors,
 549 complete C frame decodes, bounded malformed envelopes and mutated actual
 Lazy/Lazy2 records. Immutable byte spans stay borrowed and metadata reservations
 remain fallible. The codec and its public admission are unchanged by this reader.
+
+
+Retained ordinary Lazy/Lazy2 state will extend the existing copied
+`GreedyExecutionPlan` with a `LazyDepth`. A private family constructor admits
+exactly Greedy/Lazy/Lazy2 and keeps the resolved strategy unchanged; the existing
+Greedy-only constructor and public search admission remain strict until the
+successor admission gate. Source-domain error precedence, W21/H19 and chain
+C18/S8 resource limits, row selection, mathematical allocation layouts and frame
+bounds remain shared. These scalar records need no artificial unsafe variant.
+
+`GreedyMatchState` will dispatch the same borrowed block and four exact existing
+owners (two selected tables, literals, sequences) through `parse_with_depth`.
+No inactive table, allocator clone or new allocation is introduced. Zero calls,
+tiny stale-scratch calls, window/frontier adjustment and poison-on-parser-error
+remain common; speculative writes persist across raw/RLE fallback while only
+caller-committed wire repeats enter the next block. This corresponds to the
+shared v1.5.7 `ZSTD_buildSeqStore`/`ZSTD_compressBlock_lazy_generic` context path.
+All 510 ordinary observations will exercise uninterrupted source ownership and
+complete maps across schedules, with the 138 predecessor suite retained.
+
+
+Private complete Lazy-family frame integration will reuse the existing
+`ReferenceSearchPlan::Greedy` / `ReferenceSearchState::Greedy` storage variants
+for all three depths. The legacy variant names describe shared ownership, not
+public admission. No new enum owner or duplicated repeat/entropy state is needed.
+The frame workspace alone owns committed entropy and repeats; candidate literals,
+sequences and speculative search writes live in its selected search context.
+Output reservation and append must succeed before candidate entropy/repeats
+publish, and errors poison the workspace without advancing the emitted extent.
+Tests will pass exact captured resolved tuples directly, preserving source-size
+resolution as a separate future public gate. Complete predecessor Rust frame and
+allocator baselines stay independent of the new depth-tagged tests.

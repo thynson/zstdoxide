@@ -4,6 +4,7 @@
 #![forbid(unsafe_code)]
 
 use crate::greedy_key::{GreedyKeyLayout, RowLayout};
+use crate::lazy_select::LazyDepth;
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
 #[cfg(test)]
 use crate::{CompressionParameterRequest, SourceSize};
@@ -43,6 +44,7 @@ impl GreedyTablePlan {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) struct GreedyExecutionPlan {
     parameters: ResolvedCompressionParameters,
+    depth: LazyDepth,
     settings: ReferenceFrameSettings,
     tables: GreedyTablePlan,
     first_bytes: usize,
@@ -76,6 +78,22 @@ impl GreedyExecutionPlan {
         if parameters.strategy() != ReferenceStrategy::Greedy {
             return Err(Error::UnsupportedFeature);
         }
+        Self::from_family_parameters(parameters, source_len)
+    }
+
+    /// Admit an already resolved member of the shared lazy family privately.
+    /// Public strategy admission remains a separate, independently checked gate.
+    pub(crate) fn from_family_parameters(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+    ) -> Result<Self> {
+        Self::source_size_checked(source_len)?;
+        let depth = match parameters.strategy() {
+            ReferenceStrategy::Greedy => LazyDepth::Greedy,
+            ReferenceStrategy::Lazy => LazyDepth::One,
+            ReferenceStrategy::Lazy2 => LazyDepth::Two,
+            _ => return Err(Error::UnsupportedFeature),
+        };
         if parameters.window_log() > 21 || parameters.hash_log() > 19 {
             return Err(Error::ResourceLimit);
         }
@@ -121,6 +139,7 @@ impl GreedyExecutionPlan {
         Layout::array::<u8>(frame_bound).map_err(|_| Error::ResourceLimit)?;
         Ok(Self {
             parameters,
+            depth,
             settings,
             tables,
             first_bytes,
@@ -136,6 +155,9 @@ impl GreedyExecutionPlan {
             return Err(Error::InvalidParameter);
         }
         Ok(value)
+    }
+    pub(crate) const fn depth(self) -> LazyDepth {
+        self.depth
     }
     pub(crate) const fn parameters(self) -> ResolvedCompressionParameters {
         self.parameters
@@ -198,6 +220,59 @@ mod tests {
         let mut request = CompressionParameterRequest::with_level(3);
         request.set_strategy(Some(ReferenceStrategy::Greedy));
         request
+    }
+
+    #[test]
+    fn private_family_depth_preserves_strategy_geometry_and_error_precedence() {
+        for window in [14, 15, 21] {
+            for (strategy, depth) in [
+                (3, LazyDepth::Greedy),
+                (4, LazyDepth::One),
+                (5, LazyDepth::Two),
+            ] {
+                let mut r = raw();
+                r.window_log = window;
+                let baseline = direct(r, 131_072).unwrap();
+                r.strategy = strategy;
+                let p = GreedyExecutionPlan::from_family_parameters(r.validate().unwrap(), 131_072)
+                    .unwrap();
+                assert_eq!(p.depth(), depth);
+                assert_eq!(p.parameters().to_raw(), r);
+                assert_eq!(p.tables(), baseline.tables());
+                assert_eq!(
+                    (p.first_bytes(), p.second_bytes(), p.frame_bound()),
+                    (
+                        baseline.first_bytes(),
+                        baseline.second_bytes(),
+                        baseline.frame_bound()
+                    )
+                );
+                if strategy != 3 {
+                    assert_eq!(direct(r, 131_072), Err(Error::UnsupportedFeature));
+                }
+                r.hash_log = 20;
+                assert_eq!(
+                    GreedyExecutionPlan::from_family_parameters(r.validate().unwrap(), 131_072),
+                    Err(Error::ResourceLimit)
+                );
+            }
+        }
+        for strategy in [1, 2, 6, 7, 8, 9] {
+            let mut r = raw();
+            r.strategy = strategy;
+            r.hash_log = 20;
+            let parameters = r.validate().unwrap();
+            assert_eq!(
+                GreedyExecutionPlan::from_family_parameters(parameters, 131_072),
+                Err(Error::UnsupportedFeature)
+            );
+            if usize::BITS == 64 {
+                assert_eq!(
+                    GreedyExecutionPlan::from_family_parameters(parameters, usize::MAX),
+                    Err(Error::InvalidParameter)
+                );
+            }
+        }
     }
 
     #[test]

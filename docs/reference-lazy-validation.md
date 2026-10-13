@@ -490,6 +490,27 @@ archive. This verifies the reader/decoder and common storage contracts; retained
 ordinary Lazy parsing and private/public frame integration remain later gates.
 
 
+## Retained ordinary lazy-family state
+
+A copied depth now travels with the unchanged resolved tuple in the private
+family plan. The public route and Greedy-only constructor remain unchanged.
+The retained context shares exact table/scratch owners and dispatches the common
+parser with the selected depth. Full uninterrupted replay matches all 510 cases,
+1,377 blocks and 1,293 fresh candidates; 165 raw and 36 RLE fallback witnesses
+retain sampling writes while discarding changed candidate repeat offsets.
+The 138-case / 395-block Greedy predecessor test remains intact.
+
+Eight state tests pass on safe, isolated reference-chain, isolated row-table and
+all-feature builds. Invalid arguments, deliberate post-insertion corruption,
+either scratch failure, either table failure, non-clone owners and mismatched
+source/geometry are checked for all three depths and both branches. Seven plan
+tests and nine permanent Greedy frame/owner baselines pass on safe/all. All
+sixteen focused commands pass, including formatting, strict safe/all all-target
+Clippy, four no_std builds and diff checks. Evidence is in
+`docs/evidence/2026-10-13-lazy-state.json` and its read-back archive. Full private
+frame/public admission and complete feature/platform/timing gates remain open.
+
+
 ## Standard offline driver registration
 
 `scripts/check.sh` now runs ordinary Lazy recipe controls, structural validator,

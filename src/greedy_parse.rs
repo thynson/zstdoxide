@@ -195,27 +195,6 @@ impl<L: Allocator, S: Allocator> ParseOutput<'_, L, S> {
 /// literal capacity, but leaves contents and sampling unchanged. Errors after
 /// parsing starts may retain partial writes: a persistent caller must poison
 /// that state. No candidate repeat or coding-entropy state is published here.
-pub(crate) fn parse_block<A: Allocator, B: Allocator, L: Allocator, S: Allocator>(
-    block: GreedyBlock<'_>,
-    search: GreedySearch<'_, A, B>,
-    progress: &mut GreedyProgress,
-    initial_repeats: [u32; 3],
-    literals: &mut Vec<u8, L>,
-    sequences: &mut Vec<SequenceWithOffset, S>,
-) -> Result<GreedyParseResult> {
-    parse_with_depth(
-        block,
-        search,
-        progress,
-        initial_repeats,
-        literals,
-        sequences,
-        LazyDepth::Greedy,
-    )
-}
-
-/// Shared parser body; depth changes only tentative selection and sampling.
-/// Publication, scratch ownership and poisoning retain the Greedy contract.
 pub(crate) fn parse_with_depth<A: Allocator, B: Allocator, L: Allocator, S: Allocator>(
     block: GreedyBlock<'_>,
     mut search: GreedySearch<'_, A, B>,
