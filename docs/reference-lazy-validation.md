@@ -608,3 +608,16 @@ formatting and diff checks; evidence is in
 one-shot deterministic/output-bound adaptations. Reusable contexts, mutable
 max-block decoder settings, caller-owned output and advanced branches remain
 unported; no behavioral source unit is marked complete by this addition.
+
+
+## Public interoperability inputs and adapter review
+
+The new immutable recipe manifest contains 886 public requests / 125,863,316
+source bytes, predicting 811 success, 43 unsupported and 32 resource outcomes.
+It retains all 422 predecessor source/request pairs, adds 340 ordinary depth-one/
+two sources, four original selectors, 64 explicit controls and 56 level/size
+boundary cases, and freezes 43 frame-equivalence hypotheses. Normal/optimized
+Python each reject 56 malformed controls without children. Exact generic
+transport sources are reused unchanged; their normal/instrumented C syntax
+checks pass. These are pre-execution inputs and review, not new C observations.
+See `docs/evidence/2026-10-13-lazy-public-recipes.json` and its archive.

@@ -1,0 +1,68 @@
+{
+  "archive": {
+    "bytes": 2368,
+    "members": 6,
+    "path": "docs/evidence/2026-10-13-lazy-public-recipes.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "a0bfa045e68357bba97a6f88873aac5cd0917e95e7079102b869d5f42f931e3a"
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "/tmp/check-zstdoxide-lazy-public-recipes.py"
+      ],
+      "log": "normal.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-O",
+        "/tmp/check-zstdoxide-lazy-public-recipes.py"
+      ],
+      "log": "optimized.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fsyntax-only",
+        "-I/private/tmp/zstdoxide-reference-lazy-1.5.7/lib",
+        "scripts/oracles/reference_greedy_frames.c"
+      ],
+      "log": "c-normal-syntax.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fsyntax-only",
+        "-I/private/tmp/zstdoxide-reference-lazy-1.5.7/lib",
+        "scripts/oracles/reference_greedy_frames.c"
+      ],
+      "log": "c-sanitized-syntax.log",
+      "status": 0
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "sources": {
+    "docs/reference-lazy-interop-adapter-review.md": "9cff6a73d6611303ecea0915a0a578a9b06fbd324ea85b94603530c14b3c7efc",
+    "docs/reference-lazy-interop-protocol.md": "6d6ad675e7fbca8954772baba42d1efb9a58456014f62a5ca53fb2767e9e2914",
+    "scripts/check_lazy_interop_recipes.py": "14c397065ff775dfede01063e727f44a67d6d04affff8453a20fbcb38f74b778",
+    "scripts/oracles/lazy_interop.py": "db2f4e9568eff5a2508e7b65e5106404fc03c957ea8cf0afb7d3ab887b56d937",
+    "tests/fixtures/reference-lazy-interop-recipes/README.md": "ff3c69f65f7a68d932d77652be83d9e9a0bb1b869b89a0fc5feef7ab268b84ce",
+    "tests/fixtures/reference-lazy-interop-recipes/recipes.json": "d9b23abd540d4e4c2a18c1fd83795e114f59f23d7f12a1285651a77b420be1fe"
+  },
+  "test_results": []
+}
