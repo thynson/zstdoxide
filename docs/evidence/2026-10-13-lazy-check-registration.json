@@ -1,0 +1,40 @@
+{
+  "archive": "2026-10-13-lazy-check-registration.tar.gz",
+  "archive_bytes": 20257,
+  "archive_members": 23,
+  "archive_sha256": "53dc14e130f42e867617928d295a8b7db582c8d86aa3fc5119380f9e82f527bd",
+  "commands": 7,
+  "date": "2026-10-13",
+  "production_inputs_verified": 66,
+  "production_unchanged": true,
+  "qualification": "Four newly registered offline commands and shell syntax/format/diff checks only. No full scripts/check.sh execution, Rust test/Clippy/no_std matrix, new C capture or timing run is claimed. Earlier Module14 matrix remains historical and does not include this driver revision.",
+  "registered_offline_commands": [
+    [
+      "python3",
+      "scripts/check_reference_greedy_baseline.py"
+    ],
+    [
+      "python3",
+      "scripts/check_lazy_family_recipes.py",
+      "--check"
+    ],
+    [
+      "python3",
+      "scripts/capture_lazy_families.py",
+      "--check-plan"
+    ],
+    [
+      "python3",
+      "scripts/check_lazy_family_fixture.py",
+      "--check"
+    ]
+  ],
+  "source_sha256": {
+    "scripts/capture_lazy_families.py": "9d368f2c5dbf9b2138336128f623f172aae19d85fd28154558c9e289b22b65d6",
+    "scripts/check.sh": "c8e011f05917663878eba539b76d28e6d3e2075c1e9124cda8b5b834b5bbc2a7",
+    "scripts/check_lazy_family_fixture.py": "600d7b1b2d97eb9117587ac567d9f543de355747a406644ffcac6bbc2eb82388",
+    "scripts/check_lazy_family_recipes.py": "1269920726bf2a4210cdc05b4777e9eddfaa93a34a5c3bd1c5a47b43ac5ac718",
+    "scripts/check_reference_greedy_baseline.py": "5b2ce652dac711da0abec1ac4c3b847eb96af22ed2c407fbb4abede7fcb0deaa"
+  },
+  "status": "passed"
+}

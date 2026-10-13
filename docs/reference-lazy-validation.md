@@ -245,3 +245,21 @@ The [fixture evidence](evidence/2026-10-13-lazy-family-fixture.json) and
 pack, checker, exact generation/control drivers and reports, with the unchanged
 original capture archive linked separately. Rust projection/reading, parser
 implementation, ordinary frames and public admission remain separate work items.
+
+
+## Standard offline check registration
+
+The standard `scripts/check.sh` now runs the permanent Greedy frame/owner
+baseline and the broader Lazy recipe, capture-plan and immutable-fixture checks.
+All four newly registered commands pass as real CLI invocations: 32 predecessor
+frame/owner records, 645 recipes with 55 malformed packet rejections, the
+nonexecuting 645-case capture plan, and all 651 immutable observation groups
+including 96 score cases. Shell syntax, formatting and diff checks also pass.
+All 66 production/toolchain inputs recorded by this check remain unchanged.
+
+The [registration evidence](evidence/2026-10-13-lazy-check-registration.json)
+and [archive](evidence/2026-10-13-lazy-check-registration.tar.gz) preserve all
+seven command logs, exact registered sources and unchanged production inputs.
+This is focused integration validation, not a rerun of the entire standard
+script, Rust feature/Clippy/no_std matrix, C capture or performance campaign.
+The earlier Module 14 matrix remains qualified to its historical driver revision.

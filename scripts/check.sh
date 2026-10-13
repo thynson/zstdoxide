@@ -44,6 +44,10 @@ python3 scripts/check_reference_fast_interop.py --check-plan
 python3 scripts/check_match_search_baseline.py
 python3 scripts/check_reference_fast_baseline.py
 python3 scripts/check_reference_double_fast_baseline.py
+python3 scripts/check_reference_greedy_baseline.py
+python3 scripts/check_lazy_family_recipes.py --check
+python3 scripts/capture_lazy_families.py --check-plan
+python3 scripts/check_lazy_family_fixture.py --check
 
 # Each backend alone must compile without std and pass the same test suite.
 cargo fmt --all -- --check
