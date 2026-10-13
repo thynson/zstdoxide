@@ -70,8 +70,12 @@ successor admission mapping and independent oracle checks.
 - [x] Add shared copied depth/candidate/score records and explicit inclusive lookahead coordinates, preserving Greedy's strict main-search contract.
 - [x] Implement depth-one selection and repeated improvement against frozen observations.
 - [x] Implement depth-two selection, repeat bias and exact speculative sampling against frozen observations.
-- [ ] Specify and freeze ordinary frame/schedule recipes and versioned C observation protocol before execution.
-- [ ] Review, capture and independently validate ordinary Lazy/Lazy2 trajectories and complete frames with instrumented C.
+- [x] Specify and freeze ordinary frame/schedule recipes and versioned C observation protocol before execution.
+- [ ] Implement and review the versioned ordinary C helper with normal/instrumented syntax checks before execution.
+- [ ] Add independent ordinary Lazy record replay and malformed offline controls.
+- [ ] Implement and preflight the ordinary capture controller and offline auditor before execution.
+- [ ] Capture and independently validate ordinary Lazy/Lazy2 trajectories and complete frames with instrumented C.
+- [ ] Freeze and project ordinary observations into checked Rust trajectory fixtures.
 - [ ] Retain shared lazy-family state across blocks with exact owners, tiny handling and failure poisoning.
 - [ ] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
 - [ ] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.

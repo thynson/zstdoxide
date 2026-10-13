@@ -1,0 +1,4 @@
+Source-only deterministic inputs for studying facebook/zstd v1.5.7, revision
+f8745da6ff1ad1e7bab384bd1f9d742439278e99. Inherits this project's preserved Greedy
+ordinary and Lazy direct source recipes. No upstream codec implementation is
+included. Upstream attribution and license references remain in tests/upstream.

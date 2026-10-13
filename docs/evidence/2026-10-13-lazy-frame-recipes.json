@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "scope": "Source-only pre-execution ordinary Lazy-family input qualification. No codec execution.",
+  "files": {
+    "scripts/oracles/lazy_frames.py": "7fd553c0c39270e4f12828c500fd33485eb5c6b3701062778816285511390894",
+    "scripts/check_lazy_frame_recipes.py": "0a6ac1e5b21a82582048c722951fdaf1b52faf012cab2f65416ee6b766724db0",
+    "docs/reference-lazy-frame-oracle.md": "139ca5024421717f0af3f6eb0a37cf11dc749afedbfe0b27e07e6592fa89691f",
+    "tests/fixtures/reference-lazy-frame-recipes/recipes.json": "752155495565f4efa295cc25c94635dd2061d002d3b7537493ff027176b3bd0e",
+    "tests/fixtures/reference-lazy-frame-recipes/README.md": "37843cd0e8f891efe50fc25bf01b7388401fc8e78fe094c4ee363af0b49d5e7a",
+    "tests/fixtures/reference-lazy-frame-recipes/NOTICE": "f84a334e1da3f5ba1979aaed5779a884734dc7b9f50ba785b6f8ec87e1b05c52"
+  },
+  "commands": [
+    "python3 scripts/check_lazy_frame_recipes.py --check --controls",
+    "python3 -O scripts/check_lazy_frame_recipes.py --check --controls",
+    "cargo fmt --check",
+    "git diff --check"
+  ],
+  "controls_per_python_mode": {
+    "valid": 6,
+    "rejected": 64,
+    "child_attempts": 0
+  }
+}

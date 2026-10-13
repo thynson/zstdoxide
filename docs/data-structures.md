@@ -1086,3 +1086,14 @@ selection after the eligible depth-two probe. The query may reach the inclusive
 limit while the selected start remains earlier. No new owner or unchecked
 operation is introduced; all 645 frozen depth-tagged observations exercise the
 shared state transitions and complete final sampling maps.
+
+
+The ordinary Lazy-family protocol is designed in
+`docs/reference-lazy-frame-oracle.md` before C execution. Source-only `Recipe`
+records add copied depth and optional predecessor identity to the immutable
+Greedy ordinary input fields. Source byte values and schedules are owned Python
+objects with the same fixed caps; no seeds, caller repeat overrides or predicted
+outputs are admitted. The planned C helper extends only the parameter selector
+and metadata while retaining the existing guarded arena, scratch, frame, replay
+and before-map owners. Independent replay remains a separate bounded test-only
+consumer. No production allocation or unsafe leaf is added by these records.
