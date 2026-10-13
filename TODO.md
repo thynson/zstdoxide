@@ -72,7 +72,7 @@ successor admission mapping and independent oracle checks.
 - [x] Implement depth-two selection, repeat bias and exact speculative sampling against frozen observations.
 - [x] Specify and freeze ordinary frame/schedule recipes and versioned C observation protocol before execution.
 - [x] Implement and review the versioned ordinary C helper with normal/instrumented syntax checks before execution.
-- [ ] Add independent ordinary Lazy record replay and malformed offline controls.
+- [x] Add independent ordinary Lazy record replay and malformed offline controls.
 - [ ] Implement and preflight the ordinary capture controller and offline auditor before execution.
 - [ ] Capture and independently validate ordinary Lazy/Lazy2 trajectories and complete frames with instrumented C.
 - [ ] Freeze and project ordinary observations into checked Rust trajectory fixtures.

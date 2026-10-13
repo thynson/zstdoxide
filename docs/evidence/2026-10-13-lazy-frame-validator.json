@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "commands": [
+    "python3 scripts/check_lazy_frame_validator.py --check",
+    "python3 -O scripts/check_lazy_frame_validator.py --check"
+  ],
+  "results": {
+    "normal": {
+      "child_attempts": 0,
+      "inherited": {
+        "codec_executions": 0,
+        "frozen_hash_checks": 5184,
+        "metadata_positives": 1,
+        "qualification": "Synthetic structural replay and primitive checks only; no observed Greedy frame or intermediate sampling claim.",
+        "rejected_controls": 81,
+        "status": "passed",
+        "synthetic_case_positives": 6
+      },
+      "metadata_positives": 1,
+      "new_rejections": 332,
+      "predecessors": 138,
+      "qualification": "No new C execution or depth-specific parser expectation; synthetic schema replay plus immutable depth-zero predecessor records.",
+      "status": "passed",
+      "synthetic_positives": 18
+    },
+    "optimized": {
+      "child_attempts": 0,
+      "inherited": {
+        "codec_executions": 0,
+        "frozen_hash_checks": 5184,
+        "metadata_positives": 1,
+        "qualification": "Synthetic structural replay and primitive checks only; no observed Greedy frame or intermediate sampling claim.",
+        "rejected_controls": 81,
+        "status": "passed",
+        "synthetic_case_positives": 6
+      },
+      "metadata_positives": 1,
+      "new_rejections": 332,
+      "predecessors": 138,
+      "qualification": "No new C execution or depth-specific parser expectation; synthetic schema replay plus immutable depth-zero predecessor records.",
+      "status": "passed",
+      "synthetic_positives": 18
+    }
+  },
+  "files": {
+    "scripts/oracles/lazy_frame_validation.py": "b57f0c166b0c2ce5a4ff1f3c87e87eea969d25bdac93f264073d2545d60d11f3",
+    "scripts/check_lazy_frame_validator.py": "fb1d31b7d768514238454a059665a1deb5174c34c88e2a06e08524fdd2e4a944"
+  }
+}

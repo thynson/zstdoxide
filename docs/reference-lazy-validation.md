@@ -380,3 +380,19 @@ Greedy regression selection passes 59 tests each on safe/all builds, preserving
 ordinary frames, publication and allocation failure controls. This completes the
 direct parser work only: ordinary Lazy trajectories, frame dispatch, public
 admission, broader feature/platform checks and timing remain open.
+
+
+## Ordinary observation replay qualification
+
+The new ordinary validator passes actual depth-tagged strategy tuples through
+the unchanged independent Greedy structural/table/publication replay. It adds
+strict complete protocol metadata, depth/name/strategy binding and a lossless
+depth-zero name normalization for exact predecessor comparisons.
+
+Normal and optimized Python each validate all 138 frozen ordinary Greedy
+predecessors, 18 synthetic depth/family/tiny-state records and one new metadata
+record. Each rejects 332 new mutations plus 81 inherited controls and retains
+5,184 frozen hash checks, with zero child attempts. Synthetic depth-one/two
+records exercise schema/replay only and are never stored as C expectations.
+Evidence is in `docs/evidence/2026-10-13-lazy-frame-validator.json` and its archive.
+The ordinary controller/auditor preflight and actual capture are still pending.
