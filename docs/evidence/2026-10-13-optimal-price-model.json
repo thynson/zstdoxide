@@ -1,0 +1,36 @@
+{
+  "archive": "2026-10-13-optimal-price-model.tar.gz",
+  "archive_bytes": 22113,
+  "archive_members": 10,
+  "archive_sha256": "9f49ab40a4c5db5c68ccc5695168177efe9088aa733b0b40f6b0feef9b47ab75",
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "scripts/check_optimal_price_validation.py"
+      ],
+      "exit_code": 0,
+      "log": "normal.log",
+      "sha256": "e474da5d98278f5f166e175d1f7827425886e0b683cbd009c68ccea56d24a214"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_optimal_price_validation.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized.log",
+      "sha256": "e474da5d98278f5f166e175d1f7827425886e0b683cbd009c68ccea56d24a214"
+    }
+  ],
+  "qualification": "Independent complete table/price arithmetic model, hand-checked identities and 23 forged observation controls per mode. The 147 source-only requests cover 2018 transitions. No C observation has yet been captured or compared.",
+  "source": {
+    "scripts/check_optimal_price_validation.py": "4896cfb709440a3cd8b4478952c3f9f2fa115ba9e85fb9cbb83d088eac6f5ee6",
+    "scripts/oracles/optimal_price_recipes.py": "af95eecc93dfdd5c3a88c52b62616273e119b1888bf0ff6883464f62378dd2af",
+    "scripts/oracles/optimal_price_validation.py": "ec2528f09dbc35f21688c65e706e6015fed3e8a6aa14bd13fb184656a804ceca",
+    "scripts/oracles/optimal_prices_v2.py": "85360e2ee7d7202b55f1c9c48266969cf951e85657e5265fdd06f6d524f0d92a",
+    "tests/fixtures/reference-optimal-price-recipes/recipes.json": "466775a8fe25c1171728193316dabcfcf9cb66adff67b642a27f8d561fa9dfa6"
+  },
+  "status": "passed"
+}

@@ -106,7 +106,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Freeze all twenty-four BinaryTreeLazy2 frames and qualified allocator records as permanent predecessor regressions.
 - [x] Specify and validate bounded frequency/price requests, independent observation replay and malformed transport controls.
 - [x] Freeze source-only initialization, predefined/dynamic, scaling, symbol and arithmetic-boundary recipes.
-- [ ] Implement independent complete frequency/price replay with lifecycle and forged-observation controls.
+- [x] Implement independent complete frequency/price replay with lifecycle and forged-observation controls.
 - [ ] Review and preflight the pinned normal/instrumented price helper and complete source closure before execution.
 - [ ] Capture complete frequency/price transitions and reject forged records offline in normal and optimized Python.
 - [ ] Project audited price records into bounded fixtures and add an independent checked Rust reader.

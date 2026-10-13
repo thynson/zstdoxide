@@ -134,3 +134,14 @@ Normal and optimized version-2 request checks each pass ten exact round trips
 and reject 42 malformed schedules/packets with zero child attempts. Version-1
 controls still execute against the frozen version-1 module. No C capture has yet
 been run for either protocol.
+
+## Independent model checkpoint
+
+The checked Python model replays all 147 source-only requests / 2,018 operations
+with complete tables, sums, explicit cache refreshes and scalar prices. Hand-
+checked weights, initial distributions, predefined/disabled literal costs, the
+full-block LL special case, long-offset match penalty and downscale identities
+pass. Normal and optimized checks each reject 23 altered observation transcripts
+without child execution. `evidence/2026-10-13-optimal-price-model.json` retains
+the exact model, inputs and logs. These are model controls; C observations are
+not yet captured and are a separate gate.
