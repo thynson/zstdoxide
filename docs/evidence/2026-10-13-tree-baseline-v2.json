@@ -1,0 +1,261 @@
+{
+  "archive": "2026-10-13-tree-baseline-v2.tar.gz",
+  "archive_bytes": 8431449,
+  "archive_members": 103,
+  "archive_sha256": "f12d4a975e845ebe0cd5dd78a397c6d4d55614ee3cd73d184943245ee1009419",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_tree_defaults"
+      ],
+      "exit_code": 0,
+      "label": "baseline-safe",
+      "log": "baseline-safe.log",
+      "seconds": 10.957484042039141,
+      "sha256": "7c3c85072e54f7b6bb8f8475902b52069f04f19faea4e384eda7dee1846663e7",
+      "tests": [
+        [
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--features",
+        "unsafe-reference-tree",
+        "--test",
+        "reference_tree_defaults"
+      ],
+      "exit_code": 0,
+      "label": "baseline-tree",
+      "log": "baseline-tree.log",
+      "seconds": 9.382264124928042,
+      "sha256": "a72020a8bc006878b0f28daae6a17055a2519fb82cfca5ebabd1eda28b2631e8",
+      "tests": [
+        [
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--all-features",
+        "--test",
+        "reference_tree_defaults"
+      ],
+      "exit_code": 0,
+      "label": "baseline-all",
+      "log": "baseline-all.log",
+      "seconds": 8.798391500022262,
+      "sha256": "ba8fe66ee92cf0e22fcc452680bbbcf324d1e15173533a7914ddb240a9f1bfb9",
+      "tests": [
+        [
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "reference_tree_defaults"
+      ],
+      "exit_code": 0,
+      "label": "baseline-release-all",
+      "log": "baseline-release-all.log",
+      "seconds": 0.5617209170013666,
+      "sha256": "60610d903c8e366226ac3f0cbddfb47069d0630f3d384a868d4e7500d4cbcb8e",
+      "tests": [
+        [
+          7,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_tree_defaults",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "label": "clippy-safe",
+      "log": "clippy-safe.log",
+      "seconds": 0.23606900009326637,
+      "sha256": "3fe980a0f9709b0a2d093ea2a65202e1e589d4893ac71be4272c165923b9e527"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_tree_defaults",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "label": "clippy-all",
+      "log": "clippy-all.log",
+      "seconds": 0.13287716708146036,
+      "sha256": "8f3ae2616dd1e18d0fe1f4076d35b698a81fb5dae3fa8b45c2750e9a19508e5e"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "label": "format",
+      "log": "format.log",
+      "seconds": 1.4991009579971433,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_reference_tree_baseline_controls.py"
+      ],
+      "exit_code": 0,
+      "label": "controls-normal",
+      "log": "controls-normal.log",
+      "seconds": 17.306109875207767,
+      "sha256": "33b9c6d5709ec68e2bc129f96c270784675c997592b16bbc0fd6b28fc0ca7dbd"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_reference_tree_baseline_controls.py"
+      ],
+      "exit_code": 0,
+      "label": "controls-optimized",
+      "log": "controls-optimized.log",
+      "seconds": 16.093570375116542,
+      "sha256": "33b9c6d5709ec68e2bc129f96c270784675c997592b16bbc0fd6b28fc0ca7dbd"
+    }
+  ],
+  "initial_failure": "First controls attempted an unchanged zero frame offset; corrected to an actually different field value. Original harness and logs retained.",
+  "qualification": "Additive pre-Optimal tree baseline tests, outside the already running immutable Module 16 full matrix. Complete frames and qualified allocator records across safe/tree/all/release-all; normal and optimized offline corruption controls.",
+  "source": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "526c1a2582976d9f77702029df9a7ad34fb8845ee5a592f6805d992bb4c1cc05",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "scripts/check_reference_tree_baseline.py": "bb4353588595a9539aee7a4f814e51ae9b349c1f12551abf1b7104a1d56bc466",
+    "scripts/check_reference_tree_baseline_controls.py": "10f04643e443771d7e68899224050c12f43e31e1441d2fa0b1dd3c69d53ef938",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/block_entropy.rs": "a9a25e6bf3ba2b308168b2d1b0de88c4e510eaec1d4162484b4b45f21654faf1",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+    "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+    "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+    "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+    "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+    "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+    "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+    "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/greedy_block.rs": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+    "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+    "src/greedy_parse.rs": "0555b480e7c93683cdd29ec863ff8235f983b7bc579a047ef69c883e365211bb",
+    "src/greedy_plan.rs": "d5249a555e18abc82bbbcff145921c3d2a002212819987541b9b77359eaec39e",
+    "src/greedy_search.rs": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+    "src/greedy_state.rs": "4ba31ec4cc1c60e5d0d81e38e93c114d7dbdc1f4e8e7f3567aafcbcbc27ead05",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+    "src/lib.rs": "645b8c61913c7d95bbc57b9bdbe3369e82b1f382f168ac6bdd28de3f6a04611a",
+    "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+    "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+    "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+    "src/reference_encode.rs": "a2fedba92b96b4b460d8d439b226ef6b1e05b142d684101cf8c2315cebc0e42a",
+    "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+    "src/reference_frame_encode.rs": "af35382d9ea74ad40ed1a3f700fbacf1a88156e226984d2a101fd0c4bbec6802",
+    "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+    "src/reference_search.rs": "492bc71bcd813b068814b41cd5ec053b8c6ae2c786d7f30614bdf29b8c7c4369",
+    "src/reference_tree.rs": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+    "src/sequence_context.rs": "5824fea99f85b3cc1c63a62bb68f79873d1e3818af487b7107cf1bdda5f9c81c",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "2dbd16ebb375017938bcf53e949f5e369eeae708e5eea0f48ffd437e3da8da48",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/tree_layout.rs": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26",
+    "src/tree_search.rs": "c5fabb7ec63df89887f94d42f86e5bc66aea244543e061bff340d5fe5a7dc2bc",
+    "src/tree_sort.rs": "6781699dac123560ea5ee288cd22f4cafdfe27016c4788503bd0548982f65379",
+    "src/tree_source.rs": "e8ff59ed5de930faaca3ff89590ea5c208a13c75c06b9acc3f3665dd7761c4c0",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/fixtures/reference-tree-baseline/README.md": "ecd3f38b63e3c771832dcdf66ac9a5a13448e7e96dd4267ede4ff090b8f385de",
+    "tests/fixtures/reference-tree-baseline/expected.tsv": "617e758406f1c97a6536796f9d19d101c70081d0ca7c514f6ef27c2f40ec3b7d",
+    "tests/fixtures/reference-tree-baseline/frames.bin": "71232143c7e7bf7e833cdc60331c741f52690f9178ab9bac99ec75daed2efbdd",
+    "tests/fixtures/reference-tree-baseline/provenance.json": "86223820060147a1bc8f5a6cbca9fd67fd6709a090ec7ed2c43df18347c9e949",
+    "tests/reference_tree_defaults.rs": "94b348b05340a6f39acf14905a185707d001c1ce35302f5179ced3367786424c"
+  },
+  "status": "passed",
+  "tests": 28
+}

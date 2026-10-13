@@ -1480,3 +1480,20 @@ public tuples pass. Every enabled unsafe leaf, true no_std, selected foreign/
 no-atomics checks, cross-decoding and identical-workload measurements remain
 required. No price estimate, C/Rust entropy-byte parity or complete upstream
 migration is implied by an intermediate checkpoint.
+
+### Frozen pre-Optimal tree regressions
+
+The immutable tree clock-free archive now projects to twenty-four complete frame
+and allocator rows and thirteen distinct frame extents. The bounded offline
+reader checks every one of the seventeen archived backends and reconstructs
+expectations without executing a codec. Normal and optimized controls each reject
+nineteen changed frame, row, provenance or inventory inputs with no children.
+An initial control wrote the already-zero first frame offset; the corrected
+control guarantees a different value. Original failures are retained.
+
+Seven Rust tests pass in safe/tree/all/release-all configurations (28 tests),
+replaying all complete frames, resolved tuples and target-qualified owner rows.
+Safe/all focused Clippy and formatting pass. These additive tests postdate the
+immutable Module 16 full-matrix snapshot and are qualified separately in
+`evidence/2026-10-13-tree-baseline-v2.json` and its source/log archive. They do not
+change codec code or imply Optimal support.
