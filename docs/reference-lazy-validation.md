@@ -649,3 +649,23 @@ known 16385-byte inputs). Normal and optimized Python each pass those comparison
 and reject 50 malformed input controls with zero child attempts. Evidence is in
 `docs/evidence/2026-10-13-lazy-tuple-audit.json` and its archive. Coherent changed
 capture controls are additionally required at the final interoperability gate.
+
+## Broader public interoperability capture
+
+The immutable [public capture report](evidence/2026-10-13-lazy-public-interop.json)
+and its chunked archive preserve 10,104 commands over 886 frozen requests.
+There are 811 admitted, 43 unsupported and 32 resource-limited requests; 3,244
+Rust frames decode through C and 3,244 C frames decode through Rust, checking
+680,435,552 decoded bytes. Safe/all Rust output and tuple records agree. Normal
+and ASan/UBSan C builds instrument all 26 codec translation units; 156 negative
+exchanges reject malformed packets and 43 equivalence groups agree.
+
+Both ordinary and optimized Python audit modes reject 39 forged captures with
+zero child execution. The v2 extension independently binds 464 new requests,
+while preserving all 422 historical tuple expectations. Two coherent new tuple
+forgeries demonstrably pass the immutable v1 audit and fail v2; v1 alone is not
+the final tuple assurance. Its original observations and scripts remain intact.
+The archive was read sequentially and all 30,368 reconstructed capture files
+compared to their unchanged originals; no archived code was executed.
+These are public interoperability and bounded request checks, not complete
+upstream API parity or a claim that Rust emits C-identical compressed frames.
