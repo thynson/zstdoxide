@@ -95,6 +95,33 @@ successor admission mapping and independent oracle checks.
 - [ ] Compare all backends and repeat safe/all after a completed correctness/platform CPU barrier.
 - [ ] Reconcile the bounded milestone, official-test gaps and measurements; clear completed items and retain the next decomposition.
 
+## Module 16 preparation: bounded reference BinaryTreeLazy2
+
+Module 15 production inputs stay frozen until its full correctness and timing
+closure. Preparation may preserve its completed clock-free baselines and review
+the pinned source; public strategy 6 remains unsupported throughout preparation.
+
+- [x] Review binary-tree ownership, biased paired slots, unsorted-chain reversal, candidate scoring and frontier semantics before implementation.
+- [ ] Freeze all eighty Lazy-family frames and qualified allocator records as permanent predecessor regressions.
+- [ ] Specify bounded direct tree operations, deterministic arena ownership and independent observation replay before C execution.
+- [ ] Freeze tiny source/operation recipes for unsorted insertion, reversal, truncation, branch ordering, equal-to-end and skipped-frontier cases.
+- [ ] Implement and preflight the direct C helper, checked transport, capture controller and offline auditor with normal/instrumented build checks.
+- [ ] Capture tiny normal/instrumented observations and reject forged records offline without child execution.
+- [ ] Freeze broader source/ring/window/offset-cost recipes and capture independently checked complete tree trajectories.
+- [ ] Project audited direct records into bounded Rust fixtures with an independent test-only reader and predecessor controls.
+- [ ] Add checked tree layout and scalar edge/link records with explicit source and node-floor invariants.
+- [ ] Implement initialized independent hash/node owners with safe storage and an opt-in unsafe-reference-tree leaf.
+- [ ] Implement unsorted insertion, bounded chain reversal and deferred sorting against exact C maps.
+- [ ] Implement checked binary-tree best-match scoring, equal-tail handling and sampling-frontier advancement.
+- [ ] Integrate private depth-two parser dispatch with all earlier chain/row trajectories and complete frame baselines unchanged.
+- [ ] Specify, preflight and capture ordinary retained-state C frame trajectories before public integration.
+- [ ] Validate ordinary state, malformed links, allocation failures and transactional frame/repeat publication.
+- [ ] Freeze successor admission mappings and independently resolve every new public tuple before enabling bounded strategy 6.
+- [ ] Port newly admitted original assertions and capture bidirectional public C interoperability with forged-evidence controls.
+- [ ] Run safe, every unsafe leaf, all-feature, no_std, Clippy, formatting and selected foreign/no-atomics checks.
+- [ ] Freeze equivalent all-backend workloads, verify clock-free output/owners and record timing plus a separate safe/all repeat after CPU barriers.
+- [ ] Reconcile the bounded milestone and remaining official obligations, retaining the next decomposition.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

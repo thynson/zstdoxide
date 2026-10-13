@@ -1164,3 +1164,120 @@ compression plus output destruction alone enter clocks; allocator surveys,
 correctness checks and source generation remain outside. Each leaf backend and
 all features receive identical source/request pairs. These harness records add
 no production codec owner or unsafe implementation.
+
+
+## Module 16: bounded no-dictionary reference BinaryTreeLazy2
+
+This is a design for a successor to Module 15, not a supported encoder claim.
+Public strategy code 6 stays unsupported until independent direct/ordinary C
+observations, private frame integration and a successor admission fixture pass.
+The pinned upstream revision remains Zstandard v1.5.7
+`f8745da6ff1ad1e7bab384bd1f9d742439278e99`. Relevant implementation is in
+`lib/compress/zstd_lazy.c`: `ZSTD_updateDUBT`, `ZSTD_insertDUBT1`,
+`ZSTD_DUBT_findBestMatch`, `ZSTD_BtFindBestMatch` and
+`ZSTD_compressBlock_btlazy2`. The last entry uses the existing depth-two lazy
+parser with binary-tree search; its sampling state is not a hash chain or row.
+
+### Owners and index representation
+
+A proposed `ReferenceTree<H, N>` owns independent initialized hash heads and
+cyclic two-edge nodes using exact allocator values, with no allocator clone.
+Hash heads use the existing checked Greedy key layout. A chain log C describes
+2^C edge cells, hence 2^(C-1) nodes; it must not be interpreted as 2^C nodes.
+The ring slot is `(logical_position + 2) mod 2^(C-1)` to preserve the upstream
+window-start bias without pointer arithmetic or overflow near usize limits.
+A node's two cells are ordinary indices, not pointers or references into storage.
+All layouts and combined byte size are checked before the first allocation;
+partial construction releases the first owner through its original allocator.
+
+Upstream cells distinguish zero (empty), one (unsorted marker), and biased source
+indices at least two. The Rust representation must preserve all three meanings.
+One possible packed representation reserves `usize::MAX` for empty and
+`usize::MAX - 1` for unsorted, excluding both from the bounded source domain.
+The unsorted marker is legal only in the node's second cell during insertion;
+when reversing an unsorted chain that cell temporarily becomes a position or
+empty. A raw cell must be decoded by its current operation before being followed.
+The source domain is independently checked before translating any C observation.
+A copied `TreeEdge` identifies `(node_slot, side)` or a discard destination for
+upstream's local `dummy32`. It never holds a mutable reference across another
+table access. Sequential short borrows preserve aliasing rules even when ring
+slots coincide. Plain edge/link/depth records need no artificial unsafe variant.
+
+A dedicated opt-in `unsafe-reference-tree` leaf must share exactly the safe
+contract and runtime validation, using checked initialized lengths before any
+unchecked access. It must not reuse `unsafe-reference-chain` to silently change
+a second structure's backend. Adding the leaf requires updating feature
+inventories, every-leaf checks and benchmark configuration counts deliberately.
+No unsafe parser or aggregate workspace implementation is proposed.
+
+### State and search transitions
+
+The state owns a copied checked execution plan, the tree, literal scratch and
+sequence scratch. Its borrowed source stays alive throughout a one-shot frame;
+all persistent links are source positions. Window floor and tree floor are
+separate: the former limits match distance, the latter limits whether a ring
+node still represents the candidate. A candidate can remain eligible for byte
+comparison at the tree floor while traversal of its overwritten children must
+stop. The observation/replay contract must preserve this distinction.
+
+`next_to_update` can be ahead of the next parser query. The wrapper returns no
+new tree match inside a skipped interval without backfilling it. Otherwise,
+positions before the query are inserted as unsorted chains, with both cells
+initialized. Search reverses a bounded suffix of that chain in the second cell,
+nullifies the last still-unsorted candidate when necessary, and sorts stacked
+candidates in reverse order with the evolving comparison budget. These writes
+are retained even when the parser chooses a repeat or later falls back to a raw
+or RLE block. No recursive host stack or separate heap stack is required.
+
+Sorting/search maintain independent common-prefix lengths for the smaller and
+larger branches. They begin byte comparison at their minimum and must prove the
+prefix is within both relevant source extents. Equal-to-end candidates stop
+before attempting a discriminator-byte read. Child following is bounded by the
+comparison budget and checks candidate/source/window/tree invariants before
+access, rather than trusting a previously valid fixture. Corrupt or cyclic state
+must fail or terminate within an explicit bounded operation count; release-mode
+assertions do not establish safety.
+
+A longer byte match is not automatically selected: tree search compares a
+four-times length gain against the offset high-bit cost. The arithmetic and the
+initial offset-base value must match the pinned call path, with checked signed
+operations. The farthest compared match end can advance the sampling frontier
+even when its offset-cost proposal loses. Returning only the winning candidate
+would lose this state. The direct protocol therefore records complete before/
+after heads and nodes, frontier, selected length/offset, and relevant branch
+witnesses independently of the lazy parser's final sequence list.
+
+The depth-two parser can reuse checked `LazyCandidate`, `LazyDepth` and score
+selection only after search is abstracted without changing existing chain/row
+behavior. Main-search limits remain strict while eligible lookahead permits the
+inclusive last eight-byte hash position. Both the skipped-frontier behavior and
+lookahead-at-tail need direct C witnesses. Parser scratch preflight remains
+transactional; a mid-search error poisons retained state. Committed entropy and
+wire repeats remain owned by the frame workspace, with publication only after
+output reservation and append succeed.
+
+### Scope and gates
+
+Start with a bounded no-dictionary contiguous-prefix source domain. Proposed
+resource limits must be derived from node layouts and frozen before public
+admission; do not infer new default-level support from strategy code alone.
+Known-source adjustment can allow one extra chain bit for tree strategies and
+must be independently checked against upstream. Hash selection, minimum-match
+values and target-length behavior need observed coverage before being claimed.
+Dictionary modes, optimal parsing, long-distance matching, multithreading,
+large-index reduction and external sequence producers remain outside this
+module unless separately designed and validated.
+
+Freeze all 80 Module 15 complete frames and qualified allocator records as
+permanent predecessor controls before changing production owners. First use a
+small direct protocol with deterministic caller-owned guarded C arenas, bounded
+operations, no arbitrary initial table contents and complete observations.
+Malformed observations are tested only in offline consumers; do not feed
+untrusted forged state into assertion-dependent C internals. Normal and full
+ASan/UBSan captures must share source/recipe identities and have an independently
+reviewed command manifest. Existing oracle scripts/fixtures stay immutable.
+Ordinary frame trajectories follow the direct search proof and precede public
+admission. The final matrix must cover the new leaf independently, all leaves,
+std-disabled builds, selected foreign Miri checks and no-atomics caller codegen.
+All-backend clock-free complete output/owner equality precedes native timing on
+unchanged deterministic workloads and a separate safe/all repeat.
