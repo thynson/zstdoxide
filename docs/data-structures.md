@@ -1111,3 +1111,12 @@ allocation. The shared reader gains only test-only crate visibility, and the
 wrapper checks selector/name consistency, duplicate names, exact counts and
 exhausted extents. Shared independent semantic/table/frame replay does not call
 the production parser. Copied depth adds no unsafe backend or production owner.
+
+
+The ordinary `LazyFrameCase` adapter now implements that envelope. Common
+`OracleFrameCase::read`/`validate` gain test-only crate visibility and records gain
+value equality without changing their decoding or replay bodies. Five tests
+check all 510 depth-tagged observations, lossless equality of 138 predecessors,
+549 complete C frame decodes, bounded malformed envelopes and mutated actual
+Lazy/Lazy2 records. Immutable byte spans stay borrowed and metadata reservations
+remain fallible. The codec and its public admission are unchanged by this reader.

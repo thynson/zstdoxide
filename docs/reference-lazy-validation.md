@@ -469,3 +469,22 @@ extent, trailing or publication controls, with zero child attempts. Fresh
 publication uses those validated bytes; existing outputs, symlinks and bad
 output names reject. Evidence and the field reader are retained in
 `docs/evidence/2026-10-13-lazy-frame-projection.json` and its archive.
+
+
+## Checked Rust ordinary fixture adapter
+
+The `LazyFrameCase` reader validates collection/body bounds, depth/reserved/name
+agreement, unique names, exact counts and exhausted extents before returning
+borrowed records. Shared independent semantic replay checks all 510 cases and
+1,377 blocks. All 138 predecessor records compare equal, and the existing Rust
+decoder reconstructs all 549 C frames / 41,165,274 bytes. Malformed envelopes and
+changed actual depth-one/two geometry, sequence, repeat and map records reject.
+
+Five tests pass on safe, isolated reference-chain, isolated row-table and all
+features. The five shared Greedy reader tests and nine permanent Greedy complete
+frame/owner defaults also pass on safe/all: 48 test executions total, no failures
+or ignored tests. All sixteen focused commands pass, including strict safe/all
+all-target Clippy, four no_std builds, formatting and diff checks. Exact sources
+and logs are retained in `docs/evidence/2026-10-13-lazy-frame-reader.json` and its
+archive. This verifies the reader/decoder and common storage contracts; retained
+ordinary Lazy parsing and private/public frame integration remain later gates.

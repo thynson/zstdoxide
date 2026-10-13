@@ -14,7 +14,7 @@ const MAX_BLOCK: usize = 128 << 10;
 const MAX_SOURCE: usize = 4 << 20;
 type Result<T> = core::result::Result<T, &'static str>;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) struct OracleSequence {
     pub(crate) literal_length: u32,
     pub(crate) match_length: u32,
@@ -24,7 +24,7 @@ pub(crate) struct OracleSequence {
     pub(crate) raw_match_base: u32,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct OracleCandidate<'a> {
     /// The C third raw cell is preserved, not equated to the semantic third.
     pub(crate) parser_repeats: [u32; 3],
@@ -37,7 +37,7 @@ pub(crate) struct OracleCandidate<'a> {
     pub(crate) long_length_position: usize,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct OracleBlock<'a> {
     pub(crate) call: usize,
     pub(crate) start: usize,
@@ -57,7 +57,7 @@ pub(crate) struct OracleBlock<'a> {
     pub(crate) second_table: OracleTable,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct OracleTable {
     pub(crate) log: u8,
     pub(crate) element_bytes: u8,
@@ -66,7 +66,7 @@ pub(crate) struct OracleTable {
     pub(crate) hashes: [u64; 2],
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct OracleFrameCase<'a> {
     pub(crate) name: &'a str,
     pub(crate) window_log: u8,
@@ -337,7 +337,7 @@ impl<'a> OracleBlock<'a> {
 }
 
 impl<'a> OracleFrameCase<'a> {
-    fn read(bytes: &'a [u8]) -> Result<Self> {
+    pub(crate) fn read(bytes: &'a [u8]) -> Result<Self> {
         let mut r = Reader { bytes };
         let name_len = usize::from(u16::from_le_bytes(r.number()?));
         if !(1..=63).contains(&name_len) {
@@ -417,7 +417,7 @@ impl<'a> OracleFrameCase<'a> {
         Ok(result)
     }
 
-    fn validate(&self) -> Result<()> {
+    pub(crate) fn validate(&self) -> Result<()> {
         if !(10..=21).contains(&self.window_log)
             || !(6..=19).contains(&self.hash_log)
             || !(6..=29).contains(&self.chain_log)

@@ -90,6 +90,9 @@ mod huffman;
 mod huffman_codebook;
 mod huffman_encode;
 #[cfg(test)]
+#[path = "../tests/support/lazy_frame_oracle.rs"]
+mod lazy_frame_oracle_fixture;
+#[cfg(test)]
 #[path = "../tests/support/lazy_oracle.rs"]
 mod lazy_oracle_fixture;
 mod lazy_select;

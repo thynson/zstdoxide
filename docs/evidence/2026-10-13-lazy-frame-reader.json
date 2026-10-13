@@ -1,0 +1,181 @@
+{
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "log": "00.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": "01.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": "02.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "lazy_frame_oracle_fixture"
+      ],
+      "log": "03.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "log": "04.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-reference-chain",
+        "lazy_frame_oracle_fixture"
+      ],
+      "log": "05.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-reference-chain"
+      ],
+      "log": "06.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--features",
+        "unsafe-row-table",
+        "lazy_frame_oracle_fixture"
+      ],
+      "log": "07.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-row-table"
+      ],
+      "log": "08.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--all-features",
+        "lazy_frame_oracle_fixture"
+      ],
+      "log": "09.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--all-features"
+      ],
+      "log": "10.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "greedy_frame_oracle_fixture"
+      ],
+      "log": "11.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--test",
+        "reference_greedy_defaults"
+      ],
+      "log": "12.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--all-features",
+        "greedy_frame_oracle_fixture"
+      ],
+      "log": "13.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-features",
+        "--test",
+        "reference_greedy_defaults"
+      ],
+      "log": "14.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "status": 0
+    }
+  ],
+  "fixture_sha256": "d46f4900c5d43c1f54f8e68a56e228d6aa16b4d364c07a16c294b047c9548e27",
+  "sources": {
+    "src/lib.rs": "bdd300306c420194fa4a619a617510f0057257aa4596afe4258ed1c08b862b42",
+    "tests/support/greedy_frame_oracle.rs": "568c13c23c6f3c36982e5e481925186bae136ea17224069ffc2b611514b7ad9b",
+    "tests/support/lazy_frame_oracle.rs": "3dd7e5efe1418f0524ad87982cbe372f85ed0678d8f91fec40337c11b2a08094"
+  },
+  "status": "passed"
+}
