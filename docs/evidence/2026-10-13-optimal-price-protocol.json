@@ -1,0 +1,34 @@
+{
+  "archive": "2026-10-13-optimal-price-protocol.tar.gz",
+  "archive_bytes": 7679,
+  "archive_members": 8,
+  "archive_sha256": "b07c6bee879ec8e7963bfabf121cbc6fe6236f9cd40fef99e1c17a8d393fb520",
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "scripts/check_optimal_price_protocol.py"
+      ],
+      "exit_code": 0,
+      "log": "normal.log",
+      "sha256": "debff20b529af1850db108fa9d1c0fcaeb57e7f9cd7cb9407e74ad85c603384f"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_optimal_price_protocol.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized.log",
+      "sha256": "debff20b529af1850db108fa9d1c0fcaeb57e7f9cd7cb9407e74ad85c603384f"
+    }
+  ],
+  "qualification": "Source-only price transport and lifecycle gate; nine positive round trips and 38 malformed request rejections per Python mode, no codec or child execution. Independent observation replay is specified, not yet implemented; no C price results or Optimal support.",
+  "source": {
+    "docs/reference-optimal-price-protocol.md": "6e04fe75223aedabfc86b89bdc9ea9c6f8a364eb63ef30d1ba78b42a3fd38683",
+    "scripts/check_optimal_price_protocol.py": "7ae456f077c85d4cab3211fe857a3662ce53c004b344b3b8a017fda861f90b8e",
+    "scripts/oracles/optimal_prices.py": "aeb2dc2f2ecc43dbff127eba9256565b9a9b2dbd1b09a061e136692fa390a9af"
+  },
+  "status": "passed"
+}
