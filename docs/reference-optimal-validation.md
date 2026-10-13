@@ -86,3 +86,17 @@ complete source/log evidence and caller artifacts are retained in
 `evidence/2026-10-13-optimal-frequency.json` and its archive. No full library-wide
 feature matrix or performance claim is made for this private checkpoint. Merge
 waits for Module 16's independent matrix and fixed-source measurement closure.
+
+## Source-only tiny all-match preparation
+
+Twenty-nine bounded input recipes contain 71,072 source bytes and 273 queries.
+Normal and optimized Python round-trip every packet, admit minimum/maximum
+packet boundaries and reject 172 malformed variants per mode without children.
+The protocol separates repeat early exits, short-key catch-up and ordinary tree
+publication. A length-to-beat greater than the remaining source is rejected
+before execution to preserve the upstream sorted-branch end-pointer precondition.
+
+`evidence/2026-10-13-optimal-match-inputs.json` retains exact inputs, checker and
+logs. No C search has executed; these are hypotheses, not result fixtures.
+Ordinary CCtx geometry, the strict 2^18 distance cutoff and valid fresh repeat
+state remain separate TODO gates. Public Optimal remains unsupported.
