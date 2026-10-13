@@ -708,3 +708,46 @@ checkpoints from this completed bounded scope. The completed checklist is cleare
 and the Lazy/Lazy2 decomposition remains. The inventory still has 188 unfinished
 source units (149 blocked, 34 partial, five planned); complete official migration,
 numeric dictionaries/streaming, higher strategies and the roadmap remain open.
+
+
+## Module 15 completed: bounded reference Lazy and Lazy2
+
+Completed on 2026-10-13. Known-source no-dictionary one-shot numeric requests
+now execute bounded depth-one and depth-two reference parsing through shared
+chain/row owners, checked speculative coordinates and score arithmetic. Limits
+remain W21/H19, chain C18/S8 and at most 64 row visits. Default levels 5/6 work
+across source tiers; 7/8 through 256 KiB and 9/10 for 16,385..262,144-byte sources.
+Private dispatch retains transactionality, owner release and failure poisoning.
+
+All 645 direct cases match captured trajectories. Ordinary capture covers 510
+cases and 1,377 blocks; private checks cover 1,014 frames and 23,998 observed
+allocation-failure ordinals per configuration. Public interoperability has 886
+recipes and 10,104 commands: 3,244 frames in each direction reconstruct
+680,435,552 bytes, with 156 malformed exchanges. The versioned v2 auditor binds
+464 new tuples independently and retains all 422 historical tuple checks; the
+original v1 gap and unchanged capture are explicitly preserved.
+
+The immutable full matrix passes seventeen suites with 1,136 passing tests each:
+19,312 passing executions, zero failures and 918 explicit ignored executions.
+Formatting, safe/all strict Clippy, sixteen true no_std configurations, thirteen
+allocator-helper tests and 22 documentation examples per mode pass. A retained
+correction distinguishes all-feature std builds from explicitly enabled unsafe
+leaves with std disabled. Platform evidence adds 60 selected Miri executions on
+interpreted i686/s390x and no-atomics thumbv6m library/caller compilation. No
+foreign-native execution, linked firmware or device memory-fit claim follows.
+
+All sixteen backends agree on 1,280 clock-free cases. Timed and separate safe/all
+repeat campaigns retain 7,200 samples in 1,440 cases, complete unchanged frames
+and allocator records. The all/safe geometric means over 48 Lazy/Lazy2 cases are
+1.0944 and 1.0861; repeated case ratios range
+0.7157..1.7937. One host, fixed order and uncontrolled
+desktop/thermal activity prevent universal or causal unsafe speed claims.
+
+The [closure](evidence/2026-10-13-lazy-closure.json) checks 29 reports, their
+archives, 1,291 existing matrix inputs and 85 source entries per benchmark
+campaign. Module 16 preparation separately preserves the eighty-case Lazy
+baseline, audits 103 direct tree input recipes and 9,336 C operation records,
+and adds a bounded binary fixture and independent safe Rust reader. Production
+tree storage/parser and public strategy 6 remain future work. The completed
+Module 15 checklist is cleared; Module 16's decomposition remains. Official
+migration still has 188 unfinished units (149 blocked, 34 partial, five planned).

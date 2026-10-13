@@ -46,60 +46,17 @@ The final evidence reconciliation is recorded in
 and both measured campaigns are in `docs/reference-greedy-validation.md` and
 `docs/reference-greedy-benchmarks.md`. Complete upstream migration remains open.
 
-## Module 15 preparation: bounded reference Lazy and Lazy2
-
-Module 14's immutable full matrix and measurements are the completed predecessor
-gate. Preserve its measured codec inputs and permanent frame/owner baselines. Do not enable new public strategies before their own
-successor admission mapping and independent oracle checks.
-
-- [x] Review depth-one/two parsing, inclusive lookahead bounds, score arithmetic and shared ownership before implementation.
-- [x] Freeze complete Greedy frames and qualified allocator records as permanent regressions from the reviewed clock-free archive.
-- [x] Specify bounded direct Lazy/Lazy2 packets, arena bounds and independent observation validation before C execution.
-- [x] Implement and review the versioned direct C adapter, completing normal/instrumented syntax checks before execution.
-- [x] Add checked Python transport and independent replay with malformed depth/schema controls and no child execution.
-- [x] Freeze tiny depth/branch recipes and predecessor controls before C execution.
-- [x] Implement the bounded tiny capture controller and independent offline auditor with preflight rejection controls before first C execution.
-- [x] Capture normal/instrumented tiny observations and fresh-context salt, then independently reject changed evidence offline.
-- [x] Freeze broader recipes covering repeat ties, gain thresholds, successive lookahead, tail equality, skipping, floors and table trajectories.
-- [x] Implement and preflight the broader capture controller and offline auditor with exact tiny/predecessor controls before execution.
-- [x] Qualify the completed broader capture with offline forgery controls and preserve the original capture archive.
-- [x] Reconcile score-family observations and freeze independently checked broader direct fixtures before Rust parsing.
-- [x] Register the Greedy baseline and broader Lazy offline recipe, plan and fixture checks in the standard check driver.
-- [x] Project direct observations into checked Rust records with complete maps, sequence replay and source provenance.
-- [x] Add a dependency-free checked Rust adapter for all frozen direct Lazy inputs and complete observations.
-- [x] Add shared copied depth/candidate/score records and explicit inclusive lookahead coordinates, preserving Greedy's strict main-search contract.
-- [x] Implement depth-one selection and repeated improvement against frozen observations.
-- [x] Implement depth-two selection, repeat bias and exact speculative sampling against frozen observations.
-- [x] Specify and freeze ordinary frame/schedule recipes and versioned C observation protocol before execution.
-- [x] Implement and review the versioned ordinary C helper with normal/instrumented syntax checks before execution.
-- [x] Add independent ordinary Lazy record replay and malformed offline controls.
-- [x] Implement and preflight the ordinary capture controller and offline auditor before execution.
-- [x] Capture and independently validate ordinary Lazy/Lazy2 trajectories and complete frames with instrumented C.
-- [x] Freeze audited ordinary observations with immutable artifact identities and offline replay.
-- [x] Project ordinary depth-tagged trajectories and complete frames into a bounded binary fixture.
-- [x] Add a checked Rust ordinary fixture adapter with independent replay and predecessor controls.
-- [x] Register ordinary Lazy replay and projection checks in the standard check driver.
-- [x] Retain shared lazy-family state across blocks with exact owners, tiny handling and failure poisoning.
-- [x] Correct all-feature/no_std evidence classification and check all fourteen unsafe leaves with std disabled.
-- [x] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
-- [x] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.
-- [x] Enable bounded public Lazy/Lazy2 requests and document exact source-dependent level/resource behavior.
-- [x] Port newly admitted original selector and numeric assertions without closing unrelated upstream obligations.
-- [x] Freeze Lazy-family public interoperability recipes and review unchanged generic transport adapters.
-- [x] Preflight a versioned public capture controller and independent offline auditor before execution.
-- [x] Qualify a versioned offline audit extension binding new public requests to independently resolved tuples.
-- [x] Capture and independently validate broader bidirectional public interoperability with normal/instrumented C.
-- [x] Verify exact owner release, allocation failures, malformed state, no_std and interpreted i686/s390x bounds plus no-atomics caller compilation.
-- [x] Run safe, each unsafe feature and all-feature correctness checks with every predecessor regression intact.
-- [x] Freeze and verify all-backend clock-free workloads and qualify the harness with offline mutation controls.
-- [x] Compare all backends and repeat safe/all after a completed correctness/platform CPU barrier.
-- [ ] Reconcile the bounded milestone, official-test gaps and measurements; clear completed items and retain the next decomposition.
+Module 15 is complete within its bounded no-dictionary reference Lazy/Lazy2
+scope. Completed items are archived in Git history and `docs/progress.md`.
+The final matrix, interoperability and platform qualifications are in
+`docs/reference-lazy-validation.md`; both timing campaigns and their limits are
+in `docs/reference-lazy-benchmarks.md`. Complete upstream migration remains open.
 
 ## Module 16 preparation: bounded reference BinaryTreeLazy2
 
-Module 15 production inputs stay frozen until its full correctness and timing
-closure. Preparation may preserve its completed clock-free baselines and review
-the pinned source; public strategy 6 remains unsupported throughout preparation.
+Module 15 correctness and measurement closure is complete. Preserve its frozen
+complete frame and owner baselines while implementing the reviewed tree design.
+Public strategy 6 remains unsupported until its own private and public gates pass.
 
 - [x] Review binary-tree ownership, biased paired slots, unsorted-chain reversal, candidate scoring and frontier semantics before implementation.
 - [x] Freeze all eighty Lazy-family frames and qualified allocator records as permanent predecessor regressions.
@@ -115,6 +72,7 @@ the pinned source; public strategy 6 remains unsupported throughout preparation.
 - [x] Capture and independently check complete broader tree trajectories with offline forgery controls.
 - [x] Project audited direct records into bounded binary fixtures with exact source and predecessor provenance.
 - [x] Add an independent test-only Rust fixture reader with boundary rejection and selected-match replay.
+- [ ] Register frozen Lazy baseline and tree recipe/projection checks in the standard check driver.
 - [ ] Add checked tree layout and scalar edge/link records with explicit source and node-floor invariants.
 - [ ] Implement initialized independent hash/node owners with safe storage and an opt-in unsafe-reference-tree leaf.
 - [ ] Implement unsorted insertion, bounded chain reversal and deferred sorting against exact C maps.

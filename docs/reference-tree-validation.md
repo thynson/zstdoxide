@@ -1,8 +1,8 @@
 # Bounded reference BinaryTreeLazy2 preparation
 
-BinaryTreeLazy2 remains unsupported. Module 15 production inputs are frozen
-while its correctness and timing closure runs. This document records additive
-preparation only; it does not change the scope of that immutable matrix.
+BinaryTreeLazy2 remains unsupported. This additive preparation was completed
+while Module 15 production inputs were frozen for correctness and timing. Its
+separate checks do not change the scope of that now-completed immutable matrix.
 
 ## Permanent predecessor baseline
 

@@ -1,8 +1,10 @@
 # Bounded reference Lazy/Lazy2 validation
 
-This is preparatory evidence. Production Lazy/Lazy2 execution and complete
-official migration remain open. Module 14's immutable Greedy feature matrix and
-measurements are separate gates; its codec/benchmark inputs remain unchanged.
+Module 15 is complete within its bounded no-dictionary, known-source one-shot
+Lazy/Lazy2 scope. This report retains historical preparation checkpoints and
+their original qualifications; the completed matrix and closure below establish
+the final scope. Complete official migration remains open. All predecessor
+frame and allocator baselines are preserved.
 
 ## Frozen tiny inputs before C execution
 
@@ -707,3 +709,21 @@ immutable snapshot. Later additive Module 16 baseline tests and direct-tree
 capture/projection/reader work have their own focused qualifications. They are
 not retroactively included in these seventeen suites. The separately versioned
 public tuple auditor also retains its own original and forged-capture evidence.
+
+## Completed bounded milestone
+
+The [closure reconciliation](evidence/2026-10-13-lazy-closure.json) checks 29
+checkpoint reports and their named archive identities, all 1,291 existing
+matrix inputs and 85 measured source entries in each of three benchmark
+campaigns. Delivered sources match the independently completed frozen runs.
+The completed checklist moves to Git history; Module 16 retains its detailed
+next steps and separately qualified preparation. Its 21 predecessor-baseline
+tests and eight independent tree-reader tests are additive, not retroactively
+included in the Module 15 matrix. Public BinaryTreeLazy2 remains unsupported.
+
+The bounded W21/H19 resource policy, chain C18/S8 and 64-visit row cap remain.
+Default levels 5/6 work across source tiers, 7/8 through 256 KiB, and 9/10 for
+16,385..262,144-byte sources. Other requests retain documented unsupported or
+resource errors; this does not enable numeric dictionary/streaming requests,
+optimal/ultra parsing or threading. The official migration inventory remains
+188 unfinished source units (149 blocked, 34 partial, five planned).
