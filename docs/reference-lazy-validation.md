@@ -432,3 +432,21 @@ The audited ordinary observation pack is 103,211,609 bytes, SHA256
 `aca20fb1f5f2016c05da8fdd8afdcaaf418386cdd63f26bf4b9a3b1b249dc4b3`.
 Its immutable publication and Rust projection/reading remain separate work items.
 No Rust ordinary Lazy support, public admission or performance result is claimed.
+
+
+## Immutable ordinary observation collection
+
+The audited pack is now frozen under `tests/fixtures/reference-lazy-frame-capture`.
+Its 1,105 artifacts contain all 510 trajectories and scheduled frames, 39 aligned
+whole frames, native metadata and 45 incomplete headers. The manifest SHA256 is
+`0c9579981f10ec11097fca94f2c3a75223674083d80feeee83ef70bcaf302740`;
+the pack retains its previously audited identity and binds the full split raw
+archive plus control archive. No expectation is regenerated from Rust.
+
+`check_lazy_frames.py --check` independently replays every ordinary observation
+and every depth-zero predecessor. Normal and optimized Python each accept the
+complete collection and reject 14 manifest, extent, record, frame, truncation or
+trailing-byte mutations with zero child attempts. Evidence, exact control runner
+and publication source are retained in
+`docs/evidence/2026-10-13-lazy-frame-fixture.json` and its archive. Binary projection
+and the Rust reader remain separately checked steps.

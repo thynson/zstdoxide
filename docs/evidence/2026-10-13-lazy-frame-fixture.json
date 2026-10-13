@@ -1,0 +1,72 @@
+{
+  "commands": [
+    "python3 scripts/check_lazy_frames.py --check",
+    "python3 /tmp/check-zstdoxide-lazy-frame-fixture-controls.py",
+    "python3 -O /tmp/check-zstdoxide-lazy-frame-fixture-controls.py"
+  ],
+  "files": {
+    "scripts/check_lazy_frames.py": {
+      "bytes": 4320,
+      "sha256": "5f53a2aea4379f96f3b18db8b1e9737e11a0c8880306e2d7677bafa6f824cb07"
+    },
+    "tests/fixtures/reference-lazy-frame-capture/artifacts.bin": {
+      "bytes": 103211609,
+      "sha256": "aca20fb1f5f2016c05da8fdd8afdcaaf418386cdd63f26bf4b9a3b1b249dc4b3"
+    },
+    "tests/fixtures/reference-lazy-frame-capture/capture.json": {
+      "bytes": 463066,
+      "sha256": "0c9579981f10ec11097fca94f2c3a75223674083d80feeee83ef70bcaf302740"
+    }
+  },
+  "results": {
+    "normal": {
+      "checker_sha256": "5f53a2aea4379f96f3b18db8b1e9737e11a0c8880306e2d7677bafa6f824cb07",
+      "child_attempts": 0,
+      "optimization": 0,
+      "pack_sha256": "aca20fb1f5f2016c05da8fdd8afdcaaf418386cdd63f26bf4b9a3b1b249dc4b3",
+      "positive": 1,
+      "rejections": [
+        "schema_version",
+        "upstream_revision",
+        "checker_sha256",
+        "controller_sha256",
+        "pack_bytes",
+        "pack_sha256",
+        "offset",
+        "duplicate_case",
+        "coverage",
+        "missing_artifact",
+        "truncated_pack",
+        "trailing_pack",
+        "changed_d1_chain_first_uniform.stdout",
+        "changed_d2_row_first_uniform.zst"
+      ],
+      "status": "passed"
+    },
+    "optimized": {
+      "checker_sha256": "5f53a2aea4379f96f3b18db8b1e9737e11a0c8880306e2d7677bafa6f824cb07",
+      "child_attempts": 0,
+      "optimization": 1,
+      "pack_sha256": "aca20fb1f5f2016c05da8fdd8afdcaaf418386cdd63f26bf4b9a3b1b249dc4b3",
+      "positive": 1,
+      "rejections": [
+        "schema_version",
+        "upstream_revision",
+        "checker_sha256",
+        "controller_sha256",
+        "pack_bytes",
+        "pack_sha256",
+        "offset",
+        "duplicate_case",
+        "coverage",
+        "missing_artifact",
+        "truncated_pack",
+        "trailing_pack",
+        "changed_d1_chain_first_uniform.stdout",
+        "changed_d2_row_first_uniform.zst"
+      ],
+      "status": "passed"
+    }
+  },
+  "status": "passed"
+}
