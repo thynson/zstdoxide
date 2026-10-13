@@ -80,7 +80,7 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [ ] Integrate private depth-two parser dispatch with all earlier chain/row trajectories and complete frame baselines unchanged.
 - [x] Freeze ordinary tree frame source/schedule recipes and protocol with explicit retained-state observations.
 - [x] Implement and review the bounded ordinary tree C helper and independent offline replay with forged-record controls.
-- [ ] Preflight the capture controller, pinned dependencies and normal/instrumented command inventory before execution.
+- [x] Preflight the capture controller, pinned dependencies and normal/instrumented command inventory before execution.
 - [ ] Capture, audit and project ordinary retained-state C tree frames; match Rust sequences, maps and complete frame bytes before public integration.
 - [ ] Validate ordinary state, malformed links, allocation failures and transactional frame/repeat publication.
 - [ ] Freeze successor admission mappings and independently resolve every new public tuple before enabling bounded strategy 6.

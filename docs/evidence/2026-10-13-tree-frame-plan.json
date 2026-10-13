@@ -1,0 +1,60 @@
+{
+  "archive": "2026-10-13-tree-frame-plan.tar.gz",
+  "archive_bytes": 12378,
+  "archive_members": 8,
+  "archive_sha256": "61467ce329ffb2b69b8ba3c6783a6c0a23d71f40d54e820ac75f4008a370e8a7",
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "scripts/check_tree_frame_plan.py"
+      ],
+      "exit_code": 0,
+      "label": "normal",
+      "log": "normal.log",
+      "seconds": 7.193904125131667,
+      "sha256": "a74f12cf966768d7d4176a54547891a97135f65b783f1070222f331b1bf4d202"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_tree_frame_plan.py"
+      ],
+      "exit_code": 0,
+      "label": "optimized",
+      "log": "optimized.log",
+      "seconds": 7.450903916964307,
+      "sha256": "a74f12cf966768d7d4176a54547891a97135f65b783f1070222f331b1bf4d202"
+    }
+  ],
+  "preflight": {
+    "child_attempts": 0,
+    "forged_rejections": 10,
+    "plan": {
+      "codec_executions": 0,
+      "expected_commands": 1162,
+      "incomplete_headers": 15,
+      "malformed_per_build": 44,
+      "padding_passes": [
+        106,
+        195
+      ],
+      "positive_calls": 531,
+      "recipes": 245,
+      "scheduled_calls": 539,
+      "source_bytes": 7640096,
+      "status": "pre-execution plan checked",
+      "whole_comparisons": 120
+    },
+    "qualification": "No C execution; pinned inputs, command counts, malformed inventory, path bounds and altered-pin/plan controls.",
+    "status": "passed"
+  },
+  "qualification": "Offline capture preflight before C execution; exact per-command audit is separately implemented in the pinned auditor.",
+  "source": {
+    "scripts/capture_tree_frames.py": "d767bbaca27ce7bee6f88c31ce9bc805d5b7beaad77e69bd15a2bb3b9eff1c10",
+    "scripts/check_tree_frame_capture.py": "1d9746ce521d6df7b957091b977f8c3318717b997117395133d16c9b63d9e858",
+    "scripts/check_tree_frame_plan.py": "47b465ef630d0b813b253e1ce48e07bed585659d283e8c38104995c899941153"
+  },
+  "status": "passed"
+}
