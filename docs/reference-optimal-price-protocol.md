@@ -109,3 +109,28 @@ attempts. Exact source and logs are recorded in
 `evidence/2026-10-13-optimal-price-protocol.json` and its archive. This closes the
 request boundary only: independent observation replay is specified above but
 not implemented yet, and no C execution or price results are claimed.
+
+## Version 2: bounded repeated updates
+
+Recipe design exposed a coverage limit in version 1: 32 updates cannot raise
+LL/ML/OF frequency sums to their rescaling threshold. Version 1 and its evidence
+remain unchanged. The current price protocol is `ZOPPR02\0`, implemented in
+`optimal_prices_v2.py`; it adds tag 5 with words `literal offset, literal length,
+encoded offBase, match length, repeat count`. The helper invokes the same upstream
+update primitive exactly that many times before emitting the complete state.
+It does not synthesize a scaled update or skip validation. Each repeated update
+has the same source slice and abstract sequence symbols.
+
+Repeat count is 1..8,192. Across ordinary and repeated updates, at most 8,192
+primitive calls and 4,194,304 updated literal bytes are allowed per request.
+The 128-operation, source, packet, refresh and query bounds are unchanged.
+Repeated updates mark cached prices dirty exactly like an ordinary update. Full
+array/sum/cache observations are recorded after the batch, and independent replay
+checks each arithmetic increment before accepting its final record. This reaches
+all sequence-table rescaling branches with zero-length literal updates while
+retaining bounded request/output sizes. It does not add arbitrary seeded state.
+
+Normal and optimized version-2 request checks each pass ten exact round trips
+and reject 42 malformed schedules/packets with zero child attempts. Version-1
+controls still execute against the frozen version-1 module. No C capture has yet
+been run for either protocol.

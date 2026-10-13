@@ -1,0 +1,81 @@
+{
+  "archive": "2026-10-13-optimal-price-recipes.tar.gz",
+  "archive_bytes": 25291,
+  "archive_members": 18,
+  "archive_sha256": "4c19c575e0106b19cd42df78b74f301eb2887e8f8b2dd9bda42139802fd985bb",
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "scripts/check_optimal_price_protocol.py"
+      ],
+      "exit_code": 0,
+      "log": "normal-check_optimal_price_protocol.py.log",
+      "sha256": "debff20b529af1850db108fa9d1c0fcaeb57e7f9cd7cb9407e74ad85c603384f"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_optimal_price_protocol_v2.py"
+      ],
+      "exit_code": 0,
+      "log": "normal-check_optimal_price_protocol_v2.py.log",
+      "sha256": "af7f6ee6ba2bab5d48d48450cd209cb556e35074eee657bb51559baf4bdecb5d"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_optimal_price_recipes.py"
+      ],
+      "exit_code": 0,
+      "log": "normal-check_optimal_price_recipes.py.log",
+      "sha256": "c38e2b02f8b32324856bf8175aec9afd24ca5917665abbeebe4ccd8f220cc415"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_optimal_price_protocol.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized-check_optimal_price_protocol.py.log",
+      "sha256": "debff20b529af1850db108fa9d1c0fcaeb57e7f9cd7cb9407e74ad85c603384f"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_optimal_price_protocol_v2.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized-check_optimal_price_protocol_v2.py.log",
+      "sha256": "af7f6ee6ba2bab5d48d48450cd209cb556e35074eee657bb51559baf4bdecb5d"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_optimal_price_recipes.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized-check_optimal_price_recipes.py.log",
+      "sha256": "c38e2b02f8b32324856bf8175aec9afd24ca5917665abbeebe4ccd8f220cc415"
+    }
+  ],
+  "operations": 2018,
+  "qualification": "Source-only pre-execution hypotheses. Frozen v1 still passes; v2 adds bounded repeated updates to exercise all frequency-table rescaling. No C observations or Optimal support.",
+  "recipes": 147,
+  "source": {
+    "docs/reference-optimal-price-protocol.md": "c05187962955997d366876acd5aaeabb261a2c7db7e6b8ed0d303e179d71f0fa",
+    "scripts/check_optimal_price_protocol.py": "7ae456f077c85d4cab3211fe857a3662ce53c004b344b3b8a017fda861f90b8e",
+    "scripts/check_optimal_price_protocol_v2.py": "ceaad011b5b2e2f1e6a6408f77f53b854f2f93bc8d55336b9e7d9103f28081d2",
+    "scripts/check_optimal_price_recipes.py": "048f2d03144ad5f293c9d9f0c992f5e1de55bf7a4cc954b6d5b96bcbb1a3a2dd",
+    "scripts/oracles/optimal_price_recipes.py": "af95eecc93dfdd5c3a88c52b62616273e119b1888bf0ff6883464f62378dd2af",
+    "scripts/oracles/optimal_prices.py": "aeb2dc2f2ecc43dbff127eba9256565b9a9b2dbd1b09a061e136692fa390a9af",
+    "scripts/oracles/optimal_prices_v2.py": "85360e2ee7d7202b55f1c9c48266969cf951e85657e5265fdd06f6d524f0d92a",
+    "tests/fixtures/reference-optimal-price-recipes/README.md": "74f727cfbd762330b27932f9a0df6b25ebfec03eec514ea12b8e94ec671a151d",
+    "tests/fixtures/reference-optimal-price-recipes/recipes.json": "466775a8fe25c1171728193316dabcfcf9cb66adff67b642a27f8d561fa9dfa6"
+  },
+  "source_bytes": 9835338,
+  "status": "passed"
+}
