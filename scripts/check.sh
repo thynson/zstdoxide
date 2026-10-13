@@ -9,6 +9,7 @@ python3 scripts/import_negative_level_fixture.py --check
 python3 scripts/import_reference_fast_fuzz.py --check
 python3 scripts/check_reference_admission_v2.py --check
 python3 scripts/check_reference_admission_v3.py --check
+python3 scripts/check_reference_admission_v4.py --check
 python3 scripts/check_greedy_interop_recipes.py --check
 python3 scripts/capture_greedy_interop.py --check-plan
 python3 scripts/check_reference_interop_v2.py --check-plan

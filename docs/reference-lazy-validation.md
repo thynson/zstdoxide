@@ -571,3 +571,26 @@ immutable. Normal and optimized Python each compare all 797 rows, exhaust
 6,300 boundary classifications and reject 50 malformed/changed controls with
 zero child attempts. Evidence is in `docs/evidence/2026-10-13-lazy-admission.json`
 and its archive; positive new public C execution remains an obligation.
+
+
+## Bounded public Lazy/Lazy2 execution
+
+Public request dispatch now admits the two reviewed lazy depths under the shared
+W21/H19 and chain C18/S8 limits. Source-size resolution and error precedence
+remain unchanged. Default levels 5/6 fit every source tier, levels 7/8 fit through
+256 KiB, and levels 9/10 fit only above 16 KiB through 256 KiB. Larger inputs at
+levels 7..=12 exceed resource limits; unsupported strategies remain a distinct
+error. Public documentation records these exact differences rather than a level
+allowlist. Hints, key-width/target equivalences, selected owners, borrowed outputs
+and every observed failure ordinal are checked at both new depths.
+
+All fifteen final focused commands pass: new public tests on safe, each selected
+leaf and all features; prior public/Greedy baseline/original-selector tests and
+literal-policy tests on safe/all; strict Clippy, formatting, safe and explicit
+all-fourteen-leaf no_std builds, executable documentation examples and diff
+checks. The initial run exposed a stale expected set of admitted selector levels;
+that bookkeeping now includes the four frozen additions, and all affected checks
+were rerun. Original failed logs remain in
+`docs/evidence/2026-10-13-lazy-public.tar.gz`; the corresponding JSON records the
+successful final commands. Public bidirectional C execution remains a separate
+gate and is not implied by these Rust checks.

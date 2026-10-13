@@ -1,0 +1,247 @@
+{
+  "archive": {
+    "bytes": 5541,
+    "members": 26,
+    "path": "docs/evidence/2026-10-13-lazy-public.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "2a7c2c4ccba1d6e74a54198d4c6fa66d7afd731a41c888079a320e760308df53"
+  },
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "log": "00.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": "01.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": "02.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--test",
+        "reference_lazy",
+        "--test",
+        "reference_lazy_platform"
+      ],
+      "log": "03.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-reference-chain",
+        "--test",
+        "reference_lazy",
+        "--test",
+        "reference_lazy_platform"
+      ],
+      "log": "04.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--features",
+        "unsafe-row-table",
+        "--test",
+        "reference_lazy",
+        "--test",
+        "reference_lazy_platform"
+      ],
+      "log": "05.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-features",
+        "--test",
+        "reference_lazy",
+        "--test",
+        "reference_lazy_platform"
+      ],
+      "log": "06.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--test",
+        "reference_fast",
+        "--test",
+        "reference_double_fast",
+        "--test",
+        "reference_greedy",
+        "--test",
+        "reference_greedy_defaults",
+        "--test",
+        "upstream_reference_fast"
+      ],
+      "log": "07.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "reference_policy"
+      ],
+      "log": "08.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-features",
+        "--test",
+        "reference_fast",
+        "--test",
+        "reference_double_fast",
+        "--test",
+        "reference_greedy",
+        "--test",
+        "reference_greedy_defaults",
+        "--test",
+        "upstream_reference_fast"
+      ],
+      "log": "09.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--all-features",
+        "reference_policy"
+      ],
+      "log": "10.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "log": "11.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-reference-chain,unsafe-row-table,unsafe-dictionary,unsafe-training"
+      ],
+      "log": "12.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_doc_examples.py"
+      ],
+      "log": "13.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "log": "14.log",
+      "status": 0
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "sources": {
+    "src/reference_encode.rs": "0c4a6e958a106357c6488c1854d29d82295a1f6db1ce36f4e848615fc324cdad",
+    "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+    "src/reference_search.rs": "912313b5d827711113c3e13de0479aac61e4c45654feafe16be39637bb3c64c1",
+    "tests/reference_double_fast.rs": "2b60f5f5d2b8885681b9a53d6ac40b2a9bdaa51dbecaf7c709cfe9ed4d516662",
+    "tests/reference_fast.rs": "6eac4d090c7194d78c6bc5ff2f4e8252d59bf86a7b390ceae688e53c1b5bbebf",
+    "tests/reference_greedy.rs": "a76c0a7dbbadcabd337fba2f2ca7baf7614d6dfbe31727ecb03a96fe6f6e8c6f",
+    "tests/reference_lazy.rs": "7871838ea4a116937126e8cd6e798a545cd0861b07f5184e34ee6a010d7a3a87",
+    "tests/reference_lazy_platform.rs": "fdbcfbf1bba908e23b59bfd9bcce67575f3ccb3472687af403d815b4ee042db2",
+    "tests/upstream_reference_fast.rs": "831656481cd8c9aa04df9c8cfe0392c6b0e910979c4733b61014ed7a6b77a06a"
+  },
+  "test_results": [
+    "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s",
+    "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s",
+    "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s",
+    "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 797 filtered out; finished in 0.01s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s",
+    "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s",
+    "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.94s",
+    "test result: FAILED. 12 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.05s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.01s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s",
+    "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.59s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s",
+    "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.01s",
+    "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.02s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.13s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 797 filtered out; finished in 0.01s"
+  ]
+}

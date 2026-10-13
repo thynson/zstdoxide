@@ -133,7 +133,10 @@ fn each_resource_cap_and_unsupported_strategy_precede_clones_and_allocation() {
             .unwrap();
         requests.push((changed, Error::ResourceLimit));
     }
-    for strategy in [ReferenceStrategy::Lazy, ReferenceStrategy::Ultra2] {
+    for strategy in [
+        ReferenceStrategy::BinaryTreeLazy2,
+        ReferenceStrategy::Ultra2,
+    ] {
         let mut changed = request;
         changed.set_strategy(Some(strategy));
         requests.push((changed, Error::UnsupportedFeature));

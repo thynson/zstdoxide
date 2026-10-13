@@ -107,13 +107,7 @@ fn public_resource_and_strategy_errors_precede_allocation_and_cloning() {
         (22, 19, 8, ReferenceStrategy::Greedy, Error::ResourceLimit),
         (21, 20, 8, ReferenceStrategy::Greedy, Error::ResourceLimit),
         (14, 15, 9, ReferenceStrategy::Greedy, Error::ResourceLimit),
-        (
-            31,
-            30,
-            30,
-            ReferenceStrategy::Lazy,
-            Error::UnsupportedFeature,
-        ),
+        (31, 30, 30, ReferenceStrategy::Lazy, Error::ResourceLimit),
         (
             31,
             30,

@@ -8,7 +8,7 @@
 use crate::{ReferenceStrategy, ResolvedCompressionParameters};
 
 /// Automatic literal compression is disabled only for accelerated Fast.
-/// A positive DoubleFast or Greedy target does not disable Huffman or literal RLE.
+/// A positive DoubleFast, Greedy, Lazy or Lazy2 target does not disable Huffman or literal RLE.
 /// Corresponds to `ZSTD_literalsCompressionIsDisabled` for automatic literal
 /// mode in pinned zstd_compress_internal.h:685-698. Explicit caller overrides
 /// from the upstream context API are outside this bounded reference API.
@@ -16,7 +16,7 @@ pub(crate) const fn raw_literals(parameters: ResolvedCompressionParameters) -> b
     matches!(parameters.strategy(), ReferenceStrategy::Fast) && parameters.target_length() > 0
 }
 
-/// Strict payload gain shared by Fast, DoubleFast and Greedy execution.
+/// Strict payload gain shared by all admitted reference strategies.
 /// Excludes the relevant section or outer block header, according to the caller.
 /// Corresponds to the strategy-below-BtUltra branch of `ZSTD_minGain` in pinned
 /// zstd_compress_internal.h:673-683. This is not a policy for future BtUltra paths.
@@ -53,6 +53,12 @@ mod tests {
                 (3, 0, normal_kind),
                 (3, 4, normal_kind),
                 (3, 131_072, normal_kind),
+                (4, 0, normal_kind),
+                (4, 4, normal_kind),
+                (4, 131_072, normal_kind),
+                (5, 0, normal_kind),
+                (5, 4, normal_kind),
+                (5, 131_072, normal_kind),
             ] {
                 let parameters = RawCompressionParameters {
                     window_log: 21,
