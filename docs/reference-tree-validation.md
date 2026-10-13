@@ -57,3 +57,16 @@ It checks hash-head/source association, but does not recreate deferred sorting o
 predict the best candidate. Plausible alternative maps require binding to immutable
 captured bytes, not an unsupported claim that structural replay proves unique tree
 semantics. The synthetic records are not reference observations or Rust expectations.
+
+## Capture controller preflight
+
+The [controller evidence](evidence/2026-10-13-tree-capture-preflight.json) records
+two read-only positive plans and 19 rejected path, source-identity, environment
+and incomplete-capture cases per Python mode, with no child attempts. Twenty-five
+malformed packets independently fail the checked request decoder. The exact
+controller/reader/helper/input closure is pinned before execution. The planned
+170-command capture compiles 25 separate codec units and embeds unchanged
+`zstd_lazy.c` in the helper, instrumenting all 26 used codec sources and the
+helper in the sanitizer build. Its offline audit reconstructs the complete ordered
+compile/link/run inventory, verifies retained objects/executables and replays every
+observation. A successful preflight is not a completed C capture.
