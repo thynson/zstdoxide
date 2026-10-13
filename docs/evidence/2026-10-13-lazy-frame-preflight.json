@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "files": {
+    "scripts/capture_lazy_frames.py": "ab62fc3ea02f4d9eeba1ca612e3956d6762b0f74909307518a5456d4f0ef2501",
+    "scripts/check_lazy_frame_capture.py": "bbfdd37373f29f86564be9a533636fc9d55e4b10cecc17d1d0a016d39b1be584"
+  },
+  "results": {
+    "normal": {
+      "auditor_transport_rejections": [
+        "missing",
+        "../one",
+        "/one",
+        "one",
+        "link",
+        "a/../one",
+        "a\\one",
+        "status_running",
+        "status_failed",
+        "status_True",
+        "status_None"
+      ],
+      "child_attempts": 0,
+      "controller_sha256": "ab62fc3ea02f4d9eeba1ca612e3956d6762b0f74909307518a5456d4f0ef2501",
+      "optimization": 0,
+      "plan": {
+        "codec_executions": 0,
+        "incomplete_headers": 45,
+        "malformed_per_build": 51,
+        "positive_calls": 1377,
+        "recipes": 510,
+        "scheduled_calls": 1401,
+        "source_bytes": 22499784,
+        "status": "pre-execution plan checked",
+        "whole_comparisons": 39
+      },
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "rejected": [
+        "repository",
+        "repository_child",
+        "repository_ancestor",
+        "reference",
+        "reference_child",
+        "existing",
+        "symlink",
+        "internal_reference",
+        "absent_compiler",
+        "changed_pinned_input"
+      ]
+    },
+    "optimized": {
+      "auditor_transport_rejections": [
+        "missing",
+        "../one",
+        "/one",
+        "one",
+        "link",
+        "a/../one",
+        "a\\one",
+        "status_running",
+        "status_failed",
+        "status_True",
+        "status_None"
+      ],
+      "child_attempts": 0,
+      "controller_sha256": "ab62fc3ea02f4d9eeba1ca612e3956d6762b0f74909307518a5456d4f0ef2501",
+      "optimization": 1,
+      "plan": {
+        "codec_executions": 0,
+        "incomplete_headers": 45,
+        "malformed_per_build": 51,
+        "positive_calls": 1377,
+        "recipes": 510,
+        "scheduled_calls": 1401,
+        "source_bytes": 22499784,
+        "status": "pre-execution plan checked",
+        "whole_comparisons": 39
+      },
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "rejected": [
+        "repository",
+        "repository_child",
+        "repository_ancestor",
+        "reference",
+        "reference_child",
+        "existing",
+        "symlink",
+        "internal_reference",
+        "absent_compiler",
+        "changed_pinned_input"
+      ]
+    }
+  },
+  "codec_executions": 0,
+  "commands": [
+    "python3 /tmp/zstdoxide-lazy-frame-preflight/check.py",
+    "python3 -O /tmp/zstdoxide-lazy-frame-preflight/check.py"
+  ]
+}
