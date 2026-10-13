@@ -1497,3 +1497,22 @@ Safe/all focused Clippy and formatting pass. These additive tests postdate the
 immutable Module 16 full-matrix snapshot and are qualified separately in
 `evidence/2026-10-13-tree-baseline-v2.json` and its source/log archive. They do not
 change codec code or imply Optimal support.
+
+### Optimal scalar price checkpoint
+
+Before frequency ownership integration, an allocation-free scalar module may be
+compiled through a focused harness and a standalone no_std wrapper. `SymbolPrice`
+is a copied pair of checked whole-bit base/frequency weights; it owns no table,
+allocation, index link or borrow and therefore shares its safe value representation
+without artificial unsafe operations. Symbol lookup uses the existing attributed
+LL/ML format intervals and rejects out-of-domain lengths before indexing.
+
+The raw-literal helper borrows a typed 256-cell count array only for the call,
+checks every consumed scalar statistic, and retains nothing. No cache is refreshed
+implicitly: the later retained frequency owner must supply the correct phase's
+base prices. Checked sums reject the unreachable 2^30 sentinel and overflow.
+Predefined prices, disabled literal costs, full-block LL adjustment and dynamic
+match penalties remain distinct APIs. Initial code is not added to public dispatch
+or the library module graph while the previous milestone's immutable matrix runs;
+its source, no_std compilation and all captured query comparisons are independently
+qualified. Frequency ownership and its own optional unsafe feature follow later.

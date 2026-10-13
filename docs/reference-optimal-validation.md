@@ -28,3 +28,17 @@ basis for fixture trust.
 reconstruct exactly, including raw logs, packets, local source, C objects and both
 executables. Upstream reference source itself remains outside the repository.
 No production Rust price implementation or public admission is claimed here.
+
+## Bounded Rust fixture reader
+
+The audited records project to a 13,036,992-byte pack with exact case extents and
+a SHA256-bound catalog. Normal and optimized Python reconstruct it from the fixed
+archive and independently recheck all C observations. Four reader tests pass in
+safe/all/release-all (12 tests), validating source/update budgets, table sums,
+cache phases, price modes, fixed record extents, malformed input and selected
+hand-calculated prices. Safe/all strict Clippy and formatting pass.
+
+`evidence/2026-10-13-optimal-price-fixture.json` retains the reader, projector, pack
+and complete logs. This additive test-only reader postdates the running immutable
+Module 16 matrix; its checks are recorded separately. It is not production Optimal
+price/search support.

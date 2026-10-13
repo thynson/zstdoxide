@@ -1,0 +1,167 @@
+{
+  "archive": "2026-10-13-optimal-price-fixture.tar.gz",
+  "archive_bytes": 113224,
+  "archive_members": 22,
+  "archive_sha256": "f5b722d0ef54d869411c4f32b97448f9d2ff68aa5afa23a527a0b42011d7c332",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_optimal_price_fixture"
+      ],
+      "exit_code": 0,
+      "label": "reader-safe",
+      "log": "reader-safe.log",
+      "seconds": 1.3968530411366373,
+      "sha256": "b5fb221a00bb9f9258b218d4292d1a13a252f241bf71dd87ec1313f9d4108782",
+      "tests": [
+        [
+          4,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--all-features",
+        "--test",
+        "reference_optimal_price_fixture"
+      ],
+      "exit_code": 0,
+      "label": "reader-all",
+      "log": "reader-all.log",
+      "seconds": 1.1574236250016838,
+      "sha256": "be24a539dc184d8a5aee235bb950a2e50b6615e9390eb2e4907f5070b35a4c37",
+      "tests": [
+        [
+          4,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "reference_optimal_price_fixture"
+      ],
+      "exit_code": 0,
+      "label": "reader-release-all",
+      "log": "reader-release-all.log",
+      "seconds": 1.548970292089507,
+      "sha256": "0bd4f30f95d2c1b84f1544afcec3623e90126a3d2bab2c681244cf126a02aba5",
+      "tests": [
+        [
+          4,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_optimal_price_fixture",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "label": "clippy-safe",
+      "log": "clippy-safe.log",
+      "seconds": 0.30961908400058746,
+      "sha256": "238e807faa80f1382e88392d8e7bced73d83315a7aced4a1e2d6c1a48bb8987c"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_optimal_price_fixture",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "label": "clippy-all",
+      "log": "clippy-all.log",
+      "seconds": 0.19992016698233783,
+      "sha256": "3b9ad1d8e12bded03b9ac0a7fea950dd0c5c3efa30323147eb7bae6c79e967aa"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "label": "format",
+      "log": "format.log",
+      "seconds": 1.180273207835853,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/pack_optimal_price_fixtures.py"
+      ],
+      "exit_code": 0,
+      "label": "projection-normal",
+      "log": "projection-normal.log",
+      "seconds": 3.999824207974598,
+      "sha256": "9b2886a5c44f1d38c6ed5044fafbc9316cb4d6d148a9bcc8914682a1f8465b76"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/pack_optimal_price_fixtures.py"
+      ],
+      "exit_code": 0,
+      "label": "projection-optimized",
+      "log": "projection-optimized.log",
+      "seconds": 4.410682541085407,
+      "sha256": "9b2886a5c44f1d38c6ed5044fafbc9316cb4d6d148a9bcc8914682a1f8465b76"
+    }
+  ],
+  "qualification": "Additive test-only reader, outside the running immutable Module16 matrix. Full 147-case/2018-operation archived C projection; safe/all/release-all bounds checks and selected hand-calculated prices, strict safe/all Clippy and formatting. No production Optimal implementation.",
+  "source": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "526c1a2582976d9f77702029df9a7ad34fb8845ee5a592f6805d992bb4c1cc05",
+    "scripts/oracles/optimal_price_recipes.py": "af95eecc93dfdd5c3a88c52b62616273e119b1888bf0ff6883464f62378dd2af",
+    "scripts/oracles/optimal_price_validation.py": "ec2528f09dbc35f21688c65e706e6015fed3e8a6aa14bd13fb184656a804ceca",
+    "scripts/oracles/optimal_prices_v2.py": "85360e2ee7d7202b55f1c9c48266969cf951e85657e5265fdd06f6d524f0d92a",
+    "scripts/pack_optimal_price_fixtures.py": "91116a5083b85596ab4335b04beb5bed2b7beeb1d356ae1bca290b5dbcce41f8",
+    "tests/fixtures/reference-optimal-prices/README.md": "f1b410106277b3e8aa28cb9ba91ccd0ce07c18040f06a84e32ed02e2da8c9011",
+    "tests/fixtures/reference-optimal-prices/cases.bin": "c15e68d7c570b262cd3efb2e0be021cca3d0fc83afe6c26eb3527805b67978a4",
+    "tests/fixtures/reference-optimal-prices/provenance.json": "c167b85a9a64fae854db260e9c6bc7a1025e03ab38b4f131e12377c424288862",
+    "tests/reference_optimal_price_fixture.rs": "4f733dcab5a30f6716e956005129ac5856d2da082ca65743c116500b41d8b417",
+    "tests/support/optimal_price_fixture.rs": "c3bc78c2614da2a7a33a2102c79082d9f0cc795584c0c16317ff05639f85a7fb"
+  },
+  "status": "passed",
+  "tests": 12
+}
