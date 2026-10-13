@@ -129,6 +129,18 @@ impl<'a> GreedyBlock<'a> {
             }))
     }
 
+    /// Advance a lazy probe only after testing the old strict bound. The
+    /// returned coordinate may equal the limit; main search still excludes it.
+    #[allow(dead_code)] // Consumed by the next staged Lazy parser work item.
+    pub(crate) fn lookahead_after(self, current: usize) -> Result<Option<LazyQuery>> {
+        self.search_from(current, current).map(|probe| {
+            probe.map(|probe| LazyQuery {
+                // current < limit <= end proves this increment cannot overflow.
+                current: probe.current + 1,
+            })
+        })
+    }
+
     /// After storing a match, immediate repeat cleanup includes the limit.
     /// This is distinct from entering/restarting main search at the same index.
     pub(crate) fn cleanup_allowed(self, current: usize) -> Result<bool> {
@@ -136,6 +148,20 @@ impl<'a> GreedyBlock<'a> {
             return Err(Error::InvalidParameter);
         }
         Ok(self.search_limit().is_some_and(|limit| current <= limit))
+    }
+}
+
+/// Copied inclusive speculative position; owns neither source nor table.
+#[allow(dead_code)] // Consumed by the next staged Lazy parser work item.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(crate) struct LazyQuery {
+    current: usize,
+}
+
+#[allow(dead_code)]
+impl LazyQuery {
+    pub(crate) const fn current(self) -> usize {
+        self.current
     }
 }
 
@@ -220,9 +246,15 @@ mod tests {
                         let limit = prefix + size - margin;
                         assert!(block.search_from(limit, prefix).unwrap().is_none());
                         assert!(block.cleanup_allowed(limit).unwrap());
+                        assert_eq!(block.lookahead_after(limit).unwrap(), None);
+                        if limit > prefix {
+                            let next = block.lookahead_after(limit - 1).unwrap().unwrap();
+                            assert_eq!(next.current(), limit);
+                        }
                         assert!(!block.cleanup_allowed(limit + 1).unwrap());
                     } else {
                         assert!(!block.cleanup_allowed(prefix).unwrap());
+                        assert_eq!(block.lookahead_after(prefix).unwrap(), None);
                     }
                 }
             }
@@ -297,6 +329,8 @@ mod tests {
                 Err(Error::InvalidParameter)
             );
         }
+        assert_eq!(block.lookahead_after(19), Err(Error::InvalidParameter));
+        assert_eq!(block.lookahead_after(85), Err(Error::InvalidParameter));
         assert_eq!(block.cleanup_allowed(19), Err(Error::InvalidParameter));
         assert_eq!(block.cleanup_allowed(85), Err(Error::InvalidParameter));
         for cursor in [

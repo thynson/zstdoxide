@@ -1055,3 +1055,14 @@ value equality supports all 173 predecessor comparisons. Five focused tests
 replay all 645 sources, verify every complete initial/final map and compare all
 1,290 seeded Rust owners. Safe, isolated chain, isolated row and all-feature
 builds pass; these fixture records add no unsafe implementation or codec owner.
+
+
+The copied `LazyDepth`, `LazyCandidate` and `LazyGain` records now make the
+selection contract concrete. Candidates retain a checked source position,
+positive bounded distance, at least four matched bytes, intent and positive
+offBase. Their signed checked gains preserve negative short/distant scores and
+strict threshold ties. `LazyQuery` is produced by advancing a strict coordinate
+once, so equality is admitted only through explicitly named speculative search
+entry points. Those entry points revalidate the coordinate against their block
+before writes; Greedy's existing main-search functions still reject equality.
+All records are allocation-free safe values shared by both table backends.

@@ -92,6 +92,7 @@ mod huffman_encode;
 #[cfg(test)]
 #[path = "../tests/support/lazy_oracle.rs"]
 mod lazy_oracle_fixture;
+mod lazy_select;
 mod literal_encode;
 mod literal_header;
 mod match_key;

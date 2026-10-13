@@ -318,3 +318,23 @@ logs and linked immutable projection. These are reader/storage checks, not a
 complete feature matrix, Rust Lazy parsing, new C execution, ordinary/public
 frames or performance measurements. Copied candidate/score records and inclusive
 lookahead contracts are the next separate work item.
+
+
+## Copied selection and inclusive search contracts
+
+`LazyCandidate` checks match geometry and positive offBase before signed gain
+arithmetic; four gains preserve strict ties and the frozen below/equal/above
+thresholds. Maximum block/window geometry and negative scores are exercised.
+`LazyQuery` admits equality only by advancing from a strict coordinate. Explicit
+speculative search entry points recheck the receiving block before mutation;
+the original Greedy entry points continue to reject tail equality. Tiny blocks,
+both margins and cross-block forged queries are checked.
+
+The 19-command focused run passes formatting, strict safe/all-target Clippy,
+strict all-feature/all-target Clippy, and safe/isolated-chain/isolated-row/all
+selection, block and search suites plus no_std compilation. There are 16 tests
+per configuration (64 executions). A separate default Greedy regression run
+passes all 56 selected tests, including complete ordinary frames and allocator
+failures. Logs and commands are preserved in
+`docs/evidence/2026-10-13-lazy-records.tar.gz`. No Lazy parser, new C capture,
+public admission, full feature matrix or timing result is claimed here.

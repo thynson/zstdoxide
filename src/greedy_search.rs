@@ -3,7 +3,7 @@
 //! coding state and repeat offsets belong to the later parser/publication layer.
 #![forbid(unsafe_code)]
 
-use crate::greedy_block::GreedyBlock;
+use crate::greedy_block::{GreedyBlock, LazyQuery};
 use crate::reference_chain::ReferenceChain;
 use crate::row_table::RowTable;
 use crate::{Error, Result};
@@ -67,11 +67,39 @@ pub(crate) fn find_chain<H: Allocator, L: Allocator>(
     attempts: usize,
     skipping: bool,
 ) -> Result<Option<GreedyMatch>> {
+    if block.search_from(current, current)?.is_none() {
+        return Err(Error::InvalidParameter);
+    }
+    find_chain_inclusive(block, table, next, current, attempts, skipping)
+}
+
+/// Speculative probes include the tail limit. Revalidate against this block
+/// before any sampling write, even if the coordinate came from another block.
+#[allow(dead_code)] // Consumed by the next staged Lazy parser work item.
+pub(crate) fn find_chain_lookahead<H: Allocator, L: Allocator>(
+    block: GreedyBlock<'_>,
+    table: &mut ReferenceChain<H, L>,
+    next: &mut usize,
+    query: LazyQuery,
+    attempts: usize,
+    skipping: bool,
+) -> Result<Option<GreedyMatch>> {
+    find_chain_inclusive(block, table, next, query.current(), attempts, skipping)
+}
+
+fn find_chain_inclusive<H: Allocator, L: Allocator>(
+    block: GreedyBlock<'_>,
+    table: &mut ReferenceChain<H, L>,
+    next: &mut usize,
+    current: usize,
+    attempts: usize,
+    skipping: bool,
+) -> Result<Option<GreedyMatch>> {
     if block.row_search()
         || table.key_layout() != block.key_layout()
         || !(1..=256).contains(&attempts)
         || *next > current
-        || block.search_from(current, current)?.is_none()
+        || !block.cleanup_allowed(current)?
     {
         return Err(Error::InvalidParameter);
     }
@@ -114,11 +142,41 @@ pub(crate) fn find_row<P: Allocator, T: Allocator>(
     entropy: &mut u32,
     skipping: bool,
 ) -> Result<Option<GreedyMatch>> {
+    if block.search_from(current, current)?.is_none() {
+        return Err(Error::InvalidParameter);
+    }
+    find_row_inclusive(block, table, next, current, salt, entropy, skipping)
+}
+
+/// Speculative probes include the tail limit. Revalidate against this block
+/// before any sampling write, even if the coordinate came from another block.
+#[allow(dead_code)] // Consumed by the next staged Lazy parser work item.
+pub(crate) fn find_row_lookahead<P: Allocator, T: Allocator>(
+    block: GreedyBlock<'_>,
+    table: &mut RowTable<P, T>,
+    next: &mut usize,
+    query: LazyQuery,
+    salt: u64,
+    entropy: &mut u32,
+    skipping: bool,
+) -> Result<Option<GreedyMatch>> {
+    find_row_inclusive(block, table, next, query.current(), salt, entropy, skipping)
+}
+
+fn find_row_inclusive<P: Allocator, T: Allocator>(
+    block: GreedyBlock<'_>,
+    table: &mut RowTable<P, T>,
+    next: &mut usize,
+    current: usize,
+    salt: u64,
+    entropy: &mut u32,
+    skipping: bool,
+) -> Result<Option<GreedyMatch>> {
     let layout = table.layout();
     if !block.row_search()
         || layout.key_layout() != block.key_layout()
         || *next > current
-        || block.search_from(current, current)?.is_none()
+        || !block.cleanup_allowed(current)?
     {
         return Err(Error::InvalidParameter);
     }
@@ -251,6 +309,83 @@ mod tests {
         );
         assert_eq!(next, case.final_next, "{} frontier", case.name);
         assert_eq!(entropy, case.final_entropy, "{} salt entropy", case.name);
+    }
+
+    #[test]
+    fn speculative_tail_equality_is_explicit_and_rechecks_block_bounds() {
+        use crate::greedy_key::RowLayout;
+        let source = [b'x'; 160];
+        let key = GreedyKeyLayout::new(6, 4).unwrap();
+        for row in [false, true] {
+            let block = GreedyBlock::new(&source, 32..128, 0, key, 1024, row).unwrap();
+            let limit = 128 - if row { 16 } else { 8 };
+            let query = block.lookahead_after(limit - 1).unwrap().unwrap();
+            let outside = GreedyBlock::new(&source, 32..160, 0, key, 1024, row)
+                .unwrap()
+                .lookahead_after(128)
+                .unwrap()
+                .unwrap();
+            let mut next = 32;
+            if row {
+                let mut table =
+                    RowTable::new_in(RowLayout::new(key, 4).unwrap(), Global, Global).unwrap();
+                let mut entropy = 19;
+                assert_eq!(
+                    find_row(block, &mut table, &mut next, limit, 7, &mut entropy, false),
+                    Err(Error::InvalidParameter)
+                );
+                assert_eq!(next, 32);
+                assert_eq!(entropy, 19);
+                assert!(
+                    find_row_lookahead(block, &mut table, &mut next, query, 7, &mut entropy, false)
+                        .unwrap()
+                        .is_some()
+                );
+                let before = (
+                    table.test_maps().0.to_vec(),
+                    table.test_maps().1.to_vec(),
+                    next,
+                    entropy,
+                );
+                assert_eq!(
+                    find_row_lookahead(
+                        block,
+                        &mut table,
+                        &mut next,
+                        outside,
+                        7,
+                        &mut entropy,
+                        false
+                    ),
+                    Err(Error::InvalidParameter)
+                );
+                assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
+                assert_eq!((next, entropy), (before.2, before.3));
+            } else {
+                let mut table = ReferenceChain::new_in(key, 6, Global, Global).unwrap();
+                assert_eq!(
+                    find_chain(block, &mut table, &mut next, limit, 4, false),
+                    Err(Error::InvalidParameter)
+                );
+                assert_eq!(next, 32);
+                assert!(
+                    find_chain_lookahead(block, &mut table, &mut next, query, 4, false)
+                        .unwrap()
+                        .is_some()
+                );
+                let before = (
+                    table.test_maps().0.to_vec(),
+                    table.test_maps().1.to_vec(),
+                    next,
+                );
+                assert_eq!(
+                    find_chain_lookahead(block, &mut table, &mut next, outside, 4, false),
+                    Err(Error::InvalidParameter)
+                );
+                assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
+                assert_eq!(next, before.2);
+            }
+        }
     }
 
     #[test]
