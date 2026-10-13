@@ -23,3 +23,19 @@ accounting is qualified to the recorded aarch64 macOS compiler; other targets
 still enforce output and owner/category invariants. Focused safe/all Clippy and
 formatting pass. These additive tests were created after the Module 15 matrix
 snapshot and are not retroactively counted in it. Earlier baselines are intact.
+
+## Input-only direct search preparation
+
+Thirty deterministic recipes contain 13,888 source bytes. They vary tiny/inclusive
+tails, effective minimum matches, unsorted-chain budgets, paired-ring boundaries,
+lexical byte order, window floors, hash dimensions and the 256-operation cap.
+Names express intended coverage; no actual C branch witness is claimed before
+capture. The [input evidence](evidence/2026-10-13-tree-inputs.json) preserves the
+exact recipes, request transport, contract and controls.
+
+Both Python modes verify every canonical packet round trip, accept maximum-size
+and inclusive-tail positive controls, and reject 61 malformed scalar, source,
+schedule, packet and manifest cases. Duplicate/non-finite JSON and bool/float
+integer substitutions are rejected. A process audit hook records no attempted
+child execution. All archive members were read back and compared. No production
+codec or C helper has been added by this checkpoint.
