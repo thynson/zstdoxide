@@ -1217,7 +1217,7 @@ sequence scratch. Its borrowed source stays alive throughout a one-shot frame;
 all persistent links are source positions. Window floor and tree floor are
 separate: the former limits match distance, the latter limits whether a ring
 node still represents the candidate. A candidate can remain eligible for byte
-comparison at the tree floor while traversal of its overwritten children must
+comparison at or below the tree floor while traversal of its overwritten children must
 stop. The observation/replay contract must preserve this distinction.
 
 `next_to_update` can be ahead of the next parser query. The wrapper returns no

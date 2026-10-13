@@ -1,0 +1,1528 @@
+{
+  "archive": {
+    "archive": "2026-10-13-tree-families.tar.gz",
+    "archive_bytes": 27949006,
+    "archive_members": 18754,
+    "archive_sha256": "c2b8b223d0978681b8baf3db6889c2d9cf2ac8f8b397942c5a2779be11847bbf",
+    "capture_evidence_sha256": "dc03f157cebdba574eb86a21d5358dec0d16a1acdd5f0f753927002c5ffeb84b",
+    "chunk_bytes": 4096,
+    "qualification": "Complete capture including original requests, stdout/stderr, objects and executables. Downloaded upstream sources remain external. All archived members and reconstructed files checked without executing archived code.",
+    "raw_bytes": 143454268,
+    "raw_files": 820,
+    "status": "passed",
+    "verified_files": 820
+  },
+  "audits": {
+    "normal": {
+      "commands": 316,
+      "direct_observations": 412,
+      "negative_rejections": 50,
+      "operation_records": 9336,
+      "recipes": 103
+    },
+    "optimized": {
+      "commands": 316,
+      "direct_observations": 412,
+      "negative_rejections": 50,
+      "operation_records": 9336,
+      "recipes": 103
+    }
+  },
+  "commands": 316,
+  "controls": {
+    "normal": {
+      "cases": [
+        "status",
+        "boolean-schema",
+        "wrong-reference",
+        "support-archive",
+        "source-after",
+        "source-omission",
+        "upstream-source",
+        "loader-injection",
+        "recovering-runtime",
+        "missing-command",
+        "duplicate-command",
+        "boolean-exit",
+        "boolean-duration",
+        "negative-duration",
+        "unbounded-duration",
+        "unbounded-timeout",
+        "non-utc-start",
+        "working-directory",
+        "log-traversal",
+        "boolean-log-size",
+        "optimization",
+        "missing-unit-instrumentation",
+        "missing-helper-instrumentation",
+        "recovery-enabled",
+        "extra-link-input",
+        "embedded-source-omission",
+        "embedded-instrumentation-omission",
+        "dependency-omission",
+        "object-omission",
+        "binary-identity",
+        "packet-identity",
+        "totals",
+        "command-order",
+        "actual-parameter",
+        "actual-first-edge-marker",
+        "actual-false-guard",
+        "actual-release-count",
+        "actual-negative-sanitizer",
+        "actual-truncated-observation"
+      ],
+      "checker_sha256": "89150a4d00a61a9f0ebc2d03764d8b54804d5677021941d28a554f8486c1382d",
+      "child_processes": 0,
+      "optimized": false,
+      "positive": {
+        "commands": 316,
+        "direct_observations": 412,
+        "negative_rejections": 50,
+        "operation_records": 9336,
+        "recipes": 103
+      },
+      "rejected": 39,
+      "status": "passed"
+    },
+    "optimized": {
+      "cases": [
+        "status",
+        "boolean-schema",
+        "wrong-reference",
+        "support-archive",
+        "source-after",
+        "source-omission",
+        "upstream-source",
+        "loader-injection",
+        "recovering-runtime",
+        "missing-command",
+        "duplicate-command",
+        "boolean-exit",
+        "boolean-duration",
+        "negative-duration",
+        "unbounded-duration",
+        "unbounded-timeout",
+        "non-utc-start",
+        "working-directory",
+        "log-traversal",
+        "boolean-log-size",
+        "optimization",
+        "missing-unit-instrumentation",
+        "missing-helper-instrumentation",
+        "recovery-enabled",
+        "extra-link-input",
+        "embedded-source-omission",
+        "embedded-instrumentation-omission",
+        "dependency-omission",
+        "object-omission",
+        "binary-identity",
+        "packet-identity",
+        "totals",
+        "command-order",
+        "actual-parameter",
+        "actual-first-edge-marker",
+        "actual-false-guard",
+        "actual-release-count",
+        "actual-negative-sanitizer",
+        "actual-truncated-observation"
+      ],
+      "checker_sha256": "89150a4d00a61a9f0ebc2d03764d8b54804d5677021941d28a554f8486c1382d",
+      "child_processes": 0,
+      "optimized": true,
+      "positive": {
+        "commands": 316,
+        "direct_observations": 412,
+        "negative_rejections": 50,
+        "operation_records": 9336,
+        "recipes": 103
+      },
+      "rejected": 39,
+      "status": "passed"
+    }
+  },
+  "drivers": {
+    "archive-zstdoxide-tree-families.py": {
+      "sha256": "9c8246ec659688aa22bd9ce2d7a6c9595f6e71e8e4b86405443f69d4717f0e64",
+      "source": "from pathlib import Path\nimport hashlib,io,json,tarfile\nR=Path('/Users/lanxingcan/Workspace/zstdoxize');C=Path('/private/tmp/zstdoxide-tree-families-2026-10-13')\nsha=lambda b:hashlib.sha256(b).hexdigest();enc=lambda v:(json.dumps(v,sort_keys=True,indent=2)+'\\n').encode()\ne=json.loads((C/'evidence.json').read_text())\nif e['status']!='passed' or e['source_before']!=e['source_after']:raise ValueError('completed unchanged capture')\nfiles={str(p.relative_to(C)):p for p in C.rglob('*') if p.is_file()}\nchunks={};mapping={}\nfor name,p in sorted(files.items()):\n if p.is_symlink():raise ValueError('no symlink')\n b=p.read_bytes();keys=[]\n for offset in range(0,len(b),4096):\n  block=b[offset:offset+4096];h=sha(block);chunks[h]=block;keys.append(h)\n mapping[name]=dict(bytes=len(b),sha256=sha(b),chunks=keys)\nreport=dict(status='passed',capture_evidence_sha256=sha((C/'evidence.json').read_bytes()),raw_files=len(files),raw_bytes=sum(v['bytes'] for v in mapping.values()),archive='2026-10-13-tree-families.tar.gz',chunk_bytes=4096,qualification='Complete capture including original requests, stdout/stderr, objects and executables. Downloaded upstream sources remain external. All archived members and reconstructed files checked without executing archived code.')\nreconstruct=Path('/tmp/package-zstdoxide-double-fast-frames.py').read_text().split(\"reconstruct='''\",1)[1].split(\"'''\",1)[0]\nmembers={'file-map.json':enc(mapping),'report.json':enc(report),'reconstruct.py':reconstruct.encode(),**{'chunks/'+h+'.bin':b for h,b in chunks.items()}}\na=R/'docs/evidence'/report['archive']\nif a.exists():raise ValueError('fresh archive')\nwith tarfile.open(a,'w:gz') as t:\n for n,b in sorted(members.items()):\n  i=tarfile.TarInfo('tree-families/'+n);i.size=len(b);i.mode=0o644;t.addfile(i,io.BytesIO(b))\nwith tarfile.open(a) as t:found={m.name:t.extractfile(m).read() for m in t}\nif found!={'tree-families/'+n:b for n,b in members.items()}:raise ValueError('archive members')\nfor name,item in mapping.items():\n b=b''.join(found['tree-families/chunks/'+h+'.bin'] for h in item['chunks'])\n if len(b)!=item['bytes'] or sha(b)!=item['sha256'] or b!=files[name].read_bytes():raise ValueError('reconstruction '+name)\nreport.update(archive_bytes=a.stat().st_size,archive_sha256=sha(a.read_bytes()),archive_members=len(members),verified_files=len(mapping));Path('/tmp/zstdoxide-tree-families-archive.json').write_bytes(enc(report));print(report['raw_files'],report['raw_bytes'],report['archive_bytes'])\n"
+    },
+    "package-zstdoxide-tree-families-report.py": {
+      "sha256": "93962f7f68705814000985ac9d151725f92b21f9b0786d4788f9f98570e2901a",
+      "source": "from pathlib import Path\nimport hashlib,json,subprocess\nR=Path('/Users/lanxingcan/Workspace/zstdoxize');C=Path('/private/tmp/zstdoxide-tree-families-2026-10-13')\nsha=lambda b:hashlib.sha256(b).hexdigest();e=json.loads((C/'evidence.json').read_text());a=json.loads(Path('/tmp/zstdoxide-tree-families-archive.json').read_text())\nif e['status']!='passed' or e['source_before']!=e['source_after'] or len(e['commands'])!=316:raise ValueError('complete capture')\nfor n,h in e['source_before'].items():\n if sha((R/n).read_bytes())!=h or sha(subprocess.check_output(['git','show','99e8424:'+n],cwd=R))!=h:raise ValueError('immutable captured source '+n)\nif sha((R/'docs/evidence'/a['archive']).read_bytes())!=a['archive_sha256']:raise ValueError('archive identity')\ncontrols={mode:json.loads(Path('/tmp/zstdoxide-tree-family-capture-controls-'+mode+'.json').read_text()) for mode in ('normal','optimized')}\nfor mode,v in controls.items():\n if v['status']!='passed' or v['rejected']!=39 or v['child_processes']!=0 or v['optimized']!=(mode=='optimized'):raise ValueError('controls')\n if v['positive']!={'commands':316,**e['totals']}:raise ValueError('positive replay totals')\naudits={mode:json.loads(Path('/tmp/zstdoxide-tree-family-capture-audit-'+mode+'.json').read_text()) for mode in ('normal','optimized')}\nif audits['normal']!=audits['optimized'] or audits['normal']!={'commands':316,**e['totals']}:raise ValueError('independent audits')\ndrivers=['zstdoxide-tree-family-outcomes.py','zstdoxide-tree-family-capture-controls.py','archive-zstdoxide-tree-families.py','package-zstdoxide-tree-families-report.py']\nreport=dict(status='passed',source_revision='99e8424',upstream_revision=e['upstream_revision'],commands=316,totals=e['totals'],source=e['source_before'],archive=a,audits=audits,controls=controls,outcomes=json.loads(Path('/tmp/zstdoxide-tree-family-outcomes.json').read_text()),drivers={n:dict(sha256=sha((Path('/tmp')/n).read_bytes()),source=(Path('/tmp')/n).read_text()) for n in drivers},scope='Broader direct binary-tree C search capture only. All thirty original tiny observations remain exact. Normal and ASan/UBSan results match exactly across two padding fills. Every used codec source is instrumented, including the original lazy source embedded once in the helper. Structural/source replay and thirty-nine specified forgery rejections per mode do not prove unique tree-selection semantics; immutable captured artifact identities bind the original observations. No Rust tree, ordinary parser/frame, public strategy 6 or timing claim.')\np=R/'docs/evidence/2026-10-13-tree-families.json'\nif p.exists():raise ValueError('fresh report')\np.write_text(json.dumps(report,sort_keys=True,indent=2)+'\\n');print(e['totals'],a['verified_files'])\n"
+    },
+    "zstdoxide-tree-family-capture-controls.py": {
+      "sha256": "af198ebaf3824c8ec69bae6193fbee3798ce8fb0c7e59b774af87276351dcab1",
+      "source": "from pathlib import Path\nimport copy,hashlib,json,os,shutil,sys,tempfile\nR=Path('/Users/lanxingcan/Workspace/zstdoxize');C=Path('/private/tmp/zstdoxide-tree-families-2026-10-13')\nsys.dont_write_bytecode=True;sys.path.insert(0,str(R/'scripts'));import check_tree_families_capture as audit\nattempts=[]\ndef no_children(event,args):\n if event in ('subprocess.Popen','os.system','os.fork','os.posix_spawn','os.exec','os.spawn'):\n  attempts.append(event);raise RuntimeError('child forbidden')\nsys.addaudithook(no_children)\noriginal=json.loads((C/'evidence.json').read_text());positive=audit.audit(C);results=[]\nwith tempfile.TemporaryDirectory(prefix='zstdoxide-tree-forged-') as temporary:\n root=Path(temporary)/'capture';shutil.copytree(C,root,copy_function=os.link)\n report=root/'evidence.json';report.unlink()\n def test(name,modify):\n  e=copy.deepcopy(original);changed=[]\n  commands={r['label']:r for r in e['commands']}\n  def rewrite(label,stream,fn):\n   row=commands[label];path=row[stream]['path'];data=fn((C/path).read_bytes());p=root/path\n   p.unlink();p.write_bytes(data);changed.append(path);row[stream].update(bytes=len(data),sha256=hashlib.sha256(data).hexdigest())\n  try:\n   modify(e,commands,rewrite);report.write_text(json.dumps(e,sort_keys=True,indent=2)+'\\n')\n   try:audit.audit(root)\n   except (ValueError,TypeError,KeyError,IndexError,OSError):results.append(name)\n   else:raise ValueError('accepted forged capture: '+name)\n  finally:\n   for name in changed:\n    p=root/name;p.unlink();os.link(C/name,p)\n controls=[\n  ('status',lambda e,r,w:e.update(status='running')),\n  ('boolean-schema',lambda e,r,w:e.update(schema_version=True)),\n  ('wrong-reference',lambda e,r,w:e.update(upstream_revision='0'*40)),\n  ('support-archive',lambda e,r,w:e.update(support_archive_used=True)),\n  ('source-after',lambda e,r,w:e.update(source_after={})),\n  ('source-omission',lambda e,r,w:e['source_before'].pop('scripts/oracles/tree_direct_v1.c')),\n  ('upstream-source',lambda e,r,w:e['upstream_source_sha256'].update({'lib/compress/zstd_lazy.c':'0'*64})),\n  ('loader-injection',lambda e,r,w:e['environment'].update(DYLD_INSERT_LIBRARIES='/tmp/unused')),\n  ('recovering-runtime',lambda e,r,w:e['environment'].update(ASAN_OPTIONS='detect_leaks=0:halt_on_error=0')),\n  ('missing-command',lambda e,r,w:e['commands'].pop()),\n  ('duplicate-command',lambda e,r,w:e['commands'].__setitem__(1,e['commands'][0])),\n  ('boolean-exit',lambda e,r,w:r['normal-link'].update(exit_code=False)),\n  ('boolean-duration',lambda e,r,w:r['normal-link'].update(seconds=True)),\n  ('negative-duration',lambda e,r,w:r['normal-link'].update(seconds=-1)),\n  ('unbounded-duration',lambda e,r,w:r['normal-link'].update(seconds=151)),\n  ('unbounded-timeout',lambda e,r,w:r['normal-link'].update(timeout_seconds=999)),\n  ('non-utc-start',lambda e,r,w:r['normal-link'].update(started_at='2026-10-13T00:00:00+08:00')),\n  ('working-directory',lambda e,r,w:r['normal-link'].update(cwd='/tmp')),\n  ('log-traversal',lambda e,r,w:r['normal-link']['stdout'].update(path='../other')),\n  ('boolean-log-size',lambda e,r,w:r['normal-link']['stdout'].update(bytes=False)),\n  ('optimization',lambda e,r,w:r['normal-compile-0']['argv'].__setitem__(r['normal-compile-0']['argv'].index('-O2'),'-O3')),\n  ('missing-unit-instrumentation',lambda e,r,w:r['sanitized-compile-0']['argv'].remove('-fsanitize=address,undefined')),\n  ('missing-helper-instrumentation',lambda e,r,w:r['sanitized-link']['argv'].remove('-fsanitize=address,undefined')),\n  ('recovery-enabled',lambda e,r,w:r['sanitized-link']['argv'].remove('-fno-sanitize-recover=all')),\n  ('extra-link-input',lambda e,r,w:r['normal-link']['argv'].insert(-2,'/tmp/other.o')),\n  ('embedded-source-omission',lambda e,r,w:e['builds']['sanitized'].update(embedded_codec_sources=[])),\n  ('embedded-instrumentation-omission',lambda e,r,w:e['builds']['sanitized']['instrumented_codec_sources'].remove('lib/compress/zstd_lazy.c')),\n  ('dependency-omission',lambda e,r,w:e['builds']['normal']['dependencies'].pop(next(iter(e['builds']['normal']['dependencies'])))),\n  ('object-omission',lambda e,r,w:e['builds']['normal']['objects'].pop(next(iter(e['builds']['normal']['objects'])))),\n  ('binary-identity',lambda e,r,w:e['builds']['normal'].update(executable_sha256='0'*64)),\n  ('packet-identity',lambda e,r,w:e['requests']['tiny-noise-tail-8'].update(sha256='0'*64)),\n  ('totals',lambda e,r,w:e['totals'].update(operation_records=0)),\n  ('command-order',lambda e,r,w:e['commands'].__setitem__(slice(0,2),list(reversed(e['commands'][:2])))),\n ]\n for name,modify in controls:test(name,modify)\n def row_edit(data,index,edit):\n  rows=[json.loads(line) for line in data.splitlines()];edit(rows[index]);return b''.join((json.dumps(r,sort_keys=True)+'\\n').encode() for r in rows)\n for name,index,edit in [\n  ('actual-parameter',0,lambda row:row['parameters'].__setitem__(6,5)),\n  ('actual-first-edge-marker',1,lambda row:row['after_nodes'][0].__setitem__(0,1)),\n  ('actual-false-guard',1,lambda row:row.update(guards_unchanged=False)),\n  ('actual-release-count',-1,lambda row:row.update(releases=9)),\n ]:\n  test(name,lambda e,r,w,index=index,edit=edit:w('normal-case-tiny-noise-tail-8','stdout',lambda b:row_edit(b,index,edit)))\n test('actual-negative-sanitizer',lambda e,r,w:w('sanitized-negative-magic','stderr',lambda b:b+b'AddressSanitizer\\n'))\n test('actual-truncated-observation',lambda e,r,w:w('normal-case-tiny-noise-tail-8','stdout',lambda b:b.rsplit(b'\\n',2)[0]+b'\\n'))\nif audit.audit(C)!=positive or attempts:raise ValueError('unchanged restored original / no children')\nprint(json.dumps(dict(status='passed',optimized=not __debug__,positive=positive,rejected=len(results),cases=results,child_processes=0,\n                     checker_sha256=hashlib.sha256((R/'scripts/check_tree_families_capture.py').read_bytes()).hexdigest()),sort_keys=True))\n"
+    },
+    "zstdoxide-tree-family-outcomes.py": {
+      "sha256": "75f2e8846d6b7c7c3424d8c92f143d0634b6abb0e85ba6913dca59fda3cc1dd6",
+      "source": "from pathlib import Path\nimport collections,hashlib,json\nR=Path('/Users/lanxingcan/Workspace/zstdoxize');C=Path('/private/tmp/zstdoxide-tree-families-2026-10-13')\nmanifest=json.loads((R/'tests/fixtures/reference-tree-family-recipes/recipes.json').read_text())\nrows=[];groups=collections.defaultdict(collections.Counter)\nfor case in manifest['recipes']:\n if case['family'] in ('tiny-control','long-periodic-frontier'):continue\n name=case['name'];h=case['hypothesis'];data=(C/('logs/normal-case-'+name+'.stdout')).read_bytes()\n records=[json.loads(line) for line in data.splitlines()]\n record=next(r for r in records if r.get('record')=='operation' and r['pass']==0 and r['query']==h['query'])\n length,offset=record['length'],record['offset_base'];distance=offset-3 if length else None\n classification='zero' if length==0 else 'other'\n if case['family']=='conditional-offset-cost':\n  if (distance,length)==(h['near_distance'],h['near_length']):classification='near'\n  if (distance,length)==(h['far_distance'],h['far_length']):classification='far'\n  group='cost-gain-minus-cost-'+str(h['gain_minus_cost'])\n elif case['family']=='node-floor':group='node-distance-minus-count-'+str(h['far_distance']-h['node_count'])\n elif case['family']=='window-floor':group='window-delta-'+str(h['window_delta'])\n else:group=case['family']\n groups[group][f'{classification}:length={length}']+=1\n rows.append(dict(name=name,family=case['family'],hypothesis=h,length=length,offset_base=offset,distance=distance,classification=classification,stdout_sha256=hashlib.sha256(data).hexdigest()))\nreport=dict(status='passed',scope='Observed first-padding normal query results only; sanitized and padding equivalence belongs to the capture auditor. Conditional hypotheses do not imply an internal comparison-order witness.',groups=dict(groups),records=rows)\nPath('/tmp/zstdoxide-tree-family-outcomes.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\\n');print(json.dumps(report['groups'],sort_keys=True))\n"
+    }
+  },
+  "outcomes": {
+    "groups": {
+      "cost-gain-minus-cost--1": {
+        "near:length=8": 10
+      },
+      "cost-gain-minus-cost--2": {
+        "near:length=8": 5
+      },
+      "cost-gain-minus-cost-0": {
+        "near:length=8": 15
+      },
+      "cost-gain-minus-cost-1": {
+        "far:length=9": 10
+      },
+      "cost-gain-minus-cost-2": {
+        "far:length=9": 5
+      },
+      "inclusive-matched-tail": {
+        "other:length=8": 5
+      },
+      "node-distance-minus-count--1": {
+        "other:length=12": 3
+      },
+      "node-distance-minus-count--2": {
+        "other:length=12": 3
+      },
+      "node-distance-minus-count-0": {
+        "other:length=12": 3
+      },
+      "node-distance-minus-count-128": {
+        "other:length=12": 1
+      },
+      "node-distance-minus-count-32": {
+        "other:length=12": 1
+      },
+      "node-distance-minus-count-64": {
+        "other:length=12": 1
+      },
+      "window-delta--1": {
+        "other:length=16": 2
+      },
+      "window-delta-0": {
+        "zero:length=0": 2
+      },
+      "window-delta-1": {
+        "zero:length=0": 2
+      }
+    },
+    "records": [
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m3-near28-far255",
+        "offset_base": 31,
+        "stdout_sha256": "aa9a44f480f418c8fdb23f8fcef9110a7644e7b2e386d6b955d916a50311f21f"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m3-near28-far511",
+        "offset_base": 31,
+        "stdout_sha256": "9159171914500c40d5be8cec9de416e612e4a38bc518dd5b510d1f189a9ce6f6"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -2,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 6,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m3-near28-far1023",
+        "offset_base": 31,
+        "stdout_sha256": "3390dc78d315dd74fda5e8b20a3cf34ac16cbcc45c6c11952015cd7192bfd44e"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m3-near29-far255",
+        "offset_base": 258,
+        "stdout_sha256": "eb76baf3b2a25a4ff465c2fc5d0ffb1cf4df43898d67cfa987a428670352c646"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m3-near29-far511",
+        "offset_base": 32,
+        "stdout_sha256": "94c140ad998abce5a5bfa7768b18d488d42a0c3eca1b0b6130cb6bf66fb6adbd"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m3-near29-far1023",
+        "offset_base": 32,
+        "stdout_sha256": "6da3878374d186ef832100dfcd7a7042526151e75f11cf52559ffe18f12dc07b"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 2,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 2,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m3-near61-far255",
+        "offset_base": 258,
+        "stdout_sha256": "7fb989e328cb48e29cf1c3c4f5140457952f9dcec862ef91202a34d37eebf1a0"
+      },
+      {
+        "classification": "far",
+        "distance": 511,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m3-near61-far511",
+        "offset_base": 514,
+        "stdout_sha256": "f047e2515401c0d1d156b6fe3c27bf8cc564952e6707ba26d96d8db0bd65122a"
+      },
+      {
+        "classification": "near",
+        "distance": 61,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m3-near61-far1023",
+        "offset_base": 64,
+        "stdout_sha256": "a8ff7ad87e02ebd0cfad2db9b869d9062ec5758d453d04c950e8aad643845f26"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m4-near28-far255",
+        "offset_base": 31,
+        "stdout_sha256": "1c095f2f005068d0d9420463eb3dbe5d44df6396e0337cc4f214b7cc98e37b8d"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m4-near28-far511",
+        "offset_base": 31,
+        "stdout_sha256": "7d5e6dead019696e67aa200b09e8abfe9a53b6cb19fe294c204ebaa9164752de"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -2,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 6,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m4-near28-far1023",
+        "offset_base": 31,
+        "stdout_sha256": "de4021bfe4400e32a87673281e8c5576682940106da0eefc8d5d59a85703a1b4"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m4-near29-far255",
+        "offset_base": 258,
+        "stdout_sha256": "8a6b8e68a0979553f717753360b1dce7b9bb46ec10df65b425a1fb0ff68b9942"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m4-near29-far511",
+        "offset_base": 32,
+        "stdout_sha256": "25f12414e3207ac6c51aaa497a27cc29e776c156351aba650f8359a6d875f20a"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m4-near29-far1023",
+        "offset_base": 32,
+        "stdout_sha256": "21cc3c52abcf9f3587d8aec397af160b62fa53dc46649754e125827d6522ae5c"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 2,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 2,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m4-near61-far255",
+        "offset_base": 258,
+        "stdout_sha256": "856680af0899c02cc2442b8e2507824775f765ec3e489de6324b4882feaef9be"
+      },
+      {
+        "classification": "far",
+        "distance": 511,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m4-near61-far511",
+        "offset_base": 514,
+        "stdout_sha256": "d2307ccb638983eb0ef8ec4801268b3a7256d8fb4c8d8264b11f096a21340f13"
+      },
+      {
+        "classification": "near",
+        "distance": 61,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m4-near61-far1023",
+        "offset_base": 64,
+        "stdout_sha256": "9a031f5dcb3b523fa233890401e8694165c0a5520e1ba4880bb929b4ab106638"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m5-near28-far255",
+        "offset_base": 31,
+        "stdout_sha256": "2150ea4c55505e57cc35f6967f897a579acf69acfcc16d76bd6ca316fa0a9b63"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m5-near28-far511",
+        "offset_base": 31,
+        "stdout_sha256": "b133c8e09a38af0d525765a12073fc4ce8d3265dc2ba9d4101f3b3b2766b0f7f"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -2,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 6,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m5-near28-far1023",
+        "offset_base": 31,
+        "stdout_sha256": "9fe23a9efa6907a84da0e806ba81455c11097f030a4086a8100f1672114d239c"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m5-near29-far255",
+        "offset_base": 258,
+        "stdout_sha256": "aef01f224ee1d0a88472dec6ff3c27e76d6fa7182a59000b28f1edeb869472f5"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m5-near29-far511",
+        "offset_base": 32,
+        "stdout_sha256": "9e8f5de9e2f05b68af8bde1b507bdcd2c13627733c6ba98668210564b4c2cf9c"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m5-near29-far1023",
+        "offset_base": 32,
+        "stdout_sha256": "8a20dc21e758e1c36a1a893270fe9aa1db82b7f750928b6d8386af48986d7305"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 2,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 2,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m5-near61-far255",
+        "offset_base": 258,
+        "stdout_sha256": "c3eeaf3800cc2e0404debf40a79396458cd6f39bedeb7f9148c9b853bfc38a9e"
+      },
+      {
+        "classification": "far",
+        "distance": 511,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m5-near61-far511",
+        "offset_base": 514,
+        "stdout_sha256": "f8bda9143b99602d4daf2958d953a4e8f3836ef7beeacf4e5827b95dbfb11706"
+      },
+      {
+        "classification": "near",
+        "distance": 61,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 1,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m5-near61-far1023",
+        "offset_base": 64,
+        "stdout_sha256": "f4610c38aadf23cbac02cb088aec8c4fd9ed97e2303b91a5e2815bf6405efd12"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m6-near28-far255",
+        "offset_base": 31,
+        "stdout_sha256": "471139a3c7093bf0ace59fd6e1f2974cc9534b212710751fe1832fc8f46bfe30"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m6-near28-far511",
+        "offset_base": 31,
+        "stdout_sha256": "26dc02e670dec22ed0685cde7e1a0124abf20ac2a700f9d393ce8a0d26de8325"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -2,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 6,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m6-near28-far1023",
+        "offset_base": 31,
+        "stdout_sha256": "600f69e8f5ea4589db4fbdd1f13f2506d5499e842f18df72cfd0ca3949959e38"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m6-near29-far255",
+        "offset_base": 258,
+        "stdout_sha256": "c312904ba0fb3610af823aa438953245187ba150be86e5a89e51fde0df85f8d7"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m6-near29-far511",
+        "offset_base": 32,
+        "stdout_sha256": "96d035a99524d9ebe8677136aae05b51de925dcf7a36964eecf2d4fb896ea0e8"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m6-near29-far1023",
+        "offset_base": 32,
+        "stdout_sha256": "38ce4b4b744765d2e9bf1beddf8cd3c8d0c75792465404d16ff697c4957c74fb"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 2,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 2,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m6-near61-far255",
+        "offset_base": 258,
+        "stdout_sha256": "a501cdbf256e220e013ab34bf2c21db4f7d5f3f780486d557c7f8512522628dd"
+      },
+      {
+        "classification": "far",
+        "distance": 511,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m6-near61-far511",
+        "offset_base": 514,
+        "stdout_sha256": "905267bd414baa1f9edd0b2d1dbf1d71d35b0a7131b70401ea85d8b0d2c80ee0"
+      },
+      {
+        "classification": "near",
+        "distance": 61,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m6-near61-far1023",
+        "offset_base": 64,
+        "stdout_sha256": "fde7186a16da0fab930ae3ab40df5393242b163d9947fb3e35f197950a44f184"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m7-near28-far255",
+        "offset_base": 31,
+        "stdout_sha256": "da0961fed5099d691c2a021e359aefb2b3e4dcaa180eb48301b2021004daf734"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m7-near28-far511",
+        "offset_base": 31,
+        "stdout_sha256": "28c54002e6b4bd000853389972b7abca7c8cbea680f0b27e129cc5419617de13"
+      },
+      {
+        "classification": "near",
+        "distance": 28,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 1,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -2,
+          "near_distance": 28,
+          "near_length": 8,
+          "offset_bit_difference": 6,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m7-near28-far1023",
+        "offset_base": 31,
+        "stdout_sha256": "b971e24429b6aebaa06cb07e151dec56be729f16a08bde2ba7c803f3135fd3fe"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m7-near29-far255",
+        "offset_base": 258,
+        "stdout_sha256": "c14d521970ef61c396978096509158714078484bc12360d203d5896e0caafa0b"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m7-near29-far511",
+        "offset_base": 32,
+        "stdout_sha256": "bc7dad7da35643a2797c792328f5e3a93fab074c7581fc0e3be4f7d1c451a51d"
+      },
+      {
+        "classification": "near",
+        "distance": 29,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": -1,
+          "near_distance": 29,
+          "near_length": 8,
+          "offset_bit_difference": 5,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m7-near29-far1023",
+        "offset_base": 32,
+        "stdout_sha256": "2a7adc014ab2f48a50a647a5f744e561c7f20ad01d6d08893f37e1d1fddd0222"
+      },
+      {
+        "classification": "far",
+        "distance": 255,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 255,
+          "far_length": 9,
+          "gain_minus_cost": 2,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 2,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m7-near61-far255",
+        "offset_base": 258,
+        "stdout_sha256": "67673f5c287fab434aa17b9ba10554306fb635ccdc5e65ddc9c17f008341eb77"
+      },
+      {
+        "classification": "far",
+        "distance": 511,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 511,
+          "far_length": 9,
+          "gain_minus_cost": 1,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 3,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 9,
+        "name": "cost-m7-near61-far511",
+        "offset_base": 514,
+        "stdout_sha256": "da4ecb0a4e3761aa47a5c358db94ff2f60171b570eff591941f389c9a92ba516"
+      },
+      {
+        "classification": "near",
+        "distance": 61,
+        "family": "conditional-offset-cost",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 1023,
+          "far_length": 9,
+          "gain_minus_cost": 0,
+          "near_distance": 61,
+          "near_length": 8,
+          "offset_bit_difference": 4,
+          "query": 4096,
+          "weighted_length_gain": 4
+        },
+        "length": 8,
+        "name": "cost-m7-near61-far1023",
+        "offset_base": 64,
+        "stdout_sha256": "80057a5f99b4926136b20e3dd601c4889c6ca8ecb726ae2255d1f257d9d5cb47"
+      },
+      {
+        "classification": "other",
+        "distance": 30,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 30,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 32,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c6-distance30",
+        "offset_base": 33,
+        "stdout_sha256": "611adc50b53afc47f2abde6d4fe0a7a1de6b8c3bd8827b0daa09b600ba0438d4"
+      },
+      {
+        "classification": "other",
+        "distance": 31,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 31,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 32,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c6-distance31",
+        "offset_base": 34,
+        "stdout_sha256": "020837b62f007e54faa9a4b720da8799415e6f832672dea5ece5075d231f2a86"
+      },
+      {
+        "classification": "other",
+        "distance": 32,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 32,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 32,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c6-distance32",
+        "offset_base": 35,
+        "stdout_sha256": "4b77e9cc454b3d1b45c2a8238fa681cd90449e484a7d652e7831c4ce640836c3"
+      },
+      {
+        "classification": "other",
+        "distance": 64,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 64,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 32,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c6-distance64",
+        "offset_base": 67,
+        "stdout_sha256": "de8fab06840dc8bec7d7f0a35f7c7036c4a707a3cde4c7e792cc978bd94bc64f"
+      },
+      {
+        "classification": "other",
+        "distance": 62,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 62,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 64,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c7-distance62",
+        "offset_base": 65,
+        "stdout_sha256": "1ebce38ecfd773809964b53bf9e37a8d9121dcfa4e2d9135e1e9d90a960c47cd"
+      },
+      {
+        "classification": "other",
+        "distance": 63,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 63,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 64,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c7-distance63",
+        "offset_base": 66,
+        "stdout_sha256": "45e02a1376feae412065353b5ec202748f38d99961e7ef43d11fc8f6c00aa2a1"
+      },
+      {
+        "classification": "other",
+        "distance": 64,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 64,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 64,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c7-distance64",
+        "offset_base": 67,
+        "stdout_sha256": "b16095b1fa2b8139b35e13602a893cb9425b1ceb77308f59f10fcd395bae2200"
+      },
+      {
+        "classification": "other",
+        "distance": 128,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 128,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 64,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c7-distance128",
+        "offset_base": 131,
+        "stdout_sha256": "e1f436c86a6c230c2d4dfa2942391ad55da9af58d9cd6f3ea15b7de49f76f699"
+      },
+      {
+        "classification": "other",
+        "distance": 126,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 126,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 128,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c8-distance126",
+        "offset_base": 129,
+        "stdout_sha256": "8a48124bfeda742b20a3c4c2a8ba508a3e7c85aeed0da63e11158898062c14b6"
+      },
+      {
+        "classification": "other",
+        "distance": 127,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 127,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 128,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c8-distance127",
+        "offset_base": 130,
+        "stdout_sha256": "375a9d4e2a480398ca8d64a30be8ff47fea6bd3c8b89adff7a5b79c8afd71e27"
+      },
+      {
+        "classification": "other",
+        "distance": 128,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 128,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 128,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c8-distance128",
+        "offset_base": 131,
+        "stdout_sha256": "9716b86b69c2908d93b450b5cf083c735edd40d36afb12e103d6aa126dc3c87b"
+      },
+      {
+        "classification": "other",
+        "distance": 256,
+        "family": "node-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "far_distance": 256,
+          "far_length": 12,
+          "near_distance": 16,
+          "near_length": 8,
+          "node_count": 128,
+          "query": 2048
+        },
+        "length": 12,
+        "name": "ring-c8-distance256",
+        "offset_base": 259,
+        "stdout_sha256": "c53613a7331aa30096543c80cec949fbb777612c7e0bce1a369a56c1537bab95"
+      },
+      {
+        "classification": "other",
+        "distance": 1023,
+        "family": "window-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "distance": 1023,
+          "length": 16,
+          "query": 2064,
+          "window_delta": -1
+        },
+        "length": 16,
+        "name": "window-w10-distance1023",
+        "offset_base": 1026,
+        "stdout_sha256": "ce1055b85f795443f97263dd9aaa4de2470e5bf87064d8d5c7e6727ffeee4bdc"
+      },
+      {
+        "classification": "zero",
+        "distance": null,
+        "family": "window-floor",
+        "hypothesis": {
+          "construction_retry": 0,
+          "distance": 1024,
+          "length": 16,
+          "query": 2064,
+          "window_delta": 0
+        },
+        "length": 0,
+        "name": "window-w10-distance1024",
+        "offset_base": 999999999,
+        "stdout_sha256": "5eaa7eefb8a9e3c9283bb5632583323172e50ac9238714e4f9523029a2e3981b"
+      },
+      {
+        "classification": "zero",
+        "distance": null,
+        "family": "window-floor",
+        "hypothesis": {
+          "construction_retry": 4,
+          "distance": 1025,
+          "length": 16,
+          "query": 2064,
+          "window_delta": 1
+        },
+        "length": 0,
+        "name": "window-w10-distance1025",
+        "offset_base": 999999999,
+        "stdout_sha256": "6237b78bfb966b900d8a41964bd23c92fadb68964738fa1a04972177303332b9"
+      },
+      {
+        "classification": "other",
+        "distance": 2047,
+        "family": "window-floor",
+        "hypothesis": {
+          "construction_retry": 28,
+          "distance": 2047,
+          "length": 16,
+          "query": 4112,
+          "window_delta": -1
+        },
+        "length": 16,
+        "name": "window-w11-distance2047",
+        "offset_base": 2050,
+        "stdout_sha256": "f31b3f4baf2aaa8d39ea0d956facb2dd6be023c15ddbc6c0e938e0a98715dc93"
+      },
+      {
+        "classification": "zero",
+        "distance": null,
+        "family": "window-floor",
+        "hypothesis": {
+          "construction_retry": 13,
+          "distance": 2048,
+          "length": 16,
+          "query": 4112,
+          "window_delta": 0
+        },
+        "length": 0,
+        "name": "window-w11-distance2048",
+        "offset_base": 999999999,
+        "stdout_sha256": "f0a93b1074a34847da9fecbb455fce24dd61af94163b2e10fd429e79d9132ec0"
+      },
+      {
+        "classification": "zero",
+        "distance": null,
+        "family": "window-floor",
+        "hypothesis": {
+          "construction_retry": 2,
+          "distance": 2049,
+          "length": 16,
+          "query": 4112,
+          "window_delta": 1
+        },
+        "length": 0,
+        "name": "window-w11-distance2049",
+        "offset_base": 999999999,
+        "stdout_sha256": "8dfc9fb6f1007e20df12ed9496c6d62ba569647a9b6addca125725747a08d512"
+      },
+      {
+        "classification": "other",
+        "distance": 48,
+        "family": "inclusive-matched-tail",
+        "hypothesis": {
+          "construction_retry": 0,
+          "length": 8,
+          "previous": 16,
+          "query": 64
+        },
+        "length": 8,
+        "name": "tail-match-m3",
+        "offset_base": 51,
+        "stdout_sha256": "159a12f6ba6782c2ecae1063d59afa79cfe7f1fab7cf615217a6b5998017f1fa"
+      },
+      {
+        "classification": "other",
+        "distance": 48,
+        "family": "inclusive-matched-tail",
+        "hypothesis": {
+          "construction_retry": 0,
+          "length": 8,
+          "previous": 16,
+          "query": 64
+        },
+        "length": 8,
+        "name": "tail-match-m4",
+        "offset_base": 51,
+        "stdout_sha256": "f6809d1f06e9719924902649632998297e75c2b8474be2308074654932b721ec"
+      },
+      {
+        "classification": "other",
+        "distance": 48,
+        "family": "inclusive-matched-tail",
+        "hypothesis": {
+          "construction_retry": 0,
+          "length": 8,
+          "previous": 16,
+          "query": 64
+        },
+        "length": 8,
+        "name": "tail-match-m5",
+        "offset_base": 51,
+        "stdout_sha256": "e7a68e7e98253937eb91bffd7356828ca6f1ccd07f6f11e5439e4311d9c5a2a4"
+      },
+      {
+        "classification": "other",
+        "distance": 48,
+        "family": "inclusive-matched-tail",
+        "hypothesis": {
+          "construction_retry": 1,
+          "length": 8,
+          "previous": 16,
+          "query": 64
+        },
+        "length": 8,
+        "name": "tail-match-m6",
+        "offset_base": 51,
+        "stdout_sha256": "9d16f6ce8da55415a89b4fddce382b93c4fa876bf626e61df7c94d2505f7b556"
+      },
+      {
+        "classification": "other",
+        "distance": 48,
+        "family": "inclusive-matched-tail",
+        "hypothesis": {
+          "construction_retry": 3,
+          "length": 8,
+          "previous": 16,
+          "query": 64
+        },
+        "length": 8,
+        "name": "tail-match-m7",
+        "offset_base": 51,
+        "stdout_sha256": "bdc24536d3696c06f11a384b7f42a1be1a168c846dd0db58d4d4ec8a6b2d649d"
+      }
+    ],
+    "scope": "Observed first-padding normal query results only; sanitized and padding equivalence belongs to the capture auditor. Conditional hypotheses do not imply an internal comparison-order witness.",
+    "status": "passed"
+  },
+  "scope": "Broader direct binary-tree C search capture only. All thirty original tiny observations remain exact. Normal and ASan/UBSan results match exactly across two padding fills. Every used codec source is instrumented, including the original lazy source embedded once in the helper. Structural/source replay and thirty-nine specified forgery rejections per mode do not prove unique tree-selection semantics; immutable captured artifact identities bind the original observations. No Rust tree, ordinary parser/frame, public strategy 6 or timing claim.",
+  "source": {
+    "docs/evidence/2026-10-13-tree-tiny.tar.gz": "bd237f62c8b4b572d57042b6788520bff0bc167fead8823698f5d2dc3391cda1",
+    "scripts/capture_tree_families.py": "0e78d4e201d0f3fe163ef1530d6af7f44801059c2e5fa3f8d645a455042a8431",
+    "scripts/check_tree_family_recipes.py": "adde5d5d511a98e1716ec8671478cf6414192fe77a32a1936239123142395163",
+    "scripts/check_tree_recipes.py": "5f8106d6ddcadf91e898fe03978d3cc7cb4eb90edfdf4da6b56acd85767827f4",
+    "scripts/check_tree_validator.py": "adfa9ffab892555909746007b9d431e7604a0ad64be8b97497db939d9c310763",
+    "scripts/oracles/tree_direct.py": "200c9491b82ae70598f7d5f0d375070ce858494f2c96304ba186329cd4f6d6f1",
+    "scripts/oracles/tree_direct_v1.c": "f4351bd13926bffb5ebb7c8d976543dffb5fa04b7c9ab757d770b0a1de5b01e9",
+    "scripts/oracles/tree_families.py": "42292c72c63ed9572d44bfaf301922b8b8f29eb4f833721b7b866c3f1193b5f4",
+    "scripts/oracles/tree_validation.py": "59c16db4486f1a2f81eb995245c0c95cb8f07738edbe5792d5b54e00d7afcc9b",
+    "scripts/tree_capture_inputs.py": "daed6ffef1f1f2c10893b7c9443e9cd16911de4089ef67dd6a758edd2f70ef28",
+    "scripts/tree_family_capture_inputs.py": "4469d331ca935749fe75a0a3841ac823d8d20d09f60cf7bc84214f777e4faa1e",
+    "tests/fixtures/reference-tree-family-recipes/recipes.json": "b28cba0d6d827c82e579ce4131dfb6f5d8329094c47f409a41b47614656ce269",
+    "tests/fixtures/reference-tree-tiny-recipes/recipes.json": "6d23c53ce5305ae0e9e9d43c5bd97bc6f3006f0207e75bebbf7b1843462fdff4",
+    "tests/upstream/manifest.json": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+  },
+  "source_revision": "99e8424",
+  "status": "passed",
+  "totals": {
+    "direct_observations": 412,
+    "negative_rejections": 50,
+    "operation_records": 9336,
+    "recipes": 103
+  },
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

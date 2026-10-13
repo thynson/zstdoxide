@@ -124,3 +124,29 @@ reconstructs the thirty original tiny stdout records from the pinned archive
 and requires exact equality. Reconstruction executes no archived code and
 bounds regular member sizes and aggregate bytes. A separate original/changed
 stdout check passed during review. Broader C capture remains the next step.
+
+## Broader direct C capture
+
+The [broader capture](evidence/2026-10-13-tree-families.json) completes 316 commands
+from revision `99e8424`: 103 recipes, 412 build/padding observations and 9,336
+operation records. All normal/sanitized/padding comparisons and thirty exact
+tiny predecessor stdout comparisons pass. Fifty native malformed inputs reject
+without sanitizer diagnostics. Both Python modes replay the completed capture
+and reject 39 forged variants with no child attempts. The archive retains all
+820 raw files (143,454,268 bytes); every member and reconstructed file was checked.
+
+For the designated query in all 45 conditional cost recipes, the 15 positive
+gain-minus-cost cases choose the nine-byte far match; the 15 equal and 15
+negative cases retain the eight-byte near match. All five matched-tail cases
+return eight bytes. Window-distance W-1 returns the constructed sixteen-byte
+match in both tested windows, while distances W and W+1 return zero. All twelve
+node-floor cases return the farther twelve-byte match, including candidates at
+and beyond the node ring: a still reachable terminal candidate may be compared
+without traversing its overwritten child cells. This distinction must survive
+the checked Rust implementation. The report preserves exact selected offsets,
+source hypotheses, stdout identities and the summary driver. These observations
+do not expose the chronological internal comparison or reversal trace.
+
+The next step is a bounded fixture projection and independent Rust test reader.
+No tree storage, tree parser, ordinary tree frame or public strategy 6 support
+is claimed by these direct C observations.
