@@ -1076,3 +1076,13 @@ updates the incumbent with checked gains, and restarts only on an explicit
 improvement. Rejected probes retain their sampling writes. Backward extension,
 repeat cleanup and wire replay remain shared. The new direct entry point remains
 private; ordinary contexts still select Greedy until their separate capture gate.
+
+
+Depth two uses the same checked candidate and inclusive query records. It takes
+one further probe only after the depth-one explicit proposal fails, weights the
+repeat by four, and uses the seven-point explicit incumbent penalty. Either
+explicit win restarts depth one at the next query; a repeat-only win terminates
+selection after the eligible depth-two probe. The query may reach the inclusive
+limit while the selected start remains earlier. No new owner or unchecked
+operation is introduced; all 645 frozen depth-tagged observations exercise the
+shared state transitions and complete final sampling maps.

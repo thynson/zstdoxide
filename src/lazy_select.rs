@@ -12,6 +12,7 @@ pub(crate) enum LazyDepth {
     Greedy,
     #[allow(dead_code)] // Ordinary Lazy dispatch is a later work item.
     One,
+    #[allow(dead_code)] // Ordinary Lazy2 dispatch is a later work item.
     Two,
 }
 
@@ -85,9 +86,7 @@ impl LazyCandidate {
 pub(crate) enum LazyGain {
     RepeatOne,
     ExplicitOne,
-    #[allow(dead_code)] // Separate depth-two parser work item.
     RepeatTwo,
-    #[allow(dead_code)] // Separate depth-two parser work item.
     ExplicitTwo,
 }
 

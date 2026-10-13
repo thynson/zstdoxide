@@ -1,4 +1,4 @@
-//! Indexed depth-zero Greedy parsing with separate sampling and wire state.
+//! Indexed Greedy/Lazy/Lazy2 parsing with separate sampling and wire state.
 //! Corresponds to the no-dictionary `ZSTD_compressBlock_lazy_generic` in
 //! facebook/zstd v1.5.7. No C pointer, speculative source read or cache is needed.
 #![forbid(unsafe_code)]
@@ -225,9 +225,6 @@ pub(crate) fn parse_with_depth<A: Allocator, B: Allocator, L: Allocator, S: Allo
     sequences: &mut Vec<SequenceWithOffset, S>,
     depth: LazyDepth,
 ) -> Result<GreedyParseResult> {
-    if depth == LazyDepth::Two {
-        return Err(Error::InvalidParameter); // Separate depth-two work item.
-    }
     search.validate(block, progress.next)?;
     if initial_repeats.contains(&0) {
         return Err(Error::CorruptData);
@@ -291,7 +288,7 @@ pub(crate) fn parse_with_depth<A: Allocator, B: Allocator, L: Allocator, S: Allo
             cursor = miss.next;
             continue;
         };
-        if depth == LazyDepth::One {
+        if depth != LazyDepth::Greedy {
             let mut current = probe.current();
             while let Some(query) = block.lookahead_after(current)? {
                 current = query.current();
@@ -309,6 +306,28 @@ pub(crate) fn parse_with_depth<A: Allocator, B: Allocator, L: Allocator, S: Allo
                     if LazyGain::ExplicitOne.improves(explicit, candidate)? {
                         candidate = explicit;
                         continue;
+                    }
+                }
+                if depth == LazyDepth::Two
+                    && let Some(query) = block.lookahead_after(current)?
+                {
+                    current = query.current();
+                    if let Some(found) = repeated(block, current, first)? {
+                        let repeat =
+                            LazyCandidate::new(block, current, found, OffsetIntent::Repeat1)?;
+                        if LazyGain::RepeatTwo.improves(repeat, candidate)? {
+                            candidate = repeat;
+                        }
+                    }
+                    if let Some(found) = search.find_lookahead(block, progress, query)? {
+                        let explicit =
+                            LazyCandidate::new(block, current, found, OffsetIntent::Explicit)?;
+                        if LazyGain::ExplicitTwo.improves(explicit, candidate)? {
+                            candidate = explicit;
+                            // Restart at depth one after either explicit win;
+                            // a repeat-only improvement does not restart.
+                            continue;
+                        }
                     }
                 }
                 break;
@@ -510,6 +529,28 @@ mod tests {
         assert_eq!(count, 215);
     }
 
+    #[test]
+    fn every_depth_two_case_matches_full_sampling_and_sequence_observations() {
+        let cases = crate::lazy_oracle_fixture::cases().unwrap();
+        let mut count = 0;
+        for case in cases.iter().filter(|case| case.depth == 2) {
+            check_direct(&case.observation, LazyDepth::Two);
+            count += 1;
+        }
+        assert_eq!(count, 215);
+    }
+
+    #[test]
+    fn broader_depth_zero_controls_preserve_the_greedy_policy() {
+        let cases = crate::lazy_oracle_fixture::cases().unwrap();
+        let mut count = 0;
+        for case in cases.iter().filter(|case| case.depth == 0) {
+            check_direct(&case.observation, LazyDepth::Greedy);
+            count += 1;
+        }
+        assert_eq!(count, 215);
+    }
+
     fn check_direct(case: &OracleCase<'_>, depth: LazyDepth) {
         let mut padded = case.source.to_vec();
         padded.extend_from_slice(&[0xa7; 32]);
@@ -635,13 +676,14 @@ mod tests {
         let mut checked = 0;
         for lazy in all
             .iter()
-            .filter(|c| c.depth <= 1 && c.observation.name.ends_with("-long-literals-65536"))
+            .filter(|c| c.observation.name.ends_with("-long-literals-65536"))
         {
             let case = &lazy.observation;
-            let depth = if lazy.depth == 0 {
-                LazyDepth::Greedy
-            } else {
-                LazyDepth::One
+            let depth = match lazy.depth {
+                0 => LazyDepth::Greedy,
+                1 => LazyDepth::One,
+                2 => LazyDepth::Two,
+                _ => panic!("validated fixture depth"),
             };
             checked += 1;
             assert!(case.seeds.is_empty());
@@ -733,7 +775,7 @@ mod tests {
             drop(owner);
             assert_eq!(monitor.snapshot().owners_dropped, 1);
         }
-        assert_eq!(checked, 4);
+        assert_eq!(checked, 6);
     }
 
     fn sentinel() -> SequenceWithOffset {
@@ -749,7 +791,7 @@ mod tests {
 
     #[test]
     fn either_output_reserve_failure_preserves_progress_contents_and_exact_owners() {
-        for depth in [LazyDepth::Greedy, LazyDepth::One] {
+        for depth in [LazyDepth::Greedy, LazyDepth::One, LazyDepth::Two] {
             for row in [false, true] {
                 for fail_literals in [true, false] {
                     let source = [b'x'; 256];
@@ -852,7 +894,7 @@ mod tests {
 
     #[test]
     fn invalid_entry_arguments_preserve_scratch_progress_and_sampling() {
-        for depth in [LazyDepth::Greedy, LazyDepth::One] {
+        for depth in [LazyDepth::Greedy, LazyDepth::One, LazyDepth::Two] {
             let source = [b'x'; 64];
             for (row, key_mismatch, attempts, next, repeats, error) in [
                 (true, false, 4, 0, [1, 4, 8], Error::InvalidParameter),

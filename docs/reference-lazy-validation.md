@@ -361,3 +361,22 @@ reuse test, all focused checks were rerun on the final source. The
 `docs/evidence/2026-10-13-lazy-one.tar.gz` archive retains both command runs and
 the implementation sources. These direct results do not enable public Lazy or
 establish ordinary Lazy frame parity; depth two is still a separate work item.
+
+
+## Depth-two direct parsing
+
+All 645 depth-tagged direct observations now match the Rust parser, including
+215 depth-two cases and 215 broader depth-zero controls. Every comparison checks
+source replay, sequence/literal extents, long markers, raw/wire repeats, final
+frontier/skipping/salt entropy and complete table contents with both logical and
+padded sources. Depth two retains the four-times repeat bias, seven-point
+explicit penalty, inclusive final probe and restart-at-depth-one behavior.
+
+All 13 commands in `docs/evidence/2026-10-13-lazy-two.tar.gz` pass. Seven parser
+tests run on safe, isolated reference-chain, isolated row-table and all features;
+allocation rejection and non-Clone owner reuse cover all three depths. Strict
+safe/all all-target Clippy, four no_std builds and formatting pass. The broader
+Greedy regression selection passes 59 tests each on safe/all builds, preserving
+ordinary frames, publication and allocation failure controls. This completes the
+direct parser work only: ordinary Lazy trajectories, frame dispatch, public
+admission, broader feature/platform checks and timing remain open.
