@@ -194,3 +194,22 @@ pass five tests each in safe, all-feature debug and all-feature release builds,
 safe/all Clippy, two std-disabled builds and formatting. No allocator or source
 access occurs while constructing these records. Storage/search integration and
 public strategy admission remain later work.
+
+## Independent tree storage checkpoint
+
+The initialized head/node owners and `unsafe-reference-tree` leaf passed 126
+focused owner tests across safe, all fifteen individual leaves, all features,
+and release/all. Seventeen true no_std configurations, 63 permanent Lazy
+frame/allocator regression tests, strict safe/all Clippy and formatting passed.
+The immutable commands, logs and source snapshot are in
+`evidence/2026-10-13-tree-owner.json` and its matching archive. These are focused
+checks, not a new full-codec matrix.
+
+A separate primitive campaign built all safe/tree/all binaries before sequential
+timing. All nine complete normalized owner maps equal an independent Python
+model. Forty-five samples cover H/C 6, 12 and 19; allocation, key generation and
+map checking are untimed. Tree/safe median throughput ratios were 0.9632, 1.0611
+and 0.9969; all/safe were 0.9160, 1.0007 and 0.9757. This does not establish a
+universal unsafe improvement or frame-level performance. Raw samples, commands,
+binary/source identities and complete maps are archived in
+`evidence/2026-10-13-tree-owner-timing.json` and its matching archive.

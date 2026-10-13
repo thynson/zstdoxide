@@ -139,6 +139,7 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-match-table` | Hash-indexed prior-position table |
 | `unsafe-match-chain` | Bounded tagged candidate storage for Chain and Lazy matching |
 | `unsafe-reference-chain` | Checked cyclic heads/links for the reference lazy family |
+| `unsafe-reference-tree` | Checked private deferred-tree head/edge storage; public tree strategy remains unsupported |
 | `unsafe-row-table` | Checked row position/tag storage for the reference lazy family |
 | `unsafe-dictionary` | Validated immutable dictionary-content access |
 | `unsafe-training` | Bounded raw-training frequency cells |

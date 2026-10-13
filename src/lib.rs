@@ -26,6 +26,7 @@
         feature = "unsafe-match-table",
         feature = "unsafe-match-chain",
         feature = "unsafe-reference-chain",
+        feature = "unsafe-reference-tree",
         feature = "unsafe-row-table",
         feature = "unsafe-dictionary",
         feature = "unsafe-training"
@@ -110,6 +111,7 @@ mod reference_frame;
 mod reference_frame_encode;
 mod reference_policy;
 mod reference_search;
+mod reference_tree;
 mod ring_history;
 mod row_table;
 mod sequence_context;

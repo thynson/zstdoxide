@@ -1301,3 +1301,33 @@ byte-comparison eligibility. Empty is a terminated traversal, unsorted is an
 error in a sorted traversal, and future/self positions reject. These allocation-
 free records share safe representation across every backend. Storage owners and
 search consumers follow in separate work items; no public strategy is enabled.
+
+The tree owner stores two independent initialized `Vec<usize, A>` allocations,
+one for heads and one for all edge cells. Exact allocator values are moved,
+never cloned. Unsorted insertion validates all three destinations and the old
+head before the first write. Individual checked cell helpers select safe or
+`unsafe-reference-tree` access after the same live-length guard. Reset reuses
+both owners. The new leaf is added to default unsafe exclusion, the feature
+inventory and every-leaf/no_std driver; historical benchmark/fixture metadata
+remains immutable. A separate primitive owner measurement compares complete
+normalized maps under safe/tree/all using identical prepared key sequences;
+it does not claim end-to-end tree compression throughput.
+
+### Deferred sorting implementation boundaries
+
+The deferred sorter borrows source and independently owned table allocations.
+Pending positions are inserted in order; a bounded descending unsorted chain is
+reversed in larger-edge cells and then sorted oldest-first. The reversal stores
+only copied positions, never aliased references. Its comparison budget grows
+back to the original limit as stacked nodes are processed. Every stack successor
+must increase while remaining below the main query; every original unsorted
+predecessor must decrease. Malformed links reject with bounded work.
+
+A sorting node uses its own strict byte-window floor but the main query's
+maximum window/node floor for child traversal. This distinction preserves C's
+terminal comparison of an old candidate without following overwritten slots.
+Source comparisons check both suffixes; an equal tail stops before reading a
+branch byte. Cursor destinations are copied TreeEdge values, including discard.
+Sorting alone has no separately captured C phase snapshot: synthetic controls
+qualify that work item, followed by exact full-operation maps when best-match
+search is implemented. Existing captures remain unchanged.
