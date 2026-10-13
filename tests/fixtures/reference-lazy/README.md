@@ -34,3 +34,11 @@ original immutable observations. Normal/optimized Python each accept two
 positive reads and reject 28 mutations with child creation blocked; separate
 publication controls each accept two positives and reject four overwrite,
 partial-output and symlink cases. Their source-validation scope is separate.
+
+
+The checked Rust adapter is `tests/support/lazy_oracle.rs`. Structural decoding
+checks selectors and bounded bodies; dedicated tests independently replay all
+sequences and complete maps before parser-equivalence tests use the evidence.
+Five tests pass in safe, isolated chain, isolated row and all-feature builds;
+all 173 depth-zero predecessor records compare exactly after stripping the name
+prefix. This validates reading and seeded storage, not Rust Lazy parsing.

@@ -66,7 +66,7 @@ successor admission mapping and independent oracle checks.
 - [x] Reconcile score-family observations and freeze independently checked broader direct fixtures before Rust parsing.
 - [x] Register the Greedy baseline and broader Lazy offline recipe, plan and fixture checks in the standard check driver.
 - [x] Project direct observations into checked Rust records with complete maps, sequence replay and source provenance.
-- [ ] Add a dependency-free checked Rust adapter for all frozen direct Lazy inputs and complete observations.
+- [x] Add a dependency-free checked Rust adapter for all frozen direct Lazy inputs and complete observations.
 - [ ] Add shared copied depth/candidate/score records and explicit inclusive lookahead coordinates, preserving Greedy's strict main-search contract.
 - [ ] Implement depth-one selection and repeated improvement against frozen observations.
 - [ ] Implement depth-two selection, repeat bias and exact speculative sampling against frozen observations.

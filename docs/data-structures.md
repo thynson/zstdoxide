@@ -1045,3 +1045,13 @@ independent sequence/table validators can be reused through test-only methods,
 without changing the legacy pack or its strict search contracts. Neither copied
 depth nor borrowed evidence spans introduce a performance leaf or unsafe variant.
 Projection and the Rust adapter remain separate verifiable TODO items.
+
+
+The checked `LazyCase` adapter now owns only a copied depth and the common
+`OracleCase` metadata. It validates depth/reserved/name agreement before returning
+borrowed records, with bounded fallible collection allocation. The common reader
+and semantic validators are shared through test-only crate visibility; complete
+value equality supports all 173 predecessor comparisons. Five focused tests
+replay all 645 sources, verify every complete initial/final map and compare all
+1,290 seeded Rust owners. Safe, isolated chain, isolated row and all-feature
+builds pass; these fixture records add no unsafe implementation or codec owner.

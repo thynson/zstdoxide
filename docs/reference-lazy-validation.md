@@ -288,3 +288,33 @@ reader, controls and archive readback are retained in the
 The standard driver now includes the projection's immutable `--check` command.
 This checkpoint precedes Rust reading/parsing; no new C run, ordinary/public
 frame, full Rust matrix or timing result is claimed.
+
+
+## Checked Rust fixture adapter
+
+The dependency-free `tests/support/lazy_oracle.rs` adapter adds only the depth
+and outer bounds contract around the existing checked Greedy observation body.
+Name, source and literal spans borrow the immutable pack; metadata vectors use
+bounded fallible reservation. Common test-only methods gain crate visibility
+and complete value equality; their reading and semantic validation logic remains
+unchanged. Production encoder behavior and public admission do not change.
+
+Five tests pass on safe, isolated reference-chain, isolated row-table and all
+features. They independently replay all 645 source/sequence records (18,900,771
+bytes), verify complete before/after tables, compare all 1,290 initial Rust
+owner maps with C and retain all 173 complete depth-zero predecessor records.
+Controls reject truncated/extreme extents, invalid or inconsistent depth,
+reserved/trailing bytes, duplicate records, forged sequence/repeat/source fields
+and changed table fingerprints/roles. The inherited Greedy reader's five tests, including deeper
+map-corruption controls, and nine permanent full-frame/owner defaults also pass on
+safe/all: 48 focused test executions across eight suites, zero failed/ignored.
+
+All sixteen focused commands pass, including strict safe/all all-target Clippy,
+four no_std configurations (safe, each shared leaf separately, all fourteen
+unsafe leaves), formatting and diff checks. The
+[reader evidence](evidence/2026-10-13-lazy-reader.json) and
+[archive](evidence/2026-10-13-lazy-reader.tar.gz) preserve exact sources, command
+logs and linked immutable projection. These are reader/storage checks, not a
+complete feature matrix, Rust Lazy parsing, new C execution, ordinary/public
+frames or performance measurements. Copied candidate/score records and inclusive
+lookahead contracts are the next separate work item.

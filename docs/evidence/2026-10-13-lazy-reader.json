@@ -1,0 +1,47 @@
+{
+  "archive": "2026-10-13-lazy-reader.tar.gz",
+  "archive_bytes": 53605,
+  "archive_members": 45,
+  "archive_sha256": "668366b3595ac862815d040f8f903e4265b8eb77698f84ba7b5e08695fc4cc4d",
+  "commands": 16,
+  "date": "2026-10-13",
+  "depth_counts": [
+    215,
+    215,
+    215
+  ],
+  "exact_depth_zero_predecessors": 173,
+  "greedy_defaults_suites": 2,
+  "greedy_defaults_tests_per_suite": 9,
+  "initial_owner_maps": 1290,
+  "lazy_suites": 4,
+  "lazy_tests_per_suite": 5,
+  "legacy_greedy_reader_suites": 2,
+  "legacy_greedy_reader_tests_per_suite": 5,
+  "no_std_configurations": 4,
+  "projection_archive": "2026-10-13-lazy-projection.tar.gz",
+  "projection_archive_sha256": "7eef240d0effffc98a45189910d274c8b4f94d8a37a153bd254614533753f9f0",
+  "qualification": "Focused Lazy reader suites on safe, isolated chain, isolated row and all; unchanged Greedy reader and permanent defaults on safe/all; strict safe/all Clippy; safe/isolated chain/isolated row/all-leaf no_std compilation. No Rust Lazy parser, complete feature matrix, new C run or timing claim. Test-only common Greedy methods become crate-visible and derive complete value equality; their reading/semantic bodies and legacy fixture are unchanged. Source/name/literal spans borrow immutable bytes; metadata reservations are bounded and fallible. Binary fixture is retained in the separately verified projection archive.",
+  "records": 645,
+  "row_records": 342,
+  "source_bytes": 18900771,
+  "source_sha256": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "c809dfe057d78c6b5dec95d8bdea6a62aa0ba3df3f2ca2f0e329144cf81ad87d",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "src/lib.rs": "468297ec47140d3f725fe7ed8787bbda4ad22333970d8e4bc107269e41152208",
+    "tests/fixtures/reference-lazy/cases.bin": "be38aa8c6e4439bf999a6168ee81347b9e7af38391925b6fc548ffaf8c60aea7",
+    "tests/fixtures/reference-lazy/provenance.json": "d72f52ad6c71d3f056d34b73aa5331792c4d855a07be59c9ce25a78a3a1037eb",
+    "tests/support/greedy_oracle.rs": "05ee5e33715f243c7da116499edcb3aee7f15c92eef3436cfce2b7c24013a653",
+    "tests/support/lazy_oracle.rs": "3f9efe8d0dc5c33bf44b4ae88d499f56677a750fbfdc37d8a778b4a38ca1aeae"
+  },
+  "source_unchanged": true,
+  "status": "passed",
+  "strict_clippy_configurations": 2,
+  "test_suites": 8,
+  "test_totals": [
+    48,
+    0,
+    0
+  ]
+}

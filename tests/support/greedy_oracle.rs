@@ -13,7 +13,7 @@ const MAX_PREFIX: usize = 2 << 20;
 const MAX_BLOCK: usize = 128 << 10;
 type Result<T> = core::result::Result<T, &'static str>;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct OracleSequence {
     pub(crate) raw_literal_length: u32,
     pub(crate) raw_match_base: u32,
@@ -23,7 +23,7 @@ pub(crate) struct OracleSequence {
     pub(crate) offset_value: u32,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct OracleTable {
     pub(crate) element_bytes: u8,
     pub(crate) log: u8,
@@ -32,7 +32,7 @@ pub(crate) struct OracleTable {
     pub(crate) hashes: [u64; 2],
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct OracleCase<'a> {
     pub(crate) name: &'a str,
     pub(crate) row_search: bool,
@@ -146,7 +146,7 @@ impl<'a> Reader<'a> {
 }
 
 impl<'a> OracleCase<'a> {
-    fn read(bytes: &'a [u8]) -> Result<Self> {
+    pub(crate) fn read(bytes: &'a [u8]) -> Result<Self> {
         let mut r = Reader { bytes };
         let name_len = usize::from(u16::from_le_bytes(r.number()?));
         if !(1..=63).contains(&name_len) {
@@ -321,7 +321,7 @@ impl<'a> OracleCase<'a> {
 
     /// Reconstruct source bytes and wire repeats without calling a production
     /// parser or entropy emitter. Raw/expanded lengths must agree independently.
-    fn verify_sequences(&self) -> Result<()> {
+    pub(crate) fn verify_sequences(&self) -> Result<()> {
         if fnv(self.source.iter().copied()) != self.source_hash {
             return Err("source hash");
         }
@@ -445,7 +445,7 @@ impl<'a> OracleCase<'a> {
 
     /// Verify complete sparse owners, source extents and hash/tag membership.
     /// This checks frozen observations, not an expected-output generator.
-    fn verify_tables(&self) -> Result<()> {
+    pub(crate) fn verify_tables(&self) -> Result<()> {
         if (self.first_table.log, self.first_table.element_bytes) != (self.hash_log, 4)
             || (self.second_table.log, self.second_table.element_bytes)
                 != (

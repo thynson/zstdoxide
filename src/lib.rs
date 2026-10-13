@@ -89,6 +89,9 @@ mod history;
 mod huffman;
 mod huffman_codebook;
 mod huffman_encode;
+#[cfg(test)]
+#[path = "../tests/support/lazy_oracle.rs"]
+mod lazy_oracle_fixture;
 mod literal_encode;
 mod literal_header;
 mod match_key;
