@@ -111,7 +111,9 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Capture complete frequency/price transitions and reject forged records offline in normal and optimized Python.
 - [x] Project audited price records into bounded fixtures and add an independent checked Rust reader.
 - [x] Implement checked allocation-free scalar prices and compare every captured query before frequency ownership integration.
-- [ ] Implement explicitly initialized frequency ownership and lifecycle updates with an isolated safe/unsafe contract.
+- [x] Specify contiguous frequency ownership, checked phase transitions and isolated safe/unsafe access before implementation.
+- [x] Implement explicitly initialized frequency ownership and lifecycle updates with an isolated safe/unsafe contract.
+- [ ] Merge the isolated private frequency branch after Module 16 matrix and measurement closure.
 - [ ] Specify and freeze sorted-tree/all-match operations, repeat intents, minMatch3 heads and both update frontiers.
 - [ ] Review and preflight direct sorted-tree/all-match capture and independent complete-map replay before C execution.
 - [ ] Capture direct operations and qualify all-match ordering, window/node floors, three-byte tails and forged evidence.

@@ -1516,3 +1516,35 @@ match penalties remain distinct APIs. Initial code is not added to public dispat
 or the library module graph while the previous milestone's immutable matrix runs;
 its source, no_std compilation and all captured query comparisons are independently
 qualified. Frequency ownership and its own optional unsafe feature follow later.
+
+### Optimal frequency owner and isolated integration branch
+
+`OptimalFrequencies<A>` owns one fallibly initialized `Vec<u32, A>` containing
+exactly 377 live cells, partitioned into fixed literal/LL/ML/OF ranges. A single
+moved allocator owns the contiguous allocation; no allocator clone, source copy,
+interior raw pointer or reference is retained. The four sums and cached prices,
+pricing mode and initialized/dirty flags are copied scalar state. Reset preserves
+the same allocation and clears every count and phase. Disabled literal mode is
+fixed per owner and retains zero literal statistics.
+
+The independently opt-in `unsafe-optimal-frequencies` feature replaces only
+checked scalar cell reads/writes after runtime live-length/index checks. The
+safe implementation has the same API and errors. Immutable views used by price
+queries remain scoped borrows; no ownership or lifetime escapes. Snapshot values
+copy complete tables for focused conformance tests and need no artificial unsafe
+representation.
+
+Each update first validates lengths/encoded offsets and preflights histogram,
+frequency and sum arithmetic before mutation. Every counter remains below
+u32::MAX so weight(stat+1) is valid. Invalid requests, overflow, malformed storage
+or failed initial allocation leave published model state unchanged. Successful
+updates mark cached prices dirty; queries reject that phase. Explicit refresh or
+begin-block rescale updates cached prices. First-block initialization and later
+base-one rescaling follow the independent captured lifecycle; raw/RLE wire repeat
+publication remains a separate future parser concern.
+
+This isolated branch integrates only private scalar/frequency modules and their
+Cargo feature. Public strategy 7 stays unsupported. Full tree-milestone tests and
+measurement use their prior immutable source; this branch requires focused
+safe/isolated/all/release conformance, allocator failures, every-leaf no_std,
+Clippy and complete source/feature evidence before its own commit and later merge.

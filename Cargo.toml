@@ -24,6 +24,7 @@ unsafe-reference-tree = []
 unsafe-row-table = []
 unsafe-dictionary = []
 unsafe-training = []
+unsafe-optimal-frequencies = []
 
 [dev-dependencies]
 zstdoxide-test-allocator = { path = "test-support/allocator" }

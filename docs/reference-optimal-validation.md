@@ -53,7 +53,36 @@ Clippy, formatting and a standalone no_std compilation pass. The copied scalar
 price record contains no allocation or table ownership and has one safe value
 representation.
 
-Exact source and logs are in `evidence/2026-10-13-optimal-scalar.json`. The module
-is compiled through the focused harness and is not yet in the library module
-graph or public dispatch; frequency ownership and lifecycle integration follow.
+Exact source and logs are in `evidence/2026-10-13-optimal-scalar.json`. At that checkpoint the module
+was compiled through the focused harness, outside the library module graph and
+public dispatch. Private frequency integration is recorded separately below.
 It is an additive Module 17 checkpoint outside the running Module 16 matrix.
+
+## Isolated private frequency integration
+
+The `codex/optimal-frequency` branch adds the scalar and frequency modules to the
+private library graph and registers `unsafe-optimal-frequencies` as an independent
+opt-in backend. One moved allocator owns 377 initialized counters. Updates stage
+checked candidate counts before publication; invalid requests and overflow leave
+the model unchanged. Dirty caches reject queries until explicit refresh/rescale.
+Reset reuses the allocation, and disabled literals retain zero literal statistics.
+Public Optimal remains unsupported.
+
+Nineteen focused configurations (safe, every one of sixteen isolated leaves, all
+and release/all) pass eight tests each: 152 tests, with all 2,018 captured state
+transitions and 1,420 query triples matched per configuration. Eighteen genuine
+no_std configurations, safe/all strict Clippy and formatting pass. Safe/all public
+and frozen-tree regressions contribute 54 additional tests. Forty-two selected
+strict-provenance Miri tests pass on i686/s390x in safe/isolated/all modes. Three
+thumbv6m no_std library configurations and two concrete Global-owner caller builds
+pass; both caller artifacts are retained. These are interpretation/compilation,
+not native foreign execution.
+
+Initial checks caught a missing new-feature entry in the crate's unsafe permission
+condition; default builds retain their unsafe prohibition after the correction.
+The initial Miri runner attempted an unavailable default cache path; its successor
+uses the existing pinned temporary sysroots. Initial failures, corrected runners,
+complete source/log evidence and caller artifacts are retained in
+`evidence/2026-10-13-optimal-frequency.json` and its archive. No full library-wide
+feature matrix or performance claim is made for this private checkpoint. Merge
+waits for Module 16's independent matrix and fixed-source measurement closure.
