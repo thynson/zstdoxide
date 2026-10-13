@@ -1,0 +1,33 @@
+{
+  "archive": {
+    "bytes": 2022,
+    "members": 4,
+    "path": "docs/evidence/2026-10-13-lazy-tuple-audit.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "ce158fcaba5de36dbeba76f1718e78bbca89d95838e8aaad71498083d4002643"
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "/tmp/check-zstdoxide-lazy-public-tuple-audit.py"
+      ],
+      "log": "normal.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-O",
+        "/tmp/check-zstdoxide-lazy-public-tuple-audit.py"
+      ],
+      "log": "optimized.log",
+      "status": 0
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "sources": {
+    "scripts/check_lazy_interop_capture_v2.py": "0cb1ea0cef617b732c02537dfda09f5d4ac3080d2f3e2dccab6cb2c399d8410f"
+  },
+  "test_results": []
+}

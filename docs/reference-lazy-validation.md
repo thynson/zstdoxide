@@ -630,3 +630,22 @@ and symlink cases per run with no children. Its frozen 110-name source closure,
 The controller uses schema 4 while retaining the unchanged generic packet magic.
 Recipe and plan checks are registered in the standard driver. Evidence is in
 `docs/evidence/2026-10-13-lazy-public-controller.json` and its archive.
+
+
+## Versioned public tuple audit extension
+
+Review identified a gap in v1: historical requests had exact tuple comparisons,
+but a coherently changed valid tuple for a new request could retain the same
+admission status. The new `check_lazy_interop_capture_v2.py` preserves and calls
+the immutable full v1 replay, then independently reconstructs all 464 new tuples
+from the pinned C presets, adjusting once before and once after overrides.
+The 422 historical tuple checks remain intact. This is a Rust-request expectation,
+not an observed C applied tuple. The capture protocol and executed helpers are
+unchanged; no capture data is rewritten to satisfy the extension.
+
+Before accepting capture results with this extension, its reconstruction is
+compared against 276 original C requested-parameter observations (known empty and
+known 16385-byte inputs). Normal and optimized Python each pass those comparisons
+and reject 50 malformed input controls with zero child attempts. Evidence is in
+`docs/evidence/2026-10-13-lazy-tuple-audit.json` and its archive. Coherent changed
+capture controls are additionally required at the final interoperability gate.
