@@ -1,0 +1,34 @@
+{
+  "archive": {
+    "bytes": 2853,
+    "members": 4,
+    "path": "docs/evidence/2026-10-13-lazy-public-controller.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "1b5a007dd585553628762b4186d23b7d2760e2f85aea64646fabd6fd7667f487"
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "/tmp/check-zstdoxide-lazy-public-controller.py"
+      ],
+      "log": "normal.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-O",
+        "/tmp/check-zstdoxide-lazy-public-controller.py"
+      ],
+      "log": "optimized.log",
+      "status": 0
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "sources": {
+    "scripts/capture_lazy_interop.py": "4a85208adf515b2484feb84b8e57f08506da6ce7319601f0841882af97371448",
+    "scripts/check_lazy_interop_capture.py": "1bb04d8009dbdfa3ff3c353d7aa1e29dc9f7bfd7b1d5cede6bf3854a4529bce5"
+  },
+  "test_results": []
+}

@@ -621,3 +621,12 @@ Python each reject 56 malformed controls without children. Exact generic
 transport sources are reused unchanged; their normal/instrumented C syntax
 checks pass. These are pre-execution inputs and review, not new C observations.
 See `docs/evidence/2026-10-13-lazy-public-recipes.json` and its archive.
+
+
+The separately versioned public controller/auditor preflight passes in normal
+and optimized Python: fourteen rejected root, compiler, pin, incomplete-report
+and symlink cases per run with no children. Its frozen 110-name source closure,
+10,104 expected commands and complete historical tuple checks precede execution.
+The controller uses schema 4 while retaining the unchanged generic packet magic.
+Recipe and plan checks are registered in the standard driver. Evidence is in
+`docs/evidence/2026-10-13-lazy-public-controller.json` and its archive.

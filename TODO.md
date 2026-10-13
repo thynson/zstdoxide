@@ -86,7 +86,7 @@ successor admission mapping and independent oracle checks.
 - [x] Enable bounded public Lazy/Lazy2 requests and document exact source-dependent level/resource behavior.
 - [x] Port newly admitted original selector and numeric assertions without closing unrelated upstream obligations.
 - [x] Freeze Lazy-family public interoperability recipes and review unchanged generic transport adapters.
-- [ ] Preflight a versioned public capture controller and independent offline auditor before execution.
+- [x] Preflight a versioned public capture controller and independent offline auditor before execution.
 - [ ] Capture and independently validate broader bidirectional public interoperability with normal/instrumented C.
 - [ ] Verify exact owner release, allocation failures, malformed state, no_std and interpreted i686/s390x bounds plus no-atomics caller compilation.
 - [ ] Run safe, each unsafe feature and all-feature correctness checks with every predecessor regression intact.
