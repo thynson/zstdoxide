@@ -84,7 +84,7 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [ ] Capture and audit ordinary retained-state C tree frames with build/padding equality and offline forgery controls.
 - [ ] Project audited ordinary tree frames into bounded binary fixtures with exact provenance.
 - [ ] Add checked tree trajectory reading and match Rust retained sequences, maps and complete frame bytes before public integration.
-- [ ] Validate ordinary state, malformed links, allocation failures and transactional frame/repeat publication.
+- [x] Validate malformed retained tree state, allocation failures and transactional frame/repeat publication.
 - [ ] Freeze successor admission mappings and independently resolve every new public tuple before enabling bounded strategy 6.
 - [ ] Port newly admitted original assertions and capture bidirectional public C interoperability with forged-evidence controls.
 - [ ] Run safe, every unsafe leaf, all-feature, no_std, Clippy, formatting and selected foreign/no-atomics checks.

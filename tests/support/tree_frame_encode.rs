@@ -194,3 +194,108 @@ fn platform_tree_frames_keep_nonclone_owners_and_transactional_boundaries() {
         }
     }
 }
+
+#[test]
+fn every_tree_frame_allocation_failure_releases_exact_owners() {
+    use core::num::NonZeroU64;
+    let mut total = 0;
+    for size in [0, 1, 7, 96, 4097] {
+        let source: Vec<u8> = b"tree allocator repeated bytes"
+            .iter()
+            .copied()
+            .cycle()
+            .take(size)
+            .collect();
+        let plan = ReferenceSearchPlan::Greedy(
+            GreedyExecutionPlan::from_tree_parameters(
+                parameters(15, 6, 6).validate().unwrap(),
+                size,
+            )
+            .unwrap(),
+        );
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let frame = compress_reference_in(&source, plan, owner).unwrap();
+        assert_eq!(crate::decompress(&frame, size).unwrap(), source);
+        let attempts = monitor.snapshot().attempts;
+        total += attempts;
+        drop(frame);
+        monitor.assert_released();
+        for ordinal in 1..=attempts {
+            let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+            let monitor = owner.monitor();
+            monitor.set_fail_at(NonZeroU64::new(ordinal));
+            assert_eq!(
+                compress_reference_in(&source, plan, owner).err(),
+                Some(Error::AllocationFailed),
+                "size {size}, ordinal {ordinal}"
+            );
+            let snapshot = monitor.snapshot();
+            assert_eq!(snapshot.attempts, ordinal);
+            assert_eq!(snapshot.failures, 1);
+            assert_eq!(snapshot.owners_dropped, snapshot.identities_created);
+            monitor.assert_released();
+        }
+    }
+    assert!(total > 20);
+}
+
+#[test]
+fn late_tree_output_failure_preserves_committed_state_and_poisoned_context() {
+    let source: Vec<u8> = b"abcde1234567".iter().copied().cycle().take(8192).collect();
+    let plan = ReferenceSearchPlan::Greedy(
+        GreedyExecutionPlan::from_tree_parameters(
+            parameters(15, 10, 10).validate().unwrap(),
+            source.len(),
+        )
+        .unwrap(),
+    );
+    let workspace_owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+    let wm = workspace_owner.monitor();
+    let output_owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+    let om = output_owner.monitor();
+    let mut workspace = ReferenceEncoderWorkspace::new(&source, plan, workspace_owner).unwrap();
+    let settings = ReferenceFrameSettings::new(source.len(), 15).unwrap();
+    let mut frame = ReferenceFrameHeader::new(&settings).as_bytes().to_vec();
+    workspace.emit_next(4096, false, &mut frame).unwrap();
+    let committed = workspace.entropy.sequence_encoder.committed_repeats();
+    assert_ne!(committed, [1, 4, 8]);
+    let mut output = Vec::new_in(output_owner);
+    output.try_reserve_exact(frame.len()).unwrap();
+    output.extend_from_slice(&frame);
+    assert_eq!(output.len(), output.capacity());
+    assert!(om.fail_next());
+    assert_eq!(
+        workspace.emit_next(4096, true, &mut output),
+        Err(Error::AllocationFailed)
+    );
+    assert_eq!(output.as_slice(), frame);
+    assert_eq!(workspace.emitted, 4096);
+    assert_eq!(
+        workspace.entropy.sequence_encoder.committed_repeats(),
+        committed
+    );
+    assert!(workspace.entropy.pending_literal_table.is_none());
+    assert!(workspace.failed);
+    om.clear_failure();
+    let snapshots = (wm.snapshot(), om.snapshot());
+    for (size, last) in [(0, false), (4096, true), (usize::MAX, true)] {
+        assert_eq!(
+            workspace.emit_next(size, last, &mut output),
+            Err(Error::InvalidState)
+        );
+    }
+    assert_eq!((wm.snapshot(), om.snapshot()), snapshots);
+    drop(output);
+    drop(workspace);
+    wm.assert_released();
+    om.assert_released();
+    assert_eq!(
+        crate::decompress(
+            &compress_reference_in(&source, plan, alloc::alloc::Global).unwrap(),
+            source.len()
+        )
+        .unwrap(),
+        source
+    );
+}

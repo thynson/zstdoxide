@@ -250,6 +250,79 @@ mod tests {
         )
         .unwrap()
     }
+    #[test]
+    fn tree_search_corruption_after_pending_insert_poisons_retained_state() {
+        let mut input: Vec<u8> = (0..96).collect();
+        input[0] = 255;
+        let plan = GreedyExecutionPlan::from_tree_parameters(
+            crate::RawCompressionParameters {
+                window_log: 10,
+                hash_log: 6,
+                chain_log: 6,
+                search_log: 4,
+                min_match: 4,
+                target_length: 0,
+                strategy: 6,
+            }
+            .validate()
+            .unwrap(),
+            input.len(),
+        )
+        .unwrap();
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let mut state = GreedyMatchState::from_parts(
+            &input,
+            plan,
+            GreedyTables::new_in(plan.tables(), owner.clone(), owner.clone()).unwrap(),
+            Vec::new_in(owner.clone()),
+            Vec::new_in(owner),
+        )
+        .unwrap();
+        let key = plan.tables().key_layout();
+        let pending = key.read_key(&input).unwrap();
+        let query = key.read_key(&input[1..]).unwrap();
+        assert_ne!(key.bucket(pending), key.bucket(query));
+        let GreedyTables::Tree(table) = &mut state.tables else {
+            panic!("tree table")
+        };
+        table.replace_head(query, input.len() + 8).unwrap();
+        let before = maps(&state.tables);
+        assert_eq!(
+            state.parse_next(input.len(), [1, 4, 8]),
+            Err(Error::CorruptData)
+        );
+        assert!(state.failed);
+        assert_ne!(maps(&state.tables), before);
+        let after = (
+            monitor.snapshot(),
+            maps(&state.tables),
+            state.progress,
+            state.position,
+        );
+        for length in [0, 1, 96, usize::MAX] {
+            assert_eq!(
+                state.parse_next(length, [1, 4, 8]),
+                Err(Error::InvalidState)
+            );
+        }
+        assert_eq!(
+            (
+                monitor.snapshot(),
+                maps(&state.tables),
+                state.progress,
+                state.position
+            ),
+            after
+        );
+        drop(state);
+        monitor.assert_released();
+        assert_eq!(
+            monitor.snapshot().owners_dropped,
+            monitor.snapshot().identities_created
+        );
+    }
+
     fn raw_index(value: usize) -> u32 {
         if value == usize::MAX {
             0

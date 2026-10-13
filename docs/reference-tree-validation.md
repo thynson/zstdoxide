@@ -262,3 +262,17 @@ Strict safe/all Clippy, formatting and safe/tree/all true no_std checks pass.
 Immutable source/log evidence is in `evidence/2026-10-13-tree-parser.json` and
 its archive. Tree round trips are not yet a C frame identity claim; actual
 ordinary tree capture and full state/frame comparison are the next gate.
+
+## Retained tree failure boundaries
+
+Sixteen focused safe/tree/all/release-all executions pass for exact release at
+every observed frame allocation ordinal across five input sizes, non-clone
+borrowed owners, late output reservation rollback, and a malformed future head
+encountered after pending sampling writes. The latter poisons retained state;
+further calls preserve all owners, tables and progress. Late output failure
+keeps prior output and committed repeats, clears pending literal publication and
+poisons the workspace. Safe/tree no_std, safe/all strict Clippy and formatting
+pass. Evidence is in `evidence/2026-10-13-tree-failure.json` and its archive.
+An initial synthetic poisoning source had colliding first/query buckets; changing
+its first byte made the intended after-insertion failure observable. This was a
+test-input correction, not a changed codec expectation or captured C fixture.
