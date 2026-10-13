@@ -28,6 +28,10 @@ mod greedy_tests;
 #[path = "../tests/support/lazy_frame_encode.rs"]
 mod lazy_tests;
 
+#[cfg(test)]
+#[path = "../tests/support/tree_frame_encode.rs"]
+mod tree_tests;
+
 /// Encode one known-size, no-dictionary frame with an admitted reference profile.
 ///
 /// Admission and output-bound checks precede allocator operations. The original

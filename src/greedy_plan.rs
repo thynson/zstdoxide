@@ -6,6 +6,7 @@
 use crate::greedy_key::{GreedyKeyLayout, RowLayout};
 use crate::lazy_select::LazyDepth;
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
+use crate::tree_layout::TreeLayout;
 #[cfg(test)]
 use crate::{CompressionParameterRequest, SourceSize};
 use crate::{Error, ReferenceStrategy, ResolvedCompressionParameters, Result};
@@ -21,6 +22,10 @@ pub(crate) enum GreedyTablePlan {
         attempts: usize,
     },
     Row(RowLayout),
+    Tree {
+        layout: TreeLayout,
+        attempts: usize,
+    },
 }
 
 impl GreedyTablePlan {
@@ -28,12 +33,14 @@ impl GreedyTablePlan {
         match self {
             Self::Chain { key, .. } => key,
             Self::Row(row) => row.key_layout(),
+            Self::Tree { layout, .. } => layout.key(),
         }
     }
     pub(crate) const fn attempts(self) -> usize {
         match self {
             Self::Chain { attempts, .. } => attempts,
             Self::Row(row) => row.attempts(),
+            Self::Tree { attempts, .. } => attempts,
         }
     }
     pub(crate) const fn is_row(self) -> bool {
@@ -94,6 +101,31 @@ impl GreedyExecutionPlan {
             ReferenceStrategy::Lazy2 => LazyDepth::Two,
             _ => return Err(Error::UnsupportedFeature),
         };
+        Self::build(parameters, source_len, depth, false)
+    }
+
+    /// Private strategy-6 admission, independent from the public dispatch gate.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "Private tree admission precedes the public gate")
+    )]
+    pub(crate) fn from_tree_parameters(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+    ) -> Result<Self> {
+        Self::source_size_checked(source_len)?;
+        if parameters.strategy() != ReferenceStrategy::BinaryTreeLazy2 {
+            return Err(Error::UnsupportedFeature);
+        }
+        Self::build(parameters, source_len, LazyDepth::Two, true)
+    }
+
+    fn build(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+        depth: LazyDepth,
+        tree: bool,
+    ) -> Result<Self> {
         if parameters.window_log() > 21 || parameters.hash_log() > 19 {
             return Err(Error::ResourceLimit);
         }
@@ -101,7 +133,19 @@ impl GreedyExecutionPlan {
         let first_bytes = Layout::array::<usize>(key.cells())
             .map_err(|_| Error::ResourceLimit)?
             .size();
-        let (tables, second_bytes) = if parameters.window_log() > 14 {
+        let (tables, second_bytes) = if tree {
+            if parameters.chain_log() > 19 || parameters.search_log() > 8 {
+                return Err(Error::ResourceLimit);
+            }
+            let layout = TreeLayout::new(key, parameters.chain_log())?;
+            (
+                GreedyTablePlan::Tree {
+                    layout,
+                    attempts: 1 << parameters.search_log(),
+                },
+                layout.edge_bytes(),
+            )
+        } else if parameters.window_log() > 14 {
             let row = RowLayout::new(key, parameters.search_log())?;
             (
                 GreedyTablePlan::Row(row),

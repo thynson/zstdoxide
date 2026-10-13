@@ -8,6 +8,7 @@ use crate::greedy_block::GreedyBlock;
 use crate::greedy_parse::{GreedyParseResult, GreedyProgress, GreedySearch, parse_with_depth};
 use crate::greedy_plan::{GreedyExecutionPlan, GreedyTablePlan};
 use crate::reference_chain::ReferenceChain;
+use crate::reference_tree::ReferenceTree;
 use crate::row_table::RowTable;
 use crate::sequence_context::SequenceWithOffset;
 use crate::{Error, Result};
@@ -16,6 +17,7 @@ use crate::{Error, Result};
 /// storage, allocator clone, trait object or unsafe composite is introduced.
 /// The existing leaf features select the equivalent access representations.
 pub(crate) enum GreedyTables<A: Allocator> {
+    Tree(ReferenceTree<A>),
     Chain(ReferenceChain<A>),
     Row(RowTable<A>),
 }
@@ -23,6 +25,9 @@ pub(crate) enum GreedyTables<A: Allocator> {
 impl<A: Allocator> GreedyTables<A> {
     pub(crate) fn new_in(plan: GreedyTablePlan, first: A, second: A) -> Result<Self> {
         match plan {
+            GreedyTablePlan::Tree { layout, .. } => {
+                ReferenceTree::new_in(layout, first, second).map(Self::Tree)
+            }
             GreedyTablePlan::Chain { key, chain_log, .. } => {
                 ReferenceChain::new_in(key, chain_log, first, second).map(Self::Chain)
             }
@@ -31,6 +36,7 @@ impl<A: Allocator> GreedyTables<A> {
     }
     fn matches(&self, plan: GreedyTablePlan) -> bool {
         match (self, plan) {
+            (Self::Tree(table), GreedyTablePlan::Tree { layout, .. }) => table.layout() == layout,
             (Self::Chain(table), GreedyTablePlan::Chain { key, chain_log, .. }) => {
                 table.key_layout() == key && table.chain_log() == chain_log
             }
@@ -40,6 +46,7 @@ impl<A: Allocator> GreedyTables<A> {
     }
     fn reset(&mut self) {
         match self {
+            Self::Tree(table) => table.reset(),
             Self::Chain(table) => table.reset(),
             Self::Row(table) => table.reset(),
         }
@@ -47,6 +54,7 @@ impl<A: Allocator> GreedyTables<A> {
     #[cfg(test)]
     pub(crate) fn retained_capacity(&self) -> usize {
         match self {
+            Self::Tree(table) => table.layout().total_bytes(),
             Self::Chain(table) => table.retained_capacity(),
             Self::Row(table) => table.retained_capacity(),
         }
@@ -153,6 +161,10 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
                 self.progress.next = self.position - 192.min(gap - 384);
             }
             let search = match &mut self.tables {
+                GreedyTables::Tree(table) => GreedySearch::Tree {
+                    table,
+                    attempts: self.plan.tables().attempts(),
+                },
                 GreedyTables::Chain(table) => GreedySearch::Chain {
                     table,
                     attempts: self.plan.tables().attempts(),
@@ -247,6 +259,18 @@ mod tests {
     }
     fn maps<A: Allocator>(tables: &GreedyTables<A>) -> (Vec<u32>, Vec<u32>) {
         match tables {
+            GreedyTables::Tree(table) => {
+                let (h, e) = table.test_maps();
+                let convert = |v: &usize| match crate::tree_layout::TreeLink::from_stored(*v) {
+                    crate::tree_layout::TreeLink::Empty => 0,
+                    crate::tree_layout::TreeLink::Unsorted => 1,
+                    crate::tree_layout::TreeLink::Position(p) => u32::try_from(p + 2).unwrap(),
+                };
+                (
+                    h.iter().map(convert).collect(),
+                    e.iter().map(convert).collect(),
+                )
+            }
             GreedyTables::Chain(table) => {
                 let (heads, links) = table.test_maps();
                 (
@@ -546,6 +570,7 @@ mod tests {
             // when it inspects the query's candidates. This exercises poisoning
             // after logical writes, independently of allocation failures.
             match &mut state.tables {
+                GreedyTables::Tree(_) => unreachable!("chain/row predecessor fixture"),
                 GreedyTables::Chain(table) => {
                     assert_ne!(layout.bucket(pending), layout.bucket(query));
                     table.insert(query, input.len() + 8).unwrap();
@@ -657,6 +682,7 @@ mod tests {
             let mut tables = GreedyTables::new_in(plan.tables(), &owners[0], &owners[1]).unwrap();
             let key = plan.tables().key_layout().read_key(&input).unwrap();
             match &mut tables {
+                GreedyTables::Tree(_) => unreachable!("chain/row predecessor fixture"),
                 GreedyTables::Chain(table) => table.insert(key, usize::MAX - 1).unwrap(),
                 GreedyTables::Row(table) => table
                     .insert(

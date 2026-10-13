@@ -244,3 +244,21 @@ endian and 64-bit big endian targets, not complete native foreign suites.
 Commands and immutable sources are in `evidence/2026-10-13-tree-platform.json`
 and its matching archive. Private parser integration and public admission remain
 separate pending gates.
+
+## Private depth-two parser integration
+
+Private tree admission uses W21/H19/C19/S8 bounds and a distinct constructor;
+public strategy 6 dispatch remains unsupported. The shared depth-two parser
+selects tree owners explicitly, filters primitive matches shorter than four
+bytes, and preserves existing chain/row behavior. Tiny/empty calls and retained
+window/frontier adjustments keep their existing publication contracts.
+
+Full safe and all-feature suites each pass 1,190 tests, zero failures and 55
+explicit ignores, including all earlier direct trajectories, ordinary C frames,
+allocation campaigns and documentation examples. Three new private tree tests
+cover admission separation, whole-frame round trips across short inputs/windows
+and retained prefixes, and borrowed non-clone owner/publication boundaries.
+Strict safe/all Clippy, formatting and safe/tree/all true no_std checks pass.
+Immutable source/log evidence is in `evidence/2026-10-13-tree-parser.json` and
+its archive. Tree round trips are not yet a C frame identity claim; actual
+ordinary tree capture and full state/frame comparison are the next gate.

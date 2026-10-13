@@ -77,11 +77,13 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [x] Implement initialized independent hash/node owners with safe storage and an opt-in unsafe-reference-tree leaf.
 - [x] Implement unsorted insertion, bounded chain reversal and deferred sorting with malformed-link and synthetic ordering controls.
 - [x] Implement checked binary-tree best-match scoring, equal-tail handling and sampling-frontier advancement; compare every complete operation against frozen C maps.
-- [ ] Integrate private depth-two parser dispatch with all earlier chain/row trajectories and complete frame baselines unchanged.
+- [x] Integrate private depth-two parser dispatch with all earlier chain/row trajectories and complete frame baselines unchanged.
 - [x] Freeze ordinary tree frame source/schedule recipes and protocol with explicit retained-state observations.
 - [x] Implement and review the bounded ordinary tree C helper and independent offline replay with forged-record controls.
 - [x] Preflight the capture controller, pinned dependencies and normal/instrumented command inventory before execution.
-- [ ] Capture, audit and project ordinary retained-state C tree frames; match Rust sequences, maps and complete frame bytes before public integration.
+- [ ] Capture and audit ordinary retained-state C tree frames with build/padding equality and offline forgery controls.
+- [ ] Project audited ordinary tree frames into bounded binary fixtures with exact provenance.
+- [ ] Add checked tree trajectory reading and match Rust retained sequences, maps and complete frame bytes before public integration.
 - [ ] Validate ordinary state, malformed links, allocation failures and transactional frame/repeat publication.
 - [ ] Freeze successor admission mappings and independently resolve every new public tuple before enabling bounded strategy 6.
 - [ ] Port newly admitted original assertions and capture bidirectional public C interoperability with forged-evidence controls.

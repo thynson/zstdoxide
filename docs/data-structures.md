@@ -1340,3 +1340,35 @@ window-expiry fixtures representative without weakening ordinary block admission
 Best-match traversal owns only copied branch cursors and scalar common-prefix
 bounds. It tracks selected length/position separately from farthest compared
 match end, and preserves offset seed 999999999 until a strict cost win.
+
+### Private parser and retained owner integration
+
+A Tree variant joins the existing copied table plan, borrowed parser dispatch
+and owned retained-table enum. It reuses LazyDepth::Two while always disabling
+row mode. Private admission is separate (`from_tree_parameters`); existing
+public strategy dispatch and family admission remain unchanged until ordinary
+C frames and public tuples are qualified. Initial limits are W21/H19/C19/S8,
+with C edge cells retaining half as many nodes. Checked TreeLayout supplies
+actual independent owner layouts before any allocation or allocator cloning.
+
+The parser sees only matches of length at least four; the primitive still returns
+short hash-collision matches because their table/frontier effects are observable.
+Tree queries ignore the chain skipping flag while preserving parser progress
+state. Retained state keeps the existing block-start window clamp and 384/192
+frontier adjustment from ZSTD_buildSeqStore. Empty/tiny blocks keep the existing
+scratch and publication behavior. Shared transactional entropy/output ownership
+and poison-on-search-error rules apply without an extra owner or unsafe layer.
+
+### Ordinary tree trajectory projection
+
+The tree fixture uses a distinct magic and fixed case/block counts around the
+existing bounded frame-record encoding. It stores a fixed strategy selector 6
+and zero reserved bytes; row metadata remains zero. Names, source, literals and
+complete frames borrow immutable bytes. Sequence/delta vectors use fallible
+reservations after bounded counts and byte extents are checked. The shared test
+record gains explicit tree interpretation, never infers strategy from window
+size or a name. Historical readers continue selecting their original chain/row
+interpretation. Tree node markers are admitted only in odd edge slots during
+independent full-map replay. Structural replay checks window/frontier and repeat
+publication without calling the production parser; backend comparisons then
+match actual sequences, literals, all map cells and complete frame bytes.

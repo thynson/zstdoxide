@@ -12,14 +12,20 @@ use crate::greedy_search::{
 };
 use crate::lazy_select::{LazyCandidate, LazyDepth, LazyGain};
 use crate::reference_chain::ReferenceChain;
+use crate::reference_tree::ReferenceTree;
 use crate::row_table::RowTable;
 use crate::sequence_context::{LogicalSequence, SequenceWithOffset};
 use crate::sequence_plan::OffsetIntent;
+use crate::tree_source::TreeSource;
 use crate::{Error, Result};
 
 /// Borrow exactly the selected family; no trait object, allocation or owner
 /// conversion is involved. The two allocator values need not be interchangeable.
 pub(crate) enum GreedySearch<'a, A: Allocator, B: Allocator> {
+    Tree {
+        table: &'a mut ReferenceTree<A, B>,
+        attempts: usize,
+    },
     Chain {
         table: &'a mut ReferenceChain<A, B>,
         attempts: usize,
@@ -45,6 +51,11 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
                     && table.key_layout() == block.key_layout()
                     && (1..=256).contains(attempts)
             }
+            Self::Tree { table, attempts } => {
+                !block.row_search()
+                    && table.layout().key() == block.key_layout()
+                    && (1..=256).contains(attempts)
+            }
             Self::Row { table, .. } => {
                 block.row_search() && table.layout().key_layout() == block.key_layout()
             }
@@ -62,6 +73,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
         current: usize,
     ) -> Result<Option<GreedyMatch>> {
         match self {
+            Self::Tree { table, attempts } => crate::tree_search::find(
+                TreeSource::from_block(block)?,
+                table,
+                &mut progress.next,
+                current,
+                *attempts,
+            )
+            .map(|m| m.filter(|m| m.length >= 4)),
             Self::Chain { table, attempts } => find_chain(
                 block,
                 table,
@@ -88,6 +107,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
         query: LazyQuery,
     ) -> Result<Option<GreedyMatch>> {
         match self {
+            Self::Tree { table, attempts } => crate::tree_search::find(
+                TreeSource::from_block(block)?,
+                table,
+                &mut progress.next,
+                query.current(),
+                *attempts,
+            )
+            .map(|m| m.filter(|m| m.length >= 4)),
             Self::Chain { table, attempts } => find_chain_lookahead(
                 block,
                 table,
