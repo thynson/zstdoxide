@@ -180,3 +180,68 @@ score-hit reconciliation, immutable broader fixture packing/checking, Rust
 projection and Lazy/Lazy2 parsing remain open. Complete final maps and sequences
 do not constitute chronological probe traces. No new ordinary/public-frame,
 Rust Lazy, performance or complete upstream-migration claim follows.
+
+## Frozen broader observations and score reconciliation
+
+The permanent broader fixture packs 645 direct groups and six separate
+normal/sanitized salt groups into 16,705,002 bytes, SHA256
+`7979c382d9d613052a20378cea2563d397e4a1a0e146ea17acc7b1edfbb1416b`.
+Its 184,949-byte capture manifest has SHA256
+`153efc6849613cb6815d0d0980411da5eb0286ed8f5378cca7479f4e5c01a4de`.
+Packing reruns the independent capture auditor and requires exact equality with
+the previous saved audit; all source, compiler, raw capture and auditor identities
+are retained. No Rust encoder or selection algorithm generated these bytes.
+
+The new `check_lazy_family_fixture.py` verifies immutable manifest identity,
+complete contiguous observation extents, every local source pin, all sequence
+replay and full table records, per-build context peaks, all 138 exact tiny
+controls and 173 depth-zero predecessors. It also rechecks the frozen source
+placements and records observed final outputs for all 96 score inputs. All
+48 corresponding chain/row pairs emit identical sequence records.
+
+Thirty-six cases have sufficient selected depth for the intended threshold.
+For each applicable branch/depth, the final sequence retains the baseline at
+both below/equal scores and selects the placed candidate only above the score:
+
+| Placed candidate | Incumbent score | Candidate scores below/equal/above | Above-threshold publication (LL, ML, OffBase) |
+| --- | ---: | --- | --- |
+| Depth-one explicit | 25 | 21 / 25 / 29 | 1, 9, 128 |
+| Depth-two explicit | 28 | 24 / 28 / 32 | 2, 10, 256 |
+| Depth-one repeat | 15 | 12 / 15 / 18 | 1, 6, 1 |
+| Depth-two repeat | 24 | 20 / 24 / 28 | 2, 7, 1 |
+
+The explicit baselines publish `(0, 8, 2048)` when retained; repeat-family
+baselines publish `(0, 8, 1024)` at depth one or `(0, 8, 512)` at depth two.
+Twelve applicable cases are below, twelve equal and twelve above. Thirty
+additional cases are inactive-depth controls retaining their baseline; six
+Greedy cases publish the available depth-one repeat immediately, irrespective
+of these later-depth score relations.
+
+All eighteen baseline-repeat length cases publish the repeat at LL1, with ML
+7/8/9 and OffBase1. This does not establish the initial candidate selection:
+in particular, the shorter-repeat input still publishes that repeat after
+lookahead even though its placed table copy is longer. The preserved v1.5.7
+source first compares lengths and then allows a repeat gain at the next query;
+final output alone is not an initial-selection witness. The six successive-copy
+cases publish the first copy `(0, 4, 2048)` at depth zero and the fourth copy
+`(3, 16, 256)` at either Lazy depth. These outcomes do not prove a chronological
+trace of all intermediate probes. Complete final maps, frontiers, entropy and
+skipping values remain in the immutable pack and its score summary.
+
+Normal and optimized Python each accept two complete fixtures and reject 24
+forgeries with child creation blocked and zero attempts. Semantic controls
+explicitly override the manifest pin and coherently update record extents and
+all local hashes; production checking never relaxes that pin. Two controls
+substitute structurally valid depth-zero records into the corresponding Lazy
+above-threshold case, adjusting selectors, and reject at score reconciliation.
+Coherent tiny and predecessor entropy changes reject at their independent
+historical comparison layers. Other controls cover source/provenance, extents,
+totals, depth/repeats, salt, maps and score-summary metadata. Immutable recipe
+and predecessor inputs are cached only after real validation and have their
+source hashes rechecked before and after; mutated fixture bytes always replay.
+
+The [fixture evidence](evidence/2026-10-13-lazy-family-fixture.json) and
+[archive](evidence/2026-10-13-lazy-family-fixture.tar.gz) preserve the manifest,
+pack, checker, exact generation/control drivers and reports, with the unchanged
+original capture archive linked separately. Rust projection/reading, parser
+implementation, ordinary frames and public admission remain separate work items.

@@ -1019,3 +1019,14 @@ their exact predecessor contracts. The new scalar selects one of six unchanged
 upstream entry points; it creates no new pointer relationship or owner. The
 packet, inclusive lookahead arena proof and source review precede execution in
 `docs/reference-lazy-oracle.md`.
+
+
+The broader Lazy fixture retains a bounded immutable NDJSON byte pack with
+consecutive byte extents and SHA256 identities for 645 direct groups and six
+mode/depth salt groups. Its Python reader owns decoded metadata and bounded
+record slices, reuses the independent complete-map/sequence replay validator,
+and compares all tiny/depth-zero predecessor outputs. Score observations are
+copied final sequence/frontier/fingerprint records over 96 pre-frozen inputs;
+they classify publication outcomes, not chronological probe traces. These
+std-only offline validation records add no codec owner or unsafe backend.
+The future Rust projection remains a separate checked work item.

@@ -1,0 +1,37 @@
+{
+  "archive": "2026-10-13-lazy-family-fixture.tar.gz",
+  "archive_bytes": 5361411,
+  "archive_members": 44,
+  "archive_sha256": "563b833eed6243cffbb218a6f472a7993c1ac047bee921b4407bd919d21b9635",
+  "capture_archive": "2026-10-12-lazy-family-wip.tar.gz",
+  "capture_archive_sha256": "8b59851b9138312c2191aa981992749cb9b4b5ab8893e51815ade9cc9aa05bf6",
+  "chain_row_complete_sequence_pairs": 48,
+  "checker_sha256": "600d7b1b2d97eb9117587ac567d9f543de355747a406644ffcac6bbc2eb82388",
+  "controls_per_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 24
+  },
+  "date": "2026-10-13",
+  "direct_recipes": 645,
+  "exact_tiny_controls": 138,
+  "manifest_bytes": 184949,
+  "manifest_sha256": "153efc6849613cb6815d0d0980411da5eb0286ed8f5378cca7479f4e5c01a4de",
+  "pack_bytes": 16705002,
+  "pack_sha256": "7979c382d9d613052a20378cea2563d397e4a1a0e146ea17acc7b1edfbb1416b",
+  "predecessor_controls": 173,
+  "qualification": "Frozen real C direct observations only. All pack groups compared against their actual captured bytes and all direct groups against both builds. New score summaries classify final publication, not chronological probes or initial baseline-repeat selection. Semantic forgery controls override the manifest pin only to exercise deeper checks; production checking retains the immutable pin. Immutable input recipes/predecessors cached after real validation with source hashes checked before/after. No Rust Lazy execution, new C run, ordinary/public frame or timing claim.",
+  "raw_evidence_sha256": "028af18ffbae1f600ad1b5e0b6f44cf53d3fa808e4657534d57de27e1525c962",
+  "score_classifications": {
+    "active-strict-threshold": 36,
+    "greedy-early-repeat": 6,
+    "inactive-depth-control": 30,
+    "published-first-copy": 2,
+    "published-fourth-copy": 4,
+    "published-repeat-initial-selection-not-inferred": 18
+  },
+  "score_inputs": 96,
+  "source_unchanged": true,
+  "status": "passed",
+  "stored_observation_groups": 651
+}
