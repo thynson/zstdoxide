@@ -1281,3 +1281,23 @@ admission. The final matrix must cover the new leaf independently, all leaves,
 std-disabled builds, selected foreign Miri checks and no-atomics caller codegen.
 All-backend clock-free complete output/owner equality precedes native timing on
 unchanged deterministic workloads and a separate safe/all repeat.
+
+### Checked tree scalar implementation decisions
+
+`TreeLayout` keeps the existing `GreedyKeyLayout` and validates edge-log 6..19
+before calculating both independent usize allocation layouts and their sum.
+This is a private owner-layout bound, not new public admission. It represents
+2^C edge cells and 2^(C-1) nodes; permitting C19 retains at most 2^18 nodes.
+`TreeLink` is a copied enum (empty, unsorted, logical position). Storage encodes
+empty/unsorted as usize::MAX / usize::MAX-1; position construction excludes both.
+Only a larger-edge cell may contain unsorted. `TreeEdge` is a checked node slot
+and side or a discard destination; it never carries a mutable reference.
+
+`TreeProbe` checks the inclusive eight-byte footprint and biased arithmetic,
+then keeps raw window/node floors to preserve strict upstream comparisons.
+Window candidates are strictly above max(prefix_floor+2, current+2-window).
+Node traversal is strictly above current+2-(node_count-1), independently of
+byte-comparison eligibility. Empty is a terminated traversal, unsorted is an
+error in a sorted traversal, and future/self positions reject. These allocation-
+free records share safe representation across every backend. Storage owners and
+search consumers follow in separate work items; no public strategy is enabled.

@@ -1,0 +1,135 @@
+{
+  "archive": "2026-10-13-tree-layout.tar.gz",
+  "archive_bytes": 46544,
+  "archive_members": 14,
+  "archive_sha256": "8c234c1450f30a4050be486b77f54e67d2a4d2e1db7ce87dd61564cdfd6356c2",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "tree_layout"
+      ],
+      "exit_code": 0,
+      "log": "0.log",
+      "seconds": 0.5552072499413043,
+      "sha256": "d2e28697faa2e42eb880885a72b4bd9890105cfdc68f7fc3eaeeb34e8bd14a77"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--all-features",
+        "--lib",
+        "tree_layout"
+      ],
+      "exit_code": 0,
+      "log": "1.log",
+      "seconds": 9.299918041797355,
+      "sha256": "324bba7f477606ce8f5af62ed52f671cc2fc419bf2e9b606c3a76d0aff647ab6"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--lib",
+        "tree_layout"
+      ],
+      "exit_code": 0,
+      "log": "2.log",
+      "seconds": 21.97263937490061,
+      "sha256": "f46bcab01a62ff710302feb7c3ad47339a0c55c63f10bec6a7fa3831521c4637"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log": "3.log",
+      "seconds": 0.7212969169486314,
+      "sha256": "9f5ac6f5b3731234447b787f23bcc12a69881676fa5e66313c788ba60ef44570"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--all-features",
+        "--lib",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log": "4.log",
+      "seconds": 0.6748574168886989,
+      "sha256": "f5798fe8caf235c8e20adcbdf1785ed1838bb822d796f5fc0a8036d4dd426f9f"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "log": "5.log",
+      "seconds": 0.6797377080656588,
+      "sha256": "d0e6a161e6143ce7419d4a94a88bf8304d08a1455aca9069c7a23702c20d5cf1"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "unsafe-fse-encoder,unsafe-huffman,unsafe-reference-chain,unsafe-dictionary,unsafe-ring-history,unsafe-fse,unsafe-huffman-codebook,unsafe-training,unsafe-history,unsafe-bitstream,unsafe-match-table,unsafe-byte-cursor,unsafe-row-table,unsafe-match-chain"
+      ],
+      "exit_code": 0,
+      "log": "6.log",
+      "seconds": 0.5615553341340274,
+      "sha256": "f946d3387284d2ec1d905be5a5ea00c0784a73af80d8667ebe8e425502d2a0d1"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "7.log",
+      "seconds": 0.6765503329224885,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "no_std_configurations": 2,
+  "source": {
+    "docs/data-structures.md": "2bb8e2cffeebcb5d9f09ac67dc2a23bd1c79c9b6a9f4afe5cad84582125f8bcc",
+    "src/lib.rs": "ff73b308defc6c88357c8f8212df8f42019e333a835648228f1b0f609be87024",
+    "src/tree_layout.rs": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26"
+  },
+  "status": "passed",
+  "tests": 15
+}

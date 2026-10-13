@@ -184,3 +184,13 @@ seven newly registered offline commands in normal and optimized Python. The
 Lazy baseline, tiny/broader recipes, synthetic observation controls, both capture
 plans and complete binary projection pass; shell syntax also passes. This does
 not rerun the already completed Module 15 Rust matrix.
+
+## Checked layouts and scalar links
+
+`TreeLayout`, `TreeLink`, `TreeSide`, `TreeEdge` and `TreeProbe` now encode the
+reviewed dimensions, zero/unsorted/position distinction, discard destinations
+and independent strict window/node floors. The [focused checks](evidence/2026-10-13-tree-layout.json)
+pass five tests each in safe, all-feature debug and all-feature release builds,
+safe/all Clippy, two std-disabled builds and formatting. No allocator or source
+access occurs while constructing these records. Storage/search integration and
+public strategy admission remain later work.
