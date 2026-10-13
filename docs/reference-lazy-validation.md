@@ -669,3 +669,22 @@ The archive was read sequentially and all 30,368 reconstructed capture files
 compared to their unchanged originals; no archived code was executed.
 These are public interoperability and bounded request checks, not complete
 upstream API parity or a claim that Rust emits C-identical compressed frames.
+
+## Selected foreign-platform and no-atomics checks
+
+The [platform report](evidence/2026-10-13-lazy-platform.json) preserves 19 successful
+commands from immutable revision `c72fbe994e099e8c150150e2219fb2ab3cc9ca0c`.
+Fourteen selected library tests and one public test pass under Miri for i686 and
+s390x, separately with safe and all-feature storage: 60 interpreted executions.
+The selections cover checked speculative limits, threshold ties, malformed
+links/owners, allocation failure, poisoning, transactional publication and tiny
+public Lazy/Lazy2 frames. Delivered production and selected test inputs match
+that snapshot. These are selected interpreted checks, not complete foreign
+native test-suite execution.
+
+The `thumbv6m-none-eabi` library compiles with std disabled in safe mode and with
+all fourteen unsafe leaves explicitly enabled. Both corresponding caller rlibs
+compile using levels 5/6, explicit Lazy/Lazy2, borrowed allocator owners and the
+non-atomic fallback. Both retained artifacts were located by their original
+hashes and archived. This establishes caller code generation, not a linked
+firmware image, execution on hardware, or fit in a particular device's memory.

@@ -89,7 +89,7 @@ successor admission mapping and independent oracle checks.
 - [x] Preflight a versioned public capture controller and independent offline auditor before execution.
 - [x] Qualify a versioned offline audit extension binding new public requests to independently resolved tuples.
 - [x] Capture and independently validate broader bidirectional public interoperability with normal/instrumented C.
-- [ ] Verify exact owner release, allocation failures, malformed state, no_std and interpreted i686/s390x bounds plus no-atomics caller compilation.
+- [x] Verify exact owner release, allocation failures, malformed state, no_std and interpreted i686/s390x bounds plus no-atomics caller compilation.
 - [ ] Run safe, each unsafe feature and all-feature correctness checks with every predecessor regression intact.
 - [ ] Freeze and verify clock-free workloads, then compare all backends and repeat safe/all after a CPU barrier.
 - [ ] Reconcile the bounded milestone, official-test gaps and measurements; clear completed items and retain the next decomposition.
