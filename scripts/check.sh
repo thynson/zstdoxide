@@ -48,6 +48,7 @@ python3 scripts/check_reference_greedy_baseline.py
 python3 scripts/check_lazy_family_recipes.py --check
 python3 scripts/capture_lazy_families.py --check-plan
 python3 scripts/check_lazy_family_fixture.py --check
+python3 scripts/pack_lazy_parser_fixtures.py --check
 
 # Each backend alone must compile without std and pass the same test suite.
 cargo fmt --all -- --check

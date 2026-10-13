@@ -1,0 +1,24 @@
+{
+  "archive": "2026-10-13-lazy-projection.tar.gz",
+  "archive_bytes": 16383688,
+  "archive_members": 19,
+  "archive_sha256": "7eef240d0effffc98a45189910d274c8b4f94d8a37a153bd254614533753f9f0",
+  "date": "2026-10-13",
+  "fixture_bytes": 24567619,
+  "fixture_sha256": "be38aa8c6e4439bf999a6168ee81347b9e7af38391925b6fc548ffaf8c60aea7",
+  "generator_sha256": "0ffdaee57e093611839ec5ebeb3c786bc63765f6c360af7d091ef2524d2a266e",
+  "independent_controls_per_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 28
+  },
+  "publication_controls_per_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 4
+  },
+  "qualification": "Independent reader compares all input/state/source/sequence/map fields and record extents against immutable C observations. Publication controls substitute already validated bytes and test only refusal to overwrite or partially publish changed expectations. CLI write/check, shell syntax, formatting and diff checks passed. No new C execution, Rust parser, ordinary/public frame or timing claim.",
+  "records": 645,
+  "source_manifest_sha256": "153efc6849613cb6815d0d0980411da5eb0286ed8f5378cca7479f4e5c01a4de",
+  "status": "passed"
+}

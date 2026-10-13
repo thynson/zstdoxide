@@ -1030,3 +1030,18 @@ copied final sequence/frontier/fingerprint records over 96 pre-frozen inputs;
 they classify publication outcomes, not chronological probe traces. These
 std-only offline validation records add no codec owner or unsafe backend.
 The future Rust projection remains a separate checked work item.
+
+
+The direct Lazy Rust projection uses a separately versioned `ZLZST01` envelope:
+645 length-delimited records, each with a copied depth byte (0..2), three zero
+reserved bytes and the unchanged Greedy observation body schema. The depth
+corresponds to the v1.5.7 lazy-family entry-point selector and direct packet field
+at byte 144. Its name prefix must agree with depth; the selector is not inferred
+from a table layout or final output. The 64-MiB collection/32-MiB record caps
+bound reading before allocation. Name/source/literal spans will borrow immutable
+fixture bytes; bounded seed, sequence and sparse-map vectors own initialized
+metadata with fallible reservation. The common checked Greedy body reader and
+independent sequence/table validators can be reused through test-only methods,
+without changing the legacy pack or its strict search contracts. Neither copied
+depth nor borrowed evidence spans introduce a performance leaf or unsafe variant.
+Projection and the Rust adapter remain separate verifiable TODO items.

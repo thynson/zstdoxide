@@ -263,3 +263,28 @@ seven command logs, exact registered sources and unchanged production inputs.
 This is focused integration validation, not a rerun of the entire standard
 script, Rust feature/Clippy/no_std matrix, C capture or performance campaign.
 The earlier Module 14 matrix remains qualified to its historical driver revision.
+
+
+## Checked direct binary projection
+
+The separately versioned `ZLZST01` projection retains all 645 direct cases in
+24,567,619 bytes, SHA256
+`be38aa8c6e4439bf999a6168ee81347b9e7af38391925b6fc548ffaf8c60aea7`.
+A checked depth byte and three reserved bytes wrap the unchanged Greedy body
+schema. Every source, scalar, sequence and sparse owner field remains bound to
+the immutable C capture. It represents 1,290 padding and 2,580 cross-build direct
+observations; the original collection retains fresh-context metadata separately.
+
+An independent bounded binary reader compares every field and provenance extent.
+Normal and optimized Python each accept two positives and reject 28 mutations
+with zero child-process attempts. Separate publication controls each accept two
+positives and reject four changed-output/partial-output/symlink cases; these
+substitute already validated bytes and do not replace source admission. CLI
+write/check, shell syntax, formatting and diff checks pass. The exact generator,
+reader, controls and archive readback are retained in the
+[projection evidence](evidence/2026-10-13-lazy-projection.json) and
+[archive](evidence/2026-10-13-lazy-projection.tar.gz).
+
+The standard driver now includes the projection's immutable `--check` command.
+This checkpoint precedes Rust reading/parsing; no new C run, ordinary/public
+frame, full Rust matrix or timing result is claimed.
