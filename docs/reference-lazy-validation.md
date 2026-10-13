@@ -532,3 +532,27 @@ all-feature build. A new successful command explicitly enables the fourteen
 unsafe leaves while leaving `std` disabled, retained in
 `docs/evidence/2026-10-13-lazy-no-std-correction.json` and its archive. The final
 matrix will use the same explicit leaf list for its all-unsafe no_std entry.
+
+
+## Private complete frame integration
+
+The existing selected-search enum now carries private depth-tagged family plans
+through the same table/scratch owners. No new owner or entropy path is added.
+Shared frame assertions verify 1,014 whole/scheduled Rust frames from all 510
+ordinary cases; all decode exactly, with 633 raw, 114 RLE and 630 compressed
+scheduled blocks and the same 165/36 changed-repeat fallback witnesses.
+Every observed frame allocation position rejects and releases its exact owner:
+23,998 injected failures per build across safe, isolated chain, isolated row and
+all features. Failed output append preserves committed repeats and bytes, then
+poisons the workspace. Small non-clone owner tests cover all depths, both
+branches, both key-width clamps, stale tiny calls and source-independent outputs.
+
+All 58 focused test executions pass, including the original seven private
+Greedy frame tests, nine permanent frame/owner defaults and five selected-search
+owner tests on safe/all. Nineteen commands pass, including strict safe/all Clippy,
+formatting, four actual no_std configurations (the final one explicitly lists
+all fourteen unsafe leaves), an additional std-enabled all-feature compile and
+diff checks. The initial rejected Cargo argument invocation is preserved in the
+archive and is not counted as a passed check. Evidence is in
+`docs/evidence/2026-10-13-lazy-private-frames.json` and its archive. Public
+admission, public C interoperability and final module gates remain separate.

@@ -24,6 +24,10 @@ mod double_fast_tests;
 #[path = "../tests/support/greedy_frame_encode.rs"]
 mod greedy_tests;
 
+#[cfg(test)]
+#[path = "../tests/support/lazy_frame_encode.rs"]
+mod lazy_tests;
+
 /// Encode one known-size, no-dictionary frame with an admitted reference profile.
 ///
 /// Admission and output-bound checks precede allocator operations. The original

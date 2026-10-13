@@ -9,7 +9,7 @@ use alloc::alloc::Global;
 use core::num::NonZeroU64;
 use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
-fn plan(case: &OracleFrameCase<'_>) -> ReferenceSearchPlan {
+pub(super) fn plan(case: &OracleFrameCase<'_>, depth: u8) -> ReferenceSearchPlan {
     let parameters = RawCompressionParameters {
         window_log: u32::from(case.window_log),
         chain_log: u32::from(case.chain_log),
@@ -17,12 +17,12 @@ fn plan(case: &OracleFrameCase<'_>) -> ReferenceSearchPlan {
         search_log: u32::from(case.search_log),
         min_match: u32::from(case.min_match),
         target_length: case.target_length,
-        strategy: 3,
+        strategy: u32::from(depth) + 3,
     }
     .validate()
     .unwrap();
     ReferenceSearchPlan::Greedy(
-        GreedyExecutionPlan::from_resolved_parameters(parameters, case.source.len()).unwrap(),
+        GreedyExecutionPlan::from_family_parameters(parameters, case.source.len()).unwrap(),
     )
 }
 
@@ -49,15 +49,16 @@ fn verify(frame: &[u8], case: &OracleFrameCase<'_>) {
     assert!(!header.has_checksum);
 }
 
-#[test]
-fn whole_and_scheduled_frames_decode_with_committed_repeat_publication() {
-    let cases = cases().unwrap();
+pub(super) fn check_frames<'a>(
+    cases: impl IntoIterator<Item = (u8, OracleFrameCase<'a>)>,
+) -> (usize, [usize; 3], usize, usize) {
     let mut frames = 0;
     let mut changed_raw = 0;
     let mut changed_rle = 0;
     let mut kinds = [0usize; 3];
-    for case in &cases {
-        let plan = plan(case);
+    for (depth, case) in cases {
+        let case = &case;
+        let plan = plan(case, depth);
         let frame = compress_reference_in(case.source, plan, Global).unwrap();
         verify(&frame, case);
         frames += 1;
@@ -124,12 +125,14 @@ fn whole_and_scheduled_frames_decode_with_committed_repeat_publication() {
         verify(&frame, case);
         frames += 1;
     }
-    assert_eq!(frames, 274);
-    assert_eq!(kinds, [181, 38, 176]);
-    assert_eq!((changed_raw, changed_rle), (25, 12));
-    #[cfg(feature = "std")]
-    std::println!(
-        "Greedy scheduled kinds={kinds:?}; changed raw={changed_raw}; changed RLE={changed_rle}; complete Rust frames={frames}"
+    (frames, kinds, changed_raw, changed_rle)
+}
+
+#[test]
+fn whole_and_scheduled_frames_decode_with_committed_repeat_publication() {
+    assert_eq!(
+        check_frames(cases().unwrap().into_iter().map(|c| (0, c))),
+        (274, [181, 38, 176], 25, 12)
     );
 }
 
@@ -148,15 +151,15 @@ fn target_search_and_short_width_equivalences_preserve_complete_frames() {
         let b = cases.iter().find(|c| c.name == right).unwrap();
         assert_eq!(a.source, b.source);
         assert_eq!(
-            compress_reference_in(a.source, plan(a), Global).unwrap(),
-            compress_reference_in(b.source, plan(b), Global).unwrap()
+            compress_reference_in(a.source, plan(a, 0), Global).unwrap(),
+            compress_reference_in(b.source, plan(b, 0), Global).unwrap()
         );
     }
     let expire = cases.iter().find(|c| c.name == "row_window20").unwrap();
     let retain = cases.iter().find(|c| c.name == "row_window21").unwrap();
     assert_eq!(expire.source, retain.source);
-    let a = compress_reference_in(expire.source, plan(expire), Global).unwrap();
-    let b = compress_reference_in(retain.source, plan(retain), Global).unwrap();
+    let a = compress_reference_in(expire.source, plan(expire, 0), Global).unwrap();
+    let b = compress_reference_in(retain.source, plan(retain, 0), Global).unwrap();
     verify(&a, expire);
     verify(&b, retain);
     assert!(b.len() + 100_000 < a.len());
@@ -177,7 +180,7 @@ fn empty_and_tiny_frames_allocate_only_output_and_selected_tables() {
         let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
         let identity = owner.identity();
         let monitor = owner.monitor();
-        let frame = compress_reference_in(case.source, plan(case), owner).unwrap();
+        let frame = compress_reference_in(case.source, plan(case, 0), owner).unwrap();
         assert_eq!(frame.allocator().identity(), identity);
         assert_eq!(
             monitor.snapshot().attempts,
@@ -197,13 +200,14 @@ fn empty_and_tiny_frames_allocate_only_output_and_selected_tables() {
     }
 }
 
-#[test]
-fn every_observed_frame_allocation_failure_releases_the_exact_owner() {
-    let cases = cases().unwrap();
+pub(super) fn check_allocation_failures<'a>(
+    cases: impl IntoIterator<Item = (u8, OracleFrameCase<'a>)>,
+) -> u64 {
     let mut total = 0;
-    for case in &cases {
+    for (depth, case) in cases {
+        let case = &case;
         let name = case.name;
-        let selected = plan(case);
+        let selected = plan(case, depth);
         let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
         let monitor = owner.monitor();
         let frame = compress_reference_in(case.source, selected, owner).unwrap();
@@ -233,62 +237,71 @@ fn every_observed_frame_allocation_failure_releases_the_exact_owner() {
         #[cfg(feature = "std")]
         std::println!("Greedy allocation failures: {name} ordinals=1..={attempts}");
     }
-    #[cfg(feature = "std")]
-    std::println!("Greedy allocation-failure campaign: 138 cases, {total} ordinals");
-    assert_eq!(total, 6184);
+    total
+}
+
+#[test]
+fn every_observed_frame_allocation_failure_releases_the_exact_owner() {
+    assert_eq!(
+        check_allocation_failures(cases().unwrap().into_iter().map(|c| (0, c))),
+        6184
+    );
+}
+
+pub(super) fn check_failed_append(case: &OracleFrameCase<'_>, depth: u8) {
+    let selected = plan(case, depth);
+    let workspace_owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+    let output_owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+    let wm = workspace_owner.monitor();
+    let om = output_owner.monitor();
+    let mut workspace =
+        ReferenceEncoderWorkspace::new(case.source, selected, workspace_owner).unwrap();
+    let mut frame = prefix(selected);
+    workspace.emit_next(4096, false, &mut frame).unwrap();
+    let committed = workspace.entropy.sequence_encoder.committed_repeats();
+    assert_ne!(committed, [1, 4, 8]);
+    let mut output = Vec::new_in(output_owner);
+    output.try_reserve_exact(frame.len()).unwrap();
+    output.extend_from_slice(&frame);
+    assert_eq!(output.len(), output.capacity());
+    assert!(om.fail_next());
+    let remaining = case.source.len() - 4096;
+    assert_eq!(
+        workspace.emit_next(remaining, true, &mut output),
+        Err(Error::AllocationFailed)
+    );
+    assert_eq!(output.as_slice(), frame);
+    assert_eq!(workspace.emitted, 4096);
+    assert_eq!(
+        workspace.entropy.sequence_encoder.committed_repeats(),
+        committed
+    );
+    assert!(workspace.entropy.pending_literal_table.is_none());
+    assert!(workspace.failed);
+    om.clear_failure();
+    let after = (wm.snapshot(), om.snapshot());
+    for (length, last) in [(0, false), (remaining, true), (usize::MAX, true)] {
+        assert_eq!(
+            workspace.emit_next(length, last, &mut output),
+            Err(Error::InvalidState)
+        );
+    }
+    assert_eq!((wm.snapshot(), om.snapshot()), after);
+    drop(output);
+    drop(workspace);
+    wm.assert_released();
+    om.assert_released();
+    verify(
+        &compress_reference_in(case.source, selected, Global).unwrap(),
+        case,
+    );
 }
 
 #[test]
 fn failed_output_append_preserves_publication_then_poisoned() {
     let cases = cases().unwrap();
     for name in ["chain_mixed_fallback", "row_mixed_fallback"] {
-        let case = cases.iter().find(|c| c.name == name).unwrap();
-        let selected = plan(case);
-        let workspace_owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
-        let output_owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
-        let wm = workspace_owner.monitor();
-        let om = output_owner.monitor();
-        let mut workspace =
-            ReferenceEncoderWorkspace::new(case.source, selected, workspace_owner).unwrap();
-        let mut frame = prefix(selected);
-        workspace.emit_next(4096, false, &mut frame).unwrap();
-        let committed = workspace.entropy.sequence_encoder.committed_repeats();
-        assert_ne!(committed, [1, 4, 8]);
-        let mut output = Vec::new_in(output_owner);
-        output.try_reserve_exact(frame.len()).unwrap();
-        output.extend_from_slice(&frame);
-        assert_eq!(output.len(), output.capacity());
-        assert!(om.fail_next());
-        let remaining = case.source.len() - 4096;
-        assert_eq!(
-            workspace.emit_next(remaining, true, &mut output),
-            Err(Error::AllocationFailed)
-        );
-        assert_eq!(output.as_slice(), frame);
-        assert_eq!(workspace.emitted, 4096);
-        assert_eq!(
-            workspace.entropy.sequence_encoder.committed_repeats(),
-            committed
-        );
-        assert!(workspace.entropy.pending_literal_table.is_none());
-        assert!(workspace.failed);
-        om.clear_failure();
-        let after = (wm.snapshot(), om.snapshot());
-        for (length, last) in [(0, false), (remaining, true), (usize::MAX, true)] {
-            assert_eq!(
-                workspace.emit_next(length, last, &mut output),
-                Err(Error::InvalidState)
-            );
-        }
-        assert_eq!((wm.snapshot(), om.snapshot()), after);
-        drop(output);
-        drop(workspace);
-        wm.assert_released();
-        om.assert_released();
-        verify(
-            &compress_reference_in(case.source, selected, Global).unwrap(),
-            case,
-        );
+        check_failed_append(cases.iter().find(|c| c.name == name).unwrap(), 0);
     }
 }
 
@@ -297,7 +310,7 @@ fn invalid_schedules_preserve_owners_and_borrowed_results_outlive_the_source() {
     let cases = cases().unwrap();
     for name in ["chain_first_uniform", "row_first_uniform"] {
         let case = cases.iter().find(|c| c.name == name).unwrap();
-        let selected = plan(case);
+        let selected = plan(case, 0);
         let owner = TrackingAllocator::new(AllocatorConfig::default())
             .unwrap()
             .into_non_clone();

@@ -81,10 +81,12 @@ successor admission mapping and independent oracle checks.
 - [x] Register ordinary Lazy replay and projection checks in the standard check driver.
 - [x] Retain shared lazy-family state across blocks with exact owners, tiny handling and failure poisoning.
 - [x] Correct all-feature/no_std evidence classification and check all fourteen unsafe leaves with std disabled.
-- [ ] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
+- [x] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
 - [ ] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.
 - [ ] Enable bounded public Lazy/Lazy2 requests and document exact source-dependent level/resource behavior.
 - [ ] Port newly admitted original selector and numeric assertions without closing unrelated upstream obligations.
+- [ ] Freeze Lazy-family public interoperability recipes and review unchanged generic transport adapters.
+- [ ] Preflight a versioned public capture controller and independent offline auditor before execution.
 - [ ] Capture and independently validate broader bidirectional public interoperability with normal/instrumented C.
 - [ ] Verify exact owner release, allocation failures, malformed state, no_std and interpreted i686/s390x bounds plus no-atomics caller compilation.
 - [ ] Run safe, each unsafe feature and all-feature correctness checks with every predecessor regression intact.

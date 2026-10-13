@@ -173,7 +173,7 @@ mod tests {
     use alloc::alloc::Global;
     use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
-    fn plans(size: usize) -> [ReferenceSearchPlan; 4] {
+    fn plans(size: usize) -> [ReferenceSearchPlan; 8] {
         let mut request = CompressionParameterRequest::with_level(1);
         request.set_window_log(10).unwrap();
         request.set_hash_log(10).unwrap();
@@ -182,9 +182,9 @@ mod tests {
         let fast = FastExecutionPlan::new(&request, size).unwrap();
         request.set_strategy(Some(crate::ReferenceStrategy::DoubleFast));
         let double = DoubleFastExecutionPlan::new(&request, size).unwrap();
-        let greedy = |window_log| {
+        let greedy = |window_log, strategy| {
             ReferenceSearchPlan::Greedy(
-                GreedyExecutionPlan::from_resolved_parameters(
+                GreedyExecutionPlan::from_family_parameters(
                     RawCompressionParameters {
                         window_log,
                         chain_log: 9,
@@ -192,7 +192,7 @@ mod tests {
                         search_log: 4,
                         min_match: 4,
                         target_length: 0,
-                        strategy: 3,
+                        strategy,
                     }
                     .validate()
                     .unwrap(),
@@ -204,8 +204,12 @@ mod tests {
         [
             ReferenceSearchPlan::Fast(fast),
             ReferenceSearchPlan::DoubleFast(double),
-            greedy(10),
-            greedy(15),
+            greedy(10, 3),
+            greedy(15, 3),
+            greedy(10, 4),
+            greedy(15, 4),
+            greedy(10, 5),
+            greedy(15, 5),
         ]
     }
 
