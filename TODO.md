@@ -111,7 +111,8 @@ the pinned source; public strategy 6 remains unsupported throughout preparation.
 - [x] Implement and preflight the direct capture controller and offline auditor before execution.
 - [x] Capture tiny normal/instrumented observations and reject forged records offline without child execution.
 - [x] Freeze broader source/ring/window/offset-cost input recipes while preserving all thirty tiny packets.
-- [ ] Preflight a broader controller/auditor, then capture and independently check complete tree trajectories.
+- [x] Preflight a broader controller/auditor with pinned tiny observation controls before execution.
+- [ ] Capture and independently check complete broader tree trajectories with offline forgery controls.
 - [ ] Project audited direct records into bounded Rust fixtures with an independent test-only reader and predecessor controls.
 - [ ] Add checked tree layout and scalar edge/link records with explicit source and node-floor invariants.
 - [ ] Implement initialized independent hash/node owners with safe storage and an opt-in unsafe-reference-tree leaf.

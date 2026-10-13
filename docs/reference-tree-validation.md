@@ -113,3 +113,14 @@ mutations, including coherent source changes that add a nearer hash-bucket entry
 There are no child attempts. Broader C execution remains pending behind its
 separate controller/auditor preflight; tiny observations and all earlier source
 files remain immutable.
+
+## Broader controller preflight
+
+The [broader preflight](evidence/2026-10-13-tree-family-preflight.json) retains
+two read-only positive plans and 19 rejected cases in each Python mode, with
+no child attempts. The 316-command plan uses all 103 recipes, the unchanged
+helper and all 26 used codec sources. Its independent auditor additionally
+reconstructs the thirty original tiny stdout records from the pinned archive
+and requires exact equality. Reconstruction executes no archived code and
+bounds regular member sizes and aggregate bytes. A separate original/changed
+stdout check passed during review. Broader C capture remains the next step.
