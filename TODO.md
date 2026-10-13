@@ -92,7 +92,7 @@ successor admission mapping and independent oracle checks.
 - [x] Verify exact owner release, allocation failures, malformed state, no_std and interpreted i686/s390x bounds plus no-atomics caller compilation.
 - [x] Run safe, each unsafe feature and all-feature correctness checks with every predecessor regression intact.
 - [x] Freeze and verify all-backend clock-free workloads and qualify the harness with offline mutation controls.
-- [ ] Compare all backends and repeat safe/all after a completed correctness/platform CPU barrier.
+- [x] Compare all backends and repeat safe/all after a completed correctness/platform CPU barrier.
 - [ ] Reconcile the bounded milestone, official-test gaps and measurements; clear completed items and retain the next decomposition.
 
 ## Module 16 preparation: bounded reference BinaryTreeLazy2

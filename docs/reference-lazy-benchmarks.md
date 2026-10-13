@@ -65,8 +65,7 @@ allocator equality. All 32 predecessor frames and qualified owner records remain
 unchanged. A separate safe/all smoke supplies bounded adversarial harness
 controls: normal and optimized Python each pass two valid captures and reject
 49 mutations, with zero child execution. The [harness archive](evidence/2026-10-13-lazy-benchmark-harness.json)
-preserves every mutated record, frame and validation log. Timed campaigns and their interpretation remain pending until the
-correctness/platform barrier is complete.
+preserves every mutated record, frame and validation log. The completed timed campaigns below followed the correctness/platform barrier.
 
 The [all-backend clock-free report](evidence/2026-10-13-lazy-clock-free.json)
 records 1,280 cases across sixteen configurations and 37 successful commands.
@@ -76,3 +75,53 @@ smoke. Every archive member and reconstructed file was verified. Packaging
 initially rejected an obsolete human-readable replay label before writing an
 archive; the retry checks the actual Lazy-family label. This packaging correction
 does not change the campaign, validator, example or any codec source.
+
+## Completed timed campaigns
+
+The [measurement report](evidence/2026-10-13-lazy-measurements.json), chunked
+archive and [80-case CSV](evidence/2026-10-13-lazy-measurements.csv) retain 7,200
+samples in 1,440 cases over all sixteen backends plus a separate safe/all repeat.
+All 46 commands pass. Five samples per case each run at least 100 ms; every
+complete frame and qualified allocator record equals the clock-free baseline.
+Both campaigns have separately recorded completed task-owned CPU barriers.
+Normal controller replay and optimized offline replay agree. Normal and
+optimized adversarial checks each accept two valid cases and reject 22 timing
+or barrier forgeries without children.
+
+Ratios below are equally weighted geometric means of per-case median throughput
+against safe across the 48 Lazy/Lazy2 cases. Values above one are faster in this
+particular run; min/max retain unfavorable cases as well.
+
+| Backend | First geometric mean | Minimum | Maximum |
+| --- | ---: | ---: | ---: |
+| safe | 1.0000 | 1.0000 | 1.0000 |
+| unsafe-byte-cursor | 1.0517 | 0.7079 | 1.3712 |
+| unsafe-bitstream | 1.0350 | 0.6602 | 1.3213 |
+| unsafe-history | 0.8719 | 0.3834 | 1.3411 |
+| unsafe-ring-history | 1.0316 | 0.7245 | 1.3662 |
+| unsafe-fse | 0.9958 | 0.7183 | 1.2562 |
+| unsafe-fse-encoder | 0.9820 | 0.4701 | 1.3763 |
+| unsafe-huffman | 1.0388 | 0.7010 | 1.3510 |
+| unsafe-huffman-codebook | 1.0093 | 0.7455 | 1.4014 |
+| unsafe-match-table | 0.9809 | 0.5505 | 1.3661 |
+| unsafe-match-chain | 1.0509 | 0.8551 | 1.2803 |
+| unsafe-dictionary | 1.0483 | 0.7543 | 1.3938 |
+| unsafe-training | 1.0415 | 0.7824 | 1.3603 |
+| unsafe-reference-chain | 1.0122 | 0.8042 | 1.4311 |
+| unsafe-row-table | 0.8746 | 0.3268 | 1.3277 |
+| all | 1.0944 | 0.8544 | 1.3487 |
+
+The separate all/safe repeat is **1.0861**, ranging from
+0.7157 to 1.7937; the first all/safe result is
+1.0944. These observations do not establish universal unsafe
+speedup or a causal benefit for unused flags. Individual feature runs are not
+separately repeated, configuration order is fixed, and unrelated desktop load,
+clocks and thermal state remain uncontrolled. Safe remains the default.
+
+All 24 corresponding Lazy and Lazy2 profile/workload pairs produce identical
+frames on these four deterministic workloads. This is not general equivalence
+between the two strategies. Compression-size changes against Greedy are also
+workload-dependent: row-64 far-history improves from 1,578,722 to 1,576,141 bytes,
+while row-64 mixed grows from 134,279 to 134,283 and chain-4 far-history grows
+from 1,710,045 to 1,710,073. No upstream-C throughput or foreign-native speed
+comparison is claimed.

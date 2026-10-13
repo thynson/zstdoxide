@@ -1,0 +1,2451 @@
+{
+  "all_complete_frames_and_allocator_records_match_clock_free": true,
+  "archive": "2026-10-13-lazy-measurements.tar.gz",
+  "archive_bytes": 45150150,
+  "archive_format": "4096-byte SHA256 chunks with a complete file map. Compiled outputs omitted with their recorded identities retained.",
+  "archive_members": 10456,
+  "archive_sha256": "1fc1b4dbf30885d37bc6626a99fe6c804932deea3af033d341066b4b06453999",
+  "cases_per_configuration": 80,
+  "commands": 46,
+  "csv": "2026-10-13-lazy-measurements.csv",
+  "csv_sha256": "ece3707894a0c47f2d6f50e777bcbc6226978e568cc09f9d99971f0e3bd909c0",
+  "date": "2026-10-13",
+  "first_configurations": [
+    "safe",
+    "unsafe-byte-cursor",
+    "unsafe-bitstream",
+    "unsafe-history",
+    "unsafe-ring-history",
+    "unsafe-fse",
+    "unsafe-fse-encoder",
+    "unsafe-huffman",
+    "unsafe-huffman-codebook",
+    "unsafe-match-table",
+    "unsafe-match-chain",
+    "unsafe-dictionary",
+    "unsafe-training",
+    "unsafe-reference-chain",
+    "unsafe-row-table",
+    "all"
+  ],
+  "lazy_cases_per_configuration": 48,
+  "per_sample_minimum_ms": 100,
+  "qualification": "Single native host, fixed configuration order and five samples per case after observed task-owned CPU barriers. Unrelated desktop load, clocks and thermal state are uncontrolled. Ratios use each case median throughput and an equally weighted geometric mean across the 48 Lazy/Lazy2 cases. Standalone features are not each repeated; unused-feature timing does not establish causal benefit. Samples, full frames, exact owners and both campaigns are retained. No universal unsafe speedup, C throughput or foreign-native performance claim.",
+  "raw_bytes": 4969836699,
+  "raw_files": 10222,
+  "repeat_configurations": [
+    "safe",
+    "all"
+  ],
+  "samples": 7200,
+  "source": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "c809dfe057d78c6b5dec95d8bdea6a62aa0ba3df3f2ca2f0e329144cf81ad87d",
+    "docs/evidence/2026-10-12-double-fast-benchmark-harness.tar.gz": "43b8d17bdf9c43dbc84d4cfc808c656b12ff82d434cebfc5ac2e664553ae04b1",
+    "examples/lazy_benchmark.rs": "f4825d63a8b7bcadaf825951a48a3aa61fa52156c4214ce1885fd1587ff48c43",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "scripts/benchmark_lazy.py": "3c46f9084a0ba6de77fc4d0fb9e380e51b2562c2531ae677a860e9305b20216e",
+    "scripts/benchmark_search.py": "ed5b3c7ddc9737ade86ba3637f5b6d20e335a30d8d2bbf146d4cae26020ea4be",
+    "scripts/check_reference_double_fast_baseline.py": "4b8d83ffb6634b6e64674382874ce4352531257e869de661953006e083d986db",
+    "scripts/check_reference_fast_baseline.py": "3b52a0c402a046466fecbe58040489632045c10abdac42e23b0644de384b9107",
+    "scripts/check_reference_greedy_baseline.py": "5b2ce652dac711da0abec1ac4c3b847eb96af22ed2c407fbb4abede7fcb0deaa",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/block_entropy.rs": "a9a25e6bf3ba2b308168b2d1b0de88c4e510eaec1d4162484b4b45f21654faf1",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+    "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+    "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+    "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+    "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+    "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+    "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+    "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/greedy_block.rs": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+    "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+    "src/greedy_parse.rs": "95f1fdf8b2eaf1a4d65d0036479b5642c762d9a0a868e6dd0ebb025d13193f5f",
+    "src/greedy_plan.rs": "fd2a92039fe022c1a95ef55666348bc86b2c0227c0d92d7d36fdfed321d093d6",
+    "src/greedy_search.rs": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+    "src/greedy_state.rs": "44073e0db3fc6060a0f535cf44886f01ea5b3be7ca4eeaf5eb173d8bee3a6dcd",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+    "src/lib.rs": "bdd300306c420194fa4a619a617510f0057257aa4596afe4258ed1c08b862b42",
+    "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+    "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+    "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+    "src/reference_encode.rs": "0c4a6e958a106357c6488c1854d29d82295a1f6db1ce36f4e848615fc324cdad",
+    "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+    "src/reference_frame_encode.rs": "c279b23f577b66bd2d6d1291a549972e0dbe3ccde364507714e9ff96eca07b3f",
+    "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+    "src/reference_search.rs": "912313b5d827711113c3e13de0479aac61e4c45654feafe16be39637bb3c64c1",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+    "src/sequence_context.rs": "5824fea99f85b3cc1c63a62bb68f79873d1e3818af487b7107cf1bdda5f9c81c",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "2dbd16ebb375017938bcf53e949f5e369eeae708e5eea0f48ffd437e3da8da48",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "test-support/allocator/Cargo.toml": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/fixtures/reference-double-fast-baseline/expected.tsv": "d6e1691f9d9358dc84812b5350383f34bc457536ea4215f1f309a9fb5dfe0736",
+    "tests/fixtures/reference-double-fast-baseline/frames.bin": "54830e45b24939cb7e3c0feeb8ec1dfe798537b3693862a20835870abea923cd",
+    "tests/fixtures/reference-double-fast-baseline/provenance.json": "3725cc740ec35f971fb866112a34abc291532f24958dd8bf9989b4facedb3b31",
+    "tests/fixtures/reference-fast-baseline/expected.tsv": "35015cb3e8e6bc21d03deb6f28ea08a736d080a3bfed78ae368036d14788f0d7",
+    "tests/fixtures/reference-fast-baseline/frames.bin": "94f18d272ebf5204a7d320c96abf958b30e4511877b53d2a989e7ae7b847d33d",
+    "tests/fixtures/reference-fast-baseline/provenance.json": "58352c8a0dd7ff4430bde7c40590ee990b518beabbc41369dc616172415f3775",
+    "tests/fixtures/reference-greedy-baseline/expected.tsv": "11f1416483726a0dc1780fddd6c9df974ed2b5d6ed2192f0c61febd75d04da1c",
+    "tests/fixtures/reference-greedy-baseline/frames.bin": "c756fb77d95c8efe05afde852bec5ad76ea3ec94b078e3629ee8b57e4ba4d9de",
+    "tests/fixtures/reference-greedy-baseline/provenance.json": "c2bcc7f4ec5e1d55f3da93e56e45d5f2f96f9dfa5be2420b48acc1fbe4a5f92d"
+  },
+  "source_unchanged": true,
+  "status": "passed",
+  "throughput_ratio_by_profile": {
+    "repeat": {
+      "all": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.004253587064102,
+          "maximum": 1.1845120623703682,
+          "minimum": 0.8923428272330451
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9532588402587547,
+          "maximum": 1.1319247394229373,
+          "minimum": 0.7780341437413322
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.1654168110722387,
+          "maximum": 1.7316319286009203,
+          "minimum": 0.8188115807587232
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.1406747805423354,
+          "maximum": 1.6546753798347205,
+          "minimum": 0.8631285032576944
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0805040316160628,
+          "maximum": 1.338907532211636,
+          "minimum": 0.9524605788370684
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0804833896181656,
+          "maximum": 1.670759774892277,
+          "minimum": 0.715724754145192
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0976989269556425,
+          "maximum": 1.4432560395526406,
+          "minimum": 0.828245108932058
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0558287398309099,
+          "maximum": 1.2488806116658415,
+          "minimum": 0.8797590522527388
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.1022190044918614,
+          "maximum": 1.7936658055607972,
+          "minimum": 0.7625749774518082
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9924022975463526,
+          "maximum": 1.080186170189232,
+          "minimum": 0.845334617578142
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0052967696302493,
+          "maximum": 1.1057608973461177,
+          "minimum": 0.9183012083025583
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.091938773618218,
+          "maximum": 1.554954329601859,
+          "minimum": 0.967685006004085
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0789810290847204,
+          "maximum": 1.2914918684144168,
+          "minimum": 0.9818296333196779
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1561946697773033,
+          "maximum": 1.1926013020551847,
+          "minimum": 1.0795708183568786
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.059346482151332,
+          "maximum": 1.231432758131371,
+          "minimum": 0.956022757443265
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 0.9996019373091476,
+          "maximum": 1.2455090544866168,
+          "minimum": 0.7924945055576226
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9733765079712111,
+          "maximum": 1.0627347319920644,
+          "minimum": 0.8623553659004202
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9710695088876846,
+          "maximum": 1.1705511941982805,
+          "minimum": 0.7929881347111455
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0926446422093725,
+          "maximum": 1.390713650016672,
+          "minimum": 0.8529220264637067
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1430172739242483,
+          "maximum": 1.530608840156329,
+          "minimum": 0.919292958767718
+        }
+      },
+      "safe": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        }
+      }
+    },
+    "timed": {
+      "all": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.019745588049511,
+          "maximum": 1.1278530062743513,
+          "minimum": 0.8466185895128939
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.8831313330977092,
+          "maximum": 1.121908063716114,
+          "minimum": 0.4797079676673406
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.025138865875545,
+          "maximum": 1.069047991583121,
+          "minimum": 0.997943121106594
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9715015640008074,
+          "maximum": 1.1093460028190696,
+          "minimum": 0.8544316780646927
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.1407202638666079,
+          "maximum": 1.2869576508042277,
+          "minimum": 1.0680390720934254
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.210646884890032,
+          "maximum": 1.3486731186103003,
+          "minimum": 1.1085419410975257
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.1376126821833354,
+          "maximum": 1.3230968318641423,
+          "minimum": 0.8650900973609741
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.2386445474736896,
+          "maximum": 1.28483323216277,
+          "minimum": 1.202818947970046
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.1249533891161,
+          "maximum": 1.3254508121800441,
+          "minimum": 1.0194329592084048
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0587660643581658,
+          "maximum": 1.0909674464425396,
+          "minimum": 1.0020557174270344
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0546002909271945,
+          "maximum": 1.130235683929078,
+          "minimum": 0.9536642548258116
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0272301753200022,
+          "maximum": 1.1431106662448527,
+          "minimum": 0.8584015268479327
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0264083607129504,
+          "maximum": 1.1229414139668563,
+          "minimum": 0.9326077280402337
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1503491793132867,
+          "maximum": 1.2788765277889846,
+          "minimum": 1.0749700510630549
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0143864491369026,
+          "maximum": 1.0974403174215186,
+          "minimum": 0.8869460960035038
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 0.946440812227624,
+          "maximum": 1.1259353434846022,
+          "minimum": 0.8298492043446324
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9840356837467918,
+          "maximum": 1.13627443891892,
+          "minimum": 0.6719978199151497
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.039061321111094,
+          "maximum": 1.125389966217355,
+          "minimum": 0.8757985420013561
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.079030324349883,
+          "maximum": 1.1188628052237473,
+          "minimum": 1.0288559493905447
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1014520870704703,
+          "maximum": 1.1291288548692409,
+          "minimum": 1.0766929895271742
+        }
+      },
+      "safe": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0,
+          "maximum": 1.0,
+          "minimum": 1.0
+        }
+      },
+      "unsafe-bitstream": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9427386383457974,
+          "maximum": 1.2085232474025385,
+          "minimum": 0.599787854062815
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.950369292026625,
+          "maximum": 1.1323295903248387,
+          "minimum": 0.6537041768355395
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9677309507735555,
+          "maximum": 1.117669460378165,
+          "minimum": 0.8372789158538503
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9697464253475826,
+          "maximum": 1.132828022201231,
+          "minimum": 0.8733348923029614
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0875023569763667,
+          "maximum": 1.2111195252933937,
+          "minimum": 0.9364614268638461
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0570848932187784,
+          "maximum": 1.258142346244025,
+          "minimum": 0.7489048154940198
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0636577642103406,
+          "maximum": 1.21520336754009,
+          "minimum": 0.85708636545053
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.119127881764826,
+          "maximum": 1.2373734738566666,
+          "minimum": 1.0129185292783482
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.1360807510817426,
+          "maximum": 1.3213010298584869,
+          "minimum": 1.0208878016842167
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.1351610428069048,
+          "maximum": 1.2610463772656157,
+          "minimum": 1.0695805184826503
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0522870684063248,
+          "maximum": 1.0927797553487468,
+          "minimum": 1.0339221850041618
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.971365853186374,
+          "maximum": 0.9877406181992742,
+          "minimum": 0.9496091196213662
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9404015379952984,
+          "maximum": 1.0677515948197442,
+          "minimum": 0.7696845809223368
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9486644721524465,
+          "maximum": 1.08005555537924,
+          "minimum": 0.6601962354340163
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9500836619003579,
+          "maximum": 1.1409517496276766,
+          "minimum": 0.8011891482572414
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 0.9715280947368355,
+          "maximum": 1.1458879053346023,
+          "minimum": 0.8118707750348557
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.041611985214498,
+          "maximum": 1.0928275237056306,
+          "minimum": 0.9475256981966315
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0161612418369408,
+          "maximum": 1.0805932871103194,
+          "minimum": 0.9252806565117181
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0145587214208485,
+          "maximum": 1.0942917936611163,
+          "minimum": 0.9681166659367149
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.020087761536258,
+          "maximum": 1.095415863805299,
+          "minimum": 0.968818242666943
+        }
+      },
+      "unsafe-byte-cursor": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0798324761124811,
+          "maximum": 1.2418082252289593,
+          "minimum": 0.9835637951374405
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0305322503080248,
+          "maximum": 1.1348499971904231,
+          "minimum": 0.9443283461989315
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9213077772242019,
+          "maximum": 1.111115205314485,
+          "minimum": 0.7079339601368889
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9618586813821994,
+          "maximum": 1.0333913211885775,
+          "minimum": 0.8629178210888175
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0979969309277704,
+          "maximum": 1.3092388690761505,
+          "minimum": 0.9306439121510304
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.1210656755407895,
+          "maximum": 1.3712307868436244,
+          "minimum": 0.9529932269435037
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.1024303675582507,
+          "maximum": 1.2542759383089854,
+          "minimum": 0.9528849708830623
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1580289202795586,
+          "maximum": 1.360874729981514,
+          "minimum": 1.0629897192041469
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.106907086532853,
+          "maximum": 1.3063614200512557,
+          "minimum": 0.9206205197121072
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0496369106756687,
+          "maximum": 1.2422031714424968,
+          "minimum": 0.8825934989495878
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9998408430693269,
+          "maximum": 1.0999963794336356,
+          "minimum": 0.9056593964720488
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0222551036810767,
+          "maximum": 1.0639287639579502,
+          "minimum": 0.9818025403880765
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9914077895601855,
+          "maximum": 1.0786412930502107,
+          "minimum": 0.9355155379402359
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1174041039869436,
+          "maximum": 1.2177393331765207,
+          "minimum": 1.0142004073567772
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.067755117772859,
+          "maximum": 1.1302158515364695,
+          "minimum": 1.009593055099778
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0597114983882292,
+          "maximum": 1.1215523059245085,
+          "minimum": 1.0203918967953707
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0561074010569866,
+          "maximum": 1.1275257033059942,
+          "minimum": 0.9297395517607427
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0313683567708827,
+          "maximum": 1.2021056599858906,
+          "minimum": 0.9436114844506814
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9845250673791263,
+          "maximum": 1.164123390900133,
+          "minimum": 0.8889503655872052
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.8978427033570711,
+          "maximum": 1.119992178202162,
+          "minimum": 0.5875508510135712
+        }
+      },
+      "unsafe-dictionary": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9968062099543524,
+          "maximum": 1.269485125382898,
+          "minimum": 0.8472933096054814
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.008498030046902,
+          "maximum": 1.1955633926274887,
+          "minimum": 0.9271714246420439
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9108050002235425,
+          "maximum": 1.0257066157505192,
+          "minimum": 0.754297890316623
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9858435576518296,
+          "maximum": 1.0464406532736363,
+          "minimum": 0.874094994277614
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0853306461245391,
+          "maximum": 1.3367423843605764,
+          "minimum": 0.8337199694147919
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.130931762482748,
+          "maximum": 1.362203392628645,
+          "minimum": 0.934022086603672
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.1186429451469988,
+          "maximum": 1.2817175995315437,
+          "minimum": 0.9658619493873339
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.161879356660001,
+          "maximum": 1.3938243385258078,
+          "minimum": 1.008120722456233
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.1592116427751546,
+          "maximum": 1.3228303020508292,
+          "minimum": 1.0418165625307076
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0924955090275896,
+          "maximum": 1.2780833124767763,
+          "minimum": 0.9183363297077474
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0188947192386062,
+          "maximum": 1.13016988196197,
+          "minimum": 0.9347460187197969
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9429939594917106,
+          "maximum": 1.0663336793314853,
+          "minimum": 0.7894512067570694
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9603963715358868,
+          "maximum": 1.0777141086916064,
+          "minimum": 0.8555281562620022
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0517852240103724,
+          "maximum": 1.212932023790079,
+          "minimum": 0.9357232452025893
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0306679832582304,
+          "maximum": 1.0788141766298172,
+          "minimum": 0.9196205998230156
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0074453031906236,
+          "maximum": 1.0491863214567567,
+          "minimum": 0.9660532700608351
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0053163029880408,
+          "maximum": 1.1126703172270005,
+          "minimum": 0.8757625206323588
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9232304079943453,
+          "maximum": 1.0808096862057095,
+          "minimum": 0.7858812451856392
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9161238296006846,
+          "maximum": 0.9609476989278319,
+          "minimum": 0.8912310109648075
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9589567666574086,
+          "maximum": 1.0344063893011686,
+          "minimum": 0.9067814261434742
+        }
+      },
+      "unsafe-fse": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.055380008444201,
+          "maximum": 1.129918477292982,
+          "minimum": 0.9753932737710402
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9922986571235132,
+          "maximum": 1.0924032059461235,
+          "minimum": 0.862042285793327
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.008349029130276,
+          "maximum": 1.0629305325256178,
+          "minimum": 0.9854269342551902
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9026918299325758,
+          "maximum": 1.0907369078644311,
+          "minimum": 0.7182777350727676
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9843290414478018,
+          "maximum": 1.0872435538851353,
+          "minimum": 0.799047858202895
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.034655891594435,
+          "maximum": 1.07481236144127,
+          "minimum": 0.9900287013157234
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9788485811557817,
+          "maximum": 1.095876976356393,
+          "minimum": 0.8638986813058527
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0487142250984072,
+          "maximum": 1.2562233822674607,
+          "minimum": 0.9066062321099956
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9838859860290156,
+          "maximum": 1.1027516972265212,
+          "minimum": 0.7805084788527075
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0366586271310925,
+          "maximum": 1.0823799003104027,
+          "minimum": 0.9660242097483848
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.974203486878791,
+          "maximum": 1.0570263423184116,
+          "minimum": 0.9146574063920717
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9852568432819614,
+          "maximum": 1.061466885919452,
+          "minimum": 0.9326967276157717
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9342095773378825,
+          "maximum": 1.0441680277419494,
+          "minimum": 0.7573634736384323
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0925694588123218,
+          "maximum": 1.1261139969359029,
+          "minimum": 1.0552584055507377
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0448852278175083,
+          "maximum": 1.1153642212563282,
+          "minimum": 0.9974807708624113
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0108258707817386,
+          "maximum": 1.0799764783842878,
+          "minimum": 0.9299676220964146
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.056896922978633,
+          "maximum": 1.0842743496785476,
+          "minimum": 1.029922484892246
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.03684077923432,
+          "maximum": 1.1085624054270657,
+          "minimum": 0.989083986701527
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0132936743853804,
+          "maximum": 1.0891293247734735,
+          "minimum": 0.9745414997943909
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0264832748445138,
+          "maximum": 1.0604448050257136,
+          "minimum": 0.9895148441509457
+        }
+      },
+      "unsafe-fse-encoder": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9605322742027307,
+          "maximum": 1.139345072650083,
+          "minimum": 0.780654665182103
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9414339418406367,
+          "maximum": 1.1264156175080653,
+          "minimum": 0.7624575302859168
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9833579439610649,
+          "maximum": 1.0108479938566055,
+          "minimum": 0.9569190225315148
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0027863482061135,
+          "maximum": 1.029529310923009,
+          "minimum": 0.9495783466522308
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.135145011146966,
+          "maximum": 1.374052252860348,
+          "minimum": 0.998205973127545
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.114301117896528,
+          "maximum": 1.2537680401372722,
+          "minimum": 1.013069197610706
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0571653541098474,
+          "maximum": 1.1158193215743217,
+          "minimum": 0.9784751977256306
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0638467329992476,
+          "maximum": 1.3762564260929002,
+          "minimum": 0.8507707115237823
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.039160018370728,
+          "maximum": 1.185304932459432,
+          "minimum": 0.9771458680588728
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0566476569162166,
+          "maximum": 1.2540637385472637,
+          "minimum": 0.9251955441520757
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9854310345594102,
+          "maximum": 1.1208882359582302,
+          "minimum": 0.8683770661428349
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.8320140940611258,
+          "maximum": 1.0423109806565116,
+          "minimum": 0.5084612128501547
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.7930105620363048,
+          "maximum": 0.9803571041597522,
+          "minimum": 0.4701062957235907
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.8029324237587405,
+          "maximum": 1.012400093861343,
+          "minimum": 0.5795555757417568
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9203283112654328,
+          "maximum": 1.14596265897826,
+          "minimum": 0.7617401005000022
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 0.9933654841021148,
+          "maximum": 1.1609467334251211,
+          "minimum": 0.9270733792119896
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.04277755699227,
+          "maximum": 1.120860361838699,
+          "minimum": 0.9298733328328281
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.015158344050258,
+          "maximum": 1.2034600895499774,
+          "minimum": 0.9151029869682435
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0070897981729783,
+          "maximum": 1.1746545114360032,
+          "minimum": 0.9169959700299863
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0096474825834334,
+          "maximum": 1.1050843430901167,
+          "minimum": 0.9458357639327122
+        }
+      },
+      "unsafe-history": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9721832040227627,
+          "maximum": 1.2421514086406154,
+          "minimum": 0.69853568616476
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9183246363728773,
+          "maximum": 1.0527473343004787,
+          "minimum": 0.7146457831820684
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.8247906489098357,
+          "maximum": 1.0259740543569627,
+          "minimum": 0.673673538273691
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.8564443559921873,
+          "maximum": 1.0334478146887236,
+          "minimum": 0.6658690456411258
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9650718838617232,
+          "maximum": 1.3410553596067256,
+          "minimum": 0.7216172899488436
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0028972078241933,
+          "maximum": 1.2684045207602037,
+          "minimum": 0.7748532300879948
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.8099413276484767,
+          "maximum": 0.86605327819578,
+          "minimum": 0.7759470687974029
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.8596118030832324,
+          "maximum": 1.2056893400082103,
+          "minimum": 0.5394933601847565
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.7913661831251516,
+          "maximum": 1.2704603168473902,
+          "minimum": 0.3833945252873536
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.843441504363011,
+          "maximum": 1.0635241160726179,
+          "minimum": 0.6794971309193123
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.8785982346964555,
+          "maximum": 1.0184595111487544,
+          "minimum": 0.7956466246201035
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.8665788954819837,
+          "maximum": 1.0427456402796726,
+          "minimum": 0.6160266225648301
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.856971250711445,
+          "maximum": 1.0136603672257538,
+          "minimum": 0.6472121534136206
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.930711407420762,
+          "maximum": 1.2212694683957348,
+          "minimum": 0.6990995151605683
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0203370949727626,
+          "maximum": 1.138002156931396,
+          "minimum": 0.8269464869558838
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 0.9800190148230624,
+          "maximum": 1.141158771765134,
+          "minimum": 0.7369904150980927
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.910290388692158,
+          "maximum": 1.0817056102101767,
+          "minimum": 0.7520585452271077
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.8781140412614363,
+          "maximum": 1.0208130418057293,
+          "minimum": 0.7513524077347336
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.824239926334345,
+          "maximum": 1.0250536049045376,
+          "minimum": 0.6641378739638175
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.8234793013565064,
+          "maximum": 1.0421878805357436,
+          "minimum": 0.5973206937259181
+        }
+      },
+      "unsafe-huffman": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.012773829383592,
+          "maximum": 1.1740884186758311,
+          "minimum": 0.8046411094545234
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0237995436401979,
+          "maximum": 1.1190483617280433,
+          "minimum": 0.8706287457166977
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9213521752128243,
+          "maximum": 1.0974887537255524,
+          "minimum": 0.7009911757417451
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.012449960399025,
+          "maximum": 1.122644250748045,
+          "minimum": 0.8961244500533083
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.1050024532796825,
+          "maximum": 1.246755133514849,
+          "minimum": 0.9347144384266028
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.1145912157083337,
+          "maximum": 1.3417374964967579,
+          "minimum": 0.9101290384786964
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9818347717525221,
+          "maximum": 1.2749594866211604,
+          "minimum": 0.7483653850283408
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1165830791771494,
+          "maximum": 1.2598233574754845,
+          "minimum": 0.9830611417569165
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.128905778008458,
+          "maximum": 1.3509982488760464,
+          "minimum": 0.9887901568049472
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0895688804545427,
+          "maximum": 1.1786475275769173,
+          "minimum": 1.00393531040868
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9808482039660122,
+          "maximum": 1.0826923666214223,
+          "minimum": 0.9022548176955589
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9835580650249219,
+          "maximum": 1.113795879612435,
+          "minimum": 0.8058628960778166
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.994135080341413,
+          "maximum": 1.0887696451653879,
+          "minimum": 0.892708089828074
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0630032485286731,
+          "maximum": 1.1463842623522449,
+          "minimum": 0.9346001896706908
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0453973463155928,
+          "maximum": 1.1328103541005876,
+          "minimum": 1.0016230664669055
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0209344803315605,
+          "maximum": 1.1477489115647566,
+          "minimum": 0.9013952476032299
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0203764035275649,
+          "maximum": 1.0956769470941072,
+          "minimum": 0.8642951503469226
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0128737498721228,
+          "maximum": 1.1674050247703278,
+          "minimum": 0.8187815257957679
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9984945136273882,
+          "maximum": 1.1679160860671622,
+          "minimum": 0.7850194281542566
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.8686231395701018,
+          "maximum": 1.1314594916038507,
+          "minimum": 0.5591572666599575
+        }
+      },
+      "unsafe-huffman-codebook": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0041868479230147,
+          "maximum": 1.253645862247296,
+          "minimum": 0.8289454656663424
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9820309115299881,
+          "maximum": 1.0684402218000837,
+          "minimum": 0.8640425876567268
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9696509025952333,
+          "maximum": 1.0109593709764784,
+          "minimum": 0.9381265197090664
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9856991592878699,
+          "maximum": 1.058722281325751,
+          "minimum": 0.8956574234306921
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.1006529105720473,
+          "maximum": 1.3058508996361657,
+          "minimum": 0.9373728386155967
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0509693530525814,
+          "maximum": 1.401436098812137,
+          "minimum": 0.8733954787385548
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0406306405946635,
+          "maximum": 1.0813116892285448,
+          "minimum": 0.9848669732927949
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.109110616246856,
+          "maximum": 1.2074363683924463,
+          "minimum": 0.9926271266784625
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0323715761365073,
+          "maximum": 1.2692224708326674,
+          "minimum": 0.8808556704190766
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.982838631910173,
+          "maximum": 1.162574428603464,
+          "minimum": 0.745473389734469
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9604916292294059,
+          "maximum": 1.0314462588488316,
+          "minimum": 0.8613303978075244
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9209699088391444,
+          "maximum": 1.049652631876093,
+          "minimum": 0.7525260393994405
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9223233470787977,
+          "maximum": 0.999847883445921,
+          "minimum": 0.8469872731810419
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0574329239077314,
+          "maximum": 1.2274668628462042,
+          "minimum": 0.8843838991680155
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0305021507053587,
+          "maximum": 1.1208451237095973,
+          "minimum": 0.9275226814455563
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0210303013884587,
+          "maximum": 1.0776038365618918,
+          "minimum": 0.9523873923873778
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.005243457188083,
+          "maximum": 1.048428077569146,
+          "minimum": 0.9103034245585913
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9289181187361337,
+          "maximum": 0.9595741572941485,
+          "minimum": 0.881606406636809
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9335804831708201,
+          "maximum": 0.9980344973237233,
+          "minimum": 0.8144750179386717
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9832466031564325,
+          "maximum": 1.0021768874483055,
+          "minimum": 0.9369095121971908
+        }
+      },
+      "unsafe-match-chain": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0144193197984586,
+          "maximum": 1.1030415370633018,
+          "minimum": 0.9783230085872779
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9880310081570834,
+          "maximum": 1.1011986319420313,
+          "minimum": 0.9242208662242959
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.971325452802654,
+          "maximum": 1.0443020129739655,
+          "minimum": 0.8550819291829563
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0321472984043032,
+          "maximum": 1.0975105138621375,
+          "minimum": 0.9677539364648899
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0685783463182685,
+          "maximum": 1.1406211238220698,
+          "minimum": 1.035122793474345
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0702781406548534,
+          "maximum": 1.1270175875082307,
+          "minimum": 1.027529060878987
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0776216377481365,
+          "maximum": 1.1592917573494148,
+          "minimum": 0.9993269455084595
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.1140176717750736,
+          "maximum": 1.2126794703268409,
+          "minimum": 1.0652434093341556
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.1045284815240817,
+          "maximum": 1.2802844358267864,
+          "minimum": 0.9693875178000182
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0538072506516794,
+          "maximum": 1.1319047696269098,
+          "minimum": 0.9278372250616721
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0329686541467675,
+          "maximum": 1.0790798105645754,
+          "minimum": 0.966629591094507
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0488762229793351,
+          "maximum": 1.094230871685724,
+          "minimum": 0.9796542536024292
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0332601965897676,
+          "maximum": 1.0604908572238627,
+          "minimum": 1.0177616905616642
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.011946708919129,
+          "maximum": 1.0994515516068195,
+          "minimum": 0.8685972082733598
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.058303628570384,
+          "maximum": 1.080543188592257,
+          "minimum": 1.03078053095468
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0375195200683203,
+          "maximum": 1.0988135661230936,
+          "minimum": 1.0140561197125728
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0052106099160387,
+          "maximum": 1.113870066016561,
+          "minimum": 0.8683218599128852
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.989437943827881,
+          "maximum": 1.1240637838882028,
+          "minimum": 0.8588363108962951
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9463815630639646,
+          "maximum": 1.0988081883279437,
+          "minimum": 0.8291842384903848
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9703249973907179,
+          "maximum": 1.0688406996354824,
+          "minimum": 0.8627820240543613
+        }
+      },
+      "unsafe-match-table": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9693543473005033,
+          "maximum": 1.0541173098436247,
+          "minimum": 0.9393514774101464
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.8445389823790713,
+          "maximum": 1.0793876621471772,
+          "minimum": 0.647904961597177
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.8225503802370552,
+          "maximum": 1.0099284733138616,
+          "minimum": 0.588073489231768
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.8482733619248986,
+          "maximum": 1.0543529164508032,
+          "minimum": 0.6701478102451986
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0640239909432097,
+          "maximum": 1.2355602175403204,
+          "minimum": 0.9289085809392028
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0250596765024267,
+          "maximum": 1.2283610412019839,
+          "minimum": 0.8081357975140139
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0790060879684613,
+          "maximum": 1.2604596409390438,
+          "minimum": 0.9267991453159927
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.150252539935528,
+          "maximum": 1.366097032488359,
+          "minimum": 1.0590383961584515
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.047360913981109,
+          "maximum": 1.1916437359880618,
+          "minimum": 0.9082793591167357
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.017468874834535,
+          "maximum": 1.2572512801286317,
+          "minimum": 0.7696738294162512
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9629604700592784,
+          "maximum": 1.1594544694932343,
+          "minimum": 0.6696838782036224
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.8994164051449883,
+          "maximum": 1.102730833870559,
+          "minimum": 0.5505001749799338
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.8930229424871908,
+          "maximum": 1.0432233841740655,
+          "minimum": 0.5940861487142011
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0195878017917357,
+          "maximum": 1.19738588048177,
+          "minimum": 0.8137176618988105
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.988782305746579,
+          "maximum": 1.0460071415192425,
+          "minimum": 0.9457725051429303
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.0019203338892368,
+          "maximum": 1.1170920882717448,
+          "minimum": 0.9439087107544956
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 0.8968258197510044,
+          "maximum": 1.1661596786067663,
+          "minimum": 0.7205350534691934
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.8381701571525836,
+          "maximum": 1.0877704723612567,
+          "minimum": 0.6111862487087899
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.8743600646019608,
+          "maximum": 1.0792074538280234,
+          "minimum": 0.7520055973827804
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.8945674440092546,
+          "maximum": 1.0142349858925315,
+          "minimum": 0.7200905741512094
+        }
+      },
+      "unsafe-reference-chain": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0280840342185296,
+          "maximum": 1.2430531359988277,
+          "minimum": 0.8944644756437342
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9636985730636678,
+          "maximum": 1.0745143065947789,
+          "minimum": 0.9148761149910345
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.986088658594942,
+          "maximum": 0.9980566247823748,
+          "minimum": 0.9722881902347001
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0352712489893907,
+          "maximum": 1.0648872540484715,
+          "minimum": 1.0087522451084008
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.1107948619415395,
+          "maximum": 1.31261618088523,
+          "minimum": 0.994080075900001
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0865206683627537,
+          "maximum": 1.4310551033201502,
+          "minimum": 0.9526231992440968
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0172280708341666,
+          "maximum": 1.0522674156508653,
+          "minimum": 0.9765059482828516
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0715066424716233,
+          "maximum": 1.358311472472046,
+          "minimum": 0.9037049769974692
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0444654231622872,
+          "maximum": 1.1726323113980985,
+          "minimum": 0.9192032801125177
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9954860910109249,
+          "maximum": 1.2495002971771292,
+          "minimum": 0.8146442600015962
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.9400586330176693,
+          "maximum": 1.0102325667854615,
+          "minimum": 0.8041639988737607
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9360532022694192,
+          "maximum": 1.018956580274517,
+          "minimum": 0.818637774308871
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.8878911440055023,
+          "maximum": 0.9645163555327062,
+          "minimum": 0.8123793052470033
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0598513503270488,
+          "maximum": 1.1551558130688873,
+          "minimum": 0.9607668227744656
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0093937189961941,
+          "maximum": 1.1313597721454993,
+          "minimum": 0.9073359301906841
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 1.010807504267249,
+          "maximum": 1.1381442372477506,
+          "minimum": 0.8702995685394975
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0372402263150537,
+          "maximum": 1.113191095728931,
+          "minimum": 0.9610981785598668
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.004198666396553,
+          "maximum": 1.0524778353328614,
+          "minimum": 0.9601175807497145
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9721850711841257,
+          "maximum": 1.0097827568530124,
+          "minimum": 0.9062548148593264
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9855838373598963,
+          "maximum": 1.0316645307467767,
+          "minimum": 0.9453243120973749
+        }
+      },
+      "unsafe-ring-history": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9411405706434809,
+          "maximum": 1.2611911647969396,
+          "minimum": 0.6271241422952011
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9510778249888491,
+          "maximum": 1.1882828523531057,
+          "minimum": 0.7135545105559692
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9145671568340871,
+          "maximum": 1.1243056638584898,
+          "minimum": 0.7244913531969281
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9573783137706005,
+          "maximum": 1.0720170438130463,
+          "minimum": 0.7558261501456466
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0984970629409463,
+          "maximum": 1.2288510703616948,
+          "minimum": 0.9820450671974416
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.1394799431275995,
+          "maximum": 1.3662479115550794,
+          "minimum": 1.0052254845026198
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0899173388476024,
+          "maximum": 1.2706561043703324,
+          "minimum": 0.9605530943987894
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0866442216327947,
+          "maximum": 1.1536218329299506,
+          "minimum": 1.0314688444094002
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0899914653923448,
+          "maximum": 1.287202042652819,
+          "minimum": 0.985536707330462
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0692334741639742,
+          "maximum": 1.1869559025603653,
+          "minimum": 0.958955894276186
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.960364576467473,
+          "maximum": 1.038251869629378,
+          "minimum": 0.9147485430174609
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9620750734758877,
+          "maximum": 1.0629827488959342,
+          "minimum": 0.899887105969774
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9581481710482606,
+          "maximum": 0.9904926574477144,
+          "minimum": 0.9293371085797718
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0847268937069625,
+          "maximum": 1.1976304687652577,
+          "minimum": 0.9335087842055015
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9740180337140426,
+          "maximum": 1.1054565808060683,
+          "minimum": 0.8035418523624874
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 0.9520008250895352,
+          "maximum": 1.056160824367341,
+          "minimum": 0.7688931464876985
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.03145068220763,
+          "maximum": 1.1480838199591965,
+          "minimum": 0.8268504672897196
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 0.916270906303333,
+          "maximum": 1.2052219036823193,
+          "minimum": 0.607091665966344
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9017541360724204,
+          "maximum": 1.1871670942698724,
+          "minimum": 0.6006763680895072
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.9039114195455709,
+          "maximum": 1.1210739132952852,
+          "minimum": 0.6914566013473584
+        }
+      },
+      "unsafe-row-table": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.030502889020355,
+          "maximum": 1.2460282660290893,
+          "minimum": 0.9157170435848795
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.9737993148571188,
+          "maximum": 1.1531820596373217,
+          "minimum": 0.7723528465492915
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.854799430999106,
+          "maximum": 1.0899893930979556,
+          "minimum": 0.6421063577571091
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.669297334311008,
+          "maximum": 1.1066268997336943,
+          "minimum": 0.33532040340165437
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.8724926694716939,
+          "maximum": 0.9754452223275093,
+          "minimum": 0.7471957371112657
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9212684385894003,
+          "maximum": 1.0021249656995006,
+          "minimum": 0.8402977900255075
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9555795357468673,
+          "maximum": 1.2032388817522262,
+          "minimum": 0.7611379050559944
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 0.8335502122078469,
+          "maximum": 1.3276806400644552,
+          "minimum": 0.4113037661427862
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.7546701686004653,
+          "maximum": 1.0952057644005222,
+          "minimum": 0.3267591301112868
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 0.8346099987193839,
+          "maximum": 1.1486815650141873,
+          "minimum": 0.40643643038368354
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 0.8833832916980313,
+          "maximum": 1.0990371203116702,
+          "minimum": 0.5793889265361712
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9725167401601597,
+          "maximum": 1.0719671754644493,
+          "minimum": 0.8056753086196785
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9536363065560316,
+          "maximum": 1.1468829895436403,
+          "minimum": 0.719187093549859
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0590886600167968,
+          "maximum": 1.2724661897960101,
+          "minimum": 0.8400263420695357
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 0.9463663612256857,
+          "maximum": 1.0648900034010083,
+          "minimum": 0.7960188739230546
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 0.9653374584666791,
+          "maximum": 1.0652440904318765,
+          "minimum": 0.8874325239079225
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.043814610399722,
+          "maximum": 1.1162799333930258,
+          "minimum": 0.9255009291878068
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0127029903122653,
+          "maximum": 1.2316325140955506,
+          "minimum": 0.8908581319479627
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0362140690174304,
+          "maximum": 1.2144425479156378,
+          "minimum": 0.96209165528179
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0128018602950917,
+          "maximum": 1.1814246005388789,
+          "minimum": 0.9369854929101576
+        }
+      },
+      "unsafe-training": {
+        "chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.0491676667024448,
+          "maximum": 1.2268830683602523,
+          "minimum": 0.8625728530001769
+        },
+        "chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0464255076215827,
+          "maximum": 1.1653580416274705,
+          "minimum": 0.886412696162373
+        },
+        "lazy1-chain-4": {
+          "cases": 4,
+          "geometric_mean": 0.9492819328945404,
+          "maximum": 1.1216855000526373,
+          "minimum": 0.7824321391412273
+        },
+        "lazy1-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.0061623656697956,
+          "maximum": 1.0816100621135858,
+          "minimum": 0.929160294597061
+        },
+        "lazy1-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0422397192068573,
+          "maximum": 1.1165233302398083,
+          "minimum": 0.9349350699301735
+        },
+        "lazy1-row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0711791089169311,
+          "maximum": 1.279138794396812,
+          "minimum": 0.9432714246079049
+        },
+        "lazy1-row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0221507913201089,
+          "maximum": 1.1535365472176782,
+          "minimum": 0.8331307628011254
+        },
+        "lazy1-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0982147822556445,
+          "maximum": 1.266912539188073,
+          "minimum": 0.9631775247004474
+        },
+        "lazy2-chain-4": {
+          "cases": 4,
+          "geometric_mean": 1.1439346738513265,
+          "maximum": 1.3603006037863457,
+          "minimum": 0.9895413593483292
+        },
+        "lazy2-chain-8": {
+          "cases": 4,
+          "geometric_mean": 1.1229289571844114,
+          "maximum": 1.1866170684632262,
+          "minimum": 1.0447362059810081
+        },
+        "lazy2-row-16": {
+          "cases": 4,
+          "geometric_mean": 1.043331641783193,
+          "maximum": 1.09538211306428,
+          "minimum": 0.9889656673470308
+        },
+        "lazy2-row-32": {
+          "cases": 4,
+          "geometric_mean": 0.9912460785514059,
+          "maximum": 1.0749165784896448,
+          "minimum": 0.8419661740519444
+        },
+        "lazy2-row-64": {
+          "cases": 4,
+          "geometric_mean": 0.9747609007330398,
+          "maximum": 1.0822751009950493,
+          "minimum": 0.8546096555501
+        },
+        "lazy2-row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.0511694296988758,
+          "maximum": 1.164228662181992,
+          "minimum": 0.9645891785060625
+        },
+        "level-1": {
+          "cases": 4,
+          "geometric_mean": 1.0174562153115092,
+          "maximum": 1.1391859722853268,
+          "minimum": 0.9691846648582658
+        },
+        "level-3": {
+          "cases": 4,
+          "geometric_mean": 0.9888941145887609,
+          "maximum": 1.1301911018219506,
+          "minimum": 0.8725162452850557
+        },
+        "row-16": {
+          "cases": 4,
+          "geometric_mean": 1.0913282715133878,
+          "maximum": 1.0960750097218313,
+          "minimum": 1.0828772002396014
+        },
+        "row-32": {
+          "cases": 4,
+          "geometric_mean": 1.0620625754330055,
+          "maximum": 1.1720339149187717,
+          "minimum": 1.0104126802869084
+        },
+        "row-64": {
+          "cases": 4,
+          "geometric_mean": 1.0324451787451019,
+          "maximum": 1.1576137790278738,
+          "minimum": 0.9558270517666924
+        },
+        "row-capped": {
+          "cases": 4,
+          "geometric_mean": 1.006256139409425,
+          "maximum": 1.1215332706719285,
+          "minimum": 0.8894772891927282
+        }
+      }
+    }
+  },
+  "throughput_ratio_lazy": {
+    "repeat": {
+      "all": {
+        "cases": 48,
+        "geometric_mean": 1.0861040767324295,
+        "maximum": 1.7936658055607972,
+        "minimum": 0.715724754145192
+      },
+      "safe": {
+        "cases": 48,
+        "geometric_mean": 1.0,
+        "maximum": 1.0,
+        "minimum": 1.0
+      }
+    },
+    "timed": {
+      "all": {
+        "cases": 48,
+        "geometric_mean": 1.0944191141422308,
+        "maximum": 1.3486731186103003,
+        "minimum": 0.8544316780646927
+      },
+      "safe": {
+        "cases": 48,
+        "geometric_mean": 1.0,
+        "maximum": 1.0,
+        "minimum": 1.0
+      },
+      "unsafe-bitstream": {
+        "cases": 48,
+        "geometric_mean": 1.0349523450511144,
+        "maximum": 1.3213010298584869,
+        "minimum": 0.6601962354340163
+      },
+      "unsafe-byte-cursor": {
+        "cases": 48,
+        "geometric_mean": 1.0517442535081682,
+        "maximum": 1.3712307868436244,
+        "minimum": 0.7079339601368889
+      },
+      "unsafe-dictionary": {
+        "cases": 48,
+        "geometric_mean": 1.0482709470158373,
+        "maximum": 1.3938243385258078,
+        "minimum": 0.754297890316623
+      },
+      "unsafe-fse": {
+        "cases": 48,
+        "geometric_mean": 0.9958127818459128,
+        "maximum": 1.2562233822674607,
+        "minimum": 0.7182777350727676
+      },
+      "unsafe-fse-encoder": {
+        "cases": 48,
+        "geometric_mean": 0.9819972859850251,
+        "maximum": 1.3762564260929002,
+        "minimum": 0.4701062957235907
+      },
+      "unsafe-history": {
+        "cases": 48,
+        "geometric_mean": 0.8718710477521974,
+        "maximum": 1.3410553596067256,
+        "minimum": 0.3833945252873536
+      },
+      "unsafe-huffman": {
+        "cases": 48,
+        "geometric_mean": 1.0388236072357915,
+        "maximum": 1.3509982488760464,
+        "minimum": 0.7009911757417451
+      },
+      "unsafe-huffman-codebook": {
+        "cases": 48,
+        "geometric_mean": 1.0092654767936025,
+        "maximum": 1.401436098812137,
+        "minimum": 0.745473389734469
+      },
+      "unsafe-match-chain": {
+        "cases": 48,
+        "geometric_mean": 1.050929840421612,
+        "maximum": 1.2802844358267864,
+        "minimum": 0.8550819291829563
+      },
+      "unsafe-match-table": {
+        "cases": 48,
+        "geometric_mean": 0.9809363633175968,
+        "maximum": 1.366097032488359,
+        "minimum": 0.5505001749799338
+      },
+      "unsafe-reference-chain": {
+        "cases": 48,
+        "geometric_mean": 1.0121705951505955,
+        "maximum": 1.4310551033201502,
+        "minimum": 0.8041639988737607
+      },
+      "unsafe-ring-history": {
+        "cases": 48,
+        "geometric_mean": 1.0316086164432432,
+        "maximum": 1.3662479115550794,
+        "minimum": 0.7244913531969281
+      },
+      "unsafe-row-table": {
+        "cases": 48,
+        "geometric_mean": 0.8745527361240493,
+        "maximum": 1.3276806400644552,
+        "minimum": 0.3267591301112868
+      },
+      "unsafe-training": {
+        "cases": 48,
+        "geometric_mean": 1.0415224129221203,
+        "maximum": 1.3603006037863457,
+        "minimum": 0.7824321391412273
+      }
+    }
+  },
+  "timing_controls_per_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 22
+  }
+}
