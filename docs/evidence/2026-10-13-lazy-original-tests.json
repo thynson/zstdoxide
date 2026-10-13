@@ -1,0 +1,71 @@
+{
+  "archive": {
+    "bytes": 1246,
+    "members": 6,
+    "path": "docs/evidence/2026-10-13-lazy-original-tests.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "6a2631fb8ddc31d70abea3610d309f25dc0bf5b86177f0a74343e8014902f345"
+  },
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "log": "00.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": "01.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--test",
+        "upstream_reference_fast"
+      ],
+      "log": "02.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-features",
+        "--test",
+        "upstream_reference_fast"
+      ],
+      "log": "03.log",
+      "status": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "log": "04.log",
+      "status": 0
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "sources": {
+    "tests/upstream_reference_fast.rs": "70ab7e735a3f20459e0922ef656b4117a813bf45770d678f6c2d405e48e01288"
+  },
+  "test_results": [
+    "test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s",
+    "test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s"
+  ]
+}

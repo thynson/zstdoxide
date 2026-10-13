@@ -84,7 +84,7 @@ successor admission mapping and independent oracle checks.
 - [x] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
 - [x] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.
 - [x] Enable bounded public Lazy/Lazy2 requests and document exact source-dependent level/resource behavior.
-- [ ] Port newly admitted original selector and numeric assertions without closing unrelated upstream obligations.
+- [x] Port newly admitted original selector and numeric assertions without closing unrelated upstream obligations.
 - [ ] Freeze Lazy-family public interoperability recipes and review unchanged generic transport adapters.
 - [ ] Preflight a versioned public capture controller and independent offline auditor before execution.
 - [ ] Capture and independently validate broader bidirectional public interoperability with normal/instrumented C.

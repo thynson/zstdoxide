@@ -594,3 +594,17 @@ were rerun. Original failed logs remain in
 `docs/evidence/2026-10-13-lazy-public.tar.gz`; the corresponding JSON records the
 successful final commands. Public bidirectional C execution remains a separate
 gate and is not implied by these Rust checks.
+
+
+## Original selector and numeric assertions
+
+Two additive tests compare v3/v4 line-by-line while preserving every original
+selector byte, source prefix, level, preset tuple and numeric-loop input. Exactly
+four selector cases become admitted and exactly levels 5..=8 are added to each
+original numeric loop. Historical v1/v2/v3 comparisons remain intact. All fifteen
+original-reference tests pass on safe/all, with strict all-target Clippy,
+formatting and diff checks; evidence is in
+`docs/evidence/2026-10-13-lazy-original-tests.json` and its archive. These are
+one-shot deterministic/output-bound adaptations. Reusable contexts, mutable
+max-block decoder settings, caller-owned output and advanced branches remain
+unported; no behavioral source unit is marked complete by this addition.
