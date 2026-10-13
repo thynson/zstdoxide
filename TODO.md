@@ -79,7 +79,7 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [x] Implement checked binary-tree best-match scoring, equal-tail handling and sampling-frontier advancement; compare every complete operation against frozen C maps.
 - [ ] Integrate private depth-two parser dispatch with all earlier chain/row trajectories and complete frame baselines unchanged.
 - [x] Freeze ordinary tree frame source/schedule recipes and protocol with explicit retained-state observations.
-- [ ] Implement and review the bounded ordinary tree C helper and independent offline replay with forged-record controls.
+- [x] Implement and review the bounded ordinary tree C helper and independent offline replay with forged-record controls.
 - [ ] Preflight the capture controller, pinned dependencies and normal/instrumented command inventory before execution.
 - [ ] Capture, audit and project ordinary retained-state C tree frames; match Rust sequences, maps and complete frame bytes before public integration.
 - [ ] Validate ordinary state, malformed links, allocation failures and transactional frame/repeat publication.

@@ -1,0 +1,107 @@
+{
+  "archive": "2026-10-13-tree-frame-helper.tar.gz",
+  "archive_bytes": 27939,
+  "archive_members": 13,
+  "archive_sha256": "012b523d33aede42cda6727681dd21ebdcecf13a250239fb9e15bc8f4253edeb",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-g",
+        "-I",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7/lib",
+        "-I",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7/lib/common",
+        "-I",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7/lib/compress",
+        "-UZSTD_MULTITHREAD",
+        "-DZSTD_DISABLE_ASM",
+        "-DZSTD_LEGACY_SUPPORT=0",
+        "-DXXH_NAMESPACE=ZSTD_",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-deprecated-declarations",
+        "-O2",
+        "-fsyntax-only",
+        "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/tree_frame_v1.c"
+      ],
+      "exit_code": 0,
+      "label": "normal-syntax",
+      "log": "normal-syntax.log",
+      "seconds": 1.225549834081903,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-g",
+        "-I",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7/lib",
+        "-I",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7/lib/common",
+        "-I",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7/lib/compress",
+        "-UZSTD_MULTITHREAD",
+        "-DZSTD_DISABLE_ASM",
+        "-DZSTD_LEGACY_SUPPORT=0",
+        "-DXXH_NAMESPACE=ZSTD_",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-deprecated-declarations",
+        "-O1",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-fsyntax-only",
+        "/Users/lanxingcan/Workspace/zstdoxize/scripts/oracles/tree_frame_v1.c"
+      ],
+      "exit_code": 0,
+      "label": "instrumented-syntax",
+      "log": "instrumented-syntax.log",
+      "seconds": 0.8644397091120481,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_tree_frame_validator.py"
+      ],
+      "exit_code": 0,
+      "label": "normal-replay",
+      "log": "normal-replay.log",
+      "seconds": 0.3992415829561651,
+      "sha256": "0631e0b34fe87d07fa5efd26b026c14553009a91cc7bb6d54b6e5a6208b6ce99"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_tree_frame_validator.py"
+      ],
+      "exit_code": 0,
+      "label": "optimized-replay",
+      "log": "optimized-replay.log",
+      "seconds": 0.5063197088893503,
+      "sha256": "0631e0b34fe87d07fa5efd26b026c14553009a91cc7bb6d54b6e5a6208b6ce99"
+    }
+  ],
+  "forgery_rejections": 160,
+  "qualification": "Normal/instrumented helper syntax only; independent offline replay with synthetic controls. No tree frame C execution yet.",
+  "review": {
+    "archive_path": "review.md",
+    "repository_path": "docs/reference-tree-frame-helper-review.md",
+    "sha256": "101a15b22764c00af220e70df2f2a57b4a86f230335539ccf2d44c1bd36767c5"
+  },
+  "source": {
+    "docs/reference-tree-frame-oracle.md": "4357ec5e4cf813a387bed53acb89a01e9fb048f1fe0607827d2a71b2b8715a34",
+    "scripts/check_tree_frame_validator.py": "9b05bf897c8965d98fe7d2e27615e502ad16d95092497cb093de60569299c940",
+    "scripts/oracles/tree_frame_v1.c": "8625b969eb3ba3871271ddb56ab835ec1d9581b3a2c4461b682f06769db8e85e",
+    "scripts/oracles/tree_frame_validation.py": "91bb1f8e4c0ea00ec096788287892dd86da5a03758465eed9ee0a6b16806e51f",
+    "scripts/oracles/tree_frames.py": "7a4bdbc669c8d0a512870fd6198ae94e780af3f7540e265cea42c84cd1d28353"
+  },
+  "status": "passed"
+}
