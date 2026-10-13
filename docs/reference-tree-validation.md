@@ -213,3 +213,13 @@ and 0.9969; all/safe were 0.9160, 1.0007 and 0.9757. This does not establish a
 universal unsafe improvement or frame-level performance. Raw samples, commands,
 binary/source identities and complete maps are archived in
 `evidence/2026-10-13-tree-owner-timing.json` and its matching archive.
+
+## Deferred sorting checkpoint
+
+Twenty focused tests across safe/tree/all and release/all passed for pending
+insertion, reversal budgets, truncation, equal tails, overwritten node floors,
+invalid scalars and cyclic/future links. Safe/tree no_std compilation, strict
+safe/all Clippy and formatting passed. Commands and immutable source/log bytes
+are retained in `evidence/2026-10-13-tree-sort.json` and its matching archive.
+These synthetic controls do not claim separately observed C sorting phases;
+complete direct-operation map comparison follows with best-match search.

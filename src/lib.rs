@@ -124,6 +124,7 @@ mod stream_decode;
 mod stream_encode;
 mod training;
 mod tree_layout;
+mod tree_sort;
 mod xxhash;
 
 #[cfg(test)]
