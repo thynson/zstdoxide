@@ -71,15 +71,17 @@ by the Rust encoder. See [parameter usage](docs/parameter-usage.md) and
 [validation scope](docs/compression-parameters-validation.md).
 
 `compress_at_level` and `compress_with_parameters` execute resolved Fast,
-DoubleFast, Greedy, Lazy and Lazy2 profiles. Fast supports windows up to 1 MiB and hash logs up to 18;
+DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 profiles. Fast supports windows up to 1 MiB and hash logs up to 18;
 DoubleFast supports windows up to 2 MiB and independent long/short table logs
 up to 18. Greedy, Lazy and Lazy2 support windows up to 2 MiB and hash logs up to 19, selecting
 chain storage through window log 14 and row storage above it. Levels 0/3 select DoubleFast; levels 1/2 and negative levels are supported
 across all source tiers. Level 4 selects DoubleFast for inputs larger than 16 KiB
 and no larger than 128 KiB, and for inputs larger than 256 KiB; its remaining
-source tiers select Greedy. Levels 5/6 are supported across tiers; levels 7/8
-through 256 KiB, and levels 9/10 only above 16 KiB through 256 KiB. Larger inputs
-at levels 7–12 return resource errors; unsupported strategies remain distinct. These APIs write
+source tiers select Greedy. BinaryTreeLazy2 uses paired tree edges, with window
+log at most 21, independent hash/chain logs at most 19 and search log at most 8.
+Levels 5/6 are supported across tiers; levels 7–9 through 256 KiB, and levels
+10–12 above 16 KiB through 256 KiB. Level 10 at smaller sizes and levels 7–15
+above 256 KiB return resource errors; unsupported strategies remain distinct. These APIs write
 a known-size frame without a checksum and preserve the resolved window. They do not change the named APIs or provide
 live numeric streaming settings. See [reference profile usage](docs/reference-fast-usage.md)
 for overrides, allocator ownership, frame flags, and algorithm-specific caps.
@@ -100,7 +102,7 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
 | Compression | Greedy, bounded Chain, and one-byte Lazy matching over dictionary content and up to 1 MiB of configured retained output (128 KiB by default), raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
-| Reference Fast, DoubleFast, Greedy, Lazy and Lazy2 | Known-size, no-dictionary one-shot level/request execution; sampled hash, chain or row tables, explicit repeat intent, Fast-only negative-level acceleration/raw literal policy, strict gain and transactional block selection; independent entropy output |
+| Reference Fast, DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 | Known-size, no-dictionary one-shot level/request execution; sampled hash, chain, row or deferred binary-tree tables, explicit repeat intent, Fast-only negative-level acceleration/raw literal policy, strict gain and transactional block selection; independent entropy output |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Parameter inspection | Pinned reference presets, scalar bounds, raw adjustment, explicit request overrides, source hints and checked source/dictionary size arithmetic; independent of live numeric execution |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
@@ -139,7 +141,7 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-match-table` | Hash-indexed prior-position table |
 | `unsafe-match-chain` | Bounded tagged candidate storage for Chain and Lazy matching |
 | `unsafe-reference-chain` | Checked cyclic heads/links for the reference lazy family |
-| `unsafe-reference-tree` | Checked private deferred-tree head/edge storage; public tree strategy remains unsupported |
+| `unsafe-reference-tree` | Checked deferred-tree head/edge storage for bounded BinaryTreeLazy2 requests |
 | `unsafe-row-table` | Checked row position/tag storage for the reference lazy family |
 | `unsafe-dictionary` | Validated immutable dictionary-content access |
 | `unsafe-training` | Bounded raw-training frequency cells |

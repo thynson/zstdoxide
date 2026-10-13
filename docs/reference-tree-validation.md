@@ -370,3 +370,21 @@ comparisons pass in every configuration. Safe/tree no_std, safe/all strict
 Clippy and formatting pass. Exact source/log evidence is in
 `evidence/2026-10-13-tree-ordinary.json` and its archive. This closes the private
 ordinary-state gate before public strategy dispatch.
+
+## Public tree dispatch and original assertion checkpoint
+
+Public strategy 6 now selects the already qualified tree plan after one actual-
+size resolution and W21/H19/C19/S8 admission. The safe/tree/all configurations
+pass 129 focused checks, including every retained original selector and numeric
+loop, predecessor Fast/DoubleFast/Lazy boundaries, new tree hint/key/target
+identities, all four pre-allocation resource rejections and exact failed-owner
+release. Historical v2/v3/v4 fixture comparisons remain unchanged; new v5 tests
+show exactly level 9 additions and level 10 resource classifications for the
+original tiny inputs. Safe/tree no_std, safe/all strict Clippy and formatting pass.
+
+Default level 9 now supports the tiny tier; levels 11/12 add sources from 16,385
+to 262,144 bytes. Default level 10's tiny tier exceeds search log 8. Levels 13–15
+above 262,144 bytes select trees beyond local table caps. Strategies 7–9 remain
+unsupported. Exact source and focused logs are in
+`evidence/2026-10-13-tree-public.json` and its archive. Public C interoperability,
+final feature/platform checks and timing remain separate gates.

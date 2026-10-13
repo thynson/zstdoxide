@@ -50,6 +50,9 @@ impl ReferenceSearchPlan {
                 GreedyExecutionPlan::from_family_parameters(parameters, source_len)
                     .map(Self::Greedy)
             }
+            ReferenceStrategy::BinaryTreeLazy2 => {
+                GreedyExecutionPlan::from_tree_parameters(parameters, source_len).map(Self::Greedy)
+            }
             _ => Err(Error::UnsupportedFeature),
         }
     }

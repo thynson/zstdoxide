@@ -86,7 +86,7 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [x] Add checked tree trajectory reading, match Rust retained sequences/maps and decode complete C frames before public integration.
 - [x] Validate malformed retained tree state, allocation failures and transactional frame/repeat publication.
 - [x] Freeze successor admission mappings and independently resolve every new public tuple before enabling bounded strategy 6.
-- [ ] Enable the bounded public tree plan and port newly admitted original assertions without changing historical evidence.
+- [x] Enable the bounded public tree plan and port newly admitted original assertions without changing historical evidence.
 - [x] Preflight the public capture controller and independently reconstructed tuple auditor with no-child rejection controls.
 - [ ] Capture bidirectional public C interoperability and reject forged evidence offline.
 - [ ] Run safe, every unsafe leaf, all-feature, no_std, Clippy, formatting and selected foreign/no-atomics checks.

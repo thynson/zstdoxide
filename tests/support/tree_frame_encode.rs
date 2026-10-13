@@ -1,4 +1,4 @@
-//! Private tree parser/frame integration; ordinary C frame qualification follows.
+//! Tree parser/frame ownership and independently observed ordinary publication.
 #![forbid(unsafe_code)]
 use super::*;
 use crate::greedy_plan::{GreedyExecutionPlan, GreedyTablePlan};
@@ -17,7 +17,7 @@ fn parameters(window: u32, hash: u32, chain: u32) -> RawCompressionParameters {
     }
 }
 #[test]
-fn private_tree_admission_preserves_public_and_predecessor_gates() {
+fn tree_admission_preserves_selected_owners_and_predecessor_gates() {
     for window in [10, 14, 15, 21] {
         let raw = parameters(window, 19, 19);
         let resolved = raw.validate().unwrap();
@@ -41,7 +41,7 @@ fn private_tree_admission_preserves_public_and_predecessor_gates() {
         request.set_strategy(Some(ReferenceStrategy::BinaryTreeLazy2));
         assert!(matches!(
             ReferenceSearchPlan::new(&request, 4096),
-            Err(Error::UnsupportedFeature)
+            Ok(ReferenceSearchPlan::Greedy(_))
         ));
         assert_eq!(
             request

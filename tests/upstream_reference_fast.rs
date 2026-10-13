@@ -269,7 +269,7 @@ fn check_decode(frame: &[u8], source: &[u8], original_capacity: usize) {
 fn original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_budgets() {
     let cases = cases();
     let expected = observations(&cases);
-    let (mut admitted, mut unsupported, mut advanced) = (0, 0, 0);
+    let (mut admitted, mut unsupported, mut resource, mut advanced) = (0, 0, 0, 0);
     let mut selected_levels = std::collections::BTreeSet::new();
     for (case, (expected, bound)) in cases.iter().zip(expected) {
         let actual = select(&case.input);
@@ -279,15 +279,22 @@ fn original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_bu
             continue;
         };
         let source = &case.input[..actual.prefix];
-        let supported = successor_fuzz_status(&case.name, source.len(), simple.level) == "success";
+        let status = successor_fuzz_status(&case.name, source.len(), simple.level);
+        let supported = status == "success";
         if !supported {
+            let error = if status == "resource" {
+                Error::ResourceLimit
+            } else {
+                Error::UnsupportedFeature
+            };
             assert_eq!(
                 compress_at_level(source, simple.level),
-                Err(Error::UnsupportedFeature),
+                Err(error),
                 "{}",
                 case.name
             );
-            unsupported += 1;
+            resource += usize::from(status == "resource");
+            unsupported += usize::from(status == "unsupported");
             continue;
         }
         // :80-90 performs two simple compressions with the selected level. Full
@@ -308,10 +315,10 @@ fn original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_bu
         selected_levels.insert(simple.level);
         admitted += 1;
     }
-    assert_eq!((admitted, unsupported, advanced), (66, 11, 4));
+    assert_eq!((admitted, unsupported, resource, advanced), (67, 9, 1, 4));
     assert_eq!(
         selected_levels,
-        [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8]
+        [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
             .into_iter()
             .collect()
     );
@@ -322,23 +329,30 @@ fn fuzzer_empty_level_loop_uses_the_frozen_successor_admission() {
     // fuzzer.c:1554-1566: exact -1..22 range. An empty slice replaces NULL input;
     // Vec output and detached requests do not port NULL destinations or CCtx reuse.
     assert_eq!(CompressionParameterRequest::MAX_LEVEL, 22);
-    let (mut admitted, mut unsupported) = (0, 0);
+    let (mut admitted, mut unsupported, mut resource) = (0, 0, 0);
     for level in -1..=22 {
         let request = CompressionParameterRequest::with_level(level);
         let direct = compress_at_level(&[], level);
         let requested = compress_with_parameters(&[], &request);
-        if successor_loop_status("empty", 0, level) == "success" {
+        let status = successor_loop_status("empty", 0, level);
+        if status == "success" {
             let frame = direct.unwrap();
             assert_eq!(requested.unwrap(), frame);
             check_decode(&frame, &[], 0);
             admitted += 1;
         } else {
-            assert_eq!(direct, Err(Error::UnsupportedFeature));
-            assert_eq!(requested, Err(Error::UnsupportedFeature));
-            unsupported += 1;
+            let error = if status == "resource" {
+                Error::ResourceLimit
+            } else {
+                Error::UnsupportedFeature
+            };
+            assert_eq!(direct, Err(error));
+            assert_eq!(requested, Err(error));
+            resource += usize::from(status == "resource");
+            unsupported += usize::from(status == "unsupported");
         }
     }
-    assert_eq!((admitted, unsupported), (10, 14));
+    assert_eq!((admitted, unsupported, resource), (11, 12, 1));
 }
 
 #[test]
@@ -348,32 +362,36 @@ fn fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equal
     // forced streaming and reused CCtx portions remain outside this one-shot API.
     let source: Vec<u8> = (0..20).chain(0..10).collect();
     assert_eq!(source.len(), 30);
-    let (mut admitted, mut unsupported) = (0, 0);
+    let (mut admitted, mut unsupported, mut resource) = (0, 0, 0);
     for level in 1..=19 {
         let first = compress_at_level(&source, level);
         let request = CompressionParameterRequest::with_level(level);
-        if successor_loop_status("initial_match", source.len(), level) == "success" {
+        let status = successor_loop_status("initial_match", source.len(), level);
+        if status == "success" {
             let first = first.unwrap();
             assert_eq!(compress_at_level(&source, level).unwrap(), first);
             assert_eq!(compress_with_parameters(&source, &request).unwrap(), first);
             check_decode(&first, &source, source.len());
             admitted += 1;
         } else {
-            assert_eq!(first, Err(Error::UnsupportedFeature));
-            assert_eq!(
-                compress_with_parameters(&source, &request),
-                Err(Error::UnsupportedFeature)
-            );
-            unsupported += 1;
+            let error = if status == "resource" {
+                Error::ResourceLimit
+            } else {
+                Error::UnsupportedFeature
+            };
+            assert_eq!(first, Err(error));
+            assert_eq!(compress_with_parameters(&source, &request), Err(error));
+            resource += usize::from(status == "resource");
+            unsupported += usize::from(status == "unsupported");
         }
     }
-    assert_eq!((admitted, unsupported), (8, 11));
+    assert_eq!((admitted, unsupported, resource), (9, 9, 1));
 }
 
-// Version4 expectations are additive fixtures. Original C selector tuples and
-// Module12/13/14 success/failure evidence retain their historical policy unchanged.
+// Version5 expectations are additive fixtures. Original C selector tuples and
+// Module12/13/14/15 success/failure evidence retain their historical policy unchanged.
 fn successor_fuzz_status(name: &str, size: usize, level: i32) -> &'static str {
-    let mut rows = include_str!("fixtures/reference-admission-v4/fuzz.tsv")
+    let mut rows = include_str!("fixtures/reference-admission-v5/fuzz.tsv")
         .lines()
         .skip(1)
         .map(|line| line.split('\t').collect::<Vec<_>>())
@@ -387,7 +405,7 @@ fn successor_fuzz_status(name: &str, size: usize, level: i32) -> &'static str {
 }
 
 fn successor_loop_status(family: &str, size: usize, level: i32) -> &'static str {
-    let mut rows = include_str!("fixtures/reference-admission-v4/loops.tsv")
+    let mut rows = include_str!("fixtures/reference-admission-v5/loops.tsv")
         .lines()
         .skip(1)
         .map(|line| line.split('\t').collect::<Vec<_>>())
@@ -696,6 +714,86 @@ fn lazy_successor_keeps_original_numeric_inputs_and_adds_levels_five_through_eig
             ("initial_match", 6),
             ("initial_match", 7),
             ("initial_match", 8)
+        ]
+    );
+}
+
+#[test]
+fn tree_successor_preserves_all_original_selectors_and_distinguishes_resource_errors() {
+    let old = include_str!("fixtures/reference-admission-v4/fuzz.tsv")
+        .lines()
+        .skip(1);
+    let new = include_str!("fixtures/reference-admission-v5/fuzz.tsv")
+        .lines()
+        .skip(1);
+    let mut changed = Vec::new();
+    let mut totals = [0; 4];
+    let mut count = 0;
+    for (a, b) in old.zip(new) {
+        let a: Vec<_> = a.split('\t').collect();
+        let b: Vec<_> = b.split('\t').collect();
+        assert_eq!((&a[..4], &a[6..]), (&b[..4], &b[6..]));
+        assert_eq!(a[5], b[4]);
+        totals[match b[5] {
+            "success" => 0,
+            "resource" => 1,
+            "unsupported" => 2,
+            "advanced" => 3,
+            _ => panic!("status"),
+        }] += 1;
+        if b[4] != b[5] {
+            assert_eq!(b[4], "unsupported");
+            assert_eq!(b[8], "6");
+            changed.push((b[0], b[5]));
+        }
+        count += 1;
+    }
+    assert_eq!((count, totals), (81, [67, 1, 9, 4]));
+    assert_eq!(
+        changed,
+        [
+            ("unsupported-62", "success"),
+            ("unsupported-63", "resource")
+        ]
+    );
+}
+#[test]
+fn tree_successor_keeps_numeric_inputs_and_only_changes_levels_nine_and_ten() {
+    let old = include_str!("fixtures/reference-admission-v4/loops.tsv")
+        .lines()
+        .skip(1);
+    let new = include_str!("fixtures/reference-admission-v5/loops.tsv")
+        .lines()
+        .skip(1);
+    let mut changed = Vec::new();
+    let mut totals = [0; 3];
+    let mut count = 0;
+    for (a, b) in old.zip(new) {
+        let a: Vec<_> = a.split('\t').collect();
+        let b: Vec<_> = b.split('\t').collect();
+        assert_eq!((&a[..3], &a[5..]), (&b[..3], &b[5..]));
+        assert_eq!(a[4], b[3]);
+        totals[match b[4] {
+            "success" => 0,
+            "resource" => 1,
+            "unsupported" => 2,
+            _ => panic!("status"),
+        }] += 1;
+        if b[3] != b[4] {
+            assert_eq!(b[3], "unsupported");
+            assert_eq!(b[7], "6");
+            changed.push((b[0], b[2], b[4]));
+        }
+        count += 1;
+    }
+    assert_eq!((count, totals), (43, [20, 2, 21]));
+    assert_eq!(
+        changed,
+        [
+            ("empty", "9", "success"),
+            ("empty", "10", "resource"),
+            ("initial_match", "9", "success"),
+            ("initial_match", "10", "resource")
         ]
     );
 }

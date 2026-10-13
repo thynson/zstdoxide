@@ -45,9 +45,10 @@ fn default_levels_resolve_by_actual_source_tier_and_preserve_error_kinds() {
             let p = r.resolve(SourceSize::Known(size as u64), 0).unwrap();
             let expected = match level {
                 5 | 6 => Ok(()),
-                7 | 8 if size <= 262_144 => Ok(()),
-                9 | 10 if (16_385..=262_144).contains(&size) => Ok(()),
-                7..=12 if size > 262_144 => Err(Error::ResourceLimit),
+                7..=9 if size <= 262_144 => Ok(()),
+                10..=12 if (16_385..=262_144).contains(&size) => Ok(()),
+                10 if size <= 16_384 => Err(Error::ResourceLimit),
+                7..=15 if size > 262_144 => Err(Error::ResourceLimit),
                 _ => Err(Error::UnsupportedFeature),
             };
             let result = compress_at_level(&input, level);

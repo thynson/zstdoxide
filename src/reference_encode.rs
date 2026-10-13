@@ -1,4 +1,4 @@
-//! Bounded execution of pinned no-dictionary Fast, DoubleFast and lazy-family profiles.
+//! Bounded execution of pinned no-dictionary Fast, DoubleFast, lazy-family and binary-tree profiles.
 
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
@@ -14,11 +14,12 @@ use crate::{CompressionParameterRequest, Result};
 /// and Fast otherwise. Level 0 means level 3; both select DoubleFast. Level 4
 /// selects DoubleFast for inputs larger than 16 KiB and no larger than 128 KiB,
 /// and for inputs larger than 256 KiB; its remaining source tiers select Greedy.
-/// Levels 5 and 6 are also supported across source tiers. Levels 7 and 8 are
-/// supported through 256 KiB; levels 9 and 10 are supported for inputs larger
-/// than 16 KiB and no larger than 256 KiB. Larger inputs at levels 7..=12 exceed
-/// local resource caps; smaller inputs at levels 11/12 and inputs at levels 13+
-/// select unsupported strategies. Explicit overrides can change this outcome.
+/// Levels 5 and 6 are also supported across source tiers. Levels 7 through 9
+/// are supported through 256 KiB; levels 10 through 12 are supported for inputs
+/// larger than 16 KiB and no larger than 256 KiB. Level 10 at smaller sizes and
+/// levels 7 through 15 above 256 KiB exceed local resource caps. Other default
+/// requests at levels 11 and above select unsupported strategies. Explicit
+/// overrides can change this outcome.
 /// Admission uses the fully resolved strategy and its resource limits, rather
 /// than a level allowlist.
 /// Unsupported strategies return [`crate::Error::UnsupportedFeature`].
@@ -71,8 +72,8 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// A source-size hint never overrides that known length, including known empty
 /// input. The request is unchanged. Effective [`crate::ReferenceStrategy::Fast`],
 /// [`crate::ReferenceStrategy::DoubleFast`], [`crate::ReferenceStrategy::Greedy`],
-/// [`crate::ReferenceStrategy::Lazy`] and [`crate::ReferenceStrategy::Lazy2`]
-/// are implemented; another valid strategy returns
+/// [`crate::ReferenceStrategy::Lazy`], [`crate::ReferenceStrategy::Lazy2`] and
+/// [`crate::ReferenceStrategy::BinaryTreeLazy2`] are implemented; another valid strategy returns
 /// [`crate::Error::UnsupportedFeature`] before resource admission.
 ///
 /// Fast supports effective window logs 10..=20 and hash logs 6..=18. DoubleFast
@@ -81,6 +82,8 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// Their resolved window selects
 /// chain storage at logs 10..=14 (chain log <=18, search log <=8), and row storage
 /// at logs 15..=21 (unused chain log is not resource-capped, at most 64 visits).
+/// BinaryTreeLazy2 supports window logs 10..=21, independent hash/chain logs
+/// 6..=19 and search logs 1..=8, always using tree storage.
 /// All support minimum-match settings 3..=7 and target lengths 0..=131072. An otherwise
 /// valid implemented profile outside these caps returns [`crate::Error::ResourceLimit`]. Caps
 /// apply after known-size adjustment, not to the unadjusted requested values.
@@ -90,21 +93,25 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// copy or inactive algorithm storage is allocated. Search log is validated but
 /// creates no visit budget for either strategy; Fast also ignores chain log.
 ///
-/// Each lazy-family strategy owns two independent tables: chain heads/links of `2^hash_log` and
+/// Greedy, Lazy and Lazy2 own two independent tables: chain heads/links of `2^hash_log` and
 /// `2^chain_log` usize positions, or `2^hash_log` usize positions and byte tags
 /// for rows. Rows use a fresh context salt and scalar hashing on every target.
 /// Chain search visits at most `2^search_log` candidates; rows cap that at 64.
+/// BinaryTreeLazy2 owns `2^hash_log` heads and `2^chain_log` paired edge cells
+/// representing `2^(chain_log-1)` nodes. It performs bounded deferred sorting
+/// and at most `2^search_log` best-match visits with checked offset-cost gains.
 /// Sampled history survives raw/RLE fallback; only complete compressed blocks
 /// publish tentative entropy and wire repeats.
 ///
 /// Minimum-match setting 3 selects four-byte search keys; Fast/DoubleFast settings
-/// 4..=7 choose their respective key widths. The lazy family clamps key widths to 4..=6.
+/// 4..=7 choose their respective key widths. The lazy family and binary tree clamp key widths to 4..=6.
 /// DoubleFast additionally samples eight-byte long keys. Emitted matches have a
 /// four-byte minimum. Positive target length controls Fast acceleration and
-/// disables literal Huffman/RLE selection. DoubleFast and the lazy family ignore this
+/// disables literal Huffman/RLE selection. DoubleFast, the lazy family and binary tree ignore this
 /// control and retain normal literal selection. Complete block RLE remains
-/// independently available for all five strategies.
-/// Lazy and Lazy2 use checked depth-one/two speculative gains and retain rejected
+/// independently available for all six strategies.
+/// Lazy uses checked depth-one speculative gains; Lazy2 and BinaryTreeLazy2
+/// use depth-two gains and retain rejected
 /// sampling probes; Greedy stops at its first eligible baseline candidate.
 /// Block size is the smaller of the selected window and 128 KiB.
 ///

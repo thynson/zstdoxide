@@ -2,7 +2,7 @@
 
 The four reference compression entry points are separate from the existing
 named Greedy/Chain/Lazy encoder. They encode complete borrowed inputs without a
-dictionary, using the pinned v1.5.7 Fast, DoubleFast, Greedy, Lazy or Lazy2 sampling and repeat-offset
+dictionary, using the pinned v1.5.7 Fast, DoubleFast, Greedy, Lazy, Lazy2 or BinaryTreeLazy2 sampling and repeat-offset
 algorithm.
 Huffman and sequence entropy choices are independent Rust implementations;
 compressed bytes, block decisions and ratios need not equal the C encoder.
@@ -36,8 +36,10 @@ adjustment. It is not a fixed level allowlist:
 | Level 6 | Lazy2 through 16384 bytes; Lazy otherwise |
 | Level 7 | Lazy2 through 131072 bytes; Lazy above it; sizes above 262144 exceed resource caps |
 | Level 8 | Lazy2; sizes above 262144 exceed resource caps |
-| Levels 9/10 | Lazy2 only for sizes 16385..=262144; smaller inputs select unsupported strategies, larger inputs exceed resource caps |
-| Levels 11/12 | Resource errors above 262144 bytes; unsupported strategies otherwise |
+| Level 9 | BinaryTreeLazy2 through 16384 bytes; Lazy2 through 262144; larger inputs exceed resource caps |
+| Level 10 | Resource error through 16384 bytes (tree search log 9); Lazy2 for sizes 16385..=262144; larger inputs exceed resource caps |
+| Levels 11/12 | BinaryTreeLazy2 for sizes 16385..=262144; resource errors above that; unsupported at smaller sizes |
+| Levels 13–15 | Resource errors above 262144 bytes; unsupported strategies at smaller sizes |
 | Levels 13+ | Unsupported strategies |
 | Other resolved strategy | `Error::UnsupportedFeature`; no replacement algorithm |
 
@@ -167,3 +169,19 @@ their table/frontier writes. Candidate entropy and repeats still publish only
 after a complete compressed block is appended. These reference strategies are
 separate from the existing named Lazy API and do not add numeric streaming,
 dictionary, binary-tree, worker or long-distance execution.
+
+## Bounded binary-tree requests
+
+`ReferenceStrategy::BinaryTreeLazy2` uses the shared depth-two parser with an
+independent head table and paired node edges. After known-size adjustment it
+admits window log at most 21, hash and chain logs at most 19, and search log at
+most 8. Chain log counts edge cells, so there are half as many nodes. Every
+source width uses tree storage; no row table is selected. Minimum-match 3/4 and
+6/7 equivalences, ignored target length, known-source hints, transactional repeat
+publication and fallible exact-allocator ownership follow the qualified contract.
+The `unsafe-reference-tree` feature selects checked tree-cell access independently
+of every other backend. Optimal and Ultra strategies remain unsupported.
+
+Ordinary sequence/state conformance and public cross-decoding are documented in
+[tree validation](reference-tree-validation.md). Rust entropy choices remain
+independent; C-identical compressed frames and compression ratios are not promised.
