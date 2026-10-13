@@ -70,3 +70,28 @@ controller/reader/helper/input closure is pinned before execution. The planned
 helper in the sanitizer build. Its offline audit reconstructs the complete ordered
 compile/link/run inventory, verifies retained objects/executables and replays every
 observation. A successful preflight is not a completed C capture.
+
+## First direct C capture
+
+The [tiny capture report](evidence/2026-10-13-tree-tiny.json) binds the 170-command
+run to source revision `095371a`. Thirty frozen requests produce 120 padding/build
+observations and 4,036 individual operation records. All ordinary/instrumented
+and two-padding outputs agree exactly. Fifty malformed packet executions reject
+without sanitizer diagnostics. Normal and optimized offline audits each replay
+the complete original capture and reject 39 specified forged captures with zero
+child attempts. Original capture files remain unchanged.
+
+The complete 455-file archive retains 36,045,110 raw bytes, including objects,
+executables, requests and original stdout/stderr; every archived member and
+reconstructed file was read back against its original. Downloaded reference
+source remains outside the repository. The recorded controller, helper and input
+closure was also compared with the named Git revision.
+
+Of the 1,009 first-padding operations in the normal build, 238 select nonzero
+byte matches, 771 return zero, and 54 have a query behind the retained frontier
+and preserve both maps. There are 724 non-skipped queries beyond node-ring size,
+four operations with a moved raw window floor, and 671 after-maps retaining an
+unsorted marker. These are predicates on actual recorded state, not an inferred
+comparison count or a claimed chronological reversal trace. Broader offset-score
+and sorting coverage, a Rust tree backend, ordinary frame integration and public
+strategy 6 remain pending.

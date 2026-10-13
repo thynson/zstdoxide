@@ -109,7 +109,7 @@ the pinned source; public strategy 6 remains unsupported throughout preparation.
 - [x] Implement and review the direct C helper with normal/instrumented syntax checks and pinned dependency identities.
 - [x] Implement independent tree observation replay and malformed offline controls before execution.
 - [x] Implement and preflight the direct capture controller and offline auditor before execution.
-- [ ] Capture tiny normal/instrumented observations and reject forged records offline without child execution.
+- [x] Capture tiny normal/instrumented observations and reject forged records offline without child execution.
 - [ ] Freeze broader source/ring/window/offset-cost recipes and capture independently checked complete tree trajectories.
 - [ ] Project audited direct records into bounded Rust fixtures with an independent test-only reader and predecessor controls.
 - [ ] Add checked tree layout and scalar edge/link records with explicit source and node-floor invariants.
