@@ -334,3 +334,20 @@ hypotheses. Both Python modes reproduce the complete source-only manifests;
 separate capture-preflight records are retained in
 `evidence/2026-10-13-tree-public-plan.json` and its archive. This checkpoint
 does not claim a public codec execution or C-observed applied parameters.
+
+## Public capture preflight
+
+The generic Greedy-named Rust/C transport is reused unchanged for scalar
+strategy 6. The new controller and independent auditor freeze a 13,606-command
+inventory over all 1,197 recipes, both C builds, both Rust configurations and
+39 malformed packets per executable. The source-name closure, dependencies,
+flags, public tuple expectations and exact command grammar are checked before
+execution; case identifiers now allow the required fourth digit. A 32 MiB
+report cap accommodates the larger command inventory.
+
+Normal and optimized offline preflights each reject 18 bad manifests/paths or
+incomplete captures with zero child attempts. Their initial count check failed
+because only 17 controls existed; the missing-manifest control was added, with
+both initial failed logs preserved. This was a harness count correction, not an
+accepted malformed input. Exact code and logs are in the public-plan evidence.
+No public C execution is claimed here.
