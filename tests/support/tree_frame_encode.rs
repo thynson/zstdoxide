@@ -299,3 +299,14 @@ fn late_tree_output_failure_preserves_committed_state_and_poisoned_context() {
         source
     );
 }
+
+#[test]
+fn ordinary_tree_frames_match_retained_publication() {
+    let counts = super::greedy_tests::check_frames(
+        crate::tree_frame_oracle_fixture::cases()
+            .unwrap()
+            .into_iter()
+            .map(|c| (2, c)),
+    );
+    assert_eq!(counts, (488, [274, 38, 219], 38, 32));
+}

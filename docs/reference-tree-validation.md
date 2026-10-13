@@ -351,3 +351,22 @@ because only 17 controls existed; the missing-manifest control was added, with
 both initial failed logs preserved. This was a harness count correction, not an
 accepted malformed input. Exact code and logs are in the public-plan evidence.
 No public C execution is claimed here.
+
+## Ordinary Rust tree state and frame gate
+
+Thirty-two focused tests pass across safe, tree-only unsafe, all features and
+release/all. In each configuration all 245 ordinary cases / 531 nonempty blocks
+match C candidate literals, sequences, repeat publication, frontiers and complete
+head/node maps without reseeding. All 365 complete C frames decode to their
+14,136,238 original source bytes. The Rust encoder separately verifies 488
+whole/scheduled frames and the same 274 raw / 38 RLE / 219 compressed block
+choices, with 38 raw and 32 RLE discarded-repeat witnesses. Two empty cases
+produce one frame each, correcting an initial aggregate expectation of 489;
+that failed count log is retained. No C-identical entropy-byte claim is made.
+
+The bounded reader rejects invalid identity, extent, selector, trailing bytes,
+marker parity and geometry. Full earlier Greedy and Lazy-family retained-state
+comparisons pass in every configuration. Safe/tree no_std, safe/all strict
+Clippy and formatting pass. Exact source/log evidence is in
+`evidence/2026-10-13-tree-ordinary.json` and its archive. This closes the private
+ordinary-state gate before public strategy dispatch.

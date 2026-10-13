@@ -75,6 +75,7 @@ pub(crate) struct OracleFrameCase<'a> {
     pub(crate) search_log: u8,
     pub(crate) min_match: u8,
     pub(crate) row_search: bool,
+    pub(crate) tree_search: bool,
     pub(crate) target_length: u32,
     pub(crate) source: &'a [u8],
     pub(crate) source_hash: u64,
@@ -338,6 +339,12 @@ impl<'a> OracleBlock<'a> {
 
 impl<'a> OracleFrameCase<'a> {
     pub(crate) fn read(bytes: &'a [u8]) -> Result<Self> {
+        Self::read_selected(bytes, false)
+    }
+    pub(crate) fn read_tree(bytes: &'a [u8]) -> Result<Self> {
+        Self::read_selected(bytes, true)
+    }
+    fn read_selected(bytes: &'a [u8], tree: bool) -> Result<Self> {
         let mut r = Reader { bytes };
         let name_len = usize::from(u16::from_le_bytes(r.number()?));
         if !(1..=63).contains(&name_len) {
@@ -349,6 +356,9 @@ impl<'a> OracleFrameCase<'a> {
             .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_')
         {
             return Err("case name domain");
+        }
+        if tree && !name.starts_with("bt_") {
+            return Err("tree case prefix");
         }
         let window_log = r.byte()?;
         let hash_log = r.byte()?;
@@ -362,8 +372,11 @@ impl<'a> OracleFrameCase<'a> {
             || !(1..=29).contains(&search_log)
             || !(3..=7).contains(&min_match)
             || row > 1
-            || (row != 0) != (window_log > 14)
-            || (row == 0 && (chain_log > 18 || search_log > 8))
+            || if tree {
+                row != 0 || chain_log > 19 || search_log > 8
+            } else {
+                (row != 0) != (window_log > 14) || (row == 0 && (chain_log > 18 || search_log > 8))
+            }
             || r.number::<2>()? != [0; 2]
         {
             return Err("case parameters");
@@ -406,6 +419,7 @@ impl<'a> OracleFrameCase<'a> {
             search_log,
             min_match,
             row_search: row != 0,
+            tree_search: tree,
             target_length,
             source,
             source_hash,
@@ -423,8 +437,15 @@ impl<'a> OracleFrameCase<'a> {
             || !(6..=29).contains(&self.chain_log)
             || !(1..=29).contains(&self.search_log)
             || !(3..=7).contains(&self.min_match)
-            || self.row_search != (self.window_log > 14)
-            || (!self.row_search && (self.chain_log > 18 || self.search_log > 8))
+            || if self.tree_search {
+                self.row_search
+                    || self.chain_log > 19
+                    || self.search_log > 8
+                    || !self.name.starts_with("bt_")
+            } else {
+                self.row_search != (self.window_log > 14)
+                    || (!self.row_search && (self.chain_log > 18 || self.search_log > 8))
+            }
             || self.source.len() > MAX_SOURCE
             || fingerprint(self.source.iter().copied()) != self.source_hash
             || self.target_length > 131_072
@@ -807,8 +828,12 @@ impl OracleFrameCase<'_> {
                     return Err("head membership");
                 }
             }
-            for &raw in second {
-                if raw != 0 {
+            for (slot, &raw) in second.iter().enumerate() {
+                if self.tree_search && raw == 1 {
+                    if slot % 2 == 0 {
+                        return Err("tree marker in smaller edge");
+                    }
+                } else if raw != 0 {
                     position(raw)?;
                 }
             }

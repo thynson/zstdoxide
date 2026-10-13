@@ -234,22 +234,29 @@ mod tests {
         .unwrap()
     }
     fn observed_plan(case: &OracleFrameCase<'_>, depth: u8) -> GreedyExecutionPlan {
-        GreedyExecutionPlan::from_family_parameters(
-            RawCompressionParameters {
-                window_log: u32::from(case.window_log),
-                chain_log: u32::from(case.chain_log),
-                hash_log: u32::from(case.hash_log),
-                search_log: u32::from(case.search_log),
-                min_match: u32::from(case.min_match),
-                target_length: case.target_length,
-                strategy: u32::from(depth) + 3,
-            }
-            .validate()
-            .unwrap(),
-            case.source.len(),
-        )
+        let parameters = RawCompressionParameters {
+            window_log: u32::from(case.window_log),
+            chain_log: u32::from(case.chain_log),
+            hash_log: u32::from(case.hash_log),
+            search_log: u32::from(case.search_log),
+            min_match: u32::from(case.min_match),
+            target_length: case.target_length,
+            strategy: if case.tree_search {
+                6
+            } else {
+                u32::from(depth) + 3
+            },
+        }
+        .validate()
+        .unwrap();
+        if case.tree_search {
+            GreedyExecutionPlan::from_tree_parameters(parameters, case.source.len())
+        } else {
+            GreedyExecutionPlan::from_family_parameters(parameters, case.source.len())
+        }
         .unwrap()
     }
+
     #[test]
     fn tree_search_corruption_after_pending_insert_poisons_retained_state() {
         let mut input: Vec<u8> = (0..96).collect();
@@ -568,6 +575,19 @@ mod tests {
                     .map(|c| (c.depth, c.observation)),
             ),
             (1377, 1293, [165, 36]),
+        );
+    }
+
+    #[test]
+    fn all_tree_ordinary_trajectories_retain_exact_state() {
+        assert_eq!(
+            check_ordinary_cases(
+                crate::tree_frame_oracle_fixture::cases()
+                    .unwrap()
+                    .into_iter()
+                    .map(|c| (2, c))
+            ),
+            (531, 503, [38, 32])
         );
     }
 

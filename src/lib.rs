@@ -123,6 +123,9 @@ mod stream;
 mod stream_decode;
 mod stream_encode;
 mod training;
+#[cfg(test)]
+#[path = "../tests/support/tree_frame_oracle.rs"]
+mod tree_frame_oracle_fixture;
 mod tree_layout;
 #[cfg(test)]
 #[path = "../tests/support/tree_oracle.rs"]

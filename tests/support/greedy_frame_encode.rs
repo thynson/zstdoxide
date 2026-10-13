@@ -17,12 +17,21 @@ pub(super) fn plan(case: &OracleFrameCase<'_>, depth: u8) -> ReferenceSearchPlan
         search_log: u32::from(case.search_log),
         min_match: u32::from(case.min_match),
         target_length: case.target_length,
-        strategy: u32::from(depth) + 3,
+        strategy: if case.tree_search {
+            6
+        } else {
+            u32::from(depth) + 3
+        },
     }
     .validate()
     .unwrap();
     ReferenceSearchPlan::Greedy(
-        GreedyExecutionPlan::from_family_parameters(parameters, case.source.len()).unwrap(),
+        if case.tree_search {
+            GreedyExecutionPlan::from_tree_parameters(parameters, case.source.len())
+        } else {
+            GreedyExecutionPlan::from_family_parameters(parameters, case.source.len())
+        }
+        .unwrap(),
     )
 }
 
