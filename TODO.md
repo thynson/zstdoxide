@@ -56,7 +56,8 @@ in `docs/reference-lazy-benchmarks.md`. Complete upstream migration remains open
 
 Module 15 correctness and measurement closure is complete. Preserve its frozen
 complete frame and owner baselines while implementing the reviewed tree design.
-Public strategy 6 remains unsupported until its own private and public gates pass.
+Public strategy 6 is enabled after its private state and independent tuple gates;
+complete public interoperability, final matrix and measurement closure follow.
 
 - [x] Review binary-tree ownership, biased paired slots, unsorted-chain reversal, candidate scoring and frontier semantics before implementation.
 - [x] Freeze all eighty Lazy-family frames and qualified allocator records as permanent predecessor regressions.
@@ -90,7 +91,9 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [x] Preflight the public capture controller and independently reconstructed tuple auditor with no-child rejection controls.
 - [ ] Capture bidirectional public C interoperability and reject forged evidence offline.
 - [ ] Run safe, every unsafe leaf, all-feature, no_std, Clippy, formatting and selected foreign/no-atomics checks.
-- [ ] Freeze equivalent all-backend workloads, verify clock-free output/owners and record timing plus a separate safe/all repeat after CPU barriers.
+- [x] Prepare and qualify the deterministic tree benchmark harness and offline forgery controls.
+- [ ] Verify complete clock-free tree output and exact owners across all seventeen backends.
+- [ ] Record equivalent all-backend timing and a separate safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded milestone and remaining official obligations, retaining the next decomposition.
 
 ## Roadmap
