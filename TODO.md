@@ -91,7 +91,8 @@ successor admission mapping and independent oracle checks.
 - [x] Capture and independently validate broader bidirectional public interoperability with normal/instrumented C.
 - [x] Verify exact owner release, allocation failures, malformed state, no_std and interpreted i686/s390x bounds plus no-atomics caller compilation.
 - [ ] Run safe, each unsafe feature and all-feature correctness checks with every predecessor regression intact.
-- [ ] Freeze and verify clock-free workloads, then compare all backends and repeat safe/all after a CPU barrier.
+- [x] Freeze and verify all-backend clock-free workloads and qualify the harness with offline mutation controls.
+- [ ] Compare all backends and repeat safe/all after a completed correctness/platform CPU barrier.
 - [ ] Reconcile the bounded milestone, official-test gaps and measurements; clear completed items and retain the next decomposition.
 
 ## Roadmap

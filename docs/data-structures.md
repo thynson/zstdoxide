@@ -1152,3 +1152,15 @@ publish, and errors poison the workspace without advancing the emitted extent.
 Tests will pass exact captured resolved tuples directly, preserving source-size
 resolution as a separate future public gate. Complete predecessor Rust frame and
 allocator baselines stay independent of the new depth-tagged tests.
+
+
+The Lazy-family benchmark successor will retain the four pinned Greedy workload
+byte sequences and eight existing profiles, then add the six explicit chain/row
+profiles at each of depths one and two. Eighty total cases own deterministic
+source/output vectors only in the std-only harness. The clock-free phase checks
+complete frame bytes, resolved tuples, decoder reconstruction, exact allocation
+counters and all prior Fast/DoubleFast/Greedy baselines before timing. Global
+compression plus output destruction alone enter clocks; allocator surveys,
+correctness checks and source generation remain outside. Each leaf backend and
+all features receive identical source/request pairs. These harness records add
+no production codec owner or unsafe implementation.
