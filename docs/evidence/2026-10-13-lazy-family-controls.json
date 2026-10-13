@@ -1,0 +1,32 @@
+{
+  "archive": "2026-10-13-lazy-family-controls.tar.gz",
+  "archive_bytes": 15336,
+  "archive_members": 12,
+  "archive_sha256": "1035b570ee21af58de5c5c547501d87e6174b8667d7f8322b4a69d82132f6be2",
+  "capture_archive": "2026-10-12-lazy-family-wip.tar.gz",
+  "capture_archive_sha256": "8b59851b9138312c2191aa981992749cb9b4b5ab8893e51815ade9cc9aa05bf6",
+  "capture_evidence_sha256": "028af18ffbae1f600ad1b5e0b6f44cf53d3fa808e4657534d57de27e1525c962",
+  "capture_report_sha256": "42a846b43ccebf51825e3cf27d231a335a07f414eae143141cde90194b216e2d",
+  "commands": 1468,
+  "controls_per_mode": {
+    "child_processes": 0,
+    "positive": 2,
+    "rejected": 52
+  },
+  "date": "2026-10-13",
+  "interrupted_attempts": "Two initial uncached task-owned control runs were stopped before completion to avoid repeatedly rebuilding immutable inputs. No capture, helper or auditor changed; complete normal/optimized runs use the archived successor driver.",
+  "manifest_members_verified": 3702,
+  "modes": [
+    "normal",
+    "optimized"
+  ],
+  "qualification": "Capture qualification only. Immutable recipe and predecessor fixture results are cached after real validation, with their source identities rechecked before/after; every mutation reruns the capture auditor, log/binary reads and semantic checks. Two coherent controls change both builds and both paddings with refreshed local hashes and require rejection at the tiny/predecessor comparison layer. Score-family reconciliation, permanent fixtures, Rust projection and Lazy implementation remain open. No new C execution or chronological probe trace claim.",
+  "raw_capture_files_compared": 3698,
+  "status": "passed",
+  "totals": {
+    "direct_observations": 2580,
+    "fresh_contexts": 12,
+    "negative_rejections": 110,
+    "recipes": 645
+  }
+}

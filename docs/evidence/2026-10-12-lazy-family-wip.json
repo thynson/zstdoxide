@@ -1,0 +1,30 @@
+{
+  "archive": "2026-10-12-lazy-family-wip.tar.gz",
+  "archive_bytes": 31222859,
+  "archive_members": 3703,
+  "archive_sha256": "8b59851b9138312c2191aa981992749cb9b4b5ab8893e51815ade9cc9aa05bf6",
+  "archive_uncompressed_bytes": 73617023,
+  "capture_evidence_sha256": "028af18ffbae1f600ad1b5e0b6f44cf53d3fa808e4657534d57de27e1525c962",
+  "capture_status": "passed",
+  "commands": 1468,
+  "date": "2026-10-12",
+  "exact_predecessor_owner_layouts": 173,
+  "exact_tiny_controls": 138,
+  "independent_audits": [
+    "normal Python",
+    "optimized Python"
+  ],
+  "predecessor_controls": 173,
+  "qualification": "Pause preservation only. Broader capture passed and both offline audits passed. Broad-capture forgery controls, detailed score-hit reconciliation, permanent fixture freezing, projection and Rust Lazy implementation remain unfinished. This is not Module15 completion. Downloaded C source remains outside the repository; every actual capture file, including all used objects/executables, is retained.",
+  "raw_capture_files": 3698,
+  "resume_capture_directory": "/private/tmp/zstdoxide-lazy-families-2026-10-12",
+  "schema_version": 1,
+  "source_unchanged": true,
+  "status": "paused",
+  "totals": {
+    "direct_observations": 2580,
+    "fresh_contexts": 12,
+    "negative_rejections": 110,
+    "recipes": 645
+  }
+}

@@ -138,3 +138,45 @@ Normal and optimized Python each accept two read-only preflights and reject
 [preflight evidence](evidence/2026-10-12-lazy-family-preflight.json) and
 [archive](evidence/2026-10-12-lazy-family-preflight.tar.gz) preserve reviewed
 scripts, checks and drivers. Broader C execution remains a separate work item.
+
+## Broader actual capture and forgery qualification
+
+The 2026-10-12 broader capture completes all 1,468 commands, 645 recipes,
+2,580 direct observations, twelve fresh contexts and 110 malformed rejections.
+Normal/O2 and ASan+UBSan/O1 compile all 26 used C units plus the helper;
+upstream per-function annotations remain and LeakSanitizer is off. Every direct
+observation agrees byte-for-byte across builds. Independent normal/optimized
+replay retains all 138 exact tiny outputs and 173 depth-zero Greedy controls,
+including all 173 qualified owner layouts.
+
+On resumption, the original pause archive's SHA256 and complete member manifest
+were verified sequentially, and every one of its 3,698 capture files was compared
+with the original external capture. The [historical preservation report](
+evidence/2026-10-12-lazy-family-wip.json) retains its original paused status;
+that status describes preservation at the time, not a completed fixture gate.
+No archived executable or captured command was executed during verification.
+
+Normal and optimized Python each accept two positive captures and reject 52
+forgeries with child creation blocked and zero attempts. The controls cover
+source/compile/link identities, instrumentation, object/executable bytes,
+command/environment bounds, complete case records, sequence replay, full maps,
+repeat/depth/strategy fields, context ownership and sanitizer diagnostics on
+malformed packets. Two added controls coherently modify both builds and both
+padding observations while updating every local log hash. They reject at the
+exact tiny and depth-zero predecessor comparison layers, respectively, rather
+than relying on cross-build disagreement or a stale checksum.
+
+The driver reuses immutable recipe and predecessor fixture results after their
+real validation, checking their source identities before and after the control
+campaign. Capture auditing, binary/log reads and semantic validation still run
+for every mutation. Two initial uncached runs were stopped before completion to
+avoid repeatedly regenerating these inputs; neither capture nor auditor changed.
+The [qualification report](evidence/2026-10-13-lazy-family-controls.json) and
+[control archive](evidence/2026-10-13-lazy-family-controls.tar.gz) retain the exact
+driver, rejection reasons, positive counts and original capture linkage.
+
+This completes capture preservation and forgery qualification only. Detailed
+score-hit reconciliation, immutable broader fixture packing/checking, Rust
+projection and Lazy/Lazy2 parsing remain open. Complete final maps and sequences
+do not constitute chronological probe traces. No new ordinary/public-frame,
+Rust Lazy, performance or complete upstream-migration claim follows.
