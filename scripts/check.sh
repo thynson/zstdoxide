@@ -57,6 +57,13 @@ python3 scripts/check_lazy_frame_validator.py --check
 python3 scripts/capture_lazy_frames.py --check-plan
 python3 scripts/check_lazy_frames.py --check
 python3 scripts/pack_lazy_frame_trajectories.py --check
+python3 scripts/check_reference_lazy_baseline.py
+python3 scripts/check_tree_recipes.py --self-test
+python3 scripts/check_tree_family_recipes.py
+python3 scripts/check_tree_validator.py
+python3 scripts/capture_tree_tiny.py --check-plan
+python3 scripts/capture_tree_families.py --check-plan
+python3 scripts/pack_tree_fixtures.py
 
 # Each backend alone must compile without std and pass the same test suite.
 cargo fmt --all -- --check

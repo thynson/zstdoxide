@@ -176,3 +176,11 @@ otherwise valid changed skipped-state edges. Initial parameter-order and lint
 diagnostics are preserved with the corrected final runs. These sixteen test
 executions are additive and are not included in Module 15's frozen full matrix.
 A production tree backend remains unimplemented.
+
+## Standard-driver registration
+
+The [registration evidence](evidence/2026-10-13-tree-registration.json) runs all
+seven newly registered offline commands in normal and optimized Python. The
+Lazy baseline, tiny/broader recipes, synthetic observation controls, both capture
+plans and complete binary projection pass; shell syntax also passes. This does
+not rerun the already completed Module 15 Rust matrix.

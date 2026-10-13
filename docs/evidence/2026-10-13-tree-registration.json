@@ -1,0 +1,164 @@
+{
+  "archive": "2026-10-13-tree-registration.tar.gz",
+  "archive_bytes": 4810,
+  "archive_sha256": "4d815da098ebaf64f30da39d278090ca65849724ca439924706fde09629fb209",
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "scripts/check_reference_lazy_baseline.py"
+      ],
+      "exit_code": 0,
+      "log": "normal-0.log",
+      "seconds": 0.7215248749125749,
+      "sha256": "33f0248e5689e95cfd1e658834b2893d18e247ff8db6c5741a0fb54f3876bb08"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_tree_recipes.py",
+        "--self-test"
+      ],
+      "exit_code": 0,
+      "log": "normal-1.log",
+      "seconds": 0.1323878748808056,
+      "sha256": "ab2e09ef298b058e8042cdbbf374d0787f554ed231a3073df29ab0d608404b39"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_tree_family_recipes.py"
+      ],
+      "exit_code": 0,
+      "log": "normal-2.log",
+      "seconds": 0.34854679205454886,
+      "sha256": "3b0a80c5a13ee68f45c9a236ff56037b6585651f09cefd6064145e3bdd89067b"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_tree_validator.py"
+      ],
+      "exit_code": 0,
+      "log": "normal-3.log",
+      "seconds": 0.12916495790705085,
+      "sha256": "5cbdfa14277f4c8eac732582d3bcefc4cafcb379bba0ca55faf87b3f32b6af5a"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/capture_tree_tiny.py",
+        "--check-plan"
+      ],
+      "exit_code": 0,
+      "log": "normal-4.log",
+      "seconds": 0.07199887512251735,
+      "sha256": "0efd5c6ff339fef86770a4016c17a92b73424a7ed2b188623251506e44ab72a1"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/capture_tree_families.py",
+        "--check-plan"
+      ],
+      "exit_code": 0,
+      "log": "normal-5.log",
+      "seconds": 0.45488037494942546,
+      "sha256": "da7431687bdf098413017b83d72a22fb245d41653738a683605eb6a4835b0b24"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/pack_tree_fixtures.py"
+      ],
+      "exit_code": 0,
+      "log": "normal-6.log",
+      "seconds": 7.356059582903981,
+      "sha256": "83548af2aeb0a7888077b844a0dc654ee5aff19e929ab2b776f5bef782b4dbbb"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_reference_lazy_baseline.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized-0.log",
+      "seconds": 0.8720286248717457,
+      "sha256": "33f0248e5689e95cfd1e658834b2893d18e247ff8db6c5741a0fb54f3876bb08"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_tree_recipes.py",
+        "--self-test"
+      ],
+      "exit_code": 0,
+      "log": "optimized-1.log",
+      "seconds": 0.18307941709645092,
+      "sha256": "5286e88ec544a897e1d87d38c80d69fdc303ca0306b4fd3150afbd29d724c4f9"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_tree_family_recipes.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized-2.log",
+      "seconds": 0.4042945420369506,
+      "sha256": "97571430e279df9e5e935f3f7733ffa489830edf757318609eece253d456ca26"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_tree_validator.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized-3.log",
+      "seconds": 0.1874168748036027,
+      "sha256": "ee6bd7164b24d5633e8da2c1a79d9028220302d1c0cd4eacb7d1f93b35f75c22"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/capture_tree_tiny.py",
+        "--check-plan"
+      ],
+      "exit_code": 0,
+      "log": "optimized-4.log",
+      "seconds": 0.18732183310203254,
+      "sha256": "0efd5c6ff339fef86770a4016c17a92b73424a7ed2b188623251506e44ab72a1"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/capture_tree_families.py",
+        "--check-plan"
+      ],
+      "exit_code": 0,
+      "log": "optimized-5.log",
+      "seconds": 0.5474729158449918,
+      "sha256": "da7431687bdf098413017b83d72a22fb245d41653738a683605eb6a4835b0b24"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/pack_tree_fixtures.py"
+      ],
+      "exit_code": 0,
+      "log": "optimized-6.log",
+      "seconds": 7.538247208110988,
+      "sha256": "83548af2aeb0a7888077b844a0dc654ee5aff19e929ab2b776f5bef782b4dbbb"
+    }
+  ],
+  "driver_sha256": "9580ebcf85653ab46bfe6d9cd560366815cce4ddf707335555b6ca907efaab91",
+  "qualification": "Seven new offline registrations each pass normal and optimized Python; shell syntax passes. Existing commands retain their order. This is not a fresh full Rust matrix.",
+  "shell_syntax": true,
+  "status": "passed"
+}

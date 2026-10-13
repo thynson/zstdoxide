@@ -72,7 +72,7 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [x] Capture and independently check complete broader tree trajectories with offline forgery controls.
 - [x] Project audited direct records into bounded binary fixtures with exact source and predecessor provenance.
 - [x] Add an independent test-only Rust fixture reader with boundary rejection and selected-match replay.
-- [ ] Register frozen Lazy baseline and tree recipe/projection checks in the standard check driver.
+- [x] Register frozen Lazy baseline and tree recipe/projection checks in the standard check driver.
 - [ ] Add checked tree layout and scalar edge/link records with explicit source and node-floor invariants.
 - [ ] Implement initialized independent hash/node owners with safe storage and an opt-in unsafe-reference-tree leaf.
 - [ ] Implement unsorted insertion, bounded chain reversal and deferred sorting against exact C maps.
