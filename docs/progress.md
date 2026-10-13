@@ -656,3 +656,55 @@ final artifact chains and unchanged measured source. The completed checklist
 is cleared and the next Greedy module's decomposition is retained. The upstream
 inventory still reports 188 unfinished source units; full test migration,
 legacy success assertions and the remainder of the roadmap remain open.
+
+
+## Module 14 completed: bounded reference Greedy execution
+
+Reconciled on 2026-10-13 from the completed 2026-10-12 campaigns. Known-source,
+no-dictionary numeric one-shot requests now execute bounded reference Greedy,
+selecting chains through window log 14 and rows above it. Limits are W21/H19,
+chain C18/S8 and at most 64 row visits; the unused row chain dimension adds no
+resource cap. Level 4 works across all source tiers. Existing named/Fast/
+DoubleFast complete frames and allocator contracts are preserved.
+
+All 173 direct cases match complete maps and sequences. Ordinary retained state
+matches 395 C blocks, including 25 raw and 12 RLE discarded-repeat transitions;
+private frame checks cover 274 frames and all 6,184 observed allocation-failure
+ordinals. The successor admission retains all 81 selectors, with 62 admitted,
+15 unsupported and four advanced; the original loops admit 6/24 and 4/19.
+Thirteen newly admitted assertion tests pass in safe/all builds, without
+promoting any complete upstream source unit.
+
+Public interoperability completes 422 recipes: 372 admitted, 37 unsupported
+and 13 resource rejects. Across 4,786 commands, C decodes 1,488 Rust frames and
+Rust decodes 1,488 C frames, reproducing 413,994,400 source bytes; 156 malformed
+requests reject. Normal and instrumented builds compile all 26 used C units
+plus the helper. Upstream sanitizer annotations remain and LeakSanitizer is off.
+
+The immutable final matrix passes 17 suites (safe, fourteen isolated features,
+all debug/release), each with 1,098 passes, zero failures and 54 explicit ignores:
+18,666 passing executions. Formatting, strict safe/all Clippy, sixteen no_std
+configurations, thirteen allocator-helper tests and 22 documentation examples
+per safe/all mode pass. Focused platform checks add 44 strict-provenance Miri
+executions on interpreted i686/s390x, one native smoke and four thumbv6m
+library/caller compilation checks; no foreign-native or memory-fit claim follows.
+
+All sixteen backends pass 512 clock-free cases. The all-backend timing campaign
+and safe/all repeat retain 2,880 samples in 576 cases, identical frames and owner
+records, and completed task-owned CPU barriers. The all/safe geometric means
+across 24 Greedy cases are 1.0480 and 1.0588; the repeat spans 0.8546..1.2181.
+One host, fixed order, uncontrolled desktop/thermal activity and unrepeated
+individual flags prevent universal or causal speed claims. Safe remains default.
+See [measurements](reference-greedy-benchmarks.md) for all unfavorable results.
+
+The [closure reconciliation](evidence/2026-10-13-greedy-closure.json) rechecks
+thirteen reports, nine archive identities, 1,217 immutable matrix input files
+and eighty input identities in each clock-free/timed/repeat campaign. Existing
+checks are reused without claiming a fresh full-suite run. Later additive
+benchmark and Module 15 preparation files are not retroactively in that matrix;
+the nine Greedy baseline tests retain separate safe/chain/row/all qualification.
+The [validation report](reference-greedy-validation.md) distinguishes historical
+checkpoints from this completed bounded scope. The completed checklist is cleared
+and the Lazy/Lazy2 decomposition remains. The inventory still has 188 unfinished
+source units (149 blocked, 34 partial, five planned); complete official migration,
+numeric dictionaries/streaming, higher strategies and the roadmap remain open.

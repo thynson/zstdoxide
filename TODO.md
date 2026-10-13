@@ -39,66 +39,17 @@ The final matrix, interoperability and platform qualifications are recorded in
 and the inconclusive unsafe comparison are retained in
 `docs/reference-double-fast-benchmarks.md`.
 
-## Module 14: bounded reference Greedy execution
-
-Begin with source review and data-structure design before implementation.
-Preserve all named/Fast/DoubleFast outputs, owner contracts and frozen policies.
-The reviewed scope and ownership design are in `docs/reference-greedy-design.md`.
-
-- [x] Analyze source-dependent chain/row selection, ownership, salted hashes, exact parser floors and newly admitted official subsets before implementation.
-- [x] Freeze complete current DoubleFast frames and qualified allocation records from the reviewed clock-free benchmark as permanent compatibility regressions.
-- [x] Specify a bounded direct Greedy C protocol with separate chain/row arenas, full owner maps and short-input safety proof before execution.
-- [x] Implement and source-review the bounded direct/fresh-salt C adapter; complete syntax checks before its first execution.
-- [x] Implement the independent packet/record validator and freeze tiny chain/row recipes without generating expected output.
-- [x] Capture and independently verify fresh-context salt and tiny chain/row observations with all used C units instrumented.
-- [x] Pin broader source/initial-state recipes for row widths, hash/chain collisions, cyclic bias, gaps, skipping, floors, repeats and malformed packets.
-- [x] Capture normal/sanitized direct observations and independently reject changed or malformed evidence offline before Rust parsing.
-- [x] Add checked salted row-key/layout value records without changing existing Fast/DoubleFast key domains.
-- [x] Add initialized safe reference-chain storage with exact independent owners, cyclic slot translation and bounded traversal.
-- [x] Add the equivalent opt-in unsafe-reference-chain backend with complete access proofs and corruption/owner equivalence tests.
-- [x] Add initialized safe row-table storage with reserved heads, cyclic tag ordering, candidate snapshots and exact owners.
-- [x] Add the equivalent opt-in unsafe-row-table backend with complete access proofs and full-map equivalence tests.
-- [x] Add allocation-free Greedy admission planning with actual source-tier chain/row selection and independent resource caps.
-- [x] Add borrowed Greedy block/cursor records with per-probe floors and distinct chain/row search-tail transitions.
-- [x] Project frozen direct Greedy inputs/observations into bounded little-endian records with independently checked provenance.
-- [x] Add a dependency-free checked Rust adapter for frozen direct Greedy inputs and complete table/sequence observations.
-- [x] Implement safe reference chain search against full frozen heads/links and update/skipping transitions.
-- [x] Implement safe reference row search against frozen salted hashes, full positions/tags, head wrap and long-gap updates.
-- [x] Implement Greedy repeat-first parsing, tie selection, backward extension and immediate-repeat cleanup against frozen candidates.
-- [x] Specify and pin ordinary Greedy frame/schedule recipes before C execution.
-- [x] Implement and source-review the bounded ordinary Greedy frame helper; complete syntax checks before execution.
-- [x] Version the unexecuted ordinary helper to distinguish tiny window-floor clamping from long-gap/parser updates.
-- [x] Pin additive ordinary chain/row tiny-window-floor recipes before C execution.
-- [x] Implement the ordinary Greedy offline replay validator with frozen hash and synthetic structural rejection controls.
-- [x] Implement the bounded ordinary Greedy capture controller and malformed C-input campaign before execution.
-- [x] Preserve the failed unresolved-auto capture and correct the ordinary helper initialization before retrying.
-- [x] Capture normal/instrumented ordinary publication trajectories and complete C frames, then independently reject forged evidence offline.
-- [x] Project frozen ordinary Greedy trajectories and frames into bounded little-endian records with checked provenance.
-- [x] Add a dependency-free checked Rust adapter for frozen ordinary Greedy trajectories and frames.
-- [x] Retain selected chain/row state across blocks with ordinary next-to-update adjustment, tiny bypass and failure poisoning.
-- [x] Extend static private search dispatch while preserving existing owner counts and complete frame bytes.
-- [x] Emit private complete Greedy frames with transactional entropy/repeat publication and all observed allocation-failure ordinals.
-- [x] Freeze successor v3 admission mappings over unchanged selectors, numeric loops and both historical interop sets before changing public behavior.
-- [x] Extend public request admission and truthful documentation with resolved Greedy scope and unchanged unsupported/resource precedence.
-- [x] Port newly admitted official numeric/fuzz assertions without rewriting historical C tuples or closing unrelated obligations.
-- [x] Specify the successor public-frame protocol, ownership bounds and source-family plan before implementation.
-- [x] Freeze successor public-frame recipes over both unchanged historical sets and additive Greedy sources before codec execution.
-- [x] Implement and review separately versioned public C/Rust adapters, checked transport and malformed-packet controls before first C execution.
-- [x] Implement the bounded public Greedy capture controller and independent offline auditor with preflight rejection controls.
-- [x] Capture broader bidirectional public Greedy interoperability with normal/instrumented C, reject forged evidence offline and preserve the complete campaign.
-- [x] Verify focused chain/row ownership and parser bounds on interpreted i686/s390x and compile-only no-atomics callers.
-- [x] Run the full safe/each-feature/all/no_std correctness matrix with unchanged Fast/DoubleFast/named regression baselines.
-- [x] Freeze the Greedy benchmark sources, request profiles and measurement/ownership contract before implementation.
-- [x] Implement the separate clock-free Greedy harness and independent evidence validator with historical frame/owner controls.
-- [x] Validate all fourteen individual unsafe backends, safe and all together on the frozen clock-free workloads.
-- [x] Measure every backend after a completed CPU barrier and repeat safe/all with all raw samples retained.
-- [ ] Reconcile tests, inventory, evidence and qualified measurements, record the bounded milestone and clear its completed checklist.
+Module 14 is complete within its bounded no-dictionary reference Greedy scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+The final evidence reconciliation is recorded in
+`docs/evidence/2026-10-13-greedy-closure.json`; correctness/platform qualifications
+and both measured campaigns are in `docs/reference-greedy-validation.md` and
+`docs/reference-greedy-benchmarks.md`. Complete upstream migration remains open.
 
 ## Module 15 preparation: bounded reference Lazy and Lazy2
 
-Module 14's immutable full matrix and measurements remain the current milestone
-gate. Source review and fixture preparation may proceed without changing its
-measured codec inputs. Do not enable new public strategies before their own
+Module 14's immutable full matrix and measurements are the completed predecessor
+gate. Preserve its measured codec inputs and permanent frame/owner baselines. Do not enable new public strategies before their own
 successor admission mapping and independent oracle checks.
 
 - [x] Review depth-one/two parsing, inclusive lookahead bounds, score arithmetic and shared ownership before implementation.

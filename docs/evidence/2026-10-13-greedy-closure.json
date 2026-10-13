@@ -1,0 +1,92 @@
+{
+  "campaigns": {
+    "clock-free": {
+      "evidence_sha256": "e3e1f28098b5c52080e7b5cc5818c2b625c7c1562bbce361f0920a3b09d40f11",
+      "source_entries_verified": 80
+    },
+    "repeat": {
+      "evidence_sha256": "f701b6f6badb124998c0da0e86dd372e5a006056ed7c1eb5ca8f0ba8fc3ac2bc",
+      "source_entries_verified": 80
+    },
+    "timed": {
+      "evidence_sha256": "91d9055c1a0baa0f0618fe25d8afe93385da1a9e612fbd2d7b294dec226f6b40",
+      "source_entries_verified": 80
+    }
+  },
+  "checked_artifacts": {
+    "greedy-baseline": {
+      "archive": "2026-10-12-greedy-baseline.tar.gz",
+      "archive_bytes": 25587,
+      "archive_sha256": "cc82030615d589778e8a467aba24b9fdf23078254268ddfa6e2b5089409f6d39",
+      "report_sha256": "9fee89583e9a7f20443e95d6590f8427658597a76cfb9c7cd1fab5b706905dad"
+    },
+    "greedy-clock-free": {
+      "archive": "2026-10-12-greedy-clock-free.tar.gz",
+      "archive_bytes": 20672495,
+      "archive_sha256": "2b4e46c113e24bc5e36ef7195de75dc4ad2b27fc202422539d6af8c673c788f3",
+      "report_sha256": "f578134a5e51dc4c1bc61fe379a5d9497bf6e71c2d2bac4e15b1bac796898e53"
+    },
+    "greedy-families": {
+      "archive": "2026-10-12-greedy-families.tar.gz",
+      "archive_bytes": 10550627,
+      "archive_sha256": "9e7df61bc5a604d7ba13a1b8d552f2ea5641b6351a71dd01b6952625b9cdd456",
+      "report_sha256": "4cefb5d7088ef582b4f1aa7ab3c42345160925e48a18635c0e95aea814713d0a"
+    },
+    "greedy-frame-projection": {
+      "report_sha256": "b87bb2dd505e6e7300e4a0404a9aa6fbbf348a5546e846582f06402a87c4d98c"
+    },
+    "greedy-frames": {
+      "archive": "2026-10-12-greedy-frames.tar.gz",
+      "archive_bytes": 55094419,
+      "archive_sha256": "9ac132b6a452fd545acc68e914e26b3a79479efadb84593b59d592be10e4ced3",
+      "report_sha256": "1f651ba1f968c881af306f75ca59c2c9eb6e0ba23c14b8708091aa03552680f7"
+    },
+    "greedy-matrix": {
+      "archive": "2026-10-12-greedy-matrix.tar.gz",
+      "archive_bytes": 625624,
+      "archive_sha256": "78685aac3d490b2799489a31c8961d8647a8d5a3624837b9fa2d03f46ba02404",
+      "report_sha256": "e6a56e3794672b2322e644e40ec2bbd7de692af7c4058a1f2182f1df242ea3d1"
+    },
+    "greedy-measurements": {
+      "archive": "2026-10-12-greedy-measurements.tar.gz",
+      "archive_bytes": 27911263,
+      "archive_sha256": "23ec2ba3db5353e48514c5dbeb42407a88adc1d0dc82cab8e121fe54b005b223",
+      "report_sha256": "04080340a54292c4f8b75cc9cf1ba97ac307f3ab3cbcf0d6cb55e7317d486508"
+    },
+    "greedy-platform": {
+      "archive": "2026-10-12-greedy-platform.tar.gz",
+      "archive_bytes": 1531205,
+      "archive_sha256": "27731f43af5873bc292e7e4ba1f191d2c246b370fc07a803b926dd80f5c099a4",
+      "report_sha256": "8db30ca7d666888862399b0809e3d7d4e20b762b758bb74be8a29fe769b71c9a"
+    },
+    "greedy-projection": {
+      "report_sha256": "caf085ff4372ae05495b66fdbcee62eb4b6c2a72b82fccf6f168fae44b03efd4"
+    },
+    "greedy-public-interop": {
+      "archive": "2026-10-12-greedy-public-interop.tar.gz",
+      "archive_bytes": 35003394,
+      "archive_sha256": "3440015eaf7d12504729b6cd225de36dec0543062c78bddb09381cf4deeefee8",
+      "report_sha256": "b793c63accfbd2fcd2c013028c4f872282662d8ccf23b8bcf52d9f7b84e24c9a"
+    },
+    "greedy-tiny": {
+      "archive": "2026-10-12-greedy-tiny.tar.gz",
+      "archive_bytes": 1140444,
+      "archive_sha256": "26b361a9b10bec58fd1f74d58eaa1146359a63c8b01683de07393e01fd918ccc",
+      "report_sha256": "cd9fd4d10a033073763004dc5ffe7a61e05ec39c9eff31da07cbdcfb6b5a3158"
+    },
+    "reference-admission-v3": {
+      "report_sha256": "5a021cdc0311444a94b11f945e6b0af9496c68f695d4415f9b6e8060e6b813c3"
+    },
+    "reference-greedy-plan": {
+      "report_sha256": "6267613b4fb641891c08515f02c2d3d32b25bb4780bc94d0a058150d180cfdee"
+    }
+  },
+  "complete_upstream_migration": false,
+  "date": "2026-10-13",
+  "delivered_source_matches_measured": true,
+  "matrix_inputs_verified": 1217,
+  "milestone": "Module14 bounded no-dictionary reference Greedy",
+  "qualification": "Closure of existing checked scope only. Archive hashes and unchanged matrix/measured inputs were rechecked; campaigns were not rerun. Historical checkpoints retain their original scope. Later additive benchmark and Lazy preparation files are not retroactively included in the immutable matrix. Numeric dictionaries/streaming, higher reference strategies, legacy decoding and other inventoried APIs remain open.",
+  "status": "passed",
+  "unfinished_upstream_source_units": 188
+}

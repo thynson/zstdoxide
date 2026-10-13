@@ -1,10 +1,18 @@
-# Bounded reference Greedy validation in progress
+# Bounded reference Greedy validation
 
-Module 14 is in progress. Direct and ordinary Greedy parsing, retained state
-and public bounded Greedy admission are implemented and checked below. Broader
-public C interoperability, platform/full-feature qualification and measurement
-remain open. The existing independent named Greedy policy retains its behavior.
-The sections below record successive checkpoints and their historical scope.
+Module 14 is complete within its bounded known-source, no-dictionary one-shot
+scope, reconciled on 2026-10-13. Direct/ordinary parsing, retained state, public
+admission, bidirectional C interoperability, platform/full-feature checks and
+both measurement campaigns have passed their qualified gates. The independent
+named Greedy policy retains its behavior. The sections below are chronological
+checkpoints: statements that work remained pending describe that checkpoint,
+not the final status. Complete upstream migration and the wider roadmap remain
+open, with 188 unfinished source units.
+
+The [closure reconciliation](evidence/2026-10-13-greedy-closure.json) binds the
+existing artifact chains and rechecks unchanged matrix and measured inputs.
+Measurements and their host/sampling limits are recorded separately in
+[the benchmark report](reference-greedy-benchmarks.md). Safe Rust remains default.
 
 ## Preserved behavior before implementation
 
@@ -304,7 +312,7 @@ are not stored as oracle expectations and establish no observed ordinary C
 behavior. Capture-controller review and actual normal/instrumented capture remain
 pending.
 
-## Remaining scope
+## Historical scope after direct validation
 
 Constructed direct states do not establish ordinary context/frame trajectories
 or automatic public branch selection. Ordinary retention/publication, public admission and related official assertions
