@@ -388,3 +388,19 @@ above 262,144 bytes select trees beyond local table caps. Strategies 7–9 remai
 unsupported. Exact source and focused logs are in
 `evidence/2026-10-13-tree-public.json` and its archive. Public C interoperability,
 final feature/platform checks and timing remain separate gates.
+
+## Final selected foreign and no-atomics checks
+
+Forty-four exact selected tests pass under strict-provenance Miri on i686
+(32-bit little endian) and s390x (64-bit big endian), safe and all features.
+The tree owner, malformed links, deferred sorting, boundaries and borrowed
+non-clone frame ownership are covered. Safe and all-leaf no_std thumbv6m library
+checks and concrete borrowed-allocator public tree caller code generation pass;
+the existing shared-dictionary type resolves to Rc without pointer atomics.
+This is interpretation/compilation, not native foreign or firmware execution.
+
+The external caller initially selected stable Cargo outside the repository and
+rejected `-Z build-std`. The v2 caller runner explicitly pins the nightly for all
+commands; failed logs and both runner versions are retained. Production code
+was unchanged. Evidence is in `evidence/2026-10-13-tree-platform-final.json` and
+`evidence/2026-10-13-tree-thumb.json`, with matching archives.
