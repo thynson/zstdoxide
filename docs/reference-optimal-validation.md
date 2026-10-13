@@ -42,3 +42,18 @@ hand-calculated prices. Safe/all strict Clippy and formatting pass.
 and complete logs. This additive test-only reader postdates the running immutable
 Module 16 matrix; its checks are recorded separately. It is not production Optimal
 price/search support.
+
+## Allocation-free scalar prices
+
+The preparatory scalar module matches all 1,420 captured C query triples in
+safe/all/release-all configurations. Nine focused tests also reject invalid
+lengths, zero encoded offsets, overflowing statistics and unreachable prices,
+while preserving empty literal and maximum finite boundaries. Strict safe/all
+Clippy, formatting and a standalone no_std compilation pass. The copied scalar
+price record contains no allocation or table ownership and has one safe value
+representation.
+
+Exact source and logs are in `evidence/2026-10-13-optimal-scalar.json`. The module
+is compiled through the focused harness and is not yet in the library module
+graph or public dispatch; frequency ownership and lifecycle integration follow.
+It is an additive Module 17 checkpoint outside the running Module 16 matrix.

@@ -1,0 +1,159 @@
+{
+  "archive": "2026-10-13-optimal-scalar.tar.gz",
+  "archive_bytes": 102481,
+  "archive_members": 19,
+  "archive_sha256": "7539155a8f2f0511ffb44e3679a6f6eb21c84ced497b8ffcae403251674d7613",
+  "captured_queries_per_configuration": 1420,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_optimal_prices"
+      ],
+      "exit_code": 0,
+      "label": "scalar-safe",
+      "log": "scalar-safe.log",
+      "seconds": 1.3510059581603855,
+      "sha256": "0d62c39da65b53dfb7fcccf5fa333f999d498d29cbadec98430fe7e99bfbafe3",
+      "tests": [
+        [
+          3,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--all-features",
+        "--test",
+        "reference_optimal_prices"
+      ],
+      "exit_code": 0,
+      "label": "scalar-all",
+      "log": "scalar-all.log",
+      "seconds": 0.8431787921581417,
+      "sha256": "5397fb47821920585b1f236157f8e98d9ca41e12912e4d154f530c1ab006c632",
+      "tests": [
+        [
+          3,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--release",
+        "--all-features",
+        "--test",
+        "reference_optimal_prices"
+      ],
+      "exit_code": 0,
+      "label": "scalar-release-all",
+      "log": "scalar-release-all.log",
+      "seconds": 0.9449021660257131,
+      "sha256": "2412f24642dd99f4c2a0852734dfe111fdfa6fd965bd87db06871652fba25384",
+      "tests": [
+        [
+          3,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_optimal_prices",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "label": "clippy-safe",
+      "log": "clippy-safe.log",
+      "seconds": 0.2666618328075856,
+      "sha256": "9cbd0755b64362d8076235c0f698876093298f813dfefa22fec5c9f22228fac3"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--test",
+        "reference_optimal_prices",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "label": "clippy-all",
+      "log": "clippy-all.log",
+      "seconds": 0.15045412490144372,
+      "sha256": "69e8830f55584b5b710855ddb3a384351823d602659e8a40ede6f2e0c36745c2"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "label": "format",
+      "log": "format.log",
+      "seconds": 0.7274533750023693,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "rustc",
+        "--edition=2024",
+        "--crate-type=lib",
+        "--crate-name=optimal_scalar_nostd",
+        "/tmp/zstdoxide-optimal-scalar-nostd.rs",
+        "-D",
+        "warnings",
+        "-o",
+        "/tmp/zstdoxide-optimal-scalar-checks/liboptimal_scalar_nostd.rlib"
+      ],
+      "exit_code": 0,
+      "label": "nostd-scalar",
+      "log": "nostd-scalar.log",
+      "seconds": 0.0857639170717448,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "qualification": "Allocation-free preparatory scalar module, compiled through focused harness and standalone no_std wrapper; not yet added to library module graph or public dispatch. Every captured C query matches in safe/all/release-all. Private copied value records need no artificial unsafe implementation. Outside running Module16 matrix.",
+  "source": {
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "Cargo.toml": "526c1a2582976d9f77702029df9a7ad34fb8845ee5a592f6805d992bb4c1cc05",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/optimal_price.rs": "52078b7ba903e9f5de17a6e4d09289418a4872361a4cb3c51e34bc93bb4f7142",
+    "tests/fixtures/reference-optimal-prices/cases.bin": "c15e68d7c570b262cd3efb2e0be021cca3d0fc83afe6c26eb3527805b67978a4",
+    "tests/reference_optimal_prices.rs": "b44f879904b1c11b7522d114a77a8e66ae820838493d29df99c6475c3891451f",
+    "tests/support/optimal_price_fixture.rs": "c3bc78c2614da2a7a33a2102c79082d9f0cc795584c0c16317ff05639f85a7fb"
+  },
+  "status": "passed",
+  "tests": 9
+}
