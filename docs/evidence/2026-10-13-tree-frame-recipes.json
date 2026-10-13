@@ -1,0 +1,41 @@
+{
+  "archive": "2026-10-13-tree-frame-recipes.tar.gz",
+  "archive_bytes": 18078,
+  "archive_members": 9,
+  "archive_sha256": "2ee3a514b953fd6a7ad0a78b61a434d33589342270de38df7020ec377f52526f",
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "scripts/check_tree_frame_recipes.py"
+      ],
+      "exit_code": 0,
+      "label": "normal",
+      "log": "normal.log",
+      "seconds": 3.775106707820669,
+      "sha256": "24c4b00254e6a2a97fb11ac8b9fe9c2020f090cc8cd5cab989b164ba454d0caa"
+    },
+    {
+      "argv": [
+        "python3",
+        "-O",
+        "scripts/check_tree_frame_recipes.py"
+      ],
+      "exit_code": 0,
+      "label": "optimized",
+      "log": "optimized.log",
+      "seconds": 3.4310652918647975,
+      "sha256": "24c4b00254e6a2a97fb11ac8b9fe9c2020f090cc8cd5cab989b164ba454d0caa"
+    }
+  ],
+  "malformed_rejections": 44,
+  "qualification": "Source-only protocol/recipe freeze before C execution; hypotheses are not observed parser behavior.",
+  "recipes": 245,
+  "source": {
+    "docs/reference-tree-frame-oracle.md": "4357ec5e4cf813a387bed53acb89a01e9fb048f1fe0607827d2a71b2b8715a34",
+    "scripts/check_tree_frame_recipes.py": "5eb2cfed52c665213c4536c13d0955ae74ad78ce503166b7e9a7a65e40530890",
+    "scripts/oracles/tree_frames.py": "7a4bdbc669c8d0a512870fd6198ae94e780af3f7540e265cea42c84cd1d28353",
+    "tests/fixtures/reference-tree-frame-recipes/recipes.json": "ce758ddf23bb87a8e4862e1c1b5ad251977d2c3d14436c51ad21cd7da019548e"
+  },
+  "status": "passed"
+}

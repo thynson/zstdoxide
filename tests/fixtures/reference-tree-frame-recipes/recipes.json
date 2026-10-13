@@ -1,0 +1,5304 @@
+{
+  "header_only": [
+    {
+      "completed_frame": false,
+      "pledge": 255,
+      "strategy": 6,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 256,
+      "strategy": 6,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 65791,
+      "strategy": 6,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 65792,
+      "strategy": 6,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 4294967294,
+      "strategy": 6,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 4294967295,
+      "strategy": 6,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 4294967296,
+      "strategy": 6,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 1024,
+      "strategy": 6,
+      "window_log": 10
+    },
+    {
+      "completed_frame": false,
+      "pledge": 1025,
+      "strategy": 6,
+      "window_log": 10
+    },
+    {
+      "completed_frame": false,
+      "pledge": 16384,
+      "strategy": 6,
+      "window_log": 14
+    },
+    {
+      "completed_frame": false,
+      "pledge": 16385,
+      "strategy": 6,
+      "window_log": 14
+    },
+    {
+      "completed_frame": false,
+      "pledge": 32768,
+      "strategy": 6,
+      "window_log": 15
+    },
+    {
+      "completed_frame": false,
+      "pledge": 32769,
+      "strategy": 6,
+      "window_log": 15
+    },
+    {
+      "completed_frame": false,
+      "pledge": 2097152,
+      "strategy": 6,
+      "window_log": 21
+    },
+    {
+      "completed_frame": false,
+      "pledge": 2097153,
+      "strategy": 6,
+      "window_log": 21
+    }
+  ],
+  "pins": {
+    "scripts/oracles/greedy_frame_floor_recipes.py": "e30cb2c60762b333d6e4b510e9c9a5384c43a20e93209e89d52716f099bae2c4",
+    "scripts/oracles/greedy_frames.py": "360bf5139b7e2a886e9d2359c1ea258317238bd1906cfe9d123be33df7a0ce44",
+    "scripts/oracles/tree_direct.py": "200c9491b82ae70598f7d5f0d375070ce858494f2c96304ba186329cd4f6d6f1",
+    "scripts/oracles/tree_families.py": "42292c72c63ed9572d44bfaf301922b8b8f29eb4f833721b7b866c3f1193b5f4",
+    "scripts/oracles/tree_validation.py": "59c16db4486f1a2f81eb995245c0c95cb8f07738edbe5792d5b54e00d7afcc9b"
+  },
+  "positive_calls": 531,
+  "protocol": "tree-ordinary-v1",
+  "recipe_count": 245,
+  "recipes": [
+    {
+      "hypothesis": "Complete empty frame without a parser candidate.",
+      "id": "bt_chain_empty",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [],
+      "selected_branch": "tree",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "First uniform block and candidate publication.",
+      "id": "bt_chain_first_uniform",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Zero calls preserve source and publication, including after the first block.",
+      "id": "bt_chain_zero_uniform",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        0,
+        4096,
+        0,
+        0
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Compressed/raw/RLE hypotheses and committed-repeat use after fallback.",
+      "id": "bt_chain_mixed_fallback",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 16384,
+      "source_sha256": "289bbc31ebe66b13dfb5ca9165eac6b113ea12bdd1f04f72e128960f659c3ada",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Incompressible first block retains sampled history for a later copy.",
+      "id": "bt_chain_raw_then_copy",
+      "parameters": [
+        14,
+        14,
+        12,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8192,
+      "source_sha256": "75b966e55bb2d0bc95ffb86366b3b4657c2534a71e3ec00a98d317d1c1132fa1",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Tiny stale scratch versus fresh candidates and distinct parser tail boundaries.",
+      "id": "bt_chain_tiny_stale",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        0,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8363,
+      "source_sha256": "90863e6847b2cd85bda306300eb855a6ac28ee56eae56ee0f2f8581bbc6ce5d2",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length1",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1,
+      "source_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length6",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        6
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 6,
+      "source_sha256": "17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length7",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        7
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 7,
+      "source_sha256": "57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length8",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        8
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8,
+      "source_sha256": "8a851ff82ee7048ad09ec3847f1ddf44944104d2cbd17ef4e3db22c6785a0d45",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length9",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        9
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9,
+      "source_sha256": "f8348e0b1df00833cbbbd08f07abdecc10c0efb78829d7828c62a7f36d0cc549",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length10",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        10
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 10,
+      "source_sha256": "1f825aa2f0020ef7cf91dfa30da4668d791c5d4824fc8e41354b89ec05795ab3",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length15",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        15
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 15,
+      "source_sha256": "7071fc3188fde7e7e500d4768f1784bede1a22e991648dcab9dc3219acff1d4c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length16",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        16
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 16,
+      "source_sha256": "be45cb2605bf36bebde684841a28f0fd43c69850a3dce5fedba69928ee3a8991",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length17",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        17
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 17,
+      "source_sha256": "3e5718fea51a8f3f5baca61c77afab473c1810f8b9db330273b4011ce92c787e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_chain_fresh_length18",
+      "parameters": [
+        14,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        18
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 18,
+      "source_sha256": "7a096cc12702bcfa647ee070d4f3ba4c2d1d715b484b55b825d0edba6545803b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_chain_prefix_length7",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        7
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4103,
+      "source_sha256": "1fd0b6d28694ea49a135ef1283c4ca6740e783c7d7a8d03db475a6053aa63511",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_chain_prefix_length8",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        8
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4104,
+      "source_sha256": "77134c1ac039a049cd35ce2310a35b74086b6b73d8fcae92b8451e53615ed7b5",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_chain_prefix_length9",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        9
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4105,
+      "source_sha256": "5a6c54c4bdec15ff8ea2464cd4b0acf233abcb91b0bfc2a96cadf02259457674",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_chain_prefix_length10",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        10
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4106,
+      "source_sha256": "1539f53fd5736b5657a9f9ed4197d20b6bb889ae1743b6858b999ae5034776ee",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_chain_prefix_length15",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        15
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4111,
+      "source_sha256": "1f2492a34c17c49894bb883180f61d254f89010a89402480f1196bfbbe61bc11",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_chain_prefix_length16",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        16
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4112,
+      "source_sha256": "785a3d1ae4ea7aad7b5ee09c035fce492f8ffe2a232c49caf9cf71d706349a44",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_chain_prefix_length17",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        17
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4113,
+      "source_sha256": "576b18d8e862cbec4d4460241082a827bee6a7ba08b6f7368fb575d8c833aa81",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_chain_ordinary_gap383",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        383,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 416,
+      "source_sha256": "92c268932feae674a802489e2ddeb1b67adaa1374718dc51e9376333233417ad",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_chain_ordinary_gap384",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        384,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 417,
+      "source_sha256": "527fe932142cfb6a5d8b86ec2241d716654491da981cd245be47bc2b6424ff29",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_chain_ordinary_gap385",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        385,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 418,
+      "source_sha256": "a88815af609dfe7c6835ceee0159f8bd6d576dd0bed2561a33415de7f5bd3256",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_chain_ordinary_gap575",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        575,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 608,
+      "source_sha256": "09406e4c7314d6130bee34812ec7234fe3df3e210ae9328694357f7c31177303",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_chain_ordinary_gap576",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        576,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 609,
+      "source_sha256": "10ff8ae40f160c6e3b01577e792658fdd94cc3bf498052db9496dc7aea516e85",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_chain_ordinary_gap577",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        577,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 610,
+      "source_sha256": "b7da24b06ef877262a02944ded84128dc185b9c45dd4c508a885004796936941",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_chain_width3",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_chain_width4",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_chain_width5",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_chain_width6",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_chain_width7",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "bt_chain_literal_target0",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "bt_chain_literal_target4",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        7,
+        4,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "bt_chain_literal_target131072",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        7,
+        131072,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k4_d128",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "5b683d7f57e253f12a46871da9463069b351ece2fda04e735ee2ff472cce601b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k4_d192",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "d08192cf925623a5102fa058070539b63ff19e54c1443f68226c613d2257b596",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k4_d256",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "878715b3d80fe00ac22e8962d53030e267420e628a3719c7f009e1cd58c66faa",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k4_d320",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "8b05f67e348080c30e58813840e360aabfdfa036479e84ad9484d99c4dd5091f",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k8_d128",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "35135bbf8081c272659d83893dcde848b97c66ad9bf4bee53ccf9eded8467b32",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k8_d192",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "ae886beedc2148218d0f263a51a11373cc222600870aa338fb47b882dd09979e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k8_d256",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "d575f31316458894017015155d62e537c1d890b8624dbd3da3ad1cf50477171c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k8_d320",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "61ec9d4bdf4be48f2a2dc37abfbcc0d8183a301a9520a8407f99d9d65ea2e23d",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k12_d128",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "cd14abb20c19b392770a273d3ae054c140079fb4ef4d3431e422fcf5a4cc1ebe",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k12_d192",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "a6a7e89cc40c5746dfc9d356af0643a337c8b9b689b85abf9d8a25d3aa4af44e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k12_d256",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "9e62e94382b17d27f3330977dc7b6aa8e9281687d95923e83688734a9c0205f7",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_chain_raw_candidate_k12_d320",
+      "parameters": [
+        14,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "846aa816de6bbc39506407309ccd2882683efef5cf8522257faa7d2913fdb035",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "bt_chain_layout_h6_c18",
+      "parameters": [
+        14,
+        6,
+        18,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "bt_chain_layout_h19_c6",
+      "parameters": [
+        14,
+        19,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "bt_chain_layout_h6_c7",
+      "parameters": [
+        14,
+        6,
+        7,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "bt_chain_layout_h7_c6",
+      "parameters": [
+        14,
+        7,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Incompressible skipping followed by a match resets the skipping flag.",
+      "id": "bt_chain_skip_then_period",
+      "parameters": [
+        14,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        8192
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8192,
+      "source_sha256": "1cb25c3b929dc1c6fa12a756f40b305fe7bb7475d2800da145fd133f3e61ce2b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Complete empty frame without a parser candidate.",
+      "id": "bt_row_empty",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [],
+      "selected_branch": "tree",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "First uniform block and candidate publication.",
+      "id": "bt_row_first_uniform",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Zero calls preserve source and publication, including after the first block.",
+      "id": "bt_row_zero_uniform",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        0,
+        4096,
+        0,
+        0
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Compressed/raw/RLE hypotheses and committed-repeat use after fallback.",
+      "id": "bt_row_mixed_fallback",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 16384,
+      "source_sha256": "289bbc31ebe66b13dfb5ca9165eac6b113ea12bdd1f04f72e128960f659c3ada",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Incompressible first block retains sampled history for a later copy.",
+      "id": "bt_row_raw_then_copy",
+      "parameters": [
+        15,
+        14,
+        12,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8192,
+      "source_sha256": "75b966e55bb2d0bc95ffb86366b3b4657c2534a71e3ec00a98d317d1c1132fa1",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Tiny stale scratch versus fresh candidates and distinct parser tail boundaries.",
+      "id": "bt_row_tiny_stale",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        0,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8363,
+      "source_sha256": "90863e6847b2cd85bda306300eb855a6ac28ee56eae56ee0f2f8581bbc6ce5d2",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length1",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1,
+      "source_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length6",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        6
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 6,
+      "source_sha256": "17e88db187afd62c16e5debf3e6527cd006bc012bc90b51a810cd80c2d511f43",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length7",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        7
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 7,
+      "source_sha256": "57355ac3303c148f11aef7cb179456b9232cde33a818dfda2c2fcb9325749a6b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length8",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        8
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8,
+      "source_sha256": "8a851ff82ee7048ad09ec3847f1ddf44944104d2cbd17ef4e3db22c6785a0d45",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length9",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        9
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9,
+      "source_sha256": "f8348e0b1df00833cbbbd08f07abdecc10c0efb78829d7828c62a7f36d0cc549",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length10",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        10
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 10,
+      "source_sha256": "1f825aa2f0020ef7cf91dfa30da4668d791c5d4824fc8e41354b89ec05795ab3",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length15",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        15
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 15,
+      "source_sha256": "7071fc3188fde7e7e500d4768f1784bede1a22e991648dcab9dc3219acff1d4c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length16",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        16
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 16,
+      "source_sha256": "be45cb2605bf36bebde684841a28f0fd43c69850a3dce5fedba69928ee3a8991",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length17",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        17
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 17,
+      "source_sha256": "3e5718fea51a8f3f5baca61c77afab473c1810f8b9db330273b4011ce92c787e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Fresh tiny entry with no prior prefix.",
+      "id": "bt_row_fresh_length18",
+      "parameters": [
+        15,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        18
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 18,
+      "source_sha256": "7a096cc12702bcfa647ee070d4f3ba4c2d1d715b484b55b825d0edba6545803b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_row_prefix_length7",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        7
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4103,
+      "source_sha256": "1fd0b6d28694ea49a135ef1283c4ca6740e783c7d7a8d03db475a6053aa63511",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_row_prefix_length8",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        8
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4104,
+      "source_sha256": "77134c1ac039a049cd35ce2310a35b74086b6b73d8fcae92b8451e53615ed7b5",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_row_prefix_length9",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        9
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4105,
+      "source_sha256": "5a6c54c4bdec15ff8ea2464cd4b0acf233abcb91b0bfc2a96cadf02259457674",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_row_prefix_length10",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        10
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4106,
+      "source_sha256": "1539f53fd5736b5657a9f9ed4197d20b6bb889ae1743b6858b999ae5034776ee",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_row_prefix_length15",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        15
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4111,
+      "source_sha256": "1f2492a34c17c49894bb883180f61d254f89010a89402480f1196bfbbe61bc11",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_row_prefix_length16",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        16
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4112,
+      "source_sha256": "785a3d1ae4ea7aad7b5ee09c035fce492f8ffe2a232c49caf9cf71d706349a44",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Retained-prefix entry at strict chain/row search-tail boundaries.",
+      "id": "bt_row_prefix_length17",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        17
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4113,
+      "source_sha256": "576b18d8e862cbec4d4460241082a827bee6a7ba08b6f7368fb575d8c833aa81",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_row_ordinary_gap383",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        383,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 416,
+      "source_sha256": "92c268932feae674a802489e2ddeb1b67adaa1374718dc51e9376333233417ad",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_row_ordinary_gap384",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        384,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 417,
+      "source_sha256": "527fe932142cfb6a5d8b86ec2241d716654491da981cd245be47bc2b6424ff29",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_row_ordinary_gap385",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        385,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 418,
+      "source_sha256": "a88815af609dfe7c6835ceee0159f8bd6d576dd0bed2561a33415de7f5bd3256",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_row_ordinary_gap575",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        575,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 608,
+      "source_sha256": "09406e4c7314d6130bee34812ec7234fe3df3e210ae9328694357f7c31177303",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_row_ordinary_gap576",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        576,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 609,
+      "source_sha256": "10ff8ae40f160c6e3b01577e792658fdd94cc3bf498052db9496dc7aea516e85",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Uniform repeat-first candidate may leave a frontier gap; observe ordinary adjustment separately from direct row update.",
+      "id": "bt_row_ordinary_gap577",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        577,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 610,
+      "source_sha256": "b7da24b06ef877262a02944ded84128dc185b9c45dd4c508a885004796936941",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_row_width3",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_row_width4",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_row_width5",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_row_width6",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Greedy clamped minimum-match dispatch across emitted/fallback blocks.",
+      "id": "bt_row_width7",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "bt_row_literal_target0",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "bt_row_literal_target4",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        7,
+        4,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Target length must not introduce Fast-only literal acceleration.",
+      "id": "bt_row_literal_target131072",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        7,
+        131072,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "2a04a53cfc6962505519105e40206aa250af174f6fb407555231d8a30892f706",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k4_d128",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "5b683d7f57e253f12a46871da9463069b351ece2fda04e735ee2ff472cce601b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k4_d192",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "d08192cf925623a5102fa058070539b63ff19e54c1443f68226c613d2257b596",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k4_d256",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "878715b3d80fe00ac22e8962d53030e267420e628a3719c7f009e1cd58c66faa",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k4_d320",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "8b05f67e348080c30e58813840e360aabfdfa036479e84ad9484d99c4dd5091f",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k8_d128",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "35135bbf8081c272659d83893dcde848b97c66ad9bf4bee53ccf9eded8467b32",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k8_d192",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "ae886beedc2148218d0f263a51a11373cc222600870aa338fb47b882dd09979e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k8_d256",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "d575f31316458894017015155d62e537c1d890b8624dbd3da3ad1cf50477171c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k8_d320",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "61ec9d4bdf4be48f2a2dc37abfbcc0d8183a301a9520a8407f99d9d65ea2e23d",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k12_d128",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "cd14abb20c19b392770a273d3ae054c140079fb4ef4d3431e422fcf5a4cc1ebe",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k12_d192",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "a6a7e89cc40c5746dfc9d356af0643a337c8b9b689b85abf9d8a25d3aa4af44e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k12_d256",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "9e62e94382b17d27f3330977dc7b6aa8e9281687d95923e83688734a9c0205f7",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Potential raw candidate changes pending repeats; preserve all non-witnesses.",
+      "id": "bt_row_raw_candidate_k12_d320",
+      "parameters": [
+        15,
+        18,
+        16,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        1024,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9216,
+      "source_sha256": "846aa816de6bbc39506407309ccd2882683efef5cf8522257faa7d2913fdb035",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "bt_row_layout_h6_c18",
+      "parameters": [
+        15,
+        6,
+        18,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "bt_row_layout_h19_c6",
+      "parameters": [
+        15,
+        19,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "bt_row_layout_h6_c7",
+      "parameters": [
+        15,
+        6,
+        7,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Independent owner extents and collision domains.",
+      "id": "bt_row_layout_h7_c6",
+      "parameters": [
+        15,
+        7,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Incompressible skipping followed by a match resets the skipping flag.",
+      "id": "bt_row_skip_then_period",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        8192
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8192,
+      "source_sha256": "1cb25c3b929dc1c6fa12a756f40b305fe7bb7475d2800da145fd133f3e61ce2b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "bt_row_search1",
+      "parameters": [
+        15,
+        10,
+        10,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "bt_row_search4",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "bt_row_search5",
+      "parameters": [
+        15,
+        10,
+        10,
+        5,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "bt_row_search6",
+      "parameters": [
+        15,
+        10,
+        10,
+        6,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "bt_row_search7",
+      "parameters": [
+        15,
+        10,
+        10,
+        7,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Row widths16/32/64 and capped visits across an ordinary context.",
+      "id": "bt_row_search29",
+      "parameters": [
+        15,
+        10,
+        10,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Inactive chain dimension must not allocate a chain owner.",
+      "id": "bt_row_unused_chain29",
+      "parameters": [
+        15,
+        10,
+        19,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4096,
+        4096,
+        4096
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 12288,
+      "source_sha256": "5f764e36a8f4cf70e5202915c6d2ed4ffa895c6946b5b3ccd71dab1b24829e01",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "A/B/A retained-prefix visibility versus window expiry.",
+      "id": "bt_row_window17",
+      "parameters": [
+        17,
+        18,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 393216,
+      "source_sha256": "b356eab1e165e29dca402be9992bea8b59557779b837c1057f3e94eae86dfcbb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "A/B/A retained-prefix visibility versus window expiry.",
+      "id": "bt_row_window19",
+      "parameters": [
+        19,
+        18,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 393216,
+      "source_sha256": "b356eab1e165e29dca402be9992bea8b59557779b837c1057f3e94eae86dfcbb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "A/1MiB-noise/A distinguishes retention across windows20/21.",
+      "id": "bt_row_window20",
+      "parameters": [
+        20,
+        19,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1310720,
+      "source_sha256": "db7f4665ab3d2824f5e9320a2109b577ee0d73ca0b0034f48522dee2bd422191",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "A/1MiB-noise/A distinguishes retention across windows20/21.",
+      "id": "bt_row_window21",
+      "parameters": [
+        21,
+        19,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1310720,
+      "source_sha256": "db7f4665ab3d2824f5e9320a2109b577ee0d73ca0b0034f48522dee2bd422191",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "A/2MiB-noise/A advances even the largest admitted prefix floor.",
+      "id": "bt_row_window21_expired",
+      "parameters": [
+        21,
+        19,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072,
+        131072
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2359296,
+      "source_sha256": "928507b1f4804e2c631e9ff6aba383149f7461e819a86a01336c48f657af9096",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Chain history expires at its largest automatic-branch window.",
+      "id": "bt_chain_window14_expired",
+      "parameters": [
+        14,
+        14,
+        14,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        16384,
+        16384,
+        16384
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 49152,
+      "source_sha256": "47231fcb8031de266c21d847ddce82c7f6cb563ae65de9fda0a48c3a7b4ca814",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Long match marker and block bound within an ordinary call.",
+      "id": "bt_row_long_match65535",
+      "parameters": [
+        17,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        65535
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65535,
+      "source_sha256": "0a16c4d556327894a2473b32b60cbce4b29c65b28c3a3d26f8018659a702ae56",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Long match marker and block bound within an ordinary call.",
+      "id": "bt_row_long_match65536",
+      "parameters": [
+        17,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        65536
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65536,
+      "source_sha256": "901505cd1d0725d2720de4f9fdc19f114a51d3c7389f033d5e94c9c02fb429a8",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Long match marker and block bound within an ordinary call.",
+      "id": "bt_row_long_match65543",
+      "parameters": [
+        17,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        65543
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65543,
+      "source_sha256": "1d6853537f8bf242c111c7caada8a3fc03c7f2032091b6cd1fbb1b40175e80cb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Long match marker and block bound within an ordinary call.",
+      "id": "bt_row_long_match131072",
+      "parameters": [
+        17,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        131072
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 131072,
+      "source_sha256": "c50203ed1ac20b625efec53ecb97fec0e7929f304551dccf8bc827c7aab45b8d",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Potential extended literal length followed by a periodic match.",
+      "id": "bt_row_long_literals",
+      "parameters": [
+        17,
+        12,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        69632
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 69632,
+      "source_sha256": "cd74cb27f6f97d8ed7ff29c27b4b30d73a4acf4e2dd35a5acbbe58e725001008",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_chain_window_floor_tiny1",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        1,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2082,
+      "source_sha256": "7431cbc09ff958f308d1cc71bace03e1e88a1b27318b868e0b34e39992000c64",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_chain_window_floor_tiny2",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        2,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2083,
+      "source_sha256": "f665cce3daaa894eb60051a196d913422b7071f57ececbefd08523e4a711f2a6",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_chain_window_floor_tiny3",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        3,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2084,
+      "source_sha256": "1320e5beda87ef09701d7b9762d5b77900b65f6343a8f33fcc3ca09ca16eb030",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_chain_window_floor_tiny4",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        4,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2085,
+      "source_sha256": "bbc458bf093f4432c1dae7ac11ad8c5c8928e9990cb5df87b60a43b4606f307f",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_chain_window_floor_tiny5",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        5,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2086,
+      "source_sha256": "99e7b7cddc4be32f87e90486b910baab14e4d017c380a82565621c67c8efab92",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_chain_window_floor_tiny6",
+      "parameters": [
+        10,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        6,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2087,
+      "source_sha256": "26f58b956f07663133f84fa422d1a3ac5dc33faa3e6e906acb3a9a86e8def63f",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_row_window_floor_tiny1",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        32768,
+        32768,
+        1,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65570,
+      "source_sha256": "b7dc1d32a3e107d2205159af9e752f5080bd153f149e4463e3691240ad34d7dc",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_row_window_floor_tiny2",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        32768,
+        32768,
+        2,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65571,
+      "source_sha256": "54d55ab031f97fc255782e742114d4dc5209640fc4783e7fb53c065b097e648e",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_row_window_floor_tiny3",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        32768,
+        32768,
+        3,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65572,
+      "source_sha256": "e0dfe4528a171e62460af6b24c58e3c8c6eab8c087f22ff49a391793b620ec7b",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_row_window_floor_tiny4",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        32768,
+        32768,
+        4,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65573,
+      "source_sha256": "bfb714385b3ffaf98adc178dd330148c64a9d7888551472686fc40087f109189",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_row_window_floor_tiny5",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        32768,
+        32768,
+        5,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65574,
+      "source_sha256": "9ab16dc34b141f9c37324cf95a3ba4051eb9110207061c80e4e6133188cad60c",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Two uniform window-sized blocks may leave the frontier below the next tiny-call floor; observe clamp without parser work, then resume fresh search.",
+      "id": "bt_row_window_floor_tiny6",
+      "parameters": [
+        15,
+        10,
+        10,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        32768,
+        32768,
+        6,
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 65575,
+      "source_sha256": "6750d5c26266bd6e25be18017f405d81a109e8625b215933e856bdad586d70e1",
+      "whole_compare": false
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_noise_tail_8",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        8
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 8,
+      "source_sha256": "536ffca17b144d2b03173b3bacd9c74ad8b6571b87e270c0878c2d675b969019",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_noise_tail_9",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        9
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 9,
+      "source_sha256": "8980575de3cb14a8e9656be15ffb015b924eaba87c83435d48d7bc28185d78fa",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_noise_tail_15",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        15
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 15,
+      "source_sha256": "97664a6fb3eeb4d8e082c81d9fc569f1176b58c852bdd9d6d620366daca3048c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_noise_tail_16",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        16
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 16,
+      "source_sha256": "e0bc806408b158afe00c341eaccdc97b2cea85ee114acd7bd4c976bc65c8a473",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_noise_tail_17",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        17
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 17,
+      "source_sha256": "33af7df3664a3371b6224fae3c45f734bd80f7120fbae96289b4bfb17cc11fd4",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_noise_tail_31",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        31
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 31,
+      "source_sha256": "f2861dd5521bf57a2bd41252ccaa438e6978adf7dfeb1853f14e1b780df0e58c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_noise_tail_32",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        32
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 32,
+      "source_sha256": "d3e025433ebbb5c2e079110734fede41d9d950b01556b17fc74d2632c1efdff1",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_noise_tail_33",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        33
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 33,
+      "source_sha256": "5f885f39ed91b2880ec3e165b723b3d507b0bcbfbca96b9f80b4cc1a3ab249bf",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_equal_end_min_3",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        128
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 128,
+      "source_sha256": "6836cf13bac400e9105071cd6af47084dfacad4e5e302c94bfed24e013afb73e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_equal_end_min_4",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        128
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 128,
+      "source_sha256": "6836cf13bac400e9105071cd6af47084dfacad4e5e302c94bfed24e013afb73e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_equal_end_min_5",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        128
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 128,
+      "source_sha256": "6836cf13bac400e9105071cd6af47084dfacad4e5e302c94bfed24e013afb73e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_equal_end_min_6",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        128
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 128,
+      "source_sha256": "6836cf13bac400e9105071cd6af47084dfacad4e5e302c94bfed24e013afb73e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_equal_end_min_7",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        128
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 128,
+      "source_sha256": "6836cf13bac400e9105071cd6af47084dfacad4e5e302c94bfed24e013afb73e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_unsorted_budget_1",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        384
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 384,
+      "source_sha256": "842bdcffd238350456bf8a76f4c0ead9442c63b09c7c8437f51dcea57ab77ceb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_unsorted_budget_2",
+      "parameters": [
+        10,
+        6,
+        6,
+        2,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        384
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 384,
+      "source_sha256": "842bdcffd238350456bf8a76f4c0ead9442c63b09c7c8437f51dcea57ab77ceb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_unsorted_budget_4",
+      "parameters": [
+        10,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        384
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 384,
+      "source_sha256": "842bdcffd238350456bf8a76f4c0ead9442c63b09c7c8437f51dcea57ab77ceb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_unsorted_budget_8",
+      "parameters": [
+        10,
+        6,
+        6,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        384
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 384,
+      "source_sha256": "842bdcffd238350456bf8a76f4c0ead9442c63b09c7c8437f51dcea57ab77ceb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_ring_noise_6",
+      "parameters": [
+        17,
+        6,
+        6,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        88
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 88,
+      "source_sha256": "6d1298687363e7672e653cf5a31d8a42d9cc05c7c35c7aea516f81252f9590b4",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_ring_noise_7",
+      "parameters": [
+        17,
+        6,
+        7,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        152
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 152,
+      "source_sha256": "111a699ab35f2d001a8fa1ab82526082287dbbf6f4314e135f394b409034e91c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_ring_noise_8",
+      "parameters": [
+        17,
+        6,
+        8,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        280
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 280,
+      "source_sha256": "d21659cb64a1b36856cf1d58d78ea0ca964461d589a6074f89a9407d7520acba",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_ring_noise_12",
+      "parameters": [
+        17,
+        6,
+        12,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4120
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4120,
+      "source_sha256": "20991055f16e22a61c18212a0d29c0b736d40290f00b193b2e6de5f9ba64237c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_lexical_ascending",
+      "parameters": [
+        10,
+        6,
+        8,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        576
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 576,
+      "source_sha256": "75588d23d37a72529881a7d18198873083d2e441322baf3a1bc106a0cb637d0c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_lexical_descending",
+      "parameters": [
+        10,
+        6,
+        8,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        576
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 576,
+      "source_sha256": "5ea0eaa471676f95ef4b8349106361a4103291705f0bb078acd8353bf93cc716",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_lexical_alternating",
+      "parameters": [
+        10,
+        6,
+        8,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        576
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 576,
+      "source_sha256": "87ad39f3be104e18f19aa737ad75c3ed9fb0e42592a3317ffc6ee352d56e2df0",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_window_floor_10",
+      "parameters": [
+        10,
+        6,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        144
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1168,
+      "source_sha256": "8239ad3b5fcedb76e421188aca7f4644c788205e83713ddabcba7b176b81000d",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_window_floor_11",
+      "parameters": [
+        11,
+        6,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2048,
+        144
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2192,
+      "source_sha256": "d5e5102dce079ae9c581bac526e019a3659fb5985618bba9ba651549f04e047e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_hash_layout_6",
+      "parameters": [
+        10,
+        6,
+        8,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        520
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 520,
+      "source_sha256": "e379d88c9634cac2a95f12450b9d3053e609d04b777056c6f190d3414dc08c30",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_hash_layout_9",
+      "parameters": [
+        10,
+        9,
+        8,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        520
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 520,
+      "source_sha256": "e379d88c9634cac2a95f12450b9d3053e609d04b777056c6f190d3414dc08c30",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_hash_layout_12",
+      "parameters": [
+        10,
+        12,
+        8,
+        4,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        520
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 520,
+      "source_sha256": "e379d88c9634cac2a95f12450b9d3053e609d04b777056c6f190d3414dc08c30",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tiny_maximum_operation_count",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        263
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 263,
+      "source_sha256": "56313a53aff2d8bd5c6897c62b16b4736f46a9a8208b87d03ce8ecbba0161bcb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near28_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "d62ec72873092dfa443864ec301af0ead870fc178f8af74f22c771251d5826a9",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near28_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "18fd46b0a8f6e2c1b683a88f271d5650ae4df70684a6ce85ea5b9c7aa98bc6f7",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near28_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "9ae3ae7976531bf3188e8fe5bfba385dce071f399fafa9441fe5ce44d8275d34",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near29_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "d34d56e34608edb8e138c202b070874de5fedb1f6decb981b82e9a4bc99ea60c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near29_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "855b4e7d5fe6bc5f87c6117f6923c026cb3d6f30e58e03faf21f33d421f9c78d",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near29_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "876911198827e59a50444fd3bf15b6a2a09dafd94b96a4d1402d755063611d05",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near61_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "4aecebdbf7e615c6562b501b0cd542f32001009c0eb597cc7b02f0786879e33e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near61_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "759e01bec24498c653adfed8b0ac35dd86ae8042a9d0b0e74a452e86571b6a9d",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m3_near61_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "62be4b702fe1d891fd927e5690cf3ade9c30e8547dc89f9d24d25d9fbb63454e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near28_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "89e2219627d9086935a836a2653d8a0f11823f6f291567b2cf8ffba947af3a6b",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near28_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "2aecc80b6cf5ae4293e8aba404c2084fd7ccc9fb567d923126a850fd7bee46fc",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near28_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "3bead93fd0ebb8629cd1fcbf8668fd7cfce82dbdffc4165c26b8bdba7eeac4b6",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near29_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "63bd285aa5fef2d2823ae9ab167bc0dc23bb99a01e2ba8aec6d53c4a53d7caa1",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near29_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "54e9b04134f6bb516722d11991a6390feaf084ecba2419acb29001a8b8829576",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near29_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "1f43198c91171e071cf2badb90abd1249dafec84f02b535ffaa9a95277642f59",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near61_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "8b5f8ec5af2f49dccd26755715b0270ebb6278f8196ab5086b53491fd5728f41",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near61_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "74f9f257e0735b8ffc4e19689d5f1a160d8a69ca434495269e453a44d9ef92c6",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m4_near61_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "fc5cd4eff413d505ded8a6f032450d9f5d41e0aa555c27435f8181d04f1a53c7",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near28_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "4a3cabd21efc78a4112b60ec9502be0fb982fdc10e90473d5e047d9ca9a7abbb",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near28_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "37c134022ee92d49d1e299de428bdc64e398fa30cb08f6433e1424a22146edf0",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near28_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "71c6b31cb7c48c8715db7921700385bf6f74054a13375880dd4a1b9937dac969",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near29_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "c59c474bc5caeb9cc24d13f21619a35eb629ab4212d6cc02948b34fc3a368419",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near29_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "e575311cf02f2dc10fb460ebb5daa346b6034189f33b74b66e68b785752bd6d0",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near29_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "bb767b3ddcd3eef95cb3553d916ad238961ec6d427e9cb44a1d219418047a02b",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near61_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "4897b52d2668c36fc5256ea6f37389a0485e276e024a9fc922763db54f0600e1",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near61_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "e496af4b1a6e5b10bbd2fc63900229ddef7c490bf82bfdde08fe7b711c77135c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m5_near61_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "44819059e4a0dab33458fca73f98db7504e157d5639be45684a240baaea7071b",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near28_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "0f64b51be8e1842386b6c2ae0043c87ffe4b9add68fa4598818f6a7e5416abed",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near28_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "da464550e957b60cd4ff1f68b526dfa6d4bc2eaf63c84b00156fbd2066948c2d",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near28_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "76ac62c6f4dd0fce5ce02f17741bcc18b138e6a113269a16e2684a2a8dc30493",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near29_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "d43e2d47c69419ca740bfed337a8e948d103c33f3adefc7a3a4f1c2e99c7cb6e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near29_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "5807470c51e771756ca4d0ad7fa1cc12996798a8b45d84d09f815e1ce5cf6194",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near29_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "fe0398c3e2b2e84778a7aec7263df8b76673705422597b76f26d49951b5272e4",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near61_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "3c9ec60c4484dfa498d355d96849f03a7135aa2eaaa2d0f42a0eaa519acfa990",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near61_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "cad705b42ad07690b3e8d2e352f88f2dc691aef552cbf9013b8d31366f8c65e4",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m6_near61_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "4d9583b98d040cad752e2d5e55b1dd2e6b69cdc9b0dbbab9fd8771b54c646855",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near28_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "f8b54456e10f7bfe93c9a33ccaa436e44125bffcd1d8a79d9984aadd2dd1002c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near28_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "148a228b285ef3bdcc87f1b4b67e473721f1505780f48d919b53431a95df0a17",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near28_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "0e1dd61db25727a216bf8ed3d9e654da9c4f4eaf4e5620f8ace46a0a0ea6828c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near29_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "9d9d4505d6a522795bf6d7a6824a63538208c0b8ca05659f6cc2e0a9d4696c79",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near29_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "56db6a387f21e8b97b01fa99d3844457b065ab5c321e9bab3a7c52e930c7b754",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near29_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "9642de807365c8ad015667e28e0676d425a6ba466bc01b6f4a4e482a44366df0",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near61_far255",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "f9d04efaaa87f6666d243649f0f836e7f0cb5da9f79d3736771cd584872f1f75",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near61_far511",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "de86f2a22adad8d2f2bf06d384fd4ddb908fbac6bede2dea7b087bfe9f40b190",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_cost_m7_near61_far1023",
+      "parameters": [
+        13,
+        10,
+        12,
+        8,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        4224
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4224,
+      "source_sha256": "4ce404dc3fcadcf22fe387982e5fbcf77bf906a2695ffc4f893c3297ad8d7c5b",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c6_distance30",
+      "parameters": [
+        12,
+        10,
+        6,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "e88034cf4d8bfc41cd0c92aa31225a08b833f006f7fae9d12897f300119894cf",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c6_distance31",
+      "parameters": [
+        12,
+        10,
+        6,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "53385c5fb5171461a534a6707f0c8a00db68c6706279bd1cfbdd35db111fd955",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c6_distance32",
+      "parameters": [
+        12,
+        10,
+        6,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "8208f7316271984e6deb43f4947390d2624f761663f46c98494c7ecf6b0c9d22",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c6_distance64",
+      "parameters": [
+        12,
+        10,
+        6,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "e21681e003aa13f5c83eacdf60409616834bab22f7a6b44aab7535995c6d34a8",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c7_distance62",
+      "parameters": [
+        12,
+        10,
+        7,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "d6eefe9e7059bd4bab49e2c79988eb5d364319af2ae3ef49ee75dd3e6d556f2c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c7_distance63",
+      "parameters": [
+        12,
+        10,
+        7,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "6b6cfadf5028fe3660b05102dcc9d538bc380a88c3f1729e794843316d4a1926",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c7_distance64",
+      "parameters": [
+        12,
+        10,
+        7,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "8ccad4c8205a365bda78e4e4f0ecb8c1d5aab4b3bf8ea7173db44af94332e61f",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c7_distance128",
+      "parameters": [
+        12,
+        10,
+        7,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "3fdda68d41c3edd1638637db6c1dda40ede1bee0e3d83b5fa0a0e566ef0a7376",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c8_distance126",
+      "parameters": [
+        12,
+        10,
+        8,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "27d091f370da83663419b34d7c8d54f596dbb456f32e51dde0ee3b5bcc6a1af3",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c8_distance127",
+      "parameters": [
+        12,
+        10,
+        8,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "a7cea82f3d002c4b8634e5a3c2f9551f57c16b793c1f05bebc17d61b82e55a38",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c8_distance128",
+      "parameters": [
+        12,
+        10,
+        8,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "bb2f0c9f628b45253739e073b6eaf88c0cd8d277658f98656b7d9c156e16fcbe",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_ring_c8_distance256",
+      "parameters": [
+        12,
+        10,
+        8,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2176
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2176,
+      "source_sha256": "67e157ae615ce45d5232f3224771cfd1a8e291aa78a467e06fedffe222fa85ff",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_window_w10_distance1023",
+      "parameters": [
+        10,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        144
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2192,
+      "source_sha256": "e7ea5730aecef194d0630f11292df2cb9ee658a7379c288782c4aebc3d18afd1",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_window_w10_distance1024",
+      "parameters": [
+        10,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        144
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2192,
+      "source_sha256": "6db9a215f48bb80dd639419c2d1494b63bf0e2aaf7c2ba957fca83ea51f65471",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_window_w10_distance1025",
+      "parameters": [
+        10,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        144
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 2192,
+      "source_sha256": "f4b60d9538a1ef629d8410e3cd151bf1c924543c2a7afab57f9c8dae9e83f39a",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_window_w11_distance2047",
+      "parameters": [
+        11,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2048,
+        2048,
+        144
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4240,
+      "source_sha256": "a7c5b31bd59835f704af3596b2490ceb95666ab5aeaab21d32f5c37f957c0e15",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_window_w11_distance2048",
+      "parameters": [
+        11,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2048,
+        2048,
+        144
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4240,
+      "source_sha256": "e6cc792c804b0a70c5601129e7ee3eb60578b64add2a7977042ad96ceaf7be4c",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_window_w11_distance2049",
+      "parameters": [
+        11,
+        10,
+        12,
+        8,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        2048,
+        2048,
+        144
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4240,
+      "source_sha256": "38046f4a8bf26087e1bc71fdb54f626c4759712f6e2465350cf38cd22df6c293",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tail_match_m3",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        72
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 72,
+      "source_sha256": "6f2e6ec7770b687fedd0d1c72c53bf8acaba0180f201f2531a281259e0e1d6c9",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_periodic_frontier_m3",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "c393ced093ca9c084540617a30c89b099d9c0d06b30048e90b199072d4ba2297",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tail_match_m4",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        72
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 72,
+      "source_sha256": "a7b5133f54cca6419180e408a16fbb43eb09522ed411c87cb497d988d47db77a",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_periodic_frontier_m4",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "c393ced093ca9c084540617a30c89b099d9c0d06b30048e90b199072d4ba2297",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tail_match_m5",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        72
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 72,
+      "source_sha256": "b3468e036ac0e266fd6fb75108bc5b8ff26b3de7cbd7d0eb332f9317e13076b9",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_periodic_frontier_m5",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        5,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "c393ced093ca9c084540617a30c89b099d9c0d06b30048e90b199072d4ba2297",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tail_match_m6",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        72
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 72,
+      "source_sha256": "c96e25aa2b971f66e80841180561686e96b9a9f9da1775c1d5cce98d5f21264e",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_periodic_frontier_m6",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        6,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "c393ced093ca9c084540617a30c89b099d9c0d06b30048e90b199072d4ba2297",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_tail_match_m7",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        72
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 72,
+      "source_sha256": "9bd818c8509bfbd6c5f5ffda0b0eaf231482955650e2774ce03d660497cd58fe",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Direct-search source under ordinary prefix sampling; no seeded tables or promised parser branch.",
+      "id": "bt_direct_periodic_frontier_m7",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        7,
+        0,
+        6
+      ],
+      "schedule": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 4096,
+      "source_sha256": "c393ced093ca9c084540617a30c89b099d9c0d06b30048e90b199072d4ba2297",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Private maximum owner/search and target/minimum equivalence hypotheses.",
+      "id": "bt_bounds_w21_h19_c19_s8_m3_t0",
+      "parameters": [
+        21,
+        19,
+        19,
+        8,
+        3,
+        0,
+        6
+      ],
+      "schedule": [
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1024,
+      "source_sha256": "418ab85d953ad5bbc39f7104f1eca2c8792c3bbbb6edf2b4f24f1a36eeb1b861",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Private maximum owner/search and target/minimum equivalence hypotheses.",
+      "id": "bt_bounds_w21_h19_c19_s8_m7_t131072",
+      "parameters": [
+        21,
+        19,
+        19,
+        8,
+        7,
+        131072,
+        6
+      ],
+      "schedule": [
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1024,
+      "source_sha256": "418ab85d953ad5bbc39f7104f1eca2c8792c3bbbb6edf2b4f24f1a36eeb1b861",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Private maximum owner/search and target/minimum equivalence hypotheses.",
+      "id": "bt_bounds_w10_h6_c6_s1_m4_t1",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        1,
+        6
+      ],
+      "schedule": [
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1024,
+      "source_sha256": "418ab85d953ad5bbc39f7104f1eca2c8792c3bbbb6edf2b4f24f1a36eeb1b861",
+      "whole_compare": true
+    },
+    {
+      "hypothesis": "Private maximum owner/search and target/minimum equivalence hypotheses.",
+      "id": "bt_bounds_w15_h12_c19_s8_m5_t65536",
+      "parameters": [
+        15,
+        12,
+        19,
+        8,
+        5,
+        65536,
+        6
+      ],
+      "schedule": [
+        1024
+      ],
+      "selected_branch": "tree",
+      "source_bytes": 1024,
+      "source_sha256": "418ab85d953ad5bbc39f7104f1eca2c8792c3bbbb6edf2b4f24f1a36eeb1b861",
+      "whole_compare": true
+    }
+  ],
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "scheduled_calls": 539,
+  "schema_version": 1,
+  "source_bytes": 7640096,
+  "status": "source-only pre-execution hypotheses",
+  "whole_comparisons": 120
+}
