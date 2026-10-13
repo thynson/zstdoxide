@@ -688,3 +688,22 @@ compile using levels 5/6, explicit Lazy/Lazy2, borrowed allocator owners and the
 non-atomic fallback. Both retained artifacts were located by their original
 hashes and archived. This establishes caller code generation, not a linked
 firmware image, execution on hardware, or fit in a particular device's memory.
+
+## Immutable full feature matrix
+
+The [matrix report](evidence/2026-10-13-lazy-matrix.json) preserves seventeen
+complete suites: safe, each of fourteen unsafe leaves, all features in debug
+and all features in release. Each reports 1,136 passed, zero failed and 54
+explicit ignores: 19,312 passing executions and 918 ignored executions in total.
+Sixteen std-disabled configurations compile, with all leaves explicitly named
+for the combined no_std check. Safe/all strict Clippy, formatting, thirteen
+allocator-helper tests and 22 registered documentation examples per mode pass.
+The required-complete official migration gate deliberately remains failing with
+188 unfinished source units; that expected result is retained, not promoted to
+a migration success.
+
+All 1,291 pre-existing codec, test, script and dependency inputs match the
+immutable snapshot. Later additive Module 16 baseline tests and direct-tree
+capture/projection/reader work have their own focused qualifications. They are
+not retroactively included in these seventeen suites. The separately versioned
+public tuple auditor also retains its own original and forged-capture evidence.
