@@ -80,6 +80,7 @@ successor admission mapping and independent oracle checks.
 - [x] Add a checked Rust ordinary fixture adapter with independent replay and predecessor controls.
 - [x] Register ordinary Lazy replay and projection checks in the standard check driver.
 - [x] Retain shared lazy-family state across blocks with exact owners, tiny handling and failure poisoning.
+- [x] Correct all-feature/no_std evidence classification and check all fourteen unsafe leaves with std disabled.
 - [ ] Integrate private frame dispatch and transactional entropy/repeat publication while retaining every prior complete frame and allocation baseline.
 - [ ] Freeze successor admission mappings over all unchanged selector, numeric-loop and historical interoperability inputs.
 - [ ] Enable bounded public Lazy/Lazy2 requests and document exact source-dependent level/resource behavior.

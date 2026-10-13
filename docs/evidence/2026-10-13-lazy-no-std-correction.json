@@ -1,0 +1,24 @@
+{
+  "archive": {
+    "bytes": 592,
+    "members": 2,
+    "path": "docs/evidence/2026-10-13-lazy-no-std-correction.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "2d9ad818973cf9df2fa5f5b96774d264c3fa2964b7717d8ac3da52c45cf1c6d1"
+  },
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--features",
+        "unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-reference-chain,unsafe-row-table,unsafe-dictionary,unsafe-training"
+      ],
+      "log": "all-unsafe.log",
+      "status": 0
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "test_results": []
+}

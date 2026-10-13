@@ -354,7 +354,7 @@ Five parser tests pass on safe, isolated reference-chain, isolated row-table and
 all-feature configurations. Allocation-failure/invalid-entry controls include
 both depths; borrowed non-Clone owner reuse is checked against four depth-tagged
 long-literal observations with no new requests on the second parse. Strict
-safe/all all-target Clippy, four no_std builds and formatting pass. The broad
+safe/all all-target Clippy, three no_std builds plus an all-feature build and formatting pass. The broad
 Greedy selection passes 57 tests on each safe/all build, including the permanent
 ordinary frames and allocation failure campaign. After extending the owner
 reuse test, all focused checks were rerun on the final source. The
@@ -375,7 +375,7 @@ explicit penalty, inclusive final probe and restart-at-depth-one behavior.
 All 13 commands in `docs/evidence/2026-10-13-lazy-two.tar.gz` pass. Seven parser
 tests run on safe, isolated reference-chain, isolated row-table and all features;
 allocation rejection and non-Clone owner reuse cover all three depths. Strict
-safe/all all-target Clippy, four no_std builds and formatting pass. The broader
+safe/all all-target Clippy, three no_std builds plus an all-feature build and formatting pass. The broader
 Greedy regression selection passes 59 tests each on safe/all builds, preserving
 ordinary frames, publication and allocation failure controls. This completes the
 direct parser work only: ordinary Lazy trajectories, frame dispatch, public
@@ -484,7 +484,7 @@ Five tests pass on safe, isolated reference-chain, isolated row-table and all
 features. The five shared Greedy reader tests and nine permanent Greedy complete
 frame/owner defaults also pass on safe/all: 48 test executions total, no failures
 or ignored tests. All sixteen focused commands pass, including strict safe/all
-all-target Clippy, four no_std builds, formatting and diff checks. Exact sources
+all-target Clippy, three no_std builds plus an all-feature build, formatting and diff checks. Exact sources
 and logs are retained in `docs/evidence/2026-10-13-lazy-frame-reader.json` and its
 archive. This verifies the reader/decoder and common storage contracts; retained
 ordinary Lazy parsing and private/public frame integration remain later gates.
@@ -506,7 +506,7 @@ either scratch failure, either table failure, non-clone owners and mismatched
 source/geometry are checked for all three depths and both branches. Seven plan
 tests and nine permanent Greedy frame/owner baselines pass on safe/all. All
 sixteen focused commands pass, including formatting, strict safe/all all-target
-Clippy, four no_std builds and diff checks. Evidence is in
+Clippy, three no_std builds plus an all-feature build and diff checks. Evidence is in
 `docs/evidence/2026-10-13-lazy-state.json` and its read-back archive. Full private
 frame/public admission and complete feature/platform/timing gates remain open.
 
@@ -519,3 +519,16 @@ reconstruction. All five commands, shell syntax and diff checks pass; logs are
 in `docs/evidence/2026-10-13-lazy-frame-driver.json` and its archive. This is
 focused registration evidence, not a claim that the complete standard matrix
 has run for the new module.
+
+
+## no_std evidence correction
+
+Review found that the early depth-one, depth-two, ordinary-reader and retained
+state runners used `--no-default-features --all-features` for their final
+compilation. Cargo's `--all-features` also enables `std`; those commands passed
+but were not all-unsafe no_std checks. Their immutable logs remain unchanged and
+the summaries above now distinguish three actual no_std checks from that
+all-feature build. A new successful command explicitly enables the fourteen
+unsafe leaves while leaving `std` disabled, retained in
+`docs/evidence/2026-10-13-lazy-no-std-correction.json` and its archive. The final
+matrix will use the same explicit leaf list for its all-unsafe no_std entry.
