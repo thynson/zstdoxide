@@ -1,0 +1,84 @@
+{
+  "archive": {
+    "bytes": 1786,
+    "members": 9,
+    "path": "docs/evidence/2026-10-13-lazy-frame-driver.tar.gz",
+    "readback": "All members compared with originals.",
+    "sha256": "145ad957a57c0833f61a825e9bae665ba329c2ba5061d4088384d12c26bccec0"
+  },
+  "commands": [
+    {
+      "command": [
+        "sh",
+        "-n",
+        "scripts/check.sh"
+      ],
+      "log": "00.log",
+      "returncode": 0,
+      "seconds": 0.005106210708618164
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_lazy_frame_recipes.py",
+        "--check",
+        "--controls"
+      ],
+      "log": "01.log",
+      "returncode": 0,
+      "seconds": 1.4385461807250977
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_lazy_frame_validator.py",
+        "--check"
+      ],
+      "log": "02.log",
+      "returncode": 0,
+      "seconds": 78.24343276023865
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/capture_lazy_frames.py",
+        "--check-plan"
+      ],
+      "log": "03.log",
+      "returncode": 0,
+      "seconds": 2.34768009185791
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_lazy_frames.py",
+        "--check"
+      ],
+      "log": "04.log",
+      "returncode": 0,
+      "seconds": 137.6964738368988
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/pack_lazy_frame_trajectories.py",
+        "--check"
+      ],
+      "log": "05.log",
+      "returncode": 0,
+      "seconds": 137.76306796073914
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "log": "06.log",
+      "returncode": 0,
+      "seconds": 0.02465987205505371
+    }
+  ],
+  "qualification": "Focused checks only; not the complete feature/platform/timing matrix.",
+  "test_results": []
+}

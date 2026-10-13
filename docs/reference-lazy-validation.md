@@ -488,3 +488,13 @@ all-target Clippy, four no_std builds, formatting and diff checks. Exact sources
 and logs are retained in `docs/evidence/2026-10-13-lazy-frame-reader.json` and its
 archive. This verifies the reader/decoder and common storage contracts; retained
 ordinary Lazy parsing and private/public frame integration remain later gates.
+
+
+## Standard offline driver registration
+
+`scripts/check.sh` now runs ordinary Lazy recipe controls, structural validator,
+capture-plan preflight, immutable observation replay and exact binary projection
+reconstruction. All five commands, shell syntax and diff checks pass; logs are
+in `docs/evidence/2026-10-13-lazy-frame-driver.json` and its archive. This is
+focused registration evidence, not a claim that the complete standard matrix
+has run for the new module.
