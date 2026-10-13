@@ -124,7 +124,12 @@ mod stream_decode;
 mod stream_encode;
 mod training;
 mod tree_layout;
+#[cfg(test)]
+#[path = "../tests/support/tree_oracle.rs"]
+mod tree_oracle_fixture;
+mod tree_search;
 mod tree_sort;
+mod tree_source;
 mod xxhash;
 
 #[cfg(test)]

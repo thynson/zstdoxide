@@ -76,7 +76,7 @@ Public strategy 6 remains unsupported until its own private and public gates pas
 - [x] Add checked tree layout and scalar edge/link records with explicit source and node-floor invariants.
 - [x] Implement initialized independent hash/node owners with safe storage and an opt-in unsafe-reference-tree leaf.
 - [x] Implement unsorted insertion, bounded chain reversal and deferred sorting with malformed-link and synthetic ordering controls.
-- [ ] Implement checked binary-tree best-match scoring, equal-tail handling and sampling-frontier advancement; compare every complete operation against frozen C maps.
+- [x] Implement checked binary-tree best-match scoring, equal-tail handling and sampling-frontier advancement; compare every complete operation against frozen C maps.
 - [ ] Integrate private depth-two parser dispatch with all earlier chain/row trajectories and complete frame baselines unchanged.
 - [ ] Specify, preflight and capture ordinary retained-state C frame trajectories before public integration.
 - [ ] Validate ordinary state, malformed links, allocation failures and transactional frame/repeat publication.

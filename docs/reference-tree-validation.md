@@ -223,3 +223,24 @@ safe/all Clippy and formatting passed. Commands and immutable source/log bytes
 are retained in `evidence/2026-10-13-tree-sort.json` and its matching archive.
 These synthetic controls do not claim separately observed C sorting phases;
 complete direct-operation map comparison follows with best-match search.
+
+## Complete private query conformance
+
+The private tree search matches all 103 frozen direct cases and 2,334 operations
+under safe, tree-only unsafe, all features and release/all: 9,336 operation
+comparisons include every head/edge cell, selected length/offset and frontier.
+One hundred ten focused tests pass, including predecessor complete-frame/owner
+and independent fixture-reader regressions. All seventeen true no_std feature
+configurations, strict safe/all Clippy and formatting pass. Evidence is retained
+in `evidence/2026-10-13-tree-search.json` and its matching archive.
+
+`TreeSource` keeps direct source extent independent of window size. Main and
+deferred traversal now reject nondecreasing links; skipped queries preserve
+complete maps, and inclusive final-eight-byte queries remain supported.
+Ten selected owner, allocator, malformed-link, sorting, source-bound and tail
+checks pass for each of i686/s390x and safe/all under strict-provenance Miri:
+forty interpreted executions. This is selected interpretation on 32-bit little
+endian and 64-bit big endian targets, not complete native foreign suites.
+Commands and immutable sources are in `evidence/2026-10-13-tree-platform.json`
+and its matching archive. Private parser integration and public admission remain
+separate pending gates.

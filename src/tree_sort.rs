@@ -4,20 +4,19 @@
     not(test),
     allow(dead_code, reason = "Tree query integration follows deferred sorting")
 )]
-use crate::greedy_block::GreedyBlock;
 use crate::reference_tree::ReferenceTree;
 use crate::tree_layout::{TreeEdge, TreeLink, TreeProbe, TreeSide};
+use crate::tree_source::TreeSource;
 use crate::{Error, Result};
 use core::alloc::Allocator;
 
 pub(crate) fn probe<H: Allocator, N: Allocator>(
-    block: GreedyBlock<'_>,
+    block: TreeSource<'_>,
     table: &ReferenceTree<H, N>,
     current: usize,
     attempts: usize,
 ) -> Result<TreeProbe> {
-    if block.row_search()
-        || block.key_layout() != table.layout().key()
+    if block.key_layout() != table.layout().key()
         || !(1..=256).contains(&attempts)
         || current < block.range().start
     {
@@ -35,7 +34,7 @@ pub(crate) fn probe<H: Allocator, N: Allocator>(
 /// Compare only initialized logical source bytes. Recheck the common prefix
 /// inherited from the two branch bounds before relying on it.
 pub(crate) fn common_length(
-    block: GreedyBlock<'_>,
+    block: TreeSource<'_>,
     current: usize,
     previous: usize,
     common: usize,
@@ -65,7 +64,7 @@ pub(crate) fn common_length(
 /// Sort one pending node. node_floor is the main query's unsort limit, not
 /// this node's cyclic floor. Corresponds to ZSTD_insertDUBT1 (v1.5.7).
 fn sort_node<H: Allocator, N: Allocator>(
-    block: GreedyBlock<'_>,
+    block: TreeSource<'_>,
     table: &mut ReferenceTree<H, N>,
     current: usize,
     attempts: usize,
@@ -86,10 +85,15 @@ fn sort_node<H: Allocator, N: Allocator>(
     let mut larger = layout.edge(current, TreeSide::Larger)?;
     let mut link = table.edge(smaller)?;
     let (mut cs, mut cl) = (0, 0);
+    let mut ceiling = current;
     for _ in 0..attempts {
         let Some(previous) = bounds.candidate(link)? else {
             break;
         };
+        if previous >= ceiling {
+            return Err(Error::CorruptData);
+        }
+        ceiling = previous;
         let length = common_length(block, current, previous, cs.min(cl))?;
         if length == block.range().end - current {
             break;
@@ -123,7 +127,7 @@ fn sort_node<H: Allocator, N: Allocator>(
 /// chain. Scalar errors reject before writes; later malformed-state errors may
 /// leave partial sampling writes, requiring the caller to poison retained state.
 pub(crate) fn prepare<H: Allocator, N: Allocator>(
-    block: GreedyBlock<'_>,
+    block: TreeSource<'_>,
     table: &mut ReferenceTree<H, N>,
     next: &mut usize,
     current: usize,
@@ -186,10 +190,10 @@ mod tests {
     use crate::greedy_key::GreedyKeyLayout;
     use crate::tree_layout::TreeLayout;
     use alloc::alloc::Global;
-    fn setup(source: &[u8]) -> (GreedyBlock<'_>, ReferenceTree) {
+    fn setup(source: &[u8]) -> (TreeSource<'_>, ReferenceTree) {
         let key = GreedyKeyLayout::new(6, 4).unwrap();
         (
-            GreedyBlock::new(source, 0..source.len(), 0, key, 1024, false).unwrap(),
+            TreeSource::new(source, 0..source.len(), 0, key, 1024).unwrap(),
             ReferenceTree::new_in(TreeLayout::new(key, 6).unwrap(), Global, Global).unwrap(),
         )
     }

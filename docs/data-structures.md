@@ -1331,3 +1331,12 @@ branch byte. Cursor destinations are copied TreeEdge values, including discard.
 Sorting alone has no separately captured C phase snapshot: synthetic controls
 qualify that work item, followed by exact full-operation maps when best-match
 search is implemented. Existing captures remain unchanged.
+
+`TreeSource` is an allocation-free borrowed range with independent prefix and
+window bounds. Direct oracle source extents may exceed a window; ordinary frame
+blocks retain their existing limits through checked conversion from GreedyBlock.
+Each tree hash still requires eight logical bytes. This separation keeps direct
+window-expiry fixtures representative without weakening ordinary block admission.
+Best-match traversal owns only copied branch cursors and scalar common-prefix
+bounds. It tracks selected length/position separately from farthest compared
+match end, and preserves offset seed 999999999 until a strict cost win.
