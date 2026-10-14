@@ -1681,3 +1681,42 @@ protocol bounds explicitly. Unknown flags, stale baselines, duplicate/unchanged
 entries, impossible live counts and trailing bytes are rejected. Python projection
 first validates both padding passes and builds against independent replay, then
 stores one equivalent copy. All original raw maps remain in their archives.
+
+### Checked Optimal path values and ownership
+
+The next private layer corresponds to `ZSTD_optimal_t` and the in-place shortest
+path pass in `ZSTD_compressBlock_opt_generic` (pinned v1.5.7). `PathCell` is a
+copied seven-word record, not an allocation or pointer. It preserves initialized
+but stale fields exactly: setting an unreachable price does not erase offset,
+length or repeats. `PathPrice` distinguishes the unreachable sentinel (2^30)
+from finite costs below it; checked signed adjustments reject overflow, negative
+results and sentinel collision. This is shared safe value code for every backend.
+
+A forward view consumes a finite cell as a match followed by literals, with a
+checked predecessor that strictly decreases for a nonempty match. A reverse view
+consumes a cell as literals followed by a match and checks its source advance.
+Raw unused/stale fields are bounded but are not interpreted as valid repeats or
+match intent until the relevant view consumes them. Fresh zero-initialized cells
+must remain representable. Repeats are copied words; their source-validity and
+publication are checked by the parser/search boundary, not by inventing a
+nonzero invariant for unused cells. The block-local contiguous source bound is
+131,072; this layer admits no dictionary/external source history.
+
+`PathIndex` validates the 4,099 initialized slots independently of match length.
+The 4,096 forward horizon and three scratch slots are not a maximum match length:
+an immediate long match can advance to the block end while reconstruction uses
+only `cur + 2`. `ReverseCursor` tracks copied source/destination indices. Reading
+a predecessor occurs before an overlapping destination write; every nonterminal
+step checks a positive match-plus-literal extent, decreasing predecessor and a
+remaining destination strictly above that predecessor. A terminal literal-only
+entry does not subtract its literal count from the predecessor coordinate.
+
+`OptimalPaths<A>` will own one exact moved allocator and an initialized vector
+of 4,099 cells, using fallible allocation. A whole-owner phase (`Forward` or
+`Reconstruction`) prevents accidental use of the opposite typed view; transitions
+are explicit and reset zeroes all cells without allocation. Raw snapshots are
+copies, never aliases across mutation. Safe and `unsafe-optimal-paths` access
+will have the same contract, with runtime slot/length checks preceding every
+unchecked operation. Failed indices, values and phase transitions leave the
+owner unchanged. Finite record implementation and owner implementation remain
+separate checked work items; neither enables public Optimal dispatch.
