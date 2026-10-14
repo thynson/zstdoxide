@@ -95,7 +95,7 @@ complete public interoperability, final matrix and measurement closure follow.
 - [x] Run safe, every unsafe leaf, all-feature, no_std, Clippy and formatting checks.
 - [x] Prepare and qualify the deterministic tree benchmark harness and offline forgery controls.
 - [x] Verify complete clock-free tree output and exact owners across all seventeen backends.
-- [ ] Record equivalent all-backend timing and a separate safe/all repeat after CPU barriers.
+- [x] Record equivalent all-backend timing and a separate safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded milestone and remaining official obligations, retaining the next decomposition.
 
 ## Module 17 preparation: bounded reference Optimal
