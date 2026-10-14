@@ -100,3 +100,15 @@ before execution to preserve the upstream sorted-branch end-pointer precondition
 logs. No C search has executed; these are hypotheses, not result fixtures.
 Ordinary CCtx geometry, the strict 2^18 distance cutoff and valid fresh repeat
 state remain separate TODO gates. Public Optimal remains unsupported.
+
+## Independent tiny search model
+
+Direct suffix comparison and checked integer links independently reconstruct
+complete heads, paired nodes, short-key heads, both frontiers and ordered matches
+for all 29 recipes / 273 queries. Hand-calculated cases cover repeat intent order,
+strict target equality, short-key early return, full tails and skipped positions.
+Normal and optimized Python each reject 44 forged records without child execution.
+
+`evidence/2026-10-14-optimal-match-model.json` retains exact code and logs. These
+are synthetic model transcripts before C capture, not upstream observed fixtures.
+The model is a test oracle only and is not part of the Rust codec.

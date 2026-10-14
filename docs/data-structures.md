@@ -1548,3 +1548,18 @@ Cargo feature. Public strategy 7 stays unsupported. Full tree-milestone tests an
 measurement use their prior immutable source; this branch requires focused
 safe/isolated/all/release conformance, allocator failures, every-leaf no_std,
 Clippy and complete source/feature evidence before its own commit and later merge.
+
+### Tiny sorted-match observation replay
+
+The independent Python replay owns zero-initialized integer heads, paired nodes
+and optional short-key heads. Both frontiers begin at native index two. It counts
+equal suffix bytes directly from immutable source, without copying C's common-
+prefix optimization, pointer aliases or loads. Pending smaller/larger links are
+optional (slot, side) values; absence discards an expired link. Catch-up and query
+insertion publish frontiers differently. Match intents remain encoded offBase
+values, and repeat bytes use independently resolved distances.
+
+Complete copied before/after maps and frontiers are bounded observations. Replay
+recomputes every record from requests; canonical comparison rejects type changes
+and unknown fields. Hand-derived repeat, short-key, full-tail and skipped-frontier
+cases precede C capture. This test-only owner does not enable public Optimal.

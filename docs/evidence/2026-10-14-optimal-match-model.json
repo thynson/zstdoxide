@@ -1,0 +1,54 @@
+{
+  "archive": "2026-10-14-optimal-match-model.tar.gz",
+  "archive_bytes": 18956,
+  "archive_members": 12,
+  "archive_sha256": "1ff8bf80ab6155d9b0e37bd53e8776bc9892df1dec95577152d765165133eafd",
+  "child_attempts": 0,
+  "files": {
+    "docs/reference-optimal-match-protocol.md": {
+      "bytes": 5957,
+      "sha256": "eb836881856e2dd2d31a25928830f6909cd6dd1703a5427d6fed3a4817f896dd"
+    },
+    "logs/normal.json": {
+      "bytes": 344,
+      "sha256": "1d2e3a64a8e3db5b32ef2aa71b7062ff20ced595c2726ab52475e57676454284"
+    },
+    "logs/optimized.json": {
+      "bytes": 344,
+      "sha256": "1d2e3a64a8e3db5b32ef2aa71b7062ff20ced595c2726ab52475e57676454284"
+    },
+    "scripts/check_optimal_match_validation.py": {
+      "bytes": 6206,
+      "sha256": "e60df477fb8085451d9fdc49aa4d68a17b2cdb058c51a8a8a5843eb970585f4e"
+    },
+    "scripts/oracles/optimal_match_recipes.py": {
+      "bytes": 4395,
+      "sha256": "a7dd1e4b983e82940d79648a5160d9113f2c664aa06c38b4412890adab68f9d3"
+    },
+    "scripts/oracles/optimal_match_validation.py": {
+      "bytes": 8473,
+      "sha256": "07c6d80fcbb1550271b6860a35525e93f510e548b18315b5b41192eebd58285a"
+    },
+    "scripts/oracles/optimal_matches.py": {
+      "bytes": 3259,
+      "sha256": "159b4dc7f45f36d27f53f7f496957fcda232c075c36ecad36e51bcee47493caf"
+    },
+    "scripts/oracles/tree_direct.py": {
+      "bytes": 6584,
+      "sha256": "200c9491b82ae70598f7d5f0d375070ce858494f2c96304ba186329cd4f6d6f1"
+    },
+    "scripts/oracles/tree_validation.py": {
+      "bytes": 8202,
+      "sha256": "59c16db4486f1a2f81eb995245c0c95cb8f07738edbe5792d5b54e00d7afcc9b"
+    },
+    "tests/fixtures/reference-optimal-match-recipes/recipes.json": {
+      "bytes": 42851,
+      "sha256": "a2454525f419e15b5449b085aa381a53dad10dcbe4ceee77c5a4f8deba836488"
+    }
+  },
+  "forged_rejections_per_mode": 44,
+  "qualification": "Independent Python model with direct source suffix comparison and checked integer links. Synthetic transcripts and hand-calculated cases only; no C execution or observed C match expectations.",
+  "queries": 273,
+  "recipes": 29,
+  "status": "passed"
+}
