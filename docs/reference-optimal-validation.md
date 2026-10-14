@@ -379,3 +379,19 @@ Miri invocations across i686 and s390x, in safe, isolated path and all-feature
 modes. These include wrong-phase access, shortened storage, invalid slots, moved
 allocator failure cleanup and predecessor arithmetic. No native foreign execution
 is claimed. See `evidence/2026-10-14-optimal-paths-platform.json`.
+
+## Private scripted path decision engine
+
+The fresh optLevel0 engine computes decisions from production scalar prices,
+frequency ownership, candidate storage and checked path records. All 22,024
+captured events (27 cases, 42 sequences) match complete path/frequency state,
+query candidates, selected stretches, reconstruction coordinates and repeat
+publication exactly. Expected fixture values are used only by the observer.
+Six focused tests pass in safe, each of the three consumed unsafe leaves, all
+features and release/all modes. Callback/source failures poison until reset;
+late observer failure preserves documented partial external output. Borrowed
+non-clone ownership performs no allocations during parse/reset; invalid
+construction releases every moved owner. Formatting, strict safe/all Clippy
+and safe/all-unsafe no_std compilation pass. See
+`evidence/2026-10-14-optimal-parse.json`. Ordinary search startup, retained blocks
+and public Optimal remain separately gated.

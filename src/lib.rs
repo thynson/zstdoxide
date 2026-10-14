@@ -110,6 +110,7 @@ mod matchchain;
 mod matchfinder;
 mod optimal_frequencies;
 mod optimal_matches;
+mod optimal_parse;
 #[cfg(test)]
 #[path = "../tests/support/optimal_path_fixture.rs"]
 mod optimal_path_fixture;

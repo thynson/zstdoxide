@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-parse.tar.gz",
+  "archive_bytes": 10280,
+  "archive_sha256": "804d8947342bc3d3cce39e907d95ded173ab1762fa82a1f93a054e026342d617",
+  "files": [
+    {
+      "path": "src/optimal_parse.rs",
+      "bytes": 35590,
+      "sha256": "cdcd296d0c8b2c1fb31202bdd5f3073d71ce6de57b0f9c0fb7af1ba4585a6549"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 5575,
+      "sha256": "78356a7d6ce8c30f33e22d595c53c3f712334758e802006dd753ec47c4f80abf"
+    },
+    {
+      "path": "checks/all.log",
+      "bytes": 1002,
+      "sha256": "e3d9d86cc745ae42a6531514dd9d4b3bf3df66c988a50c6ed58cf9fbfbb82f7a"
+    },
+    {
+      "path": "checks/clippy-all.log",
+      "bytes": 130,
+      "sha256": "b853ef5e100950755c3861c80121bf5df84ad829a452f5d4b71f098158a07967"
+    },
+    {
+      "path": "checks/clippy.log",
+      "bytes": 130,
+      "sha256": "b4e5d0d59cb7e4151de619810208e59fb2f9350817e59fa3554c0bfb5ff99511"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 2611,
+      "sha256": "669a1a24ea3e898a896153792ecdcaf75e00185e8241db0eb9f18e53787fbc2c"
+    },
+    {
+      "path": "checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/frequencies.log",
+      "bytes": 1002,
+      "sha256": "ff0d0860e5154470f9121a830442f8d35a0034a35a2432248e1c59818388281e"
+    },
+    {
+      "path": "checks/matches.log",
+      "bytes": 1002,
+      "sha256": "2b313f52c01053c9404b3f01e695c5d153d523b4e277d03d74b5f78fe6d6e36e"
+    },
+    {
+      "path": "checks/nostd-all.log",
+      "bytes": 130,
+      "sha256": "ba154fb24dfd6ac6abb5cda800e9d42d904cd5b0f130391caad7dcdda9e8581f"
+    },
+    {
+      "path": "checks/nostd.log",
+      "bytes": 130,
+      "sha256": "30d33532a3a4db2c8933f9757e12515d8bc225c159fc789dfa7dbc7d6d4e18a8"
+    },
+    {
+      "path": "checks/paths.log",
+      "bytes": 1002,
+      "sha256": "17e56f6a03b56494248505fc376e1d2372d611100bf03a8bcc18a12faeaf6e76"
+    },
+    {
+      "path": "checks/release.log",
+      "bytes": 1006,
+      "sha256": "00153bd5ad19f1332cac682a961866de994abe6b153ce8c4bdbc06b9cb1b4962"
+    },
+    {
+      "path": "checks/safe.log",
+      "bytes": 1002,
+      "sha256": "d06483f03eaf37beb963e3d05ca3501d13ef67e6eb9dda214d099f230a2f348e"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}
