@@ -1,0 +1,39 @@
+{
+  "archive": "2026-10-14-optimal-match-broad-preflight.tar.gz",
+  "archive_bytes": 137640,
+  "archive_members": 30,
+  "archive_sha256": "3a6f3ba902812d74773de002decc2bce0fcf26b6ad93d91b9e18db85b200ef7a",
+  "commands": 180,
+  "malformed_packets": 22,
+  "model_forgeries_per_mode": 14,
+  "plan_rejections_per_mode": 19,
+  "positive_requests": 37,
+  "qualification": "Reviewed helper, complete dependency/source plan, no-child plan controls and strict syntax checks before any C helper execution.",
+  "scalar_comparisons": 333,
+  "source": {
+    "docs/reference-optimal-match-broad-adapter-review.md": "51ebaed935490ca305b8aaf4f72ea87b71e404d179319a8cb6ec3ff82080c2fb",
+    "docs/reference-optimal-match-broad-protocol.md": "68b1da40ce868e425cd24d17af396b61790dbf3b6c7778fdf80ca53cfe52b028",
+    "scripts/capture_optimal_matches_broad.py": "0b41e8208dd5f2c59e3e4806560419c0831554a07c195e219d8d5dc92e0c5de7",
+    "scripts/check_optimal_match_broad_capture.py": "84a2c3add1e10c0600cf0da4757bf9675a757d22b5c0cd3cdc7f0d2a8b64e59a",
+    "scripts/check_optimal_match_broad_capture_plan.py": "ed91b4cc6ef64876f9b079cd313de5db285c5b5acf4a3471714cdadf462a4b32",
+    "scripts/check_optimal_match_broad_recipes.py": "91e88025f2da96e928c1f38dd68da1b5f198a555bff58b9df4e867f6832d2322",
+    "scripts/check_optimal_match_broad_validation.py": "c360ce0c45433b6ae5cbf5c875237d7271f6db7687663493844b5eedbcd05b92",
+    "scripts/optimal_match_broad_capture_plan.py": "e1ff4d71c216a849f33a9821107c4b68f9d471a9d51ff33ee5a08673c43c90ee",
+    "scripts/oracles/optimal_match_broad_recipes.py": "2ae4739dbe045b1b947c32c0bfc710992767a31ea17f6eedb6310ed1d1dd003a",
+    "scripts/oracles/optimal_match_broad_validation.py": "ec01554a873c5a81fb9614d7b1807079e38f12aef37b51fed046d1d2179cf3d0",
+    "scripts/oracles/optimal_match_recipes.py": "a7dd1e4b983e82940d79648a5160d9113f2c664aa06c38b4412890adab68f9d3",
+    "scripts/oracles/optimal_match_validation_v2.py": "07909e07eb0ec17f4643dffa3befeadde814da8b9f61fe1cb284d2d036c3ecee",
+    "scripts/oracles/optimal_matches.py": "159b4dc7f45f36d27f53f7f496957fcda232c075c36ecad36e51bcee47493caf",
+    "scripts/oracles/optimal_matches_broad.c": "8e866850b3173fb35ae15da160672cb1f82ae973d5e4c7efc54ab0a898971463",
+    "scripts/oracles/optimal_matches_broad.py": "01f57cdcfe92ed304fa36d8055b5a893880bcd178371432cc47d80ec60ecbf5f",
+    "scripts/oracles/tree_direct.py": "200c9491b82ae70598f7d5f0d375070ce858494f2c96304ba186329cd4f6d6f1",
+    "scripts/oracles/tree_validation.py": "59c16db4486f1a2f81eb995245c0c95cb8f07738edbe5792d5b54e00d7afcc9b",
+    "tests/fixtures/reference-optimal-match-broad-recipes/recipes.json": "8c4cb6e7ca34fb46201116df93305e2b3f888961106cbe00748f5332e4eb008a",
+    "tests/upstream/manifest.json": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+  },
+  "status": "passed",
+  "syntax_modes": [
+    "normal",
+    "sanitized"
+  ]
+}
