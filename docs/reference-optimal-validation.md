@@ -135,3 +135,19 @@ including every object and executable, all 18,857,576 raw log bytes and the v1
 failure. This is a reconciled offline audit of actual C observations, not a
 retroactive passing v1 run. Ordinary CCtx geometry and the 2^18 distance boundary
 remain open; no Rust sorted-search or public Optimal admission is claimed.
+
+## Bounded Rust match fixture reader
+
+The audited C maps project into a 7,152,786-byte pack retaining every before/after
+owner, both frontiers and ordered candidate. Normal and optimized Python exactly
+reconstruct all 29 cases / 273 queries from the immutable capture archive.
+The independent Rust reader passes five tests in safe/all/release-all (15 total),
+strict safe/all Clippy, formatting and no_std compilation. It validates complete
+state continuity, source/window bounds, repeat intent and every match byte.
+Captured regression checks separate primary hash4 from short hash3 and preserve
+skipped query state and clamped hash widths. Malformed extents, counts, geometry,
+queries, cells, frontiers and candidate capacities are rejected.
+
+`evidence/2026-10-14-optimal-match-fixture.json` retains source, pack, exact logs
+and the initial corrected Clippy diagnostic. These additive fixture tests are
+outside the Module 16 immutable matrix; no production search is enabled.

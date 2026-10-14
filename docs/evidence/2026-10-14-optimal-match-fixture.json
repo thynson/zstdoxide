@@ -1,0 +1,23 @@
+{
+  "archive": "2026-10-14-optimal-match-fixture.tar.gz",
+  "archive_bytes": 216769,
+  "archive_members": 26,
+  "archive_sha256": "e10d4b089b9678585fc007dc4a310d35ac97e13d9ebce3463ce0ba8940853ede",
+  "cases": 29,
+  "focused_tests": 15,
+  "format": true,
+  "modes": [
+    "safe",
+    "all",
+    "release-all"
+  ],
+  "no_std": true,
+  "pack_bytes": 7152786,
+  "qualification": "Independent bounded Rust fixture reader checks primary/short hash distinction, full state continuity, repeat intent, every match source span, skipped state and malformed fields. Initial Clippy rejected chunks_exact with a constant width; final as_chunks correction passes. No production sorted search or public Optimal admission.",
+  "queries": 273,
+  "status": "passed",
+  "strict_clippy": [
+    "safe",
+    "all"
+  ]
+}
