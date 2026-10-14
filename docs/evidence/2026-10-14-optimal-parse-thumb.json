@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-parse-thumb.tar.gz",
+  "archive_bytes": 7128,
+  "archive_sha256": "bb419a2057af06aa0c16ef64eeb3e191095cc7c0917c1847fb71ed1b24896c8c",
+  "files": [
+    {
+      "path": "checks/caller/Cargo.lock",
+      "bytes": 163,
+      "sha256": "47fcd7b6e39a3a1a10d2c3053621dd85cce869468f55bfe35ba5c404bca34509"
+    },
+    {
+      "path": "checks/caller/Cargo.toml",
+      "bytes": 530,
+      "sha256": "83bce198f8776ac5699fe32c908cb8ab45f8b15e8a10d8cd7bba7af52a537d6f"
+    },
+    {
+      "path": "checks/caller/src/lib.rs",
+      "bytes": 2179,
+      "sha256": "9d53bbbe5a4d26f384bd64f1f478e7b920cfae382c5664a17c6a3ac30fdf7a93"
+    },
+    {
+      "path": "checks/caller-all.log",
+      "bytes": 756,
+      "sha256": "4adbd306327a1b2033d9c7a47406f1b0adc315234b90bf3f9f531114e09bdcf7"
+    },
+    {
+      "path": "checks/caller-frequencies.log",
+      "bytes": 756,
+      "sha256": "aed6bd387c2e4ea5c33fd0834658670617a9eba5cc999a8bb5c184722dfbcdd1"
+    },
+    {
+      "path": "checks/caller-matches.log",
+      "bytes": 756,
+      "sha256": "aed6bd387c2e4ea5c33fd0834658670617a9eba5cc999a8bb5c184722dfbcdd1"
+    },
+    {
+      "path": "checks/caller-paths.log",
+      "bytes": 756,
+      "sha256": "aed6bd387c2e4ea5c33fd0834658670617a9eba5cc999a8bb5c184722dfbcdd1"
+    },
+    {
+      "path": "checks/caller-safe.log",
+      "bytes": 756,
+      "sha256": "cd212c696bff685f3777506ecd1773cdde5eaae5dd6e2302c1802c0551e9c577"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 13829,
+      "sha256": "33b2f9dac324a99ec817b09784d6434660e6d63a1a0305a6f066001ca61a0cf1"
+    },
+    {
+      "path": "checks/library-all.log",
+      "bytes": 130,
+      "sha256": "4018e42b16f4c16fbd33a72118d0794ed132f6e4a5bf2c168f9ec40acb0191c6"
+    },
+    {
+      "path": "checks/library-frequencies.log",
+      "bytes": 130,
+      "sha256": "d58d0f1f8edf96d4d1ff39809e6f5f966bd5788866f15c9c3f23d575ecd84609"
+    },
+    {
+      "path": "checks/library-matches.log",
+      "bytes": 130,
+      "sha256": "f97e1f06d37d4911894763cccf64b4e04cc40e880a5dc47a583b4678d334fb82"
+    },
+    {
+      "path": "checks/library-paths.log",
+      "bytes": 130,
+      "sha256": "cda02434ddf62fca1753f3837408e2dfe426463c50b0c90fb8c43e7d390b3b90"
+    },
+    {
+      "path": "checks/library-safe.log",
+      "bytes": 592,
+      "sha256": "0577862f8d3dec98cbe868c22097d25718ee72e67c84d644e3cc1f2736bf7dcf"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

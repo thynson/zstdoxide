@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-parse-platform.tar.gz",
+  "archive_bytes": 7663,
+  "archive_sha256": "bb406cdde50bd40020ad4499fbc06fb3a01b387a22214e2e5b7476f8d2c819a0",
+  "files": [
+    {
+      "path": "checks/evidence.json",
+      "bytes": 22472,
+      "sha256": "53219407784c6193fcaf4b401f05eabb0f4d6e37379f22877d0824acb468d875"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-0.log",
+      "bytes": 454,
+      "sha256": "fb5adc353afa9b20d966a1cb1de592027b116f748a9455de8cd13411e418f5b7"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-1.log",
+      "bytes": 464,
+      "sha256": "4c3e914c70d917190241232f3643c94f9aaf05c1923d2beb64a48dc925800486"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-2.log",
+      "bytes": 436,
+      "sha256": "f3d2b81ab2be0ce0270cb8eade1d53d2659e6a867d2646ed72d3fd7d5cbdc2c2"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-3.log",
+      "bytes": 442,
+      "sha256": "d00b0da435dedf4c552c9b1572db8bb6922a820f191e3bd42f9d334dbb6b4f40"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-paths-0.log",
+      "bytes": 524,
+      "sha256": "6271b848bf99f9aa3cac116a75f66cd34fb7040dd76f9e4effc8b7eae574d65e"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-paths-1.log",
+      "bytes": 464,
+      "sha256": "afa60f2e324750595450f3f29871ec01abeacda955cf4bf1887fc2e709efd90f"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-paths-2.log",
+      "bytes": 436,
+      "sha256": "4bf4a7a591892e3fdf055185cecc34103ff5df9b3692aaf36e05083606524fbc"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-paths-3.log",
+      "bytes": 442,
+      "sha256": "0ec1b73f9881457d2c9cb2ee9f763d23b8e8d211d3233fe59d823d75d016ae33"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-0.log",
+      "bytes": 454,
+      "sha256": "5a92aa37e414fc5231c9b07b575f542884256172693f290f53473ef89f05c3cf"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-1.log",
+      "bytes": 464,
+      "sha256": "d37f808fdc1a6939d3f5b05feb7eea9b8f27068d61cb447fbcde66657688f4ee"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-2.log",
+      "bytes": 436,
+      "sha256": "7bc2b20eff15afad347ac564039963feb63966f7e0972b5375a42142d12786be"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-3.log",
+      "bytes": 442,
+      "sha256": "45702de3f821638cc56695f3e545ac1367d271e218fcb40beb543d2f37466ba8"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-0.log",
+      "bytes": 455,
+      "sha256": "62a2038e3e2629298c6f4962c2edaa59b6508ef9f6667ca1f56e39df637ae4fb"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-1.log",
+      "bytes": 465,
+      "sha256": "27bb838c78ac4e36dc8cecb361d4480f659f864693075850dfa01f7f1eb9aa0a"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-2.log",
+      "bytes": 437,
+      "sha256": "f4342bca80613bd4564bfaea511fbe04a6b2b46b15f537853054ce672a72a13e"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-3.log",
+      "bytes": 443,
+      "sha256": "c5f5d8162f53610b539c6a6ea9d2deec3d2c55d883b564f2daa25b08605f2ac5"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-paths-0.log",
+      "bytes": 525,
+      "sha256": "c517f3564f837cd14bf6bba89ac5fdeadb64d34b79d05434193ef5fd124f4555"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-paths-1.log",
+      "bytes": 465,
+      "sha256": "ed4b631d4aa035de8e12bb4f5bbafeb7be1215339475b8fccc809d52d38edf6e"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-paths-2.log",
+      "bytes": 437,
+      "sha256": "1b0b0da0f02034286a2e959c9cd230b2c53dc99191166412dab64a71923f338e"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-paths-3.log",
+      "bytes": 443,
+      "sha256": "fd0471475f91eac3874428f703aa9519d34967764e30e4eeaa1352734e374dd9"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-0.log",
+      "bytes": 455,
+      "sha256": "205859f737047c4fb99549f487bd55ecfb588b5b918fe39d9ba114cdd5484635"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-1.log",
+      "bytes": 465,
+      "sha256": "b91ef346f7964faf9d34471ae35c9ef2be293e37c60ab156c1ffa3415940cf56"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-2.log",
+      "bytes": 437,
+      "sha256": "d561a4cabc2ada5a4ad398c0c88e51c2f76995071f233377471064364fe0e77a"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-3.log",
+      "bytes": 443,
+      "sha256": "bf0560f0f9472cbceb0b8953a2f9454a1e31a8859333241d4ff668f18edadd38"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

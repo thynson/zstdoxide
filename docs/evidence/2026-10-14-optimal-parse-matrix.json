@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-parse-matrix.tar.gz",
+  "archive_bytes": 76405,
+  "archive_sha256": "b67c6e31f91c5694403b975c2161b7f1ee931526124cd22855a35ebb7a3762b3",
+  "files": [
+    {
+      "path": "checks/evidence.json",
+      "bytes": 33573,
+      "sha256": "306850bf1a40ac1ff156e8d1d6822fc65a6755ad7a04c51504db903f86f256d0"
+    },
+    {
+      "path": "checks/full-all.log",
+      "bytes": 139788,
+      "sha256": "f7cb0d189c629dac56700b01456c81e854836090e299cc4b24ce24d4f9ca53b7"
+    },
+    {
+      "path": "checks/full-safe.log",
+      "bytes": 139789,
+      "sha256": "66f598ecdcab82a6184d899f109c738b4cce460ac6a884b483bbdc7c652db85b"
+    },
+    {
+      "path": "checks/nostd-unsafe-bitstream.log",
+      "bytes": 130,
+      "sha256": "30d33532a3a4db2c8933f9757e12515d8bc225c159fc789dfa7dbc7d6d4e18a8"
+    },
+    {
+      "path": "checks/nostd-unsafe-byte-cursor.log",
+      "bytes": 130,
+      "sha256": "4018e42b16f4c16fbd33a72118d0794ed132f6e4a5bf2c168f9ec40acb0191c6"
+    },
+    {
+      "path": "checks/nostd-unsafe-dictionary.log",
+      "bytes": 130,
+      "sha256": "9929c213ac8cf4bc1df51f72fc3c0773c19a063db00e201d5ea37270db78ad71"
+    },
+    {
+      "path": "checks/nostd-unsafe-fse-encoder.log",
+      "bytes": 130,
+      "sha256": "b9cbbbc8a92a36d170b6159054bf2f368d4cb11cb5ac3769f3df14e7ae93762d"
+    },
+    {
+      "path": "checks/nostd-unsafe-fse.log",
+      "bytes": 130,
+      "sha256": "0bd271f494f856d1074c87f14874ca53b57008770eb8c47c519c0a0c521b5533"
+    },
+    {
+      "path": "checks/nostd-unsafe-history.log",
+      "bytes": 130,
+      "sha256": "30d33532a3a4db2c8933f9757e12515d8bc225c159fc789dfa7dbc7d6d4e18a8"
+    },
+    {
+      "path": "checks/nostd-unsafe-huffman-codebook.log",
+      "bytes": 130,
+      "sha256": "e81f0b53b08011facea06e7d0efa6db594dd45ec30da7804297cc4701a21d392"
+    },
+    {
+      "path": "checks/nostd-unsafe-huffman.log",
+      "bytes": 130,
+      "sha256": "f816a727f9afdc1a1963daa9523067ff7f547c387ada4dce1c6802287ce4938c"
+    },
+    {
+      "path": "checks/nostd-unsafe-match-chain.log",
+      "bytes": 130,
+      "sha256": "414398be964bb495c4ddc9914b9f9cdd511ad24e0b0f32d92a59c22246ec2761"
+    },
+    {
+      "path": "checks/nostd-unsafe-match-table.log",
+      "bytes": 130,
+      "sha256": "bc00ef04d664c5a943d89e420410e3b3579ed6ebf718c71d4202034faf25d789"
+    },
+    {
+      "path": "checks/nostd-unsafe-optimal-frequencies.log",
+      "bytes": 130,
+      "sha256": "4018e42b16f4c16fbd33a72118d0794ed132f6e4a5bf2c168f9ec40acb0191c6"
+    },
+    {
+      "path": "checks/nostd-unsafe-optimal-matches.log",
+      "bytes": 130,
+      "sha256": "ccf9395149dae4af323f7c516943fdac402f1c1fbbcc6562603f23a1b06afb60"
+    },
+    {
+      "path": "checks/nostd-unsafe-optimal-paths.log",
+      "bytes": 130,
+      "sha256": "7db35ae560b0ca3b809ac1b1a34183ae716c89d260e05ccb67ed39ec2d1e369c"
+    },
+    {
+      "path": "checks/nostd-unsafe-optimal-short-key.log",
+      "bytes": 130,
+      "sha256": "414398be964bb495c4ddc9914b9f9cdd511ad24e0b0f32d92a59c22246ec2761"
+    },
+    {
+      "path": "checks/nostd-unsafe-reference-chain.log",
+      "bytes": 130,
+      "sha256": "628816ec205485d8babe53bf904cf5dc96f550f1a9dc01e3d235f97893fcf288"
+    },
+    {
+      "path": "checks/nostd-unsafe-reference-tree.log",
+      "bytes": 130,
+      "sha256": "414398be964bb495c4ddc9914b9f9cdd511ad24e0b0f32d92a59c22246ec2761"
+    },
+    {
+      "path": "checks/nostd-unsafe-ring-history.log",
+      "bytes": 130,
+      "sha256": "e81f0b53b08011facea06e7d0efa6db594dd45ec30da7804297cc4701a21d392"
+    },
+    {
+      "path": "checks/nostd-unsafe-row-table.log",
+      "bytes": 130,
+      "sha256": "75e802a0a4e0f3c3570047cff28e7f0006f3fcc821b8817b27d1ea74169ea10f"
+    },
+    {
+      "path": "checks/nostd-unsafe-training.log",
+      "bytes": 130,
+      "sha256": "ccf9395149dae4af323f7c516943fdac402f1c1fbbcc6562603f23a1b06afb60"
+    },
+    {
+      "path": "checks/test-unsafe-bitstream.log",
+      "bytes": 4566,
+      "sha256": "fb445aa6a2a464534f736803d47517c6b6fda79c99c78be535b820165fd9238e"
+    },
+    {
+      "path": "checks/test-unsafe-byte-cursor.log",
+      "bytes": 4458,
+      "sha256": "3ffc2f72499ddc44a8952dd0161d7865f59d29c6aba0277a88d509f349c2f80f"
+    },
+    {
+      "path": "checks/test-unsafe-dictionary.log",
+      "bytes": 4458,
+      "sha256": "57190667b558d48a5cd59b4a07dff23262d1ada22e4d9a64ee8f0a9c742ca9be"
+    },
+    {
+      "path": "checks/test-unsafe-fse-encoder.log",
+      "bytes": 4458,
+      "sha256": "5cd553b08e39abf521f38cd3c47a3cacb9038930812ddd598894f7ac5dcd173e"
+    },
+    {
+      "path": "checks/test-unsafe-fse.log",
+      "bytes": 4458,
+      "sha256": "e887aa5d2738f125a7a27b48dbdd281fac6b98d03f1f91a4f50afbe4db7546d6"
+    },
+    {
+      "path": "checks/test-unsafe-history.log",
+      "bytes": 4458,
+      "sha256": "2a6ab109639068fe2ccac965114ced076ca3cab695f556e042c5498e3a35d747"
+    },
+    {
+      "path": "checks/test-unsafe-huffman-codebook.log",
+      "bytes": 4458,
+      "sha256": "7d70b2373e6cb2aff5b0b188dd4545afdfcf95d88105da127d5a50a2c128f1c9"
+    },
+    {
+      "path": "checks/test-unsafe-huffman.log",
+      "bytes": 4458,
+      "sha256": "9f4169345a2bf827157d2f36aa1384d3f55ea4e2cfe474cc2c74bf6c4c8cd710"
+    },
+    {
+      "path": "checks/test-unsafe-match-chain.log",
+      "bytes": 4458,
+      "sha256": "95e2e4d74e9747d4b0d0fa37b844e543f6b1586cb51e34e03abb71ce1121dfe5"
+    },
+    {
+      "path": "checks/test-unsafe-match-table.log",
+      "bytes": 4458,
+      "sha256": "0dbb61d2a15c6cf1cb449613d2a9f50867ef89b43bf63d8ea296b79ba9e72a71"
+    },
+    {
+      "path": "checks/test-unsafe-optimal-frequencies.log",
+      "bytes": 4458,
+      "sha256": "f8f288c4818f70f5215a5660942a14dee7bde0b8fb65feecea3fdfd573b87a7a"
+    },
+    {
+      "path": "checks/test-unsafe-optimal-matches.log",
+      "bytes": 4458,
+      "sha256": "4695c44bbc1532318816757de6bebcccb02fb82b2cbd8119f0bf9b1a7f5117f2"
+    },
+    {
+      "path": "checks/test-unsafe-optimal-paths.log",
+      "bytes": 4458,
+      "sha256": "d4ad31a092a83937882f096d5640fa9aec82f32d0ac6520a435a09762864bec3"
+    },
+    {
+      "path": "checks/test-unsafe-optimal-short-key.log",
+      "bytes": 4458,
+      "sha256": "095c36487e4765e0e25e029b68e702bbd1ff9464b7e491e7cdf116d22c5c6884"
+    },
+    {
+      "path": "checks/test-unsafe-reference-chain.log",
+      "bytes": 4458,
+      "sha256": "f42bbdd6c64c6c293b2a1c084a4d673e0ba604336a601b6ff98c6ea41f848cc1"
+    },
+    {
+      "path": "checks/test-unsafe-reference-tree.log",
+      "bytes": 4458,
+      "sha256": "ea577cab9aeb5175e3867196da23f547b1664a9ae31018d84b9fdab3d40869d4"
+    },
+    {
+      "path": "checks/test-unsafe-ring-history.log",
+      "bytes": 4458,
+      "sha256": "29aed22e6f06a27a6e65b6ca209b4bc9bf8ab86a9678f8bee61df781557f82a8"
+    },
+    {
+      "path": "checks/test-unsafe-row-table.log",
+      "bytes": 4458,
+      "sha256": "37945816364cd4f513f9434b4358ec030446d396d8e9853448442c0e96d7a676"
+    },
+    {
+      "path": "checks/test-unsafe-training.log",
+      "bytes": 4458,
+      "sha256": "d93f983ab10240643c806703fbb5f464bb916e89b0ae7e1ce1799d4b29496a87"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

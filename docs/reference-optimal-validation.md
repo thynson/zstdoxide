@@ -407,3 +407,16 @@ controls each reject 35 malformed/forged inputs with no children; both manifest
 checks agree. See `evidence/2026-10-14-optimal-startup-model.json`. These are
 predictions only: the unchanged-provider CCtx helper, frame capture and startup
 admission extension have not been qualified.
+
+## Scripted decision backend and platform closure
+
+All nineteen isolated unsafe configurations pass 44 focused Optimal tests each
+(836 passes) and compile without std. Full safe and all-feature suites each pass
+1,276 tests with 55 ignored. Twenty-four selected strict-provenance Miri runs
+pass on i686/s390x across safe, consumed leaves and all features. Ten thumbv6m
+checks/builds cover the actual no_std library and a concrete allocator-backed
+parser caller in safe, frequency-only, path-only, candidate-only and all-unsafe
+modes. No native foreign or firmware execution is claimed. Source identities and
+complete logs are retained in `evidence/2026-10-14-optimal-parse-matrix.json`,
+`evidence/2026-10-14-optimal-parse-platform.json` and
+`evidence/2026-10-14-optimal-parse-thumb.json`.
