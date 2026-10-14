@@ -91,7 +91,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Implement bounded candidate storage with initialized fallible ownership and an isolated unsafe feature.
 - [x] Implement checked sorted insertion and bounded match enumeration over immutable source.
 - [x] Compare every tiny and broader captured candidate, complete map and both frontiers across search backends.
-- [ ] Qualify private search on every isolated feature and complete predecessor suites.
+- [x] Qualify private search on every isolated feature and complete predecessor suites.
 - [x] Qualify private search ownership and malformed-state handling with foreign strict-provenance Miri.
 - [x] Compile private search libraries and concrete allocator callers for a no-atomics target.
 - [ ] Compare deterministic private search outputs and allocator records before safe/unsafe diagnostic timing and a separate repeat.

@@ -255,3 +255,13 @@ and all leaves. This checks code generation on a target without atomic pointer
 operations; it is not firmware execution. Exact evidence lives in
 `evidence/2026-10-14-optimal-search-platform.json` and
 `evidence/2026-10-14-optimal-search-thumb.json`.
+
+## Private search isolated matrix and predecessor regression
+
+All 18 isolated unsafe leaf configurations pass the 29 focused Optimal tests
+(522 passes), and all 18 separately compile with true no_std. Complete safe and
+all-features suites each pass 1,257 tests with 55 ignored, no failures. The ignored
+tests retain their existing explicit scope; this result does not claim they ran.
+Every frozen Rust/test input remains unchanged. Exact commands and logs:
+`evidence/2026-10-14-optimal-search-matrix.json`.
+
