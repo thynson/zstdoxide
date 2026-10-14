@@ -1423,7 +1423,9 @@ matches). Runtime live-length/domain checks must precede every unchecked access.
 
 ### Algorithm distinctions that require new observations
 
-Optimal hashing clamps widths to 3..6; minimum-match 3 is real three-byte matching
+Optimal template minimum clamps to 3..6, but the primary tree hash uses widths
+4..6 (ZSTD_hashPtr defaults to hash4 for template minimum 3). Only the separate
+short-key table uses hash3. Minimum-match 3 is real three-byte matching
 and has a separate hash table and update frontier. The generic sequence format
 can represent length-three matches, but the current lazy-family parser's
 minimum-four filter must not be reused. A selected encoded repeat intent depends

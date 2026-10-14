@@ -118,7 +118,9 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [ ] Extend sorted-tree/all-match requests to ordinary CCtx hash3 geometry, the strict 2^18 distance boundary and ordinary fresh repeat state.
 - [x] Implement independent tiny sorted-tree/all-match replay with exact maps, both frontiers and forged-record controls before C execution.
 - [x] Review the guarded direct sorted-tree/all-match helper and preflight pinned dependencies and bounded capture before C execution.
-- [ ] Capture direct operations and qualify all-match ordering, window/node floors, three-byte tails and forged evidence.
+- [x] Capture tiny direct operations and qualify exact all-match maps, short-key tails and forged evidence.
+- [ ] Project audited tiny match observations into bounded fixtures and add an independent Rust reader.
+- [ ] Capture broader ordinary-geometry/distance/repeat operations before implementing the production sorted search.
 - [ ] Implement checked sorted insertion and bounded match enumeration with optional short-key ownership.
 - [ ] Specify path transition, sufficient-length, tie, early-abort and backtracking observations before parser implementation.
 - [ ] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.

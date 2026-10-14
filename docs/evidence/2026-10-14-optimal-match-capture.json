@@ -1,0 +1,31 @@
+{
+  "archive": "2026-10-14-optimal-match-capture.tar.gz",
+  "archive_bytes": 7258565,
+  "archive_members": 464,
+  "archive_sha256": "610321786cee1dd978aed0fb2510d926d4ea14d19e0e38d6cdcd75e9e1ec2e74",
+  "child_attempts": 0,
+  "commands": 164,
+  "correction": "minMatch3 primary heads use hash4; only the short-key owner uses hash3. Original sources, unsuccessful v1 comparison and all successful C command transcripts remain unchanged.",
+  "date": "2026-10-14",
+  "forged_rejections_per_mode": 33,
+  "instrumented_codec_units": 26,
+  "log_bytes": 18857576,
+  "malformed_rejections_per_build": 22,
+  "normal_instrumented_equal": true,
+  "operations_per_build": 273,
+  "original_capture_status": "failed",
+  "original_failure": "ValueError('independent complete search state')",
+  "positive_audits_per_mode": 2,
+  "qualification": "Version 2 corrects the independently modeled primary hash for minMatch3. All original C commands succeeded; original evidence retains the v1 comparison failure. Complete maps, two padding passes and normal/instrumented bytes match. No ordinary geometry, Rust implementation or public Optimal claim.",
+  "raw_bytes": 38859233,
+  "raw_files": 462,
+  "recipes": 29,
+  "reconciliation_sources": {
+    "reconciliation/scripts/check_optimal_match_capture_controls.py": "0aed6b651c5974b2dc19b1254fdf7e8949a3e1cbe6cd11f4dc393e676cf3524a",
+    "reconciliation/scripts/check_optimal_match_capture_controls_v2.py": "4a563b019ec70d7a2370cce191820a5de158d75d1ec46d76ec054ec5bb7050ed",
+    "reconciliation/scripts/check_optimal_match_capture_v2.py": "a173e3e3c80d7cb783ff8fd9aee5d74c5b3d14d0492bb278f0fb8a330c605791",
+    "reconciliation/scripts/check_optimal_match_validation_v2.py": "ff7e176304a06395ea94d64405fb5029a19278a1c14d736504adcbbddef65e65",
+    "reconciliation/scripts/oracles/optimal_match_validation_v2.py": "07909e07eb0ec17f4643dffa3befeadde814da8b9f61fe1cb284d2d036c3ecee"
+  },
+  "status": "passed"
+}

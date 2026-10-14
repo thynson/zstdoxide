@@ -112,3 +112,26 @@ Normal and optimized Python each reject 44 forged records without child executio
 `evidence/2026-10-14-optimal-match-model.json` retains exact code and logs. These
 are synthetic model transcripts before C capture, not upstream observed fixtures.
 The model is a test oracle only and is not part of the Rust codec.
+
+## Tiny C match capture and primary-hash correction
+
+The 164-command capture executed all 29 recipes / 273 operations with two padding
+passes in normal and fully ASan/UBSan-instrumented builds. All 22 malformed packets
+per build were rejected before output; every C command completed as planned.
+The initial independent comparison failed: its primary hash incorrectly used
+three bytes for minMatch3. Upstream ZSTD_hashPtr defaults to four-byte hashing;
+only the separate short-key table uses three bytes. Earlier preparation text
+about a three-byte primary hash is superseded by this explicit correction.
+
+The original failed envelope and all original code/logs remain unchanged. The
+additive v2 model independently matches every head, paired edge, short-key head,
+frontier and ordered candidate. Both padding passes and both C builds agree
+exactly. Normal and optimized Python each reject 33 capture forgeries with two
+positive audits and zero child execution. The v2 synthetic controls additionally
+reject 44 forged records per mode and distinguish the primary/short-key buckets.
+
+`evidence/2026-10-14-optimal-match-capture.json` binds the full lossless archive,
+including every object and executable, all 18,857,576 raw log bytes and the v1
+failure. This is a reconciled offline audit of actual C observations, not a
+retroactive passing v1 run. Ordinary CCtx geometry and the 2^18 distance boundary
+remain open; no Rust sorted-search or public Optimal admission is claimed.
