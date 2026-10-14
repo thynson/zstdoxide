@@ -373,3 +373,9 @@ three strict Clippy modes and safe/isolated no_std checks pass. Initial missing
 feature-lint registration and duplicate test-module diagnostics are retained.
 See `evidence/2026-10-14-optimal-paths.json`; diagnostic timing remains a separate
 qualification step.
+
+Selected path ownership and scalar-boundary tests also pass 24 strict-provenance
+Miri invocations across i686 and s390x, in safe, isolated path and all-feature
+modes. These include wrong-phase access, shortened storage, invalid slots, moved
+allocator failure cleanup and predecessor arithmetic. No native foreign execution
+is claimed. See `evidence/2026-10-14-optimal-paths-platform.json`.
