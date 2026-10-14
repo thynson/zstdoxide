@@ -436,3 +436,24 @@ commands passed against the immutable matrix snapshot. Their logs, 171 unchanged
 script identities and 146 frozen fixture identities are bound in
 `evidence/2026-10-13-tree-driver-checks.json` and its archive. This is an offline
 driver checkpoint; the Rust full-feature matrix and timing remain separate gates.
+
+## Complete immutable feature matrix
+
+The final matrix passes 18 full suites: safe, each of15isolated unsafe leaves,
+all features and release/all. Each passes1204tests with55ignored and zero failures
+(21672passes,990ignored across all configurations). All17true no_std builds,
+strict safe/all Clippy, formatting,13allocator tests and22registered usage examples
+in each safe/all mode pass. The upstream migration gate still reports188unported
+source units; ignored large campaigns were not silently counted as executed.
+
+The user paused the original run after12completed suites. Its interrupted tree
+suite and failed/KeyboardInterrupt envelope are retained. A separately identified
+continuation rehashed the complete immutable source, every completed log and the
+compiler identities, then reran the interrupted suite in full and completed all
+remaining commands. No failed or partial suite contributes to passing totals.
+
+`evidence/2026-10-14-tree-matrix.json` binds116completed commands and a135member
+archive. Every pre-existing codec/test/dependency input matches the main checkout.
+Additive tree baseline, Optimal fixture/scalar tests, benchmark-v2 controls and
+six driver registrations have separately recorded checks. The private Optimal
+frequency/search branch is outside this matrix. Timing remains a separate gate.

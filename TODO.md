@@ -92,7 +92,7 @@ complete public interoperability, final matrix and measurement closure follow.
 - [x] Preflight the public capture controller and independently reconstructed tuple auditor with no-child rejection controls.
 - [x] Capture bidirectional public C interoperability and reject forged evidence offline.
 - [x] Run selected strict-provenance foreign interpretation and no-atomics library/caller checks.
-- [ ] Run safe, every unsafe leaf, all-feature, no_std, Clippy and formatting checks.
+- [x] Run safe, every unsafe leaf, all-feature, no_std, Clippy and formatting checks.
 - [x] Prepare and qualify the deterministic tree benchmark harness and offline forgery controls.
 - [x] Verify complete clock-free tree output and exact owners across all seventeen backends.
 - [ ] Record equivalent all-backend timing and a separate safe/all repeat after CPU barriers.
