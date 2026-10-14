@@ -322,3 +322,17 @@ and the same 26 used codec units; all 15 upstream hooks are unchanged. Original
 and wider adapter digests plus their exact diff are retained. The initial Python
 control-script syntax diagnostic is preserved with the corrected passing runs in
 `evidence/2026-10-14-optimal-path-wide-preflight.json`.
+
+## Wider scripted upstream path capture
+
+All 122 planned commands pass. Ten recipes produce 20,722 logical events per
+padding pass and build, including the strict 4096-position horizon boundary.
+Canonical complete-cell deltas, frequencies, sequences and repeats agree with
+independent replay; normal and ASan/UBSan traces are byte-identical. All twenty
+malformed packets per build fail before metadata. Normal and optimized offline
+audits each reject 42 forgeries, accept two positives and spawn no children.
+The archive retains 110,292,854 raw log bytes and all 26 instrumented units,
+requests, adapter differences and source identities (361 members, 8,860,742
+compressed bytes). See `evidence/2026-10-14-optimal-path-wide-capture.json`.
+These scripted observations do not qualify ordinary parser startup or enable
+public Optimal admission.
