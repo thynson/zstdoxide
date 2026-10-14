@@ -29,7 +29,8 @@
         feature = "unsafe-reference-tree",
         feature = "unsafe-row-table",
         feature = "unsafe-dictionary",
-        feature = "unsafe-training"
+        feature = "unsafe-training",
+        feature = "unsafe-optimal-frequencies"
     )),
     forbid(unsafe_code)
 )]
@@ -104,6 +105,12 @@ mod match_parse;
 mod match_search;
 mod matchchain;
 mod matchfinder;
+mod optimal_frequencies;
+#[allow(
+    dead_code,
+    reason = "Private optimal scalar pricing precedes parser integration"
+)]
+mod optimal_price;
 mod parameters;
 mod reference_chain;
 mod reference_encode;

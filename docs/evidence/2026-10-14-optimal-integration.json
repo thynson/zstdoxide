@@ -1,0 +1,40 @@
+{
+  "archive": "2026-10-14-optimal-integration.tar.gz",
+  "archive_bytes": 81650,
+  "archive_members": 23,
+  "archive_sha256": "cff5c9c2a70b16878aa5220f805257b420176e05e9807f57c60625893a8ed44a",
+  "fixture_price_tests": 24,
+  "focused_tests": 102,
+  "format": true,
+  "frequency_tests": 24,
+  "public_predecessor_tests": 54,
+  "qualification": "Post-merge integration checks after completed Module16 closure. Frequency ownership is private; public strategy7 remains unsupported. The historical Module16 matrix and benchmark sources remain qualified to their own immutable checkpoint.",
+  "source_unchanged": true,
+  "status": "passed",
+  "strict_clippy": [
+    "safe",
+    "all"
+  ],
+  "true_no_std": [
+    "safe",
+    "all-unsafe-leaves"
+  ],
+  "unsafe_features": [
+    "unsafe-bitstream",
+    "unsafe-byte-cursor",
+    "unsafe-dictionary",
+    "unsafe-fse",
+    "unsafe-fse-encoder",
+    "unsafe-history",
+    "unsafe-huffman",
+    "unsafe-huffman-codebook",
+    "unsafe-match-chain",
+    "unsafe-match-table",
+    "unsafe-optimal-frequencies",
+    "unsafe-reference-chain",
+    "unsafe-reference-tree",
+    "unsafe-ring-history",
+    "unsafe-row-table",
+    "unsafe-training"
+  ]
+}

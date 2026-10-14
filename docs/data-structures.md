@@ -1423,7 +1423,9 @@ matches). Runtime live-length/domain checks must precede every unchecked access.
 
 ### Algorithm distinctions that require new observations
 
-Optimal hashing clamps widths to 3..6; minimum-match 3 is real three-byte matching
+Optimal template minimum clamps to 3..6, but the primary tree hash uses widths
+4..6 (ZSTD_hashPtr defaults to hash4 for template minimum 3). Only the separate
+short-key table uses hash3. Minimum-match 3 is real three-byte matching
 and has a separate hash table and update frontier. The generic sequence format
 can represent length-three matches, but the current lazy-family parser's
 minimum-four filter must not be reused. A selected encoded repeat intent depends
@@ -1516,3 +1518,61 @@ match penalties remain distinct APIs. Initial code is not added to public dispat
 or the library module graph while the previous milestone's immutable matrix runs;
 its source, no_std compilation and all captured query comparisons are independently
 qualified. Frequency ownership and its own optional unsafe feature follow later.
+
+### Optimal frequency owner and isolated integration branch
+
+`OptimalFrequencies<A>` owns one fallibly initialized `Vec<u32, A>` containing
+exactly 377 live cells, partitioned into fixed literal/LL/ML/OF ranges. A single
+moved allocator owns the contiguous allocation; no allocator clone, source copy,
+interior raw pointer or reference is retained. The four sums and cached prices,
+pricing mode and initialized/dirty flags are copied scalar state. Reset preserves
+the same allocation and clears every count and phase. Disabled literal mode is
+fixed per owner and retains zero literal statistics.
+
+The independently opt-in `unsafe-optimal-frequencies` feature replaces only
+checked scalar cell reads/writes after runtime live-length/index checks. The
+safe implementation has the same API and errors. Immutable views used by price
+queries remain scoped borrows; no ownership or lifetime escapes. Snapshot values
+copy complete tables for focused conformance tests and need no artificial unsafe
+representation.
+
+Each update first validates lengths/encoded offsets and preflights histogram,
+frequency and sum arithmetic before mutation. Every counter remains below
+u32::MAX so weight(stat+1) is valid. Invalid requests, overflow, malformed storage
+or failed initial allocation leave published model state unchanged. Successful
+updates mark cached prices dirty; queries reject that phase. Explicit refresh or
+begin-block rescale updates cached prices. First-block initialization and later
+base-one rescaling follow the independent captured lifecycle; raw/RLE wire repeat
+publication remains a separate future parser concern.
+
+This isolated branch integrates only private scalar/frequency modules and their
+Cargo feature. Public strategy 7 stays unsupported. Full tree-milestone tests and
+measurement use their prior immutable source; this branch requires focused
+safe/isolated/all/release conformance, allocator failures, every-leaf no_std,
+Clippy and complete source/feature evidence before its own commit and later merge.
+
+### Tiny sorted-match observation replay
+
+The independent Python replay owns zero-initialized integer heads, paired nodes
+and optional short-key heads. Both frontiers begin at native index two. It counts
+equal suffix bytes directly from immutable source, without copying C's common-
+prefix optimization, pointer aliases or loads. Pending smaller/larger links are
+optional (slot, side) values; absence discards an expired link. Catch-up and query
+insertion publish frontiers differently. Match intents remain encoded offBase
+values, and repeat bytes use independently resolved distances.
+
+Complete copied before/after maps and frontiers are bounded observations. Replay
+recomputes every record from requests; canonical comparison rejects type changes
+and unknown fields. Hand-derived repeat, short-key, full-tail and skipped-frontier
+cases precede C capture. This test-only owner does not enable public Optimal.
+
+### Broader direct short-key observations
+
+The ZOPMB02 source owner caps at524288bytes and16queries, with window10..21.
+Primary/paired storage remains at most4096cells; the optional short-key owner
+uses exactly min(window,17), up to131072cells. All maps and both native-biased
+frontiers are retained. Source/packet/owner copies and guards fit a reviewed
+static4MiB observer budget; C execution requires its own bounds/preflight gate.
+Independent replay compares equal4096byte source chunks, then the first unequal
+chunk bytewise, and must agree with scalar tiny replay before broader capture.
+No production owner or unsafe leaf is introduced by this observation protocol.

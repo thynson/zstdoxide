@@ -1,0 +1,51 @@
+{
+  "archive": "2026-10-13-optimal-match-inputs.tar.gz",
+  "archive_bytes": 11762,
+  "archive_members": 9,
+  "archive_sha256": "d04e289d30c43e3d96af05ce4f3df32ef9aedf8c360457849a35ed5c1f082f43",
+  "child_attempts": 0,
+  "files": {
+    "docs/reference-optimal-match-protocol.md": {
+      "bytes": 5957,
+      "sha256": "eb836881856e2dd2d31a25928830f6909cd6dd1703a5427d6fed3a4817f896dd"
+    },
+    "logs/normal.json": {
+      "bytes": 139,
+      "sha256": "a92e85b1b92a23513065b4ca6efe38207dc3b5025ea7cae5d0a6dc97e5bcf1e6"
+    },
+    "logs/optimized.json": {
+      "bytes": 139,
+      "sha256": "a92e85b1b92a23513065b4ca6efe38207dc3b5025ea7cae5d0a6dc97e5bcf1e6"
+    },
+    "scripts/check_optimal_match_recipes.py": {
+      "bytes": 5485,
+      "sha256": "a5e3aaa92b6131a947adeb20ac75b6984c80ce680deb63fd77b14e25b114dd0f"
+    },
+    "scripts/oracles/optimal_match_recipes.py": {
+      "bytes": 4395,
+      "sha256": "a7dd1e4b983e82940d79648a5160d9113f2c664aa06c38b4412890adab68f9d3"
+    },
+    "scripts/oracles/optimal_matches.py": {
+      "bytes": 3259,
+      "sha256": "159b4dc7f45f36d27f53f7f496957fcda232c075c36ecad36e51bcee47493caf"
+    },
+    "tests/fixtures/reference-optimal-match-recipes/README.md": {
+      "bytes": 770,
+      "sha256": "1c6703a018e8df496a8d612b61283ebfa230bbfc2b42140ee83007966e4a3e91"
+    },
+    "tests/fixtures/reference-optimal-match-recipes/recipes.json": {
+      "bytes": 42851,
+      "sha256": "a2454525f419e15b5449b085aa381a53dad10dcbe4ceee77c5a4f8deba836488"
+    }
+  },
+  "malformed_rejections_per_mode": 172,
+  "modes": [
+    "normal",
+    "optimized"
+  ],
+  "qualification": "Source-only input preparation. No C execution, result maps, Rust search or public Optimal admission.",
+  "queries": 273,
+  "recipes": 29,
+  "source_bytes": 71072,
+  "status": "passed"
+}

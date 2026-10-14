@@ -1,0 +1,13 @@
+{
+  "archive": "2026-10-14-optimal-match-broad-inputs.tar.gz",
+  "archive_bytes": 9466,
+  "archive_members": 9,
+  "archive_sha256": "b2128bc5d692b5eae72b31f752abed66266bfb0eb22e5f45cd9e27f67912e14f",
+  "child_attempts": 0,
+  "malformed_rejections_per_mode": 164,
+  "qualification": "Source-only ordinary short-key geometry and strict 2^18 distance hypotheses. Fresh repeat values1/4/8 at pointer-safe positions; ordinary parser startup and larger primary/node geometry remain open.",
+  "queries": 82,
+  "recipes": 37,
+  "source_bytes": 2119568,
+  "status": "passed"
+}

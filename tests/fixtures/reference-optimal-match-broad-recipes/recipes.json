@@ -1,0 +1,1371 @@
+{
+  "protocol": "optimal-all-matches-broad-v2",
+  "qualification": "Ordinary short-key logs and strict 2^18-distance hypotheses; bounded direct primary/node logs. No C execution, result maps, ordinary parser startup or public admission.",
+  "queries": 82,
+  "recipe_count": 37,
+  "recipes": [
+    {
+      "hypothesis": "Independent inclusive window floor and strict short-key distance cutoff at 2^18.",
+      "id": "om_broad_distance_w18_d262143",
+      "packet_bytes": 262251,
+      "packet_sha256": "d2fe5c10374e994dc1cb933d297ae16570f6fa60b15afaa17891451c991955d1",
+      "parameters": [
+        18,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          262143,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 262159,
+      "source_sha256": "cb3c92e94a2cd5b01526e7dc65bd30d4c396eb74618db4b8aafb1dba004627ba"
+    },
+    {
+      "hypothesis": "Independent inclusive window floor and strict short-key distance cutoff at 2^18.",
+      "id": "om_broad_distance_w18_d262144",
+      "packet_bytes": 262252,
+      "packet_sha256": "1cb163fe3a96094246966152f81ffe57ce311ad542c49f0f8b31a49b217957e9",
+      "parameters": [
+        18,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          262144,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 262160,
+      "source_sha256": "654d357a8e2e2740af70d0cd9fca0f2559e768ac57c6ad995bae4b6a5bb7a067"
+    },
+    {
+      "hypothesis": "Independent inclusive window floor and strict short-key distance cutoff at 2^18.",
+      "id": "om_broad_distance_w18_d262145",
+      "packet_bytes": 262253,
+      "packet_sha256": "7bedc969f2af97b6fe469cb3e292fa34b0fb868e37e02cf1df4c6ed5a5d9d8a9",
+      "parameters": [
+        18,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          262145,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 262161,
+      "source_sha256": "faea5fe859579482289f4d2ce830f73f1d4d255b9bea8dc4573f2784824fc92c"
+    },
+    {
+      "hypothesis": "Independent inclusive window floor and strict short-key distance cutoff at 2^18.",
+      "id": "om_broad_distance_w19_d262143",
+      "packet_bytes": 262251,
+      "packet_sha256": "d38d4ddf1f2312aae1c142f7e026df165443fab6e1c95af01a272f8bcadf7fcf",
+      "parameters": [
+        19,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          262143,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 262159,
+      "source_sha256": "cb3c92e94a2cd5b01526e7dc65bd30d4c396eb74618db4b8aafb1dba004627ba"
+    },
+    {
+      "hypothesis": "Independent inclusive window floor and strict short-key distance cutoff at 2^18.",
+      "id": "om_broad_distance_w19_d262144",
+      "packet_bytes": 262252,
+      "packet_sha256": "204996f6bcca0fcd47ce98e15ef717b67e37f10de856ec034f0a8228b5a2165b",
+      "parameters": [
+        19,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          262144,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 262160,
+      "source_sha256": "654d357a8e2e2740af70d0cd9fca0f2559e768ac57c6ad995bae4b6a5bb7a067"
+    },
+    {
+      "hypothesis": "Independent inclusive window floor and strict short-key distance cutoff at 2^18.",
+      "id": "om_broad_distance_w19_d262145",
+      "packet_bytes": 262253,
+      "packet_sha256": "1e634ffeff8f4d43cc6b138186d7f186dd11041e3693c7fc5e327aa4e0aa5205",
+      "parameters": [
+        19,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          262145,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 262161,
+      "source_sha256": "faea5fe859579482289f4d2ce830f73f1d4d255b9bea8dc4573f2784824fc92c"
+    },
+    {
+      "hypothesis": "Ordinary CCtx short-key log min(window,17), with bounded direct primary/node geometry.",
+      "id": "om_broad_ordinary_h3_w10",
+      "packet_bytes": 2164,
+      "packet_sha256": "c804b6482be540f2b9c7d0a4eef067b46cc9fdf4dced24ec688e4c5086d17a28",
+      "parameters": [
+        10,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        10
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "Ordinary CCtx short-key log min(window,17), with bounded direct primary/node geometry.",
+      "id": "om_broad_ordinary_h3_w14",
+      "packet_bytes": 2164,
+      "packet_sha256": "6c868dbb14574242b437b626ca9bcff37eaf8505ef2641f48bcee8030e253c9c",
+      "parameters": [
+        14,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        14
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "Ordinary CCtx short-key log min(window,17), with bounded direct primary/node geometry.",
+      "id": "om_broad_ordinary_h3_w17",
+      "packet_bytes": 2164,
+      "packet_sha256": "61808d17da8cc84057e372b9a24c4d9b368b231748130c8d150e42f80529eaed",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "Ordinary CCtx short-key log min(window,17), with bounded direct primary/node geometry.",
+      "id": "om_broad_ordinary_h3_w18",
+      "packet_bytes": 2164,
+      "packet_sha256": "2c03e9572b48cbb04eeaabf8cff92a1b7951e0727ebf5e82aa3c16549411c6ed",
+      "parameters": [
+        18,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "Ordinary CCtx short-key log min(window,17), with bounded direct primary/node geometry.",
+      "id": "om_broad_ordinary_h3_w19",
+      "packet_bytes": 2164,
+      "packet_sha256": "6764e4e44cd4b202424e21ab9b1d47bbbbfe93052a92c489594a1de5978a7885",
+      "parameters": [
+        19,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "Ordinary CCtx short-key log min(window,17), with bounded direct primary/node geometry.",
+      "id": "om_broad_ordinary_h3_w21",
+      "packet_bytes": 2164,
+      "packet_sha256": "e2c5de521efab06b2dd40fe2a32f52ca9a438ad62f217bc8eaeb80468bf92dd5",
+      "parameters": [
+        21,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "No short-key owner for effective minimum above three; primary width clamps to six.",
+      "id": "om_broad_no_h3_m4",
+      "packet_bytes": 2164,
+      "packet_sha256": "6a53af3429824b4299cac434c3f2f386e571c784d2a048b3d50a33bfaf547b7c",
+      "parameters": [
+        19,
+        12,
+        12,
+        4,
+        4,
+        4096,
+        0
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          4
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "No short-key owner for effective minimum above three; primary width clamps to six.",
+      "id": "om_broad_no_h3_m5",
+      "packet_bytes": 2164,
+      "packet_sha256": "a08b4ccfb58b53615fc3d611789a6e8163e5c53bf15e8a1fa0c2285af12f5728",
+      "parameters": [
+        19,
+        12,
+        12,
+        4,
+        5,
+        4096,
+        0
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          4
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "No short-key owner for effective minimum above three; primary width clamps to six.",
+      "id": "om_broad_no_h3_m6",
+      "packet_bytes": 2164,
+      "packet_sha256": "2f0f036ff6c1565a0e9e612ff70da7f96ad19043f4d779b0a5a2bb00c8b9e55e",
+      "parameters": [
+        19,
+        12,
+        12,
+        4,
+        6,
+        4096,
+        0
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          4
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "No short-key owner for effective minimum above three; primary width clamps to six.",
+      "id": "om_broad_no_h3_m7",
+      "packet_bytes": 2164,
+      "packet_sha256": "0aca438a6b6e434aa9c8f9ab13d01c9b2310fa809ad0bdbdd9dc1d30bd22a5b4",
+      "parameters": [
+        19,
+        12,
+        12,
+        4,
+        7,
+        4096,
+        0
+      ],
+      "queries": [
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          512,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          2040,
+          0,
+          0,
+          0,
+          0,
+          4
+        ]
+      ],
+      "source_bytes": 2048,
+      "source_sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t0",
+      "packet_bytes": 156,
+      "packet_sha256": "1153123a92d5127ad8d88521f63b540496497437eb919a4d3712d92b19ac3850",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        0,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t3",
+      "packet_bytes": 156,
+      "packet_sha256": "b6093e96a3fddf7d9cf379ad81a40fc6953ccb9ea9ae5613f01f106baac1b3e7",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        3,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t4",
+      "packet_bytes": 156,
+      "packet_sha256": "cbe26cebeb13d1a197dbb2fbb482e69f68b731f703251066fd2b8c49dfab33e3",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t7",
+      "packet_bytes": 156,
+      "packet_sha256": "bfc2f4a2edb45cd6a041f559fe6334a0f45046f11ac70a102e8662e4c05c4531",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        7,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t8",
+      "packet_bytes": 156,
+      "packet_sha256": "aae3a84dc1af2af31826127d224d4c8988cc2419ca3c880165dc8698c736f321",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        8,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t11",
+      "packet_bytes": 156,
+      "packet_sha256": "94e8d8f0cc425f6adb3f3d0d5f5089176ab1987a336820f8700ec22bfa5eb3c9",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        11,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t12",
+      "packet_bytes": 156,
+      "packet_sha256": "8ba26c9e33fde22befbea77a144a483e37db4628336a6d75db8b2e6440ed953c",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        12,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t4095",
+      "packet_bytes": 156,
+      "packet_sha256": "4427ed3c29f782e9cf52422785db3286760d9e5ceb0e40805521bd8c479c1f97",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4095,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll0_t4096",
+      "packet_bytes": 156,
+      "packet_sha256": "5737e445ba8fcef1eb07fb601631fd7475c751947b1b0c082e111daf127614d3",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          48,
+          32,
+          16,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t0",
+      "packet_bytes": 156,
+      "packet_sha256": "ecdbd378878e518be4c8e5200f22f0f6af29da2a73bde5d99b2956ade2cad57c",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        0,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t3",
+      "packet_bytes": 156,
+      "packet_sha256": "8416d34e201312b38aa80295540a12f49add5c6efe2f5b2243446464f5b9fcb7",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        3,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t4",
+      "packet_bytes": 156,
+      "packet_sha256": "776f17b8568be186aeed88827f207e8216d757ab9599c8893879a9a94b732408",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t7",
+      "packet_bytes": 156,
+      "packet_sha256": "a5d991fc987a308f5fdd554785750c0d03e263fb5ab3797adba7670977dc2afb",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        7,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t8",
+      "packet_bytes": 156,
+      "packet_sha256": "871245f1e08bf3a62c6eb318e28daa623b8c732426f004e5b2bb9a5053803889",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        8,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t11",
+      "packet_bytes": 156,
+      "packet_sha256": "bb6e3fa49bdc1b4f6e86a7524f26374cb7efe12988990ece35a6b98caab17911",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        11,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t12",
+      "packet_bytes": 156,
+      "packet_sha256": "644b0d1182776bbcfafe8631a28a379d99da70798e48a672494c20eb6ab2755e",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        12,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t4095",
+      "packet_bytes": 156,
+      "packet_sha256": "5cb06539dacb232f5616143ed26ad61977f4eb3d7720b79b1ddbf416876f6434",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4095,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Repeat threshold equality/strictness and all intents before short-key publication.",
+      "id": "om_broad_repeat_ll1_t4096",
+      "packet_bytes": 156,
+      "packet_sha256": "1b2aeaabada55d00e62c1ca73005a16668e88c0c59cb8791cc400df6e3c90e4d",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          64,
+          17,
+          48,
+          32,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 88,
+      "source_sha256": "cba39b77ad9367c82e5235c330ec46a8d13d519e2de715e64294020acdd7b798"
+    },
+    {
+      "hypothesis": "Fresh repeat values 1/4/8 at pointer-safe query positions; ordinary parser startup remains separate.",
+      "id": "om_broad_fresh_repeats_ll0",
+      "packet_bytes": 244,
+      "packet_sha256": "e0024b7e3fbed24e50b9fb99c15f82040867c73540de459e9a208e2065103f5e",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          6,
+          1,
+          4,
+          8,
+          0,
+          3
+        ],
+        [
+          8,
+          1,
+          4,
+          8,
+          0,
+          3
+        ],
+        [
+          120,
+          1,
+          4,
+          8,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 128,
+      "source_sha256": "4532ef7311099286059abd85d4c06757f96d2448b259f9519222b2ac69b5ebf3"
+    },
+    {
+      "hypothesis": "Fresh repeat values 1/4/8 at pointer-safe query positions; ordinary parser startup remains separate.",
+      "id": "om_broad_fresh_repeats_ll1",
+      "packet_bytes": 244,
+      "packet_sha256": "4ba0fba242a01cccbf634584e49618cdfbf47727b6b39a3391b9814c45a48282",
+      "parameters": [
+        17,
+        12,
+        12,
+        4,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          6,
+          1,
+          4,
+          8,
+          1,
+          3
+        ],
+        [
+          8,
+          1,
+          4,
+          8,
+          1,
+          3
+        ],
+        [
+          120,
+          1,
+          4,
+          8,
+          1,
+          3
+        ]
+      ],
+      "source_bytes": 128,
+      "source_sha256": "4532ef7311099286059abd85d4c06757f96d2448b259f9519222b2ac69b5ebf3"
+    },
+    {
+      "hypothesis": "Maximum source/query extent and ordinary short-key log17; no large primary/node admission claim.",
+      "id": "om_broad_maximum",
+      "packet_bytes": 524716,
+      "packet_sha256": "40a732840f6bcefb3e560ef11961940e846c7c4dc25105cdc1a6d4f0f07104df",
+      "parameters": [
+        21,
+        12,
+        12,
+        8,
+        3,
+        4096,
+        17
+      ],
+      "queries": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          16,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          24,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          32,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          40,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          48,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          56,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          64,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          72,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          80,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          88,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          96,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          104,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          112,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          524280,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "source_bytes": 524288,
+      "source_sha256": "33bc8aab40703678c3ebe94d2dd8f2afff285dd901f9234e841e4679f8204fd5"
+    }
+  ],
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1,
+  "source_bytes": 2119568,
+  "status": "source-only pre-execution hypotheses"
+}
