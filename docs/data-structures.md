@@ -1588,3 +1588,45 @@ borrows source/name bytes, and validates hash buckets, complete state continuity
 frontier bounds and every candidate's source bytes. No codec algorithm or unsafe
 backend is involved in this test-only representation. Dense owner comparisons
 can iterate the unambiguous complete map without retaining many repeated zeros.
+
+### Private sorted Optimal search contracts
+
+`OptimalSearchLayout` is a checked scalar geometry: window 10..21, primary and
+paired-edge logs 6..19, search 1..8, minimum 3..7, target at most 131072. Primary
+keys reuse `GreedyKeyLayout` (minimum 3 hashes four bytes). Optional short keys
+hash exactly three bytes with logs 6..17; ordinary contexts select min(window,17),
+while direct observation tests may select smaller logs. No table exists when
+minimum exceeds three. Shared scalar records need no unsafe representation.
+
+`OptimalSource` borrows an immutable contiguous source for the search lifetime,
+with at most u32::MAX - 2 bytes, preserving the observed native index bias of two.
+The direct primitive leaves eight bytes at a query and checks repeat distances,
+length-to-beat and source ranges before mutation. Prefix/window eligibility is
+separate from paired-node retention. Ordinary startup/block state remains a later
+integration gate. Matching reads only initialized logical bytes without padding.
+
+`OptimalShortKey` owns one initialized `Vec<usize, A>` with the exact moved
+allocator, independent of primary heads/edges. Empty is usize::MAX; every live
+value is a source position. Disabled storage is a zero-length vector retaining
+the allocator and performs no allocation. Reset fills enabled cells with empty
+and allocates nothing. `unsafe-optimal-short-key` changes only checked cell access;
+all bounds are enforced at runtime in both implementations. Hashing is shared
+safe scalar arithmetic, corresponding to ZSTD_hash3 and hashTable3.
+
+`OptimalMatches` owns 4099 initialized candidate records in `Vec<_, A>`, plus a
+live prefix length. `OptimalMatch` is a copied offBase/length pair (nonzero intent,
+length at least three); direct observations can exceed a block's 128 KiB length.
+Appending requires strictly increasing lengths and available initialized space;
+failure leaves the live prefix unchanged. Clearing retains storage. Its separate
+`unsafe-optimal-matches` feature selects only runtime-guarded access. Empty
+initialized placeholders never escape the live prefix. This corresponds to
+ZSTD_match_t matches[ZSTD_OPT_NUM + 1], with the reviewed 4099-cell observer bound.
+
+The sorted search composite reuses `ReferenceTree`'s two independent owners and
+its existing unsafe leaf. Sorted traversal rejects the deferred-tree unsorted
+marker. Main and short-key frontiers are logical source indices (initial zero);
+no pointer or source alias is stored. Repeat publication remains caller-owned.
+Malformed requests are rejected before mutation; errors discovered during table
+traversal poison the composite until reset. Reset clears all owners and frontiers
+without allocation. It will implement ZSTD_insertBt1 / ZSTD_insertBtAndGetAllMatches
+and ZSTD_BtGetAllMatches for the observed contiguous, no-dictionary domain.

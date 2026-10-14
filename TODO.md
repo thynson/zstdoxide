@@ -85,7 +85,12 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Project audited tiny match observations into bounded fixtures and add an independent Rust reader.
 - [x] Capture broader ordinary short-key geometry, distance and repeat operations before production sorted search.
 - [x] Project broader complete maps into canonical sparse fixtures and verify an independent Rust reader.
-- [ ] Implement checked sorted insertion and bounded match enumeration with optional short-key ownership.
+- [x] Specify checked sorted-search records, immutable source lifetime and independent storage contracts.
+- [ ] Implement allocation-free sorted-search geometry, request and candidate records.
+- [ ] Implement optional short-key heads with initialized fallible ownership and an isolated unsafe feature.
+- [ ] Implement bounded candidate storage with initialized fallible ownership and an isolated unsafe feature.
+- [ ] Implement checked sorted insertion and bounded match enumeration over immutable source.
+- [ ] Compare every tiny and broader captured candidate, complete map and both frontiers across search backends.
 - [ ] Specify path transition, sufficient-length, tie, early-abort and backtracking observations before parser implementation.
 - [ ] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.
 - [ ] Implement finite-cost path ownership, phase-aware reconstruction and private optLevel0 parsing.
