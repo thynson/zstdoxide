@@ -100,7 +100,9 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Implement independent path replay and prove source-only recipe branch coverage before C execution.
 - [x] Review unique-anchor observer substitutions and preflight the pinned normal/instrumented helper.
 - [ ] Capture bounded path transitions and reject forged phase/predecessor/frequency evidence offline.
-- [ ] Extend path observations to the 4096-position horizon before production path integration.
+- [x] Specify canonical complete-state deltas for wider scripted path observations.
+- [ ] Validate wider path requests/replay against every small trace and prove horizon branch coverage.
+- [ ] Preflight and capture wider path transitions at the 4096-position horizon before production path integration.
 - [ ] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.
 - [ ] Implement finite-cost path ownership, phase-aware reconstruction and private optLevel0 parsing.
 - [ ] Freeze and capture ordinary retained optimal blocks with full search/frequency/path and repeat publication state.

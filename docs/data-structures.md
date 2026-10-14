@@ -1647,3 +1647,15 @@ separate forward/reconstruction phase. A cell's predecessor must be read before
 any overwrite during reconstruction. The bounded protocol cannot qualify the
 4096-position horizon or ordinary CCtx startup; both remain explicit later gates.
 See `reference-optimal-path-observer.md` for exact observation and rejection rules.
+
+### Wider path snapshot deltas
+
+The wider path observer retains a full initialized path owner of at most 4099
+cells and a separate initialized previous-snapshot owner. An event enumerates
+exactly the changed cell indices in increasing order with complete seven-word
+records. Missing indices preserve the previous value; the initial snapshot is
+all zero for each padding pass. Explicit zero-valued changes are valid, while
+unchanged entries and duplicate indices are noncanonical. Replaying the deltas
+recovers the complete owner, including stale fields, at every event. The emitted
+view never mutates the parser's owner. This bounded representation avoids retaining
+quadratically repeated full maps while qualifying the 4096-position horizon.
