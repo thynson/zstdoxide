@@ -751,3 +751,40 @@ and adds a bounded binary fixture and independent safe Rust reader. Production
 tree storage/parser and public strategy 6 remain future work. The completed
 Module 15 checklist is cleared; Module 16's decomposition remains. Official
 migration still has 188 unfinished units (149 blocked, 34 partial, five planned).
+
+## Module 16 completed: bounded reference BinaryTreeLazy2
+
+Completed on 2026-10-14. Known-source no-dictionary one-shot numeric requests
+now execute bounded depth-two parsing with independently owned paired binary-tree
+edges, checked deferred sorting, candidate scoring and frontier publication.
+Limits are W21/H19/C19/S8; row mode is not substituted. Existing named profiles,
+frame behavior and predecessor outputs/owner regressions remain intact.
+Default levels5/6 work across tiers,7–9 through256KiB, and10–12 above16KiB through
+256KiB; documented resource errors remain distinct from unsupported strategies.
+
+Ordinary capture retains245sources,531positive blocks and365complete C frames.
+Public interoperability independently resolves1,197recipes and13,606commands:
+C decodes4,396Rust frames and Rust decodes4,396C frames, reconstructing795,034,136
+bytes. Both Python modes reject41forged records; C/Rust entropy bytes need not
+match. Platform evidence includes44selected Miri executions and no-atomics
+library/caller compilation, without a native foreign/firmware execution claim.
+
+The immutable full matrix passes18suites with1,204tests each:21,672passing and
+990explicit ignored executions, zero failures. All17true no_std builds, strict
+safe/all Clippy, formatting,13allocator tests and22usage examples per mode pass.
+The original user-requested interruption is preserved; only12fully completed
+original suites and6fully completed continuation suites contribute to totals.
+
+All17backends agree on408clock-free cases. Two timed campaigns retain2,280samples
+across456runs with identical full frames and exact owners. All/safe geometric
+means over24cases are0.7625and1.2238; the direction reverses, so these results do
+not establish a stable unsafe throughput benefit. Single-host/fixed-order and
+uncontrolled desktop/clock/thermal effects limit interpretation.
+
+The closure evidence checks38reports/archives,1,370matrix input files and95source
+identities per benchmark campaign. Historical ordinary-frame storage is verified
+by lossless reconstruction of all4,117members rather than unavailable original
+gzip metadata. Module16's completed checklist is cleared. Module17 retains its
+independent Optimal decomposition; public strategy7 remains unsupported. The
+upstream migration gate still reports188unfinished units, so this bounded
+milestone is not a claim of complete library/CLI parity.

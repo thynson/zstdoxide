@@ -1,8 +1,11 @@
-# Bounded reference BinaryTreeLazy2 preparation
+# Bounded reference BinaryTreeLazy2 validation
 
-BinaryTreeLazy2 remains unsupported. This additive preparation was completed
-while Module 15 production inputs were frozen for correctness and timing. Its
-separate checks do not change the scope of that now-completed immutable matrix.
+Bounded known-source, no-dictionary one-shot BinaryTreeLazy2 is enabled and its
+Module 16 correctness/measurement gates are complete as of 2026-10-14. Resource
+limits and unsupported successor strategies remain explicit. Sections below retain
+chronological preparation qualifications; their earlier unsupported statements
+describe those checkpoints, not the final public state. Module 15 evidence remains
+immutable and does not retroactively include later tree work.
 
 ## Permanent predecessor baseline
 
@@ -457,3 +460,17 @@ archive. Every pre-existing codec/test/dependency input matches the main checkou
 Additive tree baseline, Optimal fixture/scalar tests, benchmark-v2 controls and
 six driver registrations have separately recorded checks. The private Optimal
 frequency/search branch is outside this matrix. Timing remains a separate gate.
+
+## Bounded milestone reconciliation
+
+The closure checks 38 report/archive references, 1,370 original matrix inputs
+and all 95 source entries in each clock-free/timed/repeat campaign against the
+delivered checkpoint. The superseded ordinary-frame gzip container is qualified
+through its storage-v2 archive: all 4,117 original members (575,147,023 logical
+bytes) and the canonical decompressed pack were reconstructed and verified;
+unavailable original gzip metadata is not claimed reverified.
+
+`evidence/2026-10-14-tree-closure.json` records this bounded completion. The full
+upstream migration remains incomplete with 188 source units unported. Optimal
+and higher reference parsers, numeric dictionary/streaming integration and other
+inventoried obligations are separate roadmap work.

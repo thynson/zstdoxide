@@ -1,0 +1,452 @@
+{
+  "campaigns": {
+    "clock-free": {
+      "configs": [
+        "safe",
+        "unsafe-byte-cursor",
+        "unsafe-bitstream",
+        "unsafe-history",
+        "unsafe-ring-history",
+        "unsafe-fse",
+        "unsafe-fse-encoder",
+        "unsafe-huffman",
+        "unsafe-huffman-codebook",
+        "unsafe-match-table",
+        "unsafe-match-chain",
+        "unsafe-dictionary",
+        "unsafe-training",
+        "unsafe-reference-chain",
+        "unsafe-row-table",
+        "unsafe-reference-tree",
+        "all"
+      ],
+      "evidence_sha256": "a9ff2d59a4697f21a904c6804ecae0c79f1d032c91fa04a9ef141e9c76409c54",
+      "source_entries_verified": 95
+    },
+    "repeat": {
+      "configs": [
+        "safe",
+        "all"
+      ],
+      "evidence_sha256": "62e7d262cb319f37f66242b2db3751555f7a9371f33314e4bac147e18a0529ee",
+      "source_entries_verified": 95
+    },
+    "timed": {
+      "configs": [
+        "safe",
+        "unsafe-byte-cursor",
+        "unsafe-bitstream",
+        "unsafe-history",
+        "unsafe-ring-history",
+        "unsafe-fse",
+        "unsafe-fse-encoder",
+        "unsafe-huffman",
+        "unsafe-huffman-codebook",
+        "unsafe-match-table",
+        "unsafe-match-chain",
+        "unsafe-dictionary",
+        "unsafe-training",
+        "unsafe-reference-chain",
+        "unsafe-row-table",
+        "unsafe-reference-tree",
+        "all"
+      ],
+      "evidence_sha256": "639a6f77787215924cf70bbab1131e9ced5f03d2116d4c937d760545adf759b9",
+      "source_entries_verified": 95
+    }
+  },
+  "checked_artifacts": {
+    "2026-10-13-lazy-baseline": {
+      "archives": [
+        {
+          "bytes": 26685,
+          "path": "docs/evidence/2026-10-13-lazy-baseline.tar.gz",
+          "sha256": "d18d86b1c72ee62ee7ff78b5150c5400fa9842019a90db44cbfa27b72119134e"
+        }
+      ],
+      "report_sha256": "9a3c766fb39a5355f0df470bc188adc1a5ae40c50887ea744d2380bf71c8b317"
+    },
+    "2026-10-13-tree-baseline-v2": {
+      "archives": [
+        {
+          "bytes": 8431449,
+          "path": "docs/evidence/2026-10-13-tree-baseline-v2.tar.gz",
+          "sha256": "f12d4a975e845ebe0cd5dd78a397c6d4d55614ee3cd73d184943245ee1009419"
+        }
+      ],
+      "report_sha256": "24e11d0871e357ca68b3b259935286cfb4c10c7cff67551752425e76ceff4f48"
+    },
+    "2026-10-13-tree-benchmark-harness": {
+      "archives": [
+        {
+          "bytes": 52815016,
+          "path": "docs/evidence/2026-10-13-tree-benchmark-harness.tar.gz",
+          "sha256": "dc7450d176bdc418854831cc6deb69b60724230de5a980b41fe8dbaa791d6ad0"
+        }
+      ],
+      "report_sha256": "5257e1abeb71675bd904bcc4dc2ec355a868520c13686f0c381c441ebc1a1b70"
+    },
+    "2026-10-13-tree-capture-preflight": {
+      "archives": [
+        {
+          "bytes": 35669,
+          "path": "docs/evidence/2026-10-13-tree-capture-preflight.tar.gz",
+          "sha256": "b837c2236424a204080f7187c8d645a40182f40a4a21eb46278b7944156adb5e"
+        }
+      ],
+      "report_sha256": "72da08899640c41c956d0f6242a4500d255d45a6f384f7800806b73b9a14d065"
+    },
+    "2026-10-13-tree-clock-free": {
+      "archives": [
+        {
+          "bytes": 42328651,
+          "path": "docs/evidence/2026-10-13-tree-clock-free.tar.gz",
+          "sha256": "355cc0359b8a46cf75187631e150e9d64cf4f9fe4a7331dc7ec5d6e2f067ba4e"
+        }
+      ],
+      "report_sha256": "f700d735fdc346bf5d8ade35b63713eebe5e345346eed881e89ac9abd494cb0c"
+    },
+    "2026-10-13-tree-driver-checks": {
+      "archives": [
+        {
+          "bytes": 514999,
+          "path": "docs/evidence/2026-10-13-tree-driver-checks.tar.gz",
+          "sha256": "45c7ead199787b7769dbd5634efb1a47ed984724209070acc459dd24bc76afe4"
+        }
+      ],
+      "report_sha256": "8aca9bb29f7d35d8154ae3e413c98ca2b1799973e380f3bbd4953d26a820f1c8"
+    },
+    "2026-10-13-tree-failure": {
+      "archives": [
+        {
+          "bytes": 376163,
+          "path": "docs/evidence/2026-10-13-tree-failure.tar.gz",
+          "sha256": "cfb0a752c2696ec3420148e9d5f0ce302a81c8608b734fd00b73cebe512643f5"
+        }
+      ],
+      "report_sha256": "892b148baf17331112463bd8c6b7f0c2c5ee3365304703ba42fb7fb7db087766"
+    },
+    "2026-10-13-tree-families": {
+      "archives": [
+        {
+          "bytes": 27949006,
+          "path": "docs/evidence/2026-10-13-tree-families.tar.gz",
+          "sha256": "c2b8b223d0978681b8baf3db6889c2d9cf2ac8f8b397942c5a2779be11847bbf"
+        }
+      ],
+      "report_sha256": "32811dbd25785f3b227877d22f75d157dde83811ae82120b8a8f22bed811fa4b"
+    },
+    "2026-10-13-tree-family-inputs": {
+      "archives": [
+        {
+          "bytes": 298641,
+          "path": "docs/evidence/2026-10-13-tree-family-inputs.tar.gz",
+          "sha256": "79309fb884907b1a8bc7268c5e3063a2d89d1bb33883dbfeda29532c55c313f7"
+        }
+      ],
+      "report_sha256": "3836ec21b34cdaeffcdaef921ddab98feaf14c7c349c8a81478c70ca161ec916"
+    },
+    "2026-10-13-tree-family-preflight": {
+      "archives": [
+        {
+          "bytes": 325479,
+          "path": "docs/evidence/2026-10-13-tree-family-preflight.tar.gz",
+          "sha256": "553f20b45cb4c1feba40a0107dfc461a252af53146df78fa2fd4e2a9fac4e1db"
+        }
+      ],
+      "report_sha256": "e8e2136974ffcc5e5eab18104abace45fc606169ab14575ab0d42582a41369d6"
+    },
+    "2026-10-13-tree-frame-helper": {
+      "archives": [
+        {
+          "bytes": 27939,
+          "path": "docs/evidence/2026-10-13-tree-frame-helper.tar.gz",
+          "sha256": "012b523d33aede42cda6727681dd21ebdcecf13a250239fb9e15bc8f4253edeb"
+        }
+      ],
+      "report_sha256": "3805044e64539ed91c09334628e5afe7e8c35d16ff5aacbb81e4edb67296f5c6"
+    },
+    "2026-10-13-tree-frame-plan": {
+      "archives": [
+        {
+          "bytes": 12378,
+          "path": "docs/evidence/2026-10-13-tree-frame-plan.tar.gz",
+          "sha256": "61467ce329ffb2b69b8ba3c6783a6c0a23d71f40d54e820ac75f4008a370e8a7"
+        }
+      ],
+      "report_sha256": "82068ecc2338813764165fba6593ac168f9935c2c6a5951ee349204761f65631"
+    },
+    "2026-10-13-tree-frame-recipes": {
+      "archives": [
+        {
+          "bytes": 18078,
+          "path": "docs/evidence/2026-10-13-tree-frame-recipes.tar.gz",
+          "sha256": "2ee3a514b953fd6a7ad0a78b61a434d33589342270de38df7020ec377f52526f"
+        }
+      ],
+      "report_sha256": "8809068e76991cae9e3e70af8cfc118bec42f27ec1e73d6deb6a085995af63b2"
+    },
+    "2026-10-13-tree-frames": {
+      "archives": [
+        {
+          "bytes": 74157471,
+          "original_container_sha256": "67cd7e56765da0a9a532b157d7b373ed049aea3306f85a3626b3bda1ffb6da54",
+          "path": "docs/evidence/2026-10-13-tree-frames-storage-v2.tar.gz",
+          "qualification": "Storage-only deduplication preserves every original regular member. Original gzip container metadata is not reconstructed; the missing historical container is not claimed reverified.",
+          "reconstructed_bytes": 575147023,
+          "reconstructed_members": 4117,
+          "sha256": "ec0c852741ce2391c86dec7d1efb90f70a98bb0f73dd3c980457217d7383e05a"
+        }
+      ],
+      "report_sha256": "de9a9c261730a8f6e80ce0ba4b4fbca10bc99ef940a8fcba324005b3356f67d4"
+    },
+    "2026-10-13-tree-frames-storage-v2": {
+      "archives": [
+        {
+          "bytes": 74157471,
+          "path": "docs/evidence/2026-10-13-tree-frames-storage-v2.tar.gz",
+          "sha256": "ec0c852741ce2391c86dec7d1efb90f70a98bb0f73dd3c980457217d7383e05a"
+        }
+      ],
+      "report_sha256": "c144cf99a6bd213c846d1659f3340962e7b7a09f6709a43ae8b1f2b5146828f8"
+    },
+    "2026-10-13-tree-helper-review": {
+      "archives": [
+        {
+          "bytes": 13854,
+          "path": "docs/evidence/2026-10-13-tree-helper-review.tar.gz",
+          "sha256": "b5535bd7ebe54d26f12d274c918a20455a5a6c90c4e73b8f886397e88569c3e3"
+        }
+      ],
+      "report_sha256": "5f6536e872c0086a63d327555779c04c3dad6346fef1ad0f4ee6850ddcbffca5"
+    },
+    "2026-10-13-tree-inputs": {
+      "archives": [
+        {
+          "bytes": 20678,
+          "path": "docs/evidence/2026-10-13-tree-inputs.tar.gz",
+          "sha256": "eb0e958c009b8bff8efdc3a0678a3fb2ae3e7038d5ef8a6af8b5e4eba4adb19f"
+        }
+      ],
+      "report_sha256": "b1371c9da59cc0b1e3ebac53cd5e84db081ea24ead948bb56c3dd5f37327d2d9"
+    },
+    "2026-10-13-tree-layout": {
+      "archives": [
+        {
+          "bytes": 46544,
+          "path": "docs/evidence/2026-10-13-tree-layout.tar.gz",
+          "sha256": "8c234c1450f30a4050be486b77f54e67d2a4d2e1db7ce87dd61564cdfd6356c2"
+        }
+      ],
+      "report_sha256": "c51df3f63cd2bc73467e32102b62a1a731acfcf5e133ac963fd3e10c0abfa3a9"
+    },
+    "2026-10-13-tree-ordinary": {
+      "archives": [
+        {
+          "bytes": 391062,
+          "path": "docs/evidence/2026-10-13-tree-ordinary.tar.gz",
+          "sha256": "63ff9753779f3db8d82211d2c07e0f16b3d59caf912510814dbc285f23ece76b"
+        }
+      ],
+      "report_sha256": "196729c90eba817b525b242ffabfa75da79d04df6a9f073d3c3b91c3d1b5e9d2"
+    },
+    "2026-10-13-tree-ordinary-projection": {
+      "archives": [
+        {
+          "bytes": 6073,
+          "path": "docs/evidence/2026-10-13-tree-ordinary-projection.tar.gz",
+          "sha256": "631387b28c9fa3df924a9d3b19a5843be6c9d5bf450d73ad7690438fdef1bf7f"
+        }
+      ],
+      "report_sha256": "af0acabf540ef2001b1078f64abd8ecebbe6966d2b6208d8ed324ee4b7d16394"
+    },
+    "2026-10-13-tree-owner": {
+      "archives": [
+        {
+          "bytes": 378587,
+          "path": "docs/evidence/2026-10-13-tree-owner.tar.gz",
+          "sha256": "9a3944dc6e9f9e54e756d97a024c0ae6c48865c461fdd874c271e98a15d93b96"
+        }
+      ],
+      "report_sha256": "f7f021d3cd5a2bda7358eb9b996ed4bea31c3bc5bf47cfb1b94d19ab8300d3af"
+    },
+    "2026-10-13-tree-owner-timing": {
+      "archives": [
+        {
+          "bytes": 896602,
+          "path": "docs/evidence/2026-10-13-tree-owner-timing.tar.gz",
+          "sha256": "d60e6ffb57d647c76cd8cfb70545a3c4eeff0276188c7629e5b98cccaeb242c6"
+        }
+      ],
+      "report_sha256": "676c4975643407c59c6894df83806e844c40283f6f44dfb996026e5e5e3c6527"
+    },
+    "2026-10-13-tree-parser": {
+      "archives": [
+        {
+          "bytes": 472550,
+          "path": "docs/evidence/2026-10-13-tree-parser.tar.gz",
+          "sha256": "539f54f9205c489df6def14c5c8f6489e43a29ba5b09718ee955b250a7389828"
+        }
+      ],
+      "report_sha256": "0e70e8390f6f0344a3e9afe1f5af256afa19c4baeb816ac618a7ec9cff3a46d9"
+    },
+    "2026-10-13-tree-platform": {
+      "archives": [
+        {
+          "bytes": 1304861,
+          "path": "docs/evidence/2026-10-13-tree-platform.tar.gz",
+          "sha256": "89c40c70ef589ad278939e807239ac9fc3db4df991e916a1b7d0885a8a778229"
+        }
+      ],
+      "report_sha256": "45d8da109d29e491edbdc992e970383bab39a764a43ffe6b15fa67164df826bf"
+    },
+    "2026-10-13-tree-platform-final": {
+      "archives": [
+        {
+          "bytes": 1309098,
+          "path": "docs/evidence/2026-10-13-tree-platform-final.tar.gz",
+          "sha256": "9eb3687aeb39335e423493295b54466e1423fa2c06cd1fd711a1d83493089e0c"
+        }
+      ],
+      "report_sha256": "45e464e309803dd11cebf0a1f5c24c8793798f44290d821c5e7cc4e71abd89f5"
+    },
+    "2026-10-13-tree-projection": {
+      "archives": [
+        {
+          "bytes": 947056,
+          "path": "docs/evidence/2026-10-13-tree-projection.tar.gz",
+          "sha256": "a7ed5d6b9bca26a12ed27525f052263003454ca07521c039d62f5ebb9254397c"
+        }
+      ],
+      "report_sha256": "1eacffe9f682e3c7bb56c1662841fd45b876454d36c5335011cb7ad137ca1599"
+    },
+    "2026-10-13-tree-public": {
+      "archives": [
+        {
+          "bytes": 401728,
+          "path": "docs/evidence/2026-10-13-tree-public.tar.gz",
+          "sha256": "66fb45852b9e2fd265c6d5906d3bdf9295b1c4975ebfa573470885d59706b083"
+        }
+      ],
+      "report_sha256": "e725d97cb5d031187fdcce7e1b915d326933cfa27a7ceadb9e39fff3d9069220"
+    },
+    "2026-10-13-tree-public-interop": {
+      "archives": [
+        {
+          "bytes": 38510622,
+          "path": "docs/evidence/2026-10-13-tree-public-interop.tar.gz",
+          "sha256": "4f88003f9c3d4a69fef8cc228f093d2c726a28527f57c951980878ee2ca01292"
+        }
+      ],
+      "report_sha256": "7904be855b027f961387b8046233acea995682973c3348a746d1df874116081e"
+    },
+    "2026-10-13-tree-public-plan": {
+      "archives": [
+        {
+          "bytes": 101098,
+          "path": "docs/evidence/2026-10-13-tree-public-plan.tar.gz",
+          "sha256": "f189a255d1321aff1162799894970ebc55cfc208104693cc7374a418a0a581ac"
+        }
+      ],
+      "report_sha256": "506efed62a0faf58de1e1677c68aecc63023336a5b09835c0911ac9de03240ba"
+    },
+    "2026-10-13-tree-reader": {
+      "archives": [
+        {
+          "bytes": 5830,
+          "path": "docs/evidence/2026-10-13-tree-reader.tar.gz",
+          "sha256": "832f72150d45b2c927aafe7be2ca9689e74a519248e017e90130018679a816d7"
+        }
+      ],
+      "report_sha256": "c648dcb398f85ea78ecb4d0372a226a2781160cb33f370d0624b90ce2211da5a"
+    },
+    "2026-10-13-tree-registration": {
+      "archives": [
+        {
+          "bytes": 4810,
+          "path": "docs/evidence/2026-10-13-tree-registration.tar.gz",
+          "sha256": "4d815da098ebaf64f30da39d278090ca65849724ca439924706fde09629fb209"
+        }
+      ],
+      "report_sha256": "03c902ad4df101c64916addd0b90ff68006eeec9009e8362f22ab8fb521eb276"
+    },
+    "2026-10-13-tree-search": {
+      "archives": [
+        {
+          "bytes": 1307936,
+          "path": "docs/evidence/2026-10-13-tree-search.tar.gz",
+          "sha256": "808690976cd0f51f8fed029d37061e2cce670294acb4e5b5dc011faea85653c1"
+        }
+      ],
+      "report_sha256": "09593b39b9081a603755c01a07d1df71c1d34d9dcbf129133870cc2c033350dc"
+    },
+    "2026-10-13-tree-sort": {
+      "archives": [
+        {
+          "bytes": 369972,
+          "path": "docs/evidence/2026-10-13-tree-sort.tar.gz",
+          "sha256": "ab5d75465d48d700073a7c4d14ad694566a96e968df086925bec71a52a7d6ca0"
+        }
+      ],
+      "report_sha256": "8e6bf0c8feabef40567464682742738b429566e62dd42f8df87e7b00f7560179"
+    },
+    "2026-10-13-tree-thumb": {
+      "archives": [
+        {
+          "bytes": 1589936,
+          "path": "docs/evidence/2026-10-13-tree-thumb.tar.gz",
+          "sha256": "cfa40cbf88c0b5e8366bb5a48e10b42730a72642724b0ec2d15d3ed1586f5096"
+        }
+      ],
+      "report_sha256": "8f503e8cab8ef6b16649a8d61948f624f1db3dbd1cf88bdf74af0df9d9e47f98"
+    },
+    "2026-10-13-tree-tiny": {
+      "archives": [
+        {
+          "bytes": 9145002,
+          "path": "docs/evidence/2026-10-13-tree-tiny.tar.gz",
+          "sha256": "bd237f62c8b4b572d57042b6788520bff0bc167fead8823698f5d2dc3391cda1"
+        }
+      ],
+      "report_sha256": "850ca641d6a0d15e3a1db77c4f8029d322d94d872caab7a19dac42c391a85ea0"
+    },
+    "2026-10-13-tree-validator": {
+      "archives": [
+        {
+          "bytes": 8760,
+          "path": "docs/evidence/2026-10-13-tree-validator.tar.gz",
+          "sha256": "ac9de6f30eb00a246d3d38ef7025040cda803c3b19deef923686b4e820ea7709"
+        }
+      ],
+      "report_sha256": "ecab63e4bda7fc9e864cf08e012db75700894943a3edabd7e76c48f3995c4bfe"
+    },
+    "2026-10-14-tree-matrix": {
+      "archives": [
+        {
+          "bytes": 765418,
+          "path": "docs/evidence/2026-10-14-tree-matrix.tar.gz",
+          "sha256": "ae93e7fc10c63f9c10613abce9e714820fe12931a3a29a569084eabcee294f45"
+        }
+      ],
+      "report_sha256": "c8eae1fd83a9c6f4bb60402cc88db46744588520b44ba896b94566061ec48cf4"
+    },
+    "2026-10-14-tree-measurements": {
+      "archives": [
+        {
+          "bytes": 50023560,
+          "path": "docs/evidence/2026-10-14-tree-measurements.tar.gz",
+          "sha256": "e50933d9d41fe798baa176b64c4aac88a4941c11250a7025d0cc2e26ec5da685"
+        }
+      ],
+      "report_sha256": "c5eb98fea959630a10e4db9fa176df62989ebecf219d0f6a63d0c7e605bf840c"
+    }
+  },
+  "complete_upstream_migration": false,
+  "date": "2026-10-14",
+  "delivered_source_matches_measured": true,
+  "matrix_inputs_verified": 1370,
+  "milestone": "Module16 bounded no-dictionary reference BinaryTreeLazy2",
+  "qualification": "Bounded strategy6 scope only. Every stored archive identity and all delivered matrix/measured inputs rechecked; the superseded ordinary-frame container is explicitly verified through all4117reconstructed members and its canonical decompressed pack instead of unavailable gzip metadata without rerunning campaigns. The user-requested interrupted matrix is preserved and only fully passing original/continuation suites count. Both timing campaigns retain opposite aggregate directions, so no stable unsafe throughput benefit is established. Additive Optimal price/scalar and tree-default regressions have separate evidence, and isolated Optimal frequency/search work is excluded. Strategy7+, ordinary optimal parsing, numeric dictionaries/streaming, legacy decoding and other inventoried API obligations remain open.",
+  "status": "passed",
+  "unfinished_upstream_source_units": 188
+}
