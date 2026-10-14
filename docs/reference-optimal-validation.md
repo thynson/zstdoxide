@@ -265,3 +265,19 @@ tests retain their existing explicit scope; this result does not claim they ran.
 Every frozen Rust/test input remains unchanged. Exact commands and logs:
 `evidence/2026-10-14-optimal-search-matrix.json`.
 
+## Private search diagnostic timings
+
+Five deterministic minimum-match workloads return identical candidate checksums
+and exact allocator records under safe/tree/short-key/candidate/all builds. Each
+round resets and reuses the same owners without allocation. First campaign and
+independent safe/all repeat retain 175 samples, 64 rounds each. Timing begins
+after the matrix, foreign Miri and no-atomics gates complete. Normal and optimized
+offline audits pass; each mode rejects 16 forgeries, accepts two positives and
+spawns no child process. Exact binaries, source, logs and gates are archived in
+`evidence/2026-10-14-optimal-search-timing.json`.
+
+All/safe median ratios for minimum 3/4/5/6/7 were 1.336/1.397/1.467/1.413/1.171
+in the first campaign and 0.942/0.959/0.954/0.946/0.964 in the repeat. The direction
+reverses. Fixed order, short samples and uncontrolled desktop clocks/thermal/load
+prevent a stable unsafe-speedup claim. Candidate and allocator equivalence here
+complements, and does not replace, the full C-map fixture comparisons.
