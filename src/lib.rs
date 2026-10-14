@@ -111,6 +111,7 @@ mod optimal_frequencies;
     reason = "Private optimal scalar pricing precedes parser integration"
 )]
 mod optimal_price;
+mod optimal_search_layout;
 mod parameters;
 mod reference_chain;
 mod reference_encode;

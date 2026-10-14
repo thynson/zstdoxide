@@ -193,3 +193,12 @@ frontiers and canonical sparse encoding. Six tests pass in safe, all-features
 and release-all builds (18 total); formatting, strict safe/all Clippy and no_std
 compilation pass. Exact source and logs are preserved in
 `evidence/2026-10-14-optimal-match-broad-fixture.json`.
+
+## Private sorted-search scalar records
+
+Checked geometry, immutable source borrowing, request validation and copied match
+records pass four focused tests in safe/all/release-all (12 total), strict
+safe/all Clippy over the library and tests, formatting and no_std compilation.
+The source comparison handles overlapping suffixes and logical tails without
+padding. Primary minMatch3 continues to hash four bytes; optional short keys
+hash three. Evidence: `evidence/2026-10-14-optimal-search-layout.json`.

@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-search-layout.tar.gz",
+  "archive_bytes": 5193,
+  "archive_sha256": "65074cd4a0236840c34aec96314227f08a1f3b79c6c257d02c7d3bd0f54f623f",
+  "files": [
+    {
+      "path": "src/optimal_search_layout.rs",
+      "bytes": 9360,
+      "sha256": "7a397e96d108d111d21a3f4b1a0ea00bd224772fb0e20f1dcbcebd06aceef8b2"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 5224,
+      "sha256": "152d277225aff9c154e94d70995feac843f51b648b063700f1cbbc8efbfabf43"
+    },
+    {
+      "path": "checks/all.log",
+      "bytes": 701,
+      "sha256": "cb31d1c41b5fffbb7af3f6d8a6661d12eba54f0a9382026d5be3a5d40a1c223f"
+    },
+    {
+      "path": "checks/clippy-all.log",
+      "bytes": 130,
+      "sha256": "df22f1ec22585cd887a8c42245fc19d14d0f6bcb02ecd883efa68f5f80ac9983"
+    },
+    {
+      "path": "checks/clippy.log",
+      "bytes": 238,
+      "sha256": "77dcde81f5f9f9eb42877716a03307d25793af06145c1f1a1a945f2e128de3cf"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 1376,
+      "sha256": "09b504049e774d5660770b2b9ead1ab180974ad18fdc9ccf9ad2f24aac5ca36e"
+    },
+    {
+      "path": "checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/nostd.log",
+      "bytes": 130,
+      "sha256": "71a460009062a5b6bf8777869a81acd4762dcf0138fd87a7907c6008963d79b2"
+    },
+    {
+      "path": "checks/release.log",
+      "bytes": 813,
+      "sha256": "4cd3aea33182fa36eee071641ab3dd07fae818754218f76796f8433557439e1d"
+    },
+    {
+      "path": "checks/safe.log",
+      "bytes": 809,
+      "sha256": "efd8b76c496484534310cf62a8a94dc948a4808729e4d5e457b76de8dcfaf79f"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}
