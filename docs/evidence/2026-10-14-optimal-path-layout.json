@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-path-layout.tar.gz",
+  "archive_bytes": 5841,
+  "archive_sha256": "cf2392f811b620b47f13bca787e74111238a8a190b68c301617d8187131d299b",
+  "files": [
+    {
+      "path": "src/optimal_path_layout.rs",
+      "bytes": 13202,
+      "sha256": "17ab8170f3e357ca8f7485f38aa94b3e322f8e419d408d7923e8b75a41abeeaa"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 5403,
+      "sha256": "747069e31d2a2930ff52f1e4246705aa99af6e544afc4bdb712f44c029090c4f"
+    },
+    {
+      "path": "checks/all.log",
+      "bytes": 825,
+      "sha256": "960b6200e2d23386b56121f3ac5175065b626dab2abebf5084e25136f04253fc"
+    },
+    {
+      "path": "checks/clippy-all.log",
+      "bytes": 130,
+      "sha256": "c4a93c858093f936f85ccdeb1b091956d8797e8df4c3825841de822cc6bafb4d"
+    },
+    {
+      "path": "checks/clippy.log",
+      "bytes": 130,
+      "sha256": "e2705243916e4d5610485f560a29c4d8157864f20ffcbee8d6a8a6e6641ebd74"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 2119,
+      "sha256": "83b5554c3926744b17321a7be77f2f45a8877268392920881fa7eaaed3dc0da9"
+    },
+    {
+      "path": "checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/nostd-all.log",
+      "bytes": 130,
+      "sha256": "67ab6a2720904d7a64b26ee662135a66a10b5ec00fc45a5d347caf7b46931b51"
+    },
+    {
+      "path": "checks/nostd-unsafe.log",
+      "bytes": 142,
+      "sha256": "d0e6a161e6143ce7419d4a94a88bf8304d08a1455aca9069c7a23702c20d5cf1"
+    },
+    {
+      "path": "checks/nostd.log",
+      "bytes": 130,
+      "sha256": "0361520f619b9d5d7cf5d60369b568e6edc2226fa2feaf1dfb890df2cbedfe4f"
+    },
+    {
+      "path": "checks/release.log",
+      "bytes": 829,
+      "sha256": "a18b2a9ad5a03a044ad47ad413d009231d811d020982ce214a5501fbb4bb29ce"
+    },
+    {
+      "path": "checks/safe.log",
+      "bytes": 825,
+      "sha256": "2e028ae99592c2e13a10574ab84ccda2e5ef927bfcc56962530176fac2a48dd0"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

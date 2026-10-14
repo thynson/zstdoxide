@@ -109,6 +109,7 @@ mod matchchain;
 mod matchfinder;
 mod optimal_frequencies;
 mod optimal_matches;
+mod optimal_path_layout;
 #[allow(
     dead_code,
     reason = "Private optimal scalar pricing precedes parser integration"

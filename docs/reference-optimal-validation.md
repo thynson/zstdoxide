@@ -349,3 +349,14 @@ flags, duplicate/unchanged deltas and trailing bytes. Formatting, strict safe/al
 Clippy and no-default compilation pass. See
 `evidence/2026-10-14-optimal-path-fixtures.json`. No production path parser is
 implemented by this fixture-only step.
+
+## Checked path value records
+
+`PathCell`, finite/unreachable prices, checked slot indices, distinct forward and
+reverse views and decreasing reconstruction cursors are implemented as safe copied
+values. Every captured cell and stretch round-trips exactly; every captured
+reconstruction coordinate agrees with checked predecessor arithmetic. Four
+focused tests pass in safe, all-feature and release/all modes. Formatting, strict
+safe/all Clippy, safe no_std and all eighteen unsafe leaves with std excluded
+compile successfully. See `evidence/2026-10-14-optimal-path-layout.json`. This
+qualifies scalar records, not a production path-decision parser.
