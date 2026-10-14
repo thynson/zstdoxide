@@ -91,7 +91,14 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Implement bounded candidate storage with initialized fallible ownership and an isolated unsafe feature.
 - [x] Implement checked sorted insertion and bounded match enumeration over immutable source.
 - [x] Compare every tiny and broader captured candidate, complete map and both frontiers across search backends.
-- [ ] Specify path transition, sufficient-length, tie, early-abort and backtracking observations before parser implementation.
+- [ ] Qualify private search on every isolated feature, complete predecessor suites, foreign Miri and no-atomics code generation.
+- [ ] Compare deterministic private search outputs and allocator records before safe/unsafe diagnostic timing and a separate repeat.
+- [x] Specify path transition, sufficient-length, tie, early-abort and backtracking observations before parser implementation.
+- [ ] Define bounded scripted-candidate path transport and validate source/offset/event capacities.
+- [ ] Implement independent path replay and prove source-only recipe branch coverage before C execution.
+- [ ] Review unique-anchor observer substitutions and preflight the pinned normal/instrumented helper.
+- [ ] Capture bounded path transitions and reject forged phase/predecessor/frequency evidence offline.
+- [ ] Extend path observations to the 4096-position horizon before production path integration.
 - [ ] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.
 - [ ] Implement finite-cost path ownership, phase-aware reconstruction and private optLevel0 parsing.
 - [ ] Freeze and capture ordinary retained optimal blocks with full search/frequency/path and repeat publication state.

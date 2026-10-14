@@ -1633,3 +1633,17 @@ Malformed requests are rejected before mutation; errors discovered during table
 traversal poison the composite until reset. Reset clears all owners and frontiers
 without allocation. It will implement ZSTD_insertBt1 / ZSTD_insertBtAndGetAllMatches
 and ZSTD_BtGetAllMatches for the observed contiguous, no-dictionary domain.
+
+### Scripted path observation ownership
+
+The first path observer owns a zero-initialized 4099-cell C path workspace and
+complete frequency/sequence workspaces; it borrows an immutable guarded source
+of at most 512 bytes. A bounded script owns at most 64 positions with eight
+strictly increasing source-valid matches each. Its callback replaces only match
+selection in the pinned generic parser, preserving original path transitions.
+Every observation retains initialized cells, including stale fields, plus explicit
+phase and coordinate tags. Independent replay owns integer cell records and a
+separate forward/reconstruction phase. A cell's predecessor must be read before
+any overwrite during reconstruction. The bounded protocol cannot qualify the
+4096-position horizon or ordinary CCtx startup; both remain explicit later gates.
+See `reference-optimal-path-observer.md` for exact observation and rejection rules.
