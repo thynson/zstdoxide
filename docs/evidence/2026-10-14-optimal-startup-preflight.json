@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-startup-preflight.tar.gz",
+  "archive_bytes": 82547,
+  "archive_sha256": "ace9357ebe6abd03ddd9ac0fb410b2dbc876f7ae34905dcdb7a4bbeb755bc429",
+  "files": [
+    {
+      "path": "docs/reference-optimal-startup-adapter-review.md",
+      "bytes": 3661,
+      "sha256": "bf6f272ca3cfa6b83810fa0a6e77bf2fa6f8ab6199d71db1d34b5f6aa01cd7fd"
+    },
+    {
+      "path": "scripts/oracles/optimal_startup.c",
+      "bytes": 16104,
+      "sha256": "472e721d703a4d5ed9551e93bc1919868dc5d0270c631604504ea01fbf9606f7"
+    },
+    {
+      "path": "scripts/oracles/optimal_startup_instrumentation.py",
+      "bytes": 2280,
+      "sha256": "d649fc80108c2ec2b77fa6be3eb0ca9548414ad37070e694af0443e20f569c10"
+    },
+    {
+      "path": "scripts/check_optimal_startup_instrumentation.py",
+      "bytes": 1973,
+      "sha256": "4d7a8897e806f34313f94a0b9174df3f654ea4b5ace538f0315f70bddc5033e5"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 1565,
+      "sha256": "fde3d8ff64acec8b3087436fac0d58e1bdd54c1c1522e4e859eb54be18420edf"
+    },
+    {
+      "path": "checks/generated/instrumentation.json",
+      "bytes": 4593,
+      "sha256": "2cc9e89f29172f9d253f4527f44fd4afde97e3bbda2c8392adc4e1151ce438ce"
+    },
+    {
+      "path": "checks/generated/observed_zstd_opt.c",
+      "bytes": 73209,
+      "sha256": "a93e211456b63127b61d42a2ac92342a8dcc844d3a5d4a0309ab26755bf6b9f1"
+    },
+    {
+      "path": "checks/generated/original_zstd_opt.c",
+      "bytes": 72006,
+      "sha256": "625936ee3fb02d789abb894c1fbc2918ee47582434094c963b630da13532c876"
+    },
+    {
+      "path": "checks/initial-diagnostics/evidence.json",
+      "bytes": 1553,
+      "sha256": "dfd8b898deae94eb40996fa03ee8434000918c833f50c50a856c319dbcb39291"
+    },
+    {
+      "path": "checks/initial-diagnostics/generated/instrumentation.json",
+      "bytes": 4593,
+      "sha256": "2cc9e89f29172f9d253f4527f44fd4afde97e3bbda2c8392adc4e1151ce438ce"
+    },
+    {
+      "path": "checks/initial-diagnostics/generated/observed_zstd_opt.c",
+      "bytes": 73209,
+      "sha256": "a93e211456b63127b61d42a2ac92342a8dcc844d3a5d4a0309ab26755bf6b9f1"
+    },
+    {
+      "path": "checks/initial-diagnostics/generated/original_zstd_opt.c",
+      "bytes": 72006,
+      "sha256": "625936ee3fb02d789abb894c1fbc2918ee47582434094c963b630da13532c876"
+    },
+    {
+      "path": "checks/initial-diagnostics/normal.log",
+      "bytes": 1915,
+      "sha256": "28dd0eb880fdefc5224c82aca379feaeceec9ae1024535f60c01aad8815d99b6"
+    },
+    {
+      "path": "checks/initial-diagnostics/reference.json",
+      "bytes": 9904,
+      "sha256": "eedc04f9a35ff6f3d6787cf958255e4d44fa9682e1d3ab45ff5d9ad504f219c0"
+    },
+    {
+      "path": "checks/initial-diagnostics/sanitized.log",
+      "bytes": 1915,
+      "sha256": "28dd0eb880fdefc5224c82aca379feaeceec9ae1024535f60c01aad8815d99b6"
+    },
+    {
+      "path": "checks/normal.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/preflight-optimal-startup-final.py",
+      "bytes": 1528,
+      "sha256": "32c80b7b3bb5e9b3ba3c429b39b09ab8ca79ead7535278d6e4a84e809e43f253"
+    },
+    {
+      "path": "checks/reference.json",
+      "bytes": 9904,
+      "sha256": "eedc04f9a35ff6f3d6787cf958255e4d44fa9682e1d3ab45ff5d9ad504f219c0"
+    },
+    {
+      "path": "checks/sanitized.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-startup-hooks-normal.log",
+      "bytes": 351,
+      "sha256": "1dd380c610894e3c6b72403769bf9bc704d82e2493bd0f4f48391d0c9b66fc8c"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-startup-hooks-optimized.log",
+      "bytes": 351,
+      "sha256": "1dd380c610894e3c6b72403769bf9bc704d82e2493bd0f4f48391d0c9b66fc8c"
+    }
+  ],
+  "qualification": "Source observer review and strict C syntax checks only; no helper execution, sanitizer runtime, startup capture or public Optimal qualification."
+}

@@ -437,3 +437,21 @@ All/safe median ratios for the five workloads were 1.0084, 1.0058, 0.9954,
 interpretation: these diagnostic measurements do not establish a stable unsafe
 speedup. They cover private scripted decisions, not ordinary parser integration
 or public Optimal compression.
+
+## Fresh startup observer source review and syntax checks
+
+The fresh CCtx observer retains the original provider selection and pointer
+attributes. Removing its fourteen observation anchors reconstructs the pinned
+upstream source exactly. Normal and optimized source-only controls each reject
+four mutations without launching children. The adapter review records bounded
+zero-initializing allocation, owner extents, guard regions, original repeat
+publication and exclusive output creation. See
+`reference-optimal-startup-adapter-review.md`.
+
+Strict normal and sanitizer-configured C syntax checks pass against the pinned
+source closure (89 files, 26 translation units). Initial deprecated-call and
+signed-comparison diagnostics are retained with the corrected checks in
+`evidence/2026-10-14-optimal-startup-preflight.json`. These checks did not execute
+the helper or sanitizers. An exact executable capture plan, bounded runner and
+independent state/frame auditors remain necessary before C startup capture.
+Ordinary startup query admission and public Optimal remain unchanged.
