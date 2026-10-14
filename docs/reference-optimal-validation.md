@@ -221,3 +221,22 @@ length/storage, exact moved allocator failures, borrowed ownership and zero
 allocation after construction. Strict safe/isolated/all Clippy, formatting and
 safe/isolated no_std checks pass. The live prefix excludes initialized unused
 placeholders. Evidence: `evidence/2026-10-14-optimal-matches.json`.
+
+## Private sorted-search implementation
+
+The private immutable-source search matches all 273 tiny and 82 broader captured
+operations: every candidate intent/length, complete primary/paired/short-key map
+and both frontiers. Focused checks pass across safe, tree-only, short-key-only,
+candidate-only, all-features and release-all builds. Strict safe/all Clippy,
+formatting and safe/all true no_std pass with source hashes unchanged. Tests also
+cover invalid requests without mutation, poisoned internal failure and reset,
+every composite allocation failure, exact borrowed owners and no allocation
+after construction. Evidence: `evidence/2026-10-14-optimal-search.json`.
+
+The initial integration rejected zero repeat values admitted by the observation
+protocol. The corrected record accepts them and search treats them as ineligible;
+zero rep0 with zero literals uses explicit wrapping subtraction and fails distance
+eligibility. Both original failing runs and the corrected complete comparison
+are retained in the integration diagnostic evidence. Public Optimal stays
+unsupported; ordinary startup, path parsing and retained block publication remain
+separate gates.

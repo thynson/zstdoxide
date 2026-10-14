@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-search.tar.gz",
+  "archive_bytes": 14304,
+  "archive_sha256": "0156617cde8e63512d83089ca34b3c6ca73ffcafbb0ca0dc022277184f3b7e1c",
+  "files": [
+    {
+      "path": "src/optimal_search.rs",
+      "bytes": 19276,
+      "sha256": "ffdcf765b389f696804f77bb2f51f130832329c9f726f43fae83c5a051aa6bca"
+    },
+    {
+      "path": "src/optimal_search_layout.rs",
+      "bytes": 9353,
+      "sha256": "77829772a8bc027a9e48bc06aa4f6996f41d20d1ee78e43533d92ca3b2e21188"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 5378,
+      "sha256": "bc28b949abac12204c0250b3debabb406677382ab37752851ee937a5e6926ce5"
+    },
+    {
+      "path": "checks/all.log",
+      "bytes": 2919,
+      "sha256": "e332c8bf26573aa94e247486b3211005f2118b8530c8474f012a459a0290d49a"
+    },
+    {
+      "path": "checks/clippy-all.log",
+      "bytes": 130,
+      "sha256": "33293a265942871ee71337ee22ee444a59eb5166a7255f8b2a6cca1a189455a3"
+    },
+    {
+      "path": "checks/clippy.log",
+      "bytes": 130,
+      "sha256": "729060c1a82490453d903d0b78aae25ff852e113be60b559f465e0597816aebd"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 10422,
+      "sha256": "ce91bffa312d03b18905732321a63f42ffee4bbe26c60d87ca18078ab36e97aa"
+    },
+    {
+      "path": "checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/matches.log",
+      "bytes": 2919,
+      "sha256": "afc667de7f56758d5dff24da87933a45fc9cc7985899df0c54683d456f9ed310"
+    },
+    {
+      "path": "checks/nostd-all.log",
+      "bytes": 130,
+      "sha256": "4018e42b16f4c16fbd33a72118d0794ed132f6e4a5bf2c168f9ec40acb0191c6"
+    },
+    {
+      "path": "checks/nostd.log",
+      "bytes": 130,
+      "sha256": "66d30ee542178a919e0527bbfc052b62e200d9c40a3ceb3ef0eac9d1575f578b"
+    },
+    {
+      "path": "checks/release.log",
+      "bytes": 2923,
+      "sha256": "18ca587b057051e5d2dcb0aa04fa6b5d35dff99af89779b728b38575bf702e67"
+    },
+    {
+      "path": "checks/safe.log",
+      "bytes": 2919,
+      "sha256": "3af3029c89b8035ced268520ca2070200603388355258fedf27fb897651e7cb2"
+    },
+    {
+      "path": "checks/short.log",
+      "bytes": 2919,
+      "sha256": "dbcbbe867b9fcb7ed24fe4ae7278dd586323f7aa63ca3559b448583380b0f6ad"
+    },
+    {
+      "path": "checks/tree.log",
+      "bytes": 2919,
+      "sha256": "0b0c77e55880412a11547d03af0f0267763a3094215e5e3068087fbd98f2e652"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

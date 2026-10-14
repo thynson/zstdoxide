@@ -1601,7 +1601,10 @@ minimum exceeds three. Shared scalar records need no unsafe representation.
 `OptimalSource` borrows an immutable contiguous source for the search lifetime,
 with at most u32::MAX - 2 bytes, preserving the observed native index bias of two.
 The direct primitive leaves eight bytes at a query and checks repeat distances,
-length-to-beat and source ranges before mutation. Prefix/window eligibility is
+length-to-beat and source ranges before mutation. Zero repeats are admissible
+direct requests but ineligible matches; rep0 minus one uses explicit wrapping
+subtraction and is rejected by distance eligibility when rep0 is zero.
+Prefix/window eligibility is
 separate from paired-node retention. Ordinary startup/block state remains a later
 integration gate. Matching reads only initialized logical bytes without padding.
 

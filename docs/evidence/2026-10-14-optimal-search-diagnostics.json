@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-search-diagnostics.tar.gz",
+  "archive_bytes": 1281,
+  "archive_sha256": "562e523c086c4e97c7bb2ed19dcdb5656ea18777f45b6cf878f58ec238c5c3b0",
+  "files": [
+    {
+      "path": "checks/zstdoxide-optimal-search-diagnostic.log",
+      "bytes": 1818,
+      "sha256": "384bee68e222bdc16ddf8c17913861e759a0dd93e81174b249a53e2a162240d2"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-search-initial.log",
+      "bytes": 1809,
+      "sha256": "4ea5c7d00b07570aba336243516d230618accd83c361b304abfdcb562b063050"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-search-zero-repeat-fix.log",
+      "bytes": 1284,
+      "sha256": "16e1da6843537d7f43ca2b850795dce70a8fc8d6e69ac09e03071b2432ff488f"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

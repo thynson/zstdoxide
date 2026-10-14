@@ -114,6 +114,7 @@ mod optimal_matches;
     reason = "Private optimal scalar pricing precedes parser integration"
 )]
 mod optimal_price;
+mod optimal_search;
 mod optimal_search_layout;
 mod optimal_short_key;
 mod parameters;

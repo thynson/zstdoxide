@@ -129,7 +129,7 @@ impl<'a> OptimalSource<'a> {
             || query
                 .repeats
                 .iter()
-                .any(|&v| v == 0 || v > 4096 || v as usize > query.position + 2)
+                .any(|&v| v > 4096 || v as usize > query.position + 2)
         {
             return Err(Error::InvalidParameter);
         }
@@ -248,7 +248,7 @@ mod tests {
                 ..q
             },
             OptimalQuery {
-                repeats: [0, 4, 8],
+                repeats: [4097, 4, 8],
                 ..q
             },
             OptimalQuery {
