@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-search-platform.tar.gz",
+  "archive_bytes": 30021,
+  "archive_sha256": "cad365aad30bf96414523dd4ed3957445e473b000546844be27d94373d236b58",
+  "files": [
+    {
+      "path": "src/optimal_short_key.rs",
+      "bytes": 6378,
+      "sha256": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434"
+    },
+    {
+      "path": "src/optimal_matches.rs",
+      "bytes": 6556,
+      "sha256": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781"
+    },
+    {
+      "path": "src/optimal_search.rs",
+      "bytes": 19276,
+      "sha256": "ffdcf765b389f696804f77bb2f51f130832329c9f726f43fae83c5a051aa6bca"
+    },
+    {
+      "path": "src/optimal_search_layout.rs",
+      "bytes": 9353,
+      "sha256": "77829772a8bc027a9e48bc06aa4f6996f41d20d1ee78e43533d92ca3b2e21188"
+    },
+    {
+      "path": "src/reference_tree.rs",
+      "bytes": 19186,
+      "sha256": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f"
+    },
+    {
+      "path": "src/tree_layout.rs",
+      "bytes": 11624,
+      "sha256": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26"
+    },
+    {
+      "path": "src/greedy_key.rs",
+      "bytes": 12733,
+      "sha256": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 1136,
+      "sha256": "f7be789027151c3e470973f95773d8db37e2b217e22e5d23204d8ed8b10357b0"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 36070,
+      "sha256": "273798ca1d9b75f244cfd29d19a8a138bd87d8bdf7be6029c80fd8c0953c283c"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-0.log",
+      "bytes": 488,
+      "sha256": "5d3735f5409f7f5536a3d2bf9e338b927ddf114cdcc14a5a8cbb9ba70edf9a00"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-1.log",
+      "bytes": 435,
+      "sha256": "7ccdf0872f93d9b4af9569818a916a35e41d845bf8998b2a8cb03361ac6db66a"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-2.log",
+      "bytes": 439,
+      "sha256": "1dcfe0299fe38e5f6af0dbb9d7455f5848707a1902c262ee759cad69fc7afcfe"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-3.log",
+      "bytes": 430,
+      "sha256": "281006553797f6ef2cc83f3c079059c3efd1fe270722e2a3dab92ad4b2c66eea"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-4.log",
+      "bytes": 439,
+      "sha256": "61da5a26356efc1df8f5635d286c5799de33cd208d8323d4b62ca249060fd8f5"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-5.log",
+      "bytes": 423,
+      "sha256": "816363231d64615b7df201525c753697e9f1609df4adbec90f80337ec074bc51"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-6.log",
+      "bytes": 435,
+      "sha256": "f28a7f21f728af2184616f5ebdcd96f57b86429ce3795aeae9da2abbfe0780e6"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-all-7.log",
+      "bytes": 441,
+      "sha256": "390d7fa3c7eb166c1eab91a66910168d52f1032fd79afec7aef4cca5bed75858"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-0.log",
+      "bytes": 596,
+      "sha256": "314b165d3d3ebca0638456cc0ff6bd43b4d9fd952adf9bb8fd80c3421c3131df"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-1.log",
+      "bytes": 435,
+      "sha256": "aad8449fca48339d2b70b8207872810bf721911499e92cce380868ff2b3a32a4"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-2.log",
+      "bytes": 439,
+      "sha256": "e4777258d6f362b56711b2563bc3eea49e654a8179085ad5f9e46ca926836164"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-3.log",
+      "bytes": 430,
+      "sha256": "7e9b634c9f899a9525a8ac112004bb7342a6eca6d59e394cb2620d60076ef858"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-4.log",
+      "bytes": 439,
+      "sha256": "82233d50367d3ec6248f293b05a1e9ca6bf3bbfe656bfdbd8e5346b5a44e19c2"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-5.log",
+      "bytes": 423,
+      "sha256": "213d62971330d1ae8cb83da22dcc82eccbaaba04949cc92a2ded4ffce593f451"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-6.log",
+      "bytes": 435,
+      "sha256": "44218352d2fcc6c6023de6b01892fd8a0f5f85beee94f3da9c3a919481612072"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-safe-7.log",
+      "bytes": 441,
+      "sha256": "ae96ec73780f8bfac77bbc8b96789419cb84dc7e7aaf61849b6a1e3db38553b5"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-search-0.log",
+      "bytes": 488,
+      "sha256": "8544a0e6915ecb26f3550ec57092a4d72ec8eb8a1b9083074a5e44a64a41ee3f"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-search-1.log",
+      "bytes": 435,
+      "sha256": "17ffb60fae6cc553ca473a736eb1e82f2827fff2e6ee0c8b06cabec6c2eaa194"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-search-2.log",
+      "bytes": 439,
+      "sha256": "03fcde3a29e13b03b7058d0bb5667eaffc2eee41dfb229a34b5e99925f5ade0b"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-search-3.log",
+      "bytes": 430,
+      "sha256": "71f7c861637ef7e5c375064bbfa57b0747ff1e1e244d6ed3adb8d5b11da3d190"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-search-4.log",
+      "bytes": 439,
+      "sha256": "44f97bcfafa19b6d41fe27c91d5bdfc18834957ae00f2e828744b246f0707dd6"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-search-5.log",
+      "bytes": 423,
+      "sha256": "7e62f11b152d279a3907e80148f88aa45aa5b558716c47fea8c6341a6ab292a1"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-search-6.log",
+      "bytes": 435,
+      "sha256": "08f6eb7b26784b9bafd5e129bf3f97d1842dad8ffe79d16812b8db6c2cf2493d"
+    },
+    {
+      "path": "checks/i686-unknown-linux-gnu-search-7.log",
+      "bytes": 441,
+      "sha256": "eb132e92d2aa2de5469b35dec642f3b8b1622fda3057d72475ab9e65854861e1"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-0.log",
+      "bytes": 489,
+      "sha256": "fdcc35045bab21297f3c03bf012602b26099d528f41c6f730144e43d12ab6ef7"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-1.log",
+      "bytes": 436,
+      "sha256": "db745ee666b86d72a4d334335c258340e0f6bad07275cfc26e883be77ef612ca"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-2.log",
+      "bytes": 440,
+      "sha256": "a78e64e48ece9607c86a51cce888500caa2b964feaa58b8c5920994000201f7f"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-3.log",
+      "bytes": 431,
+      "sha256": "6b3848f26b6cfe59a378d96ac5be1aa5e35d6df99a8c76336f8e2794b5bda73e"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-4.log",
+      "bytes": 440,
+      "sha256": "ab8bf9d577614c2f30656b73fa39784ee1f2a4abbff243e92acca6a3d51f5608"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-5.log",
+      "bytes": 424,
+      "sha256": "2290777da01501db9cf928dc6714a95724bca92fa0f5f175d67d61735cf4a986"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-6.log",
+      "bytes": 436,
+      "sha256": "87faaa2d38dd77cad536c5887294b111861b1fa6674d3f177f5e14f44512690c"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-all-7.log",
+      "bytes": 442,
+      "sha256": "398ae1fb9b2b97c841b612ce5eb23a208ce1ee9443c729cf1443b895aa67d320"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-0.log",
+      "bytes": 597,
+      "sha256": "22e519d6594e4ef1babd9520a3678022abd2afe5cd3895684426366f9a85713d"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-1.log",
+      "bytes": 436,
+      "sha256": "f3f980a6c33302e18ef6348e54300dc72d5bad2c3db8275a0cbca84e8ba2e907"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-2.log",
+      "bytes": 440,
+      "sha256": "614a4512233ab6a9820e72f35d6bd494d880e8fc044115e22f6e11e82b70000d"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-3.log",
+      "bytes": 431,
+      "sha256": "3ead14b8ae2db5f5fe007521f60cbfa0c3638e6da6f6b598711fe0de018c0b46"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-4.log",
+      "bytes": 440,
+      "sha256": "2080eaecbda392a1ca15bf333d6b7a9bcdb5f9e9f77e7eb871869611d6a6ccf7"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-5.log",
+      "bytes": 424,
+      "sha256": "9d62011ae6d43ccb8e3d823573de516e4ee671a6067e128643757780549c7591"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-6.log",
+      "bytes": 436,
+      "sha256": "7ba4b04278f819057c3f7d502d19e73df3e4c2565f4c9687c6aebb5719f7fac1"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-safe-7.log",
+      "bytes": 442,
+      "sha256": "ef8d01fa5eb18e06b2aafc727147d69e46ee7958cbdf1a1dab9d9d8d8e8880db"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-search-0.log",
+      "bytes": 489,
+      "sha256": "010846a9a3a53038df2bfdee1e5eb1f1acf7b0f76a02f40645968a35454715a5"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-search-1.log",
+      "bytes": 436,
+      "sha256": "80f3c22ba221fa3296bc61275dc19acf65db65e86ede92f58db3731c82fe3433"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-search-2.log",
+      "bytes": 440,
+      "sha256": "87a1cb3560b7f17c74ca58e90782ff6db4065901477a4450590030652c57701f"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-search-3.log",
+      "bytes": 431,
+      "sha256": "c2716169515280798ea8de794de81ff819992c7a7a45351f31a0b80f1ddb19a2"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-search-4.log",
+      "bytes": 440,
+      "sha256": "ace1111469036c96cacc8821d484ce7f51d6da860c0755bd955373aa10b451ac"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-search-5.log",
+      "bytes": 424,
+      "sha256": "f7b6d8b7868cd04e57b9577879471b20d9ad8ccf37d4784ebaaa950d5355838d"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-search-6.log",
+      "bytes": 436,
+      "sha256": "a871d472ff0c2baf262dbdf957505422eaa1f7cd37cc75dbabd59ce41081fecf"
+    },
+    {
+      "path": "checks/s390x-unknown-linux-gnu-search-7.log",
+      "bytes": 442,
+      "sha256": "7d399fd7fb92244916a0a621305d277e55411dc1193a4dbc5a426b01e50a8613"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

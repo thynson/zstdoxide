@@ -240,3 +240,18 @@ eligibility. Both original failing runs and the corrected complete comparison
 are retained in the integration diagnostic evidence. Public Optimal stays
 unsupported; ordinary startup, path parsing and retained block publication remain
 separate gates.
+
+## Private search foreign and no-atomics checks
+
+All 48 selected strict-provenance Miri tests pass on interpreted i686 and s390x
+in safe, three-search-leaf and all-features modes. They cover short-key/candidate
+storage corruption, allocator failure cleanup, invalid request preservation,
+poison/reset, source/owner mismatch and zero-repeat eligibility. Source hashes
+remain unchanged. This is interpreter evidence, not native foreign execution.
+
+Five true no_std library builds and five concrete Global-allocator private-search
+caller builds pass for thumbv6m: safe, tree-only, short-key-only, candidate-only
+and all leaves. This checks code generation on a target without atomic pointer
+operations; it is not firmware execution. Exact evidence lives in
+`evidence/2026-10-14-optimal-search-platform.json` and
+`evidence/2026-10-14-optimal-search-thumb.json`.
