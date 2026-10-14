@@ -1,0 +1,21 @@
+{
+  "archive": "2026-10-14-optimal-match-broad-capture.tar.gz",
+  "archive_bytes": 7384546,
+  "archive_members": 500,
+  "archive_sha256": "0287a812cfe7af9d3735514ee6c7a07b258151e79f7e79422ad33c7e969db212",
+  "child_attempts": 0,
+  "commands": 180,
+  "date": "2026-10-14",
+  "forged_rejections_per_mode": 33,
+  "instrumented_codec_units": 26,
+  "log_bytes": 149995548,
+  "malformed_rejections_per_build": 22,
+  "normal_instrumented_equal": true,
+  "operations_per_build": 82,
+  "positive_audits_per_mode": 2,
+  "qualification": "Independent complete broader short-key geometry, distance and repeat replay with two padding passes. No ordinary parser startup, Rust implementation or public Optimal claim.",
+  "raw_bytes": 177541190,
+  "raw_files": 498,
+  "recipes": 37,
+  "status": "passed"
+}

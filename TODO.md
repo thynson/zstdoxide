@@ -122,7 +122,8 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Review the guarded direct sorted-tree/all-match helper and preflight pinned dependencies and bounded capture before C execution.
 - [x] Capture tiny direct operations and qualify exact all-match maps, short-key tails and forged evidence.
 - [x] Project audited tiny match observations into bounded fixtures and add an independent Rust reader.
-- [ ] Capture broader ordinary-geometry/distance/repeat operations before implementing the production sorted search.
+- [x] Capture broader ordinary short-key geometry, distance and repeat operations before production sorted search.
+- [ ] Project broader complete maps into canonical sparse fixtures and verify an independent Rust reader.
 - [ ] Implement checked sorted insertion and bounded match enumeration with optional short-key ownership.
 - [ ] Specify path transition, sufficient-length, tie, early-abort and backtracking observations before parser implementation.
 - [ ] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.

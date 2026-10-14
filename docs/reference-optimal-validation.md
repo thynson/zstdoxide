@@ -151,3 +151,23 @@ queries, cells, frontiers and candidate capacities are rejected.
 `evidence/2026-10-14-optimal-match-fixture.json` retains source, pack, exact logs
 and the initial corrected Clippy diagnostic. These additive fixture tests are
 outside the Module 16 immutable matrix; no production search is enabled.
+
+## Broader short-key geometry and distance capture
+
+All 180 commands pass for 37 requests / 82 operations per C build, with two
+padding passes and all 26 used codec units instrumented. Complete maps, both
+frontiers and candidate intents/lengths match the independent chunked model;
+normal and instrumented transcripts are byte-identical. The model first matched
+333 scalar predecessor comparisons and rejected 14 synthetic forgeries per mode.
+Each C build rejects 22 malformed packets before output. Normal and optimized
+Python each reject 33 capture forgeries, accept two positives and spawn no child.
+
+The requests distinguish distances 262143/262144/262145 under windows18/19,
+ordinary short-key logs min(window,17), strict repeat thresholds and fresh1/4/8
+repeat values at pointer-safe positions. Source/query maxima are524288/16;
+primary/node logs remain bounded to12. Ordinary parser startup and larger
+production primary/node geometry remain separate gates.
+
+`evidence/2026-10-14-optimal-match-broad-capture.json` preserves every raw command,
+source, request, object and executable, including149,995,548log bytes. No Rust
+sorted-search or public Optimal admission is implied by this observation gate.
