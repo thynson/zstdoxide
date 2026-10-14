@@ -80,11 +80,11 @@ cargo test
 python3 scripts/check_doc_examples.py
 cargo clippy --all-targets -- -D warnings
 cargo check --no-default-features
-for feature in unsafe-byte-cursor unsafe-bitstream unsafe-history unsafe-ring-history unsafe-fse unsafe-fse-encoder unsafe-huffman unsafe-huffman-codebook unsafe-match-table unsafe-match-chain unsafe-reference-chain unsafe-reference-tree unsafe-row-table unsafe-dictionary unsafe-training unsafe-optimal-frequencies unsafe-optimal-short-key unsafe-optimal-matches; do
+for feature in unsafe-byte-cursor unsafe-bitstream unsafe-history unsafe-ring-history unsafe-fse unsafe-fse-encoder unsafe-huffman unsafe-huffman-codebook unsafe-match-table unsafe-match-chain unsafe-reference-chain unsafe-reference-tree unsafe-row-table unsafe-dictionary unsafe-training unsafe-optimal-frequencies unsafe-optimal-short-key unsafe-optimal-matches unsafe-optimal-paths; do
     cargo test --features "$feature"
     cargo check --no-default-features --features "$feature"
 done
 cargo test --all-features
 cargo test --release --all-features
-cargo check --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-reference-chain,unsafe-reference-tree,unsafe-row-table,unsafe-dictionary,unsafe-training,unsafe-optimal-frequencies,unsafe-optimal-short-key,unsafe-optimal-matches
+cargo check --no-default-features --features unsafe-byte-cursor,unsafe-bitstream,unsafe-history,unsafe-ring-history,unsafe-fse,unsafe-fse-encoder,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-table,unsafe-match-chain,unsafe-reference-chain,unsafe-reference-tree,unsafe-row-table,unsafe-dictionary,unsafe-training,unsafe-optimal-frequencies,unsafe-optimal-short-key,unsafe-optimal-matches,unsafe-optimal-paths
 cargo clippy --all-targets --all-features -- -D warnings

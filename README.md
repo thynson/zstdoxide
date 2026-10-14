@@ -145,6 +145,7 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-row-table` | Checked row position/tag storage for the reference lazy family |
 | `unsafe-dictionary` | Validated immutable dictionary-content access |
 | `unsafe-training` | Bounded raw-training frequency cells |
+| `unsafe-optimal-paths` | Private initialized Optimal path cells with checked phase and slot access |
 | `unsafe-optimal-matches` | Private bounded Optimal candidate storage with checked live-prefix access |
 | `unsafe-optimal-short-key` | Private optional Optimal short-key heads with checked cell access |
 | `unsafe-optimal-frequencies` | Private checked Optimal frequency cells; public strategy 7 remains unsupported |

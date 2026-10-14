@@ -244,13 +244,9 @@ impl ReverseCursor {
 }
 
 #[cfg(test)]
-#[path = "../tests/support/optimal_path_fixture.rs"]
-mod fixture;
-
-#[cfg(test)]
 mod tests {
-    use super::fixture;
     use super::*;
+    use crate::optimal_path_fixture as fixture;
 
     #[test]
     fn finite_prices_reject_negative_overflow_and_sentinel_arithmetic() {

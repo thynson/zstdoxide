@@ -32,7 +32,8 @@
         feature = "unsafe-training",
         feature = "unsafe-optimal-frequencies",
         feature = "unsafe-optimal-short-key",
-        feature = "unsafe-optimal-matches"
+        feature = "unsafe-optimal-matches",
+        feature = "unsafe-optimal-paths"
     )),
     forbid(unsafe_code)
 )]
@@ -109,7 +110,11 @@ mod matchchain;
 mod matchfinder;
 mod optimal_frequencies;
 mod optimal_matches;
+#[cfg(test)]
+#[path = "../tests/support/optimal_path_fixture.rs"]
+mod optimal_path_fixture;
 mod optimal_path_layout;
+mod optimal_paths;
 #[allow(
     dead_code,
     reason = "Private optimal scalar pricing precedes parser integration"

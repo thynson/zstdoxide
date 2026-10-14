@@ -27,6 +27,7 @@ unsafe-training = []
 unsafe-optimal-frequencies = []
 unsafe-optimal-short-key = []
 unsafe-optimal-matches = []
+unsafe-optimal-paths = []
 
 [dev-dependencies]
 zstdoxide-test-allocator = { path = "test-support/allocator" }

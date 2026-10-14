@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-paths.tar.gz",
+  "archive_bytes": 16249,
+  "archive_sha256": "7ab41b284c44991e2baca6b82f17c5fcd2245dbb40188e0b0fd4bf7b4e1e0b49",
+  "files": [
+    {
+      "path": "src/optimal_paths.rs",
+      "bytes": 10017,
+      "sha256": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9"
+    },
+    {
+      "path": "src/optimal_path_layout.rs",
+      "bytes": 13146,
+      "sha256": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 5556,
+      "sha256": "b038f9d08fc4a4787a2a44740f787dd661f5280ad65f07a4cdf0e0e4a41f22f1"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 1162,
+      "sha256": "ab21197a1a7394587993bc56b10fa0221b2ff783d44eb6ebc7f8f72f21b90008"
+    },
+    {
+      "path": "README.md",
+      "bytes": 17027,
+      "sha256": "2500c7d49dac218f08fc5d86d01e960e6215e6305a8ceede42712d4861dddc65"
+    },
+    {
+      "path": "scripts/check.sh",
+      "bytes": 5197,
+      "sha256": "57f7cd04353da5e5a367858e23054e4f6f669d104dd984e3d225ffaf48be5087"
+    },
+    {
+      "path": "checks/all.log",
+      "bytes": 873,
+      "sha256": "62c3eaba8ea09e7b8ebed5ecfe3ee75ec74fb73ecfc2406cffbecd399145228e"
+    },
+    {
+      "path": "checks/clippy-all.log",
+      "bytes": 130,
+      "sha256": "5e7ef735b4be5f44c3273aa1f47d7185d209c269767520dd8dc95b86822f6c7f"
+    },
+    {
+      "path": "checks/clippy-isolated.log",
+      "bytes": 130,
+      "sha256": "64fd0434bae4d30969f7e94116fac54226643e4e71736cc3c09661634b5c6c9a"
+    },
+    {
+      "path": "checks/clippy.log",
+      "bytes": 130,
+      "sha256": "a3c2e4f898299e9e392a734b0abbbc4bcb1c05b8e925cc7a634237357d78586b"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 2078,
+      "sha256": "6a692586df64d96136319de9e1d80fa9c36e1d161c87972560b4544d6f764d6f"
+    },
+    {
+      "path": "checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/initial/duplicate-fixture.log",
+      "bytes": 548,
+      "sha256": "e330edbf4d56626b88f203dc9765c9a05bb23e5af1cce55a29a25ef0d3ba1ac8"
+    },
+    {
+      "path": "checks/initial/isolated-lint-registration.log",
+      "bytes": 683,
+      "sha256": "8b987a4964c04abdc2ce3c8daf8ef28326b23d231a1532140c104aa983a09afa"
+    },
+    {
+      "path": "checks/isolated.log",
+      "bytes": 873,
+      "sha256": "9493d6ac50d9002cce18927841bbcd4332a59ba4c85fead4a7f8d7e898ee1740"
+    },
+    {
+      "path": "checks/nostd-isolated.log",
+      "bytes": 130,
+      "sha256": "feca1116b4af597d5538c39e4bff3566f14a57ce6b3a101ca73875a9c52b6198"
+    },
+    {
+      "path": "checks/nostd.log",
+      "bytes": 130,
+      "sha256": "33b60cc554216b8cf1f79cccbd068b23f79d803bcd91c79e41d2c68f072d3b0e"
+    },
+    {
+      "path": "checks/release.log",
+      "bytes": 877,
+      "sha256": "89df5603ee079c2c5d6c00c53acc59d51ac9d7265ae2ed03559ad7b683e263a0"
+    },
+    {
+      "path": "checks/safe.log",
+      "bytes": 873,
+      "sha256": "63c655c7897c7e7e62642a598a690b89f796cde2fc406b3ca6a9df46e813e225"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

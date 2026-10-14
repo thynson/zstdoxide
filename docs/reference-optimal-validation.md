@@ -360,3 +360,16 @@ focused tests pass in safe, all-feature and release/all modes. Formatting, stric
 safe/all Clippy, safe no_std and all eighteen unsafe leaves with std excluded
 compile successfully. See `evidence/2026-10-14-optimal-path-layout.json`. This
 qualifies scalar records, not a production path-decision parser.
+
+## Initialized path ownership
+
+`OptimalPaths<A>` owns 4,099 initialized cells and one exact moved allocator,
+with checked phase transitions, copied snapshots, allocation-free reset and the
+isolated `unsafe-optimal-paths` access feature. Five focused tests pass in safe,
+isolated, all-feature and release/all modes, comparing complete maps at all
+22,024 captured events. Invalid indices, shortened storage, wrong-phase access,
+failed construction and borrowed/non-clone allocator reuse are checked. Formatting,
+three strict Clippy modes and safe/isolated no_std checks pass. Initial missing
+feature-lint registration and duplicate test-module diagnostics are retained.
+See `evidence/2026-10-14-optimal-paths.json`; diagnostic timing remains a separate
+qualification step.

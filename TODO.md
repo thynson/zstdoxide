@@ -107,7 +107,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.
 - [x] Project audited small/wider path states into bounded canonical binary deltas and verify an independent Rust reader.
 - [x] Specify and implement finite path records with explicit forward/reconstruction roles.
-- [ ] Implement initialized allocator-aware path storage with an isolated unsafe feature.
+- [x] Implement initialized allocator-aware path storage with an isolated unsafe feature.
 - [ ] Replay scripted path decisions in private Rust and compare all captured states.
 - [ ] Integrate private optLevel0 parsing after ordinary startup/search history is qualified.
 - [ ] Freeze and capture ordinary retained optimal blocks with full search/frequency/path and repeat publication state.
