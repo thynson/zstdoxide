@@ -336,3 +336,16 @@ requests, adapter differences and source identities (361 members, 8,860,742
 compressed bytes). See `evidence/2026-10-14-optimal-path-wide-capture.json`.
 These scripted observations do not qualify ordinary parser startup or enable
 public Optimal admission.
+
+## Canonical Rust path fixtures
+
+Normal and optimized projection independently validate both immutable captures
+and produce identical 3,211,235-byte packs (27 cases, 22,024 events, 966 queries,
+42 sequences). The independent Rust reader reconstructs complete path/frequency
+states from canonical deltas and checks source matches, repeat publication,
+phase shapes, predecessor extents, sums and refreshed prices. Four focused tests
+pass in safe, all-feature and release/all modes, including malformed extents,
+flags, duplicate/unchanged deltas and trailing bytes. Formatting, strict safe/all
+Clippy and no-default compilation pass. See
+`evidence/2026-10-14-optimal-path-fixtures.json`. No production path parser is
+implemented by this fixture-only step.

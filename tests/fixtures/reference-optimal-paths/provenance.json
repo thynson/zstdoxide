@@ -1,0 +1,310 @@
+{
+  "archive_sha256": {
+    "optimal-path-capture": "0afae3d917eba580ed11ea1eb0f4ed22731d592f60b5a186bb79df7b456e25dc",
+    "optimal-path-wide-capture": "531c20689dba5b2598285a394ff35aec5e55e6867675fcf323b536e51d94cd2c"
+  },
+  "cases": [
+    {
+      "bytes": 1313,
+      "events": 2,
+      "kind": 0,
+      "name": "path_no_query_minimum_source",
+      "offset": 12,
+      "packet_sha256": "6e733323c52f3e1917b136b64c6bca6fa311ed1bd9354e12049c8cd329cc4d87",
+      "sequences": 0,
+      "source_bytes": 9,
+      "transcript_sha256": "f1a1720258db44dc5e4060dd5ab57af111b3ad948d93d0a9696339a01747c37a"
+    },
+    {
+      "bytes": 52080,
+      "events": 505,
+      "kind": 0,
+      "name": "path_no_match_maximum_source",
+      "offset": 1325,
+      "packet_sha256": "744cbc6fed314ae05ab5923c893cbb2a49f810f264e2223b23e643e6738d3bfc",
+      "sequences": 0,
+      "source_bytes": 512,
+      "transcript_sha256": "feba8edd35a377332ae20de714a3869fbe7df2e6f289efa485eb91782de77bdb"
+    },
+    {
+      "bytes": 2514,
+      "events": 13,
+      "kind": 0,
+      "name": "path_immediate",
+      "offset": 53405,
+      "packet_sha256": "19164a76514b86b9b1014c95d434088d87c90961662814d5c8f123f4f3556521",
+      "sequences": 1,
+      "source_bytes": 16,
+      "transcript_sha256": "15196d0f9d251814ee6f15670d65720add96a4520e07eb1d5f9a2e8466bd0192"
+    },
+    {
+      "bytes": 7949,
+      "events": 68,
+      "kind": 0,
+      "name": "path_all_literals",
+      "offset": 55919,
+      "packet_sha256": "124db7eb1909b5fb2b1a293ee4b13b52c41fc0e7d5404f2773b44531ba134beb",
+      "sequences": 0,
+      "source_bytes": 64,
+      "transcript_sha256": "ba03f7c9e4604533e0276b0d99a5f85690cb4595bc6bd6e1fabe7da10e389f2f"
+    },
+    {
+      "bytes": 7900,
+      "events": 66,
+      "kind": 0,
+      "name": "path_deferred_repeat",
+      "offset": 63868,
+      "packet_sha256": "91a9debb57f01845db4cbbd143f36f938b82e44196c93630bcbe4bd86ba973a7",
+      "sequences": 1,
+      "source_bytes": 64,
+      "transcript_sha256": "c4689883c433449d6fffc87b161da2dbc5e9aa18881d560a8936155828605ddb"
+    },
+    {
+      "bytes": 5067,
+      "events": 36,
+      "kind": 0,
+      "name": "path_repeat_publication",
+      "offset": 71768,
+      "packet_sha256": "83577f74a18c80c44435837b47dd172fd3f3c85162ba9501bc989cc7ef592126",
+      "sequences": 3,
+      "source_bytes": 32,
+      "transcript_sha256": "4950e2be460f7ce4252a3d0f00432fcb7128d25d8a5d846f4d61fbd03fcf5a9d"
+    },
+    {
+      "bytes": 4797,
+      "events": 34,
+      "kind": 0,
+      "name": "path_equal_sufficient",
+      "offset": 76835,
+      "packet_sha256": "daa86573b0052bf21309ac0bd3cb9780491f7d7e1cbcc7d0fb2dc158d3578d0d",
+      "sequences": 1,
+      "source_bytes": 32,
+      "transcript_sha256": "dd91fb430c46e50f8ddfb467ccbc08b2e2bf123a38013dd944291e0404dffc5c"
+    },
+    {
+      "bytes": 14970,
+      "events": 107,
+      "kind": 0,
+      "name": "path_script_seed_0",
+      "offset": 81632,
+      "packet_sha256": "74fa3742c5a385a9783c91b07a112abcf37850e8204b8e16ec44abc9eee03c7e",
+      "sequences": 3,
+      "source_bytes": 64,
+      "transcript_sha256": "9f36c717b9319207d89ad08f1386df759ada2a670532b497acbad65e26a5d516"
+    },
+    {
+      "bytes": 13438,
+      "events": 99,
+      "kind": 0,
+      "name": "path_script_seed_1",
+      "offset": 96602,
+      "packet_sha256": "ce602634da818e40559d219aac8f23e2296982d39804c9ba769a3aed51a34d0f",
+      "sequences": 4,
+      "source_bytes": 64,
+      "transcript_sha256": "0e65e3a2fee215a5d34655bc049410c2a82e1255003e4144772d0a90e17840cf"
+    },
+    {
+      "bytes": 5966,
+      "events": 34,
+      "kind": 0,
+      "name": "path_script_seed_2",
+      "offset": 110040,
+      "packet_sha256": "ec2c62e426c3f7a6502dfc4b530a9c1e1acc261b967fed056c23d47a027b208a",
+      "sequences": 4,
+      "source_bytes": 64,
+      "transcript_sha256": "dd64fa6df0648ec0876a5ee7fe9acbb0ffd268d146cc7f492321e86fa9e9435b"
+    },
+    {
+      "bytes": 7390,
+      "events": 39,
+      "kind": 0,
+      "name": "path_script_seed_6",
+      "offset": 116006,
+      "packet_sha256": "3b2f6254b93d0c5198b13c5951b8ac1d2032f4f884fee2539fdffddc5a862a05",
+      "sequences": 3,
+      "source_bytes": 64,
+      "transcript_sha256": "ce30b31c78d973ce2dba732686bb63c731de4d9548e48a8fc007555b6f7630a9"
+    },
+    {
+      "bytes": 6439,
+      "events": 48,
+      "kind": 0,
+      "name": "path_script_seed_32",
+      "offset": 123396,
+      "packet_sha256": "ae48c3419faea4ae35cc1684435a414d065bb02443058dd5e98e6086ce933e00",
+      "sequences": 2,
+      "source_bytes": 64,
+      "transcript_sha256": "1b6a46673cdbe8410a395d1787ad918ba0b2605606d31ec52387bfe7d827ca8a"
+    },
+    {
+      "bytes": 14971,
+      "events": 111,
+      "kind": 0,
+      "name": "path_script_seed_34",
+      "offset": 129835,
+      "packet_sha256": "f994bfc75b5f8d5c5eba8bccbf399c6cca5ef2fead8835e48b2e5df8dd9162b6",
+      "sequences": 2,
+      "source_bytes": 64,
+      "transcript_sha256": "5bb633c39d251cfd78aa4a4a2f23cac00e848c6d0a9d7d2ba96e300a42914bc8"
+    },
+    {
+      "bytes": 5046,
+      "events": 35,
+      "kind": 0,
+      "name": "path_minimum_4",
+      "offset": 144806,
+      "packet_sha256": "839500e90ebc02943cc04e9f581b98e4dad0570d4997fcdbb0ce5480944bfcb4",
+      "sequences": 1,
+      "source_bytes": 32,
+      "transcript_sha256": "0cd35fb588c506d974c11cb1c9463711ec0391508b7d051e5ecb54be132cdb71"
+    },
+    {
+      "bytes": 5046,
+      "events": 35,
+      "kind": 0,
+      "name": "path_minimum_5",
+      "offset": 149852,
+      "packet_sha256": "1a29ba9b2622482d5c1475af6d675db45edd187ab0ae1af25e08cd362802f1e2",
+      "sequences": 1,
+      "source_bytes": 32,
+      "transcript_sha256": "2b1df3e6f62943dad381b5919febb3f34d384aa33e218568b3ef66cb8b028035"
+    },
+    {
+      "bytes": 5046,
+      "events": 35,
+      "kind": 0,
+      "name": "path_minimum_6",
+      "offset": 154898,
+      "packet_sha256": "60e8277a884432a4d2b90aae906728e3a76153023607acacc92109db2644d2c9",
+      "sequences": 1,
+      "source_bytes": 32,
+      "transcript_sha256": "7e255c1149f8b26519826fbde323ccd2c1df505186ab6a875c1412ed8e2a7086"
+    },
+    {
+      "bytes": 5046,
+      "events": 35,
+      "kind": 0,
+      "name": "path_minimum_7",
+      "offset": 159944,
+      "packet_sha256": "8ad458e43d705df9f236da418713e5b68314a307eae4acffde224ec98113c40f",
+      "sequences": 1,
+      "source_bytes": 32,
+      "transcript_sha256": "22a2763c182eedc5bba72ae8118f80a6198d4a713e0f32f32dd1bdb31603bbfc"
+    },
+    {
+      "bytes": 548614,
+      "events": 4124,
+      "kind": 1,
+      "name": "path_wide_initial_4094",
+      "offset": 164990,
+      "packet_sha256": "1d4cb5b3c3f8c557d62d3156a31acc631a33930f3a96e2fc723701d1fc0b6e0b",
+      "sequences": 1,
+      "source_bytes": 4112,
+      "transcript_sha256": "62d47e2ca4ccd9a49e3bcb61958342c13bcfedd867d03176cd29809c218f21ce"
+    },
+    {
+      "bytes": 548650,
+      "events": 4124,
+      "kind": 1,
+      "name": "path_wide_initial_4095",
+      "offset": 713604,
+      "packet_sha256": "56c16c86d3e8b5c3ae196b2bf3f441c218bf8e9f0313d35d6c69aab0a5cfe059",
+      "sequences": 1,
+      "source_bytes": 4112,
+      "transcript_sha256": "2e75ba35058f0eb1f014e9f77975d9560e97d2a87a21ddf732efed31da152d5f"
+    },
+    {
+      "bytes": 6858,
+      "events": 16,
+      "kind": 1,
+      "name": "path_wide_initial_4096",
+      "offset": 1262254,
+      "packet_sha256": "e57246390c39072744065391b72ec362a61cec3d01ec83579891c222c2036da4",
+      "sequences": 1,
+      "source_bytes": 4112,
+      "transcript_sha256": "84d444d71115b9bd9fb72034e2078f8994cbdf857a4c59183f43fb44612c8dfb"
+    },
+    {
+      "bytes": 548352,
+      "events": 4121,
+      "kind": 1,
+      "name": "path_wide_later_4095",
+      "offset": 1269112,
+      "packet_sha256": "c36ab80d6a43465aefcb91c5f52035742edc34999913e1c968fe5e33454a843f",
+      "sequences": 1,
+      "source_bytes": 4108,
+      "transcript_sha256": "b9c154fc836db09c916b87b13d3221b2347014da45fa18ffba18c75b05e6b4ac"
+    },
+    {
+      "bytes": 343968,
+      "events": 2076,
+      "kind": 1,
+      "name": "path_wide_later_4096",
+      "offset": 1817464,
+      "packet_sha256": "fdf488235287efefaa869a5c46dc00b3b6ecc50e93d4537c9299ac46e5f3d8c6",
+      "sequences": 2,
+      "source_bytes": 4108,
+      "transcript_sha256": "a26d11699d8c5fdebfa0a7128a61427e0ed380be2b08044b5ab0c41f69938c09"
+    },
+    {
+      "bytes": 343872,
+      "events": 2075,
+      "kind": 1,
+      "name": "path_wide_later_4097",
+      "offset": 2161432,
+      "packet_sha256": "0782bde713ec5907d9a24f7dbc9dd30a2eb5fff83ae3b763d01a9867ac847129",
+      "sequences": 2,
+      "source_bytes": 4108,
+      "transcript_sha256": "02b5d1b3b2cc58d2b87d51bc3166791b1aca2c5acb6e72ac2e1cc7ac9c265222"
+    },
+    {
+      "bytes": 343636,
+      "events": 2073,
+      "kind": 1,
+      "name": "path_wide_source_end",
+      "offset": 2505304,
+      "packet_sha256": "959a5cc6637412e892cb49593d5ad1ca72f98158ff6ad66cf85b5500ea6a5f2d",
+      "sequences": 2,
+      "source_bytes": 4096,
+      "transcript_sha256": "9dc76619e74453305cdc747945afc904372f9ee29b3efd34c337a3e60ea92b4c"
+    },
+    {
+      "bytes": 10271,
+      "events": 9,
+      "kind": 1,
+      "name": "path_wide_maximum_immediate",
+      "offset": 2848940,
+      "packet_sha256": "f1f01e5557350a5e919dc1dcb516bbf75faf336b68e8468cb20c75a7d2103872",
+      "sequences": 1,
+      "source_bytes": 8192,
+      "transcript_sha256": "c30554df1e0e51818846b5541c8adc107aff8c7944e5a3737f43faee68dafd2b"
+    },
+    {
+      "bytes": 6955,
+      "events": 17,
+      "kind": 1,
+      "name": "path_wide_strict_target",
+      "offset": 2859211,
+      "packet_sha256": "903750a4bde23ca8280f21d602033fdc1acd218220d837238885988e97c94d86",
+      "sequences": 1,
+      "source_bytes": 4112,
+      "transcript_sha256": "5965c6536db3f0d66cb9f81ecf3de1d9dc3620f43f0d68b176a94d1a5b3e826d"
+    },
+    {
+      "bytes": 345069,
+      "events": 2087,
+      "kind": 1,
+      "name": "path_wide_literal_pricing",
+      "offset": 2866166,
+      "packet_sha256": "9760069fa64e3a93ec911fc04edc83ad9853a7508e44b367fca8025b1d3dd123",
+      "sequences": 2,
+      "source_bytes": 4108,
+      "transcript_sha256": "2c0d4f97c7478f8b0c722067b11542f4c4210d94afee72b440927685a17bad1b"
+    }
+  ],
+  "events": 22024,
+  "pack_bytes": 3211235,
+  "pack_sha256": "0defe329f5a50e2add4162fe865c7f1fc314db2c15733485d2cc92f463c7d167",
+  "qualification": "One exact C copy after both builds/padding passes and independent replay; complete path/frequency states reconstruct from canonical deltas. No production path parser admission.",
+  "schema_version": 1
+}
