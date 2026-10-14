@@ -315,3 +315,10 @@ reconstruct all 1,302 original small states exactly. Normal and optimized Python
 each reject 12 malformed deltas, two invalid path indices and nine forged wider
 traces; protocol controls retain four positives and 38 rejections. Source-only
 evidence: `evidence/2026-10-14-optimal-path-wide-model.json`.
+
+The wider helper's eight final preflight commands pass in normal/optimized
+Python and strict normal/sanitized C syntax modes. The exact plan has 122 commands
+and the same 26 used codec units; all 15 upstream hooks are unchanged. Original
+and wider adapter digests plus their exact diff are retained. The initial Python
+control-script syntax diagnostic is preserved with the corrected passing runs in
+`evidence/2026-10-14-optimal-path-wide-preflight.json`.

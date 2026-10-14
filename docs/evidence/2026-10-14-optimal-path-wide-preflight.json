@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-path-wide-preflight.tar.gz",
+  "archive_bytes": 181611,
+  "archive_sha256": "3ee0d299e025c0586af4b1afd43bd8c192cdffcf885562a04444dfb716a589e6",
+  "files": [
+    {
+      "path": "scripts/optimal_path_wide_capture_plan.py",
+      "bytes": 7688,
+      "sha256": "7d479619b671ef8ea0d69e2abd8f564bdab786a495d5123bd8f1501e3e5a0841"
+    },
+    {
+      "path": "scripts/capture_optimal_paths_wide.py",
+      "bytes": 7894,
+      "sha256": "10c16c0de1687d20ca55e777595ef9c105874f94efa4a7cfab3a77a2255cf1a7"
+    },
+    {
+      "path": "scripts/check_optimal_path_wide_capture.py",
+      "bytes": 9117,
+      "sha256": "222812fd82dccb5aa3873443799ccc19f5b5efd23b2ac54ccbf40d5db8a4b628"
+    },
+    {
+      "path": "scripts/check_optimal_path_wide_protocol.py",
+      "bytes": 3489,
+      "sha256": "d190824c37dfd4a183e6534d04e67291c7eb295a50f58d72fc70641132041932"
+    },
+    {
+      "path": "scripts/check_optimal_path_wide_model.py",
+      "bytes": 5389,
+      "sha256": "10ad8f91d280b95ec8112be00282fc68d20c23ecf1803bbf23cd729d373c43bd"
+    },
+    {
+      "path": "scripts/check_optimal_path_wide_capture_plan.py",
+      "bytes": 2825,
+      "sha256": "5d3d5cc7f15be07a7cbd40d609f77d6cca077c5d1e3a832ab2a6edc59f0a3833"
+    },
+    {
+      "path": "scripts/oracles/optimal_paths_wide.py",
+      "bytes": 5469,
+      "sha256": "e37f4c630b5f47dcd9291a5e3fde94b4b3b5cbcce5009407f94082867058292f"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_wide_recipes.py",
+      "bytes": 932,
+      "sha256": "b0675ff25192e307e9b747f9bce891a3a83d48f6af9b56614c8416886878a2c2"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_wide_validation.py",
+      "bytes": 5129,
+      "sha256": "9cf158e7776ac85ac40fab0a8f8831a385662e9a94ed9ab5f760b2a7d3b76927"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_instrumentation.py",
+      "bytes": 4469,
+      "sha256": "cfcc9874233610ada46cc73c4a6bd8ac826c685a464e42d890283ff1d10dbf5f"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_script_inputs.json",
+      "bytes": 28671,
+      "sha256": "f3077e03084d5faa838b47db522ef50eeea418193d59c8f8171b696b65bc1e12"
+    },
+    {
+      "path": "scripts/oracles/optimal_price_validation.py",
+      "bytes": 7491,
+      "sha256": "ec2528f09dbc35f21688c65e706e6015fed3e8a6aa14bd13fb184656a804ceca"
+    },
+    {
+      "path": "scripts/oracles/optimal_prices_v2.py",
+      "bytes": 5058,
+      "sha256": "85360e2ee7d7202b55f1c9c48266969cf951e85657e5265fdd06f6d524f0d92a"
+    },
+    {
+      "path": "scripts/oracles/tree_validation.py",
+      "bytes": 8202,
+      "sha256": "59c16db4486f1a2f81eb995245c0c95cb8f07738edbe5792d5b54e00d7afcc9b"
+    },
+    {
+      "path": "scripts/oracles/tree_direct.py",
+      "bytes": 6584,
+      "sha256": "200c9491b82ae70598f7d5f0d375070ce858494f2c96304ba186329cd4f6d6f1"
+    },
+    {
+      "path": "scripts/oracles/optimal_paths.py",
+      "bytes": 5460,
+      "sha256": "192c4f52819ae810150b030b1a32cd3dab04068cb56a4c0cc3be4386b0c8838f"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_validation.py",
+      "bytes": 12753,
+      "sha256": "ea1c4523f835ed18adefcc0a9ac3119610721e9ccc9b74f4cdeb5c6aee6b2c50"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_recipes.py",
+      "bytes": 1369,
+      "sha256": "8c6a3ce9c48519f6010e513451ce5c6f27560786f1fe1b0d7d700970c6f51cc4"
+    },
+    {
+      "path": "scripts/oracles/optimal_paths.c",
+      "bytes": 13317,
+      "sha256": "ec599664a59859e8e881e756ee5aca7242903ff5a8389bfd227ed88784a1dd94"
+    },
+    {
+      "path": "scripts/oracles/optimal_paths_wide.c",
+      "bytes": 13760,
+      "sha256": "6755ce4664a3431149f84fd8efb1fd7474d72f8578d3d94a2b87b1dc227a3078"
+    },
+    {
+      "path": "tests/fixtures/reference-optimal-path-wide-recipes/recipes.json",
+      "bytes": 5516,
+      "sha256": "06af5f7145d8ef03b63d73fa3fe5ac81e8e5994f79b80f29a317c3ab843171d7"
+    },
+    {
+      "path": "docs/reference-optimal-path-wide-observer.md",
+      "bytes": 2981,
+      "sha256": "86faf47fc44e181cbf157ef07ff06808babbbc18c9217022204b2bb384ea59eb"
+    },
+    {
+      "path": "docs/reference-optimal-path-wide-adapter-review.md",
+      "bytes": 2117,
+      "sha256": "83169759918ce410dae61f089c39e4e00eff44759488a8bc44fff50e5fc29b7c"
+    },
+    {
+      "path": "tests/upstream/manifest.json",
+      "bytes": 657979,
+      "sha256": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 3332,
+      "sha256": "2ecb6980177b16c27866d7584aae38a5d47c620597c4189e9e37877e52e3a1f9"
+    },
+    {
+      "path": "checks/generated/adapter-diff.patch",
+      "bytes": 9763,
+      "sha256": "f0ed90688e21aa0acc6557ad12791d875ef0bff283c30e958acb500dd379d894"
+    },
+    {
+      "path": "checks/generated/adapter-digests.json",
+      "bytes": 168,
+      "sha256": "b81bd5aa4eeebab6d70e578e94e83e9b407604949e051552dab8a93a5e977733"
+    },
+    {
+      "path": "checks/generated/instrumentation.json",
+      "bytes": 4633,
+      "sha256": "394e9abf25d118cad1ee68655a6d51468a4691b942acdea53e014dcae33452fd"
+    },
+    {
+      "path": "checks/generated/observed_zstd_opt.c",
+      "bytes": 73117,
+      "sha256": "d90e84c22a39bb8a77da586e0345bd95ba48ee5686b5b5638d138c2a7fd2b6c9"
+    },
+    {
+      "path": "checks/generated/original_zstd_opt.c",
+      "bytes": 72006,
+      "sha256": "625936ee3fb02d789abb894c1fbc2918ee47582434094c963b630da13532c876"
+    },
+    {
+      "path": "checks/initial-model-control-syntax-failure.log",
+      "bytes": 381,
+      "sha256": "958b846d444e1b9a3f11561a0b684d135aa9ab402ae9429e388042bc0171287d"
+    },
+    {
+      "path": "checks/model-normal.log",
+      "bytes": 2267,
+      "sha256": "cb667ba10381ea4bc2dccd353bde83063b47e98a714af34742ee5dbbc4505c7d"
+    },
+    {
+      "path": "checks/model-optimized.log",
+      "bytes": 2267,
+      "sha256": "cb667ba10381ea4bc2dccd353bde83063b47e98a714af34742ee5dbbc4505c7d"
+    },
+    {
+      "path": "checks/plan-normal.log",
+      "bytes": 190,
+      "sha256": "db935a07d8911099cf2876172736340fb2339764793b5d88e9eefcd03340442c"
+    },
+    {
+      "path": "checks/plan-optimized.log",
+      "bytes": 190,
+      "sha256": "db935a07d8911099cf2876172736340fb2339764793b5d88e9eefcd03340442c"
+    },
+    {
+      "path": "checks/protocol-normal.log",
+      "bytes": 75,
+      "sha256": "479871259ed99a1a08d6ffe54ff56d4c8f708c9d673439dcaddc6800f1a110be"
+    },
+    {
+      "path": "checks/protocol-optimized.log",
+      "bytes": 75,
+      "sha256": "479871259ed99a1a08d6ffe54ff56d4c8f708c9d673439dcaddc6800f1a110be"
+    },
+    {
+      "path": "checks/syntax-normal.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/syntax-sanitized.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

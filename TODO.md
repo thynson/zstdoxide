@@ -102,7 +102,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Capture bounded path transitions and reject forged phase/predecessor/frequency evidence offline.
 - [x] Specify canonical complete-state deltas for wider scripted path observations.
 - [x] Validate wider path requests/replay against every small trace and prove horizon branch coverage.
-- [ ] Preflight the wider path adapter and exact bounded capture plan.
+- [x] Preflight the wider path adapter and exact bounded capture plan.
 - [ ] Capture wider path transitions at the 4096-position horizon before production path integration.
 - [ ] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.
 - [ ] Implement finite-cost path ownership, phase-aware reconstruction and private optLevel0 parsing.
