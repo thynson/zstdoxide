@@ -305,3 +305,13 @@ spawn no children. The archive retains 27,527,838 log bytes, all objects/binarie
 requests, original/generated parser copies and the exact 15 substitutions.
 See `evidence/2026-10-14-optimal-path-capture.json`. This qualifies the scripted
 provider boundary only; ordinary startup and the wider horizon remain separate.
+
+## Wider scripted path replay
+
+Ten wider source-only recipes produce 20,722 logical events and distinguish
+initial lengths 4094/4095/4096, queried later endpoints 4095/4096/4097, source-end
+exit, enabled literal prices and an 8191-byte immediate match. Canonical deltas
+reconstruct all 1,302 original small states exactly. Normal and optimized Python
+each reject 12 malformed deltas, two invalid path indices and nine forged wider
+traces; protocol controls retain four positives and 38 rejections. Source-only
+evidence: `evidence/2026-10-14-optimal-path-wide-model.json`.

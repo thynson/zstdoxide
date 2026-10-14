@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-path-wide-model.tar.gz",
+  "archive_bytes": 8209,
+  "archive_sha256": "a23b233c6a3306bcf3f8b96796ddd7a111dc7cf4d7952f3d2905189e89957f91",
+  "files": [
+    {
+      "path": "scripts/oracles/optimal_paths_wide.py",
+      "bytes": 5469,
+      "sha256": "e37f4c630b5f47dcd9291a5e3fde94b4b3b5cbcce5009407f94082867058292f"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_wide_validation.py",
+      "bytes": 5129,
+      "sha256": "9cf158e7776ac85ac40fab0a8f8831a385662e9a94ed9ab5f760b2a7d3b76927"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_wide_recipes.py",
+      "bytes": 932,
+      "sha256": "b0675ff25192e307e9b747f9bce891a3a83d48f6af9b56614c8416886878a2c2"
+    },
+    {
+      "path": "scripts/check_optimal_path_wide_protocol.py",
+      "bytes": 3489,
+      "sha256": "d190824c37dfd4a183e6534d04e67291c7eb295a50f58d72fc70641132041932"
+    },
+    {
+      "path": "scripts/check_optimal_path_wide_model.py",
+      "bytes": 5389,
+      "sha256": "10ad8f91d280b95ec8112be00282fc68d20c23ecf1803bbf23cd729d373c43bd"
+    },
+    {
+      "path": "tests/fixtures/reference-optimal-path-wide-recipes/recipes.json",
+      "bytes": 5516,
+      "sha256": "06af5f7145d8ef03b63d73fa3fe5ac81e8e5994f79b80f29a317c3ab843171d7"
+    },
+    {
+      "path": "checks/model-normal.log",
+      "bytes": 2267,
+      "sha256": "cb667ba10381ea4bc2dccd353bde83063b47e98a714af34742ee5dbbc4505c7d"
+    },
+    {
+      "path": "checks/model-optimized.log",
+      "bytes": 2267,
+      "sha256": "cb667ba10381ea4bc2dccd353bde83063b47e98a714af34742ee5dbbc4505c7d"
+    },
+    {
+      "path": "checks/protocol-normal.log",
+      "bytes": 75,
+      "sha256": "479871259ed99a1a08d6ffe54ff56d4c8f708c9d673439dcaddc6800f1a110be"
+    },
+    {
+      "path": "checks/protocol-optimized.log",
+      "bytes": 75,
+      "sha256": "479871259ed99a1a08d6ffe54ff56d4c8f708c9d673439dcaddc6800f1a110be"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}
