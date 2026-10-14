@@ -420,3 +420,20 @@ modes. No native foreign or firmware execution is claimed. Source identities and
 complete logs are retained in `evidence/2026-10-14-optimal-parse-matrix.json`,
 `evidence/2026-10-14-optimal-parse-platform.json` and
 `evidence/2026-10-14-optimal-parse-thumb.json`.
+
+## Scripted decision diagnostic timing
+
+Five independently C-derived workloads preserve exact event/state checksums and
+three allocations requesting 149,072 bytes per case, with no allocations during
+parse/reset. Safe, frequency-only, candidate-only, path-only and all-feature
+profiles ran after the frozen correctness/platform gates; a separate safe/all
+repeat completes 175 samples (32 rounds per sample). Normal and optimized
+offline audit controls each reject 24 forgeries and accept two positive controls
+without launching children. See `evidence/2026-10-14-optimal-parse-timing.json`.
+
+All/safe median ratios for the five workloads were 1.0084, 1.0058, 0.9954,
+0.9983 and 1.0025; the repeat yielded 1.0049, 0.9485, 0.9099, 0.9953 and
+0.9946. Fixed execution order and an uncontrolled desktop environment limit
+interpretation: these diagnostic measurements do not establish a stable unsafe
+speedup. They cover private scripted decisions, not ordinary parser integration
+or public Optimal compression.

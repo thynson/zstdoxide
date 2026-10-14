@@ -114,7 +114,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Implement initialized allocator-aware path storage with an isolated unsafe feature.
 - [x] Replay scripted path decisions in private Rust and compare all captured states.
 - [x] Qualify scripted path decisions on every isolated feature, foreign Miri and no-atomics compilation.
-- [ ] Freeze C-derived path workload outputs and owners before diagnostic backend timing and a separate repeat.
+- [x] Freeze C-derived path workload outputs and owners before diagnostic backend timing and a separate repeat.
 - [ ] Integrate private optLevel0 parsing after ordinary startup/search history is qualified.
 - [ ] Freeze and capture ordinary retained optimal blocks with full search/frequency/path and repeat publication state.
 - [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.

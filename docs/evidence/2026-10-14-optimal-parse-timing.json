@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-parse-timing.tar.gz",
+  "archive_bytes": 3109549,
+  "archive_sha256": "7b1b2ffdde60b12c130ed8b7c36b49c4d8820eb4bfc6d15bfd8c75e9e0e39d31",
+  "files": [
+    {
+      "path": "build-all.log",
+      "bytes": 807,
+      "sha256": "1496d8a055751944eea637947ffb49a5e8cb978cf2ea46d4d402fe82286a1f0d"
+    },
+    {
+      "path": "build-frequencies.log",
+      "bytes": 807,
+      "sha256": "b9c29403424530433476c19bb883d11362ce2ac33ac96596c0a38e71fc9c0cac"
+    },
+    {
+      "path": "build-matches.log",
+      "bytes": 807,
+      "sha256": "c1e913254164b62cc4a126341eced7927c163b5a8868595790078b1bea560e61"
+    },
+    {
+      "path": "build-paths.log",
+      "bytes": 807,
+      "sha256": "5c4fe59586eb6812010d2a0bf55a50a0b930aa1e2d5ffb930406621d4141095c"
+    },
+    {
+      "path": "build-safe.log",
+      "bytes": 989,
+      "sha256": "e46569ef359b3e0e69cc9331ffbd1ffb1037e764027e55a7bcea228f71503b8c"
+    },
+    {
+      "path": "caller/Cargo.lock",
+      "bytes": 281,
+      "sha256": "f8f09315c899f6d5919246654bbd908ffb4d5af1960a7c529f3df438212353d7"
+    },
+    {
+      "path": "caller/Cargo.toml",
+      "bytes": 668,
+      "sha256": "a55ac5d1be4bdf2e9e2649c0d50db4a9ab782b3704cb659c5e99949828834a9d"
+    },
+    {
+      "path": "caller/src/main.rs",
+      "bytes": 7165,
+      "sha256": "d40be029ab85e2344a25578e092c5f747749401970531b84a37eeeca816057e6"
+    },
+    {
+      "path": "compiler.log",
+      "bytes": 210,
+      "sha256": "a4bb13dccabda9ebf5294b8144f22400733afc06744ab8062bcf43b7254e0c03"
+    },
+    {
+      "path": "first-all.log",
+      "bytes": 927,
+      "sha256": "b663041a0019362ae01381a21a17d1e18e7091bd6bc6f51040ecbf61d38974d9"
+    },
+    {
+      "path": "first-frequencies.log",
+      "bytes": 927,
+      "sha256": "8425fa2a11757b5cd21d87b0a14d958d6d16e3c45bc9ea6df533de54028c433e"
+    },
+    {
+      "path": "first-matches.log",
+      "bytes": 927,
+      "sha256": "f647feed92f91e5cc23a6d34a6fd5efbc73b5eabcc904192a6c6c472b660732a"
+    },
+    {
+      "path": "first-paths.log",
+      "bytes": 927,
+      "sha256": "aaf741ed366a6513011bbc000bb0f5d8b733c9cf3d2a17f7e29b8e55e649c132"
+    },
+    {
+      "path": "first-safe.log",
+      "bytes": 927,
+      "sha256": "daf248f95e701a73946d20e453cfcd5c420ab35299237c5b86275c9ed7468f93"
+    },
+    {
+      "path": "first.json",
+      "bytes": 11229,
+      "sha256": "5aa407f588aa110e6992418a42387d8fb77295477848acebd770b8de7364c139"
+    },
+    {
+      "path": "gates/matrix.json",
+      "bytes": 33573,
+      "sha256": "306850bf1a40ac1ff156e8d1d6822fc65a6755ad7a04c51504db903f86f256d0"
+    },
+    {
+      "path": "gates/miri.json",
+      "bytes": 22472,
+      "sha256": "53219407784c6193fcaf4b401f05eabb0f4d6e37379f22877d0824acb468d875"
+    },
+    {
+      "path": "gates/thumb.json",
+      "bytes": 13829,
+      "sha256": "33b2f9dac324a99ec817b09784d6434660e6d63a1a0305a6f066001ca61a0cf1"
+    },
+    {
+      "path": "parse-all",
+      "bytes": 3775584,
+      "sha256": "8f50bead77a2eb19f115ff680121dbe221fc78862aac319099aa10330e9a6474"
+    },
+    {
+      "path": "parse-frequencies",
+      "bytes": 3775776,
+      "sha256": "932bc71889bf27109d3d1e2fb4dfe91a139c050ba5425355c18968625c438753"
+    },
+    {
+      "path": "parse-matches",
+      "bytes": 3775584,
+      "sha256": "6ae88ffb7187cb3747834329d2b8aac4bea72c7e3ce5528e189b9222cacb7b38"
+    },
+    {
+      "path": "parse-paths",
+      "bytes": 3775696,
+      "sha256": "0b89c6f0d12ce5ccde3c1bd6e6e54c5e7fa705fa7c9ffde67295e3ca24ca924d"
+    },
+    {
+      "path": "parse-safe",
+      "bytes": 3775696,
+      "sha256": "76f7a8c1eb815ccb22676322b55fab254da5bff20e6bbebd5572b27039fc73d6"
+    },
+    {
+      "path": "prepare.json",
+      "bytes": 8983,
+      "sha256": "59328161bcdb48bab2ba8497a0447bd5a4b36ad0ee7d7583dd81b4560054d1f0"
+    },
+    {
+      "path": "repeat-all.log",
+      "bytes": 927,
+      "sha256": "0b6763e4f8e9b59df3a10a67481952f563e2fbb9e933f60e5b17769c2c9959ae"
+    },
+    {
+      "path": "repeat-safe.log",
+      "bytes": 927,
+      "sha256": "e5ba8563eee6d3bdc2713006c09503a1f6762bef4f5dd3211771012cd0fa4147"
+    },
+    {
+      "path": "repeat.json",
+      "bytes": 4971,
+      "sha256": "0f96aeacf90456393d5a17bd66a41aa80571b96c6004fc8fda08b0cf95c28f59"
+    },
+    {
+      "path": "snapshot/Cargo.toml",
+      "bytes": 1162,
+      "sha256": "ab21197a1a7394587993bc56b10fa0221b2ff783d44eb6ebc7f8f72f21b90008"
+    },
+    {
+      "path": "snapshot/rust-toolchain.toml",
+      "bytes": 118,
+      "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20"
+    },
+    {
+      "path": "snapshot/scripts/benchmark_optimal_parse.py",
+      "bytes": 13525,
+      "sha256": "55eeb81f84c56012501aa85a343c1e9db900310366e4d4b3a9ed5a61e51889b2"
+    },
+    {
+      "path": "snapshot/scripts/support/optimal_parse_benchmark.rs",
+      "bytes": 6793,
+      "sha256": "560d59dec01a72df5a9ed2b31419c50c2a64d53672decd20dad56d0000b852b1"
+    },
+    {
+      "path": "snapshot/src/constants.rs",
+      "bytes": 1542,
+      "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2"
+    },
+    {
+      "path": "snapshot/src/error.rs",
+      "bytes": 2528,
+      "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+    },
+    {
+      "path": "snapshot/src/greedy_key.rs",
+      "bytes": 12733,
+      "sha256": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d"
+    },
+    {
+      "path": "snapshot/src/optimal_frequencies.rs",
+      "bytes": 20280,
+      "sha256": "53be1c141b56ab2aedf31c8f5d1f82b2a99139a5f6f149c23a38a3599e3585cb"
+    },
+    {
+      "path": "snapshot/src/optimal_matches.rs",
+      "bytes": 6556,
+      "sha256": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781"
+    },
+    {
+      "path": "snapshot/src/optimal_parse.rs",
+      "bytes": 35590,
+      "sha256": "cdcd296d0c8b2c1fb31202bdd5f3073d71ce6de57b0f9c0fb7af1ba4585a6549"
+    },
+    {
+      "path": "snapshot/src/optimal_path_layout.rs",
+      "bytes": 13146,
+      "sha256": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5"
+    },
+    {
+      "path": "snapshot/src/optimal_paths.rs",
+      "bytes": 10017,
+      "sha256": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9"
+    },
+    {
+      "path": "snapshot/src/optimal_price.rs",
+      "bytes": 6247,
+      "sha256": "52078b7ba903e9f5de17a6e4d09289418a4872361a4cb3c51e34bc93bb4f7142"
+    },
+    {
+      "path": "snapshot/src/optimal_search_layout.rs",
+      "bytes": 9353,
+      "sha256": "77829772a8bc027a9e48bc06aa4f6996f41d20d1ee78e43533d92ca3b2e21188"
+    },
+    {
+      "path": "snapshot/src/tree_layout.rs",
+      "bytes": 11624,
+      "sha256": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26"
+    },
+    {
+      "path": "snapshot/test-support/allocator/Cargo.toml",
+      "bytes": 412,
+      "sha256": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292"
+    },
+    {
+      "path": "snapshot/test-support/allocator/src/lib.rs",
+      "bytes": 49773,
+      "sha256": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971"
+    },
+    {
+      "path": "snapshot/tests/fixtures/reference-optimal-paths/cases.bin",
+      "bytes": 3211235,
+      "sha256": "0defe329f5a50e2add4162fe865c7f1fc314db2c15733485d2cc92f463c7d167"
+    },
+    {
+      "path": "snapshot/tests/fixtures/reference-optimal-paths/provenance.json",
+      "bytes": 10523,
+      "sha256": "6f2e552e4614ecf47262ef8ece1c9b73f89a9e4a5c5577c46abd97e5b2fefae3"
+    },
+    {
+      "path": "snapshot/tests/support/optimal_path_fixture.rs",
+      "bytes": 18311,
+      "sha256": "680b43a2d79d4ac68394882ea4875d0f79f2c04703478fc345f76ce476b7125d"
+    },
+    {
+      "path": "verify-all.log",
+      "bytes": 697,
+      "sha256": "663b463f64e44e0ba2d5016aba671d44100c878fc8c764724776861e7da1f1f4"
+    },
+    {
+      "path": "verify-frequencies.log",
+      "bytes": 697,
+      "sha256": "663b463f64e44e0ba2d5016aba671d44100c878fc8c764724776861e7da1f1f4"
+    },
+    {
+      "path": "verify-matches.log",
+      "bytes": 697,
+      "sha256": "663b463f64e44e0ba2d5016aba671d44100c878fc8c764724776861e7da1f1f4"
+    },
+    {
+      "path": "verify-paths.log",
+      "bytes": 697,
+      "sha256": "663b463f64e44e0ba2d5016aba671d44100c878fc8c764724776861e7da1f1f4"
+    },
+    {
+      "path": "verify-safe.log",
+      "bytes": 697,
+      "sha256": "663b463f64e44e0ba2d5016aba671d44100c878fc8c764724776861e7da1f1f4"
+    },
+    {
+      "path": "controls/zstdoxide-optimal-parse-timing-audit.log",
+      "bytes": 513,
+      "sha256": "194bbed73bea8e4ff71740c8dfa3e8d3dd91645479c2e0e7366b8c0beb1145e3"
+    },
+    {
+      "path": "controls/zstdoxide-optimal-parse-timing-controls-normal.log",
+      "bytes": 75,
+      "sha256": "6584fa675cd9bc2230474a7559f9ddd9139afc9eafce91938668401ec00c927c"
+    },
+    {
+      "path": "controls/zstdoxide-optimal-parse-timing-controls-optimized.log",
+      "bytes": 75,
+      "sha256": "6584fa675cd9bc2230474a7559f9ddd9139afc9eafce91938668401ec00c927c"
+    },
+    {
+      "path": "controls/check_optimal_parse_benchmark.py",
+      "bytes": 3503,
+      "sha256": "14a98e60c9687bd6ae33432a549ddb9ec9a35e25983c6c1cef7121dc1b22b9f6"
+    }
+  ],
+  "audit": {
+    "measured_profile_runs": 7,
+    "qualification": "C-derived event/final-state checksum and exact allocator equivalence; all intermediate C maps qualified separately. Diagnostic timings only.",
+    "ratios_all_over_safe": {
+      "first": [
+        1.0083657406428375,
+        1.0057634461369738,
+        0.9953575547866206,
+        0.998301652716815,
+        1.0024576359959065
+      ],
+      "repeat": [
+        1.004910513714866,
+        0.9484612984148051,
+        0.9099165511750656,
+        0.9953065721525828,
+        0.9945993322340626
+      ]
+    },
+    "samples": 175,
+    "status": "passed",
+    "verified_profiles": 5,
+    "workloads": 5
+  },
+  "qualification": "Diagnostic scripted Optimal timings with C-derived event/final-state checksums, exact owner records and frozen completed CPU gates. No stable speedup claim."
+}
