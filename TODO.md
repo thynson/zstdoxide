@@ -115,7 +115,9 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Implement explicitly initialized frequency ownership and lifecycle updates with an isolated safe/unsafe contract.
 - [ ] Merge the isolated private frequency branch after Module 16 matrix and measurement closure.
 - [x] Specify tiny sorted-tree/all-match transport and freeze source-only repeat, short-key and frontier hypotheses with malformed-input controls.
-- [ ] Extend sorted-tree/all-match requests to ordinary CCtx hash3 geometry, the strict 2^18 distance boundary and ordinary fresh repeat state.
+- [x] Extend direct match requests to ordinary CCtx short-key geometry, the strict 2^18 distance boundary and fresh repeat values at pointer-safe positions.
+- [ ] Qualify ordinary parser startup positions and full fresh repeat publication in retained-state capture.
+- [ ] Validate chunked independent suffix replay and preflight the broader guarded helper before C execution.
 - [x] Implement independent tiny sorted-tree/all-match replay with exact maps, both frontiers and forged-record controls before C execution.
 - [x] Review the guarded direct sorted-tree/all-match helper and preflight pinned dependencies and bounded capture before C execution.
 - [x] Capture tiny direct operations and qualify exact all-match maps, short-key tails and forged evidence.

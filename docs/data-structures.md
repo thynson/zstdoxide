@@ -1565,3 +1565,14 @@ Complete copied before/after maps and frontiers are bounded observations. Replay
 recomputes every record from requests; canonical comparison rejects type changes
 and unknown fields. Hand-derived repeat, short-key, full-tail and skipped-frontier
 cases precede C capture. This test-only owner does not enable public Optimal.
+
+### Broader direct short-key observations
+
+The ZOPMB02 source owner caps at524288bytes and16queries, with window10..21.
+Primary/paired storage remains at most4096cells; the optional short-key owner
+uses exactly min(window,17), up to131072cells. All maps and both native-biased
+frontiers are retained. Source/packet/owner copies and guards fit a reviewed
+static4MiB observer budget; C execution requires its own bounds/preflight gate.
+Independent replay compares equal4096byte source chunks, then the first unequal
+chunk bytewise, and must agree with scalar tiny replay before broader capture.
+No production owner or unsafe leaf is introduced by this observation protocol.
