@@ -99,7 +99,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Define bounded scripted-candidate path transport and validate source/offset/event capacities.
 - [x] Implement independent path replay and prove source-only recipe branch coverage before C execution.
 - [x] Review unique-anchor observer substitutions and preflight the pinned normal/instrumented helper.
-- [ ] Capture bounded path transitions and reject forged phase/predecessor/frequency evidence offline.
+- [x] Capture bounded path transitions and reject forged phase/predecessor/frequency evidence offline.
 - [x] Specify canonical complete-state deltas for wider scripted path observations.
 - [ ] Validate wider path requests/replay against every small trace and prove horizon branch coverage.
 - [ ] Preflight and capture wider path transitions at the 4096-position horizon before production path integration.

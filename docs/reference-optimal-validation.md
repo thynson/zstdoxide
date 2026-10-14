@@ -292,3 +292,16 @@ Each pure plan control run rejects 11 forged plans/anchors and spawns no childre
 The initial unused dictMode diagnostic is retained after explicitly marking that
 parameter unused at the substituted match-provider boundary. This is preflight
 evidence only; see `evidence/2026-10-14-optimal-path-preflight.json`.
+
+## Scripted upstream path capture
+
+All 136 planned commands pass. Seventeen source-only scripts produce 1,302
+logical events per padding pass and build, with complete path cells, frequencies,
+sequences and repeat publication matching independent replay. Both padding passes
+are checked; normal and fully ASan/UBSan-instrumented traces are byte-identical.
+All 20 malformed packets per build fail before metadata. Offline normal and
+optimized audits each reject 40 capture forgeries, accept two positives and
+spawn no children. The archive retains 27,527,838 log bytes, all objects/binaries,
+requests, original/generated parser copies and the exact 15 substitutions.
+See `evidence/2026-10-14-optimal-path-capture.json`. This qualifies the scripted
+provider boundary only; ordinary startup and the wider horizon remain separate.
