@@ -281,3 +281,14 @@ in the first campaign and 0.942/0.959/0.954/0.946/0.964 in the repeat. The direc
 reverses. Fixed order, short samples and uncontrolled desktop clocks/thermal/load
 prevent a stable unsafe-speedup claim. Candidate and allocator equivalence here
 complements, and does not replace, the full C-map fixture comparisons.
+
+## Scripted path observer preflight
+
+Eight preflight commands pass: normal/optimized protocol, independent model and
+exact command-plan controls, plus strict normal/sanitized helper syntax checks.
+The plan contains 136 commands, 26 used codec units, 89 pinned C/header inputs,
+15 unique instrumentation anchors and 20 malformed transport/source packets.
+Each pure plan control run rejects 11 forged plans/anchors and spawns no children.
+The initial unused dictMode diagnostic is retained after explicitly marking that
+parameter unused at the substituted match-provider boundary. This is preflight
+evidence only; see `evidence/2026-10-14-optimal-path-preflight.json`.
