@@ -1720,3 +1720,32 @@ will have the same contract, with runtime slot/length checks preceding every
 unchecked operation. Failed indices, values and phase transitions leave the
 owner unchanged. Finite record implementation and owner implementation remain
 separate checked work items; neither enables public Optimal dispatch.
+
+### Private scripted Optimal path decision engine
+
+The next engine borrows one immutable block-local source and owns independently
+moved frequency, candidate and path allocators. A provider writes checked sorted
+candidates into the existing bounded owner for each copied query; it does not
+borrow the mutable path/frequency owners. Source equality and resolved repeat
+history are validated before consuming provider output. This provider boundary
+is deliberately separate from ordinary sorted-search startup qualification.
+
+The engine emits copied transition metadata to a fallible observer, with shared
+views of initialized path/frequency storage and the current query candidates.
+Only sequence events carry one newly emitted record; the observer owns any output
+allocation. Algorithm decisions use production prices and records, never fixture
+expected values. Captured events are compared after each transition, including
+all cells, complete statistics, future path repeats and committed wire repeats.
+The frequency cache stays unchanged during reconstruction updates and refreshes
+only after the selected sequence set, matching the captured lifecycle.
+
+A run starts with fresh [1,4,8] repeats and one source; one successful run marks
+it finished. Provider, observer or internal errors after entering a run poison the
+engine, because path/statistics and externally emitted output may be partial.
+Reset clears owned working state without allocation and returns to fresh state;
+it cannot undo external observer/provider side effects. Invalid construction and
+repeat runs fail before callbacks. Terminal results contain trailing literals,
+sequence count and committed repeats. The only admitted mode is scripted fresh
+optLevel0, minimum parameter 3..7 (effective 3 or 4), target <=4095, source 9..131072,
+no dictionary or external history. Public Optimal remains unsupported until
+ordinary retained-state search and full-frame qualification complete.
