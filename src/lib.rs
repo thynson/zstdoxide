@@ -31,7 +31,8 @@
         feature = "unsafe-dictionary",
         feature = "unsafe-training",
         feature = "unsafe-optimal-frequencies",
-        feature = "unsafe-optimal-short-key"
+        feature = "unsafe-optimal-short-key",
+        feature = "unsafe-optimal-matches"
     )),
     forbid(unsafe_code)
 )]
@@ -107,6 +108,7 @@ mod match_search;
 mod matchchain;
 mod matchfinder;
 mod optimal_frequencies;
+mod optimal_matches;
 #[allow(
     dead_code,
     reason = "Private optimal scalar pricing precedes parser integration"

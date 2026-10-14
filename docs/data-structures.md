@@ -1620,7 +1620,7 @@ Appending requires strictly increasing lengths and available initialized space;
 failure leaves the live prefix unchanged. Clearing retains storage. Its separate
 `unsafe-optimal-matches` feature selects only runtime-guarded access. Empty
 initialized placeholders never escape the live prefix. This corresponds to
-ZSTD_match_t matches[ZSTD_OPT_NUM + 1], with the reviewed 4099-cell observer bound.
+the ZSTD_match_t matchTable workspace, with the reviewed 4099-cell observer bound.
 
 The sorted search composite reuses `ReferenceTree`'s two independent owners and
 its existing unsafe leaf. Sorted traversal rejects the deferred-tree unsorted

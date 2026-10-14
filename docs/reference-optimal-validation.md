@@ -212,3 +212,12 @@ borrowed ownership and reset without allocation. Strict Clippy passes in safe,
 isolated and all modes; formatting and safe/isolated no_std compilation pass.
 Evidence: `evidence/2026-10-14-optimal-short-key.json`. This owner does not enable
 public Optimal or yet claim an unsafe performance improvement.
+
+## Private bounded candidate owner
+
+Four tests pass in safe, isolated unsafe-matches, all-features and release-all
+(16 total), including full capacity, monotonic length rejection, malformed live
+length/storage, exact moved allocator failures, borrowed ownership and zero
+allocation after construction. Strict safe/isolated/all Clippy, formatting and
+safe/isolated no_std checks pass. The live prefix excludes initialized unused
+placeholders. Evidence: `evidence/2026-10-14-optimal-matches.json`.

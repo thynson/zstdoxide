@@ -88,7 +88,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Specify checked sorted-search records, immutable source lifetime and independent storage contracts.
 - [x] Implement allocation-free sorted-search geometry, request and candidate records.
 - [x] Implement optional short-key heads with initialized fallible ownership and an isolated unsafe feature.
-- [ ] Implement bounded candidate storage with initialized fallible ownership and an isolated unsafe feature.
+- [x] Implement bounded candidate storage with initialized fallible ownership and an isolated unsafe feature.
 - [ ] Implement checked sorted insertion and bounded match enumeration over immutable source.
 - [ ] Compare every tiny and broader captured candidate, complete map and both frontiers across search backends.
 - [ ] Specify path transition, sufficient-length, tie, early-abort and backtracking observations before parser implementation.
