@@ -105,7 +105,11 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Preflight the wider path adapter and exact bounded capture plan.
 - [ ] Capture wider path transitions at the 4096-position horizon before production path integration.
 - [ ] Capture and independently check bounded optimal path trajectories and malformed predecessor controls.
-- [ ] Implement finite-cost path ownership, phase-aware reconstruction and private optLevel0 parsing.
+- [ ] Project audited small/wider path states into bounded canonical binary deltas and verify an independent Rust reader.
+- [ ] Specify and implement finite path records with explicit forward/reconstruction roles.
+- [ ] Implement initialized allocator-aware path storage with an isolated unsafe feature.
+- [ ] Replay scripted path decisions in private Rust and compare all captured states.
+- [ ] Integrate private optLevel0 parsing after ordinary startup/search history is qualified.
 - [ ] Freeze and capture ordinary retained optimal blocks with full search/frequency/path and repeat publication state.
 - [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
 - [ ] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.

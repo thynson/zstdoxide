@@ -1659,3 +1659,25 @@ unchanged entries and duplicate indices are noncanonical. Replaying the deltas
 recovers the complete owner, including stale fields, at every event. The emitted
 view never mutates the parser's owner. This bounded representation avoids retaining
 quadratically repeated full maps while qualifying the 4096-position horizon.
+
+### Canonical path fixture projection
+
+The test-only path fixture borrows names and source bytes and owns bounded event
+records with fallibly allocated deltas. It combines the two immutable audited C
+captures without regenerating observations. Each event retains all scalar tags,
+coordinates, optional stretch/reverse/query data and ordered candidates. Path
+changes carry an index and all seven cell words. Frequency changes address a
+386-word view: 377 counts, four sums, four cached prices and one predefined flag.
+Only changed entries occur, strictly ordered, against zero-initialized per-case
+baselines. Sequence output is append-only with an explicit live count. Replaying
+these records recovers every initialized path/frequency cell and emitted sequence
+at every event. No production storage or unsafe feature is introduced.
+
+The independent Rust reader bounds the complete byte extent before allocation,
+checks canonical changes, stage/phase/optional-field shapes, source/candidate
+ranges, sequence source equality and repeat intent, frequency sums, refreshed
+prices and reconstruction indices. The binary identifies small versus wider
+protocol bounds explicitly. Unknown flags, stale baselines, duplicate/unchanged
+entries, impossible live counts and trailing bytes are rejected. Python projection
+first validates both padding passes and builds against independent replay, then
+stores one equivalent copy. All original raw maps remain in their archives.
