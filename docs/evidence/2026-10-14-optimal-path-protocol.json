@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-path-protocol.tar.gz",
+  "archive_bytes": 3129,
+  "archive_sha256": "8405b2d105e00c7d04291c10a20483361308a8564469e501d205e55997d9f9ca",
+  "files": [
+    {
+      "path": "scripts/oracles/optimal_paths.py",
+      "bytes": 5460,
+      "sha256": "192c4f52819ae810150b030b1a32cd3dab04068cb56a4c0cc3be4386b0c8838f"
+    },
+    {
+      "path": "scripts/check_optimal_path_protocol.py",
+      "bytes": 3481,
+      "sha256": "734df50a3d2e642fa65c2eec1d568343f3705fe7f41910d847a28b1098035bcc"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-path-protocol-normal.log",
+      "bytes": 75,
+      "sha256": "479871259ed99a1a08d6ffe54ff56d4c8f708c9d673439dcaddc6800f1a110be"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-path-protocol-optimized.log",
+      "bytes": 75,
+      "sha256": "479871259ed99a1a08d6ffe54ff56d4c8f708c9d673439dcaddc6800f1a110be"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

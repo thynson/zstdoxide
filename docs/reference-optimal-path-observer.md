@@ -112,3 +112,13 @@ Forge candidate order, repeat state, equal-price decisions, predecessor links,
 phase tags, path cell fields, frequency increments, event counts and completion
 records. Offline validators must spawn no child process. Preserve failures and
 corrected additive evidence instead of rewriting frozen captures.
+
+## Transport checks
+
+`oracles/optimal_paths.py` defines the immutable binary request and independently
+checked repeat-distance/publication algebra. Normal and optimized Python each
+round-trip four positive requests and reject 38 malformed requests, packets and
+unavailable-repeat examples. These source-only checks spawn no child process.
+The request parser checks byte extents before decoding candidate arrays; dynamic
+repeat candidates still require independent replay before C execution. Evidence:
+`evidence/2026-10-14-optimal-path-protocol.json`.

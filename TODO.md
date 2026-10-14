@@ -94,7 +94,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [ ] Qualify private search on every isolated feature, complete predecessor suites, foreign Miri and no-atomics code generation.
 - [ ] Compare deterministic private search outputs and allocator records before safe/unsafe diagnostic timing and a separate repeat.
 - [x] Specify path transition, sufficient-length, tie, early-abort and backtracking observations before parser implementation.
-- [ ] Define bounded scripted-candidate path transport and validate source/offset/event capacities.
+- [x] Define bounded scripted-candidate path transport and validate source/offset/event capacities.
 - [ ] Implement independent path replay and prove source-only recipe branch coverage before C execution.
 - [ ] Review unique-anchor observer substitutions and preflight the pinned normal/instrumented helper.
 - [ ] Capture bounded path transitions and reject forged phase/predecessor/frequency evidence offline.
