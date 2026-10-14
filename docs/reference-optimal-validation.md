@@ -395,3 +395,15 @@ construction releases every moved owner. Formatting, strict safe/all Clippy
 and safe/all-unsafe no_std compilation pass. See
 `evidence/2026-10-14-optimal-parse.json`. Ordinary search startup, retained blocks
 and public Optimal remain separately gated.
+
+## Predictive fresh ordinary startup composition
+
+Twelve source-only requests now compose the independent integer search and path
+models with actual model-generated queries and fresh [1,4,8] repeats. Frozen
+packet/source/event hashes cover ordinary tree, short-key, repeat and skipped
+search branches, unavailable fresh repeats, literal-zero queries, all-literal
+replacement and minimum parameters three through seven. Normal and optimized
+controls each reject 35 malformed/forged inputs with no children; both manifest
+checks agree. See `evidence/2026-10-14-optimal-startup-model.json`. These are
+predictions only: the unchanged-provider CCtx helper, frame capture and startup
+admission extension have not been qualified.

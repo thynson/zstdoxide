@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-startup-model.tar.gz",
+  "archive_bytes": 8697,
+  "archive_sha256": "57d3593f30e47d13a486e4ca4e0499b4e7d06611f52667bb327cd7256539d15d",
+  "files": [
+    {
+      "path": "scripts/oracles/optimal_startup.py",
+      "bytes": 1662,
+      "sha256": "72baad2e13289bbef050a7692c181242da81c9adbb32a0ea32c4dd1cf126b588"
+    },
+    {
+      "path": "scripts/oracles/optimal_startup_validation.py",
+      "bytes": 3618,
+      "sha256": "5adb105ade5ee9cf6d55a5566813609a14e3a4b3e9f7c7fd4ee26609362b2725"
+    },
+    {
+      "path": "scripts/oracles/optimal_startup_recipes.py",
+      "bytes": 1166,
+      "sha256": "6f75966526cf2a8fbf3e2f40856b381a24073c30b994b153d588fbc528c2957b"
+    },
+    {
+      "path": "scripts/check_optimal_startup_model.py",
+      "bytes": 3843,
+      "sha256": "73b6ff8d774a7faa49bea6095056e6d183afdffe7e7358f7bbd6c50820c5ff1c"
+    },
+    {
+      "path": "scripts/plan_optimal_startup.py",
+      "bytes": 1861,
+      "sha256": "a2ce81f13cfe48e94650d952313d55dee22f6e62158577ca862dbc1f79fffb6c"
+    },
+    {
+      "path": "docs/reference-optimal-startup-protocol.md",
+      "bytes": 3041,
+      "sha256": "bf1e2ec2e7ae6b6a92d1269abe5851aa393c1f17ab26eec55645376d8e6a4f9e"
+    },
+    {
+      "path": "tests/fixtures/reference-optimal-startup-recipes/recipes.json",
+      "bytes": 8410,
+      "sha256": "161dea7a80a6bc237668744c3a9729fa057aa939ffcfbd3c60ba2632f339b8eb"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 395,
+      "sha256": "25947f720061e3d2933bc24ef37beda306f20c52f16029147d2a3fa562849dee"
+    },
+    {
+      "path": "checks/model-normal-final.log",
+      "bytes": 3899,
+      "sha256": "14ace1e20292cdeb5cfc74d246d5d97fe870c562bc855ad93ad48e30af33cb03"
+    },
+    {
+      "path": "checks/model-optimized.log",
+      "bytes": 3899,
+      "sha256": "14ace1e20292cdeb5cfc74d246d5d97fe870c562bc855ad93ad48e30af33cb03"
+    },
+    {
+      "path": "checks/plan-normal.log",
+      "bytes": 121,
+      "sha256": "158f3555b4f2831488990261035bd42d1fb8927aa9127b35ea237c8a5244beb3"
+    },
+    {
+      "path": "checks/plan-optimized.log",
+      "bytes": 121,
+      "sha256": "158f3555b4f2831488990261035bd42d1fb8927aa9127b35ea237c8a5244beb3"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

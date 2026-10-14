@@ -1,0 +1,266 @@
+{
+  "cases": [
+    {
+      "coverage": [
+        "fresh_unavailable_repeats",
+        "initial_sufficient"
+      ],
+      "events": 9,
+      "events_sha256": "8cfba766fccd7cfb4de11e034b2157aba014e308103a6fb1146305855ade9bc1",
+      "name": "startup_uniform",
+      "packet_sha256": "659d5754c623028aa06d723ef8080eae3a22715f64aefe8e1e592ea903f8cf29",
+      "queries": 1,
+      "search_phases": [
+        "repeat"
+      ],
+      "sequences": 1,
+      "source_sha256": "ffe054fe7ae0cb6dc65c3af9b61d5209f439851db43d0ba5997337df154668eb"
+    },
+    {
+      "coverage": [
+        "fresh_unavailable_repeats",
+        "initial_no_match"
+      ],
+      "events": 505,
+      "events_sha256": "531c060bd46a2c794c915dcfd2783fbdb1fb44b07fe5fd6d01b4a5e274d37f91",
+      "name": "startup_noise",
+      "packet_sha256": "a2bfe7b4d75855ddf2325a0acc2f83a3857ec07597fba7c57c701cbcda7793a8",
+      "queries": 503,
+      "search_phases": [
+        "tree"
+      ],
+      "sequences": 0,
+      "source_sha256": "d1fd4a6b04286f422b2df1fb6c70f13bc6fba521ee8f8ac1b9206ded43b2372d"
+    },
+    {
+      "coverage": [
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "initial_sufficient"
+      ],
+      "events": 42,
+      "events_sha256": "af1a7ddd2ce7b1b26cc2a7e40621fec8741e8d6d5ebe382de09a5b4f52fb4426",
+      "name": "startup_periodic",
+      "packet_sha256": "41e93628af52d8f99a16e604b1ca89a3ceb50beee87921a323cd366243a23af1",
+      "queries": 34,
+      "search_phases": [
+        "tree"
+      ],
+      "sequences": 1,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "coverage": [
+        "deferred_repeat_publication",
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "multiple_sequences",
+        "query_zero_literals",
+        "unpromising_skip"
+      ],
+      "events": 452,
+      "events_sha256": "207b1a49c9269a7bb792ef0a605d16e4320b0c428d9a560434e6a227f3dceb6b",
+      "name": "startup_mixed",
+      "packet_sha256": "37acd3a00a994c32cf7e67e3681cdd12084db154fb08538756877f155eeba782",
+      "queries": 216,
+      "search_phases": [
+        "repeat",
+        "skipped",
+        "tree"
+      ],
+      "sequences": 5,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "coverage": [
+        "deferred_repeat_publication",
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "multiple_sequences",
+        "query_zero_literals",
+        "unpromising_skip"
+      ],
+      "events": 452,
+      "events_sha256": "7195e54f674c2a06b9c23921bd4da6aa5b2133de32407eff8c65784cee7a2d77",
+      "name": "startup_disabled_literals",
+      "packet_sha256": "e88d94f24199cf4dea4b99b0b11e37521518f8e244d679d886c2840d25d38f64",
+      "queries": 216,
+      "search_phases": [
+        "repeat",
+        "skipped",
+        "tree"
+      ],
+      "sequences": 5,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "coverage": [
+        "all_literals",
+        "deferred_repeat_publication",
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "query_zero_literals",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 553,
+      "events_sha256": "6b099eabbecc0ad979cb977695ad3b56a8b0596da4bb4331bddf389ef143fece",
+      "name": "startup_three_short",
+      "packet_sha256": "70d8feae77eee484082a833caa73128a7538b1581d05d08de4655d4dc5ee02ac",
+      "queries": 30,
+      "search_phases": [
+        "skipped",
+        "tree"
+      ],
+      "sequences": 1,
+      "source_sha256": "4d6cd3e132199db6e6f616624ea7c4b3448e30aaf676d7216cd7bd1047453a6a"
+    },
+    {
+      "coverage": [
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "initial_sufficient",
+        "query_zero_literals"
+      ],
+      "events": 225,
+      "events_sha256": "5a25274f5685c47832c2f064d6e16163231731cb4ef420483b9d71e614e3f79f",
+      "name": "startup_larger_geometry",
+      "packet_sha256": "e14582c9761b98246fa06c827b6dd1adf656731f9e762c5088061ab571afcdac",
+      "queries": 199,
+      "search_phases": [
+        "repeat",
+        "tree"
+      ],
+      "sequences": 4,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "coverage": [
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement"
+      ],
+      "events": 43,
+      "events_sha256": "2809bb7fb04c348e9246084dbfbd3cd4a9ba9954b89d60d7977aa1192547a0cf",
+      "name": "startup_minimum_3",
+      "packet_sha256": "8bd3597caf401fe0e25841e9fb89ad0724a03201189d4fe270813524137818a2",
+      "queries": 33,
+      "search_phases": [
+        "short",
+        "tree"
+      ],
+      "sequences": 1,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "coverage": [
+        "deferred_repeat_publication",
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "query_zero_literals",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "events_sha256": "b7862910257daaa0423092e0aebef6bdd125e1e17fd38814743a2d85f3f83a55",
+      "name": "startup_minimum_4",
+      "packet_sha256": "e1effaa47c8a55f43cfc7db9937445d7b3c783d9cff9a0c4cd9d215d7d27fae1",
+      "queries": 45,
+      "search_phases": [
+        "skipped",
+        "tree"
+      ],
+      "sequences": 1,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "coverage": [
+        "deferred_repeat_publication",
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "query_zero_literals",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "events_sha256": "dd8878fbcf322e77ff5059d867a958d4e7ad79f11dc34f13daa3fd53cedb761a",
+      "name": "startup_minimum_5",
+      "packet_sha256": "0ace6e167c7b850cc3b7cff1175c7f40d1e7729a306c6e9e1ca69f466eb18e62",
+      "queries": 43,
+      "search_phases": [
+        "skipped",
+        "tree"
+      ],
+      "sequences": 1,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "coverage": [
+        "deferred_repeat_publication",
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "query_zero_literals",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "events_sha256": "f97a13ba49a8b7f53c4abbe932c63aeb9b7355a8a4fc0994f38c1a2aa41afe8b",
+      "name": "startup_minimum_6",
+      "packet_sha256": "5f8d0a5703c0c0d00cf9cbe35166aae8d39174da1b3deb1f78a05db3fd6a07a7",
+      "queries": 43,
+      "search_phases": [
+        "skipped",
+        "tree"
+      ],
+      "sequences": 1,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "coverage": [
+        "deferred_repeat_publication",
+        "fresh_unavailable_repeats",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "query_zero_literals",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "events_sha256": "f97a13ba49a8b7f53c4abbe932c63aeb9b7355a8a4fc0994f38c1a2aa41afe8b",
+      "name": "startup_minimum_7",
+      "packet_sha256": "37889c2e67c0ccb8305440144286f4910ba79946cfa1528149c517aca4912900",
+      "queries": 43,
+      "search_phases": [
+        "skipped",
+        "tree"
+      ],
+      "sequences": 1,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    }
+  ],
+  "qualification": "Frozen predictive fresh search/path composition; no C execution or public admission.",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1
+}
