@@ -1576,3 +1576,15 @@ static4MiB observer budget; C execution requires its own bounds/preflight gate.
 Independent replay compares equal4096byte source chunks, then the first unequal
 chunk bytewise, and must agree with scalar tiny replay before broader capture.
 No production owner or unsafe leaf is introduced by this observation protocol.
+
+### Canonical sparse wider match fixtures
+
+Broader C observations still retain complete maps. Their binary projection uses
+an explicit cell count plus every nonzero (index, value) in strictly increasing
+index order. Omitted cells mean zero, so there is exactly one encoding for a map;
+duplicate indices, explicit zeros and out-of-bounds entries are rejected. The
+independent Rust reader owns only the sparse entries with fallible allocation,
+borrows source/name bytes, and validates hash buckets, complete state continuity,
+frontier bounds and every candidate's source bytes. No codec algorithm or unsafe
+backend is involved in this test-only representation. Dense owner comparisons
+can iterate the unambiguous complete map without retaining many repeated zeros.

@@ -182,3 +182,14 @@ two true no_std configurations pass with every source input unchanged.
 `evidence/2026-10-14-optimal-integration.json` retains exact logs and source hashes.
 Public strategy7 remains unsupported pending sorted search, path parsing, ordinary
 retained-state observations and admission/interoperability qualification.
+
+## Canonical sparse broader fixtures
+
+Normal and optimized Python reproduce the same 2,271,158-byte pack from all
+37 audited requests / 82 operations. Explicit map extents and strictly ordered
+nonzero cells preserve every complete map, including implicit zero cells. The
+independent Rust reader validates source matches, state continuity, hash buckets,
+frontiers and canonical sparse encoding. Six tests pass in safe, all-features
+and release-all builds (18 total); formatting, strict safe/all Clippy and no_std
+compilation pass. Exact source and logs are preserved in
+`evidence/2026-10-14-optimal-match-broad-fixture.json`.

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-match-broad-fixture.tar.gz",
+  "archive_sha256": "bea23a129abede6771731a60a52f0b0cea169cfe2bede2e3afef3823b8f8e738",
+  "archive_bytes": 40358,
+  "files": [
+    {
+      "path": "scripts/pack_optimal_match_broad_fixtures.py",
+      "bytes": 6067,
+      "sha256": "271dde3c70c2a63c503f115965a9f47d992bbd401fa2785b757daf24faef6d30"
+    },
+    {
+      "path": "tests/support/optimal_match_broad_fixture.rs",
+      "bytes": 12618,
+      "sha256": "7629eeba7393e5cb6153e1c14cf8cf23d39e9548879ea97308d864691d6ea9e1"
+    },
+    {
+      "path": "tests/reference_optimal_match_broad_fixture.rs",
+      "bytes": 5758,
+      "sha256": "1128fd60294a56e0a38c11a285940ebc133801d336fdbbca851b5b93907e7592"
+    },
+    {
+      "path": "tests/fixtures/reference-optimal-matches-broad/cases.bin",
+      "bytes": 2271158,
+      "sha256": "0f58823b9acf0602ecabe9b74cb7a6c6d1c9dc10b700ee17d236cb3d965a71af"
+    },
+    {
+      "path": "tests/fixtures/reference-optimal-matches-broad/provenance.json",
+      "bytes": 15223,
+      "sha256": "802f70f93536893f727880e7093cf4b5a59f0d307d92b95f99ad7840154b2cad"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 2295,
+      "sha256": "bb032d8f836ed0e79e4419b4a1d58af08e158cc5ac12eff68915df3a6c089e8b"
+    },
+    {
+      "path": "checks/clippy-safe.log",
+      "bytes": 238,
+      "sha256": "20780e0374dd35ff45a311f94c10463a62c06cac73ee865984460dc8478c9e98"
+    },
+    {
+      "path": "checks/format.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/tests-release-all.log",
+      "bytes": 1024,
+      "sha256": "db0ced1fb51cdb46dad6d13d6ebb39dc9aae5548ea22a77abb8f875e4428f7bb"
+    },
+    {
+      "path": "checks/nostd.log",
+      "bytes": 130,
+      "sha256": "7c2bb515662ee03ad01570deb3ea616d38cbf344d3bd85995915b9082c4b7714"
+    },
+    {
+      "path": "checks/clippy-all.log",
+      "bytes": 130,
+      "sha256": "9929c213ac8cf4bc1df51f72fc3c0773c19a063db00e201d5ea37270db78ad71"
+    },
+    {
+      "path": "checks/tests-all.log",
+      "bytes": 913,
+      "sha256": "c0abd0c8760f61289172f4b623842f8769f88cb346f92e81ae6fd4a13361a3bb"
+    },
+    {
+      "path": "checks/tests-safe.log",
+      "bytes": 843,
+      "sha256": "f065d5069f7a99ec00a1acd5c0f17ad1b6cd55a883a317c40a0ef2784b78578b"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-match-broad-project-normal.log",
+      "bytes": 167,
+      "sha256": "013faea4344b5d60925bb5bd50fbc67239fa6a617c575b6259ea26fe3e8a169e"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-match-broad-project-optimized.log",
+      "bytes": 167,
+      "sha256": "013faea4344b5d60925bb5bd50fbc67239fa6a617c575b6259ea26fe3e8a169e"
+    }
+  ],
+  "tests_passed": 18,
+  "commands_passed": 7,
+  "qualification": "Fixture validation only; no production sorted search or public Optimal admission."
+}
