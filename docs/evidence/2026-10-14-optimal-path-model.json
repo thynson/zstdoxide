@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-path-model.tar.gz",
+  "archive_bytes": 9555,
+  "archive_sha256": "062abb5f1dd2236c784520a91da03fbae53ac6ffe33e243cc3c2ff5ba83b7835",
+  "files": [
+    {
+      "path": "scripts/oracles/optimal_paths.py",
+      "bytes": 5460,
+      "sha256": "192c4f52819ae810150b030b1a32cd3dab04068cb56a4c0cc3be4386b0c8838f"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_validation.py",
+      "bytes": 12753,
+      "sha256": "ea1c4523f835ed18adefcc0a9ac3119610721e9ccc9b74f4cdeb5c6aee6b2c50"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_recipes.py",
+      "bytes": 1369,
+      "sha256": "8c6a3ce9c48519f6010e513451ce5c6f27560786f1fe1b0d7d700970c6f51cc4"
+    },
+    {
+      "path": "scripts/oracles/optimal_path_script_inputs.json",
+      "bytes": 28671,
+      "sha256": "f3077e03084d5faa838b47db522ef50eeea418193d59c8f8171b696b65bc1e12"
+    },
+    {
+      "path": "scripts/check_optimal_path_model.py",
+      "bytes": 4926,
+      "sha256": "314b9b6ad66ac95d59ea1a9559c9331505e23627a75c46577536f54fb67a5d00"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-path-model-normal.log",
+      "bytes": 512,
+      "sha256": "caeb78a050624c3b703349db47bdedd02f8ec415513a5818c0e11dc61c2b5930"
+    },
+    {
+      "path": "checks/zstdoxide-optimal-path-model-optimized.log",
+      "bytes": 512,
+      "sha256": "caeb78a050624c3b703349db47bdedd02f8ec415513a5818c0e11dc61c2b5930"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

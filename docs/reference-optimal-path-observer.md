@@ -122,3 +122,15 @@ unavailable-repeat examples. These source-only checks spawn no child process.
 The request parser checks byte extents before decoding candidate arrays; dynamic
 repeat candidates still require independent replay before C execution. Evidence:
 `evidence/2026-10-14-optimal-path-protocol.json`.
+
+## Independent replay preflight
+
+Seventeen frozen requests cover all seventeen named transition branches before
+C execution: 1,302 events, 824 match queries and 28 emitted sequences per replay
+set. Hand-derived cases verify immediate selection, all-literal fallback, deferred
+repeat history, explicit repeat publication and strict sufficient-length equality.
+Normal and optimized Python each reject 30 forged complete traces plus unavailable
+dynamic history and event-budget overflow. Both runs spawn no children. Full
+512-byte no-match input and all minimum parameters are included; the 4096 horizon
+remains intentionally unqualified. Evidence: `evidence/2026-10-14-optimal-path-model.json`.
+These are independent model controls, not an upstream comparison result.
