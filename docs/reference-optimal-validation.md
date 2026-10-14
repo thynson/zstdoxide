@@ -202,3 +202,13 @@ safe/all Clippy over the library and tests, formatting and no_std compilation.
 The source comparison handles overlapping suffixes and logical tails without
 padding. Primary minMatch3 continues to hash four bytes; optional short keys
 hash three. Evidence: `evidence/2026-10-14-optimal-search-layout.json`.
+
+## Private optional short-key owner
+
+Four tests pass in safe, isolated unsafe-short-key, all-features and release-all
+(16 total). They cover disabled zero-allocation storage, first/last cells, invalid
+positions and shortened storage, exact moved non-Clone allocator failure cleanup,
+borrowed ownership and reset without allocation. Strict Clippy passes in safe,
+isolated and all modes; formatting and safe/isolated no_std compilation pass.
+Evidence: `evidence/2026-10-14-optimal-short-key.json`. This owner does not enable
+public Optimal or yet claim an unsafe performance improvement.

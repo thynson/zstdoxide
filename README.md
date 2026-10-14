@@ -145,6 +145,7 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-row-table` | Checked row position/tag storage for the reference lazy family |
 | `unsafe-dictionary` | Validated immutable dictionary-content access |
 | `unsafe-training` | Bounded raw-training frequency cells |
+| `unsafe-optimal-short-key` | Private optional Optimal short-key heads with checked cell access |
 | `unsafe-optimal-frequencies` | Private checked Optimal frequency cells; public strategy 7 remains unsupported |
 
 Plain scalar records share a representation; they have no pointer access to

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-14-optimal-short-key.tar.gz",
+  "archive_bytes": 5930,
+  "archive_sha256": "d3969bc146fc78a532847b7aab31eb2cf865e2843d85b6f02eba20a37f4ec64f",
+  "files": [
+    {
+      "path": "src/optimal_short_key.rs",
+      "bytes": 6378,
+      "sha256": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 5293,
+      "sha256": "cae9c7b6ebeea072fd4623443995ef176e346ad28a51e2ce29957cfa643c8af9"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 1108,
+      "sha256": "1c5d22dad11745051ccafba96d2d232a853265223f7a45806ab633a730332684"
+    },
+    {
+      "path": "scripts/check.sh",
+      "bytes": 5109,
+      "sha256": "af4f1aad5fa840c825b2d8c958f298f6f1a33db4c7779815c8f83fa724b49871"
+    },
+    {
+      "path": "checks/all.log",
+      "bytes": 684,
+      "sha256": "9a136829d0b42c519e7de734380a80cc241ea4ffad4551248cf4803383a33bab"
+    },
+    {
+      "path": "checks/clippy-all.log",
+      "bytes": 130,
+      "sha256": "4a2f2e33f3e7fd8f9dfd8326a0ae93f5b40a6d3ff9c43a9d5428758c8a656176"
+    },
+    {
+      "path": "checks/clippy-isolated.log",
+      "bytes": 130,
+      "sha256": "06f90e925de8142fbd257fff680dcc1d58a23d0018241a4c252cec8fe62630b9"
+    },
+    {
+      "path": "checks/clippy.log",
+      "bytes": 130,
+      "sha256": "f093e987ef07546252927474f3175ad6284e1f868e4d5cda5d928c8e8ea715e0"
+    },
+    {
+      "path": "checks/evidence.json",
+      "bytes": 2106,
+      "sha256": "781b4e8db30dafa11528527e4f1e2cfe6fb7bef4ca5172a059f9d06e0002ac18"
+    },
+    {
+      "path": "checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/isolated.log",
+      "bytes": 684,
+      "sha256": "85fe92807b876a153d5a7b3b5566d97d79455f507d060ded57838f34497d38c4"
+    },
+    {
+      "path": "checks/nostd-isolated.log",
+      "bytes": 130,
+      "sha256": "fee2cdd930575f0aaec109901685ffa11b90296fab07c614f4738c9366dc749f"
+    },
+    {
+      "path": "checks/nostd.log",
+      "bytes": 130,
+      "sha256": "ccf9395149dae4af323f7c516943fdac402f1c1fbbcc6562603f23a1b06afb60"
+    },
+    {
+      "path": "checks/release.log",
+      "bytes": 688,
+      "sha256": "7de288e700a08708538029740ceaaf0b39826853843b4a8773eb60198c2b70d7"
+    },
+    {
+      "path": "checks/safe.log",
+      "bytes": 685,
+      "sha256": "0d1080577d363d6af9c60afbf17e68b9f48dcacdd5987890dab76445529c73cf"
+    }
+  ],
+  "qualification": "Focused private Optimal implementation checks; public Optimal remains unsupported."
+}

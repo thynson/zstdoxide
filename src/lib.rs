@@ -30,7 +30,8 @@
         feature = "unsafe-row-table",
         feature = "unsafe-dictionary",
         feature = "unsafe-training",
-        feature = "unsafe-optimal-frequencies"
+        feature = "unsafe-optimal-frequencies",
+        feature = "unsafe-optimal-short-key"
     )),
     forbid(unsafe_code)
 )]
@@ -112,6 +113,7 @@ mod optimal_frequencies;
 )]
 mod optimal_price;
 mod optimal_search_layout;
+mod optimal_short_key;
 mod parameters;
 mod reference_chain;
 mod reference_encode;
