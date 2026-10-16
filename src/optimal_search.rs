@@ -70,6 +70,14 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
     }
     pub(crate) fn query(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
         self.source.validate(query, self.layout)?;
+        self.checked_query(query)
+    }
+    /// Ordinary fresh-block entry qualified independently from direct requests.
+    pub(crate) fn query_fresh(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
+        self.source.validate_fresh(query, self.layout)?;
+        self.checked_query(query)
+    }
+    fn checked_query(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
         if self.failed {
             return Err(Error::CorruptData);
         }
@@ -78,6 +86,20 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             return Err(error);
         }
         self.matches.as_slice()
+    }
+    #[cfg(test)]
+    pub(crate) fn test_snapshot(&self) -> alloc::vec::Vec<u32> {
+        let (heads, nodes) = self.tree.test_maps();
+        let mut result = alloc::vec::Vec::new();
+        for &value in heads.iter().chain(nodes).chain(self.short.test_cells()) {
+            result.push(if value == usize::MAX {
+                0
+            } else {
+                u32::try_from(value + 2).unwrap()
+            });
+        }
+        result.extend([(self.frontier + 2) as u32, (self.short_frontier + 2) as u32]);
+        result
     }
     fn add(&mut self, intent: u32, length: usize) -> Result<()> {
         self.matches.push(OptimalMatch::new(intent, length)?)
@@ -507,5 +529,140 @@ mod tests {
             s.eligible(TreeLink::Position(4), 4, 4),
             Err(Error::CorruptData)
         );
+    }
+}
+
+#[cfg(test)]
+#[path = "../tests/support/optimal_startup_fixture.rs"]
+mod startup_fixture;
+#[cfg(test)]
+mod fresh_tests {
+    use super::*;
+    use alloc::{vec, vec::Vec};
+    fn state(source: &[u8], layout: OptimalSearchLayout) -> OptimalSearch<'_> {
+        OptimalSearch::from_parts(
+            source,
+            layout,
+            ReferenceTree::new_in(layout.tree(), Global, Global).unwrap(),
+            OptimalShortKey::new_in(layout.short_log(), Global).unwrap(),
+            OptimalMatches::new_in(Global).unwrap(),
+        )
+        .unwrap()
+    }
+    fn layout(case: &startup_fixture::Case<'_>) -> OptimalSearchLayout {
+        OptimalSearchLayout::new(
+            case.window,
+            case.hash,
+            case.chain,
+            case.search,
+            case.path.minimum as u8,
+            case.path.target as usize,
+            (case.path.minimum == 3).then_some(case.window),
+        )
+        .unwrap()
+    }
+    fn query(q: [u32; 6]) -> OptimalQuery {
+        OptimalQuery {
+            position: q[0] as usize,
+            repeats: [q[1], q[2], q[3]],
+            zero_literals: q[4] == 1,
+            length_to_beat: q[5] as usize,
+        }
+    }
+    #[test]
+    fn every_fresh_c_query_candidate_map_and_frontier_matches() {
+        let mut queries = 0;
+        for case in startup_fixture::read(startup_fixture::PACK).unwrap() {
+            let mut state = state(case.path.source, layout(&case));
+            let mut expected = vec![0; case.search_cells()];
+            for (index, event) in case.path.events.iter().enumerate() {
+                if let Some(q) = event.query {
+                    assert_eq!(
+                        state.test_snapshot(),
+                        expected,
+                        "{} before {index}",
+                        case.path.name
+                    );
+                    let actual = state
+                        .query_fresh(query(q))
+                        .unwrap()
+                        .iter()
+                        .map(|m| [m.off_base(), m.length() as u32])
+                        .collect::<Vec<_>>();
+                    assert_eq!(actual, event.matches, "{} query {index}", case.path.name);
+                    queries += 1;
+                }
+                for &(at, value) in &case.search_changes[index] {
+                    expected[at] = value;
+                }
+                assert_eq!(
+                    state.test_snapshot(),
+                    expected,
+                    "{} after {index}",
+                    case.path.name
+                );
+            }
+        }
+        assert_eq!(queries, 1406);
+    }
+    #[test]
+    fn direct_repeat_guards_remain_and_invalid_fresh_queries_preserve_state() {
+        let source = [b'a'; 64];
+        let layout = OptimalSearchLayout::new(10, 6, 6, 1, 4, 0, None).unwrap();
+        let mut state = state(&source, layout);
+        let q = query([1, 1, 4, 8, 0, 4]);
+        assert!(state.query(q).is_err());
+        state.query_fresh(q).unwrap();
+        let before = state.test_snapshot();
+        let matches = state.matches.as_slice().unwrap().to_vec();
+        for bad in [
+            OptimalQuery { position: 0, ..q },
+            OptimalQuery {
+                position: usize::MAX,
+                ..q
+            },
+            OptimalQuery {
+                repeats: [0, 4, 8],
+                ..q
+            },
+            OptimalQuery {
+                repeats: [65, 4, 8],
+                ..q
+            },
+            OptimalQuery {
+                length_to_beat: 5,
+                ..q
+            },
+        ] {
+            assert!(state.query_fresh(bad).is_err());
+            assert_eq!(state.test_snapshot(), before);
+            assert_eq!(state.matches.as_slice().unwrap(), matches);
+            assert!(!state.failed);
+        }
+        state.reset();
+        state.query_fresh(q).unwrap();
+        assert_eq!(state.test_snapshot(), before);
+    }
+    #[test]
+    fn fresh_entry_rejects_unqualified_source_and_geometry_before_mutation() {
+        let source = [b'a'; 513];
+        let q = query([1, 1, 4, 8, 0, 4]);
+        for (length, w, h, c, s, m, t, short) in [
+            (63, 10, 6, 6, 1, 4, 0, None),
+            (513, 10, 6, 6, 1, 4, 0, None),
+            (64, 13, 6, 6, 1, 4, 0, None),
+            (64, 10, 10, 6, 1, 4, 0, None),
+            (64, 10, 6, 10, 1, 4, 0, None),
+            (64, 10, 6, 6, 5, 4, 0, None),
+            (64, 10, 6, 6, 1, 4, 4096, None),
+            (64, 10, 6, 6, 1, 3, 0, Some(6)),
+        ] {
+            let layout = OptimalSearchLayout::new(w, h, c, s, m, t, short).unwrap();
+            let mut state = state(&source[..length], layout);
+            let before = state.test_snapshot();
+            assert!(state.query_fresh(q).is_err());
+            assert_eq!(state.test_snapshot(), before);
+            assert!(!state.failed);
+        }
     }
 }

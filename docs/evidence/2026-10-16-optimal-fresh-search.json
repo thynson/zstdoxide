@@ -1,0 +1,126 @@
+{
+  "status": "passed",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_search"
+      ],
+      "exit": 0,
+      "log": "0.log",
+      "sha256": "2c258b51d6baba957ded37d7a7b6127d85f17d6c278b28e47f37794aa8dc0359"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_search",
+        "--features",
+        "unsafe-reference-tree"
+      ],
+      "exit": 0,
+      "log": "1.log",
+      "sha256": "f67bff03a94ab9eb2823fc6ab326c4c14e1474cb23914ebf93938afbb201f32b"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_search",
+        "--features",
+        "unsafe-optimal-short-key"
+      ],
+      "exit": 0,
+      "log": "2.log",
+      "sha256": "b33fe7eb9d1c99b9993426272b2016ab0aa56a7cdf45f6e00d1e533801bca683"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_search",
+        "--features",
+        "unsafe-optimal-matches"
+      ],
+      "exit": 0,
+      "log": "3.log",
+      "sha256": "068a4b948b5842238016fc3da273e75ec51cb6f56f2e5c3a75b4db1155c0be38"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_search",
+        "--all-features"
+      ],
+      "exit": 0,
+      "log": "4.log",
+      "sha256": "d88add056cde6413d7f91c945cd60fa1fdcc0700d939d56c2a14a609f4a68b37"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_search",
+        "--release",
+        "--all-features"
+      ],
+      "exit": 0,
+      "log": "5.log",
+      "sha256": "0690f2aa5b89671569a68ce932d85060b215f790abc900f58ae3bfc6e707f01e"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "6.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--lib",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "7.log",
+      "sha256": "3fcadad19d9770089ebcaac5acc223cce5f3c1a00e0c5d4e23afab20c1587ce6"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "log": "8.log",
+      "sha256": "736b9896a4e40b66f27cce23dc31720ef213eb464e1ce583714a768526229e98"
+    }
+  ],
+  "source": {
+    "src/optimal_search.rs": "fab1fcecee8b32813130a72a819881e0e4b393b9138d7d883c5668ef0e7299f8",
+    "src/optimal_search_layout.rs": "f49c07db566447d3892f6d00e9e5c684a2a72408a1c3823aa65659832fb0f4d4"
+  },
+  "archive": {
+    "path": "docs/evidence/2026-10-16-optimal-fresh-search.tar.gz",
+    "bytes": 2359,
+    "sha256": "d45fb8008c7e7e6f90d0d98efe385e1787b4599215c76e69d550c8ab9b32718a"
+  }
+}

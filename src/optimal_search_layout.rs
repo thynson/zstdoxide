@@ -47,6 +47,22 @@ impl OptimalSearchLayout {
             short_log,
         })
     }
+    /// Captured ordinary fresh CCtx domain; direct observation geometry is separate.
+    pub(crate) fn validate_fresh(self, source_len: usize) -> Result<()> {
+        if !(64..=512).contains(&source_len)
+            || !(1024..=4096).contains(&self.window)
+            || !(64..=512).contains(&self.tree.key().cells())
+            || !(32..=256).contains(&self.tree.nodes())
+            || !(2..=16).contains(&self.attempts)
+            || self.target > 4095
+            || self
+                .short_log
+                .is_some_and(|log| 1_usize << log != self.window)
+        {
+            return Err(Error::InvalidParameter);
+        }
+        Ok(())
+    }
     pub(crate) const fn tree(self) -> TreeLayout {
         self.tree
     }
@@ -130,6 +146,27 @@ impl<'a> OptimalSource<'a> {
                 .repeats
                 .iter()
                 .any(|&v| v > 4096 || v as usize > query.position + 2)
+        {
+            return Err(Error::InvalidParameter);
+        }
+        Ok(())
+    }
+    /// Fresh repeats may exceed available prefix history. They remain integers;
+    /// the search checks subtraction and the window floor before source access.
+    /// This does not relax the original direct-oracle validate contract.
+    pub(crate) fn validate_fresh(
+        self,
+        query: OptimalQuery,
+        layout: OptimalSearchLayout,
+    ) -> Result<()> {
+        layout.validate_fresh(self.len())?;
+        if query.position == 0
+            || query.position > self.len() - 8
+            || query.length_to_beat != if layout.minimum() == 3 { 3 } else { 4 }
+            || query
+                .repeats
+                .iter()
+                .any(|&v| v == 0 || v as usize > self.len())
         {
             return Err(Error::InvalidParameter);
         }
