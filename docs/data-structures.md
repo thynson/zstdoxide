@@ -2358,3 +2358,43 @@ unsafe and all-feature executables, completes clock-free qualification and waits
 for unrelated Rust/native jobs before timing. A second independent safe/all run
 provides a repeat. Raw samples, exact toolchain/environment, complete final states
 and owner records are retained; any measured difference is local evidence only.
+
+### Coupled Ultra scripted path replay successor
+
+The next observer isolates path selection using bounded source-owned scripted
+match candidates, before ordinary match discovery is integrated. Its request owns
+an immutable original wider path request (9..8192 source bytes, at most 64 scripted
+positions, at most eight strictly increasing candidate lengths per position) and
+a copied policy 0 or 2. Original 17 small and 10 horizon requests retain their
+exact source, parameters and candidate bytes. A policy-0 replay using the new
+frequency model must reconstruct the complete original 27-case C fixture before
+any successor native execution. Scripted repeat candidates remain validated at
+the actual callback with the then-current repeat history and literal-zero flag.
+
+The replay owns copied seven-word path cells, canonical complete-cell deltas,
+frequency tables and sequence records. Indices identify predecessors and the
+frontier; snapshots never contain borrowed upstream pointers. Policy 2 has three
+coupled changes: fractional prices, querying positions that policy 0 skips after
+a half-bit comparison, and continuing shorter match relaxations after a rejected
+longer candidate. A fourth branch preserves a replaced match followed by one
+literal when LL(1)-LL(0) is negative. Save the complete replaced match before
+publishing the cheaper literal extension. Resolve its repeat history from the
+original match predecessor before overwriting the next cell. The alternative
+requires strict improvement against both the longer literal run and the existing
+next cell; its frontier extension is part of the observable state.
+
+A new `alternative` event will be emitted immediately before the native strict
+comparison. It records the saved seven-word match, signed LL increment, candidate
+match-plus-literal price, competing longer-run price, existing next-cell price,
+and predecessor index. Complete canonical path/frequency state is included as
+for every other event. The later `literal` event observes any accepted next-cell
+write, copied repeat history and frontier extension. Unique-anchor instrumentation
+must preserve all original parser statements; only the match-provider callback
+is substituted. Two padding passes and normal/full sanitizer builds must agree.
+
+Source-only recipes must separately witness considered/selected/rejected
+alternatives, frontier extension, continued queries, continued descending
+relaxation and an improvement after a rejection. These cases are selected using
+only the independent model, never observed C output. Native admission and all
+public Ultra APIs remain gated until the complete observer, path owner and ordinary
+search/frame composition are independently qualified.
