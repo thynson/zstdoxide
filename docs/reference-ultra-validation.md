@@ -304,3 +304,15 @@ retained in `evidence/2026-10-16-ultra-path-capture.tar.gz` (755 verified member
 archive SHA-256 `8b28f49ad16dd6f821441683a523f4f1b593120ce1c66d2665e4615c8cecab01`).
 This qualifies scripted observations, not ordinary match discovery or a Rust
 Ultra path implementation. Public strategies 8 and 9 remain unsupported.
+
+## Complete path fixture projection
+
+Both Python modes independently project byte-identical packs and provenance from
+the audited native capture. Separate source-only reconstruction reproduces all
+8,796,312 bytes (SHA-256
+`b5f990623fcc0c09c3d55e86bffa4b3af1a7f9e2decab1a211aaffa70435a7f9`).
+The 58 cases contain 65,672 events, 22,798 queries, 72 signed alternatives and
+143 sequences. Both modes reject 24 lossless reconstruction forgeries, including
+all twelve signed operands, frontier and path-index changes with root digest
+checks bypassed. Exact projection outputs, controls and source identities are
+retained in `evidence/2026-10-16-ultra-path-projection.tar.gz`.

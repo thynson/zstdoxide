@@ -1,0 +1,297 @@
+{
+  "archive": "2026-10-16-ultra-path-projection.tar.gz",
+  "archive_bytes": 1516532,
+  "archive_sha256": "c972086ec3f803862f75865e9b2a4e04ef75bb250fcbd67e52a1ecb923ea21ba",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-path-projection-normal-1016/cases.bin",
+      "bytes": 8796312,
+      "sha256": "b5f990623fcc0c09c3d55e86bffa4b3af1a7f9e2decab1a211aaffa70435a7f9"
+    },
+    {
+      "path": "zstdoxide-ultra-path-projection-normal-1016/provenance.json",
+      "bytes": 22371,
+      "sha256": "484f907023cf1f90c17d5792c5febb4598f4a69400ad73946228e48744d43994"
+    },
+    {
+      "path": "zstdoxide-ultra-path-projection-optimized-1016/cases.bin",
+      "bytes": 8796312,
+      "sha256": "b5f990623fcc0c09c3d55e86bffa4b3af1a7f9e2decab1a211aaffa70435a7f9"
+    },
+    {
+      "path": "zstdoxide-ultra-path-projection-optimized-1016/provenance.json",
+      "bytes": 22371,
+      "sha256": "484f907023cf1f90c17d5792c5febb4598f4a69400ad73946228e48744d43994"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-0.json",
+      "bytes": 365,
+      "sha256": "20831856bd03fdee05445f7ea8adddf97e567b0cb00be0a3d11ac9c9a8575602"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-1.json",
+      "bytes": 365,
+      "sha256": "d6d5573b7836590d2868c9a07299a8f7c5fbb727a9445bb0125c54f295a2eaec"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-10.json",
+      "bytes": 366,
+      "sha256": "7d16dcca7af644d5f4acb77e1f4ff461f55b1f3b0fff259f4726ec8e9d1047d4"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-11.json",
+      "bytes": 366,
+      "sha256": "c346d154349ec90ff588e174d81695ce15c46d464fb7d9f6f75ce330a98c016d"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-2.json",
+      "bytes": 365,
+      "sha256": "6dae7cca3dbd7224b88847b5703a4027f22dd06891bc6ed11d86aa5add6b0b39"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-3.json",
+      "bytes": 365,
+      "sha256": "e13f21ccdf00c4557e49b83360e5c29512995ab811df641ff640319b420f5940"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-4.json",
+      "bytes": 365,
+      "sha256": "c41037fd6dee9a78034df96d1308d8c7708b06dfcfd79647b0e6590e2f80e784"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-5.json",
+      "bytes": 365,
+      "sha256": "d6f2459a5a20fc0f4c359099807b5910914b014b6cdd60d57efd3ec0d52fcce4"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-6.json",
+      "bytes": 365,
+      "sha256": "62ccc52d2c5ad4015baf7b99bdf5d7caaa99deb0107c82ff85372f2049e32ad3"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-7.json",
+      "bytes": 365,
+      "sha256": "d0f8f5f4babd35cfe1008988b70c8de1916eb4491d4de975d7098a487ed37b0e"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-8.json",
+      "bytes": 365,
+      "sha256": "f85f4f36e6466cfcfd484e6ea063db1d7ffec7ee183da8069fb7f82b777a5f5b"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-operand-9.json",
+      "bytes": 365,
+      "sha256": "22e7d6d93d30b7f7e11e050e2add11d37af54a2f7a18cf542c00e03b7b5176c5"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-presence.json",
+      "bytes": 356,
+      "sha256": "9a8c6a377d6b8affded16aa8d5ca43145e8f1a50c486fa89277105915181bb99"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/alternative-stage.json",
+      "bytes": 353,
+      "sha256": "acfcff5580080ae38c7864fbf60b3b2211d26517110801ccf4df482fe708d5aa"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/case-count-large.json",
+      "bytes": 346,
+      "sha256": "36595cccb1906d44e48d163799be6988963ac19e47371ebc9b02e528a5c835c5"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/case-count-zero.json",
+      "bytes": 345,
+      "sha256": "d6fb6e58b9e6774f272bf5c967ed129f1c82cf93ddf6efbd492ab1d424907bb7"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/invalid-path-index.json",
+      "bytes": 354,
+      "sha256": "6b86d674164bc3b7230057d967660624be7666bc4b176a17c1b80aded9a65b28"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/magic.json",
+      "bytes": 329,
+      "sha256": "05646b24fb14664ea9dce96bdac441f5e573c8f30b777055eae8c9ffb4167d52"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/next-frontier.json",
+      "bytes": 349,
+      "sha256": "a053b8ba1401d450945c1841369e81d2b71915f06199a0ea7f669f655ad9fd01"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/source-cap.json",
+      "bytes": 341,
+      "sha256": "b35d8a0fe344acce0fc55704340ad50e13cc6c72ac4f5fc6e1fbf346de77cc9c"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/summary.json",
+      "bytes": 9611,
+      "sha256": "593608ca0b4be4a277fd29148cd2d834c8cfb57066a2046ac24ed9a949469d9b"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/trailing.json",
+      "bytes": 318,
+      "sha256": "5869f365d880cbf8922b9bd6f1aba84c033aa0fd6d08dddb82ec0fadbe3c1ed3"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/truncated.json",
+      "bytes": 317,
+      "sha256": "708f5cf959443deff50d797caece62aff788f178ad270542dc9d4716fe1149ac"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/unknown-policy.json",
+      "bytes": 345,
+      "sha256": "56e4addd5fa9df25e05cd59cb30c4f6132bd5d4d79c4f416bf2f133a7d9a3c06"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-normal-1016/valid-wrong-policy.json",
+      "bytes": 349,
+      "sha256": "f167ea8850a7b54cd55f2542e18eba6a459a48d8f07e62a203b9360973aa59e9"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-0.json",
+      "bytes": 365,
+      "sha256": "20831856bd03fdee05445f7ea8adddf97e567b0cb00be0a3d11ac9c9a8575602"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-1.json",
+      "bytes": 365,
+      "sha256": "d6d5573b7836590d2868c9a07299a8f7c5fbb727a9445bb0125c54f295a2eaec"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-10.json",
+      "bytes": 366,
+      "sha256": "7d16dcca7af644d5f4acb77e1f4ff461f55b1f3b0fff259f4726ec8e9d1047d4"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-11.json",
+      "bytes": 366,
+      "sha256": "c346d154349ec90ff588e174d81695ce15c46d464fb7d9f6f75ce330a98c016d"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-2.json",
+      "bytes": 365,
+      "sha256": "6dae7cca3dbd7224b88847b5703a4027f22dd06891bc6ed11d86aa5add6b0b39"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-3.json",
+      "bytes": 365,
+      "sha256": "e13f21ccdf00c4557e49b83360e5c29512995ab811df641ff640319b420f5940"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-4.json",
+      "bytes": 365,
+      "sha256": "c41037fd6dee9a78034df96d1308d8c7708b06dfcfd79647b0e6590e2f80e784"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-5.json",
+      "bytes": 365,
+      "sha256": "d6f2459a5a20fc0f4c359099807b5910914b014b6cdd60d57efd3ec0d52fcce4"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-6.json",
+      "bytes": 365,
+      "sha256": "62ccc52d2c5ad4015baf7b99bdf5d7caaa99deb0107c82ff85372f2049e32ad3"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-7.json",
+      "bytes": 365,
+      "sha256": "d0f8f5f4babd35cfe1008988b70c8de1916eb4491d4de975d7098a487ed37b0e"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-8.json",
+      "bytes": 365,
+      "sha256": "f85f4f36e6466cfcfd484e6ea063db1d7ffec7ee183da8069fb7f82b777a5f5b"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-operand-9.json",
+      "bytes": 365,
+      "sha256": "22e7d6d93d30b7f7e11e050e2add11d37af54a2f7a18cf542c00e03b7b5176c5"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-presence.json",
+      "bytes": 356,
+      "sha256": "9a8c6a377d6b8affded16aa8d5ca43145e8f1a50c486fa89277105915181bb99"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/alternative-stage.json",
+      "bytes": 353,
+      "sha256": "acfcff5580080ae38c7864fbf60b3b2211d26517110801ccf4df482fe708d5aa"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/case-count-large.json",
+      "bytes": 346,
+      "sha256": "36595cccb1906d44e48d163799be6988963ac19e47371ebc9b02e528a5c835c5"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/case-count-zero.json",
+      "bytes": 345,
+      "sha256": "d6fb6e58b9e6774f272bf5c967ed129f1c82cf93ddf6efbd492ab1d424907bb7"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/invalid-path-index.json",
+      "bytes": 354,
+      "sha256": "6b86d674164bc3b7230057d967660624be7666bc4b176a17c1b80aded9a65b28"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/magic.json",
+      "bytes": 329,
+      "sha256": "05646b24fb14664ea9dce96bdac441f5e573c8f30b777055eae8c9ffb4167d52"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/next-frontier.json",
+      "bytes": 349,
+      "sha256": "a053b8ba1401d450945c1841369e81d2b71915f06199a0ea7f669f655ad9fd01"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/source-cap.json",
+      "bytes": 341,
+      "sha256": "b35d8a0fe344acce0fc55704340ad50e13cc6c72ac4f5fc6e1fbf346de77cc9c"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/summary.json",
+      "bytes": 9610,
+      "sha256": "c8ecae23f21ad2044d92c035c2aacea0f6c53929b8155aac2621ca3c8e22fff5"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/trailing.json",
+      "bytes": 318,
+      "sha256": "5869f365d880cbf8922b9bd6f1aba84c033aa0fd6d08dddb82ec0fadbe3c1ed3"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/truncated.json",
+      "bytes": 317,
+      "sha256": "708f5cf959443deff50d797caece62aff788f178ad270542dc9d4716fe1149ac"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/unknown-policy.json",
+      "bytes": 345,
+      "sha256": "56e4addd5fa9df25e05cd59cb30c4f6132bd5d4d79c4f416bf2f133a7d9a3c06"
+    },
+    {
+      "path": "zstdoxide-ultra-path-fixture-controls-optimized-1016/valid-wrong-policy.json",
+      "bytes": 349,
+      "sha256": "f167ea8850a7b54cd55f2542e18eba6a459a48d8f07e62a203b9360973aa59e9"
+    },
+    {
+      "path": "ultra-path-fixture-normal.log",
+      "bytes": 153,
+      "sha256": "f95084e4e0693b2b2d17bee299322ed5903be46e34725498195a0f5620b76782"
+    },
+    {
+      "path": "ultra-path-fixture-optimized.log",
+      "bytes": 152,
+      "sha256": "9f35e1ff719014b757a1588343617108d20ac90fa87ca222ce9fe1641bafaee5"
+    },
+    {
+      "path": "pack_ultra_path_fixture.py",
+      "bytes": 4846,
+      "sha256": "60ee913badae219689e952ba320e06171a90b8739b61cba42c186deb1b6c5f83"
+    },
+    {
+      "path": "check_ultra_path_fixture.py",
+      "bytes": 5961,
+      "sha256": "62c0e1bb2dd42ad3ba593da7608b3943c4d9f43010a7445845ea3b85cacbe8eb"
+    }
+  ]
+}
