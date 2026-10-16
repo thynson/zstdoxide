@@ -107,7 +107,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Specify private policy composition, scripted bounds and ordinary-entry rejection before implementation.
 - [x] Implement bounded private Ultra path composition and compare every intermediate state and sequence.
 - [x] Qualify private Ultra parser exact owners, foreign Miri and no-atomics code generation.
-- [ ] Complete the private Ultra parser safe/isolated-unsafe/all matrix and full regression checkpoint.
+- [x] Complete the private Ultra parser safe/isolated-unsafe/all matrix and full regression checkpoint.
 - [x] Specify ordinary Ultra search/path composition and preserve all original fresh requests before implementation.
 - [x] Reconcile policy-0 ordinary replay with every original complete fresh native observation.
 - [x] Freeze ordinary Ultra source-only branch recipes and bounded policy-tagged transport.

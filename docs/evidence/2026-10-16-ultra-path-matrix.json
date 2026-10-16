@@ -1,0 +1,377 @@
+{
+  "archive": "2026-10-16-ultra-path-matrix.tar.gz",
+  "archive_bytes": 117104,
+  "archive_sha256": "4908b7470b279dd3d15acdd81600aea743a1dc1b313b1ac29af6a2d2c7c5b4cc",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/all-fixtures.log",
+      "bytes": 1353,
+      "sha256": "898d8e45eaaa6661c5a194e0911d251807056b1f31c91d49dd1f58ce16891b84"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/all-nostd.log",
+      "bytes": 60,
+      "sha256": "d406543f224718b237022a6f718b7b5c4163f285ff7b447252247fd16fb99e75"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/all-optimal.log",
+      "bytes": 2561,
+      "sha256": "42ac205a7caf5d899eed82f6e6af795925a6529512dce3477eac8d57226581bb"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/clippy-all.log",
+      "bytes": 60,
+      "sha256": "9ddcb7a97f3589835ba8f354c41d25b0a805bd5f85ddbccaff009e6f6dc7236c"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/clippy-safe.log",
+      "bytes": 60,
+      "sha256": "1094a36867300c1838cdc4ee40efe961d83bac574665f8ee57a40d5b1e88698c"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/evidence.json",
+      "bytes": 48755,
+      "sha256": "a5b068ab2646b43f0153f56218cacf017741c53ce3a7fc502c080266e6a79125"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/full-all.log",
+      "bytes": 151511,
+      "sha256": "5e108a8f5c46daef128ff4f82031d0b4d10878deaa47b720e541c16acc36fb4d"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/full-safe.log",
+      "bytes": 151511,
+      "sha256": "31dda5dc4d21d855333628c5e3fd9bafd1d6e9be8077b5e623f7a9edd4130d55"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/release-all.log",
+      "bytes": 2564,
+      "sha256": "26d732aae00cb560d7098036fbee78e4403c3f7ce36faf2bb22f3b748112484f"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/safe-fixtures.log",
+      "bytes": 1353,
+      "sha256": "2178bf4a6371ed29ba5fe84804191d9c8bef8b4312837c89152ed48594d57291"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/safe-nostd.log",
+      "bytes": 60,
+      "sha256": "8f3ae2616dd1e18d0fe1f4076d35b698a81fb5dae3fa8b45c2750e9a19508e5e"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/safe-optimal.log",
+      "bytes": 2561,
+      "sha256": "c10761574962b86087772d97f746994f45dd2005cfcd0d1ebde1ace663f3e484"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-bitstream-fixtures.log",
+      "bytes": 1353,
+      "sha256": "97ab68efd8c8e7676abd999cd23416c52dbecc8397ca45b6c6009afa6d5c1d81"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-bitstream-nostd.log",
+      "bytes": 130,
+      "sha256": "b04363032b1c2c467cc9bc67c58a74c5e70611eb299537aeb59e5d28e60daea6"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-bitstream-optimal.log",
+      "bytes": 2631,
+      "sha256": "f478baeeb825d7d08147e6e03cc0312d5917a49e41ea9e8c54417010a8133f7d"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-byte-cursor-fixtures.log",
+      "bytes": 1353,
+      "sha256": "c609a6146b2b95974035a7b40cdef485382086f292cb8a8ff78ba66304c835bd"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-byte-cursor-nostd.log",
+      "bytes": 130,
+      "sha256": "30d33532a3a4db2c8933f9757e12515d8bc225c159fc789dfa7dbc7d6d4e18a8"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-byte-cursor-optimal.log",
+      "bytes": 2631,
+      "sha256": "d758b315e01f73a981ee8c066c10c2cbf9c9d80f7ff014d9a461f86ee93c0a44"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-dictionary-fixtures.log",
+      "bytes": 1353,
+      "sha256": "42e70a8f66f403d83dde45760d3a84b0601500c202e54dbb8b93e932591b0565"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-dictionary-nostd.log",
+      "bytes": 130,
+      "sha256": "e81f0b53b08011facea06e7d0efa6db594dd45ec30da7804297cc4701a21d392"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-dictionary-optimal.log",
+      "bytes": 2631,
+      "sha256": "6d32ec4c299773671bb159dd317d872f78f7b19bb07c7422884b1330a4bcfed6"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-fse-encoder-fixtures.log",
+      "bytes": 1353,
+      "sha256": "893d74cdf0de26986878efc5266bcc150fc4820575a8e3392626b34c22a8985f"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-fse-encoder-nostd.log",
+      "bytes": 130,
+      "sha256": "7d73be65880ff8bdd2c5a2312de34b05f4dd8b740df3a2679a7564fe0920565b"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-fse-encoder-optimal.log",
+      "bytes": 2631,
+      "sha256": "1cb26f481709e8c37d7963593012ff1fc96aafd5fa426702a3032dc95368392b"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-fse-fixtures.log",
+      "bytes": 1353,
+      "sha256": "f42721bfe889b8dac2854518b5c7c9efa23609ab8bb822f2c7bb918fad3f62e3"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-fse-nostd.log",
+      "bytes": 130,
+      "sha256": "0bd271f494f856d1074c87f14874ca53b57008770eb8c47c519c0a0c521b5533"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-fse-optimal.log",
+      "bytes": 2631,
+      "sha256": "1a3bf4f3e8ac0899deae4b85703a53d8cc6a5c04d5696fcb911602e6691351fb"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-history-fixtures.log",
+      "bytes": 1353,
+      "sha256": "d2aca30992eba30c1224e4ecc3d718c8310d05e0ea590e209ecd2b275152c0d9"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-history-nostd.log",
+      "bytes": 130,
+      "sha256": "5fdbcc63491777e926c654f3d7f0fefcf539439cf2b6b6a0ad6c2ba895db1bd4"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-history-optimal.log",
+      "bytes": 2631,
+      "sha256": "737977cbf6cb2b25e635a5e8dd8a109ac68624ad21bbca6b001afc1f215598b1"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-huffman-codebook-fixtures.log",
+      "bytes": 1353,
+      "sha256": "91b0e5fbcc5d695b8b68a8e3ca59d2bea566d08add97136d7e5664625e20bccc"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-huffman-codebook-nostd.log",
+      "bytes": 130,
+      "sha256": "30d33532a3a4db2c8933f9757e12515d8bc225c159fc789dfa7dbc7d6d4e18a8"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-huffman-codebook-optimal.log",
+      "bytes": 2631,
+      "sha256": "17caa90cd4ea1f3bc36aa31ce3b0129f3cb8f9a46506729b58ff15f0d83390cc"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-huffman-fixtures.log",
+      "bytes": 1353,
+      "sha256": "4e110adc22513172d3df97f85352d6854e8c158fe0f745cf2e1f0f3b9fd7d09c"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-huffman-nostd.log",
+      "bytes": 130,
+      "sha256": "9929c213ac8cf4bc1df51f72fc3c0773c19a063db00e201d5ea37270db78ad71"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-huffman-optimal.log",
+      "bytes": 2631,
+      "sha256": "3558f242c5eb7bd33d3904f97a82531eb0c2491c280f93c0d72c25989b2497ab"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-match-chain-fixtures.log",
+      "bytes": 1353,
+      "sha256": "755e85e525fde90e627ce992c23323480d3a8d1852bd9fd7dcc1580d0662dfbf"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-match-chain-nostd.log",
+      "bytes": 130,
+      "sha256": "c586c1752205b367f5e8f1a86271e6355644190a036075c766a851b43e385558"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-match-chain-optimal.log",
+      "bytes": 2631,
+      "sha256": "4d9ec25934de2f8f28dc9ae061c8a52d8ae6867865c734da232208738722f859"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-match-table-fixtures.log",
+      "bytes": 1353,
+      "sha256": "150b1c299d9be609a25ddfd47c690fe44ce701550f816e3de55f63e56b0740ff"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-match-table-nostd.log",
+      "bytes": 130,
+      "sha256": "333ffed2db58408b29dae56f81a54e87a2bf58ebdd7d8534dc7d625e79ed978d"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-match-table-optimal.log",
+      "bytes": 2632,
+      "sha256": "7eaae923c0bf708e48841a7fd5cad41a9ea697cbd46540df219ae7760f71f294"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-frequencies-fixtures.log",
+      "bytes": 1353,
+      "sha256": "e2e3d0588e62e602fa3d714f959f0d4e3ce29757e5b92b74217c5338e3aee331"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-frequencies-nostd.log",
+      "bytes": 130,
+      "sha256": "c6cf442692a444c2abfacb122df1ecad3db93aa9417d883214c88056b5b9e0e9"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-frequencies-optimal.log",
+      "bytes": 2561,
+      "sha256": "24cca8acdce9bc96b04af6cb39be4cf66b25b33f56a0f2757ca5d076e78387f7"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-matches-fixtures.log",
+      "bytes": 1353,
+      "sha256": "0879dff3280d75dfffec1aee689001018343e971575d6d8aa43989509c113693"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-matches-nostd.log",
+      "bytes": 130,
+      "sha256": "892b416b2ecb60ffc6a11d65406710bd2febb0fc6709b334718e3b1d9392350c"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-matches-optimal.log",
+      "bytes": 2561,
+      "sha256": "640f29da8aad22db9f91a9fbe838b3630aa5e730bf117d264460b425363f8a89"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-paths-fixtures.log",
+      "bytes": 1353,
+      "sha256": "b4b92a2e3a8150173524ca6edf384885fd5049830a8348a568c2860c1a8ea523"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-paths-nostd.log",
+      "bytes": 130,
+      "sha256": "c8c91b2c763fef3674d25d4112e700c607012d0dba85f1e0714ecd142dea6770"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-paths-optimal.log",
+      "bytes": 2561,
+      "sha256": "224f4d35d365249b8e072433670e6cf6a3532ce7dffcf955dd10dad3f6991bdb"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-short-key-fixtures.log",
+      "bytes": 1353,
+      "sha256": "ec6ce62ab090ffbd686c66da975b2b2e00321509b42947c31d293de0f95f6686"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-short-key-nostd.log",
+      "bytes": 130,
+      "sha256": "11eed3daaffb878a343d2be314ebf4dba228b541906030dc36992c6d8b10311a"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-optimal-short-key-optimal.log",
+      "bytes": 2632,
+      "sha256": "51c1710c26e542b75f4393ac51647a229ef9b1739309a4b3f48a07f28d057431"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-reference-chain-fixtures.log",
+      "bytes": 1353,
+      "sha256": "464324959d8d71cc4aaa878222ad03749d45819777056d7f7f0585e8816df868"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-reference-chain-nostd.log",
+      "bytes": 130,
+      "sha256": "cda02434ddf62fca1753f3837408e2dfe426463c50b0c90fb8c43e7d390b3b90"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-reference-chain-optimal.log",
+      "bytes": 2632,
+      "sha256": "d2c1deaf09b9b2b29c7903e9239e8c6ed6325366e7d9e04902ee90a25a8e3d30"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-reference-tree-fixtures.log",
+      "bytes": 1353,
+      "sha256": "b9701f493d21d6af4c18bccd3cbb6d8d88131d6b3484707ce41a2c9247caa30c"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-reference-tree-nostd.log",
+      "bytes": 130,
+      "sha256": "b6c97c74f8812924c8e5b0e21c1de923c17b866ae8b7d419487c1fe84ece72b8"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-reference-tree-optimal.log",
+      "bytes": 2632,
+      "sha256": "51e8d65e13c78778479bd6586af6423f25fc0f021e300bfd4f360bbf457f6c57"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-ring-history-fixtures.log",
+      "bytes": 1353,
+      "sha256": "630e5004c12b4acdc793923d695395c6c82439b80b18b3688e81263332c64776"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-ring-history-nostd.log",
+      "bytes": 130,
+      "sha256": "71a460009062a5b6bf8777869a81acd4762dcf0138fd87a7907c6008963d79b2"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-ring-history-optimal.log",
+      "bytes": 2632,
+      "sha256": "07dcb333d7f733466be88413ad96e8521183b085514f840647bf1efae17cdb35"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-row-table-fixtures.log",
+      "bytes": 1353,
+      "sha256": "b33d283c86570e99e814749a2f24996e1c723ad7132a2307514fa4dc37ea6555"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-row-table-nostd.log",
+      "bytes": 130,
+      "sha256": "75d3e39a27f0b3963a33758d12c1ddbeaf16d9198b4c66a7e6aca2fb17b2c25c"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-row-table-optimal.log",
+      "bytes": 2632,
+      "sha256": "d0ef47c13622593ff1dd4b0a9456607422ceb4f52c406ce3e1ffd85519992663"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-training-fixtures.log",
+      "bytes": 1353,
+      "sha256": "625dd469a09cc2de75a8f17447a0c253361e5c6454bfb706f9486bdc53afd8d7"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-training-nostd.log",
+      "bytes": 130,
+      "sha256": "4018e42b16f4c16fbd33a72118d0794ed132f6e4a5bf2c168f9ec40acb0191c6"
+    },
+    {
+      "path": "zstdoxide-ultra-path-matrix-1016/unsafe-training-optimal.log",
+      "bytes": 2632,
+      "sha256": "1c889f5266873c51c465db1d17f188d4d51f075d4268b58988b8b7dff6c05bf3"
+    },
+    {
+      "path": "check-ultra-path-matrix.py",
+      "bytes": 2476,
+      "sha256": "ad74ee17d938ac05bc4918f49f38c759cd53aabbf1c97b68eedfbc4f99bd8b8e"
+    },
+    {
+      "path": "reconcile-ultra-path-matrix.py",
+      "bytes": 2626,
+      "sha256": "cd61427159500cb441c2ccfa02a6735cad9628209ca20571d19b053628d00330"
+    },
+    {
+      "path": "ultra-path-matrix-reconciliation.json",
+      "bytes": 165588,
+      "sha256": "c98203aaf4b75f2001cfa4cd583b0f8617a69ddcd79dd80b0ea3b16e6d13970d"
+    },
+    {
+      "path": "ultra-path-matrix.log",
+      "bytes": 4046,
+      "sha256": "c183e4d0a0afd45a8e16bcce93dd6244c816cd68bd64a6cba756c0acba031802"
+    }
+  ]
+}

@@ -401,3 +401,21 @@ optimized Python produce equal manifests, predictions and coverage. Each rejects
 child execution. Exact requests, source search, checks and the immutable manifest
 are retained in `evidence/2026-10-16-ultra-fresh-recipes.tar.gz`. The native adapter
 and command inventory have not been implemented or executed for these requests.
+
+## Complete private path feature checkpoint
+
+All 69 planned commands pass against unchanged Rust/Cargo inputs. Safe, each of
+19 isolated unsafe features and all features each pass 21 parser tests, nine
+independent-path/public-Optimal integration tests and true no_std compilation.
+Complete safe/all suites each pass 1373 tests with 55 explicit ignored migration
+gaps, and their individual test/outcome inventories are identical. Release/all
+passes all 21 parser regressions. Strict all-target Clippy safe/all and formatting
+also pass. This campaign contains 3397 passing and 110 ignored test executions.
+
+All command/source/log identities and exact outcome reconciliation are retained
+in `evidence/2026-10-16-ultra-path-matrix.tar.gz` (74 verified members; SHA-256
+`4908b7470b279dd3d15acdd81600aea743a1dc1b313b1ac29af6a2d2c7c5b4cc`).
+The full frequency checkpoint remains a prior source-bound checkpoint. This
+latest matrix includes the private scripted path implementation and independent
+reader; it does not admit ordinary or public Ultra, retained Ultra, Ultra2 or
+previously ignored upstream migration cases.

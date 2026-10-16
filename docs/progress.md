@@ -838,3 +838,50 @@ independent work decomposition are ready. This bounded milestone does not claim
 complete upstream library, CLI, corpus or format-feature parity.
 
 Closure evidence: [final reconciliation](evidence/2026-10-16-optimal-closure.json).
+
+## Module 18 partial checkpoint: Ultra prices, frequencies and scripted paths (2026-10-16)
+
+Checked fractional price policy, immutable frequency ownership and private scripted
+Ultra paths are implemented. Existing Optimal constructors, fixtures and public
+behavior are preserved. Public Ultra (strategy 8) and Ultra2 (strategy 9) remain
+unsupported; Module 18 is not complete.
+
+The scalar oracle covers 2470 rows and exhaustive independent raw-statistic
+boundaries. The frequency oracle covers 298 lifecycle requests, 4065 transitions
+and 2848 queries, including exact fractional limits. Complete frequency checkpoint
+testing passes 21 selected configurations and full safe/all suites of 1363 passing
+and 55 ignored tests each. Selected owner checks pass 28 foreign Miri executions
+and no-atomics library/concrete caller builds. The focused frequency benchmark
+retains 540 samples with all/safe aggregate ratios near one; it does not establish
+a stable unsafe speedup or complete-frame throughput.
+
+The complete scripted path observer retains 58 requests, 65,672 logical events,
+72 signed alternatives and 143 sequences, with normal/instrumented and two-padding
+equality. Both Python modes reject 44 capture forgeries and 24 fixture forgeries
+each. The independent borrowed Rust reader verifies signed operands and exact
+next-cell/repeat/frontier publication. Private Ultra path composition matches
+every captured state. Four new tests qualify exact owners, bounds/policy rejection
+and observer-failure recovery; selected parser platform checks pass eight foreign
+Miri executions and safe/all thumbv6m library and concrete parsing code generation.
+
+An additive source-driven ordinary model reconciles both passes of all twenty
+original complete fresh C cases (129,220 events). A frozen 44-request manifest
+preserves all original inputs under both policies and adds two source-only inputs
+covering all eight Ultra-specific path branches. These ordinary Ultra predictions
+have not yet been observed natively. The native adapter/command review, ordinary
+fixture and Rust integration, execution planning, entropy publication, public
+admission, complete interoperability and complete-frame measurements remain open.
+
+Detailed evidence and qualifications are in `reference-ultra-validation.md`,
+`reference-ultra-frequency-benchmark.md` and `reference-ultra-fresh-model.md`.
+The module checklist is retained in `TODO.md`; completed commits preserve the
+detailed work archive and all official migration obligations remain open.
+
+The final private path checkpoint passes 69 commands against unchanged Rust/Cargo
+inputs: 21 selected backend configurations, true no_std in each, full safe/all
+suites of 1373 passing and 55 ignored tests each with equal individual outcomes,
+release parser regressions, strict all-target Clippy safe/all and formatting.
+The complete record contains 3397 passing and 110 ignored test executions in
+`evidence/2026-10-16-ultra-path-matrix.tar.gz`. These counts supersede the earlier
+frequency checkpoint for the current source, without changing either checkpoint's
+historical evidence or the remaining public Ultra gates.
