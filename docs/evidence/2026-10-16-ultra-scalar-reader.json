@@ -1,0 +1,47 @@
+{
+  "archive": "2026-10-16-ultra-scalar-reader.tar.gz",
+  "archive_bytes": 3602,
+  "archive_sha256": "4fc8f7293c8a8a4347a05da05e9a783fcf479fd7e70d2cd9b32cb58f9b1f8869",
+  "files": [
+    {
+      "path": "ultra_scalar_fixture.rs",
+      "bytes": 4270,
+      "sha256": "663130a3838876a87acd9966dcefffbf2edf34ad91aad7e1b4a7b3d3d573af9d"
+    },
+    {
+      "path": "reference_ultra_scalar_fixture.rs",
+      "bytes": 3404,
+      "sha256": "dad6d57046ba21c418e60ef98b94c39dfbc52ea651d56ed849682223e5a4a33a"
+    },
+    {
+      "path": "ultra-scalar-reader-before-clippy.rs",
+      "bytes": 4228,
+      "sha256": "0c388f249f46014d8ba0a16f8677f79e7c5e6ed157371897e3854417efdf20d3"
+    },
+    {
+      "path": "ultra-scalar-reader-clippy-initial.log",
+      "bytes": 1537,
+      "sha256": "30fae7fb32bcb81d8bfa7bdd9ad82c58b5e95936ddcd42c2320413d741ede322"
+    },
+    {
+      "path": "ultra-scalar-reader-final-safe.log",
+      "bytes": 625,
+      "sha256": "e67e88987c774db8cf45ae038e88f376739f3a0f7eda871385672f7259318f51"
+    },
+    {
+      "path": "ultra-scalar-reader-final-release.log",
+      "bytes": 616,
+      "sha256": "91fb7c8e86c6d0f0dddbb48b6ce87faf11f0c42a362bbcdacd9523d1ecc3356d"
+    },
+    {
+      "path": "ultra-scalar-reader-final-clippy.log",
+      "bytes": 142,
+      "sha256": "59ff8e6fc4362896195340c782df7c287bd7a015fc49f76fefd9d066441fd0f5"
+    },
+    {
+      "path": "ultra-scalar-reader-final-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

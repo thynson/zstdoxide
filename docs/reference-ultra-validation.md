@@ -96,3 +96,14 @@ without C or production Rust. Each Python mode rejects20forged packs, bypassing
 the outer root-digest check to exercise exact shape, domains, request/order and
 independent arithmetic. Full projection/control evidence is retained in
 `evidence/2026-10-16-ultra-scalar-projection.tar.gz` with verified member hashes.
+
+## Borrowed Rust fixture reader
+
+The independent safe reader borrows fixed rows without allocating codec state.
+It checks every extent and query domain before exposing copied observations.
+Three tests pass in safe debug and release/all-feature configurations, covering
+all2470rows,70signed negative results, malformed lengths/header/modes/statistics,
+and result sentinel boundaries. Final all-feature test Clippy and formatting
+pass. The first Clippy request to use fixed-array chunks and the preceding source
+are retained with final logs in `evidence/2026-10-16-ultra-scalar-reader.tar.gz`.
+This reader does not depend on production scalar arithmetic.

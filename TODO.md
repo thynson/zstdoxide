@@ -78,7 +78,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Specify bounded scalar transport and adapter ownership before native helper implementation.
 - [x] Review and preflight the exact scalar adapter, full instrumentation and malformed request controls.
 - [x] Project independently audited scalar observations into an immutable fixture and reject forged projections.
-- [ ] Qualify the independent borrowed Rust scalar fixture reader.
+- [x] Qualify the independent borrowed Rust scalar fixture reader.
 - [x] Freeze source-only price recipes, observation protocol and exact normal/instrumented C command inventory.
 - [x] Capture and independently audit fractional prices, signed increments and malformed/overflow boundaries.
 - [x] Specify policy-dependent checked price records and frequency owner/reset invariants before Rust implementation.
