@@ -1950,3 +1950,35 @@ last stretch. A coordinator owns the publication phase and all original allocato
 argument errors precede mutation, and internal/callback failures poison reuse until
 an explicit full reset. Empty/tiny blocks, larger sources and public frame dispatch
 remain separate gates rather than implicit generalization from this small domain.
+
+### Private retained source bounds and publication coordinator
+
+`OptimalSource` retains one immutable full backing slice plus a checked visible
+prefix end. All key, byte and match operations use that prefix; source identity
+checks still compare the full borrowed slice. This scalar value needs no unsafe
+representation. `OptimalSearch` adds an optional active `(start,end)` range,
+validates the retained 128..1024 source / 64..512 block domain before mutation,
+and performs the observed strict main-frontier catch-up and local-short reset
+at each contiguous entry. Direct and fresh query APIs reject retained mode;
+reset restores full visibility and clears the mode with the original owners.
+
+The path parser will keep full source identity but use explicit active block
+start/end for every source/match/sequence bound. A retained entry preserves path
+cells and frequencies, initializes pricing from only the current block, and
+resets local sequence count, anchor, repeats and last stretch. Fresh/scripted
+entry contracts remain unchanged. The parser validates candidate source bytes
+against the current prefix even though future backing bytes are accessible to
+the owner. A caller cannot enter another block after a poisoned parse.
+
+A private `RetainedOptimal` coordinator will own the parser and search (the same
+six or seven allocator owners), a copied fixed four-slot block schedule, two
+repeat triples, previous-owner index and an explicit ready/pending/finished/
+poisoned phase. Constructor checks the full two-to-four block schedule before
+mutation. Parsing creates pending candidates; only a later publication decision
+(raw/RLE/compressed) advances the schedule and optionally swaps the repeat owner.
+This mirrors ordinary `ZSTD_buildSeqStore` and compressed block-state publication;
+it does not implement entropy compression or expose public strategy selection.
+Invalid phase/schedule arguments leave state unchanged; internal or observer
+failure poisons reuse until resetting every owner. Parse, publication and reset
+introduce no allocations. Existing per-owner unsafe features select storage only;
+all coordination and source-bound logic remain safe Rust.
