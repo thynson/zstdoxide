@@ -1,0 +1,104 @@
+{
+  "status": "passed",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "0.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--test",
+        "reference_optimal_startup_fixture"
+      ],
+      "exit": 0,
+      "log": "1.log",
+      "sha256": "6ff8ce15d2923a2c9cd6ae1a226cc11124dd0542da72a43671a2df0fe3a8ee35"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--test",
+        "reference_optimal_startup_fixture",
+        "--all-features"
+      ],
+      "exit": 0,
+      "log": "2.log",
+      "sha256": "a9c96eaa2e0f3f1ffce0f762c3b355ea2502e9052edaebecec87c3c5f17c1190"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--test",
+        "reference_optimal_startup_fixture",
+        "--release",
+        "--all-features"
+      ],
+      "exit": 0,
+      "log": "3.log",
+      "sha256": "7fb89c166b225a72d4a2409312e4a55ec3ded53f4f04f659ec5c4ebaaf86554e"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--test",
+        "reference_optimal_startup_fixture",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "4.log",
+      "sha256": "4c1c5f946ce4b13a91b58f4485ae21f2b51f54a8d620ac061a244bc0c17203dc"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--test",
+        "reference_optimal_startup_fixture",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "5.log",
+      "sha256": "d5324e04ffc7f35ad75711b14575b6fc1c823be9008acda7499c87cbc291fc76"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "log": "6.log",
+      "sha256": "ee1d3fffa2022e962e63e0dbe4d35c9c198450a20c29fc09030f635dbb38bfcd"
+    }
+  ],
+  "sources": {
+    "tests/reference_optimal_startup_fixture.rs": "00eed44652d469f267181ed37b3035e4e555b9bd465174c6e188339d0195ce3f",
+    "tests/support/optimal_startup_fixture.rs": "0584d715702123abb832d4efc6fbe6141ff1e804c6757430d1de2ed4a3ba4a3b",
+    "tests/support/optimal_path_fixture.rs": "680b43a2d79d4ac68394882ea4875d0f79f2c04703478fc345f76ce476b7125d",
+    "tests/fixtures/reference-optimal-startup/cases.bin": "b9dbba655c27390e13f1652e7707c254dc51c080dab259e89c536f0a3910368d"
+  },
+  "archive": {
+    "path": "docs/evidence/2026-10-16-optimal-startup-fixture.tar.gz",
+    "bytes": 1908,
+    "sha256": "dafe4d4892a87adcfb02335d7986f4b6335f3c5f9dad5f83685cf1f6c4e1c6b3"
+  }
+}

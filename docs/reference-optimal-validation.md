@@ -477,3 +477,14 @@ workspace difference from pinned sizing functions. No sanitizer check was disabl
 These are fresh candidate states, not retained block publication. The C helper
 checks full-frame decode; independent Rust fixture decoding remains a subsequent
 gate. Public strategy 7 and the old direct-query repeat restriction remain unchanged.
+
+
+The independent 638,390-byte startup fixture reader now validates all nested
+path/source/repeat states, complete sparse search deltas and separate allocator
+triples. Four focused tests pass in safe, all-feature and release/all-feature
+builds (twelve passes): every complete frame decodes to its original bytes,
+unavailable fresh repeats remain values, malformed fixture fields reject, and
+every strict frame prefix plus altered final payload is rejected or cannot match
+the original source. Both focused strict Clippy builds, formatting and true no_std
+library compilation pass. Projection is byte-identical in normal and optimized
+Python. These checks satisfy the fresh startup gate only, not retained publication.
