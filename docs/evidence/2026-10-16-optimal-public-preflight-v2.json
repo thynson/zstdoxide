@@ -1,0 +1,57 @@
+{
+  "archive": "2026-10-16-optimal-public-preflight-v2.tar.gz",
+  "archive_bytes": 88645,
+  "archive_sha256": "615244dc42e446eb2742611aebbde2bfe52b6173ac710f303be6f908fce7a8a0",
+  "files": [
+    {
+      "path": "prepare-optimal-public-audit-v2.py",
+      "bytes": 4355,
+      "sha256": "54cc92620273ae9c3bd72a1c1d539349096ddd246daf2ada14733c9fdcf521d3"
+    },
+    {
+      "path": "prepare-optimal-public-audit-v2-initial.py",
+      "bytes": 4187,
+      "sha256": "6afe3c041bce5273bad54dd1b8f2baa71d92b8e021f83d1e5dee0a99255b6f5c"
+    },
+    {
+      "path": "prepare-optimal-public-audit-v2.log",
+      "bytes": 69,
+      "sha256": "e9280c7aad0a33ebf448c9ca8cd35c157787560027e348d76f8e2b8ecb75f874"
+    },
+    {
+      "path": "optimal-public-preflight-v2-initial-closure-failure.log",
+      "bytes": 474,
+      "sha256": "fa119a01b20e82cd408e94b67d78cc14f6ff6f56e4ea531cd24d65453bb7cd7c"
+    },
+    {
+      "path": "optimal-public-preflight-v2-normal.log",
+      "bytes": 7129,
+      "sha256": "0e001156076c16f83cf6dfa7e4f660f696464cd47cf1c158314744d65db66fbe"
+    },
+    {
+      "path": "optimal-public-preflight-v2-optimized.log",
+      "bytes": 7129,
+      "sha256": "0e001156076c16f83cf6dfa7e4f660f696464cd47cf1c158314744d65db66fbe"
+    },
+    {
+      "path": "zstdoxide-optimal-public-preflight-v2-normal/evidence.json",
+      "bytes": 7929,
+      "sha256": "e54ba76bb934143740aba645e4b92cbcd42aaddd0d790737ecc79e60940e73a5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-preflight-v2-normal/labels.json",
+      "bytes": 508431,
+      "sha256": "56889380a1bf7318a022497514a136fba58623499cbd91f34b7c0b2f2772c3bf"
+    },
+    {
+      "path": "zstdoxide-optimal-public-preflight-v2-optimized/evidence.json",
+      "bytes": 7929,
+      "sha256": "e54ba76bb934143740aba645e4b92cbcd42aaddd0d790737ecc79e60940e73a5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-preflight-v2-optimized/labels.json",
+      "bytes": 508431,
+      "sha256": "56889380a1bf7318a022497514a136fba58623499cbd91f34b7c0b2f2772c3bf"
+    }
+  ]
+}
