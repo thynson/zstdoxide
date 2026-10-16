@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-16-optimal-retained-owners.tar.gz",
+  "archive_bytes": 5381,
+  "archive_sha256": "4f3e34b2741c3f48e383d932ff5f698a5dffab73e55d76c93aac02159865f53a",
+  "files": [
+    {
+      "path": "all.log",
+      "bytes": 6328,
+      "sha256": "ccd9c3b7b909f37aa5efbecaee5cec40551efae79b33389a16545901f0f416ab"
+    },
+    {
+      "path": "clippy.log",
+      "bytes": 142,
+      "sha256": "7196a8ce93508a5c74be558dfaf7089f1a1fc30c53114dfddf2cf32682e1d5c6"
+    },
+    {
+      "path": "evidence.json",
+      "bytes": 3797,
+      "sha256": "ef749a25c6ef33bf2077f0557945e08cbe6c907c584dc0d3f8642a62dfa21900"
+    },
+    {
+      "path": "fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "frequencies.log",
+      "bytes": 6328,
+      "sha256": "9eee897ec1c0884f2080a309c84877611465e107ca99d3af801973c90633d0a6"
+    },
+    {
+      "path": "nostd.log",
+      "bytes": 72,
+      "sha256": "8c233a54790c4800d3dd585436af679aa838da259bfdb129412e2d51cdb75cdc"
+    },
+    {
+      "path": "paths.log",
+      "bytes": 6328,
+      "sha256": "3ae2913a06f662f885378fbb54ba2e0956649db62eda0cc2de4678c99cb9d69d"
+    },
+    {
+      "path": "release-all.log",
+      "bytes": 6320,
+      "sha256": "7e5d6ea07b45ec942c8f5fa40115378514c1b2cbfeb28da7e7663adbe27b6684"
+    },
+    {
+      "path": "safe.log",
+      "bytes": 6258,
+      "sha256": "605fd4840922c2b7d6080a65ffe48fac0f3e39f9115d2568405671f9af2da961"
+    },
+    {
+      "path": "search.log",
+      "bytes": 6328,
+      "sha256": "d863e7f16c9cc13bb26855927c15f4d1103ffacd90077cdabceb67e6c023c226"
+    },
+    {
+      "path": "controls/check-optimal-retained-owners.py",
+      "bytes": 1943,
+      "sha256": "185ad84a6660911570173d960cae626cd545b45915a5260e10632f1f38e28711"
+    },
+    {
+      "path": "controls/zstdoxide-optimal-retained-owners-safe-initial.log",
+      "bytes": 981,
+      "sha256": "85e9eec26c6870b17a907f62e138a856fc491cbd0da40d89c63c9fd5762f050d"
+    }
+  ],
+  "qualification": "Six configurations each passed 62 focused tests (372 executions), including every seven-owner creation failure, exact moved/borrowed non-clone releases, no parse/publication/reset allocations, rejected schedule cleanup and poison at seven observer stages in either retained block. Strict Clippy, no_std and formatting passed."
+}

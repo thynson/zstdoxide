@@ -77,7 +77,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Merge the isolated private frequency branch after Module 16 matrix and measurement closure.
 - [x] Specify tiny sorted-tree/all-match transport and freeze source-only repeat, short-key and frontier hypotheses with malformed-input controls.
 - [x] Extend direct match requests to ordinary CCtx short-key geometry, the strict 2^18 distance boundary and fresh repeat values at pointer-safe positions.
-- [ ] Qualify ordinary parser startup positions and full fresh repeat publication in retained-state capture.
+- [x] Qualify ordinary parser startup positions and full fresh repeat publication in retained-state capture.
 - [x] Specify bounded fresh ordinary startup requests and compose independent search/path replay before C execution.
 - [x] Freeze fresh startup recipes, exact CCtx/provider observation hooks and bounded zero-initializing allocator review.
 - [x] Specify an exact fresh startup capture command inventory and independent artifact/state audit before C execution.
@@ -135,7 +135,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Implement retained search entry and match every captured query/map/frontier without future-byte access.
 - [x] Implement retained path blocks and explicit candidate/committed publication with exact captured states.
 - [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
-- [ ] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
+- [x] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
 - [x] Design additive wider retained sparse observations before broadening ordinary block admission.
 - [ ] Freeze wider retained transport and independent sparse replay; reconcile every existing small capture.
 - [ ] Freeze source-only wider branch recipes and preflight the unchanged-provider sparse observer.

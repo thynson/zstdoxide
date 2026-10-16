@@ -306,3 +306,174 @@ fn schedule_identity_and_publication_phase_errors_preserve_live_state() {
         1
     );
 }
+
+#[test]
+fn poisoned_retained_blocks_require_full_reset_and_preserve_external_output() {
+    let source = [b'a'; 128];
+    for failing_block in 0..2 {
+        for stage in [0, 1, 6, 8, 9, 10, 11] {
+            let (parser, search) = pair(&source, layout(4, 0), 4, 0, false, [Global; 7]).unwrap();
+            let mut state = RetainedOptimal::from_parts(parser, search, &[64, 64]).unwrap();
+            if failing_block == 1 {
+                state.parse_next(&mut Observe::default()).unwrap();
+                state.publish(Publication::Compressed).unwrap();
+            }
+            let committed = (state.owners, state.previous, state.index, state.start);
+            let mut observe = Observe {
+                fail_stage: Some(stage),
+                ..Observe::default()
+            };
+            assert_eq!(state.parse_next(&mut observe), Err(Error::ResourceLimit));
+            assert_eq!(state.phase, Phase::Poisoned);
+            assert_eq!(
+                (state.owners, state.previous, state.index, state.start),
+                committed
+            );
+            assert!(state.pending.is_none());
+            let emitted = observe.sequences;
+            assert_eq!(emitted, usize::from(stage >= 9));
+            assert_eq!(
+                state.publish(Publication::Compressed),
+                Err(Error::InvalidState)
+            );
+            state.search.reset();
+            assert_eq!(
+                state.parse_next(&mut Observe::default()),
+                Err(Error::InvalidState)
+            );
+            state.parser.reset().unwrap();
+            assert_eq!(
+                state.parse_next(&mut Observe::default()),
+                Err(Error::InvalidState)
+            );
+            state.reset().unwrap();
+            for _ in 0..2 {
+                assert_eq!(
+                    state.parse_next(&mut Observe::default()).unwrap().sequences,
+                    1
+                );
+                state.publish(Publication::Compressed).unwrap();
+            }
+            assert!(state.is_finished());
+            assert_eq!(observe.sequences, emitted);
+        }
+    }
+}
+
+#[test]
+fn retained_moved_nonclone_owner_failures_release_every_allocation() {
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    let source = [b'a'; 128];
+    for rejected in 0..=7 {
+        let owners = core::array::from_fn(|i| {
+            TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 1,
+                fail_at: if i == rejected {
+                    core::num::NonZeroU64::new(1)
+                } else {
+                    None
+                },
+            })
+            .unwrap()
+            .into_non_clone()
+        });
+        let monitors = owners.each_ref().map(|a| a.monitor());
+        let result = pair(&source, layout(3, 0), 3, 0, false, owners)
+            .and_then(|(parser, search)| RetainedOptimal::from_parts(parser, search, &[64, 64]));
+        if rejected < 7 {
+            assert!(matches!(result, Err(Error::AllocationFailed)));
+        } else {
+            let mut state = result.unwrap();
+            let before = monitors.each_ref().map(|m| m.snapshot().attempts);
+            for _ in 0..2 {
+                for kind in [Publication::Compressed, Publication::Rle] {
+                    assert_eq!(
+                        state.parse_next(&mut Observe::default()).unwrap().sequences,
+                        1
+                    );
+                    state.publish(kind).unwrap();
+                }
+                state.reset().unwrap();
+            }
+            assert_eq!(monitors.each_ref().map(|m| m.snapshot().attempts), before);
+            drop(state);
+        }
+        for monitor in monitors {
+            monitor.assert_released();
+            assert_eq!(monitor.snapshot().owners_dropped, 1);
+        }
+    }
+}
+
+#[test]
+fn retained_borrowed_owners_reuse_pending_failed_and_finished_storage() {
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    let source = [b'a'; 128];
+    let owners: [_; 7] = core::array::from_fn(|_| {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 1,
+            fail_at: None,
+        })
+        .unwrap()
+        .into_non_clone()
+    });
+    let monitors = owners.each_ref().map(|a| a.monitor());
+    let (parser, search) = pair(&source, layout(3, 0), 3, 0, false, owners.each_ref()).unwrap();
+    let mut state = RetainedOptimal::from_parts(parser, search, &[64, 64]).unwrap();
+    let before = monitors.each_ref().map(|m| m.snapshot().attempts);
+    assert_eq!(before, [1; 7]);
+    for _ in 0..2 {
+        state.parse_next(&mut Observe::default()).unwrap();
+        assert_eq!(state.phase, Phase::Pending);
+        state.reset().unwrap();
+        assert!(state.pending.is_none());
+        assert_eq!(state.owners, [[1, 4, 8], [0, 0, 0]]);
+        let mut fail = Observe {
+            fail_stage: Some(9),
+            ..Observe::default()
+        };
+        assert_eq!(state.parse_next(&mut fail), Err(Error::ResourceLimit));
+        state.reset().unwrap();
+        for kind in [Publication::Raw, Publication::Compressed] {
+            state.parse_next(&mut Observe::default()).unwrap();
+            state.publish(kind).unwrap();
+        }
+        assert!(state.is_finished());
+        state.reset().unwrap();
+    }
+    assert_eq!(monitors.each_ref().map(|m| m.snapshot().attempts), before);
+    drop(state);
+    for monitor in &monitors {
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 0);
+    }
+    drop(owners);
+    for monitor in monitors {
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+    }
+}
+
+#[test]
+fn rejected_retained_schedule_releases_all_moved_parts() {
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    let source = [b'a'; 128];
+    let owners: [_; 7] = core::array::from_fn(|_| {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 1,
+            fail_at: None,
+        })
+        .unwrap()
+        .into_non_clone()
+    });
+    let monitors = owners.each_ref().map(|a| a.monitor());
+    let (parser, search) = pair(&source, layout(3, 0), 3, 0, false, owners).unwrap();
+    assert!(matches!(
+        RetainedOptimal::from_parts(parser, search, &[128]),
+        Err(Error::InvalidParameter)
+    ));
+    for monitor in monitors {
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+    }
+}
