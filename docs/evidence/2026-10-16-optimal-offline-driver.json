@@ -1,0 +1,72 @@
+{
+  "archive": "2026-10-16-optimal-offline-driver.tar.gz",
+  "archive_bytes": 23802,
+  "archive_sha256": "3f60f558e92918e2a3164668292b2b9c02f14ea3ce2c340d1a5a944588ffc8c3",
+  "files": [
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/0.log",
+      "bytes": 922,
+      "sha256": "e76024c85e7adceeaba8235c0267cd6501f06c5a5a3c8f54e8f1dfac7482302a"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/1.log",
+      "bytes": 174,
+      "sha256": "66fabef73715b7fe88b387c36def6ba9008c07a258689c8c4ad0973dec71f5a2"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/2.log",
+      "bytes": 117,
+      "sha256": "3854337208af1fbcc79b66e47f081d9a7749ced8cb82183dd5a75838ed404adc"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/3.log",
+      "bytes": 665,
+      "sha256": "9b2886a5c44f1d38c6ed5044fafbc9316cb4d6d148a9bcc8914682a1f8465b76"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/4.log",
+      "bytes": 168,
+      "sha256": "ca5d891f063c00e08c1f7dc35d3ffe6a8fe46c854d2878e2aabb10fef283e66b"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/5.log",
+      "bytes": 167,
+      "sha256": "013faea4344b5d60925bb5bd50fbc67239fa6a617c575b6259ea26fe3e8a169e"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/6.log",
+      "bytes": 155,
+      "sha256": "baef36d8eba092b814d30739ace96d5dd2421ef5d411476d5ec86e911b8fc9c1"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/7.log",
+      "bytes": 155,
+      "sha256": "4c9482ef712fcc3f274685e77db317b977b23f543bf69ff485383c1b7c93da50"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/8.log",
+      "bytes": 156,
+      "sha256": "5d2aa8e126d47ad99aef444250900e0bf7077c98be8834ec0d4ca6035563551b"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/9.log",
+      "bytes": 157,
+      "sha256": "10239d01404935ac6142ea3f45d66cc3b9d00be6641ffb3cac4d1b46c3c500ae"
+    },
+    {
+      "path": "zstdoxide-optimal-offline-driver-1016/evidence.json",
+      "bytes": 61567,
+      "sha256": "d70690f46509bf34526e1a2691e5e0528ac057593d14fe6f29286429a95bad09"
+    },
+    {
+      "path": "optimal-offline-driver.log",
+      "bytes": 421,
+      "sha256": "e670f38d97fdbbd967b5d72ed240475dcf5167268d97e5d0df0f8e1d104f56c2"
+    },
+    {
+      "path": "check.sh",
+      "bytes": 5711,
+      "sha256": "5ef5deddf0d660d2c137d00bfb496e8779cec975f040df0dafe86cd0fea77c90"
+    }
+  ]
+}

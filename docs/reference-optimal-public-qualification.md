@@ -110,3 +110,15 @@ requests, responses, captured source and checks. It occupies 38832496 bytes.
 Every archive member and retained file reconstruction was verified. Redundant
 Rust build intermediates alone are omitted and individually listed. C/Rust
 compressed-byte identity and complete upstream compatibility are not claimed.
+
+## Standard offline checks
+
+The standard driver now executes ten additional read-only Optimal checks:
+source-aware v6 admission, independent public recipes, the complete-frame
+baseline, and price, tiny/broad match, startup, retained, wider retained and
+complete fresh fixture reconstruction. All ten pass with an unchanged complete
+input inventory; the driver also passes shell syntax validation. Exact commands,
+logs and source hashes are archived in
+`docs/evidence/2026-10-16-optimal-offline-driver.tar.gz`. The historical path
+projector writes its output unconditionally and is deliberately not registered
+as a read-only check. Its frozen fixture remains covered by Rust replay tests.

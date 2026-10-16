@@ -70,6 +70,16 @@ python3 scripts/check_tree_frame_plan.py
 python3 scripts/pack_tree_frame_trajectories.py --check
 python3 scripts/check_reference_admission_v5.py --check
 python3 scripts/check_tree_interop_preflight.py --check
+python3 scripts/check_reference_admission_v6.py --check
+python3 scripts/check_optimal_interop_recipes.py --check
+python3 scripts/check_optimal_frame_baseline.py
+python3 scripts/pack_optimal_price_fixtures.py
+python3 scripts/pack_optimal_match_fixtures.py
+python3 scripts/pack_optimal_match_broad_fixtures.py
+python3 scripts/pack_optimal_startup_fixtures.py
+python3 scripts/pack_optimal_retained_fixtures.py
+python3 scripts/pack_optimal_retained_wide_fixtures.py
+python3 scripts/pack_optimal_fresh_wide_fixtures.py
 
 # Each backend alone must compile without std and pass the same test suite.
 cargo fmt --all -- --check

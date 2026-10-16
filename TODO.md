@@ -171,6 +171,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Correct the inherited independent admission audit with an additive version and retain its failed predecessor evidence.
 - [x] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
 - [x] Qualify selected public Optimal frames and owners on 32-bit, big-endian and no-atomics targets.
+- [x] Register and qualify the committed Optimal offline fixture and admission checks in the standard driver.
 - [ ] Run all safe/isolated-unsafe/all/release, true no_std, formatting and Clippy checks.
 - [x] Specify complete-frame benchmark records, owner equivalence and measurement barriers.
 - [x] Implement and freeze deterministic complete Optimal frame workloads and independent evidence checks.
