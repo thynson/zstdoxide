@@ -103,7 +103,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Review and preflight policy-tagged path transport and read-only native instrumentation.
 - [x] Capture complete match-plus-literal alternatives, thorough relaxation, predecessor/repeat and frontier states.
 - [x] Project the audited complete Ultra path fixture and reject forged reconstruction inputs.
-- [ ] Qualify the independent borrowed Ultra path reader, signed alternatives and publication transitions.
+- [x] Qualify the independent borrowed Ultra path reader, signed alternatives and publication transitions.
 - [ ] Implement bounded private Ultra path composition and compare every intermediate state and sequence.
 - [ ] Qualify safe/isolated-unsafe/all behavior, foreign Miri, no-atomics codegen and exact owners.
 - [ ] Design and implement allocation-free Ultra execution planning and shared-entropy token publication.

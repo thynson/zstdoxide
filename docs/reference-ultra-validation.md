@@ -316,3 +316,15 @@ The 58 cases contain 65,672 events, 22,798 queries, 72 signed alternatives and
 all twelve signed operands, frontier and path-index changes with root digest
 checks bypassed. Exact projection outputs, controls and source identities are
 retained in `evidence/2026-10-16-ultra-path-projection.tar.gz`.
+
+## Independent path reader
+
+Six independent-reader tests pass in safe, all-feature and release/all builds.
+The bounded borrowed reader checks every complete state, policy-specific cache
+and frequency bound, all signed alternative operands, and exact accepted or
+rejected next-cell/repeat/frontier publication. Malformed extents, flags, deltas,
+all twelve alternative operands, signed extremes and dirty-cache changes are
+rejected. True no_std safe/all, strict all-target Clippy safe/all and formatting
+also pass against unchanged reader/fixture sources. The eight-command record
+and source snapshots are retained in
+`evidence/2026-10-16-ultra-path-reader.tar.gz`.

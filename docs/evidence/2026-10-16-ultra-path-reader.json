@@ -1,0 +1,72 @@
+{
+  "archive": "2026-10-16-ultra-path-reader.tar.gz",
+  "archive_bytes": 11463,
+  "archive_sha256": "101f3898a1f3b00926b5837298b6b2be16ddb22881ff34e2d7172a1dee4c075e",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/all.log",
+      "bytes": 841,
+      "sha256": "f7cf99be064095f81b2281b46db335282936067b3c5069b9aa0b88bb881a73fa"
+    },
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/clippy-all.log",
+      "bytes": 130,
+      "sha256": "9cbd0755b64362d8076235c0f698876093298f813dfefa22fec5c9f22228fac3"
+    },
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/clippy-safe.log",
+      "bytes": 130,
+      "sha256": "4d5233b6e27c5ff2b4bc9dda03cf7b5d1c0943cfb442402ac6a5a38084ea5262"
+    },
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/evidence.json",
+      "bytes": 3695,
+      "sha256": "e34d24f41cc39d2d235bdc39bc1fbe2e14d8e0c6aeaeb73052363191a3daff9b"
+    },
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/nostd-all.log",
+      "bytes": 60,
+      "sha256": "8f3ae2616dd1e18d0fe1f4076d35b698a81fb5dae3fa8b45c2750e9a19508e5e"
+    },
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/nostd-safe.log",
+      "bytes": 60,
+      "sha256": "8f3ae2616dd1e18d0fe1f4076d35b698a81fb5dae3fa8b45c2750e9a19508e5e"
+    },
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/release-all.log",
+      "bytes": 844,
+      "sha256": "8ee21f64da4c8305a597ecb51aef519860f3a600511931fdf718550ca887a786"
+    },
+    {
+      "path": "zstdoxide-ultra-path-reader-1016/safe.log",
+      "bytes": 841,
+      "sha256": "157ba9d686b487885d790e5345a32f0ef083391be6ff224237cc1216b6188842"
+    },
+    {
+      "path": "check-ultra-path-reader.py",
+      "bytes": 2107,
+      "sha256": "0596619efaf49ea7e96cc8b477aaa29326378a9571c3c356151e00caf60332d5"
+    },
+    {
+      "path": "ultra-path-reader.log",
+      "bytes": 218,
+      "sha256": "f61925e0ce86eb18af60e35511e43b29e57def4d26b1cb42647ff5073ba0c45b"
+    },
+    {
+      "path": "ultra_path_fixture.rs",
+      "bytes": 26782,
+      "sha256": "77070db944c24ec8ab0eeaa9da39ce0adb9daccbe1b3ca2a8fb1f0b4fc17f873"
+    },
+    {
+      "path": "reference_ultra_path_fixture.rs",
+      "bytes": 7399,
+      "sha256": "d1cf18b3c79672b5841bfacb191a35aceeb3be6a43c1d7ff395638057f4c78ac"
+    }
+  ]
+}
