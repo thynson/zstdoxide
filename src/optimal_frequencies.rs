@@ -1,4 +1,4 @@
-//! Allocator-owned, checked no-dictionary Optimal frequency lifecycle.
+//! Allocator-owned, checked no-dictionary policy-bound frequency lifecycle.
 #![cfg_attr(not(feature = "unsafe-optimal-frequencies"), forbid(unsafe_code))]
 #![cfg_attr(
     not(test),
@@ -8,7 +8,7 @@
     )
 )]
 
-use crate::optimal_price::{self as price, SymbolPrice};
+use crate::optimal_price::{self as price, PricePolicy, SymbolPrice};
 use crate::{Error, Result};
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
@@ -23,6 +23,7 @@ const OFFSET_BASE: [u32; 32] = [
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) struct FrequencySnapshot {
+    pub(crate) policy: PricePolicy,
     pub(crate) counts: [u32; CELLS],
     pub(crate) sums: [u32; 4],
     pub(crate) base_prices: [u32; 4],
@@ -39,6 +40,7 @@ pub(crate) struct OptimalFrequencies<A: Allocator = Global> {
     initialized: bool,
     dirty: bool,
     disabled_literals: bool,
+    policy: PricePolicy,
 }
 
 fn read_cell(values: &[u32], index: usize) -> Result<u32> {
@@ -92,11 +94,11 @@ fn counter_add(left: u32, right: u32) -> Result<u32> {
         .filter(|&v| v < u32::MAX)
         .ok_or(Error::ResourceLimit)
 }
-fn refreshed(sums: [u32; 4], disabled_literals: bool) -> Result<[u32; 4]> {
+fn refreshed(policy: PricePolicy, sums: [u32; 4], disabled_literals: bool) -> Result<[u32; 4]> {
     let mut result = [0; 4];
     for table in 0..4 {
         if table != 0 || !disabled_literals {
-            result[table] = price::bit_weight(sums[table]).map_err(|_| Error::CorruptData)?;
+            result[table] = policy.weight(sums[table]).map_err(|_| Error::CorruptData)?;
         }
     }
     Ok(result)
@@ -106,7 +108,17 @@ impl<A: Allocator> OptimalFrequencies<A> {
     pub(crate) const fn disabled_literals(&self) -> bool {
         self.disabled_literals
     }
+    pub(crate) const fn policy(&self) -> PricePolicy {
+        self.policy
+    }
     pub(crate) fn new_in(disabled_literals: bool, owner: A) -> Result<Self> {
+        Self::new_with_policy_in(PricePolicy::Optimal, disabled_literals, owner)
+    }
+    pub(crate) fn new_with_policy_in(
+        policy: PricePolicy,
+        disabled_literals: bool,
+        owner: A,
+    ) -> Result<Self> {
         let mut counts = Vec::new_in(owner);
         counts
             .try_reserve_exact(CELLS)
@@ -120,6 +132,7 @@ impl<A: Allocator> OptimalFrequencies<A> {
             initialized: false,
             dirty: false,
             disabled_literals,
+            policy,
         })
     }
     fn check_layout(&self) -> Result<()> {
@@ -136,6 +149,7 @@ impl<A: Allocator> OptimalFrequencies<A> {
             *cell = read_cell(&self.counts, index)?;
         }
         Ok(FrequencySnapshot {
+            policy: self.policy,
             counts,
             sums: self.sums,
             base_prices: self.base_prices,
@@ -146,6 +160,12 @@ impl<A: Allocator> OptimalFrequencies<A> {
     }
     fn publish(&mut self, next: FrequencySnapshot) -> Result<()> {
         self.check_layout()?;
+        if next.policy != self.policy {
+            return Err(Error::InvalidParameter);
+        }
+        if self.policy == PricePolicy::Ultra && next.sums.iter().any(|&sum| sum > 8_388_606) {
+            return Err(Error::ResourceLimit);
+        }
         // All indices are within the runtime-checked exact live length, and
         // this exclusive borrow cannot change that length during publication.
         for (index, value) in next.counts.into_iter().enumerate() {
@@ -160,6 +180,7 @@ impl<A: Allocator> OptimalFrequencies<A> {
     }
     pub(crate) fn reset(&mut self) -> Result<()> {
         self.publish(FrequencySnapshot {
+            policy: self.policy,
             counts: [0; CELLS],
             sums: [0; 4],
             base_prices: [0; 4],
@@ -213,7 +234,7 @@ impl<A: Allocator> OptimalFrequencies<A> {
                 .iter()
                 .try_fold(0, |sum, &count| counter_add(sum, count))?;
         }
-        next.base_prices = refreshed(next.sums, self.disabled_literals)?;
+        next.base_prices = refreshed(self.policy, next.sums, self.disabled_literals)?;
         next.initialized = true;
         next.dirty = false;
         self.publish(next)
@@ -257,7 +278,7 @@ impl<A: Allocator> OptimalFrequencies<A> {
         if !self.initialized {
             return Err(Error::InvalidState);
         }
-        let prices = refreshed(self.sums, self.disabled_literals)?;
+        let prices = refreshed(self.policy, self.sums, self.disabled_literals)?;
         self.base_prices = prices;
         self.dirty = false;
         Ok(())
@@ -281,7 +302,8 @@ impl<A: Allocator> OptimalFrequencies<A> {
         } else if self.predefined {
             price::predefined_literals_cost(literals.len())
         } else {
-            price::dynamic_literals_cost(
+            price::dynamic_literals_cost_with_policy(
+                self.policy,
                 literals,
                 self.base_prices[0],
                 self.counts[..256]
@@ -291,13 +313,15 @@ impl<A: Allocator> OptimalFrequencies<A> {
         }
         .map_err(price_error)?;
         let symbol = |table: usize, code: usize| -> Result<SymbolPrice> {
-            SymbolPrice::new(
+            SymbolPrice::new_with_policy(
+                self.policy,
                 self.base_prices[table],
                 read_cell(&self.counts, START[table] + code)?,
             )
             .map_err(|_| Error::CorruptData)
         };
-        let ll_price = price::literal_length_price(
+        let ll_price = price::literal_length_price_with_policy(
+            self.policy,
             literal_length,
             if self.predefined {
                 None
@@ -306,7 +330,8 @@ impl<A: Allocator> OptimalFrequencies<A> {
             },
         )
         .map_err(|_| Error::CorruptData)?;
-        let match_price = price::match_price(
+        let match_price = price::match_price_with_policy(
+            self.policy,
             encoded_offset,
             match_length,
             if self.predefined {
@@ -323,6 +348,10 @@ impl<A: Allocator> OptimalFrequencies<A> {
 #[cfg(test)]
 #[path = "../tests/support/optimal_price_fixture.rs"]
 mod fixture;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_frequency_fixture.rs"]
+mod ultra_fixture;
 
 #[cfg(test)]
 mod tests {
@@ -378,6 +407,65 @@ mod tests {
         }
         assert_eq!(transitions, 2018);
         assert_eq!(queries, 1420);
+    }
+
+    #[test]
+    fn ultra_every_captured_frequency_transition_and_query_matches() {
+        let cases = ultra_fixture::read(ultra_fixture::PACK).unwrap();
+        let mut transitions = 0;
+        let mut queries = 0;
+        for case in cases {
+            let policy = if case.policy == 0 {
+                PricePolicy::Optimal
+            } else {
+                PricePolicy::Ultra
+            };
+            let mut model =
+                OptimalFrequencies::new_with_policy_in(policy, case.disabled_literals, Global)
+                    .unwrap();
+            for expected in case.observations {
+                let [tag, a, b, c, d, e] = expected.operation;
+                match tag {
+                    0 | 3 => model
+                        .begin_block(&case.source[a as usize..(a + b) as usize])
+                        .unwrap(),
+                    1 | 5 => {
+                        for _ in 0..if tag == 5 { e } else { 1 } {
+                            model
+                                .update(&case.source[a as usize..(a + b) as usize], c, d)
+                                .unwrap();
+                        }
+                    }
+                    2 => model.refresh().unwrap(),
+                    4 => {
+                        assert_eq!(
+                            model
+                                .prices(&case.source[a as usize..(a + b) as usize], c, d, e)
+                                .unwrap(),
+                            expected.query.unwrap(),
+                            "{}",
+                            case.name
+                        );
+                        queries += 1;
+                    }
+                    _ => unreachable!(),
+                }
+                let actual = model.snapshot().unwrap();
+                assert_eq!(
+                    actual.counts, expected.frequencies,
+                    "{} {:?}",
+                    case.name, expected.operation
+                );
+                assert_eq!(actual.sums, expected.sums, "{}", case.name);
+                assert_eq!(actual.base_prices, expected.base_prices, "{}", case.name);
+                assert_eq!(actual.predefined, expected.predefined, "{}", case.name);
+                assert!(actual.initialized);
+                assert_eq!(actual.policy, policy);
+                transitions += 1;
+            }
+        }
+        assert_eq!(transitions, 4065);
+        assert_eq!(queries, 2848);
     }
 
     #[test]

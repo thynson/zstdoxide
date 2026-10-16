@@ -172,6 +172,9 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         {
             return Err(Error::InvalidParameter);
         }
+        if frequencies.policy() != crate::optimal_price::PricePolicy::Optimal {
+            return Err(Error::InvalidParameter);
+        }
         frequencies.reset()?;
         paths.reset()?;
         matches.clear();

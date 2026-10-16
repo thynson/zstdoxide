@@ -1,0 +1,67 @@
+{
+  "archive": "2026-10-16-ultra-frequency-implementation.tar.gz",
+  "archive_bytes": 21130,
+  "archive_sha256": "47ff9ae490b19346d6810a7ef49833ea57df508f8ef195840e7015ebb550bb73",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-frequency-implementation-1016/all.log",
+      "bytes": 9011,
+      "sha256": "bf00d0adc20539adebce91d6724cbf4914d34ab93f5e33da03e906139ddb0b77"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-implementation-1016/clippy.log",
+      "bytes": 130,
+      "sha256": "4dca9ef9b49a6cc5685ce64fa0707ee8a8cebfecb60500dc6a93f7f3fcbef0f6"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-implementation-1016/evidence.json",
+      "bytes": 10627,
+      "sha256": "61c4588a3b3840505b25b993725fcf005b160c36ef8d6db01053526c7690eafd"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-implementation-1016/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-implementation-1016/frequencies.log",
+      "bytes": 9011,
+      "sha256": "87655bb4851a7ed22b12736611b3a79a5f4fb51f4cb7930e1aaece1d12bdb0cc"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-implementation-1016/nostd-all.log",
+      "bytes": 130,
+      "sha256": "ec6bdd117f904110dc0e06cd22d5523690dc98c6f66943edc7331aceb4801ba5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-implementation-1016/nostd-safe.log",
+      "bytes": 130,
+      "sha256": "ec6bdd117f904110dc0e06cd22d5523690dc98c6f66943edc7331aceb4801ba5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-implementation-1016/safe.log",
+      "bytes": 8940,
+      "sha256": "c86fb5b1ca4e5ff2a2b8d3260db27fac197f8a3761ddcc6347b4dd7a54ee39e9"
+    },
+    {
+      "path": "check-ultra-frequency-implementation.py",
+      "bytes": 1761,
+      "sha256": "083c32c1e5ed4ed1827a68967275aa51025ef0a3cdb78273b1f735f10389f883"
+    },
+    {
+      "path": "ultra-frequency-implementation-first.log",
+      "bytes": 1295,
+      "sha256": "60034376ac326bdbfb44ec6a3631aa814ec3be35fb97dc295fd229b6b4025757"
+    },
+    {
+      "path": "src/optimal_frequencies.rs",
+      "bytes": 23832,
+      "sha256": "fa5cb7188473709af2bebbca050ba69a50874dcb8761ed55ffa669e580f85766"
+    },
+    {
+      "path": "src/optimal_parse.rs",
+      "bytes": 40631,
+      "sha256": "bc283083ee76f5bdd2ab41021b54b535be2a2a25a6ef1c2fb2330d317c66da91"
+    }
+  ]
+}

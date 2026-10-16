@@ -200,3 +200,20 @@ the allowed fractional upper case rescales to 8447, while the whole-mode case
 just above it rescales to 4351. The fixture and reader were correct; the assertion
 was corrected after inspecting the counts. That failed test/source and the final
 passing checks are retained in `evidence/2026-10-16-ultra-frequency-reader.tar.gz`.
+
+## Policy-bound frequency implementation
+
+Frequency owners and copied snapshots carry an immutable pricing policy. The
+existing constructor retains Optimal behavior; the private explicit constructor
+uses the same single allocation for either policy. Reset preserves policy and
+allocator. Fractional publication bounds and policy equality are checked before
+any count, sum, cache or phase write. All query components select the same policy.
+The existing Optimal parser rejects Ultra frequency owners before resetting parts.
+
+All 4065 native transitions and 2848 queries match complete Rust states, alongside
+the original 2018 transitions and 1420 queries. Safe, isolated frequency unsafe and
+all-feature configurations each pass 87 Optimal library tests. True no_std safe/all,
+strict all-target all-feature Clippy and formatting pass. Source-bound focused logs
+are retained in `evidence/2026-10-16-ultra-frequency-implementation.tar.gz`.
+Exact fractional owner/error qualification and the full feature/platform matrix
+are separate remaining gates. Public Ultra remains unsupported.
