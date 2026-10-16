@@ -26,3 +26,5 @@ contains 643 individually verified members. Independent Rust fixture/frame
 qualification and wider fresh production composition remain subsequent gates.
 
 The complete fresh fixture projection passed in normal and optimized Python: 20 cases, 64,610 events, 8,460,469 bytes, SHA-256 `d6de8128b08fa0cecb4254c8089463b0bfb650abb322884b2b0f319ba00553ee`. Both runs independently checked frozen capture hashes, model states and complete frames. Projection logs are archived in `docs/evidence/2026-10-16-optimal-fresh-wide-projection.tar.gz`.
+
+The independent Rust reader passed four boundary/state/frame tests in safe, all-feature and release-all builds (12 executions), plus strict all-test Clippy, no_std compilation and formatting. It decodes every complete frame and checks all 64,610 events, 30,314 queries and 48 sequences; malformed sparse counts, source windows, horizon cells and strict frame prefixes are rejected. Evidence: `docs/evidence/2026-10-16-optimal-fresh-wide-reader.tar.gz`.

@@ -153,7 +153,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Capture and independently audit complete wider fresh blocks and frames.
 - [x] Specify complete fresh sparse fixture ownership, bounds and validation.
 - [x] Project audited complete fresh states and frames into an immutable wider fixture.
-- [ ] Qualify the complete fresh fixture reader and independent frame decoding.
+- [x] Qualify the complete fresh fixture reader and independent frame decoding.
 - [ ] Extend private fresh search admission and compare every complete query/map.
 - [ ] Extend complete fresh path composition and compare all events and sequences.
 - [ ] Qualify complete fresh allocation owners, failure cleanup and reset contracts.
