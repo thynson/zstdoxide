@@ -105,7 +105,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Project the audited complete Ultra path fixture and reject forged reconstruction inputs.
 - [x] Qualify the independent borrowed Ultra path reader, signed alternatives and publication transitions.
 - [x] Specify private policy composition, scripted bounds and ordinary-entry rejection before implementation.
-- [ ] Implement bounded private Ultra path composition and compare every intermediate state and sequence.
+- [x] Implement bounded private Ultra path composition and compare every intermediate state and sequence.
 - [ ] Qualify safe/isolated-unsafe/all behavior, foreign Miri, no-atomics codegen and exact owners.
 - [ ] Design and implement allocation-free Ultra execution planning and shared-entropy token publication.
 - [ ] Freeze source-aware admission successors without rewriting historical selectors or request inputs.

@@ -328,3 +328,28 @@ rejected. True no_std safe/all, strict all-target Clippy safe/all and formatting
 also pass against unchanged reader/fixture sources. The eight-command record
 and source snapshots are retained in
 `evidence/2026-10-16-ultra-path-reader.tar.gz`.
+
+## Private scripted Ultra path implementation
+
+The explicit private constructor accepts matching immutable frequency policy and
+bounds Ultra sources to 9..8192 bytes. The existing Optimal constructor still
+rejects Ultra owners. Ordinary fresh/retained search and planning configurations
+reject Ultra before state changes. Reset preserves policy and all three owners.
+
+Ultra now preserves a replaced match for the negative literal-length increment
+alternative, resolves its original predecessor repeats before next-cell
+publication, and extends the frontier when selected. It continues queries and
+descending match relaxation where Optimal takes its existing shortcuts. All
+65,672 native events, 72 alternatives and 143 sequences match complete captured
+path/frequency/query/repeat state. Both original Optimal scripted and ordinary
+parser tests remain unchanged.
+
+Four new tests pass under safe, isolated frequency/path/candidate unsafe, and all
+features. Safe/all/release-all each pass all 21 parser tests. Exact non-cloning
+borrowed owners incur no allocation during parse/reset; mismatch/bounds rejection
+releases all moved owners. Alternative-observer failure poisons the parser,
+rejects retry without reset, and permits complete native replay after reset.
+True no_std safe/all, strict all-target Clippy safe/all and formatting pass.
+Source-bound logs and implementation snapshots are retained in
+`evidence/2026-10-16-ultra-path-implementation.tar.gz`. Full feature/platform
+qualification is a separate work item; public Ultra remains unsupported.

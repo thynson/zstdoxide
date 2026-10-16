@@ -2,8 +2,8 @@
 
 Pinned reference: facebook/zstd v1.5.7, commit
 `f8745da6ff1ad1e7bab384bd1f9d742439278e99`. The original algorithm and derived
-observations retain the upstream BSD-3-Clause/GPL-2.0 attribution described in
-`../../../docs/reference-ultra-path-adapter-review.md`. The upstream source is
+observations retain the upstream attribution in `../../../LICENSE.zstd`.
+Adapter scope is documented in `../../../docs/reference-ultra-path-adapter-review.md`. The upstream source is
 kept outside this repository and is only an oracle.
 
 `cases.bin` is an immutable, little-endian projection of 58 independently audited

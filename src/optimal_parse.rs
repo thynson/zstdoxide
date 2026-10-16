@@ -1,4 +1,4 @@
-//! Private fresh optLevel0 path decisions with checked scripted and ordinary providers.
+//! Private Optimal paths and bounded scripted Ultra paths with checked providers.
 //! Upstream counterpart: ZSTD_compressBlock_opt_generic, zstd v1.5.7.
 #![forbid(unsafe_code)]
 #![allow(
@@ -11,6 +11,7 @@ use crate::optimal_path_layout::{
     BLOCK_LIMIT, PATH_HORIZON, PathCell, PathIndex, PathPhase, PathPrice, ReverseCursor,
 };
 use crate::optimal_paths::OptimalPaths;
+use crate::optimal_price::PricePolicy;
 use crate::optimal_search::OptimalSearch;
 use crate::optimal_search_layout::{OptimalMatch, OptimalQuery};
 use crate::{Error, Result};
@@ -82,6 +83,7 @@ pub(crate) struct PathEvent {
     pub(crate) reverse: Option<[usize; 3]>,
     pub(crate) query: Option<OptimalQuery>,
     pub(crate) appended: Option<[u32; 4]>,
+    pub(crate) alternative: Option<[i64; 12]>,
     pub(crate) sequences: usize,
 }
 impl PathEvent {
@@ -162,6 +164,26 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         source: &'a [u8],
         minimum: u8,
         target: usize,
+        frequencies: OptimalFrequencies<F>,
+        paths: OptimalPaths<P>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        Self::from_policy_parts(
+            PricePolicy::Optimal,
+            source,
+            minimum,
+            target,
+            frequencies,
+            paths,
+            matches,
+        )
+    }
+    /// Explicit private scripted composition; ordinary Ultra entry points remain gated.
+    pub(crate) fn from_policy_parts(
+        policy: PricePolicy,
+        source: &'a [u8],
+        minimum: u8,
+        target: usize,
         mut frequencies: OptimalFrequencies<F>,
         mut paths: OptimalPaths<P>,
         mut matches: OptimalMatches<M>,
@@ -172,7 +194,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         {
             return Err(Error::InvalidParameter);
         }
-        if frequencies.policy() != crate::optimal_price::PricePolicy::Optimal {
+        if frequencies.policy() != policy || (policy == PricePolicy::Ultra && source.len() > 8192) {
             return Err(Error::InvalidParameter);
         }
         frequencies.reset()?;
@@ -228,6 +250,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         search: &mut OptimalSearch<'a, H, N, S, B>,
         observer: &mut O,
     ) -> Result<PathResult> {
+        self.require_ordinary_policy()?;
         search.validate_fresh_start(self.source, self.minimum, self.target)?;
         self.parse(&mut FreshProvider(search), observer)
     }
@@ -244,7 +267,14 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         self.status = Status::Finished;
         Ok(result)
     }
+    fn require_ordinary_policy(&self) -> Result<()> {
+        if self.frequencies.policy() != PricePolicy::Optimal {
+            return Err(Error::UnsupportedFeature);
+        }
+        Ok(())
+    }
     pub(crate) fn fresh_configuration(&self) -> Result<(&'a [u8], usize, usize, bool)> {
+        self.require_ordinary_policy()?;
         if !(64..=16384).contains(&self.source.len()) {
             return Err(Error::InvalidParameter);
         }
@@ -259,6 +289,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         ))
     }
     pub(crate) fn retained_configuration(&self) -> Result<(&'a [u8], usize, usize)> {
+        self.require_ordinary_policy()?;
         if !(128..=16384).contains(&self.source.len()) {
             return Err(Error::InvalidParameter);
         }
@@ -281,6 +312,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         search: &mut OptimalSearch<'a, H, N, S, B>,
         observer: &mut O,
     ) -> Result<PathResult> {
+        self.require_ordinary_policy()?;
         if !(128..=16384).contains(&self.source.len())
             || end > self.source.len()
             || !end
@@ -451,6 +483,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         observer: &mut O,
         mut last: usize,
     ) -> Result<(usize, usize, PathCell)> {
+        let thorough = self.frequencies.policy() == PricePolicy::Ultra;
         let mut cur = 1;
         while cur <= last {
             let previous = self.read(cur - 1)?;
@@ -461,11 +494,61 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             let delta = i64::from(raw) + i64::from(self.ll_price(litlen)?)
                 - i64::from(self.ll_price(litlen - 1)?);
             let price = previous.price().adjusted(delta)?;
-            if price.word() <= self.read(cur)?.price().word() {
+            let replaced = self.read(cur)?;
+            if price.word() <= replaced.price().word() {
                 self.write(
                     cur,
                     previous.with_literals(litlen as u32)?.with_price(price)?,
                 )?;
+                if thorough && replaced.literal_length() == 0 {
+                    let increment = i64::from(self.ll_price(1)?) - i64::from(self.ll_price(0)?);
+                    let next_at = self.ip.checked_add(cur).ok_or(Error::CorruptData)?;
+                    if increment < 0 && next_at < self.block_end {
+                        let literal = self
+                            .source
+                            .get(next_at..next_at + 1)
+                            .ok_or(Error::CorruptData)?;
+                        let raw = i64::from(self.frequencies.prices(literal, 0, 1, 3)?[0]);
+                        let with_one = replaced.price().adjusted(raw + increment)?;
+                        let with_more = price.adjusted(
+                            raw + i64::from(self.ll_price(litlen + 1)?)
+                                - i64::from(self.ll_price(litlen)?),
+                        )?;
+                        let next_price = self.read(cur + 1)?.price();
+                        let predecessor = cur
+                            .checked_sub(replaced.match_length() as usize)
+                            .ok_or(Error::CorruptData)?;
+                        let mut alternative = [0; 12];
+                        alternative[..7].copy_from_slice(&replaced.words().map(i64::from));
+                        alternative[7..].copy_from_slice(&[
+                            increment,
+                            i64::from(with_one.word()),
+                            i64::from(with_more.word()),
+                            i64::from(next_price.word()),
+                            predecessor as i64,
+                        ]);
+                        let mut event = PathEvent::at(12, cur, last);
+                        event.alternative = Some(alternative);
+                        self.emit(observer, event)?;
+                        if with_one.word() < with_more.word() && with_one.word() < next_price.word()
+                        {
+                            let before = self.read(predecessor)?;
+                            let (_, repeats) = resolved(
+                                replaced.off_base(),
+                                before.repeats(),
+                                before.literal_length() == 0,
+                            )?;
+                            self.write(
+                                cur + 1,
+                                replaced
+                                    .with_repeats(repeats)?
+                                    .with_literals(1)?
+                                    .with_price(with_one)?,
+                            )?;
+                            last = last.max(cur + 1);
+                        }
+                    }
+                }
             }
             let mut cell = self.read(cur)?;
             if cur < cell.match_length() as usize {
@@ -489,12 +572,13 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             if cur == last {
                 break;
             }
-            if self.read(cur + 1)?.price().word()
-                <= cell
-                    .price()
-                    .value()?
-                    .checked_add(128)
-                    .ok_or(Error::ResourceLimit)?
+            if !thorough
+                && self.read(cur + 1)?.price().word()
+                    <= cell
+                        .price()
+                        .value()?
+                        .checked_add(128)
+                        .ok_or(Error::ResourceLimit)?
             {
                 cur += 1;
                 continue;
@@ -550,7 +634,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
                                 .with_literals(0)?
                                 .with_price(price)?,
                         )?;
-                    } else {
+                    } else if !thorough {
                         break;
                     }
                 }
@@ -1182,3 +1266,7 @@ mod fresh_tests;
 #[cfg(test)]
 #[path = "../tests/support/optimal_fresh_wide_parse.rs"]
 mod fresh_wide_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_path_parse.rs"]
+mod ultra_tests;

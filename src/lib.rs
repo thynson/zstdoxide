@@ -160,6 +160,9 @@ mod tree_oracle_fixture;
 mod tree_search;
 mod tree_sort;
 mod tree_source;
+#[cfg(test)]
+#[path = "../tests/support/ultra_path_fixture.rs"]
+mod ultra_path_fixture;
 mod xxhash;
 
 #[cfg(test)]
