@@ -1917,3 +1917,36 @@ those hypotheses to agree before applying committed-repeat state transitions.
 Both source padding and normal/sanitized C must agree; allocator records keep the
 already derived sanitizer redzone adjustment. Invalid transport, forged state,
 changed publication owner/repeats and altered frame output must reject offline.
+
+
+### Retained fixture and bounded block admission design
+
+The planned `ZORFX01` fixture borrows each source and complete frame, owns bounded
+block/event records, and stores separate ordinary/sanitizer allocation triples.
+Per-case geometry and exact block schedule precede chronological blocks. Each
+block records start/length, wire kind, committed owner before/after, incoming and
+candidate repeats, both owners after publication, pre-call main frontier, and
+all path/frequency/search deltas. Every delta baseline persists across blocks;
+only the per-block sequence list begins empty. This preserves untouched stale
+path cells and retained frequency/search state without re-zeroing them.
+
+The independent reader must bound source <=1,024, two to four 64..512-byte blocks,
+515 path cells, ordinary short geometry and all allocation/count arithmetic before
+allocation. Global literal/match positions must stay inside the current block end,
+with prior matches allowed anywhere in the consumed prefix. Reverse cursor bounds,
+finite prices, complete frequency sums and canonical delta ordering remain checked.
+The initial event of each later block permits only main/local-short frontier changes
+in search state, derived from the strict 384/192 rule; query pre-state is the previous
+complete state. Compressed publication swaps owner and commits candidate repeats;
+raw/RLE publication retains the prior committed owner while preserving candidates
+in pending storage. Complete frame decoding is independently compared to source.
+
+Private retained production admission follows successful fixture qualification.
+It must preserve the current fresh/direct APIs and never expose unqualified history
+or window-expiry domains. Search needs a checked current block end so hash/match
+reads cannot use future backing bytes. Path parsing needs a bounded global block
+range, retained tables/frequencies, incoming committed repeats and a zeroed local
+last stretch. A coordinator owns the publication phase and all original allocators;
+argument errors precede mutation, and internal/callback failures poison reuse until
+an explicit full reset. Empty/tiny blocks, larger sources and public frame dispatch
+remain separate gates rather than implicit generalization from this small domain.
