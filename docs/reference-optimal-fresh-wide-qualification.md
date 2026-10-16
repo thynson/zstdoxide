@@ -14,3 +14,13 @@ plans/dependency/environment/artifact controls without children. Separate
 strict normal and sanitized C syntax checks pass. The source-only recipes
 predict 64,610 events, 30,314 queries and 48 sequences per padding pass; native
 capture remains the next gate.
+
+All 150 native commands passed. Twenty recipes independently match 64,610
+events, 30,314 queries and 48 sequences per padding pass. All 80 complete
+frames and 80 allocator ledgers agree across normal/sanitized builds and both
+padding values; each build rejects 24 malformed requests. The exact artifact
+inventory and 362,684,292 log bytes are audited. Normal and optimized offline
+controls each accept two exact captures and reject seventy forged records
+without children. All 77 frozen capture inputs remain unchanged. The archive
+contains 643 individually verified members. Independent Rust fixture/frame
+qualification and wider fresh production composition remain subsequent gates.
