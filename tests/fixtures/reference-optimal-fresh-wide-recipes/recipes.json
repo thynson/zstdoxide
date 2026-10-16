@@ -1,0 +1,520 @@
+{
+  "cases": [
+    {
+      "blocks": [
+        64
+      ],
+      "coverage": [
+        "compressed_commit",
+        "initial_sufficient",
+        "search_repeat"
+      ],
+      "events": 9,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 63,
+      "name": "fresh_startup_uniform",
+      "packet_sha256": "faa4044cfdb688535aff031f29ea5c39f4b6cb27376dfbfc34dd2d007d26c445",
+      "predicted_state_sha256": "1b6c83eac2df74bf8790b8c824a58066d08e0fc8af08f6289970792a215676ff",
+      "queries": 1,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "initial_no_match",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 505,
+      "highest_path": 0,
+      "hypothesized_kinds": [
+        0
+      ],
+      "max_last": 0,
+      "name": "fresh_startup_noise",
+      "packet_sha256": "9f77b75c2c705fac34870afbfb0a9d18346cc82510b89fb2a90bcad29d35ca63",
+      "predicted_state_sha256": "761bc31dcd43e4bbb9d69d62faebeea255c7ae4f909f995884923fa5417ff0bc",
+      "queries": 503,
+      "sequences": 0
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_tree"
+      ],
+      "events": 42,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 478,
+      "name": "fresh_startup_periodic",
+      "packet_sha256": "bee3288ca1c61456b86fda5fec7cc1b3ae2a94d3598fbf616d5c5ac374f6be79",
+      "predicted_state_sha256": "2c21b180bff401ffedad6fb5f9e642dd5a44a28348f5280a74688652a87f50f0",
+      "queries": 34,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 452,
+      "highest_path": 125,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 124,
+      "name": "fresh_startup_mixed",
+      "packet_sha256": "aec277d1c4aa0ff5dc9a25b79a9dafd62f0a87f104f9af9b6afc41c66f243738",
+      "predicted_state_sha256": "836e3a7ffa6d3c84cf43a625ab9a4cb4aef91286cb55a89e0a5fd68e6dbb5da1",
+      "queries": 216,
+      "sequences": 5
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 452,
+      "highest_path": 125,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 124,
+      "name": "fresh_startup_disabled_literals",
+      "packet_sha256": "cd2b898905cb7e859cce7ac016d23348722c3c4b9df404c3ff2a81c335ff44b9",
+      "predicted_state_sha256": "8261aa4f6bcb4c35cc3ab17e170311e77fa246964576ca9a036926e71506013a",
+      "queries": 216,
+      "sequences": 5
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 553,
+      "highest_path": 497,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 496,
+      "name": "fresh_startup_three_short",
+      "packet_sha256": "e22b90688dd800534d733e1b8023e4d299cb665c27624398f10ebae401b26460",
+      "predicted_state_sha256": "850f726393c346a52a5330ff89a905473b8fd918e4ade5546f70cfcb09a9fad0",
+      "queries": 30,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 225,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 96,
+      "name": "fresh_startup_larger_geometry",
+      "packet_sha256": "6ae5e0223e3869f51651dbd7fc11f7ba5f4607ae048aef965889047cb58b2b4b",
+      "predicted_state_sha256": "7a29cba01d44a2b88c643c363008dbe2e9679ef0ab26afd733a9df5c5c319e27",
+      "queries": 199,
+      "sequences": 4
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 43,
+      "highest_path": 481,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 480,
+      "name": "fresh_startup_minimum_3",
+      "packet_sha256": "9977b53f0f30702a1dd863d6d258894ad939b77e59a0edc88c44c27cff075ec8",
+      "predicted_state_sha256": "2af3023249bf257945c05657d57195940e861b897cf55652aaf89f9360ee83ee",
+      "queries": 33,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "highest_path": 479,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 478,
+      "name": "fresh_startup_minimum_4",
+      "packet_sha256": "37133f32625d32baf52fb13ba517bb44b375fe59c2f22b691d11529d7ecb0d58",
+      "predicted_state_sha256": "f0bd45abc1c3e5ce99d104a53cf2b92b4f51c12975f173389aeda4ff279a74e6",
+      "queries": 45,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "highest_path": 481,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 480,
+      "name": "fresh_startup_minimum_5",
+      "packet_sha256": "57dfab7167745380407d585a3253012221cbc773db835015f3713112e0053da3",
+      "predicted_state_sha256": "abe150efd53dd65432d59efda1b4eb5d54cf3667eb454097fc4dd0d12e9eb325",
+      "queries": 43,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "highest_path": 481,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 480,
+      "name": "fresh_startup_minimum_6",
+      "packet_sha256": "caa10611ab1462b4e8adbec94212830fa56f5eeeef55f3549f5055c79ef54ce3",
+      "predicted_state_sha256": "ad6e7f3706bc16e33601303ee74e591ddad3b9239f1d858fb8ff067a865f9737",
+      "queries": 43,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "highest_path": 481,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 480,
+      "name": "fresh_startup_minimum_7",
+      "packet_sha256": "dba69091922f4466601efd549248a0846f1427d4125aa4379b4f512c6001496f",
+      "predicted_state_sha256": "ad6e7f3706bc16e33601303ee74e591ddad3b9239f1d858fb8ff067a865f9737",
+      "queries": 43,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "coverage": [
+        "compressed_commit",
+        "initial_sufficient",
+        "search_repeat"
+      ],
+      "events": 9,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 16383,
+      "name": "fresh_wide_uniform",
+      "packet_sha256": "e68de4ac4616cd2c0e292df84f6edd900fe35d32fb3a5e54c996d9cc9cc57329",
+      "predicted_state_sha256": "3e214836183fac3b3a56b339e904be6a1d4e8e0502814d4734400e1868c2ab73",
+      "queries": 1,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_tree"
+      ],
+      "events": 8202,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 8190,
+      "name": "fresh_wide_noise_copy",
+      "packet_sha256": "c4f9dfb43a3a8813932907ba7693075bdd82bde4aefee0a47788e1ebe1a41b32",
+      "predicted_state_sha256": "11d7d0b8d19c153e9d50c9a60814080e0fd8b6a87f6d10b3302d87344905169f",
+      "queries": 8194,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 12589,
+      "highest_path": 4090,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 4089,
+      "name": "fresh_wide_runs_disabled",
+      "packet_sha256": "f66d887b37d9615619047933a8a9246bdbde35ca5c75669446758233a4f7580d",
+      "predicted_state_sha256": "7e83412d06529796bd39e7d3aca7ae0a91882c9fd197c1d9c7892629344b90eb",
+      "queries": 81,
+      "sequences": 8
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 12607,
+      "highest_path": 4090,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 4089,
+      "name": "fresh_wide_runs_priced",
+      "packet_sha256": "4e8fb112c8ea7cbd5ea3f0586b95f2257fb3d02d88fc36eeb0feeefbcf7fad95",
+      "predicted_state_sha256": "f1ccda4a4a51a13b03e61826de0012d7ad484d0effc54f0e33f946a3650866b2",
+      "queries": 90,
+      "sequences": 8
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 10359,
+      "highest_path": 4096,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 4195,
+      "name": "fresh_wide_horizon",
+      "packet_sha256": "e1bf8873bf225cc5da64be0bea7c4c92cf720fb313973984af1a5a84ed360e91",
+      "predicted_state_sha256": "124e17049aec0844262683c33332251fb1951bc9aea6db61a18b91fa73d2bf4c",
+      "queries": 4143,
+      "sequences": 6
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "literal_improvement",
+        "search_tree"
+      ],
+      "events": 42,
+      "highest_path": 4,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 16368,
+      "name": "fresh_wide_short",
+      "packet_sha256": "8f0d75519e8b94120d54c96d218a7e0586c1a41dbdde5c9bdca270608896e5e7",
+      "predicted_state_sha256": "96cef0a08115f4580c0e70cd1ee81970a33ba621345614e1477c277b8137ef0f",
+      "queries": 16,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 16,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2
+      ],
+      "max_last": 16376,
+      "name": "fresh_wide_window16",
+      "packet_sha256": "fa07239eac9d14f1789bd4afdb2ff667fe75b5ad48449a3b5450dfa02fa0c067",
+      "predicted_state_sha256": "f9ba0ade16934da9e3b9cf940c193caf031276ba40afc74c95c619d5a33c240a",
+      "queries": 8,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "coverage": [
+        "initial_no_match",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 16377,
+      "highest_path": 0,
+      "hypothesized_kinds": [
+        0
+      ],
+      "max_last": 0,
+      "name": "fresh_noise16k",
+      "packet_sha256": "a3b3687dc677f473af6bc547d9df9979ee1962e11e6e21c3bf960d906d71b049",
+      "predicted_state_sha256": "4ab7360b2160062bc19fdbe24987b4122c3b9bbda901f6fd629c49835a342f27",
+      "queries": 16375,
+      "sequences": 0
+    }
+  ],
+  "qualification": "Independent fresh predictions with explicit publication hypotheses; no C execution or fresh production qualification.",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1
+}

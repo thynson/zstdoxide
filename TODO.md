@@ -147,7 +147,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [ ] Extend private retained path/coordinator admission and match all wider states and publications.
 - [ ] Qualify wider retained bounds, future-byte isolation, exact owners and poisoned resets.
 - [x] Design wider complete fresh-block observations separately from retained scheduling.
-- [ ] Freeze full fresh source transport/model/recipes and reconcile existing startup observations.
+- [x] Freeze full fresh source transport/model/recipes and reconcile existing startup observations.
 - [ ] Preflight, capture and independently audit complete wider fresh blocks and frames.
 - [ ] Project and qualify wider fresh fixtures before extending private fresh composition.
 - [ ] Freeze successor public admission mappings and independently reconstruct every newly admitted tuple.

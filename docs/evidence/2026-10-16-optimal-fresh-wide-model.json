@@ -1,0 +1,57 @@
+{
+  "archive": "2026-10-16-optimal-fresh-wide-model.tar.gz",
+  "archive_bytes": 10949,
+  "archive_sha256": "18a7d117e97461af3ced2b6ed5da823c0e794162d831d181e056a6806d4dc393",
+  "files": [
+    {
+      "path": "check-optimal-fresh-wide-model.log",
+      "bytes": 995,
+      "sha256": "0418e83971bd49f6b6fee2b203be676252f95f7a259c3adf8e8130b8e6b0011b"
+    },
+    {
+      "path": "check-optimal-fresh-wide-model-optimized.log",
+      "bytes": 995,
+      "sha256": "0418e83971bd49f6b6fee2b203be676252f95f7a259c3adf8e8130b8e6b0011b"
+    },
+    {
+      "path": "plan-optimal-fresh-wide.log",
+      "bytes": 121,
+      "sha256": "63df067e2d05a841972460fe41510c1d4fee01fa444d8f0b474753f96ea52879"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-recipes-inspect.log",
+      "bytes": 6348,
+      "sha256": "1dabe979b67c17e44e7c8f50d233e2ca4755727a7cabf4b047a1197936239bc5"
+    },
+    {
+      "path": "scripts/check_optimal_fresh_wide_model.py",
+      "bytes": 7195,
+      "sha256": "0eaa5d59b49b4cfb8d64584320145058ea2448fbcc232d3009759d98e5a92423"
+    },
+    {
+      "path": "scripts/oracles/optimal_fresh_wide.py",
+      "bytes": 2330,
+      "sha256": "a12a6745a47306f2a90b1fd0a88a91f2c1b6463830de845410a1f8b24136ed8c"
+    },
+    {
+      "path": "scripts/oracles/optimal_fresh_wide_validation.py",
+      "bytes": 7231,
+      "sha256": "321e9c113f826a34016f0f2fcc37fa3755afade62ae2498349e08b076aa9e752"
+    },
+    {
+      "path": "scripts/oracles/optimal_fresh_wide_recipes.py",
+      "bytes": 1088,
+      "sha256": "49f93c8c570f857b636f4dd621094c9c96d71f7f953b1e6020bc84f9c5e6756d"
+    },
+    {
+      "path": "scripts/plan_optimal_fresh_wide.py",
+      "bytes": 2398,
+      "sha256": "69295305d44ccc1717660c51e755f577354de4397e2416daaac15d61f386e618"
+    },
+    {
+      "path": "tests/fixtures/reference-optimal-fresh-wide-recipes/recipes.json",
+      "bytes": 13994,
+      "sha256": "e943081004aa5a4fc144b68e168fd5575a62b07fdd9f97a2722e97db15f7ec8c"
+    }
+  ]
+}
