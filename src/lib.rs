@@ -209,3 +209,7 @@ pub use stream::{EndDirective, Progress, StreamStatus};
 pub use stream_decode::Decoder;
 pub use stream_encode::{Encoder, EncoderOptions};
 pub use training::{RawTrainingOptions, train_raw_dictionary, train_raw_dictionary_in};
+
+#[cfg(test)]
+#[path = "../tests/support/optimal_retained_wide_fixture.rs"]
+mod optimal_retained_wide_fixture;

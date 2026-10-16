@@ -31,3 +31,13 @@ every strict frame prefix. Strict all-feature/all-test Clippy, formatting and
 true no_std compilation pass. A collapsible test-condition lint was repaired;
 the malformed-input test was rerun and both lint logs are preserved. This
 qualifies the fixture reader, not wider production parsing.
+
+Private retained search now admits exactly the wider captured scalar domain.
+All 12,510 queries match native candidates, every head/edge/short cell and both
+frontiers. Twenty-two focused tests pass in six configurations: safe, each of
+the three search leaf features, all features and release/all features (132
+executions). Strict all-test/all-feature Clippy, formatting and no_std compile
+pass with unchanged source hashes. Negative controls check complete source
+within window, geometry/block caps and rejection before mutation; changing
+future backing bytes cannot affect an active 8-KiB long match or table state.
+Fresh and direct-query bounds remain unchanged.

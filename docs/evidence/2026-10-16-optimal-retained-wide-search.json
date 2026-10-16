@@ -1,0 +1,67 @@
+{
+  "archive": "2026-10-16-optimal-retained-wide-search.tar.gz",
+  "archive_bytes": 3487,
+  "archive_sha256": "324c431a4764463c6493e144307d3110d1280b99d5cfcf201375d2ecfc045e36",
+  "files": [
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/all.log",
+      "bytes": 2462,
+      "sha256": "7421cdf128edbf6487300ad7e7f9f3e20e167af54d66d210e8c49f1c17c8026e"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/clippy.log",
+      "bytes": 142,
+      "sha256": "22a8e557bec3128735630550fd0b43b73c79109c68cf5af39935386b9f384d83"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/evidence.json",
+      "bytes": 3659,
+      "sha256": "cc9e7a0c9b8c53d3e624d71b5549bf292fd1dc05f7e8aec56f44ed1de8caccc9"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/matches.log",
+      "bytes": 2462,
+      "sha256": "9a225495b3c9812d8857ff7eee1836726db1ead89152c7f0e42fe06c43c036c0"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/nostd.log",
+      "bytes": 142,
+      "sha256": "5967961c06ccb338b8c0e29f3dc370050347170660ce19eec0e04d92c9f914e4"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/release-all.log",
+      "bytes": 2452,
+      "sha256": "346ea48d25683dbef325ebb3a88bfd664ea528bcb4ef21afeb78f3f40c95f303"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/safe.log",
+      "bytes": 2462,
+      "sha256": "a9ff1a9c55f7e6ab9fbf575effa359efe34bd36db8387d54ce0310616a85b10a"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/short.log",
+      "bytes": 2462,
+      "sha256": "db38892a6c5b87bc9a350b8fcbd0b4e9fc4a822c9ab905fd14cfdb0b7748b3b4"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-search-checks/tree.log",
+      "bytes": 2462,
+      "sha256": "825d5f94ea004d83c89109d20b87a8aa31deed27ee30b2e594f3f3c3c22ad89d"
+    },
+    {
+      "path": "check-optimal-retained-wide-search.py",
+      "bytes": 1864,
+      "sha256": "c832e3f48510c7407143d0fc49544a0fedeae4c193bbe77d59a180de3eb3b90e"
+    },
+    {
+      "path": "optimal-retained-wide-search-initial.log",
+      "bytes": 2236,
+      "sha256": "ca3bf7b2917fbb04aa4bbfb0900bf6b2ebc94d3e6796a633525b65c24e566bc1"
+    }
+  ]
+}

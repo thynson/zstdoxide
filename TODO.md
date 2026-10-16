@@ -143,7 +143,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Specify the wider retained binary fixture and independent horizon/source checks.
 - [x] Project audited wider sparse states and complete frames into an immutable fixture.
 - [x] Qualify the wider fixture reader and independent complete-frame decoding.
-- [ ] Extend private retained search admission and match every wider query, complete map and frontier.
+- [x] Extend private retained search admission and match every wider query, complete map and frontier.
 - [ ] Extend private retained path/coordinator admission and match all wider states and publications.
 - [ ] Qualify wider retained bounds, future-byte isolation, exact owners and poisoned resets.
 - [x] Design wider complete fresh-block observations separately from retained scheduling.
