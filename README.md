@@ -10,7 +10,8 @@ zstd**. Its one-shot and streaming decoders handle standard frames with raw or
 formatted dictionaries. Its encoder provides independent Greedy, Chain and Lazy
 strategies, Huffman literal compression and reuse, and adaptive sequence entropy
 tables. Greedy is the named API default. Separate whole-buffer entry points
-execute bounded reference Fast, DoubleFast, Greedy, Lazy and Lazy2 profiles,
+execute bounded reference Fast, DoubleFast, Greedy, Lazy, Lazy2, BinaryTreeLazy2
+and Optimal profiles,
 including levels 0–6 and negative levels across source tiers, without a dictionary.
 Higher admitted levels depend on input size and local resource limits. Their parsers follow the pinned
 sampling and repeat rules; entropy
@@ -71,7 +72,7 @@ by the Rust encoder. See [parameter usage](docs/parameter-usage.md) and
 [validation scope](docs/compression-parameters-validation.md).
 
 `compress_at_level` and `compress_with_parameters` execute resolved Fast,
-DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 profiles. Fast supports windows up to 1 MiB and hash logs up to 18;
+DoubleFast, Greedy, Lazy, Lazy2, BinaryTreeLazy2 and Optimal profiles. Fast supports windows up to 1 MiB and hash logs up to 18;
 DoubleFast supports windows up to 2 MiB and independent long/short table logs
 up to 18. Greedy, Lazy and Lazy2 support windows up to 2 MiB and hash logs up to 19, selecting
 chain storage through window log 14 and row storage above it. Levels 0/3 select DoubleFast; levels 1/2 and negative levels are supported
@@ -81,7 +82,11 @@ source tiers select Greedy. BinaryTreeLazy2 uses paired tree edges, with window
 log at most 21, independent hash/chain logs at most 19 and search log at most 8.
 Levels 5/6 are supported across tiers; levels 7–9 through 256 KiB, and levels
 10–12 above 16 KiB through 256 KiB. Level 10 at smaller sizes and levels 7–15
-above 256 KiB return resource errors; unsupported strategies remain distinct. These APIs write
+above 256 KiB return resource errors. Optimal admits one complete 64–16,384-byte
+source inside its window, window logs up to 16, hash/chain logs up to 12, search
+logs up to 6 and target lengths up to 4095. Default levels 11/12 additionally
+work for 64–2,048 bytes; other smaller-source strategy-7 requests outside these
+caps return resource errors. Ultra/Ultra2 remain unsupported. These APIs write
 a known-size frame without a checksum and preserve the resolved window. They do not change the named APIs or provide
 live numeric streaming settings. See [reference profile usage](docs/reference-fast-usage.md)
 for overrides, allocator ownership, frame flags, and algorithm-specific caps.
@@ -145,10 +150,10 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-row-table` | Checked row position/tag storage for the reference lazy family |
 | `unsafe-dictionary` | Validated immutable dictionary-content access |
 | `unsafe-training` | Bounded raw-training frequency cells |
-| `unsafe-optimal-paths` | Private initialized Optimal path cells with checked phase and slot access |
-| `unsafe-optimal-matches` | Private bounded Optimal candidate storage with checked live-prefix access |
-| `unsafe-optimal-short-key` | Private optional Optimal short-key heads with checked cell access |
-| `unsafe-optimal-frequencies` | Private checked Optimal frequency cells; public strategy 7 remains unsupported |
+| `unsafe-optimal-paths` | Initialized Optimal path cells with checked phase and slot access |
+| `unsafe-optimal-matches` | Bounded Optimal candidate storage with checked live-prefix access |
+| `unsafe-optimal-short-key` | Optional Optimal short-key heads with checked cell access |
+| `unsafe-optimal-frequencies` | Checked Optimal frequency cells for bounded public strategy 7 |
 
 Plain scalar records share a representation; they have no pointer access to
 replace. Every unsafe block has a local proof, and no unsafe operation is exposed

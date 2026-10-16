@@ -2,7 +2,10 @@
 #![forbid(unsafe_code)]
 #![cfg_attr(
     not(test),
-    allow(dead_code, reason = "Private composition precedes public dispatch")
+    allow(
+        dead_code,
+        reason = "Internal state diagnostics share the checked composition"
+    )
 )]
 use crate::optimal_frequencies::OptimalFrequencies;
 use crate::optimal_parse::{OptimalParser, PathEvent, PathObserver};

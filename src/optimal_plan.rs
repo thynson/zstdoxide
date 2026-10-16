@@ -2,7 +2,10 @@
 #![forbid(unsafe_code)]
 #![cfg_attr(
     not(test),
-    allow(dead_code, reason = "Private plan precedes public dispatch")
+    allow(
+        dead_code,
+        reason = "Internal layout diagnostics share the checked execution plan"
+    )
 )]
 
 use crate::optimal_frequencies::CELLS;

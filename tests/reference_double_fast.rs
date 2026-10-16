@@ -136,7 +136,14 @@ fn each_resource_cap_and_unsupported_strategy_precede_clones_and_allocation() {
     for strategy in [ReferenceStrategy::Optimal, ReferenceStrategy::Ultra2] {
         let mut changed = request;
         changed.set_strategy(Some(strategy));
-        requests.push((changed, Error::UnsupportedFeature));
+        requests.push((
+            changed,
+            if strategy == ReferenceStrategy::Optimal {
+                Error::ResourceLimit
+            } else {
+                Error::UnsupportedFeature
+            },
+        ));
     }
     for (request, error) in requests {
         let owner = TrackingAllocator::new(AllocatorConfig {

@@ -9,7 +9,7 @@ Clippy run exposed an unused getter in this still-private composition; a layout
 contract assertion now covers it. Both runs are retained in
 `docs/evidence/2026-10-16-optimal-public-plan.tar.gz`.
 
-Public dispatch remains closed pending private token/frame qualification.
+Public dispatch was initially closed until the private token/frame checks below completed.
 
 The private token state preserves nine independent allocator identities and the
 exact captured wire offset intent. Every automatic-literal observed case matches
@@ -44,3 +44,15 @@ passed in six configurations (72 executions), including FSE encoder, bitstream,
 Huffman codebook, all-feature and release-all builds, plus strict Clippy, no_std,
 formatting and unchanged source barriers. Initial diagnostic failures are
 preserved in `docs/evidence/2026-10-16-optimal-three-byte-entropy.tar.gz`.
+
+Bounded public strategy-7 dispatch is enabled after those private checks. Five
+public admission, frame, ownership and platform-oriented tests passed in safe,
+all-feature and release-all builds (15 executions), with strict Clippy, no_std
+and formatting. The initial periodic three-byte failure is preserved alongside
+the successful rerun. Current expectation helpers use the additive v6 tables;
+original C selectors, source bytes, numeric assertions and all historical policy
+tables remain unchanged. Default-level error tests keep their original source
+sizes while distinguishing newly implemented resource-limited Optimal requests
+from unimplemented Ultra/Ultra2. Full regression, native interoperability,
+foreign platforms and equivalent-workload measurements remain separate gates.
+Evidence: `docs/evidence/2026-10-16-optimal-public-admission.tar.gz`.

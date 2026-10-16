@@ -319,7 +319,7 @@ fn unsupported_and_resource_failures_precede_allocator_clone_or_requests() {
     let mut unsupported = double_resource;
     unsupported.set_strategy(Some(ReferenceStrategy::Optimal));
     for (request, error) in [
-        (unsupported, Error::UnsupportedFeature),
+        (unsupported, Error::ResourceLimit),
         (double_resource, Error::ResourceLimit),
         (window, Error::ResourceLimit),
         (hash, Error::ResourceLimit),

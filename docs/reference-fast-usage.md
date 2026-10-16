@@ -38,9 +38,10 @@ adjustment. It is not a fixed level allowlist:
 | Level 8 | Lazy2; sizes above 262144 exceed resource caps |
 | Level 9 | BinaryTreeLazy2 through 16384 bytes; Lazy2 through 262144; larger inputs exceed resource caps |
 | Level 10 | Resource error through 16384 bytes (tree search log 9); Lazy2 for sizes 16385..=262144; larger inputs exceed resource caps |
-| Levels 11/12 | BinaryTreeLazy2 for sizes 16385..=262144; resource errors above that; unsupported at smaller sizes |
-| Levels 13–15 | Resource errors above 262144 bytes; unsupported strategies at smaller sizes |
-| Levels 16+ | Unsupported strategies |
+| Levels 11/12 | Optimal for sizes 64..=2048; BinaryTreeLazy2 for 16385..=262144; resource errors elsewhere |
+| Levels 13–15 | Resource errors above 262144 bytes; smaller resolved Optimal tuples also exceed local caps, while Ultra/Ultra2 remain unsupported |
+| Levels 16/17 | Resource errors above 262144 bytes; Ultra/Ultra2 at smaller sizes remain unsupported |
+| Levels 18+ | Unsupported strategies |
 | Other resolved strategy | `Error::UnsupportedFeature`; no replacement algorithm |
 
 Frames carry the exact source size, no checksum and no dictionary identifier.
@@ -180,8 +181,33 @@ source width uses tree storage; no row table is selected. Minimum-match 3/4 and
 6/7 equivalences, ignored target length, known-source hints, transactional repeat
 publication and fallible exact-allocator ownership follow the qualified contract.
 The `unsafe-reference-tree` feature selects checked tree-cell access independently
-of every other backend. Optimal and Ultra strategies remain unsupported.
+of every other backend. Ultra and Ultra2 strategies remain unsupported.
 
 Ordinary sequence/state conformance and public cross-decoding are documented in
 [tree validation](reference-tree-validation.md). Rust entropy choices remain
 independent; C-identical compressed frames and compression ratios are not promised.
+
+
+## Bounded Optimal requests
+
+`ReferenceStrategy::Optimal` implements the pinned no-dictionary optLevel0
+parser for one complete source of 64..=16,384 bytes contained in its window.
+Admission follows known-size resolution: window log 10..=16, hash/chain logs
+6..=12, search log 1..=6, minimum-match setting 3..=7 and target 0..=4095.
+Default levels 11/12 fit these caps for sources of 64..=2,048 bytes. Larger
+admitted sources require bounded explicit table/search settings. The ordinary
+zero-override semantics still apply; zero does not force a zero preset value.
+
+Seven independent parser/search owners hold frequency counts, fixed path and
+candidate cells, tree heads/edges and optional three-byte-key heads. Literal
+and sequence scratch retain two additional allocator identities. Minimum 3
+uses the short-key table and permits three-byte matches; other settings use
+four-byte minimum matches. Exact wire repeat choices survive token collection.
+The shared frame entropy path publishes repeats only for compressed output.
+Argument/resource rejection occurs before cloning or allocating; subsequent
+allocation errors release every temporary owner. Input/source hints, frame flags
+and independent entropy behavior follow the existing complete-buffer API.
+
+The initial public scope excludes tiny inputs, sources above 16 KiB, window
+expiry, retained blocks, dictionaries and Ultra/Ultra2 parsing. The retained
+Optimal coordinator remains a separately tested private implementation.

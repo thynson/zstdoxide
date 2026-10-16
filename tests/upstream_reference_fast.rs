@@ -388,33 +388,33 @@ fn fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equal
     assert_eq!((admitted, unsupported, resource), (9, 9, 1));
 }
 
-// Version5 expectations are additive fixtures. Original C selector tuples and
-// Module12/13/14/15 success/failure evidence retain their historical policy unchanged.
+// Version6 expectations are additive fixtures. Original C selector tuples and
+// Module12/13/14/15/16 success/failure evidence retain their historical policy unchanged.
 fn successor_fuzz_status(name: &str, size: usize, level: i32) -> &'static str {
-    let mut rows = include_str!("fixtures/reference-admission-v5/fuzz.tsv")
+    let mut rows = include_str!("fixtures/reference-admission-v6/fuzz.tsv")
         .lines()
         .skip(1)
         .map(|line| line.split('\t').collect::<Vec<_>>())
         .filter(|row| row[0] == name);
     let row = rows.next().unwrap();
     assert!(rows.next().is_none());
-    assert_eq!(row.len(), 9);
+    assert_eq!(row.len(), 12);
     assert_eq!(row[2].parse::<usize>().unwrap(), size);
     assert_eq!(row[3].parse::<i32>().unwrap(), level);
-    row[5]
+    row[6]
 }
 
 fn successor_loop_status(family: &str, size: usize, level: i32) -> &'static str {
-    let mut rows = include_str!("fixtures/reference-admission-v5/loops.tsv")
+    let mut rows = include_str!("fixtures/reference-admission-v6/loops.tsv")
         .lines()
         .skip(1)
         .map(|line| line.split('\t').collect::<Vec<_>>())
         .filter(|row| row[0] == family && row[2].parse::<i32>().unwrap() == level);
     let row = rows.next().unwrap();
     assert!(rows.next().is_none());
-    assert_eq!(row.len(), 8);
+    assert_eq!(row.len(), 11);
     assert_eq!(row[1].parse::<usize>().unwrap(), size);
-    row[4]
+    row[5]
 }
 
 #[test]

@@ -34,10 +34,6 @@ pub(crate) enum ReferenceSearchPlan {
     Fast(FastExecutionPlan),
     DoubleFast(DoubleFastExecutionPlan),
     Greedy(GreedyExecutionPlan),
-    #[cfg_attr(
-        not(test),
-        allow(dead_code, reason = "Private composition precedes public admission")
-    )]
     Optimal(OptimalExecutionPlan),
 }
 
@@ -66,6 +62,10 @@ impl ReferenceSearchPlan {
             }
             ReferenceStrategy::BinaryTreeLazy2 => {
                 GreedyExecutionPlan::from_tree_parameters(parameters, source_len).map(Self::Greedy)
+            }
+            ReferenceStrategy::Optimal => {
+                OptimalExecutionPlan::from_resolved_parameters(parameters, source_len)
+                    .map(Self::Optimal)
             }
             _ => Err(Error::UnsupportedFeature),
         }
