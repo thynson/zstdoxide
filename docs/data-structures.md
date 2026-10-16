@@ -1982,3 +1982,33 @@ Invalid phase/schedule arguments leave state unchanged; internal or observer
 failure poisons reuse until resetting every owner. Parse, publication and reset
 introduce no allocations. Existing per-owner unsafe features select storage only;
 all coordination and source-bound logic remain safe Rust.
+
+### Wider retained sparse observation design
+
+Before widening production admission, an additive `ZOPRW02` request will retain
+one contiguous source <=16,384 bytes, two to four blocks of 64..8,192 bytes,
+W10..16/H6..12/C6..12/S1..6, minimum 3..7 and target <=4095. Total source must fit
+the selected window, so this stage still excludes history expiry. Ordinary
+short-head geometry is the selected window. All 4,099 path cells participate;
+this covers the actual 4,096-position horizon with its reconstruction slots.
+
+The observer owns fixed initialized previous-path and flattened previous-search
+arrays outside the CCtx. It emits canonical increasing changed-cell deltas rather
+than full arrays. These observer baselines reset only between padding passes;
+they persist across blocks. A pre-query sparse record is measured against the
+preceding complete search state and must be empty. Post-query deltas advance the
+baseline. Frequency counts/sums/prices and per-block sequence records remain
+complete. Every source access and owner extent retains the existing guards and
+unchanged-provider instrumentation; no parser statement is substituted.
+
+The independent model uses the already qualified integer transitions, separately
+bounded wider request validation, and independently computed sparse snapshots.
+It must reproduce the existing sixteen captures after lossless projection into
+the sparse representation before any wider native execution. New source-only
+recipes must demonstrate long matches, high path indices, sufficient-length and
+horizon decisions, block-boundary queries and repeat rollback where predictable.
+Wire publication remains an explicit hypothesis checked against actual frames.
+Source, packet, event, per-command output and aggregate campaign limits must be
+frozen before native execution. Fixture projection will preserve all changed
+cells and independently validate unchanged prior state; no sampled-state claim
+may replace complete-state qualification.
