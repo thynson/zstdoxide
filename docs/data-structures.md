@@ -1811,3 +1811,25 @@ observer and predecessor source manifests remain unchanged. If executable
 preflight exposes a helper problem, preserve that failure and use a versioned
 successor helper with an explicit reviewed diff. No search admission changes
 precede the successful state, frame, and forged-evidence gates.
+
+
+### Fresh startup fixture projection
+
+The proposed `ZOSFX01` envelope stores twelve cases with copied W/H/C/S geometry,
+complete frame bytes, separate normal/sanitized allocation triples, one embedded
+`ZOPFX01` path case and canonical complete-search deltas per event. Existing path
+reader invariants can therefore validate path/frequency/repeat/source state without
+editing frozen predecessor fixtures. Its callback list is the unique observed
+nonempty query projection, not a callback supplied to C: repeated positions must
+have identical candidate lists or projection rejects. The ordinary Rust integration
+must ignore that list for candidate production and compare its own search output.
+
+Each embedded path case borrows name/source, owns fallibly allocated event deltas,
+and inherits the independent path reader's source-match and reconstruction checks.
+Search arrays flatten heads, paired node cells, optional short heads and the two
+biased frontiers. Canonical deltas include every changed word, with ordered unique
+indices and no unchanged entries. Pre-query snapshots must equal the previous
+complete search state; each event retains its complete post-state through deltas.
+The independent Rust reader validates geometry, fixed extents, raw-index domains,
+canonical ordering, event correspondence and exact EOF before exposing fixtures.
+No new unsafe backend is needed for test-only records or borrowed fixture spans.
