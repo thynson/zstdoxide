@@ -1,0 +1,112 @@
+{
+  "archive": "2026-10-16-optimal-token-state.tar.gz",
+  "archive_bytes": 3890,
+  "archive_sha256": "ce6ce6daebcd0960f8f46eee4d51c2fc85d05b1b5ddb77c7170829ad36081fcf",
+  "files": [
+    {
+      "path": "check-optimal-token-state.py",
+      "bytes": 2211,
+      "sha256": "f7c8e44c400a2ce36d939c10190cf69f58b510303b5dd77a737fde3ab07293d8"
+    },
+    {
+      "path": "check-optimal-token-state.log",
+      "bytes": 81,
+      "sha256": "c8b109f26fc82c4b126d1bd51e5f298afee2423d96c3ea2a34b44567e77e24a1"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/all.log",
+      "bytes": 767,
+      "sha256": "77d3e02d8f05243e7ccc71bf43c0a51076c2eb6f0fbee60b92c01301e335e44e"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/clippy.log",
+      "bytes": 130,
+      "sha256": "8f629e3f2e930cdeb2704ae198473269c72b7dff4f9d8b2df7d94da1fc015dd2"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/evidence.json",
+      "bytes": 4132,
+      "sha256": "1abb614f2ae4bf246ecaa5c7b9d60a2003dae344aa9cacdc9d01df9b27481fb5"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/frequencies.log",
+      "bytes": 767,
+      "sha256": "7a89c16a3f3e86c3c6b28d1ae4b318be8f8874d2688c946d0af75d88402fa70e"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/nostd.log",
+      "bytes": 130,
+      "sha256": "34c669ee798338be805c0588ae10f0fbc32a77d2ed9790a4a571b386ca21561d"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/paths.log",
+      "bytes": 767,
+      "sha256": "5ba4acf845c4216669ac90a043d2e3f6adeb0dbd3a699919fbe8a37c15e70d45"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/release-all.log",
+      "bytes": 771,
+      "sha256": "37ebbc1f91b60a18dab1aad54dc51da284d7676730fe1cc8a2b1849ae56cfc3c"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/safe.log",
+      "bytes": 822,
+      "sha256": "49f8040588e2c00f5038b36d50cf166ae9c1d8bc07b620f7b0d78a25cf3641d8"
+    },
+    {
+      "path": "zstdoxide-optimal-token-state-checks/search.log",
+      "bytes": 767,
+      "sha256": "d5d6d0b110515ac3670c55e3cebb51734390c8252b61e6f252a8dae947af87df"
+    },
+    {
+      "path": "check-optimal-token-constructor.py",
+      "bytes": 2039,
+      "sha256": "6e2a271f226f574591549312a4f9035a8702fc35230bc7ecb784392aad1c177e"
+    },
+    {
+      "path": "check-optimal-token-constructor.log",
+      "bytes": 50,
+      "sha256": "969538bffc7ce4844876004f7117024547b5ed9d9e73679e19385a04e18ba59c"
+    },
+    {
+      "path": "zstdoxide-optimal-token-constructor-checks/all.log",
+      "bytes": 462,
+      "sha256": "885515e8ff0d44584292e1959faa89d26e2d7786dda6b3405d5654e54131626a"
+    },
+    {
+      "path": "zstdoxide-optimal-token-constructor-checks/clippy.log",
+      "bytes": 130,
+      "sha256": "e527f69cd9f248dbc5302b8ad7bc89d31ad83385a86177ba921265a8d91cbeea"
+    },
+    {
+      "path": "zstdoxide-optimal-token-constructor-checks/evidence.json",
+      "bytes": 2955,
+      "sha256": "b64809671b7c55648ebab5a3070d1813ca489a3a228a422af3c9eb96de6b97e5"
+    },
+    {
+      "path": "zstdoxide-optimal-token-constructor-checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-token-constructor-checks/nostd.log",
+      "bytes": 130,
+      "sha256": "30d33532a3a4db2c8933f9757e12515d8bc225c159fc789dfa7dbc7d6d4e18a8"
+    },
+    {
+      "path": "zstdoxide-optimal-token-constructor-checks/release-all.log",
+      "bytes": 466,
+      "sha256": "e0d3d6484cd1ea943cfc81314738027cefadd457cae5f1c54e4f2d2ccb1eff55"
+    },
+    {
+      "path": "zstdoxide-optimal-token-constructor-checks/safe.log",
+      "bytes": 462,
+      "sha256": "f2cfa29711327192bda4c98e1fe9c8f6cdd84d7513233f419059a2ec977f57df"
+    }
+  ]
+}

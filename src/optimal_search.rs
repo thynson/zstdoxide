@@ -62,6 +62,9 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             retained: None,
         })
     }
+    pub(crate) const fn layout(&self) -> OptimalSearchLayout {
+        self.layout
+    }
     /// Pair an untouched search with the exact immutable source used by a parser.
     /// Parameter rejection does not clear or otherwise modify existing owners.
     pub(crate) fn validate_fresh_start(

@@ -241,6 +241,20 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         self.status = Status::Finished;
         Ok(result)
     }
+    pub(crate) fn fresh_configuration(&self) -> Result<(&'a [u8], usize, usize, bool)> {
+        if !(64..=16384).contains(&self.source.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        if self.status != Status::Ready || self.retained_end != 0 {
+            return Err(Error::InvalidState);
+        }
+        Ok((
+            self.source,
+            self.minimum,
+            self.target,
+            self.frequencies.disabled_literals(),
+        ))
+    }
     pub(crate) fn retained_configuration(&self) -> Result<(&'a [u8], usize, usize)> {
         if !(128..=16384).contains(&self.source.len()) {
             return Err(Error::InvalidParameter);

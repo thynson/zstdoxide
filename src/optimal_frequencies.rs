@@ -103,6 +103,9 @@ fn refreshed(sums: [u32; 4], disabled_literals: bool) -> Result<[u32; 4]> {
 }
 
 impl<A: Allocator> OptimalFrequencies<A> {
+    pub(crate) const fn disabled_literals(&self) -> bool {
+        self.disabled_literals
+    }
     pub(crate) fn new_in(disabled_literals: bool, owner: A) -> Result<Self> {
         let mut counts = Vec::new_in(owner);
         counts

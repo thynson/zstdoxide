@@ -153,7 +153,11 @@ impl PlannedSequence {
 }
 
 /// Evaluates one repeat value without modifying the caller's state.
-fn repeated_offset(repeat: [u32; 3], value: u32, no_literals: bool) -> Option<(u32, [u32; 3])> {
+pub(crate) fn repeated_offset(
+    repeat: [u32; 3],
+    value: u32,
+    no_literals: bool,
+) -> Option<(u32, [u32; 3])> {
     match (no_literals, value) {
         (false, 1) => Some((repeat[0], repeat)),
         (false, 2) | (true, 1) => Some((repeat[1], [repeat[1], repeat[0], repeat[2]])),

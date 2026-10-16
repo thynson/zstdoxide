@@ -219,3 +219,5 @@ mod optimal_retained_wide_fixture;
 mod optimal_fresh_wide_fixture;
 
 mod optimal_plan;
+
+mod optimal_state;
