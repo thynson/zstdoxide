@@ -16,3 +16,11 @@ request field; initial runs whose similarly named control changed a resolved
 coordinate are also retained. This is recipe/model qualification only. Public
 enabling, native interoperability, offline captured-evidence controls and final
 configuration checks are subsequent gates.
+
+Normal and optimized preflight independently enumerate 14,350 unique ordered
+command labels: 66 metadata/build operations, 156 malformed exchanges and
+14,128 case exchanges. Both reject eight altered-pin/JSON/order controls and
+launch no children. The reviewed generic adapters remain byte-identical;
+controller and auditor counts are bound to the 1,269-case manifest. Expected
+decoded totals are 4,636 frames in each direction and 797,537,304 bytes. These
+remain predictions until actual public capture and response replay pass.

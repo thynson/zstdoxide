@@ -159,6 +159,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Freeze source-aware successor mappings and independently reconstruct every historical Optimal tuple.
 - [x] Freeze new positive public recipes and independently reconstruct every admitted tuple.
 - [ ] Enable bounded public Optimal dispatch and preserve original selector/numeric assertion inputs.
+- [x] Preflight the exact public interoperability command inventory and reused generic adapters.
 - [ ] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
 - [ ] Run all safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and selected foreign/no-atomics checks.
 - [ ] Freeze equivalent complete frames/owners, then measure all backends and a separate safe/all repeat after CPU barriers.

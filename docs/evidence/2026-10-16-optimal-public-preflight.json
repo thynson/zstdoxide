@@ -1,0 +1,42 @@
+{
+  "archive": "2026-10-16-optimal-public-preflight.tar.gz",
+  "archive_bytes": 96397,
+  "archive_sha256": "3461aa5736a510e296ea156bb23cbd89388c16d6c243bdb02efa8c505ef08617",
+  "files": [
+    {
+      "path": "zstdoxide-optimal-public-preflight-normal/evidence.json",
+      "bytes": 1754,
+      "sha256": "a4b29a0008f9659bc23c50825d2921a089aed99f6c416b20d966bf30e81ba859"
+    },
+    {
+      "path": "zstdoxide-optimal-public-preflight-normal/labels.json",
+      "bytes": 508431,
+      "sha256": "56889380a1bf7318a022497514a136fba58623499cbd91f34b7c0b2f2772c3bf"
+    },
+    {
+      "path": "zstdoxide-optimal-public-preflight-optimized/evidence.json",
+      "bytes": 1754,
+      "sha256": "a4b29a0008f9659bc23c50825d2921a089aed99f6c416b20d966bf30e81ba859"
+    },
+    {
+      "path": "zstdoxide-optimal-public-preflight-optimized/labels.json",
+      "bytes": 508431,
+      "sha256": "56889380a1bf7318a022497514a136fba58623499cbd91f34b7c0b2f2772c3bf"
+    },
+    {
+      "path": "scripts/check_optimal_interop_plan.py",
+      "bytes": 4892,
+      "sha256": "5b596e5ef4a7cd211b212bce9a34f2e88e9bb4f041f5e771fdf349025aa6e93f"
+    },
+    {
+      "path": "scripts/capture_optimal_interop.py",
+      "bytes": 19476,
+      "sha256": "654b322cec77fdbe44f21546a39ec63554f85b2bf6f982f7fa03ef4cfa54b72e"
+    },
+    {
+      "path": "scripts/check_optimal_interop_capture.py",
+      "bytes": 20818,
+      "sha256": "3792eef6758f0c60a76641c0aefd072d2ce0ada6b09ece639401ca9dba444de6"
+    }
+  ]
+}
