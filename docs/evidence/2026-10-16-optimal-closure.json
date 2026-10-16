@@ -1,0 +1,157 @@
+{
+  "status": "passed",
+  "recorded_utc": "2026-10-16T05:51:59.027533+00:00",
+  "module": 17,
+  "scope": "Bounded complete fresh no-dictionary Optimal frames; private retained state separately qualified but not publicly admitted.",
+  "verified_evidence": [
+    {
+      "report": "docs/evidence/2026-10-16-optimal-public-full-safe-v3.json",
+      "report_sha256": "889c0a92523e6fc1cd2a5d59f7c7a799ad24edaba9224bf7c85c1b095e545590",
+      "archive": "docs/evidence/2026-10-16-optimal-public-full-safe-v3.tar.gz",
+      "archive_sha256": "7dc2b6944b5e9fe161b3af35073813f14e38c52adc0ef652eb7cef3b19655287"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-public-matrix.json",
+      "report_sha256": "3ba9251c06c9f04e95e1833b327c2abeea56d76ea75f7bce9b0bcf293586c9ae",
+      "archive": "docs/evidence/2026-10-16-optimal-public-matrix.tar.gz",
+      "archive_sha256": "1c59d1b87264bca482b107521a609434ebf31e13b31a76c2c56eda06a3de95de"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-public-full-feature.json",
+      "report_sha256": "ec1a1dfeb824a56c744707c6de6f4c1937280b56ca9b1815405127c04dad46fc",
+      "archive": "docs/evidence/2026-10-16-optimal-public-full-feature.tar.gz",
+      "archive_sha256": "8ac22bd54bab62a7e95cb8bb850966ec0832b8f31f9958360b23c93576bd5185"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-public-docs-audit.json",
+      "report_sha256": "8854088b95b141a1cb52b9cd0bcced3c379855a7713198f333fc81814d4838cf",
+      "archive": "docs/evidence/2026-10-16-optimal-public-docs-audit.tar.gz",
+      "archive_sha256": "d6c52d3038ca5c895fbf99ce55c7a998bd0ee0bc746f301578ca5a4f58353318"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-public-platform.json",
+      "report_sha256": "6816f66a3bbfdbee19da8cab86bbc447a2b21f549030de4c1ff951a2d5ac43f2",
+      "archive": "docs/evidence/2026-10-16-optimal-public-platform.tar.gz",
+      "archive_sha256": "57aaa8c351b5d736745291288fdfae44261f83d71caf9777748711472351713a"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-public-interop.json",
+      "report_sha256": "387bd39838e55a1527b3b87ff6dfce4240720047df460ddc1b114d511a404cd9",
+      "archive": "docs/evidence/2026-10-16-optimal-public-interop.tar.gz",
+      "archive_sha256": "14a3dd64d40c30f2e4f4ba469066f94e784f25a342674a0f7cf3fb9da733b910"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-public-audit-v3.json",
+      "report_sha256": "95fa63cc555f21fbd68d7556fbd77f7ee50739311146ea004d58906b060b3de9",
+      "archive": "docs/evidence/2026-10-16-optimal-public-audit-v3.tar.gz",
+      "archive_sha256": "6975eff54115803f7ccf4993e8738ec0f9377f2148d2f89a3820bab2e68b58eb"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-offline-driver.json",
+      "report_sha256": "9a8de0e2c505af67b49c272c6767a2781ce6d2aad5a2b0804e013171d881d6c2",
+      "archive": "docs/evidence/2026-10-16-optimal-offline-driver.tar.gz",
+      "archive_sha256": "3f60f558e92918e2a3164668292b2b9c02f14ea3ce2c340d1a5a944588ffc8c3"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-frame-projection-v2.json",
+      "report_sha256": "775d09d801e9a894b6846b10cd33809987e67cd6b6d440fa42d5c56b2f2a00af",
+      "archive": "docs/evidence/2026-10-16-optimal-frame-projection-v2.tar.gz",
+      "archive_sha256": "7cf08863f63f1427bd3e737a8a393dc3d216178998796072cc7a00405026516f"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-frame-baseline-reader.json",
+      "report_sha256": "7e0d70ef7ead9f0a33aef355fa9e53f232f97cdfcfc5b94b5cbb2638117567c7",
+      "archive": "docs/evidence/2026-10-16-optimal-frame-baseline-reader.tar.gz",
+      "archive_sha256": "ca3ab3d053bbd8dd50e5650bed853198b8cf1ee2f0fd71036eb906116ee41278"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-frame-clock-free.json",
+      "report_sha256": "efdbe8fd81bb088fbd636e65247eaaff7f32e086ff197cf666368928e0b66278",
+      "archive": "docs/evidence/2026-10-16-optimal-frame-clock-free.tar.gz",
+      "archive_sha256": "4eaf5cc2095ba32b1aad1f98c96f590090a16efd029c89117344cc473af194c6"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-frame-benchmark-controls.json",
+      "report_sha256": "6e5b3a5625ee9b9db3b8bc762bc0d12647eab4ed76b10966445378a2cf68a534",
+      "archive": "docs/evidence/2026-10-16-optimal-frame-benchmark-controls.tar.gz",
+      "archive_sha256": "a69bf462e376cf9f3568ce7e59246f7bab94580e6c519377fa5517280e26943a"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-frame-harness-checks.json",
+      "report_sha256": "70a50bef5c4d17c356e98939a81f89a439d3fd9fc2c7acec5f9e8425cdd5892f",
+      "archive": "docs/evidence/2026-10-16-optimal-frame-harness-checks.tar.gz",
+      "archive_sha256": "5339ac34b24bd55c0adc42b574a664b91718940325b46cf6500e5db1386912c3"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-frame-timed.json",
+      "report_sha256": "42e6f8be48795400eac8993ad809b099d8ebb51071fd7e1b3bf5b04f1329024c",
+      "archive": "docs/evidence/2026-10-16-optimal-frame-timed.tar.gz",
+      "archive_sha256": "9ecb4344a3c009a48d863e50e90a1ce238a4c2aa1c8235b6d83702dae790c563"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-admission-v6.json",
+      "report_sha256": "da4f919da709067b67ca0de7463bb11faf12a8a280f7fb9d730517059fd34600",
+      "archive": "docs/evidence/2026-10-16-optimal-admission-v6.tar.gz",
+      "archive_sha256": "ba17b272146995154ab6c00d2405d554f5b2af6963db9587b3d428c116c0c677"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-public-recipes.json",
+      "report_sha256": "a0f03abdf10d9288d3e035c3892033946e056ccbc5f07999cd5829af404a7c40",
+      "archive": "docs/evidence/2026-10-16-optimal-public-recipes.tar.gz",
+      "archive_sha256": "7eaac07b3e5322a8fd5220bff0a6e1f2008e063fc1afb0b9f415ce7c71fbc173"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-three-byte-entropy.json",
+      "report_sha256": "4d7252efe3301ec804a9981782223b0727aff972b4f4d6bbdce471ecb1017b76",
+      "archive": "docs/evidence/2026-10-16-optimal-three-byte-entropy.tar.gz",
+      "archive_sha256": "4f7787befca04c17cfa8c0a8f7bb6eaebbf3028cf8acf71d402e3ac54c78d0ec"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-token-state.json",
+      "report_sha256": "edad7d2f3c51bbda1191f9464ee010035a76420f282c013422e83b94bfa72359",
+      "archive": "docs/evidence/2026-10-16-optimal-token-state.tar.gz",
+      "archive_sha256": "ce6ce6daebcd0960f8f46eee4d51c2fc85d05b1b5ddb77c7170829ad36081fcf"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-private-frame.json",
+      "report_sha256": "dcfef056e81c621c357f9b043741d71ab3651854822faccc33f9fa942b3ea48f",
+      "archive": "docs/evidence/2026-10-16-optimal-private-frame.tar.gz",
+      "archive_sha256": "10578563d52489eb8036ba422d067deff555ba5cb254836c4518b0aee983e9d0"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-fresh-wide-capture.json",
+      "report_sha256": "c7e96debfb5ecc77d76a6c66dbe202f97745b726118f9556b39ab3b6d4cd15e7",
+      "archive": "docs/evidence/2026-10-16-optimal-fresh-wide-capture.tar.gz",
+      "archive_sha256": "05a099abe94d235d12e833826a7f0a5a469d89c018416654c69452700d3646ad"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-retained-capture.json",
+      "report_sha256": "fab66225e34142eae70396534c7fb2cc42149fd37f384b00de557f39f4e02a24",
+      "archive": "docs/evidence/2026-10-16-optimal-retained-capture.tar.gz",
+      "archive_sha256": "486e694ec9e0574e145ef8ab1896bc163fc280ca971ce8f46b1ec9cc68508989"
+    },
+    {
+      "report": "docs/evidence/2026-10-16-optimal-retained-wide-capture.json",
+      "report_sha256": "3d95106434593b20595d279c15f089674cba3e5dfaee049f3e06ca13eea92def",
+      "archive": "docs/evidence/2026-10-16-optimal-retained-wide-capture.tar.gz",
+      "archive_sha256": "953eae1661e8df5bf198434514b8abd4c4289f5d73ade6ac90dcdb404124fee4"
+    }
+  ],
+  "matrix": {
+    "full_suites": 22,
+    "passing_executions": 29480,
+    "ignored_executions": 1210,
+    "focused_executions": 1729,
+    "host_no_std_builds": 21
+  },
+  "tested_source_files": 186,
+  "measured_source_files": 92,
+  "source_unchanged": true,
+  "benchmark_samples": 2760,
+  "public_native_recipes": 1269,
+  "public_native_commands": 14350,
+  "platform_miri_executions": 54,
+  "no_atomics_builds": 10,
+  "remaining_upstream_source_units": 188,
+  "qualification": "Archives were member-verified by their original packagers; this closure rechecks exact stored archive bytes and report hashes. Complete original logs and failed predecessor artifacts remain retained. No complete upstream migration or stable throughput speedup claim."
+}

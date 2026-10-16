@@ -264,6 +264,12 @@ allocation survey. See [search measurements](docs/match-search-benchmarks.md)
 for every profile/backend comparison and reproduction commands. This driver
 requires Python 3.11 or newer and the pinned Rust toolchain.
 
+Bounded public Optimal has a separate 24-case complete-frame benchmark with
+native-audited immutable frames, exact allocation surveys and explicit timing
+barriers. See [public qualification](docs/reference-optimal-public-qualification.md)
+and [complete-frame measurements](docs/reference-optimal-frame-benchmark.md)
+for supported bounds, all backend comparisons and the separate safe/all repeat.
+
 ## Development workflow
 
 [AGENTS.md](AGENTS.md) defines English project language, safety documentation,

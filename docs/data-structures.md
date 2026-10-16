@@ -2128,3 +2128,89 @@ transactional publication machinery is reused. Sequence capacity is bounded by
 `MAX_BLOCK_SIZE / minimum`, before iteration or allocation. Named-policy entropy
 and preceding parser contracts are unchanged. This corresponds to the Zstandard
 format's minimum match length and `ZSTD_storeSeq` output, not a new entropy codec.
+
+## Bounded reference Ultra: design before implementation
+
+The next strategy is `ZSTD_btultra` (numeric 8), corresponding to
+`ZSTD_compressBlock_opt2` and `ZSTD_compressBlock_opt_generic` with optLevel 2 in
+pinned v1.5.7 `lib/compress/zstd_opt.c`. Strategy 9 (`btultra2`) additionally
+seeds statistics with a first discarded pass and rewrites history coordinates;
+that lifecycle is a separate module. No public strategy-8 admission follows from
+merely adding fractional prices.
+
+### Copied policy and scalar prices
+
+A private copied policy identifies the exact coupled whole-bit Optimal or
+fractional Ultra behavior. It owns no allocation or pointer and has one safe
+representation for every feature configuration. Do not expose independently
+selectable price/search shortcuts that upstream never uses together. Existing
+Optimal construction defaults, observations and all baseline bytes must remain
+identical.
+
+Fractional weight corresponds to `ZSTD_fracWeight`: with adjusted count `n+1`,
+base `floor(log2(n+1))*256` and fractional term
+`((n+1)<<8)>>floor(log2(n+1))`. Derive and explicitly reject the upstream shift
+and intermediate-overflow boundaries before arithmetic. The pinned debug contract
+`highbit(n+1)+8<31` restricts raw statistics to 0..8388606 inclusive;
+fractional weights consequently range from 256 through 6143. Reject the next
+raw value even though an unrestricted u32 left shift could still hold its
+intermediate. An independent arithmetic model can compute the fraction by
+integer division, while the native oracle retains the original shift order.
+Counts and cached bases
+must use the same policy. Existing `SymbolPrice` whole-bit divisibility and
+31*256 bounds cannot silently be reused for fractional values. A checked scalar
+price record should validate its own policy-dependent range and consumed
+frequency; no artificial unsafe scalar implementation is appropriate.
+
+Ultra uses fractional predefined LL/ML weights, fractional dynamic symbol bases,
+and removes the optLevel<2 large-offset penalty. Preserve the shared dynamic
+match-price bias and independently qualify signed literal-length increments.
+An integer interpolation model plus direct pinned C observations must precede
+Rust implementation; test zeros, powers of two and adjacent values, maximum
+legal statistics, literal disabled mode, all code boundaries and overflow
+rejections. Preserve distinct C evaluation order where it affects boundaries.
+
+### Frequency ownership and cache lifecycle
+
+Reuse the existing contiguous 377-cell allocator owner and its isolated
+`unsafe-optimal-frequencies` access contract. Store immutable copied policy with
+the owner; reset clears counters/state without changing policy or allocator
+identity. Fresh initialization, scaling, sequence updates and cache refresh
+retain their independent invariants. Cached prices cannot be mixed across
+policies, and any future state composition must reject a policy mismatch before
+mutation or allocation. Existing snapshots/fixtures remain frozen; a successor
+observation protocol must carry explicit mode rather than reinterpret old data.
+
+### Path ownership and thorough relaxation
+
+Reuse the initialized 4099-cell path owner, match buffer and index-based reverse
+links. Ultra adds the match-plus-one-literal alternative when replacing a match
+with literals, retains the previous match's repeat-code history while considering
+that alternative, does not skip positions using Optimal's half-bit heuristic,
+and does not break descending match-length relaxation after one worse price.
+All reachable states remain finite and every predecessor index must be checked
+before access. The extra alternative may extend the frontier by one cell; prove
+capacity and initialization of both current+1 and last+1 before writing. Replay
+complete intermediate paths, repeat arrays, choices and frequencies, not just
+final sequence bytes. The existing `unsafe-optimal-paths` feature remains the
+only alternate path-memory implementation.
+
+### Complete source and frame ownership
+
+Initially retain the independently qualified no-dictionary complete fresh source
+envelope: 64..16384 bytes, source fitting W<=16, H/C<=12, S<=6, minimum3..7 and
+target<=4095. Search table geometry and all-match ownership remain separately
+qualified. A dedicated immutable execution plan couples strategy, policy and
+source identity, checks every layout before allocation, and owns no allocator.
+Composition consumes exact non-cloning owners; policy/source/layout mismatches
+are rejected before mutation. The shared entropy publication remains the sole
+committed frame owner, with three-byte minimum allowed only for a qualified
+parser. Dictionary, retained public blocks, window expiry, LDM and Ultra2 remain
+outside initial admission.
+
+The new public gate requires frozen source-only requests, independent scalar
+resolution, whole-C normal/sanitized observers, complete intermediate-state
+replay, allocation-failure cleanup and safe/unsafe equivalence, followed by
+native bidirectional complete-frame checks and an unchanged full feature matrix.
+Only then define source-aware successor admission classifications. Preserve all
+historical selectors, input values, byte bounds and previous fixture checks.

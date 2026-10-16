@@ -788,3 +788,53 @@ gzip metadata. Module16's completed checklist is cleared. Module17 retains its
 independent Optimal decomposition; public strategy7 remains unsupported. The
 upstream migration gate still reports188unfinished units, so this bounded
 milestone is not a claim of complete library/CLI parity.
+
+## Module 17 completed: bounded reference Optimal
+
+Completed on 2026-10-16. Public numeric strategy 7 now implements qualified
+complete fresh no-dictionary optLevel=0 frames: source 64..16384 fitting the
+window, W10..16/H6..12/C6..12/S1..6, minimum 3..7 and target<=4095. Default levels
+11/12 work for source 64..2048; source-aware resolution and existing selector
+behavior are preserved. Outside qualified strategy-7 bounds requests return
+ResourceLimit; Ultra/Ultra2 remain unsupported. Private retained search/path and
+publication are independently qualified but public retained Optimal, dictionaries,
+window expiry and LDM are outside this milestone.
+
+Ownership is explicit: an allocation-free plan validates nine layouts before
+allocator cloning; independently supplied owners hold frequencies, paths,
+matches, search structures and token scratch. Exact borrowed/non-cloning owner,
+allocation failure, reset and poison contracts are tested. The shared entropy
+path accepts qualified three-byte Optimal matches without weakening earlier
+parsers. Default code remains safe Rust; nineteen independently selectable
+unsafe features retain matching public contracts and no_std plus alloc support.
+
+The public oracle runs 1269 independently resolved recipes and 14350 commands.
+Pinned normal/instrumented C decodes 4636 Rust frames and Rust decodes 4636 C frames,
+reconstructing 797537304 bytes. Both Python modes reject 46 forged captures. All
+26 codec translation units in the instrumented oracle are covered. Full C/Rust
+compressed-byte identity is not required. Platform evidence passes 54 selected
+Miri executions across 32-bit/big-endian targets and 10 no-atomics library/concrete
+caller builds; this is not native firmware execution.
+
+The unchanged final matrix passes 22 complete suites with 1340 tests and 55 explicit
+ignores each: 29480 passing and 1210 ignored executions. Exact case names/outcomes
+match across every suite. Another 1729 focused feature executions, 21 host no_std
+builds, strict safe/all Clippy, formatting, allocator checks and 44 usage checks
+pass. Ten standard offline checks retain 484 unchanged inputs. Ignored upstream
+cases and the 188 unfinished source units remain open migration obligations.
+
+All 21 backends produce identical complete frames and allocator surveys across
+504 clock-free cases. Two non-overlapping timed campaigns retain 2760 samples for
+552 case/backend runs, including an independent safe/all repeat. Complete raw
+samples, all 44 executables, source identities and malformed timing controls are
+retained. All/safe geometric means of median ns/byte are 0.9493 and 0.9393;
+individual cases can still be slower. See the benchmark report for fixed-order
+desktop limitations; this is not evidence of a universal unsafe throughput benefit.
+
+The closure report verifies 22 selected archive/report pairs and unchanged final
+tested/measured source inventories. Failed predecessor evidence remains retained.
+Module 17's completed checklist is cleared; Module 18's Ultra ownership design and
+independent work decomposition are ready. This bounded milestone does not claim
+complete upstream library, CLI, corpus or format-feature parity.
+
+Closure evidence: [final reconciliation](evidence/2026-10-16-optimal-closure.json).

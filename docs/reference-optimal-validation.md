@@ -1,8 +1,11 @@
 # Bounded reference Optimal validation
 
-Strategy 7 remains unsupported. The current work qualifies the optLevel=0
-statistics and scalar price primitives before search/path implementation. It is
-not an Optimal frame implementation or a complete upstream migration.
+This is the chronological record of private optLevel=0 qualification. Early
+sections describe checkpoints when public strategy 7 was still unsupported.
+Current bounded public behavior and its frame/platform/regression evidence are
+in [public qualification](reference-optimal-public-qualification.md); complete
+frame measurements are in [the benchmark report](reference-optimal-frame-benchmark.md).
+The complete upstream test migration remains open.
 
 ## Independent price capture
 

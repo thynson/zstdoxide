@@ -25,3 +25,8 @@ the immutable frame projector. Both executions produce identical 24-case pack
 and provenance hashes. The v3 source and these completion records are preserved
 in `docs/evidence/2026-10-16-optimal-public-audit-v3.tar.gz`. The 46-control
 negative campaigns are a separate full-public-capture qualification gate.
+
+The frozen v3 Python auditor retains an inherited `Version 2:` banner in its
+module documentation. Its v3 filename, exact archived digest and documented
+source-aware admission correction identify the executed implementation. The
+banner is retained with the original evidence rather than rewriting frozen code.
