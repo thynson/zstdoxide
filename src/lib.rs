@@ -121,6 +121,7 @@ mod optimal_paths;
     reason = "Private optimal scalar pricing precedes parser integration"
 )]
 mod optimal_price;
+mod optimal_retained;
 #[cfg(test)]
 #[path = "../tests/support/optimal_retained_fixture.rs"]
 mod optimal_retained_fixture;

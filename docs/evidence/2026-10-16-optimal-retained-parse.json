@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-16-optimal-retained-parse.tar.gz",
+  "archive_bytes": 5341,
+  "archive_sha256": "db677c6d67b46c0c9e58e0f8dc9ffaa80c60bbe99ad7207668e6ede0320fc319",
+  "files": [
+    {
+      "path": "all.log",
+      "bytes": 5924,
+      "sha256": "312db3d6f84003fed264c93d58d6b82886f8c172a98a019052ab199da62c3492"
+    },
+    {
+      "path": "clippy.log",
+      "bytes": 142,
+      "sha256": "6b8cf959bf20025b44c8903b0235e7c524e4dd64f654d62f87b8264011cc3384"
+    },
+    {
+      "path": "evidence.json",
+      "bytes": 3798,
+      "sha256": "d02109d4eb6be1d71936181d9418c5f3c859f090075128d41103be376972c1c2"
+    },
+    {
+      "path": "fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "frequencies.log",
+      "bytes": 5924,
+      "sha256": "d213005d7db2ad6fa054fb44005b09ee4f073a332b2f4a9cac2de6b94360ee2a"
+    },
+    {
+      "path": "nostd.log",
+      "bytes": 142,
+      "sha256": "9f5ac6f5b3731234447b787f23bcc12a69881676fa5e66313c788ba60ef44570"
+    },
+    {
+      "path": "paths.log",
+      "bytes": 5924,
+      "sha256": "cb8e153547f9a11de897820a2e55163a818149b690a89fb67f5ed27daa012c12"
+    },
+    {
+      "path": "release-all.log",
+      "bytes": 5916,
+      "sha256": "eb813e62c03f0a0370372cfe0721064dfd8fe128d3ed6886c0511d134217eef1"
+    },
+    {
+      "path": "safe.log",
+      "bytes": 5854,
+      "sha256": "9b436d5f8ed61263fa959b92ab686c03440d0e2e8d0ab7d43eb2a158bb06b450"
+    },
+    {
+      "path": "search.log",
+      "bytes": 5924,
+      "sha256": "334103bc407a3d1d2ce50573e6365e7d65428009559eacfd8e25bc1c3cb169c2"
+    },
+    {
+      "path": "controls/check-optimal-retained-parse.py",
+      "bytes": 1942,
+      "sha256": "4bd89e9139c2ef9be5bb736f1ddfcde04e915caf3f0ae2fdbfa41bb162465f07"
+    },
+    {
+      "path": "controls/zstdoxide-optimal-retained-parse-safe-initial.log",
+      "bytes": 5924,
+      "sha256": "6b5d742b1ec5f5f0e35fb8864a886896ec41124fc30b85f5e484c9c1653cdb9d"
+    }
+  ],
+  "qualification": "Six configurations each passed 58 focused Optimal tests (348 executions), matching all 4486 retained events and 41 sequences, complete frequency/path states and committed owner publication. Strict Clippy all tests/features, no_std and formatting passed; frozen source hashes verified."
+}

@@ -41,6 +41,23 @@ impl<H: Allocator, N: Allocator, S: Allocator, B: Allocator> PathProvider
         Ok(())
     }
 }
+struct RetainedProvider<'s, 'a, H: Allocator, N: Allocator, S: Allocator, B: Allocator>(
+    &'s mut OptimalSearch<'a, H, N, S, B>,
+);
+impl<H: Allocator, N: Allocator, S: Allocator, B: Allocator> PathProvider
+    for RetainedProvider<'_, '_, H, N, S, B>
+{
+    fn query<A: Allocator>(
+        &mut self,
+        query: OptimalQuery,
+        matches: &mut OptimalMatches<A>,
+    ) -> Result<()> {
+        for &candidate in self.0.query_retained(query)? {
+            matches.push(candidate)?;
+        }
+        Ok(())
+    }
+}
 pub(crate) trait PathObserver {
     fn event<P: Allocator, F: Allocator>(
         &mut self,
@@ -97,6 +114,9 @@ enum Status {
 }
 pub(crate) struct OptimalParser<'a, F: Allocator, P: Allocator, M: Allocator> {
     source: &'a [u8],
+    block_start: usize,
+    block_end: usize,
+    retained_end: usize,
     minimum: usize,
     target: usize,
     frequencies: OptimalFrequencies<F>,
@@ -157,6 +177,9 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         matches.clear();
         Ok(Self {
             source,
+            block_start: 0,
+            block_end: source.len(),
+            retained_end: 0,
             minimum: if minimum == 3 { 3 } else { 4 },
             target,
             frequencies,
@@ -176,6 +199,9 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         self.frequencies.reset()?;
         self.paths.reset()?;
         self.matches.clear();
+        self.block_start = 0;
+        self.block_end = self.source.len();
+        self.retained_end = 0;
         self.ip = 0;
         self.anchor = 0;
         self.repeats = [1, 4, 8];
@@ -207,11 +233,70 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         provider: &mut Q,
         observer: &mut O,
     ) -> Result<PathResult> {
-        if self.status != Status::Ready {
+        if self.status != Status::Ready || self.retained_end != 0 {
             return Err(Error::InvalidState);
         }
         self.status = Status::Poisoned;
         let result = self.run(provider, observer)?;
+        self.status = Status::Finished;
+        Ok(result)
+    }
+    pub(crate) fn retained_configuration(&self) -> Result<(&'a [u8], usize, usize)> {
+        if !(128..=1024).contains(&self.source.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        if self.status != Status::Ready || self.retained_end != 0 {
+            return Err(Error::InvalidState);
+        }
+        Ok((self.source, self.minimum, self.target))
+    }
+    pub(crate) fn parse_retained<
+        H: Allocator,
+        N: Allocator,
+        S: Allocator,
+        B: Allocator,
+        O: PathObserver,
+    >(
+        &mut self,
+        start: usize,
+        end: usize,
+        repeats: [u32; 3],
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+        observer: &mut O,
+    ) -> Result<PathResult> {
+        if !(128..=1024).contains(&self.source.len())
+            || end > self.source.len()
+            || !end
+                .checked_sub(start)
+                .is_some_and(|n| (64..=512).contains(&n))
+            || repeats
+                .iter()
+                .any(|&v| v == 0 || v as usize > self.source.len())
+        {
+            return Err(Error::InvalidParameter);
+        }
+        if start != self.retained_end
+            || self.status
+                != if start == 0 {
+                    Status::Ready
+                } else {
+                    Status::Finished
+                }
+        {
+            return Err(Error::InvalidState);
+        }
+        search.begin_retained(start, end)?;
+        self.status = Status::Poisoned;
+        self.block_start = start;
+        self.block_end = end;
+        self.anchor = start;
+        self.repeats = repeats;
+        self.wire_repeats = repeats;
+        self.sequences = 0;
+        self.last_stretch = PathCell::ZERO;
+        self.matches.clear();
+        let result = self.run(&mut RetainedProvider(search), observer)?;
+        self.retained_end = end;
         self.status = Status::Finished;
         Ok(result)
     }
@@ -268,6 +353,9 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         let end = position
             .checked_add(candidate.length())
             .ok_or(Error::CorruptData)?;
+        if end > self.block_end {
+            return Err(Error::CorruptData);
+        }
         let current = self.source.get(position..end).ok_or(Error::CorruptData)?;
         let previous = self
             .source
@@ -288,7 +376,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         zero: bool,
     ) -> Result<usize> {
         let position = self.ip.checked_add(cur).ok_or(Error::CorruptData)?;
-        if position == 0 || position > self.source.len() - 8 {
+        if position == 0 || position > self.block_end - 8 {
             return Err(Error::CorruptData);
         }
         let query = OptimalQuery {
@@ -377,7 +465,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
                 self.write(cur, cell)?;
             }
             self.emit(observer, PathEvent::at(4, cur, last))?;
-            if self.ip + cur > self.source.len() - 8 {
+            if self.ip + cur > self.block_end - 8 {
                 cur += 1;
                 continue;
             }
@@ -412,7 +500,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
                 .ok_or(Error::ResourceLimit)?;
             if longest.length() > self.target
                 || end >= PATH_HORIZON
-                || self.ip + end >= self.source.len()
+                || self.ip + end >= self.block_end
             {
                 let stretch = self
                     .last_stretch
@@ -484,7 +572,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             self.ip = self
                 .ip
                 .checked_add(last)
-                .filter(|&v| v <= self.source.len())
+                .filter(|&v| v <= self.block_end)
                 .ok_or(Error::CorruptData)?;
             return Ok(());
         }
@@ -543,7 +631,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         for index in start..=end {
             let sequence = self.paths.reverse(index)?;
             let cell = sequence.cell();
-            let next = sequence.end(self.anchor, self.source.len())?;
+            let next = sequence.end(self.anchor, self.block_end)?;
             if cell.match_length() == 0 {
                 if index != end {
                     return Err(Error::CorruptData);
@@ -593,10 +681,14 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         provider: &mut Q,
         observer: &mut O,
     ) -> Result<PathResult> {
-        self.frequencies.begin_block(self.source)?;
-        self.ip = 1;
+        self.frequencies.begin_block(
+            self.source
+                .get(self.block_start..self.block_end)
+                .ok_or(Error::CorruptData)?,
+        )?;
+        self.ip = self.block_start.max(1);
         self.emit(observer, PathEvent::default())?;
-        while self.ip < self.source.len() - 8 {
+        while self.ip < self.block_end - 8 {
             let litlen = self.ip.checked_sub(self.anchor).ok_or(Error::CorruptData)?;
             let count = self.find(provider, observer, 0, 0, self.repeats, litlen == 0)?;
             if count == 0 {
@@ -627,7 +719,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             self.last_stretch = stretch;
             self.reconstruct(observer, cur, last, stretch)?;
         }
-        let tail = self.source.len() - self.anchor;
+        let tail = self.block_end - self.anchor;
         let event = PathEvent {
             stage: 11,
             tail: Some(tail),
