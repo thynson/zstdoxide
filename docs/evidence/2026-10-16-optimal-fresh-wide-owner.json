@@ -1,0 +1,67 @@
+{
+  "archive": "2026-10-16-optimal-fresh-wide-owner.tar.gz",
+  "archive_bytes": 3097,
+  "archive_sha256": "e4e955e421e6507a2ddf5a3b106f877eb2ceb3e3db1d2fe64d379558cb115857",
+  "files": [
+    {
+      "path": "check-optimal-fresh-wide-owner.py",
+      "bytes": 2168,
+      "sha256": "0aa467ad89ca13ba319c41adce5f2f0af62046023e9d566334e3f8fbfb43c462"
+    },
+    {
+      "path": "check-optimal-fresh-wide-owner.log",
+      "bytes": 81,
+      "sha256": "c8b109f26fc82c4b126d1bd51e5f298afee2423d96c3ea2a34b44567e77e24a1"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/all.log",
+      "bytes": 1442,
+      "sha256": "7f46373024081c5a6a63410a8d9d9f4b7f748ad9c8da7be4d62cc87649fe5ac9"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/clippy.log",
+      "bytes": 130,
+      "sha256": "9f78005267cda3c31bde02b0175ade7593fab21df04b8c4a7190b123dbd7b356"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/evidence.json",
+      "bytes": 3910,
+      "sha256": "145f5124a9664a2bf33520055b65b6ded4c3d4d9a90fcbd988d18a531ebd6f33"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/frequencies.log",
+      "bytes": 1442,
+      "sha256": "f11634cf62eb0c92051eaef5714034f9f1de3b195a543076d8ae7dd781f89b60"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/nostd.log",
+      "bytes": 60,
+      "sha256": "af1d2cf35aacaf94dd1c8a40bb1eb81981171b00ae7b6668106f5acb3a38e60c"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/paths.log",
+      "bytes": 1442,
+      "sha256": "ab9e6de58af9fbe61263077f436d7ba5f97fcb1f1ac0c1851e14efe670f3e1ca"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/release-all.log",
+      "bytes": 1446,
+      "sha256": "9604b013f679915f8cc65930ab2d56d5f659bc0c7c019028c4d2cdbad436595e"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/safe.log",
+      "bytes": 1443,
+      "sha256": "91452cb39d297d5479cd3ae0df576d943b8f39dc224bcf1c032c6362268a6d29"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-owner-checks/search.log",
+      "bytes": 1442,
+      "sha256": "255825013e2f143a24fe27d27fdbff17fa1b0a779edb949f57977fbeef9227bc"
+    }
+  ]
+}

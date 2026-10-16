@@ -185,3 +185,193 @@ fn every_ordinary_c_path_frequency_query_and_sequence_matches() {
     assert_eq!(events, 64610);
     assert_eq!(sequences, 48);
 }
+
+use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+fn layout(minimum: u8, target: usize) -> OptimalSearchLayout {
+    OptimalSearchLayout::new(16, 12, 12, 6, minimum, target, (minimum == 3).then_some(16)).unwrap()
+}
+#[derive(Default)]
+struct Observe {
+    events: usize,
+    sequences: usize,
+    fail_stage: Option<u8>,
+}
+impl PathObserver for Observe {
+    fn event<P: Allocator, F: Allocator>(
+        &mut self,
+        event: PathEvent,
+        _: &OptimalPaths<P>,
+        _: &OptimalFrequencies<F>,
+        _: &[OptimalMatch],
+    ) -> Result<()> {
+        self.events += 1;
+        self.sequences += usize::from(event.appended.is_some());
+        if self.fail_stage == Some(event.stage) {
+            Err(Error::ResourceLimit)
+        } else {
+            Ok(())
+        }
+    }
+}
+#[test]
+fn fresh_pair_rejects_source_parameters_and_used_search_before_parser_mutation() {
+    let source = [b'a'; 16384];
+    let other = [b'a'; 16384];
+    for (m, t) in [(3, 0), (4, 1)] {
+        let (mut parser, _) = pair(&source, layout(4, 0), 4, 0, false, [Global; 7]).unwrap();
+        let (_, mut search) = pair(&source, layout(m, t), m, t, false, [Global; 7]).unwrap();
+        let before = search.test_snapshot();
+        let mut observe = Observe::default();
+        assert_eq!(
+            parser.parse_fresh(&mut search, &mut observe),
+            Err(Error::InvalidParameter)
+        );
+        assert_eq!(observe.events, 0);
+        assert_eq!(parser.status, Status::Ready);
+        assert_eq!(search.test_snapshot(), before);
+    }
+    let (mut parser, mut search) = pair(&source, layout(4, 0), 4, 0, false, [Global; 7]).unwrap();
+    let (_, mut other_search) = pair(&other, layout(4, 0), 4, 0, false, [Global; 7]).unwrap();
+    assert_eq!(
+        parser.parse_fresh(&mut other_search, &mut Observe::default()),
+        Err(Error::InvalidParameter)
+    );
+    search
+        .query_fresh(OptimalQuery {
+            position: 1,
+            repeats: [1, 4, 8],
+            zero_literals: false,
+            length_to_beat: 4,
+        })
+        .unwrap();
+    assert_eq!(
+        parser.parse_fresh(&mut search, &mut Observe::default()),
+        Err(Error::InvalidState)
+    );
+    assert_eq!(parser.status, Status::Ready);
+    search.reset();
+    parser
+        .parse_fresh(&mut search, &mut Observe::default())
+        .unwrap();
+}
+#[test]
+fn fresh_observer_failures_require_both_resets_and_preserve_external_output() {
+    let source = [b'a'; 16384];
+    for stage in [0, 1, 6, 8, 9, 10, 11] {
+        let (mut parser, mut search) =
+            pair(&source, layout(4, 0), 4, 0, false, [Global; 7]).unwrap();
+        let mut observe = Observe {
+            fail_stage: Some(stage),
+            ..Observe::default()
+        };
+        assert_eq!(
+            parser.parse_fresh(&mut search, &mut observe),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(parser.status, Status::Poisoned);
+        let emitted = observe.sequences;
+        assert_eq!(emitted, usize::from(stage >= 9));
+        search.reset();
+        assert_eq!(
+            parser.parse_fresh(&mut search, &mut Observe::default()),
+            Err(Error::InvalidState)
+        );
+        parser.reset().unwrap();
+        let result = parser
+            .parse_fresh(&mut search, &mut Observe::default())
+            .unwrap();
+        assert_eq!(result.sequences, 1);
+        assert_eq!(observe.sequences, emitted);
+        parser.reset().unwrap();
+        assert_eq!(
+            parser.parse_fresh(&mut search, &mut Observe::default()),
+            Err(Error::InvalidState)
+        );
+        search.reset();
+        parser
+            .parse_fresh(&mut search, &mut Observe::default())
+            .unwrap();
+    }
+}
+#[test]
+fn fresh_moved_nonclone_owner_failures_release_every_allocation() {
+    let source = [b'a'; 16384];
+    for rejected in 0..=7 {
+        let owners = core::array::from_fn(|i| {
+            TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 1,
+                fail_at: if i == rejected {
+                    core::num::NonZeroU64::new(1)
+                } else {
+                    None
+                },
+            })
+            .unwrap()
+            .into_non_clone()
+        });
+        let monitors = owners.each_ref().map(|a| a.monitor());
+        let result = pair(&source, layout(3, 4095), 3, 4095, false, owners);
+        if rejected < 7 {
+            assert!(matches!(result, Err(Error::AllocationFailed)));
+        } else {
+            let (mut parser, mut search) = result.unwrap();
+            let before = monitors.each_ref().map(|m| m.snapshot().attempts);
+            for _ in 0..2 {
+                assert_eq!(
+                    parser
+                        .parse_fresh(&mut search, &mut Observe::default())
+                        .unwrap()
+                        .sequences,
+                    1
+                );
+                parser.reset().unwrap();
+                search.reset();
+            }
+            assert_eq!(monitors.each_ref().map(|m| m.snapshot().attempts), before);
+            drop((parser, search));
+        }
+        for monitor in monitors {
+            monitor.assert_released();
+            assert_eq!(monitor.snapshot().owners_dropped, 1);
+        }
+    }
+}
+#[test]
+fn fresh_borrowed_owners_never_allocate_during_parse_or_reset() {
+    let source = [b'a'; 16384];
+    let owners: [_; 7] = core::array::from_fn(|_| {
+        TrackingAllocator::new(AllocatorConfig {
+            max_live_allocations: 1,
+            fail_at: None,
+        })
+        .unwrap()
+        .into_non_clone()
+    });
+    let monitors = owners.each_ref().map(|a| a.monitor());
+    let (mut parser, mut search) =
+        pair(&source, layout(3, 4095), 3, 4095, false, owners.each_ref()).unwrap();
+    let before = monitors.each_ref().map(|m| m.snapshot().attempts);
+    assert_eq!(before, [1; 7]);
+    for _ in 0..3 {
+        assert_eq!(
+            parser
+                .parse_fresh(&mut search, &mut Observe::default())
+                .unwrap()
+                .sequences,
+            1
+        );
+        parser.reset().unwrap();
+        search.reset();
+    }
+    assert_eq!(monitors.each_ref().map(|m| m.snapshot().attempts), before);
+    drop((parser, search));
+    for m in &monitors {
+        m.assert_released();
+        assert_eq!(m.snapshot().owners_dropped, 0);
+    }
+    drop(owners);
+    for m in monitors {
+        m.assert_released();
+        assert_eq!(m.snapshot().owners_dropped, 1);
+    }
+}
