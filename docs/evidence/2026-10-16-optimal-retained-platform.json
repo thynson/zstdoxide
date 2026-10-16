@@ -1,0 +1,261 @@
+{
+  "status": "passed",
+  "archive": "2026-10-16-optimal-retained-platform.tar.gz",
+  "archive_bytes": 16125,
+  "archive_sha256": "383a3de41f69cd2c86e077654746e66f00e18e5dc85e9a2090d9fa94dadf112f",
+  "commands": 48,
+  "test_counts": {},
+  "files": [
+    {
+      "path": "evidence.json",
+      "bytes": 47497,
+      "sha256": "2b5120575429796eda7eb264979b0295266afec3008ed2b018b589cdde08ac92"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-all-0.log",
+      "bytes": 537,
+      "sha256": "649098f3af26a0e1f514e0abca8d136e8b1776a5f92fa09e9332a28a2fc154af"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-all-1.log",
+      "bytes": 467,
+      "sha256": "1d1d7f115feac28f2eb6be8c64385967bb1cf6ab944f28251b3663db3bf9bd2f"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-all-2.log",
+      "bytes": 470,
+      "sha256": "f19068230e4074e2c9d7adb384d65b79da84c9f797a8fd5cdc102cc960dc1e7c"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-all-3.log",
+      "bytes": 463,
+      "sha256": "14e1a9d68ea95204e8e1453e6314e699cfadc716a1b7a0b88589f1f870c52f2a"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-all-4.log",
+      "bytes": 470,
+      "sha256": "1e4b3355a446cf7431f988f01f5421b279fb1160871bb8ed39694b3e185bdcd6"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-all-5.log",
+      "bytes": 460,
+      "sha256": "1df6cd647f10da36ac8bb9020e91effbdec5b4e4399c728cde90e90e0864a0f8"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-all-6.log",
+      "bytes": 463,
+      "sha256": "6095bd1e9ab69c7e605dedea29e2b9b6c9f610f018a7a276609ba6164c71e014"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-all-7.log",
+      "bytes": 447,
+      "sha256": "a7c30367b11f75e0598c462e0e6a5c5c9be7ff9a1704aeb37f0b3f474c338337"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-paths-0.log",
+      "bytes": 537,
+      "sha256": "47b7df481dbe6e821d54571d0a020ddf4db51d96c77a78bc22b020dfada0e7ad"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-paths-1.log",
+      "bytes": 467,
+      "sha256": "e9e20e3be8431a8e11f413ba583f7e3fccb2704dd29a848fe5b51e93ff453818"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-paths-2.log",
+      "bytes": 470,
+      "sha256": "7ad90bc99ea0cfc06e8a81f24426c809a3a22c12b380f7c8ad935bb07eb59799"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-paths-3.log",
+      "bytes": 463,
+      "sha256": "10bb4047be833f1637d0e94d3a78849291def3baa6b1fee9338c1e103aabe8a8"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-paths-4.log",
+      "bytes": 470,
+      "sha256": "e1f2d5f63b8551f7438799557d682f0b4c3320f2f4f11cdc6c6d34ff225c8eb4"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-paths-5.log",
+      "bytes": 460,
+      "sha256": "81e2be478789177507b1ee3e97642f41b4ffc954117309728cfa22303b4b9edc"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-paths-6.log",
+      "bytes": 463,
+      "sha256": "601a195b45cf881251ffe74894017e29684b781962a12e6f2d2c3badb99d98c1"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-paths-7.log",
+      "bytes": 447,
+      "sha256": "60de53e2eca92c49e9d52f1381af27fcb43a2d8e945150b570d2dc24ebc7b9a1"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-safe-0.log",
+      "bytes": 645,
+      "sha256": "7da6f99088a6f3757b0c289801dde58b045dc1d92a1f7ba1285c2d0e191ecc16"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-safe-1.log",
+      "bytes": 467,
+      "sha256": "cf1236fbd3dc09ce5e83dd5ccbd6efa83636104503071333f271e636a14ac9cf"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-safe-2.log",
+      "bytes": 470,
+      "sha256": "1e46a82fea590230e393c024aeef523eab2d35a9112254fd66d245372d3311b6"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-safe-3.log",
+      "bytes": 463,
+      "sha256": "7912207172cb9fcb56ddd3a27f1af157c33231ec98ae836475cb5e35b11a655e"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-safe-4.log",
+      "bytes": 470,
+      "sha256": "dab142ff944e046c9da4c87c0d3f030066af603e00efd21ee14043ba88815326"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-safe-5.log",
+      "bytes": 460,
+      "sha256": "4531cbfdb0ff998ff036f417d1259783deb427ea50aad8c73c6732c45968fbf5"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-safe-6.log",
+      "bytes": 463,
+      "sha256": "9f98739ca2ff6d144ae092f1d0fa99e7e033e1892f93233ad071da0c40d41653"
+    },
+    {
+      "path": "i686-unknown-linux-gnu-safe-7.log",
+      "bytes": 447,
+      "sha256": "066dd035b2e6e9843415b9a4007f4b268e4dc5f8d1ccc54997b9bf8829324054"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-all-0.log",
+      "bytes": 538,
+      "sha256": "3baa4d044f04f9473b8611dea57ae106f15d7221ecd874cbe3fd1e76eaf23035"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-all-1.log",
+      "bytes": 468,
+      "sha256": "9a1c55de7059c760a49cade233280402bb7a77bc8aed945e91aa3b9514d6d481"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-all-2.log",
+      "bytes": 471,
+      "sha256": "9e19d5a3d43db4038911089594cae9ff207e02361a367bd3d4a6160d23368f28"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-all-3.log",
+      "bytes": 464,
+      "sha256": "bd8072688693985c06895febfbf2260f9c823abcd93a1ca46aef34948cd22bc4"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-all-4.log",
+      "bytes": 471,
+      "sha256": "e75584fe6661dc64fbf86c4e2b7cc14910bf1c5b97b229b111faa462714a7545"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-all-5.log",
+      "bytes": 461,
+      "sha256": "90676ea840ca09fd8ef8dbbbc2a7087930e622080db30cf8f617642d8f3ea170"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-all-6.log",
+      "bytes": 464,
+      "sha256": "604f2c1fe0fd419965bfa16bfc28cd1125c375c8f168eca6816e57b1ddcf2a18"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-all-7.log",
+      "bytes": 448,
+      "sha256": "d2bf5d1a2f34c09b8f510e6b30bb4f5af95675c744cd368d14c55e7fbaec24f7"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-paths-0.log",
+      "bytes": 538,
+      "sha256": "450f57bc56df5edf090177e63e3223f98d096fca0d8a253ff0a79307916489d9"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-paths-1.log",
+      "bytes": 468,
+      "sha256": "428cb4f05861adaf87fc0791b55defb0e965422abd25c1ca5b6be141454b624e"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-paths-2.log",
+      "bytes": 471,
+      "sha256": "3a734390429f4b2b20153132e49034f2f117c1a823bfc0284869d0ccb86912f5"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-paths-3.log",
+      "bytes": 464,
+      "sha256": "7b3973472429dd6a68d85d5cc28bc45e2871a04f343140bc6213415ceaf76b84"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-paths-4.log",
+      "bytes": 471,
+      "sha256": "613f84d9de9bb383a4afeeca84ade49efec1cc8e08e86520ffd3eea3604bc1a3"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-paths-5.log",
+      "bytes": 461,
+      "sha256": "b27da73b7bcaf8cf2b5a1e4c5f25bfb57333d20c6b82c1cdf400c48e4385f1b7"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-paths-6.log",
+      "bytes": 464,
+      "sha256": "f68b1e3dbc8764ea4ee63f0408677739514e365561dcf73cfc5108218667ded0"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-paths-7.log",
+      "bytes": 448,
+      "sha256": "7236d1b6196daaaea29c729b51c35badd180e461dcc48bbb2be2b32d0cfe8e7e"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-safe-0.log",
+      "bytes": 646,
+      "sha256": "ebc423066ad87ffb89e71c755866cdbd5560a527727b5bc7a524e51fd5837c28"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-safe-1.log",
+      "bytes": 468,
+      "sha256": "81b8aa923efd432fc7c94a3d958ce197f56250ee2655fbd1088a0946326254c1"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-safe-2.log",
+      "bytes": 471,
+      "sha256": "c6c4da3633e1d9e9c361359d92dfde7ae7df69ae2ee7d4d2f8a554e5f088858a"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-safe-3.log",
+      "bytes": 464,
+      "sha256": "3d01946b8fa07c1a009029a4708f37f35a75ff650141a05bc9ba28d3f5e31d95"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-safe-4.log",
+      "bytes": 471,
+      "sha256": "9de5f80ac6ff94457499d4a0be8e11f16ebb532c0b2fc018ca12f30a00c923a9"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-safe-5.log",
+      "bytes": 461,
+      "sha256": "9b294ffebeb9439c37b2db8e688fd2455ba8efe44c097551bc74df07cc115266"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-safe-6.log",
+      "bytes": 464,
+      "sha256": "b7f0ae79dffb2aa3ae4ce96bf0b3c6a150a921f6dfcbcec06ee228e544414517"
+    },
+    {
+      "path": "s390x-unknown-linux-gnu-safe-7.log",
+      "bytes": 448,
+      "sha256": "6d244498a7ab216a122f644c479bfae8596fa3ca1af5e0a239d42816d74403ea"
+    },
+    {
+      "path": "runner.py",
+      "bytes": 2987,
+      "sha256": "81374ff8dde2447b19159d3c7e384b740ce4dc3ed7d2899bf9ffbf68fe32b4d0"
+    }
+  ],
+  "qualification": "Selected strict-provenance Miri checks on i686 and s390x; no native foreign execution claim."
+}

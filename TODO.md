@@ -134,7 +134,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Specify retained prefix bounds and transactional publication coordination.
 - [x] Implement retained search entry and match every captured query/map/frontier without future-byte access.
 - [x] Implement retained path blocks and explicit candidate/committed publication with exact captured states.
-- [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
+- [x] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
 - [x] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
 - [x] Design additive wider retained sparse observations before broadening ordinary block admission.
 - [x] Freeze wider retained transport and independent sparse replay; reconcile every existing small capture.
