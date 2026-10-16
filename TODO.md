@@ -162,6 +162,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Integrate the private plan/state with shared frame entropy and independently decode complete frames.
 - [x] Freeze source-aware successor mappings and independently reconstruct every historical Optimal tuple.
 - [x] Freeze new positive public recipes and independently reconstruct every admitted tuple.
+- [x] Qualify explicit three-byte Optimal entropy admission without weakening preceding parser contracts.
 - [ ] Enable bounded public Optimal dispatch and preserve original selector/numeric assertion inputs.
 - [x] Preflight the exact public interoperability command inventory and reused generic adapters.
 - [ ] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.

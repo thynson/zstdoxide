@@ -168,13 +168,22 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         let initial_repeat = self.entropy.sequence_encoder.committed_repeats();
         let parsed = self.search.parse_next(block.len(), initial_repeat)?;
         let worthwhile = if parsed {
-            self.entropy.prepare_reference(
-                self.search.literals(),
-                self.search.sequences(),
-                initial_repeat,
-                block.len(),
-                crate::reference_policy::raw_literals(self.plan.parameters()),
-            )?
+            if matches!(self.plan, ReferenceSearchPlan::Optimal(_)) {
+                self.entropy.prepare_optimal(
+                    self.search.literals(),
+                    self.search.sequences(),
+                    initial_repeat,
+                    block.len(),
+                )?
+            } else {
+                self.entropy.prepare_reference(
+                    self.search.literals(),
+                    self.search.sequences(),
+                    initial_repeat,
+                    block.len(),
+                    crate::reference_policy::raw_literals(self.plan.parameters()),
+                )?
+            }
         } else {
             // One through six bytes bypass fresh entropy, including literal RLE.
             false
@@ -702,5 +711,37 @@ mod optimal_tests {
             cases += 1;
         }
         assert_eq!(cases, 17);
+    }
+    #[test]
+    fn short_periodic_three_byte_matches_reach_shared_entropy() {
+        let input: Vec<_> = (0..64).map(|i| b"abcXabcYabcZabcd"[i % 15]).collect();
+        let mut request = crate::CompressionParameterRequest::with_level(11);
+        request.set_strategy(Some(crate::ReferenceStrategy::Optimal));
+        request.set_window_log(16).unwrap();
+        request.set_hash_log(12).unwrap();
+        request.set_chain_log(12).unwrap();
+        request.set_search_log(6).unwrap();
+        request.set_min_match(3).unwrap();
+        request.set_target_length(1).unwrap();
+        let parameters = request.resolve(crate::SourceSize::Known(64), 0).unwrap();
+        let plan = ReferenceSearchPlan::Optimal(
+            OptimalExecutionPlan::from_resolved_parameters(parameters, 64).unwrap(),
+        );
+        let mut workspace = ReferenceEncoderWorkspace::new(&input, plan, Global).unwrap();
+        workspace
+            .search
+            .parse_next(64, [1, 4, 8])
+            .expect("parse complete periodic source");
+        workspace
+            .entropy
+            .prepare_optimal(
+                workspace.search.literals(),
+                workspace.search.sequences(),
+                [1, 4, 8],
+                64,
+            )
+            .expect("prepare three-byte sequence entropy");
+        let frame = compress_reference_in(&input, plan, Global).unwrap();
+        assert_eq!(crate::decompress(&frame, 64).unwrap(), input);
     }
 }

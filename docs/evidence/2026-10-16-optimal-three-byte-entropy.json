@@ -1,0 +1,112 @@
+{
+  "archive": "2026-10-16-optimal-three-byte-entropy.tar.gz",
+  "archive_bytes": 4594,
+  "archive_sha256": "4f7787befca04c17cfa8c0a8f7bb6eaebbf3028cf8acf71d402e3ac54c78d0ec",
+  "files": [
+    {
+      "path": "check-optimal-three-byte-entropy.py",
+      "bytes": 2269,
+      "sha256": "9f61e66bc5356de1b9afae4fc977456e850ddc0541226898eb45d9e4ce4cb21d"
+    },
+    {
+      "path": "check-optimal-three-byte-entropy.log",
+      "bytes": 207,
+      "sha256": "e913a1a368b0e168a0caa669c37145ae2c90b1991802588186317f2f91027cf6"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/all-entropy.log",
+      "bytes": 1378,
+      "sha256": "9dc1d4bf993d9c83d1c74c6612518d5b75ef900482e4d54b6745c92a3424b48e"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/all-frame.log",
+      "bytes": 573,
+      "sha256": "e448ae435998ec542e69ca38b0d25bbae8e7f31d1e490dfd8649bf1ca3a8826b"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/bits-entropy.log",
+      "bytes": 1378,
+      "sha256": "de7c33281d4f0b39ee8f699a7d6339e4efbe58ed99a63e9222291fdd77f606dc"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/bits-frame.log",
+      "bytes": 573,
+      "sha256": "d886555567aec3710827b0b2be2980fe826c6c9365d569ab8f5f1e1d2e42a1e9"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/clippy.log",
+      "bytes": 130,
+      "sha256": "4874eeaf71b28325e9a7b774bccb362abedd787ab2bd8d432a148af4551f6241"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/evidence.json",
+      "bytes": 6444,
+      "sha256": "ff6bc9cdf16e8f53deb828e4c9e1df7c901ab71f001bbb0eab185e826b212d0e"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/fse-entropy.log",
+      "bytes": 1378,
+      "sha256": "ae3f5db4aa382e6c0e56c754edfed564e48e7d35a5d9a84be0feaf86ada64ea7"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/fse-frame.log",
+      "bytes": 573,
+      "sha256": "251220c9a6ede31002cf287385bd6547ebc95d960f29422670b424597c37f645"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/huffman-entropy.log",
+      "bytes": 1378,
+      "sha256": "81833698f32085ef3a5263202b75ec140b40cd5fe1f622495d7fb1e39a3a4765"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/huffman-frame.log",
+      "bytes": 573,
+      "sha256": "bb200d3cc885441ed1118b31de360961143ea68df9eb1d0a11ccca5d4a31e195"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/nostd.log",
+      "bytes": 130,
+      "sha256": "34c669ee798338be805c0588ae10f0fbc32a77d2ed9790a4a571b386ca21561d"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/release-all-entropy.log",
+      "bytes": 1381,
+      "sha256": "3eab1fcfe5d6af1ab54342b5609fd7d0a078bad55b6ce5abf966230e37ca4626"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/release-all-frame.log",
+      "bytes": 577,
+      "sha256": "0d7fa015fc827e42bba595682051329d87c5a5df89c23bb2c7c564a96607ded4"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/safe-entropy.log",
+      "bytes": 1378,
+      "sha256": "2816cd097efe40feb9752c2fcf22405e2d71e8476385487c21ff64837c4a3917"
+    },
+    {
+      "path": "zstdoxide-optimal-three-byte-entropy-checks/safe-frame.log",
+      "bytes": 503,
+      "sha256": "b9972fa14a3ab70ddd61daa0d862de152d89a4bb5fde7aca3327cc8311ca6edd"
+    },
+    {
+      "path": "optimal-public-boundary-diagnostic.log",
+      "bytes": 835,
+      "sha256": "3d7f915f0b6c0a12e348fe055f5f698d11c5461b8d6ab9f403caf97f04daa670"
+    },
+    {
+      "path": "optimal-short-periodic-diagnostic.log",
+      "bytes": 1569,
+      "sha256": "0f34cdec5b0d179e8b3639376ee8ab07cd939a538d0e01da81fe3fc7755f38f3"
+    },
+    {
+      "path": "optimal-short-periodic-fixed.log",
+      "bytes": 464,
+      "sha256": "d6e34b074e38b538093e55b23f5b1d80c3d5a0dab940a26a5e28b816dc11ee31"
+    }
+  ]
+}

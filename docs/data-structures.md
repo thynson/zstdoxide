@@ -2115,3 +2115,16 @@ desktop timings are diagnostic observations, not stable speedup guarantees;
 features absent from a particular path must not be claimed to accelerate it.
 The benchmark source/requests and byte fingerprints are frozen when first run;
 any subsequent correction requires a versioned successor and preserved logs.
+
+### Reference entropy minimum-match admission
+
+The shared reference reconstruction preflight originally described only parsers
+with a four-byte minimum. Optimal minimum-3 keys can emit valid three-byte
+matches, including zero-literal Repeat3 transitions. A private copied
+`ReferenceMinimum` discriminator now selects the format-valid three-byte bound
+for the dedicated automatic-literal Optimal entry; the existing reference entry
+keeps its four-byte contract. The same checked total, repeat-intent, gain and
+transactional publication machinery is reused. Sequence capacity is bounded by
+`MAX_BLOCK_SIZE / minimum`, before iteration or allocation. Named-policy entropy
+and preceding parser contracts are unchanged. This corresponds to the Zstandard
+format's minimum match length and `ZSTD_storeSeq` output, not a new entropy codec.

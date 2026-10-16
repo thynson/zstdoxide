@@ -26,9 +26,21 @@ nine factory clones, no inactive parser owners and no extra dispatch allocation.
 All 17 observed automatic-literal cases produce deterministic complete frames
 that independently decode to the original bytes. Partial frame scheduling is
 rejected before mutation and a valid full-source retry remains possible. The
-frame test and six dispatch tests passed in six backend configurations (42
+frame test and five dispatch tests passed in six backend configurations (36
 executions), followed by strict Clippy, no_std and formatting. The initial broad
 run used an incorrect count of 18 automatic-literal cases; it was stopped after
 the failure was localized and retained as failed evidence, including its failed
 source barrier. The complete focused rerun has unchanged source hashes.
 Evidence: `docs/evidence/2026-10-16-optimal-private-frame.tar.gz`.
+
+The 64-byte periodic minimum-3/target-1 public boundary exposed the prior
+shared reconstruction guard's four-byte minimum. Parsed tokens were correct,
+but the entropy preflight rejected them. Optimal now enters a dedicated
+three-byte reconstruction contract; preceding parsers retain their exact
+four-byte guard. The count cap follows the selected minimum, before allocation.
+A complete-frame regression covers the zero-literal Repeat3 transition, and
+allocation/count boundary tests preserve old rejection semantics. Twelve tests
+passed in six configurations (72 executions), including FSE encoder, bitstream,
+Huffman codebook, all-feature and release-all builds, plus strict Clippy, no_std,
+formatting and unchanged source barriers. Initial diagnostic failures are
+preserved in `docs/evidence/2026-10-16-optimal-three-byte-entropy.tar.gz`.

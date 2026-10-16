@@ -82,6 +82,21 @@ impl<A: Allocator> BlockEntropyEncoder<A> {
     }
 }
 
+/// Copied parser contract; no owned storage or alternate unsafe representation.
+#[derive(Clone, Copy)]
+enum ReferenceMinimum {
+    Three,
+    Four,
+}
+impl ReferenceMinimum {
+    const fn bytes(self) -> usize {
+        match self {
+            Self::Three => 3,
+            Self::Four => 4,
+        }
+    }
+}
+
 impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
     /// Prepare a complete reference candidate without publishing frame state.
     ///
@@ -97,6 +112,44 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
         regenerated_size: usize,
         raw_literals: bool,
     ) -> Result<bool> {
+        self.prepare_reference_minimum(
+            literals,
+            sequences,
+            initial_repeat,
+            regenerated_size,
+            raw_literals,
+            ReferenceMinimum::Four,
+        )
+    }
+
+    /// Prepare the automatic-literal Optimal candidate with the format's
+    /// three-byte minimum, preserving the existing four-byte parser entry.
+    pub(crate) fn prepare_optimal(
+        &mut self,
+        literals: &[u8],
+        sequences: &[SequenceWithOffset],
+        initial_repeat: [u32; 3],
+        regenerated_size: usize,
+    ) -> Result<bool> {
+        self.prepare_reference_minimum(
+            literals,
+            sequences,
+            initial_repeat,
+            regenerated_size,
+            false,
+            ReferenceMinimum::Three,
+        )
+    }
+
+    fn prepare_reference_minimum(
+        &mut self,
+        literals: &[u8],
+        sequences: &[SequenceWithOffset],
+        initial_repeat: [u32; 3],
+        regenerated_size: usize,
+        raw_literals: bool,
+        minimum: ReferenceMinimum,
+    ) -> Result<bool> {
         self.discard();
         self.payload.clear();
         let result = self.prepare_reference_inner(
@@ -105,6 +158,7 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
             initial_repeat,
             regenerated_size,
             raw_literals,
+            minimum,
         );
         if !matches!(result, Ok(true)) {
             self.discard();
@@ -120,6 +174,7 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
         initial_repeat: [u32; 3],
         regenerated_size: usize,
         raw_literals: bool,
+        minimum: ReferenceMinimum,
     ) -> Result<bool> {
         if initial_repeat != self.sequence_encoder.committed_repeats() {
             return Err(Error::InvalidState);
@@ -129,6 +184,7 @@ impl<A: Allocator + Clone> BlockEntropyEncoder<A> {
             sequences,
             initial_repeat,
             regenerated_size,
+            minimum,
         )?;
         // The normal C block builder bypasses fresh sequence construction below
         // seven bytes. Avoid entropy work for a candidate that cannot be emitted.
@@ -208,11 +264,12 @@ fn validate_reference_reconstruction(
     sequences: &[SequenceWithOffset],
     initial_repeat: [u32; 3],
     regenerated_size: usize,
+    minimum: ReferenceMinimum,
 ) -> Result<()> {
     if regenerated_size > MAX_BLOCK_SIZE || literal_count > regenerated_size {
         return Err(Error::CorruptData);
     }
-    if sequences.len() > MAX_BLOCK_SIZE / 4 {
+    if sequences.len() > MAX_BLOCK_SIZE / minimum.bytes() {
         return Err(Error::ResourceLimit);
     }
     let mut used_literals = 0_usize;
@@ -220,7 +277,7 @@ fn validate_reference_reconstruction(
     let mut repeats = initial_repeat;
     for record in sequences {
         let sequence = record.sequence;
-        if sequence.match_length < 4 {
+        if sequence.match_length < minimum.bytes() as u32 {
             return Err(Error::CorruptData);
         }
         used_literals = used_literals
@@ -410,11 +467,23 @@ mod tests {
     fn fast_reconstruction_counts_final_literals_and_checks_complete_total() {
         let sequence = [record(10, 90, 10, OffsetIntent::Explicit)];
         assert_eq!(
-            validate_reference_reconstruction(13, &sequence, [1, 4, 8], 103),
+            validate_reference_reconstruction(
+                13,
+                &sequence,
+                [1, 4, 8],
+                103,
+                ReferenceMinimum::Four
+            ),
             Ok(())
         );
         assert_eq!(
-            validate_reference_reconstruction(13, &sequence, [1, 4, 8], 100),
+            validate_reference_reconstruction(
+                13,
+                &sequence,
+                [1, 4, 8],
+                100,
+                ReferenceMinimum::Four
+            ),
             Err(Error::CorruptData)
         );
         let mut entropy = context(Global);
@@ -705,5 +774,72 @@ mod tests {
                 monitor.snapshot().identities_created
             );
         }
+    }
+    #[test]
+    fn three_byte_contract_has_distinct_preallocation_and_count_boundaries() {
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let mut entropy = context(owner);
+        let short = [
+            record(1, 3, 1, OffsetIntent::Explicit),
+            record(0, 3, 1, OffsetIntent::Repeat1),
+        ];
+        assert!(monitor.fail_next());
+        let before = monitor.snapshot();
+        assert_eq!(
+            entropy.prepare_reference(b"a", &short, [1, 4, 8], 7, false),
+            Err(Error::CorruptData)
+        );
+        assert_eq!(monitor.snapshot(), before);
+        assert_eq!(
+            entropy.prepare_optimal(b"a", &short, [1, 4, 8], 7),
+            Err(Error::AllocationFailed)
+        );
+        assert_eq!(monitor.snapshot().attempts, before.attempts + 1);
+        drop(entropy);
+        monitor.assert_released();
+        let mut sequences = alloc::vec![record(0,3,1,OffsetIntent::Repeat1);MAX_BLOCK_SIZE/3];
+        sequences[0].sequence.literal_length = 1;
+        assert_eq!(
+            validate_reference_reconstruction(
+                1,
+                &sequences,
+                [1, 1, 1],
+                1 + 3 * sequences.len(),
+                ReferenceMinimum::Three
+            ),
+            Ok(())
+        );
+        assert_eq!(
+            validate_reference_reconstruction(
+                1,
+                &sequences,
+                [1, 1, 1],
+                1 + 3 * sequences.len(),
+                ReferenceMinimum::Four
+            ),
+            Err(Error::ResourceLimit)
+        );
+        sequences.push(record(0, 3, 1, OffsetIntent::Repeat1));
+        assert_eq!(
+            validate_reference_reconstruction(
+                1,
+                &sequences,
+                [1, 1, 1],
+                MAX_BLOCK_SIZE,
+                ReferenceMinimum::Three
+            ),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(
+            validate_reference_reconstruction(
+                1,
+                &[record(1, 2, 1, OffsetIntent::Explicit)],
+                [1, 4, 8],
+                3,
+                ReferenceMinimum::Three
+            ),
+            Err(Error::CorruptData)
+        );
     }
 }
