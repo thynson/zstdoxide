@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-16-optimal-retained-wide-preflight.tar.gz",
+  "archive_bytes": 40529,
+  "archive_sha256": "273eba5a4bdb715068cc177c449080c6d32e63cc6b541ec96eb920c67b0a027f",
+  "files": [
+    {
+      "path": "adapter-diff.patch",
+      "bytes": 14586,
+      "sha256": "05510fd19a43abfb68ce8d3e6ed006fee0120c1e542ef654898ee45f0a3f95b1"
+    },
+    {
+      "path": "evidence.json",
+      "bytes": 4313,
+      "sha256": "a4e320c7291219727e6e94ad262e0dc2bef373a3ba4d204c040aab598fc1a693"
+    },
+    {
+      "path": "instrumentation.json",
+      "bytes": 4593,
+      "sha256": "337f2ee37270cd53c080cdaa3d1fb4c0ef42bcecd306eaa9b7859f00e905e920"
+    },
+    {
+      "path": "normal.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "observed_zstd_opt.c",
+      "bytes": 73209,
+      "sha256": "a93e211456b63127b61d42a2ac92342a8dcc844d3a5d4a0309ab26755bf6b9f1"
+    },
+    {
+      "path": "original_zstd_opt.c",
+      "bytes": 72006,
+      "sha256": "625936ee3fb02d789abb894c1fbc2918ee47582434094c963b630da13532c876"
+    },
+    {
+      "path": "sanitized.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "controls/check-optimal-wide-syntax.py",
+      "bytes": 1761,
+      "sha256": "ff33a4a387e4c53f661fdc642eab0ed7384870bd7819e7515843b334630ae483"
+    },
+    {
+      "path": "controls/zstdoxide-optimal-retained-wide-preflight-normal.log",
+      "bytes": 190,
+      "sha256": "d6fa22b154f35815798c6a06463c0ee419ea42a0f6742e4be5548839833b1017"
+    },
+    {
+      "path": "controls/zstdoxide-optimal-retained-wide-preflight-optimized.log",
+      "bytes": 190,
+      "sha256": "d6fa22b154f35815798c6a06463c0ee419ea42a0f6742e4be5548839833b1017"
+    },
+    {
+      "path": "controls/zstdoxide-optimal-wide-plan.log",
+      "bytes": 120,
+      "sha256": "d2a771cdec8a58b1b6d85be5506278c791037ef50e0902716bb8b90cb831387e"
+    }
+  ],
+  "qualification": "Source-only normal/optimized exact-plan audits: 124 commands, 64 source files, 89 pinned reference files, 26 used C units, 14 unchanged observation hooks, 24 malformed packets per build and 29 forged-plan/control rejections per mode, zero child execution. Separate strict normal/sanitized syntax checks passed; no native capture yet."
+}

@@ -1,0 +1,219 @@
+{
+  "cases": [
+    {
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 18,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1
+      ],
+      "max_last": 8192,
+      "name": "wide_uniform",
+      "packet_sha256": "6d00c1ace3609570ec84cfe0e523dc1cd4612db07bcd65340441661cb63b17db",
+      "predicted_state_sha256": "947f504048b84b53539ef8a53853eb36e12ccab18ce1cf50f76f276a7dc0a202",
+      "queries": 2,
+      "sequences": 2
+    },
+    {
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 8196,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        0,
+        2
+      ],
+      "max_last": 8190,
+      "name": "wide_noise_copy",
+      "packet_sha256": "8a4f88c2c1c15b1aad5d508ad8b6e875a81e8ceea59e3a40870e4a6a3472caef",
+      "predicted_state_sha256": "f764c218f4990714cb2c6d1648aa2b978d86730a387997d315c24327740ba515",
+      "queries": 8186,
+      "sequences": 1
+    },
+    {
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 10620,
+      "highest_path": 4090,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "max_last": 4089,
+      "name": "wide_runs_disabled",
+      "packet_sha256": "e41ed55c2f8273052d90fa6487ceba83caf9ec6c079749d93fc84ed165faed64",
+      "predicted_state_sha256": "a330219edad14fb273d2d1abc693dcde92e4fb8113b15a826286a168756b1389",
+      "queries": 71,
+      "sequences": 8
+    },
+    {
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 10656,
+      "highest_path": 4090,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "max_last": 4089,
+      "name": "wide_runs_priced",
+      "packet_sha256": "e27d589300663367f7a447573e0540711b445adae8b81aceabc7e09b6e7e904c",
+      "predicted_state_sha256": "f3aa11b50ecec058c7664c1e4fc6212e914e81b6e2e3af169f4b29782ce32520",
+      "queries": 89,
+      "sequences": 8
+    },
+    {
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 8390,
+      "highest_path": 4096,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "max_last": 4195,
+      "name": "wide_horizon",
+      "packet_sha256": "ff0a2db82f782f9e4e5f68cc985e5176d7d39812805ea858026ce6a3510f9171",
+      "predicted_state_sha256": "28023b6caf8200e33d9b2bd6d5ccb2814237615f286ba021d7449b927347d499",
+      "queries": 4133,
+      "sequences": 6
+    },
+    {
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "literal_improvement",
+        "search_tree"
+      ],
+      "events": 51,
+      "highest_path": 4,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "max_last": 8192,
+      "name": "wide_short",
+      "packet_sha256": "261893d9c519457ab7c1a1a1489f8bc12ae8e8f88c674d3387bcfd0b72eec311",
+      "predicted_state_sha256": "da7a982d0d287246885f6ed414f85ab71f246af277c8ace64093a6782b20de16",
+      "queries": 17,
+      "sequences": 2
+    },
+    {
+      "blocks": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "literal_improvement",
+        "search_repeat",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 46,
+      "highest_path": 4089,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "max_last": 4096,
+      "name": "wide_window16",
+      "packet_sha256": "702469798724cce4b012ae7330dab9276fa3a4b505a281c3d25820c1be32f163",
+      "predicted_state_sha256": "8a12c08b20e27c2e1e625fade48b95dbff012cd6a2e6a177ae97c64be90e624e",
+      "queries": 12,
+      "sequences": 4
+    }
+  ],
+  "qualification": "Independent retained predictions with explicit publication hypotheses; no C execution or retained production qualification.",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1
+}
