@@ -367,3 +367,19 @@ scripted parsing, observer, reset and drop code generation pass. The probe retai
 exact production source copies plus a concrete caller. No foreign hardware or
 firmware execution is claimed. Full source-bound logs and probe inputs are retained
 in `evidence/2026-10-16-ultra-path-platform.tar.gz`.
+
+## Ordinary-search policy-0 reconciliation
+
+Both Python modes pass exact comparison with all twenty original complete fresh
+native captures: 129,220 events across both padding passes, plus all metadata and
+repeat-owner publication records. Original packet bytes and normal/instrumented
+transcripts remain unchanged. Source-driven successor search supplies every
+query result independently; captured matches are never model inputs. Each mode
+rejects 38 packet/type/complete-state forgeries without child execution.
+
+The same unchanged old requests produce preliminary Ultra predictions of 126,816
+logical events and 19 alternatives per pass. These are model values, not new C
+observations or entropy-kind predictions. The exact reports and additive replay
+are retained in `evidence/2026-10-16-ultra-fresh-baseline.tar.gz`; ownership and
+protocol scope are described in `reference-ultra-fresh-model.md`. Ordinary Rust
+Ultra and its larger source envelope remain gated.

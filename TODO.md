@@ -109,7 +109,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Qualify private Ultra parser exact owners, foreign Miri and no-atomics code generation.
 - [ ] Complete the private Ultra parser safe/isolated-unsafe/all matrix and full regression checkpoint.
 - [x] Specify ordinary Ultra search/path composition and preserve all original fresh requests before implementation.
-- [ ] Reconcile policy-0 ordinary replay with every original complete fresh native observation.
+- [x] Reconcile policy-0 ordinary replay with every original complete fresh native observation.
 - [ ] Freeze ordinary Ultra source-only branch recipes, transport and read-only native command plan.
 - [ ] Capture and independently audit ordinary Ultra search/path states and malformed/forged evidence.
 - [ ] Project and qualify the independent ordinary Ultra fixture reader before private search integration.
