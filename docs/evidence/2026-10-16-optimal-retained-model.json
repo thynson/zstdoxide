@@ -1,0 +1,87 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "cases": 12,
+      "child_processes": 0,
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "discarded_candidate_repeats",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "raw_rollback",
+        "rle_rollback",
+        "search_repeat",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 4096,
+      "qualification": "Predictive retained state and frozen publication hypotheses, not C observation evidence.",
+      "queries": 1205,
+      "rejected": 42,
+      "sequences": 32,
+      "status": "passed"
+    },
+    {
+      "cases": 12,
+      "child_processes": 0,
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "discarded_candidate_repeats",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "raw_rollback",
+        "rle_rollback",
+        "search_repeat",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 4096,
+      "qualification": "Predictive retained state and frozen publication hypotheses, not C observation evidence.",
+      "queries": 1205,
+      "rejected": 42,
+      "sequences": 32,
+      "status": "passed"
+    },
+    {
+      "cases": 12,
+      "manifest_sha256": "5f9f00013209e79e0c460d27ad80b4bc4ad4cc9b131938abeff5bb440c74d3d7",
+      "status": "passed"
+    }
+  ],
+  "sources": {
+    "scripts/oracles/optimal_retained.py": "a50b3b32b013564dd418392dfc0778a6042d98dd877ccaa90c4116e4e6d62ccf",
+    "scripts/oracles/optimal_retained_recipes.py": "11f652ea878be4a3b6d0b17a5a3c93f3ff11e654d3029d36f99868e0b967f6e2",
+    "scripts/oracles/optimal_retained_validation.py": "1d85f7d5a5ab1baf986f55d471a932c3b45ca458a449771df2174f39d40e970e",
+    "scripts/check_optimal_retained_model.py": "43f8924e809dc1e50607a24b638e5db8fec241d0bfcee68072c7cce35df8ac00",
+    "scripts/plan_optimal_retained.py": "3e16ccaf5f299403584dfcdd189df3ecb2e486430d7f274f7ff2699358bc29fd",
+    "tests/fixtures/reference-optimal-retained-recipes/recipes.json": "5f9f00013209e79e0c460d27ad80b4bc4ad4cc9b131938abeff5bb440c74d3d7"
+  },
+  "archive": {
+    "path": "docs/evidence/2026-10-16-optimal-retained-model.tar.gz",
+    "bytes": 776,
+    "sha256": "10a98a8d1df48c762a1922334fb0188f06213302fa58cc96aae0d73498912f86"
+  }
+}

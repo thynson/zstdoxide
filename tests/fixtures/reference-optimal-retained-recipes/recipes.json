@@ -1,0 +1,360 @@
+{
+  "cases": [
+    {
+      "blocks": [
+        64,
+        64
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 18,
+      "hypothesized_kinds": [
+        2,
+        1
+      ],
+      "name": "retained_uniform",
+      "packet_sha256": "3429b88fe573eb0c834d2ae8a5de0e567b4207d3abe8f1796b8b270c69cacbd2",
+      "predicted_state_sha256": "54461413b7660602884e3bc8e358c907a7ec6f7756e0b344adbb73a5d1c280ac",
+      "queries": 2,
+      "sequences": 2
+    },
+    {
+      "blocks": [
+        512,
+        512
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 52,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "name": "retained_periodic",
+      "packet_sha256": "adcf7a25130d834ac4c5834ed072ff080324326297d758a5eb1c6164460ebb25",
+      "predicted_state_sha256": "6bdb5fdb94b059bddec87782df4e9a81c2bfddafb8b009e575843f9fe75248e8",
+      "queries": 36,
+      "sequences": 2
+    },
+    {
+      "blocks": [
+        512,
+        512
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "raw_rollback",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 554,
+      "hypothesized_kinds": [
+        0,
+        2
+      ],
+      "name": "retained_noise_copy",
+      "packet_sha256": "fb664a6a4412eaa01afddba74bbedeeeea2f2f3af661b1f5be2105cbf0029eb3",
+      "predicted_state_sha256": "c3ebd19cb30389abe5aebe9492443482c8fd728568da89b7d517efebd050a455",
+      "queries": 507,
+      "sequences": 2
+    },
+    {
+      "blocks": [
+        256,
+        256,
+        256
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "discarded_candidate_repeats",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "raw_rollback",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 583,
+      "hypothesized_kinds": [
+        2,
+        0,
+        2
+      ],
+      "name": "retained_raw_rollback",
+      "packet_sha256": "777d2ad9e611f4739d600c2b468473b949f6dc262ffbb8c823a156f18504f0ba",
+      "predicted_state_sha256": "08b86c062ac6a393c7228737ec34067905c4da540c677b0a15c162ce21279b3a",
+      "queries": 314,
+      "sequences": 3
+    },
+    {
+      "blocks": [
+        128,
+        128,
+        128
+      ],
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_repeat",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 179,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2
+      ],
+      "name": "retained_short",
+      "packet_sha256": "01010321db8cf1fc2febbd4717fb284a3469cb9cd3a207a4304ce1b1e4e46b74",
+      "predicted_state_sha256": "c81731126aab7dc341113eb77ba53ed404864cd1f8525bbb2e8b3d388432cf50",
+      "queries": 32,
+      "sequences": 4
+    },
+    {
+      "blocks": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 312,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "name": "retained_disabled_literals",
+      "packet_sha256": "13e6f88d3106607699652e44f7097aba267a2e148505a9d888e76e7f9ee04f88",
+      "predicted_state_sha256": "28ef8c38bcf3030a8030dae8cca0bbf5a6a60cada177899248269d9276a0890b",
+      "queries": 51,
+      "sequences": 4
+    },
+    {
+      "blocks": [
+        512,
+        512
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 49,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "name": "retained_larger_geometry",
+      "packet_sha256": "c40f48cb7082c26e26e4411b857a8c0029b4f6f25c9814058b50ff51473b53a5",
+      "predicted_state_sha256": "fad70fa7cf345cf4c22d9d096fab25b2a8b94167f4c6d76065123221c88a8eea",
+      "queries": 33,
+      "sequences": 2
+    },
+    {
+      "blocks": [
+        512,
+        512
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "search_repeat",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 55,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "name": "retained_minimum_3",
+      "packet_sha256": "c162fb5d220542f917595eda9bd71821eb1bc1dbbaacc46cbfeda5d1552660e1",
+      "predicted_state_sha256": "d20d904440eb833b38ed9333fa9efd9ea0876a0568112d051e5d40c328da20fb",
+      "queries": 35,
+      "sequences": 2
+    },
+    {
+      "blocks": [
+        512,
+        512
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 545,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "name": "retained_minimum_4",
+      "packet_sha256": "1538298652c055bbc964063d9f3510f20a4e410fcd8694a24805cc66441277e1",
+      "predicted_state_sha256": "36985976e9e86510950ddb66d6c3f2038ee7a84094665b03e9fb90c2a7ab8695",
+      "queries": 48,
+      "sequences": 2
+    },
+    {
+      "blocks": [
+        512,
+        512
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 583,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "name": "retained_minimum_5",
+      "packet_sha256": "92e67305a275c0a384666c69c1af9328f72d148d9ac8a41d40ebac4eb065632a",
+      "predicted_state_sha256": "6ad3b676ceee90167ce84da4a48df590f343807ac3877ff26e7624f0e5b75776",
+      "queries": 49,
+      "sequences": 3
+    },
+    {
+      "blocks": [
+        512,
+        512
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 583,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "name": "retained_minimum_6",
+      "packet_sha256": "0cd34b996ef0efcd14588dcab154d6b9c2649e7cbfc8d3a18d090f4d91d4572b",
+      "predicted_state_sha256": "9203f39dfdd67cd7bc53949c9f00ff0b96fbe9c04f9fb256326af13e33f98bdd",
+      "queries": 49,
+      "sequences": 3
+    },
+    {
+      "blocks": [
+        512,
+        512
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 583,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "name": "retained_minimum_7",
+      "packet_sha256": "3e7dabe41dd2c38568a4fdab660787e957009687e0776d92ca7126c4d4b3c2dd",
+      "predicted_state_sha256": "9203f39dfdd67cd7bc53949c9f00ff0b96fbe9c04f9fb256326af13e33f98bdd",
+      "queries": 49,
+      "sequences": 3
+    }
+  ],
+  "qualification": "Independent retained predictions with explicit publication hypotheses; no C execution or retained production qualification.",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1
+}

@@ -124,7 +124,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Integrate private fresh optLevel0 parsing after ordinary startup is qualified.
 - [ ] Qualify private fresh composition across isolated features, foreign Miri and no-atomics callers before retained production changes.
 - [x] Specify bounded retained-block transport, state ownership and frame publication before model or observer implementation.
-- [ ] Freeze independent retained search/frequency/path predictions and rollback/RLE hypotheses before C execution.
+- [x] Freeze independent retained search/frequency/path predictions and rollback/RLE hypotheses before C execution.
 - [ ] Review and preflight the retained ordinary CCtx observer and exact dependency/environment command gates.
 - [ ] Capture and independently audit retained optimal blocks, complete frames and committed repeat publication.
 - [ ] Project retained complete state and qualify a checked independent Rust fixture reader.
