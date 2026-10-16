@@ -128,7 +128,9 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Review and preflight the retained ordinary CCtx observer and exact dependency/environment command gates.
 - [x] Reconcile inter-block frontier adjustment and add strict-boundary/raw-candidate successor predictions after the initial capture audit failed.
 - [ ] Capture and independently audit retained optimal blocks, complete frames and committed repeat publication.
-- [ ] Project retained complete state and qualify a checked independent Rust fixture reader.
+- [x] Specify retained fixture encoding with persistent deltas and publication owners.
+- [ ] Project audited retained complete state into a bounded immutable fixture.
+- [ ] Qualify a checked independent retained Rust fixture reader and complete frame decode.
 - [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
 - [ ] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
 - [ ] Freeze successor public admission mappings and independently reconstruct every newly admitted tuple.
