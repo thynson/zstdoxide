@@ -137,7 +137,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
 - [x] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
 - [x] Design additive wider retained sparse observations before broadening ordinary block admission.
-- [ ] Freeze wider retained transport and independent sparse replay; reconcile every existing small capture.
+- [x] Freeze wider retained transport and independent sparse replay; reconcile every existing small capture.
 - [ ] Freeze source-only wider branch recipes and preflight the unchanged-provider sparse observer.
 - [ ] Capture and audit wider ordinary paths, search state, publication and complete frames.
 - [ ] Project and independently read wider state fixtures before widening private production bounds.

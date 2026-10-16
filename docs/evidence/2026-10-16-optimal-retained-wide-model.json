@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "archive": "2026-10-16-optimal-retained-wide-model.tar.gz",
+  "archive_bytes": 7303,
+  "archive_sha256": "98c794e7c8f8d30a6918a5c963f890123ef5ecaa0d6f86ff034c46797092779e",
+  "files": [
+    {
+      "path": "logs/zstdoxide-optimal-retained-wide-model.log",
+      "bytes": 995,
+      "sha256": "0317800be6010eef56f440d1ca0eb56706b9dac42b432116faaf1773c514a96e"
+    },
+    {
+      "path": "logs/zstdoxide-optimal-retained-wide-model-optimized.log",
+      "bytes": 995,
+      "sha256": "0317800be6010eef56f440d1ca0eb56706b9dac42b432116faaf1773c514a96e"
+    },
+    {
+      "path": "scripts/oracles/optimal_retained_wide.py",
+      "bytes": 2332,
+      "sha256": "6a257560e27caabf42838978361d59f7f202d3ea9e2f2062d56a45f43af1c9de"
+    },
+    {
+      "path": "scripts/oracles/optimal_retained_wide_validation.py",
+      "bytes": 7295,
+      "sha256": "f8f9c8ba4f370cabc948ef6bf7a5e4ed7267c510755dc6f89e9c5838a54c2c5c"
+    },
+    {
+      "path": "scripts/check_optimal_retained_wide_model.py",
+      "bytes": 7057,
+      "sha256": "f719eade180e084f5e7c624fa5a9cdde26b0fa434a1b9bc5940e1038f9b892ca"
+    },
+    {
+      "path": "docs/reference-optimal-retained-wide-protocol.md",
+      "bytes": 2037,
+      "sha256": "f097083963b504d398566db9054656f842bc7b17c91a95c03e0aea08c3425367"
+    }
+  ],
+  "qualification": "Normal and optimized Python each reconciled 8972 captured events from sixteen small cases and rejected fifty malformed controls with zero child execution. Wider requests remain source-only."
+}
