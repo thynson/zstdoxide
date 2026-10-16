@@ -751,15 +751,16 @@ mod fresh_tests {
     }
     #[test]
     fn fresh_entry_rejects_unqualified_source_and_geometry_before_mutation() {
-        let source = [b'a'; 513];
+        let source = [b'a'; 16385];
         let q = query([1, 1, 4, 8, 0, 4]);
         for (length, w, h, c, s, m, t, short) in [
             (63, 10, 6, 6, 1, 4, 0, None),
-            (513, 10, 6, 6, 1, 4, 0, None),
-            (64, 13, 6, 6, 1, 4, 0, None),
-            (64, 10, 10, 6, 1, 4, 0, None),
-            (64, 10, 6, 10, 1, 4, 0, None),
-            (64, 10, 6, 6, 5, 4, 0, None),
+            (16385, 16, 6, 6, 1, 4, 0, None),
+            (64, 17, 6, 6, 1, 4, 0, None),
+            (64, 10, 13, 6, 1, 4, 0, None),
+            (64, 10, 6, 13, 1, 4, 0, None),
+            (64, 10, 6, 6, 7, 4, 0, None),
+            (16384, 13, 6, 6, 1, 4, 0, None),
             (64, 10, 6, 6, 1, 4, 4096, None),
             (64, 10, 6, 6, 1, 3, 0, Some(6)),
         ] {
@@ -1070,6 +1071,10 @@ mod retained_wide_tests {
             assert_eq!(search.test_snapshot(), before);
             assert!(search.retained.is_none());
         }
+        search
+            .validate_fresh_start(&source[..16384], 4, 4095)
+            .unwrap();
+        search.begin_retained(0, 8192).unwrap();
         assert!(
             search
                 .validate_fresh_start(&source[..16384], 4, 4095)
@@ -1105,5 +1110,78 @@ mod retained_wide_tests {
             assert!(a.source.short_bucket(8190, 16).is_err());
             assert_eq!(a.source.match_length(1, 0).unwrap(), 8191);
         }
+    }
+}
+
+#[cfg(test)]
+mod fresh_wide_tests {
+    use super::*;
+    use crate::optimal_fresh_wide_fixture as startup_fixture;
+    use alloc::{vec, vec::Vec};
+    fn state(source: &[u8], layout: OptimalSearchLayout) -> OptimalSearch<'_> {
+        OptimalSearch::from_parts(
+            source,
+            layout,
+            ReferenceTree::new_in(layout.tree(), Global, Global).unwrap(),
+            OptimalShortKey::new_in(layout.short_log(), Global).unwrap(),
+            OptimalMatches::new_in(Global).unwrap(),
+        )
+        .unwrap()
+    }
+    fn layout(case: &startup_fixture::Case<'_>) -> OptimalSearchLayout {
+        OptimalSearchLayout::new(
+            case.window,
+            case.hash,
+            case.chain,
+            case.search,
+            case.minimum as u8,
+            case.target as usize,
+            (case.minimum == 3).then_some(case.window),
+        )
+        .unwrap()
+    }
+    fn query(q: [u32; 6]) -> OptimalQuery {
+        OptimalQuery {
+            position: q[0] as usize,
+            repeats: [q[1], q[2], q[3]],
+            zero_literals: q[4] == 1,
+            length_to_beat: q[5] as usize,
+        }
+    }
+    #[test]
+    fn every_fresh_c_query_candidate_map_and_frontier_matches() {
+        let mut queries = 0;
+        for case in startup_fixture::read(startup_fixture::PACK).unwrap() {
+            let mut state = state(case.source, layout(&case));
+            let mut expected = vec![0; case.search_cells()];
+            for (index, event) in case.blocks[0].events.iter().enumerate() {
+                if let Some(q) = event.query {
+                    assert_eq!(
+                        state.test_snapshot(),
+                        expected,
+                        "{} before {index}",
+                        case.name
+                    );
+                    let actual = state
+                        .query_fresh(query(q))
+                        .unwrap()
+                        .iter()
+                        .map(|m| [m.off_base(), m.length() as u32])
+                        .collect::<Vec<_>>();
+                    assert_eq!(actual, event.matches, "{} query {index}", case.name);
+                    queries += 1;
+                }
+                for &(at, value) in &case.blocks[0].search_changes[index] {
+                    expected[at] = value;
+                }
+                assert_eq!(
+                    state.test_snapshot(),
+                    expected,
+                    "{} after {index}",
+                    case.name
+                );
+            }
+        }
+        assert_eq!(queries, 30314);
     }
 }

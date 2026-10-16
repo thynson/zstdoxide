@@ -1,0 +1,67 @@
+{
+  "archive": "2026-10-16-optimal-fresh-wide-search.tar.gz",
+  "archive_bytes": 3468,
+  "archive_sha256": "e1dcd192c1a2e739b7242c01d98bac244332bdcc32a5a7efccb4d3c148b86793",
+  "files": [
+    {
+      "path": "check-optimal-fresh-wide-search.py",
+      "bytes": 1861,
+      "sha256": "8b4aa9047d39db903b37f68e8de988b755f553774599393a96bc6bcd34349d17"
+    },
+    {
+      "path": "check-optimal-fresh-wide-search.log",
+      "bytes": 75,
+      "sha256": "bb64cbd1a190444d7335908055d4fc95f9a00f333a900c1527ea80cf07406a39"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/all.log",
+      "bytes": 2562,
+      "sha256": "1d5f607a73d2e2817fd87c4fda9f1bca4e598686b502957fa075a3ad8d0af95d"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/clippy.log",
+      "bytes": 142,
+      "sha256": "05d5bdde9b03190c148cb957418627a8ac24d2b1906a9011a583c9aeb7c54c7c"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/evidence.json",
+      "bytes": 3662,
+      "sha256": "223fedfc6f12292c14720684dfb493053e34aa3399304cda252b5a18a9c5442b"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/matches.log",
+      "bytes": 2562,
+      "sha256": "74634c302f97538354a7dfcd8c1e9b6162e16ad50c52ec8996059b234141daae"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/nostd.log",
+      "bytes": 142,
+      "sha256": "eff36244fa6aaf283a8723d22742400dfe3873677ad52cb9dc2162282ecf6267"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/release-all.log",
+      "bytes": 2553,
+      "sha256": "d4f1924f8ee617ab9a628d780b6eecb8b1efac1fa7394f939f2a14cc8874e226"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/safe.log",
+      "bytes": 2562,
+      "sha256": "300a0dff04d5f6aafa3469eddc060b806ab3c53686b490998ae778a541557112"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/short.log",
+      "bytes": 2562,
+      "sha256": "efe0c63e8fc0d27ffee89b049071cb9c84ef945efb856e6abc5f2faa794cbf30"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-search-checks/tree.log",
+      "bytes": 2562,
+      "sha256": "1e8cf40d71d1cb6b211b56fe7b0711bca3b8a573fefd2206ad8fc478bcca478e"
+    }
+  ]
+}
