@@ -2311,3 +2311,23 @@ accidentally combining fractional prices with optLevel0 search/path shortcuts.
 There is still no public strategy8 admission. The existing isolated frequency
 unsafe feature changes only checked cell access; policy and counter arithmetic
 remain common safe value operations.
+
+### Complete policy-tagged frequency fixture
+
+The successor binary uses `ZUFRQF01`, a u32 case count, then per-case u32 name
+length, source length, operation count, literal mode and policy. Name/source
+bytes follow; each operation retains six request words and the same390-word
+complete state/query record as the original Optimal fixture. Policy is explicit
+in each case and must agree with every audited native record before projection.
+The298positive cases contain4065complete observations; both rejected wrappers
+remain in the source-only manifest/capture, not in this positive fixture.
+
+An independent reader borrows source/name bytes and fallibly owns per-case
+observation vectors; allocations are bounded by the fixed40MiB pack envelope,
+298cases and4065observations. All table widths and arithmetic extents are checked
+before access. It validates policy, source spans, dirty-cache lifecycle, update
+budgets, exact sums, disabled literal state and refreshed/retained cached weights
+without production frequency code. Fractional cache reconstruction uses wide
+integer division rather than production shifts. The cumulative transport guard
+is independently recomputed from the initial source histogram. Immutable original
+whole-mode bytes and request values remain separately qualified.
