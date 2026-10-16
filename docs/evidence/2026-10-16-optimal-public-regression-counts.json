@@ -1,0 +1,67 @@
+{
+  "archive": "2026-10-16-optimal-public-regression-counts.tar.gz",
+  "archive_bytes": 41829,
+  "archive_sha256": "a01c9a3394788bfc3d35d76539893b7cdc36ac16771eee6cf348613138db41bb",
+  "files": [
+    {
+      "path": "check-optimal-public-full-safe.py",
+      "bytes": 1244,
+      "sha256": "811c9e54987367e2153f7c8e47061e8216bdffb275f22ba339242fd472c6d30b"
+    },
+    {
+      "path": "check-optimal-public-full-safe.log",
+      "bytes": 29,
+      "sha256": "6bd6b969877aba968252ff7987a9e7ab64386f51bd8dbc116c24267fb5a548d6"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-safe-1016/evidence.json",
+      "bytes": 18469,
+      "sha256": "4ae7361e9c8260b2cc5064a054702c411e9d18b7477dea576ba297fd39a3c970"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-safe-1016/full-safe.log",
+      "bytes": 796,
+      "sha256": "cec1a1ec6abd9eae90eee9942523bcea36b2d7d0149489432f15e0ba980970d6"
+    },
+    {
+      "path": "check-optimal-public-full-safe-v2.py",
+      "bytes": 1282,
+      "sha256": "28cf1ff5cb1bdc5488ef6a4bf032c99fd9e6945abf64172643e1482d444f665e"
+    },
+    {
+      "path": "check-optimal-public-full-safe-v2.log",
+      "bytes": 30,
+      "sha256": "d2d0e5c33339646b0acfc571e002907e1b31468000816b9f0e90ec5ae2bc7fea"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-safe-v2-1016/evidence.json",
+      "bytes": 19430,
+      "sha256": "ca8df540d77cea807ad846bfac85b1c38740094ef99616edf82d2fce0fe5340f"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-safe-v2-1016/full-safe.log",
+      "bytes": 137709,
+      "sha256": "19c310ab534a5e6faa19af2008cf65811cb129336f42360477bcb8717aaba9d8"
+    },
+    {
+      "path": "optimal-admission-counts-safe.log",
+      "bytes": 1827,
+      "sha256": "e2402ee7ea9f0943da0ade95c7a45c2002627e3289c099226cb0a5b660e900b9"
+    },
+    {
+      "path": "optimal-admission-counts-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "optimal-frame-benchmark-compile.log",
+      "bytes": 737,
+      "sha256": "80b5df9e4b899f5f0c74faa212d0a532619da37ceb47ae26d143b9e994c2d544"
+    },
+    {
+      "path": "optimal-frame-benchmark-compile-v2.log",
+      "bytes": 130,
+      "sha256": "feca1116b4af597d5538c39e4bff3566f14a57ce6b3a101ca73875a9c52b6198"
+    }
+  ]
+}

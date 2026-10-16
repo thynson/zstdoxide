@@ -315,7 +315,7 @@ fn original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_bu
         selected_levels.insert(simple.level);
         admitted += 1;
     }
-    assert_eq!((admitted, unsupported, resource, advanced), (67, 9, 1, 4));
+    assert_eq!((admitted, unsupported, resource, advanced), (67, 7, 3, 4));
     assert_eq!(
         selected_levels,
         [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -352,7 +352,7 @@ fn fuzzer_empty_level_loop_uses_the_frozen_successor_admission() {
             unsupported += usize::from(status == "unsupported");
         }
     }
-    assert_eq!((admitted, unsupported, resource), (11, 12, 1));
+    assert_eq!((admitted, unsupported, resource), (11, 10, 3));
 }
 
 #[test]
@@ -385,7 +385,7 @@ fn fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equal
             unsupported += usize::from(status == "unsupported");
         }
     }
-    assert_eq!((admitted, unsupported, resource), (9, 9, 1));
+    assert_eq!((admitted, unsupported, resource), (9, 7, 3));
 }
 
 // Version6 expectations are additive fixtures. Original C selector tuples and

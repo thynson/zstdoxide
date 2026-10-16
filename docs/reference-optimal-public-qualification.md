@@ -56,3 +56,15 @@ sizes while distinguishing newly implemented resource-limited Optimal requests
 from unimplemented Ultra/Ultra2. Full regression, native interoperability,
 foreign platforms and equivalent-workload measurements remain separate gates.
 Evidence: `docs/evidence/2026-10-16-optimal-public-admission.tar.gz`.
+
+The first complete regression run stopped at three local admission-category
+counts in `upstream_reference_fast`: v6 changes two legacy Optimal cases per
+family from unsupported to resource-limited. Actual request outcomes matched
+the immutable v6 tables; only aggregate counts still used v5. The fuzz totals
+are now 67/7/3/4 (success/unsupported/resource/advanced), empty-loop totals
+11/10/3, and 30-byte-loop totals 9/7/3. All 17 focused tests and formatting pass.
+No original source, selector, level range, numeric size assertion or historical
+fixture was edited. The failed full run is preserved; an earlier full-run build
+failure in the new benchmark example's mixed-width setter array is also retained.
+That example now compiles after separating its u8 log setters from the u32 target.
+Evidence: `docs/evidence/2026-10-16-optimal-public-regression-counts.tar.gz`.
