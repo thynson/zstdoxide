@@ -95,7 +95,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Qualify exact borrowed/non-cloning owners, policy mismatch rejection and allocation-failure cleanup.
 - [x] Complete the policy-bound frequency feature matrix and full safe/all regression checkpoint.
 - [x] Qualify a clock-free complete-state frequency measurement harness and exact owners.
-- [ ] Measure paired safe/frequency-unsafe/all frequency lifecycles and an independent safe/all repeat after CPU barriers.
+- [x] Measure paired safe/frequency-unsafe/all frequency lifecycles and an independent safe/all repeat after CPU barriers.
 - [x] Specify coupled scripted-path ownership, saved-match alternative observations and predecessor invariants.
 - [x] Reconstruct the complete original 27-case path fixture with policy-0 successor replay.
 - [x] Freeze independent Ultra path replay and source-only branch coverage before observer execution.

@@ -1,0 +1,302 @@
+{
+  "archive": "2026-10-16-ultra-frequency-timed.tar.gz",
+  "archive_bytes": 85834,
+  "archive_sha256": "f75b22ca173b47f57e02568123aa346a85125b1f65d53181f97db8d9a89d1357",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-timed-1016/all.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-timed-1016/all.stdout",
+      "bytes": 28465,
+      "sha256": "4baf1a16e508a1cb4a7ea772fe707bb1409ca4d3a2204a42dfd551c38bf1cb96"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-timed-1016/barriers.json",
+      "bytes": 96369,
+      "sha256": "b5418b3cfbc1499172f24528441fb473d4a46f24989a9d822ef456fef6b74974"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-timed-1016/evidence.json",
+      "bytes": 30130,
+      "sha256": "a2ac1a96cd6611ccb742fdbdd86802df2ceb83d3faad614c8dd157b93032274e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-timed-1016/frequencies.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-timed-1016/frequencies.stdout",
+      "bytes": 28465,
+      "sha256": "910388cb16b9b3cc2ea42814f97ba01fff730e3f830ff18ebd2997cda384e316"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-timed-1016/safe.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-timed-1016/safe.stdout",
+      "bytes": 28466,
+      "sha256": "c5216f9822aafcdc3c3a710f279e8f0653af25d41fc3752a18a6e8070b664c68"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-repeat-1016/all.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-repeat-1016/all.stdout",
+      "bytes": 28465,
+      "sha256": "ece8f6dcafd52e5618e3cc671347cde02e32eacc1633dd498c77b3750882c39c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-repeat-1016/barriers.json",
+      "bytes": 96369,
+      "sha256": "b5418b3cfbc1499172f24528441fb473d4a46f24989a9d822ef456fef6b74974"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-repeat-1016/evidence.json",
+      "bytes": 29631,
+      "sha256": "a68f0bf9770421f6353d1911ea6fcfee0a5939d79e1bea534e0b60d8d6fd87de"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-repeat-1016/safe.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-repeat-1016/safe.stdout",
+      "bytes": 28466,
+      "sha256": "ca7a8c5e1d554b38a3e3048d10f7668fb12602dff9e8bb2e306222b9557111a8"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timing-wrapper-1016/evidence.json",
+      "bytes": 4743,
+      "sha256": "b40c4fe569a9e0b6e3aae3adea8f63763cb9bddb0b9e3555117ce7e79cc11d24"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timing-wrapper-1016/repeat.log",
+      "bytes": 25,
+      "sha256": "89d66f302c4d0f74d1de843fd6cdcd26e5ac9478edd08c334888d39f439b9662"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timing-wrapper-1016/timed.log",
+      "bytes": 45,
+      "sha256": "bebfb4bdee1ab58f38ed3432342655c164727c77276847b1f88f06d5aaef5eb6"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/bool-duration.json",
+      "bytes": 23882,
+      "sha256": "62a2896febcab530d7c48826df6838499c00fbeb449ed9817f6f580c4895e463"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/cache.json",
+      "bytes": 23883,
+      "sha256": "a0c9352e1d71aeb170df1cad844917c65b3999e80199ba544aba815a74e3db5a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/coherent-count.json",
+      "bytes": 23884,
+      "sha256": "3498c51d60508f7c005164d5160484630770cefb5f8fa55c6e3d3fdbc15ec8e4"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/dirty.json",
+      "bytes": 23883,
+      "sha256": "736081bc2ed75aeefb41f7a1536c1e52e42081fa9f2eec513f0f5190a90eed7d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/extra.json",
+      "bytes": 23929,
+      "sha256": "391cf66ea0ae9d6050f3fcdcb2a881c4f628c84219e3c23725f49641a9bc5810"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/iteration-count.json",
+      "bytes": 23884,
+      "sha256": "99fee42021a124fba2fe9fe640099333f69ec8d95896882f301ad2cbbcf05a03"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/missing.json",
+      "bytes": 23839,
+      "sha256": "d0eb29268fcf4f6c046b4ce1372e3fd7292eafa69f2791a532e7bde661cad606"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/numeric-bool.json",
+      "bytes": 23887,
+      "sha256": "b66c64c1d1a8f4cb84955d17cb7498bef9e7398f067996c468dece5ef92d9a03"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/owner-allocation.json",
+      "bytes": 23884,
+      "sha256": "d67aa558bb4e292a3b53c8f4898f9aa24a55aaa5a44708c949abdbdf31b01be6"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/owner-leak.json",
+      "bytes": 23884,
+      "sha256": "c58435d43fdd398aae8a21ae7c014609d5d01a8cd2e03fb2f9530153db6af02f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/policy.json",
+      "bytes": 23884,
+      "sha256": "8c23f9e69805126b51707dcd729f0ad00b7c76b518bfb1b7185d36832682efb2"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/qualification-count.json",
+      "bytes": 23884,
+      "sha256": "609e4f373cf6c3dd6bfa72b3e8b342a23d0159411fa70f319c94bb30d3b0a0f1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/sample-order.json",
+      "bytes": 23884,
+      "sha256": "7346b0ace786883b5a51ba73a4463d47eb1d3c7bdcc7ea91bd4ccfbedeae1f5f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/sum.json",
+      "bytes": 23885,
+      "sha256": "29182e48a8685b413820149026625f25e268cd795fcda02caceb7353763b6c5f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/summary.json",
+      "bytes": 3007,
+      "sha256": "1bd488b368bbbadbfb5d35c74c807d1e53dc2094e91cf5898d8ae6a46cca5e10"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/wrong-backend.json",
+      "bytes": 23883,
+      "sha256": "9d3e7c3935554ccb94fe885fe32a266bfa74025dc413edc3cd940103a7bc5044"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-normal-1016/zero-duration.json",
+      "bytes": 23879,
+      "sha256": "0c165349a37f5c08718e1ad89866e73aa7a4ff23a442dcc83a331b26cfde4d2a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/bool-duration.json",
+      "bytes": 23882,
+      "sha256": "62a2896febcab530d7c48826df6838499c00fbeb449ed9817f6f580c4895e463"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/cache.json",
+      "bytes": 23883,
+      "sha256": "a0c9352e1d71aeb170df1cad844917c65b3999e80199ba544aba815a74e3db5a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/coherent-count.json",
+      "bytes": 23884,
+      "sha256": "3498c51d60508f7c005164d5160484630770cefb5f8fa55c6e3d3fdbc15ec8e4"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/dirty.json",
+      "bytes": 23883,
+      "sha256": "736081bc2ed75aeefb41f7a1536c1e52e42081fa9f2eec513f0f5190a90eed7d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/extra.json",
+      "bytes": 23929,
+      "sha256": "391cf66ea0ae9d6050f3fcdcb2a881c4f628c84219e3c23725f49641a9bc5810"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/iteration-count.json",
+      "bytes": 23884,
+      "sha256": "99fee42021a124fba2fe9fe640099333f69ec8d95896882f301ad2cbbcf05a03"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/missing.json",
+      "bytes": 23839,
+      "sha256": "d0eb29268fcf4f6c046b4ce1372e3fd7292eafa69f2791a532e7bde661cad606"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/numeric-bool.json",
+      "bytes": 23887,
+      "sha256": "b66c64c1d1a8f4cb84955d17cb7498bef9e7398f067996c468dece5ef92d9a03"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/owner-allocation.json",
+      "bytes": 23884,
+      "sha256": "d67aa558bb4e292a3b53c8f4898f9aa24a55aaa5a44708c949abdbdf31b01be6"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/owner-leak.json",
+      "bytes": 23884,
+      "sha256": "c58435d43fdd398aae8a21ae7c014609d5d01a8cd2e03fb2f9530153db6af02f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/policy.json",
+      "bytes": 23884,
+      "sha256": "8c23f9e69805126b51707dcd729f0ad00b7c76b518bfb1b7185d36832682efb2"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/qualification-count.json",
+      "bytes": 23884,
+      "sha256": "609e4f373cf6c3dd6bfa72b3e8b342a23d0159411fa70f319c94bb30d3b0a0f1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/sample-order.json",
+      "bytes": 23884,
+      "sha256": "7346b0ace786883b5a51ba73a4463d47eb1d3c7bdcc7ea91bd4ccfbedeae1f5f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/sum.json",
+      "bytes": 23885,
+      "sha256": "29182e48a8685b413820149026625f25e268cd795fcda02caceb7353763b6c5f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/summary.json",
+      "bytes": 3006,
+      "sha256": "9c8b255b76b487a41d779bd8ee27a230fea23fb795c0b372e319e38ef4bdee3c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/wrong-backend.json",
+      "bytes": 23883,
+      "sha256": "9d3e7c3935554ccb94fe885fe32a266bfa74025dc413edc3cd940103a7bc5044"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-timed-controls-optimized-1016/zero-duration.json",
+      "bytes": 23879,
+      "sha256": "0c165349a37f5c08718e1ad89866e73aa7a4ff23a442dcc83a331b26cfde4d2a"
+    },
+    {
+      "path": "run-ultra-frequency-timing.py",
+      "bytes": 2208,
+      "sha256": "9ae289b2e297f2968ce91ef1ffd1124d0661b8da4fe65421252bf08c58b1e561"
+    },
+    {
+      "path": "check-ultra-frequency-timing-modes.py",
+      "bytes": 624,
+      "sha256": "d388580591475ab1093adf1947c6bdc114c435049b6396abb11f22c37c7d883e"
+    },
+    {
+      "path": "analyze-ultra-frequency-timing.py",
+      "bytes": 2516,
+      "sha256": "ea8b374c63caaff354b8f3843d925df54924a7742b29fc3fad1f92514b7f931d"
+    },
+    {
+      "path": "ultra-frequency-timing-analysis.json",
+      "bytes": 3415,
+      "sha256": "d84f3f9fd97882dc24bbe38aab86096b08300a7a31db4ec7f42cc0019a49d37d"
+    },
+    {
+      "path": "ultra-frequency-timing-normal.json",
+      "bytes": 503,
+      "sha256": "ae3549fea809a08bbbcc2aa22f7b8566feafc97c8f870f914cce7bf7b7bddc72"
+    },
+    {
+      "path": "ultra-frequency-timing-optimized.json",
+      "bytes": 502,
+      "sha256": "0fb78b92e10bbbfa4f9fc0c2d40d872aa07008147a798324ccf22bc432ff8988"
+    },
+    {
+      "path": "ultra-frequency-timed-controls-normal.log",
+      "bytes": 70,
+      "sha256": "cfd07ae1e9e5dd036bfafb1d0ee35af7098bf48326c7978f656d6d8790aefaed"
+    },
+    {
+      "path": "ultra-frequency-timed-controls-optimized.log",
+      "bytes": 69,
+      "sha256": "d1ab79f449255d7705d7808ce118bf050ef45600173957e1273e07fc137b29cc"
+    }
+  ]
+}
