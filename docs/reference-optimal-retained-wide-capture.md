@@ -23,3 +23,11 @@ The projected ZORFW02 fixture has seven cases, 37,977 events, 12,510 queries,
 `ee53ed6f93e5c289f5793370482f1b2b5b8d076339207a7c059cc15e4633503d`.
 Normal and optimized Python reproduce identical bytes after checking every
 archive member, frozen source identity and independently replayed native state.
+
+The independent Rust reader passes four tests each in safe, all-feature and
+release/all-feature builds. It checks all complete native frames, actual horizon
+cells, raw/RLE repeat-owner publication, malformed scalar/sparse bounds and
+every strict frame prefix. Strict all-feature/all-test Clippy, formatting and
+true no_std compilation pass. A collapsible test-condition lint was repaired;
+the malformed-input test was rerun and both lint logs are preserved. This
+qualifies the fixture reader, not wider production parsing.

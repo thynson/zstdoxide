@@ -1,0 +1,77 @@
+{
+  "archive": "2026-10-16-optimal-retained-wide-reader.tar.gz",
+  "archive_bytes": 9034,
+  "archive_sha256": "5acd080e7d2ffd168fe93596dd0afcc47e15b1c4a59098cd55254123c43fb2e9",
+  "files": [
+    {
+      "path": "zstdoxide-optimal-retained-wide-reader/clippy.log",
+      "bytes": 1213,
+      "sha256": "999a9f163a9f109ee759696300387426fedf368626278fd17e564ac9adcbcd60"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-reader/evidence.json",
+      "bytes": 835,
+      "sha256": "db4cee991b516653b65b8f30f4d3ca149a80ee8a443df5d3cdb62de2335f7424"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-reader/release-all.log",
+      "bytes": 725,
+      "sha256": "461ef0754a34aa5b865fc10a6d550df160581bc8ce4f62267c98f31961559c22"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-reader-final/clippy.log",
+      "bytes": 142,
+      "sha256": "13023ddbae33840393910b8e98cbc09ae1a2aca1a6b6a187c5cd0d16dcdf2aec"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-reader-final/evidence.json",
+      "bytes": 1407,
+      "sha256": "2b02a02e3da5f6ea2bc80b9877e752a9eea90f9210a78dc50b4c81852c7823d3"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-reader-final/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-reader-final/malformed.log",
+      "bytes": 509,
+      "sha256": "3382c5557684a33dd0fc19085f6cd55fc264cf734e4bd7b9d592365c25452863"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-reader-final/nostd.log",
+      "bytes": 72,
+      "sha256": "f0788aa36d1c86b6ccdfb7f4042a5574102d82061c046422a2d42e008a1e4710"
+    },
+    {
+      "path": "test-optimal-retained-wide-reader-safe.log",
+      "bytes": 734,
+      "sha256": "9d13c17f1e810916a83d422cad1e35f1867c6211b298d27417e52c532d33f842"
+    },
+    {
+      "path": "test-optimal-retained-wide-reader-all.log",
+      "bytes": 734,
+      "sha256": "e3439d38a750b10d7720144739b2e55035887158d32796960a9585fe80fa9ce8"
+    },
+    {
+      "path": "check-retained-wide-reader-rest.py",
+      "bytes": 1008,
+      "sha256": "55dc3ff22cd7483a2fd8f5d1cadbcaeb7725a76f2fd6f450740a6fb09f426c20"
+    },
+    {
+      "path": "check-retained-wide-reader-final.py",
+      "bytes": 995,
+      "sha256": "b15cc08907be8d94dfcec3e6be075d68a51cafaf74581409a6453cb7d88e4870"
+    },
+    {
+      "path": "tests/reference_optimal_retained_wide_fixture.rs",
+      "bytes": 5992,
+      "sha256": "06e139ac17594ba32a69467b662edea0e5ac46d4711b782415caf93b0e65027d"
+    },
+    {
+      "path": "tests/support/optimal_retained_wide_fixture.rs",
+      "bytes": 21652,
+      "sha256": "bb3909e7b9641928b7078f2c5e3a5950fb64f70b87084a788453b8c12fffc4e4"
+    }
+  ]
+}
