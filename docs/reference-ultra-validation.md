@@ -37,3 +37,15 @@ native execution. The C adapter reaches unchanged static upstream functions;
 normal and fully instrumented builds must agree. Malformed input must be rejected
 before any upstream call or stdout record. Frequency lifecycle and whole-parser
 captures remain later gates and cannot be inferred from scalar conformance.
+
+## Independent scalar model
+
+The source-only manifest freezes 2470 unique rows: both policies cover weights,
+LL prices, match prices, literal clamps/disabled/predefined modes, and signed LL
+increments. There are 70 negative-increment cases. Transport size is 98812 bytes,
+SHA-256 `9c087f75ca46d26aa5a696e5f0676865f9f8b741e0abd1dd0a08eeb6a01c68bb`.
+`check_ultra_scalar_model.py` passes under ordinary and optimized Python, checking
+manual interpolation examples, power boundaries, exact packet roundtrips,
+malformed transport, strict JSON types and duplicate/nonfinite keys. Its generated
+transcript is a self-consistency check, not an upstream observation. No C helper
+has been executed at this checkpoint.

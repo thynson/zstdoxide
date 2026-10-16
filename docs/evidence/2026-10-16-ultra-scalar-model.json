@@ -1,0 +1,42 @@
+{
+  "archive": "2026-10-16-ultra-scalar-model.tar.gz",
+  "archive_bytes": 21711,
+  "archive_sha256": "50c74b1bf6af970e1627ed1559e96091cf744a8a08177595f472dd9902c67406",
+  "files": [
+    {
+      "path": "ultra_scalar.py",
+      "bytes": 6782,
+      "sha256": "8310cb0c45b333e220162d4a72523ad8163f18e768e12cb3d8c68982534063c5"
+    },
+    {
+      "path": "ultra_scalar_recipes.py",
+      "bytes": 2715,
+      "sha256": "bd311a5ddb2466342e96cf7790f336aec3d3528e2bcca2d2151642949c7cf218"
+    },
+    {
+      "path": "check_ultra_scalar_model.py",
+      "bytes": 3018,
+      "sha256": "20190258fce6719c3ffa74c0eebe6b2414651e4190cb6d74e457e8ff28a58544"
+    },
+    {
+      "path": "reference-ultra-scalar-recipes/README.md",
+      "bytes": 574,
+      "sha256": "79d2da266e41e22c73265478a4f5f8d88592b3c4df51733332ccb3dfb59a033a"
+    },
+    {
+      "path": "reference-ultra-scalar-recipes/recipes.json",
+      "bytes": 512624,
+      "sha256": "0be8f2f0fab68a388b67e19a01c9711201be61cdd18073b93e6cfb66e6d3b663"
+    },
+    {
+      "path": "ultra-scalar-model-normal.log",
+      "bytes": 348,
+      "sha256": "0c8c0f395dea89f3208a7a7853103a49205b4968006fc08dd5c08de9bf44218c"
+    },
+    {
+      "path": "ultra-scalar-model-optimized.log",
+      "bytes": 347,
+      "sha256": "c4df5db7e317637cf9e96dda7c8a726ab8942ea1ce9be82d46b03d0f180f180a"
+    }
+  ]
+}

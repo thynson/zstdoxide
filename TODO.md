@@ -74,7 +74,7 @@ Strategy 9 and its initial discarded pass belong to a subsequent module.
 Preserve every Optimal fixture, source request, complete frame and owner baseline.
 
 - [x] Review pinned fractional pricing, coupled policy, cache lifecycle and thorough path relaxation against the recorded design.
-- [ ] Decompose scalar boundaries and freeze an independent integer fractional-price model before native execution.
+- [x] Decompose scalar boundaries and freeze an independent integer fractional-price model before native execution.
 - [ ] Specify bounded scalar transport and adapter ownership before native helper implementation.
 - [ ] Review and preflight the exact scalar adapter, full instrumentation and malformed request controls.
 - [ ] Project independently audited scalar observations into an immutable Rust fixture and qualify its reader.
