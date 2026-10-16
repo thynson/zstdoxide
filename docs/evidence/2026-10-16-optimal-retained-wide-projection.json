@@ -1,0 +1,22 @@
+{
+  "archive": "2026-10-16-optimal-retained-wide-projection.tar.gz",
+  "archive_bytes": 3827,
+  "archive_sha256": "5a6c14521950a802851fe54764547daf0ce8dc795efbd252a8585b6493f02ffd",
+  "files": [
+    {
+      "path": "pack-optimal-retained-wide.log",
+      "bytes": 156,
+      "sha256": "5d2aa8e126d47ad99aef444250900e0bf7077c98be8834ec0d4ca6035563551b"
+    },
+    {
+      "path": "pack-optimal-retained-wide-optimized.log",
+      "bytes": 156,
+      "sha256": "5d2aa8e126d47ad99aef444250900e0bf7077c98be8834ec0d4ca6035563551b"
+    },
+    {
+      "path": "scripts/pack_optimal_retained_wide_fixtures.py",
+      "bytes": 10110,
+      "sha256": "7a7ae57c35fdbb017da3e5934cd7e90d2e5dc6d58ec3e7a5b12161bfd41ad731"
+    }
+  ]
+}

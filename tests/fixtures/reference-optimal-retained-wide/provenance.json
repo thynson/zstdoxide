@@ -1,0 +1,214 @@
+{
+  "archive_sha256": "953eae1661e8df5bf198434514b8abd4c4289f5d73ade6ac90dcdb404124fee4",
+  "cases": [
+    {
+      "blocks": [
+        {
+          "events": 9,
+          "kind": 2,
+          "length": 8192,
+          "queries": 1,
+          "sequences": 1,
+          "start": 0
+        },
+        {
+          "events": 9,
+          "kind": 1,
+          "length": 8192,
+          "queries": 1,
+          "sequences": 1,
+          "start": 8192
+        }
+      ],
+      "bytes": 19781,
+      "frame_bytes": 25,
+      "frame_sha256": "d8cdeb55d0b3a719cc72f66c006f8c4fbf5984882d66e6ec57dabfea49f3fc80",
+      "name": "wide_uniform",
+      "offset": 12,
+      "packet_sha256": "6d00c1ace3609570ec84cfe0e523dc1cd4612db07bcd65340441661cb63b17db",
+      "transcript_sha256": "a213490bdf5bb76938d9ac32c6457797ef8a3cc3df13fbfb2dd7b294d58049d5"
+    },
+    {
+      "blocks": [
+        {
+          "events": 8185,
+          "kind": 0,
+          "length": 8192,
+          "queries": 8183,
+          "sequences": 0,
+          "start": 0
+        },
+        {
+          "events": 11,
+          "kind": 2,
+          "length": 8192,
+          "queries": 3,
+          "sequences": 1,
+          "start": 8192
+        }
+      ],
+      "bytes": 1038650,
+      "frame_bytes": 8219,
+      "frame_sha256": "b6f1b960f843f47ff8df5d3645278a6b69f239b28e47b4b54289d298784b740b",
+      "name": "wide_noise_copy",
+      "offset": 19793,
+      "packet_sha256": "8a4f88c2c1c15b1aad5d508ad8b6e875a81e8ceea59e3a40870e4a6a3472caef",
+      "transcript_sha256": "5f51bc0d46e0f2803075f3b784002270659dbad0f07ef6a5e8bde168e6cb7378"
+    },
+    {
+      "blocks": [
+        {
+          "events": 6335,
+          "kind": 2,
+          "length": 8192,
+          "queries": 38,
+          "sequences": 4,
+          "start": 0
+        },
+        {
+          "events": 4285,
+          "kind": 2,
+          "length": 8192,
+          "queries": 33,
+          "sequences": 4,
+          "start": 8192
+        }
+      ],
+      "bytes": 1315940,
+      "frame_bytes": 54,
+      "frame_sha256": "0875c4110f2e6ad90284436b638428822d6bc793aa5f0fec98df638ebf63640d",
+      "name": "wide_runs_disabled",
+      "offset": 1058443,
+      "packet_sha256": "e41ed55c2f8273052d90fa6487ceba83caf9ec6c079749d93fc84ed165faed64",
+      "transcript_sha256": "49291c539ca4bc1c3a278f7621a3280c871961da58930cdcd53e7b97b0ed2127"
+    },
+    {
+      "blocks": [
+        {
+          "events": 6351,
+          "kind": 2,
+          "length": 8192,
+          "queries": 46,
+          "sequences": 4,
+          "start": 0
+        },
+        {
+          "events": 4305,
+          "kind": 2,
+          "length": 8192,
+          "queries": 43,
+          "sequences": 4,
+          "start": 8192
+        }
+      ],
+      "bytes": 1386602,
+      "frame_bytes": 54,
+      "frame_sha256": "0875c4110f2e6ad90284436b638428822d6bc793aa5f0fec98df638ebf63640d",
+      "name": "wide_runs_priced",
+      "offset": 2374383,
+      "packet_sha256": "e27d589300663367f7a447573e0540711b445adae8b81aceabc7e09b6e7e904c",
+      "transcript_sha256": "e4b7a162ec8deba3b20b4008453f9bcb1c867d35a695799f977223e9341de141"
+    },
+    {
+      "blocks": [
+        {
+          "events": 6303,
+          "kind": 2,
+          "length": 8192,
+          "queries": 4118,
+          "sequences": 3,
+          "start": 0
+        },
+        {
+          "events": 2087,
+          "kind": 2,
+          "length": 8192,
+          "queries": 15,
+          "sequences": 3,
+          "start": 8192
+        }
+      ],
+      "bytes": 1367999,
+      "frame_bytes": 4151,
+      "frame_sha256": "d490f9eaa98993275bc04851a3575f7ed2c42d8882c6bf147c8b473a870351af",
+      "name": "wide_horizon",
+      "offset": 3760985,
+      "packet_sha256": "ff0a2db82f782f9e4e5f68cc985e5176d7d39812805ea858026ce6a3510f9171",
+      "transcript_sha256": "0b99efbbd4f8e85cda3669fe7ceb264aea39fde3cebbf3823ac4be99c4584f37"
+    },
+    {
+      "blocks": [
+        {
+          "events": 42,
+          "kind": 2,
+          "length": 8192,
+          "queries": 16,
+          "sequences": 1,
+          "start": 0
+        },
+        {
+          "events": 9,
+          "kind": 2,
+          "length": 8192,
+          "queries": 1,
+          "sequences": 1,
+          "start": 8192
+        }
+      ],
+      "bytes": 23995,
+      "frame_bytes": 49,
+      "frame_sha256": "2e29c98f92ff74bdb4060b32646878143a10a62a865d869478563b2d4ad51548",
+      "name": "wide_short",
+      "offset": 5128984,
+      "packet_sha256": "261893d9c519457ab7c1a1a1489f8bc12ae8e8f88c674d3387bcfd0b72eec311",
+      "transcript_sha256": "dee210629baa7514158f5c3010b4f8f4c77486c383426613643198385791cb98"
+    },
+    {
+      "blocks": [
+        {
+          "events": 19,
+          "kind": 2,
+          "length": 4096,
+          "queries": 9,
+          "sequences": 1,
+          "start": 0
+        },
+        {
+          "events": 9,
+          "kind": 2,
+          "length": 4096,
+          "queries": 1,
+          "sequences": 1,
+          "start": 4096
+        },
+        {
+          "events": 9,
+          "kind": 2,
+          "length": 4096,
+          "queries": 1,
+          "sequences": 1,
+          "start": 8192
+        },
+        {
+          "events": 9,
+          "kind": 2,
+          "length": 4096,
+          "queries": 1,
+          "sequences": 1,
+          "start": 12288
+        }
+      ],
+      "bytes": 154208,
+      "frame_bytes": 59,
+      "frame_sha256": "da4ea649ae182392ffee3e94a1fec3bcc61b769f0d6f85b8e9d7f26a9c1a6023",
+      "name": "wide_window16",
+      "offset": 5152979,
+      "packet_sha256": "702469798724cce4b012ae7330dab9276fa3a4b505a281c3d25820c1be32f163",
+      "transcript_sha256": "589fec5ef439bdb6b3005f6edd80a39cfee95cb2a45b6c67c20866e130359fe8"
+    }
+  ],
+  "pack_bytes": 5307187,
+  "pack_sha256": "ee53ed6f93e5c289f5793370482f1b2b5b8d076339207a7c059cc15e4633503d",
+  "qualification": "Independently audited wider sparse retained ordinary unchanged-provider C observations. Persistent path/frequency/search deltas and committed/pending publication owners; no public Optimal admission.",
+  "schema_version": 1
+}

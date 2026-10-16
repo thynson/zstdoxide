@@ -141,7 +141,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Freeze source-only wider branch recipes and preflight the unchanged-provider sparse observer.
 - [x] Capture and audit wider ordinary paths, search state, publication and complete frames.
 - [x] Specify the wider retained binary fixture and independent horizon/source checks.
-- [ ] Project audited wider sparse states and complete frames into an immutable fixture.
+- [x] Project audited wider sparse states and complete frames into an immutable fixture.
 - [ ] Qualify the wider fixture reader and independent complete-frame decoding.
 - [ ] Extend private retained search admission and match every wider query, complete map and frontier.
 - [ ] Extend private retained path/coordinator admission and match all wider states and publications.

@@ -17,3 +17,9 @@ An initial documentation commit appended this report to the frozen protocol
 file. The fixture projector rejected its source hash before producing output.
 The original protocol bytes were restored and this report was moved to a
 separate file; no native capture was rerun or altered.
+
+The projected ZORFW02 fixture has seven cases, 37,977 events, 12,510 queries,
+31 sequences and all complete frames. Its 5,307,187 bytes hash to
+`ee53ed6f93e5c289f5793370482f1b2b5b8d076339207a7c059cc15e4633503d`.
+Normal and optimized Python reproduce identical bytes after checking every
+archive member, frozen source identity and independently replayed native state.
