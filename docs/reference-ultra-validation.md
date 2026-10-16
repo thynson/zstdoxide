@@ -287,3 +287,20 @@ Negative commands pin exact diagnostics, excluding internal guard failures.
 Generated source, adapter diffs, original source snapshots and logs are retained
 in `evidence/2026-10-16-ultra-path-preflight.tar.gz`. Native path capture is the
 next work item; no successor execution result is claimed at this checkpoint.
+
+## Complete scripted path capture
+
+All 220 frozen native commands pass: 58 source-only positive requests and 21
+exact-diagnostic negative requests in both normal and instrumented builds. All
+26 instrumented translation units are retained. Each padding pass contains
+65,672 logical events, including 72 signed saved-match alternatives and 143
+sequences; both passes contain 131,344 observed events per build. Normal and
+instrumented observations agree byte for byte with independent replay.
+
+Both Python modes reject all 44 forged capture variants and accept two positive
+controls without child processes. Lossless modified files, original baseline
+identities, all 351,252,305 native log bytes and command/source evidence are
+retained in `evidence/2026-10-16-ultra-path-capture.tar.gz` (755 verified members;
+archive SHA-256 `8b28f49ad16dd6f821441683a523f4f1b593120ce1c66d2665e4615c8cecab01`).
+This qualifies scripted observations, not ordinary match discovery or a Rust
+Ultra path implementation. Public strategies 8 and 9 remain unsupported.
