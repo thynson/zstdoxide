@@ -122,3 +122,33 @@ logs and source hashes are archived in
 `docs/evidence/2026-10-16-optimal-offline-driver.tar.gz`. The historical path
 projector writes its output unconditionally and is deliberately not registered
 as a read-only check. Its frozen fixture remains covered by Rust replay tests.
+
+## Complete public regression matrix
+
+All 22 complete Cargo suites pass on the same unchanged Rust/Cargo source
+inventory: safe, all 19 isolated unsafe features, all features together, and
+release/all features. Each suite passes 1340 tests and explicitly ignores the
+same 55 existing tests. This is 29480 passing executions and 1210 ignored
+executions; ignored cases are not successful migrations.
+
+Each isolated feature also passes 86 focused Optimal library tests and five
+public/platform-oriented tests (1729 additional executions). All 21 host
+no_std configurations pass: safe, each isolated unsafe feature, and all unsafe
+features together with std disabled. Strict safe/all-targets and all-feature
+Clippy, formatting, allocator tests and allocator Clippy/formatting pass.
+The standalone usage examples pass 22 checks in each of safe and all-feature
+configurations, with both positive and compile-fail cases bound to Cargo's
+actual library and metadata artifacts.
+
+The pinned upstream inventory and source hashes pass their audit. Its separate
+`--require-complete` gate still reports 188 unported source units and partial or
+blocked external-corpus target coverage. This remains an explicit unfinished
+obligation, not a passing complete-migration claim.
+
+Verified evidence archives under `docs/evidence/` are
+`2026-10-16-optimal-public-full-safe-v3`, `2026-10-16-optimal-public-matrix`,
+`2026-10-16-optimal-public-full-feature`, and
+`2026-10-16-optimal-public-docs-audit`. The first two unsuccessful safe attempts
+remain in the earlier regression-count qualification. The final aggregate
+binds all source maps, exact ordered commands, actual log hashes, counts and
+completion status before permitting timed measurements.

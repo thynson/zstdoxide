@@ -1,0 +1,157 @@
+{
+  "archive": "2026-10-16-optimal-public-full-feature.tar.gz",
+  "archive_bytes": 612174,
+  "archive_sha256": "8ac22bd54bab62a7e95cb8bb850966ec0832b8f31f9958360b23c93576bd5185",
+  "files": [
+    {
+      "path": "check-optimal-public-full-feature.py",
+      "bytes": 2966,
+      "sha256": "bba1fb53321089ecf54480842d7a211dd79c80906199b994c0195f91b4dedb30"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/allocator-clippy.log",
+      "bytes": 168,
+      "sha256": "90aa08480141e055685c2008e0daabb3f58b7f6cbc61185c60afbeffe490320f"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/allocator-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/allocator-test.log",
+      "bytes": 1698,
+      "sha256": "9947a92a66916e3f376988daafea8013868c2ed91821baca65d824b4ac72a1b8"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/clippy-safe.log",
+      "bytes": 238,
+      "sha256": "90a33757b8e315ade4ec34d6b65e4f77c96ff2b6afabd38476e5b5b2051c0c0c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/evidence.json",
+      "bytes": 30302,
+      "sha256": "7e1bd014df45d646a26c654d84b40246172fdabb8a069c3ff70ffd18bda3ff51"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-bitstream.log",
+      "bytes": 148560,
+      "sha256": "1eeb6885a2ce255bf2a2611141a3238c218f4e245383562e2519e750ad08259e"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-byte-cursor.log",
+      "bytes": 148453,
+      "sha256": "54f8b7649ca2da5b16c0c33efca26afc0464593a79833138c91ec9674092a8f0"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-dictionary.log",
+      "bytes": 148453,
+      "sha256": "14ddff41eb2ed56172a8aa19b12e571a14bbd5a5285a00ebedb193b2f3f64d1d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-fse-encoder.log",
+      "bytes": 148203,
+      "sha256": "d3cc5f714852561bd8eeb2df74fb58bf72af45d5fcf9a592de7b7d9efa150c71"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-fse.log",
+      "bytes": 148203,
+      "sha256": "b1fb71eddb39414a1e5adf9f021150c56c7f572c73a370ad74622635511f9d2b"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-history.log",
+      "bytes": 148057,
+      "sha256": "16b6ca71972047c02cd93a08c78d2d56d6abed5e8f3c0cb66742465a8ac410e9"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-huffman-codebook.log",
+      "bytes": 148057,
+      "sha256": "2ba31ab0c9f79acecff302d7b05d62cbd324be6faaf8bc4c1b27af89b1b7970e"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-huffman.log",
+      "bytes": 148057,
+      "sha256": "d1a641fffd508a94e2026a292eaae7d28b47c5c4298e9a45c7f19746684485da"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-match-chain.log",
+      "bytes": 148057,
+      "sha256": "394b1d57aa8cf2fd6e98e25e0369703e455d34ec28e514b57c1bb6be01fc15b6"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-match-table.log",
+      "bytes": 148057,
+      "sha256": "32cd99fb1ba1b7447815ab7c1d2687788ad52ef3f08ce94e7413239668c7902c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-optimal-frequencies.log",
+      "bytes": 148057,
+      "sha256": "6ed1292af78b0d89647dbb84b50e9d3a4a1669965aabf774c6bf1edc965eb806"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-optimal-matches.log",
+      "bytes": 148203,
+      "sha256": "449850df3a945d0c397e2e498c5100daadeb3f2f34f88b699eb05a9bf27b4dc6"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-optimal-paths.log",
+      "bytes": 148057,
+      "sha256": "4389f58102356898383cf9ae9d699edf2b6409897a1d2f6a8ceac0c22b02a403"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-optimal-short-key.log",
+      "bytes": 148057,
+      "sha256": "ab1e822c533d77ba47c6808a946e0aaff0635cf61a76cde057dd4f94d6c7d5d6"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-reference-chain.log",
+      "bytes": 148057,
+      "sha256": "83f6af5b24467d438d53cf90254aef7f694afbfe2546b03f9a655db8ddd441f3"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-reference-tree.log",
+      "bytes": 148057,
+      "sha256": "af8b3d53d76dbd498d8795eabf753ed8bd2e61569a20bc65d6d63aeee11d669e"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-ring-history.log",
+      "bytes": 148057,
+      "sha256": "f6a26a4d2db5c3eb5fd59ce31684d22fab0a57494554f2deddbf1a3634817bd7"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-row-table.log",
+      "bytes": 148057,
+      "sha256": "fae214eeb4cd636df2c872e11853d4f70c0351cab36602d77f5c9b95c6bd08c5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/full-unsafe-training.log",
+      "bytes": 148452,
+      "sha256": "5d3fdefcef7592a8d608233db85ef8cec42098d6125e9c63c8bbc9c4f6f0e67d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/nostd-all.log",
+      "bytes": 130,
+      "sha256": "0361520f619b9d5d7cf5d60369b568e6edc2226fa2feaf1dfb890df2cbedfe4f"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-feature-1016/nostd-safe.log",
+      "bytes": 130,
+      "sha256": "eec00dc2c9565ec2934daa33e9d0fee63b82a7d1e79cfd0d7d6c5d5c4e1615c8"
+    },
+    {
+      "path": "check-optimal-public-full-feature.log",
+      "bytes": 1338,
+      "sha256": "db2d50ab52183066c15e267de3e68c333f1eb56c380bdc5e10695a47fcc54c80"
+    },
+    {
+      "path": "qualify-optimal-public-matrix.py",
+      "bytes": 3698,
+      "sha256": "de7246b37583204a41e5097ce3d3a3d8c763d8440a38ef05616f9a1420970f63"
+    },
+    {
+      "path": "optimal-public-matrix-barrier.json",
+      "bytes": 24759,
+      "sha256": "f7ff319ea44e299ac2a982efd76adf5bb72712144f2cffd8515d08f53e7aa39d"
+    }
+  ]
+}

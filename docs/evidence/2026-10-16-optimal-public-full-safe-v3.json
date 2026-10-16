@@ -1,0 +1,27 @@
+{
+  "archive": "2026-10-16-optimal-public-full-safe-v3.tar.gz",
+  "archive_bytes": 42148,
+  "archive_sha256": "7dc2b6944b5e9fe161b3af35073813f14e38c52adc0ef652eb7cef3b19655287",
+  "files": [
+    {
+      "path": "check-optimal-public-full-safe-v3.py",
+      "bytes": 1282,
+      "sha256": "c9934100da221525a510949b30f249b5b1a99b3cd48879faa6c91841f5998c6b"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-safe-v3-1016/evidence.json",
+      "bytes": 19428,
+      "sha256": "2ec5096655f9914eae53e92607296c53a8c54683f44078d04a23447e023260cc"
+    },
+    {
+      "path": "zstdoxide-optimal-public-full-safe-v3-1016/full-safe.log",
+      "bytes": 145693,
+      "sha256": "7f8de9cd46c1700daa16f89cac7bc77e08f4a4139c209981a47d1d1fddc4d421"
+    },
+    {
+      "path": "check-optimal-public-full-safe-v3.log",
+      "bytes": 28,
+      "sha256": "1dae4edc40a8cc4875ee38b45414bd1496e08407b2c4e935a1220608d998e58c"
+    }
+  ]
+}

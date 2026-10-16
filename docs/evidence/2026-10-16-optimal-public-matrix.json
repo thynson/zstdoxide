@@ -1,0 +1,327 @@
+{
+  "archive": "2026-10-16-optimal-public-matrix.tar.gz",
+  "archive_bytes": 86127,
+  "archive_sha256": "1c59d1b87264bca482b107521a609434ebf31e13b31a76c2c56eda06a3de95de",
+  "files": [
+    {
+      "path": "check-optimal-public-matrix.py",
+      "bytes": 2886,
+      "sha256": "5f1b4e592e37fea880d8d6b9698b41eb2302e2ef52aabed27028601b3333ac9a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/clippy.log",
+      "bytes": 238,
+      "sha256": "3ee6b62f831d9c9a9132464a61a32de6cfa64766c8a9db05d49ec13aa550866a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/evidence.json",
+      "bytes": 47291,
+      "sha256": "7a1450d68df8d90786e7c8e92faef158d968e14b08d6205fe4eb3a1f46e23c07"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/full-all.log",
+      "bytes": 148116,
+      "sha256": "d574f1e41be48a0d49cee7bdbde47aeeb8fa9b23035539d18d5720cabb035dcb"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/full-release-all.log",
+      "bytes": 147805,
+      "sha256": "d9820650e00d290f550d4f9b1f62fc145abbe090d07d9457915a7c988fd315cc"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-bitstream.log",
+      "bytes": 130,
+      "sha256": "c6cf442692a444c2abfacb122df1ecad3db93aa9417d883214c88056b5b9e0e9"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-byte-cursor.log",
+      "bytes": 130,
+      "sha256": "859e19120340b7b703d5999cc264f2ce374b598bde95b44800b995ecbc531313"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-dictionary.log",
+      "bytes": 130,
+      "sha256": "7db35ae560b0ca3b809ac1b1a34183ae716c89d260e05ccb67ed39ec2d1e369c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-fse-encoder.log",
+      "bytes": 130,
+      "sha256": "3fb631089d281fc0beeb391d8cd8e75e06d171aa4f45438acaba039a77c62cf6"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-fse.log",
+      "bytes": 130,
+      "sha256": "b04363032b1c2c467cc9bc67c58a74c5e70611eb299537aeb59e5d28e60daea6"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-history.log",
+      "bytes": 130,
+      "sha256": "bc15b1f92d88acffe8c820ee661dc03ad5582b8db9a35297c15c716e2166ab75"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-huffman-codebook.log",
+      "bytes": 130,
+      "sha256": "562772d6f0f5be9420635691eb787aa57a6bcff22ab58e21f87be49a6fd8513d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-huffman.log",
+      "bytes": 130,
+      "sha256": "c586c1752205b367f5e8f1a86271e6355644190a036075c766a851b43e385558"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-match-chain.log",
+      "bytes": 130,
+      "sha256": "5fdbcc63491777e926c654f3d7f0fefcf539439cf2b6b6a0ad6c2ba895db1bd4"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-match-table.log",
+      "bytes": 130,
+      "sha256": "75d3e39a27f0b3963a33758d12c1ddbeaf16d9198b4c66a7e6aca2fb17b2c25c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-optimal-frequencies.log",
+      "bytes": 130,
+      "sha256": "c6cf442692a444c2abfacb122df1ecad3db93aa9417d883214c88056b5b9e0e9"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-optimal-matches.log",
+      "bytes": 130,
+      "sha256": "b9cbbbc8a92a36d170b6159054bf2f368d4cb11cb5ac3769f3df14e7ae93762d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-optimal-paths.log",
+      "bytes": 130,
+      "sha256": "ec6bdd117f904110dc0e06cd22d5523690dc98c6f66943edc7331aceb4801ba5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-optimal-short-key.log",
+      "bytes": 130,
+      "sha256": "5757a96ec214d3446443114e5d6c2169373835cf8b4d5aa988aa4aa3aef3f014"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-reference-chain.log",
+      "bytes": 130,
+      "sha256": "ec6bdd117f904110dc0e06cd22d5523690dc98c6f66943edc7331aceb4801ba5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-reference-tree.log",
+      "bytes": 130,
+      "sha256": "b9cbbbc8a92a36d170b6159054bf2f368d4cb11cb5ac3769f3df14e7ae93762d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-ring-history.log",
+      "bytes": 130,
+      "sha256": "4018e42b16f4c16fbd33a72118d0794ed132f6e4a5bf2c168f9ec40acb0191c6"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-row-table.log",
+      "bytes": 130,
+      "sha256": "9929c213ac8cf4bc1df51f72fc3c0773c19a063db00e201d5ea37270db78ad71"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/nostd-unsafe-training.log",
+      "bytes": 130,
+      "sha256": "b9cbbbc8a92a36d170b6159054bf2f368d4cb11cb5ac3769f3df14e7ae93762d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-bitstream.log",
+      "bytes": 1102,
+      "sha256": "047d5a8ea44091973bcf4379155793aaf98ee3f7a72e38f0c435b71841620afb"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-byte-cursor.log",
+      "bytes": 1102,
+      "sha256": "8a5780b83472065866bb65b821bc8e928e2e27985eec2bf833cef92d1f5112c2"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-dictionary.log",
+      "bytes": 1102,
+      "sha256": "61eaff9dd1904ad7f15931a98a03ac807051eb881233b78423f72d1165978047"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-fse-encoder.log",
+      "bytes": 1102,
+      "sha256": "bb3c4a418ac1c855bd376e1dc994a924ed8b9746fb8baf4ea6f3a50f8685270f"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-fse.log",
+      "bytes": 1102,
+      "sha256": "78c8e224f8f93b0eb7e9966c288b1f61afdfeb635f3f270e2244f420841238c7"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-history.log",
+      "bytes": 1102,
+      "sha256": "45ef60d02fc1cd6136c9b766ce9304762cbfaf2d983e5cdf5ed72a4a32bc2a85"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-huffman-codebook.log",
+      "bytes": 1102,
+      "sha256": "b88405242f663590bbaf9c4ca198538d7141c543b5575a1ca2d3f63817ab59dd"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-huffman.log",
+      "bytes": 1102,
+      "sha256": "5a78419e3189ba6380d09fcbb42c6ffc516ff8b1c30da00ec71099d7e68d39a2"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-match-chain.log",
+      "bytes": 1102,
+      "sha256": "80b5c35be8051899d795db6db7d31429137dc7e7233f8da439e751c6c2ecea3b"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-match-table.log",
+      "bytes": 1102,
+      "sha256": "c707e3cb38f8195b63f46b6ff83baae4affb48fc34e2570d3e92ed3ab599990e"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-optimal-frequencies.log",
+      "bytes": 1102,
+      "sha256": "3b89baab1757e89aa95c969898f520179f18d0030d76297c14bbece299c4eddf"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-optimal-matches.log",
+      "bytes": 1102,
+      "sha256": "8737a088691d433241c974c8518f800bc52be6860d6ea7b14523ec22a539ee96"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-optimal-paths.log",
+      "bytes": 1102,
+      "sha256": "4f35c130ca340e9ade62a8cd9365b69c1021ddc32b9873bee930545a296a9588"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-optimal-short-key.log",
+      "bytes": 1102,
+      "sha256": "25ad3d819cdb078fbd3dc668cc563b4b66bf33e392aca6f92685f1db7c98db76"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-reference-chain.log",
+      "bytes": 1102,
+      "sha256": "4e9276fd7e29e4f55ecfc73a002c25cda4c46770aab372cd782be44869147779"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-reference-tree.log",
+      "bytes": 1102,
+      "sha256": "0862ddffafc642ff87c81813cba022974c26ae64ccdef9681479cfd89ca44008"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-ring-history.log",
+      "bytes": 1102,
+      "sha256": "638214a6977cd6d0d3c9dfdddb020617cc1fa7f7f8301e2b52571708c3b16aed"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-row-table.log",
+      "bytes": 1102,
+      "sha256": "72c7311f94dd17569ccdd8d17337052cf7c09ced76878a1a15d59ba714b2125a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/public-unsafe-training.log",
+      "bytes": 1102,
+      "sha256": "56591975ff0fa22681891d37cc62934dd2eaf1aaaddc83ae05cea72f4b91648b"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-bitstream.log",
+      "bytes": 9028,
+      "sha256": "b5e19c627d5bb220290e8584f59316853116c72812ce0ced6837ba573bc74f35"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-byte-cursor.log",
+      "bytes": 8920,
+      "sha256": "56896d4ba297b82dc9f872b2982ff85243dd8c5e3227acabeef29ea14792d7ee"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-dictionary.log",
+      "bytes": 8920,
+      "sha256": "721e990cdca990445a6ec652076fc3d8c26d9ef731dbf09a686c9a3d00f3ab58"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-fse-encoder.log",
+      "bytes": 8919,
+      "sha256": "50aa4b4f92fd436667f8ac4cf34e8be7d0abfc989e0e9588bbb5accf641a69d2"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-fse.log",
+      "bytes": 8919,
+      "sha256": "a8a92de33c1401044ad444ed0ceee3ef6c9664b83534ad494228bd22282e94df"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-history.log",
+      "bytes": 8920,
+      "sha256": "4a6e37202af1342f374f65afde326460338e75b2e34cb562f515ea7104f6572e"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-huffman-codebook.log",
+      "bytes": 8920,
+      "sha256": "ca9cf4aaaf4f3de441fb8fbf8bc3dd8d8de07a32bbf42a6e4f92cdbd2eb59f4b"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-huffman.log",
+      "bytes": 8920,
+      "sha256": "b12da737bec51a28b1680806e57866e3f9e95f5f2a5e974a21905195aee2b178"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-match-chain.log",
+      "bytes": 8920,
+      "sha256": "2d7b8a4bd5c157ac8d588fef8ae6c18091cd21e357b38b9bf953cce61a3205b5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-match-table.log",
+      "bytes": 8920,
+      "sha256": "e2a3f56279dfeba44119a8456bf270103f8e21e969839a89803aff47e33874fd"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-optimal-frequencies.log",
+      "bytes": 8919,
+      "sha256": "b1a9773b00b95437dcb3edb484ee8447f183bc2a36826d6a7e1f67b1c07787c7"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-optimal-matches.log",
+      "bytes": 8920,
+      "sha256": "6fb34084813be20e60780c809279e3b51ea3f232f6040008ce2fe73e07eb2eae"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-optimal-paths.log",
+      "bytes": 8919,
+      "sha256": "5f9990b500602e3d75ec126fc3ef316313522571a0daf7b2374084484c29468d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-optimal-short-key.log",
+      "bytes": 8919,
+      "sha256": "954ce4555090845ce2510b9c67e9d36a9566a33b9704624acbb5b7be9cce7838"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-reference-chain.log",
+      "bytes": 8920,
+      "sha256": "93ce2330f582ecd57fb4b58f4e3183a9981148c95df87ff6ae36f6c8e53866f4"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-reference-tree.log",
+      "bytes": 8920,
+      "sha256": "530ea8a7dbcc541d67834a3c7d7e4d7590f6dc97bdaa8f4ee474ec266057b6e0"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-ring-history.log",
+      "bytes": 8919,
+      "sha256": "e9dbd73797de44fb1c24b8b1abc7ddcf09d0016184d5396e2b68dc4f621dc0a9"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-row-table.log",
+      "bytes": 8919,
+      "sha256": "6410b4619632467cdff577a57de47f166163b844cb990ace82f3c9c07f1f6f7c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-matrix-1016/test-unsafe-training.log",
+      "bytes": 8919,
+      "sha256": "a3b7fb67769a0a82a9baffc6dfde1dc095951749a06e5383e2bdc70e6a731d3a"
+    },
+    {
+      "path": "check-optimal-public-matrix.log",
+      "bytes": 3588,
+      "sha256": "86fd9e70ba13b54b9286153602b8a05236f057642e4e8ca9e2a68c650ce7354e"
+    }
+  ]
+}

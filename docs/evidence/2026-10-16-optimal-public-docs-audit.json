@@ -1,0 +1,37 @@
+{
+  "archive": "2026-10-16-optimal-public-docs-audit.tar.gz",
+  "archive_bytes": 2040,
+  "archive_sha256": "d6c52d3038ca5c895fbf99ce55c7a998bd0ee0bc746f301578ca5a4f58353318",
+  "files": [
+    {
+      "path": "zstdoxide-optimal-public-docs-audit-1016/docs-all.log",
+      "bytes": 4867,
+      "sha256": "b1447391081d56abdf46d7599ff4c0e15a76f86fd18a86784eedb2aafc23939a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-docs-audit-1016/docs-safe.log",
+      "bytes": 4867,
+      "sha256": "9a7ab754651a37d9f26324411426f56cdbe6d9d5f7c6c5a595ce0465c487f865"
+    },
+    {
+      "path": "zstdoxide-optimal-public-docs-audit-1016/evidence.json",
+      "bytes": 1424,
+      "sha256": "0f0252b5f19bd9d89991966a3e57a521bdc1dc391a014d32e2f03f46f3d1554f"
+    },
+    {
+      "path": "zstdoxide-optimal-public-docs-audit-1016/upstream-incomplete.log",
+      "bytes": 159,
+      "sha256": "b4e4f125325272ee5fca76933ecb3ff103e1f43c8c1a6f50d8175d011fb9cba9"
+    },
+    {
+      "path": "zstdoxide-optimal-public-docs-audit-1016/upstream-inventory.log",
+      "bytes": 352,
+      "sha256": "611e95754d50e6363f071b619f0d95998aae4daf3aef8a7e8af5323ba8982b10"
+    },
+    {
+      "path": "optimal-public-docs-audit.log",
+      "bytes": 82,
+      "sha256": "6328d39915bf26163f3d211ffdc2ff2a57ac9319bb94617a16a728a6e05ce63c"
+    }
+  ]
+}
