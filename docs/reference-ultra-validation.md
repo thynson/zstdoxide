@@ -185,3 +185,18 @@ reject 20 forged packs with the root digest bypassed. Each forged input is retai
 as a lossless delta against the pinned complete fixture, with reconstructed length
 and SHA-256 verified. Projection inputs, outputs, checkers and controls are retained
 in `evidence/2026-10-16-ultra-frequency-projection.tar.gz`.
+
+## Independent Rust frequency reader
+
+Six reader tests pass in safe debug and release/all configurations; strict test
+Clippy and formatting pass. The reader borrows sources/names, fallibly allocates
+bounded observation vectors, independently checks all sums and policy-bound
+caches, and enforces source spans, dirty/query phases and cumulative fractional
+transport limits. Tests cover all 298 cases, unknown and coherently changed
+policies, dirty-cache forgeries, malformed extents and exact upper-bound states.
+
+The first boundary test mistakenly exchanged the expected post-rescale sums:
+the allowed fractional upper case rescales to 8447, while the whole-mode case
+just above it rescales to 4351. The fixture and reader were correct; the assertion
+was corrected after inspecting the counts. That failed test/source and the final
+passing checks are retained in `evidence/2026-10-16-ultra-frequency-reader.tar.gz`.

@@ -1,0 +1,62 @@
+{
+  "archive": "2026-10-16-ultra-frequency-reader.tar.gz",
+  "archive_bytes": 6390,
+  "archive_sha256": "5e48b9809b9e86a1c3fcd980bb95e8f3995294831c5d1ece33a19e4223a939f9",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-frequency-reader-initial-1016/reference_ultra_frequency_fixture.rs",
+      "bytes": 5310,
+      "sha256": "232d5b9a907237e867742d680bb370db58626eadc00f283ccc197283366cc934"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-reader-initial-1016/ultra-frequency-reader-first.log",
+      "bytes": 1531,
+      "sha256": "5c8d8eabe220c055513130b89c03ef7a16f64729df842f12652e09da706a8d71"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-reader-initial-1016/ultra_frequency_fixture.rs",
+      "bytes": 9799,
+      "sha256": "99e98866a181ad1c2d73db95f48f82f385229c69661c8d345d3eed3fff6bf3b8"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-reader-1016/clippy.log",
+      "bytes": 238,
+      "sha256": "45b8690d48a404ffa5680cc3b2be7773f3b68630d6638a4e055f1104f3014674"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-reader-1016/evidence.json",
+      "bytes": 1727,
+      "sha256": "bafbfcba2c5803c5a276f0953ad800020582dfda3eab7dea26c13c76561f125c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-reader-1016/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-reader-1016/release-all.log",
+      "bytes": 976,
+      "sha256": "fa8dd3966831e383833bd0adfdd3e2f3c216f188b08ec4f1d1a5db8a493be088"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-reader-1016/safe.log",
+      "bytes": 865,
+      "sha256": "05a4fc7b567fec49e461bd1971f478d8e2debfa8543256a75fb0e8049564436e"
+    },
+    {
+      "path": "check-ultra-frequency-reader.py",
+      "bytes": 1519,
+      "sha256": "2a84c21e3dc3a7ea1d560dd6dd5650e310d13e20226fad3f6a79afe08848c36a"
+    },
+    {
+      "path": "tests/reference_ultra_frequency_fixture.rs",
+      "bytes": 5310,
+      "sha256": "b6b0c50c96c39e264de12b3131eb44108ff1deb1c5bbe64c672eed7875275e99"
+    },
+    {
+      "path": "tests/support/ultra_frequency_fixture.rs",
+      "bytes": 9799,
+      "sha256": "99e98866a181ad1c2d73db95f48f82f385229c69661c8d345d3eed3fff6bf3b8"
+    }
+  ]
+}
