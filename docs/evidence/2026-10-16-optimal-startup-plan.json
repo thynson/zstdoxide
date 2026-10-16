@@ -1,0 +1,147 @@
+{
+  "status": "passed",
+  "completed_at": "2026-10-16T01:47:57.389901+00:00",
+  "commands": [
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "scripts/check_optimal_startup_capture_plan.py",
+        "--upstream",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7",
+        "--output",
+        "/private/tmp/zstdoxide-optimal-startup-2026-10-16"
+      ],
+      "exit": 0,
+      "log": "0.log",
+      "sha256": "9e886df849a55baff00a6ab7d2aa14785d401ca68ca522f78240f192d2fdfb9b"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "scripts/check_optimal_startup_model.py"
+      ],
+      "exit": 0,
+      "log": "1.log",
+      "sha256": "14ace1e20292cdeb5cfc74d246d5d97fe870c562bc855ad93ad48e30af33cb03"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "scripts/check_optimal_startup_instrumentation.py",
+        "--reference",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7"
+      ],
+      "exit": 0,
+      "log": "2.log",
+      "sha256": "1dd380c610894e3c6b72403769bf9bc704d82e2493bd0f4f48391d0c9b66fc8c"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "scripts/plan_optimal_startup.py"
+      ],
+      "exit": 0,
+      "log": "3.log",
+      "sha256": "158f3555b4f2831488990261035bd42d1fb8927aa9127b35ea237c8a5244beb3"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-O",
+        "scripts/check_optimal_startup_capture_plan.py",
+        "--upstream",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7",
+        "--output",
+        "/private/tmp/zstdoxide-optimal-startup-2026-10-16"
+      ],
+      "exit": 0,
+      "log": "4.log",
+      "sha256": "9e886df849a55baff00a6ab7d2aa14785d401ca68ca522f78240f192d2fdfb9b"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-O",
+        "scripts/check_optimal_startup_model.py"
+      ],
+      "exit": 0,
+      "log": "5.log",
+      "sha256": "14ace1e20292cdeb5cfc74d246d5d97fe870c562bc855ad93ad48e30af33cb03"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-O",
+        "scripts/check_optimal_startup_instrumentation.py",
+        "--reference",
+        "/private/tmp/zstdoxide-reference-lazy-1.5.7"
+      ],
+      "exit": 0,
+      "log": "6.log",
+      "sha256": "1dd380c610894e3c6b72403769bf9bc704d82e2493bd0f4f48391d0c9b66fc8c"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-O",
+        "scripts/plan_optimal_startup.py"
+      ],
+      "exit": 0,
+      "log": "7.log",
+      "sha256": "158f3555b4f2831488990261035bd42d1fb8927aa9127b35ea237c8a5244beb3"
+    }
+  ],
+  "source": {
+    "scripts/optimal_startup_capture_plan.py": "1430ac24d1656eae0163c6764397d4e9d2a9133f137fb6906ffa10492398b507",
+    "scripts/capture_optimal_startup.py": "28b7a22e2f863a889f96fc63f3dea3b0fdf9e95fb072da27e13cee3de2e36c48",
+    "scripts/check_optimal_startup_capture.py": "4a6749dd2fd65aaa429a321247a1640ba5a7b30bebee0e2a79d42b052da4968a",
+    "scripts/check_optimal_startup_capture_plan.py": "678d5e88fcc9feb14af21a31e8ce89a4a96e4d7a36b3e9e23ef56b3cb723e955",
+    "scripts/check_optimal_startup_model.py": "73b6ff8d774a7faa49bea6095056e6d183afdffe7e7358f7bbd6c50820c5ff1c",
+    "scripts/check_optimal_startup_instrumentation.py": "4d7a8897e806f34313f94a0b9174df3f654ea4b5ace538f0315f70bddc5033e5",
+    "scripts/plan_optimal_startup.py": "a2ce81f13cfe48e94650d952313d55dee22f6e62158577ca862dbc1f79fffb6c",
+    "scripts/oracles/optimal_startup.py": "72baad2e13289bbef050a7692c181242da81c9adbb32a0ea32c4dd1cf126b588",
+    "scripts/oracles/optimal_startup_recipes.py": "6f75966526cf2a8fbf3e2f40856b381a24073c30b994b153d588fbc528c2957b",
+    "scripts/oracles/optimal_startup_validation.py": "5adb105ade5ee9cf6d55a5566813609a14e3a4b3e9f7c7fd4ee26609362b2725",
+    "scripts/oracles/optimal_startup_instrumentation.py": "d649fc80108c2ec2b77fa6be3eb0ca9548414ad37070e694af0443e20f569c10",
+    "scripts/oracles/optimal_matches_broad.py": "01f57cdcfe92ed304fa36d8055b5a893880bcd178371432cc47d80ec60ecbf5f",
+    "scripts/oracles/optimal_matches.py": "159b4dc7f45f36d27f53f7f496957fcda232c075c36ecad36e51bcee47493caf",
+    "scripts/oracles/optimal_match_broad_validation.py": "ec01554a873c5a81fb9614d7b1807079e38f12aef37b51fed046d1d2179cf3d0",
+    "scripts/oracles/optimal_match_validation.py": "07c6d80fcbb1550271b6860a35525e93f510e548b18315b5b41192eebd58285a",
+    "scripts/oracles/optimal_match_validation_v2.py": "07909e07eb0ec17f4643dffa3befeadde814da8b9f61fe1cb284d2d036c3ecee",
+    "scripts/oracles/optimal_path_instrumentation.py": "cfcc9874233610ada46cc73c4a6bd8ac826c685a464e42d890283ff1d10dbf5f",
+    "scripts/oracles/optimal_paths.py": "192c4f52819ae810150b030b1a32cd3dab04068cb56a4c0cc3be4386b0c8838f",
+    "scripts/oracles/optimal_path_validation.py": "ea1c4523f835ed18adefcc0a9ac3119610721e9ccc9b74f4cdeb5c6aee6b2c50",
+    "scripts/oracles/optimal_price_validation.py": "ec2528f09dbc35f21688c65e706e6015fed3e8a6aa14bd13fb184656a804ceca",
+    "scripts/oracles/optimal_prices_v2.py": "85360e2ee7d7202b55f1c9c48266969cf951e85657e5265fdd06f6d524f0d92a",
+    "scripts/oracles/optimal_prices.py": "aeb2dc2f2ecc43dbff127eba9256565b9a9b2dbd1b09a061e136692fa390a9af",
+    "scripts/oracles/tree_validation.py": "59c16db4486f1a2f81eb995245c0c95cb8f07738edbe5792d5b54e00d7afcc9b",
+    "scripts/oracles/tree_direct.py": "200c9491b82ae70598f7d5f0d375070ce858494f2c96304ba186329cd4f6d6f1",
+    "scripts/oracles/fast_frame_publication_support.py": "c1a205a9b7f897232dd7eb1e177f2a318c42da77ac8348226825732b44b0857a",
+    "scripts/oracles/optimal_startup.c": "472e721d703a4d5ed9551e93bc1919868dc5d0270c631604504ea01fbf9606f7",
+    "tests/fixtures/reference-optimal-startup-recipes/recipes.json": "161dea7a80a6bc237668744c3a9729fa057aa939ffcfbd3c60ba2632f339b8eb",
+    "docs/reference-optimal-startup-protocol.md": "bf1e2ec2e7ae6b6a92d1269abe5851aa393c1f17ab26eec55645376d8e6a4f9e",
+    "docs/reference-optimal-startup-adapter-review.md": "bf6f272ca3cfa6b83810fa0a6e77bf2fa6f8ab6199d71db1d34b5f6aa01cd7fd",
+    "docs/reference-optimal-startup-capture.md": "f1c39bc016ea3c0fe77fea57c819b9cafa6bc51806312c708ec72a9555ce2e9f",
+    "tests/upstream/manifest.json": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+  },
+  "counts": {
+    "commands_per_capture": 122,
+    "preflight_rejections_per_mode": 26,
+    "model_rejections_per_mode": 35,
+    "hook_rejections_per_mode": 4
+  },
+  "qualification": "Source-only executable capture gates; no helper execution.",
+  "archive": {
+    "path": "docs/evidence/2026-10-16-optimal-startup-plan.tar.gz",
+    "bytes": 3637,
+    "sha256": "7e166e22962fc758160bcc66e68ebdf9862b9ed6b55f0fa961b2d590668c10dc"
+  }
+}
