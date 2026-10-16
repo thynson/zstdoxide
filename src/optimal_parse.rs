@@ -1134,6 +1134,45 @@ mod tests {
         assert!(resolved(0, [1, 4, 8], false).is_err());
         assert!(resolved(4, [0, 4, 8], false).is_err());
     }
+    #[test]
+    fn ultra_policy_rejection_releases_all_exact_moved_owners() {
+        let a = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let ma = a.monitor();
+        let b = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let mb = b.monitor();
+        let c = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let mc = c.monitor();
+        let mut frequencies = OptimalFrequencies::new_with_policy_in(
+            crate::optimal_price::PricePolicy::Ultra,
+            false,
+            a,
+        )
+        .unwrap();
+        frequencies.begin_block(b"aaaaaaaaa").unwrap();
+        frequencies.update(b"aa", 1, 3).unwrap();
+        let result = OptimalParser::from_parts(
+            b"aaaaaaaaaaaaaaaa",
+            4,
+            0,
+            frequencies,
+            OptimalPaths::new_in(b).unwrap(),
+            OptimalMatches::new_in(c).unwrap(),
+        );
+        assert!(matches!(result, Err(Error::InvalidParameter)));
+        for monitor in [ma, mb, mc] {
+            monitor.assert_released();
+            let state = monitor.snapshot();
+            assert_eq!(state.attempts, 1);
+            assert_eq!(state.owners_dropped, 1);
+            assert!(!state.violations.any());
+        }
+    }
 }
 
 #[cfg(test)]

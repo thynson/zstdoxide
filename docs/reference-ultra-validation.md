@@ -217,3 +217,19 @@ strict all-target all-feature Clippy and formatting pass. Source-bound focused l
 are retained in `evidence/2026-10-16-ultra-frequency-implementation.tar.gz`.
 Exact fractional owner/error qualification and the full feature/platform matrix
 are separate remaining gates. Public Ultra remains unsupported.
+
+## Fractional owner and error boundaries
+
+Seven new tests cover immutable-policy publication, each table's fractional upper
+bound, the last permitted literal increment, refresh/reset phase preservation,
+borrowed non-cloning allocation reuse, moved-owner allocation failure, malformed
+consumed statistics and parser policy rejection. Together with full native replay,
+all eight Ultra library tests pass under all features. Rejections compare complete
+snapshots, including cached prices and dirty/initialized flags.
+
+All seven selected owner/error tests pass under strict-provenance Miri on i686
+and s390x in safe/all configurations: 28 interpreted executions. Safe/all thumbv6m
+no_std library checks and concrete safe/frequency-unsafe construction, update,
+query, reset and drop code generation pass. These are not native foreign hardware
+runs. Complete source-bound evidence is retained in
+`evidence/2026-10-16-ultra-frequency-owners.tar.gz`.

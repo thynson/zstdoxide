@@ -1,0 +1,217 @@
+{
+  "archive": "2026-10-16-ultra-frequency-owners.tar.gz",
+  "archive_bytes": 28871,
+  "archive_sha256": "fcf71bff9074579ac430dec3c9cdb7b2a688f0d03beba159edd08c89b47ec595",
+  "files": [
+    {
+      "path": "ultra-frequency-owners-first.log",
+      "bytes": 1191,
+      "sha256": "cd2eee4cc7371c7b1320473d6d2bae6b236ebdc9711ace251baa9281f845ae5d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/evidence.json",
+      "bytes": 24587,
+      "sha256": "bb8f9f3dd9b388f7d82718be8042820c65c55262e7574c85a0d67cf9eec36264"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-all-0.log",
+      "bytes": 519,
+      "sha256": "2dd3fee4707164fe54be6bde16301b0ab95bc85767e31f7c3c7fc03759e6c95b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-all-1.log",
+      "bytes": 453,
+      "sha256": "b8e4d94815179c4b3bc103cbea79302e062a034081e6ee600626a64044f8ecc5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-all-2.log",
+      "bytes": 455,
+      "sha256": "57cf9f911b9981e23215aef1dc4f8ff860ef5303e085f8ba54839a8d16735845"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-all-3.log",
+      "bytes": 461,
+      "sha256": "0ac8d44145f53afcde1966de89bb906c05b376a667b8e2de356baa8da57ed651"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-all-4.log",
+      "bytes": 447,
+      "sha256": "bdb51eb79f1c54176adfd6d2584da030e4651563b4d57ee6c564474d6a323ec9"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-all-5.log",
+      "bytes": 456,
+      "sha256": "3a20ac2c22b75d0243f40131a4cae689d4fc83ac6f48341e17d5ed7bd9fade06"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-all-6.log",
+      "bytes": 441,
+      "sha256": "5a4ac8ea41461eafa507a5c678bbcc9eb222d99ae3915e1ce0524d19d818f25c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-safe-0.log",
+      "bytes": 627,
+      "sha256": "50d4f70572a91ab67f10a58ff950dba026a4cef28fadcfa6bd7218ea86c76236"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-safe-1.log",
+      "bytes": 453,
+      "sha256": "53ddcd20348454883a802694cd538551d2a1884fb601d7bd1f9e3f2972ff6027"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-safe-2.log",
+      "bytes": 455,
+      "sha256": "00dedc609dbcb1695c983edbb27d5fdb95985a7ea9469615fed68d9539938a73"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-safe-3.log",
+      "bytes": 461,
+      "sha256": "3e3830062ee1032421cd9ba6870ffb07aa83553527f70e854c6ea848a43aefb2"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-safe-4.log",
+      "bytes": 447,
+      "sha256": "8c18bf2492f50701e51ed97b1e6bf4079fc7761f3726f94772e283f442101319"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-safe-5.log",
+      "bytes": 456,
+      "sha256": "8e9c074db829bd416ec5986a4a944a264332f5d36496e0411f39451367d7e405"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/i686-unknown-linux-gnu-safe-6.log",
+      "bytes": 441,
+      "sha256": "82f6a472dd2c508953f27f2fd978d1fb4c6793bbada02e987b6cf543df8cb3e3"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-all-0.log",
+      "bytes": 520,
+      "sha256": "0992c5e49cd97780587958c5416011ced4bc63d9e77244dd14fafebdfcbeb704"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-all-1.log",
+      "bytes": 454,
+      "sha256": "87bfa19a52b2aa749a5fbca3debfed332f5a497138f9c3e61b55b34ff1f303a5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-all-2.log",
+      "bytes": 456,
+      "sha256": "6c8e49ca9f7c83afc63b80dc6b547d2a93534947afc8b44a5dd62bc07b28165a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-all-3.log",
+      "bytes": 462,
+      "sha256": "2a1cb4aeec1e524e475e625d7b6c9fef3febdffed98fdc441db6a7e2bf50df2f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-all-4.log",
+      "bytes": 448,
+      "sha256": "0139c8b705608acb396580cf0d4e5c6aa1a9bbeb445491f7601349c3eee66bda"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-all-5.log",
+      "bytes": 457,
+      "sha256": "d24e1b70e0d9461e842356e41bfc5f0a6646c795ede768394ebc8682fe926d72"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-all-6.log",
+      "bytes": 442,
+      "sha256": "f5387b3e0533d27657f95b18837075601f91ccf2632d255b4e63311c70d3f982"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-safe-0.log",
+      "bytes": 628,
+      "sha256": "a09bcf83e6676f9c096f78794dab301837945f69525b5600a43ad602611a6cd9"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-safe-1.log",
+      "bytes": 454,
+      "sha256": "84468ba961cc2e64081cc4aa5c4841a7186dc95be17cc76b23ab994407c2a0a6"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-safe-2.log",
+      "bytes": 456,
+      "sha256": "4945c7e7eb54e3430de9a9f2835209841de9e8f4ce763a8f6eb0f92b9e18f21b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-safe-3.log",
+      "bytes": 462,
+      "sha256": "0fe56b59e6a702b0fa1d16754c6f2f06f493d1b7608416f296b4fa9b81cfc3d1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-safe-4.log",
+      "bytes": 448,
+      "sha256": "c3486fe79811df6df6b0005f6bec56e2a4be3827b388b77772cbc087e3a9d23f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-safe-5.log",
+      "bytes": 457,
+      "sha256": "8a2c0983566283292a6c11efa77963a9a87a577235d54c654c1e45accc460854"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-platform-1016/s390x-unknown-linux-gnu-safe-6.log",
+      "bytes": 442,
+      "sha256": "b9fe5367e218e12206cceab6637d495137c3a933744c3b1657e515c52553eb64"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-thumb-1016/codegen-safe.log",
+      "bytes": 499,
+      "sha256": "6b6b5f94e5cdc409ae4ca17087e3b098e0614694bf47b52f27a1ab9c7cacd0f2"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-thumb-1016/codegen-unsafe.log",
+      "bytes": 499,
+      "sha256": "41445525d52e903d4c79ed2c0f3fc6d7264354920d7654a33c2929e8f99f37a4"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-thumb-1016/evidence.json",
+      "bytes": 10588,
+      "sha256": "0a10c63e2e7bd752f1c1e9c476c7a789f414fc5665579e74ded49cff56fb0c1d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-thumb-1016/library-all.log",
+      "bytes": 130,
+      "sha256": "bbb9a3dfc24d46ba4421545e32654e9f513d177482951b78da7821475e79be7a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-thumb-1016/library-safe.log",
+      "bytes": 593,
+      "sha256": "b3b7ba40ee12e434052ddb525d41e740e108177048a3c26f261959105b7ac6fd"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-thumb-1016/probe/Cargo.lock",
+      "bytes": 170,
+      "sha256": "f3b9728135173ebd43347279c4ce4ed1ebf6dd1f525f3704e560b2e7eb07fa74"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-thumb-1016/probe/Cargo.toml",
+      "bytes": 140,
+      "sha256": "51abe2a6bbc5b034e6ee6c98b1fc78c0b266fcd2614df2f7d713f341bf3b17cb"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-thumb-1016/probe/src/lib.rs",
+      "bytes": 1013,
+      "sha256": "7700abed8f3413ea5764168aa2dee60f597b5fc5848b96b0d9cd15d97b1cecfb"
+    },
+    {
+      "path": "check-ultra-frequency-platform.py",
+      "bytes": 2798,
+      "sha256": "95391bf6d2ac7fc0ab8af7b7432c20acd40b56c7f7a679ff6d459ae33dfb06cd"
+    },
+    {
+      "path": "check-ultra-frequency-thumb.py",
+      "bytes": 3524,
+      "sha256": "de1fc5e34f2d4c99406273ac6a0fd695204b96fff912a8bcd9e1ad98d6ee7ac5"
+    },
+    {
+      "path": "src/optimal_frequencies.rs",
+      "bytes": 30605,
+      "sha256": "02815487254d9f621e6d0ce0e14edbe302e94cb5b012884242a790081cd671c4"
+    },
+    {
+      "path": "src/optimal_parse.rs",
+      "bytes": 42033,
+      "sha256": "09b2cc72cadaafb8036236201ce18da1f3fc16e2c7f3f59cb282997c236b9b55"
+    }
+  ]
+}

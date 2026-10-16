@@ -625,4 +625,158 @@ mod tests {
         assert!(!model.snapshot().unwrap().predefined);
         assert_eq!(model.snapshot().unwrap().base_prices[0], 0);
     }
+    #[test]
+    fn ultra_publication_rejects_mixed_policy_without_any_write() {
+        let mut model =
+            OptimalFrequencies::new_with_policy_in(PricePolicy::Ultra, false, Global).unwrap();
+        model.begin_block(b"aaaaaaaaa").unwrap();
+        let before = model.snapshot().unwrap();
+        let mut next = before;
+        next.policy = PricePolicy::Optimal;
+        next.counts.fill(123);
+        next.sums.fill(456);
+        next.base_prices.fill(789);
+        next.dirty = true;
+        assert_eq!(model.publish(next), Err(Error::InvalidParameter));
+        assert_eq!(model.snapshot().unwrap(), before);
+    }
+
+    #[test]
+    fn ultra_all_table_boundaries_reject_before_partial_publication() {
+        for table in 0..4 {
+            let mut model =
+                OptimalFrequencies::new_with_policy_in(PricePolicy::Ultra, false, Global).unwrap();
+            model.begin_block(b"aaaaaaaaa").unwrap();
+            let mut next = model.snapshot().unwrap();
+            next.counts[START[table]..START[table] + LENGTH[table]].fill(0);
+            let code = if table == 0 { usize::from(b'a') } else { 0 };
+            next.counts[START[table] + code] = 8_388_606;
+            next.sums[table] = 8_388_606;
+            next.base_prices = refreshed(next.policy, next.sums, false).unwrap();
+            model.publish(next).unwrap();
+            let before = model.snapshot().unwrap();
+            assert_eq!(model.update(b"a", 1, 3), Err(Error::ResourceLimit));
+            assert_eq!(model.snapshot().unwrap(), before);
+            let mut invalid = before;
+            invalid.sums[table] += 1;
+            invalid.counts[START[table] + code] += 1;
+            assert_eq!(model.publish(invalid), Err(Error::ResourceLimit));
+            assert_eq!(model.snapshot().unwrap(), before);
+        }
+    }
+
+    #[test]
+    fn ultra_last_literal_increment_refresh_and_reset_preserve_policy() {
+        let mut model =
+            OptimalFrequencies::new_with_policy_in(PricePolicy::Ultra, false, Global).unwrap();
+        model.begin_block(b"aaaaaaaaa").unwrap();
+        let mut next = model.snapshot().unwrap();
+        next.counts[usize::from(b'a')] = 8_388_604;
+        next.sums[0] = 8_388_604;
+        next.base_prices = refreshed(next.policy, next.sums, false).unwrap();
+        model.publish(next).unwrap();
+        model.update(b"a", 1, 3).unwrap();
+        let dirty = model.snapshot().unwrap();
+        assert_eq!(dirty.sums[0], 8_388_606);
+        assert!(dirty.dirty);
+        assert_eq!(model.prices(b"a", 1, 1, 3), Err(Error::InvalidState));
+        assert_eq!(model.update(b"a", 1, 3), Err(Error::ResourceLimit));
+        assert_eq!(model.snapshot().unwrap(), dirty);
+        model.refresh().unwrap();
+        assert_eq!(model.snapshot().unwrap().base_prices[0], 6143);
+        assert_eq!(model.prices(b"a", 1, 1, 3).unwrap()[0], 256);
+        model.reset().unwrap();
+        let reset = model.snapshot().unwrap();
+        assert_eq!(reset.policy, PricePolicy::Ultra);
+        assert_eq!(reset.counts, [0; CELLS]);
+        assert_eq!(reset.sums, [0; 4]);
+        assert_eq!(reset.base_prices, [0; 4]);
+        assert!(!reset.dirty && !reset.initialized && !reset.predefined);
+        assert_eq!(model.prices(b"", 0, 1, 3), Err(Error::InvalidState));
+        model.begin_block(b"").unwrap();
+        assert_eq!(model.snapshot().unwrap().base_prices[0], 256);
+        assert_eq!(model.prices(b"", 0, 1, 3).unwrap()[1], 256);
+    }
+
+    #[test]
+    fn ultra_borrowed_non_clone_owner_has_one_allocation_and_survives_reset() {
+        for disabled in [false, true] {
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 1,
+                fail_at: None,
+            })
+            .unwrap()
+            .into_non_clone();
+            let monitor = owner.monitor();
+            {
+                let mut model =
+                    OptimalFrequencies::new_with_policy_in(PricePolicy::Ultra, disabled, &owner)
+                        .unwrap();
+                {
+                    let source = alloc::vec![b'a';513];
+                    model.begin_block(&source).unwrap();
+                }
+                for _ in 0..3 {
+                    model.update(b"aaa", 1, 3).unwrap();
+                    model.refresh().unwrap();
+                    assert!(model.prices(b"a", 1, 1, 3).is_ok());
+                    model.reset().unwrap();
+                    assert_eq!(model.policy(), PricePolicy::Ultra);
+                    assert_eq!(model.disabled_literals(), disabled);
+                    model.begin_block(b"bbbbbbbbb").unwrap();
+                }
+                assert_eq!(monitor.snapshot().attempts, 1);
+                assert_eq!(monitor.snapshot().owners_dropped, 0);
+                if disabled {
+                    assert_eq!(model.snapshot().unwrap().base_prices[0], 0);
+                }
+            }
+            monitor.assert_released();
+            assert!(!monitor.snapshot().violations.any());
+            drop(owner);
+            assert_eq!(
+                monitor.snapshot().identities_created,
+                monitor.snapshot().owners_dropped
+            );
+        }
+    }
+
+    #[test]
+    fn ultra_failed_allocation_releases_moved_non_clone_owner() {
+        for disabled in [false, true] {
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 1,
+                fail_at: core::num::NonZeroU64::new(1),
+            })
+            .unwrap()
+            .into_non_clone();
+            let monitor = owner.monitor();
+            assert!(matches!(
+                OptimalFrequencies::new_with_policy_in(PricePolicy::Ultra, disabled, owner),
+                Err(Error::AllocationFailed)
+            ));
+            monitor.assert_released();
+            let state = monitor.snapshot();
+            assert_eq!(state.failures, 1);
+            assert_eq!(state.attempts, 1);
+            assert_eq!(state.identities_created, state.owners_dropped);
+            assert!(!state.violations.any());
+        }
+    }
+
+    #[test]
+    fn ultra_invalid_refresh_and_consumed_statistics_are_transactional() {
+        let mut model =
+            OptimalFrequencies::new_with_policy_in(PricePolicy::Ultra, false, Global).unwrap();
+        model.begin_block(b"aaaaaaaaa").unwrap();
+        model.sums[0] = 8_388_607;
+        let before = model.snapshot().unwrap();
+        assert_eq!(model.refresh(), Err(Error::CorruptData));
+        assert_eq!(model.snapshot().unwrap(), before);
+        model.sums[0] = 1;
+        model.counts[usize::from(b'a')] = 8_388_607;
+        let before = model.snapshot().unwrap();
+        assert_eq!(model.prices(b"a", 1, 1, 3), Err(Error::CorruptData));
+        assert_eq!(model.snapshot().unwrap(), before);
+    }
 }
