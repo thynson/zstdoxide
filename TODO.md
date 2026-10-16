@@ -80,7 +80,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [ ] Project independently audited scalar observations into an immutable fixture and reject forged projections.
 - [ ] Qualify the independent borrowed Rust scalar fixture reader.
 - [x] Freeze source-only price recipes, observation protocol and exact normal/instrumented C command inventory.
-- [ ] Capture and independently audit fractional prices, signed increments and malformed/overflow boundaries.
+- [x] Capture and independently audit fractional prices, signed increments and malformed/overflow boundaries.
 - [x] Specify policy-dependent checked price records and frequency owner/reset invariants before Rust implementation.
 - [ ] Implement checked scalar policy/price values and compare all independent/native observations.
 - [ ] Implement policy-bound frequency initialization, scaling, updates and caches without changing Optimal baselines.

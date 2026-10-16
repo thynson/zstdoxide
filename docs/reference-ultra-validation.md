@@ -61,3 +61,26 @@ reject ten altered command plans. Six native syntax/dependency/predefine checks
 pass, including fully instrumented adapter syntax. The initial Darwin feature
 macro syntax failure and its source are retained separately. No scalar oracle
 execution has occurred at this checkpoint; capture is the next work item.
+
+## Audited scalar observations
+
+All 134 native commands completed successfully with unchanged inputs. Normal
+and fully ASan/UBSan-instrumented builds produce identical complete transcripts;
+2470 scalar observations per build match the independent model exactly. All35
+malformed packets per build exit1 with the fixed rejection diagnostic and no
+stdout, including late-row invalid statistics, lengths, modes and reserved words.
+
+Both ordinary and optimized Python pass35offline controls: two unchanged
+positives and33rejected forgeries, with no child attempts. Controls cover source,
+compiler, full instrumentation, exact command order, input/output closure,
+coherently changed prices/modes/signed increments with updated log hashes,
+malformed-input diagnostics and guard records. Full replay also passes under
+optimized Python; no assertion-only audit gate is relied on.
+
+`evidence/2026-10-16-ultra-scalar-capture.tar.gz` retains the original capture and
+both complete control directories using file-level content deduplication:
+26351 reconstructed files, including all native objects/executables. Its161archive
+members and every reconstructed file were verified. SHA-256 is
+`f387de6aecd19d5a8cad68364bcfbdf761e9ff665c307e020e7af4a72c1f4fa9`.
+This establishes synthetic scalar conformance, not ordinary Ultra lifecycle,
+path parsing, public admission or a complete frame implementation.
