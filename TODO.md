@@ -83,7 +83,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Specify an exact fresh startup capture command inventory and independent artifact/state audit before C execution.
 - [x] Qualify fresh startup plan, dependency/environment gates and malformed controls in normal/optimized Python.
 - [x] Correct and preflight sanitizer workspace accounting while preserving the original failed capture.
-- [ ] Capture fresh ordinary startup/search/path/frame state with unchanged provider selection in normal and sanitized builds.
+- [x] Capture fresh ordinary startup/search/path/frame state with unchanged provider selection in normal and sanitized builds.
 - [ ] Project audited startup frames, path states and complete search deltas into a bounded fixture.
 - [ ] Validate the independent startup fixture reader and decode each complete frame with safe/all-feature Rust.
 - [ ] Independently audit fresh ordinary frames and forged state before extending private search query admission.

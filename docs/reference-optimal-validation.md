@@ -455,3 +455,25 @@ signed-comparison diagnostics are retained with the corrected checks in
 the helper or sanitizers. An exact executable capture plan, bounded runner and
 independent state/frame auditors remain necessary before C startup capture.
 Ordinary startup query admission and public Optimal remain unchanged.
+
+
+## Fresh ordinary startup capture (2026-10-16)
+
+Twelve unchanged-provider CCtx recipes completed 122 native commands, including
+26 translation units per normal/ASan+UBSan build and eighteen malformed rejections
+per build. All 4,409 logical events per padding pass/build match independent integer
+search/path replay: 1,406 queries and 22 sequences. Both padding passes and both
+builds have identical full state and complete frame bytes. The 48 frame artifacts
+include eleven compressed recipes and one raw recipe. All 48 allocator ledgers
+release both owners; ASan workspaces add the upstream fourteen redzone pairs.
+
+Normal and optimized offline controls each reject 54 forgeries with two positive
+replays and no children. Every member of both the successful and initial failed
+archives was read back and hashed. The initial run completed all native commands
+but its auditor incorrectly required ordinary and sanitizer workspace sizes to
+match. V2 preserves the native helper, flags and source, and derives the 3,584-byte
+workspace difference from pinned sizing functions. No sanitizer check was disabled.
+
+These are fresh candidate states, not retained block publication. The C helper
+checks full-frame decode; independent Rust fixture decoding remains a subsequent
+gate. Public strategy 7 and the old direct-query repeat restriction remain unchanged.
