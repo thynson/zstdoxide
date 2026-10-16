@@ -33,6 +33,7 @@ pub(crate) struct OptimalSearch<
     frontier: usize,
     short_frontier: usize,
     failed: bool,
+    retained: Option<(usize, usize)>,
 }
 impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'a, H, N, S, M> {
     pub(crate) fn from_parts(
@@ -58,6 +59,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             frontier: 0,
             short_frontier: 0,
             failed: false,
+            retained: None,
         })
     }
     /// Pair an untouched search with the exact immutable source used by a parser.
@@ -76,6 +78,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             return Err(Error::InvalidParameter);
         }
         if self.failed
+            || self.retained.is_some()
             || self.frontier != 0
             || self.short_frontier != 0
             || !self.matches.as_slice()?.is_empty()
@@ -91,14 +94,95 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         self.frontier = 0;
         self.short_frontier = 0;
         self.failed = false;
+        self.retained = None;
+        self.source.restore_end();
     }
     pub(crate) fn query(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
+        if self.retained.is_some() {
+            return Err(Error::InvalidState);
+        }
         self.source.validate(query, self.layout)?;
         self.checked_query(query)
     }
     /// Ordinary fresh-block entry qualified independently from direct requests.
     pub(crate) fn query_fresh(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
+        if self.retained.is_some() {
+            return Err(Error::InvalidState);
+        }
         self.source.validate_fresh(query, self.layout)?;
+        self.checked_query(query)
+    }
+    /// Validate the exact immutable source and untouched retained starting owners.
+    pub(crate) fn validate_retained_start(
+        &self,
+        source: &[u8],
+        minimum: usize,
+        target: usize,
+    ) -> Result<()> {
+        self.layout.validate_retained(source.len())?;
+        if !self.source.is_same_source(source)
+            || minimum != if self.layout.minimum() == 3 { 3 } else { 4 }
+            || target != self.layout.sufficient()
+        {
+            return Err(Error::InvalidParameter);
+        }
+        if self.failed
+            || self.retained.is_some()
+            || self.frontier != 0
+            || self.short_frontier != 0
+            || !self.matches.as_slice()?.is_empty()
+        {
+            return Err(Error::InvalidState);
+        }
+        Ok(())
+    }
+    /// Begin a contiguous bounded block without exposing future source bytes.
+    /// ZSTD_buildSeqStore adjusts the main frontier before the parser copies it
+    /// into its block-local short frontier. Argument errors precede all mutation.
+    pub(crate) fn begin_retained(&mut self, start: usize, end: usize) -> Result<()> {
+        self.layout.validate_retained(self.source.backing_len())?;
+        if end > self.source.backing_len()
+            || !end
+                .checked_sub(start)
+                .is_some_and(|n| (64..=512).contains(&n))
+        {
+            return Err(Error::InvalidParameter);
+        }
+        if self.failed {
+            return Err(Error::InvalidState);
+        }
+        match self.retained {
+            Some((_, previous_end)) if previous_end == start => {}
+            None if start == 0
+                && self.frontier == 0
+                && self.short_frontier == 0
+                && self.matches.as_slice()?.is_empty() => {}
+            _ => return Err(Error::InvalidState),
+        }
+        let frontier = if start > self.frontier + 384 {
+            start - 192.min(start - self.frontier - 384)
+        } else {
+            self.frontier
+        };
+        self.source.set_end(end)?;
+        self.frontier = frontier;
+        self.short_frontier = frontier;
+        self.matches.clear();
+        self.retained = Some((start, end));
+        Ok(())
+    }
+    pub(crate) fn query_retained(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
+        let (start, end) = self.retained.ok_or(Error::InvalidState)?;
+        if query.position < start.max(1)
+            || query.position > end - 8
+            || query.length_to_beat != if self.layout.minimum() == 3 { 3 } else { 4 }
+            || query
+                .repeats
+                .iter()
+                .any(|&v| v == 0 || v as usize > self.source.backing_len())
+        {
+            return Err(Error::InvalidParameter);
+        }
         self.checked_query(query)
     }
     fn checked_query(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
@@ -686,5 +770,188 @@ mod fresh_tests {
             assert_eq!(state.test_snapshot(), before);
             assert!(!state.failed);
         }
+    }
+}
+
+#[cfg(test)]
+mod retained_tests {
+    use super::*;
+    use crate::optimal_retained_fixture as fixture;
+    use alloc::{vec, vec::Vec};
+    fn layout(minimum: u8) -> OptimalSearchLayout {
+        OptimalSearchLayout::new(10, 6, 6, 1, minimum, 0, (minimum == 3).then_some(10)).unwrap()
+    }
+    fn state(source: &[u8], layout: OptimalSearchLayout) -> OptimalSearch<'_> {
+        OptimalSearch::from_parts(
+            source,
+            layout,
+            ReferenceTree::new_in(layout.tree(), Global, Global).unwrap(),
+            OptimalShortKey::new_in(layout.short_log(), Global).unwrap(),
+            OptimalMatches::new_in(Global).unwrap(),
+        )
+        .unwrap()
+    }
+    fn query(q: [u32; 6]) -> OptimalQuery {
+        OptimalQuery {
+            position: q[0] as usize,
+            repeats: [q[1], q[2], q[3]],
+            zero_literals: q[4] == 1,
+            length_to_beat: q[5] as usize,
+        }
+    }
+    #[test]
+    fn every_retained_query_map_and_frontier_matches_without_future_bytes() {
+        let mut queries = 0;
+        for case in fixture::read(fixture::PACK).unwrap() {
+            let layout = OptimalSearchLayout::new(
+                case.window,
+                case.hash,
+                case.chain,
+                case.search,
+                case.minimum as u8,
+                case.target as usize,
+                (case.minimum == 3).then_some(case.window),
+            )
+            .unwrap();
+            let mut actual = state(case.source, layout);
+            let mut expected = vec![0; case.search_cells()];
+            for block in &case.blocks {
+                actual
+                    .begin_retained(block.start as usize, block.start as usize + block.length)
+                    .unwrap();
+                assert_eq!(actual.source.len(), block.start as usize + block.length);
+                for (index, event) in block.events.iter().enumerate() {
+                    if let Some(q) = event.query {
+                        assert_eq!(
+                            actual.test_snapshot(),
+                            expected,
+                            "{} before {index}",
+                            case.name
+                        );
+                        let candidates: Vec<_> = actual
+                            .query_retained(query(q))
+                            .unwrap()
+                            .iter()
+                            .map(|m| [m.off_base(), m.length() as u32])
+                            .collect();
+                        assert_eq!(candidates, event.matches, "{} query {index}", case.name);
+                        queries += 1;
+                    }
+                    for &(at, value) in &block.search_changes[index] {
+                        expected[at] = value;
+                    }
+                    assert_eq!(
+                        actual.test_snapshot(),
+                        expected,
+                        "{} block {} event {index}",
+                        case.name,
+                        block.start
+                    );
+                }
+            }
+        }
+        assert_eq!(queries, 1523);
+    }
+    #[test]
+    fn invalid_retained_ranges_queries_and_mode_switches_preserve_state() {
+        let source = [b'a'; 128];
+        let mut actual = state(&source, layout(3));
+        let q = query([1, 1, 4, 8, 0, 3]);
+        assert!(actual.query_retained(q).is_err());
+        for (start, end) in [(0, 63), (1, 65), (0, 129), (usize::MAX, 64)] {
+            assert!(actual.begin_retained(start, end).is_err());
+            assert_eq!(actual.source.len(), 128);
+            assert_eq!(actual.frontier, 0);
+            assert!(actual.retained.is_none());
+        }
+        actual.begin_retained(0, 64).unwrap();
+        actual.query_retained(q).unwrap();
+        let before = actual.test_snapshot();
+        let candidates = actual.matches.as_slice().unwrap().to_vec();
+        for bad in [
+            OptimalQuery { position: 0, ..q },
+            OptimalQuery { position: 57, ..q },
+            OptimalQuery {
+                position: usize::MAX,
+                ..q
+            },
+            OptimalQuery {
+                repeats: [0, 4, 8],
+                ..q
+            },
+            OptimalQuery {
+                repeats: [129, 4, 8],
+                ..q
+            },
+            OptimalQuery {
+                length_to_beat: 4,
+                ..q
+            },
+        ] {
+            assert!(actual.query_retained(bad).is_err());
+            assert_eq!(actual.test_snapshot(), before);
+            assert_eq!(actual.matches.as_slice().unwrap(), candidates);
+        }
+        assert!(actual.query(q).is_err());
+        assert!(actual.query_fresh(q).is_err());
+        assert!(actual.begin_retained(0, 64).is_err());
+        assert!(actual.begin_retained(65, 128).is_err());
+        assert_eq!(actual.test_snapshot(), before);
+        actual.begin_retained(64, 128).unwrap();
+        assert!(actual.query_retained(q).is_err());
+        actual.reset();
+        assert_eq!(actual.source.len(), 128);
+        assert!(actual.retained.is_none());
+        actual.begin_retained(0, 64).unwrap();
+        actual.query_retained(q).unwrap();
+        assert_eq!(actual.test_snapshot(), before);
+    }
+    #[test]
+    fn hidden_future_bytes_cannot_change_first_block_candidates_or_maps() {
+        for minimum in 3..=7 {
+            let first = [b'a'; 128];
+            let mut changed = first;
+            changed[64..].fill(b'z');
+            let mut a = state(&first, layout(minimum));
+            let mut b = state(&changed, layout(minimum));
+            a.begin_retained(0, 64).unwrap();
+            b.begin_retained(0, 64).unwrap();
+            let q = query([1, 1, 4, 8, 0, if minimum == 3 { 3 } else { 4 }]);
+            assert_eq!(a.query_retained(q).unwrap(), b.query_retained(q).unwrap());
+            assert_eq!(a.test_snapshot(), b.test_snapshot());
+            assert!(
+                a.matches
+                    .as_slice()
+                    .unwrap()
+                    .iter()
+                    .all(|m| m.length() <= 63)
+            );
+            assert!(a.source.byte(64).is_err());
+            assert!(a.source.key(63, layout(minimum).tree().key()).is_err());
+            assert!(a.source.short_bucket(62, 10).is_err());
+            assert_eq!(a.source.match_length(1, 0).unwrap(), 63);
+        }
+    }
+    #[test]
+    fn retained_source_identity_geometry_and_used_owner_gates_are_separate() {
+        let source = [b'a'; 1025];
+        let other = [b'a'; 128];
+        let q = query([1, 1, 4, 8, 0, 4]);
+        for size in [127, 1025] {
+            let mut a = state(&source[..size], layout(4));
+            assert!(a.begin_retained(0, 64).is_err());
+            assert!(a.retained.is_none());
+        }
+        let mut a = state(&source[..128], layout(4));
+        assert!(a.validate_retained_start(&other, 4, 0).is_err());
+        assert!(a.validate_retained_start(&source[..128], 3, 0).is_err());
+        assert!(a.validate_retained_start(&source[..128], 4, 1).is_err());
+        a.validate_retained_start(&source[..128], 4, 0).unwrap();
+        a.query_fresh(q).unwrap();
+        assert!(a.validate_retained_start(&source[..128], 4, 0).is_err());
+        assert!(a.begin_retained(0, 64).is_err());
+        a.reset();
+        a.begin_retained(0, 64).unwrap();
+        assert!(a.validate_fresh_start(&source[..128], 4, 0).is_err());
     }
 }

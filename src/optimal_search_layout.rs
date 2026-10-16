@@ -49,8 +49,19 @@ impl OptimalSearchLayout {
     }
     /// Captured ordinary fresh CCtx domain; direct observation geometry is separate.
     pub(crate) fn validate_fresh(self, source_len: usize) -> Result<()> {
-        if !(64..=512).contains(&source_len)
-            || !(1024..=4096).contains(&self.window)
+        if !(64..=512).contains(&source_len) {
+            return Err(Error::InvalidParameter);
+        }
+        self.validate_ordinary_geometry()
+    }
+    pub(crate) fn validate_retained(self, source_len: usize) -> Result<()> {
+        if !(128..=1024).contains(&source_len) {
+            return Err(Error::InvalidParameter);
+        }
+        self.validate_ordinary_geometry()
+    }
+    fn validate_ordinary_geometry(self) -> Result<()> {
+        if !(1024..=4096).contains(&self.window)
             || !(64..=512).contains(&self.tree.key().cells())
             || !(32..=256).contains(&self.tree.nodes())
             || !(2..=16).contains(&self.attempts)
@@ -126,19 +137,36 @@ pub(crate) struct OptimalQuery {
 #[derive(Clone, Copy)]
 pub(crate) struct OptimalSource<'a> {
     bytes: &'a [u8],
+    end: usize,
 }
 impl<'a> OptimalSource<'a> {
     pub(crate) fn new(bytes: &'a [u8]) -> Result<Self> {
         if bytes.len() < 8 || bytes.len() > (u32::MAX - 2) as usize {
             return Err(Error::InvalidParameter);
         }
-        Ok(Self { bytes })
+        Ok(Self {
+            bytes,
+            end: bytes.len(),
+        })
     }
     pub(crate) fn is_same_source(self, source: &[u8]) -> bool {
         core::ptr::eq(self.bytes, source)
     }
     pub(crate) const fn len(self) -> usize {
+        self.end
+    }
+    pub(crate) const fn backing_len(self) -> usize {
         self.bytes.len()
+    }
+    pub(crate) fn restore_end(&mut self) {
+        self.end = self.bytes.len();
+    }
+    pub(crate) fn set_end(&mut self, end: usize) -> Result<()> {
+        if !(8..=self.bytes.len()).contains(&end) {
+            return Err(Error::InvalidParameter);
+        }
+        self.end = end;
+        Ok(())
     }
     pub(crate) fn validate(self, query: OptimalQuery, layout: OptimalSearchLayout) -> Result<()> {
         if query.position > self.len() - 8
@@ -177,7 +205,11 @@ impl<'a> OptimalSource<'a> {
     }
     pub(crate) fn key(self, position: usize, layout: GreedyKeyLayout) -> Result<GreedyKey> {
         layout
-            .read_key(self.bytes.get(position..).ok_or(Error::InvalidParameter)?)
+            .read_key(
+                self.bytes
+                    .get(position..self.end)
+                    .ok_or(Error::InvalidParameter)?,
+            )
             .ok_or(Error::InvalidParameter)
     }
     /// Hash constants from facebook/zstd v1.5.7 ZSTD_hash3 (LICENSE.zstd).
@@ -187,7 +219,7 @@ impl<'a> OptimalSource<'a> {
         }
         let tail = self
             .bytes
-            .get(position..)
+            .get(position..self.end)
             .and_then(|v| v.get(..3))
             .ok_or(Error::InvalidParameter)?;
         let word = u32::from_le_bytes([tail[0], tail[1], tail[2], 0]);
@@ -198,7 +230,7 @@ impl<'a> OptimalSource<'a> {
         if previous >= current || current >= self.len() {
             return Err(Error::CorruptData);
         }
-        let a = &self.bytes[current..];
+        let a = &self.bytes[current..self.end];
         let b = &self.bytes[previous..previous + a.len()];
         let mut matched = 0;
         // Safe slice equality handles long repetitive observations efficiently.
@@ -213,7 +245,10 @@ impl<'a> OptimalSource<'a> {
         Ok(matched)
     }
     pub(crate) fn byte(self, position: usize) -> Result<u8> {
-        self.bytes.get(position).copied().ok_or(Error::CorruptData)
+        self.bytes[..self.end]
+            .get(position)
+            .copied()
+            .ok_or(Error::CorruptData)
     }
 }
 

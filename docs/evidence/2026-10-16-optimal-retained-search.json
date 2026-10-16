@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "archive": "2026-10-16-optimal-retained-search.tar.gz",
+  "archive_bytes": 3618,
+  "archive_sha256": "5535337ce4afd0031c510f2457bad3ec05a15dcf31c45d5af6ebe05d946f3c2b",
+  "files": [
+    {
+      "path": "all.log",
+      "bytes": 2112,
+      "sha256": "6b4ef3d7977ec664fcb0044e90a689ece9b330b0d8e1b20ed9eabf178ba2d25b"
+    },
+    {
+      "path": "clippy.log",
+      "bytes": 142,
+      "sha256": "75f3fb6d3647c1009f838519554c8bd66d17582b0421cce0b8a5eb11a1b01f83"
+    },
+    {
+      "path": "evidence.json",
+      "bytes": 3663,
+      "sha256": "b463a3455e6d3b11b5b8cd9d3dc978a2a5ea98bcde17eefa586d3cbe5ad8f95c"
+    },
+    {
+      "path": "fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "matches.log",
+      "bytes": 2112,
+      "sha256": "16ae9649c0a91f0e4309765c245141dbe74df34f08d069fe84321c0b7c186271"
+    },
+    {
+      "path": "nostd.log",
+      "bytes": 142,
+      "sha256": "91d2cedd23271dce797ac25f8ec3a852be57d25e2f651695a26a42a755c80f64"
+    },
+    {
+      "path": "release-all.log",
+      "bytes": 2104,
+      "sha256": "861dbd232e428cf86d4b72d07d4fa5c1e27a5967d6824e796c67989b1e614087"
+    },
+    {
+      "path": "safe.log",
+      "bytes": 2042,
+      "sha256": "8ec7bce76634dbe12261e6ed60b1f0db46212e6b37ccf2b8a46a4b3b86aee37c"
+    },
+    {
+      "path": "short.log",
+      "bytes": 2112,
+      "sha256": "c2fad052f0e36f4674da40bad4d8ba92578ecc0136ba515ead79f248c0468a4a"
+    },
+    {
+      "path": "tree.log",
+      "bytes": 2112,
+      "sha256": "4abc1e1027ee0185f7ef70d5b9f027f9693662d362c17209af3caeaebb300d1c"
+    },
+    {
+      "path": "controls/check-optimal-retained-search.py",
+      "bytes": 1859,
+      "sha256": "b70579deb3dc066f942b5368185974205dad1c4bd46f8fe6495beeab5f1f8c0d"
+    }
+  ],
+  "qualification": "Six backend configurations each passed 19 search tests (114 executions), including all 1523 retained queries/maps and future-byte independence. Strict Clippy all tests/features, no_std and formatting passed; runner checked unchanged source hashes."
+}
