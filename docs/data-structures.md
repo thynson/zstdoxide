@@ -1879,3 +1879,41 @@ by Rust search rather than read from the embedded observed list. Allocation test
 must include moved and borrowed non-clone owners, every creation failure boundary,
 no allocation during parse/reset and exact deallocation identity. This private fresh
 composition cannot commit retained frame repeat/frequency state or enable strategy 7.
+
+
+### Retained ordinary Optimal observation design
+
+The next additive retained protocol owns one immutable contiguous source of at
+most 1,024 bytes and a schedule of two to four 64..512-byte blocks. Explicit
+W10..12/H6..9/C6..9/S1..4 geometry ensures the complete source remains within one
+window; this initial retained domain makes no window-expiry claim. No dictionary,
+LDM, worker, producer, or post-sequence splitter is admitted. Two padding passes
+create new CCtx owners, but each pass preserves its ordinary owners across all
+Continue calls and final End. Existing fresh captures and query guards are frozen.
+
+The observer retains all 515 potentially used path cells, complete frequency
+counts/sums/cache, complete search maps/frontiers, every query/candidate/sequence,
+prev/next compressed-state owner identities, and repeat arrays before/after each
+call. Path cells and frequencies persist even when entropy compression selects a
+raw or RLE block. Candidate repeats are copied from the current committed owner
+at the start of each block. Only a compressed block swaps entropy/repeat owners;
+raw and RLE output retain the previous committed repeats. Frame bytes, block kind,
+block extents and Rust decode independently bind the publication interpretation.
+
+`nextToUpdate3` is block-local and is initialized from the main search frontier at
+each parser entry; the short-head allocation itself persists. The independent
+model must represent that reset rather than retaining the prior local frontier.
+The block-local last-stretch record starts at zero on every parser invocation,
+while the owned path table does not. The first block starts at global position one;
+later blocks start at their global block boundary, where zero literals and repeat
+history can immediately participate. Search comparison is bounded by the current
+block end, even though source backing bytes for future blocks already exist.
+
+The predictor borrows current-prefix source for global integer search, current
+block source for literal pricing, and carries shared search/path/frequency state
+between block models. Publication hypotheses are frozen recipe fields, not runtime
+instructions to C. The eventual auditor reads actual wire block kinds and requires
+those hypotheses to agree before applying committed-repeat state transitions.
+Both source padding and normal/sanitized C must agree; allocator records keep the
+already derived sanitizer redzone adjustment. Invalid transport, forged state,
+changed publication owner/repeats and altered frame output must reject offline.

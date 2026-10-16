@@ -122,7 +122,11 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Freeze C-derived path workload outputs and owners before diagnostic backend timing and a separate repeat.
 - [x] Add separately bounded private fresh-query admission and compare every captured search map without weakening direct-query guards.
 - [ ] Integrate private fresh optLevel0 parsing after ordinary startup is qualified.
-- [ ] Freeze and capture ordinary retained optimal blocks with full search/frequency/path and repeat publication state.
+- [ ] Specify bounded retained-block transport, state ownership and frame publication before model or observer implementation.
+- [ ] Freeze independent retained search/frequency/path predictions and rollback/RLE hypotheses before C execution.
+- [ ] Review and preflight the retained ordinary CCtx observer and exact dependency/environment command gates.
+- [ ] Capture and independently audit retained optimal blocks, complete frames and committed repeat publication.
+- [ ] Project retained complete state and qualify a checked independent Rust fixture reader.
 - [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
 - [ ] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
 - [ ] Freeze successor public admission mappings and independently reconstruct every newly admitted tuple.
