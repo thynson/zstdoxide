@@ -155,3 +155,21 @@ codegen pass in safe/all configurations; these are not native foreign firmware
 runs. Complete source-bound logs and reconciliation are retained in
 `evidence/2026-10-16-ultra-scalar-implementation.tar.gz`. This completes scalar
 qualification only; Ultra frequency ownership and path integration remain open.
+
+## Complete native frequency observations
+
+All 702 planned native commands pass against unchanged source inputs. The two
+builds agree on 298 positive schedules, 4065 complete state transitions and 2848
+queries. Each build rejects both fractional-budget violations and all 20
+malformed packets with the exact preflight diagnostic and empty stdout.
+All 26 codec translation units are instrumented in the sanitizer build.
+
+Ordinary and optimized Python each pass 38 offline controls: 36 rejected
+forgeries and two unchanged positives, with zero child attempts. These cover
+policy, every count/sum/cache record, dirty caches, query prices, exact diagnostics,
+command inventory and source/output closure. The full capture and both control
+directories are retained with content deduplication in
+`evidence/2026-10-16-ultra-frequency-capture.tar.gz`: 138379 reconstructed files,
+740 verified archive members, and SHA-256
+`04adc89aba68fa8883afbe33a13e5e3664c276a9c91a7c5a67570b75bbaccb26`.
+This qualifies frequency observations, not Ultra path selection or public frames.
