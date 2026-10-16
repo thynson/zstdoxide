@@ -24,3 +24,5 @@ controls each accept two exact captures and reject seventy forged records
 without children. All 77 frozen capture inputs remain unchanged. The archive
 contains 643 individually verified members. Independent Rust fixture/frame
 qualification and wider fresh production composition remain subsequent gates.
+
+The complete fresh fixture projection passed in normal and optimized Python: 20 cases, 64,610 events, 8,460,469 bytes, SHA-256 `d6de8128b08fa0cecb4254c8089463b0bfb650abb322884b2b0f319ba00553ee`. Both runs independently checked frozen capture hashes, model states and complete frames. Projection logs are archived in `docs/evidence/2026-10-16-optimal-fresh-wide-projection.tar.gz`.

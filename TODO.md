@@ -152,7 +152,11 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Preflight the complete fresh-block observer and exact native command inventory.
 - [x] Capture and independently audit complete wider fresh blocks and frames.
 - [x] Specify complete fresh sparse fixture ownership, bounds and validation.
-- [ ] Project and qualify wider fresh fixtures before extending private fresh composition.
+- [x] Project audited complete fresh states and frames into an immutable wider fixture.
+- [ ] Qualify the complete fresh fixture reader and independent frame decoding.
+- [ ] Extend private fresh search admission and compare every complete query/map.
+- [ ] Extend complete fresh path composition and compare all events and sequences.
+- [ ] Qualify complete fresh allocation owners, failure cleanup and reset contracts.
 - [ ] Implement a private allocation-free Optimal execution plan for qualified complete fresh sources.
 - [ ] Implement checked Optimal token collection with exact owners and wire offset intents.
 - [ ] Integrate the private plan/state with shared frame entropy and independently decode complete frames.

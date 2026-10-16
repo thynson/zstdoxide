@@ -1,0 +1,22 @@
+{
+  "archive": "2026-10-16-optimal-fresh-wide-projection.tar.gz",
+  "archive_bytes": 3818,
+  "archive_sha256": "ba0accf5e399c0de95831ba61674a6b197dcc19d21402a5a275730f364bd665e",
+  "files": [
+    {
+      "path": "pack-optimal-fresh-wide.log",
+      "bytes": 157,
+      "sha256": "10239d01404935ac6142ea3f45d66cc3b9d00be6641ffb3cac4d1b46c3c500ae"
+    },
+    {
+      "path": "pack-optimal-fresh-wide-optimized.log",
+      "bytes": 157,
+      "sha256": "10239d01404935ac6142ea3f45d66cc3b9d00be6641ffb3cac4d1b46c3c500ae"
+    },
+    {
+      "path": "pack_optimal_fresh_wide_fixtures.py",
+      "bytes": 10115,
+      "sha256": "738e8009d80f8555a5ed71369819eae433181683252c70975e5339ba7271229d"
+    }
+  ]
+}
