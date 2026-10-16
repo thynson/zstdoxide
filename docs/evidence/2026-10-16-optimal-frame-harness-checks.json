@@ -1,0 +1,22 @@
+{
+  "archive": "2026-10-16-optimal-frame-harness-checks.tar.gz",
+  "archive_bytes": 356,
+  "archive_sha256": "5339ac34b24bd55c0adc42b574a664b91718940325b46cf6500e5db1386912c3",
+  "files": [
+    {
+      "path": "optimal-benchmark-clippy.log",
+      "bytes": 130,
+      "sha256": "9cddedc284355e8fbd8fe3b74a64607de37843f0e8f7216302bef433f97d5ea5"
+    },
+    {
+      "path": "optimal-benchmark-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "optimal-benchmark-validate-optimized.log",
+      "bytes": 58,
+      "sha256": "d0ebaccef2893e42672d4e55a210c83844adaa81b5633142ed92f6df20c556fe"
+    }
+  ]
+}

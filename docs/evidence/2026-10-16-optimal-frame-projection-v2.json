@@ -1,0 +1,42 @@
+{
+  "archive": "2026-10-16-optimal-frame-projection-v2.tar.gz",
+  "archive_bytes": 13485,
+  "archive_sha256": "7cf08863f63f1427bd3e737a8a393dc3d216178998796072cc7a00405026516f",
+  "files": [
+    {
+      "path": "pack_optimal_frame_baseline_v2.py",
+      "bytes": 3813,
+      "sha256": "8cf9fa1b386ced8712c0f61a7c2004fdee3f5cf262e4633ed9c1a5a1d0e825be"
+    },
+    {
+      "path": "optimal-frame-projection-v2-normal.json",
+      "bytes": 228,
+      "sha256": "90ca72481a061b5e31cbb172f33413b488bab86d8155748bff602a857a6114bc"
+    },
+    {
+      "path": "optimal-frame-projection-v2-normal.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "optimal-frame-projection-v2-optimized.json",
+      "bytes": 228,
+      "sha256": "90ca72481a061b5e31cbb172f33413b488bab86d8155748bff602a857a6114bc"
+    },
+    {
+      "path": "optimal-frame-projection-v2-optimized.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reference-optimal-frame-baseline/cases.bin",
+      "bytes": 221648,
+      "sha256": "de39c27b0eb6a48a17a07f7a23e7d949a1d40ec29de2be0e586b37337555bee9"
+    },
+    {
+      "path": "reference-optimal-frame-baseline/provenance.json",
+      "bytes": 16260,
+      "sha256": "6fa1e02df7092390e418d6f44b16b59148c34202cc6f2211d869f2f702872670"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "archive": "2026-10-16-optimal-frame-baseline-reader.tar.gz",
+  "archive_bytes": 3720,
+  "archive_sha256": "ca3ab3d053bbd8dd50e5650bed853198b8cf1ee2f0fd71036eb906116ee41278",
+  "files": [
+    {
+      "path": "check_optimal_frame_baseline.py",
+      "bytes": 5081,
+      "sha256": "8d834896588620f3293a48d6b2e9bf56c5ce2baae19ab742ba1d3fe45b091ec6"
+    },
+    {
+      "path": "check-optimal-baseline-controls.py",
+      "bytes": 2914,
+      "sha256": "6a306f63f5bd6b8bca71eda5d6f56c88ed7443f367a4935adcd2637f1e364274"
+    },
+    {
+      "path": "optimal-baseline-controls-normal.json",
+      "bytes": 602,
+      "sha256": "780ce8366d41355afeb6bd12abe576bf6cc1f188a0427dec0e6e3c0221b99394"
+    },
+    {
+      "path": "optimal-baseline-controls-optimized.json",
+      "bytes": 601,
+      "sha256": "58d07f882112411bbab93dd05b6f7ddb3e57f4f320ec14e30c281aec740e1084"
+    }
+  ]
+}
