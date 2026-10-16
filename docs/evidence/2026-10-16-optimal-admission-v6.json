@@ -1,0 +1,62 @@
+{
+  "archive": "2026-10-16-optimal-admission-v6.tar.gz",
+  "archive_bytes": 47208,
+  "archive_sha256": "ba17b272146995154ab6c00d2405d554f5b2af6963db9587b3d428c116c0c677",
+  "files": [
+    {
+      "path": "check-optimal-admission-v6.log",
+      "bytes": 922,
+      "sha256": "e76024c85e7adceeaba8235c0267cd6501f06c5a5a3c8f54e8f1dfac7482302a"
+    },
+    {
+      "path": "check-optimal-admission-v6-optimized.log",
+      "bytes": 922,
+      "sha256": "e76024c85e7adceeaba8235c0267cd6501f06c5a5a3c8f54e8f1dfac7482302a"
+    },
+    {
+      "path": "scripts/check_reference_admission_v6.py",
+      "bytes": 7441,
+      "sha256": "b73e2d9190ea5450c86d23b7e303826da8693a2fcb7c22f6d5a48ac186335391"
+    },
+    {
+      "path": "tests/fixtures/reference-admission-v6/README.md",
+      "bytes": 1196,
+      "sha256": "550cd2e9fd501f6484219df6804b065ced8a98f88a93d8a561c4438c062dcd75"
+    },
+    {
+      "path": "tests/fixtures/reference-admission-v6/broader.tsv",
+      "bytes": 25389,
+      "sha256": "8132a3a4c6e63e9ea36c789f37fcff1c16a6b994c61cd6315c7301b56086eef8"
+    },
+    {
+      "path": "tests/fixtures/reference-admission-v6/fuzz.tsv",
+      "bytes": 9601,
+      "sha256": "4ebad053b75994ec2860d4ed5cc59909597fd408cf6bc3075dcb94e89ddaa353"
+    },
+    {
+      "path": "tests/fixtures/reference-admission-v6/greedy.tsv",
+      "bytes": 68184,
+      "sha256": "79a8f42ce6d8b7eb5f96f376cf9fe35fa2f6c80b745dde5a3c2d4fa0ab0ba91e"
+    },
+    {
+      "path": "tests/fixtures/reference-admission-v6/interop.tsv",
+      "bytes": 14067,
+      "sha256": "43ec2bfee153d7a93960da2dc71b77c244130e5a8916844f8eb3cc1972bae5a5"
+    },
+    {
+      "path": "tests/fixtures/reference-admission-v6/lazy.tsv",
+      "bytes": 173956,
+      "sha256": "52704643d4aa5362260c6f8c7798ecbd89c8f77944451bc9e3b2235fce4c531f"
+    },
+    {
+      "path": "tests/fixtures/reference-admission-v6/loops.tsv",
+      "bytes": 2504,
+      "sha256": "63cbc573deafb372150b265c9acaa8e7d1cca640dd43cc6bcb8cd2942623cc7c"
+    },
+    {
+      "path": "tests/fixtures/reference-admission-v6/provenance.json",
+      "bytes": 14910,
+      "sha256": "72c57c9f1bf51a6cfb1b18fbb7534e662d3edc881e0fdd4db775c199b76c2e3d"
+    }
+  ]
+}

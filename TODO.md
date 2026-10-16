@@ -155,7 +155,8 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [ ] Implement a private allocation-free Optimal execution plan for qualified complete fresh sources.
 - [ ] Implement checked Optimal token collection with exact owners and wire offset intents.
 - [ ] Integrate the private plan/state with shared frame entropy and independently decode complete frames.
-- [ ] Freeze successor public admission mappings and independently reconstruct every newly admitted tuple.
+- [x] Freeze source-aware successor mappings and independently reconstruct every historical Optimal tuple.
+- [ ] Freeze new positive public recipes and independently reconstruct every admitted tuple.
 - [ ] Enable bounded public Optimal dispatch and preserve original selector/numeric assertion inputs.
 - [ ] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
 - [ ] Run all safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and selected foreign/no-atomics checks.

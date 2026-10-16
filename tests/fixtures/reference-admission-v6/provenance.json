@@ -1,0 +1,438 @@
+{
+  "changed": {
+    "broader.tsv": [
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-empty-level-11",
+        "historical_resolved_tuple": "10,7,7,3,4,12,7",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-empty-level-12",
+        "historical_resolved_tuple": "10,7,7,4,3,24,7",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-initial_match-level-11",
+        "historical_resolved_tuple": "10,7,7,3,4,12,7",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-initial_match-level-12",
+        "historical_resolved_tuple": "10,7,7,4,3,24,7",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      }
+    ],
+    "fuzz.tsv": [
+      {
+        "case": "unsupported-64",
+        "input_sha256": "775caae67bf06346a6b95b52a956f3665cc1b239edb907dd97a21d269ede0122",
+        "level": "11",
+        "prefix_size": "30",
+        "preset_row": "11",
+        "preset_strategy": "7",
+        "preset_tier": "3",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "case": "unsupported-65",
+        "input_sha256": "7699557ab402d662aabefe91a278f517a811f0f7d9c20aa93d280676e3a6eee6",
+        "level": "12",
+        "prefix_size": "30",
+        "preset_row": "12",
+        "preset_strategy": "7",
+        "preset_tier": "3",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      }
+    ],
+    "greedy.tsv": [
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-empty-level-11",
+        "historical_resolved_tuple": "10,7,7,3,4,12,7",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-empty-level-12",
+        "historical_resolved_tuple": "10,7,7,4,3,24,7",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-initial_match-level-11",
+        "historical_resolved_tuple": "10,7,7,3,4,12,7",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-initial_match-level-12",
+        "historical_resolved_tuple": "10,7,7,4,3,24,7",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      }
+    ],
+    "interop.tsv": [],
+    "lazy.tsv": [
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-empty-level-11",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "resolution_origin": "historical Rust tuple",
+        "resolved_tuple": "10,7,7,3,4,12,7",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-empty-level-12",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "resolution_origin": "historical Rust tuple",
+        "resolved_tuple": "10,7,7,4,3,24,7",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-initial_match-level-11",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "resolution_origin": "historical Rust tuple",
+        "resolved_tuple": "10,7,7,3,4,12,7",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "fuzzer-initial_match-level-12",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "resolution_origin": "historical Rust tuple",
+        "resolved_tuple": "10,7,7,4,3,24,7",
+        "source_sha256": "7c1b7187ecd2f416bb9d29204fddc0e9313a34fd69bf740ec794fa40cb575a33",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "lazy-level-11-size-0",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "10,7,7,3,4,12,7",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "lazy-level-12-size-0",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "10,7,7,4,3,24,7",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "lazy-level-11-size-16384",
+        "request": "11,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "14,15,14,3,4,12,7",
+        "source_sha256": "4348e3b98e8a327b34ced39c1da9e67cdb4cd5e48e4d7960607a3ae403d35f0c",
+        "source_size": "16384",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "14,15,14,3,4,12,7"
+      },
+      {
+        "additive_c_required": "0",
+        "case": "lazy-level-12-size-16384",
+        "request": "12,0,0,0,0,0,0,0,0",
+        "resolution_origin": "independent pinned-preset reconstruction",
+        "resolved_tuple": "14,15,14,4,3,24,7",
+        "source_sha256": "4348e3b98e8a327b34ced39c1da9e67cdb4cd5e48e4d7960607a3ae403d35f0c",
+        "source_size": "16384",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "14,15,14,4,3,24,7"
+      }
+    ],
+    "loops.tsv": [
+      {
+        "family": "empty",
+        "level": "11",
+        "preset_row": "11",
+        "preset_strategy": "7",
+        "preset_tier": "3",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "family": "empty",
+        "level": "12",
+        "preset_row": "12",
+        "preset_strategy": "7",
+        "preset_tier": "3",
+        "source_size": "0",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      },
+      {
+        "family": "initial_match",
+        "level": "11",
+        "preset_row": "11",
+        "preset_strategy": "7",
+        "preset_tier": "3",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,3,4,12,7"
+      },
+      {
+        "family": "initial_match",
+        "level": "12",
+        "preset_row": "12",
+        "preset_strategy": "7",
+        "preset_tier": "3",
+        "source_size": "30",
+        "v4": "unsupported",
+        "v5": "unsupported",
+        "v6": "resource",
+        "v6_additive_c_required": 0,
+        "v6_independent_tuple": "10,7,7,4,3,24,7"
+      }
+    ]
+  },
+  "child_processes": 0,
+  "coverage": {
+    "broader.tsv": {
+      "v5": {
+        "resource": 7,
+        "success": 131,
+        "unsupported": 21
+      },
+      "v6": {
+        "resource": 11,
+        "success": 131,
+        "unsupported": 17
+      }
+    },
+    "fuzz.tsv": {
+      "v5": {
+        "advanced": 4,
+        "resource": 1,
+        "success": 67,
+        "unsupported": 9
+      },
+      "v6": {
+        "advanced": 4,
+        "resource": 3,
+        "success": 67,
+        "unsupported": 7
+      }
+    },
+    "greedy.tsv": {
+      "v5": {
+        "resource": 16,
+        "success": 383,
+        "unsupported": 23
+      },
+      "v6": {
+        "resource": 20,
+        "success": 383,
+        "unsupported": 19
+      }
+    },
+    "interop.tsv": {
+      "v5": {
+        "resource": 3,
+        "success": 87,
+        "unsupported": 2
+      },
+      "v6": {
+        "resource": 3,
+        "success": 87,
+        "unsupported": 2
+      }
+    },
+    "lazy.tsv": {
+      "v5": {
+        "resource": 36,
+        "success": 823,
+        "unsupported": 27
+      },
+      "v6": {
+        "resource": 44,
+        "success": 823,
+        "unsupported": 19
+      }
+    },
+    "loops.tsv": {
+      "v5": {
+        "resource": 2,
+        "success": 20,
+        "unsupported": 21
+      },
+      "v6": {
+        "resource": 6,
+        "success": 20,
+        "unsupported": 17
+      }
+    }
+  },
+  "files": [
+    {
+      "bytes": 9601,
+      "path": "fuzz.tsv",
+      "sha256": "4ebad053b75994ec2860d4ed5cc59909597fd408cf6bc3075dcb94e89ddaa353"
+    },
+    {
+      "bytes": 2504,
+      "path": "loops.tsv",
+      "sha256": "63cbc573deafb372150b265c9acaa8e7d1cca640dd43cc6bcb8cd2942623cc7c"
+    },
+    {
+      "bytes": 14067,
+      "path": "interop.tsv",
+      "sha256": "43ec2bfee153d7a93960da2dc71b77c244130e5a8916844f8eb3cc1972bae5a5"
+    },
+    {
+      "bytes": 25389,
+      "path": "broader.tsv",
+      "sha256": "8132a3a4c6e63e9ea36c789f37fcff1c16a6b994c61cd6315c7301b56086eef8"
+    },
+    {
+      "bytes": 68184,
+      "path": "greedy.tsv",
+      "sha256": "79a8f42ce6d8b7eb5f96f376cf9fe35fa2f6c80b745dde5a3c2d4fa0ab0ba91e"
+    },
+    {
+      "bytes": 173956,
+      "path": "lazy.tsv",
+      "sha256": "52704643d4aa5362260c6f8c7798ecbd89c8f77944451bc9e3b2235fce4c531f"
+    }
+  ],
+  "generator_sha256": "b73e2d9190ea5450c86d23b7e303826da8693a2fcb7c22f6d5a48ac186335391",
+  "independently_reconstructed": 22,
+  "input_sha256": {
+    "scripts/check_lazy_interop_capture_v2.py": "0cb1ea0cef617b732c02537dfda09f5d4ac3080d2f3e2dccab6cb2c399d8410f",
+    "scripts/check_reference_admission_v5.py": "f016f23bf50a00a529276e506684c4cee1129aebbe222ca5b812cff34537287b",
+    "tests/fixtures/reference-admission-v5/README.md": "9a0f073716215e978c3d18eb0be1c3be665ab5bb4cfeed931396aceff9854a2d",
+    "tests/fixtures/reference-admission-v5/broader.tsv": "987997de3241abd0c07f149f120eb432c2d70ba53a65582a0ea0ae865a3602eb",
+    "tests/fixtures/reference-admission-v5/fuzz.tsv": "3f6cc5d182eef4da8ac8919bbe9c26e06a62148acdeb41ce03a12381598c717d",
+    "tests/fixtures/reference-admission-v5/greedy.tsv": "48aa1e7d6155b3cb9a36ca441dafa9a63e894f97e4b1d6b463387772dc1ace24",
+    "tests/fixtures/reference-admission-v5/interop.tsv": "8d13b0ba3d264e9ea76c3d437dbfc6a7c568c7cd356d7b8b2d7d50edb9a625be",
+    "tests/fixtures/reference-admission-v5/lazy.tsv": "2c210de372c6f918c55bd7fb8883290a8f0cdfc5d2d7b91f81b4182dd21edd20",
+    "tests/fixtures/reference-admission-v5/loops.tsv": "a7725e10501a9190d53c0d15b2ff746f873502f293195f4e335474b4694f3be2",
+    "tests/fixtures/reference-admission-v5/provenance.json": "be264e270bac401b405bd6b18a58cefbc624b59d88ad54e1948abbd55b10c6bc",
+    "tests/upstream/parameters/presets.tsv": "4e188cc16826c6665dcd440ae9d153484aeb4e561321a089be2aec260667881d"
+  },
+  "malformed_rejections": 15,
+  "qualification": "Source-only complete-fresh Optimal policy: source64..16384 within window,W16/H12/C12/S6,target4095. Original selector/numeric/source/request bytes and historical columns remain unchanged. All strategy7 tuples independently reconstructed; newly admitted public recipes, native interoperability and public enabling are separate gates.",
+  "schema_version": 6
+}
