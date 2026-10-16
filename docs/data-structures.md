@@ -2214,3 +2214,15 @@ replay, allocation-failure cleanup and safe/unsafe equivalence, followed by
 native bidirectional complete-frame checks and an unchanged full feature matrix.
 Only then define source-aware successor admission classifications. Preserve all
 historical selectors, input values, byte bounds and previous fixture checks.
+
+### Ultra scalar observation ownership
+
+Before lifecycle changes, a bounded scalar protocol supplies copied mode and
+query words, never pointers. Its independent Python model derives fractional
+weights by integer division rather than the C shift sequence. The native helper
+owns fixed initialized source/frequency arrays, validates the entire input before
+calling upstream, and checks that queries do not mutate its records or guards.
+Ordinary frequency lifecycle is deliberately absent: these are labeled synthetic
+scalar states. A later Rust fixture reader owns no source table and borrows
+bounded packet rows; copied checked policy/price values require no unsafe variant.
+All fixtures record mode explicitly and preserve the original whole-bit corpus.
