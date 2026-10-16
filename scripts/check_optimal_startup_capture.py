@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+"""Independently audit complete fresh ordinary Optimal startup captures without child execution."""
+import argparse
+import functools
+import json
+from pathlib import Path
+import sys
+sys.dont_write_bytecode = True
+import optimal_startup_capture_plan as specification
+from oracles import optimal_startup_validation as model
+from oracles import tree_validation as strict
+from oracles.fast_frame_publication_support import frame_blocks
+from oracles.optimal_startup import REVISION, parse_packet, require
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':'))
+
+
+def load(data):
+    return json.loads(data, object_pairs_hook=strict.unique, parse_constant=strict.bad_constant)
+
+
+def read(root, name, limit):
+    p = root / name
+    require(p.is_file() and not p.is_symlink() and p.resolve().is_relative_to(root), 'regular contained artifact: ' + name)
+    require(p.stat().st_size <= limit, 'bounded artifact: ' + name)
+    data = p.read_bytes()
+    require(len(data) <= limit, 'artifact grew: ' + name)
+    return data
+
+
+def audit(root):
+    root = root.resolve(strict=True)
+    e = load(read(root, 'evidence.json', 8 << 20))
+    keys = {'schema_version','status','started_at','cwd','upstream','output','compiler','compiler_sha256',
+            'source','upstream_revision','upstream_source_sha256','environment','plan','commands','artifacts',
+            'completed_at','source_unchanged'}
+    if e.get('status') == 'passed':
+        keys.add('audit')
+    require(type(e) is dict and set(e) == keys and type(e['schema_version']) is int, 'strict envelope')
+    require(all(type(e[k]) is str for k in ('started_at','completed_at','cwd','upstream','output','compiler','compiler_sha256','upstream_revision')), 'envelope strings')
+    require(e['schema_version'] == 2 and e['status'] in ('captured', 'passed')
+            and e['source_unchanged'] is True and e['upstream_revision'] == REVISION,
+            'completed capture status')
+    require(e['cwd'] == str(specification.ROOT), 'reviewed working directory')
+    # Copies used for offline controls retain the original command/output root.
+    output = Path(e['output'])
+    upstream = Path(e['upstream'])
+    compiler = Path(e['compiler'])
+    require(output.is_absolute() and upstream.is_absolute() and compiler.is_absolute(), 'absolute execution roots')
+    for a, b in ((specification.ROOT, upstream), (specification.ROOT, output), (upstream, output)):
+        require(not a.is_relative_to(b) and not b.is_relative_to(a), 'disjoint execution roots')
+    require(specification.sha(compiler.read_bytes()) == e['compiler_sha256'], 'compiler identity')
+    for name,data in specification.generated(upstream).items():
+        require(read(root,'generated/'+name,1<<20)==data,'exact original/generated instrumentation')
+    source = specification.source_manifest()
+    require(canonical(source) == canonical(e['source']), 'exact local source closure')
+    for name, digest in source.items():
+        require(specification.sha(read(root, 'source/' + name, 8 << 20)) == digest, 'retained source identity')
+    sources, units = specification.reference_sources(upstream)
+    require(canonical(sources) == canonical(e['upstream_source_sha256']), 'complete reference identity')
+    specification.environment(e['environment'])
+    plan = specification.plan(upstream, output, compiler, units)
+    specification.validate_plan(e['plan'], upstream, output, compiler, units)
+    require(len(e['commands']) == len(plan), 'complete exact command count')
+    packets = specification.requests()
+    require({p.name for p in (root / 'requests').iterdir()} == {n + '.bin' for n in packets}, 'request inventory')
+    for name, packet in packets.items():
+        require(read(root, 'requests/' + name + '.bin', 552) == packet, 'exact request source and schedule')
+    require({p.name for p in (root / 'logs').iterdir()} ==
+            {r['label'] + '.' + stream for r in plan for stream in ('stdout', 'stderr')}, 'complete log inventory')
+    artifacts = {}
+    total = operations = negative = 0
+    transcripts = {}
+    frames = {}
+    ledgers = {}
+    kinds = {}
+    for expected, command in zip(plan, e['commands']):
+        require(set(command) == set(expected) | {'started_at', 'stdin', 'seconds', 'exit_code', 'stdout', 'stderr'}, 'command record closure')
+        require(canonical({k: command[k] for k in expected}) == canonical(expected), 'exact command/flags/order/bounds')
+        require(type(command['exit_code']) is int and command['exit_code'] == expected['expected_exit']
+                and command['stdin'] is None and type(command['seconds']) in (float, int)
+                and 0 <= command['seconds'] <= expected['timeout_seconds'] + 5, 'command completion')
+        logs = {}
+        label = expected['label']
+        for stream in ('stdout', 'stderr'):
+            name = 'logs/' + label + '.' + stream
+            data = read(root, name, expected[stream + '_limit'])
+            require(canonical(command[stream]) == canonical(dict(path=name, bytes=len(data), sha256=specification.sha(data))), 'exact log metadata')
+            total += len(data)
+            require(total <= 512 << 20, 'aggregate logs')
+            logs[stream] = data
+        out, err = logs['stdout'], logs['stderr']
+        if expected['expected_exit'] == 1:
+            require(not out and err.startswith(b'Optimal startup observer: ') and err.count(b'\n') == 1,
+                    'malformed packet rejected before output')
+            negative += 1
+        else:
+            require(not err, 'successful command stderr')
+        if expected['expected_exit'] == 0:
+            specification.command_gate(label, out, err, upstream, output, sources)
+        if '-run-negative-' in label:
+            mode, name = label.split('-run-', 1)
+            require(all(not (root/p).exists() for p in specification.artifact_paths(mode,name)),
+                    'malformed request has no artifacts')
+        if '-compile-' in label or label.endswith('-link'):
+            require(not out, 'quiet compilation')
+            name = str(Path(expected['argv'][-1]).relative_to(output))
+            data = read(root, name, 64 << 20)
+            artifacts[name] = dict(bytes=len(data), sha256=specification.sha(data))
+        elif '-run-startup_' in label:
+            mode, name = label.split('-run-', 1)
+            request = parse_packet(packets[name])
+            model.validate_output(out,request)
+            operations += len(model.Replay(request).run())
+            if mode == 'normal':
+                transcripts[name] = out
+            else:
+                require(transcripts[name] == out, 'normal/instrumented complete equality')
+            paths = specification.artifact_paths(mode,name)
+            for path in paths:
+                data = read(root,path,2048)
+                artifacts[path] = dict(bytes=len(data),sha256=specification.sha(data))
+            first, second = (read(root,path,1024) for path in paths[:2])
+            require(first == second, 'padding frame equality')
+            frame_kind = validate_frame(first,request)
+            ledger_first, ledger_second = (load(read(root,path,2048)) for path in paths[2:])
+            validate_ledger(ledger_first)
+            strict.same(ledger_first,ledger_second,'padding allocation equality')
+            if mode == 'normal':
+                frames[name] = first
+                ledgers[name] = ledger_first
+                kinds[name] = frame_kind
+            else:
+                require(frames[name] == first,'normal/instrumented complete frame equality')
+                strict.same(ledgers[name],ledger_first,'normal/instrumented allocation equality')
+    require(canonical(artifacts) == canonical(e['artifacts']) and len(artifacts) == 150,
+            'all objects, executables, frames and ledgers')
+    for mode in ('normal','sanitized'):
+        require({str(p.relative_to(root)) for p in (root/'artifacts'/mode).iterdir()} ==
+                {p for name in specification.recipes() for p in specification.artifact_paths(mode,name)},
+                'exact generated artifact inventory')
+    require(len(transcripts) == 12 and operations == 8818 and negative == 36, 'exact capture totals')
+    result = dict(status='passed', recipes=12, events_per_build=4409, commands=len(plan),
+                  malformed_rejections_per_build=18, instrumented_codec_units=26,
+                  normal_instrumented_equal=True, log_bytes=total, frame_kinds=kinds,
+                  frames=48, allocation_ledgers=48,
+                  qualification='Fresh ordinary unchanged-provider CCtx startup with complete independent search/path replay, frame structure and allocator audit. C decoder checked complete frames; independent Rust decoding and retained block publication remain separate gates.')
+    if 'audit' in e:
+        require(canonical(e['audit']) == canonical(result), 'saved audit equals independent replay')
+    return result
+
+
+def validate_ledger(value):
+    require(type(value) is dict and set(value)=={'allocations','peak_bytes','released'},'ledger schema')
+    values=value['allocations']
+    require(type(values) is list and 1 <= len(values) <= 32 and
+            all(type(v) is int and 0 < v <= 8<<20 for v in values),'allocation request domain')
+    require(type(value['peak_bytes']) is int and max(values) <= value['peak_bytes'] <= min(sum(values),8<<20),
+            'allocation high-water domain')
+    require(value['released'] is True,'complete owner release')
+
+
+def validate_frame(data,request):
+    n=len(request.source)
+    header = bytes.fromhex('28b52ffd') + (bytes((0x20,n)) if n<256 else bytes((0x60,))+(n-256).to_bytes(2,'little'))
+    require(data.startswith(header),'exact single-segment source-size header')
+    blocks=frame_blocks(data)
+    require(len(blocks)==1 and blocks[0]['last']==1,'one complete final block')
+    block=blocks[0]
+    if block['kind']==0:
+        require(block['payload']==request.source,'raw frame source')
+    elif block['kind']==1:
+        require(block['field']==n and block['payload']*n==request.source,'RLE frame source')
+    else:
+        require(0 < block['field'] < n,'bounded beneficial compressed block')
+    return block['kind']
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('capture', type=Path)
+    args = parser.parse_args()
+    print(json.dumps(audit(args.capture), sort_keys=True, indent=2))
