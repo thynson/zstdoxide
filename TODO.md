@@ -80,7 +80,10 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [ ] Qualify ordinary parser startup positions and full fresh repeat publication in retained-state capture.
 - [x] Specify bounded fresh ordinary startup requests and compose independent search/path replay before C execution.
 - [x] Freeze fresh startup recipes, exact CCtx/provider observation hooks and bounded zero-initializing allocator review.
-- [ ] Preflight and capture fresh ordinary startup/search/path/frame state with unchanged provider selection.
+- [ ] Specify an exact fresh startup capture command inventory and independent artifact/state audit before C execution.
+- [ ] Qualify fresh startup plan, dependency/environment gates and malformed controls in normal/optimized Python.
+- [ ] Capture fresh ordinary startup/search/path/frame state with unchanged provider selection in normal and sanitized builds.
+- [ ] Freeze audited complete fresh frames and decode each with independent safe/all-feature Rust.
 - [ ] Independently audit fresh ordinary frames and forged state before extending private search query admission.
 - [x] Validate chunked independent suffix replay and preflight the broader guarded helper before C execution.
 - [x] Implement independent tiny sorted-tree/all-match replay with exact maps, both frontiers and forged-record controls before C execution.

@@ -1783,3 +1783,31 @@ Record exact allocation extents/failures and ensure all owners release. Later
 blocks must retain actual state rather than re-zeroing it. Both source-padding
 passes and normal/instrumented builds must agree, with independent frame decode
 and forged-record controls before Rust search-startup admission changes.
+
+
+### Fresh startup executable capture records
+
+The additive capture plan owns immutable argv records, timeout/output limits and
+an exact per-request artifact map. A request creates two complete frame files
+and two allocation ledgers in its build-specific artifact directory. Invalid
+packets must fail before metadata and create no artifacts. The runner owns each
+child and bounded pipe buffers, closes both pipes, kills overdue children and
+preserves failed command diagnostics. Dependencies and effective predefines are
+validated immediately, before any observed helper execution, not just post hoc.
+The reference closure is the pinned C/header inventory; the one generated opt
+unit replaces only its original translation unit, retaining 25 others.
+
+The independent auditor borrows immutable packets and logs and regenerates every
+complete startup event using the integer search/path composition. It separately
+checks canonical frame header/content-size/block extents, raw/RLE source bytes,
+all allocation ledger integer domains, release, and equality of both padding
+passes and both builds. Compressed payload decoding is a separate Rust fixture
+gate; structural inspection is never described as full decoding. The C helper
+already decodes each complete frame with the pinned decoder. Capture does not
+qualify retained block publication, where raw fallback may discard path choices.
+
+All new capture files are additive. Existing predictive recipes, source model,
+observer and predecessor source manifests remain unchanged. If executable
+preflight exposes a helper problem, preserve that failure and use a versioned
+successor helper with an explicit reviewed diff. No search admission changes
+precede the successful state, frame, and forged-evidence gates.
