@@ -2093,3 +2093,25 @@ retained calls. Public admission follows private complete-frame validation
 and an additive, source-size-aware successor of the frozen v5 mappings.
 Every newly admitted parameter tuple must be independently reconstructed from
 pinned presets and unchanged request/source inputs before interoperability.
+
+### Complete Optimal frame measurement records
+
+A separate public benchmark will measure the complete one-shot frame path only
+within the newly qualified source domain. Its immutable corpus records own
+64..16,384-byte deterministic vectors; copied request records describe default
+levels 11/12 and bounded explicit strategy-7 tuples. Before clocks, it resolves
+every request, independently decodes the complete result, fingerprints full
+source and frame bytes, and records an allocator ownership ledger. The Global
+allocation path alone is timed; corpus construction, checksums, decoding and
+tracking-allocator accounting remain outside the interval. Each repetition
+compresses and drops a complete result, including all temporary ownership.
+
+All 19 isolated leaf features, safe and all-feature builds must produce equal
+full-frame bytes and owner ledgers on identical records before timing begins.
+The driver builds every executable before the first measurement and validates
+explicit evidence that native correctness, feature and platform jobs completed.
+A separately invoked safe/all repeat follows the first campaign. Fixed-order
+desktop timings are diagnostic observations, not stable speedup guarantees;
+features absent from a particular path must not be claimed to accelerate it.
+The benchmark source/requests and byte fingerprints are frozen when first run;
+any subsequent correction requires a versioned successor and preserved logs.

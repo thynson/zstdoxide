@@ -166,6 +166,8 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Preflight the exact public interoperability command inventory and reused generic adapters.
 - [ ] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
 - [ ] Run all safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and selected foreign/no-atomics checks.
+- [x] Specify complete-frame benchmark records, owner equivalence and measurement barriers.
+- [ ] Implement and freeze deterministic complete Optimal frame workloads and independent evidence checks.
 - [ ] Freeze equivalent complete frames/owners, then measure all backends and a separate safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded milestone, outstanding official migration obligations and the next decomposition.
 
