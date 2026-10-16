@@ -1,0 +1,57 @@
+{
+  "archive": "2026-10-16-optimal-public-recipes.tar.gz",
+  "archive_bytes": 45583,
+  "archive_sha256": "7eaac07b3e5322a8fd5220bff0a6e1f2008e063fc1afb0b9f415ce7c71fbc173",
+  "files": [
+    {
+      "path": "freeze-optimal-interop-plan.log",
+      "bytes": 131,
+      "sha256": "a402955a241a5bd2a7932b75b2f228d93cf17cdd59f14b58bc4f954b43425c74"
+    },
+    {
+      "path": "check-optimal-interop-recipes-normal.log",
+      "bytes": 419,
+      "sha256": "0e712b945a04bc587491cdee17c6fc55286e3f1180ea8dcf288e9be8751ff312"
+    },
+    {
+      "path": "check-optimal-interop-recipes-optimized.log",
+      "bytes": 419,
+      "sha256": "0e712b945a04bc587491cdee17c6fc55286e3f1180ea8dcf288e9be8751ff312"
+    },
+    {
+      "path": "check-optimal-interop-recipes-normal-final.log",
+      "bytes": 419,
+      "sha256": "0e712b945a04bc587491cdee17c6fc55286e3f1180ea8dcf288e9be8751ff312"
+    },
+    {
+      "path": "check-optimal-interop-recipes-optimized-final.log",
+      "bytes": 419,
+      "sha256": "0e712b945a04bc587491cdee17c6fc55286e3f1180ea8dcf288e9be8751ff312"
+    },
+    {
+      "path": "check-optimal-interop-recipe-controls-initial.py",
+      "bytes": 2695,
+      "sha256": "e6e665fe5bf4dc0d8ad3d9e4855f423c179a7df40e23c44c24b3beb88f0ab903"
+    },
+    {
+      "path": "scripts/oracles/optimal_interop.py",
+      "bytes": 7325,
+      "sha256": "d20ade78c9b541868ee2480ea4b5458c76c5872ed84dfda1212ddf99a22b330a"
+    },
+    {
+      "path": "scripts/check_optimal_interop_recipes.py",
+      "bytes": 2514,
+      "sha256": "c8e3641deba8d48c7b7e89d3782f338aa7229dd6b126abc50a3ae1051b65b4f3"
+    },
+    {
+      "path": "scripts/check_optimal_interop_recipe_controls.py",
+      "bytes": 2698,
+      "sha256": "2a0f6daba1c5c1ef886f2d18f31ed90960088a932cb8e01c93cd2ff52fed5753"
+    },
+    {
+      "path": "tests/fixtures/reference-optimal-interop-recipes/recipes.json",
+      "bytes": 765383,
+      "sha256": "91f9c271ebb9cd42aeac7e3bd2a47be0841e610917d994bf589cb217996965ac"
+    }
+  ]
+}
