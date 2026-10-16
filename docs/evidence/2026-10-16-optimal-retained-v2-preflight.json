@@ -1,0 +1,102 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "cases": 16,
+      "child_processes": 0,
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "discarded_candidate_repeats",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "raw_rollback",
+        "rle_rollback",
+        "search_repeat",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 4486,
+      "qualification": "Predictive retained state and frozen publication hypotheses, not C observation evidence.",
+      "queries": 1523,
+      "rejected": 42,
+      "sequences": 41,
+      "status": "passed"
+    },
+    {
+      "cases": 16,
+      "child_processes": 0,
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "discarded_candidate_repeats",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "raw_rollback",
+        "rle_rollback",
+        "search_repeat",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 4486,
+      "qualification": "Predictive retained state and frozen publication hypotheses, not C observation evidence.",
+      "queries": 1523,
+      "rejected": 42,
+      "sequences": 41,
+      "status": "passed"
+    },
+    {
+      "cases": 16,
+      "manifest_sha256": "0926589cfa074132935a70cef4eb1c7830d6e954e8032e9690f8862716f1b1db",
+      "status": "passed"
+    },
+    {
+      "child_processes": 0,
+      "codec_units": 26,
+      "commands": 140,
+      "forged_rejected": 29,
+      "negative_packets": 23,
+      "reference_files": 89,
+      "source_files": 51,
+      "status": "passed",
+      "substitutions": 14
+    },
+    {
+      "child_processes": 0,
+      "codec_units": 26,
+      "commands": 140,
+      "forged_rejected": 29,
+      "negative_packets": 23,
+      "reference_files": 89,
+      "source_files": 51,
+      "status": "passed",
+      "substitutions": 14
+    }
+  ],
+  "archive": {
+    "path": "docs/evidence/2026-10-16-optimal-retained-v2-preflight.tar.gz",
+    "bytes": 994,
+    "sha256": "d4db1458a52e0646a9eb5aa440c71bcbd2429b4bdd4476be462297b59461eec9"
+  },
+  "qualification": "Corrected independent model and new boundary hypotheses; unchanged C helper. Original failed native capture retained separately."
+}
