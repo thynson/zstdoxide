@@ -1,0 +1,262 @@
+{
+  "archive": "2026-10-16-ultra-path-preflight.tar.gz",
+  "archive_bytes": 682189,
+  "archive_sha256": "f3c55ee2a6ad30cff24d3a78af08e685b1362c6b73dd91fcff39e3a194b648ec",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/evidence.json",
+      "bytes": 13836,
+      "sha256": "d025c69c7f6ebda6a483ef972bce2506c3a852a453691ee71762bb7cd8e65579"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/generated/adapter-diff.patch",
+      "bytes": 14198,
+      "sha256": "b9158bc5216be6fc26ae9bd0a03b6b5ae3ef640c42b865cfc8b3502a4b477129"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/generated/adapter-digests.json",
+      "bytes": 168,
+      "sha256": "a7cd52a963feab582b6414a9e8f49341cebaedbd74753843580fe3ed704e5bde"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/generated/instrumentation.json",
+      "bytes": 5044,
+      "sha256": "24542bbe37e0950fb92b26c261c42957cd87450b8d2851a82c26ce68a0b027e0"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/generated/observed_zstd_opt.c",
+      "bytes": 73265,
+      "sha256": "dd73925df66e62bf626bc8248610452321ed84ae4f48bf7997cd5c947766301f"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/generated/original_zstd_opt.c",
+      "bytes": 72006,
+      "sha256": "625936ee3fb02d789abb894c1fbc2918ee47582434094c963b630da13532c876"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/normal-dependencies.log",
+      "bytes": 36077,
+      "sha256": "817f423b3dda127fed69fee2993cfdb07334bfe2b07c8b522a956c67b558ec5d"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/normal-predefines.log",
+      "bytes": 625760,
+      "sha256": "cfefb9220b63f17dd0c78665b56a3ae8964dec77e971cb05feaef2a547f65241"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/normal-syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/sanitized-dependencies.log",
+      "bytes": 36077,
+      "sha256": "817f423b3dda127fed69fee2993cfdb07334bfe2b07c8b522a956c67b558ec5d"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/sanitized-predefines.log",
+      "bytes": 622661,
+      "sha256": "dbcfffd89ac4d23848b2d765361e3cd0761ed06d2b32925a4f08a043d7f0e507"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/sanitized-syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/docs/reference-ultra-path-adapter-review.md",
+      "bytes": 2579,
+      "sha256": "f8e69fccccf041ad68e7a133e76968cd89a0253353794c919837892044964b9d"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/docs/reference-ultra-path-protocol.md",
+      "bytes": 4527,
+      "sha256": "6137a236248318b9a3de869da9355692e83100a7b8bb73e9d6cedc0be694300e"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/capture_ultra_paths.py",
+      "bytes": 7911,
+      "sha256": "ad1bc972c4187bbdfb66641c759f3fe58ebbcd9711c8b7f4ecb45383f2f6044a"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/check_ultra_path_baseline.py",
+      "bytes": 3559,
+      "sha256": "34be13d6e49f48bf70952373465f78c1ba328f0dffef09db3cae0deb20ecbabc"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/check_ultra_path_capture.py",
+      "bytes": 9207,
+      "sha256": "b376e2424cd51aa770626642b8d1e74aeafe5919332f5a6cf8db03e8b99d2980"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/check_ultra_path_capture_plan.py",
+      "bytes": 3005,
+      "sha256": "96328dce0e4330e6845349b36f782d833687453dd6d9b6affece9f7a5cbe3f18"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/check_ultra_path_model.py",
+      "bytes": 6907,
+      "sha256": "ffb9eae2fcf6dc6a7d6fd823ebac4b81e26313099cb20179d301632587d0d8ee"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_path_instrumentation.py",
+      "bytes": 4469,
+      "sha256": "cfcc9874233610ada46cc73c4a6bd8ac826c685a464e42d890283ff1d10dbf5f"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_path_recipes.py",
+      "bytes": 1369,
+      "sha256": "8c6a3ce9c48519f6010e513451ce5c6f27560786f1fe1b0d7d700970c6f51cc4"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_path_script_inputs.json",
+      "bytes": 28671,
+      "sha256": "f3077e03084d5faa838b47db522ef50eeea418193d59c8f8171b696b65bc1e12"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_path_validation.py",
+      "bytes": 12753,
+      "sha256": "ea1c4523f835ed18adefcc0a9ac3119610721e9ccc9b74f4cdeb5c6aee6b2c50"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_path_wide_recipes.py",
+      "bytes": 932,
+      "sha256": "b0675ff25192e307e9b747f9bce891a3a83d48f6af9b56614c8416886878a2c2"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_path_wide_validation.py",
+      "bytes": 5129,
+      "sha256": "9cf158e7776ac85ac40fab0a8f8831a385662e9a94ed9ab5f760b2a7d3b76927"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_paths.py",
+      "bytes": 5460,
+      "sha256": "192c4f52819ae810150b030b1a32cd3dab04068cb56a4c0cc3be4386b0c8838f"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_paths_wide.c",
+      "bytes": 13760,
+      "sha256": "6755ce4664a3431149f84fd8efb1fd7474d72f8578d3d94a2b87b1dc227a3078"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_paths_wide.py",
+      "bytes": 5469,
+      "sha256": "e37f4c630b5f47dcd9291a5e3fde94b4b3b5cbcce5009407f94082867058292f"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_price_validation.py",
+      "bytes": 7491,
+      "sha256": "ec2528f09dbc35f21688c65e706e6015fed3e8a6aa14bd13fb184656a804ceca"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/optimal_prices_v2.py",
+      "bytes": 5058,
+      "sha256": "85360e2ee7d7202b55f1c9c48266969cf951e85657e5265fdd06f6d524f0d92a"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/tree_direct.py",
+      "bytes": 6584,
+      "sha256": "200c9491b82ae70598f7d5f0d375070ce858494f2c96304ba186329cd4f6d6f1"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/tree_validation.py",
+      "bytes": 8202,
+      "sha256": "59c16db4486f1a2f81eb995245c0c95cb8f07738edbe5792d5b54e00d7afcc9b"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/ultra_frequency.py",
+      "bytes": 5498,
+      "sha256": "1b15ebd1b98a7b2e0b0e8da7cc16730b9f862c51cd5b6e6f93f90c5c62a7ef6e"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/ultra_path_instrumentation.py",
+      "bytes": 953,
+      "sha256": "9ff726e9bbde908c1dd4d6f80bc335988d5b9a21744122f2aba9280f53a4b615"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/ultra_path_recipes.py",
+      "bytes": 1885,
+      "sha256": "63edd5a7178c4bf76d3abb753916f162a230426a32d6412ab537b99706967f32"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/ultra_path_script_inputs.json",
+      "bytes": 10561,
+      "sha256": "d6d294bc8132b6f0ec7fe0d2eb44000c2868d9aa5e7315b19884eb0756289c29"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/ultra_path_validation.py",
+      "bytes": 7927,
+      "sha256": "8c44e0240ee1e865fb3fac5ccd82c86b5047a26219ea0c321f53562b7e6157f7"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/ultra_paths.c",
+      "bytes": 15542,
+      "sha256": "6f1336d4f2fdd719cf16a914c3db2881eb9f76857966fb8952d427ccdd8a2551"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/ultra_paths.py",
+      "bytes": 1080,
+      "sha256": "4ce228d39ccc1e917e5440ad8316cad7b2ca082e87df758e319ddeca979f9858"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/oracles/ultra_scalar.py",
+      "bytes": 6782,
+      "sha256": "8310cb0c45b333e220162d4a72523ad8163f18e768e12cb3d8c68982534063c5"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/scripts/ultra_path_capture_plan.py",
+      "bytes": 9034,
+      "sha256": "2707b6f37a60d221094c836ffa70e55897d31f7dff72a965e97ec37c9da58366"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/tests/fixtures/reference-optimal-paths/cases.bin",
+      "bytes": 3211235,
+      "sha256": "0defe329f5a50e2add4162fe865c7f1fc314db2c15733485d2cc92f463c7d167"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/tests/fixtures/reference-ultra-path-recipes/recipes.json",
+      "bytes": 34648,
+      "sha256": "45a7186bd5027160066a7a028a7f07deddf4eba967352a4e71705f1a1374094a"
+    },
+    {
+      "path": "zstdoxide-ultra-path-preflight-1016/source/tests/upstream/manifest.json",
+      "bytes": 657979,
+      "sha256": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+    },
+    {
+      "path": "preflight-ultra-path-native.py",
+      "bytes": 1979,
+      "sha256": "7031d1b91bec5d51b99620f3ca1c56a0da32599ef31a30c9c2492b6b60fc93da"
+    },
+    {
+      "path": "ultra-path-plan-normal.log",
+      "bytes": 190,
+      "sha256": "38b3949006f70c1e966f5239d605e204f33549210d2465c8eed3b5a55c893a25"
+    },
+    {
+      "path": "ultra-path-plan-optimized.log",
+      "bytes": 190,
+      "sha256": "38b3949006f70c1e966f5239d605e204f33549210d2465c8eed3b5a55c893a25"
+    },
+    {
+      "path": "ultra-path-staged-syntax/instrumentation.json",
+      "bytes": 5044,
+      "sha256": "93167519a25953b5928b2ae677c65c5d4cb08ce3e385fcd53577f784fc0f5430"
+    },
+    {
+      "path": "ultra-path-staged-syntax/normal.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ultra-path-staged-syntax/observed_zstd_opt.c",
+      "bytes": 73265,
+      "sha256": "dd73925df66e62bf626bc8248610452321ed84ae4f48bf7997cd5c947766301f"
+    },
+    {
+      "path": "ultra-path-staged-syntax/ultra_paths.c",
+      "bytes": 15542,
+      "sha256": "6f1336d4f2fdd719cf16a914c3db2881eb9f76857966fb8952d427ccdd8a2551"
+    }
+  ]
+}

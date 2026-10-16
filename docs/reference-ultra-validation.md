@@ -275,3 +275,15 @@ Requests, branch manifest, deterministic source-only search and complete reports
 are retained in `evidence/2026-10-16-ultra-path-model.tar.gz`. These are model
 predictions until the reviewed native successor executes; they do not qualify a
 production Ultra parser or ordinary match discovery.
+
+## Coupled path native preflight
+
+The frozen native plan has 220 commands, 58 positive packets and 21 malformed
+packets per build. Both Python modes reject 14 changed command/instrumentation
+plans without child attempts. All 16 unique observation anchors preserve their
+original parser statements except the explicitly scripted provider substitution.
+Normal and fully instrumented syntax, dependency and predefine checks all pass.
+Negative commands pin exact diagnostics, excluding internal guard failures.
+Generated source, adapter diffs, original source snapshots and logs are retained
+in `evidence/2026-10-16-ultra-path-preflight.tar.gz`. Native path capture is the
+next work item; no successor execution result is claimed at this checkpoint.
