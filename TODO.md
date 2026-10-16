@@ -175,7 +175,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Run all safe/isolated-unsafe/all/release, true no_std, formatting and Clippy checks.
 - [x] Specify complete-frame benchmark records, owner equivalence and measurement barriers.
 - [x] Implement and freeze deterministic complete Optimal frame workloads and independent evidence checks.
-- [ ] Freeze equivalent complete frames/owners, then measure all backends and a separate safe/all repeat after CPU barriers.
+- [x] Freeze equivalent complete frames/owners, then measure all backends and a separate safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded milestone, outstanding official migration obligations and the next decomposition.
 
 ## Roadmap
