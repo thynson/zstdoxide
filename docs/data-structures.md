@@ -1833,3 +1833,23 @@ complete search state; each event retains its complete post-state through deltas
 The independent Rust reader validates geometry, fixed extents, raw-index domains,
 canonical ordering, event correspondence and exact EOF before exposing fixtures.
 No new unsafe backend is needed for test-only records or borrowed fixture spans.
+
+
+### Private fresh-query admission after capture qualification
+
+The qualified fresh domain is a separate checked entry, not a weakening of
+`OptimalSource::validate`: source 64..512, W10..12/H6..9/C6..9/S1..4, minimum
+parameter 3..7, target <=4095, and the ordinary short table only for minimum 3
+with log equal to window. Queries begin at one, retain the eight-byte footprint,
+use the effective minimum as their beat, and carry three positive repeats bounded
+by source length. Unavailable fresh distances remain values; checked subtraction
+rejects them before any source access. Existing direct queries retain <=4096 and
+<=position+2 repeat restrictions. Both entries share the already qualified integer
+search implementation and its poison/reset semantics, with no new allocation.
+
+Full fresh fixture tests will compare every query result and complete search map,
+including unchanged maps between path events and both frontiers. Rejected fresh
+geometry/query bounds must preserve storage and live candidates; internal failure
+still poisons until reset. The new entry remains private and does not establish
+retained blocks or public strategy 7 admission. Existing safe/unsafe leaf contracts
+and deterministic predecessor fixtures remain applicable.

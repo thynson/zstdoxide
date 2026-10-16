@@ -120,7 +120,8 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Replay scripted path decisions in private Rust and compare all captured states.
 - [x] Qualify scripted path decisions on every isolated feature, foreign Miri and no-atomics compilation.
 - [x] Freeze C-derived path workload outputs and owners before diagnostic backend timing and a separate repeat.
-- [ ] Integrate private optLevel0 parsing after ordinary startup/search history is qualified.
+- [ ] Add separately bounded private fresh-query admission and compare every captured search map without weakening direct-query guards.
+- [ ] Integrate private fresh optLevel0 parsing after ordinary startup is qualified.
 - [ ] Freeze and capture ordinary retained optimal blocks with full search/frequency/path and repeat publication state.
 - [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
 - [ ] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
