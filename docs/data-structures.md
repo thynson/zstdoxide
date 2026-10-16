@@ -1853,3 +1853,29 @@ geometry/query bounds must preserve storage and live candidates; internal failur
 still poisons until reset. The new entry remains private and does not establish
 retained blocks or public strategy 7 admission. Existing safe/unsafe leaf contracts
 and deterministic predecessor fixtures remain applicable.
+
+
+### Private fresh search/path composition
+
+`OptimalParser::parse_fresh` will borrow an existing `OptimalSearch` for one
+complete fresh source. The parser retains its independent frequency, path and
+candidate owners; search retains heads, paired nodes, optional short heads and
+its own candidate owner. Six allocations (seven with minimum 3) therefore remain
+explicit and independently allocator-parameterized. A private provider adapter
+copies the bounded search candidates into the parser's existing live prefix;
+no parse/reset allocation is introduced and no source bytes are copied.
+
+Before parser mutation, the entry validates captured fresh geometry, exact borrowed
+source identity, effective minimum/target agreement, and untouched search frontiers,
+candidates and poison state. Existing scripted parsing stays separate. Parser
+errors poison parser reuse; search errors also poison search. Resetting only one
+component cannot authorize reuse when the other still contains prior query state.
+The caller explicitly resets both owners to retry. Callbacks may already have
+published output before failure; neither parser nor search rolls back caller data.
+
+Full C fixture comparisons cover path/frequency scalars at every event and complete
+search maps before and after every actual query, while candidates are generated
+by Rust search rather than read from the embedded observed list. Allocation tests
+must include moved and borrowed non-clone owners, every creation failure boundary,
+no allocation during parse/reset and exact deallocation identity. This private fresh
+composition cannot commit retained frame repeat/frequency state or enable strategy 7.
