@@ -1,0 +1,57 @@
+{
+  "archive": "2026-10-16-ultra-path-model.tar.gz",
+  "archive_bytes": 11181,
+  "archive_sha256": "43913c7d557e84afdb8be9fe13ed4944569189cdd296d16e2032bdfc1a0b96d7",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-path-model-1016/normal.json",
+      "bytes": 21745,
+      "sha256": "4dbdb275cc96fa590b83d04a1d09f8826376dc3714f2a4dee5b587327d38a66e"
+    },
+    {
+      "path": "zstdoxide-ultra-path-model-1016/normal.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-path-model-1016/optimized.json",
+      "bytes": 21744,
+      "sha256": "176efb62f8aa403f0e5593657a627fb80fd422e303fb2eddfc1f79cf75681056"
+    },
+    {
+      "path": "zstdoxide-ultra-path-model-1016/optimized.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "search-ultra-path-alternatives.py",
+      "bytes": 1574,
+      "sha256": "35f577d5edfadb5e55e32a55a0d79c288b30f8db77ca5f7bf302eeed6ef522a5"
+    },
+    {
+      "path": "ultra-path-alternative-search.log",
+      "bytes": 309,
+      "sha256": "7805a5cf65e4223eba9cd757c68e56a5bfc6de784093a8db388dc952e9da2750"
+    },
+    {
+      "path": "scripts/check_ultra_path_model.py",
+      "bytes": 6907,
+      "sha256": "ffb9eae2fcf6dc6a7d6fd823ebac4b81e26313099cb20179d301632587d0d8ee"
+    },
+    {
+      "path": "scripts/oracles/ultra_path_recipes.py",
+      "bytes": 1885,
+      "sha256": "63edd5a7178c4bf76d3abb753916f162a230426a32d6412ab537b99706967f32"
+    },
+    {
+      "path": "scripts/oracles/ultra_path_script_inputs.json",
+      "bytes": 10561,
+      "sha256": "d6d294bc8132b6f0ec7fe0d2eb44000c2868d9aa5e7315b19884eb0756289c29"
+    },
+    {
+      "path": "tests/fixtures/reference-ultra-path-recipes/recipes.json",
+      "bytes": 34648,
+      "sha256": "45a7186bd5027160066a7a028a7f07deddf4eba967352a4e71705f1a1374094a"
+    }
+  ]
+}

@@ -98,7 +98,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [ ] Measure paired safe/frequency-unsafe/all frequency lifecycles and an independent safe/all repeat after CPU barriers.
 - [x] Specify coupled scripted-path ownership, saved-match alternative observations and predecessor invariants.
 - [x] Reconstruct the complete original 27-case path fixture with policy-0 successor replay.
-- [ ] Freeze independent Ultra path replay and source-only branch coverage before observer execution.
+- [x] Freeze independent Ultra path replay and source-only branch coverage before observer execution.
 - [x] Specify policy-tagged path transport, complete alternative observations and bounded native storage.
 - [ ] Review and preflight policy-tagged path transport and read-only native instrumentation.
 - [ ] Capture complete match-plus-literal alternatives, thorough relaxation, predecessor/repeat and frontier states.

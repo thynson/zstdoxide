@@ -257,3 +257,21 @@ all complete path, frequency, repeat and sequence records. Source and both repor
 are retained in `evidence/2026-10-16-ultra-path-baseline.tar.gz`.
 The new Ultra branch model still requires its own source-only qualification and
 successor native capture; this reconciliation alone does not establish those.
+
+## Frozen independent Ultra path model
+
+Both Python modes pass the complete 58-request source-only corpus, retaining every
+original request under both policies and adding two deterministic alternative
+scripts under each policy. The model predicts 65,672 logical events and 143
+sequences per padding pass, with 72 saved-match alternative checks. Coverage
+includes accepted/rejected alternatives, frontier extension, continued queries,
+continued descending relaxation, and improvement after a rejection.
+
+A hand arithmetic witness checks 4515 + 256 - 224 = 4547 against a competing
+2168 cost, preserving the negative increment and complete saved match. Each mode
+rejects 20 forged traces and 14 malformed transport/type cases. The original
+27-case C-fixture reconciliation also reruns within each full model check.
+Requests, branch manifest, deterministic source-only search and complete reports
+are retained in `evidence/2026-10-16-ultra-path-model.tar.gz`. These are model
+predictions until the reviewed native successor executes; they do not qualify a
+production Ultra parser or ordinary match discovery.
