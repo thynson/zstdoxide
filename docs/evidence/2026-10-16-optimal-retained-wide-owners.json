@@ -1,0 +1,62 @@
+{
+  "archive": "2026-10-16-optimal-retained-wide-owners.tar.gz",
+  "archive_bytes": 5199,
+  "archive_sha256": "2b4837a82f0bc32059d814c43952972a7421497f684e542f816317832dc5e896",
+  "files": [
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/all.log",
+      "bytes": 7117,
+      "sha256": "f4265adf016ba096d1c0b20ade373d544a80431bcc19ef8f551f17cb5fdcb39b"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/clippy.log",
+      "bytes": 142,
+      "sha256": "270633b2fd1c396934f3cda051d3d381ad9f74e2c87dbbd864bdbca81e89735c"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/evidence.json",
+      "bytes": 3916,
+      "sha256": "76f5738d927edef5f3463d9d9795ef9501f104d7109b8d68fc6b3d1bfadc7a11"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/frequencies.log",
+      "bytes": 7117,
+      "sha256": "57c1f198328d8fca2243c58e0697c44f5768389a8414cc2e5c1add66847396f2"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/nostd.log",
+      "bytes": 72,
+      "sha256": "99f71393b9903dca098310bb446022a4bdee195ea9996f351a787195555210a6"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/paths.log",
+      "bytes": 7117,
+      "sha256": "8b6f3be832233abf4b0d4f4e4b87e138aa83eaef42874fc095f9e0b0d65f0f47"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/release-all.log",
+      "bytes": 7108,
+      "sha256": "6d0403b732268031a0be838f2335d6d7bd2a2f4c9e61c7883c27c6351cf52532"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/safe.log",
+      "bytes": 7117,
+      "sha256": "1eef869e7ed212bd993918b5cdbacea16ccf9ea0743ecf8f0c121048f61851d3"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-owner-checks/search.log",
+      "bytes": 7172,
+      "sha256": "bf31feba962fb0a90e9a354efd19b05afd7370054a8f5ba0583dd884f9e16e9e"
+    },
+    {
+      "path": "check-optimal-retained-wide-owners.py",
+      "bytes": 1994,
+      "sha256": "cdb2841ec492b4a17490ef046e997e43f6eef6edeecc5e5e6026a8ccb06301e4"
+    }
+  ]
+}

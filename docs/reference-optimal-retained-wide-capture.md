@@ -49,3 +49,11 @@ publication match. Sixty-six focused Optimal tests pass in six configurations
 (safe, frequency, path, combined search, all and release/all): 396 executions.
 Strict all-test/all-feature Clippy, formatting and true no_std compilation pass
 with unchanged source. Wider ownership and reset qualification follows.
+
+Wider exact-owner checks use a 16-KiB source and 65,536 short heads. All seven
+allocation failure ordinals release every moved non-clone owner; borrowed
+owners retain their identity through pending/failed/finished/reset states.
+Parse, publication and reset allocate nothing after construction. Rejected
+schedule construction releases all seven supplied owners. Sixty-nine focused
+Optimal tests pass in all six configurations (414 executions), plus strict
+Clippy, formatting and no_std compilation with unchanged source hashes.

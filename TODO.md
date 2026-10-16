@@ -145,7 +145,8 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Qualify the wider fixture reader and independent complete-frame decoding.
 - [x] Extend private retained search admission and match every wider query, complete map and frontier.
 - [x] Extend private retained path/coordinator admission and match all wider states and publications.
-- [ ] Qualify wider retained bounds, future-byte isolation, exact owners and poisoned resets.
+- [x] Qualify wider retained bounds, future-byte isolation, exact owners and poisoned resets.
+- [ ] Check complete wide schedule rejection and cleanup at exact block/source limits.
 - [x] Design wider complete fresh-block observations separately from retained scheduling.
 - [x] Freeze full fresh source transport/model/recipes and reconcile existing startup observations.
 - [x] Preflight the complete fresh-block observer and exact native command inventory.
