@@ -2052,3 +2052,44 @@ repeat owners and explicit pending phase. Wider source/block limits do not
 authorize an extra block, future-byte reads, window expiry or fresh public use.
 Separate search-map, path/publication, and ownership/negative gates precede
 complete feature/platform qualification.
+
+### Bounded Optimal frame plan and token ownership
+
+After complete fresh observations and private parsing are qualified, an
+`OptimalExecutionPlan` will hold copied resolved parameters, source size,
+checked search layout, frame settings/bound and explicit owner byte counts.
+The initial scope is one complete known-size source of 64..16,384 bytes,
+inside its window, W10..16/H6..12/C6..12/S1..6, minimum 3..7, target <=4095.
+Parameter resolution happens once before dispatch; invalid source/tuple,
+unsupported strategy, operational resource bounds and checked allocation
+layouts are validated before allocator clones or requests. The current
+small-input and larger-source exclusions are explicit resource policy, not
+claims about upstream format validity. Retained scheduling remains private.
+
+An `OptimalMatchState` will own the qualified fresh parser/search owners and
+two caller-owned `Vec` scratch buffers for literals and `SequenceWithOffset`.
+It borrows the complete immutable source. Seven parser/search allocator
+identities remain separate (the optional short owner may allocate nothing);
+literal and sequence vectors retain two more identities. A non-cloning
+`from_parts` constructor validates all scalar ownership relationships. Only
+the outer factory clones once per selected child owner in documented order.
+All reservations are fallible, explicit and bounded by the admitted source.
+
+A safe observer consumes appended `[anchor, literal length, match length,
+offBase]` records, validates contiguous source spans and actual match bytes,
+and reconstructs the exact `OffsetIntent` against the running wire repeat
+triple. It appends checked literal bytes and logical sequences, then the final
+literal tail. Sequence count and final repeats must equal the parser result.
+Argument errors precede mutation; reserve/parser/observer failure poisons the
+state. Existing leaf unsafe features change storage only; the copied plan,
+observer and state coordination need no artificial unsafe representation.
+
+Static `ReferenceSearchPlan`/`ReferenceSearchState` dispatch will select this
+private variant while the public strategy gate remains closed. Shared frame
+entropy owns the sole committed repeat state and performs existing raw/RLE/
+compressed publication. The initial one-block state accepts only the full
+source and initial repeats, so it cannot silently generalize to partial or
+retained calls. Public admission follows private complete-frame validation
+and an additive, source-size-aware successor of the frozen v5 mappings.
+Every newly admitted parameter tuple must be independently reconstructed from
+pinned presets and unchanged request/source inputs before interoperability.
