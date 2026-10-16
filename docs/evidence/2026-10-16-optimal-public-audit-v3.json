@@ -1,0 +1,22 @@
+{
+  "archive": "2026-10-16-optimal-public-audit-v3.tar.gz",
+  "archive_bytes": 7092,
+  "archive_sha256": "6975eff54115803f7ccf4993e8738ec0f9377f2148d2f89a3820bab2e68b58eb",
+  "files": [
+    {
+      "path": "check_optimal_interop_capture_v3.py",
+      "bytes": 21116,
+      "sha256": "2fc1a615cc84ea03a63d50b114c4f60929fd0801cb4cf0ce4bbd7f1f61ec91a4"
+    },
+    {
+      "path": "optimal-frame-projection-v2-normal.json",
+      "bytes": 228,
+      "sha256": "90ca72481a061b5e31cbb172f33413b488bab86d8155748bff602a857a6114bc"
+    },
+    {
+      "path": "optimal-frame-projection-v2-optimized.json",
+      "bytes": 228,
+      "sha256": "90ca72481a061b5e31cbb172f33413b488bab86d8155748bff602a857a6114bc"
+    }
+  ]
+}

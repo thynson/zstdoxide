@@ -1,0 +1,47 @@
+{
+  "archive": "2026-10-16-optimal-public-audit-v2-rejection.tar.gz",
+  "archive_bytes": 10970,
+  "archive_sha256": "711cef7bdac5d38bca68a26e86cc6abfb650cb36b70f268ad96856d3877e3844",
+  "files": [
+    {
+      "path": "check_optimal_interop_capture_v2.py",
+      "bytes": 20867,
+      "sha256": "2bdde7c4f2e06bda4c7a83404e269a3a39d10ccf4cf158eb40508f87aaae0b06"
+    },
+    {
+      "path": "check_optimal_interop_capture_controls.py",
+      "bytes": 8837,
+      "sha256": "0786a0abf7c30b33ef28b152b2aa2d58637bc66681ec0bfa1fb471ec3e3ba66e"
+    },
+    {
+      "path": "pack_optimal_frame_baseline.py",
+      "bytes": 3813,
+      "sha256": "0af1f4c71d8f0b030c0c501b00221f3e68ef3d0320b83268d134289cf5bcd8cd"
+    },
+    {
+      "path": "optimal-public-audit.log",
+      "bytes": 835,
+      "sha256": "c287195339bd30a7fba589af4aadb0e5192c6b7f4036930a1f19da61e8074317"
+    },
+    {
+      "path": "optimal-public-controls-normal.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "optimal-public-controls-normal.stderr",
+      "bytes": 642,
+      "sha256": "b7775187a877f099527eab149f7c6efc43723a8a874616db257be6920422ccf3"
+    },
+    {
+      "path": "optimal-frame-projection-normal.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "optimal-frame-projection-normal.stderr",
+      "bytes": 1443,
+      "sha256": "55aae54b87bb80b03a4d12a1c9a72a9600d7b132c6b014434a863360d618a7fb"
+    }
+  ]
+}
