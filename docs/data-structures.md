@@ -2012,3 +2012,23 @@ Source, packet, event, per-command output and aggregate campaign limits must be
 frozen before native execution. Fixture projection will preserve all changed
 cells and independently validate unchanged prior state; no sampled-state claim
 may replace complete-state qualification.
+
+### Wider complete fresh-block observation gate
+
+Public one-shot admission also needs a complete fresh source, independently of
+manual retained Continue scheduling. A subsequent additive `ZOPFW03` transport
+will contain exactly one 64..16,384-byte block and its full known-size source,
+W10..16/H6..12/C6..12/S1..6, minimum 3..7, target <=4095 and source inside window.
+It retains the same complete sparse path/search representation and guarded owner
+observations. The one block is passed to ordinary Continue and terminated by an
+empty final raw block; every complete frame is independently decoded. No native
+provider is changed. Fresh initialization and sufficient-length behavior remain
+explicitly distinct from retained owner publication.
+
+The independent block model can borrow the request's entire immutable source,
+because no future block exists. Its scalar transitions and 4,099 path cells are
+unchanged, including long matches that bypass path seeding. It must reconcile
+all existing fresh startup observations and freeze wider full-source hypotheses
+before native execution. The source cap alone does not authorize public
+parameter selection, allocation cloning or frame/token integration; those
+remain separate plan, owner, mapping and interoperability gates.

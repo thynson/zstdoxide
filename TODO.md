@@ -144,6 +144,10 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [ ] Project audited wider sparse states and complete frames into an immutable fixture.
 - [ ] Qualify the wider fixture reader and independent complete-frame decoding.
 - [ ] Match wider private retained production states after extending only the captured admission domain.
+- [x] Design wider complete fresh-block observations separately from retained scheduling.
+- [ ] Freeze full fresh source transport/model/recipes and reconcile existing startup observations.
+- [ ] Preflight, capture and independently audit complete wider fresh blocks and frames.
+- [ ] Project and qualify wider fresh fixtures before extending private fresh composition.
 - [ ] Freeze successor public admission mappings and independently reconstruct every newly admitted tuple.
 - [ ] Enable bounded public Optimal dispatch and preserve original selector/numeric assertion inputs.
 - [ ] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
