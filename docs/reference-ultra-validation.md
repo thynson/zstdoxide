@@ -173,3 +173,15 @@ directories are retained with content deduplication in
 740 verified archive members, and SHA-256
 `04adc89aba68fa8883afbe33a13e5e3664c276a9c91a7c5a67570b75bbaccb26`.
 This qualifies frequency observations, not Ultra path selection or public frames.
+
+## Immutable frequency projection
+
+The ordinary and optimized projectors independently audit the full native capture
+and emit identical 26,646,439-byte packs with 298 cases, 4065 observations and
+2848 queries. The complete pack SHA-256 is
+`a92871e38d38d30749d7d65ac710e133500ab65348191ba9579e3592f95aa11c`.
+Both independent checker modes reconstruct every byte from the frozen model and
+reject 20 forged packs with the root digest bypassed. Each forged input is retained
+as a lossless delta against the pinned complete fixture, with reconstructed length
+and SHA-256 verified. Projection inputs, outputs, checkers and controls are retained
+in `evidence/2026-10-16-ultra-frequency-projection.tar.gz`.

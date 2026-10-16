@@ -1,0 +1,272 @@
+{
+  "archive": "2026-10-16-ultra-frequency-projection.tar.gz",
+  "archive_bytes": 594891,
+  "archive_sha256": "6e8dc796da01f8aad485370ac00afab596d3df2eeb9f35e12833b856ff2f9a36",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-frequency-projection-normal-1016/cases.bin",
+      "bytes": 26646439,
+      "sha256": "a92871e38d38d30749d7d65ac710e133500ab65348191ba9579e3592f95aa11c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-projection-normal-1016/provenance.json",
+      "bytes": 138761,
+      "sha256": "4edce3cc10dd2f13551a33b39b7ebda21bee1f6976c3fe809c904dfd25ccb5fa"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-projection-optimized-1016/cases.bin",
+      "bytes": 26646439,
+      "sha256": "a92871e38d38d30749d7d65ac710e133500ab65348191ba9579e3592f95aa11c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-projection-optimized-1016/provenance.json",
+      "bytes": 138761,
+      "sha256": "4edce3cc10dd2f13551a33b39b7ebda21bee1f6976c3fe809c904dfd25ccb5fa"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/changed-count.json",
+      "bytes": 318,
+      "sha256": "8bde97003286dd114043e13aaf8e96f97319645feb541f6e058bc31fa0f87bac"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/coherent-frequency-sum-cache.json",
+      "bytes": 488,
+      "sha256": "e27181e838fce07cb1dbaacd22334a0d2be90366f7b47fbe31c29185fa163339"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/coherent-query-price.json",
+      "bytes": 366,
+      "sha256": "eeb25b5c19f7f4ba80dfd8a70a2090cfbe7fd4609245df8d3ab5f45ec2c7de7d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/dirty-cache-rewritten.json",
+      "bytes": 371,
+      "sha256": "d74929a543f77b4d2ef2673308cb32992c201968c1eb0dc7095c3ce3064b57c4"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/fractional-cache.json",
+      "bytes": 366,
+      "sha256": "3f0b5f05b0246fe5bf8be0701bf8537f3996e8616836d0471e8d9c7669d4a41b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/fractional-upper-sum.json",
+      "bytes": 370,
+      "sha256": "d68418e69d2c36371f6f83fd7469f0a7f3a9dce1bd31e8b0e07f6ff5bd64d168"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/initial-phase.json",
+      "bytes": 357,
+      "sha256": "c72645f6ce839d9f6c0d88cf804d2b969692fc468ca8d94b206bcf1cb8d5dceb"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/large-count.json",
+      "bytes": 316,
+      "sha256": "8c6278a0a3ca17d4cd497f184f377bc0363a4436e7acbf2148d4f0a59ef12fb5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/literal-mode.json",
+      "bytes": 356,
+      "sha256": "4302d2f7396d26ae132b9e6aeb7de25e992525ff69cc4ef1f007a22be8384b28"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/magic.json",
+      "bytes": 304,
+      "sha256": "ae1254da6cfd31c8c011c3332e89f494947c838fe19533628e8084f25d504b9e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/operation-limit.json",
+      "bytes": 359,
+      "sha256": "aacdeb1f843bd15f5a9a424997166ee56c7e45b7e775e1ad8500b1b6a9fada5d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/query-zero-offset.json",
+      "bytes": 363,
+      "sha256": "f76e569c92b1e9cc122eeedf740995f07c08bad7eb3b7a2df991df01a056cef2"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/reserved-word.json",
+      "bytes": 357,
+      "sha256": "7f7da35c3f0e70198bab45be0f932575a2cd65a6a99499ba849da980469fd4be"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/short.json",
+      "bytes": 312,
+      "sha256": "5617458afb25b4f765542dc005b1c1c38734b3f78ecb17e9aae7283f52cdcfec"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/source-limit.json",
+      "bytes": 356,
+      "sha256": "e75f6601bf6e3e8c5e2e6f1934089d553aacdf40672da8b6fde5f8fdd8f1b61a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/summary.json",
+      "bytes": 8374,
+      "sha256": "b85cf05d45bf5eb240ba29648ff0aa1f3fcef4e3360043bdc8dac4432d8413f9"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/trailing.json",
+      "bytes": 322,
+      "sha256": "1be6b716d6a9a0a0a9e26a3e8c3316527fddfa40b5714b40ec66e59060c86718"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/truncated.json",
+      "bytes": 321,
+      "sha256": "182ff7c39790deee7b7c15929ec6b2edab83f285067adf39631acb60e59bff2f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/unknown-policy.json",
+      "bytes": 358,
+      "sha256": "f6465ab780eaef2b6edbca0718b3d5136a34cddccef164220ce981448bd034ad"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/wrong-valid-policy.json",
+      "bytes": 368,
+      "sha256": "f7cbfc0782576d1dee2df5b8c0a4545afde902f0aa5ac8e098f8fc36e2ac780e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-normal-1016/zero-count.json",
+      "bytes": 315,
+      "sha256": "de3f643a208a5cb155ed1f87357054332123626d60b4c1a3ac716a02ce9c8cea"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/changed-count.json",
+      "bytes": 318,
+      "sha256": "8bde97003286dd114043e13aaf8e96f97319645feb541f6e058bc31fa0f87bac"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/coherent-frequency-sum-cache.json",
+      "bytes": 488,
+      "sha256": "e27181e838fce07cb1dbaacd22334a0d2be90366f7b47fbe31c29185fa163339"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/coherent-query-price.json",
+      "bytes": 366,
+      "sha256": "eeb25b5c19f7f4ba80dfd8a70a2090cfbe7fd4609245df8d3ab5f45ec2c7de7d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/dirty-cache-rewritten.json",
+      "bytes": 371,
+      "sha256": "d74929a543f77b4d2ef2673308cb32992c201968c1eb0dc7095c3ce3064b57c4"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/fractional-cache.json",
+      "bytes": 366,
+      "sha256": "3f0b5f05b0246fe5bf8be0701bf8537f3996e8616836d0471e8d9c7669d4a41b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/fractional-upper-sum.json",
+      "bytes": 370,
+      "sha256": "d68418e69d2c36371f6f83fd7469f0a7f3a9dce1bd31e8b0e07f6ff5bd64d168"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/initial-phase.json",
+      "bytes": 357,
+      "sha256": "c72645f6ce839d9f6c0d88cf804d2b969692fc468ca8d94b206bcf1cb8d5dceb"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/large-count.json",
+      "bytes": 316,
+      "sha256": "8c6278a0a3ca17d4cd497f184f377bc0363a4436e7acbf2148d4f0a59ef12fb5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/literal-mode.json",
+      "bytes": 356,
+      "sha256": "4302d2f7396d26ae132b9e6aeb7de25e992525ff69cc4ef1f007a22be8384b28"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/magic.json",
+      "bytes": 304,
+      "sha256": "ae1254da6cfd31c8c011c3332e89f494947c838fe19533628e8084f25d504b9e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/operation-limit.json",
+      "bytes": 359,
+      "sha256": "aacdeb1f843bd15f5a9a424997166ee56c7e45b7e775e1ad8500b1b6a9fada5d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/query-zero-offset.json",
+      "bytes": 363,
+      "sha256": "f76e569c92b1e9cc122eeedf740995f07c08bad7eb3b7a2df991df01a056cef2"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/reserved-word.json",
+      "bytes": 357,
+      "sha256": "7f7da35c3f0e70198bab45be0f932575a2cd65a6a99499ba849da980469fd4be"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/short.json",
+      "bytes": 312,
+      "sha256": "5617458afb25b4f765542dc005b1c1c38734b3f78ecb17e9aae7283f52cdcfec"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/source-limit.json",
+      "bytes": 356,
+      "sha256": "e75f6601bf6e3e8c5e2e6f1934089d553aacdf40672da8b6fde5f8fdd8f1b61a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/summary.json",
+      "bytes": 8373,
+      "sha256": "e1741940b790e38f51181610b0011aa6dba7497bfd2911f9375197ca8cce2194"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/trailing.json",
+      "bytes": 322,
+      "sha256": "1be6b716d6a9a0a0a9e26a3e8c3316527fddfa40b5714b40ec66e59060c86718"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/truncated.json",
+      "bytes": 321,
+      "sha256": "182ff7c39790deee7b7c15929ec6b2edab83f285067adf39631acb60e59bff2f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/unknown-policy.json",
+      "bytes": 358,
+      "sha256": "f6465ab780eaef2b6edbca0718b3d5136a34cddccef164220ce981448bd034ad"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/wrong-valid-policy.json",
+      "bytes": 368,
+      "sha256": "f7cbfc0782576d1dee2df5b8c0a4545afde902f0aa5ac8e098f8fc36e2ac780e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-fixture-controls-optimized-1016/zero-count.json",
+      "bytes": 315,
+      "sha256": "de3f643a208a5cb155ed1f87357054332123626d60b4c1a3ac716a02ce9c8cea"
+    },
+    {
+      "path": "ultra-frequency-fixture-normal.log",
+      "bytes": 214,
+      "sha256": "370a850ce5f2bbea2c703462fbc3147c3d7be3874e40747428cdfe216762e4d0"
+    },
+    {
+      "path": "ultra-frequency-fixture-optimized.log",
+      "bytes": 213,
+      "sha256": "6e5b44d9ce36fdb295e8cfecdd8c581f421299c8436dd10775ce81e10e937553"
+    },
+    {
+      "path": "scripts/pack_ultra_frequency_fixture.py",
+      "bytes": 3237,
+      "sha256": "cbaec42301dc482d1aa55f8832b8b992bbba91e876a76129ffb5df6442d5d58b"
+    },
+    {
+      "path": "scripts/check_ultra_frequency_fixture.py",
+      "bytes": 5940,
+      "sha256": "30571a45aa1e5ec9705a99a8aa466a1d519f5a5eaf7dec0bf8d86d4c3e1ddf50"
+    },
+    {
+      "path": "tests/fixtures/reference-ultra-frequencies/README.md",
+      "bytes": 1207,
+      "sha256": "5cf5b18aac8a84a9a928d62cde0258537527f62bbd416a2af08f768fc7731e7d"
+    },
+    {
+      "path": "tests/fixtures/reference-ultra-frequencies/cases.bin",
+      "bytes": 26646439,
+      "sha256": "a92871e38d38d30749d7d65ac710e133500ab65348191ba9579e3592f95aa11c"
+    },
+    {
+      "path": "tests/fixtures/reference-ultra-frequencies/provenance.json",
+      "bytes": 138761,
+      "sha256": "4edce3cc10dd2f13551a33b39b7ebda21bee1f6976c3fe809c904dfd25ccb5fa"
+    }
+  ]
+}

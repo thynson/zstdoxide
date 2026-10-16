@@ -89,7 +89,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Review and preflight the complete policy-tagged frequency observer and native command inventory.
 - [x] Capture and independently audit complete frequency lifecycles and forged-evidence controls.
 - [x] Specify policy-tagged frequency fixture ownership and independent cache/lifecycle checks.
-- [ ] Project the audited policy-tagged frequency fixture and reject forged reconstructions.
+- [x] Project the audited policy-tagged frequency fixture and reject forged reconstructions.
 - [ ] Qualify the bounded independent Rust frequency fixture reader.
 - [ ] Implement policy-bound frequency initialization, scaling, updates and caches without changing Optimal baselines.
 - [ ] Qualify exact borrowed/non-cloning owners, policy mismatch rejection and allocation-failure cleanup.
