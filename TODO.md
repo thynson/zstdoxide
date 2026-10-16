@@ -149,6 +149,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Design wider complete fresh-block observations separately from retained scheduling.
 - [x] Freeze full fresh source transport/model/recipes and reconcile existing startup observations.
 - [ ] Preflight, capture and independently audit complete wider fresh blocks and frames.
+- [x] Specify complete fresh sparse fixture ownership, bounds and validation.
 - [ ] Project and qualify wider fresh fixtures before extending private fresh composition.
 - [ ] Freeze successor public admission mappings and independently reconstruct every newly admitted tuple.
 - [ ] Enable bounded public Optimal dispatch and preserve original selector/numeric assertion inputs.
