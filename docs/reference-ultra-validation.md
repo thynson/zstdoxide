@@ -84,3 +84,15 @@ members and every reconstructed file were verified. SHA-256 is
 `f387de6aecd19d5a8cad68364bcfbdf761e9ff665c307e020e7af4a72c1f4fa9`.
 This establishes synthetic scalar conformance, not ordinary Ultra lifecycle,
 path parsing, public admission or a complete frame implementation.
+
+## Immutable scalar fixture
+
+Ordinary and optimized projection independently audit the entire native capture
+before emitting byte-identical fixture and provenance files. The118572-byte
+`ZUSFIX01` pack contains2470requests and observed signed results; itsSHA-256is
+`f5510dff52e9495a257aa78f367a25d1c0b0834ccfc05f3e4ffb099cd944c9b9`.
+The separate checker reconstructs every original request and expected result
+without C or production Rust. Each Python mode rejects20forged packs, bypassing
+the outer root-digest check to exercise exact shape, domains, request/order and
+independent arithmetic. Full projection/control evidence is retained in
+`evidence/2026-10-16-ultra-scalar-projection.tar.gz` with verified member hashes.

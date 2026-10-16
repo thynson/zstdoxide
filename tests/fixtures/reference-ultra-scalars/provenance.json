@@ -1,0 +1,25 @@
+{
+  "capture_audit": {
+    "commands": 134,
+    "instrumented_codec_units": 26,
+    "log_bytes": 1630041,
+    "malformed_rejections_per_build": 35,
+    "normal_instrumented_equal": true,
+    "operations_per_build": 2470,
+    "qualification": "Complete independent synthetic scalar replay for coupled modes 0 and 2; no ordinary frequency lifecycle, Ultra search or frame claim.",
+    "recipes": 1,
+    "status": "passed"
+  },
+  "capture_evidence_sha256": "f55998a7e3ef772a9a5c9fa401f36ea806666372ad9c02fdfc9e14379ef710db",
+  "fixture_bytes": 118572,
+  "fixture_sha256": "f5510dff52e9495a257aa78f367a25d1c0b0834ccfc05f3e4ffb099cd944c9b9",
+  "normal_stdout_sha256": "9450123dac5e98b15064d04487b34779f5f790f1fd9b445f819ed44f19195477",
+  "projector_sha256": "ce5fd2aa52a59e5917d5be46cb8969f5b8b69c0b07d23e431554337962b5a49a",
+  "qualification": "Synthetic scalar observations from unchanged pinned C functions, fully audited before projection. No ordinary lifecycle or frame claim.",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "rows": 2470,
+  "sanitized_stdout_sha256": "9450123dac5e98b15064d04487b34779f5f790f1fd9b445f819ed44f19195477",
+  "schema_version": 1,
+  "source_manifest_sha256": "0be8f2f0fab68a388b67e19a01c9711201be61cdd18073b93e6cfb66e6d3b663",
+  "source_packet_sha256": "9c087f75ca46d26aa5a696e5f0676865f9f8b741e0abd1dd0a08eeb6a01c68bb"
+}

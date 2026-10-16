@@ -1,0 +1,282 @@
+{
+  "archive": "2026-10-16-ultra-scalar-projection.tar.gz",
+  "archive_bytes": 409070,
+  "archive_sha256": "dc8dd20be3b4688c82a214c7ba11cc87bc4e521d5ce6b3664c046af0c2fbc90f",
+  "files": [
+    {
+      "path": "pack_ultra_scalar_fixture.py",
+      "bytes": 1838,
+      "sha256": "ce5fd2aa52a59e5917d5be46cb8969f5b8b69c0b07d23e431554337962b5a49a"
+    },
+    {
+      "path": "check_ultra_scalar_fixture.py",
+      "bytes": 3689,
+      "sha256": "2e0b0052208f668cfbf2c1a36e21970ba5708d6843a40fc87a44e750e62d5aa8"
+    },
+    {
+      "path": "reference-ultra-scalars/README.md",
+      "bytes": 1048,
+      "sha256": "bca30339716e4a6807bd816df2f0b46e33dd0ba67ca33a774c32d0db237102b9"
+    },
+    {
+      "path": "reference-ultra-scalars/cases.bin",
+      "bytes": 118572,
+      "sha256": "f5510dff52e9495a257aa78f367a25d1c0b0834ccfc05f3e4ffb099cd944c9b9"
+    },
+    {
+      "path": "reference-ultra-scalars/provenance.json",
+      "bytes": 1364,
+      "sha256": "b8f53ac2f3400e87e0f6a3a77abed9fbf4f43aacbef949e229eefe30e8b83b78"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-projection-normal-1016/cases.bin",
+      "bytes": 118572,
+      "sha256": "f5510dff52e9495a257aa78f367a25d1c0b0834ccfc05f3e4ffb099cd944c9b9"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-projection-normal-1016/provenance.json",
+      "bytes": 1364,
+      "sha256": "b8f53ac2f3400e87e0f6a3a77abed9fbf4f43aacbef949e229eefe30e8b83b78"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-projection-optimized-1016/cases.bin",
+      "bytes": 118572,
+      "sha256": "f5510dff52e9495a257aa78f367a25d1c0b0834ccfc05f3e4ffb099cd944c9b9"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-projection-optimized-1016/provenance.json",
+      "bytes": 1364,
+      "sha256": "b8f53ac2f3400e87e0f6a3a77abed9fbf4f43aacbef949e229eefe30e8b83b78"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/changed-count.bin",
+      "bytes": 118572,
+      "sha256": "66cc63dc9e8c6af4be0bd04467e32eda74cf23d115fcdda6bacdb5780d8434c0"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/changed-valid-request.bin",
+      "bytes": 118572,
+      "sha256": "70fcec578b956e2d5759982a8cc4dd6c71bbe4976dd60849d29d1e02d2d4e426"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/coherent-price.bin",
+      "bytes": 118572,
+      "sha256": "a3f0a902461eb5df266ddcb34608aef766df54da4ec4845f16ba89618a43d2f5"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/fraction-overflow.bin",
+      "bytes": 118572,
+      "sha256": "8276e10f5f38bdeb5e5a43b31ce03c86bd276eb2d9eb5594e1cf065934f6012e"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/increment-zero-length.bin",
+      "bytes": 118572,
+      "sha256": "1a4772eff16ccaa3be5116010303272b4da887488b316111ad83121bec95b2ef"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/large-count.bin",
+      "bytes": 118572,
+      "sha256": "fac6ea30cbcd7b138d25526cae40b56e1c6ce51bf7ea29a8f120cd783b6679d2"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/ll-limit.bin",
+      "bytes": 118572,
+      "sha256": "6b0f5a3b7bc98a38a9b2a140b981226d8a6f65e4877780d2ed17946d90c31852"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/magic.bin",
+      "bytes": 118572,
+      "sha256": "45afbb11ced4d871defefdc099da3e0b326b8692e85501e9306537712aad08ef"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/mode.bin",
+      "bytes": 118572,
+      "sha256": "7cf610b01eda4bd89f1b1ba8b2a5a03f999ad67241588c95f380290032ec9997"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/negative-unsigned-price.bin",
+      "bytes": 118572,
+      "sha256": "7fbd25c37dc306a872d059c79c04c1914c5bc21bff3ec3bcf8eb509d5a22bcb2"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/price-overflow.bin",
+      "bytes": 118572,
+      "sha256": "a6e7f5d0ae5be7dbf35c496962114fd35df25cd1c3719f296db077916d6e2277"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/reserved.bin",
+      "bytes": 118572,
+      "sha256": "cab2242c53d9e61a95a591babd1cf2fc22bb79cec7797b81f0cf3e62ccdbcfbf"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/short-match.bin",
+      "bytes": 118572,
+      "sha256": "d3e180bd8810dd8874bee4b53e946274b218c5a77d1f6d8b1f4b2a73f09a7468"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/short.bin",
+      "bytes": 11,
+      "sha256": "41a6d01aecaf8725ce5ecc5bfe8f6e1b30cebca456414dee75d84ac0b18f905a"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/signed-increment.bin",
+      "bytes": 118572,
+      "sha256": "c8f3b184daa33bd7055aab2fa9b61588aa0b11323f01f7604eeb2a41ec49aca1"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/summary.json",
+      "bytes": 3954,
+      "sha256": "d1c8eceb20fac7b2124adb6a156eb7e66e787d2fb3feef57a697d3190b3c7fa5"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/tag.bin",
+      "bytes": 118572,
+      "sha256": "619c86698dbe94972bd63ffc683c5f7197761d5e2c203247edf7d81c4ebd12d9"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/trailing.bin",
+      "bytes": 118573,
+      "sha256": "6aaa2814aac37636db9ebfbdce1a5aa1cd94aacfcbc8b6a115b0b8d7de7717d1"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/truncated.bin",
+      "bytes": 118571,
+      "sha256": "f93c95ce2a8cbe185d381e2b6a660fe015f8585699dc62e5727adc897c0be051"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/zero-count.bin",
+      "bytes": 118572,
+      "sha256": "fce718da8c7af81b1d347b2ae51d15dbf25312926d316e33052cd0c1a29655c2"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-normal-1016/zero-offset.bin",
+      "bytes": 118572,
+      "sha256": "aaad63702b6c77a3075612e6e7c754e3e287935ef5dbc9560fd055fd56fbf586"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/changed-count.bin",
+      "bytes": 118572,
+      "sha256": "66cc63dc9e8c6af4be0bd04467e32eda74cf23d115fcdda6bacdb5780d8434c0"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/changed-valid-request.bin",
+      "bytes": 118572,
+      "sha256": "70fcec578b956e2d5759982a8cc4dd6c71bbe4976dd60849d29d1e02d2d4e426"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/coherent-price.bin",
+      "bytes": 118572,
+      "sha256": "a3f0a902461eb5df266ddcb34608aef766df54da4ec4845f16ba89618a43d2f5"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/fraction-overflow.bin",
+      "bytes": 118572,
+      "sha256": "8276e10f5f38bdeb5e5a43b31ce03c86bd276eb2d9eb5594e1cf065934f6012e"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/increment-zero-length.bin",
+      "bytes": 118572,
+      "sha256": "1a4772eff16ccaa3be5116010303272b4da887488b316111ad83121bec95b2ef"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/large-count.bin",
+      "bytes": 118572,
+      "sha256": "fac6ea30cbcd7b138d25526cae40b56e1c6ce51bf7ea29a8f120cd783b6679d2"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/ll-limit.bin",
+      "bytes": 118572,
+      "sha256": "6b0f5a3b7bc98a38a9b2a140b981226d8a6f65e4877780d2ed17946d90c31852"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/magic.bin",
+      "bytes": 118572,
+      "sha256": "45afbb11ced4d871defefdc099da3e0b326b8692e85501e9306537712aad08ef"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/mode.bin",
+      "bytes": 118572,
+      "sha256": "7cf610b01eda4bd89f1b1ba8b2a5a03f999ad67241588c95f380290032ec9997"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/negative-unsigned-price.bin",
+      "bytes": 118572,
+      "sha256": "7fbd25c37dc306a872d059c79c04c1914c5bc21bff3ec3bcf8eb509d5a22bcb2"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/price-overflow.bin",
+      "bytes": 118572,
+      "sha256": "a6e7f5d0ae5be7dbf35c496962114fd35df25cd1c3719f296db077916d6e2277"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/reserved.bin",
+      "bytes": 118572,
+      "sha256": "cab2242c53d9e61a95a591babd1cf2fc22bb79cec7797b81f0cf3e62ccdbcfbf"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/short-match.bin",
+      "bytes": 118572,
+      "sha256": "d3e180bd8810dd8874bee4b53e946274b218c5a77d1f6d8b1f4b2a73f09a7468"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/short.bin",
+      "bytes": 11,
+      "sha256": "41a6d01aecaf8725ce5ecc5bfe8f6e1b30cebca456414dee75d84ac0b18f905a"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/signed-increment.bin",
+      "bytes": 118572,
+      "sha256": "c8f3b184daa33bd7055aab2fa9b61588aa0b11323f01f7604eeb2a41ec49aca1"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/summary.json",
+      "bytes": 3953,
+      "sha256": "9b061f3e86d6ac0287f9752eb6744ff4eec8f2cd645f4dc38a6ff7db517d865a"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/tag.bin",
+      "bytes": 118572,
+      "sha256": "619c86698dbe94972bd63ffc683c5f7197761d5e2c203247edf7d81c4ebd12d9"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/trailing.bin",
+      "bytes": 118573,
+      "sha256": "6aaa2814aac37636db9ebfbdce1a5aa1cd94aacfcbc8b6a115b0b8d7de7717d1"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/truncated.bin",
+      "bytes": 118571,
+      "sha256": "f93c95ce2a8cbe185d381e2b6a660fe015f8585699dc62e5727adc897c0be051"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/zero-count.bin",
+      "bytes": 118572,
+      "sha256": "fce718da8c7af81b1d347b2ae51d15dbf25312926d316e33052cd0c1a29655c2"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-fixture-controls-optimized-1016/zero-offset.bin",
+      "bytes": 118572,
+      "sha256": "aaad63702b6c77a3075612e6e7c754e3e287935ef5dbc9560fd055fd56fbf586"
+    },
+    {
+      "path": "ultra-scalar-projection-normal.log",
+      "bytes": 1296,
+      "sha256": "13bcdf869c8816debd30e643a1c61224311c6ad37b19954453d97e842e603d9e"
+    },
+    {
+      "path": "ultra-scalar-projection-optimized.log",
+      "bytes": 1296,
+      "sha256": "13bcdf869c8816debd30e643a1c61224311c6ad37b19954453d97e842e603d9e"
+    },
+    {
+      "path": "ultra-scalar-fixture-normal.log",
+      "bytes": 166,
+      "sha256": "765e54ecc3a534ae4caf65c14501ce7b3ffedd2fc58be5d7951224b8858b946e"
+    },
+    {
+      "path": "ultra-scalar-fixture-optimized.log",
+      "bytes": 165,
+      "sha256": "5d25b65fefa238184e89bb3b65eb1d527760f0ef2a43dcf38d59aa1c56a7e20a"
+    }
+  ]
+}
