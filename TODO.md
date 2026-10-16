@@ -148,7 +148,8 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [ ] Qualify wider retained bounds, future-byte isolation, exact owners and poisoned resets.
 - [x] Design wider complete fresh-block observations separately from retained scheduling.
 - [x] Freeze full fresh source transport/model/recipes and reconcile existing startup observations.
-- [ ] Preflight, capture and independently audit complete wider fresh blocks and frames.
+- [x] Preflight the complete fresh-block observer and exact native command inventory.
+- [ ] Capture and independently audit complete wider fresh blocks and frames.
 - [x] Specify complete fresh sparse fixture ownership, bounds and validation.
 - [ ] Project and qualify wider fresh fixtures before extending private fresh composition.
 - [ ] Implement a private allocation-free Optimal execution plan for qualified complete fresh sources.

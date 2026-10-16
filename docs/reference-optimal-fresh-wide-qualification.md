@@ -6,3 +6,11 @@ each reject fifty transport/state forgeries and launch no children. The twenty
 full-source recipe predictions are frozen with manifest SHA-256
 `e943081004aa5a4fc144b68e168fd5575a62b07fdd9f97a2722e97db15f7ec8c`.
 This is source-only model qualification; native execution is a subsequent gate.
+
+Normal and optimized source-only preflight each qualify the exact 150-command
+plan, 77 project source files, 89 pinned reference files, all 26 codec units,
+14 uniquely anchored hooks and 24 malformed packets, rejecting 29 forged
+plans/dependency/environment/artifact controls without children. Separate
+strict normal and sanitized C syntax checks pass. The source-only recipes
+predict 64,610 events, 30,314 queries and 48 sequences per padding pass; native
+capture remains the next gate.
