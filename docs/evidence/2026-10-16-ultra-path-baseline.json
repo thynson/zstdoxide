@@ -1,0 +1,42 @@
+{
+  "archive": "2026-10-16-ultra-path-baseline.tar.gz",
+  "archive_bytes": 4566,
+  "archive_sha256": "3eba2f5d2aa221c3ee0ae3ea4c3320d9326355323f399ef9e2ce68a7eedca63e",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-path-baseline-1016/normal.json",
+      "bytes": 349,
+      "sha256": "70ebdf1e94dc41c2e73ddbb5b63fba641b661012eecab8350f579dab5861bf04"
+    },
+    {
+      "path": "zstdoxide-ultra-path-baseline-1016/normal.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-path-baseline-1016/optimized.json",
+      "bytes": 348,
+      "sha256": "e90f533df88118d9a823322408ddccd03bb523018e46a5b696aa9ccf8aa4e359"
+    },
+    {
+      "path": "zstdoxide-ultra-path-baseline-1016/optimized.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/oracles/ultra_paths.py",
+      "bytes": 1080,
+      "sha256": "4ce228d39ccc1e917e5440ad8316cad7b2ca082e87df758e319ddeca979f9858"
+    },
+    {
+      "path": "scripts/oracles/ultra_path_validation.py",
+      "bytes": 7927,
+      "sha256": "8c44e0240ee1e865fb3fac5ccd82c86b5047a26219ea0c321f53562b7e6157f7"
+    },
+    {
+      "path": "scripts/check_ultra_path_baseline.py",
+      "bytes": 3559,
+      "sha256": "34be13d6e49f48bf70952373465f78c1ba328f0dffef09db3cae0deb20ecbabc"
+    }
+  ]
+}

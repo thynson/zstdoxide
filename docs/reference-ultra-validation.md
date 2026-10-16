@@ -245,3 +245,15 @@ regressions. Strict all-target Clippy in safe/all modes and formatting pass.
 The campaign contains 5235 passing and 110 ignored test executions; ignored cases
 are not counted as successes. Full logs, source identities and exact inventory
 reconciliation are retained in `evidence/2026-10-16-ultra-frequency-matrix.tar.gz`.
+
+## Complete original path reconciliation
+
+The policy-0 successor path replay, using the new policy-bound frequency model,
+reconstructs every byte of the original 27-case, 22,024-event native path fixture.
+Both ordinary and optimized Python pass: 3,211,235 bytes, SHA-256
+`0defe329f5a50e2add4162fe865c7f1fc314db2c15733485d2cc92f463c7d167`.
+This preserves original small and horizon source/parameter/candidate inputs and
+all complete path, frequency, repeat and sequence records. Source and both reports
+are retained in `evidence/2026-10-16-ultra-path-baseline.tar.gz`.
+The new Ultra branch model still requires its own source-only qualification and
+successor native capture; this reconciliation alone does not establish those.
