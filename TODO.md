@@ -169,7 +169,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Preflight the exact public interoperability command inventory and reused generic adapters.
 - [x] Qualify the additive public audit successor against the complete implemented source inventory.
 - [x] Correct the inherited independent admission audit with an additive version and retain its failed predecessor evidence.
-- [ ] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
+- [x] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
 - [x] Qualify selected public Optimal frames and owners on 32-bit, big-endian and no-atomics targets.
 - [ ] Run all safe/isolated-unsafe/all/release, true no_std, formatting and Clippy checks.
 - [x] Specify complete-frame benchmark records, owner equivalence and measurement barriers.

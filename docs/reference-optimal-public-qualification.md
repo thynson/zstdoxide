@@ -85,3 +85,28 @@ code generation of a concrete borrowed-Global public Optimal caller. These
 firmware execution. All source inventories remained unchanged. The verified
 73-member archive is `docs/evidence/2026-10-16-optimal-public-platform.tar.gz`
 (SHA-256 `57aaa8c351b5d736745291288fdfae44261f83d71caf9777748711472351713a`).
+
+## Public bidirectional interoperability
+
+The unchanged pinned controller completed all 14350 commands and 1269 recipes:
+1159 admitted, 83 resource-limited and 27 unsupported. C decoded 4636 Rust
+frames and Rust decoded 4636 C frames, reproducing 797537304 decoded bytes.
+Safe/all Rust outputs and normal/fully ASan+UBSan C outputs agree within each
+implementation. Eight explicit/default request equivalence groups agree. The
+156 malformed transport rejections and all 26 instrumented codec units are
+preserved. New tuples are independently resolved from pinned source tables;
+this does not claim observation of C's internally applied scalar parameters.
+
+Both normal and optimized Python replay the complete campaign with the additive
+v3 admission auditor and reject 46 forged evidence cases each without child
+execution. The obsolete v2 admission rejection remains preserved and documented
+in `docs/reference-optimal-interop-audit-v3.md`. No observed request or frame was
+changed to repair the audit.
+
+The lossless archive `docs/evidence/2026-10-16-optimal-public-interop.tar.gz`
+contains a SHA-256 chunk map and reconstruction script for 43215 retained files
+(2538311416 logical bytes), including all C objects, the four audited executables,
+requests, responses, captured source and checks. It occupies 38832496 bytes.
+Every archive member and retained file reconstruction was verified. Redundant
+Rust build intermediates alone are omitted and individually listed. C/Rust
+compressed-byte identity and complete upstream compatibility are not claimed.
