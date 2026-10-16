@@ -13,7 +13,7 @@ use crate::{Error, Result};
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
-const CELLS: usize = 377;
+pub(crate) const CELLS: usize = 377;
 const START: [usize; 4] = [0, 256, 292, 345];
 const LENGTH: [usize; 4] = [256, 36, 53, 32];
 // Pinned ZSTD_rescaleFreqs distributions, v1.5.7; NOTICE/LICENSE.zstd.

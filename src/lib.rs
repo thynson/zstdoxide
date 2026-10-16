@@ -217,3 +217,5 @@ mod optimal_retained_wide_fixture;
 #[cfg(test)]
 #[path = "../tests/support/optimal_fresh_wide_fixture.rs"]
 mod optimal_fresh_wide_fixture;
+
+mod optimal_plan;

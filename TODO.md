@@ -157,7 +157,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Extend private fresh search admission and compare every complete query/map.
 - [x] Extend complete fresh path composition and compare all events and sequences.
 - [x] Qualify complete fresh allocation owners, failure cleanup and reset contracts.
-- [ ] Implement a private allocation-free Optimal execution plan for qualified complete fresh sources.
+- [x] Implement a private allocation-free Optimal execution plan for qualified complete fresh sources.
 - [ ] Implement checked Optimal token collection with exact owners and wire offset intents.
 - [ ] Integrate the private plan/state with shared frame entropy and independently decode complete frames.
 - [x] Freeze source-aware successor mappings and independently reconstruct every historical Optimal tuple.

@@ -1,0 +1,87 @@
+{
+  "archive": "2026-10-16-optimal-public-plan.tar.gz",
+  "archive_bytes": 3341,
+  "archive_sha256": "f061e658f2dbb7da15cd9879451f2c9659819d0cb2fc4eeeb2868f530e11452f",
+  "files": [
+    {
+      "path": "check-optimal-public-plan.py",
+      "bytes": 1933,
+      "sha256": "8619c4b7dede84b75e5a58bd27ddc78a47e64ffec9a305ff4fc2ac4d42f86ab3"
+    },
+    {
+      "path": "check-optimal-public-plan.log",
+      "bytes": 38,
+      "sha256": "7fa6abe2baee9c50905875dbe09a2709ffe921ce75fa2fac6273f2c16ef8c526"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks/all.log",
+      "bytes": 1064,
+      "sha256": "f0d353b327c2c25c7d5f6c41a68d6a0a66c0942aa2a3df6e18628ea606b8a906"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks/clippy.log",
+      "bytes": 573,
+      "sha256": "60bae3f8d90991333c92276ecee99f3d80b537aeaea242492471b71d99d6d44c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks/evidence.json",
+      "bytes": 1981,
+      "sha256": "a00d14e03b35c1a4da07144d7ffdd0a8813ad07b28fa0b22821187a790aebbfa"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks/release-all.log",
+      "bytes": 1068,
+      "sha256": "2aca8414ab4f20dae2f6be65760087b29603a494ddab2458d75aca444453a27a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks/safe.log",
+      "bytes": 1119,
+      "sha256": "65da0ff20ca3b1cb6c29288c66e315980ad765d814507bb8f790fa8d07ab733b"
+    },
+    {
+      "path": "check-optimal-public-plan-v2.py",
+      "bytes": 1936,
+      "sha256": "606c9ed106a8d63ac9a9a6076d36aa88511e247951b7ddae2b9665f508ad60e1"
+    },
+    {
+      "path": "check-optimal-public-plan-v2.log",
+      "bytes": 50,
+      "sha256": "969538bffc7ce4844876004f7117024547b5ed9d9e73679e19385a04e18ba59c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks-v2/all.log",
+      "bytes": 646,
+      "sha256": "62f92bd126a07f2efde74e2f74c3f4dbc63cb952eff36f4600d3ce12f7106ccb"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks-v2/clippy.log",
+      "bytes": 130,
+      "sha256": "01fdd4f337cdac3dcb97038d88ea2bf1f141456a46ab26bb33f5aa41d7e3b45a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks-v2/evidence.json",
+      "bytes": 2579,
+      "sha256": "5e734d1fd572bbfef66b0fb7068756166180e14fe08a07c1f238870b9aafa02b"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks-v2/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks-v2/nostd.log",
+      "bytes": 130,
+      "sha256": "b9cbbbc8a92a36d170b6159054bf2f368d4cb11cb5ac3769f3df14e7ae93762d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks-v2/release-all.log",
+      "bytes": 650,
+      "sha256": "0bf75e149f6a22db68e9c25015d51e5fa6260c8642dad502827466d13f03a766"
+    },
+    {
+      "path": "zstdoxide-optimal-public-plan-checks-v2/safe.log",
+      "bytes": 646,
+      "sha256": "662d0f1768c1911be46544979a364c79d9fafc287a60177b7cdbf872c1c42b90"
+    }
+  ]
+}
