@@ -1,0 +1,372 @@
+{
+  "archive": "2026-10-16-ultra-frequency-matrix.tar.gz",
+  "archive_bytes": 123695,
+  "archive_sha256": "23dc8f4bf942a5a602f2e4011c832313af6a4eeb1ff7afde1fbcd32703d4aa3d",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/all-fixtures.log",
+      "bytes": 3080,
+      "sha256": "eec0663d80364e89c374de98245ea8fce30cacc8d6c5a45c48d5f34a6bb17ab5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/all-nostd.log",
+      "bytes": 130,
+      "sha256": "45ecf0b59d74fae16ecfe5dfd6aff0b4ec154a20a6fd855509fd6c86e61e6d1f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/all-optimal.log",
+      "bytes": 9638,
+      "sha256": "5bb9099c30897b376474617a884a0aa02d640a7879e1e6ac52779928dd6dcb15"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/clippy-all.log",
+      "bytes": 60,
+      "sha256": "9ddcb7a97f3589835ba8f354c41d25b0a805bd5f85ddbccaff009e6f6dc7236c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/clippy-safe.log",
+      "bytes": 130,
+      "sha256": "f4e9cdae6a28c08f8be19279716db542ea94e6dc21b0a817c48cc55e2662f6e1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/evidence.json",
+      "bytes": 51833,
+      "sha256": "f341beff72cd465f27571477fe2df7475298a1fd998ec8c7898caa22c42c226e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/full-all.log",
+      "bytes": 150479,
+      "sha256": "7ebbd4707dd902f2fad019937c27001a021903ffb6306198d1dfea32778d07e1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/full-safe.log",
+      "bytes": 150479,
+      "sha256": "ba5ca6b23adf0d388561c124639cba140e3b05064b71d815e8d07e3a9a33cf8e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/release-all.log",
+      "bytes": 9711,
+      "sha256": "e5765627b418d9518cd708f84a04d53856dd0452a78d9c4d6b53ba1a132d3aeb"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/safe-fixtures.log",
+      "bytes": 3080,
+      "sha256": "7a0a0239090af1ee00c7142d25081df93f0680a5f439db7866c746b951477c5b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/safe-nostd.log",
+      "bytes": 130,
+      "sha256": "ef096078c98836f9b115dba8630e2c18808556d325b06926afeafff14a6a7d6a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/safe-optimal.log",
+      "bytes": 9709,
+      "sha256": "73dbb0b0fb067cd661c3cc643483f930538df463da5c45cff0c77809beef34ae"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-bitstream-fixtures.log",
+      "bytes": 3080,
+      "sha256": "96aaacebe53b91297adadb0cc3f3ed6ae06fccb5d8d01ee280e319ffcf52fbe5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-bitstream-nostd.log",
+      "bytes": 130,
+      "sha256": "251186d8c2afa7e86323a6638b757ffb5e1a71b3aa857fb20aeee219a98dfb26"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-bitstream-optimal.log",
+      "bytes": 9709,
+      "sha256": "e69f661398aa773043f1ed08df330c01847afb6a5af98ad05fa0e4ab6da3e11f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-byte-cursor-fixtures.log",
+      "bytes": 3080,
+      "sha256": "510f3ca45c2380c7dc5ae71435c43a4568be5cd5f99f58f01b468995cb80c365"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-byte-cursor-nostd.log",
+      "bytes": 130,
+      "sha256": "d9e3681f1146e5fdd4d735fe3c3831ccbbc0e43eca041141c740f6699ccdde5f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-byte-cursor-optimal.log",
+      "bytes": 9709,
+      "sha256": "8bffd684abb8c97bbfe6e0310976203a0ac4276111dfd5c6f6004b66492a0585"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-dictionary-fixtures.log",
+      "bytes": 3080,
+      "sha256": "c68fc1b65c1049920bbe2966fb95f6ea4b64f0d8beb2faa04a12091b01a0b061"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-dictionary-nostd.log",
+      "bytes": 130,
+      "sha256": "f4ce03934f69d19cdead8f49a7c948e6411d9db825ff13efd2ffeaeaba1f416d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-dictionary-optimal.log",
+      "bytes": 9709,
+      "sha256": "d04dffb3c581f9ef4ea7c731afce3657a3931746b23f49ea9cd7b9954377e99c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-fse-encoder-fixtures.log",
+      "bytes": 3080,
+      "sha256": "d09230d630b95a501f4f4a3bbf28bca1a9db3a987195e5902f94c290bc8397af"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-fse-encoder-nostd.log",
+      "bytes": 130,
+      "sha256": "56609d29af0669246e5ea4ded681f68db1366daf23084f712f787ea59034f94b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-fse-encoder-optimal.log",
+      "bytes": 9709,
+      "sha256": "84161cb5b338a196108689cd468d7d70482adedd8d02f195dcf5b4adc0eb869d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-fse-fixtures.log",
+      "bytes": 3080,
+      "sha256": "d43048c1018e5353d3ca7f6f53d93466a03a66d59829116e6ef3611dffbc94e5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-fse-nostd.log",
+      "bytes": 130,
+      "sha256": "859e19120340b7b703d5999cc264f2ce374b598bde95b44800b995ecbc531313"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-fse-optimal.log",
+      "bytes": 9709,
+      "sha256": "bc51dbca3493b9527dd2afb41ca29c1f7ab15c813009a1cf40601aae9f0f4721"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-history-fixtures.log",
+      "bytes": 3080,
+      "sha256": "25f72be053379d4aa5515d28881d3051379877801cace891c5bfb9ad0f03b610"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-history-nostd.log",
+      "bytes": 130,
+      "sha256": "c586c1752205b367f5e8f1a86271e6355644190a036075c766a851b43e385558"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-history-optimal.log",
+      "bytes": 9709,
+      "sha256": "b961c0479e09b0dea1e555070432cb85026c3f340e64896dcdcd4a84b333ffb0"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-huffman-codebook-fixtures.log",
+      "bytes": 3080,
+      "sha256": "8f5c351bf8077590c647fe2aea31adf4cf4fa87d61321ebf40c4b1ca7b08147d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-huffman-codebook-nostd.log",
+      "bytes": 130,
+      "sha256": "5cf9a2250bfe386f2e298fced0f2030b1f6955ff043c77189677a250d428030c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-huffman-codebook-optimal.log",
+      "bytes": 9709,
+      "sha256": "f2fefdbe213dd46600946447c029bc6a06aa1705382cf7cd6cb1cd2dce98034a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-huffman-fixtures.log",
+      "bytes": 3080,
+      "sha256": "eea886687b8bc9ea673e10dec7f43dd8fe87cb445684ce5995ef14d4b7a5e09a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-huffman-nostd.log",
+      "bytes": 130,
+      "sha256": "947bc982e033af317f19dd8d0d364fbf0c2abf7d74e99805b4400f6b9ebd74d8"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-huffman-optimal.log",
+      "bytes": 9709,
+      "sha256": "bf085059beb1deb96811d7478e48af6c04fc75b8e9bc88f12d96045c6864349b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-match-chain-fixtures.log",
+      "bytes": 3080,
+      "sha256": "26ae410624dc57e064ed05e03d52f4c6eb2b3e299ba691d0d0b3d900f173f7f1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-match-chain-nostd.log",
+      "bytes": 130,
+      "sha256": "b8ac284b456e59e125e289118e340fcc1ac11f9e188d92d1ff9c6781100eceb7"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-match-chain-optimal.log",
+      "bytes": 9709,
+      "sha256": "9d7322330b9e08d78b4e272bbd9966839bda06a879660bc78d140650304e9b5f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-match-table-fixtures.log",
+      "bytes": 3080,
+      "sha256": "c8c34518a90c4b73154a2a03dfa899a869e2c5146b046428b8bc3b623da8260c"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-match-table-nostd.log",
+      "bytes": 130,
+      "sha256": "6452534afef5532aa964b975688457ac58d00bfe5e4047e676c134badb7eea88"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-match-table-optimal.log",
+      "bytes": 9709,
+      "sha256": "aae78afa15b3a93b565c3c93698f5efe6c65405d7f3493da6d1082bfab40c162"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-frequencies-fixtures.log",
+      "bytes": 3080,
+      "sha256": "95c0866602d8f8bc6f01d8777537702f890d4216d1deb72ced679e899c76de6a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-frequencies-nostd.log",
+      "bytes": 130,
+      "sha256": "d014374d8d215ca0085d88369687a41921d065390c432a6338d67e45d204d072"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-frequencies-optimal.log",
+      "bytes": 9709,
+      "sha256": "f3328d0f8a262bb06e7cba4ea06365272a4d4b2e7f4f78f16048647d7ddaac70"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-matches-fixtures.log",
+      "bytes": 3080,
+      "sha256": "91371342d2417d9cf656f601beeb7fbbe3233c47c390ba54c37d221916ff2b6f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-matches-nostd.log",
+      "bytes": 130,
+      "sha256": "6452534afef5532aa964b975688457ac58d00bfe5e4047e676c134badb7eea88"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-matches-optimal.log",
+      "bytes": 9709,
+      "sha256": "8bae91cd29d6bee4909a48faa3e3b471257fd8a104509f5286f6a9dd9a0df0e2"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-paths-fixtures.log",
+      "bytes": 3080,
+      "sha256": "a23ca845771851093e8d5f09b9636433aaf23699b89d62c22c61afcc210c73d1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-paths-nostd.log",
+      "bytes": 130,
+      "sha256": "b4e49a4d6ab16e79dd6d135925b35967bd06068ab3107ae8ee74ecc62cfbc9b0"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-paths-optimal.log",
+      "bytes": 9709,
+      "sha256": "7c1a29c5d3707f2d2acc8d9596a69878d1042a26574f6c64714812fe7e843354"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-short-key-fixtures.log",
+      "bytes": 3080,
+      "sha256": "7663c78d569348b6a5b1a2cfbce1ce5bbb092793d7996310de6b8b9c03138d64"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-short-key-nostd.log",
+      "bytes": 130,
+      "sha256": "bad1d379490f81e039954153e4a645058291de5b567ce63b30a6a6fb3bff6e41"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-optimal-short-key-optimal.log",
+      "bytes": 9709,
+      "sha256": "ff53aef3b037a53ebae6d3e31cafdc05a5061c3714c8742ce145d7599ff8afa7"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-reference-chain-fixtures.log",
+      "bytes": 3080,
+      "sha256": "bb2669f60eb7ae7636d12dc37974a2e555be9cae2c88576647bed4b4d41b1d4e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-reference-chain-nostd.log",
+      "bytes": 130,
+      "sha256": "43282c2fc61e021680924425dfe11d1c2f8c40ac8937595b373e0f6ec2768716"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-reference-chain-optimal.log",
+      "bytes": 9709,
+      "sha256": "f99017a70a1705f711fef65385907d567012fd8f2e93def3ddffcecc0562a731"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-reference-tree-fixtures.log",
+      "bytes": 3080,
+      "sha256": "30953ded3886b5652493049af4760029d3a3261acb26466cecae1f7aeed803c8"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-reference-tree-nostd.log",
+      "bytes": 130,
+      "sha256": "8362513c36c71b16e41f5396c08fd174ab77d0dd94f7362bb1bd20e0921d7215"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-reference-tree-optimal.log",
+      "bytes": 9709,
+      "sha256": "5653743eac9d0df6a908888985fe405919cad146ca659e7b72c7e46198a473b5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-ring-history-fixtures.log",
+      "bytes": 3080,
+      "sha256": "cc0fc8b9e06fdb9be94c021a4fa9e30dbbdfde3755782a48912ff2b949719ef1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-ring-history-nostd.log",
+      "bytes": 130,
+      "sha256": "ec6bdd117f904110dc0e06cd22d5523690dc98c6f66943edc7331aceb4801ba5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-ring-history-optimal.log",
+      "bytes": 9709,
+      "sha256": "853e3e0377a3b72a223f1dcf2d77af946b1c5ca0862b9f69764486639eaefbc8"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-row-table-fixtures.log",
+      "bytes": 3080,
+      "sha256": "5b9632eab2d9f40bd4a8e1d00307a31af6600900f4cb84a4f6847d450f105df9"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-row-table-nostd.log",
+      "bytes": 130,
+      "sha256": "b4e49a4d6ab16e79dd6d135925b35967bd06068ab3107ae8ee74ecc62cfbc9b0"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-row-table-optimal.log",
+      "bytes": 9709,
+      "sha256": "1e358cc31dda12d4c96dc1c354f6969229669095909d01e204ace16190064d05"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-training-fixtures.log",
+      "bytes": 3080,
+      "sha256": "298f2554c7ab5c98842140b6725940510e006fa08f40730d2cb318169c72c569"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-training-nostd.log",
+      "bytes": 130,
+      "sha256": "ec6bdd117f904110dc0e06cd22d5523690dc98c6f66943edc7331aceb4801ba5"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-matrix-1016/unsafe-training-optimal.log",
+      "bytes": 9709,
+      "sha256": "dc711de04a900ad7131d2734265d284f8a614f1dccaa4ad0efe2c8fdca3d182b"
+    },
+    {
+      "path": "check-ultra-frequency-matrix.py",
+      "bytes": 2584,
+      "sha256": "0c704ff0e57147486281f503113fa73a0f5741c7dfc9cd322586f7882a1622ec"
+    },
+    {
+      "path": "reconcile-ultra-frequency-matrix.py",
+      "bytes": 2629,
+      "sha256": "488340ff5d21930f6b97388e1d6233b4bd61cb4fef1946252a207d542d7e9947"
+    },
+    {
+      "path": "ultra-frequency-matrix-reconciliation.json",
+      "bytes": 164522,
+      "sha256": "a9f8a798ca399dbb1a0d02bf7f876d3b91b128901f78ba0fe87a14bf57a0da87"
+    }
+  ]
+}

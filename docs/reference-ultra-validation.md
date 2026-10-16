@@ -233,3 +233,15 @@ no_std library checks and concrete safe/frequency-unsafe construction, update,
 query, reset and drop code generation pass. These are not native foreign hardware
 runs. Complete source-bound evidence is retained in
 `evidence/2026-10-16-ultra-frequency-owners.tar.gz`.
+
+## Complete frequency feature checkpoint
+
+All 69 planned commands pass against unchanged Rust/Cargo inputs. Safe, each of
+19 isolated unsafe features and all features each pass 94 Optimal library tests,
+21 selected scalar/frequency/public integration tests and true no_std compilation.
+Complete safe/all suites each pass 1363 tests with 55 ignored migration gaps;
+their individual test/outcome inventories match. Release/all passes all 94 Optimal
+regressions. Strict all-target Clippy in safe/all modes and formatting pass.
+The campaign contains 5235 passing and 110 ignored test executions; ignored cases
+are not counted as successes. Full logs, source identities and exact inventory
+reconciliation are retained in `evidence/2026-10-16-ultra-frequency-matrix.tar.gz`.

@@ -93,7 +93,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Qualify the bounded independent Rust frequency fixture reader.
 - [x] Implement policy-bound frequency initialization, scaling, updates and caches without changing Optimal baselines.
 - [x] Qualify exact borrowed/non-cloning owners, policy mismatch rejection and allocation-failure cleanup.
-- [ ] Complete the policy-bound frequency feature matrix and full safe/all regression checkpoint.
+- [x] Complete the policy-bound frequency feature matrix and full safe/all regression checkpoint.
 - [x] Qualify a clock-free complete-state frequency measurement harness and exact owners.
 - [ ] Measure paired safe/frequency-unsafe/all frequency lifecycles and an independent safe/all repeat after CPU barriers.
 - [x] Specify coupled scripted-path ownership, saved-match alternative observations and predecessor invariants.
