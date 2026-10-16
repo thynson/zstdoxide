@@ -1,0 +1,86 @@
+{
+  "status": "passed",
+  "archive": "2026-10-16-optimal-fresh-thumb.tar.gz",
+  "archive_bytes": 9398,
+  "archive_sha256": "59667df61e7bbc46b69d6d49c3c65edff3af0b3a1cdfcf008505612773559750",
+  "commands": 10,
+  "test_counts": {},
+  "files": [
+    {
+      "path": "caller/Cargo.lock",
+      "bytes": 163,
+      "sha256": "eb0a29f040ed80bc9f3b12fbfd3004e389b8184d1bf79ee811be837f04a788e7"
+    },
+    {
+      "path": "caller/Cargo.toml",
+      "bytes": 530,
+      "sha256": "42abb71d6326e4ced65223d11b700f5d94264289f940a5002cda44fd088356f7"
+    },
+    {
+      "path": "caller/src/lib.rs",
+      "bytes": 3019,
+      "sha256": "c82169af82433c0c4edf200f16f4ae627c0dc87bcfd98538e56c8b8a261686ce"
+    },
+    {
+      "path": "caller-all.log",
+      "bytes": 761,
+      "sha256": "e7658f05429eb9c5310fb0ca641c7fa0a1f6720617e2375ce4416decbbcce1e5"
+    },
+    {
+      "path": "caller-frequencies.log",
+      "bytes": 761,
+      "sha256": "be2bef1a75ac8ae50f2ce85900cc63436685763ef63a5bbcaa4a30ce64f6d90c"
+    },
+    {
+      "path": "caller-paths.log",
+      "bytes": 761,
+      "sha256": "be2bef1a75ac8ae50f2ce85900cc63436685763ef63a5bbcaa4a30ce64f6d90c"
+    },
+    {
+      "path": "caller-safe.log",
+      "bytes": 761,
+      "sha256": "be2bef1a75ac8ae50f2ce85900cc63436685763ef63a5bbcaa4a30ce64f6d90c"
+    },
+    {
+      "path": "caller-search.log",
+      "bytes": 761,
+      "sha256": "57aac7ff49d4af13fa9dcc995ba8b8a54a6f4dbf5a3e945db27642da28d956fc"
+    },
+    {
+      "path": "evidence.json",
+      "bytes": 13974,
+      "sha256": "4f497b6bedfae5cac1a826050caf7078b89e9e77cd44134df123ff1152e61b6f"
+    },
+    {
+      "path": "library-all.log",
+      "bytes": 130,
+      "sha256": "77bfc0931dd5bec26cd6c7b24b0cbc982e36046abdd91a6c74ab2467d71f7a44"
+    },
+    {
+      "path": "library-frequencies.log",
+      "bytes": 130,
+      "sha256": "829bf98a4a00b6bacbc1acbe64b4f9d69b7e084260a03a7f1a7bc595e2f40863"
+    },
+    {
+      "path": "library-paths.log",
+      "bytes": 130,
+      "sha256": "66d30ee542178a919e0527bbfc052b62e200d9c40a3ceb3ef0eac9d1575f578b"
+    },
+    {
+      "path": "library-safe.log",
+      "bytes": 592,
+      "sha256": "f458643a369dca0e780a95a573e5b50afcd953804bd38acf95d07f0b4dfabd4f"
+    },
+    {
+      "path": "library-search.log",
+      "bytes": 130,
+      "sha256": "bc10384eba041a5be801b10a6d2e40768cf96b94d22eb8d4f51057b1bb77eb8a"
+    },
+    {
+      "path": "runner.py",
+      "bytes": 4651,
+      "sha256": "576c55616ecb0a9665414a1a3180ce4c3ae8191e01cb71598c5bb8eae87287fc"
+    }
+  ],
+  "qualification": "Actual thumbv6m no_std library checks and concrete private ordinary fresh caller with seven borrowed Global owners code generation; no firmware execution."
+}
