@@ -68,3 +68,20 @@ fixture was edited. The failed full run is preserved; an earlier full-run build
 failure in the new benchmark example's mixed-width setter array is also retained.
 That example now compiles after separating its u8 log setters from the u32 target.
 Evidence: `docs/evidence/2026-10-16-optimal-public-regression-counts.tar.gz`.
+
+## Public platform qualification
+
+The unchanged source passed 54 strict-provenance Miri executions across i686
+and s390x. The primary campaign ran eight selected plan, layout, owner,
+preallocation rejection and complete public frame tests under safe, Optimal
+leaf-unsafe and all-feature configurations on both targets. Six additional
+executions cover the three-byte periodic entropy regression under the same
+configuration/target product. These are interpreted executions, not native
+foreign binaries.
+
+Five thumbv6m configurations each pass a true no_std library check and actual
+code generation of a concrete borrowed-Global public Optimal caller. These
+10 builds establish that this path does not require atomics; they do not claim
+firmware execution. All source inventories remained unchanged. The verified
+73-member archive is `docs/evidence/2026-10-16-optimal-public-platform.tar.gz`
+(SHA-256 `57aaa8c351b5d736745291288fdfae44261f83d71caf9777748711472351713a`).

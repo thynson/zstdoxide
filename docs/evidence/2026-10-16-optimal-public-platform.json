@@ -1,0 +1,372 @@
+{
+  "archive": "2026-10-16-optimal-public-platform.tar.gz",
+  "archive_bytes": 19977,
+  "archive_sha256": "57aaa8c351b5d736745291288fdfae44261f83d71caf9777748711472351713a",
+  "files": [
+    {
+      "path": "check-optimal-public-platform.py",
+      "bytes": 3229,
+      "sha256": "83527ac9cb7f91f63e9c7796d1f5f8c24b4784ce22bda5fbcc2cea81948f3576"
+    },
+    {
+      "path": "check-optimal-public-platform-short.py",
+      "bytes": 2564,
+      "sha256": "b0f7451abe10d909043a8863027619fe82646be108eec24144d4338b33106582"
+    },
+    {
+      "path": "check-optimal-public-thumb.py",
+      "bytes": 3206,
+      "sha256": "4233178feacb897538d06885c57a07dc800ffbb54c9614274cd6ab3760e5e05e"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/evidence.json",
+      "bytes": 38476,
+      "sha256": "f3adc7a1f27fb83bdf868c141e3205c789a5b7fe5b77cd04acb46ea1c7ca98b6"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-all-0.log",
+      "bytes": 513,
+      "sha256": "fd775c31557f322a8e13f835911b034b9f57995e0e682a7287aa5184992e2006"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-all-1.log",
+      "bytes": 445,
+      "sha256": "2d86a39ffb1e3746614ae5a00fd4c500b05ead721fb0c59a39e16db82dfb22e0"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-all-2.log",
+      "bytes": 452,
+      "sha256": "dcfd9d87d0ec9557c8f0358c6886615e6c7ac27f0ee4c22e15659dcc40153f27"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-all-3.log",
+      "bytes": 448,
+      "sha256": "239287baea93140811e223ab6a45cb0878389538e9bf2929bd314f8e908268ff"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-all-4.log",
+      "bytes": 453,
+      "sha256": "0c388ca59b4f60d267046d1109e633425f8ea74586a585c8ce9ea4e61088af05"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-all-5.log",
+      "bytes": 418,
+      "sha256": "c85614ff2861efb6b694d4ae6bb0ba6398068f8cdfa4056b1fc0715ce55d041a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-all-6.log",
+      "bytes": 534,
+      "sha256": "613cc2832840c266bd1bec85d14d410c02c5ed0a566e0f6ad35fea5521d92cef"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-all-7.log",
+      "bytes": 449,
+      "sha256": "35105ae94eb0a6da52abefdc92f306d18d69f9ffe2ec2b6141775bd7cc613f2a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-optimal-0.log",
+      "bytes": 513,
+      "sha256": "31473425416c03e0952867a20e8ae63dcf29ca9f5ceabdd846320496d9f14908"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-optimal-1.log",
+      "bytes": 445,
+      "sha256": "84df37e145ccac21ccf4902fdfddac03a8a797e4b44108a9cbbce6a368b19af9"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-optimal-2.log",
+      "bytes": 452,
+      "sha256": "872280431521d499f969c7ee4169fdc83006aaf18c2098ad57c7531e7557ce2c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-optimal-3.log",
+      "bytes": 448,
+      "sha256": "0e971c91b6981ba0b36f781e34c2290d7a8185b827025f536435bd187e447f36"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-optimal-4.log",
+      "bytes": 453,
+      "sha256": "9099802e25ff29d3bb9611e9aeaeed9d866d0520e30fbf44f691c3c0b0cbff49"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-optimal-5.log",
+      "bytes": 418,
+      "sha256": "4b24f763159f525f884d66f6a2c9780ad6bb4e92393f9795862e1a9d9a5ecb1b"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-optimal-6.log",
+      "bytes": 534,
+      "sha256": "0be8d49b325032404bae55d37649a9af9e0c19e8dbfba12bfe93ffc858900916"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-optimal-7.log",
+      "bytes": 449,
+      "sha256": "23576c0fbf440b7d579fa83163f35ae5cc37e1601c9699d13daa4e34df3b887b"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-safe-0.log",
+      "bytes": 621,
+      "sha256": "b1f09af2fc901e8dbae59674aa62f98eb793a3297aa92d12f1d85943d7d76e22"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-safe-1.log",
+      "bytes": 445,
+      "sha256": "c1e642caea3692056edd772072c2da6ef417b5b8764f6113fefec16f005e635d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-safe-2.log",
+      "bytes": 452,
+      "sha256": "55639d8074cb9113df6e63d39567a7fc7b5647bc344f502cf3ba3a94bba1dd12"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-safe-3.log",
+      "bytes": 448,
+      "sha256": "d7d4fce55e8ae9dd834ccf5c08731539dfe21e6627b551c46fb5b34ab987b509"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-safe-4.log",
+      "bytes": 453,
+      "sha256": "67bbbb4dd98023a529936a80377cbb32bd9b038e8da27427951dfc85a0056390"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-safe-5.log",
+      "bytes": 418,
+      "sha256": "fb8fdd301131282351633b6ce981774affc83e7cc1439fce5881f9a24f68f247"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-safe-6.log",
+      "bytes": 534,
+      "sha256": "0452874a67c3ea5567647b00bffdb600eeb925b74e566b7a17b3d18a0fdb92d2"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/i686-unknown-linux-gnu-safe-7.log",
+      "bytes": 449,
+      "sha256": "ac5a6d5edad1606230c8efdeb93eadc9c8d1ab35897af4b08d51e7407c02e195"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-all-0.log",
+      "bytes": 514,
+      "sha256": "6b3dd8a1b9171213ecced63c0690e047ba40af2666899b208a41c278d824b922"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-all-1.log",
+      "bytes": 446,
+      "sha256": "9590ea70e7abba6c0cb61a5005ceef4bb646f23f8212a5356efc1b987e3f8a74"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-all-2.log",
+      "bytes": 453,
+      "sha256": "6a7ed6594ab57568c2befbb4d6d800e025e881c3b68fe2abe0276246d247d118"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-all-3.log",
+      "bytes": 449,
+      "sha256": "0f650cf7d6b17268da9b35663ae68c71cc621cdb0f4551192fa7c57253f76977"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-all-4.log",
+      "bytes": 454,
+      "sha256": "f02bdeecdfb477720b516028f8538687db0d095d40667d6afff5894711c62e85"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-all-5.log",
+      "bytes": 419,
+      "sha256": "a75c2042297f47dd4d9de2e40247f63fa855825691c44087b5724544bd2574e5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-all-6.log",
+      "bytes": 535,
+      "sha256": "71c82966a97010f4b2e2dadc6dcee9abd512e8b5d1c9ef365ad026adb8dc4a8c"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-all-7.log",
+      "bytes": 450,
+      "sha256": "f77356b45544094c496309078ca30f1fd2853ddd006996821e1c718c82863f66"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-optimal-0.log",
+      "bytes": 514,
+      "sha256": "d97b9aad631ae0493dde20f3c93843504830d774c3889bec0d90eece41a6d299"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-optimal-1.log",
+      "bytes": 446,
+      "sha256": "f364031e2394190e4d74fe1824550c47000ef1a9a33b5ffba19dff06b518b262"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-optimal-2.log",
+      "bytes": 453,
+      "sha256": "9deb77b3fb0971dd6aff67162a8b2d578df3da1dc67e5a2acc0a67b9f3e2824f"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-optimal-3.log",
+      "bytes": 449,
+      "sha256": "6d90d2a0d42da6aaa7c5b459e6c5a2d6d8cbdc3edcb7b58b8cb19d913efc85fe"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-optimal-4.log",
+      "bytes": 454,
+      "sha256": "5f1a8c6169fb7238c9e76f032ef85bdf113cf7b7a2afac3b7b5d6e1520a72801"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-optimal-5.log",
+      "bytes": 419,
+      "sha256": "f9cadc912a5b726c4c24bba7e065d7f42633f283ec1cf7c7d56d2f6239b14f48"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-optimal-6.log",
+      "bytes": 535,
+      "sha256": "36992ef9029b74d7dc3c071ab60b88e17e70a840cc49259c6dbd49cd23834172"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-optimal-7.log",
+      "bytes": 450,
+      "sha256": "56fc656b6fb1c9cba92144f7dcc0b6e795b67ab2949c31c1d1a2fda766d7f0fc"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-safe-0.log",
+      "bytes": 622,
+      "sha256": "57707b411439add4615c446b642e84f0baec63c4c3eb259d84cca4a3e4fd43bd"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-safe-1.log",
+      "bytes": 446,
+      "sha256": "32538794754550d58ac79bc57a86c1b25add7d4394720a3d53c88e697a694823"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-safe-2.log",
+      "bytes": 453,
+      "sha256": "be5524126a2abb83a3560e0ae309b20f07db13f181bc7ec13d34ee11f972b1bc"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-safe-3.log",
+      "bytes": 449,
+      "sha256": "e5aa69afbcecc01f6baf39b9ccad76da540d02dcdee2eee268f843eb42acdedf"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-safe-4.log",
+      "bytes": 454,
+      "sha256": "c8fa3f49514187b243de2725b8678249d3c2bb08759d44221bcd8622b81d7d98"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-safe-5.log",
+      "bytes": 419,
+      "sha256": "a4b84ec7522b6e3f68a4f2e5217773bc517844aeb9cedba0bd88145912b0f02a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-safe-6.log",
+      "bytes": 535,
+      "sha256": "ab3547b50ab14881dead8e007e401d060a2c0e13af3d1ff4d9667f440666d7af"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-1016/s390x-unknown-linux-gnu-safe-7.log",
+      "bytes": 450,
+      "sha256": "8f7f58b851fdac01d876183ea6a5a5e21bcb692ff9ff0da7005922151a737ef5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-short-1016/evidence.json",
+      "bytes": 12125,
+      "sha256": "0b5639025303d19fe5746af06508c16664ee0e8916d65e8458147a7d4843a887"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-short-1016/i686-unknown-linux-gnu-all-0.log",
+      "bytes": 458,
+      "sha256": "76d096cdcf22c67d64bdbacd9c440c85de7cca0551a6105aa10accec121181b0"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-short-1016/i686-unknown-linux-gnu-optimal-0.log",
+      "bytes": 458,
+      "sha256": "6d42298b3349c7e4fc06ba01b1cb5dd1a562e3863d3c6b8ac1b691337919d1bc"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-short-1016/i686-unknown-linux-gnu-safe-0.log",
+      "bytes": 458,
+      "sha256": "9e93e2691d480a027751682b0b77f3a03b836679da67afb50916e6071dc3dcf5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-short-1016/s390x-unknown-linux-gnu-all-0.log",
+      "bytes": 459,
+      "sha256": "fd7ef5cb74bc961fb7cf06d1744dff7d65a843f661ff0731468217f5eeb96821"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-short-1016/s390x-unknown-linux-gnu-optimal-0.log",
+      "bytes": 459,
+      "sha256": "9f488b299b821c66e244be4d75628fae2309c939d632dd3a24964675f3469869"
+    },
+    {
+      "path": "zstdoxide-optimal-public-platform-short-1016/s390x-unknown-linux-gnu-safe-0.log",
+      "bytes": 459,
+      "sha256": "af3729a5b57a70ab2b744d074c38903f060930fbc93c11da82a527fa05f43784"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/caller/Cargo.lock",
+      "bytes": 247,
+      "sha256": "182d12a35905f169aabca13a97f440c8c88b5d3e382b9b90ad99737f40a558c2"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/caller/Cargo.toml",
+      "bytes": 1205,
+      "sha256": "a2b8bb5b92bc85275847759020269bd670d60696a8db7163ad42011450977d42"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/caller/src/lib.rs",
+      "bytes": 1390,
+      "sha256": "58a422ea4ffd119b5114755e54d0a6121b10e80f589e62497cb926cd599c1e63"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/caller-all.log",
+      "bytes": 229,
+      "sha256": "3d0c1ff3f9ea63942bd7b41ed1f8ec19af452977c0dac844b8696c3d1e2e99d0"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/caller-frequencies.log",
+      "bytes": 229,
+      "sha256": "1032b88f1526566f25094dfcacaa671a466da07212bfe9a531e1f55b5325af05"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/caller-paths.log",
+      "bytes": 229,
+      "sha256": "9248aae31b99e97a3a88d44270f2c28376a9fbad71fbad03c9588c2c4c0008ab"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/caller-safe.log",
+      "bytes": 303,
+      "sha256": "b90fc7df604451919e21e4d610d7e4d5a3591ae8d18e72c2003f9acdeb54fece"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/caller-search.log",
+      "bytes": 229,
+      "sha256": "2351f426d484499fd15190a90f7709ff51eb468f5f877e2260e8947ee17b0fe5"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/evidence.json",
+      "bytes": 14238,
+      "sha256": "40f3bb66db35d4f50018deca68146ecbae471eaea353487da170dbd9286afb6e"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/library-all.log",
+      "bytes": 130,
+      "sha256": "5209e64092d38745bc1875a708297843b07e902597c15ddbc693b2a3844626e0"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/library-frequencies.log",
+      "bytes": 130,
+      "sha256": "fe6c1f92d81c0a52e8b7587b201a69c9fe10f59f715792ba3e367341e9ac970a"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/library-paths.log",
+      "bytes": 130,
+      "sha256": "333ffed2db58408b29dae56f81a54e87a2bf58ebdd7d8534dc7d625e79ed978d"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/library-safe.log",
+      "bytes": 593,
+      "sha256": "da5c036880652d0d909fafbd7d809e7adfd82f1bab1660565743b84bb1ad24c0"
+    },
+    {
+      "path": "zstdoxide-optimal-public-thumb-1016/library-search.log",
+      "bytes": 130,
+      "sha256": "480cc3c3a7e4fefd214a6b533b1dad77b59a76b229c8e4477a8545cf971940a0"
+    }
+  ]
+}

@@ -60,7 +60,8 @@ both timing campaigns and their opposing aggregate directions are recorded in
 
 ## Module 17 preparation: bounded reference Optimal
 
-Keep strategy 7 unsupported while qualifying the independent optimal parser.
+Public strategy 7 now admits the qualified bounded fresh-block envelope.
+Finish full regression, native audit and measurements before milestone closure.
 Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline.
 
 - [x] Review optimal ownership, frequency lifecycle, sorted-tree eligibility, short-key frontier, finite prices and path reconstruction before implementation.
@@ -168,7 +169,8 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Preflight the exact public interoperability command inventory and reused generic adapters.
 - [x] Qualify the additive public audit successor against the complete implemented source inventory.
 - [ ] Capture and independently audit bidirectional public interoperability with offline forged-evidence controls.
-- [ ] Run all safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and selected foreign/no-atomics checks.
+- [x] Qualify selected public Optimal frames and owners on 32-bit, big-endian and no-atomics targets.
+- [ ] Run all safe/isolated-unsafe/all/release, true no_std, formatting and Clippy checks.
 - [x] Specify complete-frame benchmark records, owner equivalence and measurement barriers.
 - [ ] Implement and freeze deterministic complete Optimal frame workloads and independent evidence checks.
 - [ ] Freeze equivalent complete frames/owners, then measure all backends and a separate safe/all repeat after CPU barriers.
