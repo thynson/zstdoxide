@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "runs": {
+    "zstdoxide-optimal-retained-pack.log": {
+      "cases": 16,
+      "events": 4486,
+      "pack_bytes": 769102,
+      "pack_sha256": "2423a3e76c0b142660233961e58da8d1d753ef273325e290cf257194c9762ea1",
+      "status": "passed"
+    },
+    "zstdoxide-optimal-retained-pack-optimized.log": {
+      "cases": 16,
+      "events": 4486,
+      "pack_bytes": 769102,
+      "pack_sha256": "2423a3e76c0b142660233961e58da8d1d753ef273325e290cf257194c9762ea1",
+      "status": "passed"
+    }
+  },
+  "script_sha256": "41042608f2bbc6bba47101e6396e9fe3b6fe72d7548bbb09a9bfd5e9fbf65332",
+  "qualification": "Normal projection and optimized Python byte-for-byte reproduction from all hash-verified immutable capture members."
+}

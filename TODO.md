@@ -129,7 +129,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Reconcile inter-block frontier adjustment and add strict-boundary/raw-candidate successor predictions after the initial capture audit failed.
 - [x] Capture and independently audit retained optimal blocks, complete frames and committed repeat publication.
 - [x] Specify retained fixture encoding with persistent deltas and publication owners.
-- [ ] Project audited retained complete state into a bounded immutable fixture.
+- [x] Project audited retained complete state into a bounded immutable fixture.
 - [ ] Qualify a checked independent retained Rust fixture reader and complete frame decode.
 - [ ] Match private Rust ordinary sequences/state and decode every complete C frame; preserve all predecessor regressions.
 - [ ] Qualify allocation failures, exact borrowed/non-clone owners, resets and poisoned transactional failures.
