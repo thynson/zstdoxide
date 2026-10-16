@@ -2398,3 +2398,32 @@ relaxation and an improvement after a rejection. These cases are selected using
 only the independent model, never observed C output. Native admission and all
 public Ultra APIs remain gated until the complete observer, path owner and ordinary
 search/frame composition are independently qualified.
+
+### Ultra path fixture and independent reader ownership
+
+The projected fixture uses `ZUPFX01\0`, a u32 case count, and nine u32 fields per
+case: name/source lengths, minimum, target, literal mode, path cell count, event
+count, script count and policy. All requests use the wider bounded transport;
+there is no legacy small/wide discriminator. Name/source bytes and scripted
+candidates retain their native request order. Existing stage numbers 0..11 stay
+unchanged; stage 12 is the saved-match alternative observation.
+
+Each event retains the prior complete-state delta encoding. After the optional
+query and its candidates, an optional alternative flag carries twelve signed
+little-endian i64 values. The remaining canonical path/frequency changes and
+append-only sequence records retain their original field widths. The pack is
+bounded by 32 MiB, 58 cases, 16384 events per case and 65672 total events. Sources
+and names are borrowed; scripts, events and change lists use bounded fallible Vec
+allocations. One temporary path vector and fixed frequency array reconstruct each
+case; the reader never allocates a complete path table per event.
+
+The independent reader recomputes whole/fractional refreshed caches with wide
+integer division and preserves dirty caches between refreshes. Before applying
+an alternative event's deltas, its saved match must equal the preceding complete
+current-cell value. After applying them, recompute the signed LL increment and
+both candidate prices from the recorded frequencies/source and current literal
+cell. The next-cell price and predecessor index must agree with reconstructed
+state. The following literal event must contain exactly the accepted next-cell
+write and repeat publication, or no path write for a rejected alternative, with
+the corresponding unchanged or extended frontier. These checks are independent
+of the production path parser, which remains unimplemented for Ultra.
