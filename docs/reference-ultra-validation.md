@@ -49,3 +49,15 @@ manual interpolation examples, power boundaries, exact packet roundtrips,
 malformed transport, strict JSON types and duplicate/nonfinite keys. Its generated
 transcript is a self-consistency check, not an upstream observation. No C helper
 has been executed at this checkpoint.
+
+## Native adapter preflight
+
+The reviewed native plan contains exactly 134 commands: pinned reference/compiler
+identity, full dependencies/predefines, 52 object compilations, two links, two
+2470-row positive runs and 70 malformed runs (35 per build). Every malformed
+semantic packet starts with a valid row, proving that the complete-packet gate
+must reject it before even the first observation. Ordinary and optimized Python
+reject ten altered command plans. Six native syntax/dependency/predefine checks
+pass, including fully instrumented adapter syntax. The initial Darwin feature
+macro syntax failure and its source are retained separately. No scalar oracle
+execution has occurred at this checkpoint; capture is the next work item.

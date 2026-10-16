@@ -1,0 +1,132 @@
+{
+  "archive": "2026-10-16-ultra-scalar-preflight.tar.gz",
+  "archive_bytes": 169342,
+  "archive_sha256": "e7d37ed706efebc6cd88f0a640b8f36dc46359994118dcb75bb5fe7153916637",
+  "files": [
+    {
+      "path": "preflight-ultra-scalar.py",
+      "bytes": 1689,
+      "sha256": "50da3f409712a8306291764648d3da1b2bf59d6d1178ee320c7ccb5359c00e7e"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/evidence.json",
+      "bytes": 11377,
+      "sha256": "fb93ef4bb6ccb69291e6ddc0b27c47b6ae6456cb7c683ec639478351c180b2bf"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/normal-compile-25-syntax.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/normal-compile-25-syntax.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/normal-dependencies.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/normal-dependencies.stdout",
+      "bytes": 36068,
+      "sha256": "4a93bcd59ec980b2d2519961a82c7b8e89a7c62d67cd4417e4c468b470ecd735"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/normal-predefines.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/normal-predefines.stdout",
+      "bytes": 625227,
+      "sha256": "2befbbe5f0d45b718f61ebec282b14a8e00c63d5db9d73037c696b4b1c6a4191"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/sanitized-compile-25-syntax.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/sanitized-compile-25-syntax.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/sanitized-dependencies.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/sanitized-dependencies.stdout",
+      "bytes": 36068,
+      "sha256": "4a93bcd59ec980b2d2519961a82c7b8e89a7c62d67cd4417e4c468b470ecd735"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/sanitized-predefines.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-preflight-1016/sanitized-predefines.stdout",
+      "bytes": 622128,
+      "sha256": "d42e94760734088d754a651a2dff582b608c3f8ecdd48a31d7a12ab8f2f166c8"
+    },
+    {
+      "path": "ultra-scalar-plan-normal.log",
+      "bytes": 1425,
+      "sha256": "647292bbde2e709cd651d0f0267f516d206d0ed650391c8faefc242d07bfda9e"
+    },
+    {
+      "path": "ultra-scalar-plan-optimized.log",
+      "bytes": 1424,
+      "sha256": "42f60d5770e0f5c2ef146c384074f50df6991944adadc7b172b8f189bbec9263"
+    },
+    {
+      "path": "ultra-scalar-syntax.log",
+      "bytes": 209,
+      "sha256": "4c6b4ab2afd66ee3e306df9778f83a1db515822d3d52638110ac80da073904ce"
+    },
+    {
+      "path": "ultra-scalar-syntax-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ultra-scalar-before-darwin.c",
+      "bytes": 8852,
+      "sha256": "52c82868ec6cf4c4eb91f46f10f243c04c573801d41239910eee730478d0573e"
+    },
+    {
+      "path": "ultra_scalar.c",
+      "bytes": 8888,
+      "sha256": "e161b3e59584da0f5a44569f48a93b2284bb685318d77a6890bd5306e7baefdc"
+    },
+    {
+      "path": "ultra_scalar_capture_plan.py",
+      "bytes": 6260,
+      "sha256": "51c29a9301388129a9368b3705b3afee991acb054f5b35eb0ef63931a93e0430"
+    },
+    {
+      "path": "capture_ultra_scalars.py",
+      "bytes": 7860,
+      "sha256": "7bb6230a2dea9cd340c2186b7b6c2096e23265aa36b43f5200a1484db9e5dfcd"
+    },
+    {
+      "path": "check_ultra_scalar_capture.py",
+      "bytes": 8493,
+      "sha256": "4385b773cf455fe5dd95a9fcf121c2d5a9a5ac4d81bf7645c62199d10abc484f"
+    },
+    {
+      "path": "check_ultra_scalar_capture_plan.py",
+      "bytes": 1699,
+      "sha256": "d5cc3e98f24e2deea123e04caa8c9aea66194ba63a846d474796fcb16bf22fae"
+    },
+    {
+      "path": "reference-ultra-scalar-adapter-review.md",
+      "bytes": 2646,
+      "sha256": "372be65e80d7e06dcc0a87835cdf022dd546b9b787dafb6bff1187556f1e380f"
+    }
+  ]
+}

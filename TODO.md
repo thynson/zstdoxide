@@ -76,9 +76,9 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Review pinned fractional pricing, coupled policy, cache lifecycle and thorough path relaxation against the recorded design.
 - [x] Decompose scalar boundaries and freeze an independent integer fractional-price model before native execution.
 - [x] Specify bounded scalar transport and adapter ownership before native helper implementation.
-- [ ] Review and preflight the exact scalar adapter, full instrumentation and malformed request controls.
+- [x] Review and preflight the exact scalar adapter, full instrumentation and malformed request controls.
 - [ ] Project independently audited scalar observations into an immutable Rust fixture and qualify its reader.
-- [ ] Freeze source-only price recipes, observation protocol and exact normal/instrumented C command inventory.
+- [x] Freeze source-only price recipes, observation protocol and exact normal/instrumented C command inventory.
 - [ ] Capture and independently audit fractional prices, signed increments and malformed/overflow boundaries.
 - [ ] Specify policy-dependent checked price records and frequency owner/reset invariants before Rust implementation.
 - [ ] Implement checked scalar policy/price values and compare all independent/native observations.
