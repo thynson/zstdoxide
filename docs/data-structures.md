@@ -2226,3 +2226,50 @@ Ordinary frequency lifecycle is deliberately absent: these are labeled synthetic
 scalar states. A later Rust fixture reader owns no source table and borrows
 bounded packet rows; copied checked policy/price values require no unsafe variant.
 All fixtures record mode explicitly and preserve the original whole-bit corpus.
+
+### Checked Ultra price values and compatibility entry points
+
+Extend the private scalar price module with copied `PricePolicy::{Optimal,Ultra}`.
+The policy couples the whole-bit mode and fractional mode; later path/frequency
+composition must carry this same discriminator rather than independent knobs.
+`SymbolPrice` gains a copied policy alongside its finite cached base and weighted
+frequency. It owns no memory or source reference, so its representation stays
+shared across safe/unsafe features. Existing constructors and query entry points
+remain Optimal wrappers with unchanged admission and results.
+
+A policy-aware symbol constructor validates the raw frequency's domain, exact
+representability of the cached base, and frequency weight <= base. Whole-bit
+bases remain multiples of256 through7936. Fractional bases are256..6143, with
+quantization constraints below exponent8: not every integer in the numeric range
+is an obtainable base. For base `256*(k+1)+r`, k<8 requires r divisible by
+`2^(8-k)`; k>=8 permits every remainder. This is a cached-weight value contract,
+not a claim that a synthetic count vector is an ordinary CCtx state.
+
+Every dynamic LL/match query checks that all supplied symbol policies match the
+query policy before arithmetic; a mismatch is InvalidStatistics. Literal slices
+are borrowed only for a call. Empty literals preserve the no-read zero result;
+positive queries validate every consumed frequency and apply the minimum one-bit
+cost. Disabled/predefined literals retain shared six/eight-bit behavior. LL and
+match length bounds, offset intents, unreachable sentinel and checked additions
+retain their established contracts. Ultra predefined LL/ML prices use fractional
+weights and dynamic matches omit the large-offset handicap while retaining51.
+Signed adjacent LL increments are independently compared by subtracting finite
+prices in a wide signed type; no new path admission follows from these scalars.
+
+### Ultra scalar fixture transport
+
+The native-audited scalar fixture uses magic `ZUSFIX01`, little-endian u32 count,
+then ten u32 request words and one little-endian signed i64 result per row.
+Count is exactly2470 for this frozen corpus; total size118572bytes. Projection
+requires full capture audit and normal/instrumented equality before writing any
+fixture. Provenance binds original capture, source-only manifest, packet and
+both complete transcript hashes. A separate offline checker reconstructs every
+row from the independent source-only model and rejects changed extents, requests
+and results, even when presented with plausible in-range scalar values.
+
+The Rust test reader borrows immutable bytes, checks exact extents before slicing,
+and validates each copied row's mode, operation, reserved words, statistic sum,
+length/offset and signed-result domains independently of production price code.
+It allocates no table or codec state. Iterator items remain checked copied rows;
+no unsafe indexing or lifetime extension is appropriate. Malformed reader tests
+cover truncation, appended data, count bounds and invalid query fields.
