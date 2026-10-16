@@ -107,3 +107,17 @@ and result sentinel boundaries. Final all-feature test Clippy and formatting
 pass. The first Clippy request to use fixed-array chunks and the preceding source
 are retained with final logs in `evidence/2026-10-16-ultra-scalar-reader.tar.gz`.
 This reader does not depend on production scalar arithmetic.
+
+## Independent frequency lifecycle successor
+
+The policy-tagged model reconstructs all13,036,992bytes of the original147-case
+native whole-mode fixture exactly, including all377counts, sums, cached prices
+and query results. Both ordinary and optimized Python pass this reconciliation.
+All original source/operation bytes remain unchanged.
+
+The source-only successor manifest fixes300wrappers:298positive schedules with
+4065complete transitions and2848queries, and2fractional-envelope rejections.
+Additional schedules reach literal sums8388604,8388606and8388608; the last is
+rejected only for policy2. Predicted post-rescale sums differ at the upper power
+boundary (8447versus4351), so full observations must retain these exact cases.
+These are independent model expectations until the new native capture executes.

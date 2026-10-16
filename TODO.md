@@ -84,8 +84,8 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Specify policy-dependent checked price records and frequency owner/reset invariants before Rust implementation.
 - [ ] Implement checked scalar policy/price values and compare all independent/native observations.
 - [x] Specify immutable frequency policy, fractional publication bounds and parser composition rejection before implementation.
-- [ ] Freeze the policy-tagged frequency transport/model and reconstruct every original whole-mode C fixture before execution.
-- [ ] Freeze source-only frequency lifecycle recipes and exact fractional-boundary negative classifications.
+- [x] Freeze the policy-tagged frequency transport/model and reconstruct every original whole-mode C fixture before execution.
+- [x] Freeze source-only frequency lifecycle recipes and exact fractional-boundary negative classifications.
 - [ ] Review and preflight the complete policy-tagged frequency observer and native command inventory.
 - [ ] Capture and independently audit complete frequency lifecycles and forged-evidence controls.
 - [ ] Project the audited policy-tagged frequency fixture and qualify its independent reader.

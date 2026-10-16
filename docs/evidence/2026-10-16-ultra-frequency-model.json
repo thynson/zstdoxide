@@ -1,0 +1,47 @@
+{
+  "archive": "2026-10-16-ultra-frequency-model.tar.gz",
+  "archive_bytes": 44100,
+  "archive_sha256": "7624dee34073f7c779357e88bf1ef36f00a758d027e2a7c412504fe5faa9f677",
+  "files": [
+    {
+      "path": "ultra_frequency.py",
+      "bytes": 5498,
+      "sha256": "1b15ebd1b98a7b2e0b0e8da7cc16730b9f862c51cd5b6e6f93f90c5c62a7ef6e"
+    },
+    {
+      "path": "ultra_frequency_recipes.py",
+      "bytes": 1901,
+      "sha256": "d7b7bd965b5d30d87d03a7848a38267385ffce9da3286a42edd780269405beaa"
+    },
+    {
+      "path": "check_ultra_frequency_model.py",
+      "bytes": 2772,
+      "sha256": "1414ab0f58d5b76fb7aa22a2fd3704ff00e93d971dd462c45fb1629f86e03cfc"
+    },
+    {
+      "path": "reference-ultra-frequency-recipes/README.md",
+      "bytes": 644,
+      "sha256": "24e9c8dc1ef624fb86e599f2adfa4d223fe61b6a22bcef96ac43f4d0c8fe169b"
+    },
+    {
+      "path": "reference-ultra-frequency-recipes/recipes.json",
+      "bytes": 577063,
+      "sha256": "0fb7c89faffa6ca81a29da029b8ded9cf0090a9b52019bac5812670a90b1746d"
+    },
+    {
+      "path": "reference-ultra-frequency-protocol.md",
+      "bytes": 4286,
+      "sha256": "ce4e4181ac4d474e65c32d9ea9b3d3f396adb93510b30869b02e396f76dbfbcc"
+    },
+    {
+      "path": "ultra-frequency-model-normal.log",
+      "bytes": 667,
+      "sha256": "fc090848e59a1afa2944f1abddfb76f4448e3c0ca3bd838c9aa7006d961354b0"
+    },
+    {
+      "path": "ultra-frequency-model-optimized.log",
+      "bytes": 666,
+      "sha256": "7e0f11ec2040d48c91e39376807cbea94bb6645bb6cc26379d6b9ce6599b2805"
+    }
+  ]
+}
