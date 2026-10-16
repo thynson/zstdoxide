@@ -57,3 +57,9 @@ Parse, publication and reset allocate nothing after construction. Rejected
 schedule construction releases all seven supplied owners. Sixty-nine focused
 Optimal tests pass in all six configurations (414 executions), plus strict
 Clippy, formatting and no_std compilation with unchanged source hashes.
+
+Additional schedule controls reject an 8,193-byte block with an otherwise exact
+16-KiB schedule, over-total/short-block/fifth-block schedules, 16,385-byte source
+and subminimum source. Every rejected constructor releases all seven moved
+owners. The focused test passes in safe, all and release/all builds, with strict
+all-feature/all-test Clippy and formatting; production code is unchanged.

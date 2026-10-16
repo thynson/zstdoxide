@@ -356,3 +356,36 @@ fn rejected_wider_retained_schedule_releases_all_moved_parts() {
         assert_eq!(monitor.snapshot().owners_dropped, 1);
     }
 }
+
+#[test]
+fn wide_schedule_and_source_limits_reject_and_release_every_owner() {
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    let source = [b'a'; 16385];
+    for (size, schedule) in [
+        (16384, &[8193, 8191][..]),
+        (16384, &[8192, 8193][..]),
+        (16384, &[8192, 8129, 63][..]),
+        (16384, &[4096, 4096, 4096, 4032, 64][..]),
+        (16385, &[8192, 8192][..]),
+        (127, &[64, 63][..]),
+    ] {
+        let owners: [_; 7] = core::array::from_fn(|_| {
+            TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 1,
+                fail_at: None,
+            })
+            .unwrap()
+            .into_non_clone()
+        });
+        let monitors = owners.each_ref().map(|a| a.monitor());
+        let (parser, search) = pair(&source[..size], wide_layout(), 3, 0, false, owners).unwrap();
+        assert!(matches!(
+            RetainedOptimal::from_parts(parser, search, schedule),
+            Err(Error::InvalidParameter)
+        ));
+        for monitor in monitors {
+            monitor.assert_released();
+            assert_eq!(monitor.snapshot().owners_dropped, 1);
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+  "archive": "2026-10-16-optimal-retained-wide-limits.tar.gz",
+  "archive_bytes": 1696,
+  "archive_sha256": "91a63e1e8f36cf0dfbefab88961030b4b84a221576ee83d6a3d2c72e2527b570",
+  "files": [
+    {
+      "path": "zstdoxide-optimal-retained-wide-limits/all.log",
+      "bytes": 475,
+      "sha256": "406561de2cb7469af360881d83af0127b94e931f3f150e3c23835eb6312b1300"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-limits/clippy.log",
+      "bytes": 142,
+      "sha256": "06883765da0c1b510f9958084e4038752d13ac8950fd92ae8030d2bfd2dac5d1"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-limits/evidence.json",
+      "bytes": 1755,
+      "sha256": "19db7a55792bfc89d246fec95c12d44565dc080ff8c89d138e9c6768c1395a46"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-limits/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-limits/release-all.log",
+      "bytes": 467,
+      "sha256": "52de8e8d0d45906b2179a53a0f0ff7f01bf4b4c4e6dfb3044b14cb8fcb0b4b64"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-limits/safe.log",
+      "bytes": 475,
+      "sha256": "3056c05a65cc2b2556e88edbb34a48a74bc856fabe8e62823b6b6c5ef7df8f26"
+    },
+    {
+      "path": "check-retained-wide-limits.py",
+      "bytes": 1337,
+      "sha256": "fadf33e0fdf65a15677c90abc1063029ce798c24c7943331395bb74506c94816"
+    }
+  ]
+}
