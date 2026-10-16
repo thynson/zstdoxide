@@ -1,0 +1,282 @@
+{
+  "archive": "2026-10-16-ultra-frequency-benchmark-harness.tar.gz",
+  "archive_bytes": 1335346,
+  "archive_sha256": "bdd85b618c84ba63a746bb1c6e1c910a444494650479986587ae6b2083d55cfe",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/benchmark-all",
+      "bytes": 27368896,
+      "sha256": "9472d047943e8e9b0354d0daaf5a14b44cc975b15490ee18382fdf38f457c4fe"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/benchmark-frequencies",
+      "bytes": 27368896,
+      "sha256": "96ca55eb62ae5c2af486320e451933d491c428aac195f93ee3f60f45450775de"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/benchmark-safe",
+      "bytes": 27368896,
+      "sha256": "842924a83a3b747e486e694cbd03b369703b71c9fc1959480f8c82ebd01adc39"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/build-all.stderr",
+      "bytes": 132,
+      "sha256": "096864d0625423e54d2cccfaa9a6ba7171e2b366426972f4e088b44131d92986"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/build-all.stdout",
+      "bytes": 3378,
+      "sha256": "6ad74ee10604b9a160ddbaa1d0214c34b2a28891cd6a89f8f35a526e5521deeb"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/build-frequencies.stderr",
+      "bytes": 132,
+      "sha256": "090804c9fa1da3002aebe634c6ff4f72406012d8f5f59aab74a55b1ac1ac0ad9"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/build-frequencies.stdout",
+      "bytes": 2620,
+      "sha256": "b7ebfff43a27625ff2cc86f9bd1ea46c1531f1922aa959ea788ec241ae04b75e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/build-safe.stderr",
+      "bytes": 240,
+      "sha256": "b20f373cc05952ca4b2342eaf76cacf124827b1f5689eb80dd3cf68766c71798"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/build-safe.stdout",
+      "bytes": 2563,
+      "sha256": "efc16df050fa925ddd0e528dfe29c260a9c810b705cda0ac558169fafb65a94f"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/cargo.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/cargo.stdout",
+      "bytes": 45,
+      "sha256": "71de2de1f7d9ecf66030112aa59bf05781d6210a550634db5eba3920af9d08de"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/evidence.json",
+      "bytes": 35168,
+      "sha256": "b066ad1733737cd9331a1bdf6f88f98afc453205d7741773d66c2bf7f2239cb9"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/expected.json",
+      "bytes": 55739,
+      "sha256": "371eb1f57cec3a9447a54010405b2ff25594afd6bfac7950588782fc728e09ca"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/qualify-all.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/qualify-all.stdout",
+      "bytes": 17358,
+      "sha256": "dc6a0d908ebcc5eb3e3557a2d57af9f367b6548119017e256d38160916757707"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/qualify-frequencies.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/qualify-frequencies.stdout",
+      "bytes": 17358,
+      "sha256": "dc6a0d908ebcc5eb3e3557a2d57af9f367b6548119017e256d38160916757707"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/qualify-safe.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/qualify-safe.stdout",
+      "bytes": 17359,
+      "sha256": "26d07ab3c7c394e57454461c0a0ebba8cac96b09471fa5f8f2418d1737d14c44"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/rustc.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-prepared-1016/rustc.stdout",
+      "bytes": 210,
+      "sha256": "a4bb13dccabda9ebf5294b8144f22400733afc06744ab8062bcf43b7254e0c03"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/cache.json",
+      "bytes": 12776,
+      "sha256": "d4091d7cd9230a32c6afee02967ba69cefe789ef7b2ddfef443e025ee0dc3cea"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/coherent-count.json",
+      "bytes": 12777,
+      "sha256": "aaa880f13f96aba8f8a68ee1093c71c7a979108c65aeb36195d225de9a619111"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/dirty.json",
+      "bytes": 12776,
+      "sha256": "3a1796c5036dc774c5496293300ae07583a1980579124dc2bec4a733a75c5f2b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/extra.json",
+      "bytes": 12820,
+      "sha256": "a9ccdaf424b6d82d43560fe327f0e4607ebf07bd9cac90df7e8d14d3c1115423"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/missing.json",
+      "bytes": 12734,
+      "sha256": "91a10f3efe3579e7eaebb2cc83cb88c473fa8df23dc4a7d90e3aa0c4d43a47c0"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/numeric-bool.json",
+      "bytes": 12780,
+      "sha256": "0e6fcb14dedfbce9cbb237ac87c9cf10b5d700c2805a6cc4026c7a6525cc038a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/owner-allocation.json",
+      "bytes": 12777,
+      "sha256": "e88dc31fe17be2891686c65aa97e131dc5db2f29668d4ab564d79b389648f793"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/owner-leak.json",
+      "bytes": 12777,
+      "sha256": "8ab49027fa9e60f2cc322b00c339ac24a8f4d7183f3147efa3c98b4e47a0fd67"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/policy.json",
+      "bytes": 12777,
+      "sha256": "daffa5b7a14126f2f207bfaec42114963cbc2cf7a2483e1484764288bcc7608b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/qualification-count.json",
+      "bytes": 12777,
+      "sha256": "1fa84985faa15f5cff0d606537c860b09720487347e9e50e8df1e6c21dc14996"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/sum.json",
+      "bytes": 12778,
+      "sha256": "3f911043c5795ee3cf046dc7380cddbc040f3fff3bf0b632be037ea63818ad5b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/summary.json",
+      "bytes": 2282,
+      "sha256": "f916df214e9d6576d38c9ba6f3ac1a8ad678365f916822235a3d3ea5f3b19574"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-normal-1016/wrong-backend.json",
+      "bytes": 12776,
+      "sha256": "91df884b766c86af3c60e8fab9c79b2863050cd5b9f79d40502c6162702c0ab6"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/cache.json",
+      "bytes": 12776,
+      "sha256": "d4091d7cd9230a32c6afee02967ba69cefe789ef7b2ddfef443e025ee0dc3cea"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/coherent-count.json",
+      "bytes": 12777,
+      "sha256": "aaa880f13f96aba8f8a68ee1093c71c7a979108c65aeb36195d225de9a619111"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/dirty.json",
+      "bytes": 12776,
+      "sha256": "3a1796c5036dc774c5496293300ae07583a1980579124dc2bec4a733a75c5f2b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/extra.json",
+      "bytes": 12820,
+      "sha256": "a9ccdaf424b6d82d43560fe327f0e4607ebf07bd9cac90df7e8d14d3c1115423"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/missing.json",
+      "bytes": 12734,
+      "sha256": "91a10f3efe3579e7eaebb2cc83cb88c473fa8df23dc4a7d90e3aa0c4d43a47c0"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/numeric-bool.json",
+      "bytes": 12780,
+      "sha256": "0e6fcb14dedfbce9cbb237ac87c9cf10b5d700c2805a6cc4026c7a6525cc038a"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/owner-allocation.json",
+      "bytes": 12777,
+      "sha256": "e88dc31fe17be2891686c65aa97e131dc5db2f29668d4ab564d79b389648f793"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/owner-leak.json",
+      "bytes": 12777,
+      "sha256": "8ab49027fa9e60f2cc322b00c339ac24a8f4d7183f3147efa3c98b4e47a0fd67"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/policy.json",
+      "bytes": 12777,
+      "sha256": "daffa5b7a14126f2f207bfaec42114963cbc2cf7a2483e1484764288bcc7608b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/qualification-count.json",
+      "bytes": 12777,
+      "sha256": "1fa84985faa15f5cff0d606537c860b09720487347e9e50e8df1e6c21dc14996"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/sum.json",
+      "bytes": 12778,
+      "sha256": "3f911043c5795ee3cf046dc7380cddbc040f3fff3bf0b632be037ea63818ad5b"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/summary.json",
+      "bytes": 2281,
+      "sha256": "672fc66a5d569bec87e1072f88deae0a408f84650e8d7e395b5ce800b83bf81d"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-benchmark-controls-optimized-1016/wrong-backend.json",
+      "bytes": 12776,
+      "sha256": "91df884b766c86af3c60e8fab9c79b2863050cd5b9f79d40502c6162702c0ab6"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-harness-initial-1016/ultra-frequency-harness-clippy.log",
+      "bytes": 892,
+      "sha256": "8cb695c93d2f6112e1a20e17d4b68adc3b3214f8baa2d749104ea2a91b1524de"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-harness-initial-1016/ultra_frequency_benchmark.rs",
+      "bytes": 7999,
+      "sha256": "b48d8c4f3e2d483cf067f93ab1cf29febf7dc3ba4ae2bb3dee6bd4cb9af94b62"
+    },
+    {
+      "path": "ultra-frequency-harness-clippy-final.log",
+      "bytes": 130,
+      "sha256": "a5ce5c9614ba872af1ed64f501b2c84a2cd13f717d9508fb204211605562cd9a"
+    },
+    {
+      "path": "ultra-frequency-benchmark-controls-normal.log",
+      "bytes": 68,
+      "sha256": "ef92173a3d56a6ff63dbba758a90c4322deedf28a191c7a697bee575aac2df9a"
+    },
+    {
+      "path": "ultra-frequency-benchmark-controls-optimized.log",
+      "bytes": 67,
+      "sha256": "87d7a8849dd08c299c1ed2622332c77daa025db35558856310a6ac99f82cb753"
+    },
+    {
+      "path": "examples/ultra_frequency_benchmark.rs",
+      "bytes": 7979,
+      "sha256": "192926658294631250d39dd98757b692849305b4e1918756cc2cd7fba18a737d"
+    },
+    {
+      "path": "scripts/benchmark_ultra_frequencies.py",
+      "bytes": 6820,
+      "sha256": "23f3c365e8f7d3ef90dabf72746fe681fb7784acc7bb38b9f3b00314ef930eeb"
+    },
+    {
+      "path": "scripts/check_ultra_frequency_benchmark.py",
+      "bytes": 6095,
+      "sha256": "c67778c4498ee7d44c141fcb90215d0527df3d04029551fd847432a225d43080"
+    }
+  ]
+}
