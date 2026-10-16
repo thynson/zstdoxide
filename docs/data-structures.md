@@ -2331,3 +2331,30 @@ without production frequency code. Fractional cache reconstruction uses wide
 integer division rather than production shifts. The cumulative transport guard
 is independently recomputed from the initial source histogram. Immutable original
 whole-mode bytes and request values remain separately qualified.
+
+### Policy-bound frequency measurement ownership
+
+A focused frequency harness will reuse the immutable, independently checked
+298-case native fixture. Qualification replays every operation and compares all
+377 counts, four sums, four cached bases, phase and all query prices outside
+clocks. Selected deterministic workloads pair policies 0 and 2 for single-symbol
+initialization, full-block cyclic initialization, 8192 symbol updates, disabled
+literal symbol queries, grouped dirty updates and the final permitted fractional
+literal sum. Original operations and source slices are never rewritten.
+
+The measured unit constructs one Global-owned 377-cell table, replays the exact
+schedule, copies its final snapshot and drops the table. Fixture decoding, full
+intermediate comparisons, allocator monitoring and output formatting stay outside
+timing. Queries and final snapshots pass through black_box; elapsed samples measure
+complete lifecycle latency, not compression throughput or isolated unchecked loads.
+An untimed exact borrowed/non-cloning allocator pass verifies one allocation,
+1508 requested bytes, no growth, no leaked allocation and exact owner release.
+Timed final snapshots must equal the previously checked complete state after
+each sample; no checksum alone establishes correctness.
+
+The harness reports policy, case name, primitive operation count and sample count.
+A controller freezes inputs/source/build commands, builds safe, isolated frequency
+unsafe and all-feature executables, completes clock-free qualification and waits
+for unrelated Rust/native jobs before timing. A second independent safe/all run
+provides a repeat. Raw samples, exact toolchain/environment, complete final states
+and owner records are retained; any measured difference is local evidence only.
