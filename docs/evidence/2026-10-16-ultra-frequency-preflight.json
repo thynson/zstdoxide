@@ -1,0 +1,117 @@
+{
+  "archive": "2026-10-16-ultra-frequency-preflight.tar.gz",
+  "archive_bytes": 169888,
+  "archive_sha256": "3e7038c7a46ea2609748ebb0998eb204185ea6be161b6ecc2bf57a50a84fe6d1",
+  "files": [
+    {
+      "path": "preflight-ultra-frequency.py",
+      "bytes": 1698,
+      "sha256": "f2e9282de890718209c2c6a18fabdb10bb395e1daead86b438991c20db6b126e"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/evidence.json",
+      "bytes": 12117,
+      "sha256": "fb5c10143476be296940adf5f2b958d6bb7dbd2182b01bae15a2d11c83eea291"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/normal-compile-25-syntax.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/normal-compile-25-syntax.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/normal-dependencies.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/normal-dependencies.stdout",
+      "bytes": 36074,
+      "sha256": "6190a45971b2e9899783257fabeb1536cde0f9c269ab8771df2e4cb4719107a1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/normal-predefines.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/normal-predefines.stdout",
+      "bytes": 625212,
+      "sha256": "0a547bfb2dc65752b329015a350081cb01eb46fbb2ef2b1b5cb32009782e45aa"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/sanitized-compile-25-syntax.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/sanitized-compile-25-syntax.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/sanitized-dependencies.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/sanitized-dependencies.stdout",
+      "bytes": 36074,
+      "sha256": "6190a45971b2e9899783257fabeb1536cde0f9c269ab8771df2e4cb4719107a1"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/sanitized-predefines.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-frequency-preflight-1016/sanitized-predefines.stdout",
+      "bytes": 622113,
+      "sha256": "0132d5b5620b0b0b5e9c13be8e2fcc5866320f4d70fa05fcc4438a8ba0c612fb"
+    },
+    {
+      "path": "ultra-frequency-plan-normal.log",
+      "bytes": 2144,
+      "sha256": "ea86620157f3d1c7f81271a577887e0d7f1367863942705cd81b0396912f2d1d"
+    },
+    {
+      "path": "ultra-frequency-plan-optimized.log",
+      "bytes": 2143,
+      "sha256": "c91558fb7df43d2b678eab3255400ad21fc2d6938b805f93201553107e6a09b0"
+    },
+    {
+      "path": "ultra_frequency.c",
+      "bytes": 9520,
+      "sha256": "3e8bc537351eebcd462f5366b351d279b837b7013f5e5315d85d9aae81664338"
+    },
+    {
+      "path": "ultra_frequency_capture_plan.py",
+      "bytes": 6644,
+      "sha256": "fefe4414f8b03cea1c03f63002890af7d0f77653710024ee321f7042dcbf5113"
+    },
+    {
+      "path": "capture_ultra_frequencies.py",
+      "bytes": 7869,
+      "sha256": "99bfc13d4751aeeadc9148a1b153b5cff1f7e387600f98944a8546aa4cfec896"
+    },
+    {
+      "path": "check_ultra_frequency_capture.py",
+      "bytes": 8542,
+      "sha256": "4e38b1127d78714bf87f99db2f3580f947f80ed58273b8f07bb0718ec70c1a03"
+    },
+    {
+      "path": "check_ultra_frequency_capture_plan.py",
+      "bytes": 1969,
+      "sha256": "8b7bd04f747b965322efceffc5dec683469d3c02ac7eebad84b8f7d9b16598e8"
+    },
+    {
+      "path": "reference-ultra-frequency-adapter-review.md",
+      "bytes": 2119,
+      "sha256": "dbd4fa3a31fb9e0a8d5e4449aa74b25197f320504d6de7e337816f391733ee06"
+    }
+  ]
+}

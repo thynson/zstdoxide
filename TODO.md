@@ -86,7 +86,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Specify immutable frequency policy, fractional publication bounds and parser composition rejection before implementation.
 - [x] Freeze the policy-tagged frequency transport/model and reconstruct every original whole-mode C fixture before execution.
 - [x] Freeze source-only frequency lifecycle recipes and exact fractional-boundary negative classifications.
-- [ ] Review and preflight the complete policy-tagged frequency observer and native command inventory.
+- [x] Review and preflight the complete policy-tagged frequency observer and native command inventory.
 - [ ] Capture and independently audit complete frequency lifecycles and forged-evidence controls.
 - [ ] Project the audited policy-tagged frequency fixture and qualify its independent reader.
 - [ ] Implement policy-bound frequency initialization, scaling, updates and caches without changing Optimal baselines.

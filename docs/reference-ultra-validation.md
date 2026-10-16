@@ -121,3 +121,14 @@ Additional schedules reach literal sums8388604,8388606and8388608; the last is
 rejected only for policy2. Predicted post-rescale sums differ at the upper power
 boundary (8447versus4351), so full observations must retain these exact cases.
 These are independent model expectations until the new native capture executes.
+
+## Frequency native preflight
+
+The exact successor plan contains702commands and320request files per build:
+298positive schedules,2fractional-boundary wrapper rejections, and20malformed
+transport controls. Both normal and optimized Python reject10changed plans;
+all6normal/instrumented syntax/dependency/predefine checks pass. Every negative
+command pins its precise diagnostic, excluding internal guard failures from
+acceptable input rejections. Source snapshots and logs are retained in
+`evidence/2026-10-16-ultra-frequency-preflight.tar.gz`. No frequency oracle
+execution has occurred at this checkpoint.
