@@ -2427,3 +2427,30 @@ state. The following literal event must contain exactly the accepted next-cell
 write and repeat publication, or no path write for a rejected alternative, with
 the corresponding unchanged or extended frontier. These checks are independent
 of the production path parser, which remains unimplemented for Ultra.
+
+### Private coupled-policy path implementation
+
+The parser continues to own exactly one frequency owner, path owner and candidate
+owner, each retaining its caller allocator. An explicit private policy constructor
+checks the supplied immutable frequency policy before resetting any part. Existing
+`from_parts` keeps its Optimal contract. Ultra construction is bounded to the
+qualified 9..8192-byte scripted envelope; ordinary fresh/retained search and token
+planning entry points reject Ultra until their separate integration is qualified.
+Policy is read from the frequency owner, avoiding a second potentially inconsistent
+policy field. Reset retains that policy and all allocations.
+
+Forward relaxation saves a copied `PathCell` before literal replacement. Ultra
+calculates the signed LL(1)-LL(0) difference and both alternative prices using
+checked `PathPrice` arithmetic. The observer receives the twelve copied signed
+values before the strict comparison. An accepted candidate resolves repeats from
+a checked predecessor index and writes the saved match plus one literal into the
+next checked path cell, extending the frontier when needed. The half-bit query
+skip and first-rejected-shorter-match break apply only to Optimal. Reconstruction,
+output validation, poisoning, owner release and phase contracts stay shared.
+
+No new allocation or unsafe operation is needed: the price, saved cell and event
+are plain copied values, and existing independently selectable frequency/path/
+candidate access backends implement the same storage contract. Verification
+compares all 58 native cases, complete paths/frequencies, alternatives, callbacks,
+sequences and final repeats. Focused mismatch, bounds, callback-failure/reset and
+exact borrowed-owner checks precede the feature/platform qualification item.
