@@ -488,3 +488,22 @@ every strict frame prefix plus altered final payload is rejected or cannot match
 the original source. Both focused strict Clippy builds, formatting and true no_std
 library compilation pass. Projection is byte-identical in normal and optimized
 Python. These checks satisfy the fresh startup gate only, not retained publication.
+
+
+## Private ordinary fresh composition
+
+The private fresh entry retains the previous direct-query repeat guards and adds
+only the separately checked captured startup domain. All 1,406 captured queries
+match candidate lists and complete search maps/frontiers. The paired parser then
+matches all 4,409 path/frequency/query events and 22 sequences without supplying
+captured candidates to Rust search. Source identity, parameter and used-search
+rejections precede parser mutation. Observer failures preserve external output and
+require reset; moved non-clone failure injection covers seven independent owners,
+and borrowed owners prove no allocations during parse/reset.
+
+Six configurations (safe, search leaves together, frequencies, paths, all, and
+release/all) each pass 52 focused Optimal tests, 312 passes total. Formatting,
+strict all-test Clippy and true no_std compilation pass. Initial Clippy diagnostics
+for duplicate fixture module loading and a complex test type are retained; shared
+crate fixture modules and a named test alias resolved them. This fresh-only entry
+does not commit retained frame state or expose public strategy 7.

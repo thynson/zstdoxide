@@ -1,0 +1,131 @@
+{
+  "status": "passed",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_"
+      ],
+      "exit": 0,
+      "log": "0.log",
+      "sha256": "02c08f6e6f64cf7fe00f2687d6e46487acf647184a6afad351b1ad37d62df788"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_",
+        "--features",
+        "unsafe-reference-tree,unsafe-optimal-short-key,unsafe-optimal-matches"
+      ],
+      "exit": 0,
+      "log": "1.log",
+      "sha256": "ed01267fa41dbd63a5c8e32c3cc39c3ed11d30426b6c9ef053c270e0e14dc79f"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_",
+        "--features",
+        "unsafe-optimal-frequencies"
+      ],
+      "exit": 0,
+      "log": "2.log",
+      "sha256": "ea7e9be6b7e4cc5ff870290c9dd7302ba3326678590e6a2907a52832f476950b"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_",
+        "--features",
+        "unsafe-optimal-paths"
+      ],
+      "exit": 0,
+      "log": "3.log",
+      "sha256": "45eed6387025392aa5f38109a786f18982033b637dff4304447d93674fc4fbd0"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_",
+        "--all-features"
+      ],
+      "exit": 0,
+      "log": "4.log",
+      "sha256": "091deb8e220e722c1179432e681ab969fffdad1f57111cd7a4d22d29f08eb8d1"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--lib",
+        "optimal_",
+        "--release",
+        "--all-features"
+      ],
+      "exit": 0,
+      "log": "5.log",
+      "sha256": "3d26b80ed4d668e741590de590901f561dfe76cb8703d319cf06f032d87c260d"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "6.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--tests",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "7.log",
+      "sha256": "c92508a29848820f033cd2ea015c85dde0953c88b07cc967ce34b7c08f610549"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "log": "8.log",
+      "sha256": "ba919761741ee3d2dafa288873138d7c80279691ee509f8253ba3696d5f85f1a"
+    }
+  ],
+  "source": {
+    "src/lib.rs": "557e63d81d5afdcb967c9fb87a9bd7f18205162a6b2f4835ec1a9c0f8aa0c639",
+    "src/optimal_parse.rs": "6bfe134b4cfa184c555eb4025f5363f80c448ffc02c058d3f7ea013d94841588",
+    "src/optimal_search.rs": "35818f8da72ce71db3db843fef44b36ffc207f757ac86620da1be0300d8f1923",
+    "src/optimal_search_layout.rs": "0d775f3209e410a79aa25ca68b1dc2be28cff031511a8136026b01a7f9500507",
+    "tests/support/optimal_fresh_parse.rs": "991d1705990ee10af2c229ea9fcd4ff58ecf48d0a6558c66f8d46078b4d5a391",
+    "tests/support/optimal_startup_fixture.rs": "d918eb47737ec556739322ab14c52494d929bddbdd7cd3f5e002fc1679789c34",
+    "tests/reference_optimal_startup_fixture.rs": "f97ab1c6f3e071b99084c880c7a491430886847145db7985c9ebce888eddf0ff"
+  },
+  "archive": {
+    "path": "docs/evidence/2026-10-16-optimal-fresh-parse.tar.gz",
+    "bytes": 4714,
+    "sha256": "ccbc5d0ddb024138e89eb856159d971d9d08930bef9102366d95a3329cb382cf"
+  }
+}

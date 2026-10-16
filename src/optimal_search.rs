@@ -60,6 +60,30 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             failed: false,
         })
     }
+    /// Pair an untouched search with the exact immutable source used by a parser.
+    /// Parameter rejection does not clear or otherwise modify existing owners.
+    pub(crate) fn validate_fresh_start(
+        &self,
+        source: &[u8],
+        minimum: usize,
+        target: usize,
+    ) -> Result<()> {
+        self.layout.validate_fresh(source.len())?;
+        if !self.source.is_same_source(source)
+            || minimum != if self.layout.minimum() == 3 { 3 } else { 4 }
+            || target != self.layout.sufficient()
+        {
+            return Err(Error::InvalidParameter);
+        }
+        if self.failed
+            || self.frontier != 0
+            || self.short_frontier != 0
+            || !self.matches.as_slice()?.is_empty()
+        {
+            return Err(Error::InvalidState);
+        }
+        Ok(())
+    }
     pub(crate) fn reset(&mut self) {
         self.tree.reset();
         self.short.reset();
@@ -533,11 +557,9 @@ mod tests {
 }
 
 #[cfg(test)]
-#[path = "../tests/support/optimal_startup_fixture.rs"]
-mod startup_fixture;
-#[cfg(test)]
 mod fresh_tests {
     use super::*;
+    use crate::optimal_startup_fixture as startup_fixture;
     use alloc::{vec, vec::Vec};
     fn state(source: &[u8], layout: OptimalSearchLayout) -> OptimalSearch<'_> {
         OptimalSearch::from_parts(

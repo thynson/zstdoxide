@@ -1,8 +1,7 @@
 //! Checked projection of ordinary fresh Optimal observations from pinned zstd 1.5.7.
 //! Candidate lists in the nested path format are captured outputs, never C inputs.
 #![allow(dead_code)]
-#[path = "optimal_path_fixture.rs"]
-pub mod path;
+use crate::optimal_path_fixture as path;
 
 pub const PACK: &[u8] = include_bytes!("../fixtures/reference-optimal-startup/cases.bin");
 #[derive(Debug)]

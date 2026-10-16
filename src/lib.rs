@@ -124,6 +124,9 @@ mod optimal_price;
 mod optimal_search;
 mod optimal_search_layout;
 mod optimal_short_key;
+#[cfg(test)]
+#[path = "../tests/support/optimal_startup_fixture.rs"]
+mod optimal_startup_fixture;
 mod parameters;
 mod reference_chain;
 mod reference_encode;

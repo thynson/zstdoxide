@@ -2,6 +2,8 @@
 #![forbid(unsafe_code)]
 #[path = "support/optimal_startup_fixture.rs"]
 mod fixture;
+#[path = "support/optimal_path_fixture.rs"]
+mod optimal_path_fixture;
 
 #[test]
 fn complete_c_frames_decode_to_every_original_source() {

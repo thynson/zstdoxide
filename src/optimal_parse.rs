@@ -1,4 +1,4 @@
-//! Private fresh optLevel0 path decisions with a checked scripted-provider boundary.
+//! Private fresh optLevel0 path decisions with checked scripted and ordinary providers.
 //! Upstream counterpart: ZSTD_compressBlock_opt_generic, zstd v1.5.7.
 #![forbid(unsafe_code)]
 #![allow(
@@ -11,6 +11,7 @@ use crate::optimal_path_layout::{
     BLOCK_LIMIT, PATH_HORIZON, PathCell, PathIndex, PathPhase, PathPrice, ReverseCursor,
 };
 use crate::optimal_paths::OptimalPaths;
+use crate::optimal_search::OptimalSearch;
 use crate::optimal_search_layout::{OptimalMatch, OptimalQuery};
 use crate::{Error, Result};
 use core::alloc::Allocator;
@@ -21,6 +22,24 @@ pub(crate) trait PathProvider {
         query: OptimalQuery,
         matches: &mut OptimalMatches<A>,
     ) -> Result<()>;
+}
+/// The ordinary provider can only be constructed by the paired fresh entry.
+struct FreshProvider<'s, 'a, H: Allocator, N: Allocator, S: Allocator, B: Allocator>(
+    &'s mut OptimalSearch<'a, H, N, S, B>,
+);
+impl<H: Allocator, N: Allocator, S: Allocator, B: Allocator> PathProvider
+    for FreshProvider<'_, '_, H, N, S, B>
+{
+    fn query<A: Allocator>(
+        &mut self,
+        query: OptimalQuery,
+        matches: &mut OptimalMatches<A>,
+    ) -> Result<()> {
+        for &candidate in self.0.query_fresh(query)? {
+            matches.push(candidate)?;
+        }
+        Ok(())
+    }
 }
 pub(crate) trait PathObserver {
     fn event<P: Allocator, F: Allocator>(
@@ -165,6 +184,23 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         self.last_stretch = PathCell::ZERO;
         self.status = Status::Ready;
         Ok(())
+    }
+    /// Parse one bounded ordinary fresh block with independently owned search.
+    /// A retry requires resetting both this parser and the search. Observer
+    /// effects are caller-owned and cannot be rolled back after failure.
+    pub(crate) fn parse_fresh<
+        H: Allocator,
+        N: Allocator,
+        S: Allocator,
+        B: Allocator,
+        O: PathObserver,
+    >(
+        &mut self,
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+        observer: &mut O,
+    ) -> Result<PathResult> {
+        search.validate_fresh_start(self.source, self.minimum, self.target)?;
+        self.parse(&mut FreshProvider(search), observer)
     }
     pub(crate) fn parse<Q: PathProvider, O: PathObserver>(
         &mut self,
@@ -990,3 +1026,7 @@ mod tests {
         assert!(resolved(4, [0, 4, 8], false).is_err());
     }
 }
+
+#[cfg(test)]
+#[path = "../tests/support/optimal_fresh_parse.rs"]
+mod fresh_tests;

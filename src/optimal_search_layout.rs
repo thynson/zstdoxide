@@ -134,6 +134,9 @@ impl<'a> OptimalSource<'a> {
         }
         Ok(Self { bytes })
     }
+    pub(crate) fn is_same_source(self, source: &[u8]) -> bool {
+        core::ptr::eq(self.bytes, source)
+    }
     pub(crate) const fn len(self) -> usize {
         self.bytes.len()
     }
