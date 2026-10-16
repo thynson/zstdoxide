@@ -2273,3 +2273,41 @@ length/offset and signed-result domains independently of production price code.
 It allocates no table or codec state. Iterator items remain checked copied rows;
 no unsafe indexing or lifetime extension is appropriate. Malformed reader tests
 cover truncation, appended data, count bounds and invalid query fields.
+
+### Policy-bound frequency lifecycle successor
+
+The next frequency capture adds an explicit copied policy word to the existing
+bounded no-dictionary price schedule. Original147requests retain every byte,
+operation and source; they are independently wrapped for modes0/2. Whole-mode
+model observations must reconstruct the entire immutable original C fixture
+before the successor observer runs. A fractional wrapper that exceeds its local
+weight bound is an explicit negative case, not a rewritten predecessor request.
+
+For the native successor's conservative preflight bound, compute the first
+literal histogram's scaled mass directly from the specified first source span.
+Enabled fractional literals require `initial_mass + 2*total_updated_literals <=
+8388606` across the whole schedule, even if rescaling later reduces that mass.
+This is a documented observation-envelope restriction, not an upstream format
+limit. Sequence update budgets already keep their sums far below the fractional
+bound. Exact-boundary source-only schedules reach the final allowed mass and
+reject the next increment before any C call. Full377-cell tables, sums, cached
+prices and query results remain observed after every scheduled operation;
+batched updates still invoke C once per primitive update.
+
+Production frequency owners gain an immutable PricePolicy, and snapshots include
+that copied discriminator. The existing constructor selects Optimal. An explicit
+private policy constructor keeps the same single377-cell allocation and exact
+allocator identity. Reset preserves policy and allocator while clearing counts,
+phase and caches. Cached zeros while uninitialized are not valid query prices.
+Updates validate fractional next sums before publication; rejection leaves counts,
+caches, dirty flags and policy unchanged. Snapshot publication rejects a policy
+mismatch before any write. Refresh computes all active policy-bound caches before
+publishing them, and disabled literal caches remain zero.
+
+Until Ultra's path relaxation is implemented and independently qualified, the
+existing Optimal parser's owner-consuming constructor rejects a frequency owner
+whose policy is Ultra before resetting frequencies, paths or matches. This avoids
+accidentally combining fractional prices with optLevel0 search/path shortcuts.
+There is still no public strategy8 admission. The existing isolated frequency
+unsafe feature changes only checked cell access; policy and counter arithmetic
+remain common safe value operations.
