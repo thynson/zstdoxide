@@ -1,4 +1,4 @@
-//! Checked optLevel=0 scalar prices corresponding to zstd_opt.c v1.5.7.
+//! Checked coupled optLevel=0/2 scalar prices from zstd_opt.c v1.5.7.
 //!
 //! This preparatory module owns no frequency table or allocation. Its focused
 //! harness qualifies captured queries before retained-state integration.
@@ -8,6 +8,43 @@ pub(crate) const BLOCK_LIMIT: u32 = 131_072;
 const SCALE: u32 = 256;
 const UNREACHABLE_PRICE: u32 = 1 << 30;
 
+/// Copied whole-parser policy; scalar qualification does not admit Ultra frames.
+/// This value owns no memory and has no alternate unsafe representation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(crate) enum PricePolicy {
+    Optimal,
+    #[allow(
+        dead_code,
+        reason = "Ultra scalar qualification precedes parser admission"
+    )]
+    Ultra,
+}
+
+impl PricePolicy {
+    pub(crate) fn weight(self, statistic: u32) -> Result<u32, PriceError> {
+        match self {
+            Self::Optimal => bit_weight(statistic),
+            Self::Ultra => fractional_weight(statistic),
+        }
+    }
+
+    fn valid_base(self, base: u32) -> bool {
+        match self {
+            Self::Optimal => base <= 31 * SCALE && base.is_multiple_of(SCALE),
+            Self::Ultra => {
+                if !(SCALE..=6143).contains(&base) {
+                    return false;
+                }
+                // For exponent k < 8, integer statistics quantize the fractional
+                // remainder in steps of 2^(8-k). Larger exponents fill every step.
+                let exponent = base / SCALE - 1;
+                let step = 1 << 8u32.saturating_sub(exponent);
+                (base % SCALE).is_multiple_of(step)
+            }
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) enum PriceError {
     InvalidLength,
@@ -16,10 +53,11 @@ pub(crate) enum PriceError {
     PriceOverflow,
 }
 
-/// A copied scalar pair, with finite whole-bit weights and a nonnegative cost.
+/// Copied policy and finite weights, with a nonnegative symbol cost.
 /// No owner, borrowed table or alternate unchecked representation is needed.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) struct SymbolPrice {
+    policy: PricePolicy,
     base: u32,
     frequency: u32,
 }
@@ -28,11 +66,20 @@ impl SymbolPrice {
     /// The retained model supplies an explicitly refreshed cached base price.
     /// Validate the consumed frequency without changing any model statistics.
     pub(crate) fn new(base_price: u32, frequency: u32) -> Result<Self, PriceError> {
-        let frequency = bit_weight(frequency)?;
-        if base_price > 31 * SCALE || !base_price.is_multiple_of(SCALE) || frequency > base_price {
+        Self::new_with_policy(PricePolicy::Optimal, base_price, frequency)
+    }
+
+    pub(crate) fn new_with_policy(
+        policy: PricePolicy,
+        base_price: u32,
+        frequency: u32,
+    ) -> Result<Self, PriceError> {
+        let frequency = policy.weight(frequency)?;
+        if !policy.valid_base(base_price) || frequency > base_price {
             return Err(PriceError::InvalidStatistics);
         }
         Ok(Self {
+            policy,
             base: base_price,
             frequency,
         })
@@ -55,6 +102,18 @@ impl SymbolPrice {
 pub(crate) fn bit_weight(stat: u32) -> Result<u32, PriceError> {
     let adjusted = stat.checked_add(1).ok_or(PriceError::InvalidStatistics)?;
     Ok(adjusted.ilog2() * SCALE)
+}
+
+/// `ZSTD_fracWeight`, including the pinned debug contract before shifting.
+pub(crate) fn fractional_weight(stat: u32) -> Result<u32, PriceError> {
+    // highbit(stat + 1) + 8 < 31 permits at most exponent 22. Checking
+    // this stricter bound also proves increment and multiplication fit u32.
+    if stat > 8_388_606 {
+        return Err(PriceError::InvalidStatistics);
+    }
+    let adjusted = stat + 1;
+    let exponent = adjusted.ilog2();
+    Ok(exponent * SCALE + ((adjusted << 8) >> exponent))
 }
 
 /// A finite cost never reaches the upstream unreachable-path sentinel.
@@ -119,13 +178,23 @@ pub(crate) fn dynamic_literals_cost(
     base_price: u32,
     frequencies: &[u32; 256],
 ) -> Result<u32, PriceError> {
+    dynamic_literals_cost_with_policy(PricePolicy::Optimal, literals, base_price, frequencies)
+}
+
+pub(crate) fn dynamic_literals_cost_with_policy(
+    policy: PricePolicy,
+    literals: &[u8],
+    base_price: u32,
+    frequencies: &[u32; 256],
+) -> Result<u32, PriceError> {
     if literals.len() > BLOCK_LIMIT as usize {
         return Err(PriceError::InvalidLength);
     }
     let mut cost = 0;
     for &literal in literals {
         // A byte converts to an index within the typed 256-entry array.
-        let price = SymbolPrice::new(base_price, frequencies[usize::from(literal)])?;
+        let price =
+            SymbolPrice::new_with_policy(policy, base_price, frequencies[usize::from(literal)])?;
         cost = add_price(cost, price.literal_cost()?)?;
     }
     Ok(cost)
@@ -136,10 +205,21 @@ pub(crate) fn literal_length_price(
     length: u32,
     dynamic_symbol: Option<SymbolPrice>,
 ) -> Result<u32, PriceError> {
+    literal_length_price_with_policy(PricePolicy::Optimal, length, dynamic_symbol)
+}
+
+pub(crate) fn literal_length_price_with_policy(
+    policy: PricePolicy,
+    length: u32,
+    dynamic_symbol: Option<SymbolPrice>,
+) -> Result<u32, PriceError> {
     let code = literal_length_code(length)?;
     match dynamic_symbol {
-        None => bit_weight(length),
+        None => policy.weight(length),
         Some(symbol) => {
+            if symbol.policy != policy {
+                return Err(PriceError::InvalidStatistics);
+            }
             let extra = u32::from(*LL_BITS.get(code).ok_or(PriceError::InvalidLength)?) * SCALE;
             let price = add_price(extra, symbol.cost())?;
             add_price(price, if length == BLOCK_LIMIT { SCALE } else { 0 })
@@ -154,18 +234,39 @@ pub(crate) fn match_price(
     length: u32,
     dynamic_symbols: Option<(SymbolPrice, SymbolPrice)>,
 ) -> Result<u32, PriceError> {
+    match_price_with_policy(
+        PricePolicy::Optimal,
+        encoded_offset,
+        length,
+        dynamic_symbols,
+    )
+}
+
+pub(crate) fn match_price_with_policy(
+    policy: PricePolicy,
+    encoded_offset: u32,
+    length: u32,
+    dynamic_symbols: Option<(SymbolPrice, SymbolPrice)>,
+) -> Result<u32, PriceError> {
     let offset = offset_code(encoded_offset)?;
     let code = match_length_code(length)?;
     let offset_bits = u32::try_from(offset).map_err(|_| PriceError::InvalidOffset)?;
     match dynamic_symbols {
-        None => add_price(bit_weight(length - 3)?, (16 + offset_bits) * SCALE),
+        None => add_price(policy.weight(length - 3)?, (16 + offset_bits) * SCALE),
         Some((off_symbol, ml_symbol)) => {
+            if off_symbol.policy != policy || ml_symbol.policy != policy {
+                return Err(PriceError::InvalidStatistics);
+            }
             let price = add_price(offset_bits * SCALE, off_symbol.cost())?;
-            let penalty = offset_bits.saturating_sub(19) * 2 * SCALE;
+            let penalty = if policy == PricePolicy::Optimal {
+                offset_bits.saturating_sub(19) * 2 * SCALE
+            } else {
+                0
+            };
             let price = add_price(price, penalty)?;
             let extra = u32::from(*ML_BITS.get(code).ok_or(PriceError::InvalidLength)?) * SCALE;
             let price = add_price(price, add_price(extra, ml_symbol.cost())?)?;
-            // The pinned whole-bit heuristic uses integer division: 256 / 5 = 51.
+            // Both coupled policies retain the integer heuristic: 256 / 5 = 51.
             add_price(price, SCALE / 5)
         }
     }

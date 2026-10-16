@@ -132,3 +132,26 @@ command pins its precise diagnostic, excluding internal guard failures from
 acceptable input rejections. Source snapshots and logs are retained in
 `evidence/2026-10-16-ultra-frequency-preflight.tar.gz`. No frequency oracle
 execution has occurred at this checkpoint.
+
+## Checked scalar implementation
+
+The copied policy now selects checked whole or fractional weights, validates
+representable cached bases and prevents mixed-policy symbol prices. All 2470
+native observations match. The fractional domain is also exhaustively checked
+for all 8,388,607 permitted raw statistics against independent integer division.
+Original whole-mode scalar and public Optimal fixtures remain unchanged.
+
+Safe, each of 19 isolated unsafe features, and all features pass the selected
+scalar/public tests, 86 Optimal library regressions, and true no_std compilation.
+Release/all tests, strict safe/all Clippy and formatting pass: 67 successful
+commands and 2136 passing test executions. One earlier compiler invocation ran
+out of disk space before tests; its complete failed log is retained. Removing
+obsolete build caches and disabling incremental compilation allowed only the
+unfinished commands to resume against identical source hashes.
+
+Sixteen selected strict-provenance Miri executions pass on i686 and big-endian
+s390x, in safe/all configurations. Thumbv6m no_std checks and private scalar caller
+codegen pass in safe/all configurations; these are not native foreign firmware
+runs. Complete source-bound logs and reconciliation are retained in
+`evidence/2026-10-16-ultra-scalar-implementation.tar.gz`. This completes scalar
+qualification only; Ultra frequency ownership and path integration remain open.

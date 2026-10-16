@@ -1,0 +1,517 @@
+{
+  "archive": "2026-10-16-ultra-scalar-implementation.tar.gz",
+  "archive_bytes": 62083,
+  "archive_sha256": "44c6ed0132aca60fbef7a2538fce5a4981a6cb14ec2698e784d5debbcfdcf94f",
+  "files": [
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/evidence.json",
+      "bytes": 35689,
+      "sha256": "ed8aba3955587cd34a232bdfb198db02d784336f33b8f8bdb9e4afe66a95c8bc"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/safe-nostd.log",
+      "bytes": 142,
+      "sha256": "78b60dfcb52e9ed49969703248d496a98327c7da4ccbf6ddbd886c26be9e2831"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/safe-optimal.log",
+      "bytes": 8919,
+      "sha256": "6d95a8e4ca2409e51e47c711b47f690b94e8fa4035ae2ac6867600cd59f37f67"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/safe-scalars.log",
+      "bytes": 2342,
+      "sha256": "967c72c4f00282cc67e521d1da4bf8f990d4d6a7a1d0b43fa16398c2cf67db2d"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-bitstream-nostd.log",
+      "bytes": 142,
+      "sha256": "f270c4ceb39df67c9af6b6951e15eea8b466c0eab5f968b0e4a3b3c00ed30d99"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-bitstream-optimal.log",
+      "bytes": 8919,
+      "sha256": "1757864e512b078d9793a5c1371cf48d4a97d8baa6d535456fc691fc1e0ee26c"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-bitstream-scalars.log",
+      "bytes": 2342,
+      "sha256": "d8e0a95384a551f504ee9243b3a95db094fbc162dbd83e58915defd39c41e329"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-byte-cursor-nostd.log",
+      "bytes": 142,
+      "sha256": "23404fece940ec115df1fdf737b5d423f8f8035824c5c67890ba160e70e5dafb"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-byte-cursor-optimal.log",
+      "bytes": 8919,
+      "sha256": "b895eea504d1e4c0b8f08dca210321bc7a465da0c1e2d3d0f9bd8bbe3728e7e4"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-byte-cursor-scalars.log",
+      "bytes": 2342,
+      "sha256": "7928ecdf31dd7fa59206b76231d12b441b563d017d9e6b6b92f6c0a14f8ce1fe"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-dictionary-nostd.log",
+      "bytes": 142,
+      "sha256": "02b76ee4eede2a08be428a30ea7cd0f1042a4c1ee2d70a2dbdb556e97149ac9d"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-dictionary-optimal.log",
+      "bytes": 8919,
+      "sha256": "74b80de958c67e442147a381b1de4376cceef3d1e02031be31cb47761632aa29"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-dictionary-scalars.log",
+      "bytes": 2342,
+      "sha256": "6a39caf755319ca37ce8375a46c81c8cf89d93c1824db2cd7582bb8b2f23a7a0"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-fse-encoder-nostd.log",
+      "bytes": 142,
+      "sha256": "ea3a8214acc346a7682527b5a58633226471aa514ad20af6ca7d0ec3696bfcf2"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-fse-encoder-optimal.log",
+      "bytes": 8919,
+      "sha256": "b70b336df17ad4cde48a439d5897b2fd739fa365a2f04219f8e53ca49997cf3e"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-fse-encoder-scalars.log",
+      "bytes": 2342,
+      "sha256": "32e1835bfb9741f451fca3ef7815d2bc42904d8543e3ec624a5675a9a25247e7"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-fse-nostd.log",
+      "bytes": 142,
+      "sha256": "3691e4779b6fe572253597a8065d3f1a883e41ca24117be612149987ffa189d4"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-fse-optimal.log",
+      "bytes": 8919,
+      "sha256": "8a32dea5562957002fdbbc3b596497d154808a1b4495024eb9f4a7a76c6841a0"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-fse-scalars.log",
+      "bytes": 2342,
+      "sha256": "6b420fde70005662ad782edf7b75b81aabe8ebfffe8fe56afbb5562d79335f3c"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-history-nostd.log",
+      "bytes": 142,
+      "sha256": "813a9dd69a5c4094d178b806271ed65f5eb8a808fc7f6a1359377c1dac46fa60"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-history-optimal.log",
+      "bytes": 8919,
+      "sha256": "d7e19ce55eea87c0c70c9b44a8c2d8abe65b3cb224f51a871ec01c300667d272"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-history-scalars.log",
+      "bytes": 2342,
+      "sha256": "2629eaa2580403c21c155c3db21ff132f07273721c7fc234c7779fb11cd6d41e"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-huffman-codebook-nostd.log",
+      "bytes": 142,
+      "sha256": "c676c722765c47195e062a06f0d4dfa93a5fb7cf2c9e7baf7351102c257720d9"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-huffman-codebook-optimal.log",
+      "bytes": 8919,
+      "sha256": "f8d3e5048253d3b7588cad7c27e8689ef8f8ad224a4b8f9b2c37ae5ca1b44b3b"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-huffman-codebook-scalars.log",
+      "bytes": 2342,
+      "sha256": "6ba26a093814235d0c8fd19a66e2c6ca9930d03e1e2d5c50e64e785a13020ccd"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-huffman-nostd.log",
+      "bytes": 142,
+      "sha256": "502e98fc0fe5e52244893d25aca721092398148d63d85950b0fa678de113566d"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-huffman-optimal.log",
+      "bytes": 8919,
+      "sha256": "8d5bc4915e20d529804d03bb138f827c36c7ceb2b749502c40f090f71f4e19e2"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-huffman-scalars.log",
+      "bytes": 2342,
+      "sha256": "2ea6b86ef4c1537946fbbe853ab53ea81b5ac4e829a8d603ae3f14bd2f07cdad"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-match-chain-nostd.log",
+      "bytes": 142,
+      "sha256": "71bee95a4eab7b681da90c122fb4992f6fd25b6bae96325624608ee62d775b2c"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-match-chain-optimal.log",
+      "bytes": 8919,
+      "sha256": "b158c31627ac9b052e3ea3f3d1da8a38bc5b243d02e37db5252517bb9bb49d94"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-match-chain-scalars.log",
+      "bytes": 2342,
+      "sha256": "88ffdcf46a3e5de089c2a7359411ebee2220ebea67a127a11d12397a80cce01d"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-match-table-nostd.log",
+      "bytes": 142,
+      "sha256": "88dbc51b7e1428155a9176f8bf297398646dfac49c4634718a6e69338c239406"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-match-table-optimal.log",
+      "bytes": 8919,
+      "sha256": "4e99542211cee5b4d62da1518df97283c3a0435b5e10089a4de99ee4f4d5b63f"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-match-table-scalars.log",
+      "bytes": 2342,
+      "sha256": "c6d1a9fc2e7c67adde47480d49c8f6fd13c52fac665fdad2ac86de8605f47a8e"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-optimal-frequencies-optimal.log",
+      "bytes": 353,
+      "sha256": "86fe27f943cc5d19aae48a6cf3237900ffe2bd4e7c07322e47652330d5da89a3"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-1016/unsafe-optimal-frequencies-scalars.log",
+      "bytes": 2342,
+      "sha256": "87892875a0d4acb5e57da8af4266d4ba3a253abc21eff9464f24bddae82477c7"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/all-nostd.log",
+      "bytes": 142,
+      "sha256": "5801d0831a70a41e602d022fae6ee95635f9e149a2c87952451f6339027b7521"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/all-optimal.log",
+      "bytes": 8919,
+      "sha256": "10ee2e70f3ced58c648ff269f950acb0f687d5543536a7e2b54c5afbd41419b9"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/all-scalars.log",
+      "bytes": 2342,
+      "sha256": "2fccd015263f5bfcd8ea4920459ff8ca3695dd009ee4db384a0bfe0a4e8dc444"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/clippy-all.log",
+      "bytes": 143,
+      "sha256": "5aaa26e01ce2f268a719a6fe89109fbe464ec64d4df50ad257210342a6a83c12"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/clippy-safe.log",
+      "bytes": 251,
+      "sha256": "fdf00336d99a1c47af1e05e3b7e537415587b9b1950139e8c3433368d2d2a8f0"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/evidence.json",
+      "bytes": 36454,
+      "sha256": "a2ceee06a7b01cc2ec24a77f9a3f85bc753cd1467b0049918ef6e624815e924f"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/release-all.log",
+      "bytes": 2339,
+      "sha256": "050a9bcc7c6c92c904edb75ac2994e4a4832b2244fde1215581b77d46c8a14b1"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-frequencies-nostd.log",
+      "bytes": 142,
+      "sha256": "1d701ff0deb49e55a1d9c525558e19439e761d206541c161cd37aef14d9fbf63"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-frequencies-optimal.log",
+      "bytes": 9027,
+      "sha256": "b90ea296abff7f9c3a6ab2aa19f623d5f02e157ead36e70a2420411083b505dc"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-matches-nostd.log",
+      "bytes": 142,
+      "sha256": "de9a4253613f3777c3d402c54516e247d6d19b38c9847d6fb37c1a6c8391fef7"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-matches-optimal.log",
+      "bytes": 8919,
+      "sha256": "0566874e0f5e52345b52850d0dfee1e6fde8b08b9667c1309a23fe51e1b9ba97"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-matches-scalars.log",
+      "bytes": 2342,
+      "sha256": "4ac1998f057044270d3050e04df8f31d2eb310454c2375bd71d5b0d62f7c7f31"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-paths-nostd.log",
+      "bytes": 142,
+      "sha256": "c6472efa98deb13b547ff910f82d9d7e5d0b3b185a9544289316f56d59225871"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-paths-optimal.log",
+      "bytes": 8919,
+      "sha256": "34de8d46096d845b8de946d27c512194cc09336d3159789b4be0775a0474c0b3"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-paths-scalars.log",
+      "bytes": 2342,
+      "sha256": "30da4af29ca8e1fbe29e0f2dc5f7ff8ec1d9bca8624e4bf857e880f711eef954"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-short-key-nostd.log",
+      "bytes": 142,
+      "sha256": "9ec1b3fdc5fc3b9790b170eff4a18641b8adedae2df3e6736446c0f858540a33"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-short-key-optimal.log",
+      "bytes": 8919,
+      "sha256": "c5c177dbb2a8e5dc290545ba87fe07604218edd300b5acc796d92771b856a3d8"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-optimal-short-key-scalars.log",
+      "bytes": 2342,
+      "sha256": "81939db5fb437f3933431b4ed1f0908b6599dd6f01b885ab6273afe738ce5bbb"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-reference-chain-nostd.log",
+      "bytes": 142,
+      "sha256": "202c9cb87512018006aa0f7ef878deb1d66ac861560a814a9ea672896d6b3acd"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-reference-chain-optimal.log",
+      "bytes": 8919,
+      "sha256": "c140f0d36ae431991dcd9e6196691e1b71bcdbca35259631f2104ec3388bc029"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-reference-chain-scalars.log",
+      "bytes": 2342,
+      "sha256": "e09a777d969abf7ab42ee50f6deb46c91f7aa22e7fb128fbbc4f3fe09696ef8b"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-reference-tree-nostd.log",
+      "bytes": 142,
+      "sha256": "7f5353ff2958462687918e2a34139cbd23c130486215b4e30823ca1f5c60084b"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-reference-tree-optimal.log",
+      "bytes": 8919,
+      "sha256": "4a79d7ebb9753d4e5a581ff65f42813c727f59ca44956408f94244ae18d304da"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-reference-tree-scalars.log",
+      "bytes": 2342,
+      "sha256": "4cee29ccd7e34aecd199f9043bc24bc6ffe25fa6b59971650b8894de9e067e1f"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-ring-history-nostd.log",
+      "bytes": 142,
+      "sha256": "4b9a005219ff9a0df47fdddc48948f282402bd418c4c30deec1d895d1c712d66"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-ring-history-optimal.log",
+      "bytes": 8919,
+      "sha256": "5387ca7cfedc51c8ac89e83a58419f37a41c5410387d3ade283fd73941ec5ac3"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-ring-history-scalars.log",
+      "bytes": 2342,
+      "sha256": "5e1262839917faa9fba54c74ce7175a54435c10941f36d4c8ab225606e897088"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-row-table-nostd.log",
+      "bytes": 142,
+      "sha256": "202c9cb87512018006aa0f7ef878deb1d66ac861560a814a9ea672896d6b3acd"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-row-table-optimal.log",
+      "bytes": 8919,
+      "sha256": "f22788d53fd09899b4cb207786b1227c1976f39c8b6b3eea0565821a953d44e0"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-row-table-scalars.log",
+      "bytes": 2342,
+      "sha256": "5d5192cc3fe35d6102252a8b93001ed0c0a59d7b421f3a44d94f7248fe37d2c3"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-training-nostd.log",
+      "bytes": 142,
+      "sha256": "506788a7c9bb70f52227de18d6a6c78e200ab719c6f051dbb771d90b84499635"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-training-optimal.log",
+      "bytes": 8919,
+      "sha256": "4b351f65e420ddd989aead7cec0822fd12a56ddb6e265c5d423009f20d10ee9d"
+    },
+    {
+      "path": "zstdoxide-ultra-price-matrix-continuation-1016/unsafe-training-scalars.log",
+      "bytes": 2342,
+      "sha256": "ec2258f56ce9c11b116db8a8b937dc3d4b9966b869e434dd946b62b601e235db"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/evidence.json",
+      "bytes": 17773,
+      "sha256": "77ab5656cb25641d957a6a1f11fb134d6f19b111fea95c696e87c8b2980a3e8e"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/i686-unknown-linux-gnu-all-0.log",
+      "bytes": 514,
+      "sha256": "d7455f093370b2a0ec771726228d63b19002c6349ee6016305c5cc3e88e3e1de"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/i686-unknown-linux-gnu-all-1.log",
+      "bytes": 445,
+      "sha256": "48c99e59d818ee8f1d5f88faee44a8156582c52d651dbee827be63369ad4853e"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/i686-unknown-linux-gnu-all-2.log",
+      "bytes": 436,
+      "sha256": "fc6cd6bebac15a78d9f92a55fa5e65748fdee2d167fad92d727930bd9c0b816e"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/i686-unknown-linux-gnu-all-3.log",
+      "bytes": 448,
+      "sha256": "5c50baee0ca12f383162f1e42ec1740db1e9e24362edafdfb48593560f02ef68"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/i686-unknown-linux-gnu-safe-0.log",
+      "bytes": 622,
+      "sha256": "b3f1b8cf1eaa39e46183fd6596c96cf70cb297f5a8d43bb5da1510216d765d93"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/i686-unknown-linux-gnu-safe-1.log",
+      "bytes": 445,
+      "sha256": "d7f4061a14eac8da48f99f2d85fba6f74023d80d1cec0b4f181dbfcab516b229"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/i686-unknown-linux-gnu-safe-2.log",
+      "bytes": 436,
+      "sha256": "2ca62d8d8e07299b310a2120c0676a14b3a77df0caf5fae773bd6a6b893bfab5"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/i686-unknown-linux-gnu-safe-3.log",
+      "bytes": 448,
+      "sha256": "ec9231a923841ce1c85b88b08e7b587bee62580dd16f353da9035575ab5f396b"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/s390x-unknown-linux-gnu-all-0.log",
+      "bytes": 515,
+      "sha256": "87a9f2f8e62ad96ba060215b5c4b928ea62427f3c819933d45db472d1bf09e06"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/s390x-unknown-linux-gnu-all-1.log",
+      "bytes": 446,
+      "sha256": "6e9fc0a43e9e5a4a272e0ea099ac98098478dd58266f11741c851b99f1ae16be"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/s390x-unknown-linux-gnu-all-2.log",
+      "bytes": 437,
+      "sha256": "8fbf5313c2a600133312f50bc24f1afffe6e28aa5c381f351c5487ca6239a7e6"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/s390x-unknown-linux-gnu-all-3.log",
+      "bytes": 449,
+      "sha256": "be4f25328da885c773cc9100aafc61d7134f405e50c81d7a2acebcb7b75462f2"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/s390x-unknown-linux-gnu-safe-0.log",
+      "bytes": 623,
+      "sha256": "126b8c27bf2479863cc23317c11537106f9c72e0bba5fada75ea88d679927c97"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/s390x-unknown-linux-gnu-safe-1.log",
+      "bytes": 446,
+      "sha256": "a0ac5a21f2824df74db2d30c6a87c49a56e98bb8ae93c10164e41be6103b6c3b"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/s390x-unknown-linux-gnu-safe-2.log",
+      "bytes": 437,
+      "sha256": "f852c03f04744f44e963545b1cd9c027de94679910a95cb87e026bf017952b9f"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-platform-1016/s390x-unknown-linux-gnu-safe-3.log",
+      "bytes": 449,
+      "sha256": "5b2f5e1715bb5eb9da03260546ed803e6547dc393d52c8a2cea04b5afac6c902"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-thumb-1016/evidence.json",
+      "bytes": 9993,
+      "sha256": "ff31565d41ffa21a7bd860b1fc46931cd3d5672cc1cc0f3de0dfb65ecd651e95"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-thumb-1016/library-all.log",
+      "bytes": 130,
+      "sha256": "bbb9a3dfc24d46ba4421545e32654e9f513d177482951b78da7821475e79be7a"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-thumb-1016/library-safe.log",
+      "bytes": 593,
+      "sha256": "bd807294ced20de6de64c16c9d4258e2cf187dbf4cec328491aa9a74be524f90"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-thumb-1016/probe/Cargo.lock",
+      "bytes": 167,
+      "sha256": "b1e98856c60eea4e7c4f35422a913a1b67d74f131b29f0956648a8a9891727e6"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-thumb-1016/probe/Cargo.toml",
+      "bytes": 96,
+      "sha256": "48b3df2063bc9d2b0aeb226cf37b9c79002b9d7fdeb109db0b1406c6779e3a42"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-thumb-1016/probe/src/lib.rs",
+      "bytes": 822,
+      "sha256": "fea59361b05c9bb42a420ab68ec99799d182bea2ed6470fd4e8b2a63bfc8c04b"
+    },
+    {
+      "path": "zstdoxide-ultra-scalar-thumb-1016/scalar-codegen.log",
+      "bytes": 159,
+      "sha256": "26399dc6ee34998c971e9adb3aa9756c26e62ae5291259b92548020626d92f0c"
+    },
+    {
+      "path": "check-ultra-price-matrix.py",
+      "bytes": 2431,
+      "sha256": "a5a70a0f2272b7c7a02ec36a3d405c259d5e848ca08b39a502af014a3b2323ea"
+    },
+    {
+      "path": "check-ultra-price-matrix-continuation.py",
+      "bytes": 3122,
+      "sha256": "25036af943c4cabbd0c49590a3b5596629b7c41cf384a738d4f65b7a13b2ab83"
+    },
+    {
+      "path": "check-ultra-scalar-platform.py",
+      "bytes": 2427,
+      "sha256": "8b87d9f9287250926aafc0d5e49bd98700f9bfbc5fc97b925cdd2507da95e99a"
+    },
+    {
+      "path": "check-ultra-scalar-thumb.py",
+      "bytes": 2930,
+      "sha256": "129030b741b2c029a3016244b0530ed1622b2c117bfb57545d3ff387675cc714"
+    },
+    {
+      "path": "reconcile-ultra-scalars.py",
+      "bytes": 2539,
+      "sha256": "a22a7d6f611a3f138bf78465f73aa8e934e8716f1a085b0ceeac03129c76b184"
+    },
+    {
+      "path": "ultra-scalar-reconciliation.json",
+      "bytes": 35465,
+      "sha256": "e5933334a8e483fb2ae063bd765e5a63593b07e548c5b426ad1498ed6c7789a0"
+    },
+    {
+      "path": "src/optimal_price.rs",
+      "bytes": 9496,
+      "sha256": "d389ec0b49194a65c506c369531ae68a42ec92f6dd06531333ddbc93c018712e"
+    },
+    {
+      "path": "tests/reference_ultra_prices.rs",
+      "bytes": 7643,
+      "sha256": "f7b2d61d08b9951ff477b257f93fa2ac12ded9455a3395aca5251249d1052489"
+    }
+  ]
+}
