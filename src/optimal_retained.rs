@@ -78,7 +78,7 @@ impl<
     ) -> Result<Self> {
         let (source, minimum, target) = parser.retained_configuration()?;
         search.validate_retained_start(source, minimum, target)?;
-        if !(2..=4).contains(&blocks.len()) || blocks.iter().any(|n| !(64..=512).contains(n)) {
+        if !(2..=4).contains(&blocks.len()) || blocks.iter().any(|n| !(64..=8192).contains(n)) {
             return Err(Error::InvalidParameter);
         }
         let total = blocks
@@ -164,3 +164,7 @@ impl<
 #[cfg(test)]
 #[path = "../tests/support/optimal_retained_parse.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "../tests/support/optimal_retained_wide_parse.rs"]
+mod wide_tests;

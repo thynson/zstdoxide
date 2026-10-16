@@ -41,3 +41,11 @@ pass with unchanged source hashes. Negative controls check complete source
 within window, geometry/block caps and rejection before mutation; changing
 future backing bytes cannot affect an active 8-KiB long match or table state.
 Fresh and direct-query bounds remain unchanged.
+
+Private retained path/coordinator admission now matches the wider source/block
+bounds. All 37,977 native events, complete 4,099-cell path state, frequency
+transitions, 31 emitted sequences, final search state and repeat-owner
+publication match. Sixty-six focused Optimal tests pass in six configurations
+(safe, frequency, path, combined search, all and release/all): 396 executions.
+Strict all-test/all-feature Clippy, formatting and true no_std compilation pass
+with unchanged source. Wider ownership and reset qualification follows.

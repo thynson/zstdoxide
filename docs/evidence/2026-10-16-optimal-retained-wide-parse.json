@@ -1,0 +1,62 @@
+{
+  "archive": "2026-10-16-optimal-retained-wide-parse.tar.gz",
+  "archive_bytes": 5108,
+  "archive_sha256": "157d80c0513ad900bba8d042fa769823aa596433871360696eb34e3204fe6415",
+  "files": [
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/all.log",
+      "bytes": 6790,
+      "sha256": "f8e88c63516e26fd37c1b25a7dbdc373e9f31d3b0e32aec79d93963adc2a9fec"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/clippy.log",
+      "bytes": 142,
+      "sha256": "ccd50ea0e24981b80ce1809c5cbf2d473250ceb1386de7433c6fcebf71621bcc"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/evidence.json",
+      "bytes": 3915,
+      "sha256": "616443c3885ab5b62a750683ffca0d2561386815dd06e33351e6149c6cd4d15c"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/frequencies.log",
+      "bytes": 6791,
+      "sha256": "8c1bbe2d25581e430700546cb30e1ee19168b1391609b698a040b5d4a78fa285"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/nostd.log",
+      "bytes": 142,
+      "sha256": "e61a2bdaf97e8c22e5cd950c479f4ca34df4f70f5f7e91940ff2bc1e70a7f879"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/paths.log",
+      "bytes": 6791,
+      "sha256": "e76be70c1460edb0f74ca94b6bdfde64a938cd9545b3fb806542bed4fb7cb32b"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/release-all.log",
+      "bytes": 6781,
+      "sha256": "8deab86651aaa756e79b7786b55fbd23ce4fe17ddb08bdc666e8f497ed155bd3"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/safe.log",
+      "bytes": 6791,
+      "sha256": "eba40f92aee4ec2ec590b5b9008fa4b767d1bcf7fca51aee45939ed1a1947ed4"
+    },
+    {
+      "path": "zstdoxide-optimal-retained-wide-parse-checks/search.log",
+      "bytes": 6790,
+      "sha256": "94164329233afba9f600dcb7841f07eb690da6e114281506f27388acb640a4f8"
+    },
+    {
+      "path": "check-optimal-retained-wide-parse.py",
+      "bytes": 1994,
+      "sha256": "44416d30e3641183ccc54c07788ce3400f44f2d63c98e010628acfbe8853e648"
+    }
+  ]
+}
