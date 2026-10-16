@@ -1122,3 +1122,7 @@ mod tests {
 #[cfg(test)]
 #[path = "../tests/support/optimal_fresh_parse.rs"]
 mod fresh_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/optimal_fresh_wide_parse.rs"]
+mod fresh_wide_tests;

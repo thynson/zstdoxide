@@ -1,0 +1,97 @@
+{
+  "archive": "2026-10-16-optimal-fresh-wide-parse.tar.gz",
+  "archive_bytes": 6993,
+  "archive_sha256": "14ddafdb316be9e59ffb5a486283b36ecd95b3a979b5db1981425424d21f9456",
+  "files": [
+    {
+      "path": "check-optimal-fresh-wide-parse.py",
+      "bytes": 1920,
+      "sha256": "66fdfb595860388661d5de4d5f341feb63581fe1a2955713661336e69ae1cc93"
+    },
+    {
+      "path": "check-optimal-fresh-wide-parse.log",
+      "bytes": 31,
+      "sha256": "7452be5b0c11bab79475f45200a66d708563bc23ad4f3ca5781e7df29ad4b2fb"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks/evidence.json",
+      "bytes": 1534,
+      "sha256": "06f9b2dc920f98b1a694c06a7ee72b6b0e157dbd5ca889522c862a266780abba"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks/frequencies.log",
+      "bytes": 7427,
+      "sha256": "ab7eeec3b27211e43acf9edb800f14928e40f6451bb7819a32002eefce84a21f"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks/paths.log",
+      "bytes": 1948,
+      "sha256": "d08c398775c34e507cfbfe7f0b088394f42c4bc55a2d3231c0bb28fdfaf790f9"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks/safe.log",
+      "bytes": 7428,
+      "sha256": "5e2f5255e68e63e96c897f0929474e07acc660f2027608d782ce8747c60473d5"
+    },
+    {
+      "path": "check-optimal-fresh-wide-parse-v2.py",
+      "bytes": 2159,
+      "sha256": "dd3f5c253752fd2d1ee7dfe7ca2f4290248f5856c62b94dd3616d0ffe1abb2bf"
+    },
+    {
+      "path": "check-optimal-fresh-wide-parse-v2.log",
+      "bytes": 81,
+      "sha256": "c8b109f26fc82c4b126d1bd51e5f298afee2423d96c3ea2a34b44567e77e24a1"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/all.log",
+      "bytes": 7415,
+      "sha256": "4ba6481c1240e22aa8ed6375108ad24e70697e6c878742ecb34babc3a7470876"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/clippy.log",
+      "bytes": 238,
+      "sha256": "327a14867c0c9090504eb3ba35df6dbbbbd27ecf31d2703043cd1574d52ddab2"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/evidence.json",
+      "bytes": 3832,
+      "sha256": "5677da692ed49d7605cb42ac730bc678bd7155d90f38019d8e329a47cbab7983"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/frequencies.log",
+      "bytes": 7415,
+      "sha256": "08622145fdf520fce1cae9cf34e8eb4fb11875af4ca24294fc0a7c6e0bef5c9c"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/nostd.log",
+      "bytes": 130,
+      "sha256": "7e2872e200d3c8023caba80ad49b81459530c9ef8ab1ec42dc9a4aee5567dc1e"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/paths.log",
+      "bytes": 7415,
+      "sha256": "b8c5bbe0290a05be7bbe36c96144cea7f5717f81078f91040324c27bc85dab79"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/release-all.log",
+      "bytes": 7418,
+      "sha256": "da18283ef34a21e8946d74421b1074f14bd59ec5cf64c600cf8bea2f25f22165"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/safe.log",
+      "bytes": 7523,
+      "sha256": "3189bd4112b8eb7464d4b48cfe26961f7723b63546823bb5223b6e924de07bce"
+    },
+    {
+      "path": "zstdoxide-optimal-fresh-wide-parse-checks-v2/search.log",
+      "bytes": 7415,
+      "sha256": "e07e4429e301c22e8c6e11e0453db4c8f03d69108fb63f17aa5fc8b28128963c"
+    }
+  ]
+}
