@@ -1,0 +1,54 @@
+{
+  "status": "passed",
+  "archive": "2026-10-16-optimal-retained-reader.tar.gz",
+  "archive_bytes": 10200,
+  "archive_sha256": "f80e2633db04a410ebbb4fda3e1ece2cfa9a77fdb81d0125f55beb92b496125d",
+  "files": [
+    {
+      "path": "logs/zstdoxide-optimal-retained-reader-all.log",
+      "bytes": 727,
+      "sha256": "847b06ec1d5f0d686c722d84b95b64c4d9e7e4b9705a4512bc4594372fbbc1a8"
+    },
+    {
+      "path": "logs/zstdoxide-optimal-retained-reader-clippy.log",
+      "bytes": 142,
+      "sha256": "124c1e335115a146c7112314445c08cd62916b96dda99bb87e726b2b9c07db52"
+    },
+    {
+      "path": "logs/zstdoxide-optimal-retained-reader-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/zstdoxide-optimal-retained-reader-nostd.log",
+      "bytes": 72,
+      "sha256": "02db5a66fa0c60ca8618bd08aac556eac4f3ec863e8630a0d353dba6a0f6e126"
+    },
+    {
+      "path": "logs/zstdoxide-optimal-retained-reader-release.log",
+      "bytes": 718,
+      "sha256": "f9169d3db1d31f5db1f55bf1b719ceb20d7d92bad67135b54714f9d5a52c18c8"
+    },
+    {
+      "path": "logs/zstdoxide-optimal-retained-reader-safe.log",
+      "bytes": 727,
+      "sha256": "7f8fe75d52035f5864d9a52bb9893d87a8557f9b56eea817fb5218659ffcc0ed"
+    },
+    {
+      "path": "tests/reference_optimal_retained_fixture.rs",
+      "bytes": 5570,
+      "sha256": "f534ae5a726f56d38097ff11b3a5f03553ddf084de969be065623bb2e839bb7c"
+    },
+    {
+      "path": "tests/support/optimal_retained_fixture.rs",
+      "bytes": 21522,
+      "sha256": "87c8690ac19b350a71211aa4498e38101fc70da6c7baeb75650bfecc35639bb9"
+    },
+    {
+      "path": "tests/support/optimal_path_fixture.rs",
+      "bytes": 18403,
+      "sha256": "2abcb525dbbbbf2a502188da6140731441cb448214260963812e12341869db6d"
+    }
+  ],
+  "qualification": "Four independent fixture/frame tests passed safe, all features and release/all; strict Clippy all tests/features, no_std and formatting passed. Every C frame fully decoded and every strict frame prefix rejected."
+}

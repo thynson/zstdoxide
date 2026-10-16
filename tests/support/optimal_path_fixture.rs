@@ -101,7 +101,7 @@ impl<'a> Reader<'a> {
         Ok(result)
     }
 }
-fn opt(value: u32) -> Option<u32> {
+pub(crate) fn opt(value: u32) -> Option<u32> {
     (value != NONE).then_some(value)
 }
 fn distance(off: u32, repeats: [u32; 3], zero: bool) -> Result<u32, &'static str> {
@@ -122,7 +122,7 @@ fn distance(off: u32, repeats: [u32; 3], zero: bool) -> Result<u32, &'static str
         _ => Err("repeat intent"),
     }
 }
-fn publish(off: u32, repeats: [u32; 3], zero: bool) -> Result<[u32; 3], &'static str> {
+pub(crate) fn publish(off: u32, repeats: [u32; 3], zero: bool) -> Result<[u32; 3], &'static str> {
     let d = distance(off, repeats, zero)?;
     need(d > 0, "nonzero resolved repeat")?;
     if off > 3 {
@@ -134,7 +134,7 @@ fn publish(off: u32, repeats: [u32; 3], zero: bool) -> Result<[u32; 3], &'static
         _ => Ok([d, repeats[0], repeats[1]]),
     }
 }
-fn source_match(
+pub(crate) fn source_match(
     source: &[u8],
     position: u32,
     off: u32,
@@ -153,7 +153,7 @@ fn source_match(
         .ok_or("prior match extent")?;
     need(current == previous, "exact source match")
 }
-fn check_pairs(
+pub(crate) fn check_pairs(
     source: &[u8],
     position: u32,
     pairs: &[[u32; 2]],
@@ -178,7 +178,7 @@ fn check_pairs(
     }
     Ok(())
 }
-fn path_value(value: [u32; 7], source_len: usize) -> Result<(), &'static str> {
+pub(crate) fn path_value(value: [u32; 7], source_len: usize) -> Result<(), &'static str> {
     need(
         value[0] <= INFINITY
             && value[1] <= source_len as u32 + 3
@@ -192,7 +192,11 @@ fn path_value(value: [u32; 7], source_len: usize) -> Result<(), &'static str> {
         "bounded cell history",
     )
 }
-fn frequency_state(values: &[u32; 386], mode: u32, refreshed: bool) -> Result<(), &'static str> {
+pub(crate) fn frequency_state(
+    values: &[u32; 386],
+    mode: u32,
+    refreshed: bool,
+) -> Result<(), &'static str> {
     let mut start = 0;
     for (i, count) in [256, 36, 53, 32].into_iter().enumerate() {
         let sum: u64 = values[start..start + count]
@@ -222,7 +226,7 @@ fn frequency_state(values: &[u32; 386], mode: u32, refreshed: bool) -> Result<()
     }
     Ok(())
 }
-fn shape(event: &Event, index: usize, count: usize) -> Result<(), &'static str> {
+pub(crate) fn shape(event: &Event, index: usize, count: usize) -> Result<(), &'static str> {
     need(event.stage <= 11, "known event stage")?;
     need(
         event.reverse_phase == matches!(event.stage, 7..=10),
