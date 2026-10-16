@@ -2032,3 +2032,23 @@ all existing fresh startup observations and freeze wider full-source hypotheses
 before native execution. The source cap alone does not authorize public
 parameter selection, allocation cloning or frame/token integration; those
 remain separate plan, owner, mapping and interoperability gates.
+
+### Wider retained production admission
+
+The qualified ZOPRW02 source domain extends only retained admission: source
+128..16,384, blocks 64..8,192, W10..16/H6..12/C6..12/S1..6, source <= window.
+Fresh and direct-query contracts stay separate. `OptimalSearchLayout` checks
+these complete scalar bounds before retained mode changes; the existing full
+backing/visible-prefix representation and contiguous entry invariant remain.
+All heads, paired edges and short heads retain their original independently
+owned initialized storage and opt-in unsafe features. No new allocation or
+unsafe operation is needed for the wider scalar admission.
+
+The parser still owns exactly 4,099 path cells and validates every transition
+against the active block end. Long matches may bypass path seeding; horizon
+reconstruction must match native cell 4096 without confusing match length with
+path capacity. The coordinator keeps the same fixed four-slot schedule, two
+repeat owners and explicit pending phase. Wider source/block limits do not
+authorize an extra block, future-byte reads, window expiry or fresh public use.
+Separate search-map, path/publication, and ownership/negative gates precede
+complete feature/platform qualification.
