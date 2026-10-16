@@ -1,0 +1,1123 @@
+{
+  "branch_cases": [
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "match_tie_abort",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 1482,
+      "name": "uf_p0_alternative_seed_0",
+      "rows_sha256": "d6ad2e5ea917dc729a81007b409dbb80ea96048b233133bccc9e58813d8225ec",
+      "sequences": 69
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_tie_abort",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "trailing_backtrack",
+        "unpromising_skip"
+      ],
+      "events": 1483,
+      "name": "uf_p0_alternative_seed_2",
+      "rows_sha256": "0e5b8b4ceee6aa2834d225c68945bf9e68c40b7428268ae69ae24984c3f65886",
+      "sequences": 51
+    },
+    {
+      "alternatives": 72,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_tree",
+        "ultra_alternative_considered",
+        "ultra_alternative_rejected",
+        "ultra_alternative_selected",
+        "ultra_improvement_after_rejection",
+        "ultra_match_tie_continue",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 2046,
+      "name": "uf_p2_alternative_seed_0",
+      "rows_sha256": "529ceeeceb83784892abd20ccf58f7d31778eaea108cba55c88d2e95bba4fb16",
+      "sequences": 72
+    },
+    {
+      "alternatives": 110,
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "trailing_backtrack",
+        "ultra_alternative_considered",
+        "ultra_alternative_extends_frontier",
+        "ultra_alternative_rejected",
+        "ultra_alternative_selected",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 2039,
+      "name": "uf_p2_alternative_seed_2",
+      "rows_sha256": "9edf3fcbeb933b4a19be4c86df6a5ebb380c36149ccb82e9417dfb9e4f779f67",
+      "sequences": 60
+    }
+  ],
+  "qualification": "Forty-four source-only ordinary requests preserve all twenty original requests under both policies. Two added sources close all eight Ultra-specific model branches. No new native execution, entropy-kind prediction or public admission.",
+  "recipes": [
+    {
+      "blocks": [
+        64
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_uniform",
+      "packet_bytes": 124,
+      "packet_sha256": "3a6fbb6ec0125122ec4a18eb693733a6a47910385c9f6448b9c0c5087fec6ef3",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 64,
+      "source_sha256": "ffe054fe7ae0cb6dc65c3af9b61d5209f439851db43d0ba5997337df154668eb"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        0
+      ],
+      "name": "uf_p0_fresh_startup_noise",
+      "packet_bytes": 572,
+      "packet_sha256": "b1f57e5342a9d1d4fd3210afe252b46e2a6bdd9ddc7fe4e1f61a975dce0c873a",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "d1fd4a6b04286f422b2df1fb6c70f13bc6fba521ee8f8ac1b9206ded43b2372d"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_periodic",
+      "packet_bytes": 572,
+      "packet_sha256": "712e6ad6b5b85aabf5fc59696a98c452b225caf404702a8a62eec7379be54ab2",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_mixed",
+      "packet_bytes": 572,
+      "packet_sha256": "cc0ce16ee4dcad7fd39dd5eacca933a6cbac9661d619538301ad2a24a96b1660",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_disabled_literals",
+      "packet_bytes": 572,
+      "packet_sha256": "a5023d36ee7670b8acb605d057552690082c6e9315148c2189355b919407afd6",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        4095,
+        1
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_three_short",
+      "packet_bytes": 572,
+      "packet_sha256": "f6f21caaf13d7d5fb31f5fb15ec33da3499f4f73de6e4900c52eb444e336072a",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        3,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "4d6cd3e132199db6e6f616624ea7c4b3448e30aaf676d7216cd7bd1047453a6a"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_larger_geometry",
+      "packet_bytes": 572,
+      "packet_sha256": "bf4d6ebcb91b69ec26d6ec529fe95eed05fe8408789cb03c4664cb78ad1df53e",
+      "parameters": [
+        12,
+        9,
+        9,
+        4,
+        3,
+        16,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_minimum_3",
+      "packet_bytes": 572,
+      "packet_sha256": "11c3ced784da4955350bf1e70d1e8f7289d0f37cbb02a86adec9adc4dceedb6f",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        3,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_minimum_4",
+      "packet_bytes": 572,
+      "packet_sha256": "c9f2d570f29b9d66dc676ad84627e1b3d2f4b407dbd2b0afd7991ca8f9050851",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_minimum_5",
+      "packet_bytes": 572,
+      "packet_sha256": "0f2870ae749568a651a8cd7e050ec6a4591b1cd88ac1ca0f2d55ba2dd95342eb",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        5,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_minimum_6",
+      "packet_bytes": 572,
+      "packet_sha256": "ed947021ae83af1fb555244bf8300906511b554cce760759808924ef98e54077",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        6,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_startup_minimum_7",
+      "packet_bytes": 572,
+      "packet_sha256": "fc2c123b53c8f3bb56c594fb864509a72d175e2a419dce80c536af2c640f6e5a",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        7,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_wide_uniform",
+      "packet_bytes": 16444,
+      "packet_sha256": "966935bb989d3e66386e46f9fad8cf0e5a472d7672bf705c12f14a08ee2943b2",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 16384,
+      "source_sha256": "f3336bea752b5a28743033dd2c844a4a63fba08871aaee2586a2bf2d69be83a2"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_wide_noise_copy",
+      "packet_bytes": 16444,
+      "packet_sha256": "34824d072014a2da1c4c207a8a6e21b01ee770c75eacdf317eb5f7274bff0add",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 16384,
+      "source_sha256": "4bdce7f4f7073a1901193d38658a8ffdc9d19a23bbd1e8b7d62087ba26350e97"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_wide_runs_disabled",
+      "packet_bytes": 16444,
+      "packet_sha256": "991749b4eaee5edfea7095797e3b4650bfb06bb2cae6bb1a4ad7431040207495",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 0,
+      "source_bytes": 16384,
+      "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_wide_runs_priced",
+      "packet_bytes": 16444,
+      "packet_sha256": "3633e43beb061cf44edb653040862e31c6d30d5ca1c48bcc76b4482fe57bd350",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 16384,
+      "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_wide_horizon",
+      "packet_bytes": 16444,
+      "packet_sha256": "10ba8aeaeea889abcf5d5c49271270ffc794d3705255e66cbada7c9b4189fae0",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 0,
+      "source_bytes": 16384,
+      "source_sha256": "a101088542f51cfa8f7fbb510f643231788be9823bf89860cbe57ffa4bf895f1"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_wide_short",
+      "packet_bytes": 16444,
+      "packet_sha256": "2c70bae4376c5440b88000b2399f824218aadae17f1ab9569cad386a63dab9e6",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 16384,
+      "source_sha256": "b43879f3fc630f0775f4f5b2d4fc04fae8b56bec91beab83786da097b068e5aa"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_fresh_wide_window16",
+      "packet_bytes": 16444,
+      "packet_sha256": "f4de9593e7c50064ced0e46d031e3128f2c4be2dc9cf550cbed45144b29a3231",
+      "parameters": [
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 16384,
+      "source_sha256": "41cab224d858f799d6b1a7b8cfa3a9e0f19e5fbcb5c80ccd8bdd25cd026ede8b"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        0
+      ],
+      "name": "uf_p0_fresh_noise16k",
+      "packet_bytes": 16444,
+      "packet_sha256": "787133165b4c3d2f3955fb6b65759225e8394773e2fcb27470621095c8ae990f",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 16384,
+      "source_sha256": "fbc2640aadc5683766fda86b2a21aaba0d44f8cdca65c820d3226719eedfc3e4"
+    },
+    {
+      "blocks": [
+        624
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_alternative_seed_0",
+      "packet_bytes": 684,
+      "packet_sha256": "ad9c74478e464914a4c89d17bd2b92fcef44627988954584c10baa7736557bb3",
+      "parameters": [
+        10,
+        8,
+        8,
+        6,
+        3,
+        128,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 624,
+      "source_sha256": "bef57cac8ef307aa113aaacd06f1da1f8530b7024d782f67bf69d90975678c74"
+    },
+    {
+      "blocks": [
+        624
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p0_alternative_seed_2",
+      "packet_bytes": 684,
+      "packet_sha256": "21e04d14e22de1989b9833a85dfe4a13b82d6ad4c07288e94755c66ebf730f20",
+      "parameters": [
+        10,
+        8,
+        8,
+        6,
+        3,
+        128,
+        0
+      ],
+      "policy": 0,
+      "source_bytes": 624,
+      "source_sha256": "d38eb6fb1c2762b8264b1b3c8bac49eb5814d37dcfe8e2cd3cfefffd76660f57"
+    },
+    {
+      "blocks": [
+        64
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_uniform",
+      "packet_bytes": 124,
+      "packet_sha256": "ef6ab6657714f7d41792c24fad67b9e49a349b2876834e45037825e780d05282",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 64,
+      "source_sha256": "ffe054fe7ae0cb6dc65c3af9b61d5209f439851db43d0ba5997337df154668eb"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        0
+      ],
+      "name": "uf_p2_fresh_startup_noise",
+      "packet_bytes": 572,
+      "packet_sha256": "adf1f40d5c6018ed7b90e83534c63af5a14301263f9681c7509a4be3779a729a",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "d1fd4a6b04286f422b2df1fb6c70f13bc6fba521ee8f8ac1b9206ded43b2372d"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_periodic",
+      "packet_bytes": 572,
+      "packet_sha256": "d95dd92f9c0b4daf57799eee1bb443784a2fd9ed2021de88d2189c16f0fae0f3",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        0,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_mixed",
+      "packet_bytes": 572,
+      "packet_sha256": "c994e4f1d580390843fa0c3f67ac76b78d43bf2e5fb2ba1a51404c46c3c5c642",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_disabled_literals",
+      "packet_bytes": 572,
+      "packet_sha256": "d1169cf800cc9d2541f950204700f7b9b26d7e6215e55db15ce1fd0bd2a0cec4",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        4095,
+        1
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_three_short",
+      "packet_bytes": 572,
+      "packet_sha256": "252f7387b070ec0d4e2fe68f5606356fc266d5fcc1bf06e7b9fb40ea3e80da6e",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        3,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "4d6cd3e132199db6e6f616624ea7c4b3448e30aaf676d7216cd7bd1047453a6a"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_larger_geometry",
+      "packet_bytes": 572,
+      "packet_sha256": "f0b384a086f17348f19d5b2f673c163d9c9d5f9f0efa43f11fe8d6141c0d293b",
+      "parameters": [
+        12,
+        9,
+        9,
+        4,
+        3,
+        16,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "3b8e35dd534727b06ceeb0f7d5cbfa63cf445598695438309ec9af5b0eb53041"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_minimum_3",
+      "packet_bytes": 572,
+      "packet_sha256": "952c2959c722f2afe8fedfb91df8af16b58719f7c8a728875b3ce058073e54f0",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        3,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_minimum_4",
+      "packet_bytes": 572,
+      "packet_sha256": "06e22baa853a267515a1e529782ceac4e8a7e864d1b05b4d16232cb4d544ca3e",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_minimum_5",
+      "packet_bytes": 572,
+      "packet_sha256": "9f192ef8db5d2a56d69576476cdc61910176a495fbea2f0aa422e4b37f0eb194",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        5,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_minimum_6",
+      "packet_bytes": 572,
+      "packet_sha256": "31e32a217376086c54fc2dc9897ee0fb32c85c8ed27424fcd6f30da06c97565c",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        6,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        512
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_startup_minimum_7",
+      "packet_bytes": 572,
+      "packet_sha256": "5a21936293f0d17daf839ef056395d47f0a5061fd7203e356d2a10d6f791a913",
+      "parameters": [
+        10,
+        6,
+        6,
+        1,
+        7,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 512,
+      "source_sha256": "7e737dc4f73bbdc34b0db8bc3c3e0fb9f268fa198d395d0672166c157ac4798b"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_wide_uniform",
+      "packet_bytes": 16444,
+      "packet_sha256": "c5c611cd789c2856607c3c5e6ec49d2d0adcaf9d3f7081341ee3e21483d7fa2f",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 16384,
+      "source_sha256": "f3336bea752b5a28743033dd2c844a4a63fba08871aaee2586a2bf2d69be83a2"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_wide_noise_copy",
+      "packet_bytes": 16444,
+      "packet_sha256": "f5bbff04d95a9adeb1d4946c317363f429d2f681f09e083ca8895b687c69df74",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 16384,
+      "source_sha256": "4bdce7f4f7073a1901193d38658a8ffdc9d19a23bbd1e8b7d62087ba26350e97"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_wide_runs_disabled",
+      "packet_bytes": 16444,
+      "packet_sha256": "827642c075941dbb0809949cab20234924cb1f5731709159269ab80696f43a7e",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 2,
+      "source_bytes": 16384,
+      "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_wide_runs_priced",
+      "packet_bytes": 16444,
+      "packet_sha256": "65d6246b84813e77b381eb373a8a00c3f3acd29097398e3605b1dafe195cdc27",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 16384,
+      "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_wide_horizon",
+      "packet_bytes": 16444,
+      "packet_sha256": "2a1955982ee82da04fcc6bdcb5d6f59e7166f8ba211c05e9fd65cfd4eedd0bfe",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 2,
+      "source_bytes": 16384,
+      "source_sha256": "a101088542f51cfa8f7fbb510f643231788be9823bf89860cbe57ffa4bf895f1"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_wide_short",
+      "packet_bytes": 16444,
+      "packet_sha256": "62c168e85970943382fc784f5b81192a863f51e260a184c7133a4f8b3008a6cf",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 16384,
+      "source_sha256": "b43879f3fc630f0775f4f5b2d4fc04fae8b56bec91beab83786da097b068e5aa"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_fresh_wide_window16",
+      "packet_bytes": 16444,
+      "packet_sha256": "fa27138f21497ce077e3e0539afc45855bb1eb76e3c3110884f379986ea187b2",
+      "parameters": [
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 16384,
+      "source_sha256": "41cab224d858f799d6b1a7b8cfa3a9e0f19e5fbcb5c80ccd8bdd25cd026ede8b"
+    },
+    {
+      "blocks": [
+        16384
+      ],
+      "kinds": [
+        0
+      ],
+      "name": "uf_p2_fresh_noise16k",
+      "packet_bytes": 16444,
+      "packet_sha256": "d4f3e0a75869bb5b4d2074fb09e0965a5b44bf015c88051fea18f18e44290096",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 16384,
+      "source_sha256": "fbc2640aadc5683766fda86b2a21aaba0d44f8cdca65c820d3226719eedfc3e4"
+    },
+    {
+      "blocks": [
+        624
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_alternative_seed_0",
+      "packet_bytes": 684,
+      "packet_sha256": "b978edb3b69ee1479c9331acfd7c0f8c1bdbcdc0d679447ec785e88df0bbe665",
+      "parameters": [
+        10,
+        8,
+        8,
+        6,
+        3,
+        128,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 624,
+      "source_sha256": "bef57cac8ef307aa113aaacd06f1da1f8530b7024d782f67bf69d90975678c74"
+    },
+    {
+      "blocks": [
+        624
+      ],
+      "kinds": [
+        2
+      ],
+      "name": "uf_p2_alternative_seed_2",
+      "packet_bytes": 684,
+      "packet_sha256": "6af01eae6ba344631f79ad76fb1887a29bc20b528abd7f2ef41acdd3855164fc",
+      "parameters": [
+        10,
+        8,
+        8,
+        6,
+        3,
+        128,
+        0
+      ],
+      "policy": 2,
+      "source_bytes": 624,
+      "source_sha256": "d38eb6fb1c2762b8264b1b3c8bac49eb5814d37dcfe8e2cd3cfefffd76660f57"
+    }
+  ],
+  "schema_version": 1
+}

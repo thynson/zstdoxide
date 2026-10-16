@@ -1,0 +1,392 @@
+{
+  "archive": "2026-10-16-ultra-fresh-recipes.tar.gz",
+  "archive_bytes": 33959,
+  "archive_sha256": "c71f2c9e557946dba27a29937d5da34710629c4dc2957b1666a636691b66778f",
+  "files": [
+    {
+      "path": "ultra-fresh-recipes-normal.json",
+      "bytes": 26509,
+      "sha256": "39fe659497e01f4861a8cf0c89b462cf641e4cc8c7c9a64e5bd71ba5ebb4d9bf"
+    },
+    {
+      "path": "ultra-fresh-recipes-optimized.json",
+      "bytes": 26508,
+      "sha256": "f4e4f68ed491eea7aced0b08ee793c35a176fbd1fd9be5a6157c03dc3f0c4743"
+    },
+    {
+      "path": "ultra-fresh-recipes-normal.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ultra-fresh-recipes-optimized.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "search-ultra-fresh-sources.py",
+      "bytes": 1573,
+      "sha256": "65393a52952fecc6a4d5a89effa9dd0e8d0f7c3ab694cd197f5ccde9d206b1f3"
+    },
+    {
+      "path": "search-ultra-fresh-sources-v2.py",
+      "bytes": 1669,
+      "sha256": "4d125580c67d4d0041c190d26239e764b9e9a14acc3db44a638588f43f5e8530"
+    },
+    {
+      "path": "ultra-fresh-source-search.json",
+      "bytes": 31293,
+      "sha256": "6c5bb21a7960ab78c2c1e84875d49d7f5ecf828d0277692f392934d5566801bb"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2.json",
+      "bytes": 108547,
+      "sha256": "33ad3d21f5ee2e527bf31890374f3f661e5479dd867c8bc3c50fbf1e112915b7"
+    },
+    {
+      "path": "ultra-fresh-source-search-1016/progress.json",
+      "bytes": 37,
+      "sha256": "02841678059ad7979613c5bb1b0b0d86274d1842f766035d192c856d50ecdb63"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/progress.json",
+      "bytes": 54204,
+      "sha256": "03354276e3918a13e1e06d7ef7b7c7c89f59520f42d999a5d4d4f162382255dd"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-0.bin",
+      "bytes": 684,
+      "sha256": "b978edb3b69ee1479c9331acfd7c0f8c1bdbcdc0d679447ec785e88df0bbe665"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-1.bin",
+      "bytes": 684,
+      "sha256": "d6d7e02c7da6c90dadc79811a71014579a180ecd0cc15dc8b756eee2fb7c0435"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-10.bin",
+      "bytes": 684,
+      "sha256": "110fa21e7da52e2bb5b3a054e1f57abacbe1847e8cc1e186cdc4b8f78efdf176"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-11.bin",
+      "bytes": 684,
+      "sha256": "e0586aaafc1542de13b0a01ba118f9a924408dfded7cf7618b6416e10e17847a"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-12.bin",
+      "bytes": 684,
+      "sha256": "9799ec6db169d2145596966e23dc11c41302e5d30e8907d37f41158be6d952c2"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-13.bin",
+      "bytes": 684,
+      "sha256": "2804198f1db2c66bea49b66bd4b0e169e0bd6a663373b22535ca8a95badb7257"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-14.bin",
+      "bytes": 684,
+      "sha256": "afda31a4de731f37c03ad2f44c4b52044d19738b106a675425d483d511c324ee"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-15.bin",
+      "bytes": 684,
+      "sha256": "74f7adf25d4fa4e3b4d3858454db476968db4fb2c1fa420d1dc5db3122d1762b"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-16.bin",
+      "bytes": 684,
+      "sha256": "7a98e53b7649a0cfcef3276c475f1053126ca6ec5e787fb919f0c9831628caf4"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-17.bin",
+      "bytes": 684,
+      "sha256": "ea697c3046809a186cb1675400216562cbc98ca8ab1cb822c2254ec8af6cd6d7"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-18.bin",
+      "bytes": 684,
+      "sha256": "0bf9cbd0d24b0cc64c706648efa12c34ac353e7be3fad0e670daee9156da5c00"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-19.bin",
+      "bytes": 684,
+      "sha256": "e5d1280ee5524e22f0cfeeccb6f70411db11a539669a3d2aec1276c7529d6b17"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-2.bin",
+      "bytes": 684,
+      "sha256": "6af01eae6ba344631f79ad76fb1887a29bc20b528abd7f2ef41acdd3855164fc"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-20.bin",
+      "bytes": 684,
+      "sha256": "b78527f3eb1cc3445b9e1fd554a2c9d097573d7f0b85c5b5f20799992a20fde5"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-21.bin",
+      "bytes": 684,
+      "sha256": "62489f8994349230896778c2e133ec37cc51cb4cbe360d070128094bf7211961"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-22.bin",
+      "bytes": 684,
+      "sha256": "90f7f7afbba56e2df670bfb3622cf7e3dd3a630175661fe3240f1557ba348b88"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-23.bin",
+      "bytes": 684,
+      "sha256": "f663e14d34683dc7ea5cf798bc3216f229192689808e61c7d95cb090ee5a0298"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-24.bin",
+      "bytes": 684,
+      "sha256": "b6d39bf60799edd23468346b56a3ece8457bbf787ba1546c7b49dcdfd6e2d7af"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-25.bin",
+      "bytes": 684,
+      "sha256": "67f8dd20fbab359faeee79d9a9a011647d9cc63bf0308c0437f60ebb9eec1dfa"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-26.bin",
+      "bytes": 684,
+      "sha256": "5d5dd07acea77974e1cc80b6b4f2785728cb231d9c136dba74d63c896d6c7375"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-27.bin",
+      "bytes": 684,
+      "sha256": "d484f556e179e78608bab6163999e18b21e1de291154279174cec81db0553fb4"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-28.bin",
+      "bytes": 684,
+      "sha256": "d82e5aff87a2cfb0b1e816ca16dfbf7722639a60107f9345b726c04ac261860d"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-29.bin",
+      "bytes": 684,
+      "sha256": "f9d9caa0654a602c54dda15078801b9f8211ca43ea43ec3f96cf99d826c00c76"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-3.bin",
+      "bytes": 684,
+      "sha256": "3e2896a38308bfd8c945fea59665614130f0444fd60e77fe88e77ba6c35f175b"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-30.bin",
+      "bytes": 684,
+      "sha256": "62a61b53a2b4f94d49d23ae8ec7e19cc82acce64371644b42a2ed42f76739b0e"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-31.bin",
+      "bytes": 684,
+      "sha256": "c74576d6cd234adf18ed650396c97499da198850e14f06bac841f52405f8737e"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-32.bin",
+      "bytes": 684,
+      "sha256": "78af678fe9d6330bf578682444bb0af6c043747a9f8ac22d4e70d08abf621239"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-33.bin",
+      "bytes": 684,
+      "sha256": "818f952c66f3636bf7c03ed30311e5f1eb2fee5f6c830e5773b5529c3e9abda1"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-34.bin",
+      "bytes": 684,
+      "sha256": "88ec9bd93b83de183790a51cec029a38f8b11dc4cabed13659e671a786fc7ee0"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-35.bin",
+      "bytes": 684,
+      "sha256": "f43887b11c43109d0d3929d140beefd851743db512d7474174de219eb2eaffc7"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-36.bin",
+      "bytes": 684,
+      "sha256": "25efbd9e6aa6d99e5579d3ede67e0e44249124989d06527f7519ede924c88480"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-37.bin",
+      "bytes": 684,
+      "sha256": "7602258cfd1ac870367a076645f3b21f41385a250d6653cbd12769f68161ed92"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-38.bin",
+      "bytes": 684,
+      "sha256": "7508cba22061d2fcd90f6c3f2edad4aef7c0c8cacfbc446def41fed4326412d1"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-39.bin",
+      "bytes": 684,
+      "sha256": "28c7eadda3e5815d41acbc2a44b807e889e87b703f6a16702b664c6d6948a846"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-4.bin",
+      "bytes": 684,
+      "sha256": "478dbddc3102778d16d7d9db91b6bbbf91f7d4b172034e8163f6b5b04c04ac06"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-40.bin",
+      "bytes": 684,
+      "sha256": "2f2ce4c78e27d506faa8daad079063ac7c321c041bb9cbb5c192c7c088f3a117"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-41.bin",
+      "bytes": 684,
+      "sha256": "66c9f89c8c25bb15dabd059ca88197edaa784e9502d2be65cec61125ca73eff1"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-42.bin",
+      "bytes": 684,
+      "sha256": "e649619bf006c1ababb6722f90363fc86c2582fee5a9341d62808979f5519fd4"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-43.bin",
+      "bytes": 684,
+      "sha256": "6fee156b159136d79778aa452a34671a9f093b41a9351c289a35e2dd81fdbf8a"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-44.bin",
+      "bytes": 684,
+      "sha256": "a33248560869bbab220c3c91721d3627052320cda39842d5f78c9426f866a933"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-45.bin",
+      "bytes": 684,
+      "sha256": "f0773a9eb5d098b004ceb905a2b8e9d83cc3e6e73146495ec277c08f1eba82d9"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-46.bin",
+      "bytes": 684,
+      "sha256": "82fda38c5564f4148c57c802af04d4037b8059877648a3b89d51928f47947e89"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-47.bin",
+      "bytes": 684,
+      "sha256": "3436ede45a7f8238faeb4d2244895b837976f655a777064d5eb91b5b64bcb907"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-48.bin",
+      "bytes": 684,
+      "sha256": "ac57e2809fa8b04e23698356c313a17f27bc9e475a761d7e6cc554290c1c3d0f"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-49.bin",
+      "bytes": 684,
+      "sha256": "081db33944f0bcab0f764ffe8727173a24cdfab5d79e298581416729e2f9e703"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-5.bin",
+      "bytes": 684,
+      "sha256": "ca208f24faaca1b0d538bf01ce4bbb06faf2f479655b3d9d6fa0eb5ce585638d"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-50.bin",
+      "bytes": 684,
+      "sha256": "b27ffb58e86239595943cd02306cedac5408c6951ecf0f5955a9a24a79bb546a"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-51.bin",
+      "bytes": 684,
+      "sha256": "e56444d405c5c6b9cfd6104b9315e6d7b096722103b590768a27e152e4853c8a"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-52.bin",
+      "bytes": 684,
+      "sha256": "4dce5f4897d6ee981f2c3a3890c35cc2eef1785e4919dd90ee498042b1045f90"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-53.bin",
+      "bytes": 684,
+      "sha256": "400cf0ff6d397c9815b5762da7c4b66147d9ae8ed1a50dd4ef17e7a531e7ad21"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-54.bin",
+      "bytes": 684,
+      "sha256": "b827aa94da41127c6a5fcb8c01f739e024a97eb3ba0ddcb3ef8c4583a60e5841"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-55.bin",
+      "bytes": 684,
+      "sha256": "978cedca6c4fd3d7fe1c773bc540a147472deac3159857e381bb048f59de061b"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-56.bin",
+      "bytes": 684,
+      "sha256": "8916dd1e21e48f92e687cdff93944c962b4c44de77720e8c4b8f3f27bcd23963"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-57.bin",
+      "bytes": 684,
+      "sha256": "325a6d1dd2087b065ba7daf9cacffb4c53ee3d5ea31f22eda6aa639b0708f9e7"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-58.bin",
+      "bytes": 684,
+      "sha256": "e4f40ff937d7932c66a540b3a971593f06f83f524704406c7341322ceae3eb55"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-59.bin",
+      "bytes": 684,
+      "sha256": "56aef934e3c22eaf760eb578a60c709373af2c15ef997ec6c6a672f8f3d7f77c"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-6.bin",
+      "bytes": 684,
+      "sha256": "dd0cea55c75dece8a0b8e8346844eb8506415852466cb193d10f06decfe3f13a"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-60.bin",
+      "bytes": 684,
+      "sha256": "73471f208814a8c3a214254418e6bd1d0f77410c6afb61b7cc53727fb49ac7ed"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-61.bin",
+      "bytes": 684,
+      "sha256": "7eb5ebf50c3be8d43aeda88b03bcb103953ccb744c87c9dd01aea1a8c0cfc152"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-62.bin",
+      "bytes": 684,
+      "sha256": "ca02a8bfd34e2836ca916bb280195b59137b023bf92ca9a29492abd3fab0db57"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-63.bin",
+      "bytes": 684,
+      "sha256": "395d5b5f6c7253a66c1fae93e23fdf35937ffc3f31905488c14c455b25a2cbc8"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-7.bin",
+      "bytes": 684,
+      "sha256": "52b7a1984fba76d837c8512fd0dd1865bba8d25da88aff4953eb587ddceacf1b"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-8.bin",
+      "bytes": 684,
+      "sha256": "91c1b8324f281bb07ea2014f150e882301a335b5dc3b753493462e54e4c3360b"
+    },
+    {
+      "path": "ultra-fresh-source-search-v2-1016/seed-9.bin",
+      "bytes": 684,
+      "sha256": "f84c5566ba586483ba98cc94e809c44b74513813443428b62703ffa6c834fa02"
+    },
+    {
+      "path": "check_ultra_fresh_recipes.py",
+      "bytes": 4159,
+      "sha256": "c3b64c5d061c4fa66097e95c6d835328e0d3854259248db3eae01f59d16daef2"
+    },
+    {
+      "path": "ultra_fresh_recipes.py",
+      "bytes": 1425,
+      "sha256": "0d76aa3e601bf8563ed374655cf9e22ca8d1cf15902242617a83de390b03ebec"
+    },
+    {
+      "path": "reference-ultra-fresh-recipes/recipes.json",
+      "bytes": 25346,
+      "sha256": "91939e7b4dbc345b87029e9f277ddb247fbc46392d070707308d0f8201e6cf9b"
+    }
+  ]
+}

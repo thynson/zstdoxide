@@ -383,3 +383,21 @@ observations or entropy-kind predictions. The exact reports and additive replay
 are retained in `evidence/2026-10-16-ultra-fresh-baseline.tar.gz`; ownership and
 protocol scope are described in `reference-ultra-fresh-model.md`. Ordinary Rust
 Ultra and its larger source envelope remain gated.
+
+## Frozen ordinary Ultra branch recipes
+
+The 44-request manifest preserves all twenty original requests under both policies
+and adds two deterministic 624-byte sources under both policies. The source-only
+search first tried 64 short alphabet inputs without alternatives, then prefixed
+48 repeated fragments with distinct single-byte separators. Seeds 0 and 2 cover
+all eight Ultra-specific branches, including selected/rejected alternatives,
+frontier extension, continued queries and an improvement after a rejected longer
+relaxation. Both searches and all candidate identities are retained.
+
+The four added model cases contain 1482, 1483, 2046 and 2039 events respectively;
+the Ultra pair has 72 and 110 alternatives and 72 and 60 sequences. Normal and
+optimized Python produce equal manifests, predictions and coverage. Each rejects
+17 alternative/publication forgeries, including every signed operand, without
+child execution. Exact requests, source search, checks and the immutable manifest
+are retained in `evidence/2026-10-16-ultra-fresh-recipes.tar.gz`. The native adapter
+and command inventory have not been implemented or executed for these requests.
