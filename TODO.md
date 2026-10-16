@@ -82,6 +82,7 @@ Preserve the completed BinaryTreeLazy2 frames, owners and every earlier baseline
 - [x] Freeze fresh startup recipes, exact CCtx/provider observation hooks and bounded zero-initializing allocator review.
 - [x] Specify an exact fresh startup capture command inventory and independent artifact/state audit before C execution.
 - [x] Qualify fresh startup plan, dependency/environment gates and malformed controls in normal/optimized Python.
+- [x] Correct and preflight sanitizer workspace accounting while preserving the original failed capture.
 - [ ] Capture fresh ordinary startup/search/path/frame state with unchanged provider selection in normal and sanitized builds.
 - [ ] Freeze audited complete fresh frames and decode each with independent safe/all-feature Rust.
 - [ ] Independently audit fresh ordinary frames and forged state before extending private search query admission.
