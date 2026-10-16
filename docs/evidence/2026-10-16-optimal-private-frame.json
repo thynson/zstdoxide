@@ -1,0 +1,117 @@
+{
+  "archive": "2026-10-16-optimal-private-frame.tar.gz",
+  "archive_bytes": 5896,
+  "archive_sha256": "10578563d52489eb8036ba422d067deff555ba5cb254836c4518b0aee983e9d0",
+  "files": [
+    {
+      "path": "check-optimal-private-frame.py",
+      "bytes": 2170,
+      "sha256": "1756d8506768ccc2f9ab32ad61877667dbb5bfb0d21f31656801c5f39d7282e9"
+    },
+    {
+      "path": "check-optimal-private-frame.log",
+      "bytes": 9,
+      "sha256": "34e9d82f47d5b049d4ef94bf3e1bfe983eee578ba9b7cb279ef008a8d1b6fe99"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks/evidence.json",
+      "bytes": 955,
+      "sha256": "52a1b9bf2508da637a3ab7990fba1c49e30ff3b85acea969cec5028ac743128b"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks/safe.log",
+      "bytes": 7592,
+      "sha256": "9e7551af873f353352e9b8437359f6ec9a01cc7b87baf55ac4b9e7c3d5e609a8"
+    },
+    {
+      "path": "check-optimal-private-frame-v2.py",
+      "bytes": 2363,
+      "sha256": "32a455fcbf251867e0b1fe645d0d4db738e0899352e9fa3524518d78829b14bc"
+    },
+    {
+      "path": "check-optimal-private-frame-v2.log",
+      "bytes": 229,
+      "sha256": "444dda8206bd97e7fa57d154f6f90b6322079fca93f100edea29576bcd8797fb"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/all-dispatch.log",
+      "bytes": 810,
+      "sha256": "7e134986bf084b7fe88f2ec201a34f68de569d5c84c6022ca3a3e251a130846e"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/all-frame.log",
+      "bytes": 466,
+      "sha256": "4cd1185bf9bdfa8c1aef0efd6a414941edce880f9edfaf1ee8b53813ada7e3ef"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/clippy.log",
+      "bytes": 130,
+      "sha256": "9cf9f9b60b4e764ac75abfa24f7c59cf83c62380cfdbbf5689cd1ca7ab4e3346"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/evidence.json",
+      "bytes": 6711,
+      "sha256": "5eeaa4e35cabd10757d4de856af35df2586fcbb6e5af7ceb15c033184e912961"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/frequencies-dispatch.log",
+      "bytes": 810,
+      "sha256": "0b5472649ae8ee3b3a148e5b48b53b756a536e88d9b08503bd49af3430d33b82"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/frequencies-frame.log",
+      "bytes": 466,
+      "sha256": "97fa6cb9756a7ee4793ee430fbde366d09549f411b2aa71098f5e2719c3464ca"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/nostd.log",
+      "bytes": 130,
+      "sha256": "34c669ee798338be805c0588ae10f0fbc32a77d2ed9790a4a571b386ca21561d"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/paths-dispatch.log",
+      "bytes": 810,
+      "sha256": "adaf9c198170ef84b7663fe5788cce1f029494dba33dd4a2071b87f1d3b9409e"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/paths-frame.log",
+      "bytes": 466,
+      "sha256": "48f6b455da6dafe2bb636eae0e295d0d817e7f8f477c37ee3d6ed317347974a3"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/release-all-dispatch.log",
+      "bytes": 813,
+      "sha256": "77fec5c5aac0b98434d7f868ff6cab7c692843d5a29dbe19f714e745308b341a"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/release-all-frame.log",
+      "bytes": 470,
+      "sha256": "50e5c7c726de62a53aa052c8648fbf939c4d7f76adeaa9d034943b8e18f2a113"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/safe-dispatch.log",
+      "bytes": 810,
+      "sha256": "50f1f5537d5b9d8fd43e7955861cc4f0a89379848a443813d8e1c2e419e12837"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/safe-frame.log",
+      "bytes": 466,
+      "sha256": "b2ad4b6583f5d1e0a9db0109b724a6f0a110e03129521d35083cb875bf1a3a7e"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/search-dispatch.log",
+      "bytes": 810,
+      "sha256": "20f5490dbb9dde2432d6be9d76145dc21c0cfe9568dc880c318cf3879ababdd3"
+    },
+    {
+      "path": "zstdoxide-optimal-private-frame-checks-v2/search-frame.log",
+      "bytes": 466,
+      "sha256": "1679fb58070f6be76041d3331fe937c32258e95087de52261b144d9d1785f2de"
+    }
+  ]
+}

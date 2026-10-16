@@ -20,3 +20,15 @@ An additional constructor test rejects foreign source identity, mismatched
 layout/policy/target, and used parser/search owners in safe, all-feature and
 release-all builds. Both groups passed strict Clippy, no_std, formatting and
 source barriers. Evidence: `docs/evidence/2026-10-16-optimal-token-state.tar.gz`.
+
+The private static dispatch now selects the complete Optimal state with exactly
+nine factory clones, no inactive parser owners and no extra dispatch allocation.
+All 17 observed automatic-literal cases produce deterministic complete frames
+that independently decode to the original bytes. Partial frame scheduling is
+rejected before mutation and a valid full-source retry remains possible. The
+frame test and six dispatch tests passed in six backend configurations (42
+executions), followed by strict Clippy, no_std and formatting. The initial broad
+run used an incorrect count of 18 automatic-literal cases; it was stopped after
+the failure was localized and retained as failed evidence, including its failed
+source barrier. The complete focused rerun has unchanged source hashes.
+Evidence: `docs/evidence/2026-10-16-optimal-private-frame.tar.gz`.

@@ -140,7 +140,12 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
             .checked_add(length)
             .filter(|&end| end <= self.source.len())
             .ok_or(Error::InvalidParameter)?;
-        if length == 0 || length > self.plan.block_limit() || last != (end == self.source.len()) {
+        if length == 0
+            || length > self.plan.block_limit()
+            || last != (end == self.source.len())
+            || (matches!(self.plan, ReferenceSearchPlan::Optimal(_))
+                && (self.emitted != 0 || end != self.source.len()))
+        {
             return Err(Error::InvalidParameter);
         }
         if let Err(error) = self.emit_checked(end, last, output) {
@@ -638,5 +643,64 @@ mod tests {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod optimal_tests {
+    use super::*;
+    use crate::RawCompressionParameters;
+    use crate::optimal_fresh_wide_fixture as fixture;
+    use crate::optimal_plan::OptimalExecutionPlan;
+    use alloc::alloc::Global;
+    #[test]
+    fn every_complete_observed_source_uses_shared_frame_entropy() {
+        let mut cases = 0;
+        for case in fixture::read(fixture::PACK)
+            .unwrap()
+            .into_iter()
+            .filter(|c| c.literal_mode != 1)
+        {
+            let parameters = RawCompressionParameters {
+                window_log: u32::from(case.window),
+                hash_log: u32::from(case.hash),
+                chain_log: u32::from(case.chain),
+                search_log: u32::from(case.search),
+                min_match: case.minimum,
+                target_length: case.target,
+                strategy: 7,
+            }
+            .validate()
+            .unwrap();
+            let plan = ReferenceSearchPlan::Optimal(
+                OptimalExecutionPlan::from_resolved_parameters(parameters, case.source.len())
+                    .unwrap(),
+            );
+            let frame = compress_reference_in(case.source, plan, Global).unwrap();
+            assert_eq!(
+                crate::decompress(&frame, 16384).unwrap(),
+                case.source,
+                "{}",
+                case.name
+            );
+            assert_eq!(
+                compress_reference_in(case.source, plan, Global).unwrap(),
+                frame
+            );
+            let mut workspace = ReferenceEncoderWorkspace::new(case.source, plan, Global).unwrap();
+            let mut output = Vec::new();
+            assert_eq!(
+                workspace.emit_next(case.source.len() / 2, false, &mut output),
+                Err(Error::InvalidParameter)
+            );
+            assert!(!workspace.failed);
+            assert!(output.is_empty());
+            workspace
+                .emit_next(case.source.len(), true, &mut output)
+                .unwrap();
+            assert!(workspace.finished);
+            cases += 1;
+        }
+        assert_eq!(cases, 17);
     }
 }

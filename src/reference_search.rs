@@ -12,6 +12,15 @@ use crate::fast_state::FastMatchState;
 use crate::greedy_plan::GreedyExecutionPlan;
 use crate::greedy_state::{GreedyMatchState, GreedyTables};
 use crate::matchfinder::MatchTable;
+use crate::optimal_frequencies::OptimalFrequencies;
+use crate::optimal_matches::OptimalMatches;
+use crate::optimal_parse::OptimalParser;
+use crate::optimal_paths::OptimalPaths;
+use crate::optimal_plan::OptimalExecutionPlan;
+use crate::optimal_search::OptimalSearch;
+use crate::optimal_short_key::OptimalShortKey;
+use crate::optimal_state::OptimalMatchState;
+use crate::reference_tree::ReferenceTree;
 use crate::sequence_context::SequenceWithOffset;
 use crate::{
     CompressionParameterRequest, Error, ReferenceStrategy, ResolvedCompressionParameters, Result,
@@ -25,6 +34,11 @@ pub(crate) enum ReferenceSearchPlan {
     Fast(FastExecutionPlan),
     DoubleFast(DoubleFastExecutionPlan),
     Greedy(GreedyExecutionPlan),
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "Private composition precedes public admission")
+    )]
+    Optimal(OptimalExecutionPlan),
 }
 
 impl ReferenceSearchPlan {
@@ -62,6 +76,7 @@ impl ReferenceSearchPlan {
             Self::Fast(plan) => plan.source_len(),
             Self::DoubleFast(plan) => plan.source_len(),
             Self::Greedy(plan) => plan.source_len(),
+            Self::Optimal(plan) => plan.source_len(),
         }
     }
     pub(crate) fn parameters(self) -> ResolvedCompressionParameters {
@@ -69,6 +84,7 @@ impl ReferenceSearchPlan {
             Self::Fast(plan) => plan.parameters(),
             Self::DoubleFast(plan) => plan.parameters(),
             Self::Greedy(plan) => plan.parameters(),
+            Self::Optimal(plan) => plan.parameters(),
         }
     }
     pub(crate) fn block_limit(self) -> usize {
@@ -76,6 +92,7 @@ impl ReferenceSearchPlan {
             Self::Fast(plan) => plan.block_limit(),
             Self::DoubleFast(plan) => plan.block_limit(),
             Self::Greedy(plan) => plan.block_limit(),
+            Self::Optimal(plan) => plan.block_limit(),
         }
     }
 }
@@ -83,10 +100,15 @@ impl ReferenceSearchPlan {
 /// One selected parser owns its tables and scratch. Committed entropy remains
 /// exclusively in the enclosing frame workspace; no repeats are duplicated here.
 /// The enum adds no unchecked representation or allocator erasure.
+#[allow(
+    clippy::large_enum_variant,
+    reason = "Inline owners preserve allocator identities without a dispatch allocation"
+)]
 pub(crate) enum ReferenceSearchState<'a, A: Allocator> {
     Fast(FastMatchState<'a, A>),
     DoubleFast(DoubleFastMatchState<'a, A>),
     Greedy(GreedyMatchState<'a, A>),
+    Optimal(OptimalMatchState<'a, A>),
 }
 
 impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
@@ -99,6 +121,36 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
             return Err(Error::InvalidParameter);
         }
         match plan {
+            ReferenceSearchPlan::Optimal(plan) => {
+                // Exact clone order: frequencies, paths, parser candidates, tree
+                // heads, tree edges, short heads, search candidates, literals,
+                // sequences. The optional short owner may allocate no storage.
+                let parameters = plan.parameters();
+                let parser = OptimalParser::from_parts(
+                    source,
+                    parameters.min_match(),
+                    parameters.target_length() as usize,
+                    OptimalFrequencies::new_in(false, factory.clone())?,
+                    OptimalPaths::new_in(factory.clone())?,
+                    OptimalMatches::new_in(factory.clone())?,
+                )?;
+                let layout = plan.layout();
+                let search = OptimalSearch::from_parts(
+                    source,
+                    layout,
+                    ReferenceTree::new_in(layout.tree(), factory.clone(), factory.clone())?,
+                    OptimalShortKey::new_in(layout.short_log(), factory.clone())?,
+                    OptimalMatches::new_in(factory.clone())?,
+                )?;
+                Ok(Self::Optimal(OptimalMatchState::from_parts(
+                    source,
+                    plan,
+                    parser,
+                    search,
+                    Vec::new_in(factory.clone()),
+                    Vec::new_in(factory.clone()),
+                )?))
+            }
             ReferenceSearchPlan::Fast(plan) => {
                 let table = MatchTable::with_layout_in(plan.layout(), factory.clone())?;
                 let literals = Vec::new_in(factory.clone());
@@ -147,6 +199,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Greedy(state) => state
                 .parse_next(length, committed)
                 .map(|candidate| candidate.is_some()),
+            Self::Optimal(state) => state.parse_next(length, committed),
         }
     }
     pub(crate) fn literals(&self) -> &[u8] {
@@ -154,6 +207,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Fast(state) => state.literals(),
             Self::DoubleFast(state) => state.literals(),
             Self::Greedy(state) => state.literals(),
+            Self::Optimal(state) => state.literals(),
         }
     }
     pub(crate) fn sequences(&self) -> &[SequenceWithOffset] {
@@ -161,6 +215,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Fast(state) => state.sequences(),
             Self::DoubleFast(state) => state.sequences(),
             Self::Greedy(state) => state.sequences(),
+            Self::Optimal(state) => state.sequences(),
         }
     }
     #[cfg(test)]
@@ -169,6 +224,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Fast(state) => state.retained_capacity(),
             Self::DoubleFast(state) => state.retained_capacity(),
             Self::Greedy(state) => state.retained_capacity(),
+            Self::Optimal(state) => state.retained_capacity(),
         }
     }
 }
@@ -180,7 +236,7 @@ mod tests {
     use alloc::alloc::Global;
     use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
-    fn plans(size: usize) -> [ReferenceSearchPlan; 8] {
+    fn plans(size: usize) -> [ReferenceSearchPlan; 9] {
         let mut request = CompressionParameterRequest::with_level(1);
         request.set_window_log(10).unwrap();
         request.set_hash_log(10).unwrap();
@@ -217,6 +273,23 @@ mod tests {
             greedy(15, 4),
             greedy(10, 5),
             greedy(15, 5),
+            ReferenceSearchPlan::Optimal(
+                OptimalExecutionPlan::from_resolved_parameters(
+                    RawCompressionParameters {
+                        window_log: 10,
+                        chain_log: 6,
+                        hash_log: 6,
+                        search_log: 1,
+                        min_match: 3,
+                        target_length: 0,
+                        strategy: 7,
+                    }
+                    .validate()
+                    .unwrap(),
+                    size,
+                )
+                .unwrap(),
+            ),
         ]
     }
 
@@ -228,6 +301,7 @@ mod tests {
                 ReferenceSearchPlan::Fast(p) => (1, 4, p.table_bytes()),
                 ReferenceSearchPlan::DoubleFast(p) => (2, 5, p.table_bytes()),
                 ReferenceSearchPlan::Greedy(p) => (2, 5, p.table_bytes()),
+                ReferenceSearchPlan::Optimal(p) => (7, 10, p.owner_bytes()[..7].iter().sum()),
             };
             let factory = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
             let monitor = factory.monitor();
