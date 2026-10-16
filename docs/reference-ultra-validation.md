@@ -353,3 +353,17 @@ True no_std safe/all, strict all-target Clippy safe/all and formatting pass.
 Source-bound logs and implementation snapshots are retained in
 `evidence/2026-10-16-ultra-path-implementation.tar.gz`. Full feature/platform
 qualification is a separate work item; public Ultra remains unsupported.
+
+## Private parser platform and ownership qualification
+
+Both selected Ultra parser owner/boundary tests pass under strict-provenance Miri
+on i686 and s390x in safe/all modes: eight interpreted executions. These cover
+policy mismatch, source/parameter rejection, exact moved-owner release, borrowed
+non-cloning owners, zero parse/reset allocation and immutable policy. Complete
+large fixture replay is exercised natively, not claimed as a Miri run.
+
+Safe/all thumbv6m no_std library checks and concrete private Ultra construction,
+scripted parsing, observer, reset and drop code generation pass. The probe retains
+exact production source copies plus a concrete caller. No foreign hardware or
+firmware execution is claimed. Full source-bound logs and probe inputs are retained
+in `evidence/2026-10-16-ultra-path-platform.tar.gz`.

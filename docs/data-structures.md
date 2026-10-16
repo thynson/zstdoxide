@@ -2454,3 +2454,31 @@ candidate access backends implement the same storage contract. Verification
 compares all 58 native cases, complete paths/frequencies, alternatives, callbacks,
 sequences and final repeats. Focused mismatch, bounds, callback-failure/reset and
 exact borrowed-owner checks precede the feature/platform qualification item.
+
+### Ordinary Ultra search/path successor
+
+Before enabling ordinary providers, an additive replay will compose the immutable
+whole/fractional frequency model and thorough path rules with the already qualified
+source-driven tree/short-key search. It owns the search heads, child indices,
+short heads and insertion frontiers, as well as persistent path/frequency state.
+No native matches or scripted candidates supply model inputs. Search changes are
+observed at each actual policy-dependent query; every non-query event preserves
+the prior search state. This matters because Ultra's additional queries change
+future tree state even though the search routine itself has no optLevel argument.
+
+Requests pair copied policy 0/2 with an immutable original complete fresh request.
+Preserve all twenty original 64..16384-byte requests, parameters and source bytes
+under policy 0, and require exact reconciliation of every original native event
+before new capture. The wider model does not increase the currently admitted
+9..8192-byte private scripted Rust bound. Additional source-only recipes must
+cover ordinary alternatives, frontier extension and thorough relaxation before
+a native observer is reviewed. Strategy 9 and retained contexts remain separate.
+
+Complete search/path deltas retain the original canonical sparse encoding. New
+policy and signed-alternative fields are additive. Committed/pending repeat owners
+and raw/RLE/compressed publication hypotheses are explicit copied inputs; the
+model predicts parser state and publication consequences, not entropy payload
+bytes or which block kind the encoder will choose. Native execution later verifies
+each hypothesis and all ownership/guard records. Frame bytes remain opaque
+observations until independently decoded. Allocation-free Ultra execution planning
+and shared-entropy publication follow this ordinary-search qualification.
