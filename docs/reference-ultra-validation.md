@@ -517,3 +517,18 @@ The 203-member source/log archive is
 `027a3729d5d7bc425aae8f1a6f3202bc90dbb3e3e6877405dc62c37640cbcb72`.
 This is private ordinary composition; complete public token/frame admission
 remains a separate task.
+
+## Private ordinary platform qualification
+
+Eight strict-provenance Miri executions pass: source/admission and borrowed-owner
+parse/reset tests on i686 and big-endian s390x, each with safe and all-feature
+builds. These are interpreted foreign-target executions, not native binaries.
+Both safe and all-unsafe thumbv6m builds pass true no_std compilation and actual
+code generation of a concrete ordinary Ultra construction/parse/reset/drop caller.
+The retained LLVM IR contains its definition and the retained objects are checked
+32-bit little-endian ARM ELF. No firmware execution is claimed.
+
+All twelve commands bind unchanged source hashes. The 229-member archive
+`evidence/2026-10-19-ultra-fresh-platform.tar.gz` retains commands, logs, code,
+sysroot setup logs, concrete probe source, LLVM IR and objects (SHA-256
+`033063f8d2d2f34e307d4396c0b9d193a4ba38ec3070248f1619ede913721d8e`).
