@@ -117,7 +117,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Qualify the independent ordinary Ultra fixture reader before private search integration.
 - [x] Implement and qualify private ordinary Ultra search/path composition against every captured state.
 - [x] Qualify ordinary Ultra exact owners, foreign Miri and no-atomics code generation.
-- [ ] Complete the ordinary Ultra safe/isolated-unsafe/all matrix and full regression checkpoint.
+- [x] Complete the ordinary Ultra safe/isolated-unsafe/all matrix and full regression checkpoint.
 - [x] Design and qualify allocation-free private Ultra execution plans with original/public gates preserved.
 - [x] Implement and qualify private Ultra token publication with nine exact owners and transactional failures.
 - [x] Qualify private Ultra static dispatch and deterministic shared-entropy frames before public admission.

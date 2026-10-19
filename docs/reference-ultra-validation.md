@@ -1,5 +1,12 @@
 # Bounded reference Ultra qualification
 
+Current status (2026-10-19): bounded public strategy 8 is enabled. See
+[public qualification](reference-ultra-public-qualification.md) for its exact
+envelope and completed versus pending final gates. The chronological records
+below preserve the state at each earlier private checkpoint; statements that
+public admission was closed describe those checkpoints. Strategy 9 remains
+unsupported.
+
 Strategy 8 remains unsupported. This module qualifies the coupled optLevel=2
 policy before public dispatch. Strategy 9's discarded first pass and history
 rewrite are separate work. All prior Optimal fixtures and native observations
@@ -602,3 +609,30 @@ all-target Clippy, true no_std and formatting pass. The 221-member source/log
 archive is `evidence/2026-10-19-ultra-private-frame.tar.gz`, SHA-256
 `97415103eb73c0cd1768ec7f3deca9719d6d6b11c51488ceb0b27e5253ff88ef`.
 The main checkout's public strategy gate is still closed at this checkpoint.
+
+## Ordinary private composition matrix (frozen snapshot)
+
+The private ordinary search/path snapshot completes its 21-configuration product:
+safe, each of the nineteen isolated unsafe features and all features together.
+Every configuration passes eight ordinary parser/search tests, four independent
+fixture-reader tests and a true no_std library build (252 focused executions and
+21 no_std builds). This checkpoint predates public dispatch and is distinct from
+the later 1405-test public suite.
+
+The safe full suite passes 1385 tests with 55 explicit ignores. The all-feature
+Cargo invocation reaches its original 1800-second bound without assertion
+failures. Its failed orchestration record remains preserved. Only successful
+complete groups followed by Cargo starting the next group are reused; the final
+child and all remaining integration/doc groups are rerun. Their combined exact
+individual names/outcomes equal the safe suite's 1385 passes and 55 ignores.
+The final orphaned child's success output alone is not accepted as an exit-status
+proof. Selected release parser tests pass all 28 cases, strict safe/all Clippy
+passes, and every frozen source identity remains unchanged. Formatting passed
+at the start of this unchanged snapshot.
+
+The combined evidence retains 72 successful command records, the original
+failed attempt, all raw logs and source snapshots. The 266-member archive is
+`evidence/2026-10-19-ultra-fresh-matrix.tar.gz`, SHA-256
+`9dcf704d85ee09d28cc8c725d0a98a592b00f737371633a61890ae0b42ba3ab0`.
+Every archived member was independently rehashed. This completes the ordinary
+private matrix gate without relabeling the timed-out invocation as successful.
