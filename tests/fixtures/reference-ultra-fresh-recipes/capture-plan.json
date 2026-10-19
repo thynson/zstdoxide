@@ -1,0 +1,1100 @@
+{
+  "cases": [
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_sufficient",
+        "search_repeat"
+      ],
+      "events": 9,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 11928,
+      "name": "uf_p0_fresh_startup_uniform",
+      "packet_sha256": "3a6fbb6ec0125122ec4a18eb693733a6a47910385c9f6448b9c0c5087fec6ef3",
+      "policy": 0,
+      "queries": 1,
+      "rows_sha256": "75c351e5e966d2e34261af42fa51bb5ecd99357685d401e6ba06a48d76ea9e69",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "initial_no_match",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 505,
+      "hypothesized_kinds": [
+        0
+      ],
+      "logical_row_bytes": 669768,
+      "name": "uf_p0_fresh_startup_noise",
+      "packet_sha256": "b1f57e5342a9d1d4fd3210afe252b46e2a6bdd9ddc7fe4e1f61a975dce0c873a",
+      "policy": 0,
+      "queries": 503,
+      "rows_sha256": "480729de21698ca8fef642ca41c8f30b4a83b79697e4da3a1cd61997c53c8f0e",
+      "sequences": 0
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_tree"
+      ],
+      "events": 42,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 55255,
+      "name": "uf_p0_fresh_startup_periodic",
+      "packet_sha256": "712e6ad6b5b85aabf5fc59696a98c452b225caf404702a8a62eec7379be54ab2",
+      "policy": 0,
+      "queries": 34,
+      "rows_sha256": "28156b39b09a773b68d7b899c58428dd0d806d8d1ce4464b18360595c1f569dc",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 452,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 605935,
+      "name": "uf_p0_fresh_startup_mixed",
+      "packet_sha256": "cc0ce16ee4dcad7fd39dd5eacca933a6cbac9661d619538301ad2a24a96b1660",
+      "policy": 0,
+      "queries": 216,
+      "rows_sha256": "6dfa54b19ddbb98fd33132d03ab12cb9a8d4f95a1285468c94988edfee7bddfe",
+      "sequences": 5
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 452,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 603662,
+      "name": "uf_p0_fresh_startup_disabled_literals",
+      "packet_sha256": "a5023d36ee7670b8acb605d057552690082c6e9315148c2189355b919407afd6",
+      "policy": 0,
+      "queries": 216,
+      "rows_sha256": "4efece4bf787f4f9db1954e965344738a22716ff3b37a471ae78a4b05a4e2cab",
+      "sequences": 5
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 553,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 730229,
+      "name": "uf_p0_fresh_startup_three_short",
+      "packet_sha256": "f6f21caaf13d7d5fb31f5fb15ec33da3499f4f73de6e4900c52eb444e336072a",
+      "policy": 0,
+      "queries": 30,
+      "rows_sha256": "d406c616935ba50bab71442a24f0de6f1f2a2365b125ff9b5ef60ab76cc97823",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 225,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 304802,
+      "name": "uf_p0_fresh_startup_larger_geometry",
+      "packet_sha256": "bf4d6ebcb91b69ec26d6ec529fe95eed05fe8408789cb03c4664cb78ad1df53e",
+      "policy": 0,
+      "queries": 199,
+      "rows_sha256": "afad3f85281ad649aa83d1ab8c87a4c2b787b68f7f58a212dd89a5283e78b467",
+      "sequences": 4
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 43,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 70440,
+      "name": "uf_p0_fresh_startup_minimum_3",
+      "packet_sha256": "11c3ced784da4955350bf1e70d1e8f7289d0f37cbb02a86adec9adc4dceedb6f",
+      "policy": 0,
+      "queries": 33,
+      "rows_sha256": "d8f7cd51e3b5d5e73c1b33f3f0a254edad487dba5e66755173e5858eb3fc4001",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 703128,
+      "name": "uf_p0_fresh_startup_minimum_4",
+      "packet_sha256": "c9f2d570f29b9d66dc676ad84627e1b3d2f4b407dbd2b0afd7991ca8f9050851",
+      "policy": 0,
+      "queries": 45,
+      "rows_sha256": "adfbca39d07109577de18cfcda6b72a60e5165b4688e507cf7597819fc257f34",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 703116,
+      "name": "uf_p0_fresh_startup_minimum_5",
+      "packet_sha256": "0f2870ae749568a651a8cd7e050ec6a4591b1cd88ac1ca0f2d55ba2dd95342eb",
+      "policy": 0,
+      "queries": 43,
+      "rows_sha256": "68cfa555c75d7a93bbb6e488f6249cceb392be6f4f1392bb54b47234f2bb189d",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 703097,
+      "name": "uf_p0_fresh_startup_minimum_6",
+      "packet_sha256": "ed947021ae83af1fb555244bf8300906511b554cce760759808924ef98e54077",
+      "policy": 0,
+      "queries": 43,
+      "rows_sha256": "7334089e9d559f60b85e5854504a3939c0df5c5a32af805292c68e5c64e8b1e9",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "unpromising_skip"
+      ],
+      "events": 532,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 703097,
+      "name": "uf_p0_fresh_startup_minimum_7",
+      "packet_sha256": "fc2c123b53c8f3bb56c594fb864509a72d175e2a419dce80c536af2c640f6e5a",
+      "policy": 0,
+      "queries": 43,
+      "rows_sha256": "7334089e9d559f60b85e5854504a3939c0df5c5a32af805292c68e5c64e8b1e9",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_sufficient",
+        "search_repeat"
+      ],
+      "events": 9,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 12039,
+      "name": "uf_p0_fresh_wide_uniform",
+      "packet_sha256": "966935bb989d3e66386e46f9fad8cf0e5a472d7672bf705c12f14a08ee2943b2",
+      "policy": 0,
+      "queries": 1,
+      "rows_sha256": "9b6f0370281c96a7ae9471f863b68f5d8d403d806568d78560fa1e4ca04460a4",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_tree"
+      ],
+      "events": 8202,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 10934923,
+      "name": "uf_p0_fresh_wide_noise_copy",
+      "packet_sha256": "34824d072014a2da1c4c207a8a6e21b01ee770c75eacdf317eb5f7274bff0add",
+      "policy": 0,
+      "queries": 8194,
+      "rows_sha256": "9206d5fde6a210bbc93799ef5cf888395d7fd4e1f3264af479f575fc4ae55033",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 12589,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 16964035,
+      "name": "uf_p0_fresh_wide_runs_disabled",
+      "packet_sha256": "991749b4eaee5edfea7095797e3b4650bfb06bb2cae6bb1a4ad7431040207495",
+      "policy": 0,
+      "queries": 81,
+      "rows_sha256": "1227e02cf9ab9c2c13edd9cc743c133f312dd82bc1b4cf3391d10e5486f06dc1",
+      "sequences": 8
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 12607,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 17083797,
+      "name": "uf_p0_fresh_wide_runs_priced",
+      "packet_sha256": "3633e43beb061cf44edb653040862e31c6d30d5ca1c48bcc76b4482fe57bd350",
+      "policy": 0,
+      "queries": 90,
+      "rows_sha256": "56aed476fd5340b0bff8bae63e7d4e461d6bf22eca080e9205c642317a46f4af",
+      "sequences": 8
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 10359,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 14181180,
+      "name": "uf_p0_fresh_wide_horizon",
+      "packet_sha256": "10ba8aeaeea889abcf5d5c49271270ffc794d3705255e66cbada7c9b4189fae0",
+      "policy": 0,
+      "queries": 4143,
+      "rows_sha256": "aa09c83b131ecdda64518210f46bd094b1e724bf9e0458891ebce00be409b90b",
+      "sequences": 6
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "literal_improvement",
+        "search_tree"
+      ],
+      "events": 42,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 55572,
+      "name": "uf_p0_fresh_wide_short",
+      "packet_sha256": "2c70bae4376c5440b88000b2399f824218aadae17f1ab9569cad386a63dab9e6",
+      "policy": 0,
+      "queries": 16,
+      "rows_sha256": "49eee0080aef417c1024b8e033f68566c08b55abb592fac1b551fdaf749ecab5",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 16,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 21381,
+      "name": "uf_p0_fresh_wide_window16",
+      "packet_sha256": "f4de9593e7c50064ced0e46d031e3128f2c4be2dc9cf550cbed45144b29a3231",
+      "policy": 0,
+      "queries": 8,
+      "rows_sha256": "b7426f6ad22bef882c80d6d1f661baa575d4984c8d3647aeb15835e8c6bd03e6",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "initial_no_match",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 16377,
+      "hypothesized_kinds": [
+        0
+      ],
+      "logical_row_bytes": 21937890,
+      "name": "uf_p0_fresh_noise16k",
+      "packet_sha256": "787133165b4c3d2f3955fb6b65759225e8394773e2fcb27470621095c8ae990f",
+      "policy": 0,
+      "queries": 16375,
+      "rows_sha256": "39bfa31c64efd5c331a6eb197fd50bffeaa6f53d5fa575816801c2754ba9043c",
+      "sequences": 0
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "match_tie_abort",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 1482,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 2527662,
+      "name": "uf_p0_alternative_seed_0",
+      "packet_sha256": "ad9c74478e464914a4c89d17bd2b92fcef44627988954584c10baa7736557bb3",
+      "policy": 0,
+      "queries": 321,
+      "rows_sha256": "d6ad2e5ea917dc729a81007b409dbb80ea96048b233133bccc9e58813d8225ec",
+      "sequences": 69
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_tie_abort",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "trailing_backtrack",
+        "unpromising_skip"
+      ],
+      "events": 1483,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 2501539,
+      "name": "uf_p0_alternative_seed_2",
+      "packet_sha256": "21e04d14e22de1989b9833a85dfe4a13b82d6ad4c07288e94755c66ebf730f20",
+      "policy": 0,
+      "queries": 367,
+      "rows_sha256": "0e5b8b4ceee6aa2834d225c68945bf9e68c40b7428268ae69ae24984c3f65886",
+      "sequences": 51
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_sufficient",
+        "search_repeat"
+      ],
+      "events": 9,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 11927,
+      "name": "uf_p2_fresh_startup_uniform",
+      "packet_sha256": "ef6ab6657714f7d41792c24fad67b9e49a349b2876834e45037825e780d05282",
+      "policy": 2,
+      "queries": 1,
+      "rows_sha256": "4027866905d28e387d6036213be57f2807690f60fb38a661ab345a8642596a29",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "initial_no_match",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 505,
+      "hypothesized_kinds": [
+        0
+      ],
+      "logical_row_bytes": 669768,
+      "name": "uf_p2_fresh_startup_noise",
+      "packet_sha256": "adf1f40d5c6018ed7b90e83534c63af5a14301263f9681c7509a4be3779a729a",
+      "policy": 2,
+      "queries": 503,
+      "rows_sha256": "66f1f91c5853d563f21b9b2a479928fcedf5e00922ee81fd5696e163e25a917a",
+      "sequences": 0
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_tree"
+      ],
+      "events": 42,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 55255,
+      "name": "uf_p2_fresh_startup_periodic",
+      "packet_sha256": "d95dd92f9c0b4daf57799eee1bb443784a2fd9ed2021de88d2189c16f0fae0f3",
+      "policy": 2,
+      "queries": 34,
+      "rows_sha256": "914ee68765f4e63411d8e30bdd46941c98cc3d2bcd2db0eaccf9d12b305e7664",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 719,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 953702,
+      "name": "uf_p2_fresh_startup_mixed",
+      "packet_sha256": "c994e4f1d580390843fa0c3f67ac76b78d43bf2e5fb2ba1a51404c46c3c5c642",
+      "policy": 2,
+      "queries": 389,
+      "rows_sha256": "37ebd062f2cdfebb9d1601c8c259c66905b4411570aae0d1d651bd79bba42b82",
+      "sequences": 5
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_repeat",
+        "search_skipped",
+        "search_tree",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 719,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 950094,
+      "name": "uf_p2_fresh_startup_disabled_literals",
+      "packet_sha256": "d1169cf800cc9d2541f950204700f7b9b26d7e6215e55db15ce1fd0bd2a0cec4",
+      "policy": 2,
+      "queries": 389,
+      "rows_sha256": "b8585dbf55b25441a8a1ca16eecda67c230311cb582a20407f1e588a9d653e1c",
+      "sequences": 5
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "ultra_unpromising_query"
+      ],
+      "events": 989,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 1297643,
+      "name": "uf_p2_fresh_startup_three_short",
+      "packet_sha256": "252f7387b070ec0d4e2fe68f5606356fc266d5fcc1bf06e7b9fb40ea3e80da6e",
+      "policy": 2,
+      "queries": 488,
+      "rows_sha256": "5f03dbd1b26499788cb34de035f15da48014c380b3e8148253d4f71f559e232a",
+      "sequences": 2
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 225,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 304802,
+      "name": "uf_p2_fresh_startup_larger_geometry",
+      "packet_sha256": "f0b384a086f17348f19d5b2f673c163d9c9d5f9f0efa43f11fe8d6141c0d293b",
+      "policy": 2,
+      "queries": 199,
+      "rows_sha256": "683d63f26153ded5c23a36a3e9a443c708a4cf91fe29d3a5997d2c752b66cf16",
+      "sequences": 4
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 43,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 70440,
+      "name": "uf_p2_fresh_startup_minimum_3",
+      "packet_sha256": "952c2959c722f2afe8fedfb91df8af16b58719f7c8a728875b3ce058073e54f0",
+      "policy": 2,
+      "queries": 33,
+      "rows_sha256": "5851c4296b6047805b39bd56c522190693b604cac93c285d1ccea5af10f47ff9",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "ultra_unpromising_query"
+      ],
+      "events": 921,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 1208505,
+      "name": "uf_p2_fresh_startup_minimum_4",
+      "packet_sha256": "06e22baa853a267515a1e529782ceac4e8a7e864d1b05b4d16232cb4d544ca3e",
+      "policy": 2,
+      "queries": 472,
+      "rows_sha256": "926b3e64a390ac672b4d5b07ebc62a9877d28157fa9097472cf0b2a299f748c5",
+      "sequences": 2
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "ultra_unpromising_query"
+      ],
+      "events": 925,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 1213738,
+      "name": "uf_p2_fresh_startup_minimum_5",
+      "packet_sha256": "9f192ef8db5d2a56d69576476cdc61910176a495fbea2f0aa422e4b37f0eb194",
+      "policy": 2,
+      "queries": 473,
+      "rows_sha256": "e5a3416a9db5fcca1802b6711497cca6868dd6582732489e3c61f0429858e8f4",
+      "sequences": 2
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "ultra_unpromising_query"
+      ],
+      "events": 923,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 1211071,
+      "name": "uf_p2_fresh_startup_minimum_6",
+      "packet_sha256": "31e32a217376086c54fc2dc9897ee0fb32c85c8ed27424fcd6f30da06c97565c",
+      "policy": 2,
+      "queries": 472,
+      "rows_sha256": "371aaa621c720918d60cf9cba40ccd0d30b1f37238ee45ef0eff23f0acebb644",
+      "sequences": 2
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "ultra_unpromising_query"
+      ],
+      "events": 923,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 1211071,
+      "name": "uf_p2_fresh_startup_minimum_7",
+      "packet_sha256": "5a21936293f0d17daf839ef056395d47f0a5061fd7203e356d2a10d6f791a913",
+      "policy": 2,
+      "queries": 472,
+      "rows_sha256": "371aaa621c720918d60cf9cba40ccd0d30b1f37238ee45ef0eff23f0acebb644",
+      "sequences": 2
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_sufficient",
+        "search_repeat"
+      ],
+      "events": 9,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 12038,
+      "name": "uf_p2_fresh_wide_uniform",
+      "packet_sha256": "c5c611cd789c2856607c3c5e6ec49d2d0adcaf9d3f7081341ee3e21483d7fa2f",
+      "policy": 2,
+      "queries": 1,
+      "rows_sha256": "40fcfa51caa5717f8fc7e8f680afd6788893f663cea6ce40262ce2df0320e0fb",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_tree"
+      ],
+      "events": 8202,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 10934923,
+      "name": "uf_p2_fresh_wide_noise_copy",
+      "packet_sha256": "f5bbff04d95a9adeb1d4946c317363f429d2f681f09e083ca8895b687c69df74",
+      "policy": 2,
+      "queries": 8194,
+      "rows_sha256": "974706724cec5213048bdb306eab62c4c8e8aa8a0df8a874a9a0e3a15d827656",
+      "sequences": 1
+    },
+    {
+      "alternatives": 3,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "ultra_alternative_considered",
+        "ultra_alternative_rejected",
+        "ultra_improvement_after_rejection",
+        "ultra_match_tie_continue",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 36879,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 49680042,
+      "name": "uf_p2_fresh_wide_runs_disabled",
+      "packet_sha256": "827642c075941dbb0809949cab20234924cb1f5731709159269ab80696f43a7e",
+      "policy": 2,
+      "queries": 12286,
+      "rows_sha256": "10dd7f7a72b4f44b569bec7dcbeb09d1ec82aa170a9579d612f2e108ef66e60f",
+      "sequences": 8
+    },
+    {
+      "alternatives": 16,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "ultra_alternative_considered",
+        "ultra_alternative_rejected",
+        "ultra_improvement_after_rejection",
+        "ultra_match_tie_continue",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 36892,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 49968807,
+      "name": "uf_p2_fresh_wide_runs_priced",
+      "packet_sha256": "65d6246b84813e77b381eb373a8a00c3f3acd29097398e3605b1dafe195cdc27",
+      "policy": 2,
+      "queries": 12286,
+      "rows_sha256": "5ce80f86e76aaab5e4f0f98b1c8956fc4997aed395026fe1c43e5ab3ee26d536",
+      "sequences": 8
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 21456,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 29112316,
+      "name": "uf_p2_fresh_wide_horizon",
+      "packet_sha256": "2a1955982ee82da04fcc6bdcb5d6f59e7166f8ba211c05e9fd65cfd4eedd0bfe",
+      "policy": 2,
+      "queries": 10245,
+      "rows_sha256": "464de3ca2bd18cd6ebdb361c8fb615bbee2f08a154ae89d3ba93f5c778ce07c9",
+      "sequences": 6
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "literal_improvement",
+        "search_tree"
+      ],
+      "events": 42,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 55572,
+      "name": "uf_p2_fresh_wide_short",
+      "packet_sha256": "62c168e85970943382fc784f5b81192a863f51e260a184c7133a4f8b3008a6cf",
+      "policy": 2,
+      "queries": 16,
+      "rows_sha256": "16be61a927507cec70ec2d8a656c5ca893dd2500abecfd1536a8d9ac0d47d14b",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 16,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 21381,
+      "name": "uf_p2_fresh_wide_window16",
+      "packet_sha256": "fa27138f21497ce077e3e0539afc45855bb1eb76e3c3110884f379986ea187b2",
+      "policy": 2,
+      "queries": 8,
+      "rows_sha256": "0af5773b53fe292ec6d96347faad6dbae15dbb8c0dc7ec54b515e2fc9f855964",
+      "sequences": 1
+    },
+    {
+      "alternatives": 0,
+      "coverage": [
+        "initial_no_match",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 16377,
+      "hypothesized_kinds": [
+        0
+      ],
+      "logical_row_bytes": 21937890,
+      "name": "uf_p2_fresh_noise16k",
+      "packet_sha256": "d4f3e0a75869bb5b4d2074fb09e0965a5b44bf015c88051fea18f18e44290096",
+      "policy": 2,
+      "queries": 16375,
+      "rows_sha256": "8457de94156fb69297985b42a376908fece6b10684c29dd501f2d87d84beb787",
+      "sequences": 0
+    },
+    {
+      "alternatives": 72,
+      "coverage": [
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_tree",
+        "ultra_alternative_considered",
+        "ultra_alternative_rejected",
+        "ultra_alternative_selected",
+        "ultra_improvement_after_rejection",
+        "ultra_match_tie_continue",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 2046,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 3438973,
+      "name": "uf_p2_alternative_seed_0",
+      "packet_sha256": "b978edb3b69ee1479c9331acfd7c0f8c1bdbcdc0d679447ec785e88df0bbe665",
+      "policy": 2,
+      "queries": 615,
+      "rows_sha256": "529ceeeceb83784892abd20ccf58f7d31778eaea108cba55c88d2e95bba4fb16",
+      "sequences": 72
+    },
+    {
+      "alternatives": 110,
+      "coverage": [
+        "all_literals",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "trailing_backtrack",
+        "ultra_alternative_considered",
+        "ultra_alternative_extends_frontier",
+        "ultra_alternative_rejected",
+        "ultra_alternative_selected",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 2039,
+      "hypothesized_kinds": [
+        2
+      ],
+      "logical_row_bytes": 3466332,
+      "name": "uf_p2_alternative_seed_2",
+      "packet_sha256": "6af01eae6ba344631f79ad76fb1887a29bc20b528abd7f2ef41acdd3855164fc",
+      "policy": 2,
+      "queries": 628,
+      "rows_sha256": "9edf3fcbeb933b4a19be4c86df6a5ebb380c36149ccb82e9417dfb9e4f779f67",
+      "sequences": 60
+    }
+  ],
+  "qualification": "Source-only ordinary search/path expectations; publication kinds are explicit hypotheses, not entropy-selection predictions.",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1
+}

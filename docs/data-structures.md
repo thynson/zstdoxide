@@ -2482,3 +2482,33 @@ bytes or which block kind the encoder will choose. Native execution later verifi
 each hypothesis and all ownership/guard records. Frame bytes remain opaque
 observations until independently decoded. Allocation-free Ultra execution planning
 and shared-entropy publication follow this ordinary-search qualification.
+
+### Ordinary Ultra native observer and capture ownership
+
+The additive `ultra_fresh.c` adapter retains the complete fresh Optimal CCtx,
+allocator, search snapshots, 4099 path cells and 16384-byte source envelope.
+It reads one descriptor with `O_NOFOLLOW | O_NONBLOCK`, verifies regular-file
+identity and the 124..16444-byte extent using `fstat`, and consumes exactly that
+packet before any upstream allocation. The outer policy occupies bytes 8..12;
+the immutable nested Optimal packet starts at byte 12 and source data at byte 60.
+Both the applied-parameter invariant and CCtx construction select btopt for policy
+0 and btultra for policy 2. The ordinary upstream match provider is unchanged.
+
+The original fourteen observation substitutions are augmented by one read-only
+saved-match hook. Its twelve signed i64 values are observer-owned copies, reset
+after emission and at each padding pass. It receives the current repeat pointer
+and short-search frontier so its snapshot has exactly the same complete-state
+contract as every other non-query event. Removing all fifteen hooks must recover
+the exact pinned source, including the match-provider selector. Policy tags appear
+on metadata, events, block begin/publication and completion records.
+
+The command plan owns immutable packet bytes and exact diagnostic strings. Both
+normal and ASan/UBSan builds compile all 26 used translation units, with dependency
+and effective-predefine gates before helper execution. Captures retain frames,
+allocator ledgers, compiler identity, source closure, commands and bounded logs.
+The independent auditor regenerates state from original sources and compares
+canonical records, not only hashes. It retains transcript digests for cross-build
+equality and limits predicted-line caching to two cases to avoid retaining the
+entire expanded campaign. Aggregate log storage is bounded by 2 GiB; each valid
+request remains bounded by 256 MiB and 65536 events per padding pass. Publication
+kinds stay explicit hypotheses until compared with native block headers and owners.

@@ -419,3 +419,23 @@ The full frequency checkpoint remains a prior source-bound checkpoint. This
 latest matrix includes the private scripted path implementation and independent
 reader; it does not admit ordinary or public Ultra, retained Ultra, Ultra2 or
 previously ignored upstream migration cases.
+
+## Ordinary Ultra observer preflight (2026-10-19)
+
+The additive complete fresh observer preserves the original provider and parser;
+removing all fifteen read-only hooks recovers the exact pinned source. Outer
+policy/nested packet offsets, signed saved-match alternatives and all policy tags
+are reviewed in `reference-ultra-fresh-adapter-review.md`. Both strict normal and
+ASan/UBSan helper syntax checks pass. The restored external reference checkout
+matches the pinned commit and all 89 used source/header identities.
+
+Normal and optimized Python plan checks each pass 216 exact command rows,
+26 codec units, 49 source inputs, 29 malformed packets and four descriptor/path
+controls. Each rejects 32 command/environment/frame/ledger forgeries without
+child execution. Both recipe checks preserve the 44 original requests and reject
+17 alternative/publication forgeries. The full source-only prediction manifest
+contains 198476 events and 201 alternatives per padding pass; its SHA-256 is
+`406d7d8e970f56220d0ed00d55767a4c1e78b07841726a0b3a6ac157a74f6718`.
+The exact source hashes, generated identities and complete command inventory are
+retained in `evidence/2026-10-19-ultra-fresh-preflight.json`. This checkpoint is
+pre-execution qualification; native capture and independent audit follow.
