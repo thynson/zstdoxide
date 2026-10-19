@@ -2574,3 +2574,57 @@ constructor with an arbitrary scripted provider. Generic scripted parsing reject
 that owner before changing status. The ordinary entry calls the shared private
 runner after source/search validation. Reset retains this bit; it is a plain value
 record shared by all access backends and needs no artificial unsafe implementation.
+
+### Private Ultra execution and token composition
+
+`OptimalExecutionPlan` remains a plain copied record. Its new private
+`from_ultra_parameters` entry admits only resolved strategy 8 and delegates to
+checked geometry/layout arithmetic shared with strategy 7. The original entry
+continues to reject strategy 8. Both use the already observed 64..16384-byte
+fresh source domain, W16/H12/C12/S6 and target4095 caps, complete-source windows,
+nine distinct owner byte counts and a checked raw-frame bound. No allocations,
+allocator clones, native calls or unsafe representation are involved. Upstream
+counterparts are `ZSTD_getCParams_internal` / adjusted compression parameters and
+`ZSTD_compressBlock_btultra`; the local resource envelope is not a format limit.
+
+`OptimalMatchState` gains a separately checked Ultra constructor. The plan
+strategy and unused ordinary Ultra parser admission must agree before any scratch
+is cleared. Its seven parser/search owners and two scratch owners retain exact
+allocator identities. Source pointer/length, effective minimum, target, geometry,
+literal policy and unused search/parser state are checked together. The source
+is borrowed and tokens own only literal bytes and `SequenceWithOffset` records.
+The existing Optimal constructor rejects a forged Ultra plan even if paired with
+an Optimal parser. A shared collector preserves checked three-byte minimum,
+wire offset intent, overlap reconstruction, repeat evolution and literal tail.
+Reservation failures poison the composite; reset clears both parser/search and
+scratch while preserving capacities and policy. No new storage backend is needed.
+
+Private `ReferenceSearchPlan::Ultra` selects the same statically stored token
+state, with a distinct plan variant to prevent accidental public admission. The
+factory validates variant/strategy correspondence before cloning any owner. The
+exact nine clones remain frequencies, paths, parser candidates, tree heads, tree
+edges, short heads, search candidates, literals and sequences. No inactive parser
+or additional dispatch allocation is introduced. The historical request selector
+continues to reject strategy 8 until separate source-aware admission qualifies.
+
+The shared frame workspace accepts only one full source block for either optimal
+strategy and passes checked tokens to the existing three-byte entropy contract.
+Committed entropy/repeats stay in the entropy child. Candidate parsing does not
+commit wire state; compressed publication commits it, raw fallback discards it,
+and any failure after preflight poisons the workspace. Invalid partial scheduling
+is transactional. Rust entropy bytes need not equal C; complete frames must be
+deterministic and decode exactly, with native bidirectional interoperability a
+separate gate. Raw/disabled-literal observation cases are not silently admitted
+as public literal-policy controls.
+
+### Source-aware Ultra admission successor
+
+An additive v7 classification projects all historical v6 rows unchanged, retains
+all original columns/source/request identities, and independently reconstructs
+all 27 strategy-8 tuples from the pinned preset/resolution source model. Only the
+new v7 columns classify strategy 8 as success/resource within the qualified
+ordinary domain. Strategy 9 stays unsupported. The projection cannot execute
+children. Its malformed/type/geometry controls run under normal and optimized
+Python before any public dispatch change. New native public recipes preserve all
+1269 predecessor requests and frames as a baseline and add ordinary observed
+Ultra sources, default/explicit equivalences and exact resource boundaries.

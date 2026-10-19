@@ -532,3 +532,19 @@ All twelve commands bind unchanged source hashes. The 229-member archive
 `evidence/2026-10-19-ultra-fresh-platform.tar.gz` retains commands, logs, code,
 sysroot setup logs, concrete probe source, LLVM IR and objects (SHA-256
 `033063f8d2d2f34e307d4396c0b9d193a4ba38ec3070248f1619ede913721d8e`).
+
+## Private Ultra allocation-free plan
+
+The separate private Ultra plan constructor shares checked source/layout/frame
+arithmetic with Optimal while preserving the original Optimal constructor and
+public request gate. It checks all nine independent owner sizes before allocation
+and keeps unsupported-strategy versus resource-limit precedence. All 22 native
+Ultra geometries produce the expected plans. Plain copied plan records are shared
+by every backend and need no artificial unsafe representation.
+
+All ten qualification commands pass: seven new/original plan tests under safe,
+all features and release/all; strict safe/all-target Clippy; true no_std safe/all;
+and formatting. The 201-member source/log archive is
+`evidence/2026-10-19-ultra-private-plan.tar.gz`, SHA-256
+`0ff25172679c27d8c42ada00b07f85afe8e9afd64275ab5d150642394287286e`.
+Token collection and shared entropy remain separate qualification steps.
