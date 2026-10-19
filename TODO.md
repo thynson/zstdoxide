@@ -117,7 +117,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Qualify the independent ordinary Ultra fixture reader before private search integration.
 - [ ] Implement and qualify private ordinary Ultra search/path composition against every captured state.
 - [ ] Design and implement allocation-free Ultra execution planning and shared-entropy token publication.
-- [ ] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
+- [x] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
 - [ ] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
 - [ ] Capture and independently audit complete bidirectional public interoperability and forged-evidence controls.
 - [ ] Run complete safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and usage checks.

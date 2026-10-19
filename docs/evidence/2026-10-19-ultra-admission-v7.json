@@ -1,0 +1,287 @@
+{
+  "runs": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_reference_admission_v7.py",
+        "--write"
+      ],
+      "result": {
+        "child_processes": 0,
+        "coverage": {
+          "broader.tsv": {
+            "v6": {
+              "resource": 11,
+              "success": 131,
+              "unsupported": 17
+            },
+            "v7": {
+              "resource": 17,
+              "success": 131,
+              "unsupported": 11
+            }
+          },
+          "fuzz.tsv": {
+            "v6": {
+              "advanced": 4,
+              "resource": 3,
+              "success": 67,
+              "unsupported": 7
+            },
+            "v7": {
+              "advanced": 4,
+              "resource": 6,
+              "success": 67,
+              "unsupported": 4
+            }
+          },
+          "greedy.tsv": {
+            "v6": {
+              "resource": 20,
+              "success": 383,
+              "unsupported": 19
+            },
+            "v7": {
+              "resource": 26,
+              "success": 383,
+              "unsupported": 13
+            }
+          },
+          "interop.tsv": {
+            "v6": {
+              "resource": 3,
+              "success": 87,
+              "unsupported": 2
+            },
+            "v7": {
+              "resource": 3,
+              "success": 87,
+              "unsupported": 2
+            }
+          },
+          "lazy.tsv": {
+            "v6": {
+              "resource": 44,
+              "success": 823,
+              "unsupported": 19
+            },
+            "v7": {
+              "resource": 50,
+              "success": 823,
+              "unsupported": 13
+            }
+          },
+          "loops.tsv": {
+            "v6": {
+              "resource": 6,
+              "success": 20,
+              "unsupported": 17
+            },
+            "v7": {
+              "resource": 12,
+              "success": 20,
+              "unsupported": 11
+            }
+          }
+        },
+        "independently_reconstructed": 27,
+        "rejected": 15,
+        "status": "passed"
+      }
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_reference_admission_v7.py",
+        "--check"
+      ],
+      "result": {
+        "child_processes": 0,
+        "coverage": {
+          "broader.tsv": {
+            "v6": {
+              "resource": 11,
+              "success": 131,
+              "unsupported": 17
+            },
+            "v7": {
+              "resource": 17,
+              "success": 131,
+              "unsupported": 11
+            }
+          },
+          "fuzz.tsv": {
+            "v6": {
+              "advanced": 4,
+              "resource": 3,
+              "success": 67,
+              "unsupported": 7
+            },
+            "v7": {
+              "advanced": 4,
+              "resource": 6,
+              "success": 67,
+              "unsupported": 4
+            }
+          },
+          "greedy.tsv": {
+            "v6": {
+              "resource": 20,
+              "success": 383,
+              "unsupported": 19
+            },
+            "v7": {
+              "resource": 26,
+              "success": 383,
+              "unsupported": 13
+            }
+          },
+          "interop.tsv": {
+            "v6": {
+              "resource": 3,
+              "success": 87,
+              "unsupported": 2
+            },
+            "v7": {
+              "resource": 3,
+              "success": 87,
+              "unsupported": 2
+            }
+          },
+          "lazy.tsv": {
+            "v6": {
+              "resource": 44,
+              "success": 823,
+              "unsupported": 19
+            },
+            "v7": {
+              "resource": 50,
+              "success": 823,
+              "unsupported": 13
+            }
+          },
+          "loops.tsv": {
+            "v6": {
+              "resource": 6,
+              "success": 20,
+              "unsupported": 17
+            },
+            "v7": {
+              "resource": 12,
+              "success": 20,
+              "unsupported": 11
+            }
+          }
+        },
+        "independently_reconstructed": 27,
+        "rejected": 15,
+        "status": "passed"
+      }
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-O",
+        "scripts/check_reference_admission_v7.py",
+        "--check"
+      ],
+      "result": {
+        "child_processes": 0,
+        "coverage": {
+          "broader.tsv": {
+            "v6": {
+              "resource": 11,
+              "success": 131,
+              "unsupported": 17
+            },
+            "v7": {
+              "resource": 17,
+              "success": 131,
+              "unsupported": 11
+            }
+          },
+          "fuzz.tsv": {
+            "v6": {
+              "advanced": 4,
+              "resource": 3,
+              "success": 67,
+              "unsupported": 7
+            },
+            "v7": {
+              "advanced": 4,
+              "resource": 6,
+              "success": 67,
+              "unsupported": 4
+            }
+          },
+          "greedy.tsv": {
+            "v6": {
+              "resource": 20,
+              "success": 383,
+              "unsupported": 19
+            },
+            "v7": {
+              "resource": 26,
+              "success": 383,
+              "unsupported": 13
+            }
+          },
+          "interop.tsv": {
+            "v6": {
+              "resource": 3,
+              "success": 87,
+              "unsupported": 2
+            },
+            "v7": {
+              "resource": 3,
+              "success": 87,
+              "unsupported": 2
+            }
+          },
+          "lazy.tsv": {
+            "v6": {
+              "resource": 44,
+              "success": 823,
+              "unsupported": 19
+            },
+            "v7": {
+              "resource": 50,
+              "success": 823,
+              "unsupported": 13
+            }
+          },
+          "loops.tsv": {
+            "v6": {
+              "resource": 6,
+              "success": 20,
+              "unsupported": 17
+            },
+            "v7": {
+              "resource": 12,
+              "success": 20,
+              "unsupported": 11
+            }
+          }
+        },
+        "independently_reconstructed": 27,
+        "rejected": 15,
+        "status": "passed"
+      }
+    }
+  ],
+  "sources": {
+    "scripts/check_reference_admission_v7.py": "e7d00a7b657bd518cc41d81a5076f6d1f831c511862643e40e92252d4c6df93f",
+    "tests/fixtures/reference-admission-v7/README.md": "16274d528fc8a030aee9f605be1528c309063753ba9c42a575576398aa99ed3c",
+    "tests/fixtures/reference-admission-v7/broader.tsv": "420806286982a8f49e247a7ac12ca7730af80c60c9679f5ad6f649c39a93c8f5",
+    "tests/fixtures/reference-admission-v7/fuzz.tsv": "bc0811b799d5b7b698372f2e3707906daf120fd4b609bab61cf7177e4cd63bdf",
+    "tests/fixtures/reference-admission-v7/greedy.tsv": "99a1639d778b8d6e7df3663b24506aed2170b008f08e7fc6c32c0093bf71c300",
+    "tests/fixtures/reference-admission-v7/interop.tsv": "4669c156877d149da9c66ce4bdd9e872367ab4892010552626054be9f1f0be08",
+    "tests/fixtures/reference-admission-v7/lazy.tsv": "922de316b6e39d413b420b8d7fdfa04dcbf9e30182922b3221d06b3798213e15",
+    "tests/fixtures/reference-admission-v7/loops.tsv": "b01332f7dbe670b3a0bf0ba70098f444dcaf9f7fa769e30f1dbf0cdd910e7e7d",
+    "tests/fixtures/reference-admission-v7/provenance.json": "547009d418dd4b8f50f416aba5193538600f9622cb2f8a6432f2be8c09f21243"
+  },
+  "status": "passed"
+}
