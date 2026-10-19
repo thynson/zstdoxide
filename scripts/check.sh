@@ -73,6 +73,12 @@ python3 scripts/check_tree_interop_preflight.py --check
 python3 scripts/check_reference_admission_v6.py --check
 python3 scripts/check_optimal_interop_recipes.py --check
 python3 scripts/check_optimal_frame_baseline.py
+python3 scripts/check_reference_admission_v7.py --check
+python3 scripts/check_ultra_interop_recipes.py --check
+python3 scripts/check_ultra_scalar_fixture.py
+python3 scripts/check_ultra_frequency_fixture.py
+python3 scripts/check_ultra_path_offline.py
+python3 scripts/check_ultra_frame_baseline.py
 python3 scripts/pack_optimal_price_fixtures.py
 python3 scripts/pack_optimal_match_fixtures.py
 python3 scripts/pack_optimal_match_broad_fixtures.py
