@@ -1,4 +1,4 @@
-//! Bounded execution of pinned no-dictionary Fast, DoubleFast, lazy-family binary-tree and bounded Optimal profiles.
+//! Bounded execution of pinned no-dictionary Fast, DoubleFast, lazy-family binary-tree and bounded Optimal/Ultra profiles.
 
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
@@ -18,9 +18,9 @@ use crate::{CompressionParameterRequest, Result};
 /// are supported through 256 KiB; levels 10 through 12 are supported for inputs
 /// larger than 16 KiB and no larger than 256 KiB. Level 10 at smaller sizes and
 /// levels 7 through 17 above 256 KiB exceed local resource caps. Resolved
-/// strategy-7 requests admit a complete 64..=16384-byte source within the stated
-/// resource caps; default levels 11/12 also work for sizes 64..=2048. Ultra and
-/// Ultra2 remain unsupported. Explicit overrides can change this outcome.
+/// strategy-7/8 requests admit a complete 64..=16384-byte source within the stated
+/// resource caps; default levels 11/12 (Optimal) and 13/14 (Ultra) also work for
+/// sizes 64..=2048. Ultra2 remains unsupported. Explicit overrides can change this outcome.
 /// Admission uses the fully resolved strategy and its resource limits, rather
 /// than a level allowlist.
 /// Unsupported strategies return [`crate::Error::UnsupportedFeature`].
@@ -74,8 +74,8 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// input. The request is unchanged. Effective [`crate::ReferenceStrategy::Fast`],
 /// [`crate::ReferenceStrategy::DoubleFast`], [`crate::ReferenceStrategy::Greedy`],
 /// [`crate::ReferenceStrategy::Lazy`], [`crate::ReferenceStrategy::Lazy2`] and
-/// [`crate::ReferenceStrategy::BinaryTreeLazy2`] and [`crate::ReferenceStrategy::Optimal`]
-/// are implemented; another valid strategy returns
+/// [`crate::ReferenceStrategy::BinaryTreeLazy2`], [`crate::ReferenceStrategy::Optimal`]
+/// and [`crate::ReferenceStrategy::Ultra`] are implemented; another valid strategy returns
 /// [`crate::Error::UnsupportedFeature`] before resource admission.
 ///
 /// Fast supports effective window logs 10..=20 and hash logs 6..=18. DoubleFast
@@ -87,7 +87,7 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// BinaryTreeLazy2 supports window logs 10..=21, independent hash/chain logs
 /// 6..=19 and search logs 1..=8, always using tree storage.
 /// The preceding six strategies support minimum-match settings 3..=7 and target
-/// lengths 0..=131072. Optimal supports one complete source of 64..=16384 bytes
+/// lengths 0..=131072. Optimal and Ultra support one complete source of 64..=16384 bytes
 /// fitting its window, window logs 10..=16, hash/chain logs 6..=12, search logs
 /// 1..=6, minimum-match settings 3..=7 and targets 0..=4095. An otherwise
 /// valid implemented profile outside these caps returns [`crate::Error::ResourceLimit`]. Caps
@@ -114,11 +114,13 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// four-byte minimum. Positive target length controls Fast acceleration and
 /// disables literal Huffman/RLE selection. DoubleFast, the lazy family and binary tree ignore this
 /// control and retain normal literal selection. Complete block RLE remains
-/// independently available to the preceding strategies. Optimal preserves three-byte
+/// independently available to the preceding strategies. Optimal and Ultra preserve three-byte
 /// keys and three-byte matches for minimum 3, otherwise using four-byte minimum
-/// matches. It uses the pinned optLevel0 path/frequency decisions and sufficient
-/// match target, with automatic literal compression. Its initial public scope is
-/// a single complete block; retained-block, dictionary and Ultra paths are excluded.
+/// matches. Optimal uses pinned optLevel0 path/frequency decisions; Ultra uses
+/// coupled optLevel2 fractional prices, match-plus-literal alternatives and thorough
+/// path relaxation. Both use the sufficient-match target and automatic literal
+/// compression. Each admits a single complete block; retained-block, dictionary
+/// and Ultra2 discarded-pass paths are excluded.
 /// Lazy uses checked depth-one speculative gains; Lazy2 and BinaryTreeLazy2
 /// use depth-two gains and retain rejected
 /// sampling probes; Greedy stops at its first eligible baseline candidate.

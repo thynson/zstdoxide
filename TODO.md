@@ -68,8 +68,8 @@ The full upstream migration obligations above remain open.
 
 ## Module 18 preparation: bounded reference Ultra
 
-Design and ownership are recorded in `docs/data-structures.md`. Keep strategy 8
-unsupported until complete coupled optLevel=2 behavior is independently qualified.
+Design and ownership are recorded in `docs/data-structures.md`. Strategy 8 now
+admits only the independently qualified bounded fresh optLevel=2 envelope.
 Strategy 9 and its initial discarded pass belong to a subsequent module.
 Preserve every Optimal fixture, source request, complete frame and owner baseline.
 
@@ -124,7 +124,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
 - [x] Freeze additive public Ultra recipes and complete predecessor frame identities with independent controls.
 - [x] Qualify an isolated public Ultra candidate, foreign platform paths and executable usage without opening the main gate.
-- [ ] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
+- [x] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
 - [ ] Review and preflight the exact public Ultra native command/source inventory.
 - [ ] Capture and independently audit complete bidirectional public interoperability and forged-evidence controls.
 - [ ] Run complete safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and usage checks.

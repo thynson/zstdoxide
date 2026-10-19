@@ -1,7 +1,8 @@
 # Bounded Ultra public qualification
 
-This checkpoint qualifies an isolated candidate. The main checkout keeps the
-public strategy-8 gate closed until its remaining matrix and native audits pass.
+The main checkout now exposes the independently qualified bounded strategy-8
+envelope. Full regression, adversarial-control completion and timing remain
+separate open milestone gates; they are not implied by public admission.
 
 Public strategy 8 uses the coupled pinned optLevel2 policy: fractional prices,
 policy-tagged frequency/cache lifecycles, thorough relaxation and the
@@ -58,3 +59,16 @@ Its diagnostic is an expected limitation, not a successful migration result.
 
 Evidence archives: `evidence/2026-10-19-ultra-public-usage.tar.gz` and
 `evidence/2026-10-19-ultra-public-support.tar.gz`.
+
+
+## Admission source barrier
+
+The main checkout copies exactly the 87 production identities used by the
+qualified isolated candidate and both native Rust builds. The complete ordinary
+focused product has passed: safe, all 19 isolated unsafe features and all
+features together, with parser/search replay, borrowed fixture reading and true
+no_std in every configuration (63 commands). Both original and additive native
+auditors independently accept the complete captured campaign. Full regression
+and adversarial-control campaigns continue independently. The admission record
+is `evidence/2026-10-19-ultra-public-admission.json`; it explicitly preserves
+those unfinished campaign statuses instead of reporting module completion.

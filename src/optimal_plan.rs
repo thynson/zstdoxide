@@ -36,8 +36,8 @@ impl OptimalExecutionPlan {
     ) -> Result<Self> {
         Self::from_strategy(parameters, source_len, ReferenceStrategy::Optimal)
     }
-    /// Private Ultra admission retains the ordinary source/geometry envelope.
-    /// The public request dispatcher remains closed until its separate gates pass.
+    /// Checked Ultra admission retains the qualified ordinary source/geometry
+    /// envelope. The public dispatcher supplies already resolved parameters.
     pub(crate) fn from_ultra_parameters(
         parameters: ResolvedCompressionParameters,
         source_len: usize,
@@ -313,7 +313,7 @@ mod ultra_plan_tests {
         }
     }
     #[test]
-    fn original_admission_and_public_dispatch_remain_closed_for_ultra() {
+    fn original_admission_stays_closed_and_public_dispatch_selects_ultra() {
         let parameters = raw().validate().unwrap();
         assert_eq!(
             OptimalExecutionPlan::from_resolved_parameters(parameters, 64),
@@ -323,7 +323,7 @@ mod ultra_plan_tests {
         request.set_strategy(Some(ReferenceStrategy::Ultra));
         assert!(matches!(
             crate::reference_search::ReferenceSearchPlan::new(&request, 64),
-            Err(Error::UnsupportedFeature)
+            Ok(crate::reference_search::ReferenceSearchPlan::Ultra(_))
         ));
     }
     #[test]

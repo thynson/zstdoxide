@@ -35,10 +35,6 @@ pub(crate) enum ReferenceSearchPlan {
     DoubleFast(DoubleFastExecutionPlan),
     Greedy(GreedyExecutionPlan),
     Optimal(OptimalExecutionPlan),
-    #[allow(
-        dead_code,
-        reason = "Private Ultra framing awaits public admission qualification"
-    )]
     Ultra(OptimalExecutionPlan),
 }
 
@@ -71,6 +67,9 @@ impl ReferenceSearchPlan {
             ReferenceStrategy::Optimal => {
                 OptimalExecutionPlan::from_resolved_parameters(parameters, source_len)
                     .map(Self::Optimal)
+            }
+            ReferenceStrategy::Ultra => {
+                OptimalExecutionPlan::from_ultra_parameters(parameters, source_len).map(Self::Ultra)
             }
             _ => Err(Error::UnsupportedFeature),
         }
