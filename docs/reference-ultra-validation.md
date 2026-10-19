@@ -480,3 +480,18 @@ Python reproduce the identical complete pack and provenance and each reject
 28 malformed or forged projections. Native frames and allocator ledgers remain
 explicit audited opaque inputs with exact identities. Commands, results and
 source hashes are retained in `evidence/2026-10-19-ultra-fresh-projection.json`.
+
+## Independent ordinary Rust reader
+
+All ten source-bound reader qualification commands pass. Safe and all-feature
+builds each pass fourteen new-reader/original-Optimal/scripted-Ultra tests; the
+release build passes all four new-reader tests. Strict all-target Clippy safe/all,
+true no_std safe/all and formatting pass. The reader checks complete search and
+publication state, all twelve signed alternative operands and their next literal
+publication, malformed bounds and all original twenty policy-0 frame/state/owner
+baselines. All 44 native frames also decode to their source bytes in Rust.
+
+The 200-member source/log archive is
+`evidence/2026-10-19-ultra-fresh-reader.tar.gz`, SHA-256
+`3bdcb82d31e958c4625d68390e02f1081e3c8f0e9134fb4bd95930ddb2358325`.
+This reader checkpoint precedes private ordinary parser integration.

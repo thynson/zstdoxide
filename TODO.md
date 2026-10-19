@@ -114,7 +114,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Review and preflight ordinary Ultra read-only native instrumentation and exact command inventory.
 - [x] Capture and independently audit ordinary Ultra search/path states and malformed/forged evidence.
 - [x] Specify and project the independently audited ordinary Ultra fixture with forged-projection controls.
-- [ ] Qualify the independent ordinary Ultra fixture reader before private search integration.
+- [x] Qualify the independent ordinary Ultra fixture reader before private search integration.
 - [ ] Implement and qualify private ordinary Ultra search/path composition against every captured state.
 - [ ] Design and implement allocation-free Ultra execution planning and shared-entropy token publication.
 - [ ] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
