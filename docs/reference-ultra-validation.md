@@ -439,3 +439,32 @@ contains 198476 events and 201 alternatives per padding pass; its SHA-256 is
 The exact source hashes, generated identities and complete command inventory are
 retained in `evidence/2026-10-19-ultra-fresh-preflight.json`. This checkpoint is
 pre-execution qualification; native capture and independent audit follow.
+
+## Ordinary Ultra native capture and successor audit
+
+All 216 frozen native commands completed with expected outcomes: 44 cases,
+198476 logical events and 201 alternatives per padding pass, 176 complete frames
+and 176 released allocation ledgers. Normal and ASan/UBSan observations agree
+exactly. Both builds reject all 29 malformed packets and four filesystem controls.
+
+The original post-capture auditor failed because it applied the 16444-byte valid
+packet limit to the intentional 16445-byte oversize negative. Its failed evidence
+and exact error remain immutable. Additive auditor v2 reads each exact expected
+request length and accepts only that specific prior audit-bound failure; it still
+checks every command, source, native state, publication, frame and owner ledger.
+Its passed sidecar binds the original failed evidence hash. No native rerun or
+semantic relaxation is hidden by the successor.
+
+Normal and optimized successor controls each pass two positive audits and reject
+88 forgeries without child execution. Semantic mutations are equal across both
+builds and must fail independent state/publication replay, so transcript inequality
+cannot stand in for semantic validation. Results and source identities are in
+`evidence/2026-10-19-ultra-fresh-controls.json`.
+
+The capture archive retains 970 verified regular members (27943010 compressed
+bytes), including original/successor sources, requests, generated instrumentation,
+objects, logs, frames, ledgers and both audit outcomes. Its SHA-256 is
+`8f75a522e0428169e8e9f1e3da66e8cecca8c0dcc354cf92bfdfb006eb6ed523`;
+the archive report documents omitted special filesystem nodes and their retained
+creation commands/diagnostics. This qualifies ordinary native observations, not
+public Rust Ultra admission.

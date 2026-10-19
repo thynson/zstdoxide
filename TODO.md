@@ -112,7 +112,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Reconcile policy-0 ordinary replay with every original complete fresh native observation.
 - [x] Freeze ordinary Ultra source-only branch recipes and bounded policy-tagged transport.
 - [x] Review and preflight ordinary Ultra read-only native instrumentation and exact command inventory.
-- [ ] Capture and independently audit ordinary Ultra search/path states and malformed/forged evidence.
+- [x] Capture and independently audit ordinary Ultra search/path states and malformed/forged evidence.
 - [ ] Specify and project the independently audited ordinary Ultra fixture with forged-projection controls.
 - [ ] Qualify the independent ordinary Ultra fixture reader before private search integration.
 - [ ] Implement and qualify private ordinary Ultra search/path composition against every captured state.
