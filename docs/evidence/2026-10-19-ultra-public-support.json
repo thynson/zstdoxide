@@ -1,0 +1,80 @@
+{
+  "archive": "2026-10-19-ultra-public-support.tar.gz",
+  "archive_bytes": 123667,
+  "archive_sha256": "2f79a3e93c1fa00ca9ad551af4c27b691cc5bbd7c30eb63bf1d1ae0864b7a691",
+  "commands": 5,
+  "expected_nonzero_commands": [
+    "migration-incomplete"
+  ],
+  "files": [
+    {
+      "bytes": 3198,
+      "path": "evidence.json",
+      "sha256": "1cbcb5f3b94c515c62f6520ac3d53ddfe78ca5e6ad62833c6bc5dcc0bfa5d1b3"
+    },
+    {
+      "bytes": 188,
+      "path": "logs/allocator-clippy.log",
+      "sha256": "c36f981c64d83714c9d3cc6fe6de4a425cac7e5de2cfa7a36c62ed2591c67c54"
+    },
+    {
+      "bytes": 0,
+      "path": "logs/allocator-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1707,
+      "path": "logs/allocator-tests.log",
+      "sha256": "a2f76d9fb2da367767d96318a51826eacf4a642cc8e44ac2ccfb4b53afbb1832"
+    },
+    {
+      "bytes": 159,
+      "path": "logs/migration-incomplete.log",
+      "sha256": "b4e4f125325272ee5fca76933ecb3ff103e1f43c8c1a6f50d8175d011fb9cba9"
+    },
+    {
+      "bytes": 352,
+      "path": "logs/upstream-inventory.log",
+      "sha256": "611e95754d50e6363f071b619f0d95998aae4daf3aef8a7e8af5323ba8982b10"
+    },
+    {
+      "bytes": 2416,
+      "path": "source/driver.py",
+      "sha256": "1a6363a6fb1ecf0662f5477555796e50ddebfb096494c278ac73b87da47e8fbf"
+    },
+    {
+      "bytes": 15528,
+      "path": "source/scripts/audit_upstream_tests.py",
+      "sha256": "379af7a160c4b9e4ecbfe5d22e9d4e291167f80f2c337912ca60e1e47ef3c368"
+    },
+    {
+      "bytes": 168,
+      "path": "source/test-support/allocator/Cargo.lock",
+      "sha256": "6fa35d5b169b38383adf0f2b1e06523ec925ea71be364f3f7fd45039afee125e"
+    },
+    {
+      "bytes": 412,
+      "path": "source/test-support/allocator/Cargo.toml",
+      "sha256": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292"
+    },
+    {
+      "bytes": 49773,
+      "path": "source/test-support/allocator/src/lib.rs",
+      "sha256": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971"
+    },
+    {
+      "bytes": 657979,
+      "path": "source/tests/upstream/manifest.json",
+      "sha256": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+    }
+  ],
+  "qualification": "Inventory and allocator checks passed; the deliberately nonzero require-complete result preserves the unfinished official migration obligation.",
+  "source": {
+    "scripts/audit_upstream_tests.py": "379af7a160c4b9e4ecbfe5d22e9d4e291167f80f2c337912ca60e1e47ef3c368",
+    "test-support/allocator/Cargo.lock": "6fa35d5b169b38383adf0f2b1e06523ec925ea71be364f3f7fd45039afee125e",
+    "test-support/allocator/Cargo.toml": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/upstream/manifest.json": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+  },
+  "status": "passed"
+}

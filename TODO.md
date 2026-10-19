@@ -123,6 +123,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Qualify private Ultra static dispatch and deterministic shared-entropy frames before public admission.
 - [x] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
 - [x] Freeze additive public Ultra recipes and complete predecessor frame identities with independent controls.
+- [x] Qualify an isolated public Ultra candidate, foreign platform paths and executable usage without opening the main gate.
 - [ ] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
 - [ ] Review and preflight the exact public Ultra native command/source inventory.
 - [ ] Capture and independently audit complete bidirectional public interoperability and forged-evidence controls.

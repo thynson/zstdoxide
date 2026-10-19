@@ -1,0 +1,74 @@
+{
+  "archive": "2026-10-19-ultra-public-usage.tar.gz",
+  "archive_bytes": 20359,
+  "archive_sha256": "8e6440c8e6b9921e25686286e8dbd293b12daca47c7cb44aedc23a652abfe609",
+  "commands": 2,
+  "files": [
+    {
+      "bytes": 1589,
+      "path": "evidence.json",
+      "sha256": "9fbb3ff960d7c441d068bc7a8fadb1e965de2c2885826dfdf0d94aa2220247e4"
+    },
+    {
+      "bytes": 5359,
+      "path": "logs/all.log",
+      "sha256": "f5bb2ca89beebae03fbaf19069f63a92da94da4dbef8b28dbdc8a3506c9548f0"
+    },
+    {
+      "bytes": 5360,
+      "path": "logs/safe.log",
+      "sha256": "4e9361163ae266c162bd9006acb6e5e0a13d5dce5b81c7ce137d4bf6f91616e9"
+    },
+    {
+      "bytes": 7721,
+      "path": "source/docs/allocator-usage.md",
+      "sha256": "58ff668852b07265320db975638122944bc34e609237102607999aaa19510668"
+    },
+    {
+      "bytes": 7307,
+      "path": "source/docs/dictionary-usage.md",
+      "sha256": "3929fa980eee121794803bdc71a822a40130e75af29725320629255b98080b5e"
+    },
+    {
+      "bytes": 7060,
+      "path": "source/docs/match-search-usage.md",
+      "sha256": "d673788c371c189ef6839a1676c3fc098f3f1278e0465fae9fc9889a6fbbe92a"
+    },
+    {
+      "bytes": 6577,
+      "path": "source/docs/parameter-usage.md",
+      "sha256": "3949605bf5c4d102cf0b120af739d447434e7a1002b7a6d1f631c1423f36a76c"
+    },
+    {
+      "bytes": 13809,
+      "path": "source/docs/reference-fast-usage.md",
+      "sha256": "4e58994b2daeab4e1d1bc5dfb1ec2bb751d4ba5111220ade56bacac0cbc248bb"
+    },
+    {
+      "bytes": 10852,
+      "path": "source/docs/streaming-usage.md",
+      "sha256": "58522ab445e43fd1e15b78fba9a5be15dbbbc4b78d3d89523e6971a1d70e5939"
+    },
+    {
+      "bytes": 1697,
+      "path": "source/driver.py",
+      "sha256": "acc8a1f59b3ce491dd1f005c0ac6a0cc8e70268136c4108fcd79cf2c785d6b71"
+    },
+    {
+      "bytes": 2581,
+      "path": "source/scripts/check_doc_examples.py",
+      "sha256": "5820709c5d31b507a319b1a184f86d2236af3bd31aae4764ec79786c462494f1"
+    }
+  ],
+  "qualification": "All recorded commands passed against unchanged source identities. Full command/environment/log records and code snapshots are retained; each archived member was independently rehashed.",
+  "source": {
+    "docs/allocator-usage.md": "58ff668852b07265320db975638122944bc34e609237102607999aaa19510668",
+    "docs/dictionary-usage.md": "3929fa980eee121794803bdc71a822a40130e75af29725320629255b98080b5e",
+    "docs/match-search-usage.md": "d673788c371c189ef6839a1676c3fc098f3f1278e0465fae9fc9889a6fbbe92a",
+    "docs/parameter-usage.md": "3949605bf5c4d102cf0b120af739d447434e7a1002b7a6d1f631c1423f36a76c",
+    "docs/reference-fast-usage.md": "4e58994b2daeab4e1d1bc5dfb1ec2bb751d4ba5111220ade56bacac0cbc248bb",
+    "docs/streaming-usage.md": "58522ab445e43fd1e15b78fba9a5be15dbbbc4b78d3d89523e6971a1d70e5939",
+    "scripts/check_doc_examples.py": "5820709c5d31b507a319b1a184f86d2236af3bd31aae4764ec79786c462494f1"
+  },
+  "status": "passed"
+}
