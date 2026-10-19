@@ -468,3 +468,15 @@ objects, logs, frames, ledgers and both audit outcomes. Its SHA-256 is
 the archive report documents omitted special filesystem nodes and their retained
 creation commands/diagnostics. This qualifies ordinary native observations, not
 public Rust Ultra admission.
+
+## Ordinary Ultra immutable projection
+
+The audited native projection contains 44 cases, 198476 events and 201 signed
+alternatives in 25429567 bytes (SHA-256
+`6844d88c533e56a30fdeac437a63d023cbadb51b0d8a4cb64ef64542460ed0de`).
+An independent serializer reconstructs every source-driven search/path/frequency
+and publication state without using captured query answers. Normal and optimized
+Python reproduce the identical complete pack and provenance and each reject
+28 malformed or forged projections. Native frames and allocator ledgers remain
+explicit audited opaque inputs with exact identities. Commands, results and
+source hashes are retained in `evidence/2026-10-19-ultra-fresh-projection.json`.

@@ -1,0 +1,52 @@
+{
+  "checks": {
+    "normal": {
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_ultra_fresh_fixture.py",
+        "/private/tmp/zstdoxide-ultra-fresh-capture-1019",
+        "--controls",
+        "/private/tmp/ultra-fresh-fixture-controls"
+      ],
+      "result": {
+        "bytes": 25429567,
+        "rejected": 28,
+        "sha256": "6844d88c533e56a30fdeac437a63d023cbadb51b0d8a4cb64ef64542460ed0de",
+        "status": "passed"
+      },
+      "sha256": "9dad719479b34db546134b8c24bdb3e4de28ad8dca340cb43f698e15b41b393f"
+    },
+    "optimized": {
+      "argv": [
+        "python3",
+        "-B",
+        "-O",
+        "scripts/check_ultra_fresh_fixture.py",
+        "/private/tmp/zstdoxide-ultra-fresh-capture-1019",
+        "--controls",
+        "/private/tmp/ultra-fresh-fixture-controls-optimized"
+      ],
+      "result": {
+        "bytes": 25429567,
+        "rejected": 28,
+        "sha256": "6844d88c533e56a30fdeac437a63d023cbadb51b0d8a4cb64ef64542460ed0de",
+        "status": "passed"
+      },
+      "sha256": "9dad719479b34db546134b8c24bdb3e4de28ad8dca340cb43f698e15b41b393f"
+    }
+  },
+  "projection": {
+    "alternatives": 201,
+    "cases": 44,
+    "events": 198476,
+    "pack_bytes": 25429567,
+    "pack_sha256": "6844d88c533e56a30fdeac437a63d023cbadb51b0d8a4cb64ef64542460ed0de",
+    "status": "passed"
+  },
+  "sources": {
+    "scripts/check_ultra_fresh_fixture.py": "68242175237ed36ef2e85a06c461c0ed9231ff7a713586ca66147afda0a63803",
+    "scripts/pack_ultra_fresh_fixture.py": "056774bf28d468b8205c17510ca70add06eab36c36242670a14067c9f8d10672"
+  },
+  "status": "passed"
+}

@@ -2512,3 +2512,34 @@ equality and limits predicted-line caching to two cases to avoid retaining the
 entire expanded campaign. Aggregate log storage is bounded by 2 GiB; each valid
 request remains bounded by 256 MiB and 65536 events per padding pass. Publication
 kinds stay explicit hypotheses until compared with native block headers and owners.
+
+### Ordinary Ultra fixture and independent borrowed reader
+
+The additive fixture uses `ZUFFX01\0`, a u32 case count, and the original complete
+fresh twelve-word case header plus one policy word. The policy is 0 or 2. Two
+three-word allocation ledgers, borrowed ASCII name/source/frame bytes and the
+single twenty-word block publication record follow. Every event retains the
+original ten-word header, optional stretch/reverse/query, candidate pairs and
+canonical path/frequency/search deltas. An optional twelve-i64 alternative record
+is inserted immediately after query candidates, matching the scripted Ultra
+fixture's signed representation. Case policy applies to every event; projecting
+native records must verify all redundant policy tags before removing them.
+
+The pack is bounded by 64 MiB, 44 cases, 65536 events per case and 198476 total
+events. Each source remains 64..16384 bytes inside its window. All 4099 path cells
+and complete search owners are reconstructed. Names, source and frame bytes are
+borrowed; event/change vectors use bounded fallible allocation. One temporary
+path/search state and a fixed frequency array suffice per case. Committed/pending
+repeat-owner checks, canonical delta validation, wire frame structure, exact
+allocator high-water marks and sanitizer redzones retain their original contract.
+
+The independent reader reuses independently implemented Ultra event and frequency
+checks, including fractional cache refresh and unchanged dirty caches. It verifies
+the complete saved match before applying alternative deltas, recomputes signed
+LL increments and both candidate prices, and checks the following literal event's
+exact accepted/rejected publication and frontier. Ordinary non-query events may
+not change search; initial frontiers and biased source positions stay checked.
+No production parser supplies reader decisions or fixture reconstruction inputs.
+Captured frames are separately decoded with the Rust decoder. A source-only
+reconstructor must reproduce every state byte and retain all twelve-operand,
+search/path/publication, count and transport forgery controls.
