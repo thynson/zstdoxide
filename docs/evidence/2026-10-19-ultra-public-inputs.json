@@ -1,0 +1,161 @@
+{
+  "predecessor_controls": {
+    "normal": {
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_ultra_interop_predecessor_v2.py",
+        "--controls"
+      ],
+      "result": {
+        "archive_sha256": "14a3dd64d40c30f2e4f4ba469066f94e784f25a342674a0f7cf3fb9da733b910",
+        "child_processes": 0,
+        "compared_capture": false,
+        "encoded_responses": 4636,
+        "original_successes": 1159,
+        "rejected": [
+          "missing-response",
+          "changed-frame",
+          "changed-archive",
+          "float-schema"
+        ],
+        "status": "passed"
+      }
+    },
+    "optimized": {
+      "argv": [
+        "python3",
+        "-B",
+        "-O",
+        "scripts/check_ultra_interop_predecessor_v2.py",
+        "--controls"
+      ],
+      "result": {
+        "archive_sha256": "14a3dd64d40c30f2e4f4ba469066f94e784f25a342674a0f7cf3fb9da733b910",
+        "child_processes": 0,
+        "compared_capture": false,
+        "encoded_responses": 4636,
+        "original_successes": 1159,
+        "rejected": [
+          "missing-response",
+          "changed-frame",
+          "changed-archive",
+          "float-schema"
+        ],
+        "status": "passed"
+      }
+    }
+  },
+  "preserved_initial_failure": {
+    "commands": [
+      [
+        "python3",
+        "-B",
+        "scripts/check_ultra_interop_predecessor.py",
+        "--controls"
+      ],
+      [
+        "python3",
+        "-B",
+        "-O",
+        "scripts/check_ultra_interop_predecessor.py",
+        "--controls"
+      ]
+    ],
+    "error": "ValueError: bounded archived file map",
+    "reason": "The preserved 55635394-byte archive file map exceeds the initial 32 MiB pre-read cap. No baseline comparison or native execution occurred. The additive v2 checks the exact pinned map size.",
+    "source_sha256": "127ad34c39f0fe7891670b14f03022c3dc29117a558d4e5ddfeee5aa97167b7f",
+    "status": "failed"
+  },
+  "recipe_controls": {
+    "normal": {
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_ultra_interop_recipe_controls.py"
+      ],
+      "result": {
+        "child_processes": 0,
+        "classifications": {
+          "resource": 108,
+          "success": 1222,
+          "unsupported": 15
+        },
+        "equivalence_groups": 16,
+        "positives": 2,
+        "recipes": 1345,
+        "rejected": [
+          "count",
+          "source-bytes",
+          "classification",
+          "source-hash",
+          "request",
+          "tuple",
+          "equivalence",
+          "missing-case",
+          "float-schema",
+          "extra-key",
+          "truncated",
+          "trailing",
+          "duplicate-key",
+          "nonfinite",
+          "symlink"
+        ],
+        "semantic_digest_bypass": true,
+        "source_bytes": 146427068,
+        "status": "passed"
+      }
+    },
+    "optimized": {
+      "argv": [
+        "python3",
+        "-B",
+        "-O",
+        "scripts/check_ultra_interop_recipe_controls.py"
+      ],
+      "result": {
+        "child_processes": 0,
+        "classifications": {
+          "resource": 108,
+          "success": 1222,
+          "unsupported": 15
+        },
+        "equivalence_groups": 16,
+        "positives": 2,
+        "recipes": 1345,
+        "rejected": [
+          "count",
+          "source-bytes",
+          "classification",
+          "source-hash",
+          "request",
+          "tuple",
+          "equivalence",
+          "missing-case",
+          "float-schema",
+          "extra-key",
+          "truncated",
+          "trailing",
+          "duplicate-key",
+          "nonfinite",
+          "symlink"
+        ],
+        "semantic_digest_bypass": true,
+        "source_bytes": 146427068,
+        "status": "passed"
+      }
+    }
+  },
+  "source_sha256": {
+    "docs/reference-ultra-interop-protocol.md": "78398829eea12eec5c8caf829b3123ccaec6888cd55e378d753d58c1621ef97b",
+    "scripts/check_ultra_interop_predecessor.py": "127ad34c39f0fe7891670b14f03022c3dc29117a558d4e5ddfeee5aa97167b7f",
+    "scripts/check_ultra_interop_predecessor_v2.py": "70ca1fe29058b56edd2f4140f8ca10c5b3b394e4be730584bf6091b051d3eae4",
+    "scripts/check_ultra_interop_recipe_controls.py": "68c49b061c00299720a2d7dd05f920eda77bddf983d43f6d4209eec1a47febc5",
+    "scripts/check_ultra_interop_recipes.py": "05d5ad81525d211868541cf840550516425530ada5f84ad1ad64ff2a1a30d461",
+    "scripts/oracles/ultra_interop.py": "c9d98ec9f8671d4e9a0596b4abdbda47282de93d1571718e4d74126ed6753108",
+    "tests/fixtures/reference-ultra-interop-recipes/README.md": "2840c1b892e41f1cf7338d3e9c92ae36655050d9816657e55e3a9e7050f05fb6",
+    "tests/fixtures/reference-ultra-interop-recipes/predecessor-frames.json": "342368fbf3b4e6c9d23cb575af0d56e76cebcbe4a0f6d25b335a1da2fc4f09a2",
+    "tests/fixtures/reference-ultra-interop-recipes/recipes.json": "b498c6932e2fd85712608833dd7c745945cbea87d53bdfd009e2dae8a295fcd0"
+  },
+  "status": "passed"
+}

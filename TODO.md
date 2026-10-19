@@ -122,7 +122,9 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [ ] Implement and qualify private Ultra token publication with nine exact owners and transactional failures.
 - [ ] Qualify private Ultra static dispatch and deterministic shared-entropy frames before public admission.
 - [x] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
+- [x] Freeze additive public Ultra recipes and complete predecessor frame identities with independent controls.
 - [ ] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
+- [ ] Review and preflight the exact public Ultra native command/source inventory.
 - [ ] Capture and independently audit complete bidirectional public interoperability and forged-evidence controls.
 - [ ] Run complete safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and usage checks.
 - [ ] Freeze complete frames/owners and measure all backends plus an independent safe/all repeat after CPU barriers.

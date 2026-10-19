@@ -548,3 +548,21 @@ and formatting. The 201-member source/log archive is
 `evidence/2026-10-19-ultra-private-plan.tar.gz`, SHA-256
 `0ff25172679c27d8c42ada00b07f85afe8e9afd64275ab5d150642394287286e`.
 Token collection and shared entropy remain separate qualification steps.
+
+## Source-only public Ultra inputs
+
+The additive public manifest preserves all 1269 predecessor requests and adds
+76 cases: twenty observed source/request pairs, 24 default requests, ten minimum/
+target boundaries, eight explicit aliases and fourteen rejection boundaries.
+Independent source resolution predicts 1222 successes, 108 resource limits and
+15 unsupported cases among 1345 requests, with sixteen equivalence groups.
+Normal and optimized controls each reject fifteen forgeries, including semantic
+mutations whose outer digest was coherently updated. No children execute.
+
+All 4636 originally successful encoded-response identities are reconstructed
+from the unchanged audited predecessor archive. Both Python modes reject four
+forgeries each. The original predecessor checker failed before comparison on
+its 32 MiB index cap; additive v2 verifies the exact 55635394-byte pinned index.
+The initial source/error remains recorded. Commands, source hashes and results
+are in `evidence/2026-10-19-ultra-public-inputs.json`. No new native capture or
+comparison with these old frames is claimed by this input-freeze checkpoint.
