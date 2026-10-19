@@ -2628,3 +2628,83 @@ children. Its malformed/type/geometry controls run under normal and optimized
 Python before any public dispatch change. New native public recipes preserve all
 1269 predecessor requests and frames as a baseline and add ordinary observed
 Ultra sources, default/explicit equivalences and exact resource boundaries.
+
+## Bounded reference Ultra2: design before implementation
+
+Pinned v1.5.7 `ZSTD_compressBlock_btultra2` uses the already coupled optLevel2
+parser twice only when the original block is eligible. `ZSTD_initStats_ultra`
+collects the first pass into the same frequency owner, discards its tokens and
+repeat changes, invalidates the old history range and starts the real pass with
+scaled accumulated statistics. Strategy 9 must remain unsupported until this
+complete lifecycle is independently observed and qualified.
+
+### Coordinates, phases and ownership
+
+A private copied phase (`Fresh`, `Seeding`, `Rebased`, `Encoding`, `Complete`,
+`Failed`) owns no memory and needs no unsafe representation. It must encode
+which transitions are legal and whether output is publishable. A failed pass
+poisons the complete coordinator; only an explicit whole reset may reuse it.
+Caller-visible repeats, tokens and frame bytes remain unchanged during seeding.
+The borrowed source retains its ordinary lifetime throughout both scans.
+
+A checked coordinate record stores the absolute index origin, low/dictionary
+limit, update frontier and source length as integers. The C implementation
+moves `window.base` backwards by `srcSize` and advances `dictLimit`, `lowLimit`
+and `nextToUpdate` to invalidate old positions. Rust must never form a pointer
+before the source allocation. Translate eligible positions through checked
+subtraction and explicit interval validation; stale first-pass tree and hash
+cells remain integer records and cannot become dereferenceable history.
+Whether clearing all old cells is observationally equivalent must be proven
+against complete native intermediate state before selecting that simplification.
+The short-key table, tree edges/heads and candidate frontier need the same
+coordinate proof. Ring-slot aliases after rebasing require explicit coverage.
+
+The existing frequency, path, match-buffer and search owners can be reused if
+their phase-reset contracts support the exact upstream transitions. The first
+pass must preserve all collected frequency counters; the second call to
+`ZSTD_rescaleFreqs` scales those counters and recomputes cached bases. Clearing
+frequency state, keeping stale caches or calling fresh histogram initialization
+again changes the algorithm. Path/candidate scratch may be reset without
+retaining externally observable choices only after that equivalence is checked.
+A discarded token sink should borrow existing literal/sequence buffers and
+reset their logical lengths, retaining the same allocating owner and capacities.
+Do not clone owners merely to discard the first pass. The real pass starts with
+the original repeat offsets, since C gives the initial pass a local `tmpRep`.
+
+### Eligibility and qualification boundaries
+
+The native gate tests all of: zero initial literal-length sum, an empty sequence
+store, equal dictionary and low limits, current position equal to dictionary
+limit, and source length greater than `ZSTD_PREDEF_THRESHOLD` (8). Each
+predicate and the 7/8/9 boundaries need independent controls. Inputs
+that skip seeding still run the ordinary optLevel2 parser; they must match Ultra
+when source, parameters and initial state are identical. Existing Ultra/Optimal
+source requests and complete frames remain frozen.
+
+The initial 64-byte public lower bound means every otherwise eligible public
+request exceeds the native threshold; the smaller threshold controls belong to
+the private model/observer, without widening public admission.
+
+Initially reuse the complete fresh no-dictionary 64..16384 source envelope and
+existing geometry caps. Keep dictionary, prefix, LDM, retained public blocks,
+window expiry and multiple-block compression outside public admission. Native
+observer transport must expose pass identity, original/copied repeats, frequency
+and cache state before/after scaling, sequence-store reset, all coordinate
+transitions and complete search/path events. Instrumentation is read-only; the
+original C initial-pass call, coordinate arithmetic and predicates stay intact.
+The independent model must derive both passes before native execution, including
+cases that differ from ordinary Ultra, to prevent final-frame-only validation.
+
+### Exact first-pass reset boundaries
+
+`nextToUpdate3` is a local variable initialized from `ms->nextToUpdate` on each
+`ZSTD_compressBlock_opt_generic` invocation; it is not an independently retained
+match-state field. The second pass therefore initializes it from the rebased
+frontier, while the existing hash3 cells themselves survive as stale indices.
+`lastStretch` is zero-initialized each invocation, and `ip` skips the first byte
+when it equals `prefixStart` in both passes. The seeding call's returned tail
+length is ignored; the helper must not invent a final-literal statistics update
+or an entropy publication between passes. `ZSTD_resetSeqStore` resets logical
+sequence/literal output before the real pass. The observer must distinguish
+physical stale cells from readable current history and report both where the
+native state exposes them.

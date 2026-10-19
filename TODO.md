@@ -131,6 +131,32 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [ ] Freeze complete frames/owners and measure all backends plus an independent safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded Ultra milestone, official migration gaps and the separate Ultra2 lifecycle decomposition.
 
+## Module 19: bounded reference Ultra2
+
+Keep strategy 9 unsupported until its initial discarded pass and exact history
+invalidation are independently qualified. Preserve every earlier recipe,
+source-size selector, complete frame and allocator baseline.
+
+- [x] Review pinned Ultra2 eligibility, sequence-store reset, copied repeats and history-coordinate changes against the ownership design.
+- [ ] Freeze an independent eligibility/coordinate model and reconcile skipped-seeding cases with ordinary Ultra.
+- [ ] Freeze source-only two-pass recipes covering short-key tables, stale ring aliases, threshold predicates and changed final paths.
+- [ ] Specify bounded pass-tagged transport and complete frequency/search/path/reset observations before native instrumentation.
+- [ ] Review and preflight read-only instrumentation, full sanitizer coverage and exact command/source inventories.
+- [ ] Capture and independently audit both passes, malformed requests and coherent forged lifecycle states.
+- [ ] Specify and project an immutable two-pass fixture with independent reconstruction controls.
+- [ ] Qualify the independent borrowed Rust fixture reader and all reset/publication boundaries.
+- [ ] Design a private checked Ultra2 plan and copied phase/coordinate records before changing parser/search state.
+- [ ] Implement checked index rebasing and stale-history exclusion while retaining exact search owners.
+- [ ] Implement the private discarded-pass coordinator with preserved frequencies, original repeats and reset token lengths.
+- [ ] Qualify complete private two-pass paths, nine owner identities and transactional failures against every captured state.
+- [ ] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation.
+- [ ] Freeze additive source-aware admission and public recipes without rewriting any Ultra predecessor input.
+- [ ] Qualify bounded public Ultra2 dispatch and complete shared-entropy frames before public admission.
+- [ ] Capture and independently audit bidirectional public interoperability and all predecessor frame identities.
+- [ ] Complete full regression, true no_std, formatting, Clippy, usage and migration-inventory checks.
+- [ ] Freeze complete frames/owners and measure every backend plus an independent repeat after CPU barriers.
+- [ ] Reconcile the bounded Ultra2 milestone and decompose the next roadmap scope without claiming complete upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
