@@ -1,8 +1,8 @@
 # Bounded Ultra public qualification
 
 The main checkout now exposes the independently qualified bounded strategy-8
-envelope. Full regression and timing remain
-separate open milestone gates; they are not implied by public admission.
+envelope. Complete regression qualification now passes. Timed measurements and final
+milestone reconciliation remain separate open gates.
 
 Public strategy 8 uses the coupled pinned optLevel2 policy: fractional prices,
 policy-tagged frequency/cache lifecycles, thorough relaxation and the
@@ -68,7 +68,7 @@ qualified isolated candidate and both native Rust builds. The complete ordinary
 focused product has passed: safe, all 19 isolated unsafe features and all
 features together, with parser/search replay, borrowed fixture reading and true
 no_std in every configuration (63 commands). Both original and additive native
-auditors independently accept the complete captured campaign. Full regression continues independently. Both normal and optimized Python
+auditors independently accept the complete captured campaign. The complete final regression product is recorded below. Both normal and optimized Python
 adversarial-control campaigns now pass all 56 cases without child execution. The admission record
 is `evidence/2026-10-19-ultra-public-admission.json`; it explicitly preserves
 those unfinished campaign statuses instead of reporting module completion.
@@ -98,3 +98,39 @@ member and every reconstructed original file were independently rehashed.
 Evidence: `evidence/2026-10-19-ultra-public-interop.tar.gz`, SHA-256
 `fc99f273d801db8319a55a0352d9a8cd1ad4588494a4d3a5e4e404881ee5d073`.
 The adjacent JSON records the complete archive and capture identities.
+
+## Complete public regression product
+
+All 22 configuration products are complete: safe, nineteen isolated unsafe
+features, all features, and release/all. Each has the same 1460 individual
+case/outcome records: 1405 passes and 55 explicit ignores. This is 30910 passing
+and 1210 ignored executions, with 21 true no_std builds. Strict safe/all Clippy,
+formatting, allocator support and 48 executable usage checks are qualified by
+the unchanged earlier records. Ignored official cases remain open obligations.
+
+Six original 1800-second Cargo attempts timed out without assertion failures.
+Sixteen suites completed in one successful invocation; six were completed from
+verified prefixes and explicit integration/doc continuations. A prefix group
+counts only when Cargo subsequently started the next group. The final child is
+rerun even if orphaned output later reported success. Exact individual names and
+outcomes match the complete safe suite. All 49 final successful command records
+are retained, as are the failed timeout records and both earlier interrupted
+schedulers. The summary's zero unresolved failures does not erase those attempts.
+
+The initial before/after snapshot covers 396 selected file formats. A supplemental
+check binds 933 additional inherited files, including binary corpora and native
+stdout fixtures, to Git blobs preceding public qualification; all match current
+main and the frozen candidate. Two later frame-baseline files have their separate
+native/clock-free pins, and the generated allocator lockfile is compared directly.
+This supplemental check does not invent contemporaneous hashes for formats absent
+from the initial inventory. Similarly, the scoped platform inventory is supplemented
+with unchanged pre-qualification Git identities for its unrecorded allocator
+manifest and native-only oracle example; the latter is not compiled by Miri.
+
+The review archive preserves every raw campaign and 720 regular bundle files.
+All 1332 complete inputs are reconstructible from 1331 exact local Git blobs plus
+one stored generated lockfile, with independent SHA-256/length checks. It avoids
+duplicating large inherited corpora already held in Git; the redundant full-input
+archive remains outside the repository and its report is retained.
+Evidence: `evidence/2026-10-19-ultra-public-matrix.tar.gz`, SHA-256
+`3b40b63560b7b4a0575d82b492fe76b3f1d733091933b9ce5c22cadc743f9c87`.

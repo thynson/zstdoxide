@@ -127,7 +127,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
 - [x] Review and preflight the exact public Ultra native command/source inventory.
 - [x] Capture and independently audit complete bidirectional public interoperability and forged-evidence controls.
-- [ ] Run complete safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and usage checks.
+- [x] Run complete safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and usage checks.
 - [x] Freeze the 26 preselected complete frame baselines after full native replay.
 - [x] Add read-only Ultra admission, scalar/frequency/path and complete-frame checks to the offline driver.
 - [x] Qualify clock-free complete frames and allocator ledgers across every backend.
