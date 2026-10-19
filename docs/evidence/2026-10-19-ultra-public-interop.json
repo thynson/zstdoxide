@@ -1,0 +1,25 @@
+{
+  "archive": "2026-10-19-ultra-public-interop.tar.gz",
+  "archive_bytes": 53344105,
+  "archive_sha256": "fc99f273d801db8319a55a0352d9a8cd1ad4588494a4d3a5e4e404881ee5d073",
+  "capture_evidence_sha256": "acd9c2c7de77f426f84537aada3fb9ef9a02cb38b0f7f7ba8a587e3d5791a1ee",
+  "commands": 15132,
+  "controls_per_mode": 56,
+  "expanded_bytes": 2599322696,
+  "file_map_sha256": "be36a34a038d88e73e133ced3696cf2e25a7559a4308af4218356da6d1d94f62",
+  "omissions": "None. Every regular capture artifact is reconstructed exactly; chunk deduplication changes storage only.",
+  "qualification": "Complete normal/sanitized C and safe/all Rust bidirectional interoperability, independently audited with immutable predecessor frame comparisons. No C/Rust compression-byte identity claim.",
+  "regular_files": 45671,
+  "status": "passed",
+  "totals": {
+    "admitted": 1222,
+    "c_frames_rust_decoded": 4888,
+    "decoded_bytes": 800050968,
+    "recipes": 1345,
+    "resource": 108,
+    "rust_frames_c_decoded": 4888,
+    "unsupported": 15
+  },
+  "unique_chunk_bytes": 168144318,
+  "unique_chunks": 6585
+}

@@ -1,7 +1,7 @@
 # Bounded Ultra public qualification
 
 The main checkout now exposes the independently qualified bounded strategy-8
-envelope. Full regression, adversarial-control completion and timing remain
+envelope. Full regression and timing remain
 separate open milestone gates; they are not implied by public admission.
 
 Public strategy 8 uses the coupled pinned optLevel2 policy: fractional prices,
@@ -68,7 +68,33 @@ qualified isolated candidate and both native Rust builds. The complete ordinary
 focused product has passed: safe, all 19 isolated unsafe features and all
 features together, with parser/search replay, borrowed fixture reading and true
 no_std in every configuration (63 commands). Both original and additive native
-auditors independently accept the complete captured campaign. Full regression
-and adversarial-control campaigns continue independently. The admission record
+auditors independently accept the complete captured campaign. Full regression continues independently. Both normal and optimized Python
+adversarial-control campaigns now pass all 56 cases without child execution. The admission record
 is `evidence/2026-10-19-ultra-public-admission.json`; it explicitly preserves
 those unfinished campaign statuses instead of reporting module completion.
+
+## Complete native public interoperability
+
+The source-bound capture completes 15,132 commands for 1,345 source-only
+recipes: 1,222 admitted, 108 resource-limited and 15 unsupported. Normal and
+fully ASan/UBSan-instrumented C builds each compile all 26 relevant translation
+units. Safe/all Rust frames are decoded by both C builds, and both C frames are
+decoded by both Rust builds: 4,888 frames in each direction, 800,050,968 decoded
+bytes. All 4,636 predecessor successful encoded responses retain exact bytes.
+The 156 malformed-adapter exits are expected exit 2, not crashes or unreported
+failures. Interoperability does not imply identical C/Rust compression bytes.
+
+The original, v2 and v3 independent positive audits all pass. V3 normal and
+optimized Python each reject 56 forged evidence cases with zero child attempts.
+The earlier slow v1/v2 control runs remain explicitly interrupted; their sources,
+mutation snapshots and logs are retained and do not contribute passing controls.
+See the additive [v3 audit review](reference-ultra-interop-audit-v3.md).
+
+The lossless archive retains all 45,671 regular capture artifacts, including
+source snapshots, exact executables, request/response bytes, compiler outputs,
+preflight and interrupted-control evidence. Its 2,599,322,696 logical bytes are
+stored in 53,344,105 compressed bytes using content-addressed chunks. Every
+member and every reconstructed original file were independently rehashed.
+Evidence: `evidence/2026-10-19-ultra-public-interop.tar.gz`, SHA-256
+`fc99f273d801db8319a55a0352d9a8cd1ad4588494a4d3a5e4e404881ee5d073`.
+The adjacent JSON records the complete archive and capture identities.

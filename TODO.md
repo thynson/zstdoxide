@@ -126,7 +126,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Qualify an isolated public Ultra candidate, foreign platform paths and executable usage without opening the main gate.
 - [x] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
 - [x] Review and preflight the exact public Ultra native command/source inventory.
-- [ ] Capture and independently audit complete bidirectional public interoperability and forged-evidence controls.
+- [x] Capture and independently audit complete bidirectional public interoperability and forged-evidence controls.
 - [ ] Run complete safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and usage checks.
 - [ ] Freeze complete frames/owners and measure all backends plus an independent safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded Ultra milestone, official migration gaps and the separate Ultra2 lifecycle decomposition.
