@@ -35,6 +35,11 @@ pub(crate) enum ReferenceSearchPlan {
     DoubleFast(DoubleFastExecutionPlan),
     Greedy(GreedyExecutionPlan),
     Optimal(OptimalExecutionPlan),
+    #[allow(
+        dead_code,
+        reason = "Private Ultra framing awaits public admission qualification"
+    )]
+    Ultra(OptimalExecutionPlan),
 }
 
 impl ReferenceSearchPlan {
@@ -76,7 +81,7 @@ impl ReferenceSearchPlan {
             Self::Fast(plan) => plan.source_len(),
             Self::DoubleFast(plan) => plan.source_len(),
             Self::Greedy(plan) => plan.source_len(),
-            Self::Optimal(plan) => plan.source_len(),
+            Self::Optimal(plan) | Self::Ultra(plan) => plan.source_len(),
         }
     }
     pub(crate) fn parameters(self) -> ResolvedCompressionParameters {
@@ -84,7 +89,7 @@ impl ReferenceSearchPlan {
             Self::Fast(plan) => plan.parameters(),
             Self::DoubleFast(plan) => plan.parameters(),
             Self::Greedy(plan) => plan.parameters(),
-            Self::Optimal(plan) => plan.parameters(),
+            Self::Optimal(plan) | Self::Ultra(plan) => plan.parameters(),
         }
     }
     pub(crate) fn block_limit(self) -> usize {
@@ -92,7 +97,7 @@ impl ReferenceSearchPlan {
             Self::Fast(plan) => plan.block_limit(),
             Self::DoubleFast(plan) => plan.block_limit(),
             Self::Greedy(plan) => plan.block_limit(),
-            Self::Optimal(plan) => plan.block_limit(),
+            Self::Optimal(plan) | Self::Ultra(plan) => plan.block_limit(),
         }
     }
 }
@@ -120,17 +125,43 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
         if source.len() != plan.source_len() {
             return Err(Error::InvalidParameter);
         }
+        let ultra = matches!(plan, ReferenceSearchPlan::Ultra(_));
+        if matches!(
+            plan,
+            ReferenceSearchPlan::Optimal(_) | ReferenceSearchPlan::Ultra(_)
+        ) && plan.parameters().strategy()
+            != if ultra {
+                ReferenceStrategy::Ultra
+            } else {
+                ReferenceStrategy::Optimal
+            }
+        {
+            return Err(Error::UnsupportedFeature);
+        }
         match plan {
-            ReferenceSearchPlan::Optimal(plan) => {
+            ReferenceSearchPlan::Optimal(plan) | ReferenceSearchPlan::Ultra(plan) => {
                 // Exact clone order: frequencies, paths, parser candidates, tree
                 // heads, tree edges, short heads, search candidates, literals,
                 // sequences. The optional short owner may allocate no storage.
                 let parameters = plan.parameters();
-                let parser = OptimalParser::from_parts(
+                let constructor = if ultra {
+                    OptimalParser::from_ultra_fresh_parts
+                } else {
+                    OptimalParser::from_parts
+                };
+                let parser = constructor(
                     source,
                     parameters.min_match(),
                     parameters.target_length() as usize,
-                    OptimalFrequencies::new_in(false, factory.clone())?,
+                    OptimalFrequencies::new_with_policy_in(
+                        if ultra {
+                            crate::optimal_price::PricePolicy::Ultra
+                        } else {
+                            crate::optimal_price::PricePolicy::Optimal
+                        },
+                        false,
+                        factory.clone(),
+                    )?,
                     OptimalPaths::new_in(factory.clone())?,
                     OptimalMatches::new_in(factory.clone())?,
                 )?;
@@ -142,7 +173,12 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                     OptimalShortKey::new_in(layout.short_log(), factory.clone())?,
                     OptimalMatches::new_in(factory.clone())?,
                 )?;
-                Ok(Self::Optimal(OptimalMatchState::from_parts(
+                let compose = if ultra {
+                    OptimalMatchState::from_ultra_parts
+                } else {
+                    OptimalMatchState::from_parts
+                };
+                Ok(Self::Optimal(compose(
                     source,
                     plan,
                     parser,
@@ -301,7 +337,9 @@ mod tests {
                 ReferenceSearchPlan::Fast(p) => (1, 4, p.table_bytes()),
                 ReferenceSearchPlan::DoubleFast(p) => (2, 5, p.table_bytes()),
                 ReferenceSearchPlan::Greedy(p) => (2, 5, p.table_bytes()),
-                ReferenceSearchPlan::Optimal(p) => (7, 10, p.owner_bytes()[..7].iter().sum()),
+                ReferenceSearchPlan::Optimal(p) | ReferenceSearchPlan::Ultra(p) => {
+                    (7, 10, p.owner_bytes()[..7].iter().sum())
+                }
             };
             let factory = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
             let monitor = factory.monitor();
@@ -502,5 +540,89 @@ mod tests {
             assert_eq!(committed, block.wire_after);
         }
         assert!(blocks.next().is_none());
+    }
+}
+
+#[cfg(test)]
+mod ultra_dispatch_tests {
+    use super::*;
+    use crate::RawCompressionParameters;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    fn plan(strategy: u32) -> OptimalExecutionPlan {
+        let p = RawCompressionParameters {
+            window_log: 10,
+            hash_log: 6,
+            chain_log: 6,
+            search_log: 1,
+            min_match: 3,
+            target_length: 1,
+            strategy,
+        }
+        .validate()
+        .unwrap();
+        if strategy == 8 {
+            OptimalExecutionPlan::from_ultra_parameters(p, 64).unwrap()
+        } else {
+            OptimalExecutionPlan::from_resolved_parameters(p, 64).unwrap()
+        }
+    }
+    #[test]
+    fn private_ultra_preserves_exact_nine_clone_order_and_borrowed_identity() {
+        let source = [b'a'; 64];
+        let p = plan(8);
+        let factory = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = factory.monitor();
+        let mut state =
+            ReferenceSearchState::new(&source, ReferenceSearchPlan::Ultra(p), &factory).unwrap();
+        let before = monitor.snapshot();
+        assert_eq!(before.identities_created, 10);
+        assert_eq!(before.attempts, 7);
+        assert_eq!(before.live_blocks, 7);
+        assert_eq!(
+            before.live_requested_bytes,
+            p.owner_bytes()[..7].iter().sum::<usize>() as u128
+        );
+        state.parse_next(64, [1, 4, 8]).unwrap();
+        assert_eq!(monitor.snapshot().attempts, 9);
+        drop(state);
+        drop(factory);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 10);
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = owner.monitor();
+        let mut state =
+            ReferenceSearchState::new(&source, ReferenceSearchPlan::Ultra(p), &&owner).unwrap();
+        state.parse_next(64, [1, 4, 8]).unwrap();
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        drop(state);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 0);
+        drop(owner);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+    }
+    #[test]
+    fn forged_variant_strategy_and_source_fail_before_any_owner_clone() {
+        let source = [b'a'; 64];
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        assert!(monitor.fail_next());
+        let before = monitor.snapshot();
+        for p in [
+            ReferenceSearchPlan::Optimal(plan(8)),
+            ReferenceSearchPlan::Ultra(plan(7)),
+        ] {
+            assert!(matches!(
+                ReferenceSearchState::new(&source, p, &owner),
+                Err(Error::UnsupportedFeature)
+            ));
+            assert_eq!(monitor.snapshot(), before);
+        }
+        assert!(matches!(
+            ReferenceSearchState::new(&source[..63], ReferenceSearchPlan::Ultra(plan(8)), &owner),
+            Err(Error::InvalidParameter)
+        ));
+        assert_eq!(monitor.snapshot(), before);
     }
 }

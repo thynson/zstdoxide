@@ -143,8 +143,10 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         if length == 0
             || length > self.plan.block_limit()
             || last != (end == self.source.len())
-            || (matches!(self.plan, ReferenceSearchPlan::Optimal(_))
-                && (self.emitted != 0 || end != self.source.len()))
+            || (matches!(
+                self.plan,
+                ReferenceSearchPlan::Optimal(_) | ReferenceSearchPlan::Ultra(_)
+            ) && (self.emitted != 0 || end != self.source.len()))
         {
             return Err(Error::InvalidParameter);
         }
@@ -168,7 +170,10 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         let initial_repeat = self.entropy.sequence_encoder.committed_repeats();
         let parsed = self.search.parse_next(block.len(), initial_repeat)?;
         let worthwhile = if parsed {
-            if matches!(self.plan, ReferenceSearchPlan::Optimal(_)) {
+            if matches!(
+                self.plan,
+                ReferenceSearchPlan::Optimal(_) | ReferenceSearchPlan::Ultra(_)
+            ) {
                 self.entropy.prepare_optimal(
                     self.search.literals(),
                     self.search.sequences(),
@@ -743,5 +748,178 @@ mod optimal_tests {
             .expect("prepare three-byte sequence entropy");
         let frame = compress_reference_in(&input, plan, Global).unwrap();
         assert_eq!(crate::decompress(&frame, 64).unwrap(), input);
+    }
+}
+
+#[cfg(test)]
+mod ultra_frame_tests {
+    use super::*;
+    use crate::RawCompressionParameters;
+    use crate::optimal_plan::OptimalExecutionPlan;
+    use crate::ultra_fresh_fixture as fixture;
+    use alloc::alloc::Global;
+    #[test]
+    fn every_complete_observed_source_uses_shared_frame_entropy() {
+        let mut cases = 0;
+        for case in fixture::read(fixture::PACK)
+            .unwrap()
+            .into_iter()
+            .filter(|c| c.policy == 2 && c.literal_mode != 1)
+        {
+            let parameters = RawCompressionParameters {
+                window_log: u32::from(case.window),
+                hash_log: u32::from(case.hash),
+                chain_log: u32::from(case.chain),
+                search_log: u32::from(case.search),
+                min_match: case.minimum,
+                target_length: case.target,
+                strategy: 8,
+            }
+            .validate()
+            .unwrap();
+            let plan = ReferenceSearchPlan::Ultra(
+                OptimalExecutionPlan::from_ultra_parameters(parameters, case.source.len()).unwrap(),
+            );
+            let frame = compress_reference_in(case.source, plan, Global).unwrap();
+            assert_eq!(
+                crate::decompress(&frame, 16384).unwrap(),
+                case.source,
+                "{}",
+                case.name
+            );
+            assert_eq!(
+                compress_reference_in(case.source, plan, Global).unwrap(),
+                frame
+            );
+            let mut workspace = ReferenceEncoderWorkspace::new(case.source, plan, Global).unwrap();
+            let mut output = Vec::new();
+            assert_eq!(
+                workspace.emit_next(case.source.len() / 2, false, &mut output),
+                Err(Error::InvalidParameter)
+            );
+            assert!(!workspace.failed);
+            assert!(output.is_empty());
+            workspace
+                .emit_next(case.source.len(), true, &mut output)
+                .unwrap();
+            assert!(workspace.finished);
+            cases += 1;
+        }
+        assert_eq!(cases, 19);
+    }
+    #[test]
+    fn short_periodic_three_byte_matches_reach_shared_entropy() {
+        let input: Vec<_> = (0..64).map(|i| b"abcXabcYabcZabcd"[i % 15]).collect();
+        let mut request = crate::CompressionParameterRequest::with_level(11);
+        request.set_strategy(Some(crate::ReferenceStrategy::Ultra));
+        request.set_window_log(16).unwrap();
+        request.set_hash_log(12).unwrap();
+        request.set_chain_log(12).unwrap();
+        request.set_search_log(6).unwrap();
+        request.set_min_match(3).unwrap();
+        request.set_target_length(1).unwrap();
+        let parameters = request.resolve(crate::SourceSize::Known(64), 0).unwrap();
+        let plan = ReferenceSearchPlan::Ultra(
+            OptimalExecutionPlan::from_ultra_parameters(parameters, 64).unwrap(),
+        );
+        let mut workspace = ReferenceEncoderWorkspace::new(&input, plan, Global).unwrap();
+        workspace
+            .search
+            .parse_next(64, [1, 4, 8])
+            .expect("parse complete periodic source");
+        workspace
+            .entropy
+            .prepare_optimal(
+                workspace.search.literals(),
+                workspace.search.sequences(),
+                [1, 4, 8],
+                64,
+            )
+            .expect("prepare three-byte sequence entropy");
+        let frame = compress_reference_in(&input, plan, Global).unwrap();
+        assert_eq!(crate::decompress(&frame, 64).unwrap(), input);
+    }
+    #[test]
+    fn every_private_ultra_frame_allocation_failure_releases_exact_owners() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let source: Vec<_> = (0..64).map(|i| b"abcXabcYabcZabcd"[i % 15]).collect();
+        let parameters = RawCompressionParameters {
+            window_log: 10,
+            hash_log: 6,
+            chain_log: 6,
+            search_log: 1,
+            min_match: 3,
+            target_length: 1,
+            strategy: 8,
+        }
+        .validate()
+        .unwrap();
+        let plan = ReferenceSearchPlan::Ultra(
+            OptimalExecutionPlan::from_ultra_parameters(parameters, 64).unwrap(),
+        );
+        let factory = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = factory.monitor();
+        let frame = compress_reference_in(&source, plan, factory).unwrap();
+        let attempts = monitor.snapshot().attempts;
+        assert_eq!(crate::decompress(&frame, 64).unwrap(), source);
+        drop(frame);
+        monitor.assert_released();
+        assert!(attempts >= 10);
+        for failed in 1..=attempts {
+            let factory = TrackingAllocator::new(AllocatorConfig {
+                fail_at: core::num::NonZeroU64::new(failed),
+                ..AllocatorConfig::default()
+            })
+            .unwrap();
+            let monitor = factory.monitor();
+            assert!(
+                matches!(
+                    compress_reference_in(&source, plan, factory),
+                    Err(Error::AllocationFailed)
+                ),
+                "failure {failed}"
+            );
+            monitor.assert_released();
+            let snapshot = monitor.snapshot();
+            assert_eq!(snapshot.owners_dropped, snapshot.identities_created);
+        }
+    }
+    #[test]
+    fn failed_output_publication_keeps_output_and_poisons_workspace() {
+        use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+        let source = [b'a'; 64];
+        let parameters = RawCompressionParameters {
+            window_log: 10,
+            hash_log: 6,
+            chain_log: 6,
+            search_log: 1,
+            min_match: 3,
+            target_length: 1,
+            strategy: 8,
+        }
+        .validate()
+        .unwrap();
+        let plan = ReferenceSearchPlan::Ultra(
+            OptimalExecutionPlan::from_ultra_parameters(parameters, 64).unwrap(),
+        );
+        let mut workspace = ReferenceEncoderWorkspace::new(&source, plan, Global).unwrap();
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let mut output = Vec::new_in(owner);
+        assert!(monitor.fail_next());
+        assert_eq!(
+            workspace.emit_next(64, true, &mut output),
+            Err(Error::AllocationFailed)
+        );
+        assert!(output.is_empty());
+        assert!(workspace.failed);
+        assert!(!workspace.finished);
+        assert_eq!(workspace.emitted, 0);
+        assert_eq!(
+            workspace.emit_next(64, true, &mut output),
+            Err(Error::InvalidState)
+        );
+        drop(output);
+        monitor.assert_released();
     }
 }

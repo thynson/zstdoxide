@@ -583,3 +583,22 @@ Strict all-target Clippy safe/all, true no_std safe/all and formatting pass.
 The ten-command, 201-member source/log archive is
 `evidence/2026-10-19-ultra-private-state.tar.gz`, SHA-256
 `fa2af89e6ad457d8eb1a9d57759e4a65295e11178ec3b69e4a7b40a807c01aa3`.
+
+## Private Ultra static dispatch and complete frames
+
+The private Ultra plan variant selects the existing inline optimal token owner,
+validating variant/strategy correspondence before cloning. Exact factory order
+remains nine independent parser/search/scratch identities; borrowed non-cloning
+owners introduce no extra identity. The shared entropy owner accepts one complete
+source and checked three-byte tokens, commits only a compressed publication and
+poisons the workspace after a failed output append.
+
+All sixteen qualification commands pass. Safe, all-feature and release/all each
+pass seven dispatch tests, four new Ultra frame tests and two original Optimal
+frame tests. Nineteen automatic-literal observed Ultra cases produce deterministic
+complete frames that decode exactly; every actual allocation failure releases
+its owners, and failed output publication leaves output unchanged. Strict
+all-target Clippy, true no_std and formatting pass. The 221-member source/log
+archive is `evidence/2026-10-19-ultra-private-frame.tar.gz`, SHA-256
+`97415103eb73c0cd1768ec7f3deca9719d6d6b11c51488ceb0b27e5253ff88ef`.
+The main checkout's public strategy gate is still closed at this checkpoint.

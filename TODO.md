@@ -120,7 +120,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [ ] Complete the ordinary Ultra safe/isolated-unsafe/all matrix and full regression checkpoint.
 - [x] Design and qualify allocation-free private Ultra execution plans with original/public gates preserved.
 - [x] Implement and qualify private Ultra token publication with nine exact owners and transactional failures.
-- [ ] Qualify private Ultra static dispatch and deterministic shared-entropy frames before public admission.
+- [x] Qualify private Ultra static dispatch and deterministic shared-entropy frames before public admission.
 - [x] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
 - [x] Freeze additive public Ultra recipes and complete predecessor frame identities with independent controls.
 - [ ] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
