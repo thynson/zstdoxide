@@ -1,9 +1,9 @@
-//! Private Optimal paths and bounded scripted Ultra paths with checked providers.
+//! Private Optimal and bounded scripted/ordinary Ultra paths with checked providers.
 //! Upstream counterpart: ZSTD_compressBlock_opt_generic, zstd v1.5.7.
 #![forbid(unsafe_code)]
 #![allow(
     dead_code,
-    reason = "Ordinary search startup and public integration remain gated"
+    reason = "Private Ultra parsing and internal diagnostics are not exposed publicly"
 )]
 use crate::optimal_frequencies::OptimalFrequencies;
 use crate::optimal_matches::OptimalMatches;
@@ -131,6 +131,7 @@ pub(crate) struct OptimalParser<'a, F: Allocator, P: Allocator, M: Allocator> {
     sequences: usize,
     last_stretch: PathCell,
     status: Status,
+    ultra_fresh_only: bool,
 }
 fn resolved(off: u32, repeats: [u32; 3], zero: bool) -> Result<(u32, [u32; 3])> {
     if off == 0 || repeats.contains(&0) {
@@ -178,23 +179,49 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             matches,
         )
     }
-    /// Explicit private scripted composition; ordinary Ultra entry points remain gated.
+    /// Explicit private scripted composition, retaining the 8192-byte Ultra bound.
     pub(crate) fn from_policy_parts(
         policy: PricePolicy,
+        source: &'a [u8],
+        minimum: u8,
+        target: usize,
+        frequencies: OptimalFrequencies<F>,
+        paths: OptimalPaths<P>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        if frequencies.policy() != policy || (policy == PricePolicy::Ultra && source.len() > 8192) {
+            return Err(Error::InvalidParameter);
+        }
+        Self::initialize_parts(source, minimum, target, frequencies, paths, matches, false)
+    }
+    /// Independently qualified ordinary Ultra envelope. The larger source owner
+    /// cannot be used with an arbitrary scripted provider or retained planning.
+    pub(crate) fn from_ultra_fresh_parts(
+        source: &'a [u8],
+        minimum: u8,
+        target: usize,
+        frequencies: OptimalFrequencies<F>,
+        paths: OptimalPaths<P>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        if frequencies.policy() != PricePolicy::Ultra || !(64..=16384).contains(&source.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        Self::initialize_parts(source, minimum, target, frequencies, paths, matches, true)
+    }
+    fn initialize_parts(
         source: &'a [u8],
         minimum: u8,
         target: usize,
         mut frequencies: OptimalFrequencies<F>,
         mut paths: OptimalPaths<P>,
         mut matches: OptimalMatches<M>,
+        ultra_fresh_only: bool,
     ) -> Result<Self> {
         if !(9..=BLOCK_LIMIT as usize).contains(&source.len())
             || !(3..=7).contains(&minimum)
             || target >= PATH_HORIZON
         {
-            return Err(Error::InvalidParameter);
-        }
-        if frequencies.policy() != policy || (policy == PricePolicy::Ultra && source.len() > 8192) {
             return Err(Error::InvalidParameter);
         }
         frequencies.reset()?;
@@ -217,6 +244,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             sequences: 0,
             last_stretch: PathCell::ZERO,
             status: Status::Ready,
+            ultra_fresh_only,
         })
     }
     pub(crate) fn reset(&mut self) -> Result<()> {
@@ -254,7 +282,38 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         search.validate_fresh_start(self.source, self.minimum, self.target)?;
         self.parse(&mut FreshProvider(search), observer)
     }
+    /// Parse one qualified ordinary Ultra source; this does not publish tokens.
+    pub(crate) fn parse_ultra_fresh<
+        H: Allocator,
+        N: Allocator,
+        S: Allocator,
+        B: Allocator,
+        O: PathObserver,
+    >(
+        &mut self,
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+        observer: &mut O,
+    ) -> Result<PathResult> {
+        if self.frequencies.policy() != PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        if !(64..=16384).contains(&self.source.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        search.validate_fresh_start(self.source, self.minimum, self.target)?;
+        self.parse_with_provider(&mut FreshProvider(search), observer)
+    }
     pub(crate) fn parse<Q: PathProvider, O: PathObserver>(
+        &mut self,
+        provider: &mut Q,
+        observer: &mut O,
+    ) -> Result<PathResult> {
+        if self.ultra_fresh_only {
+            return Err(Error::UnsupportedFeature);
+        }
+        self.parse_with_provider(provider, observer)
+    }
+    fn parse_with_provider<Q: PathProvider, O: PathObserver>(
         &mut self,
         provider: &mut Q,
         observer: &mut O,
@@ -1270,3 +1329,7 @@ mod fresh_wide_tests;
 #[cfg(test)]
 #[path = "../tests/support/ultra_path_parse.rs"]
 mod ultra_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_fresh_parse.rs"]
+mod ultra_fresh_tests;

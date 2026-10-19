@@ -495,3 +495,25 @@ The 200-member source/log archive is
 `evidence/2026-10-19-ultra-fresh-reader.tar.gz`, SHA-256
 `3bdcb82d31e958c4625d68390e02f1081e3c8f0e9134fb4bd95930ddb2358325`.
 This reader checkpoint precedes private ordinary parser integration.
+
+## Private ordinary Ultra parser implementation
+
+A separately checked private constructor admits Ultra owners for ordinary
+64..16384-byte sources. Its admission bit prevents using that larger envelope
+with arbitrary scripted providers. The original scripted bound, Optimal entry,
+retained entry and public/planning gates remain unchanged. Ordinary parsing uses
+the existing checked source provider and seven storage owners.
+
+All twelve implementation qualification commands pass against unchanged named
+source inputs: safe/all each pass 28 parser regressions and the complete ordinary
+search replay, release/all passes eight new ordinary tests, and strict all-target
+Clippy, true no_std and formatting pass. Complete comparisons cover 198476 events,
+95581 queries, 201 signed alternatives and 353 sequences. Owner failure controls
+cover every moved allocation, borrowed non-cloning reuse, foreign source/geometry,
+used state and observer poisoning followed by complete reset/replay.
+
+The 203-member source/log archive is
+`evidence/2026-10-19-ultra-fresh-implementation.tar.gz`, SHA-256
+`027a3729d5d7bc425aae8f1a6f3202bc90dbb3e3e6877405dc62c37640cbcb72`.
+This is private ordinary composition; complete public token/frame admission
+remains a separate task.

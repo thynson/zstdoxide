@@ -224,3 +224,7 @@ mod optimal_fresh_wide_fixture;
 mod optimal_plan;
 
 mod optimal_state;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_fresh_fixture.rs"]
+mod ultra_fresh_fixture;

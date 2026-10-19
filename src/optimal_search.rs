@@ -1188,3 +1188,76 @@ mod fresh_wide_tests {
         assert_eq!(queries, 30314);
     }
 }
+
+#[cfg(test)]
+mod ultra_fresh_tests {
+    use super::*;
+    use crate::ultra_fresh_fixture as startup_fixture;
+    use alloc::{vec, vec::Vec};
+    fn state(source: &[u8], layout: OptimalSearchLayout) -> OptimalSearch<'_> {
+        OptimalSearch::from_parts(
+            source,
+            layout,
+            ReferenceTree::new_in(layout.tree(), Global, Global).unwrap(),
+            OptimalShortKey::new_in(layout.short_log(), Global).unwrap(),
+            OptimalMatches::new_in(Global).unwrap(),
+        )
+        .unwrap()
+    }
+    fn layout(case: &startup_fixture::Case<'_>) -> OptimalSearchLayout {
+        OptimalSearchLayout::new(
+            case.window,
+            case.hash,
+            case.chain,
+            case.search,
+            case.minimum as u8,
+            case.target as usize,
+            (case.minimum == 3).then_some(case.window),
+        )
+        .unwrap()
+    }
+    fn query(q: [u32; 6]) -> OptimalQuery {
+        OptimalQuery {
+            position: q[0] as usize,
+            repeats: [q[1], q[2], q[3]],
+            zero_literals: q[4] == 1,
+            length_to_beat: q[5] as usize,
+        }
+    }
+    #[test]
+    fn every_fresh_c_query_candidate_map_and_frontier_matches() {
+        let mut queries = 0;
+        for case in startup_fixture::read(startup_fixture::PACK).unwrap() {
+            let mut state = state(case.source, layout(&case));
+            let mut expected = vec![0; case.search_cells()];
+            for (index, event) in case.blocks[0].events.iter().enumerate() {
+                if let Some(q) = event.query {
+                    assert_eq!(
+                        state.test_snapshot(),
+                        expected,
+                        "{} before {index}",
+                        case.name
+                    );
+                    let actual = state
+                        .query_fresh(query(q))
+                        .unwrap()
+                        .iter()
+                        .map(|m| [m.off_base(), m.length() as u32])
+                        .collect::<Vec<_>>();
+                    assert_eq!(actual, event.matches, "{} query {index}", case.name);
+                    queries += 1;
+                }
+                for &(at, value) in &case.blocks[0].search_changes[index] {
+                    expected[at] = value;
+                }
+                assert_eq!(
+                    state.test_snapshot(),
+                    expected,
+                    "{} after {index}",
+                    case.name
+                );
+            }
+        }
+        assert_eq!(queries, 95581);
+    }
+}

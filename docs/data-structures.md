@@ -2543,3 +2543,34 @@ No production parser supplies reader decisions or fixture reconstruction inputs.
 Captured frames are separately decoded with the Rust decoder. A source-only
 reconstructor must reproduce every state byte and retain all twelve-operand,
 search/path/publication, count and transport forgery controls.
+
+### Private ordinary Ultra parser admission
+
+A separate private `from_ultra_fresh_parts` constructor will admit matching Ultra
+frequency owners only for 64..16384-byte sources, with the already checked minimum
+and target bounds. The existing Optimal constructor and 9..8192-byte scripted
+Ultra constructor retain their rejection contracts. Shared initialization runs
+only after constructor-specific policy/source checks, and resets the same three
+moved owners. No allocation, unsafe access or alternate search implementation is
+introduced. Borrowed non-cloning allocator identities remain with each owner.
+
+A separate `parse_ultra_fresh` entry validates the Ultra policy, source envelope,
+source identity and complete fresh search geometry/state before mutation, then
+uses the same ordinary provider and thorough coupled-policy path engine. Existing
+Optimal fresh, retained and execution-planning gates remain unchanged. Parser and
+search must both be reset after failure; observer effects remain caller-owned.
+The private ordinary entry does not publish entropy tokens or enable strategy 8.
+
+Qualification compares all path/frequency/query/alternative/sequence events and
+final repeats, then independently replays the same query schedule against every
+complete search owner before and after every query and non-query event. Policy-0
+baselines retain all original requests and complete frames. Focused controls cover
+foreign source, mismatched parameters, used search, owner policy/source bounds,
+every moved-owner allocation failure, borrowed-owner parse/reset allocation
+counts, alternative-observer poisoning and successful complete replay after reset.
+
+A copied `ultra_fresh_only` admission bit prevents using the larger ordinary
+constructor with an arbitrary scripted provider. Generic scripted parsing rejects
+that owner before changing status. The ordinary entry calls the shared private
+runner after source/search validation. Reset retains this bit; it is a plain value
+record shared by all access backends and needs no artificial unsafe implementation.

@@ -115,7 +115,9 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Capture and independently audit ordinary Ultra search/path states and malformed/forged evidence.
 - [x] Specify and project the independently audited ordinary Ultra fixture with forged-projection controls.
 - [x] Qualify the independent ordinary Ultra fixture reader before private search integration.
-- [ ] Implement and qualify private ordinary Ultra search/path composition against every captured state.
+- [x] Implement and qualify private ordinary Ultra search/path composition against every captured state.
+- [ ] Qualify ordinary Ultra exact owners, foreign Miri and no-atomics code generation.
+- [ ] Complete the ordinary Ultra safe/isolated-unsafe/all matrix and full regression checkpoint.
 - [ ] Design and implement allocation-free Ultra execution planning and shared-entropy token publication.
 - [x] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
 - [ ] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
