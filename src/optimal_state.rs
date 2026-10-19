@@ -1,4 +1,4 @@
-//! Checked token collection for one complete, qualified Optimal block.
+//! Checked token collection for bounded complete Optimal and private Ultra blocks.
 #![forbid(unsafe_code)]
 #![cfg_attr(
     not(test),
@@ -15,7 +15,7 @@ use crate::optimal_search::OptimalSearch;
 use crate::optimal_search_layout::OptimalMatch;
 use crate::sequence_context::{LogicalSequence, SequenceWithOffset};
 use crate::sequence_plan::{OffsetIntent, repeated_offset};
-use crate::{Error, Result};
+use crate::{Error, ReferenceStrategy, Result};
 use alloc::vec::Vec;
 use core::alloc::Allocator;
 
@@ -39,10 +39,56 @@ impl<'a, A: Allocator> OptimalMatchState<'a, A> {
         plan: OptimalExecutionPlan,
         parser: OptimalParser<'a, A, A, A>,
         search: OptimalSearch<'a, A, A, A, A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        if plan.parameters().strategy() != ReferenceStrategy::Optimal {
+            return Err(Error::UnsupportedFeature);
+        }
+        let configuration = parser.fresh_configuration()?;
+        Self::initialize_parts(
+            source,
+            plan,
+            parser,
+            search,
+            literals,
+            sequences,
+            configuration,
+        )
+    }
+    /// Compose only a matching private Ultra plan and fresh Ultra parser owner.
+    pub(crate) fn from_ultra_parts(
+        source: &'a [u8],
+        plan: OptimalExecutionPlan,
+        parser: OptimalParser<'a, A, A, A>,
+        search: OptimalSearch<'a, A, A, A, A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        if plan.parameters().strategy() != ReferenceStrategy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        let configuration = parser.ultra_fresh_configuration()?;
+        Self::initialize_parts(
+            source,
+            plan,
+            parser,
+            search,
+            literals,
+            sequences,
+            configuration,
+        )
+    }
+    fn initialize_parts(
+        source: &'a [u8],
+        plan: OptimalExecutionPlan,
+        parser: OptimalParser<'a, A, A, A>,
+        search: OptimalSearch<'a, A, A, A, A>,
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
+        configuration: (&'a [u8], usize, usize, bool),
     ) -> Result<Self> {
-        let (original, minimum, target, disabled) = parser.fresh_configuration()?;
+        let (original, minimum, target, disabled) = configuration;
         if !core::ptr::eq(original, source)
             || source.len() != plan.source_len()
             || search.layout() != plan.layout()
@@ -94,7 +140,12 @@ impl<'a, A: Allocator> OptimalMatchState<'a, A> {
             anchor: 0,
             repeats: committed,
         };
-        let result = self.parser.parse_fresh(&mut self.search, &mut collect)?;
+        let result = if self.plan.parameters().strategy() == ReferenceStrategy::Ultra {
+            self.parser
+                .parse_ultra_fresh(&mut self.search, &mut collect)?
+        } else {
+            self.parser.parse_fresh(&mut self.search, &mut collect)?
+        };
         if result.sequences != collect.sequences.len()
             || result.repeats != collect.repeats
             || result.tail != self.source.len() - collect.anchor
@@ -543,6 +594,359 @@ mod tests {
         assert!(matches!(
             rebind(original, &source, p),
             Err(Error::InvalidState)
+        ));
+    }
+}
+
+#[cfg(test)]
+mod ultra_state_tests {
+    use super::*;
+    use crate::RawCompressionParameters;
+    use crate::optimal_matches::OptimalMatches;
+    use crate::optimal_short_key::OptimalShortKey;
+    use crate::reference_tree::ReferenceTree;
+    use crate::ultra_fresh_fixture as fixture;
+    use alloc::alloc::Global;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    fn plan(size: usize, minimum: u32) -> OptimalExecutionPlan {
+        OptimalExecutionPlan::from_ultra_parameters(
+            RawCompressionParameters {
+                window_log: 16,
+                hash_log: 12,
+                chain_log: 12,
+                search_log: 6,
+                min_match: minimum,
+                target_length: 4095,
+                strategy: 8,
+            }
+            .validate()
+            .unwrap(),
+            size,
+        )
+        .unwrap()
+    }
+    fn state<A: Allocator>(
+        source: &[u8],
+        p: OptimalExecutionPlan,
+        owners: [A; 9],
+    ) -> Result<OptimalMatchState<'_, A>> {
+        let [f, path, m, h, n, short, candidates, literals, sequences] = owners;
+        let parser = OptimalParser::from_ultra_fresh_parts(
+            source,
+            p.parameters().min_match(),
+            p.parameters().target_length() as usize,
+            OptimalFrequencies::new_with_policy_in(
+                crate::optimal_price::PricePolicy::Ultra,
+                false,
+                f,
+            )?,
+            OptimalPaths::new_in(path)?,
+            OptimalMatches::new_in(m)?,
+        )?;
+        let l = p.layout();
+        let search = OptimalSearch::from_parts(
+            source,
+            l,
+            ReferenceTree::new_in(l.tree(), h, n)?,
+            OptimalShortKey::new_in(l.short_log(), short)?,
+            OptimalMatches::new_in(candidates)?,
+        )?;
+        OptimalMatchState::from_ultra_parts(
+            source,
+            p,
+            parser,
+            search,
+            Vec::new_in(literals),
+            Vec::new_in(sequences),
+        )
+    }
+    #[test]
+    fn complete_c_tokens_keep_exact_wire_intents_and_reconstruct_sources() {
+        let mut total = 0;
+        let mut cases = 0;
+        for case in fixture::read(fixture::PACK)
+            .unwrap()
+            .into_iter()
+            .filter(|c| c.policy == 2 && c.literal_mode != 1)
+        {
+            cases += 1;
+            let p = OptimalExecutionPlan::from_ultra_parameters(
+                RawCompressionParameters {
+                    window_log: u32::from(case.window),
+                    hash_log: u32::from(case.hash),
+                    chain_log: u32::from(case.chain),
+                    search_log: u32::from(case.search),
+                    min_match: case.minimum,
+                    target_length: case.target,
+                    strategy: 8,
+                }
+                .validate()
+                .unwrap(),
+                case.source.len(),
+            )
+            .unwrap();
+            let mut state = state(case.source, p, [Global; 9]).unwrap();
+            assert!(state.parse_next(case.source.len(), [1, 4, 8]).unwrap());
+            let expected = case.blocks[0]
+                .events
+                .iter()
+                .filter_map(|event| event.appended.first())
+                .collect::<Vec<_>>();
+            assert_eq!(state.sequences().len(), expected.len(), "{}", case.name);
+            let mut decoded = Vec::new();
+            let mut at = 0;
+            let mut repeats = [1, 4, 8];
+            for (actual, row) in state.sequences().iter().zip(expected) {
+                let seq = actual.sequence;
+                assert_eq!([seq.literal_length, seq.match_length], [row[1], row[2]]);
+                let resolved = actual
+                    .offset
+                    .resolve(seq.literal_length, seq.distance, repeats)
+                    .unwrap();
+                assert_eq!(resolved.offset_value, row[3]);
+                repeats = resolved.next_repeat;
+                let end = at + seq.literal_length as usize;
+                decoded.extend_from_slice(&state.literals()[at..end]);
+                at = end;
+                for _ in 0..seq.match_length {
+                    let value = decoded[decoded.len() - seq.distance as usize];
+                    decoded.push(value);
+                }
+                total += 1;
+            }
+            decoded.extend_from_slice(&state.literals()[at..]);
+            assert_eq!(decoded, case.source, "{}", case.name);
+            assert_eq!(repeats, case.blocks[0].candidate);
+            assert_eq!(
+                state.parse_next(case.source.len(), [1, 4, 8]),
+                Err(Error::InvalidState)
+            );
+        }
+        assert!(total >= 24);
+        assert_eq!(cases, 19);
+    }
+    #[test]
+    fn moved_nonclone_owners_release_every_failed_construction_and_reservation() {
+        let source = [b'a'; 16384];
+        for failed in 0..=9 {
+            let owners = core::array::from_fn(|i| {
+                TrackingAllocator::new(AllocatorConfig {
+                    max_live_allocations: 1,
+                    fail_at: if i == failed {
+                        core::num::NonZeroU64::new(1)
+                    } else {
+                        None
+                    },
+                })
+                .unwrap()
+                .into_non_clone()
+            });
+            let monitors = owners.each_ref().map(|a| a.monitor());
+            let result = state(&source, plan(source.len(), 3), owners);
+            if failed < 7 {
+                assert!(matches!(result, Err(Error::AllocationFailed)));
+            } else {
+                let mut state = result.unwrap();
+                let result = state.parse_next(source.len(), [1, 4, 8]);
+                if failed < 9 {
+                    assert_eq!(result, Err(Error::AllocationFailed));
+                    assert_eq!(
+                        state.parse_next(source.len(), [1, 4, 8]),
+                        Err(Error::InvalidState)
+                    );
+                    state.reset().unwrap();
+                    state.parse_next(source.len(), [1, 4, 8]).unwrap();
+                } else {
+                    assert_eq!(result, Ok(true));
+                }
+                drop(state);
+            }
+            for m in monitors {
+                m.assert_released();
+                assert_eq!(m.snapshot().owners_dropped, 1);
+            }
+        }
+    }
+    #[test]
+    fn borrowed_owners_reuse_capacities_and_reject_partial_or_changed_repeats() {
+        let source = [b'a'; 16384];
+        let owners: [_; 9] = core::array::from_fn(|_| {
+            TrackingAllocator::new(AllocatorConfig {
+                max_live_allocations: 1,
+                fail_at: None,
+            })
+            .unwrap()
+            .into_non_clone()
+        });
+        let monitors = owners.each_ref().map(|a| a.monitor());
+        let mut state = state(&source, plan(source.len(), 3), owners.each_ref()).unwrap();
+        for (length, repeats) in [
+            (0, [1, 4, 8]),
+            (8192, [1, 4, 8]),
+            (16385, [1, 4, 8]),
+            (16384, [1, 1, 1]),
+            (16384, [0, 4, 8]),
+        ] {
+            assert_eq!(
+                state.parse_next(length, repeats),
+                Err(Error::InvalidParameter)
+            );
+        }
+        state.parse_next(source.len(), [1, 4, 8]).unwrap();
+        let before = monitors.each_ref().map(|a| a.snapshot().attempts);
+        assert_eq!(before, [1; 9]);
+        let expected = state.sequences().to_vec();
+        let capacity = state.retained_capacity();
+        for _ in 0..3 {
+            state.reset().unwrap();
+            state.parse_next(source.len(), [1, 4, 8]).unwrap();
+            assert_eq!(state.sequences(), expected);
+            assert_eq!(state.retained_capacity(), capacity);
+        }
+        assert_eq!(monitors.each_ref().map(|a| a.snapshot().attempts), before);
+        drop(state);
+        for m in &monitors {
+            m.assert_released();
+            assert_eq!(m.snapshot().owners_dropped, 0);
+        }
+        drop(owners);
+        for m in monitors {
+            assert_eq!(m.snapshot().owners_dropped, 1);
+        }
+    }
+    #[test]
+    fn composition_rejects_foreign_sources_policies_geometry_and_used_owners() {
+        fn rebind<'a>(
+            original: OptimalMatchState<'a, Global>,
+            source: &'a [u8],
+            p: OptimalExecutionPlan,
+        ) -> Result<OptimalMatchState<'a, Global>> {
+            OptimalMatchState::from_ultra_parts(
+                source,
+                p,
+                original.parser,
+                original.search,
+                original.literals,
+                original.sequences,
+            )
+        }
+        let source = [b'a'; 64];
+        let other = source;
+        let p = plan(64, 3);
+        assert!(matches!(
+            rebind(state(&source, p, [Global; 9]).unwrap(), &other, p),
+            Err(Error::InvalidParameter)
+        ));
+        for wrong in [plan(128, 3), plan(64, 4)] {
+            assert!(matches!(
+                rebind(state(&source, p, [Global; 9]).unwrap(), &source, wrong),
+                Err(Error::InvalidParameter)
+            ));
+        }
+        for (disabled, target) in [(true, 4095), (false, 1)] {
+            let mut original = state(&source, p, [Global; 9]).unwrap();
+            original.parser = OptimalParser::from_ultra_fresh_parts(
+                &source,
+                3,
+                target,
+                OptimalFrequencies::new_with_policy_in(
+                    crate::optimal_price::PricePolicy::Ultra,
+                    disabled,
+                    Global,
+                )
+                .unwrap(),
+                OptimalPaths::new_in(Global).unwrap(),
+                OptimalMatches::new_in(Global).unwrap(),
+            )
+            .unwrap();
+            assert!(matches!(
+                rebind(original, &source, p),
+                Err(Error::InvalidParameter)
+            ));
+        }
+        let mut original = state(&source, p, [Global; 9]).unwrap();
+        original
+            .search
+            .query_fresh(crate::optimal_search_layout::OptimalQuery {
+                position: 1,
+                repeats: [1, 4, 8],
+                zero_literals: false,
+                length_to_beat: 3,
+            })
+            .unwrap();
+        assert!(matches!(
+            rebind(original, &source, p),
+            Err(Error::InvalidState)
+        ));
+        let mut original = state(&source, p, [Global; 9]).unwrap();
+        original.parse_next(64, [1, 4, 8]).unwrap();
+        assert!(matches!(
+            rebind(original, &source, p),
+            Err(Error::InvalidState)
+        ));
+    }
+    #[test]
+    fn incompatible_plan_parser_and_constructor_policies_are_rejected() {
+        let source = [b'a'; 64];
+        let ultra = plan(64, 3);
+        let optimal = OptimalExecutionPlan::from_resolved_parameters(
+            RawCompressionParameters {
+                window_log: 16,
+                hash_log: 12,
+                chain_log: 12,
+                search_log: 6,
+                min_match: 3,
+                target_length: 4095,
+                strategy: 7,
+            }
+            .validate()
+            .unwrap(),
+            64,
+        )
+        .unwrap();
+        for wrong_plan in [false, true] {
+            let original = state(&source, ultra, [Global; 9]).unwrap();
+            let result = if wrong_plan {
+                OptimalMatchState::from_ultra_parts(
+                    &source,
+                    optimal,
+                    original.parser,
+                    original.search,
+                    original.literals,
+                    original.sequences,
+                )
+            } else {
+                OptimalMatchState::from_parts(
+                    &source,
+                    ultra,
+                    original.parser,
+                    original.search,
+                    original.literals,
+                    original.sequences,
+                )
+            };
+            assert!(matches!(result, Err(Error::UnsupportedFeature)));
+        }
+        let original = state(&source, ultra, [Global; 9]).unwrap();
+        let parser = OptimalParser::from_parts(
+            &source,
+            3,
+            4095,
+            OptimalFrequencies::new_in(false, Global).unwrap(),
+            OptimalPaths::new_in(Global).unwrap(),
+            OptimalMatches::new_in(Global).unwrap(),
+        )
+        .unwrap();
+        assert!(matches!(
+            OptimalMatchState::from_ultra_parts(
+                &source,
+                ultra,
+                parser,
+                original.search,
+                original.literals,
+                original.sequences
+            ),
+            Err(Error::UnsupportedFeature)
         ));
     }
 }

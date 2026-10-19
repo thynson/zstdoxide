@@ -566,3 +566,20 @@ its 32 MiB index cap; additive v2 verifies the exact 55635394-byte pinned index.
 The initial source/error remains recorded. Commands, source hashes and results
 are in `evidence/2026-10-19-ultra-public-inputs.json`. No new native capture or
 comparison with these old frames is claimed by this input-freeze checkpoint.
+
+## Private Ultra token publication
+
+The separate Ultra token-state constructor checks matching plan/parser policy,
+ordinary admission, complete source identity, effective minimum/target, layout,
+literal mode and unused search/parser state before clearing scratch. All nine
+allocator identities survive composition. The existing checked collector retains
+wire offset intents, three-byte matches, overlap reconstruction, repeat evolution
+and complete literal tails. Reservation failures poison the state until reset.
+
+All ten new/original state tests pass under safe, all features and release/all,
+including all nineteen automatic-literal native Ultra cases, every moved owner
+allocation failure, borrowed capacity reuse and forged plan/parser compositions.
+Strict all-target Clippy safe/all, true no_std safe/all and formatting pass.
+The ten-command, 201-member source/log archive is
+`evidence/2026-10-19-ultra-private-state.tar.gz`, SHA-256
+`fa2af89e6ad457d8eb1a9d57759e4a65295e11178ec3b69e4a7b40a807c01aa3`.
