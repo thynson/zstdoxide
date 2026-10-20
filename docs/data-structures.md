@@ -2970,3 +2970,45 @@ Reviewed upstream: v1.5.7 revision
 `f8745da6ff1ad1e7bab384bd1f9d742439278e99`, `zstd_opt.c` lines 1077..1127
 and `zstd_compress.c` lines 3607..3611. These are design hypotheses, not a new
 production admission or completed larger-domain qualification.
+
+### Retained execution plan and block scratch refinement
+
+`RetainedOptimalPlan` will be a copied record of resolved Optimal parameters,
+source length, checked search layout, at most four block lengths, literal-price
+policy, nine independent owner-byte counts and the exact raw frame bound. Its
+private constructor accepts only the independently observed retained domain and
+explicit checked schedules. A separate frame constructor fixes automatic literal
+prices and derives the balanced schedule for 16385..32768 bytes. Neither admits
+retained Ultra/Ultra2 or accepts caller wire metadata as scheduling authority.
+Both constructors finish all validation and size arithmetic before any allocator
+clone. Checked next-length lookup accepts only a scheduled boundary and rejects
+an interior offset or completed source.
+
+Literal scratch reserves the largest scheduled block, and sequence scratch at
+most floor(largest-block/3) entries, once before parsing. The seven parser/search
+owners are unchanged, giving nine total independently tracked allocator owners.
+The block collector borrows only the consumed prefix, starts at the absolute
+block offset, initializes wire repeats from the committed coordinator and checks
+all emitted literal/match ranges against the active end. It hides partially
+collected tokens after failure and checks the final tail against that end.
+Private literal-disabled plans qualify the captured parser controls; the eventual
+public frame constructor cannot expose that experimental policy.
+
+The workspace remains responsible for choosing the actual wire kind. A new
+publication bridge must validate pending repeats before output append. Complete
+publication and failure poisoning must keep retained repeats consistent with
+committed entropy whenever the workspace remains usable. The private coordinator
+already records pending candidates and preserves frequencies/search across raw
+and RLE fallback; its larger-source qualification does not itself enable public
+frame dispatch. Existing fresh collectors and all previously admitted plans keep
+their source bounds, bytes and allocator baselines.
+
+The existing `Collect` already checks absolute anchors, overlapping match bytes
+and tail length against its borrowed slice. A separate fallible block constructor
+can therefore reuse those verified transitions by borrowing `source[..block_end]`
+and supplying the checked block start and committed repeats. Its existing fresh
+constructor remains unchanged. The new constructor must reject invalid ranges,
+repeat records, nonempty scratch and insufficient reserved capacity before
+constructing a collector; it neither allocates nor expands the borrowed prefix.
+This avoids duplicating offset-intent logic while preserving the original
+whole-source contract and making retained initialization explicit.

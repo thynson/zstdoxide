@@ -103,3 +103,24 @@ An explicit Git-blob map deduplicates 1152 unchanged inherited fixtures totaling
 Rust inputs are retained directly. Original full qualification snapshots remain
 on disk. Isolated-feature, foreign Miri, no-atomics and eventual complete-frame
 qualification are subsequent gates; no public retained admission is claimed.
+
+## Copied retained plan
+
+`RetainedOptimalPlan` validates the complete source, geometry, literal policy and
+fixed schedule before any owner clone or reservation. The private constructor
+retains all nineteen observed schedules; the separate proposed frame constructor
+admits only 16385..32768 bytes with automatic literal prices and balanced blocks.
+It does not yet participate in public dispatch. Exact boundary lookup rejects
+interior offsets and completed sources. Token scratch is bounded by the largest
+scheduled block; the seven existing parser/search owner sizes remain unchanged.
+The complete raw bound includes every scheduled three-byte block header.
+
+Three tests pass in safe/all builds, checking all 16384 new source lengths,
+independent boundary examples, every captured schedule/policy and malformed
+geometry/scheduling. Both strict all-target Clippy configurations, formatting
+and true safe/all no_std pass. The plain copied record needs no artificial unsafe
+representation. Block token collection and publication integration remain open.
+Evidence: `evidence/2026-10-20-optimal-retained-plan.tar.gz`, SHA-256
+`b664dd352df5dd891eeb54f28d00501f52a445db4107af5ca54d8e423b2609b1`.
+The archive preserves all regular bundle files and an explicit verified Git-blob
+map for unchanged inherited fixtures, with complete reconstruction checks.
