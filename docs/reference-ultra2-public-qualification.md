@@ -2,9 +2,8 @@
 
 The main checkout now implements strategy 9 within the independently qualified
 fresh no-dictionary envelope. Private feature/platform gates and focused main
-admission checks are complete. Full public regression and benchmark campaigns
-are separately tracked; Module 19 is not yet complete and this report does not
-claim their unfinished outcomes.
+admission checks are complete. Full public regression is complete; performance campaigns remain pending.
+Module 19 is not yet complete and this report does not claim unfinished outcomes.
 
 The resolved bounds are source length 64..16384, contained in the selected
 window, W10..16, H/C6..12, S1..6, minimum-match 3..7 and target 0..4095. Default
@@ -97,17 +96,27 @@ survey now passes all 26 cases across 21 backends, with identical complete frame
 and allocation ledgers; see [frame qualification](reference-ultra2-frame-benchmark.md).
 Timing remains pending.
 
-## Full regression in progress
+## Complete full regression
 
-The first nine complete products (safe, unsafe-byte-cursor, unsafe-bitstream,
-unsafe-history, unsafe-ring-history, unsafe-fse, unsafe-fse-encoder, unsafe-huffman
-and unsafe-huffman-codebook) pass 1,435 tests each, with
-zero failures and 55 explicit ignores. Independent
-parsing of the first three raw Cargo logs finds 67 groups and identical individual test
-names/outcomes, including the separate merged and compile-fail doctest groups.
-Each completed product also passes true no_std. Remaining isolated features,
-all-features and release/all remain running or pending; these nine products do
-not constitute the final full matrix. Original cancelled attempts stay retained.
+All 22 complete products pass: safe, all nineteen isolated unsafe features,
+all-features and release/all. Each passes 1,435 tests with zero failures and
+55 explicit ignores. All 21 debug products also pass true no_std compilation.
+The independent reconciler compares every individual test name and outcome
+across 67 groups per product, including merged and compile-fail doctest groups.
+All 43 final commands and the unchanged source inventory are verified. The
+qualified production files match the 90 native/platform-admitted identities.
+
+The original obsolete assertion failure and three cancelled incomplete runs
+remain archived and do not count as complete products. Worker caches were
+removed only after each successful full-test/no_std pair, with executable
+identities recorded; test binaries are not represented as archived artifacts.
+
+Evidence: `evidence/2026-10-20-ultra2-public-matrix.tar.gz`, SHA-256
+`2ef351c9ebfc1fc86453aeae20f199285eb9c37203b5cf6b81526ebf97b36bf1`.
+The archive reconstructs all 284 bundle files (58,337,313 logical bytes).
+The explicit omission map binds 1,147 unchanged inherited fixture files to
+verified committed Git blobs; changed/new fixtures and Rust sources are retained
+directly. Independent reconstruction and a second original-file check pass.
 
 ## Main-checkout admission
 
