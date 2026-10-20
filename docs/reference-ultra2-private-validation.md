@@ -103,3 +103,22 @@ correctness runs and provide no performance claim.
 
 The full isolated feature matrix, foreign platform reconciliation and public
 admission remain subsequent gates.
+
+## Foreign ownership and no-atomics qualification
+
+The six coordinator tests above qualify the complete captured trajectories and
+nine-owner failure contracts in safe and all-feature builds. A reduced borrowed
+nonclone-owner test also passes under strict-provenance Miri on i686 little-endian
+32-bit and s390x big-endian 64-bit targets, in both safe and all-feature modes.
+It exercises both passes, whole reset, source lifetime and owner destruction.
+These four executions are interpreted foreign-target checks, not native runs.
+
+The thumbv6m target passes core-plus-alloc library checks and concrete private
+two-pass/reset/drop release code generation in safe and all-feature modes. LLVM
+IR and ARM ELF objects are retained. All eight commands pass with unchanged
+qualification inputs. The archive is
+`evidence/2026-10-20-ultra2-private-platform.tar.gz`, SHA-256
+`93768d12d9e164b5b594df4c2f327cc6d7a644f5867f687a9da0da3b5290a6c9`.
+It contains 308 regular files, with independently reconstructed lossless content
+and exact Git-blob references for unchanged inherited fixtures. The full
+isolated-feature matrix remains a separate pending gate.
