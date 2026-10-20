@@ -1,0 +1,31 @@
+{
+  "modes": {
+    "normal": {
+      "child_processes": 0,
+      "manifest_sha256": "2e4b9ebf0cb68fffb37a828ddecde21c0da60dfe4cf3f6126827b6a65e820544",
+      "new_hypotheses": 12,
+      "predicted_events": 67321,
+      "qualification": "Source-only hypotheses and predecessor state hashes; no larger native or Rust execution claim.",
+      "recipes": 19,
+      "status": "passed",
+      "unchanged_predecessors": 7
+    },
+    "optimized": {
+      "child_processes": 0,
+      "manifest_sha256": "2e4b9ebf0cb68fffb37a828ddecde21c0da60dfe4cf3f6126827b6a65e820544",
+      "new_hypotheses": 12,
+      "predicted_events": 67321,
+      "qualification": "Source-only hypotheses and predecessor state hashes; no larger native or Rust execution claim.",
+      "recipes": 19,
+      "status": "passed",
+      "unchanged_predecessors": 7
+    }
+  },
+  "source": {
+    "scripts/check_optimal_retained_frames_recipes.py": "f583392d81fe05ebda5397cabd1ea4f528ef99014ea7391da4663dd84ae9c1d4",
+    "scripts/oracles/optimal_retained_frames_recipes.py": "acb0f4c48fc2775c0abeaab7ac46bc5a5444d58c70a91fd911d37b8c97060223",
+    "scripts/plan_optimal_retained_frames.py": "05cc48b36a42b2c7d75f2c799b706b251044e5be45eda24fe504036b577e3370",
+    "tests/fixtures/reference-optimal-retained-frames-recipes/recipes.json": "2e4b9ebf0cb68fffb37a828ddecde21c0da60dfe4cf3f6126827b6a65e820544"
+  },
+  "status": "passed"
+}

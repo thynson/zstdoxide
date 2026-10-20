@@ -91,7 +91,7 @@ independently before changing production. Retained Ultra/Ultra2 remain separate.
 
 - [x] Review retained ownership, source boundaries, balanced schedules, exact output reservation and transactional publication against pinned upstream.
 - [x] Freeze an additive larger-domain transport and independent model; reconcile every earlier wide native state and reject malformed schedules/state in normal and optimized Python.
-- [ ] Freeze source-only recipes for 16385/24576/24577/32768 boundaries, cross-block history, short keys, horizon paths and raw/RLE/compressed publication.
+- [x] Freeze source-only recipes for 16385/24576/24577/32768 boundaries, cross-block history, short keys, horizon paths and raw/RLE/compressed publication.
 - [ ] Specify and preflight bounded observer adaptation, sanitizer/dependency closure, exact commands and complete source inventory before native execution.
 - [ ] Capture and independently audit larger retained states and complete frames, with coherent forgery controls and unchanged predecessor observations.
 - [ ] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before widening parser/search admission.
