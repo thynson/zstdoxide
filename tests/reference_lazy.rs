@@ -44,9 +44,12 @@ fn default_levels_resolve_by_actual_source_tier_and_preserve_error_kinds() {
             let r = Request::with_level(level);
             let p = r.resolve(SourceSize::Known(size as u64), 0).unwrap();
             // Preserve the original levels and source sizes. The source-aware
-            // successor classifies every newly implemented Ultra tuple here as
-            // resource-limited; this corpus has no 64..=2048-byte Ultra inputs.
-            let expected = if p.strategy() == ReferenceStrategy::Ultra {
+            // successor classifies every newly implemented Ultra/Ultra2 tuple here as
+            // resource-limited; this corpus has no 64..=2048-byte Ultra/Ultra2 inputs.
+            let expected = if matches!(
+                p.strategy(),
+                ReferenceStrategy::Ultra | ReferenceStrategy::Ultra2
+            ) {
                 Err(Error::ResourceLimit)
             } else {
                 match level {

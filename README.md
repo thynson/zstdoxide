@@ -72,7 +72,7 @@ by the Rust encoder. See [parameter usage](docs/parameter-usage.md) and
 [validation scope](docs/compression-parameters-validation.md).
 
 `compress_at_level` and `compress_with_parameters` execute resolved Fast,
-DoubleFast, Greedy, Lazy, Lazy2, BinaryTreeLazy2 and bounded Optimal/Ultra profiles. Fast supports windows up to 1 MiB and hash logs up to 18;
+DoubleFast, Greedy, Lazy, Lazy2, BinaryTreeLazy2 and bounded Optimal/Ultra/Ultra2 profiles. Fast supports windows up to 1 MiB and hash logs up to 18;
 DoubleFast supports windows up to 2 MiB and independent long/short table logs
 up to 18. Greedy, Lazy and Lazy2 support windows up to 2 MiB and hash logs up to 19, selecting
 chain storage through window log 14 and row storage above it. Levels 0/3 select DoubleFast; levels 1/2 and negative levels are supported
@@ -82,11 +82,13 @@ source tiers select Greedy. BinaryTreeLazy2 uses paired tree edges, with window
 log at most 21, independent hash/chain logs at most 19 and search log at most 8.
 Levels 5/6 are supported across tiers; levels 7–9 through 256 KiB, and levels
 10–12 above 16 KiB through 256 KiB. Level 10 at smaller sizes and levels 7–15
-above 256 KiB return resource errors. Optimal and Ultra admit one complete 64–16,384-byte
+above 256 KiB return resource errors. Optimal, Ultra and Ultra2 admit one complete 64–16,384-byte
 source inside its window, window logs up to 16, hash/chain logs up to 12, search
 logs up to 6 and target lengths up to 4095. Default levels 11/12 (Optimal) and
-13/14 (Ultra) additionally work for 64–2,048 bytes; valid strategy-7/8 requests
-outside these caps return resource errors. Ultra2 remains unsupported. These APIs write
+13/14 (Ultra), and 16/17 (Ultra2) additionally work for 64–2,048 bytes; valid
+strategy-7/8/9 requests outside these caps return resource errors. Ultra2 seeds
+statistics with an initial discarded pass, invalidates search history and
+encodes the second pass from the original repeat offsets. These APIs write
 a known-size frame without a checksum and preserve the resolved window. They do not change the named APIs or provide
 live numeric streaming settings. See [reference profile usage](docs/reference-fast-usage.md)
 for overrides, allocator ownership, frame flags, and algorithm-specific caps.

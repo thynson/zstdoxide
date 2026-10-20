@@ -22,6 +22,8 @@ use crate::optimal_short_key::OptimalShortKey;
 use crate::optimal_state::OptimalMatchState;
 use crate::reference_tree::ReferenceTree;
 use crate::sequence_context::SequenceWithOffset;
+use crate::ultra2_frame_plan::Ultra2FramePlan;
+use crate::ultra2_state::Ultra2MatchState;
 use crate::{
     CompressionParameterRequest, Error, ReferenceStrategy, ResolvedCompressionParameters, Result,
     SourceSize,
@@ -36,6 +38,7 @@ pub(crate) enum ReferenceSearchPlan {
     Greedy(GreedyExecutionPlan),
     Optimal(OptimalExecutionPlan),
     Ultra(OptimalExecutionPlan),
+    Ultra2(Ultra2FramePlan),
 }
 
 impl ReferenceSearchPlan {
@@ -71,7 +74,9 @@ impl ReferenceSearchPlan {
             ReferenceStrategy::Ultra => {
                 OptimalExecutionPlan::from_ultra_parameters(parameters, source_len).map(Self::Ultra)
             }
-            _ => Err(Error::UnsupportedFeature),
+            ReferenceStrategy::Ultra2 => {
+                Ultra2FramePlan::new(parameters, source_len).map(Self::Ultra2)
+            }
         }
     }
 
@@ -81,6 +86,7 @@ impl ReferenceSearchPlan {
             Self::DoubleFast(plan) => plan.source_len(),
             Self::Greedy(plan) => plan.source_len(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.source_len(),
+            Self::Ultra2(plan) => plan.source_len(),
         }
     }
     pub(crate) fn parameters(self) -> ResolvedCompressionParameters {
@@ -89,6 +95,7 @@ impl ReferenceSearchPlan {
             Self::DoubleFast(plan) => plan.parameters(),
             Self::Greedy(plan) => plan.parameters(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.parameters(),
+            Self::Ultra2(plan) => plan.parameters(),
         }
     }
     pub(crate) fn block_limit(self) -> usize {
@@ -97,6 +104,7 @@ impl ReferenceSearchPlan {
             Self::DoubleFast(plan) => plan.block_limit(),
             Self::Greedy(plan) => plan.block_limit(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.block_limit(),
+            Self::Ultra2(plan) => plan.block_limit(),
         }
     }
 }
@@ -113,6 +121,7 @@ pub(crate) enum ReferenceSearchState<'a, A: Allocator> {
     DoubleFast(DoubleFastMatchState<'a, A>),
     Greedy(GreedyMatchState<'a, A>),
     Optimal(OptimalMatchState<'a, A>),
+    Ultra2(Ultra2MatchState<'a, A>),
 }
 
 impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
@@ -186,6 +195,39 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                     Vec::new_in(factory.clone()),
                 )?))
             }
+            ReferenceSearchPlan::Ultra2(plan) => {
+                // Preserve the nine qualified owner identities and clone order.
+                let execution = plan.execution();
+                let parameters = plan.parameters();
+                let parser = OptimalParser::from_ultra2_parts(
+                    source,
+                    parameters.min_match(),
+                    parameters.target_length() as usize,
+                    OptimalFrequencies::new_with_policy_in(
+                        crate::optimal_price::PricePolicy::Ultra,
+                        false,
+                        factory.clone(),
+                    )?,
+                    OptimalPaths::new_in(factory.clone())?,
+                    OptimalMatches::new_in(factory.clone())?,
+                )?;
+                let layout = execution.layout();
+                let search = OptimalSearch::from_ultra2_parts(
+                    source,
+                    layout,
+                    ReferenceTree::new_in(layout.tree(), factory.clone(), factory.clone())?,
+                    OptimalShortKey::new_in(layout.short_log(), factory.clone())?,
+                    OptimalMatches::new_in(factory.clone())?,
+                )?;
+                Ok(Self::Ultra2(Ultra2MatchState::from_parts(
+                    source,
+                    execution,
+                    parser,
+                    search,
+                    Vec::new_in(factory.clone()),
+                    Vec::new_in(factory.clone()),
+                )?))
+            }
             ReferenceSearchPlan::Fast(plan) => {
                 let table = MatchTable::with_layout_in(plan.layout(), factory.clone())?;
                 let literals = Vec::new_in(factory.clone());
@@ -235,6 +277,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
                 .parse_next(length, committed)
                 .map(|candidate| candidate.is_some()),
             Self::Optimal(state) => state.parse_next(length, committed),
+            Self::Ultra2(state) => state.parse_next(length, committed),
         }
     }
     pub(crate) fn literals(&self) -> &[u8] {
@@ -243,6 +286,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::DoubleFast(state) => state.literals(),
             Self::Greedy(state) => state.literals(),
             Self::Optimal(state) => state.literals(),
+            Self::Ultra2(state) => state.literals(),
         }
     }
     pub(crate) fn sequences(&self) -> &[SequenceWithOffset] {
@@ -251,6 +295,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::DoubleFast(state) => state.sequences(),
             Self::Greedy(state) => state.sequences(),
             Self::Optimal(state) => state.sequences(),
+            Self::Ultra2(state) => state.sequences(),
         }
     }
     #[cfg(test)]
@@ -260,6 +305,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::DoubleFast(state) => state.retained_capacity(),
             Self::Greedy(state) => state.retained_capacity(),
             Self::Optimal(state) => state.retained_capacity(),
+            Self::Ultra2(state) => state.retained_capacity(),
         }
     }
 }
@@ -333,6 +379,7 @@ mod tests {
         let input = [b'x'; 64];
         for plan in plans(input.len()) {
             let (table_count, owner_count, bytes) = match plan {
+                ReferenceSearchPlan::Ultra2(p) => (7, 10, p.owner_bytes()[..7].iter().sum()),
                 ReferenceSearchPlan::Fast(p) => (1, 4, p.table_bytes()),
                 ReferenceSearchPlan::DoubleFast(p) => (2, 5, p.table_bytes()),
                 ReferenceSearchPlan::Greedy(p) => (2, 5, p.table_bytes()),
@@ -620,6 +667,80 @@ mod ultra_dispatch_tests {
         }
         assert!(matches!(
             ReferenceSearchState::new(&source[..63], ReferenceSearchPlan::Ultra(plan(8)), &owner),
+            Err(Error::InvalidParameter)
+        ));
+        assert_eq!(monitor.snapshot(), before);
+    }
+}
+
+#[cfg(test)]
+mod ultra2_dispatch_tests {
+    use super::*;
+    use crate::RawCompressionParameters;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    fn plan() -> Ultra2FramePlan {
+        Ultra2FramePlan::new(
+            RawCompressionParameters {
+                window_log: 10,
+                hash_log: 6,
+                chain_log: 6,
+                search_log: 1,
+                min_match: 3,
+                target_length: 1,
+                strategy: 9,
+            }
+            .validate()
+            .unwrap(),
+            64,
+        )
+        .unwrap()
+    }
+    #[test]
+    fn ultra2_preserves_exact_nine_clone_order_and_borrowed_identity() {
+        let source = [b'a'; 64];
+        let p = plan();
+        let factory = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = factory.monitor();
+        let mut state =
+            ReferenceSearchState::new(&source, ReferenceSearchPlan::Ultra2(p), &factory).unwrap();
+        let before = monitor.snapshot();
+        assert_eq!(before.identities_created, 10);
+        assert_eq!(before.attempts, 7);
+        assert_eq!(before.live_blocks, 7);
+        assert_eq!(
+            before.live_requested_bytes,
+            p.owner_bytes()[..7].iter().sum::<usize>() as u128
+        );
+        state.parse_next(64, [1, 4, 8]).unwrap();
+        assert_eq!(monitor.snapshot().attempts, 9);
+        drop(state);
+        drop(factory);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 10);
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = owner.monitor();
+        let mut state =
+            ReferenceSearchState::new(&source, ReferenceSearchPlan::Ultra2(p), &&owner).unwrap();
+        state.parse_next(64, [1, 4, 8]).unwrap();
+        assert_eq!(monitor.snapshot().identities_created, 1);
+        drop(state);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 0);
+        drop(owner);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+    }
+
+    #[test]
+    fn ultra2_wrong_source_precedes_every_factory_clone() {
+        let source = [b'a'; 63];
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        assert!(monitor.fail_next());
+        let before = monitor.snapshot();
+        assert!(matches!(
+            ReferenceSearchState::new(&source, ReferenceSearchPlan::Ultra2(plan()), &owner),
             Err(Error::InvalidParameter)
         ));
         assert_eq!(monitor.snapshot(), before);

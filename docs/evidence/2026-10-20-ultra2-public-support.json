@@ -1,0 +1,20 @@
+{
+  "archive": "2026-10-20-ultra2-public-support.tar.gz",
+  "archive_bytes": 202725,
+  "archive_sha256": "ac9aa15b76f9f7fccce1e2e2885b145b8e153a153119823778f8e9de78346b88",
+  "commands": 5,
+  "expanded_bytes": 1721672,
+  "file_map_sha256": "352875eaeee5105d2072d251fca5ce346cd1c0a5a659b63028c038fe5d480641",
+  "qualification": "Inventory and allocator checks passed; the deliberately nonzero require-complete result preserves the unfinished official migration obligation. The first isolated packaging attempt lacked the migration manifest local targets and failed its inventory command; its complete diagnostics and scoped inputs are retained. The successful successor runs against the actual repository targets. This support checkpoint does not qualify public production behavior. Every regular bundle file is retained by lossless chunks. Independent archive replay reconstructs every file; a second concurrent read verifies every original remained unchanged. Any omissions made while preparing the bundle are explicitly documented in its qualification and manifests; this archive omits no regular bundle file.",
+  "regular_files": 23,
+  "source": {
+    "scripts/audit_upstream_tests.py": "379af7a160c4b9e4ecbfe5d22e9d4e291167f80f2c337912ca60e1e47ef3c368",
+    "test-support/allocator/Cargo.lock": "6fa35d5b169b38383adf0f2b1e06523ec925ea71be364f3f7fd45039afee125e",
+    "test-support/allocator/Cargo.toml": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/upstream/manifest.json": "3bb5ac1c2a0407b71c5e5dbaabac6b39074f5b7f851801a2056856a910f3ccaa"
+  },
+  "status": "passed",
+  "unique_chunk_bytes": 997812,
+  "unique_chunks": 29
+}

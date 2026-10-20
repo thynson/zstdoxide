@@ -113,7 +113,7 @@ fn explicit_two_table_dimensions_window21_and_nonoperative_controls() {
 }
 
 #[test]
-fn each_resource_cap_and_unsupported_strategy_precede_clones_and_allocation() {
+fn each_strategy_resource_cap_precedes_clones_and_allocation() {
     let input = source((1 << 21) + 1);
     let mut request = Request::new();
     request.set_window_log(22).unwrap();
@@ -136,14 +136,7 @@ fn each_resource_cap_and_unsupported_strategy_precede_clones_and_allocation() {
     for strategy in [ReferenceStrategy::Optimal, ReferenceStrategy::Ultra2] {
         let mut changed = request;
         changed.set_strategy(Some(strategy));
-        requests.push((
-            changed,
-            if strategy == ReferenceStrategy::Optimal {
-                Error::ResourceLimit
-            } else {
-                Error::UnsupportedFeature
-            },
-        ));
+        requests.push((changed, Error::ResourceLimit));
     }
     for (request, error) in requests {
         let owner = TrackingAllocator::new(AllocatorConfig {

@@ -236,3 +236,5 @@ mod ultra2_plan;
 mod ultra2_fixture;
 
 mod ultra2_state;
+
+mod ultra2_frame_plan;

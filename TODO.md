@@ -72,13 +72,15 @@ The full regression, interoperability and platform evidence is recorded in
 `docs/reference-ultra-public-qualification.md`; complete-frame measurements and
 the independent repeat are in `docs/reference-ultra-frame-benchmark.md`.
 The final evidence reconciliation is `docs/evidence/2026-10-20-ultra-closure.json`.
-Ultra2 remains unsupported and complete upstream migration remains open.
+Ultra2 was outside that milestone; its progress is tracked in Module 19 below.
+Complete upstream migration remains open.
 
 ## Module 19: bounded reference Ultra2
 
-Keep strategy 9 unsupported until its initial discarded pass and exact history
-invalidation are independently qualified. Preserve every earlier recipe,
-source-size selector, complete frame and allocator baseline.
+Strategy 9 now admits the independently qualified bounded fresh-source envelope.
+Its discarded pass, history invalidation and public frame path are qualified;
+full regression and performance closure remain open. Preserve every earlier
+recipe, source-size selector, complete frame and allocator baseline.
 
 - [x] Review pinned Ultra2 eligibility, sequence-store reset, copied repeats and history-coordinate changes against the ownership design.
 - [x] Freeze an independent eligibility/coordinate model and reconcile skipped-seeding cases with ordinary Ultra.
@@ -94,7 +96,7 @@ source-size selector, complete frame and allocator baseline.
 - [x] Qualify complete private two-pass paths, nine owner identities and transactional failures against every captured state.
 - [x] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation.
 - [x] Freeze additive source-aware admission and public recipes without rewriting any Ultra predecessor input.
-- [ ] Qualify bounded public Ultra2 dispatch and complete shared-entropy frames before public admission.
+- [x] Qualify bounded public Ultra2 dispatch and complete shared-entropy frames before public admission.
 - [x] Capture and independently audit bidirectional public interoperability and all predecessor frame identities.
 - [ ] Complete full regression, true no_std, formatting, Clippy, usage and migration-inventory checks.
 - [x] Freeze preselected native-audited complete Ultra2 frames with independent immutable baseline checks.

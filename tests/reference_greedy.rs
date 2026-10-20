@@ -108,13 +108,7 @@ fn public_resource_and_strategy_errors_precede_allocation_and_cloning() {
         (21, 20, 8, ReferenceStrategy::Greedy, Error::ResourceLimit),
         (14, 15, 9, ReferenceStrategy::Greedy, Error::ResourceLimit),
         (31, 30, 30, ReferenceStrategy::Lazy, Error::ResourceLimit),
-        (
-            31,
-            30,
-            30,
-            ReferenceStrategy::Ultra2,
-            Error::UnsupportedFeature,
-        ),
+        (31, 30, 30, ReferenceStrategy::Ultra2, Error::ResourceLimit),
     ] {
         let mut request = request();
         request.set_window_log(window).unwrap();

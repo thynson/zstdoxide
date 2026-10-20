@@ -62,7 +62,7 @@ fn complete_bounds_targets_and_three_byte_keys_round_trip() {
     }
 }
 #[test]
-fn resolved_resource_limits_and_unsupported_successors_precede_owner_cloning() {
+fn resource_limits_and_admitted_successors_preserve_allocation_order() {
     let input = source(32768, 0);
     let mut cases = Vec::new();
     for size in [0, 1, 63, 16385, 32768] {
@@ -82,7 +82,7 @@ fn resolved_resource_limits_and_unsupported_successors_precede_owner_cloning() {
     }
     let mut successor = request();
     successor.set_strategy(Some(ReferenceStrategy::Ultra2));
-    cases.push((64, successor, Error::UnsupportedFeature));
+    cases.push((64, successor, Error::AllocationFailed));
     for (size, r, error) in cases {
         let owner = TrackingAllocator::new(AllocatorConfig {
             fail_at: NonZeroU64::new(1),
@@ -97,7 +97,11 @@ fn resolved_resource_limits_and_unsupported_successors_precede_owner_cloning() {
         let s = monitor.snapshot();
         assert_eq!(
             (s.attempts, s.identities_created, s.owners_dropped),
-            (0, 1, 1)
+            if error == Error::AllocationFailed {
+                (1, 1, 1)
+            } else {
+                (0, 1, 1)
+            }
         );
         monitor.assert_released();
     }

@@ -315,7 +315,7 @@ fn original_simple_branch_successor_profiles_are_deterministic_and_fit_c_size_bu
         selected_levels.insert(simple.level);
         admitted += 1;
     }
-    assert_eq!((admitted, unsupported, resource, advanced), (67, 4, 6, 4));
+    assert_eq!((admitted, unsupported, resource, advanced), (67, 0, 10, 4));
     assert_eq!(
         selected_levels,
         [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -352,7 +352,7 @@ fn fuzzer_empty_level_loop_uses_the_frozen_successor_admission() {
             unsupported += usize::from(status == "unsupported");
         }
     }
-    assert_eq!((admitted, unsupported, resource), (11, 7, 6));
+    assert_eq!((admitted, unsupported, resource), (11, 0, 13));
 }
 
 #[test]
@@ -385,36 +385,36 @@ fn fuzzer_30_byte_initial_match_preserves_level_range_and_supported_output_equal
             unsupported += usize::from(status == "unsupported");
         }
     }
-    assert_eq!((admitted, unsupported, resource), (9, 4, 6));
+    assert_eq!((admitted, unsupported, resource), (9, 0, 10));
 }
 
-// Version7 expectations are additive fixtures. Original C selector tuples and
-// Module12/13/14/15/16/17 success/failure evidence retain their historical policy unchanged.
+// Version8 expectations are additive fixtures. Original C selector tuples and
+// Module12/13/14/15/16/17/18 success/failure evidence retain their historical policy unchanged.
 fn successor_fuzz_status(name: &str, size: usize, level: i32) -> &'static str {
-    let mut rows = include_str!("fixtures/reference-admission-v7/fuzz.tsv")
+    let mut rows = include_str!("fixtures/reference-admission-v8-v2/fuzz.tsv")
         .lines()
         .skip(1)
         .map(|line| line.split('\t').collect::<Vec<_>>())
         .filter(|row| row[0] == name);
     let row = rows.next().unwrap();
     assert!(rows.next().is_none());
-    assert_eq!(row.len(), 15);
+    assert_eq!(row.len(), 18);
     assert_eq!(row[2].parse::<usize>().unwrap(), size);
     assert_eq!(row[3].parse::<i32>().unwrap(), level);
-    row[7]
+    row[8]
 }
 
 fn successor_loop_status(family: &str, size: usize, level: i32) -> &'static str {
-    let mut rows = include_str!("fixtures/reference-admission-v7/loops.tsv")
+    let mut rows = include_str!("fixtures/reference-admission-v8-v2/loops.tsv")
         .lines()
         .skip(1)
         .map(|line| line.split('\t').collect::<Vec<_>>())
         .filter(|row| row[0] == family && row[2].parse::<i32>().unwrap() == level);
     let row = rows.next().unwrap();
     assert!(rows.next().is_none());
-    assert_eq!(row.len(), 14);
+    assert_eq!(row.len(), 17);
     assert_eq!(row[1].parse::<usize>().unwrap(), size);
-    row[6]
+    row[7]
 }
 
 #[test]

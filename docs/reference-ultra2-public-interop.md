@@ -4,7 +4,8 @@ The isolated public candidate completes 16,008 commands for 1,433 frozen
 source-only recipes: 1,292 admitted, 141 resource-limited and zero unsupported.
 Both Rust builds and both C builds use the pinned source and exact reviewed
 command/environment inventories. This is qualification of an isolated candidate;
-main admission still requires the separate private feature matrix.
+main admission was still gated at capture time. The later main admission is
+recorded in `reference-ultra2-public-qualification.md`.
 
 Normal and fully ASan/UBSan-instrumented C builds compile all 26 relevant codec
 translation units. Safe/all Rust frames are decoded by both C builds; normal/

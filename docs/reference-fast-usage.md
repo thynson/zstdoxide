@@ -2,7 +2,7 @@
 
 The four reference compression entry points are separate from the existing
 named Greedy/Chain/Lazy encoder. They encode complete borrowed inputs without a
-dictionary, using the pinned v1.5.7 Fast, DoubleFast, Greedy, Lazy, Lazy2, BinaryTreeLazy2, Optimal or Ultra sampling, path and
+dictionary, using the pinned v1.5.7 Fast, DoubleFast, Greedy, Lazy, Lazy2, BinaryTreeLazy2, Optimal, Ultra or Ultra2 sampling, path and
 repeat-offset algorithms within the documented resource limits.
 Huffman and sequence entropy choices are independent Rust implementations;
 compressed bytes, block decisions and ratios need not equal the C encoder.
@@ -40,8 +40,9 @@ adjustment. It is not a fixed level allowlist:
 | Level 10 | Resource error through 16384 bytes (tree search log 9); Lazy2 for sizes 16385..=262144; larger inputs exceed resource caps |
 | Levels 11/12 | Optimal for sizes 64..=2048; BinaryTreeLazy2 for 16385..=262144; resource errors elsewhere |
 | Levels 13/14 | Ultra for sizes 64..=2048; other resolved implemented tuples exceed local caps |
-| Levels 15–17 | Resolved implemented strategies exceed local caps; Ultra2 remains unsupported |
-| Levels 18+ | Unsupported strategies |
+| Level 15 | Resolved implemented strategies exceed local caps |
+| Levels 16/17 | Ultra2 for sizes 64..=2048; other resolved tuples exceed local caps |
+| Levels 18+ | Resolved strategies exceed local caps |
 | Other resolved strategy | `Error::UnsupportedFeature`; no replacement algorithm |
 
 Frames carry the exact source size, no checksum and no dictionary identifier.
@@ -182,7 +183,7 @@ source width uses tree storage; no row table is selected. Minimum-match 3/4 and
 publication and fallible exact-allocator ownership follow the qualified contract.
 The `unsafe-reference-tree` feature selects checked tree-cell access independently
 of every other backend. The bounded Optimal and Ultra parsers below have separate
-resource limits; Ultra2 remains unsupported.
+resource limits, including Ultra2 below.
 
 Ordinary sequence/state conformance and public cross-decoding are documented in
 [tree validation](reference-tree-validation.md). Rust entropy choices remain
@@ -211,7 +212,7 @@ and independent entropy behavior follow the existing complete-buffer API.
 
 The initial public scope excludes tiny inputs, sources above 16 KiB, window
 expiry, retained blocks and dictionaries. Ultra follows the separate policy
-below; Ultra2 remains unsupported. The retained
+below; Ultra2 adds a discarded initial pass. The retained
 Optimal coordinator remains a separately tested private implementation.
 
 
@@ -253,8 +254,52 @@ assert_eq!(decompress(&frame, input.len())?, input);
 ```
 
 Valid Ultra requests outside these local bounds return `ResourceLimit` before
-allocator cloning. Ultra2 returns `UnsupportedFeature`; its discarded initial
-pass has not been implemented. Complete-buffer Ultra does not admit retained
+allocator cloning. Complete-buffer Ultra does not admit retained
 blocks, dictionaries, window expiry, numeric streaming, long-distance matching
 or workers. Safe and opt-in unsafe storage backends share checked admission,
 allocator ownership and output publication contracts.
+
+
+## Bounded Ultra2 requests
+
+`ReferenceStrategy::Ultra2` uses the same bounded optLevel2 parser geometry
+and nine scratch owners as Ultra. It first parses the complete source to seed
+frequencies, discards all first-pass tokens, invalidates search history with
+checked coordinate rebasing, and reparses from the original 1/4/8 repeat offsets.
+Only the second pass supplies tokens to the shared entropy encoder. The phase
+transition and whole-owner reset allocate no additional parser/search storage.
+
+Default levels 16/17 admit sources of 64..=2,048 bytes. Explicit settings admit
+64..=16,384 bytes contained in the window, with resolved window log 10..=16,
+hash/chain logs 6..=12, search log 1..=6, minimum match 3..=7 and target 0..=4095.
+Automatic literal prices and the initial pass are always enabled publicly.
+
+```rust
+use zstdoxide::{compress_at_level, decompress};
+let input = vec![b'x'; 512];
+let frame = compress_at_level(&input, 16)?;
+assert_eq!(decompress(&frame, input.len())?, input);
+# Ok::<(), zstdoxide::Error>(())
+```
+
+```rust
+use zstdoxide::{compress_with_parameters, decompress,
+    CompressionParameterRequest, ReferenceStrategy};
+let input: Vec<u8> = (0..4096).map(|i| (i % 31) as u8).collect();
+let mut request = CompressionParameterRequest::with_level(16);
+request.set_strategy(Some(ReferenceStrategy::Ultra2));
+request.set_window_log(16)?;
+request.set_hash_log(12)?;
+request.set_chain_log(12)?;
+request.set_search_log(6)?;
+request.set_min_match(3)?;
+request.set_target_length(128)?;
+let frame = compress_with_parameters(&input, &request)?;
+assert_eq!(decompress(&frame, input.len())?, input);
+# Ok::<(), zstdoxide::Error>(())
+```
+
+Out-of-scope resolved Ultra2 resources return `ResourceLimit` before allocator
+cloning. Tiny sources, retained public blocks, dictionary/prefix state, window
+expiry, numeric streaming, long-distance matching and workers remain excluded.
+The borrowed input and request need not outlive the returned owned frame.

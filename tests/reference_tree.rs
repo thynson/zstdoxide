@@ -118,16 +118,7 @@ fn every_tree_resource_limit_rejects_before_allocator_cloning() {
         r.set_strategy(Some(strategy));
         assert_eq!(
             compress_with_parameters(&tiny, &r),
-            Err(
-                if matches!(
-                    strategy,
-                    ReferenceStrategy::Optimal | ReferenceStrategy::Ultra
-                ) {
-                    Error::ResourceLimit
-                } else {
-                    Error::UnsupportedFeature
-                }
-            )
+            Err(Error::ResourceLimit)
         );
     }
 }

@@ -145,7 +145,9 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
             || last != (end == self.source.len())
             || (matches!(
                 self.plan,
-                ReferenceSearchPlan::Optimal(_) | ReferenceSearchPlan::Ultra(_)
+                ReferenceSearchPlan::Optimal(_)
+                    | ReferenceSearchPlan::Ultra(_)
+                    | ReferenceSearchPlan::Ultra2(_)
             ) && (self.emitted != 0 || end != self.source.len()))
         {
             return Err(Error::InvalidParameter);
@@ -172,7 +174,9 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         let worthwhile = if parsed {
             if matches!(
                 self.plan,
-                ReferenceSearchPlan::Optimal(_) | ReferenceSearchPlan::Ultra(_)
+                ReferenceSearchPlan::Optimal(_)
+                    | ReferenceSearchPlan::Ultra(_)
+                    | ReferenceSearchPlan::Ultra2(_)
             ) {
                 self.entropy.prepare_optimal(
                     self.search.literals(),
@@ -920,6 +924,95 @@ mod ultra_frame_tests {
             Err(Error::InvalidState)
         );
         drop(output);
+        monitor.assert_released();
+    }
+}
+
+#[cfg(test)]
+mod ultra2_frame_tests {
+    use super::*;
+    use crate::{RawCompressionParameters, ultra2_frame_plan::Ultra2FramePlan};
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    fn plan() -> ReferenceSearchPlan {
+        ReferenceSearchPlan::Ultra2(
+            Ultra2FramePlan::new(
+                RawCompressionParameters {
+                    window_log: 10,
+                    hash_log: 6,
+                    chain_log: 6,
+                    search_log: 1,
+                    min_match: 3,
+                    target_length: 1,
+                    strategy: 9,
+                }
+                .validate()
+                .unwrap(),
+                64,
+            )
+            .unwrap(),
+        )
+    }
+    #[test]
+    fn ultra2_rejects_partial_schedule_without_mutation_then_emits_one_frame() {
+        let source = [b'a'; 64];
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = owner.monitor();
+        let mut w = ReferenceEncoderWorkspace::new(&source, plan(), &owner).unwrap();
+        let settings = ReferenceFrameSettings::new(64, 10).unwrap();
+        let mut output = ReferenceFrameHeader::new(&settings).as_bytes().to_vec();
+        let before = output.clone();
+        let allocations = monitor.snapshot();
+        for (n, last) in [
+            (0, false),
+            (32, false),
+            (32, true),
+            (64, false),
+            (65, true),
+            (usize::MAX, true),
+        ] {
+            assert_eq!(
+                w.emit_next(n, last, &mut output),
+                Err(Error::InvalidParameter)
+            );
+            assert_eq!(output, before);
+            assert_eq!(monitor.snapshot(), allocations);
+            assert_eq!(w.emitted, 0);
+            assert!(!w.failed);
+        }
+        w.emit_next(64, true, &mut output).unwrap();
+        assert_eq!(crate::decompress(&output, 64).unwrap(), source);
+        let completed = output.clone();
+        assert_eq!(w.emit_next(64, true, &mut output), Err(Error::InvalidState));
+        assert_eq!(output, completed);
+        drop(w);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().owners_dropped, 0);
+        drop(owner);
+        assert_eq!(monitor.snapshot().owners_dropped, 1);
+    }
+    #[test]
+    fn ultra2_seed_reservation_failure_cannot_publish_entropy_or_output() {
+        let source = [b'a'; 64];
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let mut w = ReferenceEncoderWorkspace::new(&source, plan(), &owner).unwrap();
+        let mut output = Vec::new();
+        let repeats = w.entropy.sequence_encoder.committed_repeats();
+        assert!(monitor.fail_next());
+        assert_eq!(
+            w.emit_next(64, true, &mut output),
+            Err(Error::AllocationFailed)
+        );
+        assert!(w.failed);
+        assert_eq!(w.emitted, 0);
+        assert!(output.is_empty());
+        assert_eq!(w.entropy.sequence_encoder.committed_repeats(), repeats);
+        assert!(w.search.literals().is_empty());
+        assert!(w.search.sequences().is_empty());
+        assert_eq!(w.emit_next(64, true, &mut output), Err(Error::InvalidState));
+        drop(w);
         monitor.assert_released();
     }
 }

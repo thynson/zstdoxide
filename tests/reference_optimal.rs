@@ -83,17 +83,9 @@ fn resolved_resource_limits_and_successor_admission_precede_owner_cloning() {
     for strategy in [ReferenceStrategy::Ultra, ReferenceStrategy::Ultra2] {
         let mut r = request();
         r.set_strategy(Some(strategy));
-        // Preserve the original Ultra request; admitted Ultra now reaches the
+        // Preserve the original Ultra/Ultra2 requests; both now reach the
         // intentionally failed output allocation before any scratch clone.
-        cases.push((
-            64,
-            r,
-            if strategy == ReferenceStrategy::Ultra {
-                Error::AllocationFailed
-            } else {
-                Error::UnsupportedFeature
-            },
-        ));
+        cases.push((64, r, Error::AllocationFailed));
     }
     for (size, r, error) in cases {
         let owner = TrackingAllocator::new(AllocatorConfig {

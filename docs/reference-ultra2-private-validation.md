@@ -121,8 +121,8 @@ qualification inputs. The archive is
 `evidence/2026-10-20-ultra2-private-platform.tar.gz`, SHA-256
 `93768d12d9e164b5b594df4c2f327cc6d7a644f5867f687a9da0da3b5290a6c9`.
 It contains 308 regular files, with independently reconstructed lossless content
-and exact Git-blob references for unchanged inherited fixtures. The full
-isolated-feature matrix remains a separate pending gate.
+and exact Git-blob references for unchanged inherited fixtures. The complete
+isolated-feature matrix is recorded in the following checkpoint.
 
 ## Complete private backend reconciliation
 
