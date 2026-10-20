@@ -1,7 +1,8 @@
 # Private Rust Ultra2 validation
 
-The private lifecycle is qualified incrementally. Public Ultra2 remains
-unsupported, and this document does not claim complete strategy-9 frame behavior.
+The private lifecycle is qualified through the feature and platform checkpoints
+below. Public complete-frame admission is tracked separately in
+`reference-ultra2-public-qualification.md`.
 The native lifecycle and immutable fixture are described in
 `reference-ultra2-native-qualification.md` and
 `reference-ultra2-fixture-qualification.md`.
@@ -101,8 +102,8 @@ Independent lossless reconstruction and unchanged-original verification pass.
 Exploratory runs passed before the final six-test source snapshot. These are
 correctness runs and provide no performance claim.
 
-The full isolated feature matrix, foreign platform reconciliation and public
-admission remain subsequent gates.
+The following checkpoints record the isolated feature matrix and foreign
+platform reconciliation; public admission has its separate complete-frame gate.
 
 ## Foreign ownership and no-atomics qualification
 
@@ -122,3 +123,28 @@ qualification inputs. The archive is
 It contains 308 regular files, with independently reconstructed lossless content
 and exact Git-blob references for unchanged inherited fixtures. The full
 isolated-feature matrix remains a separate pending gate.
+
+## Complete private backend reconciliation
+
+All nineteen isolated unsafe configurations pass the same six coordinator tests
+and true no_std checks; release/all repeats all six tests successfully. Together
+with the matching safe/all coordinator checkpoint, this is 22 complete products,
+132 passing test executions and 21 host no_std builds. An independent parser
+compares every test name and successful outcome. Each product replays all 53
+native cases, 394656 complete events and 29 lifecycle resets, plus owner-failure
+and transactional reuse contracts. No partial or failed run contributes a pass.
+
+The matrix, safe/all coordinator and foreign-platform records bind the same 582
+recorded source/fixture identities. They were checked against main before public
+admission. Supplemental Cargo configuration observations are explicitly dated
+during the run; they do not invent a contemporaneous start snapshot. The formal
+benchmark campaigns maintain their own stricter Cargo-configuration inventory.
+
+The matrix archive is `evidence/2026-10-20-ultra2-private-matrix.tar.gz`, SHA-256
+`6f1d5dc1b5810d17bd691b17bbb2161914e657d73c7b762d2bcd7218598c3268`.
+It retains 39 successful command records, the independent reconciliation and
+284 regular bundle files (53169012 logical bytes). Unchanged inherited fixtures
+have verified Git-blob reconstruction records; all Rust and changed/new fixture
+inputs remain directly retained. Lossless reconstruction and unchanged-original
+checks pass. This completes the private backend/platform gate; full public
+regression and complete-frame timing remain separate work.

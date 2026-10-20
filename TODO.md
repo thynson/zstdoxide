@@ -92,7 +92,7 @@ source-size selector, complete frame and allocator baseline.
 - [x] Implement checked index rebasing and stale-history exclusion while retaining exact search owners.
 - [x] Implement the private discarded-pass coordinator with preserved frequencies, original repeats and reset token lengths.
 - [x] Qualify complete private two-pass paths, nine owner identities and transactional failures against every captured state.
-- [ ] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation.
+- [x] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation.
 - [x] Freeze additive source-aware admission and public recipes without rewriting any Ultra predecessor input.
 - [ ] Qualify bounded public Ultra2 dispatch and complete shared-entropy frames before public admission.
 - [x] Capture and independently audit bidirectional public interoperability and all predecessor frame identities.
