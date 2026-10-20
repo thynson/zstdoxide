@@ -84,7 +84,7 @@ source-size selector, complete frame and allocator baseline.
 - [x] Freeze an independent eligibility/coordinate model and reconcile skipped-seeding cases with ordinary Ultra.
 - [x] Freeze source-only two-pass recipes covering short-key tables, stale ring aliases, threshold predicates and changed final paths.
 - [x] Specify bounded pass-tagged transport and complete frequency/search/path/reset observations before native instrumentation.
-- [ ] Review and preflight read-only instrumentation, full sanitizer coverage and exact command/source inventories.
+- [x] Review and preflight read-only instrumentation, full sanitizer coverage and exact command/source inventories.
 - [ ] Capture and independently audit both passes, malformed requests and coherent forged lifecycle states.
 - [ ] Specify and project an immutable two-pass fixture with independent reconstruction controls.
 - [ ] Qualify the independent borrowed Rust fixture reader and all reset/publication boundaries.
