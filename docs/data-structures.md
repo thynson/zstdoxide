@@ -2801,3 +2801,53 @@ the first final snapshot and reset snapshot. The following begin event must
 independently satisfy the preserved-statistics rescale/cache rules. Threshold
 controls and skipped-seeding append observations remain private test cases and
 must not widen any public admission boundary.
+
+### Private Rust Ultra2 plan and phase transition contract
+
+The private `Ultra2ExecutionPlan` will be a copied, allocation-free value holding
+resolved strategy-9 parameters, the checked ordinary search geometry, source
+length, literal-price mode, explicit seed hypothesis and nine exact owner sizes.
+It admits the private observed 7..16384-byte envelope; no frame settings or public
+dispatch are attached to it. The existing Optimal/Ultra plans and their 64-byte
+lower bounds remain unchanged. Public Ultra2 admission, when separately qualified,
+must still apply its own source-aware 64-byte boundary. The false seed hypothesis
+models appended parser observations under an opaque sequence prefix, not a
+published preexisting token stream.
+
+`Ultra2Coordinates` will use Rust source indices without the native bias of two:
+first origin zero, second origin source length. Checked interval construction
+reserves room for the native bias and rejects overflow before forming an end.
+`absolute(offset)`, `offset(index, width)` and `rebase()` validate complete ranges;
+zero-width end ranges are valid, positive end reads and every stale old index are
+not. The original source borrow is the only readable byte storage. `OptimalSource`
+will carry this origin and translate all key/hash/byte/match operations through
+checked subtraction. Its existing zero-origin constructors and direct-query
+contracts stay unchanged. A dedicated private constructor handles threshold
+controls without broadening ordinary public entry points.
+
+The search owner retains all physical tree/short-key cells on phase reset and
+changes only its source origin, main frontier, block-local short frontier and
+logical candidate length. Candidate filtering takes the maximum of the window
+floor and the current origin before any source access. Tree ring indices remain
+absolute Rust positions plus the native bias, so old physical aliases survive
+exactly as observed. The second phase presents relative queries to the parser
+and translates them once at the provider boundary; path and token offsets never
+change coordinate systems. Source argument errors precede owner mutation.
+
+A copied `Ultra2Phase` transition record distinguishes Ready, Seeding, Rebased,
+Encoding, Complete and Failed. Only a legal finished seeding pass can enter the
+rebased state. The parser preserves frequency/path allocations and cell contents,
+but resets invocation-local anchor, cursor, repeats, last-stretch, sequence count
+and candidate length. It must not call the existing whole-parser reset at this
+boundary. Re-running `begin_block` performs the observed retained-frequency
+scaling. Tiny threshold cases perform begin/complete without a search query;
+loop bounds must use checked or saturating subtraction rather than underflow.
+
+The future coordinator owns the same nine allocator objects as ordinary Ultra:
+frequency, path, parser matches, tree heads, tree nodes, short keys, search matches,
+literals and sequences. Both token vectors reserve once before the first pass.
+A private observer collects seed tokens into those same buffers, clears only
+logical lengths at reset, and restarts original repeats for encoding. No tail
+statistics or entropy publication occurs between passes. Accessors expose no
+seed or partial-failure output; failures after work starts poison the coordinator,
+and a whole reset is required for reuse. Parameter rejection remains transactional.
