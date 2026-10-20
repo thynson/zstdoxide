@@ -936,3 +936,57 @@ official migration obligations stay open; this is not full zstd library/CLI pari
 
 Details: `reference-ultra-public-qualification.md`,
 `reference-ultra-frame-benchmark.md`, `evidence/2026-10-20-ultra-closure.json`.
+
+## Module 19: bounded reference Ultra2 complete (2026-10-20)
+
+Public strategy 9 admits fresh no-dictionary sources of 64..16384 bytes fitting
+W10..16, H/C6..12, S1..6, minimum-match 3..7 and target 0..4095 after resolution.
+Default levels 16/17 fit 64..2048-byte sources. The discarded first pass retains
+learned frequencies and exact nine-owner identities; checked rebasing excludes
+old search history, clears token lengths and restores original repeats. Only
+the completed second pass reaches shared entropy. Public retained blocks,
+dictionary/prefix, window expiry, numeric streaming, LDM and workers remain
+outside this milestone.
+
+The independently observed fixture contains 53 cases, 394656 events and 29
+resets, preserves 44 old first-pass identities and covers stale ring aliases
+and changed final paths. The private lifecycle passes all 22 configuration
+products and 21 true no_std builds. Selected 32-bit/big-endian Miri and safe/all
+no-atomics concrete code generation pass; these are not foreign native runs.
+
+Public native interoperability covers 1433 recipes: 1292 admitted and 141
+resource rejections. All 16008 commands complete with their declared outcomes,
+including 156 expected malformed-input exits. Each direction decodes 5168
+frames; total decoded bytes are 802569512. All 26 relevant C units receive
+sanitizer instrumentation. All 1345 predecessor recipe/source pairs and 4888
+successful predecessor Rust responses remain intact. Both Python modes reject
+59 native-evidence forgeries without child execution.
+
+Full public regression completes 22 uninterrupted final configuration products,
+each with 1435 passes and 55 explicit ignores (31570 passing and 1210 ignored
+executions), plus 21 true no_std builds. Independent reconciliation compares all
+67 named groups and exact outcomes. The earlier empty-source classification
+assertion failure and three cancelled incomplete attempts are preserved and
+excluded from success counts. Formatting, strict safe/all Clippy, allocator,
+usage, platform and inventory evidence applies to unchanged production sources.
+The 188 unfinished upstream source units and 55 ignored cases remain open.
+
+All 21 backends produce equal complete frames and allocator ledgers on the 26
+preselected cases. Primary timings and an independent safe/all repeat retain
+598 case/backend rows, 2990 samples and all 23 measured executables. Both modes
+pass 33 timing controls with zero child attempts. The all/safe geometric means
+of median cost per input byte are 0.9985 and 1.0007; they do not establish a
+stable unsafe speedup. CPU barriers exclude task-owned competing work, while
+fixed order, thermal state and unrelated desktop activity remain limitations.
+
+Final reconciliation verifies all 23 Ultra2 archive/report pairs, 45 predecessor
+pairs, current full-regression and measured source inventories and all 90 public
+production identities. Historical stages and failed attempts remain explicit.
+Module 19's checklist is cleared. Module 20 begins with a reviewed retained
+Optimal ownership/scheduling/publication design: independently qualify sources
+above the current private 16 KiB cap before extending bounded complete frames
+to 32 KiB. This design changes no current production admission.
+
+Details: `reference-ultra2-public-qualification.md`,
+`reference-ultra2-frame-benchmark.md`, `evidence/2026-10-20-ultra2-closure.json`,
+and the Module 20 design in `data-structures.md`.

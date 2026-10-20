@@ -75,34 +75,35 @@ The final evidence reconciliation is `docs/evidence/2026-10-20-ultra-closure.jso
 Ultra2 was outside that milestone; its progress is tracked in Module 19 below.
 Complete upstream migration remains open.
 
-## Module 19: bounded reference Ultra2
+Module 19 is complete within its bounded fresh no-dictionary Ultra2 scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Correctness and platform evidence are in
+`docs/reference-ultra2-public-qualification.md`; complete-frame measurements and
+the independent repeat are in `docs/reference-ultra2-frame-benchmark.md`.
+The final reconciliation is `docs/evidence/2026-10-20-ultra2-closure.json`.
+Retained public blocks and complete upstream migration remain open.
 
-Strategy 9 now admits the independently qualified bounded fresh-source envelope.
-Its discarded pass, history invalidation and public frame path are qualified;
-final milestone reconciliation remains open. Preserve every earlier
-recipe, source-size selector, complete frame and allocator baseline.
+## Module 20: bounded retained Optimal complete frames
 
-- [x] Review pinned Ultra2 eligibility, sequence-store reset, copied repeats and history-coordinate changes against the ownership design.
-- [x] Freeze an independent eligibility/coordinate model and reconcile skipped-seeding cases with ordinary Ultra.
-- [x] Freeze source-only two-pass recipes covering short-key tables, stale ring aliases, threshold predicates and changed final paths.
-- [x] Specify bounded pass-tagged transport and complete frequency/search/path/reset observations before native instrumentation.
-- [x] Review and preflight read-only instrumentation, full sanitizer coverage and exact command/source inventories.
-- [x] Capture and independently audit both passes, malformed requests and coherent forged lifecycle states.
-- [x] Specify and project an immutable two-pass fixture with independent reconstruction controls.
-- [x] Qualify the independent borrowed Rust fixture reader and all reset/publication boundaries.
-- [x] Design a private checked Ultra2 plan and copied phase/coordinate records before changing parser/search state.
-- [x] Implement checked index rebasing and stale-history exclusion while retaining exact search owners.
-- [x] Implement the private discarded-pass coordinator with preserved frequencies, original repeats and reset token lengths.
-- [x] Qualify complete private two-pass paths, nine owner identities and transactional failures against every captured state.
-- [x] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation.
-- [x] Freeze additive source-aware admission and public recipes without rewriting any Ultra predecessor input.
-- [x] Qualify bounded public Ultra2 dispatch and complete shared-entropy frames before public admission.
-- [x] Capture and independently audit bidirectional public interoperability and all predecessor frame identities.
-- [x] Complete full regression, true no_std, formatting, Clippy, usage and migration-inventory checks.
-- [x] Freeze preselected native-audited complete Ultra2 frames with independent immutable baseline checks.
-- [x] Verify complete frame bytes and owner ledgers across every backend without clocks.
-- [x] Measure every backend plus an independent repeat after CPU barriers.
-- [ ] Reconcile the bounded Ultra2 milestone and decompose the next roadmap scope without claiming complete upstream parity.
+Preserve all existing fresh requests and frame bytes. The current private
+retained source ceiling is 16 KiB; qualify the proposed additive 32 KiB domain
+independently before changing production. Retained Ultra/Ultra2 remain separate.
+
+- [x] Review retained ownership, source boundaries, balanced schedules, exact output reservation and transactional publication against pinned upstream.
+- [ ] Freeze an additive larger-domain transport and independent model; reconcile every earlier wide native state and reject malformed schedules/state in normal and optimized Python.
+- [ ] Freeze source-only recipes for 16385/24576/24577/32768 boundaries, cross-block history, short keys, horizon paths and raw/RLE/compressed publication.
+- [ ] Specify and preflight bounded observer adaptation, sanitizer/dependency closure, exact commands and complete source inventory before native execution.
+- [ ] Capture and independently audit larger retained states and complete frames, with coherent forgery controls and unchanged predecessor observations.
+- [ ] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before widening parser/search admission.
+- [ ] Implement a checked copied schedule and source-aware retained frame plan, preserving old fresh dispatch and all early allocator rejection boundaries.
+- [ ] Implement block-range token collection and allocation-free retained transitions with exact nine-owner identities.
+- [ ] Integrate shared entropy and repeat publication, raw/RLE rollback, complete output reservation, failure poisoning and reset.
+- [ ] Qualify actual Rust wire publication history with independent replay and native decoding without assuming C/Rust entropy decisions agree.
+- [ ] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation before public admission.
+- [ ] Qualify additive public admission and bidirectional interoperability while preserving every predecessor request/response identity.
+- [ ] Complete full regression, true no_std, formatting, Clippy, usage, allocator and upstream migration-inventory checks.
+- [ ] Freeze complete frames and owner ledgers; measure every backend and an independent repeat after CPU barriers.
+- [ ] Reconcile the bounded milestone and decompose the next scope without claiming complete upstream parity.
 
 ## Roadmap
 

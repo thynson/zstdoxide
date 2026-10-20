@@ -2883,3 +2883,90 @@ Every previously admitted request must retain its predecessor complete Rust
 response, source and resolved tuple. A successor fixture may reclassify an old
 strategy-9 rejection; it may not rewrite the predecessor evidence. Public
 admission follows private lifecycle, feature, foreign Miri and no-atomics gates.
+
+## Bounded retained Optimal complete frames (Module 20 design)
+
+The existing private `RetainedOptimal` admission is 128..16384 total bytes,
+with two to four blocks of 64..8192 bytes. Four schedule slots do not admit a
+32768-byte source. A separate additive integer model, pinned native observer,
+complete-state fixture and Rust reader must qualify the larger source domain
+before changing any production bound. The proposed public extension is
+16385..32768 bytes fitting its selected window; all existing fresh 64..16384
+requests retain their dispatcher, source resolution and complete frame bytes.
+Retained Ultra/Ultra2, dictionaries, prefix attachment, window expiry, numeric
+streaming, long-distance matching and workers remain separate work.
+
+### Copied schedule and exact frame reservation
+
+A checked plain-value schedule stores at most four lengths and cumulative ends.
+For the proposed new length n, k=ceil(n/8192), q=n/k and r=n%k; the first r
+blocks have q+1 bytes and the remaining blocks q bytes. Thus 16385 maps to
+[5462,5462,5461], 24576 to [8192,8192,8192], 24577 to
+[6145,6144,6144,6144], and 32768 to [8192,8192,8192,8192]. The constructor
+validates the complete source/window/geometry and exact checked sum before
+cloning an allocator. The next-block accessor checks the expected emitted
+position. Setting the existing constant block limit to 8192 is insufficient:
+it would produce a one-byte final block at the lower boundary.
+
+The frame plan owns no allocation and supplies the exact checked raw upper
+bound: frame-header bytes plus source bytes plus three bytes per scheduled
+block, plus any enabled trailer. The current window-based bound counts fewer
+headers for these sources. Although per-block fallible reservation is memory
+safe, relying on it would violate a complete up-front reservation contract.
+All fallback kinds must fit the initial capacity without output growth. Existing
+fresh variants keep their current bounds and allocator baselines.
+
+### Retained parser, block-local tokens and publication
+
+The existing coordinator owns seven allocator values for parser and search
+storage. Two token scratch vectors bring the complete retained token stage to
+nine owners. It retains frequency/path/search allocations across blocks, with
+copied initial/current repeat records, source cursor, fixed schedule, pending
+`PathResult` and Ready/Pending/Finished/Poisoned phase. Those copied records need
+no artificial unsafe representation; existing storage owners retain their
+separately selected safe/unsafe implementations and public contracts.
+
+A new collector borrows an explicitly checked absolute block range. Its anchor
+and final tail are block-local; tail length is block-end minus anchor, not
+whole-source length minus anchor. Matches may reference the consumed prefix,
+while future backing bytes remain inaccessible through the active source view.
+The existing whole-source collector remains unchanged. Scratch reserves before
+parsing and transitions between blocks allocate nothing.
+
+Pinned `ZSTD_compressBlock_opt_generic` reinitializes invocation-local search
+frontiers, last-stretch and pricing scale while retaining owners and learned
+frequencies. `ZSTD_blockState_confirmRepcodesAndEntropyTables` publishes the
+pending compressed-state owner only for compressed output. The Rust frame
+workspace is the committed entropy and wire-repeat authority. A bridge validates
+pending phase and candidate repeats before appending a complete block, then
+commits without a fallible transition. Raw/RLE fallback advances parsing history
+but preserves committed repeats. A failure after irreversible parser/search work
+poisons the coordinator; no usable state may disagree with already emitted wire
+repeats. Complete reset is required for reuse after such a failure.
+
+### Independent larger-domain evidence
+
+The additive transport admits 128..32768 bytes to reconcile all seven earlier
+wide native cases unchanged before covering the new domain. It retains the
+same two-to-four block schedule, 4099 path cells, bounded search geometry,
+32768-event per-block limit, exact sparse deltas and guarded two-padding-pass
+observations. A new protocol identity distinguishes the larger packet/frame
+bounds. Scalar path/search/price transitions may reuse immutable qualified
+integer-model components; captured matches must never become provider inputs.
+New source-only recipes and publication hypotheses are frozen before C execution.
+The observer needs a source-sized frame buffer with explicit header allowance;
+the old fixed 32768-byte frame buffer cannot hold a worst-case new raw frame.
+
+C and Rust entropy encoders may choose different block kinds, which legitimately
+changes the next block's committed repeats. Exact native fixtures bind their
+captured publication schedule. Complete Rust frames instead require an
+independent wire-kind reader and replay of the frozen integer model under their
+actual publication history, plus native decoding. Never change the native match
+provider or publication to force agreement. Interoperability alone is not an
+exact parser-state comparison. Dictionary/window/streaming support is not inferred
+from retained history within this bounded complete-source contract.
+
+Reviewed upstream: v1.5.7 revision
+`f8745da6ff1ad1e7bab384bd1f9d742439278e99`, `zstd_opt.c` lines 1077..1127
+and `zstd_compress.c` lines 3607..3611. These are design hypotheses, not a new
+production admission or completed larger-domain qualification.

@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "scope": "Proposed schedule arithmetic only; no native/model/Rust codec qualification or public admission.",
+  "checked_source_lengths": 16384,
+  "recorded_utc": "2026-10-20T04:12:13.674121+00:00",
+  "boundaries": [
+    {
+      "source_bytes": 16385,
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "extra_headers_over_single_block": 6
+    },
+    {
+      "source_bytes": 24576,
+      "blocks": [
+        8192,
+        8192,
+        8192
+      ],
+      "extra_headers_over_single_block": 6
+    },
+    {
+      "source_bytes": 24577,
+      "blocks": [
+        6145,
+        6144,
+        6144,
+        6144
+      ],
+      "extra_headers_over_single_block": 9
+    },
+    {
+      "source_bytes": 32768,
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "extra_headers_over_single_block": 9
+    }
+  ]
+}
