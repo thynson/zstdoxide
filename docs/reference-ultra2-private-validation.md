@@ -67,5 +67,39 @@ references and complete reconstruction instructions; all changed/new inputs and
 Rust sources are retained directly. The original full snapshots remain local.
 No timing or unsafe-speedup conclusion is drawn from these correctness runs.
 
-Discarded-pass parser/coordinator state, complete path/frequency comparisons,
-nine-owner failure controls and public admission remain subsequent gates.
+## Discarded-pass coordinator and exact output publication
+
+The private coordinator uses the same nine allocator objects for both passes.
+It reserves literal and sequence capacity once, collects and validates the seed
+pass without appending its tail, preserves the frequency/path/search owners,
+rebases checked search coordinates, clears token lengths and restores original
+1/4/8 repeat offsets before encoding. Only the completed encoding pass exposes
+output. Parameter rejection precedes mutation; failures at any work boundary
+hide partial tokens and require whole-owner reset. The shared collector retains
+the existing Optimal/Ultra behavior and validates final repeats, counts and tail.
+
+All 53 native cases match every one of 394656 path/frequency/query/publication
+events and 29 lifecycle resets in safe and all-feature builds. Complete final
+wire offset intents reconstruct every source, including tiny private thresholds,
+disabled literal prices, skipped-seed hypotheses, stale rings and changed seeded
+paths. Full final search tables match the captured states; every intermediate
+search state was independently qualified in the earlier search checkpoint.
+
+Six focused tests cover all nine moved nonclone construction/reservation failures,
+borrowed owner identities and allocation-free phase/reset reuse, foreign-source/
+geometry/used-owner rejection, and injected entry/begin/append/end/reset failures
+in both passes. Completed output survives invalid reuse; failed/seed output is
+never exposed. Old Optimal/Ultra state and ordinary Ultra parser regression,
+strict safe/all Clippy, formatting and true no_std safe/all checks all pass
+(11 commands, 582 unchanged compiled input identities).
+
+The coordinator archive is `evidence/2026-10-20-ultra2-coordinator.tar.gz`, SHA-256
+`065d298d98280087c53d571413d6e4507c90cc7dffd3406ecdd715b53eda08c9`.
+It retains 227 regular bundle files and exact Git-blob reconstruction records for
+unchanged inherited fixture inputs; complete original snapshots remain local.
+Independent lossless reconstruction and unchanged-original verification pass.
+Exploratory runs passed before the final six-test source snapshot. These are
+correctness runs and provide no performance claim.
+
+The full isolated feature matrix, foreign platform reconciliation and public
+admission remain subsequent gates.

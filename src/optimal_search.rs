@@ -146,6 +146,15 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         minimum: usize,
         target: usize,
     ) -> Result<()> {
+        self.validate_ultra2_phase(source, minimum, target, false)
+    }
+    pub(crate) fn validate_ultra2_binding(
+        &self,
+        source: &[u8],
+        minimum: usize,
+        target: usize,
+        rebased: bool,
+    ) -> Result<()> {
         self.layout.validate_ultra2(source.len())?;
         if !self.source.is_same_source(source)
             || minimum != if self.layout.minimum() == 3 { 3 } else { 4 }
@@ -153,17 +162,38 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         {
             return Err(Error::InvalidParameter);
         }
-        if self.ultra2 != Some(false)
+        let origin = if rebased { source.len() } else { 0 };
+        if self.ultra2 != Some(rebased)
             || self.failed
             || self.retained.is_some()
-            || self.source.origin() != 0
-            || self.frontier != 0
-            || self.short_frontier != 0
+            || self.source.origin() != origin
+        {
+            return Err(Error::InvalidState);
+        }
+        Ok(())
+    }
+    pub(crate) fn validate_ultra2_phase(
+        &self,
+        source: &[u8],
+        minimum: usize,
+        target: usize,
+        rebased: bool,
+    ) -> Result<()> {
+        self.validate_ultra2_binding(source, minimum, target, rebased)?;
+        let origin = self.source.origin();
+        if self.frontier != origin
+            || self.short_frontier != origin
             || !self.matches.as_slice()?.is_empty()
         {
             return Err(Error::InvalidState);
         }
         Ok(())
+    }
+    pub(crate) fn ultra2_coordinates(&self) -> Result<crate::ultra2_plan::Ultra2Coordinates> {
+        if self.ultra2.is_none() {
+            return Err(Error::InvalidState);
+        }
+        crate::ultra2_plan::Ultra2Coordinates::new(self.source.origin(), self.source.backing_len())
     }
     /// The paired coordinator verifies a finished seeding parser before calling
     /// this boundary. All validation precedes mutation of these search owners.

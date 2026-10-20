@@ -234,3 +234,5 @@ mod ultra2_plan;
 #[cfg(test)]
 #[path = "../tests/support/ultra2_fixture.rs"]
 mod ultra2_fixture;
+
+mod ultra2_state;

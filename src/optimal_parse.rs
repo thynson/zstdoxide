@@ -5,7 +5,7 @@
     dead_code,
     reason = "Private Ultra parsing and internal diagnostics are not exposed publicly"
 )]
-use crate::optimal_frequencies::OptimalFrequencies;
+use crate::optimal_frequencies::{FrequencySnapshot, OptimalFrequencies};
 use crate::optimal_matches::OptimalMatches;
 use crate::optimal_path_layout::{
     BLOCK_LIMIT, PATH_HORIZON, PathCell, PathIndex, PathPhase, PathPrice, ReverseCursor,
@@ -37,6 +37,23 @@ impl<H: Allocator, N: Allocator, S: Allocator, B: Allocator> PathProvider
         matches: &mut OptimalMatches<A>,
     ) -> Result<()> {
         for &candidate in self.0.query_fresh(query)? {
+            matches.push(candidate)?;
+        }
+        Ok(())
+    }
+}
+struct Ultra2Provider<'s, 'a, H: Allocator, N: Allocator, S: Allocator, B: Allocator>(
+    &'s mut OptimalSearch<'a, H, N, S, B>,
+);
+impl<H: Allocator, N: Allocator, S: Allocator, B: Allocator> PathProvider
+    for Ultra2Provider<'_, '_, H, N, S, B>
+{
+    fn query<A: Allocator>(
+        &mut self,
+        query: OptimalQuery,
+        matches: &mut OptimalMatches<A>,
+    ) -> Result<()> {
+        for &candidate in self.0.query_ultra2(query)? {
             matches.push(candidate)?;
         }
         Ok(())
@@ -114,6 +131,12 @@ enum Status {
     Finished,
     Poisoned,
 }
+#[derive(Clone, Copy, Eq, PartialEq)]
+enum Scope {
+    Scripted,
+    UltraFresh,
+    Ultra2,
+}
 pub(crate) struct OptimalParser<'a, F: Allocator, P: Allocator, M: Allocator> {
     source: &'a [u8],
     block_start: usize,
@@ -132,6 +155,7 @@ pub(crate) struct OptimalParser<'a, F: Allocator, P: Allocator, M: Allocator> {
     last_stretch: PathCell,
     status: Status,
     ultra_fresh_only: bool,
+    ultra2: Option<bool>,
 }
 fn resolved(off: u32, repeats: [u32; 3], zero: bool) -> Result<(u32, [u32; 3])> {
     if off == 0 || repeats.contains(&0) {
@@ -192,7 +216,15 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         if frequencies.policy() != policy || (policy == PricePolicy::Ultra && source.len() > 8192) {
             return Err(Error::InvalidParameter);
         }
-        Self::initialize_parts(source, minimum, target, frequencies, paths, matches, false)
+        Self::initialize_parts(
+            source,
+            minimum,
+            target,
+            frequencies,
+            paths,
+            matches,
+            Scope::Scripted,
+        )
     }
     /// Independently qualified ordinary Ultra envelope. The larger source owner
     /// cannot be used with an arbitrary scripted provider or retained planning.
@@ -207,7 +239,36 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         if frequencies.policy() != PricePolicy::Ultra || !(64..=16384).contains(&source.len()) {
             return Err(Error::InvalidParameter);
         }
-        Self::initialize_parts(source, minimum, target, frequencies, paths, matches, true)
+        Self::initialize_parts(
+            source,
+            minimum,
+            target,
+            frequencies,
+            paths,
+            matches,
+            Scope::UltraFresh,
+        )
+    }
+    pub(crate) fn from_ultra2_parts(
+        source: &'a [u8],
+        minimum: u8,
+        target: usize,
+        frequencies: OptimalFrequencies<F>,
+        paths: OptimalPaths<P>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        if frequencies.policy() != PricePolicy::Ultra || !(7..=16384).contains(&source.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        Self::initialize_parts(
+            source,
+            minimum,
+            target,
+            frequencies,
+            paths,
+            matches,
+            Scope::Ultra2,
+        )
     }
     fn initialize_parts(
         source: &'a [u8],
@@ -216,12 +277,14 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         mut frequencies: OptimalFrequencies<F>,
         mut paths: OptimalPaths<P>,
         mut matches: OptimalMatches<M>,
-        ultra_fresh_only: bool,
+        scope: Scope,
     ) -> Result<Self> {
-        if !(9..=BLOCK_LIMIT as usize).contains(&source.len())
-            || !(3..=7).contains(&minimum)
-            || target >= PATH_HORIZON
-        {
+        let valid_source = if scope == Scope::Ultra2 {
+            (7..=16384).contains(&source.len())
+        } else {
+            (9..=BLOCK_LIMIT as usize).contains(&source.len())
+        };
+        if !valid_source || !(3..=7).contains(&minimum) || target >= PATH_HORIZON {
             return Err(Error::InvalidParameter);
         }
         frequencies.reset()?;
@@ -244,7 +307,8 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             sequences: 0,
             last_stretch: PathCell::ZERO,
             status: Status::Ready,
-            ultra_fresh_only,
+            ultra_fresh_only: scope != Scope::Scripted,
+            ultra2: (scope == Scope::Ultra2).then_some(false),
         })
     }
     pub(crate) fn reset(&mut self) -> Result<()> {
@@ -262,6 +326,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         self.sequences = 0;
         self.last_stretch = PathCell::ZERO;
         self.status = Status::Ready;
+        self.ultra2 = self.ultra2.map(|_| false);
         Ok(())
     }
     /// Parse one bounded ordinary fresh block with independently owned search.
@@ -294,7 +359,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         search: &mut OptimalSearch<'a, H, N, S, B>,
         observer: &mut O,
     ) -> Result<PathResult> {
-        if self.frequencies.policy() != PricePolicy::Ultra {
+        if self.ultra2.is_some() || self.frequencies.policy() != PricePolicy::Ultra {
             return Err(Error::UnsupportedFeature);
         }
         if !(64..=16384).contains(&self.source.len()) {
@@ -302,6 +367,68 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         }
         search.validate_fresh_start(self.source, self.minimum, self.target)?;
         self.parse_with_provider(&mut FreshProvider(search), observer)
+    }
+    pub(crate) fn ultra2_configuration(&self) -> Result<(&'a [u8], usize, usize, bool)> {
+        if self.ultra2 != Some(false) || self.frequencies.policy() != PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        if self.status != Status::Ready
+            || self.retained_end != 0
+            || self.frequencies.snapshot()?.initialized
+        {
+            return Err(Error::InvalidState);
+        }
+        Ok((
+            self.source,
+            self.minimum,
+            self.target,
+            self.frequencies.disabled_literals(),
+        ))
+    }
+    pub(crate) fn ultra2_frequencies(&self) -> Result<FrequencySnapshot> {
+        if self.ultra2.is_none() {
+            return Err(Error::UnsupportedFeature);
+        }
+        self.frequencies.snapshot()
+    }
+    pub(crate) fn parse_ultra2<
+        H: Allocator,
+        N: Allocator,
+        S: Allocator,
+        B: Allocator,
+        O: PathObserver,
+    >(
+        &mut self,
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+        observer: &mut O,
+    ) -> Result<PathResult> {
+        let rebased = self.ultra2.ok_or(Error::UnsupportedFeature)?;
+        if self.frequencies.policy() != PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        search.validate_ultra2_phase(self.source, self.minimum, self.target, rebased)?;
+        self.parse_with_provider(&mut Ultra2Provider(search), observer)
+    }
+    /// Preserve exact frequency/path owners; reset only invocation-local scratch.
+    pub(crate) fn rebase_ultra2<H: Allocator, N: Allocator, S: Allocator, B: Allocator>(
+        &mut self,
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+    ) -> Result<()> {
+        if self.ultra2 != Some(false) || self.status != Status::Finished || self.retained_end != 0 {
+            return Err(Error::InvalidState);
+        }
+        search.validate_ultra2_binding(self.source, self.minimum, self.target, false)?;
+        search.rebase_ultra2()?;
+        self.ip = 0;
+        self.anchor = 0;
+        self.repeats = [1, 4, 8];
+        self.wire_repeats = self.repeats;
+        self.sequences = 0;
+        self.last_stretch = PathCell::ZERO;
+        self.matches.clear();
+        self.ultra2 = Some(true);
+        self.status = Status::Ready;
+        Ok(())
     }
     pub(crate) fn parse<Q: PathProvider, O: PathObserver>(
         &mut self,
@@ -349,7 +476,10 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
     }
     /// Inspect an unused owner admitted through the ordinary Ultra constructor.
     pub(crate) fn ultra_fresh_configuration(&self) -> Result<(&'a [u8], usize, usize, bool)> {
-        if self.frequencies.policy() != PricePolicy::Ultra || !self.ultra_fresh_only {
+        if self.ultra2.is_some()
+            || self.frequencies.policy() != PricePolicy::Ultra
+            || !self.ultra_fresh_only
+        {
             return Err(Error::UnsupportedFeature);
         }
         if !(64..=16384).contains(&self.source.len()) {
@@ -866,7 +996,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         )?;
         self.ip = self.block_start.max(1);
         self.emit(observer, PathEvent::default())?;
-        while self.ip < self.block_end - 8 {
+        while self.ip < self.block_end.saturating_sub(8) {
             let litlen = self.ip.checked_sub(self.anchor).ok_or(Error::CorruptData)?;
             let count = self.find(provider, observer, 0, 0, self.repeats, litlen == 0)?;
             if count == 0 {

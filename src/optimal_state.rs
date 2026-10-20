@@ -8,7 +8,7 @@
     )
 )]
 use crate::optimal_frequencies::OptimalFrequencies;
-use crate::optimal_parse::{OptimalParser, PathEvent, PathObserver};
+use crate::optimal_parse::{OptimalParser, PathEvent, PathObserver, PathResult};
 use crate::optimal_paths::OptimalPaths;
 use crate::optimal_plan::OptimalExecutionPlan;
 use crate::optimal_search::OptimalSearch;
@@ -133,26 +133,14 @@ impl<'a, A: Allocator> OptimalMatchState<'a, A> {
         self.sequences
             .try_reserve_exact(self.source.len() / 3)
             .map_err(|_| Error::AllocationFailed)?;
-        let mut collect = Collect {
-            source: self.source,
-            literals: &mut self.literals,
-            sequences: &mut self.sequences,
-            anchor: 0,
-            repeats: committed,
-        };
+        let mut collect = Collect::new(self.source, &mut self.literals, &mut self.sequences);
         let result = if self.plan.parameters().strategy() == ReferenceStrategy::Ultra {
             self.parser
                 .parse_ultra_fresh(&mut self.search, &mut collect)?
         } else {
             self.parser.parse_fresh(&mut self.search, &mut collect)?
         };
-        if result.sequences != collect.sequences.len()
-            || result.repeats != collect.repeats
-            || result.tail != self.source.len() - collect.anchor
-        {
-            return Err(Error::CorruptData);
-        }
-        collect.literal_tail()?;
+        collect.finish(result, true)?;
         self.finished = true;
         self.failed = false;
         Ok(true)
@@ -182,12 +170,39 @@ impl<'a, A: Allocator> OptimalMatchState<'a, A> {
     }
 }
 
-struct Collect<'s, 'v, A: Allocator> {
+pub(crate) struct Collect<'s, 'v, A: Allocator> {
     source: &'s [u8],
     literals: &'v mut Vec<u8, A>,
     sequences: &'v mut Vec<SequenceWithOffset, A>,
     anchor: usize,
     repeats: [u32; 3],
+}
+impl<'s, 'v, A: Allocator> Collect<'s, 'v, A> {
+    pub(crate) fn new(
+        source: &'s [u8],
+        literals: &'v mut Vec<u8, A>,
+        sequences: &'v mut Vec<SequenceWithOffset, A>,
+    ) -> Self {
+        Self {
+            source,
+            literals,
+            sequences,
+            anchor: 0,
+            repeats: [1, 4, 8],
+        }
+    }
+    pub(crate) fn finish(&mut self, result: PathResult, include_tail: bool) -> Result<()> {
+        if result.sequences != self.sequences.len()
+            || result.repeats != self.repeats
+            || self.source.len().checked_sub(self.anchor) != Some(result.tail)
+        {
+            return Err(Error::CorruptData);
+        }
+        if include_tail {
+            self.literal_tail()?;
+        }
+        Ok(())
+    }
 }
 impl<A: Allocator> Collect<'_, '_, A> {
     fn append(&mut self, [anchor, literal_length, match_length, off_base]: [u32; 4]) -> Result<()> {
