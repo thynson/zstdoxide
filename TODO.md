@@ -95,9 +95,11 @@ source-size selector, complete frame and allocator baseline.
 - [ ] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation.
 - [x] Freeze additive source-aware admission and public recipes without rewriting any Ultra predecessor input.
 - [ ] Qualify bounded public Ultra2 dispatch and complete shared-entropy frames before public admission.
-- [ ] Capture and independently audit bidirectional public interoperability and all predecessor frame identities.
+- [x] Capture and independently audit bidirectional public interoperability and all predecessor frame identities.
 - [ ] Complete full regression, true no_std, formatting, Clippy, usage and migration-inventory checks.
-- [ ] Freeze complete frames/owners and measure every backend plus an independent repeat after CPU barriers.
+- [ ] Freeze preselected native-audited complete Ultra2 frames with independent immutable baseline checks.
+- [ ] Verify complete frame bytes and owner ledgers across every backend without clocks.
+- [ ] Measure every backend plus an independent repeat after CPU barriers.
 - [ ] Reconcile the bounded Ultra2 milestone and decompose the next roadmap scope without claiming complete upstream parity.
 
 ## Roadmap
