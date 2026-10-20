@@ -238,3 +238,49 @@ The platform archive retains complete source inputs, original failures and every
 selected concrete artifact, with explicit inherited-fixture/Cargo-cache maps.
 The matrix source map matches that archive exactly; all regular bundle files
 pass reconstruction and a second original-file hash check.
+
+
+## Additive public admission and bidirectional native capture
+
+Resolved strategy 7 now admits16385..32768 source bytes through the checked
+balanced retained plan. Sources64..16384 preserve their fresh dispatch. The
+complete source still fits its resolved window; window/hash/chain/search/minimum
+and target caps remain unchanged. Public Ultra/Ultra2, dictionaries/prefixes,
+window expiry, numeric streaming, long-distance mode and workers retain their
+prior exclusions. Known-size resolution, including zero override semantics,
+precedes admission. Larger default levels11/12 continue to select BinaryTreeLazy2
+where their existing source tier requires it.
+
+The isolated candidate passes old/new public API tests, strict all-target Clippy,
+formatting and true no_std in safe/all builds. Its 1513-request native campaign
+preserves all2866 predecessor response byte strings. Eighty new requests contain
+61 admitted retained Optimal cases,8 already-supported BinaryTreeLazy2 default
+controls, and11 resource rejections. All new Rust safe/all frames agree. Normal
+and ASan/UBSan native binaries produce equal native frames;276 native decodes
+of Rust frames and276 Rust decodes of native frames reproduce exact source
+bytes. Thirty-nine malformed packets are rejected by all four binaries.
+
+The reused native executables match the prior qualified binary digests and every
+used dependency in the pinned26-unit codec closure. Copied executables are retained.
+No native internal scalar observation substitutes for independent parameter
+resolution. An offline auditor reconstructs all3874 requests/commands, frame
+extents, binary/input identities, predecessor responses and decoded bytes.
+Eighteen forgery controls, including coherently rehashed corrupted decoded data,
+fail in each Python mode; two positive controls pass and no children execute.
+
+Evidence: `evidence/2026-10-20-optimal-retained-public-native.tar.gz`, SHA-256
+`4653c33e7f536ec10271d7774a41cb34e3de7995b0d2c7cdf7b79ae7a99c90ae`.
+All10504 regular bundle files reconstruct exactly (327942505 logical bytes),
+including all four executables, compiled source snapshots, requests, outputs,
+independent audits and explicit inherited-fixture maps. Original failures remain:
+missing predecessor protocol documents, historical filename padding, the generic
+C adapter's exit2 contract mistakenly written as exit1, an undersized source-file
+read cap, and an auditor that initially applied Optimal's schedule to the eight
+BinaryTreeLazy2 controls. Successful successors preserve and reconcile completed
+commands rather than relabeling those failures.
+
+Main copies the candidate's tested dispatch and public tests; its only additional
+Rust edits are API documentation and a diagnostic-only dead-code reason. Focused
+main tests, both Clippy modes, formatting and true no_std pass. Complete main
+safe/all regression is a separate running checkpoint. The final all-feature full
+suite matrix, complete-frame measurements and Module20 closure remain open.

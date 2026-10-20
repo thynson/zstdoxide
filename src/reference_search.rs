@@ -44,7 +44,7 @@ pub(crate) enum ReferenceSearchPlan {
     Ultra2(Ultra2FramePlan),
     #[allow(
         dead_code,
-        reason = "Public retained admission awaits independent wire qualification"
+        reason = "Explicit observed schedules share the retained frame dispatch"
     )]
     RetainedOptimal(RetainedOptimalPlan),
 }
@@ -76,8 +76,13 @@ impl ReferenceSearchPlan {
                 GreedyExecutionPlan::from_tree_parameters(parameters, source_len).map(Self::Greedy)
             }
             ReferenceStrategy::Optimal => {
-                OptimalExecutionPlan::from_resolved_parameters(parameters, source_len)
-                    .map(Self::Optimal)
+                if source_len > 16384 {
+                    RetainedOptimalPlan::for_frame(parameters, source_len)
+                        .map(Self::RetainedOptimal)
+                } else {
+                    OptimalExecutionPlan::from_resolved_parameters(parameters, source_len)
+                        .map(Self::Optimal)
+                }
             }
             ReferenceStrategy::Ultra => {
                 OptimalExecutionPlan::from_ultra_parameters(parameters, source_len).map(Self::Ultra)

@@ -193,7 +193,7 @@ independent; C-identical compressed frames and compression ratios are not promis
 ## Bounded Optimal requests
 
 `ReferenceStrategy::Optimal` implements the pinned no-dictionary optLevel0
-parser for one complete source of 64..=16,384 bytes contained in its window.
+parser for complete sources of 64..=32,768 bytes contained in their windows.
 Admission follows known-size resolution: window log 10..=16, hash/chain logs
 6..=12, search log 1..=6, minimum-match setting 3..=7 and target 0..=4095.
 Default levels 11/12 fit these caps for sources of 64..=2,048 bytes. Larger
@@ -210,10 +210,37 @@ Argument/resource rejection occurs before cloning or allocating; subsequent
 allocation errors release every temporary owner. Input/source hints, frame flags
 and independent entropy behavior follow the existing complete-buffer API.
 
-The initial public scope excludes tiny inputs, sources above 16 KiB, window
-expiry, retained blocks and dictionaries. Ultra follows the separate policy
-below; Ultra2 adds a discarded initial pass. The retained
-Optimal coordinator remains a separately tested private implementation.
+Sources through 16,384 bytes preserve the existing single-block path. Sources
+of 16,385..=32,768 bytes use three or four balanced blocks, each at most 8,192
+bytes. Search and frequency history survive raw/RLE fallback; repeat offsets
+and entropy commit only for emitted compressed blocks. The output reservation
+includes every block header. The whole source must fit the resolved window, so
+this does not introduce window expiry, dictionary/prefix support or numeric
+streaming. Tiny inputs and sources above 32 KiB remain outside Optimal's scope.
+Ultra and Ultra2 retain their separate single-block limits below.
+
+```rust
+use zstdoxide::{CompressionParameterRequest, ReferenceStrategy,
+    compress_with_parameters, decompress};
+let input: Vec<u8> = b"retained Optimal history across bounded blocks"
+    .iter().copied().cycle().take(32_768).collect();
+let mut request = CompressionParameterRequest::with_level(1);
+request.set_strategy(Some(ReferenceStrategy::Optimal));
+request.set_window_log(16)?;
+request.set_hash_log(6)?;
+request.set_chain_log(6)?;
+request.set_search_log(1)?;
+request.set_min_match(3)?;
+let frame = compress_with_parameters(&input, &request)?;
+assert_eq!(decompress(&frame, input.len())?, input);
+# Ok::<(), zstdoxide::Error>(())
+```
+
+The retained implementation and its independent wire-history/native checks are
+described in [retained Optimal validation](reference-optimal-retained-frames-validation.md).
+The final Module 20 full feature regression and complete-frame measurements
+remain separate work; the earlier fresh Optimal benchmark is not a retained
+performance result.
 
 
 ## Bounded Ultra requests

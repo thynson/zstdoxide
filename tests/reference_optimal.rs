@@ -66,7 +66,15 @@ fn resolved_resource_limits_and_successor_admission_precede_owner_cloning() {
     let input = source(32768, 0);
     let mut cases = Vec::new();
     for size in [0, 1, 63, 16385, 32768] {
-        cases.push((size, request(), Error::ResourceLimit));
+        cases.push((
+            size,
+            request(),
+            if size > 16384 {
+                Error::AllocationFailed
+            } else {
+                Error::ResourceLimit
+            },
+        ));
     }
     for dimension in 0..5 {
         let mut r = request();
