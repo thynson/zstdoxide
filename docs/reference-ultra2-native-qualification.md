@@ -24,5 +24,38 @@ The source-bound normal/optimized protocol campaign separately rejects 57
 malformed or coherently forged observations in each mode without children;
 its archive/report is `evidence/2026-10-20-ultra2-protocol`.
 
-Native capture and copied-evidence controls are a separate pending gate. The
-preflight results above do not claim that a native helper has passed.
+## Complete native observations
+
+The captured unchanged wrapper passes all 53 recipes in both normal and fully
+ASan/UBSan-instrumented builds. Each build records 789312 events across two
+padding runs (394656 logical events per padding). Every parsed canonical state
+matches the independently frozen pre-execution prediction. Normal and sanitized
+stdout are byte-identical. All 212 allocation ledgers agree across padding and
+satisfy the exact sanitizer workspace-redzone relationship. The 220 planned
+commands all reach their specified exits, including 26 malformed-packet/filesystem
+rejections per build before observations or artifacts are produced.
+
+Normal and optimized copied-evidence controls each pass 33 cases: two complete
+positive audits and 31 rejected forgeries, with zero child execution inside the
+controls. Mutations include phase identity, origin/frontier, discarded output,
+original and copied repeats, retained caches/tree cells, coherent frequencies in
+both builds, source/generated identities, command order/flags, allocation state
+and a forged saved audit. Every mutation and diagnostic is retained. An initial
+optimized wrapper supplied an unsupported `--output` option and stopped in
+argument parsing before auditing. Its driver/log remain preserved alongside the
+successful positional-argument rerun; it is not counted as a passed control run.
+
+The native archive is `evidence/2026-10-20-ultra2-native.tar.gz`, SHA-256
+`b1f9b0f828fa6bbc6d7981f443eb436c00c0d8847eea3cc893bd268ab9f9fbb5`.
+It losslessly retains 1091 regular bundle files representing 2390584005 bytes,
+including all raw observations, objects/executables, exact local and pinned
+upstream sources, allocation ledgers, control mutations and command drivers.
+The two restored duplicate control working copies are omitted only after
+file-by-file equality with retained capture files; explicit omission maps record
+every identity. Filesystem control nodes are represented by their type/target
+manifest and actual command logs. Independent archive replay reconstructs and
+hashes every retained file, followed by a second unchanged-source read.
+
+This qualifies the private parser lifecycle and physical state transitions.
+No entropy encoder or frame publication ran in this oracle. Rust implementation,
+fixture-reader qualification and public strategy-9 admission remain later gates.
