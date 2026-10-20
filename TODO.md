@@ -79,7 +79,7 @@ Complete upstream migration remains open.
 
 Strategy 9 now admits the independently qualified bounded fresh-source envelope.
 Its discarded pass, history invalidation and public frame path are qualified;
-performance closure remains open. Preserve every earlier
+final milestone reconciliation remains open. Preserve every earlier
 recipe, source-size selector, complete frame and allocator baseline.
 
 - [x] Review pinned Ultra2 eligibility, sequence-store reset, copied repeats and history-coordinate changes against the ownership design.
@@ -101,7 +101,7 @@ recipe, source-size selector, complete frame and allocator baseline.
 - [x] Complete full regression, true no_std, formatting, Clippy, usage and migration-inventory checks.
 - [x] Freeze preselected native-audited complete Ultra2 frames with independent immutable baseline checks.
 - [x] Verify complete frame bytes and owner ledgers across every backend without clocks.
-- [ ] Measure every backend plus an independent repeat after CPU barriers.
+- [x] Measure every backend plus an independent repeat after CPU barriers.
 - [ ] Reconcile the bounded Ultra2 milestone and decompose the next roadmap scope without claiming complete upstream parity.
 
 ## Roadmap

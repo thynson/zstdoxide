@@ -52,18 +52,72 @@ and a second unchanged-original hash check pass. The bundle individually hashes
 omitted. Captured absolute paths describe original execution locations and are
 not rewritten to imply a relocated rerun.
 
-## Timing remains pending
+## Timed complete frames (2026-10-20)
+
+The primary campaign measures all 21 configurations; an independent second
+campaign measures safe and all again. All 26 preselected cases have five samples
+of at least 100 milliseconds. The complete validator accepts 598 case/backend
+records and 2990 samples. Sources, resolved requests, complete frame bytes and
+allocation ledgers agree with the clock-free survey and across the repeat.
+The campaigns retain all 23 measured executables and 56 successful commands.
 
 Only global-allocator compression and output destruction belong inside clocks.
-Fixture loading, decoding, exact byte comparisons and allocation tracking stay
-outside. All requested binaries must be built before measurement. The planned
-primary campaign covers all 21 configurations and the independent repeat covers
-safe/all, with five samples of at least 100 milliseconds per complete case.
+Fixture loading, native-baseline comparison, decoding and allocation tracking
+stay outside. All requested executables were built before measuring. Recorded
+CPU barriers follow completed regression, platform, native and clock-free gates;
+no other task-owned CPU job ran during either campaign. The independent repeat
+started after every primary child command exited.
 
-Timed execution requires a recorded CPU barrier after full regression, native
-interoperability, platform and clock-free prerequisites have completed, with no
-remaining task-owned CPU jobs. Full public regression is still in progress, so
-no Ultra2 timing campaign or performance comparison is claimed here. Fixed run
-order, thermal state and unrelated desktop activity will remain limitations even
-after that barrier. The completed clock-free survey establishes neither an
-unsafe speedup nor throughput equivalence to the native implementation.
+The table compares each case's median compression-plus-drop nanoseconds per
+input byte with the corresponding safe median in the same campaign. A ratio
+below one is faster. Geometric means weight the 26 cases equally. The range
+contains minimum and maximum per-case ratios, not a confidence interval.
+Raw elapsed times and iteration counts are retained; the archived
+`measurement-report/cases.csv` contains all individual results.
+
+| Campaign | Configuration | Geometric mean cost / safe | Per-case range |
+| --- | --- | ---: | ---: |
+| primary | `safe` | 1.0000 | 1.0000–1.0000 |
+| primary | `unsafe-byte-cursor` | 0.9940 | 0.9580–1.0372 |
+| primary | `unsafe-bitstream` | 0.9966 | 0.9527–1.0874 |
+| primary | `unsafe-history` | 0.9957 | 0.9628–1.0289 |
+| primary | `unsafe-ring-history` | 0.9937 | 0.9536–1.0333 |
+| primary | `unsafe-fse` | 1.0565 | 0.9819–1.5034 |
+| primary | `unsafe-fse-encoder` | 0.9957 | 0.9576–1.0428 |
+| primary | `unsafe-huffman` | 0.9869 | 0.9626–1.0095 |
+| primary | `unsafe-huffman-codebook` | 0.9971 | 0.9616–1.0408 |
+| primary | `unsafe-match-table` | 1.0027 | 0.9588–1.0896 |
+| primary | `unsafe-match-chain` | 1.0390 | 0.9652–1.9881 |
+| primary | `unsafe-dictionary` | 0.9958 | 0.9707–1.0324 |
+| primary | `unsafe-training` | 1.0073 | 0.9605–1.1806 |
+| primary | `unsafe-reference-chain` | 0.9943 | 0.9472–1.0340 |
+| primary | `unsafe-row-table` | 0.9876 | 0.9535–1.0293 |
+| primary | `unsafe-reference-tree` | 0.9976 | 0.9694–1.0355 |
+| primary | `unsafe-optimal-frequencies` | 0.9953 | 0.9507–1.0232 |
+| primary | `unsafe-optimal-paths` | 1.0270 | 0.9486–1.6823 |
+| primary | `unsafe-optimal-matches` | 1.0225 | 0.9585–1.1840 |
+| primary | `unsafe-optimal-short-key` | 0.9871 | 0.9569–1.0107 |
+| primary | `all` | 0.9985 | 0.9634–1.1163 |
+| repeat | `safe` | 1.0000 | 1.0000–1.0000 |
+| repeat | `all` | 1.0007 | 0.9733–1.0216 |
+
+The all/safe geometric means are 0.9985 and 1.0007. Their near-unity values and
+opposing directions do not establish a stable unsafe speedup. Individual features
+have some larger outliers, and not every unsafe owner is exercised by this
+compression path. Fixed run order, thermal state and unrelated desktop activity
+prevent interpreting those differences as isolated causal effects of a feature.
+No native-C throughput comparison or general compression-ratio claim follows.
+
+Normal and optimized Python each pass 33 independent copied-evidence controls:
+two accepted replays, 31 rejected timing/barrier/source forgeries and zero child
+attempts. The independent summary revalidates both complete campaigns, source
+identity and repeated frame/ledger equality before computing any aggregate.
+
+Timed evidence: `evidence/2026-10-20-ultra2-frames-timed.tar.gz`, SHA-256
+`5af25354f2a903127afc9c6ed477e6e4a5f8c0fdc70cffe9d806e364860bd46e`.
+The lossless archive preserves all 5544 regular bundle files (100520358 logical
+bytes), including samples, source snapshots, frames, all 23 binaries, process
+barriers, prerequisites, report tools and control artifacts. Full reconstruction
+and a second unchanged-original hash check pass. The bundle separately hashes
+736 omitted redundant Cargo intermediates; no measured executable or log is
+omitted. Captured paths retain their actual original execution locations.
