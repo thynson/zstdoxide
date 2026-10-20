@@ -497,7 +497,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
     }
     pub(crate) fn retained_configuration(&self) -> Result<(&'a [u8], usize, usize)> {
         self.require_ordinary_policy()?;
-        if !(128..=16384).contains(&self.source.len()) {
+        if !(128..=32768).contains(&self.source.len()) {
             return Err(Error::InvalidParameter);
         }
         if self.status != Status::Ready || self.retained_end != 0 {
@@ -520,7 +520,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         observer: &mut O,
     ) -> Result<PathResult> {
         self.require_ordinary_policy()?;
-        if !(128..=16384).contains(&self.source.len())
+        if !(128..=32768).contains(&self.source.len())
             || end > self.source.len()
             || !end
                 .checked_sub(start)

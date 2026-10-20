@@ -71,3 +71,35 @@ pass a second original-file hash check. Compiled/formatted Rust inputs, source
 projection dependencies, both Python outputs, the failed original producer,
 new fixture and six Rust check logs are retained. The already committed native
 archives retain their separate complete hashes and original execution paths.
+
+## Private retained parser/search extension
+
+Only the retained layout admission, parser configuration and retained parse
+source checks widen to 32768 bytes. Fresh Optimal, Ultra, Ultra2 and public
+frame plans retain their earlier limits. The copied source/window/schedule
+checks still reject malformed requests before parser/search mutation.
+
+Nine new contracts pass in safe and all-feature builds. Complete parser paths,
+frequency states, emitted sequences and publication owners match all 67321
+fixture events; direct search replay checks all 33122 queries and exact maps and
+frontiers. Eighty-four sequences agree. Moved nonclone owner failures release
+all seven allocations, borrowed owners reset pending/failed/finished storage
+without allocation, and the nonuniform boundary smoke preserves owner identity.
+Third-block comparisons prove that differing fourth-block backing bytes cannot
+change visible matches or search state. An initial broader safe run also passes
+40 retained tests, including unchanged predecessor contracts.
+
+Both strict all-target Clippy configurations, formatting and true safe/all
+no_std checks pass. The first qualification stopped at a leading blank line in
+one new test support file. The successful successor reruns all seven commands
+on the corrected source; the failed source, outputs and exact one-byte source
+reconstruction are preserved explicitly rather than counted as success.
+
+Evidence: `evidence/2026-10-20-optimal-retained-frames-private.tar.gz`, SHA-256
+`32ec964ef8b74d14810abbf30b7d2b4e55f0d94490fefa0b53564891e49fb34f`.
+All 250 regular bundle files reconstruct exactly (63878278 logical bytes).
+An explicit Git-blob map deduplicates 1152 unchanged inherited fixtures totaling
+723061630 bytes after byte-for-byte comparison; all new retained fixtures and
+Rust inputs are retained directly. Original full qualification snapshots remain
+on disk. Isolated-feature, foreign Miri, no-atomics and eventual complete-frame
+qualification are subsequent gates; no public retained admission is claimed.

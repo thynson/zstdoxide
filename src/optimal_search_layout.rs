@@ -56,7 +56,7 @@ impl OptimalSearchLayout {
         self.validate_ordinary_geometry()
     }
     pub(crate) fn validate_retained(self, source_len: usize) -> Result<()> {
-        if !(128..=16384).contains(&source_len) || source_len > self.window {
+        if !(128..=32768).contains(&source_len) || source_len > self.window {
             return Err(Error::InvalidParameter);
         }
         self.validate_ordinary_geometry()

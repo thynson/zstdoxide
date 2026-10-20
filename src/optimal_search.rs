@@ -1167,10 +1167,10 @@ mod retained_wide_tests {
 
     #[test]
     fn wider_retained_bounds_reject_before_mode_or_visibility_mutation() {
-        let source = [b'a'; 16385];
+        let source = [b'a'; 32769];
         for (size, w, h, c, attempts, minimum, target, short) in [
             (127, 14, 12, 12, 6, 4, 0, None),
-            (16385, 16, 12, 12, 6, 4, 0, None),
+            (32769, 16, 12, 12, 6, 4, 0, None),
             (16384, 13, 12, 12, 6, 4, 0, None),
             (16384, 17, 12, 12, 6, 4, 0, None),
             (16384, 14, 13, 12, 6, 4, 0, None),
@@ -1393,3 +1393,7 @@ mod ultra_fresh_tests {
 #[cfg(test)]
 #[path = "../tests/support/ultra2_search.rs"]
 mod ultra2_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/optimal_retained_frames_search.rs"]
+mod retained_frames_tests;

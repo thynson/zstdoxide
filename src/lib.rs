@@ -218,6 +218,10 @@ pub use training::{RawTrainingOptions, train_raw_dictionary, train_raw_dictionar
 mod optimal_retained_wide_fixture;
 
 #[cfg(test)]
+#[path = "../tests/support/optimal_retained_frames_fixture.rs"]
+mod optimal_retained_frames_fixture;
+
+#[cfg(test)]
 #[path = "../tests/support/optimal_fresh_wide_fixture.rs"]
 mod optimal_fresh_wide_fixture;
 

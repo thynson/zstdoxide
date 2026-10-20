@@ -168,3 +168,7 @@ mod tests;
 #[cfg(test)]
 #[path = "../tests/support/optimal_retained_wide_parse.rs"]
 mod wide_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/optimal_retained_frames_parse.rs"]
+mod frames_tests;
