@@ -131,7 +131,7 @@ Preserve every Optimal fixture, source request, complete frame and owner baselin
 - [x] Freeze the 26 preselected complete frame baselines after full native replay.
 - [x] Add read-only Ultra admission, scalar/frequency/path and complete-frame checks to the offline driver.
 - [x] Qualify clock-free complete frames and allocator ledgers across every backend.
-- [ ] Measure all backends plus an independent safe/all repeat after CPU barriers.
+- [x] Measure all backends plus an independent safe/all repeat after CPU barriers.
 - [ ] Reconcile the bounded Ultra milestone, official migration gaps and the separate Ultra2 lifecycle decomposition.
 
 ## Module 19: bounded reference Ultra2
