@@ -350,3 +350,72 @@ fn retained_frame_actual_wire_history_capture() {
         file.write_all(records.as_bytes()).unwrap();
     }
 }
+
+/// A small explicit private schedule keeps foreign interpretation bounded while
+/// exercising the same factory, shared entropy and retained publication path.
+#[test]
+fn retained_frame_small_platform_owners_publication_and_reset() {
+    let mut source = [b'a'; 192];
+    let mut value = 0x9e3779b9_u32;
+    for byte in &mut source[64..128] {
+        value ^= value << 13;
+        value ^= value >> 17;
+        value ^= value << 5;
+        *byte = value as u8;
+    }
+    let parameters = RawCompressionParameters {
+        window_log: 10,
+        hash_log: 6,
+        chain_log: 6,
+        search_log: 1,
+        min_match: 3,
+        target_length: 0,
+        strategy: 7,
+    }
+    .validate()
+    .unwrap();
+    let selected = ReferenceSearchPlan::RetainedOptimal(
+        RetainedOptimalPlan::new(parameters, source.len(), &[64, 64, 64], false).unwrap(),
+    );
+    let owner = TrackingAllocator::new(AllocatorConfig::default())
+        .unwrap()
+        .into_non_clone();
+    let monitor = owner.monitor();
+    let mut workspace = ReferenceEncoderWorkspace::new(&source, selected, &owner).unwrap();
+    let mut baseline = Vec::new();
+    for pass in 0..2 {
+        let mut output = prefix(selected);
+        let mut observed_kinds = Vec::new();
+        for index in 0..3 {
+            let before = workspace.entropy.sequence_encoder.committed_repeats();
+            let position = output.len();
+            workspace.emit_next(64, index == 2, &mut output).unwrap();
+            let kind = kind_at(&output[position..]);
+            observed_kinds.push(kind);
+            if kind != BlockKind::Compressed {
+                assert_eq!(
+                    workspace.entropy.sequence_encoder.committed_repeats(),
+                    before
+                );
+            }
+        }
+        assert_eq!(crate::decompress(&output, source.len()).unwrap(), source);
+        assert_eq!(
+            observed_kinds,
+            [BlockKind::Compressed, BlockKind::Raw, BlockKind::Rle]
+        );
+        if pass == 0 {
+            baseline = output;
+        } else {
+            assert_eq!(output, baseline);
+        }
+        let before = monitor.snapshot();
+        assert!(monitor.fail_next());
+        workspace.reset_retained().unwrap();
+        assert_eq!(monitor.snapshot(), before);
+        monitor.clear_failure();
+    }
+    assert_eq!(monitor.snapshot().identities_created, 1);
+    drop(workspace);
+    monitor.assert_released();
+}

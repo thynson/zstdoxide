@@ -210,3 +210,31 @@ reconciles both complete full-library logs against unchanged source hashes and
 runs the remaining checks; the interrupted driver and failure are retained.
 Unchanged inherited fixture bytes use the verified Git-blob map. Public retained
 admission and the integrated feature/platform matrix are still separate gates.
+
+
+## Integrated frame feature and platform gates
+
+The private frame candidate passes 54 identical retained contracts across safe,
+nineteen isolated unsafe features, all features and release/all features, plus
+21 true no_std checks. A small 192-byte compressed/raw/RLE schedule additionally
+checks exact borrowed owners, publication and allocation-free reset under Miri
+strict provenance on i686 and s390x, safe/all. Thumbv6m core+alloc checks and
+concrete complete-frame entropy/publication LLVM and ARM ELF generation pass in
+both modes. The current private compiled inputs match that candidate exactly;
+formatting and both strict all-target Clippy checks also pass.
+
+The first small test incorrectly referenced a sibling-private helper. Its failed
+source is reconstructible by one archived test-file replacement. Disk exhaustion
+later interrupted some matrix/codegen work; completed commands and their exact
+logs are reconciled, failed tails remain explicit, and successors complete only
+missing checks with bounded per-configuration Cargo caches. No foreign native
+execution or public admission is inferred from these checks.
+
+Evidence: `evidence/2026-10-20-optimal-retained-frame-platform.tar.gz`, SHA-256
+`dee5e2ecb1f315a723fba5e2a27d2abce487900f26bb7dca593cf4136105db6d`,
+and `evidence/2026-10-20-optimal-retained-frame-matrix.tar.gz`, SHA-256
+`f1c7801bc1d0bd1beb802cd9843c75126f8a1684e7d07c3bac05f6f8229da2eb`.
+The platform archive retains complete source inputs, original failures and every
+selected concrete artifact, with explicit inherited-fixture/Cargo-cache maps.
+The matrix source map matches that archive exactly; all regular bundle files
+pass reconstruction and a second original-file hash check.
