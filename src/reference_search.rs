@@ -17,6 +17,9 @@ use crate::optimal_matches::OptimalMatches;
 use crate::optimal_parse::OptimalParser;
 use crate::optimal_paths::OptimalPaths;
 use crate::optimal_plan::OptimalExecutionPlan;
+use crate::optimal_retained::Publication;
+use crate::optimal_retained_plan::RetainedOptimalPlan;
+use crate::optimal_retained_state::RetainedOptimalState;
 use crate::optimal_search::OptimalSearch;
 use crate::optimal_short_key::OptimalShortKey;
 use crate::optimal_state::OptimalMatchState;
@@ -39,6 +42,11 @@ pub(crate) enum ReferenceSearchPlan {
     Optimal(OptimalExecutionPlan),
     Ultra(OptimalExecutionPlan),
     Ultra2(Ultra2FramePlan),
+    #[allow(
+        dead_code,
+        reason = "Public retained admission awaits independent wire qualification"
+    )]
+    RetainedOptimal(RetainedOptimalPlan),
 }
 
 impl ReferenceSearchPlan {
@@ -87,6 +95,7 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.source_len(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.source_len(),
             Self::Ultra2(plan) => plan.source_len(),
+            Self::RetainedOptimal(plan) => plan.source_len(),
         }
     }
     pub(crate) fn parameters(self) -> ResolvedCompressionParameters {
@@ -96,6 +105,7 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.parameters(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.parameters(),
             Self::Ultra2(plan) => plan.parameters(),
+            Self::RetainedOptimal(plan) => plan.parameters(),
         }
     }
     pub(crate) fn block_limit(self) -> usize {
@@ -105,12 +115,36 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.block_limit(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.block_limit(),
             Self::Ultra2(plan) => plan.block_limit(),
+            Self::RetainedOptimal(plan) => plan.maximum_block_len(),
+        }
+    }
+    pub(crate) fn next_block_len(self, emitted: usize) -> Result<usize> {
+        if let Self::RetainedOptimal(plan) = self {
+            plan.next_block_len(emitted)
+        } else {
+            self.source_len()
+                .checked_sub(emitted)
+                .filter(|&n| n != 0)
+                .map(|n| n.min(self.block_limit()))
+                .ok_or(Error::InvalidParameter)
+        }
+    }
+    pub(crate) fn frame_bound(self) -> Result<usize> {
+        if let Self::RetainedOptimal(plan) = self {
+            Ok(plan.frame_bound())
+        } else {
+            let settings = crate::reference_frame::ReferenceFrameSettings::new(
+                self.source_len(),
+                self.parameters().window_log(),
+            )?;
+            crate::reference_frame::ReferenceFrameHeader::raw_frame_bound(&settings)
         }
     }
 }
 
 /// One selected parser owns its tables and scratch. Committed entropy remains
-/// exclusively in the enclosing frame workspace; no repeats are duplicated here.
+/// in the enclosing frame workspace; retained search checks a copied publication
+/// snapshot before every transition.
 /// The enum adds no unchecked representation or allocator erasure.
 #[allow(
     clippy::large_enum_variant,
@@ -122,6 +156,7 @@ pub(crate) enum ReferenceSearchState<'a, A: Allocator> {
     Greedy(GreedyMatchState<'a, A>),
     Optimal(OptimalMatchState<'a, A>),
     Ultra2(Ultra2MatchState<'a, A>),
+    RetainedOptimal(RetainedOptimalState<'a, A>),
 }
 
 impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
@@ -187,6 +222,35 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                     OptimalMatchState::from_parts
                 };
                 Ok(Self::Optimal(compose(
+                    source,
+                    plan,
+                    parser,
+                    search,
+                    Vec::new_in(factory.clone()),
+                    Vec::new_in(factory.clone()),
+                )?))
+            }
+            ReferenceSearchPlan::RetainedOptimal(plan) => {
+                // Exact retained order: frequencies, paths, parser candidates,
+                // tree heads/edges, short heads, search candidates, two scratch owners.
+                let parameters = plan.parameters();
+                let parser = OptimalParser::from_parts(
+                    source,
+                    parameters.min_match(),
+                    parameters.target_length() as usize,
+                    OptimalFrequencies::new_in(plan.disabled_literals(), factory.clone())?,
+                    OptimalPaths::new_in(factory.clone())?,
+                    OptimalMatches::new_in(factory.clone())?,
+                )?;
+                let layout = plan.layout();
+                let search = OptimalSearch::from_parts(
+                    source,
+                    layout,
+                    ReferenceTree::new_in(layout.tree(), factory.clone(), factory.clone())?,
+                    OptimalShortKey::new_in(layout.short_log(), factory.clone())?,
+                    OptimalMatches::new_in(factory.clone())?,
+                )?;
+                Ok(Self::RetainedOptimal(RetainedOptimalState::from_parts(
                     source,
                     plan,
                     parser,
@@ -278,6 +342,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
                 .map(|candidate| candidate.is_some()),
             Self::Optimal(state) => state.parse_next(length, committed),
             Self::Ultra2(state) => state.parse_next(length, committed),
+            Self::RetainedOptimal(state) => state.parse_next(length, committed),
         }
     }
     pub(crate) fn literals(&self) -> &[u8] {
@@ -287,6 +352,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Greedy(state) => state.literals(),
             Self::Optimal(state) => state.literals(),
             Self::Ultra2(state) => state.literals(),
+            Self::RetainedOptimal(state) => state.literals(),
         }
     }
     pub(crate) fn sequences(&self) -> &[SequenceWithOffset] {
@@ -296,6 +362,29 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Greedy(state) => state.sequences(),
             Self::Optimal(state) => state.sequences(),
             Self::Ultra2(state) => state.sequences(),
+            Self::RetainedOptimal(state) => state.sequences(),
+        }
+    }
+    pub(crate) fn validate_publication(&self, kind: Publication, after: [u32; 3]) -> Result<()> {
+        if let Self::RetainedOptimal(state) = self {
+            state.validate_publication(kind, after)
+        } else {
+            Ok(())
+        }
+    }
+    pub(crate) fn publish(&mut self, kind: Publication, after: [u32; 3]) -> Result<()> {
+        if let Self::RetainedOptimal(state) = self {
+            state.publish(kind, after)
+        } else {
+            Ok(())
+        }
+    }
+    #[cfg(test)]
+    pub(crate) fn reset_retained(&mut self) -> Result<()> {
+        if let Self::RetainedOptimal(state) = self {
+            state.reset()
+        } else {
+            Err(Error::InvalidState)
         }
     }
     #[cfg(test)]
@@ -306,6 +395,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Greedy(state) => state.retained_capacity(),
             Self::Optimal(state) => state.retained_capacity(),
             Self::Ultra2(state) => state.retained_capacity(),
+            Self::RetainedOptimal(state) => state.retained_capacity(),
         }
     }
 }
@@ -380,6 +470,9 @@ mod tests {
         for plan in plans(input.len()) {
             let (table_count, owner_count, bytes) = match plan {
                 ReferenceSearchPlan::Ultra2(p) => (7, 10, p.owner_bytes()[..7].iter().sum()),
+                ReferenceSearchPlan::RetainedOptimal(p) => {
+                    (7, 10, p.owner_bytes()[..7].iter().sum())
+                }
                 ReferenceSearchPlan::Fast(p) => (1, 4, p.table_bytes()),
                 ReferenceSearchPlan::DoubleFast(p) => (2, 5, p.table_bytes()),
                 ReferenceSearchPlan::Greedy(p) => (2, 5, p.table_bytes()),

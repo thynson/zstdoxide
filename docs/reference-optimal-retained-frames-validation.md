@@ -175,3 +175,38 @@ and `evidence/2026-10-20-optimal-retained-tokens-platform.tar.gz`, SHA-256
 `64559918d5e78b738a800e2683a069dfaa435e86055d603965cd8b2585c68d4a`.
 Both archives independently reconstruct every regular bundle file. The matrix
 source-reference map matches the prior complete token archive exactly.
+
+
+## Private shared entropy and actual wire history
+
+The checked retained schedule now participates in the shared private frame loop.
+Output reservation includes every scheduled block header. Before append, the
+bridge checks the parser candidate against the sequence encoder's pending
+repeats; raw/RLE publication preserves the committed snapshot. Complete append
+precedes both publications. Any internal failure poisons the workspace; private
+reset clears search and entropy together while retaining allocations. Existing
+fresh variants preserve their no-op publication bridge and source admission.
+
+Five focused tests cover complete mixed frames, exact scheduling rejection,
+every allocation failure, failed output append and reset, and observable tokens
+under actual wire history. Full library regressions pass 972 tests with 25
+existing ignored cases in safe and all-feature builds. These are library counts,
+not the complete integration-suite matrix. Strict all-target Clippy, formatting
+and true no_std pass in both configurations.
+
+Sixteen automatic-literal sources produce byte-identical safe/all captures.
+Their actual wire kinds independently drive 35771 integer-model events and 61
+sequences per build; literals, tails and incoming/candidate/committed repeats
+agree. These selected histories happen to equal the C hypotheses, but the audit
+does not assume that equality. All 32 Rust frames decode through native zstd
+1.5.7. Twenty-one malformed/coherently forged controls are rejected in each of
+ordinary and optimized Python, with two positive controls and no children.
+
+Evidence: `evidence/2026-10-20-optimal-retained-frame-integration.tar.gz`, SHA-256
+`e0830746a72832cbbda9aa791d90cfa822c1f248ac7753fa38a9fe031ee88303`.
+All 851 regular bundle files reconstruct exactly (70496668 logical bytes).
+The initial fixture-name typo is retained. After disk exhaustion, the successor
+reconciles both complete full-library logs against unchanged source hashes and
+runs the remaining checks; the interrupted driver and failure are retained.
+Unchanged inherited fixture bytes use the verified Git-blob map. Public retained
+admission and the integrated feature/platform matrix are still separate gates.

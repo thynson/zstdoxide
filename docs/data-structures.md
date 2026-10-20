@@ -3012,3 +3012,22 @@ repeat records, nonempty scratch and insufficient reserved capacity before
 constructing a collector; it neither allocates nor expands the borrowed prefix.
 This avoids duplicating offset-intent logic while preserving the original
 whole-source contract and making retained initialization explicit.
+
+### Module 20 shared frame publication bridge
+
+The private `ReferenceSearchPlan::RetainedOptimal` variant carries the checked
+schedule and exact complete-frame bound. Public request resolution continues to
+select only the old fresh Optimal plan until independent wire-history and
+platform gates pass. The frame loop asks the plan for its next block; manual
+retained workspace calls must match the exact next boundary before mutation.
+The selected search factory creates the same nine owners in the qualified order.
+
+Before appending a retained block, the sequence encoder exposes a copied checked
+pending repeat snapshot. The frame bridge validates that snapshot against the
+parser candidate for compressed publication, or the committed snapshot for raw
+and RLE publication. After the complete append it publishes both states without
+allocation. Any unexpected failure poisons the enclosing workspace and discards
+pending entropy. Old variants have no retained publication callback and preserve
+their byte/owner behavior. Reset of this private retained workspace clears parser
+history and entropy availability together, retaining every allocation. A copied
+pending repeat value needs no alternate unsafe representation.

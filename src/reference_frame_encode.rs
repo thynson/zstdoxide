@@ -11,6 +11,7 @@ use crate::block_entropy::BlockEntropyEncoder;
 use crate::fast_plan::FastExecutionPlan;
 use crate::frame::{BlockKind, MAX_BLOCK_SIZE};
 use crate::literal_encode::LiteralEncoder;
+use crate::optimal_retained::Publication;
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
 use crate::reference_search::{ReferenceSearchPlan, ReferenceSearchState};
 use crate::sequence_context::SequenceEncoder;
@@ -31,6 +32,10 @@ mod lazy_tests;
 #[cfg(test)]
 #[path = "../tests/support/tree_frame_encode.rs"]
 mod tree_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/optimal_retained_frame_encode.rs"]
+mod retained_tests;
 
 /// Encode one known-size, no-dictionary frame with an admitted reference profile.
 ///
@@ -60,7 +65,7 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
         return Err(Error::InvalidParameter);
     }
     let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
-    let bound = ReferenceFrameHeader::raw_frame_bound(&settings)?;
+    let bound = plan.frame_bound()?;
     let mut output = Vec::new_in(allocator);
     output
         .try_reserve_exact(bound)
@@ -77,7 +82,7 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
     }
     let mut workspace = ReferenceEncoderWorkspace::new(input, plan, output.allocator().clone())?;
     while workspace.emitted < input.len() {
-        let length = (input.len() - workspace.emitted).min(plan.block_limit());
+        let length = plan.next_block_len(workspace.emitted)?;
         let last = length == input.len() - workspace.emitted;
         workspace.emit_next(length, last, &mut output)?;
     }
@@ -88,7 +93,7 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
 ///
 /// Search advances before emission. `emitted` advances only after an entire
 /// block is appended; any intermediate failure invalidates this workspace.
-/// Committed repeats live exclusively in the entropy child, never here.
+/// Entropy owns committed repeats; retained search checks a copied snapshot.
 struct ReferenceEncoderWorkspace<'a, A: Allocator> {
     source: &'a [u8],
     plan: ReferenceSearchPlan,
@@ -143,6 +148,8 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         if length == 0
             || length > self.plan.block_limit()
             || last != (end == self.source.len())
+            || (matches!(self.plan, ReferenceSearchPlan::RetainedOptimal(_))
+                && length != self.plan.next_block_len(self.emitted)?)
             || (matches!(
                 self.plan,
                 ReferenceSearchPlan::Optimal(_)
@@ -177,6 +184,7 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
                 ReferenceSearchPlan::Optimal(_)
                     | ReferenceSearchPlan::Ultra(_)
                     | ReferenceSearchPlan::Ultra2(_)
+                    | ReferenceSearchPlan::RetainedOptimal(_)
             ) {
                 self.entropy.prepare_optimal(
                     self.search.literals(),
@@ -211,12 +219,43 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         } else {
             (BlockKind::Raw, block)
         };
+        let publication = match kind {
+            BlockKind::Raw => Publication::Raw,
+            BlockKind::Rle => Publication::Rle,
+            BlockKind::Compressed => Publication::Compressed,
+        };
+        let retained = matches!(self.plan, ReferenceSearchPlan::RetainedOptimal(_));
+        let after = if retained && kind == BlockKind::Compressed {
+            self.entropy.sequence_encoder.pending_repeats()?
+        } else {
+            initial_repeat
+        };
+        self.search.validate_publication(publication, after)?;
         append_block(output, block.len(), kind, payload, last)?;
         if kind == BlockKind::Compressed {
             self.entropy.commit();
         } else {
             self.entropy.discard();
         }
+        self.search.publish(publication, after)?;
+        if retained && self.entropy.sequence_encoder.committed_repeats() != after {
+            return Err(Error::CorruptData);
+        }
+        Ok(())
+    }
+
+    #[cfg(test)]
+    fn reset_retained(&mut self) -> Result<()> {
+        if !matches!(self.plan, ReferenceSearchPlan::RetainedOptimal(_)) {
+            return Err(Error::InvalidState);
+        }
+        self.failed = true;
+        self.search.reset_retained()?;
+        self.entropy.reset();
+        self.entropy.start_frame(None, None)?;
+        self.emitted = 0;
+        self.finished = false;
+        self.failed = false;
         Ok(())
     }
 

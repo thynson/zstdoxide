@@ -164,6 +164,15 @@ impl<'a, A: Allocator> RetainedOptimalState<'a, A> {
         self.failed = false;
         Ok(())
     }
+    /// Test-only observation of completed scratch after publication; never used
+    /// as parser input or exposed through the production token accessors.
+    #[cfg(test)]
+    pub(crate) fn audit_tokens(&self) -> Result<(&[u8], &[SequenceWithOffset])> {
+        if self.failed {
+            return Err(Error::InvalidState);
+        }
+        Ok((&self.literals, &self.sequences))
+    }
     #[cfg(test)]
     pub(crate) fn retained_capacity(&self) -> usize {
         self.plan.owner_bytes()[..7].iter().sum::<usize>()

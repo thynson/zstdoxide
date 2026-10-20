@@ -425,6 +425,19 @@ impl<A: Allocator> SequenceEncoder<A> {
         self.repeat
     }
 
+    /// Copy the repeat state that a complete candidate would publish. A zero
+    /// sequence section retains the committed repeats without pending modes.
+    pub(crate) fn pending_repeats(&self) -> Result<[u32; 3]> {
+        if !self.prepared {
+            return Err(Error::InvalidState);
+        }
+        Ok(if self.pending_modes.is_some() {
+            self.pending_repeat
+        } else {
+            self.repeat
+        })
+    }
+
     /// Invalidate frame state without freeing cached/default/spare allocations.
     /// A subsequent start_frame may install a dictionary for the next frame.
     pub(crate) fn reset(&mut self) {

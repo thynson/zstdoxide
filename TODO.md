@@ -99,8 +99,8 @@ qualified before complete-frame and public admission. Retained Ultra/Ultra2 rema
 - [x] Implement a checked copied schedule and source-aware retained frame plan, preserving old fresh dispatch and all early allocator rejection boundaries.
 - [x] Implement block-range token collection and allocation-free retained transitions with exact nine-owner identities.
 - [x] Qualify the retained token snapshot across all storage features, foreign Miri and no-atomics concrete code generation.
-- [ ] Integrate shared entropy and repeat publication, raw/RLE rollback, complete output reservation, failure poisoning and reset.
-- [ ] Qualify actual Rust wire publication history with independent replay and native decoding without assuming C/Rust entropy decisions agree.
+- [x] Integrate shared entropy and repeat publication, raw/RLE rollback, complete output reservation, failure poisoning and reset.
+- [x] Qualify actual Rust wire publication history with independent replay and native decoding without assuming C/Rust entropy decisions agree.
 - [ ] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation before public admission.
 - [ ] Qualify additive public admission and bidirectional interoperability while preserving every predecessor request/response identity.
 - [ ] Complete full regression, true no_std, formatting, Clippy, usage, allocator and upstream migration-inventory checks.
