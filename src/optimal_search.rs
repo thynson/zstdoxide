@@ -34,16 +34,38 @@ pub(crate) struct OptimalSearch<
     short_frontier: usize,
     failed: bool,
     retained: Option<(usize, usize)>,
+    ultra2: Option<bool>,
 }
 impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'a, H, N, S, M> {
     pub(crate) fn from_parts(
         source: &'a [u8],
         layout: OptimalSearchLayout,
+        tree: ReferenceTree<H, N>,
+        short: OptimalShortKey<S>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        let source = OptimalSource::new(source)?;
+        Self::initialize_parts(source, layout, tree, short, matches, None)
+    }
+    pub(crate) fn from_ultra2_parts(
+        source: &'a [u8],
+        layout: OptimalSearchLayout,
+        tree: ReferenceTree<H, N>,
+        short: OptimalShortKey<S>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        layout.validate_ultra2(source.len())?;
+        let source = OptimalSource::for_ultra2(source)?;
+        Self::initialize_parts(source, layout, tree, short, matches, Some(false))
+    }
+    fn initialize_parts(
+        source: OptimalSource<'a>,
+        layout: OptimalSearchLayout,
         mut tree: ReferenceTree<H, N>,
         mut short: OptimalShortKey<S>,
         mut matches: OptimalMatches<M>,
+        ultra2: Option<bool>,
     ) -> Result<Self> {
-        let source = OptimalSource::new(source)?;
         if tree.layout() != layout.tree() || short.log() != layout.short_log() {
             return Err(Error::InvalidParameter);
         }
@@ -60,6 +82,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             short_frontier: 0,
             failed: false,
             retained: None,
+            ultra2,
         })
     }
     pub(crate) const fn layout(&self) -> OptimalSearchLayout {
@@ -80,7 +103,8 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         {
             return Err(Error::InvalidParameter);
         }
-        if self.failed
+        if self.ultra2.is_some()
+            || self.failed
             || self.retained.is_some()
             || self.frontier != 0
             || self.short_frontier != 0
@@ -98,10 +122,11 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         self.short_frontier = 0;
         self.failed = false;
         self.retained = None;
+        self.ultra2 = self.ultra2.map(|_| false);
         self.source.restore_end();
     }
     pub(crate) fn query(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
-        if self.retained.is_some() {
+        if self.retained.is_some() || self.ultra2.is_some() {
             return Err(Error::InvalidState);
         }
         self.source.validate(query, self.layout)?;
@@ -109,10 +134,76 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
     }
     /// Ordinary fresh-block entry qualified independently from direct requests.
     pub(crate) fn query_fresh(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
-        if self.retained.is_some() {
+        if self.retained.is_some() || self.ultra2.is_some() {
             return Err(Error::InvalidState);
         }
         self.source.validate_fresh(query, self.layout)?;
+        self.checked_query(query)
+    }
+    pub(crate) fn validate_ultra2_start(
+        &self,
+        source: &[u8],
+        minimum: usize,
+        target: usize,
+    ) -> Result<()> {
+        self.layout.validate_ultra2(source.len())?;
+        if !self.source.is_same_source(source)
+            || minimum != if self.layout.minimum() == 3 { 3 } else { 4 }
+            || target != self.layout.sufficient()
+        {
+            return Err(Error::InvalidParameter);
+        }
+        if self.ultra2 != Some(false)
+            || self.failed
+            || self.retained.is_some()
+            || self.source.origin() != 0
+            || self.frontier != 0
+            || self.short_frontier != 0
+            || !self.matches.as_slice()?.is_empty()
+        {
+            return Err(Error::InvalidState);
+        }
+        Ok(())
+    }
+    /// The paired coordinator verifies a finished seeding parser before calling
+    /// this boundary. All validation precedes mutation of these search owners.
+    pub(crate) fn rebase_ultra2(&mut self) -> Result<()> {
+        if self.ultra2 != Some(false) || self.failed || self.retained.is_some() {
+            return Err(Error::InvalidState);
+        }
+        self.matches.as_slice()?;
+        self.source.rebase_ultra2()?;
+        self.frontier = self.source.origin();
+        self.short_frontier = self.frontier;
+        self.matches.clear();
+        self.ultra2 = Some(true);
+        Ok(())
+    }
+    /// Parser positions remain source-relative in both passes. Physical table
+    /// positions are translated once here and filtered before any source read.
+    pub(crate) fn query_ultra2(&mut self, mut query: OptimalQuery) -> Result<&[OptimalMatch]> {
+        if self.ultra2.is_none() || self.retained.is_some() {
+            return Err(Error::InvalidState);
+        }
+        let length = self.source.backing_len();
+        if query.position == 0
+            || !query
+                .position
+                .checked_add(8)
+                .is_some_and(|end| end <= length)
+            || query.length_to_beat != if self.layout.minimum() == 3 { 3 } else { 4 }
+            || query
+                .repeats
+                .iter()
+                .any(|&v| v == 0 || v as usize > length.max(8))
+        {
+            return Err(Error::InvalidParameter);
+        }
+        query.position = self
+            .source
+            .origin()
+            .checked_add(query.position)
+            .ok_or(Error::InvalidParameter)?;
         self.checked_query(query)
     }
     /// Validate the exact immutable source and untouched retained starting owners.
@@ -129,7 +220,8 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         {
             return Err(Error::InvalidParameter);
         }
-        if self.failed
+        if self.ultra2.is_some()
+            || self.failed
             || self.retained.is_some()
             || self.frontier != 0
             || self.short_frontier != 0
@@ -143,6 +235,9 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
     /// ZSTD_buildSeqStore adjusts the main frontier before the parser copies it
     /// into its block-local short frontier. Argument errors precede all mutation.
     pub(crate) fn begin_retained(&mut self, start: usize, end: usize) -> Result<()> {
+        if self.ultra2.is_some() {
+            return Err(Error::InvalidState);
+        }
         self.layout.validate_retained(self.source.backing_len())?;
         if end > self.source.backing_len()
             || !end
@@ -226,10 +321,13 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
     fn eligible(&self, link: TreeLink, current: usize, target: usize) -> Result<Option<usize>> {
         match link {
             TreeLink::Empty => Ok(None),
-            TreeLink::Position(p) if p < self.layout.floor(target) => Ok(None),
+            TreeLink::Position(p) if p < self.history_floor(target) => Ok(None),
             TreeLink::Position(p) if p < current => Ok(Some(p)),
             _ => Err(Error::CorruptData),
         }
+    }
+    fn history_floor(&self, position: usize) -> usize {
+        self.layout.floor(position).max(self.source.origin())
     }
     /// Insert either a catch-up node or a queried node. Pending links are checked
     /// value destinations; expired links become Discard rather than raw pointers.
@@ -323,7 +421,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             let Some(previous) = current.checked_sub(distance as usize) else {
                 continue;
             };
-            if previous < self.layout.floor(current) {
+            if previous < self.history_floor(current) {
                 continue;
             }
             let length = self.source.match_length(current, previous)?;
@@ -346,7 +444,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
                 if previous >= current {
                     return Err(Error::CorruptData);
                 }
-                if previous >= self.layout.floor(current) && current - previous < (1 << 18) {
+                if previous >= self.history_floor(current) && current - previous < (1 << 18) {
                     let length = self.source.match_length(current, previous)?;
                     if length >= 3 {
                         best = length;
@@ -1261,3 +1359,7 @@ mod ultra_fresh_tests {
         assert_eq!(queries, 95581);
     }
 }
+
+#[cfg(test)]
+#[path = "../tests/support/ultra2_search.rs"]
+mod ultra2_tests;

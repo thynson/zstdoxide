@@ -37,5 +37,35 @@ remain available. An earlier focused run omitted integration sources from its
 retained input closure; its logs remain, and the final complete rerun supplies
 those inputs for all-test Clippy.
 
-Search rebasing, discarded-pass coordination, all native intermediate state
-comparisons, owner-failure controls and public admission are subsequent gates.
+## Checked search rebasing and physical owner preservation
+
+The private search constructor admits only its separately bounded source domain.
+All source keys, short hashes, bytes and overlapping matches use checked current
+interval translation. Ordinary zero-origin contracts remain intact. The rebase
+retains all physical hash/tree/short-key cells and allocator identities, resets
+the main/local-short frontiers to the new origin, and clears only live candidates.
+The window floor is combined with that origin before any candidate source read.
+Parser-relative queries are translated exactly once at the provider boundary.
+
+Every native query and complete physical search state matches both phases of all
+53 fixtures. Tests cover 29 actual resets, retained stale table cells, direct stale
+read rejection even at aliased ring slots, transactional bad arguments, private/
+ordinary mode separation, four distinct nonclone owners with no phase allocations,
+and live-link corruption poisoning until whole reset. Safe and all-feature runs
+also pass all 29 existing/new search and layout tests. The isolated tree, short-key
+and match-buffer unsafe configurations each pass all five new tests. Formatting,
+strict safe/all Clippy and all five true no_std configurations pass (13 commands).
+The first exploratory full-state comparison passed while allocating converted
+snapshots for each query; the final test compares complete borrowed table slices
+with incrementally reconstructed expected values and avoids that test-only cost.
+
+The search archive is `evidence/2026-10-20-ultra2-search.tar.gz`, SHA-256
+`7762e12a82f14b64e30e4ff574b0b3b24158aba701dc2e2c2bb619acf1dabb2e`.
+All 580 source/input identities are unchanged across qualification. As with the
+plan archive, unchanged inherited fixture bytes have exact verified Git-blob
+references and complete reconstruction instructions; all changed/new inputs and
+Rust sources are retained directly. The original full snapshots remain local.
+No timing or unsafe-speedup conclusion is drawn from these correctness runs.
+
+Discarded-pass parser/coordinator state, complete path/frequency comparisons,
+nine-owner failure controls and public admission remain subsequent gates.

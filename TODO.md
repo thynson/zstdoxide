@@ -89,7 +89,7 @@ source-size selector, complete frame and allocator baseline.
 - [x] Specify and project an immutable two-pass fixture with independent reconstruction controls.
 - [x] Qualify the independent borrowed Rust fixture reader and all reset/publication boundaries.
 - [x] Design a private checked Ultra2 plan and copied phase/coordinate records before changing parser/search state.
-- [ ] Implement checked index rebasing and stale-history exclusion while retaining exact search owners.
+- [x] Implement checked index rebasing and stale-history exclusion while retaining exact search owners.
 - [ ] Implement the private discarded-pass coordinator with preserved frequencies, original repeats and reset token lengths.
 - [ ] Qualify complete private two-pass paths, nine owner identities and transactional failures against every captured state.
 - [ ] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation.

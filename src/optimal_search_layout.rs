@@ -8,6 +8,7 @@
 
 use crate::greedy_key::{GreedyKey, GreedyKeyLayout};
 use crate::tree_layout::TreeLayout;
+use crate::ultra2_plan::Ultra2Coordinates;
 use crate::{Error, Result};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -56,6 +57,13 @@ impl OptimalSearchLayout {
     }
     pub(crate) fn validate_retained(self, source_len: usize) -> Result<()> {
         if !(128..=16384).contains(&source_len) || source_len > self.window {
+            return Err(Error::InvalidParameter);
+        }
+        self.validate_ordinary_geometry()
+    }
+    /// Private observed threshold cases do not widen ordinary fresh admission.
+    pub(crate) fn validate_ultra2(self, source_len: usize) -> Result<()> {
+        if !(7..=16384).contains(&source_len) || source_len > self.window {
             return Err(Error::InvalidParameter);
         }
         self.validate_ordinary_geometry()
@@ -138,6 +146,7 @@ pub(crate) struct OptimalQuery {
 pub(crate) struct OptimalSource<'a> {
     bytes: &'a [u8],
     end: usize,
+    origin: usize,
 }
 impl<'a> OptimalSource<'a> {
     pub(crate) fn new(bytes: &'a [u8]) -> Result<Self> {
@@ -147,7 +156,48 @@ impl<'a> OptimalSource<'a> {
         Ok(Self {
             bytes,
             end: bytes.len(),
+            origin: 0,
         })
+    }
+    pub(crate) fn for_ultra2(bytes: &'a [u8]) -> Result<Self> {
+        if !(7..=16384).contains(&bytes.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        let coordinates = Ultra2Coordinates::new(0, bytes.len())?;
+        Ok(Self {
+            bytes,
+            end: coordinates.end(),
+            origin: 0,
+        })
+    }
+    pub(crate) const fn origin(self) -> usize {
+        self.origin
+    }
+    /// Retain the original borrow. No old integer position becomes a pointer.
+    pub(crate) fn rebase_ultra2(&mut self) -> Result<()> {
+        if self.origin != 0
+            || self.end != self.bytes.len()
+            || !(7..=16384).contains(&self.bytes.len())
+        {
+            return Err(Error::InvalidState);
+        }
+        let next = Ultra2Coordinates::new(self.origin, self.bytes.len())?.rebase()?;
+        self.origin = next.origin();
+        self.end = next.end();
+        Ok(())
+    }
+    fn offset(self, index: usize, width: usize) -> Result<usize> {
+        let length = self
+            .end
+            .checked_sub(self.origin)
+            .ok_or(Error::CorruptData)?;
+        let offset = index
+            .checked_sub(self.origin)
+            .ok_or(Error::InvalidParameter)?;
+        if width > length || offset > length - width {
+            return Err(Error::InvalidParameter);
+        }
+        Ok(offset)
     }
     pub(crate) fn is_same_source(self, source: &[u8]) -> bool {
         core::ptr::eq(self.bytes, source)
@@ -159,17 +209,20 @@ impl<'a> OptimalSource<'a> {
         self.bytes.len()
     }
     pub(crate) fn restore_end(&mut self) {
+        self.origin = 0;
         self.end = self.bytes.len();
     }
     pub(crate) fn set_end(&mut self, end: usize) -> Result<()> {
-        if !(8..=self.bytes.len()).contains(&end) {
+        if self.origin != 0 || !(8..=self.bytes.len()).contains(&end) {
             return Err(Error::InvalidParameter);
         }
         self.end = end;
         Ok(())
     }
     pub(crate) fn validate(self, query: OptimalQuery, layout: OptimalSearchLayout) -> Result<()> {
-        if query.position > self.len() - 8
+        if self.origin != 0
+            || self.len() < 8
+            || query.position > self.len().saturating_sub(8)
             || query.length_to_beat < if layout.minimum() == 3 { 3 } else { 4 }
             || query.length_to_beat > 4096
             || query.length_to_beat > self.len() - query.position
@@ -191,7 +244,8 @@ impl<'a> OptimalSource<'a> {
         layout: OptimalSearchLayout,
     ) -> Result<()> {
         layout.validate_fresh(self.len())?;
-        if query.position == 0
+        if self.origin != 0
+            || query.position == 0
             || query.position > self.len() - 8
             || query.length_to_beat != if layout.minimum() == 3 { 3 } else { 4 }
             || query
@@ -204,12 +258,13 @@ impl<'a> OptimalSource<'a> {
         Ok(())
     }
     pub(crate) fn key(self, position: usize, layout: GreedyKeyLayout) -> Result<GreedyKey> {
+        let offset = self.offset(position, 0)?;
+        let end = self
+            .end
+            .checked_sub(self.origin)
+            .ok_or(Error::CorruptData)?;
         layout
-            .read_key(
-                self.bytes
-                    .get(position..self.end)
-                    .ok_or(Error::InvalidParameter)?,
-            )
+            .read_key(self.bytes.get(offset..end).ok_or(Error::InvalidParameter)?)
             .ok_or(Error::InvalidParameter)
     }
     /// Hash constants from facebook/zstd v1.5.7 ZSTD_hash3 (LICENSE.zstd).
@@ -217,9 +272,10 @@ impl<'a> OptimalSource<'a> {
         if !(6..=17).contains(&log) {
             return Err(Error::InvalidParameter);
         }
+        let position = self.offset(position, 3)?;
         let tail = self
             .bytes
-            .get(position..self.end)
+            .get(position..)
             .and_then(|v| v.get(..3))
             .ok_or(Error::InvalidParameter)?;
         let word = u32::from_le_bytes([tail[0], tail[1], tail[2], 0]);
@@ -230,8 +286,18 @@ impl<'a> OptimalSource<'a> {
         if previous >= current || current >= self.len() {
             return Err(Error::CorruptData);
         }
-        let a = &self.bytes[current..self.end];
-        let b = &self.bytes[previous..previous + a.len()];
+        let current = self.offset(current, 1)?;
+        let previous = self.offset(previous, 1)?;
+        let end = self
+            .end
+            .checked_sub(self.origin)
+            .ok_or(Error::CorruptData)?;
+        let a = self.bytes.get(current..end).ok_or(Error::CorruptData)?;
+        let previous_end = previous.checked_add(a.len()).ok_or(Error::CorruptData)?;
+        let b = self
+            .bytes
+            .get(previous..previous_end)
+            .ok_or(Error::CorruptData)?;
         let mut matched = 0;
         // Safe slice equality handles long repetitive observations efficiently.
         for (x, y) in a.chunks(64).zip(b.chunks(64)) {
@@ -245,10 +311,8 @@ impl<'a> OptimalSource<'a> {
         Ok(matched)
     }
     pub(crate) fn byte(self, position: usize) -> Result<u8> {
-        self.bytes[..self.end]
-            .get(position)
-            .copied()
-            .ok_or(Error::CorruptData)
+        let position = self.offset(position, 1)?;
+        self.bytes.get(position).copied().ok_or(Error::CorruptData)
     }
 }
 
