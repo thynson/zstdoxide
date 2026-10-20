@@ -2708,3 +2708,96 @@ or an entropy publication between passes. `ZSTD_resetSeqStore` resets logical
 sequence/literal output before the real pass. The observer must distinguish
 physical stale cells from readable current history and report both where the
 native state exposes them.
+
+### Independent Ultra2 eligibility and source view
+
+The source-only `Entry` record keeps the five native eligibility predicates
+separate from the helper's unsigned `dictLimit - nextToUpdate <= 1` assertion.
+An invalid update frontier is not silently reclassified as a sixth skip predicate.
+Checked `Coordinates` map absolute indices into one source interval; rebasing
+advances the origin by the complete source length and rejects overflow of the
+second interval. Every byte in the first interval is then stale, even if its
+integer index aliases a current tree ring slot. Empty ranges may name the end;
+positive reads may not. These copied values own no allocation and require no
+unsafe representation.
+
+The independent two-pass search model retains the actual hash/tree/short-key
+lists while replacing only its checked source view and update frontiers. The
+view presents the absolute coordinate extent expected by the already qualified
+ordinary model but rejects access to its nonexistent prefix; it allocates no
+fake history bytes. Ordinary path offsets stay relative to the same source.
+Both scans retain the same frequency and path owners, while each parser invocation
+starts with original repeats and an empty logical sequence list. Per-pass copied
+observation rows own their snapshots, so later updates cannot rewrite earlier
+predictions. Model-only source-read counters are excluded from the native wire
+protocol rather than presented as native observations.
+
+Skipped-seeding reconciliation initially uses only a nonempty opaque sequence
+prefix with otherwise fresh parser state. The sequence payload is outside that
+model's contract. Other failed gate predicates are checked as independent
+eligibility arithmetic; they are not claimed to reproduce dictionary/retained
+parser states or an already observed native Ultra2 wrapper.
+
+### Two-pass observation storage and transport
+
+`ZU2PS01\0` owns exactly 44 bytes of header plus 7..16384 source bytes. Its nine
+little-endian u32 fields are source size, seed hypothesis (0/1), window/hash/chain/
+search logs, minimum match, target and literal mode. One entire block is implicit;
+7/8/9-byte threshold cases are private controls, not a public lower-bound change.
+The parser rejects size, arithmetic, geometry, mode and trailing-byte errors
+before allocation or native calls. Request records own bytes; frame-independent
+observation readers borrow bounded lines and copy validated state only as needed.
+
+The observer will use a real CCtx allocation with its original frequency, path,
+match, search and sequence owners, but directly invoke the unchanged private
+`ZSTD_compressBlock_btultra2` wrapper. No entropy selection or frame publication
+occurs in this lifecycle oracle. A leading source guard of at least one complete
+source length keeps the C helper's backwards base movement inside the same
+allocated source object. The Rust design still uses integers only.
+
+Pass-tagged observations include eligibility, pre-rescale state, all ordinary
+search/path/frequency events, final candidate repeats/tokens, and the original
+sequence-store reset plus coordinate transition. Old physical cells remain
+observable; only logical output lengths reset. The independent normal/sanitized
+builds and two padding fills must agree on every canonical state, source bytes,
+guards and released allocation ledger. Seeding-mode zero installs one explicit
+zero-literal sentinel sequence before the wrapper to test the native empty-store
+predicate; its fields and logical prefix must remain unchanged. Returned parser
+observations describe only appended sequences, not that sentinel as codec output.
+
+### Two-pass fixture ownership (planned before projection)
+
+The future `ZU2FX01\0` pack will own request/source bytes, exact native allocator
+ledgers, pass/reset descriptors and complete canonical event deltas. `Case<'a>`
+will borrow its name and source from the immutable pack; bounded owned vectors
+will hold decoded pass records and event/delta lists for tests. No source frame
+is present because this observer does not run entropy publication. Original
+Ultra packs remain unchanged. These test-only value records have no distinct
+unsafe representation and do not add a production allocator owner.
+
+A case header binds geometry, seed mode, one source and one or two algorithm
+passes. Each pass binds its phase, absolute origin, original incoming repeats,
+pre-rescale frequency state, candidate repeats, final tail and event extent.
+A seeded case additionally binds the native reset's discarded counts/repeats,
+unchanged caller repeats/frequencies and all advanced history limits. Path and
+search sparse baselines persist across passes; frequencies also persist while
+logical sequence counters and block-relative wire reconstruction restart.
+Resetting the decoder's physical sparse baselines would lose evidence and is
+forbidden. Source offsets remain relative, while search indices remain absolute.
+
+The reader must check extents and count arithmetic before reserving memory,
+reject noncanonical or duplicate deltas, validate 7/8/9 threshold/phase selection,
+and distinguish stale stored indices from readable current source. The second
+pass's live interval is `[source_len + 2, 2 * source_len + 2)` in native indices;
+old positive table entries may remain below it. A table value in that old range
+is not itself malformed, but a match/source read from it is. Ring-slot equality
+does not change that distinction. New source translation, geometry and phase
+records remain copied integers, with no before-allocation pointers.
+
+Every pass starts wire reconstruction with repeats 1/4/8. The first pass's tokens
+are independently checked against the source and then discarded; its final tail
+is not a frequency update. The second pre-rescale frequency snapshot must equal
+the first final snapshot and reset snapshot. The following begin event must
+independently satisfy the preserved-statistics rescale/cache rules. Threshold
+controls and skipped-seeding append observations remain private test cases and
+must not widen any public admission boundary.

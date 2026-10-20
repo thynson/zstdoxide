@@ -81,7 +81,7 @@ invalidation are independently qualified. Preserve every earlier recipe,
 source-size selector, complete frame and allocator baseline.
 
 - [x] Review pinned Ultra2 eligibility, sequence-store reset, copied repeats and history-coordinate changes against the ownership design.
-- [ ] Freeze an independent eligibility/coordinate model and reconcile skipped-seeding cases with ordinary Ultra.
+- [x] Freeze an independent eligibility/coordinate model and reconcile skipped-seeding cases with ordinary Ultra.
 - [ ] Freeze source-only two-pass recipes covering short-key tables, stale ring aliases, threshold predicates and changed final paths.
 - [ ] Specify bounded pass-tagged transport and complete frequency/search/path/reset observations before native instrumentation.
 - [ ] Review and preflight read-only instrumentation, full sanitizer coverage and exact command/source inventories.
