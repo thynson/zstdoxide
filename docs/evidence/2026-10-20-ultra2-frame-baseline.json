@@ -1,0 +1,20 @@
+{
+  "archive": "2026-10-20-ultra2-frame-baseline.tar.gz",
+  "archive_bytes": 73471,
+  "archive_sha256": "9460dc99f255934d5f3001102432cfbc73321b4ba44aeb1d38286f334d070de5",
+  "commands": 0,
+  "expanded_bytes": 1116968,
+  "file_map_sha256": "07196239422367df8b63b753fe9a02024ce712d3a78f808d638548a8e2dba7e8",
+  "qualification": "26 source-only preselected complete Ultra2 frames projected only after full independent native capture replay; safe/all encoded frames agree and both normal/sanitized C decoders reconstruct every source. Independent bounded baseline checker passes normal/optimized Python with immutable pack/provenance/recipe digests. The retained projection/check logs are observed successful tool outcomes; this wrapper does not invent contemporaneous command environment records. Private main admission and clock-free owner/backends/timing are separate pending gates. Every regular bundle file is retained by lossless chunks. Independent archive replay reconstructs every file; a second concurrent read verifies every original remained unchanged. Any omissions made while preparing the bundle are explicitly documented in its qualification and manifests; this archive omits no regular bundle file.",
+  "regular_files": 10,
+  "source": {
+    "scripts/check_ultra2_frame_baseline.py": "164db323fb31f999fb4d416ace2d2c33935e8fa78c51b4b938ed229fef678ba7",
+    "scripts/pack_ultra2_frame_baseline.py": "b922ce4c638360d11796e3ca59ba35db85ce86a33af0974096edeb40c6e8311a",
+    "tests/fixtures/reference-ultra2-frame-baseline/cases.bin": "5800d0e13d324f2401f2739e1482ad8d9eb8afe42f2118933afa42b7b1b3896f",
+    "tests/fixtures/reference-ultra2-frame-baseline/provenance.json": "2b234e63470bcba505dc6ed459537011613e37635aa7205610597afbf357e1b3",
+    "tests/fixtures/reference-ultra2-interop-recipes/recipes.json": "0ae6c7cfb5ab3530c52976139326514e9919bcba321d9e6516621ffd129f4dd5"
+  },
+  "status": "passed",
+  "unique_chunk_bytes": 1116851,
+  "unique_chunks": 25
+}

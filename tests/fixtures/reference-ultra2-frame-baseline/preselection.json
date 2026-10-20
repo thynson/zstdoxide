@@ -1,0 +1,33 @@
+{
+  "recorded_utc": "2026-10-20T02:58:48.895301+00:00",
+  "names": [
+    "ultra2-default-16-64-uniform",
+    "ultra2-default-16-64-periodic",
+    "ultra2-default-16-64-noise",
+    "ultra2-default-16-2048-uniform",
+    "ultra2-default-16-2048-periodic",
+    "ultra2-default-16-2048-noise",
+    "ultra2-default-17-64-uniform",
+    "ultra2-default-17-64-periodic",
+    "ultra2-default-17-64-noise",
+    "ultra2-default-17-2048-uniform",
+    "ultra2-default-17-2048-periodic",
+    "ultra2-default-17-2048-noise",
+    "ultra2-minimum-3-target-1",
+    "ultra2-minimum-3-target-4095",
+    "ultra2-minimum-4-target-1",
+    "ultra2-minimum-4-target-4095",
+    "ultra2-minimum-5-target-1",
+    "ultra2-minimum-5-target-4095",
+    "ultra2-minimum-6-target-1",
+    "ultra2-minimum-6-target-4095",
+    "ultra2-minimum-7-target-1",
+    "ultra2-minimum-7-target-4095",
+    "ultra2-observed-u2_seed_fresh_wide_horizon",
+    "ultra2-observed-u2_seed_fresh_wide_window16",
+    "ultra2-observed-u2_seed_alternative_seed_0",
+    "ultra2-observed-u2_seed_alternative_seed_2"
+  ],
+  "projector_sha256": "b922ce4c638360d11796e3ca59ba35db85ce86a33af0974096edeb40c6e8311a",
+  "qualification": "Selected from frozen source-only hypotheses before new Ultra2 public native cases are observed. Full capture audit required before projection; no timing is enabled."
+}

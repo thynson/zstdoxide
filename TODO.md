@@ -97,7 +97,7 @@ source-size selector, complete frame and allocator baseline.
 - [ ] Qualify bounded public Ultra2 dispatch and complete shared-entropy frames before public admission.
 - [x] Capture and independently audit bidirectional public interoperability and all predecessor frame identities.
 - [ ] Complete full regression, true no_std, formatting, Clippy, usage and migration-inventory checks.
-- [ ] Freeze preselected native-audited complete Ultra2 frames with independent immutable baseline checks.
+- [x] Freeze preselected native-audited complete Ultra2 frames with independent immutable baseline checks.
 - [ ] Verify complete frame bytes and owner ledgers across every backend without clocks.
 - [ ] Measure every backend plus an independent repeat after CPU barriers.
 - [ ] Reconcile the bounded Ultra2 milestone and decompose the next roadmap scope without claiming complete upstream parity.
