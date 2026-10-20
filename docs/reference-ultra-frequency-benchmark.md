@@ -1,8 +1,10 @@
 # Private policy-bound frequency measurements
 
 This harness measures frequency state lifecycles, not Ultra compression or frames.
-The public Ultra strategy remains unsupported. The native fixture, independent
-model and implementation qualification are described in `reference-ultra-validation.md`.
+Public Ultra was still unsupported at this private measurement checkpoint.
+Current bounded public support is described in `reference-ultra-public-qualification.md`.
+The native fixture, independent model and implementation qualification are
+described in `reference-ultra-validation.md`.
 
 ## Fixed workloads and measured region
 

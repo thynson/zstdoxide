@@ -885,3 +885,54 @@ The complete record contains 3397 passing and 110 ignored test executions in
 `evidence/2026-10-16-ultra-path-matrix.tar.gz`. These counts supersede the earlier
 frequency checkpoint for the current source, without changing either checkpoint's
 historical evidence or the remaining public Ultra gates.
+
+
+## Module 18: bounded reference Ultra complete (2026-10-20)
+
+Public strategy 8 now admits independently qualified fresh no-dictionary sources
+of 64..16384 bytes fitting the selected window, W10..16, H/C6..12, S1..6,
+minimum-match 3..7 and target 0..4095 after source resolution. Default levels
+13/14 support 64..2048-byte sources. Fractional pricing, immutable frequency
+policy, thorough relaxation and match-plus-literal alternatives are coupled.
+The original Optimal inputs and 4636 successful encoded responses are unchanged.
+Ultra2, retained public blocks, dictionary/prefix, LDM, workers, numeric streaming
+and window expiry remain outside this milestone.
+
+The ordinary parser, checked allocation-free plan, exact nine-owner token state
+and shared-entropy frame dispatcher are qualified in small implementation steps.
+Public geometry rejection precedes owner cloning; unsupported and operational
+resource classifications remain distinct. Safe defaults and nineteen separately
+selectable unsafe implementations retain the same contracts and no_std + alloc.
+
+Native interoperability covers 1345 recipes and 15132 commands, with 4888 frame
+decodes in each direction and 800050968 decoded bytes. All 26 relevant C units
+are covered by the instrumented build. Both Python modes reject 56 forged native
+captures without child execution. Complete C/Rust compressed-byte identity is
+not required. Selected 32-bit/big-endian Miri and no-atomics library/concrete
+caller checks pass; these are not native foreign or firmware executions.
+
+The full public regression matrix completes 22 configuration products, each with
+1405 passes and 55 explicit ignores (30910 passing and 1210 ignored executions),
+and 21 true no_std builds. Individual test names and outcomes agree. Six products
+are explicitly reconciled from successful prefixes and resumed integration/doc
+suffixes after preserved 1800-second timeouts; sixteen complete uninterrupted.
+Scoped historical source inventories have explicit Git-bound supplements rather
+than invented contemporaneous entries. Strict Clippy, formatting, allocator
+support and 48 standalone usage checks pass. Fresh final focused safe/all Ultra,
+Clippy, formatting and no_std checks pass on identical production sources.
+
+All 21 backends produce identical complete frames and allocator surveys over
+26 preselected cases. Two timed campaigns retain 2990 samples for 598 case/backend
+records and all 23 measured executables, including an independent safe/all repeat.
+The all/safe geometric means of median cost per byte are 1.0395 and 0.8782: the
+opposing directions do not establish a stable unsafe speedup. The frame report
+preserves per-case results and fixed-order desktop limitations.
+
+The final reconciliation verifies selected archive/report identities and current
+source equality. Historical failed/interrupted attempts remain evidence. Module
+18's completed checklist is cleared and Module 19's Ultra2 lifecycle decomposition
+remains. The 55 ignored tests, 188 unfinished upstream source units and all other
+official migration obligations stay open; this is not full zstd library/CLI parity.
+
+Details: `reference-ultra-public-qualification.md`,
+`reference-ultra-frame-benchmark.md`, `evidence/2026-10-20-ultra-closure.json`.

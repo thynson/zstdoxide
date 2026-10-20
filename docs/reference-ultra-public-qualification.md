@@ -1,8 +1,9 @@
 # Bounded Ultra public qualification
 
 The main checkout now exposes the independently qualified bounded strategy-8
-envelope. Complete regression qualification now passes. Timed measurements and final
-milestone reconciliation remain separate open gates.
+envelope. Module 18 is complete within that bounded scope: regression, native
+interoperability, platform checks and complete-frame measurements are qualified.
+The separate Ultra2 lifecycle and complete official test migration remain open.
 
 Public strategy 8 uses the coupled pinned optLevel2 policy: fractional prices,
 policy-tagged frequency/cache lifecycles, thorough relaxation and the
@@ -134,3 +135,26 @@ duplicating large inherited corpora already held in Git; the redundant full-inpu
 archive remains outside the repository and its report is retained.
 Evidence: `evidence/2026-10-19-ultra-public-matrix.tar.gz`, SHA-256
 `3b40b63560b7b4a0575d82b492fe76b3f1d733091933b9ce5c22cadc743f9c87`.
+
+## Complete-frame measurements and final reconciliation
+
+The clock-free survey verifies 26 complete sources across all 21 backends,
+including exact output bytes, allocation ledgers and zero residual live owners.
+The primary timed campaign and independent safe/all repeat retain 598 case rows
+and 2990 samples. The all/safe aggregate cost direction changes (1.0395 versus
+0.8782), so these data do not establish a stable unsafe speedup. Exact samples,
+compiled executables, source-bound CPU barriers and normal/optimized malformed
+controls are preserved in [the frame report](reference-ultra-frame-benchmark.md).
+
+Final formatting, focused safe/all Ultra tests, strict all-target Clippy safe/all
+and true no_std safe/all pass again on unchanged production sources. The full
+22-product matrix above remains the full-regression evidence; focused checks do
+not replace it. Historical failures, timeouts and scoped source supplements are
+retained. The final reconciliation verifies archive/report hashes and unchanged
+current source inventories without reclassifying historical checkpoints.
+
+Closure: `evidence/2026-10-20-ultra-closure.json`. The completed Module 18 checklist
+is archived in Git history and `progress.md`; Module 19 retains its independent
+Ultra2 decomposition. Strategy 9 remains unsupported. Official ignored cases,
+188 unfinished upstream source units, retained/dictionary public Ultra, CLI and
+other excluded features remain open; this milestone does not imply full parity.

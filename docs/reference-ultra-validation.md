@@ -1,14 +1,15 @@
 # Bounded reference Ultra qualification
 
-Current status (2026-10-19): bounded public strategy 8 is enabled. See
+Current status (2026-10-20): Module 18 is complete within its bounded public
+strategy-8 scope. See
 [public qualification](reference-ultra-public-qualification.md) for its exact
-envelope and completed versus pending final gates. The chronological records
+envelope, completed gates and remaining excluded features. The chronological records
 below preserve the state at each earlier private checkpoint; statements that
 public admission was closed describe those checkpoints. Strategy 9 remains
 unsupported.
 
-Strategy 8 remains unsupported. This module qualifies the coupled optLevel=2
-policy before public dispatch. Strategy 9's discarded first pass and history
+At the initial private checkpoint below, strategy 8 remained unsupported.
+That checkpoint qualified the coupled optLevel=2 policy before public dispatch. Strategy 9's discarded first pass and history
 rewrite are separate work. All prior Optimal fixtures and native observations
 remain immutable; additive protocols identify fractional observations explicitly.
 

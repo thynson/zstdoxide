@@ -66,73 +66,13 @@ and the independent repeat are in `docs/reference-optimal-frame-benchmark.md`.
 Private retained state qualification does not admit public retained Optimal.
 The full upstream migration obligations above remain open.
 
-## Module 18 preparation: bounded reference Ultra
-
-Design and ownership are recorded in `docs/data-structures.md`. Strategy 8 now
-admits only the independently qualified bounded fresh optLevel=2 envelope.
-Strategy 9 and its initial discarded pass belong to a subsequent module.
-Preserve every Optimal fixture, source request, complete frame and owner baseline.
-
-- [x] Review pinned fractional pricing, coupled policy, cache lifecycle and thorough path relaxation against the recorded design.
-- [x] Decompose scalar boundaries and freeze an independent integer fractional-price model before native execution.
-- [x] Specify bounded scalar transport and adapter ownership before native helper implementation.
-- [x] Review and preflight the exact scalar adapter, full instrumentation and malformed request controls.
-- [x] Project independently audited scalar observations into an immutable fixture and reject forged projections.
-- [x] Qualify the independent borrowed Rust scalar fixture reader.
-- [x] Freeze source-only price recipes, observation protocol and exact normal/instrumented C command inventory.
-- [x] Capture and independently audit fractional prices, signed increments and malformed/overflow boundaries.
-- [x] Specify policy-dependent checked price records and frequency owner/reset invariants before Rust implementation.
-- [x] Implement checked scalar policy/price values and compare all independent/native observations.
-- [x] Specify immutable frequency policy, fractional publication bounds and parser composition rejection before implementation.
-- [x] Freeze the policy-tagged frequency transport/model and reconstruct every original whole-mode C fixture before execution.
-- [x] Freeze source-only frequency lifecycle recipes and exact fractional-boundary negative classifications.
-- [x] Review and preflight the complete policy-tagged frequency observer and native command inventory.
-- [x] Capture and independently audit complete frequency lifecycles and forged-evidence controls.
-- [x] Specify policy-tagged frequency fixture ownership and independent cache/lifecycle checks.
-- [x] Project the audited policy-tagged frequency fixture and reject forged reconstructions.
-- [x] Qualify the bounded independent Rust frequency fixture reader.
-- [x] Implement policy-bound frequency initialization, scaling, updates and caches without changing Optimal baselines.
-- [x] Qualify exact borrowed/non-cloning owners, policy mismatch rejection and allocation-failure cleanup.
-- [x] Complete the policy-bound frequency feature matrix and full safe/all regression checkpoint.
-- [x] Qualify a clock-free complete-state frequency measurement harness and exact owners.
-- [x] Measure paired safe/frequency-unsafe/all frequency lifecycles and an independent safe/all repeat after CPU barriers.
-- [x] Specify coupled scripted-path ownership, saved-match alternative observations and predecessor invariants.
-- [x] Reconstruct the complete original 27-case path fixture with policy-0 successor replay.
-- [x] Freeze independent Ultra path replay and source-only branch coverage before observer execution.
-- [x] Specify policy-tagged path transport, complete alternative observations and bounded native storage.
-- [x] Review and preflight policy-tagged path transport and read-only native instrumentation.
-- [x] Capture complete match-plus-literal alternatives, thorough relaxation, predecessor/repeat and frontier states.
-- [x] Project the audited complete Ultra path fixture and reject forged reconstruction inputs.
-- [x] Qualify the independent borrowed Ultra path reader, signed alternatives and publication transitions.
-- [x] Specify private policy composition, scripted bounds and ordinary-entry rejection before implementation.
-- [x] Implement bounded private Ultra path composition and compare every intermediate state and sequence.
-- [x] Qualify private Ultra parser exact owners, foreign Miri and no-atomics code generation.
-- [x] Complete the private Ultra parser safe/isolated-unsafe/all matrix and full regression checkpoint.
-- [x] Specify ordinary Ultra search/path composition and preserve all original fresh requests before implementation.
-- [x] Reconcile policy-0 ordinary replay with every original complete fresh native observation.
-- [x] Freeze ordinary Ultra source-only branch recipes and bounded policy-tagged transport.
-- [x] Review and preflight ordinary Ultra read-only native instrumentation and exact command inventory.
-- [x] Capture and independently audit ordinary Ultra search/path states and malformed/forged evidence.
-- [x] Specify and project the independently audited ordinary Ultra fixture with forged-projection controls.
-- [x] Qualify the independent ordinary Ultra fixture reader before private search integration.
-- [x] Implement and qualify private ordinary Ultra search/path composition against every captured state.
-- [x] Qualify ordinary Ultra exact owners, foreign Miri and no-atomics code generation.
-- [x] Complete the ordinary Ultra safe/isolated-unsafe/all matrix and full regression checkpoint.
-- [x] Design and qualify allocation-free private Ultra execution plans with original/public gates preserved.
-- [x] Implement and qualify private Ultra token publication with nine exact owners and transactional failures.
-- [x] Qualify private Ultra static dispatch and deterministic shared-entropy frames before public admission.
-- [x] Freeze source-aware admission successors without rewriting historical selectors or request inputs.
-- [x] Freeze additive public Ultra recipes and complete predecessor frame identities with independent controls.
-- [x] Qualify an isolated public Ultra candidate, foreign platform paths and executable usage without opening the main gate.
-- [x] Enable only the independently qualified bounded public Ultra envelope and preserve unsupported/resource distinctions.
-- [x] Review and preflight the exact public Ultra native command/source inventory.
-- [x] Capture and independently audit complete bidirectional public interoperability and forged-evidence controls.
-- [x] Run complete safe/isolated-unsafe/all/release, true no_std, formatting, Clippy and usage checks.
-- [x] Freeze the 26 preselected complete frame baselines after full native replay.
-- [x] Add read-only Ultra admission, scalar/frequency/path and complete-frame checks to the offline driver.
-- [x] Qualify clock-free complete frames and allocator ledgers across every backend.
-- [x] Measure all backends plus an independent safe/all repeat after CPU barriers.
-- [ ] Reconcile the bounded Ultra milestone, official migration gaps and the separate Ultra2 lifecycle decomposition.
+Module 18 is complete within its bounded fresh no-dictionary Ultra scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+The full regression, interoperability and platform evidence is recorded in
+`docs/reference-ultra-public-qualification.md`; complete-frame measurements and
+the independent repeat are in `docs/reference-ultra-frame-benchmark.md`.
+The final evidence reconciliation is `docs/evidence/2026-10-20-ultra-closure.json`.
+Ultra2 remains unsupported and complete upstream migration remains open.
 
 ## Module 19: bounded reference Ultra2
 
