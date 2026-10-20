@@ -36,3 +36,32 @@ snapshot, reconstructed case body/layout, forged byte delta and driver/log.
 Independent archive replay reconstructs and hashes every retained file, followed
 by a second unchanged-original read. No model or observer was rewritten to fit
 native output.
+
+## Borrowed Rust reader
+
+The reader borrows names, source bytes and case extents from its input. It checks
+all sizes before bounded fallible allocation, canonical sparse indices, complete
+source-relative match/repeat reconstruction, exact phase order, original repeats,
+discarded token counts/tail, and current versus stale search coordinates. A reset
+retains physical cells and frequencies. Independent histogram/distribution and
+integer rescaling calculations check the complete following begin state, including
+7/8/9 predefined-price thresholds. No production codec state supplies expectations.
+
+Four integration tests pass in both safe and all-feature builds: complete native
+inventory and borrowed extents, every state of all 44 predecessor first passes,
+malformed extent/type boundaries, and discarded/reset/rebased publication
+forgeries. Targeted strict Clippy, repository formatting, and true no_std safe/all
+compilation also pass. These reader tests use safe test-owned vectors; they do not
+claim qualification of a future production two-pass coordinator or its backends.
+
+The reader archive is `evidence/2026-10-20-ultra2-reader.tar.gz`, SHA-256
+`98bb749142ecd638c02f6309427f13cc0abf17d3b07ef3fed9913e77bb905746`.
+It retains 229 files, including exact compiled/reader inputs, raw logs and earlier
+attempts. The first exploratory borrowing assertion compared distinct Rust const
+include-byte promotions; a shared static input fixes the test's identity premise.
+All semantic reader checks had passed. The first formal attempt then passed both
+test modes but Clippy rejected a redundant constant policy comparison. The
+corrected equivalent expression passes all nine final qualification commands.
+These failures are preserved, not counted as successful checks. The snapshot
+precedes registration of the separate private Ultra2 plan; it qualifies this
+reader against its captured production baseline.
