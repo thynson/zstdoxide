@@ -148,3 +148,30 @@ The 242 regular files (63724622 logical bytes) reconstruct exactly; unchanged
 inherited fixtures use the explicit verified Git-blob map. Foreign/platform
 checks will use this complete immutable source snapshot, independently of later
 frame integration edits.
+
+
+## Retained token feature and platform gates
+
+The exact token snapshot passes 48 identical named contracts in 22 products:
+safe, nineteen isolated unsafe features, all features and release/all features.
+All 21 applicable true no_std checks pass. Disk exhaustion interrupted the
+all-feature build after the first twenty products; its failure remains recorded.
+The successor validates every inherited complete test log and source hash, then
+runs only the missing all/release and no_std commands. Reproducible unmeasured
+Cargo caches are removed after checks with executable identities recorded.
+Source bytes remain bound to the complete token archive above; measured Ultra2
+binaries and all qualification evidence are retained.
+
+The same token source passes strict-provenance Miri on i686 little-endian 32-bit
+and s390x big-endian 64-bit, safe/all. The no-atomics thumbv6m target passes
+core+alloc checks and concrete construction, scheduled parse/publication, reset
+and drop code generation in safe/all modes. LLVM definitions and 32-bit ARM ELF
+objects are retained. These are interpreted and compiled foreign checks, not
+native foreign executions or integrated-frame/public qualification.
+
+Evidence: `evidence/2026-10-20-optimal-retained-tokens-matrix.tar.gz`, SHA-256
+`6bce930c53c115dbd8298a6cec8108d717edaed7a251efdc3a6a335b30cf966e`,
+and `evidence/2026-10-20-optimal-retained-tokens-platform.tar.gz`, SHA-256
+`64559918d5e78b738a800e2683a069dfaa435e86055d603965cd8b2585c68d4a`.
+Both archives independently reconstruct every regular bundle file. The matrix
+source-reference map matches the prior complete token archive exactly.
