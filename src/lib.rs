@@ -244,3 +244,5 @@ mod ultra2_state;
 mod ultra2_frame_plan;
 
 mod optimal_retained_plan;
+
+mod optimal_retained_state;

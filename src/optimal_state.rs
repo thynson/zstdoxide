@@ -191,6 +191,37 @@ impl<'s, 'v, A: Allocator> Collect<'s, 'v, A> {
             repeats: [1, 4, 8],
         }
     }
+    /// Retained initialization borrows only the consumed prefix. The existing
+    /// fresh constructor and its complete-source semantics are unchanged.
+    pub(crate) fn for_block(
+        prefix: &'s [u8],
+        start: usize,
+        repeats: [u32; 3],
+        literals: &'v mut Vec<u8, A>,
+        sequences: &'v mut Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        let length = prefix
+            .len()
+            .checked_sub(start)
+            .ok_or(Error::InvalidParameter)?;
+        if prefix.len() > 32768
+            || !(64..=8192).contains(&length)
+            || repeats.iter().any(|&v| v == 0 || v as usize > prefix.len())
+            || !literals.is_empty()
+            || !sequences.is_empty()
+            || literals.capacity() < length
+            || sequences.capacity() < length / 3
+        {
+            return Err(Error::InvalidParameter);
+        }
+        Ok(Self {
+            source: prefix,
+            literals,
+            sequences,
+            anchor: start,
+            repeats,
+        })
+    }
     pub(crate) fn finish(&mut self, result: PathResult, include_tail: bool) -> Result<()> {
         if result.sequences != self.sequences.len()
             || result.repeats != self.repeats

@@ -124,3 +124,27 @@ Evidence: `evidence/2026-10-20-optimal-retained-plan.tar.gz`, SHA-256
 `b664dd352df5dd891eeb54f28d00501f52a445db4107af5ca54d8e423b2609b1`.
 The archive preserves all regular bundle files and an explicit verified Git-blob
 map for unchanged inherited fixtures, with complete reconstruction checks.
+
+
+## Retained block tokens and nine owners
+
+The new private token state composes the seven retained parser/search owners
+with separate literal and sequence vectors. Its block collector borrows only
+the consumed source prefix, validates absolute sequence coordinates and repeat
+intent, and accounts for the exact block tail. It reserves the largest planned
+block once; transitions and reset preserve all nine allocator identities.
+Scheduling and publication argument errors are transactional. Allocation or
+parse failure hides partial tokens until reset; successful publication hides
+stale tokens before the next block.
+
+All 48 retained tests pass in safe/all builds, including five new contracts
+covering nineteen native token streams, all nine moved nonclone allocation
+failures, borrowed owner reuse, malformed collectors and constructor mismatches.
+Both strict all-target Clippy configurations, formatting and true safe/all
+no_std pass. Shared entropy integration and public admission remain separate.
+Evidence: `evidence/2026-10-20-optimal-retained-tokens.tar.gz`, SHA-256
+`511673c5ee5d198be103b7674e31d2fe391d39645d2d5c4b206ab06341a9d08e`.
+The 242 regular files (63724622 logical bytes) reconstruct exactly; unchanged
+inherited fixtures use the explicit verified Git-blob map. Foreign/platform
+checks will use this complete immutable source snapshot, independently of later
+frame integration edits.

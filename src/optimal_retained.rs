@@ -76,7 +76,7 @@ impl<
         search: OptimalSearch<'a, H, N, S, B>,
         blocks: &[usize],
     ) -> Result<Self> {
-        let (source, minimum, target) = parser.retained_configuration()?;
+        let (source, minimum, target, _) = parser.retained_configuration()?;
         search.validate_retained_start(source, minimum, target)?;
         if !(2..=4).contains(&blocks.len()) || blocks.iter().any(|n| !(64..=8192).contains(n)) {
             return Err(Error::InvalidParameter);
@@ -155,6 +155,18 @@ impl<
         self.pending = None;
         self.phase = Phase::Ready;
         Ok(())
+    }
+    pub(crate) fn position(&self) -> usize {
+        self.start
+    }
+    pub(crate) fn committed_repeats(&self) -> [u32; 3] {
+        self.owners[self.previous]
+    }
+    pub(crate) fn pending_result(&self) -> Result<PathResult> {
+        if self.phase != Phase::Pending {
+            return Err(Error::InvalidState);
+        }
+        self.pending.ok_or(Error::CorruptData)
     }
     pub(crate) fn is_finished(&self) -> bool {
         self.phase == Phase::Finished
