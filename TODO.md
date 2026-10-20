@@ -105,7 +105,8 @@ qualified before complete-frame and public admission. Retained Ultra/Ultra2 rema
 - [x] Freeze additive public source/request hypotheses while preserving every prior tuple and upstream admission inventory.
 - [x] Qualify additive public admission and bidirectional interoperability while preserving every predecessor request/response identity.
 - [ ] Complete full regression, true no_std, formatting, Clippy, usage, allocator and upstream migration-inventory checks.
-- [ ] Freeze complete frames and owner ledgers; measure every backend and an independent repeat after CPU barriers.
+- [x] Freeze 26 independently decoded complete frames and qualify equal safe/all owner ledgers without timing.
+- [ ] Qualify the complete-frame benchmark on every backend, audit its controller and negative controls, then measure every backend and an independent repeat after CPU barriers.
 - [ ] Reconcile the bounded milestone and decompose the next scope without claiming complete upstream parity.
 
 ## Roadmap
