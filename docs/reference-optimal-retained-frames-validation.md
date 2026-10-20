@@ -281,6 +281,36 @@ commands rather than relabeling those failures.
 
 Main copies the candidate's tested dispatch and public tests; its only additional
 Rust edits are API documentation and a diagnostic-only dead-code reason. Focused
-main tests, both Clippy modes, formatting and true no_std pass. Complete main
-safe/all regression is a separate running checkpoint. The final all-feature full
-suite matrix, complete-frame measurements and Module20 closure remain open.
+main tests, both Clippy modes, formatting and true no_std pass. The complete main
+safe/all checkpoint is recorded below. The remaining isolated-feature/release
+full suites, complete-frame measurements and Module20 closure remain open.
+
+## Final public safe/all regression checkpoint
+
+The unchanged final main source passes both complete Cargo suites: 1465 tests
+pass and 55 remain explicitly ignored in each configuration. All named passing
+and ignored outcomes agree; each log contains 70 result groups, including empty
+and documentation groups. Original ordered commands, complete logs, source
+snapshots and Cargo configuration identities are retained.
+
+All 21 true no_std configurations pass on this public production source: safe,
+nineteen isolated unsafe features, and all unsafe features together. Strict
+all-target Clippy passes in safe/all configurations, as does formatting.
+Allocator support passes 13 tests, strict Clippy and formatting. Standalone
+usage documents pass 27 checks in each mode, including the new 32 KiB example
+and existing positive and compile-fail ownership contracts. Their separate
+source scopes and original receipts are reconciled against unchanged shared
+inputs rather than presented as one contemporaneous capture.
+
+Fresh structural and pinned upstream inventory audits pass. They cover 418
+test-related sources, 221 explicit non-test exclusions and 615 named case
+groups; pinned checkout hashes and case anchors are verified. These checks
+do not close the 188 unfinished upstream units or the 55 ignored tests.
+
+Evidence: `evidence/2026-10-20-optimal-retained-public-main.tar.gz`, SHA-256
+`69fc483c0791d59c7a7b40221d2376efa28957fac0577ef513dd86160d67df63`.
+All 844 regular files reconstruct exactly, totaling 71135483 logical bytes.
+The archive includes 35 successful top-level commands, original receipts and
+the explicit inherited-fixture Git-blob map. Remaining public matrix work is
+the nineteen isolated-feature full suites and release/all full suite. The
+earlier integrated 54-contract matrix is distinct from those full suites.

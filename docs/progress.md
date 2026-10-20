@@ -990,3 +990,42 @@ to 32 KiB. This design changes no current production admission.
 Details: `reference-ultra2-public-qualification.md`,
 `reference-ultra2-frame-benchmark.md`, `evidence/2026-10-20-ultra2-closure.json`,
 and the Module 20 design in `data-structures.md`.
+
+## Module 20: retained Optimal public checkpoint (2026-10-20)
+
+Bounded public strategy 7 now supports known-size no-dictionary sources through
+32768 bytes fitting the resolved window. Earlier 64..16384 fresh requests retain
+their dispatch and frame bytes. Larger sources use three or four balanced blocks,
+retaining parser frequencies/search history while publishing repeat and entropy
+state only for compressed blocks. Checked plans reject unsupported geometry
+before owner cloning, reserve a complete frame bound and retain nine parser
+owner identities. Raw/RLE fallback, failed publication, poisoning and reset are
+qualified independently. Retained Ultra/Ultra2 and window expiry remain outside
+this extension.
+
+The larger-domain independent model, native observations and immutable Rust
+fixtures precede implementation. Token and integrated frame contracts pass all
+22 storage products and 21 true no_std configurations. Selected foreign Miri and
+thumbv6m concrete code-generation checks pass. Actual Rust wire histories are
+independently replayed without assuming identical C/Rust entropy choices.
+
+The public native campaign preserves 2866 predecessor response byte strings.
+Its 80 additive requests include 61 retained Optimal successes, eight existing
+BinaryTreeLazy2 default controls and eleven resource rejections. Native and Rust
+decoders reproduce all 552 decoded sources across both directions; all 156
+malformed transport checks reject. Independent offline audits and forgery
+controls pass in ordinary and optimized Python. Failed attempts remain explicit.
+
+Final public safe/all complete suites each pass 1465 tests and ignore 55, with
+identical named outcomes. All 21 true no_std products, strict Clippy, formatting,
+13 allocator tests and 54 standalone usage checks pass. Pinned upstream source
+and inventory audits pass without claiming completion of the remaining migration.
+The other twenty full-suite configuration products still require qualification.
+
+Twenty-six independently decoded complete frames and matching safe/all allocation
+ledgers are frozen in a separately qualified, clock-free benchmark snapshot.
+No retained Optimal timing result is claimed. Every-backend benchmark preflight,
+controller controls, measurements, the full public matrix and final Module 20
+reconciliation remain open. See `reference-optimal-retained-frames-validation.md`
+and `reference-retained-optimal-frame-benchmark.md` for archive identities and
+precise evidence boundaries.
