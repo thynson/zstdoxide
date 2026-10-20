@@ -92,8 +92,10 @@ regular files and 2,587,742,073 logical bytes; complete reconstruction and a
 second unchanged-original verification pass. See
 [public interoperability](reference-ultra2-public-interop.md) for its source
 closure and archive identity. The separately frozen 26-case native frame baseline
-is in `tests/fixtures/reference-ultra2-frame-baseline`; owner surveys and timing
-remain pending.
+is in `tests/fixtures/reference-ultra2-frame-baseline`. The complete clock-free
+survey now passes all 26 cases across 21 backends, with identical complete frames
+and allocation ledgers; see [frame qualification](reference-ultra2-frame-benchmark.md).
+Timing remains pending.
 
 ## Full regression in progress
 
@@ -121,7 +123,8 @@ true no_std for safe/all. All 1373 recorded source/input identities, including
 every fixture format and the new benchmark example, remain unchanged throughout
 this qualification. The new example had already passed an isolated safe/all
 26-case native-frame/owner survey without clocks. The complete 21-backend survey
-is a separate gate. No full-regression or timing completion is inferred here.
+has subsequently passed its separate gate. No full-regression or timing
+completion is inferred here.
 
 Evidence: `evidence/2026-10-20-ultra2-public-admission.tar.gz` and its adjacent
 archive report (SHA-256
