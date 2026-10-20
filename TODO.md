@@ -94,7 +94,7 @@ independently before changing production. Retained Ultra/Ultra2 remain separate.
 - [x] Freeze source-only recipes for 16385/24576/24577/32768 boundaries, cross-block history, short keys, horizon paths and raw/RLE/compressed publication.
 - [x] Specify and preflight bounded observer adaptation, sanitizer/dependency closure, exact commands and complete source inventory before native execution.
 - [x] Capture and independently audit larger retained states and complete frames, with coherent forgery controls and unchanged predecessor observations.
-- [ ] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before widening parser/search admission.
+- [x] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before widening parser/search admission.
 - [ ] Qualify the private 32 KiB retained parser/search envelope against every new captured state, exact owner failures and future-source isolation.
 - [ ] Implement a checked copied schedule and source-aware retained frame plan, preserving old fresh dispatch and all early allocator rejection boundaries.
 - [ ] Implement block-range token collection and allocation-free retained transitions with exact nine-owner identities.

@@ -44,3 +44,30 @@ paths record actual execution locations; no relocated rerun is claimed.
 The fixture projection, independent Rust reader, production retained extension,
 feature/platform checks and eventual public complete-frame path remain separate
 work. Native observation time is not a benchmark or a claim of upstream parity.
+
+## Immutable fixture and independent Rust reader
+
+The `ZORFS03` pack is 9843850 bytes (SHA-256
+`b6380ecf5002679d35230f77d8a3b2bf7ff07396441e9292fa3bf525d9e15c0c`).
+It preserves every byte of the seven predecessor case records and adds twelve
+cases, for 67321 projected events, 33122 queries and 84 sequences. Ordinary and
+optimized Python independently reproduce the same pack and provenance. The
+initial producer mistakenly selected the old capture report; its inventory
+check rejected before fixture creation. Its exact source and failure output
+are preserved; the additive `_v2` producer changes only the selected report path.
+
+The independent borrowed Rust reader passes five tests in safe and all-feature
+builds. Every complete native frame decodes correctly and every strict prefix
+fails. Malformed counts, source visibility, sparse horizon cells, owner changes,
+late-block publication and trailing bytes are rejected. Explicit nonuniform
+16385/24577 schedules and the compressed/raw/RLE/compressed case are preserved.
+Both focused strict Clippy checks, workspace formatting and true no_std pass.
+These checks do not yet widen production retained parsing.
+
+Evidence: `evidence/2026-10-20-optimal-retained-frames-fixture.tar.gz`, SHA-256
+`03d48518aeb9379ff8d6467842a9a53f851c7c72c66682c784916b756a6210af`.
+All 321 regular bundle files (23946186 logical bytes) reconstruct exactly and
+pass a second original-file hash check. Compiled/formatted Rust inputs, source
+projection dependencies, both Python outputs, the failed original producer,
+new fixture and six Rust check logs are retained. The already committed native
+archives retain their separate complete hashes and original execution paths.
