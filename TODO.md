@@ -86,7 +86,7 @@ source-size selector, complete frame and allocator baseline.
 - [x] Specify bounded pass-tagged transport and complete frequency/search/path/reset observations before native instrumentation.
 - [x] Review and preflight read-only instrumentation, full sanitizer coverage and exact command/source inventories.
 - [x] Capture and independently audit both passes, malformed requests and coherent forged lifecycle states.
-- [ ] Specify and project an immutable two-pass fixture with independent reconstruction controls.
+- [x] Specify and project an immutable two-pass fixture with independent reconstruction controls.
 - [ ] Qualify the independent borrowed Rust fixture reader and all reset/publication boundaries.
 - [ ] Design a private checked Ultra2 plan and copied phase/coordinate records before changing parser/search state.
 - [ ] Implement checked index rebasing and stale-history exclusion while retaining exact search owners.
