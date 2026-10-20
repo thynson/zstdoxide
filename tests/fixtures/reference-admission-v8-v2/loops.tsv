@@ -1,0 +1,44 @@
+family	source_size	level	v4	v5	v6	v7	v8	preset_tier	preset_row	preset_strategy	v6_independent_tuple	v6_additive_c_required	v7_independent_tuple	v7_additive_c_required	v8_independent_tuple	v8_additive_c_required
+empty	0	-1	success	success	success	success	success	3	0	1		0		0		0
+empty	0	0	success	success	success	success	success	3	3	2		0		0		0
+empty	0	1	success	success	success	success	success	3	1	1		0		0		0
+empty	0	2	success	success	success	success	success	3	2	1		0		0		0
+empty	0	3	success	success	success	success	success	3	3	2		0		0		0
+empty	0	4	success	success	success	success	success	3	4	3		0		0		0
+empty	0	5	success	success	success	success	success	3	5	4		0		0		0
+empty	0	6	success	success	success	success	success	3	6	5		0		0		0
+empty	0	7	success	success	success	success	success	3	7	5		0		0		0
+empty	0	8	success	success	success	success	success	3	8	5		0		0		0
+empty	0	9	unsupported	success	success	success	success	3	9	6		0		0		0
+empty	0	10	unsupported	resource	resource	resource	resource	3	10	6		0		0		0
+empty	0	11	unsupported	unsupported	resource	resource	resource	3	11	7	10,7,7,3,4,12,7	0		0		0
+empty	0	12	unsupported	unsupported	resource	resource	resource	3	12	7	10,7,7,4,3,24,7	0		0		0
+empty	0	13	unsupported	unsupported	unsupported	resource	resource	3	13	8		0	10,7,7,5,3,32,8	0		0
+empty	0	14	unsupported	unsupported	unsupported	resource	resource	3	14	8		0	10,7,7,6,3,64,8	0		0
+empty	0	15	unsupported	unsupported	unsupported	resource	resource	3	15	8		0	10,7,7,7,3,256,8	0		0
+empty	0	16	unsupported	unsupported	unsupported	unsupported	resource	3	16	9		0		0	10,7,7,5,3,48,9	0
+empty	0	17	unsupported	unsupported	unsupported	unsupported	resource	3	17	9		0		0	10,7,7,6,3,128,9	0
+empty	0	18	unsupported	unsupported	unsupported	unsupported	resource	3	18	9		0		0	10,7,7,7,3,256,9	0
+empty	0	19	unsupported	unsupported	unsupported	unsupported	resource	3	19	9		0		0	10,7,7,8,3,256,9	0
+empty	0	20	unsupported	unsupported	unsupported	unsupported	resource	3	20	9		0		0	10,7,7,8,3,512,9	0
+empty	0	21	unsupported	unsupported	unsupported	unsupported	resource	3	21	9		0		0	10,7,7,9,3,512,9	0
+empty	0	22	unsupported	unsupported	unsupported	unsupported	resource	3	22	9		0		0	10,7,7,10,3,999,9	0
+initial_match	30	1	success	success	success	success	success	3	1	1		0		0		0
+initial_match	30	2	success	success	success	success	success	3	2	1		0		0		0
+initial_match	30	3	success	success	success	success	success	3	3	2		0		0		0
+initial_match	30	4	success	success	success	success	success	3	4	3		0		0		0
+initial_match	30	5	success	success	success	success	success	3	5	4		0		0		0
+initial_match	30	6	success	success	success	success	success	3	6	5		0		0		0
+initial_match	30	7	success	success	success	success	success	3	7	5		0		0		0
+initial_match	30	8	success	success	success	success	success	3	8	5		0		0		0
+initial_match	30	9	unsupported	success	success	success	success	3	9	6		0		0		0
+initial_match	30	10	unsupported	resource	resource	resource	resource	3	10	6		0		0		0
+initial_match	30	11	unsupported	unsupported	resource	resource	resource	3	11	7	10,7,7,3,4,12,7	0		0		0
+initial_match	30	12	unsupported	unsupported	resource	resource	resource	3	12	7	10,7,7,4,3,24,7	0		0		0
+initial_match	30	13	unsupported	unsupported	unsupported	resource	resource	3	13	8		0	10,7,7,5,3,32,8	0		0
+initial_match	30	14	unsupported	unsupported	unsupported	resource	resource	3	14	8		0	10,7,7,6,3,64,8	0		0
+initial_match	30	15	unsupported	unsupported	unsupported	resource	resource	3	15	8		0	10,7,7,7,3,256,8	0		0
+initial_match	30	16	unsupported	unsupported	unsupported	unsupported	resource	3	16	9		0		0	10,7,7,5,3,48,9	0
+initial_match	30	17	unsupported	unsupported	unsupported	unsupported	resource	3	17	9		0		0	10,7,7,6,3,128,9	0
+initial_match	30	18	unsupported	unsupported	unsupported	unsupported	resource	3	18	9		0		0	10,7,7,7,3,256,9	0
+initial_match	30	19	unsupported	unsupported	unsupported	unsupported	resource	3	19	9		0		0	10,7,7,8,3,256,9	0

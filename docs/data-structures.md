@@ -2851,3 +2851,35 @@ logical lengths at reset, and restarts original repeats for encoding. No tail
 statistics or entropy publication occurs between passes. Accessors expose no
 seed or partial-failure output; failures after work starts poison the coordinator,
 and a whole reset is required for reuse. Parameter rejection remains transactional.
+
+### Source-aware public Ultra2 plan and frame boundary
+
+The additive admission-v8 projection will retain all predecessor TSV columns,
+request bytes, source selectors and independent tuples. Only resolved strategy 9
+changes classification: a complete fresh source of 64..16384 bytes must fit its
+window and the qualified W10..16, H/C6..12, S1..6, minimum3..7, target0..4095
+geometry. Every historical strategy-9 tuple is independently resolved from the
+pinned preset table and original request before classification. Source-only
+public recipes retain all 1345 predecessor pairs and add observed seeded sources,
+short-key ring residues, changed final paths, default levels 16/17, explicit
+aliases and resource boundaries. These hypotheses do not enable execution.
+
+A separate copied `Ultra2FramePlan` will wrap the private execution plan plus
+checked `ReferenceFrameSettings` and the raw frame bound. It always requests
+seeding and automatic literal prices; the private 7/8/9 controls and opaque
+prefix/skip hypothesis cannot escape through that public constructor. Admission
+must finish before cloning the allocator factory or reserving any frame owner.
+The public static-dispatch variant will construct the same nine child owners in
+frequency/path/parser-candidate/tree-head/tree-edge/short-head/search-candidate/
+literal/sequence order. The existing frame workspace remains the sole entropy
+and committed repeat owner and receives only the completed second-pass tokens.
+No first-pass tail statistics or entropy tables are published. The new variant
+adds no boxed owner, allocator erasure or unsafe dispatch representation.
+
+Both native C builds must decode every successful safe/all Rust complete frame;
+both Rust builds must decode normal/sanitized C frames. Rust safe/all bytes and
+normal/sanitized C bytes are compared within their own implementation pairs.
+Every previously admitted request must retain its predecessor complete Rust
+response, source and resolved tuple. A successor fixture may reclassify an old
+strategy-9 rejection; it may not rewrite the predecessor evidence. Public
+admission follows private lifecycle, feature, foreign Miri and no-atomics gates.
