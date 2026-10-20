@@ -46,6 +46,34 @@ integer coordinate translation rather than pointer rebasing.
 
 The source-only corpus is preselected: all 22 preceding Ultra sources in both
 seeded and skipped forms, three threshold controls and six tree-ring residues
-(53 requests). Complete normal/optimized recipe reconciliation and freezing are
-tracked separately in TODO.md. Native instrumentation, its reviewed protocol and
-all later Rust/public admission gates remain separate work items.
+(53 requests). All 53 requests have now passed complete normal/optimized model reconciliation:
+394656 logical events, including full first-pass equality against the preceding
+native ordinary transcripts for all 44 predecessor variants. The two changed
+final paths are `u2_seed_alternative_seed_0` and `u2_seed_alternative_seed_2`.
+Six ring cases exercise 28 queries at stale physical tree slots and 378 queries
+with stale short-key cells. Those cells are retained physically and excluded
+from readable history by checked coordinates.
+
+The optimized qualification and normal complete-wire campaign retain source
+snapshots and before/after hashes. The separate sequential normal survey agrees
+on every complete model-row hash; it was not itself started with a contemporaneous
+source snapshot, so the source-bound campaigns supply that provenance. Each
+model worker prohibits child execution. Python worker concurrency is not native
+codec execution or a timing comparison.
+
+The sealed manifest is `tests/fixtures/reference-ultra2-recipes/recipes.json`,
+SHA-256 `05025827219df1b3c4c1c4d752bea23f3a05e54814e0143a661ab17edc51e16a`.
+Every canonical wire record is independently computed before C execution. The
+complete predictions total 1163199991 bytes per native build; the largest single
+transcript is 216085829 bytes, below the fixed 256 MiB cap. All per-line and
+campaign bounds pass. Literal manifest hashing binds these full-state predictions
+in the native capture specification, so later coherent output changes cannot be
+accepted by simply updating capture metadata.
+
+The source-only qualification archive is
+`evidence/2026-10-20-ultra2-recipes.tar.gz`, SHA-256
+`24e3b3cd44f5af20279345c70dbe6330f4f8610acabac3c488e9709a57542834`.
+Its 286 retained files include all workers, normal/optimized results, drivers and
+the frozen manifest; independent archive reconstruction checks every file.
+Native observation, its protocol controls and all Rust/public admission gates
+remain separate work items.
