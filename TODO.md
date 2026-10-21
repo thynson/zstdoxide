@@ -110,7 +110,7 @@ qualified before complete-frame and public admission. Retained Ultra/Ultra2 rema
 - [x] Freeze 26 independently decoded complete frames and qualify equal safe/all owner ledgers without timing.
 - [x] Promote the exact frozen complete-frame example/pack to main and verify formatting, safe/all Clippy and ordinary/optimized independent baseline checks.
 - [x] Qualify every benchmark backend without clocks; audit controller and coherent forgery controls.
-- [ ] Measure every backend and an independent safe/all repeat after completed CPU barriers; retain all executables, samples and source identities.
+- [x] Measure every backend and an independent safe/all repeat after completed CPU barriers; retain all executables, samples and source identities.
 - [ ] Reconcile the bounded milestone and decompose the next scope without claiming complete upstream parity.
 
 ## Module 21: bounded retained Ultra complete frames
