@@ -61,11 +61,42 @@ source reconciliation are retained in
 inherited fixtures are omitted only after exact Git-blob comparison, with an
 explicit revision/blob/size/SHA-256 reconstruction map.
 
+## Final complete public regression matrix (2026-10-21)
+
+All 22 full products pass with identical named outcomes: 1465 passed and 55
+ignored per product across 69 named groups and 70 Cargo result sections.
+The doctest group has separate ordinary and compile-fail result sections. The nineteen isolated unsafe-feature products and
+release/all product are newly executed here. Main safe/all full regressions are
+inherited only after exact source and log reconciliation. All 32230 passed
+executions and 1210 ignored executions are repeated products of the same named
+suite, not distinct test cases. The ignored upstream obligations remain open.
+
+Nineteen isolated true no_std builds also pass again. Together with the exactly
+bound main safe/all no_std builds, the reconciliation covers all 21 unique no_std
+configurations. The 43 combined gates comprise 22 full products and 21 no_std
+products. Every named test identity/outcome, all 86 production Rust files and the
+complete shared snapshot inventory agree. The additive benchmark example has
+separate formatting, Clippy and all-backend gates; it was not present in the
+original full-suite snapshot.
+
+The first reconciliation incorrectly expected 70 named groups and failed; its
+source and traceback are retained unchanged. The additive successor verifies
+69 named groups and 70 result sections in every product, without rerunning tests.
+
+Original logs, source snapshots, exact named outcome reconciliation and executable
+hash inventories are retained in
+`evidence/2026-10-21-optimal-retained-public-matrix.{json,tar.gz}`. Test build caches
+were released only after successful checks and inventory capture; their binaries
+are not claimed as retained artifacts. Unchanged fixture bodies use explicit
+Git-blob reconstruction records after byte-for-byte comparison.
+
+The earlier formatting, strict Clippy, allocator, standalone usage and upstream
+inventory checks remain source-bound in
+`evidence/2026-10-20-optimal-retained-public-main.{json,tar.gz}`. No production
+Rust changed during this session's final matrix and platform qualification.
+
 ## Remaining milestone gates
 
-The earlier full safe/all main regressions, all 21 true no_std products,
-formatting, strict Clippy, allocator, standalone usage and upstream inventory
-checks remain in `evidence/2026-10-20-optimal-retained-public-main.{json,tar.gz}`.
-The 19 isolated-feature and release/all full regression products are still being
-qualified. Final matrix reconciliation, complete-frame timing and independent
-repeat, and the Module 20 closure receipt remain open.
+All-backend complete-frame timing, an independent safe/all repeat and the final
+Module 20 closure receipt remain open. Clock-free qualification does not imply
+performance measurements.

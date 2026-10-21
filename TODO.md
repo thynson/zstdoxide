@@ -106,7 +106,7 @@ qualified before complete-frame and public admission. Retained Ultra/Ultra2 rema
 - [x] Qualify additive public admission and bidirectional interoperability while preserving every predecessor request/response identity.
 - [x] Complete full safe/all regression, all 21 true no_std builds, formatting, Clippy, usage, allocator and upstream migration-inventory checks.
 - [x] Bind the final public entry point directly to foreign Miri and concrete no-atomics code generation, retaining exact native-to-final source reconciliation.
-- [ ] Complete the remaining 19 isolated-feature and release/all full regression products and reconcile the final public matrix.
+- [x] Complete the remaining 19 isolated-feature and release/all full regression products and reconcile the final public matrix.
 - [x] Freeze 26 independently decoded complete frames and qualify equal safe/all owner ledgers without timing.
 - [x] Promote the exact frozen complete-frame example/pack to main and verify formatting, safe/all Clippy and ordinary/optimized independent baseline checks.
 - [x] Qualify every benchmark backend without clocks; audit controller and coherent forgery controls.
