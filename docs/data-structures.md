@@ -3231,3 +3231,34 @@ scope, policy, unused status and zero consumed prefix. This explicit staged
 boundary avoids enabling unqualified retained execution merely by constructing
 policy-2 owners. Checked planning and scoped retained execution are independently
 verifiable subsequent work items.
+
+### Retained Ultra checked plan before scoped execution
+
+The existing `RetainedOptimalPlan` names the Optimal parser family, like
+`OptimalParser`; it now carries an explicit copied `PricePolicy` alongside the
+resolved strategy. Its old `new`/`for_frame` constructors remain strategy-7-only.
+Additive `new_ultra`/`for_ultra_frame` constructors require strategy 8 and bind
+policy 2 before sharing schedule, geometry, nine-owner and raw-frame checks.
+A private common constructor accepts only the internally supplied policy/strategy
+pair. All fields remain private, copied and allocation-free. The old constructors'
+validation order and error values are preserved. No new unsafe representation is
+needed for this plain plan. Parser and coordinator admission remain separate;
+a plan alone cannot choose a provider or change public request resolution.
+
+Every captured policy-2 schedule must reproduce exact owner sizes from its
+geometry. The seven parser/search owners match the existing policy-0 geometry;
+token owners depend only on the largest block. All prospective public lengths
+must use the same balanced schedule and complete raw-output reservation as
+retained Optimal. Reject other strategies, insufficient windows, resource
+limits, malformed/truncated schedules and sum mismatches before any allocation.
+Copied schedules must survive caller mutation. Later coordinator binding checks
+policy, source identity, search layout, minimum, target and literal mode before
+accepting these bounds. Upstream counterparts remain `ZSTD_compressBlock_opt_generic`
+policy 2 and `ZSTD_buildSeqStore`; no upstream code or pointer layout is embedded.
+
+The old frame-plan variant additionally checks its retained policy before raw
+output reservation and before cloning the search factory. Wrapping an additive
+Ultra plan in the ordinary variant is therefore an early unsupported-feature
+error, including when the allocator is configured to fail its next operation.
+This check closes the internal dispatch boundary while the dedicated Ultra
+frame variant remains unimplemented.

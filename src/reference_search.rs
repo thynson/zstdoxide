@@ -134,7 +134,16 @@ impl ReferenceSearchPlan {
                 .ok_or(Error::InvalidParameter)
         }
     }
+    pub(crate) fn validate_retained_policy(self) -> Result<()> {
+        if let Self::RetainedOptimal(plan) = self
+            && plan.policy() != crate::optimal_price::PricePolicy::Optimal
+        {
+            return Err(Error::UnsupportedFeature);
+        }
+        Ok(())
+    }
     pub(crate) fn frame_bound(self) -> Result<usize> {
+        self.validate_retained_policy()?;
         if let Self::RetainedOptimal(plan) = self {
             Ok(plan.frame_bound())
         } else {
@@ -173,6 +182,7 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
         if source.len() != plan.source_len() {
             return Err(Error::InvalidParameter);
         }
+        plan.validate_retained_policy()?;
         let ultra = matches!(plan, ReferenceSearchPlan::Ultra(_));
         if matches!(
             plan,
@@ -467,6 +477,46 @@ mod tests {
                 .unwrap(),
             ),
         ]
+    }
+
+    #[test]
+    fn retained_ultra_plan_cannot_allocate_through_ordinary_dispatch() {
+        let input = [b'x'; 128];
+        let plan = ReferenceSearchPlan::RetainedOptimal(
+            RetainedOptimalPlan::new_ultra(
+                RawCompressionParameters {
+                    window_log: 10,
+                    hash_log: 6,
+                    chain_log: 6,
+                    search_log: 1,
+                    min_match: 3,
+                    target_length: 0,
+                    strategy: 8,
+                }
+                .validate()
+                .unwrap(),
+                input.len(),
+                &[64, 64],
+                false,
+            )
+            .unwrap(),
+        );
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        assert!(monitor.fail_next());
+        let before = monitor.snapshot();
+        assert_eq!(plan.frame_bound(), Err(Error::UnsupportedFeature));
+        assert!(matches!(
+            ReferenceSearchState::new(&input, plan, &owner),
+            Err(Error::UnsupportedFeature)
+        ));
+        assert!(matches!(
+            crate::reference_frame_encode::compress_reference_in(&input, plan, &owner),
+            Err(Error::UnsupportedFeature)
+        ));
+        assert_eq!(monitor.snapshot(), before);
+        drop(owner);
+        monitor.assert_released();
     }
 
     #[test]

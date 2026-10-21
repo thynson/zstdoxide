@@ -6,6 +6,7 @@
 use crate::optimal_frequencies::CELLS;
 use crate::optimal_matches::MATCH_CAPACITY;
 use crate::optimal_path_layout::{PATH_CAPACITY, PathCell};
+use crate::optimal_price::PricePolicy;
 use crate::optimal_search_layout::{OptimalMatch, OptimalSearchLayout};
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
 use crate::sequence_context::SequenceWithOffset;
@@ -17,6 +18,7 @@ use core::alloc::Layout;
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) struct RetainedOptimalPlan {
     parameters: ResolvedCompressionParameters,
+    policy: PricePolicy,
     layout: OptimalSearchLayout,
     settings: ReferenceFrameSettings,
     blocks: [usize; 4],
@@ -36,7 +38,43 @@ impl RetainedOptimalPlan {
         blocks: &[usize],
         disabled_literals: bool,
     ) -> Result<Self> {
-        if parameters.strategy() != ReferenceStrategy::Optimal {
+        Self::with_policy(
+            parameters,
+            source_len,
+            blocks,
+            disabled_literals,
+            PricePolicy::Optimal,
+        )
+    }
+
+    /// Explicit retained Ultra admission, separate from the ordinary constructor.
+    pub(crate) fn new_ultra(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+        blocks: &[usize],
+        disabled_literals: bool,
+    ) -> Result<Self> {
+        Self::with_policy(
+            parameters,
+            source_len,
+            blocks,
+            disabled_literals,
+            PricePolicy::Ultra,
+        )
+    }
+
+    fn with_policy(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+        blocks: &[usize],
+        disabled_literals: bool,
+        policy: PricePolicy,
+    ) -> Result<Self> {
+        let strategy = match policy {
+            PricePolicy::Optimal => ReferenceStrategy::Optimal,
+            PricePolicy::Ultra => ReferenceStrategy::Ultra,
+        };
+        if parameters.strategy() != strategy {
             return Err(Error::UnsupportedFeature);
         }
         if !(128..=32768).contains(&source_len)
@@ -111,6 +149,7 @@ impl RetainedOptimalPlan {
         schedule[..blocks.len()].copy_from_slice(blocks);
         Ok(Self {
             parameters,
+            policy,
             layout,
             settings,
             blocks: schedule,
@@ -128,6 +167,22 @@ impl RetainedOptimalPlan {
         parameters: ResolvedCompressionParameters,
         source_len: usize,
     ) -> Result<Self> {
+        Self::frame_with_policy(parameters, source_len, PricePolicy::Optimal)
+    }
+
+    /// Checked prospective Ultra frame bounds; public resolution is separate.
+    pub(crate) fn for_ultra_frame(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+    ) -> Result<Self> {
+        Self::frame_with_policy(parameters, source_len, PricePolicy::Ultra)
+    }
+
+    fn frame_with_policy(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+        policy: PricePolicy,
+    ) -> Result<Self> {
         if !(16385..=32768).contains(&source_len) {
             return Err(Error::ResourceLimit);
         }
@@ -138,7 +193,11 @@ impl RetainedOptimalPlan {
         for (index, length) in blocks[..count].iter_mut().enumerate() {
             *length = quotient + usize::from(index < remainder);
         }
-        Self::new(parameters, source_len, &blocks[..count], false)
+        Self::with_policy(parameters, source_len, &blocks[..count], false, policy)
+    }
+
+    pub(crate) const fn policy(self) -> PricePolicy {
+        self.policy
     }
 
     pub(crate) const fn parameters(self) -> ResolvedCompressionParameters {
@@ -332,3 +391,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_plan.rs"]
+mod ultra_tests;

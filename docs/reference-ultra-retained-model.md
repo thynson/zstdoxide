@@ -192,3 +192,37 @@ binding and are not relabeled as current-source runs. Original base qualificatio
 all expanded/foreign receipts, source, logs and Git fixture reconstruction records
 are preserved in `evidence/2026-10-21-ultra-retained-scope.{json,tar.gz}`.
 Archive SHA-256: `3b5f24c7cedd932d860996767fb48f5ca446cd69606b0fff31115b233ec1fca8`.
+
+## Checked retained Ultra plan and closed ordinary dispatch (2026-10-21)
+
+The copied retained plan now binds policy 0 to strategy 7 and policy 2 to strategy
+8 through separate constructors. The existing `new` and `for_frame` entries keep
+their original admission and error order. New private Ultra constructors validate
+128..32768-byte observed schedules or balanced prospective 16385..32768-byte frame
+schedules, complete window/search geometry, all nine owner byte counts and the
+complete raw-frame reservation before allocation. Schedule entries are copied;
+caller changes cannot alter an admitted plan. The plan remains a plain shared
+safe value, with no artificial unsafe representation.
+
+The ordinary token-state constructor rejects an Ultra plan. The ordinary search
+plan variant also rejects it before output allocation or allocator cloning, so
+manually composing that internal mismatch cannot reach the old implementation.
+Public request resolution and all parser entries remain unchanged at this gate.
+A dedicated scoped retained parser/coordinator is the next work item.
+
+Qualification preserves two exact source stages. Six plan tests pass in all 22
+storage products, including all 16384 prospective public lengths and all 21
+policy-2 native fixture schedules. A successor changes only `reference_search.rs`
+to close the ordinary dispatch boundary; its exact allocator-noninteraction test
+also passes in all 22 products. Each stage passes all 21 true no_std builds,
+focused safe/all retained and public regressions, formatting and strict safe/all
+all-target Clippy. These are focused checks, not a new full regression campaign.
+The two 50-command receipts retain their own source identities; neither replaces
+historical Module 20 measurements or native captures.
+
+Sources, commands, logs, the separate initial receipt and verified inherited
+fixture reconstruction records are preserved in
+`evidence/2026-10-21-ultra-retained-plan.{json,tar.gz}`. No retained Ultra token,
+frame or public admission is claimed by this plan-only checkpoint.
+
+Archive SHA-256: `bb0216421fe9d649514501500e6ba8c72fc891e9878ebb5fc052df6740a7492f`.

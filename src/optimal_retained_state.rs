@@ -34,6 +34,9 @@ impl<'a, A: Allocator> RetainedOptimalState<'a, A> {
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
     ) -> Result<Self> {
+        if plan.policy() != crate::optimal_price::PricePolicy::Optimal {
+            return Err(Error::UnsupportedFeature);
+        }
         let (original, minimum, target, disabled) = parser.retained_configuration()?;
         if !core::ptr::eq(original, source)
             || source.len() != plan.source_len()
@@ -520,6 +523,32 @@ mod tests {
             )
             .unwrap();
         assert_eq!(literals, source[64..]);
+    }
+
+    #[test]
+    fn ordinary_token_constructor_rejects_an_ultra_plan() {
+        let source = [b'a'; 16385];
+        let ordinary = plan(source.len());
+        let (parser, search, literals, sequences) = pieces(&source, ordinary, [Global; 9]).unwrap();
+        let ultra = RetainedOptimalPlan::for_ultra_frame(
+            RawCompressionParameters {
+                window_log: 15,
+                hash_log: 6,
+                chain_log: 6,
+                search_log: 1,
+                min_match: 3,
+                target_length: 0,
+                strategy: 8,
+            }
+            .validate()
+            .unwrap(),
+            source.len(),
+        )
+        .unwrap();
+        assert!(matches!(
+            RetainedOptimalState::from_parts(&source, ultra, parser, search, literals, sequences,),
+            Err(Error::UnsupportedFeature)
+        ));
     }
 
     #[test]

@@ -246,3 +246,7 @@ mod ultra2_frame_plan;
 mod optimal_retained_plan;
 
 mod optimal_retained_state;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_fixture.rs"]
+mod ultra_retained_fixture;
