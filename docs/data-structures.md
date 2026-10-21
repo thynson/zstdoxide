@@ -3050,3 +3050,118 @@ all-backend clock-free receipts, bound to the current production source. Private
 platform-to-public admission changes must be recorded explicitly in the receipt;
 interpreted foreign checks do not constitute native foreign execution. An
 independent safe/all repeat uses fresh executables and the same frozen inputs.
+
+## Bounded retained Ultra complete frames (Module 21 design)
+
+This design follows the bounded retained Optimal milestone. It proposes an
+additive retained strategy-8 path for known 16385..32768-byte sources fitting the
+resolved window. Existing fresh Ultra requests through 16384 bytes retain their
+current resolution, constructor, allocation contract and exact frame bytes.
+Window logs 10..16, hash/chain logs 6..12, search logs 1..6, minimum-match settings
+3..7 and target lengths 0..4095 remain the intended resource envelope. The
+proposed private observation domain is 128..32768 bytes with two to four blocks
+of 64..8192 bytes; its broader schedule controls do not become public options.
+The public schedule remains the balanced Module 20 schedule, with complete raw
+output capacity checked before allocator cloning. Automatic literal prices are
+the only proposed public policy; literal-disabled cases remain private controls.
+Retained Ultra2, dictionaries/prefixes, window expiry, numeric streaming,
+long-distance matching and workers remain separate scopes.
+
+### Policy-bound ownership and lifecycle
+
+Pinned `ZSTD_compressBlock_btopt` and `ZSTD_compressBlock_btultra` select
+`ZSTD_compressBlock_opt_generic` policies 0 and 2 respectively. Retained Ultra
+uses policy 2 for every scheduled block, including the first. It does not run the
+separate Ultra2 first-block statistics bootstrap. Frequency scaling and search
+frontier initialization occur at each block boundary while frequency and search
+storage survive publication. Existing whole-bit policy-0 behavior is unchanged.
+
+A checked copied plan binds strategy, price policy, source extent, schedule,
+search geometry, exact raw frame bound and nine owner byte counts. A dedicated
+retained-Ultra constructor/scope must distinguish this admission from scripted
+Ultra, ordinary fresh Ultra and Ultra2. Removing `require_ordinary_policy` without
+replacing that admission boundary would accidentally permit the old constructors
+to enter a previously unsupported lifecycle. The existing Optimal constructor
+must continue to require policy 0; fresh and scripted contracts stay explicit.
+Any shared private lifecycle helper receives an already checked scope and cannot
+infer retention merely from a source length or policy tag.
+
+The coordinator owns the same seven independently allocated parser/search owners:
+frequency cells, path cells, parser match scratch, hash heads, binary-tree links,
+optional three-byte hash heads and search match scratch. Two token vectors own
+block literals and offset-intent sequences, giving nine owners before the
+separately accounted frame/entropy/output workspace. Copied schedule entries,
+price-policy tags, repeat records and phase values have one safe representation;
+they require no artificial unsafe alternative. Each performance-sensitive owner
+continues to select its equivalent safe/unsafe implementation through its own
+existing Cargo feature. No new unsafe access is justified by policy selection.
+
+The immutable source borrow spans the full planned input, but each search and
+collector view exposes only the consumed prefix through the checked active block
+end. Positions and tree links remain indices. Cross-block matches may reference
+prior bytes; they may not inspect future backing bytes. Path/search sparse
+observation baselines persist across blocks. Initial/current repeats, pending
+`PathResult`, schedule index and Ready/Pending/Finished/Poisoned phase remain
+copied coordinator state. Policy-2 alternative paths use the retained block's
+absolute source position while path indices remain local to the current stretch.
+
+The workspace remains the authority for committed wire repeats and entropy.
+Parsing retains learned prices/search for every wire kind. Compressed output
+commits pending repeats and entropy together; raw/RLE output discards candidate
+repeat publication while retaining parser history. Pending phase/repeat agreement
+is checked before appending a block. No fallible owner allocation occurs during
+block transitions. Failed parsing or publication poisons the usable state, and
+complete reset clears history and entropy availability while retaining storage.
+Boundary misuse, observer failure and allocator failures must preserve the
+existing early-rejection and no-partial-token exposure contracts.
+
+### Additive independent model and evidence
+
+A new immutable request wraps the exact existing `ZOPRS03` packet plus an exact
+integer policy 0 or 2 under a distinct protocol identity. It rejects booleans,
+unknown policies, mutable sources/schedules, truncated or trailing bytes and
+invalid nested geometry before replay. Earlier requests, packets and captures
+remain immutable. Policy 0 must reproduce every retained predecessor state and
+publication record after removing only declared additive policy/alternative tags
+and restoring the predecessor metadata identity; no observed value may be
+normalized away. Policy 2 requires new source-derived qualification.
+
+The successor composes the qualified retained-wide block initializer with the
+qualified Ultra path relaxation and policy-bound frequency model. It must not
+inherit the ordinary fresh initializer, which requires block zero at source
+position zero. Searches are independently derived from the active consumed
+prefix. Captured match candidates, path decisions and publication outcomes are
+observations, never provider inputs. Source-only publication hypotheses are
+explicit request inputs for model tests; they do not predict native or Rust
+entropy block choices. Native captures and actual Rust wire histories each need
+replay using their own observed block kinds.
+
+Freeze source recipes, expected admission changes, observer adaptation, guarded
+padding passes, dependency closure, sanitizer commands and bounded outputs before
+new native execution. Cover retained learned-price transitions, short-key history,
+policy-2 alternative selection/rejection, horizon/source-end exits and raw/RLE
+rollback followed by compressed publication. Qualify malformed schedules, policy
+and sparse-state forgeries in ordinary and optimized Python. Every new native
+state must reconcile independently before fixture projection or Rust admission.
+Preserve the existing observer/capture/auditor helpers; executed successors also
+become immutable and failures remain part of the evidence chain.
+
+### Public predecessor compatibility
+
+The current 1513-request public inventory contains one intended transition:
+`retained-resource-ultra` (32768 bytes, W15/H12/C12/S6, minimum 3, target 4095)
+is currently resource-limited solely because retained Ultra is unsupported. The
+proposed extension should admit that exact request; preserve its old rejection as
+historical evidence and declare the new expectation before execution. The
+`ultra-resource-source-16385` and `ultra-resource-source-32768` requests use W14
+and must remain resource-limited because their complete sources exceed the
+window. All other predecessor request bytes and response bytes must remain
+unchanged. The corresponding early-rejection integration assertion is revised
+only at the separately qualified public-admission step, with replacement window,
+Ultra2 and over-bound controls retaining exact allocator noninteraction checks.
+
+Reviewed pinned upstream revision: `f8745da6ff1ad1e7bab384bd1f9d742439278e99`.
+The studied `lib/compress/zstd_opt.c` SHA-256 is
+`625936ee3fb02d789abb894c1fbc2918ee47582434094c963b630da13532c876`, already
+bound by the predecessor native dependency inventory. These are design
+requirements, not evidence of implemented or admitted retained Ultra support.
