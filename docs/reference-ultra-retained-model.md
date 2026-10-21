@@ -226,3 +226,37 @@ fixture reconstruction records are preserved in
 frame or public admission is claimed by this plan-only checkpoint.
 
 Archive SHA-256: `bb0216421fe9d649514501500e6ba8c72fc891e9878ebb5fc052df6740a7492f`.
+
+## Dedicated retained Ultra parser and coordinator (2026-10-21)
+
+The new private parser entry requires the dedicated retained-Ultra scope and
+policy 2, then checks source identity and search geometry before any mutation.
+The ordinary retained entry preserves its policy-0 guard. Both use the same
+private checked block transition after their explicit admission checks. The
+coordinator's additive constructor binds the checked plan, literal mode,
+normalized minimum, target, exact search layout and source extent before moving
+into its fixed schedule. Old fresh, scripted, Ultra2 and Optimal constructors
+cannot enter the new lifecycle.
+
+The same seven independent parser/search owners survive raw, RLE and compressed
+publication. Pending results, committed repeats and poison/reset behavior retain
+the established contracts. Five focused tests cover old-scope rejection,
+transactional malformed calls, mismatched plans, every independent owner failure,
+all publication kinds, failures in either block and allocation-preserving reset
+with borrowed non-clone owners.
+
+The 34-command native qualification passes these five tests and relevant retained,
+parser and public regressions in safe/all, all 21 true no_std configurations,
+formatting and strict safe/all all-target Clippy. A separate four-command Miri
+receipt interprets the same five tests for i686 and s390x, safe/all, with strict
+provenance: 20 successful interpreted executions, not native foreign execution.
+No full regression or complete-state storage matrix is claimed by this step.
+
+Only `optimal_parse.rs`, `optimal_search.rs` and `optimal_retained.rs` change
+production behavior relative to the checked-plan checkpoint. The complete
+source-bound receipts are in
+`evidence/2026-10-21-ultra-retained-execution.{json,tar.gz}`. Complete captured-state
+qualification is the next gate; token collection, shared frames and public
+retained Ultra resolution remain closed at this checkpoint.
+
+Archive SHA-256: `1cf0792e1a7a6ff1d9faa199eb559a23212633dd1d1f4698e292273d310be095`.

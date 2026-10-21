@@ -237,7 +237,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         self.checked_query(query)
     }
     /// Validate the exact immutable source and untouched retained starting owners.
-    pub(crate) fn validate_retained_start(
+    pub(crate) fn validate_retained_binding(
         &self,
         source: &[u8],
         minimum: usize,
@@ -250,6 +250,15 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         {
             return Err(Error::InvalidParameter);
         }
+        Ok(())
+    }
+    pub(crate) fn validate_retained_start(
+        &self,
+        source: &[u8],
+        minimum: usize,
+        target: usize,
+    ) -> Result<()> {
+        self.validate_retained_binding(source, minimum, target)?;
         if self.ultra2.is_some()
             || self.failed
             || self.retained.is_some()

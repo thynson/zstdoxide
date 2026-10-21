@@ -523,7 +523,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             self.frequencies.disabled_literals(),
         ))
     }
-    /// Inspect only an unused retained-Ultra owner; this grants no parse entry.
+    /// Inspect only an unused owner admitted through the retained Ultra constructor.
     pub(crate) fn ultra_retained_configuration(&self) -> Result<(&'a [u8], usize, usize, bool)> {
         if self.scope != Scope::UltraRetained || self.frequencies.policy() != PricePolicy::Ultra {
             return Err(Error::UnsupportedFeature);
@@ -568,6 +568,46 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         observer: &mut O,
     ) -> Result<PathResult> {
         self.require_ordinary_policy()?;
+        self.parse_retained_scoped(start, end, repeats, search, observer)
+    }
+    /// Retained policy-2 execution requires its dedicated constructor scope.
+    /// Source/geometry errors precede any search, observer or parser mutation.
+    pub(crate) fn parse_ultra_retained<
+        H: Allocator,
+        N: Allocator,
+        S: Allocator,
+        B: Allocator,
+        O: PathObserver,
+    >(
+        &mut self,
+        start: usize,
+        end: usize,
+        repeats: [u32; 3],
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+        observer: &mut O,
+    ) -> Result<PathResult> {
+        if self.scope != Scope::UltraRetained || self.frequencies.policy() != PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        search.validate_retained_binding(self.source, self.minimum, self.target)?;
+        self.parse_retained_scoped(start, end, repeats, search, observer)
+    }
+    /// Called only after the explicit parser entry has checked its policy
+    /// and scope; this helper cannot grant retained admission by source length.
+    fn parse_retained_scoped<
+        H: Allocator,
+        N: Allocator,
+        S: Allocator,
+        B: Allocator,
+        O: PathObserver,
+    >(
+        &mut self,
+        start: usize,
+        end: usize,
+        repeats: [u32; 3],
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+        observer: &mut O,
+    ) -> Result<PathResult> {
         if !(128..=32768).contains(&self.source.len())
             || end > self.source.len()
             || !end

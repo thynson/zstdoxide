@@ -3262,3 +3262,32 @@ Ultra plan in the ordinary variant is therefore an early unsupported-feature
 error, including when the allocator is configured to fail its next operation.
 This check closes the internal dispatch boundary while the dedicated Ultra
 frame variant remains unimplemented.
+
+### Explicit retained Ultra execution and coordinator binding
+
+Add `parse_ultra_retained` as a dedicated entry which requires `UltraRetained`
+and policy 2, then checks exact source identity and search minimum/target/layout
+bounds before mutation. The old `parse_retained` keeps its policy-0 guard. A
+private transition helper shares checked block bounds, poisoning, block-local
+scratch reset and frequency/search retention only after the selected entry has
+validated its scope. It cannot infer admission from source length. Search binding
+validation is read-only and reusable during continuation; untouched-start checks
+still reject prior queries, Ultra2 search owners or active retained blocks.
+
+`RetainedOptimal` names the parser family and retains a copied policy, with
+`from_parts` continuing to admit only the old ordinary configuration. Its new
+`from_ultra_parts` requires a checked Ultra plan, the dedicated unused parser,
+exact source extent, literal mode, normalized minimum, target and search layout.
+It copies the already checked schedule and moves the same seven independent
+owners. Every parse dispatches through the corresponding explicitly gated entry.
+Pending/committed repeat owners and Ready/Pending/Finished/Poisoned transitions
+remain unchanged; reset retains policy and every allocation. The copied tag
+shares its safe representation across all storage features. Upstream counterparts
+remain `ZSTD_compressBlock_opt_generic` policy 2 and prev/next block publication.
+
+Focused entry tests reject all old constructor scopes before observation, reject
+invalid direct block calls transactionally, and release mismatched moved owners.
+Exercise all seven independent allocation failures, each publication kind,
+observer failures in both blocks, pending/finished reuse and borrowed nonclone
+ownership. Complete native state/search/alternative comparisons are a separate
+following gate before token and frame integration; public resolution stays closed.

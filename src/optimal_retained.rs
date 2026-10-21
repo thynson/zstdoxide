@@ -1,11 +1,13 @@
-//! Private bounded ordinary Optimal block lifecycle and repeat publication.
+//! Private bounded policy-bound Optimal/Ultra lifecycle and repeat publication.
 //! Upstream: ZSTD_buildSeqStore and prevCBlock/nextCBlock publication, v1.5.7.
 #![forbid(unsafe_code)]
 #![allow(
     dead_code,
-    reason = "Public Optimal frame admission remains separately gated"
+    reason = "Retained Ultra frame admission remains separately gated"
 )]
 use crate::optimal_parse::{OptimalParser, PathObserver, PathResult};
+use crate::optimal_price::PricePolicy;
+use crate::optimal_retained_plan::RetainedOptimalPlan;
 use crate::optimal_search::OptimalSearch;
 use crate::{Error, Result};
 use alloc::alloc::Global;
@@ -51,6 +53,7 @@ pub(crate) struct RetainedOptimal<
 > {
     parser: OptimalParser<'a, F, P, M>,
     search: OptimalSearch<'a, H, N, S, B>,
+    policy: PricePolicy,
     schedule: [usize; 4],
     count: usize,
     index: usize,
@@ -78,6 +81,47 @@ impl<
     ) -> Result<Self> {
         let (source, minimum, target, _) = parser.retained_configuration()?;
         search.validate_retained_start(source, minimum, target)?;
+        Self::initialize_parts(parser, search, blocks, source.len(), PricePolicy::Optimal)
+    }
+    /// Bind all seven moved owners to the checked policy-2 plan before parsing.
+    pub(crate) fn from_ultra_parts(
+        parser: OptimalParser<'a, F, P, M>,
+        search: OptimalSearch<'a, H, N, S, B>,
+        plan: RetainedOptimalPlan,
+    ) -> Result<Self> {
+        if plan.policy() != PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        let (source, minimum, target, disabled) = parser.ultra_retained_configuration()?;
+        if source.len() != plan.source_len()
+            || minimum
+                != if plan.parameters().min_match() == 3 {
+                    3
+                } else {
+                    4
+                }
+            || target != plan.parameters().target_length() as usize
+            || disabled != plan.disabled_literals()
+            || search.layout() != plan.layout()
+        {
+            return Err(Error::InvalidParameter);
+        }
+        search.validate_retained_start(source, minimum, target)?;
+        Self::initialize_parts(
+            parser,
+            search,
+            plan.blocks(),
+            source.len(),
+            PricePolicy::Ultra,
+        )
+    }
+    fn initialize_parts(
+        parser: OptimalParser<'a, F, P, M>,
+        search: OptimalSearch<'a, H, N, S, B>,
+        blocks: &[usize],
+        source_len: usize,
+        policy: PricePolicy,
+    ) -> Result<Self> {
         if !(2..=4).contains(&blocks.len()) || blocks.iter().any(|n| !(64..=8192).contains(n)) {
             return Err(Error::InvalidParameter);
         }
@@ -85,7 +129,7 @@ impl<
             .iter()
             .try_fold(0_usize, |a, &b| a.checked_add(b))
             .ok_or(Error::InvalidParameter)?;
-        if total != source.len() {
+        if total != source_len {
             return Err(Error::InvalidParameter);
         }
         let mut schedule = [0; 4];
@@ -93,6 +137,7 @@ impl<
         Ok(Self {
             parser,
             search,
+            policy,
             schedule,
             count: blocks.len(),
             index: 0,
@@ -112,13 +157,22 @@ impl<
             .start
             .checked_add(self.schedule[self.index])
             .ok_or(Error::CorruptData)?;
-        let result = self.parser.parse_retained(
-            self.start,
-            end,
-            self.owners[self.previous],
-            &mut self.search,
-            observer,
-        )?;
+        let result = match self.policy {
+            PricePolicy::Optimal => self.parser.parse_retained(
+                self.start,
+                end,
+                self.owners[self.previous],
+                &mut self.search,
+                observer,
+            ),
+            PricePolicy::Ultra => self.parser.parse_ultra_retained(
+                self.start,
+                end,
+                self.owners[self.previous],
+                &mut self.search,
+                observer,
+            ),
+        }?;
         self.pending = Some(result);
         self.phase = Phase::Pending;
         Ok(result)
@@ -184,3 +238,7 @@ mod wide_tests;
 #[cfg(test)]
 #[path = "../tests/support/optimal_retained_frames_parse.rs"]
 mod frames_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_execution.rs"]
+mod ultra_execution_tests;
