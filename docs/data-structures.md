@@ -3165,3 +3165,46 @@ The studied `lib/compress/zstd_opt.c` SHA-256 is
 `625936ee3fb02d789abb894c1fbc2918ee47582434094c963b630da13532c876`, already
 bound by the predecessor native dependency inventory. These are design
 requirements, not evidence of implemented or admitted retained Ultra support.
+
+### Retained Ultra fixture ownership (before projection)
+
+The additive `ZURFX01\0` fixture preserves the complete ordinary Ultra record
+layout under a distinct identity. It has at most 42 cases, 207635 events and
+64 MiB total bytes. Each case has thirteen u32 header fields, two three-word
+native allocation ledgers, borrowed ASCII name/source/frame bytes and 2..4
+contiguous blocks. Sources are 128..32768 bytes and fit the resolved window;
+each block is 64..8192 bytes. Headers bind exact policy 0/2, geometry, source,
+frame and path-owner extents. Earlier `ZUFFX01` and retained Optimal packs remain
+immutable. Native allocation sizes and entropy frame bytes are audited opaque
+inputs, not independent model predictions.
+
+A twenty-word block record binds absolute start, length, kind, prior and pending
+repeat owners, entry frontier, event count and trailing literals. Event records
+retain ordinary Ultra's optional twelve signed 64-bit alternative values,
+complete scalar coordinates, query candidates, append-only sequences and sparse
+path/frequency/search changes. The 4099 path cells, 386 frequency cells and
+bounded search owner persist across blocks. Sequence counts reset at each block;
+path, price and search baselines do not. Only compressed publication changes the
+committed repeat owner. The native counterpart is the unchanged pinned
+`ZSTD_compressBlock_opt_generic` state observed at block entry, event hooks and
+publication, not a serialized C pointer layout.
+
+Projection first rechecks the audited capture and emits observed state deltas.
+A separate checker reconstructs every state byte solely from source recipes and
+independent policy replay; it consumes native frame/ledger bytes only after exact
+capture identities and shape checks. Its negative controls bypass the root pack
+digest and forge later-block alternative columns, publication owners, search and
+frequency deltas, schedule coordinates and truncation. All altered byte strings
+must actually differ from the baseline. Ordinary and optimized Python must agree.
+
+The later test-only Rust reader borrows source, name and frame slices. It owns
+bounded fallible vectors for cases, blocks, events and changes, plus temporary
+path/frequency/search reconstructions that survive block transitions. Checked
+extents precede indexing and allocation. It verifies contiguous coverage,
+consumed-prefix matches, canonical sparse changes, alternative decisions and
+committed/pending publication state without invoking the production parser.
+Plain records and the checked test-only reader share one safe representation;
+there is no performance-sensitive codec owner needing an artificial unsafe
+variant. Frame decoding still exercises safe and each codec backend separately.
+Old policy-0 requests, frames, ledgers and every complete state must reconcile
+with the immutable retained Optimal fixture before parser admission.
