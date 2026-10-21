@@ -105,7 +105,9 @@ requirements are recorded in `docs/data-structures.md` before implementation.
 - [x] Capture and independently audit retained policy-2 complete states and native frames, including coherent forgery controls and unchanged predecessor observations.
 - [x] Project an immutable complete-state fixture and reconstruct every state byte independently in ordinary/optimized Python, with later-block forgery controls.
 - [x] Qualify the independent borrowed Rust fixture reader, all native frame decodes, predecessor states and malformed boundaries before parser admission.
-- [ ] Add an explicit private retained-Ultra parser scope and checked plan while preserving old constructor/early-allocation contracts.
+- [x] Introduce a constructor-only retained-Ultra parser scope while preserving old constructor ownership and rejecting every existing parse entry.
+- [ ] Add the checked policy-bound retained-Ultra plan while preserving copied schedules and early-allocation contracts.
+- [ ] Admit scoped retained-Ultra parser/coordinator execution without widening old fresh, scripted, Ultra2 or Optimal constructors.
 - [ ] Qualify private policy-2 retained transitions against every captured state, future-source isolation, owner failures, poisoning and allocation-preserving reset.
 - [ ] Integrate block token collection and shared frame publication with exact nine-owner identities, complete output reservation and raw/RLE rollback.
 - [ ] Qualify actual Rust wire history by independent replay and native decoding, without assuming native/Rust entropy decisions agree.

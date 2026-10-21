@@ -152,3 +152,43 @@ scope and production admission remain separate.
 Details and exact archive identities are in
 `../tests/fixtures/reference-ultra-retained/README.md` and
 `evidence/2026-10-21-ultra-retained-{fixture,reader}.{json,tar.gz}`.
+
+
+## Explicit constructor scope, execution still gated (2026-10-21)
+
+`OptimalParser` now retains its copied `Scope` enum instead of reducing scope to
+an `ultra_fresh_only` boolean. The new private `UltraRetained` constructor accepts
+policy 2 and 128..32768 source bytes, with the existing minimum/target validation.
+It owns the same three frequency/path/match allocations; invalid construction
+releases moved non-clone owners, and repeated reset preserves scope without
+additional allocation. The plain enum shares one safe representation across all
+storage backends.
+
+Construction alone admits no provider. Every existing scripted, fresh Optimal,
+fresh Ultra, Ultra2 and retained Optimal parse entry rejects this scope before
+provider/observer execution or search mutation. Existing constructors cannot claim
+the new configuration accessor. The old scripted-Ultra fresh capability remains
+unchanged. Window/search geometry, a copied schedule and scoped retained execution
+remain the next independent gates; no public retained Ultra request is admitted.
+
+Four constructor/ownership tests pass in all 22 native storage products: safe,
+19 isolated features, all and release/all. Relevant parser, retained lifecycle
+and public interface tests pass in safe/all. Complete current safe/all suites
+also agree on every named outcome: 1474 passed, 55 ignored per product, across
+70 named groups and 71 Cargo result sections. These totals add the five fixture
+reader tests and four scope tests to the historical 1465-pass Module 20 suite.
+The nineteen isolated constructor runs are focused tests, not full regressions.
+
+All 21 true no_std configurations, formatting and strict safe/all all-target
+Clippy pass. Strict-provenance Miri interprets all four scope tests on i686 and
+s390x in safe/all, giving 16 successful foreign interpreted test executions.
+This is interpreter coverage, not native foreign execution. The earlier fixture
+reader's 22-product native decode evidence remains separately preserved.
+
+The only production transition is `src/optimal_parse.rs`; all other production
+Rust source identities match the preceding fixture/Module 20 checkpoints.
+Historical native observations and measurements retain their own exact source
+binding and are not relabeled as current-source runs. Original base qualification,
+all expanded/foreign receipts, source, logs and Git fixture reconstruction records
+are preserved in `evidence/2026-10-21-ultra-retained-scope.{json,tar.gz}`.
+Archive SHA-256: `3b5f24c7cedd932d860996767fb48f5ca446cd69606b0fff31115b233ec1fca8`.

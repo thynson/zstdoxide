@@ -135,6 +135,7 @@ enum Status {
 enum Scope {
     Scripted,
     UltraFresh,
+    UltraRetained,
     Ultra2,
 }
 pub(crate) struct OptimalParser<'a, F: Allocator, P: Allocator, M: Allocator> {
@@ -154,7 +155,7 @@ pub(crate) struct OptimalParser<'a, F: Allocator, P: Allocator, M: Allocator> {
     sequences: usize,
     last_stretch: PathCell,
     status: Status,
-    ultra_fresh_only: bool,
+    scope: Scope,
     ultra2: Option<bool>,
 }
 fn resolved(off: u32, repeats: [u32; 3], zero: bool) -> Result<(u32, [u32; 3])> {
@@ -249,6 +250,30 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             Scope::UltraFresh,
         )
     }
+    /// Own a bounded retained-Ultra workspace without admitting any provider.
+    /// A later checked retained plan binds the source window and block schedule.
+    /// Existing fresh, scripted, Ultra2 and Optimal retained entries reject it.
+    pub(crate) fn from_ultra_retained_parts(
+        source: &'a [u8],
+        minimum: u8,
+        target: usize,
+        frequencies: OptimalFrequencies<F>,
+        paths: OptimalPaths<P>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        if frequencies.policy() != PricePolicy::Ultra || !(128..=32768).contains(&source.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        Self::initialize_parts(
+            source,
+            minimum,
+            target,
+            frequencies,
+            paths,
+            matches,
+            Scope::UltraRetained,
+        )
+    }
     pub(crate) fn from_ultra2_parts(
         source: &'a [u8],
         minimum: u8,
@@ -307,7 +332,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             sequences: 0,
             last_stretch: PathCell::ZERO,
             status: Status::Ready,
-            ultra_fresh_only: scope != Scope::Scripted,
+            scope,
             ultra2: (scope == Scope::Ultra2).then_some(false),
         })
     }
@@ -359,7 +384,10 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         search: &mut OptimalSearch<'a, H, N, S, B>,
         observer: &mut O,
     ) -> Result<PathResult> {
-        if self.ultra2.is_some() || self.frequencies.policy() != PricePolicy::Ultra {
+        if self.ultra2.is_some()
+            || self.scope == Scope::UltraRetained
+            || self.frequencies.policy() != PricePolicy::Ultra
+        {
             return Err(Error::UnsupportedFeature);
         }
         if !(64..=16384).contains(&self.source.len()) {
@@ -435,7 +463,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         provider: &mut Q,
         observer: &mut O,
     ) -> Result<PathResult> {
-        if self.ultra_fresh_only {
+        if self.scope != Scope::Scripted {
             return Err(Error::UnsupportedFeature);
         }
         self.parse_with_provider(provider, observer)
@@ -478,12 +506,27 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
     pub(crate) fn ultra_fresh_configuration(&self) -> Result<(&'a [u8], usize, usize, bool)> {
         if self.ultra2.is_some()
             || self.frequencies.policy() != PricePolicy::Ultra
-            || !self.ultra_fresh_only
+            || self.scope != Scope::UltraFresh
         {
             return Err(Error::UnsupportedFeature);
         }
         if !(64..=16384).contains(&self.source.len()) {
             return Err(Error::InvalidParameter);
+        }
+        if self.status != Status::Ready || self.retained_end != 0 {
+            return Err(Error::InvalidState);
+        }
+        Ok((
+            self.source,
+            self.minimum,
+            self.target,
+            self.frequencies.disabled_literals(),
+        ))
+    }
+    /// Inspect only an unused retained-Ultra owner; this grants no parse entry.
+    pub(crate) fn ultra_retained_configuration(&self) -> Result<(&'a [u8], usize, usize, bool)> {
+        if self.scope != Scope::UltraRetained || self.frequencies.policy() != PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
         }
         if self.status != Status::Ready || self.retained_end != 0 {
             return Err(Error::InvalidState);
@@ -1486,3 +1529,7 @@ mod ultra_tests;
 #[cfg(test)]
 #[path = "../tests/support/ultra_fresh_parse.rs"]
 mod ultra_fresh_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_scope.rs"]
+mod ultra_retained_scope_tests;

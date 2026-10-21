@@ -3208,3 +3208,26 @@ there is no performance-sensitive codec owner needing an artificial unsafe
 variant. Frame decoding still exercises safe and each codec backend separately.
 Old policy-0 requests, frames, ledgers and every complete state must reconcile
 with the immutable retained Optimal fixture before parser admission.
+
+
+### Retained Ultra constructor scope before execution admission
+
+Replace the parser's `ultra_fresh_only` boolean with the existing copied `Scope`
+enum and add `UltraRetained` as an explicit fourth case. This shared plain value
+has no allocation or performance-sensitive unsafe representation. The new private
+constructor accepts only policy 2 and 128..32768-byte sources, preserving the
+existing minimum/target validation and moved frequency/path/match owners. It
+resets those three owners only after complete constructor validation, and reset
+preserves scope without allocating. Geometry/window/schedule binding remains the
+next checked-plan gate; construction alone grants no provider or public entry.
+
+All existing parse entries must reject this new scope before observer/provider
+calls or search mutation. Ordinary Optimal retained policy checks stay intact.
+The ordinary Ultra configuration accessor requires exactly `UltraFresh`; its
+existing scripted-Ultra fresh parse capability remains unchanged. Scripted parse
+requires exactly `Scripted`; Ultra2 still requires its dedicated bootstrap state.
+A new read-only retained-Ultra configuration accessor requires the exact new
+scope, policy, unused status and zero consumed prefix. This explicit staged
+boundary avoids enabling unqualified retained execution merely by constructing
+policy-2 owners. Checked planning and scoped retained execution are independently
+verifiable subsequent work items.
