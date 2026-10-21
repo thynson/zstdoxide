@@ -1,6 +1,7 @@
 # Bounded retained Ultra independent model
 
-Module 21 currently provides a source-only retained policy transport and replay.
+Module 21 provides an independently replayed retained policy transport and a
+qualified bounded native observation campaign.
 It does not implement or admit retained Ultra in production Rust. Module 20's
 public retained Optimal implementation and existing fresh Ultra/Ultra2 behavior
 remain unchanged. The proposed retained strategy-8 envelope and ownership
@@ -46,8 +47,8 @@ The existing predecessor capture archive is explicitly reused at SHA-256
 `750e3a3624c78b9d189ab93249085f96736667d25f857156ae1e065e05e4e985`;
 it is preserved in repository history rather than duplicated in the new bundle.
 
-An additive native observer campaign and independent capture audit remain separate
-gates before fixture or production admission.
+The following sections record the later native qualification. Fixture reading
+and production admission remain separate gates.
 
 ## Frozen retained source hypotheses (2026-10-21)
 
@@ -71,7 +72,8 @@ The independently checked source-only evidence, selected-source exploration,
 executed scripts and immutable manifest are retained in
 `evidence/2026-10-21-ultra-retained-recipes.{json,tar.gz}`; archive SHA-256
 `53c95e78f4978be8d32461110017883e1d666fca8799a0b80b6382c4eb5a579a`.
-These checks still make no native retained-Ultra or production support claim.
+These source-only checks preceded the native qualification below and do not
+by themselves establish native or production support.
 
 ## Pure native preflight (2026-10-21)
 
@@ -89,5 +91,41 @@ results. Exact planned commands, all packets, source closure, generated source
 and review drivers are archived in
 `evidence/2026-10-21-ultra-retained-preflight.{json,tar.gz}`, SHA-256
 `883c0b054038ed29501810b834244fb583a0e213adde7b223d0967cd297bd2b5`.
-No native command in that plan was executed by these preflights. Native capture,
-semantic forgery controls and predecessor artifact reconciliation remain open.
+No native command in that plan was executed by these preflights. The subsequent
+native campaign is recorded separately below.
+
+
+## Native complete-state qualification (2026-10-21)
+
+All 212 planned native commands completed with their expected status: 146
+successful commands and 66 intentional early malformed/filesystem rejections.
+Both normal and sanitizer builds use all 26 pinned codec translation units.
+All 52 local input identities remain unchanged from preflight through capture
+and its independent postchecks.
+
+The 42 immutable recipes produce 207635 logical events per padding pass, or
+415270 observed events per build. Source-driven independent replay reconciles
+complete search, path, frequency, repeat and publication state. All normal,
+sanitized and padding results agree. The capture preserves 168 complete frames
+and 168 allocation ledgers, including native frame decoding. Each build rejects
+29 malformed packets and four filesystem cases before provider execution.
+
+Ordinary and optimized Python each independently reject 89 effective coherent
+forgeries and pass two positive audits, with no child execution. The two modes
+have identical control outcomes. A separate no-child predecessor checker
+verifies all 76 old frames, 76 allocation ledgers and 19 nested packets exactly.
+All 38 old transcripts, containing 269284 observed events, reconcile after only
+the declared additive policy/alternative tags and protocol identity are removed.
+No old native run is repeated or inferred from model output.
+
+The lossless evidence bundle retains 960 regular files, including source,
+objects, executables, requests, frames, ledgers, logs and postcheck drivers.
+Only nonregular filesystem-control nodes are omitted, with their creation
+code, command receipts and diagnostic logs retained in an explicit manifest.
+Independent archive reconstruction and a second read verify every regular file.
+The archive is `evidence/2026-10-21-ultra-retained-native.{json,tar.gz}`,
+SHA-256 `13cc40e5d22c27d9c41704a458a1b5a216db3865a436af1ac32cf6e02936c7fb`.
+
+The next gate projects an immutable complete-state fixture and independently
+qualifies a borrowed Rust reader and Rust frame decoding. Neither this native
+campaign nor its Python replay admits retained Ultra in production Rust.

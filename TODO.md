@@ -124,7 +124,7 @@ requirements are recorded in `docs/data-structures.md` before implementation.
 - [x] Freeze an additive policy-tagged retained transport and independent model; reconcile all policy-0 predecessor observations and reject malformed requests/state in ordinary and optimized Python.
 - [x] Freeze source-only policy-2 recipes and witnesses for learned retained prices, alternatives, short keys, horizons, source boundaries and all publication kinds.
 - [x] Specify and preflight additive native observer adaptation, full dependency/source inventories, sanitizer commands and bounded capture before execution.
-- [ ] Capture and independently audit retained policy-2 complete states and native frames, including coherent forgery controls and unchanged predecessor observations.
+- [x] Capture and independently audit retained policy-2 complete states and native frames, including coherent forgery controls and unchanged predecessor observations.
 - [ ] Project an immutable complete-state fixture and independently qualify its borrowed Rust reader before parser admission.
 - [ ] Add an explicit private retained-Ultra parser scope and checked plan while preserving old constructor/early-allocation contracts.
 - [ ] Qualify private policy-2 retained transitions against every captured state, future-source isolation, owner failures, poisoning and allocation-preserving reset.
