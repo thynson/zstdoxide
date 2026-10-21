@@ -47,10 +47,6 @@ pub(crate) enum ReferenceSearchPlan {
         reason = "Explicit observed schedules share the retained frame dispatch"
     )]
     RetainedOptimal(RetainedOptimalPlan),
-    #[allow(
-        dead_code,
-        reason = "Private retained Ultra frame qualification precedes public admission"
-    )]
     RetainedUltra(RetainedOptimalPlan),
 }
 
@@ -90,7 +86,13 @@ impl ReferenceSearchPlan {
                 }
             }
             ReferenceStrategy::Ultra => {
-                OptimalExecutionPlan::from_ultra_parameters(parameters, source_len).map(Self::Ultra)
+                if source_len > 16384 {
+                    RetainedOptimalPlan::for_ultra_frame(parameters, source_len)
+                        .map(Self::RetainedUltra)
+                } else {
+                    OptimalExecutionPlan::from_ultra_parameters(parameters, source_len)
+                        .map(Self::Ultra)
+                }
             }
             ReferenceStrategy::Ultra2 => {
                 Ultra2FramePlan::new(parameters, source_len).map(Self::Ultra2)

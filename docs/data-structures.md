@@ -3345,3 +3345,20 @@ source. It freezes alternatives 72/103, sequence counts 72/22, tails 0/6 and
 candidate repeats [22,164,134]/[61,140,12]. The Rust probe checks these values
 across retained publication and reset, without reading observed candidates as
 provider input. Its scalar expected records have one safe representation.
+
+### Public retained Ultra routing after private qualification
+
+The public strategy-8 resolver retains the existing fresh path through 16384
+bytes. Larger sources enter the separately checked `for_ultra_frame` plan and
+`RetainedUltra` dispatch; all resource and complete-output bounds are validated
+before allocator cloning or allocation. The source must fit its resolved window,
+and 16385..32768 bytes use three or four balanced blocks of at most 8192 bytes.
+No new owner representation or unsafe storage is introduced at this routing gate.
+The existing nine retained owners and shared entropy/publication contracts apply.
+
+Historical public rejection tests are adjusted only for the intended strategy-8
+extension: the new admitted W16 requests reach the injected allocation failure;
+explicit W14 counterparts still reject without allocator contact. Strategy9,
+all other resource caps and fresh requests retain their previous contracts.
+The 1513-case predecessor corpus has exactly one declared response transition;
+all other response bytes require direct native-campaign reconciliation.

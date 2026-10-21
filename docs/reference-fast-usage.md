@@ -217,7 +217,7 @@ and entropy commit only for emitted compressed blocks. The output reservation
 includes every block header. The whole source must fit the resolved window, so
 this does not introduce window expiry, dictionary/prefix support or numeric
 streaming. Tiny inputs and sources above 32 KiB remain outside Optimal's scope.
-Ultra and Ultra2 retain their separate single-block limits below.
+Ultra shares this retained source envelope; Ultra2 retains its single-block limit below.
 
 ```rust
 use zstdoxide::{CompressionParameterRequest, ReferenceStrategy,
@@ -246,7 +246,11 @@ performance result.
 ## Bounded Ultra requests
 
 `ReferenceStrategy::Ultra` implements the pinned no-dictionary optLevel2
-policy for one complete source of 64..=16,384 bytes contained in its window.
+policy for one complete source of 64..=32,768 bytes contained in its window.
+Sources through 16,384 bytes preserve the existing fresh path. Larger admitted
+sources use three or four balanced blocks of at most 8192 bytes. Search and price
+history survive raw/RLE output; only compressed blocks commit wire repeat
+offsets and entropy.
 It has the same resolved geometry limits and nine scratch owners as Optimal.
 Default levels 13/14 fit for 64..=2,048 bytes. Its fractional prices, frequency
 lifecycle, thorough path relaxation and match-plus-literal alternatives are
@@ -266,7 +270,7 @@ Explicit larger sources require bounded parameters after known-size resolution:
 ```rust
 use zstdoxide::{compress_with_parameters, decompress,
     CompressionParameterRequest, ReferenceStrategy};
-let input: Vec<u8> = (0..4096).map(|i| (i % 31) as u8).collect();
+let input: Vec<u8> = (0..24577).map(|i| (i % 31) as u8).collect();
 let mut request = CompressionParameterRequest::with_level(13);
 request.set_strategy(Some(ReferenceStrategy::Ultra));
 request.set_window_log(16)?;
@@ -281,9 +285,9 @@ assert_eq!(decompress(&frame, input.len())?, input);
 ```
 
 Valid Ultra requests outside these local bounds return `ResourceLimit` before
-allocator cloning. Complete-buffer Ultra does not admit retained
-blocks, dictionaries, window expiry, numeric streaming, long-distance matching
-or workers. Safe and opt-in unsafe storage backends share checked admission,
+allocator cloning. Complete-buffer Ultra does not admit dictionaries, window
+expiry, numeric streaming, long-distance matching or workers. Retained Ultra2
+remains outside admission. Safe and opt-in unsafe storage backends share checked admission,
 allocator ownership and output publication contracts.
 
 

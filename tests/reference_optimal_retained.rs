@@ -89,7 +89,10 @@ fn retained_public_early_rejections_and_output_owner_lifetime() {
             3 => r.set_chain_log(13).unwrap(),
             4 => r.set_search_log(7).unwrap(),
             5 => r.set_target_length(4096).unwrap(),
-            6 => r.set_strategy(Some(ReferenceStrategy::Ultra)),
+            6 => {
+                r.set_strategy(Some(ReferenceStrategy::Ultra));
+                r.set_window_log(14).unwrap();
+            }
             _ => r.set_strategy(Some(ReferenceStrategy::Ultra2)),
         }
         let owner = TrackingAllocator::new(AllocatorConfig {

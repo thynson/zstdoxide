@@ -18,7 +18,7 @@ use crate::{CompressionParameterRequest, Result};
 /// are supported through 256 KiB; levels 10 through 12 are supported for inputs
 /// larger than 16 KiB and no larger than 256 KiB. Level 10 at smaller sizes and
 /// levels 7 through 17 above 256 KiB exceed local resource caps. Resolved
-/// strategy-7 requests admit 64..=32768 bytes; strategy-8/9 requests admit
+/// strategy-7/8 requests admit 64..=32768 bytes; strategy-9 requests admit
 /// 64..=16384 bytes, each fitting its window within the stated resource caps; default levels 11/12 (Optimal), 13/14 (Ultra) and 16/17 (Ultra2) also work for
 /// sizes 64..=2048. Explicit overrides can change this outcome.
 /// Admission uses the fully resolved strategy and its resource limits, rather
@@ -86,8 +86,8 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// BinaryTreeLazy2 supports window logs 10..=21, independent hash/chain logs
 /// 6..=19 and search logs 1..=8, always using tree storage.
 /// The preceding six strategies support minimum-match settings 3..=7 and target
-/// lengths 0..=131072. Optimal supports 64..=32768 source bytes; Ultra and Ultra2
-/// support 64..=16384 bytes. Each source must fit its window, with window logs
+/// lengths 0..=131072. Optimal and Ultra support 64..=32768 source bytes; Ultra2
+/// supports 64..=16384 bytes. Each source must fit its window, with window logs
 /// 10..=16, hash/chain logs 6..=12, search logs 1..=6, minimum-match settings
 /// 3..=7 and targets 0..=4095. An otherwise
 /// valid implemented profile outside these caps returns [`crate::Error::ResourceLimit`]. Caps
@@ -122,16 +122,16 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// invalidates history by rebasing checked indices, restores original repeat
 /// offsets and encodes a second pass with the retained statistics. All three
 /// use the sufficient-match target and automatic literal compression. Each
-/// uses a single complete block through 16384 bytes. Optimal sources of
+/// uses a single complete block through 16384 bytes. Optimal and Ultra sources of
 /// 16385..=32768 bytes use three or four balanced blocks of at most 8192 bytes.
 /// Search and price history survive raw/RLE blocks; only compressed blocks
-/// publish candidate repeat offsets and entropy. Retained Ultra/Ultra2, window
+/// publish candidate repeat offsets and entropy. Retained Ultra2, window
 /// expiry and dictionary paths remain excluded.
 /// Lazy uses checked depth-one speculative gains; Lazy2 and BinaryTreeLazy2
 /// use depth-two gains and retain rejected
 /// sampling probes; Greedy stops at its first eligible baseline candidate.
 /// The preceding six non-Optimal strategies cap blocks at the smaller of the
-/// selected window and 128 KiB. Retained Optimal uses its balanced schedule.
+/// selected window and 128 KiB. Retained Optimal and Ultra use their balanced schedules.
 ///
 /// Frame flags and independent entropy qualifications match [`compress_at_level`].
 /// Corresponds to applying compression parameters before `ZSTD_compress2` in a

@@ -113,7 +113,7 @@ requirements are recorded in `docs/data-structures.md` before implementation.
 - [x] Qualify actual Rust wire history by independent replay and native decoding, without assuming native/Rust entropy decisions agree.
 - [x] Complete all storage-feature correctness, foreign Miri and concrete no-atomics code generation before public admission.
 - [x] Freeze additive public recipes declaring only the exact intended retained-Ultra resource-to-success predecessor transition.
-- [ ] Qualify public strategy-8 admission, all remaining predecessor identities and bidirectional interoperability with malformed/allocator controls.
+- [x] Qualify public strategy-8 admission, all remaining predecessor identities and bidirectional interoperability with malformed/allocator controls.
 - [ ] Complete full safe/isolated-unsafe/all and release/all regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
 - [ ] Bind the final public entry point to foreign Miri and concrete no-atomics artifacts with exact native-to-final source reconciliation.
 - [ ] Freeze independently decoded complete-frame benchmark inputs and qualify every backend without clocks and with controller forgery controls.
