@@ -121,7 +121,7 @@ remaining upstream migration obligations stay separate. Design and ownership
 requirements are recorded in `docs/data-structures.md` before implementation.
 
 - [x] Analyze policy-bound retained ownership, source isolation, publication/reset contracts and the one intended predecessor admission transition against pinned upstream.
-- [ ] Freeze an additive policy-tagged retained transport and independent model; reconcile all policy-0 predecessor observations and reject malformed requests/state in ordinary and optimized Python.
+- [x] Freeze an additive policy-tagged retained transport and independent model; reconcile all policy-0 predecessor observations and reject malformed requests/state in ordinary and optimized Python.
 - [ ] Freeze source-only policy-2 recipes and witnesses for learned retained prices, alternatives, short keys, horizons, source boundaries and all publication kinds.
 - [ ] Specify and preflight additive native observer adaptation, full dependency/source inventories, sanitizer commands and bounded capture before execution.
 - [ ] Capture and independently audit retained policy-2 complete states and native frames, including coherent forgery controls and unchanged predecessor observations.
