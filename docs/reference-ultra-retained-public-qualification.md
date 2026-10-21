@@ -69,3 +69,24 @@ Inherited checks are not presented as reruns.
 Full safe/isolated-unsafe/all/release regression and benchmark qualification are
 separate gates. This report does not infer their completion from focused tests
 or native interoperability.
+
+## Final public foreign-platform checkpoint
+
+The exact public source runs a complete 16385-byte uniform frame through
+strict-provenance Miri on i686 (32-bit little-endian) and s390x (64-bit big-endian),
+each with safe/all storage. All four executions check compressed/RLE/RLE block
+history, exact frame consumption, complete decoding, one surviving output
+allocation and full release on drop.
+
+Safe/all thumbv6m checks compile the library against `core + alloc` without
+atomics. Two additional concrete probes accept runtime source input and invoke
+the final public compression entry point; their LLVM IR and ARM ELF objects are
+retained. All eight commands pass. These are foreign interpreted executions and
+concrete code generation, not native execution on those architectures.
+
+All 86 production Rust files and the complete 1968-file public input inventory
+match the native capture and its independent auditor exactly. The archive
+`evidence/2026-10-21-ultra-retained-public-platform.{json,tar.gz}` retains the
+source snapshots, effective environments, logs, probes, concrete artifacts and
+source-binding receipt. The earlier private mixed-publication/reset platform
+qualification remains separate complementary evidence.

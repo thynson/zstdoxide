@@ -115,7 +115,7 @@ requirements are recorded in `docs/data-structures.md` before implementation.
 - [x] Freeze additive public recipes declaring only the exact intended retained-Ultra resource-to-success predecessor transition.
 - [x] Qualify public strategy-8 admission, all remaining predecessor identities and bidirectional interoperability with malformed/allocator controls.
 - [ ] Complete full safe/isolated-unsafe/all and release/all regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
-- [ ] Bind the final public entry point to foreign Miri and concrete no-atomics artifacts with exact native-to-final source reconciliation.
+- [x] Bind the final public entry point to foreign Miri and concrete no-atomics artifacts with exact native-to-final source reconciliation.
 - [ ] Freeze independently decoded complete-frame benchmark inputs and qualify every backend without clocks and with controller forgery controls.
 - [ ] Measure every backend and an independent safe/all repeat after completed CPU barriers, retaining all executables, samples and source identities.
 - [ ] Reconcile the bounded milestone, clear its completed checklist and decompose the next scope without claiming complete upstream parity.
