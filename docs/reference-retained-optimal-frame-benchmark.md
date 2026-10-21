@@ -44,3 +44,19 @@ controller and forgery controls, complete public regression reconciliation,
 CPU barriers, timings for all storage backends and an independent safe/all
 repeat. Clock-free command durations are operational metadata, not benchmark
 samples. Module 20 remains open.
+
+
+## Main integration checkpoint (2026-10-21)
+
+The exact frozen Rust example and pack are now present in the main repository as
+`examples/retained_optimal_benchmark.rs` and
+`tests/fixtures/reference-retained-optimal-frame-baseline/`. The additive offline
+checker binds source-only requests, resolved tuples, all source/frame SHA-256
+identities and block kinds to the immutable capture. Normal and optimized Python
+agree. Main formatting and strict safe/all example Clippy pass. Codec source is
+unchanged. The promotion receipt and full scoped source snapshot are retained in
+`evidence/2026-10-21-optimal-retained-benchmark-promotion.{json,tar.gz}`.
+
+The original external-only baseline description above records its historical
+state. All-backend controller qualification and timings remain separate gates;
+this integration alone makes no performance claim.

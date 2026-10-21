@@ -1,0 +1,940 @@
+{
+  "capture_evidence_sha256": "c457a0c4c9523a42fc6b19ec012678c111eeece27af58e28f7b42f99d7994d89",
+  "cases": [
+    {
+      "block_kinds": [
+        "compressed",
+        "rle",
+        "rle"
+      ],
+      "frame_bytes": 26,
+      "frame_sha256": "8ee0eab7930ba8928ab17cdf7ff4bb4e1e4b3369ef8a4bbf70ef0a121c903492",
+      "index": 1433,
+      "name": "retained-wide_frames_uniform_16385",
+      "offset": 12,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "608b801060d579a7b659a01755259a13dec8853b97d3d8062763c97ffac6ddae"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "rle",
+        "rle"
+      ],
+      "frame_bytes": 26,
+      "frame_sha256": "e58f765b719498d1e21759de0d772fcbe47562d948a4682f18840c7eb92a771c",
+      "index": 1434,
+      "name": "retained-wide_frames_uniform_24576",
+      "offset": 16569,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7
+      ],
+      "source_bytes": 24576,
+      "source_sha256": "d55c45e0e41a72b156e1795f2f688b0c999286433c88834fa2ad25cc7bea3a94"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "rle",
+        "rle",
+        "rle"
+      ],
+      "frame_bytes": 30,
+      "frame_sha256": "0608f91a909dd0885865510f7db745b3e729abbc0e6f4a90aa16b48e5b8131a3",
+      "index": 1435,
+      "name": "retained-wide_frames_uniform_24577",
+      "offset": 41317,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7
+      ],
+      "source_bytes": 24577,
+      "source_sha256": "3a25c3a1c66a11193503fa926656f2c96fdec8c49820fdb48635559494ec1f50"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "rle",
+        "rle",
+        "rle"
+      ],
+      "frame_bytes": 30,
+      "frame_sha256": "bfc4d3f6d7ff2d9f8cdc8ac32b3f47ac522a9aaf5df132966957f701d83a02da",
+      "index": 1436,
+      "name": "retained-wide_frames_uniform_32768",
+      "offset": 66070,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "b217b65e6f205f41b3fb8ef90cf7c44da93f630ca03965273485bbb21a5cccf5"
+    },
+    {
+      "block_kinds": [
+        "raw",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 8238,
+      "frame_sha256": "54dcab957f2ea27fc47e838abef6d7712030fad241e60ab731102d4ff1761ba4",
+      "index": 1437,
+      "name": "retained-wide_frames_copy",
+      "offset": 99014,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "1e3f782923b37d9698bc2931e7f349435d67da9bbadaf0a79262fe6228c519a1"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "raw",
+        "rle",
+        "compressed"
+      ],
+      "frame_bytes": 8231,
+      "frame_sha256": "c33e6fdd0347c7ad3b4a4f797269b607c40a4666faafdc01fa33c7cef8a0919a",
+      "index": 1438,
+      "name": "retained-wide_frames_mixed",
+      "offset": 140157,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "318796c01ae42b12d59d44b8186fc62b3658540cea870c7abe9871f5e6a478d6"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 65,
+      "frame_sha256": "b2cfd8e2ae37aea22a862ebbed53c409f5119a39366e318e775848d75494ef4b",
+      "index": 1439,
+      "name": "retained-wide_frames_short",
+      "offset": 181294,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        3,
+        1,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        1,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 52,
+      "frame_sha256": "c998fae9d48432a49301c25a911f3cf042e6fd3452a82d44310047555e3ebdd4",
+      "index": 1440,
+      "name": "retained-wide_frames_minimum_5",
+      "offset": 214265,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        5,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        5,
+        4095,
+        7
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 52,
+      "frame_sha256": "c998fae9d48432a49301c25a911f3cf042e6fd3452a82d44310047555e3ebdd4",
+      "index": 1441,
+      "name": "retained-wide_frames_minimum_6",
+      "offset": 230844,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        6,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        6,
+        4095,
+        7
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 52,
+      "frame_sha256": "c998fae9d48432a49301c25a911f3cf042e6fd3452a82d44310047555e3ebdd4",
+      "index": 1442,
+      "name": "retained-wide_frames_minimum_7",
+      "offset": 247423,
+      "request": [
+        11,
+        15,
+        12,
+        12,
+        6,
+        7,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        7,
+        4095,
+        7
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 56,
+      "frame_sha256": "2a4b77058bc25fe93fa2206806f0ba7c297ce67363adf32d4b736d93d34302a3",
+      "index": 1443,
+      "name": "retained-wide_frames_small_tables",
+      "offset": 264002,
+      "request": [
+        11,
+        16,
+        6,
+        6,
+        1,
+        4,
+        0,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        6,
+        6,
+        1,
+        4,
+        8,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "824b489745de883f2f50de9b7eb0c503cd2c9daf1ffceed0dbfe5cf0f9e269ef"
+    },
+    {
+      "block_kinds": [
+        "raw",
+        "raw",
+        "raw"
+      ],
+      "frame_bytes": 16401,
+      "frame_sha256": "b88001f91b03a1f1204bbb0c7af3f0b3d412a55eb166c58c10cdc853634530e6",
+      "index": 1446,
+      "name": "retained-boundary-16385-noise",
+      "offset": 296971,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "41b4710643354a3653237e57b939f88d5fbf3fe4cb7d3309f28f6bd15bb0bca6"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 55,
+      "frame_sha256": "5132a42d78adb42d9f46221e296ce6ca5aac331c03faa9105e3b0c45da74bbaa",
+      "index": 1445,
+      "name": "retained-boundary-16385-periodic",
+      "offset": 329898,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "3de09c12252253bc16565b90d9d35f46ca69badf848df484403b94b5486c935d"
+    },
+    {
+      "block_kinds": [
+        "raw",
+        "raw",
+        "raw"
+      ],
+      "frame_bytes": 24592,
+      "frame_sha256": "eabe60dea6fd3fb5c79cc0086d64ee3e971e8fece18a4ca915db0cf35a66b11e",
+      "index": 1451,
+      "name": "retained-boundary-24576-noise",
+      "offset": 346482,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 24576,
+      "source_sha256": "dedd9ec988ca57221dcb3cef9e5f5b6cfdaa31042d41623b8e3e8bbcd6f04d3f"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 56,
+      "frame_sha256": "ccce3a8111c1c46d022e2a1c18199556b0b5c32cbe57315e0fbb92179ce55a4d",
+      "index": 1450,
+      "name": "retained-boundary-24576-periodic",
+      "offset": 395791,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 24576,
+      "source_sha256": "efbba272ae76ce5e587f4aef1c46e8f077e6123344ad98d383620cffb1cde092"
+    },
+    {
+      "block_kinds": [
+        "raw",
+        "raw",
+        "raw",
+        "raw"
+      ],
+      "frame_bytes": 24596,
+      "frame_sha256": "264f26f012bf5502199f10b5f79739d8cd997ab4f41dbd2953c40e3836dcb13a",
+      "index": 1456,
+      "name": "retained-boundary-24577-noise",
+      "offset": 420567,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 24577,
+      "source_sha256": "f7603651c7e12a42fc1e8e7b73ba69694a685730b7d16a1ae8836cb0d479c4bf"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 65,
+      "frame_sha256": "718fa2701d9ed4345f9eafb0b156bb68233d41cdde90e7ac40d9cbd9933d1927",
+      "index": 1455,
+      "name": "retained-boundary-24577-periodic",
+      "offset": 469881,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 24577,
+      "source_sha256": "5408869b81433a4659cbf77fcd3aae2ad1257ae8ec6fcf90c0456803b4696b95"
+    },
+    {
+      "block_kinds": [
+        "raw",
+        "raw",
+        "raw",
+        "raw"
+      ],
+      "frame_bytes": 32787,
+      "frame_sha256": "f633f6119bcd272bafb7b193c4c337a34eb790d7984f803e48893b1f6ddbd4c3",
+      "index": 1461,
+      "name": "retained-boundary-32768-noise",
+      "offset": 494667,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "733050c9cde9a1638a7e3540b5da4c013fb716bf913dfbf8f12ea015dd0bb9b0"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 66,
+      "frame_sha256": "926398f45a20fce3476dee0a6609b9aac2bec955bdfaeecafd92f7a92a3e688b",
+      "index": 1460,
+      "name": "retained-boundary-32768-periodic",
+      "offset": 560363,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 66,
+      "frame_sha256": "926398f45a20fce3476dee0a6609b9aac2bec955bdfaeecafd92f7a92a3e688b",
+      "index": 1479,
+      "name": "retained-minimum-3-target-0-32768",
+      "offset": 593341,
+      "request": [
+        11,
+        16,
+        6,
+        6,
+        1,
+        3,
+        0,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        6,
+        6,
+        1,
+        3,
+        8,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 65,
+      "frame_sha256": "b2cfd8e2ae37aea22a862ebbed53c409f5119a39366e318e775848d75494ef4b",
+      "index": 1480,
+      "name": "retained-minimum-3-target-1-32768",
+      "offset": 626320,
+      "request": [
+        11,
+        16,
+        6,
+        6,
+        1,
+        3,
+        1,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        6,
+        6,
+        1,
+        3,
+        1,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 66,
+      "frame_sha256": "926398f45a20fce3476dee0a6609b9aac2bec955bdfaeecafd92f7a92a3e688b",
+      "index": 1481,
+      "name": "retained-minimum-3-target-4095-32768",
+      "offset": 659298,
+      "request": [
+        11,
+        16,
+        6,
+        6,
+        1,
+        3,
+        4095,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        6,
+        6,
+        1,
+        3,
+        4095,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+    },
+    {
+      "block_kinds": [
+        "raw",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 8236,
+      "frame_sha256": "57ab8238fa76c1f202a40acb52d9b341fb506b646e3c00b147811d18a6874552",
+      "index": 1495,
+      "name": "retained-geometry-15-6-6",
+      "offset": 692280,
+      "request": [
+        11,
+        15,
+        6,
+        6,
+        6,
+        3,
+        1,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        6,
+        6,
+        6,
+        3,
+        1,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "1e3f782923b37d9698bc2931e7f349435d67da9bbadaf0a79262fe6228c519a1"
+    },
+    {
+      "block_kinds": [
+        "raw",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 8236,
+      "frame_sha256": "57ab8238fa76c1f202a40acb52d9b341fb506b646e3c00b147811d18a6874552",
+      "index": 1500,
+      "name": "retained-geometry-16-12-1",
+      "offset": 733420,
+      "request": [
+        11,
+        16,
+        12,
+        12,
+        1,
+        3,
+        1,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        12,
+        12,
+        1,
+        3,
+        1,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "1e3f782923b37d9698bc2931e7f349435d67da9bbadaf0a79262fe6228c519a1"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 56,
+      "frame_sha256": "923207c8ff4982ad0b86fb35b95e0c5f0a7207050c789313e7a5ef4b0736f9ce",
+      "index": 1468,
+      "name": "retained-minimum-4-target-1-16385",
+      "offset": 774561,
+      "request": [
+        11,
+        16,
+        6,
+        6,
+        1,
+        4,
+        1,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        6,
+        6,
+        1,
+        4,
+        1,
+        7
+      ],
+      "source_bytes": 16385,
+      "source_sha256": "3de09c12252253bc16565b90d9d35f46ca69badf848df484403b94b5486c935d"
+    },
+    {
+      "block_kinds": [
+        "compressed",
+        "compressed",
+        "compressed",
+        "compressed"
+      ],
+      "frame_bytes": 66,
+      "frame_sha256": "926398f45a20fce3476dee0a6609b9aac2bec955bdfaeecafd92f7a92a3e688b",
+      "index": 1491,
+      "name": "retained-minimum-7-target-0-32768",
+      "offset": 791147,
+      "request": [
+        11,
+        16,
+        6,
+        6,
+        1,
+        7,
+        0,
+        7,
+        0
+      ],
+      "resolved": [
+        15,
+        6,
+        6,
+        1,
+        7,
+        8,
+        7
+      ],
+      "source_bytes": 32768,
+      "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+    }
+  ],
+  "native_archive_sha256": "4653c33e7f536ec10271d7774a41cb34e3de7995b0d2c7cdf7b79ae7a99c90ae",
+  "pack_bytes": 824126,
+  "pack_sha256": "7804afd8512933ec0d94f09a0ccdc7b801580e484b99e07bdba0124672750ce0",
+  "qualification": "Twenty-six complete retained source/request/frame cases selected before clocks for four source boundaries, raw/RLE/compressed and cross-block histories, every minimum, target requests and table/search endpoints. Every safe/all frame and its normal/sanitized native decoded source are byte-checked. No allocator ledger or timing is inferred; those are subsequent measurements.",
+  "schema_version": 1,
+  "selection": [
+    "retained-wide_frames_uniform_16385",
+    "retained-wide_frames_uniform_24576",
+    "retained-wide_frames_uniform_24577",
+    "retained-wide_frames_uniform_32768",
+    "retained-wide_frames_copy",
+    "retained-wide_frames_mixed",
+    "retained-wide_frames_short",
+    "retained-wide_frames_minimum_5",
+    "retained-wide_frames_minimum_6",
+    "retained-wide_frames_minimum_7",
+    "retained-wide_frames_small_tables",
+    "retained-boundary-16385-noise",
+    "retained-boundary-16385-periodic",
+    "retained-boundary-24576-noise",
+    "retained-boundary-24576-periodic",
+    "retained-boundary-24577-noise",
+    "retained-boundary-24577-periodic",
+    "retained-boundary-32768-noise",
+    "retained-boundary-32768-periodic",
+    "retained-minimum-3-target-0-32768",
+    "retained-minimum-3-target-1-32768",
+    "retained-minimum-3-target-4095-32768",
+    "retained-geometry-15-6-6",
+    "retained-geometry-16-12-1",
+    "retained-minimum-4-target-1-16385",
+    "retained-minimum-7-target-0-32768"
+  ],
+  "source_manifest_sha256": "0fcd36c87dd5e1a2de6288c0b3e41abb2acd81b74060f37436baa07d46e57fde",
+  "upstream_revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+}

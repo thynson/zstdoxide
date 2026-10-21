@@ -3031,3 +3031,22 @@ pending entropy. Old variants have no retained publication callback and preserve
 their byte/owner behavior. Reset of this private retained workspace clears parser
 history and entropy availability together, retaining every allocation. A copied
 pending repeat value needs no alternate unsafe representation.
+
+### Retained Optimal complete-frame measurement records
+
+The benchmark owns 26 fixed source/request/frame records from the previously
+qualified `ZORB0001` pack. The Rust example is byte-identical to the frozen
+clock-free draft. Its copied parameter records and bounded reader use safe code
+for every backend; the selected codec storage features alone choose unsafe
+implementations. The Python checker independently binds complete SHA-256 source
+and frame identities to the immutable native capture and source-only recipes.
+
+Campaign records own exact command/environment/log identities, complete frame
+files, executable hashes, allocation ledgers and five samples per timed case.
+Allocation tracking, decoding and byte comparisons run outside clocks. The
+controller builds every requested executable before running any of them. Timing
+requires completed public regression, private frame platform, native interop and
+all-backend clock-free receipts, bound to the current production source. Private
+platform-to-public admission changes must be recorded explicitly in the receipt;
+interpreted foreign checks do not constitute native foreign execution. An
+independent safe/all repeat uses fresh executables and the same frozen inputs.
