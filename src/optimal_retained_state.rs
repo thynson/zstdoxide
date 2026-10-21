@@ -31,13 +31,39 @@ impl<'a, A: Allocator> RetainedOptimalState<'a, A> {
         plan: RetainedOptimalPlan,
         parser: OptimalParser<'a, A, A, A>,
         search: OptimalSearch<'a, A, A, A, A>,
-        mut literals: Vec<u8, A>,
-        mut sequences: Vec<SequenceWithOffset, A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
     ) -> Result<Self> {
         if plan.policy() != crate::optimal_price::PricePolicy::Optimal {
             return Err(Error::UnsupportedFeature);
         }
-        let (original, minimum, target, disabled) = parser.retained_configuration()?;
+        Self::initialize_parts(source, plan, parser, search, literals, sequences)
+    }
+    pub(crate) fn from_ultra_parts(
+        source: &'a [u8],
+        plan: RetainedOptimalPlan,
+        parser: OptimalParser<'a, A, A, A>,
+        search: OptimalSearch<'a, A, A, A, A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        if plan.policy() != crate::optimal_price::PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        Self::initialize_parts(source, plan, parser, search, literals, sequences)
+    }
+    fn initialize_parts(
+        source: &'a [u8],
+        plan: RetainedOptimalPlan,
+        parser: OptimalParser<'a, A, A, A>,
+        search: OptimalSearch<'a, A, A, A, A>,
+        mut literals: Vec<u8, A>,
+        mut sequences: Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        let (original, minimum, target, disabled) = match plan.policy() {
+            crate::optimal_price::PricePolicy::Optimal => parser.retained_configuration(),
+            crate::optimal_price::PricePolicy::Ultra => parser.ultra_retained_configuration(),
+        }?;
         if !core::ptr::eq(original, source)
             || source.len() != plan.source_len()
             || search.layout() != plan.layout()
@@ -52,7 +78,14 @@ impl<'a, A: Allocator> RetainedOptimalState<'a, A> {
         {
             return Err(Error::InvalidParameter);
         }
-        let coordinator = RetainedOptimal::from_parts(parser, search, plan.blocks())?;
+        let coordinator = match plan.policy() {
+            crate::optimal_price::PricePolicy::Optimal => {
+                RetainedOptimal::from_parts(parser, search, plan.blocks())
+            }
+            crate::optimal_price::PricePolicy::Ultra => {
+                RetainedOptimal::from_ultra_parts(parser, search, plan)
+            }
+        }?;
         literals.clear();
         sequences.clear();
         Ok(Self {
@@ -590,3 +623,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_tokens.rs"]
+mod ultra_tests;

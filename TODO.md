@@ -109,7 +109,7 @@ requirements are recorded in `docs/data-structures.md` before implementation.
 - [x] Add the checked policy-bound retained-Ultra plan while preserving copied schedules and early-allocation contracts.
 - [x] Admit scoped retained-Ultra parser/coordinator execution without widening old fresh, scripted, Ultra2 or Optimal constructors.
 - [x] Qualify private policy-2 retained transitions against every captured state, future-source isolation, owner failures, poisoning and allocation-preserving reset.
-- [ ] Integrate block token collection and shared frame publication with exact nine-owner identities, complete output reservation and raw/RLE rollback.
+- [x] Integrate block token collection and shared frame publication with exact nine-owner identities, complete output reservation and raw/RLE rollback.
 - [ ] Qualify actual Rust wire history by independent replay and native decoding, without assuming native/Rust entropy decisions agree.
 - [ ] Complete all storage-feature correctness, foreign Miri and concrete no-atomics code generation before public admission.
 - [ ] Freeze additive public recipes declaring only the exact intended retained-Ultra resource-to-success predecessor transition.

@@ -246,3 +246,7 @@ mod ultra_execution_tests;
 #[cfg(test)]
 #[path = "../tests/support/ultra_retained_parse.rs"]
 mod ultra_state_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_platform.rs"]
+mod ultra_platform_tests;

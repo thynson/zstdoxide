@@ -148,8 +148,7 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         if length == 0
             || length > self.plan.block_limit()
             || last != (end == self.source.len())
-            || (matches!(self.plan, ReferenceSearchPlan::RetainedOptimal(_))
-                && length != self.plan.next_block_len(self.emitted)?)
+            || (self.plan.is_retained() && length != self.plan.next_block_len(self.emitted)?)
             || (matches!(
                 self.plan,
                 ReferenceSearchPlan::Optimal(_)
@@ -185,6 +184,7 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
                     | ReferenceSearchPlan::Ultra(_)
                     | ReferenceSearchPlan::Ultra2(_)
                     | ReferenceSearchPlan::RetainedOptimal(_)
+                    | ReferenceSearchPlan::RetainedUltra(_)
             ) {
                 self.entropy.prepare_optimal(
                     self.search.literals(),
@@ -224,7 +224,7 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
             BlockKind::Rle => Publication::Rle,
             BlockKind::Compressed => Publication::Compressed,
         };
-        let retained = matches!(self.plan, ReferenceSearchPlan::RetainedOptimal(_));
+        let retained = self.plan.is_retained();
         let after = if retained && kind == BlockKind::Compressed {
             self.entropy.sequence_encoder.pending_repeats()?
         } else {
@@ -246,7 +246,7 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
 
     #[cfg(test)]
     fn reset_retained(&mut self) -> Result<()> {
-        if !matches!(self.plan, ReferenceSearchPlan::RetainedOptimal(_)) {
+        if !self.plan.is_retained() {
             return Err(Error::InvalidState);
         }
         self.failed = true;
@@ -1055,3 +1055,7 @@ mod ultra2_frame_tests {
         monitor.assert_released();
     }
 }
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_frame_encode.rs"]
+mod retained_ultra_tests;

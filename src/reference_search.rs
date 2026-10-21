@@ -47,6 +47,11 @@ pub(crate) enum ReferenceSearchPlan {
         reason = "Explicit observed schedules share the retained frame dispatch"
     )]
     RetainedOptimal(RetainedOptimalPlan),
+    #[allow(
+        dead_code,
+        reason = "Private retained Ultra frame qualification precedes public admission"
+    )]
+    RetainedUltra(RetainedOptimalPlan),
 }
 
 impl ReferenceSearchPlan {
@@ -100,7 +105,7 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.source_len(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.source_len(),
             Self::Ultra2(plan) => plan.source_len(),
-            Self::RetainedOptimal(plan) => plan.source_len(),
+            Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) => plan.source_len(),
         }
     }
     pub(crate) fn parameters(self) -> ResolvedCompressionParameters {
@@ -110,7 +115,7 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.parameters(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.parameters(),
             Self::Ultra2(plan) => plan.parameters(),
-            Self::RetainedOptimal(plan) => plan.parameters(),
+            Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) => plan.parameters(),
         }
     }
     pub(crate) fn block_limit(self) -> usize {
@@ -120,11 +125,11 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.block_limit(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.block_limit(),
             Self::Ultra2(plan) => plan.block_limit(),
-            Self::RetainedOptimal(plan) => plan.maximum_block_len(),
+            Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) => plan.maximum_block_len(),
         }
     }
     pub(crate) fn next_block_len(self, emitted: usize) -> Result<usize> {
-        if let Self::RetainedOptimal(plan) = self {
+        if let Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) = self {
             plan.next_block_len(emitted)
         } else {
             self.source_len()
@@ -134,17 +139,23 @@ impl ReferenceSearchPlan {
                 .ok_or(Error::InvalidParameter)
         }
     }
+    pub(crate) fn is_retained(self) -> bool {
+        matches!(self, Self::RetainedOptimal(_) | Self::RetainedUltra(_))
+    }
     pub(crate) fn validate_retained_policy(self) -> Result<()> {
-        if let Self::RetainedOptimal(plan) = self
-            && plan.policy() != crate::optimal_price::PricePolicy::Optimal
-        {
+        let (plan, expected) = match self {
+            Self::RetainedOptimal(plan) => (plan, crate::optimal_price::PricePolicy::Optimal),
+            Self::RetainedUltra(plan) => (plan, crate::optimal_price::PricePolicy::Ultra),
+            _ => return Ok(()),
+        };
+        if plan.policy() != expected {
             return Err(Error::UnsupportedFeature);
         }
         Ok(())
     }
     pub(crate) fn frame_bound(self) -> Result<usize> {
         self.validate_retained_policy()?;
-        if let Self::RetainedOptimal(plan) = self {
+        if let Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) = self {
             Ok(plan.frame_bound())
         } else {
             let settings = crate::reference_frame::ReferenceFrameSettings::new(
@@ -184,6 +195,7 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
         }
         plan.validate_retained_policy()?;
         let ultra = matches!(plan, ReferenceSearchPlan::Ultra(_));
+        let retained_ultra = matches!(plan, ReferenceSearchPlan::RetainedUltra(_));
         if matches!(
             plan,
             ReferenceSearchPlan::Optimal(_) | ReferenceSearchPlan::Ultra(_)
@@ -245,15 +257,25 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                     Vec::new_in(factory.clone()),
                 )?))
             }
-            ReferenceSearchPlan::RetainedOptimal(plan) => {
+            ReferenceSearchPlan::RetainedOptimal(plan)
+            | ReferenceSearchPlan::RetainedUltra(plan) => {
                 // Exact retained order: frequencies, paths, parser candidates,
                 // tree heads/edges, short heads, search candidates, two scratch owners.
                 let parameters = plan.parameters();
-                let parser = OptimalParser::from_parts(
+                let constructor = if retained_ultra {
+                    OptimalParser::from_ultra_retained_parts
+                } else {
+                    OptimalParser::from_parts
+                };
+                let parser = constructor(
                     source,
                     parameters.min_match(),
                     parameters.target_length() as usize,
-                    OptimalFrequencies::new_in(plan.disabled_literals(), factory.clone())?,
+                    OptimalFrequencies::new_with_policy_in(
+                        plan.policy(),
+                        plan.disabled_literals(),
+                        factory.clone(),
+                    )?,
                     OptimalPaths::new_in(factory.clone())?,
                     OptimalMatches::new_in(factory.clone())?,
                 )?;
@@ -265,7 +287,12 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                     OptimalShortKey::new_in(layout.short_log(), factory.clone())?,
                     OptimalMatches::new_in(factory.clone())?,
                 )?;
-                Ok(Self::RetainedOptimal(RetainedOptimalState::from_parts(
+                let compose = if retained_ultra {
+                    RetainedOptimalState::from_ultra_parts
+                } else {
+                    RetainedOptimalState::from_parts
+                };
+                Ok(Self::RetainedOptimal(compose(
                     source,
                     plan,
                     parser,
@@ -520,12 +547,112 @@ mod tests {
     }
 
     #[test]
+    fn retained_ultra_factory_preserves_exact_nine_child_identities_and_bounds() {
+        let input = [b'x'; 128];
+        for minimum in [3, 4] {
+            let bounds = RetainedOptimalPlan::new_ultra(
+                RawCompressionParameters {
+                    window_log: 10,
+                    hash_log: 6,
+                    chain_log: 6,
+                    search_log: 1,
+                    min_match: minimum,
+                    target_length: 0,
+                    strategy: 8,
+                }
+                .validate()
+                .unwrap(),
+                input.len(),
+                &[64, 64],
+                false,
+            )
+            .unwrap();
+            let factory = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+            let monitor = factory.monitor();
+            let mut state = ReferenceSearchState::new(
+                &input,
+                ReferenceSearchPlan::RetainedUltra(bounds),
+                &factory,
+            )
+            .unwrap();
+            let initial = monitor.snapshot();
+            assert_eq!(initial.identities_created, 10);
+            assert_eq!(initial.attempts, if minimum == 3 { 7 } else { 6 });
+            assert_eq!(
+                initial.live_requested_bytes,
+                bounds.owner_bytes()[..7].iter().sum::<usize>() as u128
+            );
+            assert!(state.parse_next(64, [1, 4, 8]).unwrap());
+            let pending = monitor.snapshot();
+            assert_eq!(pending.identities_created, 10);
+            assert_eq!(pending.attempts, if minimum == 3 { 9 } else { 8 });
+            assert_eq!(
+                pending.live_requested_bytes,
+                bounds.owner_bytes().iter().sum::<usize>() as u128
+            );
+            assert_eq!(
+                state.retained_capacity(),
+                bounds.owner_bytes().iter().sum::<usize>()
+            );
+            state.publish(Publication::Raw, [1, 4, 8]).unwrap();
+            assert!(monitor.fail_next());
+            state.reset_retained().unwrap();
+            assert_eq!(monitor.snapshot(), pending);
+            monitor.clear_failure();
+            drop(state);
+            monitor.assert_released();
+            assert_eq!(monitor.snapshot().owners_dropped, 9);
+            drop(factory);
+            assert_eq!(monitor.snapshot().owners_dropped, 10);
+        }
+    }
+
+    #[test]
+    fn retained_ultra_dispatch_rejects_an_ordinary_plan_before_allocator_contact() {
+        let input = [b'x'; 128];
+        let bounds = RetainedOptimalPlan::new(
+            RawCompressionParameters {
+                window_log: 10,
+                hash_log: 6,
+                chain_log: 6,
+                search_log: 1,
+                min_match: 3,
+                target_length: 0,
+                strategy: 7,
+            }
+            .validate()
+            .unwrap(),
+            input.len(),
+            &[64, 64],
+            false,
+        )
+        .unwrap();
+        let plan = ReferenceSearchPlan::RetainedUltra(bounds);
+        let factory = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = factory.monitor();
+        assert!(monitor.fail_next());
+        let before = monitor.snapshot();
+        assert_eq!(plan.frame_bound(), Err(Error::UnsupportedFeature));
+        assert!(matches!(
+            ReferenceSearchState::new(&input, plan, &factory),
+            Err(Error::UnsupportedFeature)
+        ));
+        assert!(matches!(
+            crate::reference_frame_encode::compress_reference_in(&input, plan, &factory),
+            Err(Error::UnsupportedFeature)
+        ));
+        assert_eq!(monitor.snapshot(), before);
+        drop(factory);
+        monitor.assert_released();
+    }
+
+    #[test]
     fn only_selected_tables_allocate_and_each_child_retains_its_owner() {
         let input = [b'x'; 64];
         for plan in plans(input.len()) {
             let (table_count, owner_count, bytes) = match plan {
                 ReferenceSearchPlan::Ultra2(p) => (7, 10, p.owner_bytes()[..7].iter().sum()),
-                ReferenceSearchPlan::RetainedOptimal(p) => {
+                ReferenceSearchPlan::RetainedOptimal(p) | ReferenceSearchPlan::RetainedUltra(p) => {
                     (7, 10, p.owner_bytes()[..7].iter().sum())
                 }
                 ReferenceSearchPlan::Fast(p) => (1, 4, p.table_bytes()),

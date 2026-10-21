@@ -291,3 +291,37 @@ reconstruction maps are preserved in
 `evidence/2026-10-21-ultra-retained-state.{json,tar.gz}`.
 
 Archive SHA-256: `46836fd56dd4c91432c5173e65441930d7a951ee0d34ed2a1b1e78b20330315e`.
+
+## Private retained Ultra tokens and complete frames (2026-10-21)
+
+A separate private retained-Ultra token constructor and search-plan variant now
+connect the scoped parser to the shared frame workspace. The original retained
+Optimal entry still requires policy 0. Both policy/variant mismatch directions
+reject before output allocation or allocator cloning. The nine retained child
+owners keep exact identities and bounds, including the short-key owner when its
+allocation is empty. Token scratch reserves once and retains capacity through
+publication, failure recovery and reset.
+
+The shared workspace uses exact copied schedules and the existing optimal
+entropy encoder. It commits candidate repeats only for compressed blocks; raw
+and RLE publication retain the prior wire repeats. Complete output reservation
+and append-failure poisoning retain their previous contracts. Public request
+resolution is unchanged at this private integration checkpoint.
+
+Fifteen focused tests pass in safe/all, including all 293 policy-2 captured
+sequences, literal and offset intents, both mismatch directions, all nine owner
+failures, mixed raw/RLE/compressed complete frames, decoding, append failure and
+reset. The source-derived small alternative probe checks 72/103 alternatives
+across two blocks and repeats the same results after reset. Its separate ordinary
+and optimized Python evidence proves all 2752 records equal the original native
+recipe prefix despite truncating unconsumed source; no new C execution is claimed
+for that derivation.
+
+The 11-command integration receipt also passes existing Optimal frame/token and
+public regressions, safe/all true no_std, formatting and strict safe/all all-target
+Clippy. Actual wire-history replay/native decoding, all isolated storage products,
+foreign interpretation/code generation and public admission remain separate gates.
+Sources, logs, receipts and the two source-only prefix proofs are preserved in
+`evidence/2026-10-21-ultra-retained-frame.{json,tar.gz}`.
+
+Archive SHA-256: `1544fa17ac6bde3285501878a06805f6068d730e3ae741cdb165856c11bbbd2d`.

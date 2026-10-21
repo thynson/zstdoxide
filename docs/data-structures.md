@@ -3310,3 +3310,38 @@ full reset followed by exact complete replay. These are ordinary safe test
 records and bounded buffers; the selected production storage features supply
 the safe/unsafe representations being compared. No new production owner or
 public admission is introduced by these tests.
+
+### Retained Ultra token and shared frame bridge
+
+The private `RetainedOptimalState` gains a distinct `from_ultra_parts` entry;
+its old constructor still requires policy 0. The common initializer selects the
+matching parser configuration and coordinator constructor only after the entry
+has checked its policy. All nine owners retain their separate identities and
+exact layout-derived bounds; a short-key owner with no cells still has its own
+allocator lifetime. Two token vectors reserve the maximum scheduled block once,
+then reuse capacity through parsing, publication, poisoning and reset.
+
+A dedicated private `ReferenceSearchPlan::RetainedUltra` variant is distinct from
+`RetainedOptimal`. Both frame reservation and the factory reject a mismatched
+variant/policy before allocating output or cloning any child allocator. The
+factory moves the dedicated retained-Ultra parser into the same checked token
+state and preserves the nine-child clone order. The frame workspace recognizes
+both retained variants for exact scheduling, optimal entropy preparation,
+pending-repeat validation, raw/RLE rollback, compressed commit and full reset.
+Public request resolution remains unchanged until separate qualification.
+
+Tests independently account for exactly nine child allocator identities and all
+owner bytes, including the absent short-key allocation, and verify both policy
+mismatch directions without allocator contact. Complete captured token sequences
+and offset intents, every owned allocation failure, append failure, mixed wire
+publication and reset are checked. Actual Rust wire histories require separate
+source-derived replay and pinned native decoding; native entropy decisions are
+not assumed to match the Rust encoder.
+
+A small foreign-interpreter probe derives the first two 624-byte blocks from the
+frozen alternatives_0202 recipe. Independent ordinary/optimized Python proves
+all 2752 complete records equal the original prefix after removing the remaining
+source. It freezes alternatives 72/103, sequence counts 72/22, tails 0/6 and
+candidate repeats [22,164,134]/[61,140,12]. The Rust probe checks these values
+across retained publication and reset, without reading observed candidates as
+provider input. Its scalar expected records have one safe representation.
