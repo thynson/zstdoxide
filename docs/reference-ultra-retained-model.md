@@ -72,3 +72,22 @@ executed scripts and immutable manifest are retained in
 `evidence/2026-10-21-ultra-retained-recipes.{json,tar.gz}`; archive SHA-256
 `53c95e78f4978be8d32461110017883e1d666fca8799a0b80b6382c4eb5a579a`.
 These checks still make no native retained-Ultra or production support claim.
+
+## Pure native preflight (2026-10-21)
+
+The additive native observer and capture/audit/controller sources now pass pure
+ordinary and optimized preflight. Both modes agree on 212 planned commands,
+26 codec translation units, 52 local inputs, 89 pinned reference files,
+29 malformed packets, four filesystem controls and 34 rejected forged plans.
+All 15 read-only upstream substitutions reconstruct the pinned source exactly;
+12 explicit helper adaptations reconstruct the immutable fresh helper exactly.
+The complete ordinary provider and parser are unchanged.
+
+A child-execution guard reports zero child processes. Two additional pure wrapper
+runs bind all 52 input hashes before and after preflight, retaining the original
+results. Exact planned commands, all packets, source closure, generated source
+and review drivers are archived in
+`evidence/2026-10-21-ultra-retained-preflight.{json,tar.gz}`, SHA-256
+`883c0b054038ed29501810b834244fb583a0e213adde7b223d0967cd297bd2b5`.
+No native command in that plan was executed by these preflights. Native capture,
+semantic forgery controls and predecessor artifact reconciliation remain open.

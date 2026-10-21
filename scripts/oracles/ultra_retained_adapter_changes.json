@@ -1,0 +1,81 @@
+{
+  "base": "scripts/oracles/ultra_fresh.c",
+  "base_sha256": "8de0c95579951774e49f1c8a0e3cb185b7966aaff540614ae201e0d05e53255f",
+  "draft_sha256": "1fb7274c63550933c8800acdde9f14a9d9ba84251a6facb428d860fd0c0dcfd7",
+  "qualification": "Twelve exact textual adaptations recover the immutable fresh helper exactly when removed. Original fifteen read-only upstream hooks and complete ordinary provider/parser remain untouched. No C compilation or execution has occurred.",
+  "status": "draft-not-executed",
+  "substitutions": [
+    {
+      "after": "coupled-policy retained CCtx helper",
+      "before": "coupled-policy complete fresh CCtx helper",
+      "name": "scope",
+      "occurrences": 1
+    },
+    {
+      "after": "#define SOURCE_CAP 32768u",
+      "before": "#define SOURCE_CAP 16384u",
+      "name": "source-cap",
+      "occurrences": 1
+    },
+    {
+      "after": "#define EVENT_CAP 32768u",
+      "before": "#define EVENT_CAP 65536u",
+      "name": "events-per-block",
+      "occurrences": 1
+    },
+    {
+      "after": "#define SEQUENCE_CAP 2731u",
+      "before": "#define SEQUENCE_CAP 5462u",
+      "name": "sequences-per-block",
+      "occurrences": 1
+    },
+    {
+      "after": "values[SOURCE_CAP+64],after[64]; } frame;",
+      "before": "values[32768],after[64]; } frame;",
+      "name": "complete-frame-cap",
+      "occurrences": 1
+    },
+    {
+      "after": "static BYTE packet[72+SOURCE_CAP];",
+      "before": "static BYTE packet[60+SOURCE_CAP];",
+      "name": "nested-packet-cap",
+      "occurrences": 1
+    },
+    {
+      "after": "Ultra retained observer:",
+      "before": "Ultra fresh observer:",
+      "name": "diagnostic",
+      "occurrences": 1
+    },
+    {
+      "after": "info.st_size>=192",
+      "before": "info.st_size>=124",
+      "name": "packet-minimum",
+      "occurrences": 1
+    },
+    {
+      "after": "ZURTS01",
+      "before": "ZUFRS01",
+      "name": "outer-magic",
+      "occurrences": 2
+    },
+    {
+      "after": "ZOPRS03",
+      "before": "ZOPFW03",
+      "name": "nested-magic",
+      "occurrences": 1
+    },
+    {
+      "after": "source_size>=128&&source_size<=SOURCE_CAP&&block_count>=2&&block_count<=4",
+      "before": "source_size>=64&&source_size<=SOURCE_CAP&&block_count==1",
+      "name": "retained-admission",
+      "occurrences": 1
+    },
+    {
+      "after": "block_lengths[i]<=8192",
+      "before": "block_lengths[i]<=16384",
+      "name": "block-cap",
+      "occurrences": 1
+    }
+  ]
+}
