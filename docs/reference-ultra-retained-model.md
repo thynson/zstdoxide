@@ -260,3 +260,34 @@ qualification is the next gate; token collection, shared frames and public
 retained Ultra resolution remain closed at this checkpoint.
 
 Archive SHA-256: `1cf0792e1a7a6ff1d9faa199eb559a23212633dd1d1f4698e292273d310be095`.
+
+## Complete retained Ultra states and isolated storage (2026-10-21)
+
+The private coordinator now has exact captured-state qualification over all 42
+policy-tagged recipes and 134 blocks: 207635 complete events, 543 final sequences
+and 530 alternatives. The policy-2 subset accounts for 135495 events, 293
+sequences and all 530 alternatives. A separate source-only search comparison
+checks all 102307 queries, including 67897 policy-2 queries, without using native
+matches as parser input. Existing policy-0 observations remain exact controls.
+
+Every one of the 46 policy-2 unconsumed source boundaries is independently
+replaced while completed block states remain identical. A later-block observer
+failure at an alternative poisons the coordinator; allocation-preserving reset
+replays the exact complete states. These checks supplement the five already
+qualified scope, owner-failure and lifecycle controls. Source registrations and
+a binding-comment correction are the only production-file changes in this step;
+there is no runtime behavior change relative to scoped execution.
+
+Nine named tests pass with identical outcomes in all 22 storage products: safe,
+19 isolated unsafe features, all and release/all. All 21 true no_std builds pass.
+The separate focused receipt passes formatting, the 17 existing retained Optimal
+lifecycle tests in safe/all and strict safe/all all-target Clippy on the same
+Rust sources. These 48 recorded commands are focused qualification, not a full
+regression campaign. Token collection, complete Rust frames and public retained
+Ultra admission remain separate gates.
+
+All source snapshots, logs, commands and exact inherited Git-fixture
+reconstruction maps are preserved in
+`evidence/2026-10-21-ultra-retained-state.{json,tar.gz}`.
+
+Archive SHA-256: `46836fd56dd4c91432c5173e65441930d7a951ee0d34ed2a1b1e78b20330315e`.

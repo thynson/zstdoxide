@@ -108,7 +108,7 @@ requirements are recorded in `docs/data-structures.md` before implementation.
 - [x] Introduce a constructor-only retained-Ultra parser scope while preserving old constructor ownership and rejecting every existing parse entry.
 - [x] Add the checked policy-bound retained-Ultra plan while preserving copied schedules and early-allocation contracts.
 - [x] Admit scoped retained-Ultra parser/coordinator execution without widening old fresh, scripted, Ultra2 or Optimal constructors.
-- [ ] Qualify private policy-2 retained transitions against every captured state, future-source isolation, owner failures, poisoning and allocation-preserving reset.
+- [x] Qualify private policy-2 retained transitions against every captured state, future-source isolation, owner failures, poisoning and allocation-preserving reset.
 - [ ] Integrate block token collection and shared frame publication with exact nine-owner identities, complete output reservation and raw/RLE rollback.
 - [ ] Qualify actual Rust wire history by independent replay and native decoding, without assuming native/Rust entropy decisions agree.
 - [ ] Complete all storage-feature correctness, foreign Miri and concrete no-atomics code generation before public admission.

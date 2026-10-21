@@ -236,7 +236,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             .ok_or(Error::InvalidParameter)?;
         self.checked_query(query)
     }
-    /// Validate the exact immutable source and untouched retained starting owners.
+    /// Validate the exact immutable source and retained search geometry.
     pub(crate) fn validate_retained_binding(
         &self,
         source: &[u8],
@@ -252,6 +252,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         }
         Ok(())
     }
+    /// Additionally require untouched owners before the first retained block.
     pub(crate) fn validate_retained_start(
         &self,
         source: &[u8],
@@ -1406,3 +1407,7 @@ mod ultra2_tests;
 #[cfg(test)]
 #[path = "../tests/support/optimal_retained_frames_search.rs"]
 mod retained_frames_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_search.rs"]
+mod ultra_search_tests;

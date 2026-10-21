@@ -3291,3 +3291,22 @@ Exercise all seven independent allocation failures, each publication kind,
 observer failures in both blocks, pending/finished reuse and borrowed nonclone
 ownership. Complete native state/search/alternative comparisons are a separate
 following gate before token and frame integration; public resolution stays closed.
+
+
+### Retained Ultra complete-state test observers
+
+The test-only comparator borrows an independently validated immutable case and
+owns bounded expected/actual path snapshots, a fixed 386-word frequency baseline
+and a bounded reconstructed search map. Native observations are expected values,
+never parser/provider inputs. Source-only search replay checks every query/map
+transition separately, while the coordinator comparison checks every parser,
+frequency, alternative, sequence and publication event and each final block map.
+Expected sparse baselines persist across blocks; block-local counters reset.
+
+Future-source tests own a changed source vector but mutate only the unconsumed
+suffix before borrowing it into the parser. Every completed prefix must retain
+all captured states exactly. Later-block alternative-observer failures require
+full reset followed by exact complete replay. These are ordinary safe test
+records and bounded buffers; the selected production storage features supply
+the safe/unsafe representations being compared. No new production owner or
+public admission is introduced by these tests.

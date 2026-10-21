@@ -242,3 +242,7 @@ mod frames_tests;
 #[cfg(test)]
 #[path = "../tests/support/ultra_retained_execution.rs"]
 mod ultra_execution_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra_retained_parse.rs"]
+mod ultra_state_tests;
