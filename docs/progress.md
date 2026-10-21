@@ -1029,3 +1029,51 @@ controller controls, measurements, the full public matrix and final Module 20
 reconciliation remain open. See `reference-optimal-retained-frames-validation.md`
 and `reference-retained-optimal-frame-benchmark.md` for archive identities and
 precise evidence boundaries.
+
+
+## Module 20: bounded retained Optimal complete (2026-10-21)
+
+The final public entry point is now directly qualified by safe/all foreign Miri
+on i686 and s390x and by concrete safe/all thumbv6m core/alloc code generation.
+Native-to-final source reconciliation permits only the documented Rustdoc and
+lint-reason differences; it does not relabel historical source runs.
+
+All 22 full-suite products agree on 1465 passing and 55 ignored tests, across
+69 named groups and 70 Cargo result sections per product. This is 32230 passed
+and 1210 ignored executions of the same named suite. All 21 unique true no_std
+configurations pass. The initial reconciler confused result sections with named
+groups; its failed receipt and source remain preserved, and an additive successor
+verifies both counts without rerunning or changing the passing tests. Earlier
+formatting, strict Clippy, allocator and standalone usage checks remain exactly
+source-bound. No production Rust changed during this final qualification.
+
+The promoted complete-frame benchmark passes all 21 clock-free backends and
+ordinary/optimized controller controls. The first ineffective mutation is kept
+as a failed control; the corrected successor passes all 43 checks. Complete
+measurements and an independent safe/all repeat retain 598 case rows, 2990 raw
+samples and all 23 measured executables. Ordinary and optimized timed controls
+each pass 33 checks, including 31 effective rejects. All frames and allocator
+ledgers agree. All/safe geometric mean cost ratios are 1.0228 and 1.0258, or about
+2.3% and 2.6% slower for these equally weighted workloads. Task-owned CPU barriers
+are explicit; fixed order, thermal state and unrelated desktop activity limit
+broader performance conclusions. Safe remains the default.
+
+Final reconciliation verifies all 21 Module 20 archive/report pairs, 21 earlier
+retained pairs and 68 Ultra/Ultra2 predecessor pairs, current full-regression and
+measured source inventories, and 92 production/compiler/allocator/adapter inputs.
+Module 20's completed checklist is cleared. Its scope remains bounded known-size
+no-dictionary strategy 7 through 32768 bytes within one window; all old fresh
+requests and frames are preserved. Retained Ultra/Ultra2, dictionaries/prefixes,
+window expiry, numeric streaming, LDM and workers are separate. The 55 ignored
+cases and 188 unfinished upstream source units remain open.
+
+Module 21's retained Ultra ownership and work decomposition precede implementation.
+Its additive model, 42 source-only recipes, pure native preflight and complete
+normal/sanitized native state capture are qualified. Ordinary/optimized native
+controls and all policy-0 predecessor identities pass. Immutable fixture reading
+and production retained Ultra admission remain subsequent gates.
+
+Details: `reference-retained-optimal-public-qualification.md`,
+`reference-retained-optimal-frame-benchmark.md`,
+`evidence/2026-10-21-optimal-retained-closure.json`, and
+`reference-ultra-retained-model.md`.

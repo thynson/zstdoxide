@@ -95,8 +95,20 @@ inventory checks remain source-bound in
 `evidence/2026-10-20-optimal-retained-public-main.{json,tar.gz}`. No production
 Rust changed during this session's final matrix and platform qualification.
 
-## Remaining milestone gates
+## Bounded milestone closure (2026-10-21)
 
-All-backend complete-frame timing, an independent safe/all repeat and the final
-Module 20 closure receipt remain open. Clock-free qualification does not imply
-performance measurements.
+All-backend complete-frame timing and an independent safe/all repeat are complete,
+with 598 case rows, 2990 samples and 23 retained measured executables. The all/safe
+geometric mean cost ratios are 1.0228 and 1.0258; no universal unsafe speedup is
+established. See `reference-retained-optimal-frame-benchmark.md` for complete
+results, measurement limits and control evidence.
+
+`evidence/2026-10-21-optimal-retained-closure.json` reconciles all 21 Module 20
+archive/report pairs, 21 earlier retained pairs and 68 Ultra/Ultra2 predecessor
+pairs. It binds 86 production Rust files and six compiler/allocator/native-adapter
+inputs. Historical failures and source transitions remain explicit, including
+the original ineffective clock-free control and matrix group-count correction.
+Module 20 is complete only within the bounded strategy-7 scope documented here.
+Retained Ultra/Ultra2, dictionaries/prefixes, window expiry, numeric streaming,
+LDM and workers remain outside that scope. The 55 ignored cases and 188 unfinished
+upstream source units are still open.

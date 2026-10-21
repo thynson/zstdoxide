@@ -83,35 +83,13 @@ the independent repeat are in `docs/reference-ultra2-frame-benchmark.md`.
 The final reconciliation is `docs/evidence/2026-10-20-ultra2-closure.json`.
 Retained public blocks and complete upstream migration remain open.
 
-## Module 20: bounded retained Optimal complete frames
-
-Preserve all existing fresh requests and frame bytes. The original private
-retained source ceiling was 16 KiB; the additive 32 KiB domain is independently
-qualified before complete-frame and public admission. Retained Ultra/Ultra2 remain separate.
-
-- [x] Review retained ownership, source boundaries, balanced schedules, exact output reservation and transactional publication against pinned upstream.
-- [x] Freeze an additive larger-domain transport and independent model; reconcile every earlier wide native state and reject malformed schedules/state in normal and optimized Python.
-- [x] Freeze source-only recipes for 16385/24576/24577/32768 boundaries, cross-block history, short keys, horizon paths and raw/RLE/compressed publication.
-- [x] Specify and preflight bounded observer adaptation, sanitizer/dependency closure, exact commands and complete source inventory before native execution.
-- [x] Capture and independently audit larger retained states and complete frames, with coherent forgery controls and unchanged predecessor observations.
-- [x] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before widening parser/search admission.
-- [x] Qualify the private 32 KiB retained parser/search envelope against every new captured state, exact owner failures and future-source isolation.
-- [x] Implement a checked copied schedule and source-aware retained frame plan, preserving old fresh dispatch and all early allocator rejection boundaries.
-- [x] Implement block-range token collection and allocation-free retained transitions with exact nine-owner identities.
-- [x] Qualify the retained token snapshot across all storage features, foreign Miri and no-atomics concrete code generation.
-- [x] Integrate shared entropy and repeat publication, raw/RLE rollback, complete output reservation, failure poisoning and reset.
-- [x] Qualify actual Rust wire publication history with independent replay and native decoding without assuming C/Rust entropy decisions agree.
-- [x] Complete safe/isolated-unsafe/all correctness, foreign Miri and no-atomics code generation before public admission.
-- [x] Freeze additive public source/request hypotheses while preserving every prior tuple and upstream admission inventory.
-- [x] Qualify additive public admission and bidirectional interoperability while preserving every predecessor request/response identity.
-- [x] Complete full safe/all regression, all 21 true no_std builds, formatting, Clippy, usage, allocator and upstream migration-inventory checks.
-- [x] Bind the final public entry point directly to foreign Miri and concrete no-atomics code generation, retaining exact native-to-final source reconciliation.
-- [x] Complete the remaining 19 isolated-feature and release/all full regression products and reconcile the final public matrix.
-- [x] Freeze 26 independently decoded complete frames and qualify equal safe/all owner ledgers without timing.
-- [x] Promote the exact frozen complete-frame example/pack to main and verify formatting, safe/all Clippy and ordinary/optimized independent baseline checks.
-- [x] Qualify every benchmark backend without clocks; audit controller and coherent forgery controls.
-- [x] Measure every backend and an independent safe/all repeat after completed CPU barriers; retain all executables, samples and source identities.
-- [ ] Reconcile the bounded milestone and decompose the next scope without claiming complete upstream parity.
+Module 20 is complete within its bounded retained no-dictionary Optimal scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+The exact public matrix and platform evidence are in
+`docs/reference-retained-optimal-public-qualification.md`; measured complete frames
+are in `docs/reference-retained-optimal-frame-benchmark.md`. The final receipt is
+`docs/evidence/2026-10-21-optimal-retained-closure.json`.
+Retained Ultra/Ultra2 and complete upstream migration remain open.
 
 ## Module 21: bounded retained Ultra complete frames
 
