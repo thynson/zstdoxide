@@ -111,7 +111,7 @@ requirements are recorded in `docs/data-structures.md` before implementation.
 - [x] Qualify private policy-2 retained transitions against every captured state, future-source isolation, owner failures, poisoning and allocation-preserving reset.
 - [x] Integrate block token collection and shared frame publication with exact nine-owner identities, complete output reservation and raw/RLE rollback.
 - [x] Qualify actual Rust wire history by independent replay and native decoding, without assuming native/Rust entropy decisions agree.
-- [ ] Complete all storage-feature correctness, foreign Miri and concrete no-atomics code generation before public admission.
+- [x] Complete all storage-feature correctness, foreign Miri and concrete no-atomics code generation before public admission.
 - [x] Freeze additive public recipes declaring only the exact intended retained-Ultra resource-to-success predecessor transition.
 - [ ] Qualify public strategy-8 admission, all remaining predecessor identities and bidirectional interoperability with malformed/allocator controls.
 - [ ] Complete full safe/isolated-unsafe/all and release/all regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
