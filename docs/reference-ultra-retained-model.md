@@ -46,5 +46,29 @@ The existing predecessor capture archive is explicitly reused at SHA-256
 `750e3a3624c78b9d189ab93249085f96736667d25f857156ae1e065e05e4e985`;
 it is preserved in repository history rather than duplicated in the new bundle.
 
-Source-only policy-2 recipes, an additive native observer campaign and independent
-capture audit remain separate gates before fixture or production admission.
+An additive native observer campaign and independent capture audit remain separate
+gates before fixture or production admission.
+
+## Frozen retained source hypotheses (2026-10-21)
+
+The 42-case manifest now preserves all 19 predecessor source packets under each
+policy and adds two four-block alternative sources under each policy. Ordinary
+generation and optimized read-only regeneration produce the exact same file,
+SHA-256 `888f364acc26b310d82b397dd5508a35afb2d000a311858377fc99ce5a715636`.
+All 19 policy-zero complete state hashes are unchanged. The model predicts 207635
+logical events per padding pass and 348 policy-two alternative events after the
+first block. Publication kinds remain explicit source-only hypotheses.
+
+Ordinary/optimized controls each verify all 38 nested old packets and reject 17
+effective later-block alternative forgeries. Changing only future backing bytes
+leaves the complete first block unchanged: 1484 records for policy zero and 2048
+for policy two. The changed suffix is subsequently exercised, so these are not
+vacuous equal-input checks. Both added sources exhibit later-block alternatives.
+
+Every request has a conservative stdout bound checked before native execution.
+The largest is 90603078 bytes and the total for two builds is 1230723400 bytes.
+The independently checked source-only evidence, selected-source exploration,
+executed scripts and immutable manifest are retained in
+`evidence/2026-10-21-ultra-retained-recipes.{json,tar.gz}`; archive SHA-256
+`53c95e78f4978be8d32461110017883e1d666fca8799a0b80b6382c4eb5a579a`.
+These checks still make no native retained-Ultra or production support claim.

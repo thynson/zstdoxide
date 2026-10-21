@@ -1,0 +1,2289 @@
+{
+  "cases": [
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 18,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1
+      ],
+      "logical_row_bytes": 24078,
+      "name": "ur_p0_wide_uniform",
+      "nested_packet_sha256": "2238e1dfe560003cbd03e586656bc892fdb498dbbc6cfc11f3ed63dd5aa94395",
+      "observation_output_bound": 57884,
+      "packet_bytes": 16448,
+      "packet_sha256": "b69765771317e947bc86d5d4b8f89aff8f69d82aca8ce425c9cd95980ea76106",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "945a81366be9b98e31fdee7079460472e5f6d85dae473b7855f8e47b28453764",
+      "queries": 2,
+      "sequences": 2,
+      "source_bytes": 16384,
+      "source_sha256": "f3336bea752b5a28743033dd2c844a4a63fba08871aaee2586a2bf2d69be83a2"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 8196,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        0,
+        2
+      ],
+      "logical_row_bytes": 10926556,
+      "name": "ur_p0_wide_noise_copy",
+      "nested_packet_sha256": "565baea420ff8e1200e0a6eafbc50122aecb0121f4a937d9dc7e2fde1cae4e85",
+      "observation_output_bound": 23956408,
+      "packet_bytes": 16448,
+      "packet_sha256": "857de4f1bd8d2e6f074b9c6c44f9418358cff9b75cce847c55418324aec3d620",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "20b3359103733991e55879c4e6f2c37dbcddc79ad79d06eaac37aa2bb7101935",
+      "queries": 8186,
+      "sequences": 1,
+      "source_bytes": 16384,
+      "source_sha256": "4bdce7f4f7073a1901193d38658a8ffdc9d19a23bbd1e8b7d62087ba26350e97"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 10620,
+      "highest_path": 4090,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "logical_row_bytes": 14066331,
+      "name": "ur_p0_wide_runs_disabled",
+      "nested_packet_sha256": "6f20528553855cdf2c7028f0e60b155b86a516fb744d42f9fb213a00cbfb8f13",
+      "observation_output_bound": 30856502,
+      "packet_bytes": 16448,
+      "packet_sha256": "626dc9dba0d11586840d408b0fa88b14919f3aff9b7616a2522abd52e4efbfb4",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "6e7d506750b42c62c97029f8803d0073dc1e7069d7d62d397f98a90f3b2d668e",
+      "queries": 71,
+      "sequences": 8,
+      "source_bytes": 16384,
+      "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "match_worse_abort",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 10656,
+      "highest_path": 4090,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "logical_row_bytes": 14238166,
+      "name": "ur_p0_wide_runs_priced",
+      "nested_packet_sha256": "e0613c7861994f971c174bc5705bd771be83e7819559d852d220510e8d2aaf66",
+      "observation_output_bound": 31209388,
+      "packet_bytes": 16448,
+      "packet_sha256": "6435ce1e73b3942392a6e1f84a9e6f0ac9b6fd6b9659c12202933e27f34095f1",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "2ff26fc48c1a64712cfe39ed190bc2df10680c5684929693557c5edaeefe3ff2",
+      "queries": 89,
+      "sequences": 8,
+      "source_bytes": 16384,
+      "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 8390,
+      "highest_path": 4096,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "logical_row_bytes": 11448708,
+      "name": "ur_p0_wide_horizon",
+      "nested_packet_sha256": "993387eca3ecbe0881f874b028d378c148cd1ce6f483a22a77cfae405a77349c",
+      "observation_output_bound": 25050376,
+      "packet_bytes": 16448,
+      "packet_sha256": "e1c0669198d5f36b1e8759006367bbc3129c18732bf1c921d0899c5c518621e6",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "1425a53b4f4e8a12a315533bb259ed4be91c5e7d357a584fd23962aebefe604c",
+      "queries": 4133,
+      "sequences": 6,
+      "source_bytes": 16384,
+      "source_sha256": "a101088542f51cfa8f7fbb510f643231788be9823bf89860cbe57ffa4bf895f1"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "literal_improvement",
+        "search_tree"
+      ],
+      "events": 51,
+      "highest_path": 4,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "logical_row_bytes": 67596,
+      "name": "ur_p0_wide_short",
+      "nested_packet_sha256": "24787291cd9d18b17268c22700fb21ff69faf2361d34c7974932fb913b09dd2b",
+      "observation_output_bound": 153368,
+      "packet_bytes": 16448,
+      "packet_sha256": "0c5140ba276da9fd343dfc26198e6b34441b3c640513e69ae9aff0a15395c1f4",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "6db7cd254766a0ed74ee07ebe14690ad5aaa42a1e861527b63c39fe79b8e86e2",
+      "queries": 17,
+      "sequences": 2,
+      "source_bytes": 16384,
+      "source_sha256": "b43879f3fc630f0775f4f5b2d4fc04fae8b56bec91beab83786da097b068e5aa"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "literal_improvement",
+        "search_repeat",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 46,
+      "highest_path": 4089,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 177901,
+      "name": "ur_p0_wide_window16",
+      "nested_packet_sha256": "110e5db06b1f494c5223ae0fd58901b4c89cb79f630bd8a9683d3f68d3460eca",
+      "observation_output_bound": 373722,
+      "packet_bytes": 16456,
+      "packet_sha256": "8847e961fe38ed66eed53610d9c73cffeeca2d75b9c2e81d805b2551f6b30a2c",
+      "parameters": [
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "d1d0f2a57585107bb62d075921db3a3b126c76a9d7a33ebbd48939d77fecef50",
+      "queries": 12,
+      "sequences": 4,
+      "source_bytes": 16384,
+      "source_sha256": "41cab224d858f799d6b1a7b8cfa3a9e0f19e5fbcb5c80ccd8bdd25cd026ede8b"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 27,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1,
+        1
+      ],
+      "logical_row_bytes": 36143,
+      "name": "ur_p0_wide_frames_uniform_16385",
+      "nested_packet_sha256": "609f5ae3f6651140b67c3cd51eed807bac2d2627b7f626e6bba7ba9779cb6ec2",
+      "observation_output_bound": 84830,
+      "packet_bytes": 16453,
+      "packet_sha256": "5b2111938e49dbf770429ac46bf2850a1d3eaa5b4be99cc7419533c137567be5",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "753949d5d4b3c968578bb300f97a28c23b37094547de62d66d03ab440768560f",
+      "queries": 3,
+      "sequences": 3,
+      "source_bytes": 16385,
+      "source_sha256": "608b801060d579a7b659a01755259a13dec8853b97d3d8062763c97ffac6ddae"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 27,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1,
+        1
+      ],
+      "logical_row_bytes": 36121,
+      "name": "ur_p0_wide_frames_uniform_24576",
+      "nested_packet_sha256": "23bdcd4daccfe6548460629a3f5f64fcb5ec4b79b1453f7bb18fba63d9e38af4",
+      "observation_output_bound": 84786,
+      "packet_bytes": 24644,
+      "packet_sha256": "a2277671e2c13cf10cea007ce4d8dfa211bb72f01e401744b2cd510a0bfa80ac",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "9c72d7d660f2fb72b19da4c1f8e52049dac6aacb574077dd184abedffd989668",
+      "queries": 3,
+      "sequences": 3,
+      "source_bytes": 24576,
+      "source_sha256": "d55c45e0e41a72b156e1795f2f688b0c999286433c88834fa2ad25cc7bea3a94"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        6145,
+        6144,
+        6144,
+        6144
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 36,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1,
+        1,
+        1
+      ],
+      "logical_row_bytes": 48168,
+      "name": "ur_p0_wide_frames_uniform_24577",
+      "nested_packet_sha256": "ec3d38ed7343aea9297522d66bb79938c671a6e5310a5b997cc249506296056b",
+      "observation_output_bound": 111696,
+      "packet_bytes": 24649,
+      "packet_sha256": "f15cb8368288c1515891691a821cccbf5832b1673c2e7f5a35b814a3613d01a5",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "8d62374294fb5d2fc7762df3afaf122b7fac76bd0090042b57b76fa0a6989a7b",
+      "queries": 4,
+      "sequences": 4,
+      "source_bytes": 24577,
+      "source_sha256": "3a25c3a1c66a11193503fa926656f2c96fdec8c49820fdb48635559494ec1f50"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 36,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1,
+        1,
+        1
+      ],
+      "logical_row_bytes": 48168,
+      "name": "ur_p0_wide_frames_uniform_32768",
+      "nested_packet_sha256": "3dc7ff176cc08a4413cad2d616ead79b9943fedfc559c449690b7cb671b61ac8",
+      "observation_output_bound": 111696,
+      "packet_bytes": 32840,
+      "packet_sha256": "0f461a19cb8f110476353c64cfd7f3a6ca0ed1f5c83a6b6cc0cfb36d99f0acfc",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "c6fb36c654e151aef1a1ea6cf21d5dd1dfe62824a4ec1501cd8d665708677a3d",
+      "queries": 4,
+      "sequences": 4,
+      "source_bytes": 32768,
+      "source_sha256": "b217b65e6f205f41b3fb8ef90cf7c44da93f630ca03965273485bbb21a5cccf5"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "raw_rollback",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 8214,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        0,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 10950947,
+      "name": "ur_p0_wide_frames_copy",
+      "nested_packet_sha256": "51ff5db2bc68b97dc2e42cb000cae42154077e6dff8ee6fb9300f3581a5f320b",
+      "observation_output_bound": 24010822,
+      "packet_bytes": 32840,
+      "packet_sha256": "78587c24d69f006461c6ded123c85fbd6249ff1ffce301f71d0e778c3ed1b6d4",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "0b4b62c24aeb321100c69aa38ed567bcaa21f04790ecd147a23fbacc93fe3db3",
+      "queries": 8188,
+      "sequences": 3,
+      "source_bytes": 32768,
+      "source_sha256": "1e3f782923b37d9698bc2931e7f349435d67da9bbadaf0a79262fe6228c519a1"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "raw_rollback",
+        "rle_rollback",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 8216,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        0,
+        1,
+        2
+      ],
+      "logical_row_bytes": 11012939,
+      "name": "ur_p0_wide_frames_mixed",
+      "nested_packet_sha256": "bd80f345f583f914001f85047cd38adbfde2f41af25e65ecc6ba73bdefabd02b",
+      "observation_output_bound": 24135318,
+      "packet_bytes": 32840,
+      "packet_sha256": "7791fc98c793f3e53b5d7616caa863cbff74da1233ec7539ed0006fbfa7984be",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "a1538a3994400c9e5a7cc004289ad42d8fc0a3c12dd9318cb497b65cd783690f",
+      "queries": 8190,
+      "sequences": 3,
+      "source_bytes": 32768,
+      "source_sha256": "318796c01ae42b12d59d44b8186fc62b3658540cea870c7abe9871f5e6a478d6"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 91,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 121436,
+      "name": "ur_p0_wide_frames_short",
+      "nested_packet_sha256": "95a09aab63d8ade9c826ce0432425dc952ddd852cf3f49e905bfa9d4d103b3ae",
+      "observation_output_bound": 272312,
+      "packet_bytes": 32840,
+      "packet_sha256": "4e12d3d129f705c9a290c3f9a9c9fc574082c19c36ce842e65d1f81b716c0d07",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        1,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "7b6dde2614eef2d638e8660dbbf6c6a6b4a94903392770362e3ab53612720e5d",
+      "queries": 17,
+      "sequences": 11,
+      "source_bytes": 32768,
+      "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 38,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 50724,
+      "name": "ur_p0_wide_frames_minimum_5",
+      "nested_packet_sha256": "c1fbf1f53b103cdffee5a70e307fcdc99d360fb0f6f225481111087729920432",
+      "observation_output_bound": 116808,
+      "packet_bytes": 16453,
+      "packet_sha256": "1bb3f8a2d988d7e92706c845d9a3b83cca7071389ab6efbef5626c3fe97cc119",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        5,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "c2766172440a567f2e221e591ab4db996af73cf82f25b0a81c19b260795343ea",
+      "queries": 14,
+      "sequences": 3,
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 38,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 50727,
+      "name": "ur_p0_wide_frames_minimum_6",
+      "nested_packet_sha256": "eaab892b53dc9c3dd5d128698fe16fb2eb0425ae1b9aedf79826fbcdeb9d83b3",
+      "observation_output_bound": 116814,
+      "packet_bytes": 16453,
+      "packet_sha256": "4324bfa2e6451ff03d98a53ca2c252bd820a097186d7dc89cdd86d2cb6e23734",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        6,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "93220f5cc8de18335826c999533384d6f75be23d1ee7b70596b230d8ecf9dc53",
+      "queries": 14,
+      "sequences": 3,
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 38,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 50727,
+      "name": "ur_p0_wide_frames_minimum_7",
+      "nested_packet_sha256": "d6db9bae45625cffc86a161d8c9635d6432902391afc070e064315c28fc6d90d",
+      "observation_output_bound": 116814,
+      "packet_bytes": 16453,
+      "packet_sha256": "25d2b0dbc9ca4df343c960964da10640074a288f206ba81a459976bfdfe30d27",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        7,
+        4095,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "93220f5cc8de18335826c999533384d6f75be23d1ee7b70596b230d8ecf9dc53",
+      "queries": 14,
+      "sequences": 3,
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "later_sufficient",
+        "literal_improvement",
+        "literal_rejected",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "unpromising_skip"
+      ],
+      "events": 12540,
+      "highest_path": 4096,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 17261628,
+      "name": "ur_p0_wide_frames_horizon",
+      "nested_packet_sha256": "10353e9ffc8205d080feef30a2a5db01e21490a69403dd53dc9e2f8f365ebd6d",
+      "observation_output_bound": 37739640,
+      "packet_bytes": 32840,
+      "packet_sha256": "48c1fb09fa453fd1f5923cd82e67576523fc8a66e96d38f57aaf2cae7b5d7294",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "190a06d09c183bda02b4b8ba537c796eb7343ddcccf71c638866f58a3fbb84ba",
+      "queries": 4150,
+      "sequences": 9,
+      "source_bytes": 32768,
+      "source_sha256": "19e5ad3bc7a99c4f503e777103ffa3d41d3e8f40cf9b63bcb89356feb5f7dede"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 43,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 57354,
+      "name": "ur_p0_wide_frames_small_tables",
+      "nested_packet_sha256": "1d623a5f2e997ff0cb5ef28121829dbc7bf5c9dce2c536921edd109f7564ddbf",
+      "observation_output_bound": 131860,
+      "packet_bytes": 32840,
+      "packet_sha256": "9f5bc7ade8a08a49f95539a5b576e890cec4c6192c3e756a38c374b96c704098",
+      "parameters": [
+        16,
+        6,
+        6,
+        1,
+        4,
+        0,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "a437c846dd1e0a01632df6e2e331a71ded236c91d6f1018063c3b68f225a203a",
+      "queries": 11,
+      "sequences": 4,
+      "source_bytes": 32768,
+      "source_sha256": "824b489745de883f2f50de9b7eb0c503cd2c9daf1ffceed0dbfe5cf0f9e269ef"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        624,
+        624,
+        624,
+        624
+      ],
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "later_sufficient",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "match_tie_abort",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "trailing_backtrack",
+        "unpromising_skip"
+      ],
+      "events": 2699,
+      "highest_path": 188,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 4249484,
+      "name": "ur_p0_alternatives_0202",
+      "nested_packet_sha256": "e397c93aeb61a7b8cab8246795500dfd40fb5e6dff10ec8f1cc26e0c18b03318",
+      "observation_output_bound": 9196056,
+      "packet_bytes": 2568,
+      "packet_sha256": "edf7782f80b3680bb8d9a468375e3a06ef28ea979a79797ebafc08a2b16749eb",
+      "parameters": [
+        12,
+        8,
+        8,
+        6,
+        3,
+        128,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "7204d70df49b9d5c940facb4fc83d8da8fe98ee2f593f97a9b7254059d769099",
+      "queries": 733,
+      "sequences": 97,
+      "source_bytes": 2496,
+      "source_sha256": "c18e228dd413d245f2221e9cc0543e45be0a3445344f22f4be0cd631bb227e68"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        624,
+        624,
+        624,
+        624
+      ],
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "later_sufficient",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "match_tie_abort",
+        "match_worse_abort",
+        "multiple_sequences",
+        "search_repeat",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "trailing_backtrack",
+        "unpromising_skip"
+      ],
+      "events": 2120,
+      "highest_path": 188,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 3388148,
+      "name": "ur_p0_alternatives_2020",
+      "nested_packet_sha256": "d1f4a6faf1d7dde6e7f42ee6e0b2802c41ffaccdfc9cdb296dc790fbabd79c73",
+      "observation_output_bound": 7325160,
+      "packet_bytes": 2568,
+      "packet_sha256": "45ba68527302810f110f6b6e9c71d2bd57248c3ccbb3593dd611ff84e164eb09",
+      "parameters": [
+        12,
+        8,
+        8,
+        6,
+        3,
+        128,
+        0
+      ],
+      "policy": 0,
+      "predicted_state_sha256": "0b72279b8dad8cebdd0364bdd52df4f85a8fb40152f51e65b4bdc11071be82c5",
+      "queries": 555,
+      "sequences": 69,
+      "source_bytes": 2496,
+      "source_sha256": "8f59337ceb5f1a3e1105f6845ddbf2fc3a210b7b38be83f4b378ca817a4d76b1"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 18,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1
+      ],
+      "logical_row_bytes": 24077,
+      "name": "ur_p2_wide_uniform",
+      "nested_packet_sha256": "2238e1dfe560003cbd03e586656bc892fdb498dbbc6cfc11f3ed63dd5aa94395",
+      "observation_output_bound": 57882,
+      "packet_bytes": 16448,
+      "packet_sha256": "0653b090a62a99b9376f290aa88532b565a702c632357fba4372764b35320998",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "c4e25c99e76c78b55d5e9c0f01c809445b377e3ec6754332cc08351e39c6323c",
+      "queries": 2,
+      "sequences": 2,
+      "source_bytes": 16384,
+      "source_sha256": "f3336bea752b5a28743033dd2c844a4a63fba08871aaee2586a2bf2d69be83a2"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "raw_rollback",
+        "search_tree"
+      ],
+      "events": 8196,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        0,
+        2
+      ],
+      "logical_row_bytes": 10926556,
+      "name": "ur_p2_wide_noise_copy",
+      "nested_packet_sha256": "565baea420ff8e1200e0a6eafbc50122aecb0121f4a937d9dc7e2fde1cae4e85",
+      "observation_output_bound": 23956408,
+      "packet_bytes": 16448,
+      "packet_sha256": "3c09114b504815f7476f63beecf972ab8dcfa6a5e2e1deb9c78dd30a48ea58fd",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "d3ad197dc2e72516979f0ae85e60c5ff074f3cbf798a0a14df9c212ac4a98219",
+      "queries": 8186,
+      "sequences": 1,
+      "source_bytes": 16384,
+      "source_sha256": "4bdce7f4f7073a1901193d38658a8ffdc9d19a23bbd1e8b7d62087ba26350e97"
+    },
+    {
+      "alternatives": 3,
+      "alternatives_by_block": [
+        0,
+        3
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "ultra_alternative_considered",
+        "ultra_alternative_rejected",
+        "ultra_improvement_after_rejection",
+        "ultra_match_tie_continue",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 31035,
+      "highest_path": 4096,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "logical_row_bytes": 41111908,
+      "name": "ur_p2_wide_runs_disabled",
+      "nested_packet_sha256": "6f20528553855cdf2c7028f0e60b155b86a516fb744d42f9fb213a00cbfb8f13",
+      "observation_output_bound": 90173896,
+      "packet_bytes": 16448,
+      "packet_sha256": "0f06b79259a748e0e717395058a1abc106f46cd14b98ed97946068dd318940b9",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "6d6cfa1d786b3a34d13f49b0808b3895e562b4687626bd9320e0f6dae9f07f63",
+      "queries": 10337,
+      "sequences": 8,
+      "source_bytes": 16384,
+      "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+    },
+    {
+      "alternatives": 18,
+      "alternatives_by_block": [
+        0,
+        18
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "ultra_alternative_considered",
+        "ultra_alternative_rejected",
+        "ultra_improvement_after_rejection",
+        "ultra_match_tie_continue",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 31050,
+      "highest_path": 4096,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "logical_row_bytes": 41324579,
+      "name": "ur_p2_wide_runs_priced",
+      "nested_packet_sha256": "e0613c7861994f971c174bc5705bd771be83e7819559d852d220510e8d2aaf66",
+      "observation_output_bound": 90603078,
+      "packet_bytes": 16448,
+      "packet_sha256": "6c73cda31b163761a2d5a87a73c9b226a2a13ef8c10b5dddac4830a2f6acbbd8",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "d313af0b59df318fa391408552a3937d0d22ca8683c1df7500ce4b6e49f3adf8",
+      "queries": 10337,
+      "sequences": 8,
+      "source_bytes": 16384,
+      "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 15611,
+      "highest_path": 4096,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "logical_row_bytes": 20980113,
+      "name": "ur_p2_wide_horizon",
+      "nested_packet_sha256": "993387eca3ecbe0881f874b028d378c148cd1ce6f483a22a77cfae405a77349c",
+      "observation_output_bound": 45961762,
+      "packet_bytes": 16448,
+      "packet_sha256": "db2b9d7f9365a474e3c942be7d3d7db345ec61dafe5d5ae9bc7e6d147aece81b",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "0005b17c2a8137adc9b8906e6c02c3a59311942e86e64622d87070d256f53f05",
+      "queries": 8296,
+      "sequences": 6,
+      "source_bytes": 16384,
+      "source_sha256": "a101088542f51cfa8f7fbb510f643231788be9823bf89860cbe57ffa4bf895f1"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192
+      ],
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "literal_improvement",
+        "search_tree"
+      ],
+      "events": 51,
+      "highest_path": 4,
+      "hypothesized_kinds": [
+        2,
+        2
+      ],
+      "logical_row_bytes": 67596,
+      "name": "ur_p2_wide_short",
+      "nested_packet_sha256": "24787291cd9d18b17268c22700fb21ff69faf2361d34c7974932fb913b09dd2b",
+      "observation_output_bound": 153368,
+      "packet_bytes": 16448,
+      "packet_sha256": "2207f50d5677dc0db47556942b258d083ccd1d4c42a90c20a33e235c2ab4268c",
+      "parameters": [
+        14,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "6809c7b1938f10f01424a1eebb1d61e54b1bc01b2926aec3b410c31da0d832cd",
+      "queries": 17,
+      "sequences": 2,
+      "source_bytes": 16384,
+      "source_sha256": "b43879f3fc630f0775f4f5b2d4fc04fae8b56bec91beab83786da097b068e5aa"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "literal_improvement",
+        "search_repeat",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 46,
+      "highest_path": 4089,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 177922,
+      "name": "ur_p2_wide_window16",
+      "nested_packet_sha256": "110e5db06b1f494c5223ae0fd58901b4c89cb79f630bd8a9683d3f68d3460eca",
+      "observation_output_bound": 373764,
+      "packet_bytes": 16456,
+      "packet_sha256": "e0f994ed398cbf2d71c5e4d4cb0c2bdca93186a622a8b31737c1ff8d6d885a5e",
+      "parameters": [
+        16,
+        12,
+        12,
+        6,
+        3,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "f645ac5ee34d125fcdb34d906d1a33273181f89fb9e1ee502043eeb8d27e93d1",
+      "queries": 12,
+      "sequences": 4,
+      "source_bytes": 16384,
+      "source_sha256": "41cab224d858f799d6b1a7b8cfa3a9e0f19e5fbcb5c80ccd8bdd25cd026ede8b"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 27,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1,
+        1
+      ],
+      "logical_row_bytes": 36163,
+      "name": "ur_p2_wide_frames_uniform_16385",
+      "nested_packet_sha256": "609f5ae3f6651140b67c3cd51eed807bac2d2627b7f626e6bba7ba9779cb6ec2",
+      "observation_output_bound": 84870,
+      "packet_bytes": 16453,
+      "packet_sha256": "893935ce78fc562d86c6eb16c1d950d5b6f74e9e8d1eace822a4fbc0b69204b0",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "1143eb37b86de0d79dd89c5ee3b9f73c38a891620e8bda17d10857d11f8b840f",
+      "queries": 3,
+      "sequences": 3,
+      "source_bytes": 16385,
+      "source_sha256": "608b801060d579a7b659a01755259a13dec8853b97d3d8062763c97ffac6ddae"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 27,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1,
+        1
+      ],
+      "logical_row_bytes": 36141,
+      "name": "ur_p2_wide_frames_uniform_24576",
+      "nested_packet_sha256": "23bdcd4daccfe6548460629a3f5f64fcb5ec4b79b1453f7bb18fba63d9e38af4",
+      "observation_output_bound": 84826,
+      "packet_bytes": 24644,
+      "packet_sha256": "c3e4b1a0fb46d3c1496b76b4856bf18d2dff9b2cd830bba4950c0adc2c38bc3b",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "1a9198e2f4cabefb50ada66c049f4765316cf4b14b4d2cce9819bdf4c95aad09",
+      "queries": 3,
+      "sequences": 3,
+      "source_bytes": 24576,
+      "source_sha256": "d55c45e0e41a72b156e1795f2f688b0c999286433c88834fa2ad25cc7bea3a94"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        6145,
+        6144,
+        6144,
+        6144
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 36,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1,
+        1,
+        1
+      ],
+      "logical_row_bytes": 48209,
+      "name": "ur_p2_wide_frames_uniform_24577",
+      "nested_packet_sha256": "ec3d38ed7343aea9297522d66bb79938c671a6e5310a5b997cc249506296056b",
+      "observation_output_bound": 111778,
+      "packet_bytes": 24649,
+      "packet_sha256": "ca35470ce3c01bebf1bb62dc3400d249a3fd98c4f395655f7b54d5ecb40c1a93",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "80270f9048132a3a1bc485d92917a405a2edf69881f73de98eadf47841b5ff32",
+      "queries": 4,
+      "sequences": 4,
+      "source_bytes": 24577,
+      "source_sha256": "3a25c3a1c66a11193503fa926656f2c96fdec8c49820fdb48635559494ec1f50"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "discarded_candidate_repeats",
+        "initial_sufficient",
+        "rle_rollback",
+        "search_repeat"
+      ],
+      "events": 36,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        1,
+        1,
+        1
+      ],
+      "logical_row_bytes": 48209,
+      "name": "ur_p2_wide_frames_uniform_32768",
+      "nested_packet_sha256": "3dc7ff176cc08a4413cad2d616ead79b9943fedfc559c449690b7cb671b61ac8",
+      "observation_output_bound": 111778,
+      "packet_bytes": 32840,
+      "packet_sha256": "a6b845cb41ce63af7f233f7d445102b1cb1e066641cd5a249e52b16908cd02e5",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "ca4bf9bd50c466668a16513dc615b0ebfaafecd98cb4cb93e7860a1055e1fe2d",
+      "queries": 4,
+      "sequences": 4,
+      "source_bytes": 32768,
+      "source_sha256": "b217b65e6f205f41b3fb8ef90cf7c44da93f630ca03965273485bbb21a5cccf5"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "raw_rollback",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 8214,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        0,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 10950947,
+      "name": "ur_p2_wide_frames_copy",
+      "nested_packet_sha256": "51ff5db2bc68b97dc2e42cb000cae42154077e6dff8ee6fb9300f3581a5f320b",
+      "observation_output_bound": 24010822,
+      "packet_bytes": 32840,
+      "packet_sha256": "c8d465fb96e72544f5381cb72df0970dddafd976df8264786bed6ec862e170fd",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "4306a829237612ef21fd60373d9c74c72ccb370e71dca3fac534500d7cfa636d",
+      "queries": 8188,
+      "sequences": 3,
+      "source_bytes": 32768,
+      "source_sha256": "1e3f782923b37d9698bc2931e7f349435d67da9bbadaf0a79262fe6228c519a1"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "raw_rollback",
+        "rle_rollback",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 8216,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        0,
+        1,
+        2
+      ],
+      "logical_row_bytes": 11012938,
+      "name": "ur_p2_wide_frames_mixed",
+      "nested_packet_sha256": "bd80f345f583f914001f85047cd38adbfde2f41af25e65ecc6ba73bdefabd02b",
+      "observation_output_bound": 24135316,
+      "packet_bytes": 32840,
+      "packet_sha256": "854c662d8d81ad104457c40f97d04ad0a051bce4b5c825e417be044a7f91179b",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "4391168c5b784ef6f6bcecef3d2da98bfb4777d2634ea50e03ab88dc5a4c507f",
+      "queries": 8190,
+      "sequences": 3,
+      "source_bytes": 32768,
+      "source_sha256": "318796c01ae42b12d59d44b8186fc62b3658540cea870c7abe9871f5e6a478d6"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_short",
+        "search_tree"
+      ],
+      "events": 91,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 121456,
+      "name": "ur_p2_wide_frames_short",
+      "nested_packet_sha256": "95a09aab63d8ade9c826ce0432425dc952ddd852cf3f49e905bfa9d4d103b3ae",
+      "observation_output_bound": 272352,
+      "packet_bytes": 32840,
+      "packet_sha256": "263661c4b9a1b1bebf55ac40819f74dbf561d548d61f1ba3a2069d9920158608",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        3,
+        1,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "a446c12de28e661e38d0a53478269af8c78c26e2c23449897c4483ec7aedefe0",
+      "queries": 17,
+      "sequences": 11,
+      "source_bytes": 32768,
+      "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 38,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 50724,
+      "name": "ur_p2_wide_frames_minimum_5",
+      "nested_packet_sha256": "c1fbf1f53b103cdffee5a70e307fcdc99d360fb0f6f225481111087729920432",
+      "observation_output_bound": 116808,
+      "packet_bytes": 16453,
+      "packet_sha256": "5b309acd704ef1d58124eb06092a878e3ac52a129562c6a33fd8ea9bac500b45",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        5,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "898bfce95a29594ba14f872b177cf52fc77d623bec98f61707b87012581626ef",
+      "queries": 14,
+      "sequences": 3,
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 38,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 50727,
+      "name": "ur_p2_wide_frames_minimum_6",
+      "nested_packet_sha256": "eaab892b53dc9c3dd5d128698fe16fb2eb0425ae1b9aedf79826fbcdeb9d83b3",
+      "observation_output_bound": 116814,
+      "packet_bytes": 16453,
+      "packet_sha256": "16ab65cd6f937928769813fe80c841dae38dfb4e3a8968506eb49e185abb8a6a",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        6,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "7229db5b3f3dca2b9861986bca2ebb4cd8bcce711b13bc913e6afcf800868319",
+      "queries": 14,
+      "sequences": 3,
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        5462,
+        5462,
+        5461
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 38,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 50727,
+      "name": "ur_p2_wide_frames_minimum_7",
+      "nested_packet_sha256": "d6db9bae45625cffc86a161d8c9635d6432902391afc070e064315c28fc6d90d",
+      "observation_output_bound": 116814,
+      "packet_bytes": 16453,
+      "packet_sha256": "eebca732ea89075355142790deaf1d68e4256df0b8d728eacdced188e365ec93",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        7,
+        4095,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "7229db5b3f3dca2b9861986bca2ebb4cd8bcce711b13bc913e6afcf800868319",
+      "queries": 14,
+      "sequences": 3,
+      "source_bytes": 16385,
+      "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_horizon",
+        "later_source_end",
+        "later_sufficient",
+        "literal_improvement",
+        "literal_rejected",
+        "multiple_sequences",
+        "search_repeat",
+        "search_tree",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 26303,
+      "highest_path": 4096,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 35441751,
+      "name": "ur_p2_wide_frames_horizon",
+      "nested_packet_sha256": "10353e9ffc8205d080feef30a2a5db01e21490a69403dd53dc9e2f8f365ebd6d",
+      "observation_output_bound": 77623214,
+      "packet_bytes": 32840,
+      "packet_sha256": "c7ffd6f5ea107d30232554bc350932be51c9b8212218ec0d4a2ea82952db98fc",
+      "parameters": [
+        15,
+        12,
+        12,
+        6,
+        4,
+        4095,
+        1
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "f770a1686a301fb1c51b6db0578f27eeb71311f77ccf4070b8eb1336355d9637",
+      "queries": 12392,
+      "sequences": 9,
+      "source_bytes": 32768,
+      "source_sha256": "19e5ad3bc7a99c4f503e777103ffa3d41d3e8f40cf9b63bcb89356feb5f7dede"
+    },
+    {
+      "alternatives": 0,
+      "alternatives_by_block": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blocks": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "coverage": [
+        "block_boundary_query",
+        "compressed_commit",
+        "initial_no_match",
+        "initial_sufficient",
+        "search_repeat",
+        "search_tree"
+      ],
+      "events": 43,
+      "highest_path": 2,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 57354,
+      "name": "ur_p2_wide_frames_small_tables",
+      "nested_packet_sha256": "1d623a5f2e997ff0cb5ef28121829dbc7bf5c9dce2c536921edd109f7564ddbf",
+      "observation_output_bound": 131860,
+      "packet_bytes": 32840,
+      "packet_sha256": "7b1c46803645e0c42f0c82180cc6c10b10b949675008ffbff4781f69d5754e7a",
+      "parameters": [
+        16,
+        6,
+        6,
+        1,
+        4,
+        0,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "74ac64be9de761ae9f8251caf0f2f03adaab67a69ffe95d37228b558ba355bc9",
+      "queries": 11,
+      "sequences": 4,
+      "source_bytes": 32768,
+      "source_sha256": "824b489745de883f2f50de9b7eb0c503cd2c9daf1ffceed0dbfe5cf0f9e269ef"
+    },
+    {
+      "alternatives": 277,
+      "alternatives_by_block": [
+        72,
+        103,
+        95,
+        7
+      ],
+      "blocks": [
+        624,
+        624,
+        624,
+        624
+      ],
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "later_source_end",
+        "later_sufficient",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "trailing_backtrack",
+        "ultra_alternative_considered",
+        "ultra_alternative_extends_frontier",
+        "ultra_alternative_rejected",
+        "ultra_alternative_selected",
+        "ultra_improvement_after_rejection",
+        "ultra_match_tie_continue",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 3532,
+      "highest_path": 188,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 5562456,
+      "name": "ur_p2_alternatives_0202",
+      "nested_packet_sha256": "e397c93aeb61a7b8cab8246795500dfd40fb5e6dff10ec8f1cc26e0c18b03318",
+      "observation_output_bound": 12035248,
+      "packet_bytes": 2568,
+      "packet_sha256": "70d68d59569b32dd27e421eef75039697e2ae9fd1594e2440afbd2d13369ff08",
+      "parameters": [
+        12,
+        8,
+        8,
+        6,
+        3,
+        128,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "9a0ab46d319af7ec3b3266c3cb602de31d310066b96099243db86adf27264bef",
+      "queries": 1022,
+      "sequences": 123,
+      "source_bytes": 2496,
+      "source_sha256": "c18e228dd413d245f2221e9cc0543e45be0a3445344f22f4be0cd631bb227e68"
+    },
+    {
+      "alternatives": 232,
+      "alternatives_by_block": [
+        110,
+        115,
+        7,
+        0
+      ],
+      "blocks": [
+        624,
+        624,
+        624,
+        624
+      ],
+      "coverage": [
+        "all_literals",
+        "block_boundary_query",
+        "compressed_commit",
+        "deferred_repeat_publication",
+        "initial_no_match",
+        "initial_sufficient",
+        "later_source_end",
+        "later_sufficient",
+        "literal_improvement",
+        "literal_rejected",
+        "literal_tie",
+        "match_extend",
+        "match_improvement",
+        "multiple_sequences",
+        "search_repeat",
+        "search_short",
+        "search_skipped",
+        "search_tree",
+        "tail_no_query",
+        "trailing_backtrack",
+        "ultra_alternative_considered",
+        "ultra_alternative_extends_frontier",
+        "ultra_alternative_rejected",
+        "ultra_alternative_selected",
+        "ultra_improvement_after_rejection",
+        "ultra_match_tie_continue",
+        "ultra_match_worse_continue",
+        "ultra_unpromising_query"
+      ],
+      "events": 2849,
+      "highest_path": 188,
+      "hypothesized_kinds": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "logical_row_bytes": 4590647,
+      "name": "ur_p2_alternatives_2020",
+      "nested_packet_sha256": "d1f4a6faf1d7dde6e7f42ee6e0b2802c41ffaccdfc9cdb296dc790fbabd79c73",
+      "observation_output_bound": 9916782,
+      "packet_bytes": 2568,
+      "packet_sha256": "f20664b647add2bab9c18f733d9ff4fcebb803f311c7e7a0b2f16389f5429f4c",
+      "parameters": [
+        12,
+        8,
+        8,
+        6,
+        3,
+        128,
+        0
+      ],
+      "policy": 2,
+      "predicted_state_sha256": "936f8ef829c50aa2bd45277312d5799187f7ee590d0a33a19fdbb6a7257958d3",
+      "queries": 834,
+      "sequences": 86,
+      "source_bytes": 2496,
+      "source_sha256": "8f59337ceb5f1a3e1105f6845ddbf2fc3a210b7b38be83f4b378ca817a4d76b1"
+    }
+  ],
+  "coverage": [
+    "all_literals",
+    "block_boundary_query",
+    "compressed_commit",
+    "deferred_repeat_publication",
+    "discarded_candidate_repeats",
+    "initial_no_match",
+    "initial_sufficient",
+    "later_horizon",
+    "later_source_end",
+    "later_sufficient",
+    "literal_improvement",
+    "literal_rejected",
+    "literal_tie",
+    "match_extend",
+    "match_improvement",
+    "multiple_sequences",
+    "raw_rollback",
+    "rle_rollback",
+    "search_repeat",
+    "search_short",
+    "search_skipped",
+    "search_tree",
+    "tail_no_query",
+    "trailing_backtrack",
+    "ultra_alternative_considered",
+    "ultra_alternative_extends_frontier",
+    "ultra_alternative_rejected",
+    "ultra_alternative_selected",
+    "ultra_improvement_after_rejection",
+    "ultra_match_tie_continue",
+    "ultra_match_worse_continue",
+    "ultra_unpromising_query"
+  ],
+  "policy_two_later_alternatives": 348,
+  "predecessor_manifest_sha256": "2e4b9ebf0cb68fffb37a828ddecde21c0da60dfe4cf3f6126827b6a65e820544",
+  "protocol": "ZURTS01",
+  "qualification": "Forty-two source-only retained requests preserve all nineteen predecessor packets under both policies and every policy-zero state hypothesis. Policy-two alternatives occur after the first block. Publication kinds are explicit hypotheses, not entropy-selection predictions. No successor native execution or public retained Ultra admission.",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "schema_version": 1,
+  "source_cap": 32768,
+  "unchanged_policy_zero_cases": 19
+}
