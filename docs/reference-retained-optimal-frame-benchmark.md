@@ -60,3 +60,14 @@ unchanged. The promotion receipt and full scoped source snapshot are retained in
 The original external-only baseline description above records its historical
 state. All-backend controller qualification and timings remain separate gates;
 this integration alone makes no performance claim.
+
+
+## Complete clock-free qualification (2026-10-21)
+
+The active v2 controller now qualifies all 21 storage configurations. All 546 case
+rows and complete frames agree, allocation ownership balances, and every sample
+array remains empty. Both ordinary/optimized corrected control suites pass 43/43.
+The original ineffective search-log mutation and its 42/43 result are retained
+separately. Exact source, binaries, frame/ledger evidence and the controller audit
+are documented in `reference-retained-optimal-benchmark-controller-review.md`.
+Timing still awaits the full regression and observed task-owned CPU barrier.

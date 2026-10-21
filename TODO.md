@@ -109,7 +109,7 @@ qualified before complete-frame and public admission. Retained Ultra/Ultra2 rema
 - [ ] Complete the remaining 19 isolated-feature and release/all full regression products and reconcile the final public matrix.
 - [x] Freeze 26 independently decoded complete frames and qualify equal safe/all owner ledgers without timing.
 - [x] Promote the exact frozen complete-frame example/pack to main and verify formatting, safe/all Clippy and ordinary/optimized independent baseline checks.
-- [ ] Qualify every benchmark backend without clocks; audit controller and coherent forgery controls.
+- [x] Qualify every benchmark backend without clocks; audit controller and coherent forgery controls.
 - [ ] Measure every backend and an independent safe/all repeat after completed CPU barriers; retain all executables, samples and source identities.
 - [ ] Reconcile the bounded milestone and decompose the next scope without claiming complete upstream parity.
 
