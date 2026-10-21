@@ -112,7 +112,7 @@ requirements are recorded in `docs/data-structures.md` before implementation.
 - [x] Integrate block token collection and shared frame publication with exact nine-owner identities, complete output reservation and raw/RLE rollback.
 - [ ] Qualify actual Rust wire history by independent replay and native decoding, without assuming native/Rust entropy decisions agree.
 - [ ] Complete all storage-feature correctness, foreign Miri and concrete no-atomics code generation before public admission.
-- [ ] Freeze additive public recipes declaring only the exact intended retained-Ultra resource-to-success predecessor transition.
+- [x] Freeze additive public recipes declaring only the exact intended retained-Ultra resource-to-success predecessor transition.
 - [ ] Qualify public strategy-8 admission, all remaining predecessor identities and bidirectional interoperability with malformed/allocator controls.
 - [ ] Complete full safe/isolated-unsafe/all and release/all regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
 - [ ] Bind the final public entry point to foreign Miri and concrete no-atomics artifacts with exact native-to-final source reconciliation.
