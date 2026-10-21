@@ -129,3 +129,26 @@ SHA-256 `13cc40e5d22c27d9c41704a458a1b5a216db3865a436af1ac32cf6e02936c7fb`.
 The next gate projects an immutable complete-state fixture and independently
 qualifies a borrowed Rust reader and Rust frame decoding. Neither this native
 campaign nor its Python replay admits retained Ultra in production Rust.
+
+
+## Immutable fixture and independent Rust reader (2026-10-21)
+
+The retained policy pack now contains 42 cases and 134 blocks, preserving 207635
+complete state events, 102307 queries, 543 sequences and 530 alternative records.
+Source-driven independent ordinary/optimized Python reconstructs all 28853730
+bytes exactly and each mode rejects 30 effective malformed or later-block state
+forgeries with the root hash bypassed. Native frame/ledger values remain audited
+inputs, not model predictions.
+
+The independent borrowed Rust reader passes five focused checks in all 22
+storage products, plus 21 true no_std builds, formatting and strict safe/all
+Clippy. All 42 native frames decode; all 19 retained Optimal predecessor cases
+preserve geometry, frames, allocation ledgers and every complete state. The
+reader checks later-block alternative operands and committed/pending publication
+without invoking production parsing. All 86 production Rust source files remain
+unchanged at this checkpoint. This advances the fixture gate; private parser
+scope and production admission remain separate.
+
+Details and exact archive identities are in
+`../tests/fixtures/reference-ultra-retained/README.md` and
+`evidence/2026-10-21-ultra-retained-{fixture,reader}.{json,tar.gz}`.
