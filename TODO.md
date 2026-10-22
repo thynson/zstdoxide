@@ -106,7 +106,7 @@ strategy-9 scope is 16385..32768 bytes within one resolved window, with first-bl
 bootstrap followed by retained single-pass policy 2. Design and ownership are
 recorded in `docs/data-structures.md` before implementation.
 
-- [ ] Analyze first-block bootstrap, checked rebase, retained ownership and the two intended predecessor transitions against pinned upstream.
+- [x] Analyze first-block bootstrap, checked rebase, retained ownership and the two intended predecessor transitions against pinned upstream.
 - [ ] Freeze an additive phase/block transport and independent model, preserving every Module 19 fresh and Module 21 retained observation.
 - [ ] Freeze source-only witnesses for seeding, rebase, retained learned prices, later alternatives, short keys, horizons and all publication kinds.
 - [ ] Specify and preflight native observer adaptation, complete dependency inventories, sanitizer commands and bounded capture.
