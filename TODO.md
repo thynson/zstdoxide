@@ -115,7 +115,7 @@ recorded in `docs/data-structures.md` before implementation.
 - [x] Introduce a dedicated constructor-only retained-Ultra2 scope with old-entry rejection and exact owner contracts.
 - [x] Add the checked first-block-rebase and retained schedule plan, preserving early allocation and complete output bounds.
 - [x] Bind retained Ultra2 search to its checked schedule and qualify every native query, table, frontier and phase boundary.
-- [ ] Admit scoped bootstrap/rebase/retained execution without widening fresh Ultra2 or retained Ultra constructors.
+- [x] Admit scoped bootstrap/rebase/retained execution without widening fresh Ultra2 or retained Ultra constructors.
 - [ ] Qualify every complete state, future-source boundary, phase failure, poison/reset path and allocator identity.
 - [ ] Integrate retained token collection and shared frame publication with discarded-token isolation and raw/RLE rollback.
 - [ ] Qualify actual Rust wire histories by independent phase replay and pinned native decoding.

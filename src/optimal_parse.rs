@@ -76,6 +76,23 @@ impl<H: Allocator, N: Allocator, S: Allocator, B: Allocator> PathProvider
         Ok(())
     }
 }
+struct Ultra2RetainedProvider<'s, 'a, H: Allocator, N: Allocator, S: Allocator, B: Allocator>(
+    &'s mut OptimalSearch<'a, H, N, S, B>,
+);
+impl<H: Allocator, N: Allocator, S: Allocator, B: Allocator> PathProvider
+    for Ultra2RetainedProvider<'_, '_, H, N, S, B>
+{
+    fn query<A: Allocator>(
+        &mut self,
+        query: OptimalQuery,
+        matches: &mut OptimalMatches<A>,
+    ) -> Result<()> {
+        for &candidate in self.0.query_ultra2_retained(query)? {
+            matches.push(candidate)?;
+        }
+        Ok(())
+    }
+}
 pub(crate) trait PathObserver {
     fn event<P: Allocator, F: Allocator>(
         &mut self,
@@ -685,6 +702,98 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         self.retained_end = end;
         self.status = Status::Finished;
         Ok(result)
+    }
+    pub(crate) fn ultra2_retained_frequencies(&self) -> Result<FrequencySnapshot> {
+        if self.scope != Scope::Ultra2Retained {
+            return Err(Error::UnsupportedFeature);
+        }
+        self.frequencies.snapshot()
+    }
+    /// Execute exactly one scheduled phase using a separately bound search.
+    /// The discarded first pass cannot advance the actual retained block cursor.
+    pub(crate) fn parse_ultra2_retained<
+        H: Allocator,
+        N: Allocator,
+        S: Allocator,
+        B: Allocator,
+        O: PathObserver,
+    >(
+        &mut self,
+        start: usize,
+        end: usize,
+        seeding: bool,
+        repeats: [u32; 3],
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+        observer: &mut O,
+    ) -> Result<PathResult> {
+        if self.scope != Scope::Ultra2Retained || self.frequencies.policy() != PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        let plan =
+            search.validate_ultra2_retained_binding(self.source, self.minimum, self.target)?;
+        if end.checked_sub(start) != Some(plan.next_block_len(start)?)
+            || end > self.source.len()
+            || repeats
+                .iter()
+                .any(|&v| v == 0 || v as usize > self.source.len())
+            || start == 0 && repeats != [1, 4, 8]
+        {
+            return Err(Error::InvalidParameter);
+        }
+        if start != self.retained_end
+            || self.status
+                != if start == 0 {
+                    Status::Ready
+                } else {
+                    Status::Finished
+                }
+        {
+            return Err(Error::InvalidState);
+        }
+        search.begin_ultra2_retained(start, end, seeding)?;
+        self.status = Status::Poisoned;
+        self.block_start = start;
+        self.block_end = end;
+        self.anchor = start;
+        self.repeats = repeats;
+        self.wire_repeats = repeats;
+        self.sequences = 0;
+        self.last_stretch = PathCell::ZERO;
+        self.matches.clear();
+        let result = self.run(&mut Ultra2RetainedProvider(search), observer)?;
+        if !seeding {
+            self.retained_end = end;
+        }
+        self.status = Status::Finished;
+        Ok(result)
+    }
+    /// Rebase only a completed discarded first pass. Keep learned prices and
+    /// physical path/search cells while discarding phase-local candidates.
+    pub(crate) fn rebase_ultra2_retained<H: Allocator, N: Allocator, S: Allocator, B: Allocator>(
+        &mut self,
+        search: &mut OptimalSearch<'a, H, N, S, B>,
+    ) -> Result<()> {
+        if self.scope != Scope::Ultra2Retained {
+            return Err(Error::UnsupportedFeature);
+        }
+        if self.status != Status::Finished || self.retained_end != 0 || self.block_start != 0 {
+            return Err(Error::InvalidState);
+        }
+        let plan =
+            search.validate_ultra2_retained_binding(self.source, self.minimum, self.target)?;
+        if self.block_end != plan.first_block_len() {
+            return Err(Error::InvalidState);
+        }
+        search.rebase_ultra2_retained()?;
+        self.ip = 0;
+        self.anchor = 0;
+        self.repeats = [1, 4, 8];
+        self.wire_repeats = self.repeats;
+        self.sequences = 0;
+        self.last_stretch = PathCell::ZERO;
+        self.matches.clear();
+        self.status = Status::Ready;
+        Ok(())
     }
     fn emit<O: PathObserver>(&self, observer: &mut O, mut event: PathEvent) -> Result<()> {
         event.ip = self.ip;

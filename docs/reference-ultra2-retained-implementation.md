@@ -102,3 +102,32 @@ Search executable contents are not retained; source snapshots, archive contents,
 logs and hashes remain available. Future scoped correctness matrices similarly
 hash each product and remove its isolated Cargo cache. Benchmark executables
 remain separate measured artifacts and are unaffected.
+
+## Scoped bootstrap and retained parser execution
+
+The dedicated parser entry and seven-owner coordinator execute the checked
+first-block seed, single rebase, actual first pass and later retained policy-2
+passes. Discarded results do not advance the actual block cursor or become
+pending publication. Raw/RLE publication keeps committed repeats; only compressed
+publication swaps wire owners. Every observer failure poisons the coordinator,
+which requires a complete allocation-preserving reset. Old parser scopes remain
+closed to the new entry. Token collection, frame dispatch and public admission
+are not part of this implementation checkpoint.
+
+All five execution tests pass in 22 products. Test-profile builds use optimization
+level 1 with debug assertions and overflow checks explicitly enabled; the
+release/all product retains its normal release profile. Complete native parser comparison
+covers 32 cases, all 93 actual blocks and all 229657 events, including physical
+path cells, price frequencies, queries, candidates, reset boundaries and repeat
+publication. Every callback in a complete seeded/two-block execution is separately
+failed and followed by reset/replay with borrowed allocators. All seven nonclone
+owner allocation failures, direct invalid calls, old scopes and mismatched plans
+are checked. Safe/all predecessor integration each passes nine tests; all 21
+true no_std products, formatting and strict all-target Clippy pass. The final
+full-regression/public/platform/benchmark gates remain open.
+
+Evidence: `docs/evidence/2026-10-22-ultra2-retained-execution.{json,tar.gz}`.
+Archive SHA-256: `a87b96b7f79dde62b71eb61e1ea6806aa95994557682fea9d689b9e89584c27e`. Changed Rust sources and complete logs
+are embedded; unchanged fixture payloads have an exact-commit Git blob/SHA-256
+restore manifest. Full source snapshots remain in the external stage, and exact
+executables are identified by the recorded hashes.

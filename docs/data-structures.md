@@ -3564,3 +3564,33 @@ indices before access and cap every read at the current block's physical end.
 Reset clears tables/frontiers, restores origin zero and reuses all allocations.
 This composition reuses each owner's independent safe/unsafe backend; the copied
 plan, rebased flag and ranges need no additional unsafe representation.
+
+### Scoped retained Ultra2 parser and phase coordinator
+
+`RetainedUltra2` owns seven independently allocator-parameterized parser/search
+workspaces, a copied checked plan, current block position, two repeat arrays and
+pending actual-pass result. Its lifecycle is Ready, Pending, Finished or
+Poisoned. It never allocates or stores tokens. Construction requires the dedicated
+unused parser and search scopes, exact borrowed source and matching plan, policy,
+literal mode, minimum match and target. Previous constructors cannot enter it.
+
+The dedicated parser entry validates source, schedule, repeats and phase before
+mutation. A discarded seed leaves the actual retained cursor at zero. Only its
+successful completion permits rebase; the rebase preserves frequency/path/search
+owners while resetting phase-local cursors, candidate storage and initial repeats.
+Actual encoding advances the retained cursor. Later blocks retain that logical
+bias and learned frequency state. The parser's existing path algorithm is shared;
+its provider is explicitly restricted to the new search capability.
+
+The coordinator observes upstream eligibility, phase begin/end and discarded reset
+through the existing `Ultra2Observer` contract. A small borrowed observer adapter
+counts sequence literals without allocating or collecting discarded tokens. Only
+an actual encoding result becomes pending publication. Raw/RLE publication keeps
+committed repeats; compressed publication swaps the two wire owners. Every
+post-entry error poisons the coordinator, including observer failures before or
+after any phase; whole-owner reset reuses allocations and permits bootstrap once
+again. Upstream counterparts are `ZSTD_compressBlock_btultra2`,
+`ZSTD_initStats_ultra`, `ZSTD_buildSeqStore` and prevCBlock/nextCBlock publication.
+The new coordinator and phase values use one safe representation; existing owners
+retain their independent opt-in unsafe implementations. Token/frame integration
+and public strategy admission remain separate work.
