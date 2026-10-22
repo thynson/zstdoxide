@@ -234,6 +234,7 @@ mod optimal_state;
 mod ultra_fresh_fixture;
 
 mod ultra2_plan;
+mod ultra2_retained_plan;
 
 #[cfg(test)]
 #[path = "../tests/support/ultra2_fixture.rs"]
@@ -250,3 +251,7 @@ mod optimal_retained_state;
 #[cfg(test)]
 #[path = "../tests/support/ultra_retained_fixture.rs"]
 mod ultra_retained_fixture;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra2_retained_fixture.rs"]
+mod ultra2_retained_fixture;

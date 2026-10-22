@@ -3515,3 +3515,26 @@ Its upstream counterpart is the workspace ownership spanning first-block
 `ZSTD_compressBlock_btultra2` bootstrap and later policy-2 block calls, rather
 than an upstream standalone constructor. The discriminant and borrowed source
 record need no independent unsafe representation.
+
+### Checked retained Ultra2 schedule and source coordinates
+
+`RetainedUltra2Plan` is an allocation-free copied value. It owns at most four
+block lengths and validated parameters, and records the maximum block length,
+all nine existing owner byte bounds and the complete known-size frame bound.
+Private schedules contain two-to-four blocks of 7..8192 bytes, sum exactly to
+14..32768 physical source bytes and fit the resolved window. Public-plan-only
+construction balances 16385..32768 bytes into three/four blocks. Neither factory
+changes resolver or encoder admission.
+
+The plan uses `Ultra2Coordinates::new(first_block_length, source_length)` only
+when the first block exceeds eight bytes; otherwise origin remains zero. It
+never calls the fresh plan's whole-source rebase. Visible coordinates accept
+only complete scheduled prefixes, keep the same logical bias for every later
+block and reject stale/future addresses by checked subtraction and extent.
+The plan validates all owner `Layout` bounds and the full frame header plus
+source and per-block headers before allocation. Existing fresh Ultra2 and
+retained Optimal/Ultra validators retain their original bounds; an additive
+layout method handles the tiny retained threshold controls. Upstream counterparts
+are first-block `ZSTD_initStats_ultra` rebase, `ZSTD_buildSeqStore` scheduling and
+known-size frame/header reservation. Copied fields share one representation
+across all independently selected storage backends.

@@ -1,0 +1,260 @@
+{
+  "files": [
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/159b1bba472aa05eee974e6073f3b826837daab2e449659a3026edee3a0a2fec.gz",
+      "archive_bytes": 1418839,
+      "archive_sha256": "59850860ebda93010eb923430caef9c1b789a86a2e3a80f50c17196b5696a1e7",
+      "bytes": 4753640,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/04bc4edeb0889784/out/reference_ultra_retained-04bc4edeb0889784",
+      "sha256": "159b1bba472aa05eee974e6073f3b826837daab2e449659a3026edee3a0a2fec"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/5cee48f611ef7ef317afb480ddc86922300deb53e0aab6b556b9892aa67e4b14.gz",
+      "archive_bytes": 1428199,
+      "archive_sha256": "6e754e3bee771d72e29380768090400d59f311fadb730edc010e320d9e0b1e9c",
+      "bytes": 4764208,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/11fdcf9a4765e8d9/out/reference_ultra2-11fdcf9a4765e8d9",
+      "sha256": "5cee48f611ef7ef317afb480ddc86922300deb53e0aab6b556b9892aa67e4b14"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/f5463c108b72d705f4cf0b62ec7d710709a18f8dca95834de77c0e14d21a7c35.gz",
+      "archive_bytes": 346644833,
+      "archive_sha256": "a1c6cc025cb4b68f5423497d223a089bf137e2e1dd138a33e4770cd819cb67a5",
+      "bytes": 971138424,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/1c381cba8f8b1baa/out/zstdoxide-1c381cba8f8b1baa",
+      "sha256": "f5463c108b72d705f4cf0b62ec7d710709a18f8dca95834de77c0e14d21a7c35"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/4d780d5f65fe68ca59ce345c0b42924235bb067f44dec3b326e516b76842a38e.gz",
+      "archive_bytes": 1423636,
+      "archive_sha256": "3837d4bd31efdd9599ac51560c21a88312147392eae67bdaffa7aac02d7b7f27",
+      "bytes": 4741968,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/1fa7d5953a8a6e87/out/reference_ultra2-1fa7d5953a8a6e87",
+      "sha256": "4d780d5f65fe68ca59ce345c0b42924235bb067f44dec3b326e516b76842a38e"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/d5106e960dacaa3f9014c90e75258de27d23d825769a11e0eb3a312a9c73a624.gz",
+      "archive_bytes": 1428136,
+      "archive_sha256": "c7f54c74d5e4e51090174369f1eae7439f1bdc66513f847ff6616d7caf768cc4",
+      "bytes": 4760912,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/2cd6bcf878a567b8/out/reference_ultra-2cd6bcf878a567b8",
+      "sha256": "d5106e960dacaa3f9014c90e75258de27d23d825769a11e0eb3a312a9c73a624"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/d50dd9bb8458e5e7ce1aa7544d98055fdaeea5f25d8d010f4087f4647b4f96f3.gz",
+      "archive_bytes": 346656562,
+      "archive_sha256": "63c163d4244a1f1aa15567df3dd569fbae76e576d8b2ecc1693c97ad7b549d08",
+      "bytes": 971140888,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/2ef9fdce9eb1bf37/out/zstdoxide-2ef9fdce9eb1bf37",
+      "sha256": "d50dd9bb8458e5e7ce1aa7544d98055fdaeea5f25d8d010f4087f4647b4f96f3"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/ca4df04fe13a880733c277d74aaa52800c5c128bbdebfb108668196879386a60.gz",
+      "archive_bytes": 346661724,
+      "archive_sha256": "ae101567066abdba9fa66a62f9b016d6099cc21965b6fd0b45dcfe477b4c9019",
+      "bytes": 971137000,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/302b730c954d0e31/out/zstdoxide-302b730c954d0e31",
+      "sha256": "ca4df04fe13a880733c277d74aaa52800c5c128bbdebfb108668196879386a60"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/e17e9750d8f23482c6ea0dcfb84635eef995cd95ab735a04166471df732aca10.gz",
+      "archive_bytes": 346652086,
+      "archive_sha256": "8b6a51cc4d26a4958e14ecb310715d58957379476f701e5e0067eec30664b267",
+      "bytes": 971138216,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/366a34bcdf4262de/out/zstdoxide-366a34bcdf4262de",
+      "sha256": "e17e9750d8f23482c6ea0dcfb84635eef995cd95ab735a04166471df732aca10"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/320691784902441f506c3015c84ae7f2b9bac8286b3823d4d72484e3e6337e04.gz",
+      "archive_bytes": 346674974,
+      "archive_sha256": "738d8f01298ca3fc99f4f9b0e5f26bd4ede78fe70fd8ca35b453d0c2bd9aabc0",
+      "bytes": 971139992,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/3962a8e6f2816335/out/zstdoxide-3962a8e6f2816335",
+      "sha256": "320691784902441f506c3015c84ae7f2b9bac8286b3823d4d72484e3e6337e04"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/63991fa8bae0035e67be67502cf06c0a7c31a0d9f1060c3c338f6764361b8413.gz",
+      "archive_bytes": 346622905,
+      "archive_sha256": "292c79b8d05ea9247aae945fc9b7e6a18ccbe44bf55e92ae45b9e621eeb0aa6c",
+      "bytes": 971138520,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/40da444cb2d859d9/out/zstdoxide-40da444cb2d859d9",
+      "sha256": "63991fa8bae0035e67be67502cf06c0a7c31a0d9f1060c3c338f6764361b8413"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/870afe317aa35aa8fe6897f65d7f1dadff05d4491abc582b987021b5f5883070.gz",
+      "archive_bytes": 346642559,
+      "archive_sha256": "aad1791464717b296274af4bf36908a200ba25b5cefde566b0a2638753d81501",
+      "bytes": 971138616,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/41cfdd74b1f8ec38/out/zstdoxide-41cfdd74b1f8ec38",
+      "sha256": "870afe317aa35aa8fe6897f65d7f1dadff05d4491abc582b987021b5f5883070"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/742f37dd3cf6656106814402e8e4ba032ea451640da58db3534a7187ce94df68.gz",
+      "archive_bytes": 346639065,
+      "archive_sha256": "d98eb61bc5506993d2279da1a85547996e7e10b1e38381135a6a03ef2fef4f99",
+      "bytes": 971138200,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/42c5e42647031de4/out/zstdoxide-42c5e42647031de4",
+      "sha256": "742f37dd3cf6656106814402e8e4ba032ea451640da58db3534a7187ce94df68"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/3e1f76435bebb7d75cef43955877d8c63d5c418c5730c80c0f84dcb309499bf0.gz",
+      "archive_bytes": 346608121,
+      "archive_sha256": "7e4a7d46adc83306c7aff0e19ab60380b5d9afed719090d725b7c8316fdf07e7",
+      "bytes": 971139528,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/559ca3778fa79c65/out/zstdoxide-559ca3778fa79c65",
+      "sha256": "3e1f76435bebb7d75cef43955877d8c63d5c418c5730c80c0f84dcb309499bf0"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/4402b113a9387ac90ff7cc559280b5fb1d7bac3391718f0438cf743805cc3070.gz",
+      "archive_bytes": 1422659,
+      "archive_sha256": "4cb568d641cc2db990472f8f04832259bd97c6a77cb250072670d24078b3a1dd",
+      "bytes": 4760184,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/58c0b0a63d084685/out/reference_ultra_retained-58c0b0a63d084685",
+      "sha256": "4402b113a9387ac90ff7cc559280b5fb1d7bac3391718f0438cf743805cc3070"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/3461ceb34eb929092a49dad3e63c8ef6fbd059ae22e90a857b25c0fd494765b4.gz",
+      "archive_bytes": 346669638,
+      "archive_sha256": "a71f926b079cc57f5d96bd883e86e6cd26f6147b70f56982264c74d42013ddcf",
+      "bytes": 971137848,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/5fe90a3ae671540d/out/zstdoxide-5fe90a3ae671540d",
+      "sha256": "3461ceb34eb929092a49dad3e63c8ef6fbd059ae22e90a857b25c0fd494765b4"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/a1cd21f94d4f1a2b8a43b96c50332f20b132082a59e797a33f0c14a3e15a9cf6.gz",
+      "archive_bytes": 346635536,
+      "archive_sha256": "ade06c62ee4ce4fcaf6d0bcb4c028005628b4b658eebda1392e40106cb4426c6",
+      "bytes": 971136872,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/85e7f0ceaceb8f96/out/zstdoxide-85e7f0ceaceb8f96",
+      "sha256": "a1cd21f94d4f1a2b8a43b96c50332f20b132082a59e797a33f0c14a3e15a9cf6"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/66d8110547b4667a5f7e6988f4492728acc8ae3d198227b24cd989a93a71ed88.gz",
+      "archive_bytes": 346676115,
+      "archive_sha256": "88101d53a4e31e465d62c36d93e771cb79f2facc68a9c7de4ec501d859e283aa",
+      "bytes": 971138584,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/a3bd99964d861398/out/zstdoxide-a3bd99964d861398",
+      "sha256": "66d8110547b4667a5f7e6988f4492728acc8ae3d198227b24cd989a93a71ed88"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/0297cd05e9f6400ddebba9b2438c0e06ac9866483b14b2fe47ddfd93c02fcf5d.gz",
+      "archive_bytes": 346627641,
+      "archive_sha256": "fb0b76081a85af00b9188b8afbfa74982503f962c4245cd31f7716fa6cb23445",
+      "bytes": 971138888,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/ab9cdf7022a6cd4e/out/zstdoxide-ab9cdf7022a6cd4e",
+      "sha256": "0297cd05e9f6400ddebba9b2438c0e06ac9866483b14b2fe47ddfd93c02fcf5d"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/4dcd6404da27799a4e985dc562df8b864b45fe87db1ef7148d3c5eb66b88a3db.gz",
+      "archive_bytes": 346656214,
+      "archive_sha256": "465fd6c8fff95337fda49ff3ba70bfdbbed47b4ab7326a03f558d3d5a6cdc890",
+      "bytes": 971139304,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/ba5ff421b9197903/out/zstdoxide-ba5ff421b9197903",
+      "sha256": "4dcd6404da27799a4e985dc562df8b864b45fe87db1ef7148d3c5eb66b88a3db"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/713c5f45349b7829a8642c2452e614ba63681278b1532fcc90a32e41395bb774.gz",
+      "archive_bytes": 1424072,
+      "archive_sha256": "67f96d1a176600fb0dcbcab29bfbbc569b660c11bda2d719086eebec817d860d",
+      "bytes": 4738800,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/bb120335f424c674/out/reference_ultra-bb120335f424c674",
+      "sha256": "713c5f45349b7829a8642c2452e614ba63681278b1532fcc90a32e41395bb774"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/ab1b562ca791daf881953a40c7dab5817f152f13ef2dfbad22930c772b167a40.gz",
+      "archive_bytes": 346615352,
+      "archive_sha256": "b166298631b365371664bf1b3c4b02734dd26f16307cae1c5aedf3a1aa83cc20",
+      "bytes": 971138680,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/c5d88314dc7a11a1/out/zstdoxide-c5d88314dc7a11a1",
+      "sha256": "ab1b562ca791daf881953a40c7dab5817f152f13ef2dfbad22930c772b167a40"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/bfc7f1c4d27b36a02deb17433c22b296983a9d9b236db2c404099cc44cbe846e.gz",
+      "archive_bytes": 346627412,
+      "archive_sha256": "8443beaa43509a2ffafee2ac86fa97ca56fffe336a70dabd71ac1d8a4cc41dda",
+      "bytes": 971141832,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/c6c04400b66d6610/out/zstdoxide-c6c04400b66d6610",
+      "sha256": "bfc7f1c4d27b36a02deb17433c22b296983a9d9b236db2c404099cc44cbe846e"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/50e3f7883794493823fcb0ea66df2377439c80d56138ee9994e91b0f02ba178e.gz",
+      "archive_bytes": 346619110,
+      "archive_sha256": "d4d02d7afbb1c48cbc87590b4e47cd0b1bcc75b1cad12d8e6b041f080d539d2c",
+      "bytes": 971137432,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/edd37148d42a223c/out/zstdoxide-edd37148d42a223c",
+      "sha256": "50e3f7883794493823fcb0ea66df2377439c80d56138ee9994e91b0f02ba178e"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/843b10253ccc6d7c1de2dd883e2cfec8d3b2d8803a12fe6039c5d4b288743d7c.gz",
+      "archive_bytes": 346633661,
+      "archive_sha256": "759d5766d64648fe4577dab211781926e02fd9fb8fcaf155acacc1f0c7c22724",
+      "bytes": 971137064,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/ef32ef0c462b872c/out/zstdoxide-ef32ef0c462b872c",
+      "sha256": "843b10253ccc6d7c1de2dd883e2cfec8d3b2d8803a12fe6039c5d4b288743d7c"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/2b4d86e748333dd214d1c94f99e28b92c6ec98c1c353086d9c666872b45b31f8.gz",
+      "archive_bytes": 346675746,
+      "archive_sha256": "e92d557fc31e005a35aa1599847dce539d00d2dd617e7df6a9b687c4e3799bcd",
+      "bytes": 971138744,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/fbd7fa6c50597489/out/zstdoxide-fbd7fa6c50597489",
+      "sha256": "2b4d86e748333dd214d1c94f99e28b92c6ec98c1c353086d9c666872b45b31f8"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/ccea73430e60495119c3f73587179081111d91c4b90d3c2c6568c14a4ffb898b.gz",
+      "archive_bytes": 346631974,
+      "archive_sha256": "0919b992a1342067e05ce86acc7f13de6c726f826f72b754f0e537d89d325696",
+      "bytes": 971137176,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/fbdd762883c2478b/out/zstdoxide-fbdd762883c2478b",
+      "sha256": "ccea73430e60495119c3f73587179081111d91c4b90d3c2c6568c14a4ffb898b"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/68579bf590bd31ff502f8c473aef96f2b605215563081983abbcec56214a63b1.gz",
+      "archive_bytes": 346621025,
+      "archive_sha256": "6adf6e734100dabd8d8b04bac6f4bfe9f588c804e9940eec2796286a40d9d4f9",
+      "bytes": 971138216,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/debug/build/zstdoxide/ff692301381cfaad/out/zstdoxide-ff692301381cfaad",
+      "sha256": "68579bf590bd31ff502f8c473aef96f2b605215563081983abbcec56214a63b1"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-constructors-executable-storage-v2/0add25f33da93fb518327bdf781e87f75c455533bef2c9866da53298697d5b3c.gz",
+      "archive_bytes": 322563342,
+      "archive_sha256": "c1316f8751c2354d68dfaaa81b2353b658210be2be2fff2e6bec591683b20d7e",
+      "bytes": 815213824,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-constructors/release/build/zstdoxide/bf2e57771b2b10d0/out/zstdoxide-bf2e57771b2b10d0",
+      "sha256": "0add25f33da93fb518327bdf781e87f75c455533bef2c9866da53298697d5b3c"
+    }
+  ],
+  "qualification": "Every recorded executable is preserved as a separate lossless gzip file. Streaming reconstruction verifies exact size and SHA-256 before the generated target copy is removed; this receipt supersedes original target locations. Qualification sources and logs remain unchanged. Memory is bounded to stream chunks, independent of aggregate executable size.",
+  "source_receipt": "/private/tmp/retained-ultra2-constructors-full/evidence.json",
+  "source_receipt_sha256": "575c97ab2d81021fb695d60e952050e08fa683093a450f8bc781461220a0d3fa",
+  "status": "passed"
+}

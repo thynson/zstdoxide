@@ -68,6 +68,14 @@ impl OptimalSearchLayout {
         }
         self.validate_ordinary_geometry()
     }
+    /// Dedicated two-to-four-block Ultra2 planning geometry. This does not
+    /// widen any old fresh/retained constructor or search entry.
+    pub(crate) fn validate_retained_ultra2(self, source_len: usize) -> Result<()> {
+        if !(14..=32768).contains(&source_len) || source_len > self.window {
+            return Err(Error::InvalidParameter);
+        }
+        self.validate_ordinary_geometry()
+    }
     fn validate_ordinary_geometry(self) -> Result<()> {
         if !(1024..=65536).contains(&self.window)
             || !(64..=4096).contains(&self.tree.key().cells())
