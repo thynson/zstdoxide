@@ -112,7 +112,7 @@ recorded in `docs/data-structures.md` before implementation.
 - [x] Specify and preflight native observer adaptation, complete dependency inventories, sanitizer commands and bounded capture.
 - [x] Capture and independently audit first/later-block states and native frames, including coherent later-phase forgeries and predecessor identities.
 - [x] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before parser admission.
-- [ ] Introduce a dedicated constructor-only retained-Ultra2 scope with old-entry rejection and exact owner contracts.
+- [x] Introduce a dedicated constructor-only retained-Ultra2 scope with old-entry rejection and exact owner contracts.
 - [ ] Add the checked first-block-rebase and retained schedule plan, preserving early allocation and complete output bounds.
 - [ ] Admit scoped bootstrap/rebase/retained execution without widening fresh Ultra2 or retained Ultra constructors.
 - [ ] Qualify every complete state, future-source boundary, phase failure, poison/reset path and allocator identity.

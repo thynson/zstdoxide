@@ -3495,3 +3495,23 @@ discarded-state leakage, later-block coordinates, coherent frequency changes,
 repeat-owner publication and frame payload extents. Plain copied observation
 records use one representation; this test-only safe reader needs no artificial
 unsafe backend.
+
+### Constructor-only retained Ultra2 capability
+
+`OptimalParser::from_ultra2_retained_parts` consumes the existing frequency,
+path and candidate owners without cloning or allocating. It accepts only policy
+2 and a physical source length of 14..32768, leaving complete schedule/window
+validation to the subsequent checked plan. Initialization retains the existing
+minimum-match/target bounds and resets all three owners through their shared
+safe/feature-selected contracts. Invalid construction drops each consumed owner
+exactly once. Reset reuses those allocations.
+
+The new plain `Scope::Ultra2Retained` discriminant is distinct from both fresh
+Ultra2 and retained Ultra. Its configuration accessor accepts only unused,
+ready, uninitialized-frequency state. Every existing parser/provider/rebase
+entry rejects it before mutation. This first capability step deliberately has
+no execution entry; later phase execution must explicitly require this scope.
+Its upstream counterpart is the workspace ownership spanning first-block
+`ZSTD_compressBlock_btultra2` bootstrap and later policy-2 block calls, rather
+than an upstream standalone constructor. The discriminant and borrowed source
+record need no independent unsafe representation.

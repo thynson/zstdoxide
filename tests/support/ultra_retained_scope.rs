@@ -37,6 +37,7 @@ fn parser(
         Scope::UltraFresh => OptimalParser::from_ultra_fresh_parts(source, 4, 0, f, p, m),
         Scope::UltraRetained => OptimalParser::from_ultra_retained_parts(source, 4, 0, f, p, m),
         Scope::Ultra2 => OptimalParser::from_ultra2_parts(source, 4, 0, f, p, m),
+        Scope::Ultra2Retained => OptimalParser::from_ultra2_retained_parts(source, 4, 0, f, p, m),
     }
     .unwrap()
 }
@@ -179,6 +180,7 @@ fn earlier_constructor_scopes_cannot_claim_retained_ultra_ownership() {
         (Scope::Scripted, PricePolicy::Ultra),
         (Scope::UltraFresh, PricePolicy::Ultra),
         (Scope::Ultra2, PricePolicy::Ultra),
+        (Scope::Ultra2Retained, PricePolicy::Ultra),
     ] {
         let mut p = parser(&source, scope, policy);
         for _ in 0..2 {

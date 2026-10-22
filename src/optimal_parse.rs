@@ -137,6 +137,7 @@ enum Scope {
     UltraFresh,
     UltraRetained,
     Ultra2,
+    Ultra2Retained,
 }
 pub(crate) struct OptimalParser<'a, F: Allocator, P: Allocator, M: Allocator> {
     source: &'a [u8],
@@ -274,6 +275,29 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             Scope::UltraRetained,
         )
     }
+    /// Own a distinct retained-Ultra2 workspace without admitting execution.
+    /// A separately checked schedule must bind first-block bootstrap and rebase.
+    pub(crate) fn from_ultra2_retained_parts(
+        source: &'a [u8],
+        minimum: u8,
+        target: usize,
+        frequencies: OptimalFrequencies<F>,
+        paths: OptimalPaths<P>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        if frequencies.policy() != PricePolicy::Ultra || !(14..=32768).contains(&source.len()) {
+            return Err(Error::InvalidParameter);
+        }
+        Self::initialize_parts(
+            source,
+            minimum,
+            target,
+            frequencies,
+            paths,
+            matches,
+            Scope::Ultra2Retained,
+        )
+    }
     pub(crate) fn from_ultra2_parts(
         source: &'a [u8],
         minimum: u8,
@@ -385,7 +409,7 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
         observer: &mut O,
     ) -> Result<PathResult> {
         if self.ultra2.is_some()
-            || self.scope == Scope::UltraRetained
+            || !matches!(self.scope, Scope::Scripted | Scope::UltraFresh)
             || self.frequencies.policy() != PricePolicy::Ultra
         {
             return Err(Error::UnsupportedFeature);
@@ -529,6 +553,24 @@ impl<'a, F: Allocator, P: Allocator, M: Allocator> OptimalParser<'a, F, P, M> {
             return Err(Error::UnsupportedFeature);
         }
         if self.status != Status::Ready || self.retained_end != 0 {
+            return Err(Error::InvalidState);
+        }
+        Ok((
+            self.source,
+            self.minimum,
+            self.target,
+            self.frequencies.disabled_literals(),
+        ))
+    }
+    /// Inspect only an unused dedicated retained-Ultra2 owner.
+    pub(crate) fn ultra2_retained_configuration(&self) -> Result<(&'a [u8], usize, usize, bool)> {
+        if self.scope != Scope::Ultra2Retained || self.frequencies.policy() != PricePolicy::Ultra {
+            return Err(Error::UnsupportedFeature);
+        }
+        if self.status != Status::Ready
+            || self.retained_end != 0
+            || self.frequencies.snapshot()?.initialized
+        {
             return Err(Error::InvalidState);
         }
         Ok((
@@ -1573,3 +1615,7 @@ mod ultra_fresh_tests;
 #[cfg(test)]
 #[path = "../tests/support/ultra_retained_scope.rs"]
 mod ultra_retained_scope_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra2_retained_scope.rs"]
+mod ultra2_retained_scope_tests;
