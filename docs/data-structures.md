@@ -3362,3 +3362,100 @@ explicit W14 counterparts still reject without allocator contact. Strategy9,
 all other resource caps and fresh requests retain their previous contracts.
 The 1513-case predecessor corpus has exactly one declared response transition;
 all other response bytes require direct native-campaign reconciliation.
+
+## Module 22: bounded retained Ultra2 frames (design before implementation)
+
+Pinned upstream `ZSTD_compressBlock_btultra2` (`lib/compress/zstd_opt.c`,
+v1.5.7, lines 1517..1543) seeds statistics by scanning only the first block when
+five predicates hold: zero literal-length sum, empty sequence store, equal
+dictionary and low limits, current position at the dictionary limit, and block
+size greater than eight bytes. `ZSTD_initStats_ultra` (lines 1484..1508) also
+requires the update frontier to differ from the dictionary limit by at most one
+in the upstream unsigned arithmetic. It uses temporary repeats, resets the
+sequence store, subtracts that block's size from the logical base, advances
+history/update limits and retains learned frequencies. Later blocks take one
+ordinary policy-2 pass with retained history.
+
+Module 19 scans the whole source because its fresh scope has one block. Its
+`Ultra2Coordinates::rebase` therefore uses the complete source length. Reusing
+that calculation unchanged for retained frames would invalidate the wrong
+interval. The new plan must use the first block length as its logical bias while
+retaining checked access to the whole admitted source prefix. The existing
+fresh constructor and coordinate contract remain unchanged.
+
+A dedicated retained-Ultra2 capability and checked plan distinguish strategy 9
+from retained strategy 8 despite their shared policy-2 price arithmetic. Old
+constructor scopes and parser entries remain closed to the new capability.
+The private plan copies explicit two-to-four-block schedules; the public
+16385..32768-byte extension uses the same balanced three/four-block schedule as
+retained Optimal and Ultra. It validates the complete borrowed source/window,
+nine owner bounds, output reservation and first-block coordinate bias before
+allocation. Only the first actual block can trigger bootstrap. The discarded
+pass must not inspect future blocks or publish tokens, repeats or wire entropy.
+
+After an eligible first-block seed, the normalized logical origin is the first
+block length and the complete logical end is that origin plus the frame source
+length. For the proposed public bounds this end is at most 40960. A later block
+keeps that same origin; it does not rebase again. Source access maps an index by
+checked subtraction of the origin and then checks against the visible physical
+prefix. Stale first-pass indices below the new origin are never source addresses.
+The frame content size and admitted window span remain the physical source
+length. A skipped bootstrap retains origin zero. Native transport records must
+preserve this bias after removing only the native constant offset of two.
+
+The coordinator owns phase and block progress while retaining the existing seven
+parser/search owners and two token scratch owners. It separately tracks initial
+repeats, discarded candidate repeats, actual pending repeats and committed wire
+state. Bootstrap resets phase-local path/candidate cursors and discarded token
+counts, preserves allocated path/search cells and learned frequency statistics,
+and invalidates first-pass history through checked integer coordinates. Dormant
+path cells are retained exactly as in the existing fresh Ultra2 observer;
+resetting logical progress must not silently zero those physical cells. No pointer-base subtraction or unchecked wraparound enters source
+access. Raw/RLE publication on any actual block preserves committed repeats and
+entropy while retaining actual-pass search/price history. Reset restores the
+complete startup state without allocation and permits the same bootstrap once
+again. Failure after mutation poisons the coordinator until reset; invalid
+plan/source/phase combinations reject before mutation or allocation.
+
+Performance-sensitive owners reuse their independently selectable safe/unsafe
+backends. Copied schedules, phases, coordinates and repeat records share one
+plain-value representation. The no_std plus alloc boundary remains unchanged.
+Native observations, independent source-only models and borrowed Rust fixture
+readers cover both passes of the first block, the rebase, every later block,
+publication kinds, future-source isolation and failures in each phase. Private
+first-block sizes of eight and nine distinguish threshold behavior independently
+of public admission; every public first block is above the threshold. Full
+foreign Miri and concrete no-atomics probes precede public admission.
+
+The current 1593-request public corpus has two prospective predecessor
+transitions: index 1512, `retained-resource-ultra2`, and index 1592,
+`retained-ultra-resource-ultra2`. Both use 32768 bytes and resolve to
+W15/C12/H12/S6/minimum 3/target 4095/strategy 9; their request levels are 11 and 13.
+An eventual public extension must declare these exact changes before execution
+and preserve the other 1591 predecessor responses. W14 requests exceeding their
+window remain resource rejections. Dictionary/prefix input, window expiry,
+numeric streaming, long-distance matching, workers and complete upstream
+migration remain separate scope.
+
+
+The source model must distinguish physical frame offsets, logical search indices
+and the normalized Rust index space. Event `ip`, `anchor`, query positions and
+sequence anchors remain physical offsets into the complete source. Search-table
+cells and both insertion frontiers retain their logical bias, including across
+sparse snapshot baselines. Only source access translates the bias. Catch-up at
+later block entry compares `origin + block_start` with the retained frontier;
+using the physical start would silently skip the strict 384/192 transition.
+The visible source view is restricted to the current block's consumed prefix,
+including during the discarded first pass; later source bytes never become a
+search input early. First-block threshold controls include seven, eight and nine
+bytes: upstream's sequence-store entry skips only sizes below seven.
+
+The independent model's compatibility obligations are distinct. A one-block
+reconciliation path must reproduce Module 19's existing seeded and skipped
+observations without changing its public packet grammar. A bootstrap-disabled
+retained path must reproduce Module 21's policy-2 state and publication records.
+The new transport carries explicit algorithm phase and block identity; neither
+is inferred from coincidental table contents or reused padding-pass counters.
+A new native observer must record the actual wrapper's predicate decision,
+first-pass reset and subsequent block transitions without replacing upstream
+parser/provider statements. Predictions alone do not establish native parity.

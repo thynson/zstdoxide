@@ -1077,3 +1077,53 @@ Details: `reference-retained-optimal-public-qualification.md`,
 `reference-retained-optimal-frame-benchmark.md`,
 `evidence/2026-10-21-optimal-retained-closure.json`, and
 `reference-ultra-retained-model.md`.
+
+
+## Module 21: bounded retained Ultra complete (2026-10-22)
+
+Resolved strategy 8 now supports known sources through 32768 bytes within one
+window under the documented resource caps. Fresh requests through 16384 bytes
+keep their original dispatch and frame bytes; larger requests use balanced
+three/four-block schedules. Policy-2 search and learned prices survive raw/RLE
+publication, while only compressed publication commits repeats and wire entropy.
+The implementation remains safe by default and compatible with no_std plus alloc.
+
+Private native-state and Rust-wire qualification precede public admission.
+The final 1593-case public campaign has 1423 successes and 170 resource-limit
+responses. Exactly the declared `retained-resource-ultra` predecessor changes
+to success; the other 3024 safe/all response byte strings remain unchanged.
+All 3964 capture commands pass, including 496 complete bidirectional decodes and
+156 malformed calls. Independent ordinary/optimized audits each pass 21 negative
+and two positive controls. The focused controller's empty-doctest mistake is
+preserved; its successor inherits 12 successful commands and executes two
+remaining checks without claiming inherited commands were rerun.
+
+All 22 full products have 1505 passed and 55 ignored tests,
+with identical named outcomes and 72 Cargo result sections.
+All 21 true no_std configurations pass. Strict Clippy, formatting, standalone
+usage, allocator and upstream inventory checks bind the same production source.
+Final public safe/all Miri passes on i686 and s390x; safe/all thumbv6m core/alloc
+checks and concrete LLVM IR/ARM objects are retained. These are foreign
+interpretation/code generation, not native foreign execution.
+
+The 26 preselected complete-frame benchmark cases pass all 21 clock-free
+backends, with identical frames and allocation ledgers. Ordinary/optimized
+controller checks each pass 41 negative and two positive controls. Primary and
+independently rebuilt safe/all measurements retain 598 case rows, 2990 samples
+and all 23 measured executables. Timed controllers each reject 31 forgeries and
+accept two positives. Task-owned CPU barriers precede clocks; unrelated desktop
+activity, fixed order and thermal history limit broader performance conclusions.
+All/safe geometric mean cost ratios are 0.9969 and 1.0104.
+No universal unsafe speedup is claimed; safe remains the default.
+
+The final reconciliation verifies 19 module archive/report pairs and 110
+predecessor pairs, plus exact qualified source inventories and 92 production,
+compiler, allocator and adapter inputs. The completed checklist is cleared;
+Module 22's retained Ultra2 first-block bootstrap design and decomposition are
+recorded before implementation. Retained Ultra2, dictionaries/prefixes, window
+expiry, numeric streaming, LDM and workers remain separate work. The 55 ignored
+test obligations and 188 unfinished upstream migration units remain open.
+
+Details: `reference-ultra-retained-public-qualification.md`,
+`reference-ultra-retained-frame-benchmark.md`, and
+`evidence/2026-10-22-ultra-retained-closure.json`.

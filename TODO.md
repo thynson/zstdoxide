@@ -91,34 +91,41 @@ are in `docs/reference-retained-optimal-frame-benchmark.md`. The final receipt i
 `docs/evidence/2026-10-21-optimal-retained-closure.json`.
 Retained Ultra/Ultra2 and complete upstream migration remain open.
 
-## Module 21: bounded retained Ultra complete frames
+Module 21 is complete within its bounded retained no-dictionary Ultra scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+The full public regression, interoperability and platform evidence are in
+`docs/reference-ultra-retained-public-qualification.md`; complete-frame
+measurements are in `docs/reference-ultra-retained-frame-benchmark.md`.
+The final reconciliation is `docs/evidence/2026-10-22-ultra-retained-closure.json`.
+Retained Ultra2 and complete upstream migration remain separate open work.
 
-Preserve every existing fresh/Optimal frame. The intended additive strategy-8
-scope is 16385..32768 bytes within one resolved window. Retained Ultra2 and the
-remaining upstream migration obligations stay separate. Design and ownership
-requirements are recorded in `docs/data-structures.md` before implementation.
+## Module 22: bounded retained Ultra2 complete frames
 
-- [x] Analyze policy-bound retained ownership, source isolation, publication/reset contracts and the one intended predecessor admission transition against pinned upstream.
-- [x] Freeze an additive policy-tagged retained transport and independent model; reconcile all policy-0 predecessor observations and reject malformed requests/state in ordinary and optimized Python.
-- [x] Freeze source-only policy-2 recipes and witnesses for learned retained prices, alternatives, short keys, horizons, source boundaries and all publication kinds.
-- [x] Specify and preflight additive native observer adaptation, full dependency/source inventories, sanitizer commands and bounded capture before execution.
-- [x] Capture and independently audit retained policy-2 complete states and native frames, including coherent forgery controls and unchanged predecessor observations.
-- [x] Project an immutable complete-state fixture and reconstruct every state byte independently in ordinary/optimized Python, with later-block forgery controls.
-- [x] Qualify the independent borrowed Rust fixture reader, all native frame decodes, predecessor states and malformed boundaries before parser admission.
-- [x] Introduce a constructor-only retained-Ultra parser scope while preserving old constructor ownership and rejecting every existing parse entry.
-- [x] Add the checked policy-bound retained-Ultra plan while preserving copied schedules and early-allocation contracts.
-- [x] Admit scoped retained-Ultra parser/coordinator execution without widening old fresh, scripted, Ultra2 or Optimal constructors.
-- [x] Qualify private policy-2 retained transitions against every captured state, future-source isolation, owner failures, poisoning and allocation-preserving reset.
-- [x] Integrate block token collection and shared frame publication with exact nine-owner identities, complete output reservation and raw/RLE rollback.
-- [x] Qualify actual Rust wire history by independent replay and native decoding, without assuming native/Rust entropy decisions agree.
-- [x] Complete all storage-feature correctness, foreign Miri and concrete no-atomics code generation before public admission.
-- [x] Freeze additive public recipes declaring only the exact intended retained-Ultra resource-to-success predecessor transition.
-- [x] Qualify public strategy-8 admission, all remaining predecessor identities and bidirectional interoperability with malformed/allocator controls.
-- [x] Complete full safe/isolated-unsafe/all and release/all regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
-- [x] Bind the final public entry point to foreign Miri and concrete no-atomics artifacts with exact native-to-final source reconciliation.
-- [x] Freeze independently decoded complete-frame benchmark inputs and qualify every backend without clocks and with controller forgery controls.
-- [x] Measure every backend and an independent safe/all repeat after completed CPU barriers, retaining all executables, samples and source identities.
-- [ ] Reconcile the bounded milestone, clear its completed checklist and decompose the next scope without claiming complete upstream parity.
+Preserve every existing fresh/retained Optimal and Ultra frame. The additive
+strategy-9 scope is 16385..32768 bytes within one resolved window, with first-block
+bootstrap followed by retained single-pass policy 2. Design and ownership are
+recorded in `docs/data-structures.md` before implementation.
+
+- [ ] Analyze first-block bootstrap, checked rebase, retained ownership and the two intended predecessor transitions against pinned upstream.
+- [ ] Freeze an additive phase/block transport and independent model, preserving every Module 19 fresh and Module 21 retained observation.
+- [ ] Freeze source-only witnesses for seeding, rebase, retained learned prices, later alternatives, short keys, horizons and all publication kinds.
+- [ ] Specify and preflight native observer adaptation, complete dependency inventories, sanitizer commands and bounded capture.
+- [ ] Capture and independently audit first/later-block states and native frames, including coherent later-phase forgeries and predecessor identities.
+- [ ] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before parser admission.
+- [ ] Introduce a dedicated constructor-only retained-Ultra2 scope with old-entry rejection and exact owner contracts.
+- [ ] Add the checked first-block-rebase and retained schedule plan, preserving early allocation and complete output bounds.
+- [ ] Admit scoped bootstrap/rebase/retained execution without widening fresh Ultra2 or retained Ultra constructors.
+- [ ] Qualify every complete state, future-source boundary, phase failure, poison/reset path and allocator identity.
+- [ ] Integrate retained token collection and shared frame publication with discarded-token isolation and raw/RLE rollback.
+- [ ] Qualify actual Rust wire histories by independent phase replay and pinned native decoding.
+- [ ] Complete all isolated storage, foreign Miri and concrete no-atomics gates before public admission.
+- [ ] Freeze additive public recipes declaring exactly the two intended predecessor resource-to-success transitions.
+- [ ] Qualify strategy-9 public admission, every remaining predecessor response and bidirectional native interoperability.
+- [ ] Complete full safe/isolated/all/release regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
+- [ ] Bind final public entry points to foreign Miri, concrete no-atomics artifacts and exact native-to-final production sources.
+- [ ] Freeze independently decoded complete-frame benchmarks and qualify all backends with clock-free and forgery controls.
+- [ ] Measure all backends and an independent safe/all repeat after completed CPU barriers, retaining exact executables and samples.
+- [ ] Reconcile the bounded milestone, clear its checklist and decompose the next scope without claiming complete upstream parity.
 
 ## Roadmap
 

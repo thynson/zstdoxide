@@ -125,3 +125,24 @@ The archive is `evidence/2026-10-21-ultra-retained-public-matrix.{json,tar.gz}`.
 Its SHA-256 is `50def8a8c49214dab24a247e8b5b043b7d938138fc940ea846ba94dd8406db61`. Independent archive reconstruction and a
 second read of original files pass. The existing 55 ignored test obligations
 and 188 unfinished upstream migration units remain open.
+
+
+## Bounded milestone closure
+
+Module 21 is complete within the retained strategy-8 bounds documented above.
+The final receipt `evidence/2026-10-22-ultra-retained-closure.json` verifies all
+19 module archive/report pairs and 110 predecessor pairs, current qualified
+source inventories, 86 production Rust files and six compiler/allocator/adapter
+inputs. Historical failures and inherited checks remain explicitly identified.
+
+All-backend complete-frame measurements and an independent safe/all repeat
+retain 598 case rows, 2990 samples and 23 measured executables. The all/safe
+geometric mean cost ratios are 0.9969 and 1.0104; see
+`reference-ultra-retained-frame-benchmark.md` for every backend, controls and
+measurement limits. No universal unsafe speedup is claimed.
+
+Retained Ultra2, dictionaries/prefixes, window expiry, numeric streaming,
+long-distance matching, workers and full upstream parity remain outside this
+milestone. The 55 ignored tests and 188 unfinished migration units remain open.
+Module 22's first-block bootstrap ownership and task decomposition are recorded
+before implementation.
