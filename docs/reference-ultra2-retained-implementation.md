@@ -131,3 +131,16 @@ Archive SHA-256: `a87b96b7f79dde62b71eb61e1ea6806aa95994557682fea9d689b9e89584c2
 are embedded; unchanged fixture payloads have an exact-commit Git blob/SHA-256
 restore manifest. Full source snapshots remain in the external stage, and exact
 executables are identified by the recorded hashes.
+
+## Complete phase-state reconciliation
+
+The native, fixture, constructor, schedule, search and execution archives are
+rehash-bound by `docs/evidence/2026-10-22-ultra2-retained-state-reconciliation.json`.
+The final execution snapshot retains exactly the qualified search code and native
+fixture. Together the executed tests cover all 32 cases, 93 blocks, 123 phases,
+30 discarded seed resets and 229657 complete-state events, plus future-prefix
+isolation, invalid direct entries, every observer failure boundary, poison/reset
+and all seven independent nonclone allocation failure points. All 22 execution
+products run identical tests and all 21 true no_std products pass. This receipt
+reconciles existing executions; it does not represent a repeated test campaign
+or replace the remaining private-wire, platform and public-admission gates.
