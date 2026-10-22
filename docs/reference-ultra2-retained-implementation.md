@@ -270,3 +270,15 @@ preflight is a separate candidate and does not widen current public support.
 Formal public admission, full public regression/platform binding, benchmarks
 and complete upstream migration remain open. The exact receipt and executable
 checker are `docs/evidence/2026-10-22-ultra2-retained-private-frame-reconciliation.{json,py}`.
+
+## Isolated candidate usage validation
+
+The updated reference-profile usage document passes all nine examples in safe
+and all-feature candidate builds, including its new retained Ultra2 complete-
+frame example at24577bytes. Both modes use actual Cargo-reported rlib/rmeta
+artifacts, retain their hashes and have identical named outcomes. The complete
+candidate and added environment/example helpers are captured and unchanged;
+main production source remains unchanged. These18 successful example executions
+validate the unpromoted documentation only and do not admit public retained
+Ultra2. Evidence: `docs/evidence/2026-10-22-ultra2-retained-public-usage-preview.{json,tar.gz}`,
+archive SHA-256 `d3b45624320f3b1b30db30bc0bf4eea761920a583aad51e881b4bd05868096a5`.

@@ -124,7 +124,8 @@ recorded in `docs/data-structures.md` before implementation.
 - [x] Reconcile private frame integration, actual wire and platform source identities before public admission.
 - [x] Freeze additive public recipes declaring exactly the two intended predecessor resource-to-success transitions.
 - [x] Preflight the public retained Ultra2 candidate in isolation while preserving current admission.
-- [ ] Qualify the updated public-candidate usage examples in isolated safe/all builds.
+- [x] Qualify the updated public-candidate usage examples in isolated safe/all builds.
+- [ ] Preflight candidate new and transition requests with pinned bidirectional native decoding.
 - [ ] Qualify strategy-9 public admission, every remaining predecessor response and bidirectional native interoperability.
 - [ ] Complete full safe/isolated/all/release regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
 - [ ] Bind final public entry points to foreign Miri, concrete no-atomics artifacts and exact native-to-final production sources.
