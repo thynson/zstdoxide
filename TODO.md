@@ -119,7 +119,7 @@ recorded in `docs/data-structures.md` before implementation.
 - [x] Qualify every complete state, future-source boundary, phase failure, poison/reset path and allocator identity.
 - [x] Preserve isolated private-frame preflight with cross-profile captures, independent actual-wire replay and pinned native decoding.
 - [x] Integrate retained token collection and shared frame publication with discarded-token isolation and raw/RLE rollback.
-- [ ] Qualify actual Rust wire histories by independent phase replay and pinned native decoding.
+- [x] Qualify actual Rust wire histories by independent phase replay and pinned native decoding.
 - [x] Complete all isolated storage, foreign Miri and concrete no-atomics gates before public admission.
 - [ ] Reconcile private frame integration, actual wire and platform source identities before public admission.
 - [x] Freeze additive public recipes declaring exactly the two intended predecessor resource-to-success transitions.

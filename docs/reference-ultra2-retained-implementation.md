@@ -233,3 +233,22 @@ archive SHA-256 `c3dd6ca0c747a4df2abddf58dddf63bdb7258c6a5e3efa37cf0a61577b13326
 public capture/auditor drafts; their syntax and planned inventory were reviewed,
 but they have not performed the formal native campaign. Qualified formatted
 candidate sources are in its `source` tree; earlier unformatted drafts are history.
+
+## Actual private Rust wire histories
+
+Safe and all-feature builds produce byte-identical captures for all 29 automatic
+literal recipes: 59 artifacts per build including complete frames, source bytes
+and actual token/repeat histories. All 58 frames decode byte-for-byte with the
+pinned upstream v1.5.7 CLI and bound loader libraries; Rust decoding also passes
+inside each capture test. Independent source-only phase replay derives all actual
+wire histories in ordinary and optimized Python. Each mode rejects 34 effective
+forgeries and passes two positive audits with child execution forbidden.
+
+The audit replays 116881 events and 672 sequences;
+1 cases differ from their original native block-kind
+hypotheses. Actual Rust wire kinds drive replay and publication throughout.
+All 67 commands pass with unchanged source, capture and native input identities.
+The archived protocol records bounds, exact inventory and decoder dependencies.
+Evidence: `docs/evidence/2026-10-22-ultra2-retained-wire.{json,tar.gz}`, SHA-256
+`c4be31cdf9675b3ac7cdedac5604d0b4e45d650f680bc8912d7bd5137d3ae878`. Foreign Miri, concrete no-atomics, public admission, full
+regression and benchmarks remain separate gates.
