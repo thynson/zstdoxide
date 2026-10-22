@@ -107,7 +107,7 @@ bootstrap followed by retained single-pass policy 2. Design and ownership are
 recorded in `docs/data-structures.md` before implementation.
 
 - [x] Analyze first-block bootstrap, checked rebase, retained ownership and the two intended predecessor transitions against pinned upstream.
-- [ ] Freeze an additive phase/block transport and independent model, preserving every Module 19 fresh and Module 21 retained observation.
+- [x] Freeze an additive phase/block transport and independent model, preserving every Module 19 fresh and Module 21 retained observation.
 - [ ] Freeze source-only witnesses for seeding, rebase, retained learned prices, later alternatives, short keys, horizons and all publication kinds.
 - [ ] Specify and preflight native observer adaptation, complete dependency inventories, sanitizer commands and bounded capture.
 - [ ] Capture and independently audit first/later-block states and native frames, including coherent later-phase forgeries and predecessor identities.
