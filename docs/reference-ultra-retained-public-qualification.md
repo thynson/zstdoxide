@@ -66,9 +66,8 @@ failed controller, receipt and traceback, inherits the exact successful command
 logs and source identities, then executes the two remaining inventory commands.
 Inherited checks are not presented as reruns.
 
-Full safe/isolated-unsafe/all/release regression and benchmark qualification are
-separate gates. This report does not infer their completion from focused tests
-or native interoperability.
+The focused checks above are separate from the completed full regression below.
+Benchmark qualification is recorded in `reference-ultra-retained-frame-benchmark.md`.
 
 ## Final public foreign-platform checkpoint
 
@@ -90,3 +89,39 @@ match the native capture and its independent auditor exactly. The archive
 source snapshots, effective environments, logs, probes, concrete artifacts and
 source-binding receipt. The earlier private mixed-publication/reset platform
 qualification remains separate complementary evidence.
+
+
+## Complete public regression matrix
+
+All 22 newly executed full products pass: safe, nineteen isolated unsafe
+features, all features and release/all. Each product has 1505
+passing tests and 55 ignored obligations, with identical
+named outcomes and 72 Cargo result sections. This yields
+33110 passed and 1210 ignored executions of the same suite,
+not that many distinct tests. All 21 true no_std configurations also pass.
+
+A separate pure reader reconciles all 1560 complete names across
+71 groups, including five doctests and six should-panic names
+omitted by the live controller's narrow token pattern. Ordinary/optimized reader
+preflight each passes nine negative and two positive controls. Its first runner
+had a syntax error before reading any test log; the original source and stderr
+remain preserved alongside the corrected additive runner. No test was rerun or
+changed for this reporting correction.
+
+The 43 complete product gates retain exact command environments, logs, source
+snapshots, outcome inventories and executable hashes. Ordinary Cargo caches
+were removed only after successful checks and executable inventory capture;
+those test binaries are not claimed as preserved measured artifacts. The
+separate benchmark archives retain their actual campaign executables.
+
+All 86 production Rust files, compiler/allocator/adapter inputs and every
+predecessor input in the focused/native/platform snapshots match the final
+matrix exactly. The matrix includes 1972 source inputs. The additive
+benchmark example was absent from this snapshot and has explicit separate
+integration and all-backend gates. Formatting, strict Clippy, usage, allocator
+and upstream inventory checks remain bound to the exact same production source.
+
+The archive is `evidence/2026-10-21-ultra-retained-public-matrix.{json,tar.gz}`.
+Its SHA-256 is `50def8a8c49214dab24a247e8b5b043b7d938138fc940ea846ba94dd8406db61`. Independent archive reconstruction and a
+second read of original files pass. The existing 55 ignored test obligations
+and 188 unfinished upstream migration units remain open.
