@@ -121,9 +121,10 @@ recorded in `docs/data-structures.md` before implementation.
 - [x] Integrate retained token collection and shared frame publication with discarded-token isolation and raw/RLE rollback.
 - [x] Qualify actual Rust wire histories by independent phase replay and pinned native decoding.
 - [x] Complete all isolated storage, foreign Miri and concrete no-atomics gates before public admission.
-- [ ] Reconcile private frame integration, actual wire and platform source identities before public admission.
+- [x] Reconcile private frame integration, actual wire and platform source identities before public admission.
 - [x] Freeze additive public recipes declaring exactly the two intended predecessor resource-to-success transitions.
 - [x] Preflight the public retained Ultra2 candidate in isolation while preserving current admission.
+- [ ] Qualify the updated public-candidate usage examples in isolated safe/all builds.
 - [ ] Qualify strategy-9 public admission, every remaining predecessor response and bidirectional native interoperability.
 - [ ] Complete full safe/isolated/all/release regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
 - [ ] Bind final public entry points to foreign Miri, concrete no-atomics artifacts and exact native-to-final production sources.

@@ -1,0 +1,1093 @@
+{
+  "archives": {
+    "integration": {
+      "archive": "2026-10-22-ultra2-retained-integration.tar.gz",
+      "archive_sha256": "9f48b0880b8f09641b134869147a3b0265ce372f0244d64c3ad2ad57e4fa78d6",
+      "receipt": "2026-10-22-ultra2-retained-integration.json",
+      "receipt_sha256": "71f0e9d06756ddb517416f6c987cf63402eff32bbead6855423838fe31f875aa",
+      "stage_evidence_sha256": "f0f3f8ebe7974360e7f25ae4d19fbd90fd8ad9c5da57b56cd672124a5c4efc38"
+    },
+    "platform": {
+      "archive": "2026-10-22-ultra2-retained-private-platform.tar.gz",
+      "archive_sha256": "ffabc32a1767ed7c6fc84f36aaf1ca733445f8cfcd492402ff6bfaaa72490dd6",
+      "receipt": "2026-10-22-ultra2-retained-private-platform.json",
+      "receipt_sha256": "884adfe89c04f8c92b045a5b950ecc43406fc7b0bddb3bae54ff7eaa2725811d",
+      "stage_evidence_sha256": "ac362cb71c9b988582283869f878eb8c553689801a0208eba4bb03bc138ecff0"
+    },
+    "wire": {
+      "archive": "2026-10-22-ultra2-retained-wire.tar.gz",
+      "archive_sha256": "c4be31cdf9675b3ac7cdedac5604d0b4e45d650f680bc8912d7bd5137d3ae878",
+      "receipt": "2026-10-22-ultra2-retained-wire.json",
+      "receipt_sha256": "b85d6d272f600d80790910fe13e23a8383db058c39d44596e41b0ccff9d04de6",
+      "stage_evidence_sha256": "02329bb5c0f9556b3a4994a6163dc83e1ff8bbac1f17129895f4bb91a3e3e7d3"
+    }
+  },
+  "capture_artifacts_per_build": 59,
+  "commands": 124,
+  "controller_sha256": "b00565829818e31fb9323dc1262316c9f299cdc471cb86c4c9f9d44da7a5a759",
+  "focused_test_executions": 286,
+  "independent_audit": {
+    "cases": [
+      {
+        "coverage": [
+          "compressed_commit",
+          "discarded_candidate_repeats",
+          "encoding:block_boundary_query",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "rle_rollback",
+          "seeding:initial_sufficient",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "0bd7227e808c66d14818591e7f555888cf044778a87f238bb753bfd22580864f",
+        "kinds": [
+          2,
+          1
+        ],
+        "name": "u2r_wide_uniform",
+        "native_hypothesis": [
+          2,
+          1
+        ],
+        "source_sha256": "f3336bea752b5a28743033dd2c844a4a63fba08871aaee2586a2bf2d69be83a2"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:search_tree",
+          "raw_rollback",
+          "seeding:initial_no_match",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "326efb5c116bc84c375576b3de94ba5ffbf1c42eb1480abe4166791eaf3d5ed7",
+        "kinds": [
+          0,
+          2
+        ],
+        "name": "u2r_wide_noise_copy",
+        "native_hypothesis": [
+          0,
+          2
+        ],
+        "source_sha256": "4bdce7f4f7073a1901193d38658a8ffdc9d19a23bbd1e8b7d62087ba26350e97"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:deferred_repeat_publication",
+          "encoding:initial_no_match",
+          "encoding:later_horizon",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:literal_rejected",
+          "encoding:match_extend",
+          "encoding:match_improvement",
+          "encoding:multiple_sequences",
+          "encoding:search_repeat",
+          "encoding:search_tree",
+          "encoding:ultra_alternative_considered",
+          "encoding:ultra_alternative_rejected",
+          "encoding:ultra_improvement_after_rejection",
+          "encoding:ultra_match_tie_continue",
+          "encoding:ultra_match_worse_continue",
+          "encoding:ultra_unpromising_query",
+          "seeding:deferred_repeat_publication",
+          "seeding:initial_no_match",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:literal_rejected",
+          "seeding:search_repeat",
+          "seeding:search_tree",
+          "seeding:ultra_match_worse_continue",
+          "seeding:ultra_unpromising_query"
+        ],
+        "frame_sha256": "0275ebd4a8c4a58537884264cbeb7d19b8b50c0230ea9d0ea730cdb4a7148235",
+        "kinds": [
+          2,
+          2
+        ],
+        "name": "u2r_wide_runs_priced",
+        "native_hypothesis": [
+          2,
+          2
+        ],
+        "source_sha256": "8577e60f5f077f367cd92a954e3cda7fa361f0734a6f658aeca5a69cb9dcab59"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:all_literals",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:literal_improvement",
+          "encoding:search_tree",
+          "seeding:all_literals",
+          "seeding:initial_no_match",
+          "seeding:initial_sufficient",
+          "seeding:literal_improvement",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "72bcd03445baebb80e7f573bf82671ecd56e5521b2cbf9deef442128dcb34ec1",
+        "kinds": [
+          2,
+          2
+        ],
+        "name": "u2r_wide_short",
+        "native_hypothesis": [
+          2,
+          2
+        ],
+        "source_sha256": "b43879f3fc630f0775f4f5b2d4fc04fae8b56bec91beab83786da097b068e5aa"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:search_repeat",
+          "encoding:search_short",
+          "encoding:search_tree",
+          "seeding:initial_no_match",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:search_repeat",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "6364b81de70a9bbd450ad34181be0d2efc0df6b25793bfe5cf20da04c573b9c3",
+        "kinds": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_wide_window16",
+        "native_hypothesis": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "41cab224d858f799d6b1a7b8cfa3a9e0f19e5fbcb5c80ccd8bdd25cd026ede8b"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "discarded_candidate_repeats",
+          "encoding:block_boundary_query",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "rle_rollback",
+          "seeding:initial_sufficient",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "8ee0eab7930ba8928ab17cdf7ff4bb4e1e4b3369ef8a4bbf70ef0a121c903492",
+        "kinds": [
+          2,
+          1,
+          1
+        ],
+        "name": "u2r_wide_frames_uniform_16385",
+        "native_hypothesis": [
+          2,
+          1,
+          1
+        ],
+        "source_sha256": "608b801060d579a7b659a01755259a13dec8853b97d3d8062763c97ffac6ddae"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "discarded_candidate_repeats",
+          "encoding:block_boundary_query",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "rle_rollback",
+          "seeding:initial_sufficient",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "e58f765b719498d1e21759de0d772fcbe47562d948a4682f18840c7eb92a771c",
+        "kinds": [
+          2,
+          1,
+          1
+        ],
+        "name": "u2r_wide_frames_uniform_24576",
+        "native_hypothesis": [
+          2,
+          1,
+          1
+        ],
+        "source_sha256": "d55c45e0e41a72b156e1795f2f688b0c999286433c88834fa2ad25cc7bea3a94"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "discarded_candidate_repeats",
+          "encoding:block_boundary_query",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "rle_rollback",
+          "seeding:initial_sufficient",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "0608f91a909dd0885865510f7db745b3e729abbc0e6f4a90aa16b48e5b8131a3",
+        "kinds": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "name": "u2r_wide_frames_uniform_24577",
+        "native_hypothesis": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "source_sha256": "3a25c3a1c66a11193503fa926656f2c96fdec8c49820fdb48635559494ec1f50"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "discarded_candidate_repeats",
+          "encoding:block_boundary_query",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "rle_rollback",
+          "seeding:initial_sufficient",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "bfc4d3f6d7ff2d9f8cdc8ac32b3f47ac522a9aaf5df132966957f701d83a02da",
+        "kinds": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "name": "u2r_wide_frames_uniform_32768",
+        "native_hypothesis": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "source_sha256": "b217b65e6f205f41b3fb8ef90cf7c44da93f630ca03965273485bbb21a5cccf5"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "encoding:search_tree",
+          "raw_rollback",
+          "seeding:initial_no_match",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "54dcab957f2ea27fc47e838abef6d7712030fad241e60ab731102d4ff1761ba4",
+        "kinds": [
+          0,
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_wide_frames_copy",
+        "native_hypothesis": [
+          0,
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "1e3f782923b37d9698bc2931e7f349435d67da9bbadaf0a79262fe6228c519a1"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "encoding:search_tree",
+          "raw_rollback",
+          "rle_rollback",
+          "seeding:initial_sufficient",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "c33e6fdd0347c7ad3b4a4f797269b607c40a4666faafdc01fa33c7cef8a0919a",
+        "kinds": [
+          2,
+          0,
+          1,
+          2
+        ],
+        "name": "u2r_wide_frames_mixed",
+        "native_hypothesis": [
+          2,
+          0,
+          1,
+          2
+        ],
+        "source_sha256": "318796c01ae42b12d59d44b8186fc62b3658540cea870c7abe9871f5e6a478d6"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "encoding:search_short",
+          "encoding:search_tree",
+          "seeding:initial_no_match",
+          "seeding:initial_sufficient",
+          "seeding:search_repeat",
+          "seeding:search_short",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "b2cfd8e2ae37aea22a862ebbed53c409f5119a39366e318e775848d75494ef4b",
+        "kinds": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_wide_frames_short",
+        "native_hypothesis": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "af372dbf82158e9b41d5e036eb37ce31ccc2bc10343f9f22f606ac9248aa2db4"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "encoding:search_tree",
+          "seeding:initial_no_match",
+          "seeding:initial_sufficient",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "c998fae9d48432a49301c25a911f3cf042e6fd3452a82d44310047555e3ebdd4",
+        "kinds": [
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_wide_frames_minimum_5",
+        "native_hypothesis": [
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "encoding:search_tree",
+          "seeding:initial_no_match",
+          "seeding:initial_sufficient",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "c998fae9d48432a49301c25a911f3cf042e6fd3452a82d44310047555e3ebdd4",
+        "kinds": [
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_wide_frames_minimum_6",
+        "native_hypothesis": [
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "encoding:search_tree",
+          "seeding:initial_no_match",
+          "seeding:initial_sufficient",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "c998fae9d48432a49301c25a911f3cf042e6fd3452a82d44310047555e3ebdd4",
+        "kinds": [
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_wide_frames_minimum_7",
+        "native_hypothesis": [
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "43274d6ebc32c56b5e513ced5f4e2adae5eda255c35683259ae15da30310227a"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:search_repeat",
+          "encoding:search_tree",
+          "seeding:initial_no_match",
+          "seeding:initial_sufficient",
+          "seeding:search_repeat",
+          "seeding:search_tree"
+        ],
+        "frame_sha256": "2a4b77058bc25fe93fa2206806f0ba7c297ce67363adf32d4b736d93d34302a3",
+        "kinds": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_wide_frames_small_tables",
+        "native_hypothesis": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "824b489745de883f2f50de9b7eb0c503cd2c9daf1ffceed0dbfe5cf0f9e269ef"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:all_literals",
+          "encoding:block_boundary_query",
+          "encoding:deferred_repeat_publication",
+          "encoding:initial_no_match",
+          "encoding:later_source_end",
+          "encoding:later_sufficient",
+          "encoding:literal_improvement",
+          "encoding:literal_rejected",
+          "encoding:literal_tie",
+          "encoding:match_extend",
+          "encoding:match_improvement",
+          "encoding:multiple_sequences",
+          "encoding:search_short",
+          "encoding:search_skipped",
+          "encoding:search_tree",
+          "encoding:tail_no_query",
+          "encoding:trailing_backtrack",
+          "encoding:ultra_alternative_considered",
+          "encoding:ultra_alternative_extends_frontier",
+          "encoding:ultra_alternative_rejected",
+          "encoding:ultra_alternative_selected",
+          "encoding:ultra_improvement_after_rejection",
+          "encoding:ultra_match_tie_continue",
+          "encoding:ultra_match_worse_continue",
+          "encoding:ultra_unpromising_query",
+          "seeding:deferred_repeat_publication",
+          "seeding:initial_no_match",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:literal_rejected",
+          "seeding:literal_tie",
+          "seeding:match_extend",
+          "seeding:match_improvement",
+          "seeding:multiple_sequences",
+          "seeding:search_tree",
+          "seeding:ultra_alternative_considered",
+          "seeding:ultra_alternative_rejected",
+          "seeding:ultra_alternative_selected",
+          "seeding:ultra_improvement_after_rejection",
+          "seeding:ultra_match_tie_continue",
+          "seeding:ultra_match_worse_continue",
+          "seeding:ultra_unpromising_query"
+        ],
+        "frame_sha256": "b84ea7f1e9bf8d183ed3043f32cc680d6f1e902408c1b0519db9ab206c549c01",
+        "kinds": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_alternatives_0202",
+        "native_hypothesis": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "c18e228dd413d245f2221e9cc0543e45be0a3445344f22f4be0cd631bb227e68"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:all_literals",
+          "encoding:block_boundary_query",
+          "encoding:deferred_repeat_publication",
+          "encoding:initial_no_match",
+          "encoding:initial_sufficient",
+          "encoding:later_source_end",
+          "encoding:later_sufficient",
+          "encoding:literal_improvement",
+          "encoding:literal_rejected",
+          "encoding:match_extend",
+          "encoding:match_improvement",
+          "encoding:multiple_sequences",
+          "encoding:search_repeat",
+          "encoding:search_short",
+          "encoding:search_skipped",
+          "encoding:search_tree",
+          "encoding:tail_no_query",
+          "encoding:trailing_backtrack",
+          "encoding:ultra_alternative_considered",
+          "encoding:ultra_alternative_extends_frontier",
+          "encoding:ultra_alternative_rejected",
+          "encoding:ultra_alternative_selected",
+          "encoding:ultra_improvement_after_rejection",
+          "encoding:ultra_match_tie_continue",
+          "encoding:ultra_match_worse_continue",
+          "encoding:ultra_unpromising_query",
+          "seeding:all_literals",
+          "seeding:deferred_repeat_publication",
+          "seeding:initial_no_match",
+          "seeding:literal_improvement",
+          "seeding:literal_rejected",
+          "seeding:match_extend",
+          "seeding:match_improvement",
+          "seeding:multiple_sequences",
+          "seeding:search_skipped",
+          "seeding:search_tree",
+          "seeding:tail_no_query",
+          "seeding:trailing_backtrack",
+          "seeding:ultra_alternative_considered",
+          "seeding:ultra_alternative_extends_frontier",
+          "seeding:ultra_alternative_rejected",
+          "seeding:ultra_alternative_selected",
+          "seeding:ultra_match_worse_continue",
+          "seeding:ultra_unpromising_query"
+        ],
+        "frame_sha256": "ede59e53ed298e251b60e0476628099351ba8607253e10b4e793130cddb8d4fd",
+        "kinds": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_alternatives_2020",
+        "native_hypothesis": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "8f59337ceb5f1a3e1105f6845ddbf2fc3a210b7b38be83f4b378ca817a4d76b1"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:search_repeat",
+          "rle_rollback"
+        ],
+        "frame_sha256": "9740e48e0d956af993cf09acbdcd9606415fd343f21068594ab5b0b7757c332d",
+        "kinds": [
+          2,
+          1
+        ],
+        "name": "u2r_first_threshold_7",
+        "native_hypothesis": [
+          0,
+          1
+        ],
+        "source_sha256": "eefa4cfbea79400c2f4239e1f702e02ebece761f78b6a35c9d2c167a79f9570c"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:search_repeat",
+          "rle_rollback",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "9c82fb98c1cc52ab7e56aa4fd399a3953f82caea461bfa83d53219eecb5494cb",
+        "kinds": [
+          2,
+          1
+        ],
+        "name": "u2r_later_threshold_7",
+        "native_hypothesis": [
+          2,
+          1
+        ],
+        "source_sha256": "eefa4cfbea79400c2f4239e1f702e02ebece761f78b6a35c9d2c167a79f9570c"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:search_repeat",
+          "rle_rollback"
+        ],
+        "frame_sha256": "c1feee186b2d665226ed0fb7a70bc1adeb8eedb3399f60c9f23307b5f02759b6",
+        "kinds": [
+          2,
+          1
+        ],
+        "name": "u2r_first_threshold_8",
+        "native_hypothesis": [
+          2,
+          1
+        ],
+        "source_sha256": "d66304b6180365e47c858f6c84d3da065caf4b3350c9f45277a1af82e3dbb055"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:search_repeat",
+          "rle_rollback",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "72c5728bcf49e7751ade861a52c99b544b8ec407bc870723be4499954d2ac9cb",
+        "kinds": [
+          2,
+          1
+        ],
+        "name": "u2r_later_threshold_8",
+        "native_hypothesis": [
+          2,
+          1
+        ],
+        "source_sha256": "d66304b6180365e47c858f6c84d3da065caf4b3350c9f45277a1af82e3dbb055"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:search_repeat",
+          "rle_rollback"
+        ],
+        "frame_sha256": "137c5a0979a0c26f4f2227f53e99f9f33807abdd22a47a373977eef04846b828",
+        "kinds": [
+          2,
+          1
+        ],
+        "name": "u2r_first_threshold_9",
+        "native_hypothesis": [
+          2,
+          1
+        ],
+        "source_sha256": "0e058e3f7d0439f9054d59c735587ae99655f6473a234ce494d82b5586f7eac6"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:search_repeat",
+          "rle_rollback",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:search_repeat"
+        ],
+        "frame_sha256": "609f2b1c35561c2f82da70525cbb3ae7ece7886e3ba7cb5687e7c9e796c56131",
+        "kinds": [
+          2,
+          1
+        ],
+        "name": "u2r_later_threshold_9",
+        "native_hypothesis": [
+          2,
+          1
+        ],
+        "source_sha256": "0e058e3f7d0439f9054d59c735587ae99655f6473a234ce494d82b5586f7eac6"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:all_literals",
+          "encoding:block_boundary_query",
+          "encoding:deferred_repeat_publication",
+          "encoding:initial_no_match",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:literal_rejected",
+          "encoding:multiple_sequences",
+          "encoding:search_repeat",
+          "encoding:search_skipped",
+          "encoding:search_tree",
+          "encoding:ultra_match_worse_continue",
+          "encoding:ultra_unpromising_query",
+          "seeding:all_literals",
+          "seeding:deferred_repeat_publication",
+          "seeding:initial_no_match",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:literal_rejected",
+          "seeding:multiple_sequences",
+          "seeding:search_skipped",
+          "seeding:search_tree",
+          "seeding:ultra_match_worse_continue",
+          "seeding:ultra_unpromising_query"
+        ],
+        "frame_sha256": "2cbf1b0dced18fd36ef48fcefea54ab23963e20872e42fd70db4acbf55496339",
+        "kinds": [
+          2,
+          2
+        ],
+        "name": "u2r_ring_65",
+        "native_hypothesis": [
+          2,
+          2
+        ],
+        "source_sha256": "7aa792a4e566859c2d5d250d0f03ff45dd5e2fd2c96ceadc0fc490f6ccdfdfc6"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:all_literals",
+          "encoding:block_boundary_query",
+          "encoding:deferred_repeat_publication",
+          "encoding:initial_no_match",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:literal_rejected",
+          "encoding:multiple_sequences",
+          "encoding:search_repeat",
+          "encoding:search_short",
+          "encoding:search_skipped",
+          "encoding:search_tree",
+          "encoding:ultra_match_worse_continue",
+          "encoding:ultra_unpromising_query",
+          "seeding:all_literals",
+          "seeding:deferred_repeat_publication",
+          "seeding:initial_no_match",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:literal_rejected",
+          "seeding:multiple_sequences",
+          "seeding:search_short",
+          "seeding:search_skipped",
+          "seeding:search_tree",
+          "seeding:ultra_match_worse_continue",
+          "seeding:ultra_unpromising_query"
+        ],
+        "frame_sha256": "fd01931475a0cd01c44919bbd746f111bf4f249eb31e6df2d17ceefe35f40d2a",
+        "kinds": [
+          2,
+          2
+        ],
+        "name": "u2r_ring_95",
+        "native_hypothesis": [
+          2,
+          2
+        ],
+        "source_sha256": "11d49fe7bcccc981b03c02a730c499c1e1ae14372ad58a061a1a89d468dc0b7d"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:all_literals",
+          "encoding:block_boundary_query",
+          "encoding:deferred_repeat_publication",
+          "encoding:initial_no_match",
+          "encoding:later_source_end",
+          "encoding:literal_improvement",
+          "encoding:literal_rejected",
+          "encoding:multiple_sequences",
+          "encoding:search_repeat",
+          "encoding:search_skipped",
+          "encoding:search_tree",
+          "encoding:ultra_match_worse_continue",
+          "encoding:ultra_unpromising_query",
+          "seeding:all_literals",
+          "seeding:deferred_repeat_publication",
+          "seeding:initial_no_match",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:literal_rejected",
+          "seeding:multiple_sequences",
+          "seeding:search_skipped",
+          "seeding:search_tree",
+          "seeding:ultra_match_worse_continue",
+          "seeding:ultra_unpromising_query"
+        ],
+        "frame_sha256": "44875c1732b73ac43e97fc238c4f5d6091636c38982d18a08bbe440b3461cad8",
+        "kinds": [
+          2,
+          2
+        ],
+        "name": "u2r_ring_97",
+        "native_hypothesis": [
+          2,
+          2
+        ],
+        "source_sha256": "a3273e08e42ec6ae3a854362262b659a24fde799f24aa6bb49d8d4036ad72148"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:deferred_repeat_publication",
+          "encoding:initial_no_match",
+          "encoding:later_source_end",
+          "encoding:later_sufficient",
+          "encoding:literal_improvement",
+          "encoding:literal_rejected",
+          "encoding:literal_tie",
+          "encoding:match_extend",
+          "encoding:match_improvement",
+          "encoding:multiple_sequences",
+          "encoding:search_short",
+          "encoding:search_skipped",
+          "encoding:search_tree",
+          "encoding:tail_no_query",
+          "encoding:trailing_backtrack",
+          "encoding:ultra_alternative_considered",
+          "encoding:ultra_alternative_extends_frontier",
+          "encoding:ultra_alternative_rejected",
+          "encoding:ultra_alternative_selected",
+          "encoding:ultra_improvement_after_rejection",
+          "encoding:ultra_match_tie_continue",
+          "encoding:ultra_match_worse_continue",
+          "encoding:ultra_unpromising_query",
+          "seeding:deferred_repeat_publication",
+          "seeding:initial_no_match",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:literal_rejected",
+          "seeding:literal_tie",
+          "seeding:match_extend",
+          "seeding:match_improvement",
+          "seeding:multiple_sequences",
+          "seeding:search_tree",
+          "seeding:ultra_alternative_considered",
+          "seeding:ultra_alternative_rejected",
+          "seeding:ultra_alternative_selected",
+          "seeding:ultra_improvement_after_rejection",
+          "seeding:ultra_match_tie_continue",
+          "seeding:ultra_match_worse_continue",
+          "seeding:ultra_unpromising_query"
+        ],
+        "frame_sha256": "8504d685164fd85a5e29a4f7d23fd5ba6e4076b17823cdefad5b58c23ce92776",
+        "kinds": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_future_128",
+        "native_hypothesis": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "f3c3ed3719fa9388d2437ca7f3daaedfc73cc1f5ed06ed54f284ec8cbbb64403"
+      },
+      {
+        "coverage": [
+          "compressed_commit",
+          "encoding:block_boundary_query",
+          "encoding:deferred_repeat_publication",
+          "encoding:initial_no_match",
+          "encoding:later_source_end",
+          "encoding:later_sufficient",
+          "encoding:literal_improvement",
+          "encoding:literal_rejected",
+          "encoding:literal_tie",
+          "encoding:match_extend",
+          "encoding:match_improvement",
+          "encoding:multiple_sequences",
+          "encoding:search_short",
+          "encoding:search_skipped",
+          "encoding:search_tree",
+          "encoding:tail_no_query",
+          "encoding:trailing_backtrack",
+          "encoding:ultra_alternative_considered",
+          "encoding:ultra_alternative_extends_frontier",
+          "encoding:ultra_alternative_rejected",
+          "encoding:ultra_alternative_selected",
+          "encoding:ultra_improvement_after_rejection",
+          "encoding:ultra_match_tie_continue",
+          "encoding:ultra_match_worse_continue",
+          "encoding:ultra_unpromising_query",
+          "seeding:deferred_repeat_publication",
+          "seeding:initial_no_match",
+          "seeding:later_source_end",
+          "seeding:literal_improvement",
+          "seeding:literal_rejected",
+          "seeding:literal_tie",
+          "seeding:match_extend",
+          "seeding:match_improvement",
+          "seeding:multiple_sequences",
+          "seeding:search_tree",
+          "seeding:ultra_alternative_considered",
+          "seeding:ultra_alternative_rejected",
+          "seeding:ultra_alternative_selected",
+          "seeding:ultra_improvement_after_rejection",
+          "seeding:ultra_match_tie_continue",
+          "seeding:ultra_match_worse_continue",
+          "seeding:ultra_unpromising_query"
+        ],
+        "frame_sha256": "9900d6da0f12876c6dbdfe23171c747b208ccf1d4bebe9b92a50a7f25f29c1f2",
+        "kinds": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "name": "u2r_future_255",
+        "native_hypothesis": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "source_sha256": "6d6838b2aa82b7aa7c12b13422d3f453f87cdb0de190d8101003762d5faa35eb"
+      }
+    ],
+    "changed_native_histories": 1,
+    "child_processes": 0,
+    "model_events": 116881,
+    "qualification": "Independent immutable retained Ultra2 phase integer model derives tokens, literals, tails and repeat publication from source and actual Rust wire kinds. Native matches or C wire hypotheses never provide parser input. This audit does not decode compressed payloads; native and Rust decode checks are separate.",
+    "sequences": 672,
+    "status": "passed"
+  },
+  "miri_test_executions": 12,
+  "native_decodes": 58,
+  "negative_controls_per_interpreter": 34,
+  "platform_commands": 8,
+  "positive_controls_per_interpreter": 2,
+  "production_source_sha256": {
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/block_entropy.rs": "9a8dbdaf37c75f09aa18199d7a6b6701621267b55e5090bb0847317c4a45e538",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/decode.rs": "842326d2cf8b97941f0ae308a403affd95d28c06da9b87d6855074764f3db403",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+    "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+    "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+    "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+    "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+    "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+    "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+    "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/greedy_block.rs": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+    "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+    "src/greedy_parse.rs": "0555b480e7c93683cdd29ec863ff8235f983b7bc579a047ef69c883e365211bb",
+    "src/greedy_plan.rs": "d5249a555e18abc82bbbcff145921c3d2a002212819987541b9b77359eaec39e",
+    "src/greedy_search.rs": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+    "src/greedy_state.rs": "4ba31ec4cc1c60e5d0d81e38e93c114d7dbdc1f4e8e7f3567aafcbcbc27ead05",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+    "src/lib.rs": "4bacbc549ffc851ed0ee5d021b74a21c0aafca7da174fdc2ece2bfd6233adc0e",
+    "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+    "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+    "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+    "src/optimal_frequencies.rs": "02815487254d9f621e6d0ce0e14edbe302e94cb5b012884242a790081cd671c4",
+    "src/optimal_matches.rs": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781",
+    "src/optimal_parse.rs": "99c2a92137115d50194e897df70403f3631127e5b7a7da058e5aee507a2567ab",
+    "src/optimal_path_layout.rs": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5",
+    "src/optimal_paths.rs": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9",
+    "src/optimal_plan.rs": "e11c456b8ee9cfb4f3195b15f36873e87ed50ce701559760d157f6d36cd70c68",
+    "src/optimal_price.rs": "d389ec0b49194a65c506c369531ae68a42ec92f6dd06531333ddbc93c018712e",
+    "src/optimal_retained.rs": "137308d223bc5e2182b2e9ff531ab06c0c95b6665a364ec65bacb711eb176cf6",
+    "src/optimal_retained_plan.rs": "f2d5f8de81be4ccbd30517cae2d45694b341bc27dd26a6b9e01645512bd2fd8c",
+    "src/optimal_retained_state.rs": "efa3aa8506bd085690805bf7a64287a5593af227abd4cb07ff5b91f46fe0c5e7",
+    "src/optimal_search.rs": "d33fb024fe4f55120417a0e3150ce8758e9cb7079a40521f26d1a2761901f992",
+    "src/optimal_search_layout.rs": "005fe4f977caae25123d207b3d6f431f5234c9da00d3d1eacdf0f15122a903ba",
+    "src/optimal_short_key.rs": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434",
+    "src/optimal_state.rs": "72ccaab4558ac4ae8ac691cafd1a0b4753c3281d4e86ed0cefcf602cccdbe8e7",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+    "src/reference_encode.rs": "f10c1da00266b468972ce001a1d34686e8216ea6326f59d3ea4674a59d7114e8",
+    "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+    "src/reference_frame_encode.rs": "4ed9ced3dd754b0c7dafcc61c927c05f93b8fb1f337b3f9f563c1645a2a2c202",
+    "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+    "src/reference_search.rs": "91571b0d41eebe86921ef8639d6c9c4b0722cdb6c6a349c4eedd0503f634a447",
+    "src/reference_tree.rs": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+    "src/sequence_context.rs": "cfa51f7f78f2488a67b42e3dce4569f2641895b161fb92f9c69380d44a8fc47b",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/sequence_plan.rs": "0af5935553bb8b0aa931a60355e8bf1b76c62f53e0d17c3fb477e1119e3f0bdf",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+    "src/stream.rs": "029b1f8d024a5d26f36825994fe63fc7607a18ab051be1d83f26b7a14c78bb3c",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/tree_layout.rs": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26",
+    "src/tree_search.rs": "c5fabb7ec63df89887f94d42f86e5bc66aea244543e061bff340d5fe5a7dc2bc",
+    "src/tree_sort.rs": "6781699dac123560ea5ee288cd22f4cafdfe27016c4788503bd0548982f65379",
+    "src/tree_source.rs": "e8ff59ed5de930faaca3ff89590ea5c208a13c75c06b9acc3f3665dd7761c4c0",
+    "src/ultra2_frame_plan.rs": "f3b704e167db719fcc10b19cc91c292c8fa7ac63927ec7f2c9a9622bb32c21a6",
+    "src/ultra2_plan.rs": "acf639e33dc378275508a85f568a4f61ef074aba97510c4a5dc9fe7b05d9f94f",
+    "src/ultra2_retained.rs": "69a889ff4e8e77720e7a55f2e0ce7c79049b813c9f33b1e24b14f8491ec5ed39",
+    "src/ultra2_retained_plan.rs": "ed06ed3543896b2c1d16049c0e77772824afa29261068cabc9285d894c0677b6",
+    "src/ultra2_retained_state.rs": "121e6bcfed9297c23f4d3aaeff5168dfaf12cc45e67230c02309a8312c810b64",
+    "src/ultra2_state.rs": "b7ac2e5b1e61630d8d30e263f9891acd7355c2cfe321c6c4a6d008b0f95eb6eb",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed"
+  },
+  "public_predecessor_test_executions": 18,
+  "public_retained_ultra2_admitted": false,
+  "qualification": "All private retained Ultra2 token/frame integration, actual-wire independent replay/native decoding and foreign platform gates bind the same complete production sources and integration inputs. Every referenced log, archive, capture and concrete platform artifact is checked again. Public resolver remains fresh-only; source-only public hypotheses are a separate completed plan. Public admission, final full regression, final platform binding, benchmarks and complete upstream parity remain open.",
+  "source_unchanged": true,
+  "status": "passed",
+  "true_no_std_products": 21,
+  "wire_cases": 29
+}

@@ -252,3 +252,21 @@ The archived protocol records bounds, exact inventory and decoder dependencies.
 Evidence: `docs/evidence/2026-10-22-ultra2-retained-wire.{json,tar.gz}`, SHA-256
 `c4be31cdf9675b3ac7cdedac5604d0b4e45d650f680bc8912d7bd5137d3ae878`. Foreign Miri, concrete no-atomics, public admission, full
 regression and benchmarks remain separate gates.
+
+## Closed private frame checkpoint
+
+The reconciliation receipt binds all 124 completed private integration, actual-
+wire and platform commands to one exact production-source inventory. All source
+snapshots, command logs, three complete evidence archives, paired frame captures
+and concrete platform artifacts are checked again. Wire and platform receipts
+bind the exact completed integration receipt and include every integration input.
+The public resolver is independently checked to retain its fresh-only Ultra2 path.
+
+This closes the private token/frame prerequisite: 286 focused test executions,
+18 public predecessor test executions, 21 true no_std products, 58 native frame
+decodes, ordinary/optimized independent phase audits with 34 negative controls
+each, and 12 strict-provenance foreign Miri executions. The unpromoted public
+preflight is a separate candidate and does not widen current public support.
+Formal public admission, full public regression/platform binding, benchmarks
+and complete upstream migration remain open. The exact receipt and executable
+checker are `docs/evidence/2026-10-22-ultra2-retained-private-frame-reconciliation.{json,py}`.
