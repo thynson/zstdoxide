@@ -1,0 +1,260 @@
+{
+  "files": [
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/cdda7143508582cc70cf8c6c17fa97bd06a5a2666a7c4d4592ecf09359f9c5d5.gz",
+      "archive_bytes": 311589574,
+      "archive_sha256": "e9338f0dc0e872b67c2221638200a90d5b1dec962c3847c3780c7b3cf7300592",
+      "bytes": 740323264,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/03b81058fc001058/out/zstdoxide-03b81058fc001058",
+      "sha256": "cdda7143508582cc70cf8c6c17fa97bd06a5a2666a7c4d4592ecf09359f9c5d5"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/3d28971d84ff1e1246391c680fd4ed10bfe36cda7338c7352d1f803ef76c7240.gz",
+      "archive_bytes": 311589404,
+      "archive_sha256": "b38f1ca254f191d0910962363364b2dbc37abbac703bb44617b4964fba60bd1a",
+      "bytes": 740322080,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/07d1a9404647fc49/out/zstdoxide-07d1a9404647fc49",
+      "sha256": "3d28971d84ff1e1246391c680fd4ed10bfe36cda7338c7352d1f803ef76c7240"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/fe06e426c6c0978a53099251a178eeebee45e3342a4c4bda12075eab8fc07979.gz",
+      "archive_bytes": 311640072,
+      "archive_sha256": "53471ace62a48ee9820365c118e43ccb73b89a92d1495cdd31a7fbd9395a09e6",
+      "bytes": 740322672,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/088708fc83d7b381/out/zstdoxide-088708fc83d7b381",
+      "sha256": "fe06e426c6c0978a53099251a178eeebee45e3342a4c4bda12075eab8fc07979"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/70037589666ca0d913a74358772aaca63d438e5e45575634618aa0bd8c35012e.gz",
+      "archive_bytes": 1257550,
+      "archive_sha256": "8ee872105dcde6d4ccbae7b764fa12e03a21d65107b5f24eb9b594d6e4e4290c",
+      "bytes": 3977040,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/149a5a409545fc5e/out/reference_ultra2-149a5a409545fc5e",
+      "sha256": "70037589666ca0d913a74358772aaca63d438e5e45575634618aa0bd8c35012e"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/7ee7c88cb5f71bcc045831173188b0f0a76a5bdc074eb9a344175ff1b7d8b5e0.gz",
+      "archive_bytes": 311564170,
+      "archive_sha256": "4414ff1e519a45f7c679aa14e5685b6223e3cc07cdd0ac02b4ec518520fb44b3",
+      "bytes": 740323392,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/161925a2d9dd4b60/out/zstdoxide-161925a2d9dd4b60",
+      "sha256": "7ee7c88cb5f71bcc045831173188b0f0a76a5bdc074eb9a344175ff1b7d8b5e0"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/9f7975e798665e3b43ecc1c1a04ef64127823b91be12793eb39c3e738b6884df.gz",
+      "archive_bytes": 311598225,
+      "archive_sha256": "149d7514a1fa67250e3015f9cd3048f0e0e7e123a6cf59427f188b6fc701c3df",
+      "bytes": 740320544,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/1c149c2826a79990/out/zstdoxide-1c149c2826a79990",
+      "sha256": "9f7975e798665e3b43ecc1c1a04ef64127823b91be12793eb39c3e738b6884df"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/cd1d7c711d843e2a7cd0aa9fb94b192c9953e5022ac729b4a055bac2a1d38fc1.gz",
+      "archive_bytes": 311595132,
+      "archive_sha256": "4442f734101e0d92ac0a9099e2f7b3842b4c462d1cf9b37cfd512b7be5f90ee6",
+      "bytes": 740287600,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/1de6269acd6bfc6a/out/zstdoxide-1de6269acd6bfc6a",
+      "sha256": "cd1d7c711d843e2a7cd0aa9fb94b192c9953e5022ac729b4a055bac2a1d38fc1"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/abbbe888d7be58b20e153ce1e16b5de703a863cad380c95ccda821bd1c45d809.gz",
+      "archive_bytes": 311623038,
+      "archive_sha256": "436935ce4d388f197d4dd78afe1504d3e72acd6eaa5ae1a9e8137cddf0db87d5",
+      "bytes": 740320000,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/2c42a5681eb3a34b/out/zstdoxide-2c42a5681eb3a34b",
+      "sha256": "abbbe888d7be58b20e153ce1e16b5de703a863cad380c95ccda821bd1c45d809"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/5052d2b0d6855bc54cb81ca45892fa4df116b273b9a1d022739e5b29ccc346f2.gz",
+      "archive_bytes": 311566889,
+      "archive_sha256": "d1dde01a6f9e8a0db6a41d8d50b34f106a56bdded3f7c437d5465868e44bc831",
+      "bytes": 740321968,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/427d9f870ca698c1/out/zstdoxide-427d9f870ca698c1",
+      "sha256": "5052d2b0d6855bc54cb81ca45892fa4df116b273b9a1d022739e5b29ccc346f2"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/ef10b6d58986a86221319fad2adadd8943f610c1d6d98e9b3fd60f53bfa7b10e.gz",
+      "archive_bytes": 312844915,
+      "archive_sha256": "0fde3c862c8f90e5affe0ce9a397a93ec5ad87fbcf64f495c7a91ad270241b1f",
+      "bytes": 748858704,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/5cf760c7ac84354b/out/zstdoxide-5cf760c7ac84354b",
+      "sha256": "ef10b6d58986a86221319fad2adadd8943f610c1d6d98e9b3fd60f53bfa7b10e"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/541bea20deb2d6146a5b7a93ab9161058c13c8c028d6bf3111295da91f13024d.gz",
+      "archive_bytes": 311624131,
+      "archive_sha256": "e44bad842ef20131e687f8548b3a4e99dd713fd06b5622873b115adeb11485a6",
+      "bytes": 740323296,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/5fca6734484a14a7/out/zstdoxide-5fca6734484a14a7",
+      "sha256": "541bea20deb2d6146a5b7a93ab9161058c13c8c028d6bf3111295da91f13024d"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/4c406d2b8ab03e4c98fa8fab54e98f6a7ce87c9e9ae51dbe81b380dc86fce5be.gz",
+      "archive_bytes": 1258651,
+      "archive_sha256": "e9d6656a64c86539c2510336fb1578b35eeb367209458d00879559767a1f2f91",
+      "bytes": 3971824,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/63c72ea92160bcdb/out/reference_ultra-63c72ea92160bcdb",
+      "sha256": "4c406d2b8ab03e4c98fa8fab54e98f6a7ce87c9e9ae51dbe81b380dc86fce5be"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/905718157a34033dc8a676bce0405f4d51b6d2d90d34b916d041eb40c4e27130.gz",
+      "archive_bytes": 311586214,
+      "archive_sha256": "7d70899aaf074c62bb8f680f441e5a8402398e88fa38af19568e495b4d787cfb",
+      "bytes": 740323152,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/738f0c9085e16cdc/out/zstdoxide-738f0c9085e16cdc",
+      "sha256": "905718157a34033dc8a676bce0405f4d51b6d2d90d34b916d041eb40c4e27130"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/64d9e47d29d865de173af06bb9547ad6bf9426288b09a7e99fc3674fb68d108c.gz",
+      "archive_bytes": 1255652,
+      "archive_sha256": "f9636be358d73b487124aad2e82c679af4531493ed34945ae4656f611dc847a3",
+      "bytes": 3970640,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/80a5363354bfb8cd/out/reference_ultra-80a5363354bfb8cd",
+      "sha256": "64d9e47d29d865de173af06bb9547ad6bf9426288b09a7e99fc3674fb68d108c"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/35d6d5d0a97c82027f0cbfbda495e450f86cbbc466b056378ad3c88386cfab9f.gz",
+      "archive_bytes": 1255238,
+      "archive_sha256": "7b4321e5c0f3388057937ca4a065b5e8cfa4d8c01c82ef026c825602e1e10ab5",
+      "bytes": 3974240,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/8a31cde363a15c87/out/reference_ultra_retained-8a31cde363a15c87",
+      "sha256": "35d6d5d0a97c82027f0cbfbda495e450f86cbbc466b056378ad3c88386cfab9f"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/94de29ab35c517edb6b1c02ee553016d191308e7e063752206c46335c180d8c2.gz",
+      "archive_bytes": 311613138,
+      "archive_sha256": "0b5b4e609f49bf75cfe5e98ebfc918a3699cb212788c641c7b6d356ee25d63eb",
+      "bytes": 740321696,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/8ed127a3dcbf0fd0/out/zstdoxide-8ed127a3dcbf0fd0",
+      "sha256": "94de29ab35c517edb6b1c02ee553016d191308e7e063752206c46335c180d8c2"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/4715851efffc9af915bf7e29960454bf9d2752da5f22f99684509117fba19f8f.gz",
+      "archive_bytes": 311606528,
+      "archive_sha256": "bc7ba35683047f283dda341afe2f8c2485bab55b0975a4d306b6aae72a4e241e",
+      "bytes": 740320208,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/9e394beeb3a37148/out/zstdoxide-9e394beeb3a37148",
+      "sha256": "4715851efffc9af915bf7e29960454bf9d2752da5f22f99684509117fba19f8f"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/8a4ea4d45269db66014961a7aa6151e80e2a1b47663ad3cd485af79cb2320356.gz",
+      "archive_bytes": 311626245,
+      "archive_sha256": "30949e23a78daf47cd424199fdd594d0dc8f8731a0d842d6b48418a8995120c2",
+      "bytes": 740323504,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/a35bdaeeb46bdf84/out/zstdoxide-a35bdaeeb46bdf84",
+      "sha256": "8a4ea4d45269db66014961a7aa6151e80e2a1b47663ad3cd485af79cb2320356"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/aacdd8cd908e55f14bbbe95c0642a3481c67a92882076b97b3874bd42a56cd94.gz",
+      "archive_bytes": 311647877,
+      "archive_sha256": "a87e28e4c8eb8ccdaeba64acf157a566feab2471788ad206544f422e0f7e37d9",
+      "bytes": 740323168,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/a629ebb4bfb9eeec/out/zstdoxide-a629ebb4bfb9eeec",
+      "sha256": "aacdd8cd908e55f14bbbe95c0642a3481c67a92882076b97b3874bd42a56cd94"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/e5ef3b50f37b6bbca93599e56fd7d179e567cfe2c8acc222bf014bdf5c313f7c.gz",
+      "archive_bytes": 1254995,
+      "archive_sha256": "220a77ae4877c9c9a64a5719da150af0687a7b93a3b9ffa8845a7ebf5dee2e36",
+      "bytes": 3973360,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/bc92e0d632c6d273/out/reference_ultra2-bc92e0d632c6d273",
+      "sha256": "e5ef3b50f37b6bbca93599e56fd7d179e567cfe2c8acc222bf014bdf5c313f7c"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/e90a5b65632dd950da4d3b3dd83f6230de4971847b8118c5c384b1411fd228e5.gz",
+      "archive_bytes": 311640778,
+      "archive_sha256": "6898d6cd1b7af4e7b9392b9a21b464a11a8387ecbf67355d036304667a3b42ae",
+      "bytes": 740323664,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/c43f9008683d573d/out/zstdoxide-c43f9008683d573d",
+      "sha256": "e90a5b65632dd950da4d3b3dd83f6230de4971847b8118c5c384b1411fd228e5"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/8d31b6f634c511de2cceeddcb8b3a2f91f61fe5ae41aade0fa58374aaee8cb6b.gz",
+      "archive_bytes": 311618903,
+      "archive_sha256": "48893c4b1cd2c8bf89b212e8bbce28ea8027fd3de371bb2657c15127a0db46e3",
+      "bytes": 740320672,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/d1cdc24235e02ae9/out/zstdoxide-d1cdc24235e02ae9",
+      "sha256": "8d31b6f634c511de2cceeddcb8b3a2f91f61fe5ae41aade0fa58374aaee8cb6b"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/c0e3f751c37790e051e3a8ee202f9283bfb01fe7f63ca49183a3fbc9bfacd8e4.gz",
+      "archive_bytes": 1252666,
+      "archive_sha256": "c7a992cedb2a0d76571bebaac5e3253514ec44d0f386a9e45a3ecee7d738fcce",
+      "bytes": 3970064,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/d5d1d260628ab0b3/out/reference_ultra_retained-d5d1d260628ab0b3",
+      "sha256": "c0e3f751c37790e051e3a8ee202f9283bfb01fe7f63ca49183a3fbc9bfacd8e4"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/15496d62fe05eef97ddf7ba2bacb4289949cad36ff42ee2164e923783cd2575e.gz",
+      "archive_bytes": 311634356,
+      "archive_sha256": "1890c28ce39e980e6ae5b6d365150c32264e43bba534635d29da9b6ac671fc8c",
+      "bytes": 740324176,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/d6a1f1a3c86e40d5/out/zstdoxide-d6a1f1a3c86e40d5",
+      "sha256": "15496d62fe05eef97ddf7ba2bacb4289949cad36ff42ee2164e923783cd2575e"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/a398deadebf1f41ec5acf1884582a6e0c2f2e00002aedb6e1d9804a24739c79d.gz",
+      "archive_bytes": 311618791,
+      "archive_sha256": "be40deeb96ac5da0dd844312d0ca93380b31042d6d98921fb5ca2cc76523d0b2",
+      "bytes": 740323888,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/e24a9d30cdac2c85/out/zstdoxide-e24a9d30cdac2c85",
+      "sha256": "a398deadebf1f41ec5acf1884582a6e0c2f2e00002aedb6e1d9804a24739c79d"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/63837dfbe5c7cf0d3c569f67779fd0fa4d6ac1c97e7ed08a9c037d8cf1fe1886.gz",
+      "archive_bytes": 311636318,
+      "archive_sha256": "da59b82d0c6bf97aa8ff744ec98f7a5795f5ae49a67f3e34fdebac79b23c596d",
+      "bytes": 740288944,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/ed0daac6be29c7bc/out/zstdoxide-ed0daac6be29c7bc",
+      "sha256": "63837dfbe5c7cf0d3c569f67779fd0fa4d6ac1c97e7ed08a9c037d8cf1fe1886"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/fe34b4db3a3a08196b5845a2533344df920658ceb5c9c0a2649cb5d2e60e485a.gz",
+      "archive_bytes": 311566310,
+      "archive_sha256": "898a5595e059536ecb0cd6a970f520966fa73e4738fb840c47014eb4ac81464f",
+      "bytes": 740321968,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/debug/build/zstdoxide/f132a1d2f70578ca/out/zstdoxide-f132a1d2f70578ca",
+      "sha256": "fe34b4db3a3a08196b5845a2533344df920658ceb5c9c0a2649cb5d2e60e485a"
+    },
+    {
+      "archive": "/private/tmp/retained-ultra2-plan-executable-storage/51ede13cae19571e4c02ac149c0998300ce98cb263f7bc4e88d123c544108dd9.gz",
+      "archive_bytes": 336940992,
+      "archive_sha256": "1da90af14c458afc00d6ed032134387d3d005014e6afacc67fb5ab12f5a30244",
+      "bytes": 908103680,
+      "mode": 493,
+      "original_path": "/private/tmp/zstdoxide-target-ultra2-retained-plan/release/build/zstdoxide/bf2e57771b2b10d0/out/zstdoxide-bf2e57771b2b10d0",
+      "sha256": "51ede13cae19571e4c02ac149c0998300ce98cb263f7bc4e88d123c544108dd9"
+    }
+  ],
+  "qualification": "Every recorded executable is preserved as a separate lossless gzip file. Streaming reconstruction verifies exact size and SHA-256 before the generated target copy is removed; this receipt supersedes original target locations. Qualification sources and logs remain unchanged. Memory is bounded to stream chunks, independent of aggregate executable size.",
+  "source_receipt": "/private/tmp/retained-ultra2-plan-rust-full/evidence.json",
+  "source_receipt_sha256": "94ddc60434273717ea2fcacb40f142f8993721fad2b1be4f8c17ea7af49a0f3d",
+  "status": "passed"
+}

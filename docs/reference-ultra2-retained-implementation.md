@@ -66,3 +66,39 @@ attempt passed all five tests, and the final complete matrix passed with explici
 `CARGO_INCREMENTAL=0`, `CARGO_PROFILE_DEV_DEBUG=0` and
 `CARGO_PROFILE_TEST_DEBUG=0`. These settings affect build artifacts and symbols,
 while preserving the tested feature combinations and debug assertions.
+
+## Dedicated retained search
+
+The dedicated search constructor binds the original four owners to the checked
+plan and exact source borrow. It rejects all older search/block entries and
+requires first-block seeding, one checked rebase and contiguous actual blocks.
+Rebase preserves physical table cells; every source access filters stale indices
+and stays within the visible physical prefix. Later frontier catch-up uses the
+logical first-block bias. Reset restores the original capability and allocations.
+
+All five focused tests pass in 22 products. Native replay compares every query,
+candidate, complete table and frontier across all 32 cases, 123 phases and
+229657 events, including 30 seed resets. Other checks cover invalid schedule/phase
+and query rejection, future-source isolation, tiny/non-power-of-two biases,
+owned/borrowed nonclone allocators, allocation failures and reset. The same nine
+public predecessor integration tests pass in safe/all products; 21 true no_std
+products, formatting and strict all-target Clippy pass. This search qualification
+alone does not admit parser execution or public retained Ultra2.
+
+Evidence: `docs/evidence/2026-10-22-ultra2-retained-search.{json,tar.gz}`.
+Archive SHA-256: `2aa486879b516f4d308c467a4e68d904fb429da7eef0e6663ebf71a35e13b815`. Changed Rust sources and complete logs
+are embedded; unchanged fixture payloads have an exact-commit Git blob/SHA-256
+restore manifest. Full source snapshots remain in the external stage. Recorded
+executable hashes identify the exact products used by each command.
+
+## Subsequent correctness-product storage
+
+The plan executables were also moved into verified external lossless gzip files;
+`docs/evidence/2026-10-22-ultra2-retained-plan-executable-storage.json` supersedes
+their original target locations. After the search gate completed, ordinary search
+Cargo caches were removed with every recorded executable identity rechecked.
+The exact receipt is `docs/evidence/2026-10-22-ultra2-retained-search-cache-cleanup.json`.
+Search executable contents are not retained; source snapshots, archive contents,
+logs and hashes remain available. Future scoped correctness matrices similarly
+hash each product and remove its isolated Cargo cache. Benchmark executables
+remain separate measured artifacts and are unaffected.

@@ -3538,3 +3538,29 @@ layout method handles the tiny retained threshold controls. Upstream counterpart
 are first-block `ZSTD_initStats_ultra` rebase, `ZSTD_buildSeqStore` scheduling and
 known-size frame/header reservation. Copied fields share one representation
 across all independently selected storage backends.
+
+### Plan-bound retained Ultra2 search phases
+
+`OptimalSearch::from_ultra2_retained_parts` moves the existing head, tree-node,
+short-key and candidate owners into a dedicated capability holding a copied
+validated plan and a rebased flag. The source remains the same immutable borrow.
+Old constructors keep this capability absent; all old query and block-entry
+paths reject it before accessing source or tables. Search start validation
+requires the exact source identity, plan geometry and untouched frontiers.
+
+A new source-view setter installs checked physical prefix length and logical
+origin without changing the underlying borrow. First-block seeding is mandatory
+exactly when the plan requires it. Rebase requires the first seeded block,
+retains every physical table cell, resets both frontiers to the first-block bias
+and clears only candidates. Actual encoding must then enter the first block
+before any later contiguous scheduled block. The paired parser establishes pass
+completion; the search alone does not claim that parsing has finished.
+
+Block entry applies upstream's strict 384/192 frontier catch-up in logical
+coordinates before copying the frontier for short keys. Query input positions
+remain physical offsets, with checked lookahead and repeats; only the dedicated
+query boundary adds the logical origin. Existing source readers reject stale
+indices before access and cap every read at the current block's physical end.
+Reset clears tables/frontiers, restores origin zero and reuses all allocations.
+This composition reuses each owner's independent safe/unsafe backend; the copied
+plan, rebased flag and ranges need no additional unsafe representation.

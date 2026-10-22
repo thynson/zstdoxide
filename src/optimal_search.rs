@@ -35,6 +35,7 @@ pub(crate) struct OptimalSearch<
     failed: bool,
     retained: Option<(usize, usize)>,
     ultra2: Option<bool>,
+    ultra2_retained: Option<(crate::ultra2_retained_plan::RetainedUltra2Plan, bool)>,
 }
 impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'a, H, N, S, M> {
     pub(crate) fn from_parts(
@@ -83,6 +84,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
             failed: false,
             retained: None,
             ultra2,
+            ultra2_retained: None,
         })
     }
     pub(crate) const fn layout(&self) -> OptimalSearchLayout {
@@ -103,7 +105,8 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         {
             return Err(Error::InvalidParameter);
         }
-        if self.ultra2.is_some()
+        if self.ultra2_retained.is_some()
+            || self.ultra2.is_some()
             || self.failed
             || self.retained.is_some()
             || self.frontier != 0
@@ -123,10 +126,11 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         self.failed = false;
         self.retained = None;
         self.ultra2 = self.ultra2.map(|_| false);
+        self.ultra2_retained = self.ultra2_retained.map(|(plan, _)| (plan, false));
         self.source.restore_end();
     }
     pub(crate) fn query(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
-        if self.retained.is_some() || self.ultra2.is_some() {
+        if self.ultra2_retained.is_some() || self.retained.is_some() || self.ultra2.is_some() {
             return Err(Error::InvalidState);
         }
         self.source.validate(query, self.layout)?;
@@ -134,7 +138,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
     }
     /// Ordinary fresh-block entry qualified independently from direct requests.
     pub(crate) fn query_fresh(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
-        if self.retained.is_some() || self.ultra2.is_some() {
+        if self.ultra2_retained.is_some() || self.retained.is_some() || self.ultra2.is_some() {
             return Err(Error::InvalidState);
         }
         self.source.validate_fresh(query, self.layout)?;
@@ -260,7 +264,8 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         target: usize,
     ) -> Result<()> {
         self.validate_retained_binding(source, minimum, target)?;
-        if self.ultra2.is_some()
+        if self.ultra2_retained.is_some()
+            || self.ultra2.is_some()
             || self.failed
             || self.retained.is_some()
             || self.frontier != 0
@@ -275,7 +280,7 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
     /// ZSTD_buildSeqStore adjusts the main frontier before the parser copies it
     /// into its block-local short frontier. Argument errors precede all mutation.
     pub(crate) fn begin_retained(&mut self, start: usize, end: usize) -> Result<()> {
-        if self.ultra2.is_some() {
+        if self.ultra2_retained.is_some() || self.ultra2.is_some() {
             return Err(Error::InvalidState);
         }
         self.layout.validate_retained(self.source.backing_len())?;
@@ -310,6 +315,9 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         Ok(())
     }
     pub(crate) fn query_retained(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
+        if self.ultra2_retained.is_some() {
+            return Err(Error::InvalidState);
+        }
         let (start, end) = self.retained.ok_or(Error::InvalidState)?;
         if query.position < start.max(1)
             || query.position > end - 8
@@ -321,6 +329,184 @@ impl<'a, H: Allocator, N: Allocator, S: Allocator, M: Allocator> OptimalSearch<'
         {
             return Err(Error::InvalidParameter);
         }
+        self.checked_query(query)
+    }
+    /// Bind the existing four owners to one checked retained Ultra2 schedule.
+    pub(crate) fn from_ultra2_retained_parts(
+        source: &'a [u8],
+        plan: crate::ultra2_retained_plan::RetainedUltra2Plan,
+        tree: ReferenceTree<H, N>,
+        short: OptimalShortKey<S>,
+        matches: OptimalMatches<M>,
+    ) -> Result<Self> {
+        if source.len() != plan.source_len() {
+            return Err(Error::InvalidParameter);
+        }
+        plan.layout().validate_retained_ultra2(source.len())?;
+        let mut result = Self::initialize_parts(
+            OptimalSource::new(source)?,
+            plan.layout(),
+            tree,
+            short,
+            matches,
+            None,
+        )?;
+        result.ultra2_retained = Some((plan, false));
+        Ok(result)
+    }
+    pub(crate) fn validate_ultra2_retained_binding(
+        &self,
+        source: &[u8],
+        minimum: usize,
+        target: usize,
+    ) -> Result<crate::ultra2_retained_plan::RetainedUltra2Plan> {
+        let (plan, _) = self.ultra2_retained.ok_or(Error::InvalidState)?;
+        if !self.source.is_same_source(source)
+            || source.len() != plan.source_len()
+            || minimum != if self.layout.minimum() == 3 { 3 } else { 4 }
+            || target != self.layout.sufficient()
+        {
+            return Err(Error::InvalidParameter);
+        }
+        if self.failed {
+            return Err(Error::InvalidState);
+        }
+        Ok(plan)
+    }
+    pub(crate) fn validate_ultra2_retained_start(
+        &self,
+        source: &[u8],
+        minimum: usize,
+        target: usize,
+    ) -> Result<crate::ultra2_retained_plan::RetainedUltra2Plan> {
+        let plan = self.validate_ultra2_retained_binding(source, minimum, target)?;
+        if self.ultra2_retained != Some((plan, false))
+            || self.retained.is_some()
+            || self.source.origin() != 0
+            || self.frontier != 0
+            || self.short_frontier != 0
+            || !self.matches.as_slice()?.is_empty()
+        {
+            return Err(Error::InvalidState);
+        }
+        Ok(plan)
+    }
+    /// Enter a complete scheduled prefix. A seeded first block must run its
+    /// discarded pass, rebase once, then run its actual pass before later blocks.
+    /// All range, phase and owner checks precede changes to any search state.
+    pub(crate) fn begin_ultra2_retained(
+        &mut self,
+        start: usize,
+        end: usize,
+        seeding: bool,
+    ) -> Result<()> {
+        let (plan, rebased) = self.ultra2_retained.ok_or(Error::InvalidState)?;
+        if self.failed {
+            return Err(Error::InvalidState);
+        }
+        let length = end.checked_sub(start).ok_or(Error::InvalidParameter)?;
+        if plan.next_block_len(start)? != length || end > plan.source_len() {
+            return Err(Error::InvalidParameter);
+        }
+        if seeding && (start != 0 || !plan.seeds_first_block() || rebased)
+            || !seeding && rebased != plan.seeds_first_block()
+        {
+            return Err(Error::InvalidState);
+        }
+        let origin = if rebased { plan.first_block_len() } else { 0 };
+        if self.source.origin() != origin {
+            return Err(Error::InvalidState);
+        }
+        match self.retained {
+            Some((_, previous_end)) if previous_end == start && !seeding => {}
+            None if start == 0
+                && self.frontier == origin
+                && self.short_frontier == origin
+                && self.matches.as_slice()?.is_empty() => {}
+            _ => return Err(Error::InvalidState),
+        }
+        let current = origin.checked_add(start).ok_or(Error::InvalidParameter)?;
+        let lag = current.saturating_sub(self.frontier);
+        let frontier = if lag > 384 {
+            current - 192.min(lag - 384)
+        } else {
+            self.frontier
+        };
+        let coordinates = plan.visible_coordinates(end, rebased)?;
+        self.source.set_ultra2_retained_view(coordinates)?;
+        self.frontier = frontier;
+        self.short_frontier = frontier;
+        self.matches.clear();
+        self.retained = Some((start, end));
+        Ok(())
+    }
+    /// The paired parser must establish a completed discarded pass. Search
+    /// tables remain allocated and retain stale integer cells below the new bias.
+    pub(crate) fn rebase_ultra2_retained(&mut self) -> Result<()> {
+        let (plan, rebased) = self.ultra2_retained.ok_or(Error::InvalidState)?;
+        if self.failed
+            || rebased
+            || !plan.seeds_first_block()
+            || self.retained != Some((0, plan.first_block_len()))
+            || self.source.origin() != 0
+        {
+            return Err(Error::InvalidState);
+        }
+        self.matches.as_slice()?;
+        let coordinates = plan.visible_coordinates(plan.first_block_len(), true)?;
+        self.source.set_ultra2_retained_view(coordinates)?;
+        self.frontier = coordinates.origin();
+        self.short_frontier = self.frontier;
+        self.matches.clear();
+        self.retained = None;
+        self.ultra2_retained = Some((plan, true));
+        Ok(())
+    }
+    pub(crate) fn ultra2_retained_frontier(&self) -> Result<usize> {
+        if self.ultra2_retained.is_none() {
+            return Err(Error::InvalidState);
+        }
+        Ok(self.frontier)
+    }
+    pub(crate) fn ultra2_retained_coordinates(
+        &self,
+    ) -> Result<crate::ultra2_plan::Ultra2Coordinates> {
+        if self.ultra2_retained.is_none() {
+            return Err(Error::InvalidState);
+        }
+        crate::ultra2_plan::Ultra2Coordinates::new(
+            self.source.origin(),
+            self.source
+                .len()
+                .checked_sub(self.source.origin())
+                .ok_or(Error::CorruptData)?,
+        )
+    }
+    /// The parser uses physical frame offsets; only this boundary converts them
+    /// to the current logical index space. No stale table cell authorizes a read.
+    pub(crate) fn query_ultra2_retained(
+        &mut self,
+        mut query: OptimalQuery,
+    ) -> Result<&[OptimalMatch]> {
+        if self.ultra2_retained.is_none() {
+            return Err(Error::InvalidState);
+        }
+        let (start, end) = self.retained.ok_or(Error::InvalidState)?;
+        if query.position < start.max(1)
+            || !query.position.checked_add(8).is_some_and(|n| n <= end)
+            || query.length_to_beat != if self.layout.minimum() == 3 { 3 } else { 4 }
+            || query
+                .repeats
+                .iter()
+                .any(|&v| v == 0 || v as usize > self.source.backing_len())
+        {
+            return Err(Error::InvalidParameter);
+        }
+        query.position = self
+            .source
+            .origin()
+            .checked_add(query.position)
+            .ok_or(Error::InvalidParameter)?;
         self.checked_query(query)
     }
     fn checked_query(&mut self, query: OptimalQuery) -> Result<&[OptimalMatch]> {
@@ -1411,3 +1597,7 @@ mod retained_frames_tests;
 #[cfg(test)]
 #[path = "../tests/support/ultra_retained_search.rs"]
 mod ultra_search_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra2_retained_search.rs"]
+mod ultra2_retained_tests;

@@ -227,6 +227,22 @@ impl<'a> OptimalSource<'a> {
         self.end = end;
         Ok(())
     }
+    /// Install a checked physical prefix and logical first-block bias without
+    /// changing the original borrow. Existing source entry contracts stay narrow.
+    pub(crate) fn set_ultra2_retained_view(
+        &mut self,
+        coordinates: Ultra2Coordinates,
+    ) -> Result<()> {
+        if !(14..=32768).contains(&self.bytes.len())
+            || !(7..=self.bytes.len()).contains(&coordinates.len())
+            || coordinates.origin() > 8192
+        {
+            return Err(Error::InvalidParameter);
+        }
+        self.origin = coordinates.origin();
+        self.end = coordinates.end();
+        Ok(())
+    }
     pub(crate) fn validate(self, query: OptimalQuery, layout: OptimalSearchLayout) -> Result<()> {
         if self.origin != 0
             || self.len() < 8
