@@ -1,0 +1,48 @@
+{
+  "archives": {
+    "2026-10-22-ultra2-retained-public-native-preview": "b7ebd520c920dc75c94f6915c3420fb3c927d120c1e04b5fc89b60e88b8c1ce1",
+    "2026-10-22-ultra2-retained-wire": "c4be31cdf9675b3ac7cdedac5604d0b4e45d650f680bc8912d7bd5137d3ae878"
+  },
+  "controller_sha256": "0a6f831ed9c497cc7dca1dbc3dc35f721c06ca236e4f4828e91a37eba3de7253",
+  "executables": [
+    {
+      "bytes": 875148832,
+      "path": "/private/tmp/retained-ultra2-wire-target/debug/build/zstdoxide/d77393b1cf6a900b/out/zstdoxide-d77393b1cf6a900b",
+      "sha256": "cd5f10df0cb3227f0b0b11c0bbd73676cefc92e29c705510d17e6b6e65b59bf9"
+    },
+    {
+      "bytes": 880450144,
+      "path": "/private/tmp/retained-ultra2-wire-target/debug/build/zstdoxide/0da75f6fc72dcc4d/out/zstdoxide-0da75f6fc72dcc4d",
+      "sha256": "37febc44024e8bb0cb58985f2782bff971be51b6b17f94d79fd249a9d2891ce3"
+    },
+    {
+      "path": "/private/tmp/retained-ultra2-public-native-preview-safe/release/examples/reference_greedy_oracle",
+      "retained_copy": "/private/tmp/retained-ultra2-public-native-preview/binaries/rust-safe",
+      "sha256": "3ead0266d49d6cfdb4bff67316168d939e69ebaac097aeb43e29db88c189f54e"
+    },
+    {
+      "path": "/private/tmp/retained-ultra2-public-native-preview-all/release/examples/reference_greedy_oracle",
+      "retained_copy": "/private/tmp/retained-ultra2-public-native-preview/binaries/rust-all",
+      "sha256": "6d44043b2cec8bb49f7a73c6fddb6bebad239782947ebf7062e399f6732a7bae"
+    }
+  ],
+  "qualification": "Only three task-owned ordinary correctness Cargo caches are removed after all callers finished and actual binary hashes matched completed evidence. Candidate interop executables remain in the native-preview stage and archive. Wire test executable identities remain recorded with full source. No benchmark executable, Miri sysroot, source snapshot, captured artifact or log is removed.",
+  "removed": [
+    {
+      "bytes": 1755837032,
+      "files": 26,
+      "path": "/private/tmp/retained-ultra2-wire-target"
+    },
+    {
+      "bytes": 7280976,
+      "files": 29,
+      "path": "/private/tmp/retained-ultra2-public-native-preview-safe"
+    },
+    {
+      "bytes": 7304770,
+      "files": 29,
+      "path": "/private/tmp/retained-ultra2-public-native-preview-all"
+    }
+  ],
+  "status": "passed"
+}

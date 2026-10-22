@@ -245,8 +245,8 @@ wire histories in ordinary and optimized Python. Each mode rejects 34 effective
 forgeries and passes two positive audits with child execution forbidden.
 
 The audit replays 116881 events and 672 sequences;
-1 cases differ from their original native block-kind
-hypotheses. Actual Rust wire kinds drive replay and publication throughout.
+One case differs from its original native block-kind
+hypothesis. Actual Rust wire kinds drive replay and publication throughout.
 All 67 commands pass with unchanged source, capture and native input identities.
 The archived protocol records bounds, exact inventory and decoder dependencies.
 Evidence: `docs/evidence/2026-10-22-ultra2-retained-wire.{json,tar.gz}`, SHA-256
@@ -275,10 +275,40 @@ checker are `docs/evidence/2026-10-22-ultra2-retained-private-frame-reconciliati
 
 The updated reference-profile usage document passes all nine examples in safe
 and all-feature candidate builds, including its new retained Ultra2 complete-
-frame example at24577bytes. Both modes use actual Cargo-reported rlib/rmeta
+frame example at 24,577 bytes. Both modes use actual Cargo-reported rlib/rmeta
 artifacts, retain their hashes and have identical named outcomes. The complete
 candidate and added environment/example helpers are captured and unchanged;
-main production source remains unchanged. These18 successful example executions
+main production source remains unchanged. These 18 successful example executions
 validate the unpromoted documentation only and do not admit public retained
 Ultra2. Evidence: `docs/evidence/2026-10-22-ultra2-retained-public-usage-preview.{json,tar.gz}`,
 archive SHA-256 `d3b45624320f3b1b30db30bc0bf4eea761920a583aad51e881b4bd05868096a5`.
+
+## Isolated new-request native preflight
+
+The exact unpromoted candidate passes 950 commands covering all 79 new public
+recipes and both intended predecessor transitions. Its 63 successful cases have
+identical safe/all Rust frames and identical normal/sanitized v1.5.7 native
+frames; all 504 bidirectional decodes equal their independently generated sources.
+The 18 resource cases remain rejected in both Rust builds, and 156 malformed packet
+calls against the four adapters exit 2 without a successful response. Four exact
+prior resource responses bind the two transition identities.
+
+All used native binaries, 26 codec translation units and dependencies are checked
+against their pinned prior qualification. The first archive finisher mistakenly
+counted malformed-packet labels containing
+`decode` as successful decode cases; it failed before archiving. Its source/log
+remain preserved, and the additive finisher counts only `case-` decode labels.
+No native execution is rerun or relabeled. The four executed binaries, complete
+source/request/response logs and unchanged main-source identity are retained.
+This preview intentionally omits the 1,591 unchanged predecessor cases and the
+formal independent adversarial audit; those obligations remain open. Public
+retained Ultra2 is still not admitted in repository production.
+
+Evidence: `docs/evidence/2026-10-22-ultra2-retained-public-native-preview.{json,tar.gz}`,
+archive SHA-256 `b7ebd520c920dc75c94f6915c3420fb3c927d120c1e04b5fc89b60e88b8c1ce1`.
+
+After all callers finished, three ordinary correctness Cargo caches were removed
+after rehashing the two wire test executables and both candidate interop binaries.
+The candidate executables remain in the native-preview stage/archive; all source,
+logs, captures and measured benchmark executables remain preserved. Exact checks
+and paths are recorded in `docs/evidence/2026-10-22-ultra2-retained-correctness-cache-cleanup.{json,py}`.
