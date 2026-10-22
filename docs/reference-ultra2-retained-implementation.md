@@ -204,3 +204,32 @@ code generation, not native foreign execution.
 Evidence: `docs/evidence/2026-10-22-ultra2-retained-private-platform.{json,tar.gz}`,
 SHA-256 `ffabc32a1767ed7c6fc84f36aaf1ca733445f8cfcd492402ff6bfaaa72490dd6`. Public admission and its final regression,
 interoperability, production-source platform binding and measurements remain open.
+
+## Isolated public admission candidate preflight
+
+An isolated candidate routes larger known strategy-9 sources through the checked
+retained plan and updates public bounds, source-limit controls and a retained
+usage example. Three additive public tests exercise balanced block boundaries,
+minimum/target modes, early resource rejection, allocator lifetime and complete
+frame publication. No candidate source or API documentation is promoted.
+
+Safe/all candidate builds pass the same 13 private integration tests and 12 public
+tests, including the three new tests and all nine predecessor tests. Formatting,
+strict all-target/all-feature Clippy and safe/all true no_std compilation pass.
+The eight-command qualification preserves four successful test commands from
+the original preview and executes its four remaining checks in an additive
+continuation. The original log-name collision and a preexecution continuation
+guard failure remain archived; no test failure is relabeled and no inherited
+command is claimed rerun. The preview captures exact changed sources, ordinary executable
+hashes, logs and unchanged main-source identities. Test-profile optimization1
+keeps debug assertions and overflow checks enabled. This is a preflight only:
+formal public capture, all 1591 unchanged predecessor responses, both intended
+transitions, bidirectional native interoperability, independent controls, full
+regression, final platform binding and benchmarks remain required. The public
+resolver in the repository still admits only the earlier fresh Ultra2 scope.
+
+Evidence: `docs/evidence/2026-10-22-ultra2-retained-public-preflight.{json,tar.gz}`,
+archive SHA-256 `c3dd6ca0c747a4df2abddf58dddf63bdb7258c6a5e3efa37cf0a61577b13326b`. The archive also preserves unexecuted
+public capture/auditor drafts; their syntax and planned inventory were reviewed,
+but they have not performed the formal native campaign. Qualified formatted
+candidate sources are in its `source` tree; earlier unformatted drafts are history.
