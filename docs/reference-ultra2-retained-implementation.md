@@ -144,3 +144,21 @@ and all seven independent nonclone allocation failure points. All 22 execution
 products run identical tests and all 21 true no_std products pass. This receipt
 reconciles existing executions; it does not represent a repeated test campaign
 or replace the remaining private-wire, platform and public-admission gates.
+
+## Isolated private-frame preflight (not production admission)
+
+The token/frame integration remains an external draft. Its 13 tests pass in
+optimized and unoptimized safe builds, and strict all-target/all-feature draft
+Clippy passes. All 59 capture artifacts match across profiles. The 29 complete
+frames decode exactly through pinned upstream v1.5.7. Independent ordinary and
+optimized Python reports match: 116881 events, 672 sequences, 34 rejected
+forgeries and two positive audits per mode, with child execution forbidden.
+The seven-byte first-block case uses actual kinds [2,1] rather than the original
+native hypothesis [0,1]; actual-kind model replay and native decoding both pass.
+
+The preflight archive preserves all 40 command records, logs, captures, native
+artifacts and exact draft sources, with precisely eight unpromoted paths listed.
+It binds every other draft input to committed production. Formal integration,
+its 22-product/21-no_std matrix, foreign platform gates and public admission
+remain unchecked. Evidence: `docs/evidence/2026-10-22-ultra2-retained-frame-preflight.{json,tar.gz}`,
+SHA-256 `24f499addddb8f4d652d893f9e0a062f208824bcdc95f9db5cc8616b1c66bd67`.
