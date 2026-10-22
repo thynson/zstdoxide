@@ -185,6 +185,7 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
                     | ReferenceSearchPlan::Ultra2(_)
                     | ReferenceSearchPlan::RetainedOptimal(_)
                     | ReferenceSearchPlan::RetainedUltra(_)
+                    | ReferenceSearchPlan::RetainedUltra2(_)
             ) {
                 self.entropy.prepare_optimal(
                     self.search.literals(),
@@ -1059,3 +1060,7 @@ mod ultra2_frame_tests {
 #[cfg(test)]
 #[path = "../tests/support/ultra_retained_frame_encode.rs"]
 mod retained_ultra_tests;
+
+#[cfg(test)]
+#[path = "../tests/support/ultra2_retained_frame_encode.rs"]
+mod retained_ultra2_integration_frames;

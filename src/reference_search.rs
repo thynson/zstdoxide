@@ -26,6 +26,8 @@ use crate::optimal_state::OptimalMatchState;
 use crate::reference_tree::ReferenceTree;
 use crate::sequence_context::SequenceWithOffset;
 use crate::ultra2_frame_plan::Ultra2FramePlan;
+use crate::ultra2_retained_plan::RetainedUltra2Plan;
+use crate::ultra2_retained_state::RetainedUltra2State;
 use crate::ultra2_state::Ultra2MatchState;
 use crate::{
     CompressionParameterRequest, Error, ReferenceStrategy, ResolvedCompressionParameters, Result,
@@ -48,6 +50,11 @@ pub(crate) enum ReferenceSearchPlan {
     )]
     RetainedOptimal(RetainedOptimalPlan),
     RetainedUltra(RetainedOptimalPlan),
+    #[allow(
+        dead_code,
+        reason = "Private observed retained Ultra2 frames precede public admission"
+    )]
+    RetainedUltra2(RetainedUltra2Plan),
 }
 
 impl ReferenceSearchPlan {
@@ -107,6 +114,7 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.source_len(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.source_len(),
             Self::Ultra2(plan) => plan.source_len(),
+            Self::RetainedUltra2(plan) => plan.source_len(),
             Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) => plan.source_len(),
         }
     }
@@ -117,6 +125,7 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.parameters(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.parameters(),
             Self::Ultra2(plan) => plan.parameters(),
+            Self::RetainedUltra2(plan) => plan.parameters(),
             Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) => plan.parameters(),
         }
     }
@@ -127,10 +136,14 @@ impl ReferenceSearchPlan {
             Self::Greedy(plan) => plan.block_limit(),
             Self::Optimal(plan) | Self::Ultra(plan) => plan.block_limit(),
             Self::Ultra2(plan) => plan.block_limit(),
+            Self::RetainedUltra2(plan) => plan.maximum_block_len(),
             Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) => plan.maximum_block_len(),
         }
     }
     pub(crate) fn next_block_len(self, emitted: usize) -> Result<usize> {
+        if let Self::RetainedUltra2(plan) = self {
+            return plan.next_block_len(emitted);
+        }
         if let Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) = self {
             plan.next_block_len(emitted)
         } else {
@@ -142,7 +155,10 @@ impl ReferenceSearchPlan {
         }
     }
     pub(crate) fn is_retained(self) -> bool {
-        matches!(self, Self::RetainedOptimal(_) | Self::RetainedUltra(_))
+        matches!(
+            self,
+            Self::RetainedOptimal(_) | Self::RetainedUltra(_) | Self::RetainedUltra2(_)
+        )
     }
     pub(crate) fn validate_retained_policy(self) -> Result<()> {
         let (plan, expected) = match self {
@@ -156,6 +172,9 @@ impl ReferenceSearchPlan {
         Ok(())
     }
     pub(crate) fn frame_bound(self) -> Result<usize> {
+        if let Self::RetainedUltra2(plan) = self {
+            return Ok(plan.frame_bound());
+        }
         self.validate_retained_policy()?;
         if let Self::RetainedOptimal(plan) | Self::RetainedUltra(plan) = self {
             Ok(plan.frame_bound())
@@ -184,6 +203,7 @@ pub(crate) enum ReferenceSearchState<'a, A: Allocator> {
     Optimal(OptimalMatchState<'a, A>),
     Ultra2(Ultra2MatchState<'a, A>),
     RetainedOptimal(RetainedOptimalState<'a, A>),
+    RetainedUltra2(RetainedUltra2State<'a, A>),
 }
 
 impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
@@ -303,6 +323,40 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                     Vec::new_in(factory.clone()),
                 )?))
             }
+            ReferenceSearchPlan::RetainedUltra2(plan) => {
+                // Exact retained order: frequencies, paths, parser candidates,
+                // tree heads/edges, short heads, search candidates, two scratch owners.
+                let parameters = plan.parameters();
+                let constructor = OptimalParser::from_ultra2_retained_parts;
+                let parser = constructor(
+                    source,
+                    parameters.min_match(),
+                    parameters.target_length() as usize,
+                    OptimalFrequencies::new_with_policy_in(
+                        crate::optimal_price::PricePolicy::Ultra,
+                        plan.disabled_literals(),
+                        factory.clone(),
+                    )?,
+                    OptimalPaths::new_in(factory.clone())?,
+                    OptimalMatches::new_in(factory.clone())?,
+                )?;
+                let layout = plan.layout();
+                let search = OptimalSearch::from_ultra2_retained_parts(
+                    source,
+                    plan,
+                    ReferenceTree::new_in(layout.tree(), factory.clone(), factory.clone())?,
+                    OptimalShortKey::new_in(layout.short_log(), factory.clone())?,
+                    OptimalMatches::new_in(factory.clone())?,
+                )?;
+                Ok(Self::RetainedUltra2(RetainedUltra2State::from_parts(
+                    source,
+                    plan,
+                    parser,
+                    search,
+                    Vec::new_in(factory.clone()),
+                    Vec::new_in(factory.clone()),
+                )?))
+            }
             ReferenceSearchPlan::Ultra2(plan) => {
                 // Preserve the nine qualified owner identities and clone order.
                 let execution = plan.execution();
@@ -387,6 +441,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Optimal(state) => state.parse_next(length, committed),
             Self::Ultra2(state) => state.parse_next(length, committed),
             Self::RetainedOptimal(state) => state.parse_next(length, committed),
+            Self::RetainedUltra2(state) => state.parse_next(length, committed),
         }
     }
     pub(crate) fn literals(&self) -> &[u8] {
@@ -397,6 +452,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Optimal(state) => state.literals(),
             Self::Ultra2(state) => state.literals(),
             Self::RetainedOptimal(state) => state.literals(),
+            Self::RetainedUltra2(state) => state.literals(),
         }
     }
     pub(crate) fn sequences(&self) -> &[SequenceWithOffset] {
@@ -407,17 +463,22 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Optimal(state) => state.sequences(),
             Self::Ultra2(state) => state.sequences(),
             Self::RetainedOptimal(state) => state.sequences(),
+            Self::RetainedUltra2(state) => state.sequences(),
         }
     }
     pub(crate) fn validate_publication(&self, kind: Publication, after: [u32; 3]) -> Result<()> {
-        if let Self::RetainedOptimal(state) = self {
+        if let Self::RetainedUltra2(state) = self {
+            state.validate_publication(kind, after)
+        } else if let Self::RetainedOptimal(state) = self {
             state.validate_publication(kind, after)
         } else {
             Ok(())
         }
     }
     pub(crate) fn publish(&mut self, kind: Publication, after: [u32; 3]) -> Result<()> {
-        if let Self::RetainedOptimal(state) = self {
+        if let Self::RetainedUltra2(state) = self {
+            state.publish(kind, after)
+        } else if let Self::RetainedOptimal(state) = self {
             state.publish(kind, after)
         } else {
             Ok(())
@@ -425,7 +486,9 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
     }
     #[cfg(test)]
     pub(crate) fn reset_retained(&mut self) -> Result<()> {
-        if let Self::RetainedOptimal(state) = self {
+        if let Self::RetainedUltra2(state) = self {
+            state.reset()
+        } else if let Self::RetainedOptimal(state) = self {
             state.reset()
         } else {
             Err(Error::InvalidState)
@@ -440,6 +503,7 @@ impl<A: Allocator> ReferenceSearchState<'_, A> {
             Self::Optimal(state) => state.retained_capacity(),
             Self::Ultra2(state) => state.retained_capacity(),
             Self::RetainedOptimal(state) => state.retained_capacity(),
+            Self::RetainedUltra2(state) => state.retained_capacity(),
         }
     }
 }
@@ -654,6 +718,9 @@ mod tests {
         for plan in plans(input.len()) {
             let (table_count, owner_count, bytes) = match plan {
                 ReferenceSearchPlan::Ultra2(p) => (7, 10, p.owner_bytes()[..7].iter().sum()),
+                ReferenceSearchPlan::RetainedUltra2(p) => {
+                    (7, 10, p.owner_bytes()[..7].iter().sum())
+                }
                 ReferenceSearchPlan::RetainedOptimal(p) | ReferenceSearchPlan::RetainedUltra(p) => {
                     (7, 10, p.owner_bytes()[..7].iter().sum())
                 }
@@ -1021,5 +1088,94 @@ mod ultra2_dispatch_tests {
             Err(Error::InvalidParameter)
         ));
         assert_eq!(monitor.snapshot(), before);
+    }
+}
+
+#[cfg(test)]
+mod retained_ultra2_integration_dispatch {
+    use super::*;
+    use crate::RawCompressionParameters;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    fn plan(minimum: u32) -> RetainedUltra2Plan {
+        RetainedUltra2Plan::new(
+            RawCompressionParameters {
+                window_log: 10,
+                hash_log: 6,
+                chain_log: 6,
+                search_log: 1,
+                min_match: minimum,
+                target_length: 0,
+                strategy: 9,
+            }
+            .validate()
+            .unwrap(),
+            128,
+            &[64, 64],
+            false,
+        )
+        .unwrap()
+    }
+    #[test]
+    fn retained_ultra2_integration_factory_clones_exact_nine_owners_and_reuses_them() {
+        let source = [b'a'; 128];
+        for minimum in [3, 4] {
+            let p = plan(minimum);
+            let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+            let monitor = owner.monitor();
+            let mut state =
+                ReferenceSearchState::new(&source, ReferenceSearchPlan::RetainedUltra2(p), &owner)
+                    .unwrap();
+            let before = monitor.snapshot();
+            assert_eq!(before.identities_created, 10);
+            assert_eq!(before.attempts, if minimum == 3 { 7 } else { 6 });
+            assert_eq!(
+                before.live_requested_bytes,
+                p.owner_bytes()[..7].iter().sum::<usize>() as u128
+            );
+            for _ in 0..2 {
+                state.parse_next(64, [1, 4, 8]).unwrap();
+                state.publish(Publication::Raw, [1, 4, 8]).unwrap();
+            }
+            let complete = monitor.snapshot();
+            state.reset_retained().unwrap();
+            assert_eq!(monitor.snapshot(), complete);
+            for _ in 0..2 {
+                state.parse_next(64, [1, 4, 8]).unwrap();
+                state.publish(Publication::Raw, [1, 4, 8]).unwrap();
+            }
+            assert_eq!(monitor.snapshot().attempts, complete.attempts);
+            drop(state);
+            monitor.assert_released();
+            drop(owner);
+            assert_eq!(monitor.snapshot().owners_dropped, 10);
+            assert!(!monitor.snapshot().violations.any());
+        }
+    }
+    #[test]
+    fn retained_ultra2_integration_dispatch_rejects_source_before_allocator_contact_and_keeps_public_gate()
+     {
+        let source = [b'a'; 128];
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        assert!(monitor.fail_next());
+        let before = monitor.snapshot();
+        assert!(matches!(
+            ReferenceSearchState::new(
+                &source[..127],
+                ReferenceSearchPlan::RetainedUltra2(plan(3)),
+                &owner
+            ),
+            Err(Error::InvalidParameter)
+        ));
+        assert_eq!(monitor.snapshot(), before);
+        monitor.clear_failure();
+        drop(owner);
+        monitor.assert_released();
+        let mut request = CompressionParameterRequest::with_level(13);
+        request.set_strategy(Some(ReferenceStrategy::Ultra2));
+        assert!(matches!(
+            ReferenceSearchPlan::new(&request, 32768),
+            Err(Error::ResourceLimit)
+        ));
     }
 }

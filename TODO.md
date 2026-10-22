@@ -118,7 +118,7 @@ recorded in `docs/data-structures.md` before implementation.
 - [x] Admit scoped bootstrap/rebase/retained execution without widening fresh Ultra2 or retained Ultra constructors.
 - [x] Qualify every complete state, future-source boundary, phase failure, poison/reset path and allocator identity.
 - [x] Preserve isolated private-frame preflight with cross-profile captures, independent actual-wire replay and pinned native decoding.
-- [ ] Integrate retained token collection and shared frame publication with discarded-token isolation and raw/RLE rollback.
+- [x] Integrate retained token collection and shared frame publication with discarded-token isolation and raw/RLE rollback.
 - [ ] Qualify actual Rust wire histories by independent phase replay and pinned native decoding.
 - [ ] Complete all isolated storage, foreign Miri and concrete no-atomics gates before public admission.
 - [x] Freeze additive public recipes declaring exactly the two intended predecessor resource-to-success transitions.

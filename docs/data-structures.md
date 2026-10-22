@@ -3594,3 +3594,31 @@ again. Upstream counterparts are `ZSTD_compressBlock_btultra2`,
 The new coordinator and phase values use one safe representation; existing owners
 retain their independent opt-in unsafe implementations. Token/frame integration
 and public strategy admission remain separate work.
+
+### Actual-pass tokens and private retained Ultra2 frame dispatch
+
+`RetainedUltra2State` owns the seven-owner coordinator and the same two token
+vectors used by earlier retained strategies. It reserves their maximum-block
+bounds before phase execution. A borrowed observer forwards only actual encoding
+events to the collector; every discarded seed event is ignored by token scratch,
+while the coordinator independently observes and counts the learning pass.
+The new tiny-block collector accepts 7..8192-byte blocks and initial repeat eight
+for a seven-byte prefix. The previous retained collector keeps its 64-byte lower
+bound. Both use checked source-prefix ranges and the same offset resolution.
+
+Only a successful actual pass exposes tokens. Scheduling/repeat errors precede
+reservation; later failures hide partial tokens until complete reset. Publication
+validates the expected committed repeats before changing shared output/entropy.
+Raw/RLE kinds retain committed history and compressed kinds replace it. Reset
+preserves all nine allocator identities and capacities.
+
+A private `ReferenceSearchPlan::RetainedUltra2` variant binds the existing shared
+frame encoder to this state. The resolver does not produce this variant yet.
+Its copied plan supplies exact schedule and full frame reservation, and the
+factory clones exactly once for each of nine owners in the established order.
+The shared optimal entropy path and transactional publication hooks are reused;
+no new wire coding or unsafe representation is introduced. The initial frame
+checks cover Rust decoding, complete actual wire histories, raw/RLE rollback,
+allocation and output-append failures, and reset. Independent replay under actual
+wire kinds, native decoding, platform gates and public admission remain separate
+qualification steps.

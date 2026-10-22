@@ -162,3 +162,30 @@ It binds every other draft input to committed production. Formal integration,
 its 22-product/21-no_std matrix, foreign platform gates and public admission
 remain unchecked. Evidence: `docs/evidence/2026-10-22-ultra2-retained-frame-preflight.{json,tar.gz}`,
 SHA-256 `24f499addddb8f4d652d893f9e0a062f208824bcdc95f9db5cc8616b1c66bd67`.
+
+## Actual-pass tokens and private complete frames
+
+The nine-owner token state ignores every discarded learning-pass event and
+collects only actual encoding tokens. Its dedicated tiny-block collector keeps
+all older collector bounds unchanged. Private static dispatch reuses the shared
+optimal entropy path, exact frame reservation, transactional publication and
+reset. The public resolver still does not construct retained Ultra2 plans.
+
+All 13 focused integration tests pass in 22 products. They compare actual-pass
+literals, sequences, offset intents and publication against the native fixture,
+exercise all nine allocation-failure points and exact factory identities, decode
+private complete frames with Rust, check all actual publication kinds and reset,
+and inject allocation/output-append failures without publishing candidate history.
+The same nine public predecessor tests pass in safe/all products. All 21 true
+no_std products, formatting and strict all-target Clippy pass. Test-profile builds
+use optimization level 1 with debug assertions and overflow checks explicitly
+enabled; the release/all product retains its normal release profile.
+
+This checkpoint establishes private frame integration. Independent actual-wire
+model replay, pinned native decoding, foreign Miri, concrete no-atomics gates,
+public admission and final full regression/benchmarks remain separate obligations.
+Evidence: `docs/evidence/2026-10-22-ultra2-retained-integration.{json,tar.gz}`.
+Archive SHA-256: `9f48b0880b8f09641b134869147a3b0265ce372f0244d64c3ad2ad57e4fa78d6`. Changed Rust sources and complete logs
+are embedded; unchanged fixture payloads are recoverable through the exact Git
+blob/SHA-256 manifest. Isolated unpromoted draft experiments remain separate
+history and do not substitute for this final matrix.

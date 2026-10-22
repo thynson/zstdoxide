@@ -222,6 +222,39 @@ impl<'s, 'v, A: Allocator> Collect<'s, 'v, A> {
             repeats,
         })
     }
+    /// Dedicated retained Ultra2 threshold blocks borrow only the visible prefix.
+    /// The older retained collector keeps its original 64-byte lower bound.
+    pub(crate) fn for_ultra2_retained_block(
+        prefix: &'s [u8],
+        start: usize,
+        repeats: [u32; 3],
+        literals: &'v mut Vec<u8, A>,
+        sequences: &'v mut Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        let length = prefix
+            .len()
+            .checked_sub(start)
+            .ok_or(Error::InvalidParameter)?;
+        if prefix.len() > 32768
+            || !(7..=8192).contains(&length)
+            || repeats
+                .iter()
+                .any(|&v| v == 0 || v as usize > prefix.len().max(8))
+            || !literals.is_empty()
+            || !sequences.is_empty()
+            || literals.capacity() < length
+            || sequences.capacity() < length / 3
+        {
+            return Err(Error::InvalidParameter);
+        }
+        Ok(Self {
+            source: prefix,
+            literals,
+            sequences,
+            anchor: start,
+            repeats,
+        })
+    }
     pub(crate) fn finish(&mut self, result: PathResult, include_tail: bool) -> Result<()> {
         if result.sequences != self.sequences.len()
             || result.repeats != self.repeats

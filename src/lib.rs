@@ -236,6 +236,7 @@ mod ultra_fresh_fixture;
 mod ultra2_plan;
 mod ultra2_retained;
 mod ultra2_retained_plan;
+mod ultra2_retained_state;
 
 #[cfg(test)]
 #[path = "../tests/support/ultra2_fixture.rs"]
