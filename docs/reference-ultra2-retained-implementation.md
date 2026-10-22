@@ -189,3 +189,18 @@ Archive SHA-256: `9f48b0880b8f09641b134869147a3b0265ce372f0244d64c3ad2ad57e4fa78
 are embedded; unchanged fixture payloads are recoverable through the exact Git
 blob/SHA-256 manifest. Isolated unpromoted draft experiments remain separate
 history and do not substitute for this final matrix.
+
+## Private storage and foreign platform gates
+
+The 22-product private integration matrix is now accompanied by twelve successful
+strict-provenance Miri test executions: three named phase/owner/publication tests
+on i686 and s390x, each in safe/all builds. Safe/all thumbv6m no-atomics core-plus-
+alloc checks also pass, with separate concrete release frame probes retaining
+verified LLVM IR and ARM ELF32 object files. All eight platform commands pass
+against the exact integration sources, with protocol and environment helper
+explicitly added to the captured closure. These are foreign interpretation and
+code generation, not native foreign execution.
+
+Evidence: `docs/evidence/2026-10-22-ultra2-retained-private-platform.{json,tar.gz}`,
+SHA-256 `ffabc32a1767ed7c6fc84f36aaf1ca733445f8cfcd492402ff6bfaaa72490dd6`. Public admission and its final regression,
+interoperability, production-source platform binding and measurements remain open.
