@@ -1,0 +1,2003 @@
+{
+  "capture_evidence_sha256": "e05b6db22fd22a78b2762a13dff8b4b6ab47dba35f2850afbdf1390d8fc2b834",
+  "cases": [
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        }
+      ],
+      "bytes": 32197,
+      "frame_bytes": 25,
+      "frame_sha256": "d8cdeb55d0b3a719cc72f66c006f8c4fbf5984882d66e6ec57dabfea49f3fc80",
+      "name": "u2r_wide_uniform",
+      "offset": 12,
+      "packet_sha256": "87f5658ea275a3676b1a6fa13c486b162d3094ccb56b748f6b53c51ed0b7fc7e",
+      "transcript_sha256": "605246d53e8cbcbb651a823776baee52fc18758436291242289022e0ffe5a144"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 0,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 8185,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 0,
+              "tail": 8192
+            },
+            {
+              "alternatives": 0,
+              "events": 8185,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 0,
+              "tail": 8192
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 11,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        }
+      ],
+      "bytes": 2137298,
+      "frame_bytes": 8219,
+      "frame_sha256": "b6f1b960f843f47ff8df5d3645278a6b69f239b28e47b4b54289d298784b740b",
+      "name": "u2r_wide_noise_copy",
+      "offset": 32209,
+      "packet_sha256": "a4bb843aa7c988dac58e9d324c44a8287d1777ad65b83458ae07ca7dd011b8f2",
+      "transcript_sha256": "8f7a6f396c35c39be09c059d3686dc54b02a5137dcc83a9cf3078d839c665626"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 18735,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 4,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 18735,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 4,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 3,
+              "events": 12300,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 4,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        }
+      ],
+      "bytes": 5824102,
+      "frame_bytes": 56,
+      "frame_sha256": "ea6a99afc6ae4c7e850fd6b0a18b0d40a22e66ff1ff8514993033a3f9271e65d",
+      "name": "u2r_wide_runs_disabled",
+      "offset": 2169507,
+      "packet_sha256": "26b56cee24e6b8a03f8d2db649cf7d81a5e1c6fee7bf6128b7d73db6f64a7ac8",
+      "transcript_sha256": "04dbe9cdc625712c00ef85be1b6156ead2547ffd04fedb13b6bb55d404f66be1"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 18735,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 4,
+              "tail": 0
+            },
+            {
+              "alternatives": 13,
+              "events": 18748,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 4,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 16,
+              "events": 12313,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 4,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        }
+      ],
+      "bytes": 5829868,
+      "frame_bytes": 56,
+      "frame_sha256": "ea6a99afc6ae4c7e850fd6b0a18b0d40a22e66ff1ff8514993033a3f9271e65d",
+      "name": "u2r_wide_runs_priced",
+      "offset": 7993609,
+      "packet_sha256": "4ea466f6a5306686a273086b7617ba02755aa592438a71be42b835157645681e",
+      "transcript_sha256": "3c7316ddeac44192bdfa5c686ac75e05c73d37fb8ea69c3c1e73cd24b581e95c"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 10546,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 3,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 10546,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 3,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 5065,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 3,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        }
+      ],
+      "bytes": 3517199,
+      "frame_bytes": 4151,
+      "frame_sha256": "d490f9eaa98993275bc04851a3575f7ed2c42d8882c6bf147c8b473a870351af",
+      "name": "u2r_wide_horizon",
+      "offset": 13823477,
+      "packet_sha256": "4f265556a71d81b0c699babe9f0f701af6ce8533ba3ac615d623135d579442d3",
+      "transcript_sha256": "9cbc7a6ad1007a2660767e411f794b27be0995c20e169871a59ffa74994c3c18"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 42,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 42,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        }
+      ],
+      "bytes": 40763,
+      "frame_bytes": 49,
+      "frame_sha256": "2e29c98f92ff74bdb4060b32646878143a10a62a865d869478563b2d4ad51548",
+      "name": "u2r_wide_short",
+      "offset": 17340676,
+      "packet_sha256": "dc863b5a0d57a6109922ecab7385f9872044fd5c9a3288eb1947d5448c0e2998",
+      "transcript_sha256": "8da29db3b4be42787440c6d02de174209a5cc11058ebce09e1aa5ad1af227504"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 4096,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 19,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 19,
+              "origin": 4098,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 4096,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 4098,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 4096
+        },
+        {
+          "kind": 2,
+          "length": 4096,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 4098,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        },
+        {
+          "kind": 2,
+          "length": 4096,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 4098,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 12288
+        }
+      ],
+      "bytes": 305304,
+      "frame_bytes": 59,
+      "frame_sha256": "da4ea649ae182392ffee3e94a1fec3bcc61b769f0d6f85b8e9d7f26a9c1a6023",
+      "name": "u2r_wide_window16",
+      "offset": 17381439,
+      "packet_sha256": "3fd0f089257d0a3ef3a7a11aaa7ad853d59885393786ada2b3ed04e4ec66685a",
+      "transcript_sha256": "3f0a951366dedaeb181145d0cdaf638b616d7ee9294ef816eea5ce39567eca75"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 5462,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 5462,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 5462
+        },
+        {
+          "kind": 1,
+          "length": 5461,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 10924
+        }
+      ],
+      "bytes": 36575,
+      "frame_bytes": 29,
+      "frame_sha256": "ff75b13e90caef977e84a612cd6dbf946b7704119f3a197f0275a88a212bcc8c",
+      "name": "u2r_wide_frames_uniform_16385",
+      "offset": 17686743,
+      "packet_sha256": "915e98cff9e037f40854e16b21d0b689902693ea6e8ef69488d361e469154a5f",
+      "transcript_sha256": "c5f7a0a16134460539988ec3a83283a934cb9f800df0c789cd7e5f201703fbe5"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        },
+        {
+          "kind": 1,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 16384
+        }
+      ],
+      "bytes": 44734,
+      "frame_bytes": 29,
+      "frame_sha256": "1f69de4b279b4d56a886733312b16f653041ff038806aa8ddfcb0b34b7f23ffa",
+      "name": "u2r_wide_frames_uniform_24576",
+      "offset": 17723318,
+      "packet_sha256": "e433938073583ee907f9c1d8d94d2141678cde5f148670313c285465690921bb",
+      "transcript_sha256": "586636f24f33d2fdf72e013d361eab93a8228689ba6bfbb5941de2fa05ffe5b0"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 6145,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 6147,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 6144,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 6147,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 6145
+        },
+        {
+          "kind": 1,
+          "length": 6144,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 6147,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 12289
+        },
+        {
+          "kind": 1,
+          "length": 6144,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 6147,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 18433
+        }
+      ],
+      "bytes": 49067,
+      "frame_bytes": 33,
+      "frame_sha256": "36a69188fd7d3f7bb4af7e30fb34f5e54061ba06ab9b29f4a47503d59e2540a2",
+      "name": "u2r_wide_frames_uniform_24577",
+      "offset": 17768052,
+      "packet_sha256": "3e1847bcaf190591d85e218d7c14fdc8b91552ca393e5f687f14f2c55d035576",
+      "transcript_sha256": "90587fa0b1f6be58db7cfe1431e4aa3419cc6e0e361748cc0dda01d2c78a39cc"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        },
+        {
+          "kind": 1,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 16384
+        },
+        {
+          "kind": 1,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 24576
+        }
+      ],
+      "bytes": 57258,
+      "frame_bytes": 33,
+      "frame_sha256": "a9bd9d5be9eed1b67fd59697f8391d98660ee43caeb1875756dd074bd621264c",
+      "name": "u2r_wide_frames_uniform_32768",
+      "offset": 17817119,
+      "packet_sha256": "40d3abe35898fd15af8085d776fa3cd33ceb0cbc4551592a822710c7c5320d85",
+      "transcript_sha256": "c3842efb4de56d9bb0c7f4efade4f0b3e5be921ff9dadbe2e99738c309c3526f"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 0,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 8185,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 0,
+              "tail": 8192
+            },
+            {
+              "alternatives": 0,
+              "events": 8185,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 0,
+              "tail": 8192
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 11,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 16384
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 24576
+        }
+      ],
+      "bytes": 2162441,
+      "frame_bytes": 8241,
+      "frame_sha256": "78c6b4baa0b6b0dc9bba7cda6666b36185a3324833a565077bb793e088200534",
+      "name": "u2r_wide_frames_copy",
+      "offset": 17874377,
+      "packet_sha256": "ec87bd8891bbea831732ffbed2b4bf44f723596a2465623d74c1fe2b447f3862",
+      "transcript_sha256": "cd80558a83ea746f24d59c725c181c4fd2c5d5759e470e092099d2ff1b6d7174"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 0,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 8186,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 0,
+              "tail": 8192
+            }
+          ],
+          "start": 8192
+        },
+        {
+          "kind": 1,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 10,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 16384
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 11,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 24576
+        }
+      ],
+      "bytes": 1107483,
+      "frame_bytes": 8234,
+      "frame_sha256": "0b9a61821105e0347b66216bd91dc58d0c3cb96b74c5fb19248937ebbf000b04",
+      "name": "u2r_wide_frames_mixed",
+      "offset": 20036818,
+      "packet_sha256": "32daca327340b16a307cbbf56744b59cf733081f762e56fe23797813d37084ea",
+      "transcript_sha256": "dc60b5cc2e62553b7b4dd2d697df6e97c4f9863fd4012f414cea261f8459b7e9"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 43,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 5,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 43,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 5,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 16,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 2,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 16,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 2,
+              "tail": 0
+            }
+          ],
+          "start": 16384
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 16,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 2,
+              "tail": 0
+            }
+          ],
+          "start": 24576
+        }
+      ],
+      "bytes": 69705,
+      "frame_bytes": 72,
+      "frame_sha256": "ce6faaac0e3ffb65efdf413ed07c6ae0f173d06957559d96c01098480cc1a9d9",
+      "name": "u2r_wide_frames_short",
+      "offset": 21144301,
+      "packet_sha256": "831d05ad7983f622777b3f11e026448b139417819a4eb8a29c6dc8fb31b1a645",
+      "transcript_sha256": "56b59a0f2afccf21546b2fdee26761ecc651c9cd8a3960ba19e70e8d9a675765"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 5462,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 20,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 20,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 5462,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 5462
+        },
+        {
+          "kind": 2,
+          "length": 5461,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 10924
+        }
+      ],
+      "bytes": 39517,
+      "frame_bytes": 55,
+      "frame_sha256": "8d09d9b831827b3cd908361f1f5292a3faa6a1af7636c6bb8b305654705fd0a8",
+      "name": "u2r_wide_frames_minimum_5",
+      "offset": 21214006,
+      "packet_sha256": "aaffbcbec298559f9bd7dfa1424bc7a40e9654b4d78a93a63bc54e48fdaf3318",
+      "transcript_sha256": "b74aca7667a7b319035d00bcb1edf162d5a42c9415a5d39b87afb5d79c05ef27"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 5462,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 20,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 20,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 5462,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 5462
+        },
+        {
+          "kind": 2,
+          "length": 5461,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 10924
+        }
+      ],
+      "bytes": 39517,
+      "frame_bytes": 55,
+      "frame_sha256": "8d09d9b831827b3cd908361f1f5292a3faa6a1af7636c6bb8b305654705fd0a8",
+      "name": "u2r_wide_frames_minimum_6",
+      "offset": 21253523,
+      "packet_sha256": "6f57b24c23a8fef4b1dbc9c6bae96e28e984cf36283b14d99a0088ec59b1b8bd",
+      "transcript_sha256": "a8e4f4773223ae7bfe21991ca8c21de112dfb90ceec8252e48c60f6b76894bdc"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 5462,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 20,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 20,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 5462,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 5462
+        },
+        {
+          "kind": 2,
+          "length": 5461,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 5464,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 10924
+        }
+      ],
+      "bytes": 39517,
+      "frame_bytes": 55,
+      "frame_sha256": "8d09d9b831827b3cd908361f1f5292a3faa6a1af7636c6bb8b305654705fd0a8",
+      "name": "u2r_wide_frames_minimum_7",
+      "offset": 21293040,
+      "packet_sha256": "b7037bcf5096df5169527a838705fd4a069c46d09fad95a2e4ad414a8f9da748",
+      "transcript_sha256": "a57e1e84150370b4a7a18e93f5e5cca80649cf88696becfde9f3e1780da826a4"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 10546,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 3,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 10546,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 3,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 5065,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 3,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 10680,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 2,
+              "tail": 0
+            }
+          ],
+          "start": 16384
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 24576
+        }
+      ],
+      "bytes": 5000584,
+      "frame_bytes": 4177,
+      "frame_sha256": "fc45ae75a2cb7638285d783720a4560d9836a55ebf73ce0dae17ae6dbe78af5d",
+      "name": "u2r_wide_frames_horizon",
+      "offset": 21332557,
+      "packet_sha256": "b2745cc267c3798781c6a70d3f4bda90a9737ec1e606d0fa9f5501c9b7bbb6cb",
+      "transcript_sha256": "538400c8cca5aa1c6bf9b3c4dc5d9d7ec34f63298f88a4e10d1f278402d8a934"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 16,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 16,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8192
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 16384
+        },
+        {
+          "kind": 2,
+          "length": 8192,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 9,
+              "origin": 8194,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 24576
+        }
+      ],
+      "bytes": 59155,
+      "frame_bytes": 59,
+      "frame_sha256": "b076627b995e119d136d0677b35520c30c6b1d60287e0fd4a50a7469307bb63d",
+      "name": "u2r_wide_frames_small_tables",
+      "offset": 26333141,
+      "packet_sha256": "676b7e3aa5387fc63784b3c3fb440ccb60115daa6181d2aa4c3cb2b60bd075db",
+      "transcript_sha256": "e792dedeb2bb0b82656fbe3c1db6d0c49e299c5d9845ff38232f3049096291c4"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 72,
+              "events": 2046,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 72,
+              "tail": 0
+            },
+            {
+              "alternatives": 103,
+              "events": 2083,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 75,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 82,
+              "events": 695,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 30,
+              "tail": 5
+            }
+          ],
+          "start": 624
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 96,
+              "events": 726,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 27,
+              "tail": 0
+            }
+          ],
+          "start": 1248
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 7,
+              "events": 61,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 3,
+              "tail": 0
+            }
+          ],
+          "start": 1872
+        }
+      ],
+      "bytes": 783128,
+      "frame_bytes": 339,
+      "frame_sha256": "7054b80646370f728f0c2463590baa8335a3e4ff93f4d1a8507931c11a77ea6d",
+      "name": "u2r_alternatives_0202",
+      "offset": 26392296,
+      "packet_sha256": "eeb3449cb59e1df958288c2d836190c076da450d90c2822f05d45f55f3e70535",
+      "transcript_sha256": "5e7888622106339ab8bea9f35142b4625341b17cb589c626959c5bfce75519f8"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 110,
+              "events": 2039,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 60,
+              "tail": 15
+            },
+            {
+              "alternatives": 216,
+              "events": 2116,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 53,
+              "tail": 15
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 106,
+              "events": 726,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 22,
+              "tail": 0
+            }
+          ],
+          "start": 624
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 7,
+              "events": 61,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 3,
+              "tail": 0
+            }
+          ],
+          "start": 1248
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 16,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 2,
+              "tail": 0
+            }
+          ],
+          "start": 1872
+        }
+      ],
+      "bytes": 689788,
+      "frame_bytes": 287,
+      "frame_sha256": "65ce29197ba21a68cf2c6cbdaba8006299a5eb5d0ef33de2ccddd895e9636806",
+      "name": "u2r_alternatives_2020",
+      "offset": 27175424,
+      "packet_sha256": "08c189d61af1b667d88eeded41ed01958958e605b9ab7d84513a186f923f5ef5",
+      "transcript_sha256": "7d8fd76fdc316af5de733ed5a983d3f43a8f88df5df36e5d4f7dad6b8223877c"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 0,
+          "length": 7,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 2,
+              "origin": 2,
+              "phase": "encoding",
+              "sequences": 0,
+              "tail": 7
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 64,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 2,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 7
+        }
+      ],
+      "bytes": 11491,
+      "frame_bytes": 23,
+      "frame_sha256": "0ef08ab2f113aaf71368ea7ab64def7ab01d76ad7670cdfde015151a033ef685",
+      "name": "u2r_first_threshold_7",
+      "offset": 27865212,
+      "packet_sha256": "78db9d72a73235b869a82b263d9484f1d246ebef0c376456154a3637665fb3fa",
+      "transcript_sha256": "3babe6902081ee6f875af32116b061f5f8370c976cd06a19ff9b2f51e7eb18fa"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 64,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 66,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 7,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 2,
+              "origin": 66,
+              "phase": "encoding",
+              "sequences": 0,
+              "tail": 7
+            }
+          ],
+          "start": 64
+        }
+      ],
+      "bytes": 19624,
+      "frame_bytes": 24,
+      "frame_sha256": "6a0843368a40e1deed045f70fd6c33d26c3e2ab736d96e980260a2c816b4cbd3",
+      "name": "u2r_later_threshold_7",
+      "offset": 27876703,
+      "packet_sha256": "f51ed2633f709d034fa569fd9032011fa775b014e234ea8b3204031344c0ab16",
+      "transcript_sha256": "2fe732f4ca41ca7690bc5ef57a2c93a5f1b8c3be17a64b42c036dde8dc5dc103"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 8,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 2,
+              "origin": 2,
+              "phase": "encoding",
+              "sequences": 0,
+              "tail": 8
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 64,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 2,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 8
+        }
+      ],
+      "bytes": 11488,
+      "frame_bytes": 19,
+      "frame_sha256": "2800bbd57c0a7acc253ebe16ba4180b3466c974f1965f909e93e2d931750778e",
+      "name": "u2r_first_threshold_8",
+      "offset": 27896327,
+      "packet_sha256": "f2f09962619c0df073cb450ecc4017079235fe24f9648a0f0708bdd20b88097c",
+      "transcript_sha256": "cfdf8434c4da94632b97d82f78f26e4e3aa13c5c42b7767f77bdd7614644af31"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 64,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 66,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 8,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 2,
+              "origin": 66,
+              "phase": "encoding",
+              "sequences": 0,
+              "tail": 8
+            }
+          ],
+          "start": 64
+        }
+      ],
+      "bytes": 19625,
+      "frame_bytes": 24,
+      "frame_sha256": "fc96f3b671fa695b9f885ba0cf18936fe1974fa29950d0643fe581ffc5587219",
+      "name": "u2r_later_threshold_8",
+      "offset": 27907815,
+      "packet_sha256": "02633bd545e20a9fbce385666416c0686545625a29e0259e94006f08a8584be3",
+      "transcript_sha256": "8fa3db61c5ad76fac492616b4686630e70c4736abefbee4c8b6b6118a3b4d55c"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 9,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 2,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 0,
+              "tail": 9
+            },
+            {
+              "alternatives": 0,
+              "events": 2,
+              "origin": 11,
+              "phase": "encoding",
+              "sequences": 0,
+              "tail": 9
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 64,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 11,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 9
+        }
+      ],
+      "bytes": 16381,
+      "frame_bytes": 19,
+      "frame_sha256": "e85c4a43f9d59bb20a45544d881dbf54303e99ac46b57742635bd54aea03b0e6",
+      "name": "u2r_first_threshold_9",
+      "offset": 27927440,
+      "packet_sha256": "39bdfd4397e16d0c66d8f706b8378ee6a0b1fdca64c4246e91256e2ee547e1be",
+      "transcript_sha256": "d943c5ee88ee1bd4362e42d6de1b7823bf81beb7a6f179e618bec59ffde54c4b"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 64,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 1,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 66,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 1,
+          "length": 9,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 66,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 64
+        }
+      ],
+      "bytes": 21226,
+      "frame_bytes": 24,
+      "frame_sha256": "35c5ad51518f4d7600ea50a58631197a2e70e3f2d5793b68f87b19b8462525f4",
+      "name": "u2r_later_threshold_9",
+      "offset": 27943821,
+      "packet_sha256": "7fdee942074186d35fc81dffd0db888ad86063d127d977f8650a972f68091ac5",
+      "transcript_sha256": "ffd7b6bbf17e5c0ccb9f96c89650fd70731f134009d8b20928fa3424ee69fef0"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 65,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 97,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 2,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 97,
+              "origin": 67,
+              "phase": "encoding",
+              "sequences": 2,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 97,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 67,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 65
+        }
+      ],
+      "bytes": 42856,
+      "frame_bytes": 47,
+      "frame_sha256": "62bb71a9ed4854b30d3eac35233e36de24a4c63366721ab8cce7d1abcdfa8289",
+      "name": "u2r_ring_65",
+      "offset": 27965047,
+      "packet_sha256": "66d9113f8f3937f10cdf2eaae4ff42f6d1a84938c8e0bfb32a9f4c40c7268a65",
+      "transcript_sha256": "1d88655c6749e400f5033691c9456f5c40f93f375857a3fb6e020f042e85cbaa"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 95,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 157,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 2,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 157,
+              "origin": 97,
+              "phase": "encoding",
+              "sequences": 2,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 97,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 97,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 95
+        }
+      ],
+      "bytes": 56518,
+      "frame_bytes": 47,
+      "frame_sha256": "f1c3ceb943f912ef7eda22d4d6c1263264209ce462d12bf197917973032cd389",
+      "name": "u2r_ring_95",
+      "offset": 28007903,
+      "packet_sha256": "3280cb72d2394c9d6e36185114eb45b4f6c700da6fe45efe6a843e1645ef9ba6",
+      "transcript_sha256": "a3fbdd3607bf23aff9b8e9210a937b994da6a96b69a50d228c02f9d0fc35c256"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 97,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 164,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 2,
+              "tail": 0
+            },
+            {
+              "alternatives": 0,
+              "events": 164,
+              "origin": 99,
+              "phase": "encoding",
+              "sequences": 2,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 97,
+          "phases": [
+            {
+              "alternatives": 0,
+              "events": 12,
+              "origin": 99,
+              "phase": "encoding",
+              "sequences": 1,
+              "tail": 0
+            }
+          ],
+          "start": 97
+        }
+      ],
+      "bytes": 58112,
+      "frame_bytes": 47,
+      "frame_sha256": "fc33b75c187d64244e732f30c5a43387a39fb58760ef9f5e239e5434b61a3fb8",
+      "name": "u2r_ring_97",
+      "offset": 28064421,
+      "packet_sha256": "5ddfdd153b995c34e259005d432430a3251237f9f10d66bb6c12975bf30254d2",
+      "transcript_sha256": "41d4fd1e773610aecefb2767f93ed24d273c4071831e1494b0c6cf35547a4dc3"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 72,
+              "events": 2046,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 72,
+              "tail": 0
+            },
+            {
+              "alternatives": 103,
+              "events": 2083,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 75,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 55,
+              "events": 2016,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 82,
+              "tail": 5
+            }
+          ],
+          "start": 624
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 67,
+              "events": 705,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 31,
+              "tail": 0
+            }
+          ],
+          "start": 1248
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 1,
+              "events": 43,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 3,
+              "tail": 0
+            }
+          ],
+          "start": 1872
+        }
+      ],
+      "bytes": 931810,
+      "frame_bytes": 424,
+      "frame_sha256": "e06bc2e95dc11f3a4e70dfa3a85d7480e5778bce02490274b293a8d41182f3f6",
+      "name": "u2r_future_128",
+      "offset": 28122533,
+      "packet_sha256": "05b1af964195013b5e6b8ea59a571c7b12e6abbfb91be8d7d8f97bc3138d9410",
+      "transcript_sha256": "cacd8a2f50b7fa612d34d3c5c2217f723a9849f4a9288dcfeea64f9a5ba1adae"
+    },
+    {
+      "blocks": [
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 72,
+              "events": 2046,
+              "origin": 2,
+              "phase": "seeding",
+              "sequences": 72,
+              "tail": 0
+            },
+            {
+              "alternatives": 103,
+              "events": 2083,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 75,
+              "tail": 0
+            }
+          ],
+          "start": 0
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 59,
+              "events": 2020,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 81,
+              "tail": 6
+            }
+          ],
+          "start": 624
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 71,
+              "events": 710,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 30,
+              "tail": 0
+            }
+          ],
+          "start": 1248
+        },
+        {
+          "kind": 2,
+          "length": 624,
+          "phases": [
+            {
+              "alternatives": 2,
+              "events": 41,
+              "origin": 626,
+              "phase": "encoding",
+              "sequences": 3,
+              "tail": 0
+            }
+          ],
+          "start": 1872
+        }
+      ],
+      "bytes": 935348,
+      "frame_bytes": 414,
+      "frame_sha256": "12e147830a709c99c4e1998d48f7cc7e7de24af3aad91ac5daa2951f4dbc041f",
+      "name": "u2r_future_255",
+      "offset": 29054343,
+      "packet_sha256": "e607f59b4e68a12ca493d13027d218102cdff46847191f41957fc7508994ca10",
+      "transcript_sha256": "35258ac05b6aed33384c3e098fc6779f12758c660b3fc43ba085e0435864841b"
+    }
+  ],
+  "events": 229657,
+  "inherited_native_qualification": {
+    "archive_sha256": "8396908cce3f0ba57e01071dad3d12ab84e283932d738e46a98e9c78974dc5f9",
+    "qualification": "Complete native model replay and coherent controls are inherited from the pinned successful archive. This projection independently rehashes every captured regular file; it does not claim another native/model execution.",
+    "rehashed_regular_files": 1254,
+    "report_sha256": "e2df0c64a4acf5e3e01e5693b285b90006ef2c5937dd7a2256a5be8ec0f616d3"
+  },
+  "pack_bytes": 29989691,
+  "pack_sha256": "f78d74259cc65b32321b963bb6d26f6ac75818d94754b8a39ca06f0ad5a2aa6f",
+  "qualification": "Complete independently audited native retained Ultra2 first/later-block lifecycle and frame projection. Physical parser/search/frequency state persists across discarded reset and actual publication. No production candidate provider or public admission.",
+  "schema_version": 1
+}

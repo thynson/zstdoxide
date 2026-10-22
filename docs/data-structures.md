@@ -3459,3 +3459,39 @@ is inferred from coincidental table contents or reused padding-pass counters.
 A new native observer must record the actual wrapper's predicate decision,
 first-pass reset and subsequent block transitions without replacing upstream
 parser/provider statements. Predictions alone do not establish native parity.
+
+### Independent retained Ultra2 fixture reader
+
+The additive `ZU2RFX01` validation pack borrows each case's ASCII name, source,
+complete frame and encoded byte range from one immutable input slice. It owns
+only bounded, fallibly reserved observation vectors. No fixture observation is
+used as a production search candidate or codec implementation.
+
+The case header records source/parameter bounds, two-to-four actual blocks,
+complete frame extent, path-cell count, bootstrap scope and policy. Separate
+native/sanitized allocator ledgers precede the borrowed byte ranges. Each block
+records its physical extent, actual publication kind, pending/committed repeat
+owners, entry frontier, final candidate repeats, tail and logical sequence count.
+Its eligibility record precedes one or two phase envelopes. Each phase contains
+its origin, caller repeats, complete sparse parser/search/frequency deltas,
+append-only sequences, final frequency/candidate state and optional discarded
+pass reset. Physical path and search baselines persist across every phase and
+block; frequency baselines change only through recorded rescaling/refresh.
+
+The reader checks every count against both an explicit cap and remaining bytes
+before allocation. Indices and source ranges use checked arithmetic. It derives
+bootstrap eligibility, first-block rebase, later insertion catch-up, frequency
+rescaling, repeat publication, owner swaps and complete frame extents independently
+of the producer. Query footprints are limited to the consumed physical prefix;
+logical search indices retain the first-block bias and stale indices never become
+source addresses. Raw/RLE publication retains committed repeats; only compressed
+publication swaps the committed owner. The discarded pass cannot publish tokens.
+
+The projection preserves exact native inputs and all four equal frame outputs.
+It validates complete native records before converting them and rejects missing,
+duplicate or extra records. The independent reader's negative cases cover
+truncation, oversized counts, malformed deltas, eligibility/rebase changes,
+discarded-state leakage, later-block coordinates, coherent frequency changes,
+repeat-owner publication and frame payload extents. Plain copied observation
+records use one representation; this test-only safe reader needs no artificial
+unsafe backend.
