@@ -1,0 +1,121 @@
+{
+  "base_sha256": "1fb7274c63550933c8800acdde9f14a9d9ba84251a6facb428d860fd0c0dcfd7",
+  "draft_sha256": "88128237229e975b4a508d3ca0e7956d4f0a37ad7e89b3b9141cd84a280871b3",
+  "substitutions": [
+    {
+      "after": "first-block Ultra2 retained CCtx",
+      "before": "coupled-policy retained CCtx",
+      "occurrences": 1
+    },
+    {
+      "after": "Retained Ultra2 observer:",
+      "before": "Ultra retained observer:",
+      "occurrences": 1
+    },
+    {
+      "after": "static void observer_entry(const ZSTD_MatchState_t*,const SeqStore_t*,const U32*,const void*,size_t);\nstatic void observer_seed_begin(const ZSTD_MatchState_t*,const SeqStore_t*,const U32*);\nstatic void observer_pass_begin(const ZSTD_MatchState_t*,const SeqStore_t*,const U32*,const void*,size_t);\nstatic void observer_reset(const ZSTD_MatchState_t*,const SeqStore_t*,const U32*,const void*,size_t);\nstatic void observer_pass_end(const U32*);\nstatic void observer_before(const ZSTD_MatchState_t*,U32);",
+      "before": "static void observer_before(const ZSTD_MatchState_t*,U32);",
+      "occurrences": 1
+    },
+    {
+      "after": "values[2*SOURCE_CAP+128]",
+      "before": "values[SOURCE_CAP+128]",
+      "occurrences": 1
+    },
+    {
+      "after": "packet[68+SOURCE_CAP]",
+      "before": "packet[72+SOURCE_CAP]",
+      "occurrences": 1
+    },
+    {
+      "after": "static U32 price_policy,bootstrap,block_start,total_events,total_passes;\nstatic int seeding;\nstatic U32 saved_repeats[3],observed_repeats[3];\nstatic const U32*caller_repeats;",
+      "before": "static U32 price_policy;",
+      "occurrences": 1
+    },
+    {
+      "after": "ZSTD_btultra2",
+      "before": "(price_policy==2?ZSTD_btultra:ZSTD_btopt)",
+      "occurrences": 1
+    },
+    {
+      "after": "for(i=0;i<SOURCE_CAP+64;i++)need(source.values[i]==padding,\"source prefix\");\n for(i=SOURCE_CAP+64+source_size;i<2*SOURCE_CAP+128;i++)need(source.values[i]==padding,\"source tail\");",
+      "before": "for(i=64+source_size;i<SOURCE_CAP+128;i++)need(source.values[i]==padding,\"source tail\");",
+      "occurrences": 1
+    },
+    {
+      "after": "printf(\",\\\"pass_name\\\":\\\"%s\\\",\\\"price_policy\\\":%u,\\\"alternative\\\":\",seeding?\"seeding\":\"encoding\",price_policy);",
+      "before": "printf(\",\\\"price_policy\\\":%u,\\\"alternative\\\":\",price_policy);",
+      "occurrences": 1
+    },
+    {
+      "after": "if(strcmp(stage,\"complete\")==0){block_tail=tail;observer_pass_end(global_rep);}",
+      "before": "if(strcmp(stage,\"complete\")==0)block_tail=tail;",
+      "occurrences": 1
+    },
+    {
+      "after": "static void frequency(void){const optState_t*o=&state.opt;\n fputs(\"{\\\"tables\\\":{\\\"lit\\\":\",stdout);array(o->litFreq,256);fputs(\",\\\"ll\\\":\",stdout);array(o->litLengthFreq,36);fputs(\",\\\"ml\\\":\",stdout);array(o->matchLengthFreq,53);fputs(\",\\\"of\\\":\",stdout);array(o->offCodeFreq,32);\n printf(\"},\\\"sums\\\":{\\\"lit\\\":%u,\\\"ll\\\":%u,\\\"ml\\\":%u,\\\"of\\\":%u},\\\"cache\\\":{\\\"lit\\\":%u,\\\"ll\\\":%u,\\\"ml\\\":%u,\\\"of\\\":%u},\\\"predefined\\\":%s}\",o->litSum,o->litLengthSum,o->matchLengthSum,o->offCodeSum,o->litSumBasePrice,o->litLengthSumBasePrice,o->matchLengthSumBasePrice,o->offCodeSumBasePrice,o->priceType==zop_predef?\"true\":\"false\");\n}\nstatic U32 origin(void){need(logical_source>=state.window.base,\"nonnegative source origin\");return(U32)(logical_source-state.window.base);}\nstatic void observer_entry(const ZSTD_MatchState_t*ms,const SeqStore_t*ss,const U32*rep,const void*src,size_t size){\n int a,b,c,d,e;caller_repeats=rep;need(ms==&state&&ss==&store&&src==logical_source+block_start&&size==block_lengths[block_index],\"entry identities\");guards();\n a=ms->opt.litLengthSum==0;b=ss->sequences==ss->sequencesStart;c=ms->window.dictLimit==ms->window.lowLimit;d=origin()+block_start==ms->window.dictLimit;e=size>ZSTD_PREDEF_THRESHOLD;\n printf(\"{\\\"record\\\":\\\"eligibility\\\",\\\"padding_pass\\\":%u,\\\"block\\\":%u,\\\"predicates\\\":[%s,%s,%s,%s,%s],\\\"seed\\\":%s,\\\"current\\\":%u,\\\"dictionary_limit\\\":%u,\\\"low_limit\\\":%u,\\\"next_to_update\\\":%u,\\\"source_bytes\\\":%u,\\\"original_repeats\\\":\",pass,block_index,a?\"true\":\"false\",b?\"true\":\"false\",c?\"true\":\"false\",d?\"true\":\"false\",e?\"true\":\"false\",a&&b&&c&&d&&e?\"true\":\"false\",origin()+block_start,ms->window.dictLimit,ms->window.lowLimit,ms->nextToUpdate,block_lengths[block_index]);array(rep,3);printf(\",\\\"sequence_prefix\\\":%u}\\n\",0u);\n}\nstatic void observer_seed_begin(const ZSTD_MatchState_t*ms,const SeqStore_t*ss,const U32*rep){need(ms==&state&&ss==&store&&!seeding&&block_index==0,\"seed identities\");need(memcmp(rep,saved_repeats,sizeof(saved_repeats))==0,\"original copied repeats\");seeding=1;}\nstatic void observer_pass_begin(const ZSTD_MatchState_t*ms,const SeqStore_t*ss,const U32*rep,const void*src,size_t size){\n need(ms==&state&&ss==&store&&src==logical_source+block_start&&size==block_lengths[block_index],\"pass identities\");guards();need(memcmp(rep,saved_repeats,sizeof(saved_repeats))==0,\"each pass starts with original repeats\");need(seeding?(rep!=caller_repeats):(rep==caller_repeats),\"copied seed versus original encoding repeat owner\");\n event_count=0;reverse_phase=before_live=alternative_active=0;need(sequence_count==0,\"empty appended sequence store\");memset(sequence_records,0,sizeof(sequence_records));\n printf(\"{\\\"record\\\":\\\"pass_begin\\\",\\\"padding_pass\\\":%u,\\\"block\\\":%u,\\\"phase\\\":\\\"%s\\\",\\\"origin\\\":%u,\\\"repeats\\\":\",pass,block_index,seeding?\"seeding\":\"encoding\",origin());array(rep,3);fputs(\",\\\"frequency\\\":\",stdout);frequency();puts(\"}\");\n}\nstatic void observer_pass_end(const U32*rep){U32 i;guards();\n printf(\"{\\\"record\\\":\\\"pass_end\\\",\\\"padding_pass\\\":%u,\\\"block\\\":%u,\\\"phase\\\":\\\"%s\\\",\\\"origin\\\":%u,\\\"candidate_repeats\\\":\",pass,block_index,seeding?\"seeding\":\"encoding\",origin());array(rep,3);fputs(\",\\\"sequences\\\":[\",stdout);for(i=0;i<sequence_count;i++){if(i)putchar(',');array(sequence_records[i],4);}printf(\"],\\\"tail\\\":%u,\\\"frequency\\\":\",block_tail);frequency();puts(\"}\");memcpy(observed_repeats,rep,sizeof(observed_repeats));total_events+=event_count;total_passes++;\n}\nstatic void observer_reset(const ZSTD_MatchState_t*ms,const SeqStore_t*ss,const U32*rep,const void*src,size_t size){\n U32 i,at=0,literals=0;need(ms==&state&&ss==&store&&src==logical_source+block_start&&size==block_lengths[block_index]&&seeding,\"reset identities\");\n need(ss->sequences==ss->sequencesStart&&ss->lit==ss->litStart,\"native logical sequence/literal reset\");\n for(i=0;i<(1u<<hash_log);i++)need(prior_search[at++]==ms->hashTable[i],\"preserved hash cells\");for(i=0;i<(1u<<chain_log);i++)need(prior_search[at++]==ms->chainTable[i],\"preserved tree cells\");if(minimum==3)for(i=0;i<(1u<<window_log);i++)need(prior_search[at++]==ms->hashTable3[i],\"preserved short cells\");\n for(i=0;i<sequence_count;i++)literals+=sequence_records[i][1];\n printf(\"{\\\"record\\\":\\\"reset\\\",\\\"padding_pass\\\":%u,\\\"block\\\":%u,\\\"discarded_sequences\\\":%u,\\\"discarded_literals\\\":%u,\\\"discarded_tail\\\":%u,\\\"caller_repeats\\\":\",pass,block_index,sequence_count,literals,block_tail);array(rep,3);\n fputs(\",\\\"discarded_repeats\\\":\",stdout);array(observed_repeats,3);\n printf(\",\\\"origin_before\\\":%u,\\\"origin_after\\\":%u,\\\"low_limit\\\":%u,\\\"dictionary_limit\\\":%u,\\\"next_to_update\\\":%u,\\\"frequency\\\":\",origin()-block_lengths[block_index],origin(),ms->window.lowLimit,ms->window.dictLimit,ms->nextToUpdate);frequency();puts(\",\\\"tables_preserved\\\":true}\");\n need(memcmp(rep,saved_repeats,sizeof(saved_repeats))==0,\"discarded pass leaves caller repeats unchanged\");sequence_count=0;seeding=0;guards();\n}\nstatic U32 owner_index(",
+      "before": "static U32 owner_index(",
+      "occurrences": 1
+    },
+    {
+      "after": "U32 i,sum=0;",
+      "before": "U32 i,total_events=0,sum=0;",
+      "occurrences": 1
+    },
+    {
+      "after": "info.st_size>=74",
+      "before": "info.st_size>=192",
+      "occurrences": 1
+    },
+    {
+      "after": "memcmp(packet,\"ZU2RT01\\0\",8)",
+      "before": "memcmp(packet,\"ZURTS01\\0\",8)",
+      "occurrences": 1
+    },
+    {
+      "after": " source_size=little32(packet+8);block_count=little32(packet+12);bootstrap=little32(packet+16);price_policy=little32(packet+20);\n need(bootstrap==1&&price_policy==2,\"native bootstrap scope\");\n window_log=little32(packet+24);hash_log=little32(packet+28);chain_log=little32(packet+32);search_log=little32(packet+36);minimum=little32(packet+40);target=little32(packet+44);literal_mode=little32(packet+48);\n need(source_size>=14&&source_size<=SOURCE_CAP&&block_count>=2&&block_count<=4&&window_log>=10&&window_log<=16&&hash_log>=6&&hash_log<=12&&chain_log>=6&&chain_log<=12&&search_log>=1&&search_log<=6&&minimum>=3&&minimum<=7&&target<=4095&&literal_mode<=1,\"request admission\");\n need(source_size<=1u<<window_log,\"source fits retained window\");source_offset=52+4*block_count;need(size==source_offset+source_size,\"complete retained source extent\");\n for(i=0;i<block_count;i++){block_lengths[i]=little32(packet+52+4*i);need(block_lengths[i]>=7&&block_lengths[i]<=8192,\"block length\");sum+=block_lengths[i];}need(sum==source_size,\"exact schedule total\");\n",
+      "before": " price_policy=little32(packet+8);need(price_policy==0||price_policy==2,\"price policy\");need(memcmp(packet+12,\"ZOPRS03\\0\",8)==0,\"nested packet magic\");\n source_size=little32(packet+20);block_count=little32(packet+24);window_log=little32(packet+28);hash_log=little32(packet+32);chain_log=little32(packet+36);search_log=little32(packet+40);minimum=little32(packet+44);target=little32(packet+48);literal_mode=little32(packet+52);\n need(source_size>=128&&source_size<=SOURCE_CAP&&block_count>=2&&block_count<=4&&window_log>=10&&window_log<=16&&hash_log>=6&&hash_log<=12&&chain_log>=6&&chain_log<=12&&search_log>=1&&search_log<=6&&minimum>=3&&minimum<=7&&target<=4095&&literal_mode<=1,\"request admission\");\n need(source_size<=1u<<window_log,\"source fits retained window\");source_offset=56+4*block_count;need(size==source_offset+source_size,\"complete retained source extent\");\n for(i=0;i<block_count;i++){block_lengths[i]=little32(packet+56+4*i);need(block_lengths[i]>=64&&block_lengths[i]<=8192,\"block length\");sum+=block_lengths[i];}need(sum==source_size,\"exact schedule total\");\n",
+      "occurrences": 1
+    },
+    {
+      "after": "\\\"protocol\\\":\\\"ZU2RT01\\\"",
+      "before": "\\\"protocol\\\":\\\"ZURTS01\\\"",
+      "occurrences": 1
+    },
+    {
+      "after": "\\\"bootstrap\\\":true,\\\"path_cells\\\":4099,\\\"padding_passes\\\":2",
+      "before": "\\\"path_cells\\\":4099,\\\"passes\\\":2",
+      "occurrences": 1
+    },
+    {
+      "after": "logical_source=source.values+SOURCE_CAP+64;memcpy(source.values+SOURCE_CAP+64,",
+      "before": "logical_source=source.values+64;memcpy(source.values+64,",
+      "occurrences": 1
+    },
+    {
+      "after": "p.cParams.strategy=ZSTD_btultra2;",
+      "before": "p.cParams.strategy=price_policy==2?ZSTD_btultra:ZSTD_btopt;",
+      "occurrences": 1
+    },
+    {
+      "after": "padding=pass?0xc3:0x6a;seeding=0;event_count=sequence_count=0;",
+      "before": "padding=pass?0xc3:0x6a;event_count=sequence_count=0;",
+      "occurrences": 1
+    },
+    {
+      "after": "memcpy(before_repeats,owners[prior]->rep,sizeof(before_repeats));memcpy(saved_repeats,before_repeats,sizeof(saved_repeats));block_start=(U32)consumed;",
+      "before": "memcpy(before_repeats,owners[prior]->rep,sizeof(before_repeats));",
+      "occurrences": 1
+    },
+    {
+      "after": "written+=result;consumed+=block_lengths[block_index];",
+      "before": "written+=result;consumed+=block_lengths[block_index];total_events+=event_count;",
+      "occurrences": 1
+    },
+    {
+      "after": " printf(\"{\\\"record\\\":\\\"complete\\\",\\\"events\\\":%u,\\\"padding_passes\\\":2,\\\"blocks\\\":%u,\\\"algorithm_passes\\\":%u,\\\"guards_unchanged\\\":true,\\\"source_unchanged\\\":true}\\n\",total_events,block_count,total_passes);",
+      "before": " printf(\"{\\\"record\\\":\\\"complete\\\",\\\"events\\\":%u,\\\"passes\\\":2,\\\"blocks\\\":%u,\\\"guards_unchanged\\\":true,\\\"source_unchanged\\\":true,\\\"price_policy\\\":%u}\\n\",total_events,block_count,price_policy);",
+      "occurrences": 1
+    }
+  ]
+}

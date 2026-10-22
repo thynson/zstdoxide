@@ -109,7 +109,7 @@ recorded in `docs/data-structures.md` before implementation.
 - [x] Analyze first-block bootstrap, checked rebase, retained ownership and the two intended predecessor transitions against pinned upstream.
 - [x] Freeze an additive phase/block transport and independent model, preserving every Module 19 fresh and Module 21 retained observation.
 - [x] Freeze source-only witnesses for seeding, rebase, retained learned prices, later alternatives, short keys, horizons and all publication kinds.
-- [ ] Specify and preflight native observer adaptation, complete dependency inventories, sanitizer commands and bounded capture.
+- [x] Specify and preflight native observer adaptation, complete dependency inventories, sanitizer commands and bounded capture.
 - [ ] Capture and independently audit first/later-block states and native frames, including coherent later-phase forgeries and predecessor identities.
 - [ ] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before parser admission.
 - [ ] Introduce a dedicated constructor-only retained-Ultra2 scope with old-entry rejection and exact owner contracts.
