@@ -18,6 +18,7 @@
         feature = "unsafe-byte-cursor",
         feature = "unsafe-bitstream",
         feature = "unsafe-history",
+        feature = "unsafe-slice-history",
         feature = "unsafe-ring-history",
         feature = "unsafe-fse",
         feature = "unsafe-fse-encoder",
@@ -145,6 +146,14 @@ mod sequence_context;
 mod sequence_encode;
 mod sequence_plan;
 mod sequences;
+#[cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "Borrowed output integration follows storage qualification"
+    )
+)]
+mod slice_history;
 mod strategy;
 mod stream;
 mod stream_decode;

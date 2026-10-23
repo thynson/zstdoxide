@@ -1,0 +1,160 @@
+{
+  "status": "passed",
+  "source": {
+    "Cargo.toml": "1fb28214a4bc2d2ece44db590168f7dcc238cff0c3cab7c24e4ac9cb6d62b22a",
+    "src/lib.rs": "05fa8af0d2c078faa8ff273dd5df12283f1641089d89dd173180cbbe9e2a7b3a",
+    "src/slice_history.rs": "05729cf00f256a7fdb912fca88dd839f4f29bd6de38815eab390383375e8065f",
+    "src/history.rs": "849fe49a5a0eacb4e44f36f25df2682ca2deca2361c0aeb01e41ca67b47af999",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+  },
+  "tests_per_configuration": 4,
+  "configurations": [
+    "safe",
+    "unsafe-slice-history",
+    "all"
+  ],
+  "no_std_configurations": 3,
+  "strict_clippy_configurations": 3,
+  "format": "passed",
+  "commands": [
+    {
+      "label": "unsafe-tests",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "slice_history::tests",
+        "--features",
+        "unsafe-slice-history"
+      ],
+      "exit_code": 0,
+      "seconds": 116.60001504098182
+    },
+    {
+      "label": "all-tests",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "slice_history::tests",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 267.31926062499406
+    },
+    {
+      "label": "safe-no-std",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 4.777692500007106
+    },
+    {
+      "label": "unsafe-no-std",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-slice-history"
+      ],
+      "exit_code": 0,
+      "seconds": 4.561203750025015
+    },
+    {
+      "label": "all-no-std",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-slice-history,unsafe-huffman,unsafe-ring-history,unsafe-fse,unsafe-dictionary,unsafe-optimal-frequencies,unsafe-match-chain,unsafe-history,unsafe-optimal-matches,unsafe-optimal-paths,unsafe-row-table,unsafe-optimal-short-key,unsafe-huffman-codebook,unsafe-reference-tree,unsafe-byte-cursor,unsafe-fse-encoder,unsafe-match-table,unsafe-training,unsafe-bitstream,unsafe-reference-chain"
+      ],
+      "exit_code": 0,
+      "seconds": 3.665352707990678
+    },
+    {
+      "label": "safe-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 85.01699662499595
+    },
+    {
+      "label": "unsafe-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--features",
+        "unsafe-slice-history",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 15.29396108299261
+    },
+    {
+      "label": "all-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 12.215671333979117
+    },
+    {
+      "label": "format",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.2178889169881586
+    }
+  ],
+  "archive": "2026-10-23-caller-output-storage.tar.gz",
+  "archive_sha256": "a7ae7740480846556f3670621a469bd198ad4a5a74397e9a1baa63f53674774e",
+  "archive_bytes": 10987,
+  "qualification": "Focused storage checks only. Safe test was executed before the recorded successor sequence; its exact log is retained. Twelve test executions include 3168 overlap combinations per backend. Public APIs, full feature matrix, native interoperability and benchmarks remain separate work."
+}
