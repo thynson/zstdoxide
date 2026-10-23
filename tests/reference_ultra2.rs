@@ -63,9 +63,9 @@ fn complete_bounds_targets_and_three_byte_keys_round_trip() {
 }
 #[test]
 fn resolved_resource_limits_precede_owner_cloning() {
-    let input = source(32768, 0);
+    let input = source(65536, 0);
     let mut cases = Vec::new();
-    for size in [0, 1, 63, 16385, 32768] {
+    for size in [0, 1, 63, 32769, 65536] {
         cases.push((size, request(), Error::ResourceLimit));
     }
     for dimension in 0..5 {

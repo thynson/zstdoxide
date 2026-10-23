@@ -50,10 +50,6 @@ pub(crate) enum ReferenceSearchPlan {
     )]
     RetainedOptimal(RetainedOptimalPlan),
     RetainedUltra(RetainedOptimalPlan),
-    #[allow(
-        dead_code,
-        reason = "Private observed retained Ultra2 frames precede public admission"
-    )]
     RetainedUltra2(RetainedUltra2Plan),
 }
 
@@ -102,7 +98,11 @@ impl ReferenceSearchPlan {
                 }
             }
             ReferenceStrategy::Ultra2 => {
-                Ultra2FramePlan::new(parameters, source_len).map(Self::Ultra2)
+                if source_len > 16384 {
+                    RetainedUltra2Plan::for_frame(parameters, source_len).map(Self::RetainedUltra2)
+                } else {
+                    Ultra2FramePlan::new(parameters, source_len).map(Self::Ultra2)
+                }
             }
         }
     }
@@ -1152,7 +1152,7 @@ mod retained_ultra2_integration_dispatch {
         }
     }
     #[test]
-    fn retained_ultra2_integration_dispatch_rejects_source_before_allocator_contact_and_keeps_public_gate()
+    fn retained_ultra2_integration_dispatch_rejects_source_before_allocator_contact_and_keeps_default_limits()
      {
         let source = [b'a'; 128];
         let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();

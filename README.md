@@ -82,20 +82,19 @@ source tiers select Greedy. BinaryTreeLazy2 uses paired tree edges, with window
 log at most 21, independent hash/chain logs at most 19 and search log at most 8.
 Levels 5/6 are supported across tiers; levels 7–9 through 256 KiB, and levels
 10–12 above 16 KiB through 256 KiB. Level 10 at smaller sizes and levels 7–15
-above 256 KiB return resource errors. Optimal and Ultra admit 64–32,768 bytes;
-Ultra2 admits 64–16,384 bytes. Each source must fit its window, with window logs
+above 256 KiB return resource errors. Optimal, Ultra and Ultra2 admit 64–32,768 bytes. Each source must fit its window, with window logs
 up to 16, hash/chain logs up to 12, search
 logs up to 6 and target lengths up to 4095. Default levels 11/12 (Optimal) and
 13/14 (Ultra), and 16/17 (Ultra2) additionally work for 64–2,048 bytes; valid
 strategy-7/8/9 requests outside their respective caps return resource errors.
-Optimal and Ultra preserve the existing single-block paths through 16,384 bytes. Larger
+Optimal, Ultra and Ultra2 preserve the existing single-block paths through 16,384 bytes. Larger
 admitted sources use three or four balanced blocks of at most 8,192 bytes,
 retaining search and price history across raw/RLE fallback while committing
-repeat offsets and entropy only for emitted compressed blocks. Retained
-Ultra2, window expiry and dictionaries are outside this reference-profile
-extension. Ultra2 seeds
-statistics with an initial discarded pass, invalidates search history and
-encodes the second pass from the original repeat offsets. These APIs write
+repeat offsets and entropy only for emitted compressed blocks. Window expiry
+and dictionaries are outside this reference-profile extension. Ultra2 seeds
+statistics with an initial discarded pass over the first block, invalidates
+search history and encodes that block again from the original repeat offsets.
+Later retained blocks parse once using the learned statistics and retained search. These APIs write
 a known-size frame without a checksum and preserve the resolved window. They do not change the named APIs or provide
 live numeric streaming settings. See [reference profile usage](docs/reference-fast-usage.md)
 for overrides, allocator ownership, frame flags, and algorithm-specific caps.

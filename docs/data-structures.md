@@ -3622,3 +3622,22 @@ checks cover Rust decoding, complete actual wire histories, raw/RLE rollback,
 allocation and output-append failures, and reset. Independent replay under actual
 wire kinds, native decoding, platform gates and public admission remain separate
 qualification steps.
+
+## Retained Ultra2 public admission candidate
+
+The public resolver keeps the fresh Ultra2 plan for known sources through16384
+bytes and delegates larger sources to the already checked RetainedUltra2Plan.
+That plan admits16385..32768 bytes in one window, bounds W/H/C/S/target before
+any owner is cloned, and derives a balanced three/four-block schedule. It owns
+only value records and indices. The existing nine independent parser/search/token
+owners, shared entropy workspace and output allocator retain their contracts;
+no new allocation, unsafe representation or C binding is introduced by admission.
+
+The first scheduled block alone performs discarded learning, checked rebase and
+actual encoding. Every later block uses one retained Ultra-priced pass. Public
+source hints and immutable requests still flow through known-size resolution.
+The two declared predecessor resource-to-success changes are independently
+frozen at indices1512/1592; every other prior complete response must remain equal.
+Original fresh and sibling-family states remain independently bounded. Public
+admission requires focused Rust, exact predecessor/native interoperability and
+independent controls; full regression/platform/benchmark closure follows.

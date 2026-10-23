@@ -217,7 +217,7 @@ and entropy commit only for emitted compressed blocks. The output reservation
 includes every block header. The whole source must fit the resolved window, so
 this does not introduce window expiry, dictionary/prefix support or numeric
 streaming. Tiny inputs and sources above 32 KiB remain outside Optimal's scope.
-Ultra shares this retained source envelope; Ultra2 retains its single-block limit below.
+Ultra and Ultra2 share this retained source envelope; Ultra2 bootstraps its first block as described below.
 
 ```rust
 use zstdoxide::{CompressionParameterRequest, ReferenceStrategy,
@@ -286,22 +286,31 @@ assert_eq!(decompress(&frame, input.len())?, input);
 
 Valid Ultra requests outside these local bounds return `ResourceLimit` before
 allocator cloning. Complete-buffer Ultra does not admit dictionaries, window
-expiry, numeric streaming, long-distance matching or workers. Retained Ultra2
-remains outside admission. Safe and opt-in unsafe storage backends share checked admission,
+expiry, numeric streaming, long-distance matching or workers. Safe and opt-in
+unsafe storage backends share checked admission,
 allocator ownership and output publication contracts.
 
 
 ## Bounded Ultra2 requests
 
 `ReferenceStrategy::Ultra2` uses the same bounded optLevel2 parser geometry
-and nine scratch owners as Ultra. It first parses the complete source to seed
-frequencies, discards all first-pass tokens, invalidates search history with
-checked coordinate rebasing, and reparses from the original 1/4/8 repeat offsets.
-Only the second pass supplies tokens to the shared entropy encoder. The phase
-transition and whole-owner reset allocate no additional parser/search storage.
+and nine scratch owners as Ultra. It first parses the first block to seed
+frequencies, discards every learning-pass token, invalidates search history with
+checked coordinate rebasing, and reparses that block from the original 1/4/8
+repeat offsets. Only actual encoding passes supply tokens to the shared entropy
+encoder. The phase transition and whole-owner reset allocate no additional
+parser/search storage.
+
+Sources through 16,384 bytes preserve the existing single-block path. Sources
+of 16,385..=32,768 bytes use three or four balanced blocks of at most 8,192 bytes.
+Only the first block runs a discarded learning pass; its checked coordinate bias
+is the first block's length. Each later block parses once under retained Ultra
+pricing, preserving learned frequencies and search history. Raw/RLE publication
+keeps committed repeat offsets; compressed publication adopts candidate offsets.
+The complete input remains borrowed and fits one resolved window.
 
 Default levels 16/17 admit sources of 64..=2,048 bytes. Explicit settings admit
-64..=16,384 bytes contained in the window, with resolved window log 10..=16,
+64..=32,768 bytes contained in the window, with resolved window log 10..=16,
 hash/chain logs 6..=12, search log 1..=6, minimum match 3..=7 and target 0..=4095.
 Automatic literal prices and the initial pass are always enabled publicly.
 
@@ -316,7 +325,7 @@ assert_eq!(decompress(&frame, input.len())?, input);
 ```rust
 use zstdoxide::{compress_with_parameters, decompress,
     CompressionParameterRequest, ReferenceStrategy};
-let input: Vec<u8> = (0..4096).map(|i| (i % 31) as u8).collect();
+let input: Vec<u8> = (0..24577).map(|i| (i % 31) as u8).collect();
 let mut request = CompressionParameterRequest::with_level(16);
 request.set_strategy(Some(ReferenceStrategy::Ultra2));
 request.set_window_log(16)?;
@@ -331,6 +340,6 @@ assert_eq!(decompress(&frame, input.len())?, input);
 ```
 
 Out-of-scope resolved Ultra2 resources return `ResourceLimit` before allocator
-cloning. Tiny sources, retained public blocks, dictionary/prefix state, window
+cloning. Tiny sources, dictionary/prefix state, window
 expiry, numeric streaming, long-distance matching and workers remain excluded.
 The borrowed input and request need not outlive the returned owned frame.
