@@ -128,7 +128,7 @@ recorded in `docs/data-structures.md` before implementation.
 - [x] Preflight candidate new and transition requests with pinned bidirectional native decoding.
 - [x] Qualify strategy-9 public admission, every remaining predecessor response and bidirectional native interoperability.
 - [x] Reconcile retained Ultra2 algorithm documentation with the admitted first-block and later-block behavior.
-- [ ] Complete full safe/isolated/all/release regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
+- [x] Complete full safe/isolated/all/release regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
 - [x] Bind final public entry points to foreign Miri, concrete no-atomics artifacts and exact native-to-final production sources.
 - [x] Freeze independently decoded complete-frame benchmarks and qualify all backends with clock-free and forgery controls.
 - [x] Qualify the exact 1672-request timing barrier in an additive controller successor.
