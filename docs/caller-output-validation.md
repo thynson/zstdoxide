@@ -66,3 +66,17 @@ code generation and deterministic allocation/performance comparisons remain
 open until their own evidence is recorded. Stable incremental destination
 contracts, overlapping in-place decoding and caller-owned dictionary output
 are outside this bounded module.
+
+## Foreign interpretation and no-atomics code generation
+
+`evidence/2026-10-23-caller-output-platform.json` records four strict-provenance
+Miri executions: safe/all on i686 and s390x. Independently generated compressed
+frames exercise exact destination output, bounded rejection, sentinel protection
+and concatenation with new frame-local history. These are 32-bit and big-endian
+interpreter checks, not native foreign hardware runs.
+
+Two thumbv6m no_std core+alloc checks passed, and two release code-generation
+builds retain LLVM IR with a concrete `caller_output_codegen_probe` definition
+and verified 32-bit little-endian ARM ELF objects. The probe calls the actual
+public options-based direct-output API. The source snapshot changes only the
+probe addition; production source identities remain bound to the working tree.
