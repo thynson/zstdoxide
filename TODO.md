@@ -131,6 +131,7 @@ recorded in `docs/data-structures.md` before implementation.
 - [ ] Complete full safe/isolated/all/release regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
 - [x] Bind final public entry points to foreign Miri, concrete no-atomics artifacts and exact native-to-final production sources.
 - [x] Freeze independently decoded complete-frame benchmarks and qualify all backends with clock-free and forgery controls.
+- [x] Qualify the exact 1672-request timing barrier in an additive controller successor.
 - [ ] Measure all backends and an independent safe/all repeat after completed CPU barriers, retaining exact executables and samples.
 - [ ] Reconcile the bounded milestone, clear its checklist and decompose the next scope without claiming complete upstream parity.
 

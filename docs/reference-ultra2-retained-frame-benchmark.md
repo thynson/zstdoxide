@@ -27,3 +27,18 @@ source snapshots, integration and projection history, control mutations and
 command logs: `evidence/2026-10-23-ultra2-retained-clockfree.{json,tar.gz}`,
 SHA-256 `1c84ec7e58bf0735cf589cca91bf64a495ffee5b33f87b6e4b3cb432eac7d9e9`.
 All archived files were independently reconstructed and original hashes rechecked.
+
+## Exact native timing prerequisite
+
+The additive `_v2` controller fixes the predecessor native-request count of
+1593 to the actual retained Ultra2 inventory of 1672 before any timing. Its
+source closure, all 21 clock-free backends and ordinary/optimized 41-negative/
+two-positive controls are freshly qualified. Separate child-free synthetic
+schema tests reject eight coherently rehashed incomplete/incorrect barriers
+and accept two positives in each interpreter mode; synthetic records are not
+actual prerequisite completion evidence. Original captures remain immutable.
+
+Use `scripts/benchmark_retained_ultra2_frames_v2.py` and its matching `_v2`
+control/summary tools for subsequent timing. Evidence:
+`evidence/2026-10-23-ultra2-retained-clockfree-v2.{json,tar.gz}`, SHA-256
+`f204eaf9ad427b802af06db572e69a6d7de125e117d033aa76b74b46d6d808db`.
