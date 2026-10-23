@@ -2,10 +2,11 @@
 
 ## Scope and order
 
-This is Module 23 preparation. Module 22 retained Ultra2 qualification must close
-before implementing this scope. This document does not claim a new public API
-or completed upstream migration. Record the final ownership model in
-`docs/data-structures.md` before writing the implementation.
+Module 22 retained Ultra2 qualification is complete. Module 23 now exposes the
+four direct destination APIs described below; its final ownership model was
+recorded in `docs/data-structures.md` before implementation. Focused API/native
+evidence and remaining qualification gates are in `caller-output-validation.md`.
+This does not claim completed upstream migration.
 
 The next bounded capability is direct one-shot decoding into a caller-owned
 mutable slice. It must write format output directly through checked history
@@ -19,7 +20,7 @@ and progress contracts beyond a one-shot destination. In-place overlapping
 input/output, raw-block APIs, prepared dictionaries, static entropy workspaces,
 legacy formats, numeric streaming, LDM and workers are also separate work.
 
-## Proposed public contract
+## Public contract
 
 `decompress_into(input, output)` returns the number of decoded bytes in
 `output[..written]`. Its default combined output limit is the destination length;

@@ -206,7 +206,7 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 885 | decompress with 1 missing byte | ported | `decompress_with_one_missing_byte`. Truncated source rejected with UnexpectedEof. |
 | 891 | decompress with 1 too much byte | ported | `decompress_with_one_extra_byte`. One trailing byte rejected with UnexpectedEof. |
 | 897 | decompress too large input | ported | `decompress_with_large_trailing_input`. Overlong source rejected; deterministic zero tail replaces uninitialized C capacity. |
-| 903 | decompress into NULL buffer | ported | `decompress_into_zero_output_limit`. Explicit zero output limit expresses the C zero-capacity contract. |
+| 903 | decompress into NULL buffer | ported | `decompress_into_zero_output_limit`. An actual empty caller-owned slice and the original explicit zero output limit both reject nonempty output with ResourceLimit. |
 | 909 | decompress with corrupted checksum | partial | `decompress_with_corrupted_checksum`. All four checksum-byte corruptions rejected; forceIgnoreChecksum API absent. |
 | 948 | ZSTD_decompressBound test with content size missing | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
 | 968 | check DCtx size is reduced after many oversized calls | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |

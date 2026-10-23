@@ -4341,7 +4341,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Exact tail-driven source/limit selection asserts empty input success and ResourceLimit for nonempty insufficient destinations. This one-shot adapter does not cover original level selection, reusable one-shot context variants, caller destination canaries, or sequence-producer setup. The separately pinned official rolling corpus passed all 1173 files in a release all-feature run with no skipped files.",
+      "reason": "Exact tail-driven source/capacity selection exercises a real caller-owned destination with prefix/suffix canaries and retains the explicit output-limit check. Empty source succeeds and nonempty insufficient destinations return ResourceLimit. Original level selection, reusable one-shot context variants and sequence-producer setup remain outside this adapter. Complete pinned external corpus replay is recorded in the caller-output qualification evidence.",
       "rust_tests": [
         "tests/upstream_fuzz_targets.rs#too_small_destination_deterministic_corpus",
         "tests/upstream_fuzz_targets.rs#external_file_corpus"
@@ -4355,7 +4355,7 @@
           "line_end": 74,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Exact tail-driven source/limit selection asserts empty input success and ResourceLimit for nonempty insufficient destinations. This one-shot adapter does not cover original level selection, reusable one-shot context variants, caller destination canaries, or sequence-producer setup. The separately pinned official rolling corpus passed all 1173 files in a release all-feature run with no skipped files.",
+          "reason": "Exact tail-driven source/capacity selection exercises a real caller-owned destination with prefix/suffix canaries and retains the explicit output-limit check. Empty source succeeds and nonempty insufficient destinations return ResourceLimit. Original level selection, reusable one-shot context variants and sequence-producer setup remain outside this adapter. Complete pinned external corpus replay is recorded in the caller-output qualification evidence.",
           "rust_tests": [
             "tests/upstream_fuzz_targets.rs#too_small_destination_deterministic_corpus",
             "tests/upstream_fuzz_targets.rs#external_file_corpus"
@@ -5667,7 +5667,7 @@
           "line_end": 908,
           "label": "test%3i : decompress into NULL buffer :",
           "status": "ported",
-          "reason": "Explicit zero output limit expresses the C zero-capacity contract.",
+          "reason": "An actual empty caller-owned slice and the original explicit zero output limit both reject nonempty output with ResourceLimit.",
           "rust_tests": [
             "tests/upstream_fuzzer.rs#decompress_into_zero_output_limit"
           ]

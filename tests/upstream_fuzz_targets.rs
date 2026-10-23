@@ -9,7 +9,9 @@ use fuzz_support::{DataProducer, decompression_case};
 use std::fs;
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
-use zstdoxide::{DecodeOptions, Error, FrameHeader, compress, decompress_with_options};
+use zstdoxide::{
+    DecodeOptions, Error, FrameHeader, compress, decompress_into, decompress_with_options,
+};
 
 const MAX_INPUT: usize = 1024 * 1024;
 const MAX_OUTPUT: usize = 10 * MAX_INPUT;
@@ -111,7 +113,7 @@ fn simple_decompress(input: &[u8]) -> bool {
 }
 
 /// `decompress_dstSize_tooSmall.c::LLVMFuzzerTestOneInput`: the original
-/// tail-selected source and too-small destination become an explicit limit.
+/// tail-selected source and destination capacity exercise a real output slice.
 fn decompress_destination_too_small(input: &[u8]) {
     assert!(input.len() <= MAX_INPUT);
     let mut producer = DataProducer::new(input);
@@ -119,10 +121,16 @@ fn decompress_destination_too_small(input: &[u8]) {
     let source = &input[..producer.remaining()];
     let limit = selected_limit.min(source.len().saturating_sub(1));
     let encoded = compress(source).expect("compression must succeed");
+    let mut destination = vec![0xa5; limit + 64];
+    let direct = decompress_into(&encoded, &mut destination[32..32 + limit]);
+    assert!(destination[..32].iter().all(|byte| *byte == 0xa5));
+    assert!(destination[32 + limit..].iter().all(|byte| *byte == 0xa5));
     let decoded = decompress_with_options(&encoded, options(limit));
     if source.is_empty() {
+        assert_eq!(direct, Ok(0));
         assert_eq!(decoded.unwrap(), b"");
     } else {
+        assert_eq!(direct, Err(Error::ResourceLimit));
         assert_eq!(decoded, Err(Error::ResourceLimit));
     }
 }

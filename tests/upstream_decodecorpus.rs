@@ -4,7 +4,9 @@
 //! The fixture importer additionally verifies originals with the official CLI.
 //! See `tests/upstream/decodecorpus/README.md` for provenance and mode coverage.
 
-use zstdoxide::{DecodeOptions, Error, FrameHeader, decompress, decompress_with_options};
+use zstdoxide::{
+    DecodeOptions, Error, FrameHeader, decompress, decompress_into, decompress_with_options,
+};
 
 struct FrameFixture {
     name: &'static str,
@@ -242,5 +244,38 @@ fn replays_configurable_official_generator_run() {
         let decoded = decompress(&encoded, original.len())
             .unwrap_or_else(|error| panic!("seed {seed}, frame {index}: {error:?}"));
         assert_eq!(decoded, original, "seed {seed}, frame {index}");
+    }
+}
+
+/// Native-generated frames exercise direct output, including cross-block history.
+#[test]
+fn caller_owned_destinations_match_every_generated_frame() {
+    for fixture in FRAMES {
+        for capacity in [fixture.original.len(), fixture.original.len() + 17] {
+            let mut output = vec![0xa5; capacity + 32];
+            let count = decompress_into(fixture.encoded, &mut output[16..16 + capacity])
+                .unwrap_or_else(|error| panic!("{}: {error:?}", fixture.name));
+            assert_eq!(count, fixture.original.len(), "{}", fixture.name);
+            assert_eq!(
+                &output[16..16 + count],
+                fixture.original,
+                "{}",
+                fixture.name
+            );
+            assert!(output[..16].iter().all(|byte| *byte == 0xa5));
+            assert!(output[16 + count..].iter().all(|byte| *byte == 0xa5));
+        }
+        if !fixture.original.is_empty() {
+            let capacity = fixture.original.len() - 1;
+            let mut output = vec![0xa5; capacity + 32];
+            assert_eq!(
+                decompress_into(fixture.encoded, &mut output[16..16 + capacity]),
+                Err(Error::ResourceLimit),
+                "{}",
+                fixture.name
+            );
+            assert!(output[..16].iter().all(|byte| *byte == 0xa5));
+            assert!(output[16 + capacity..].iter().all(|byte| *byte == 0xa5));
+        }
     }
 }

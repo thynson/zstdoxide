@@ -7,7 +7,10 @@ mod support;
 
 use std::sync::OnceLock;
 use support::{FuzzerRng, noise, skippable_frame, three_byte_sequences};
-use zstdoxide::{DecodeOptions, Error, FrameHeader, compress, decompress, decompress_with_options};
+use zstdoxide::{
+    DecodeOptions, Error, FrameHeader, compress, decompress, decompress_into,
+    decompress_with_options,
+};
 
 const BASIC_SIZE: usize = 5 * 1024 * 1024;
 const BASIC_SEED: u32 = 0;
@@ -78,10 +81,14 @@ fn decompress_with_large_trailing_input() {
     assert_eq!(decompress(&frame, BASIC_SIZE), Err(Error::InvalidMagic));
 }
 
-/// Rust's explicit zero output limit replaces C's NULL/zero-capacity buffer.
+/// Exercise a real empty destination as well as the explicit output limit.
 #[test]
 fn decompress_into_zero_output_limit() {
     assert_eq!(decompress(basic_frame(), 0), Err(Error::ResourceLimit));
+    assert_eq!(
+        decompress_into(basic_frame(), &mut []),
+        Err(Error::ResourceLimit)
+    );
 }
 
 /// Port checksum rejection; forceIgnoreChecksum remains an unsupported API.
@@ -110,6 +117,8 @@ fn compress_and_decompress_empty_frames() {
         None
     );
     assert_eq!(decompress(&unknown_size, 0).unwrap(), b"");
+    assert_eq!(decompress_into(&known_size, &mut []), Ok(0));
+    assert_eq!(decompress_into(&unknown_size, &mut []), Ok(0));
 }
 
 /// Exact four-way source division and 129-KiB skip used by basicUnitTests.
