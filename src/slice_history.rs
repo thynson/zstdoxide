@@ -1,6 +1,6 @@
 //! Direct caller-owned output with checked, frame-local LZ history.
 
-use crate::history::SequenceOutput;
+use crate::history::{FrameOutput, SequenceOutput};
 use crate::{Error, Result};
 
 pub(crate) struct SliceHistory<'a> {
@@ -93,6 +93,18 @@ impl SequenceOutput for SliceHistory<'_> {
         }
         self.position = end;
         Ok(())
+    }
+}
+
+impl FrameOutput for SliceHistory<'_> {
+    fn start_frame(&mut self, window: usize) {
+        SliceHistory::start_frame(self, window);
+    }
+    fn frame_bytes(&self) -> &[u8] {
+        SliceHistory::frame_bytes(self)
+    }
+    fn repeat(&mut self, byte: u8, count: usize) -> Result<()> {
+        SliceHistory::repeat(self, byte, count)
     }
 }
 

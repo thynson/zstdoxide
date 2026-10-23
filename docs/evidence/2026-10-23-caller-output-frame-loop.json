@@ -1,0 +1,151 @@
+{
+  "status": "passed",
+  "source": {
+    "Cargo.toml": "1fb28214a4bc2d2ece44db590168f7dcc238cff0c3cab7c24e4ac9cb6d62b22a",
+    "src/lib.rs": "05fa8af0d2c078faa8ff273dd5df12283f1641089d89dd173180cbbe9e2a7b3a",
+    "src/slice_history.rs": "19eac9a30f6cecd2daa258da0d0422dbe5dc5a0bab74abbdd917af92b5d10a4a",
+    "src/history.rs": "07b640adba19ce0fcbf12ef6cb3442818dd608f2348adbe08707a24456b04daf",
+    "src/decode.rs": "5c8f842a9372b7f903a3925b4dd8c5106cd94d6e94becba7fe430fec04c3efad",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54"
+  },
+  "commands": [
+    {
+      "label": "safe-owned-unit",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "decode::"
+      ],
+      "exit_code": 0,
+      "seconds": 196.52821312498418
+    },
+    {
+      "label": "safe-integration",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "malformed",
+        "--test",
+        "upstream_fuzzer",
+        "--test",
+        "upstream_decodecorpus"
+      ],
+      "exit_code": 0,
+      "seconds": 8.492009459005203
+    },
+    {
+      "label": "safe-no-std",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8396810830163304
+    },
+    {
+      "label": "safe-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 13.441523874993436
+    },
+    {
+      "label": "all-owned-unit",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "decode::",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 142.144880790991
+    },
+    {
+      "label": "all-integration",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "malformed",
+        "--test",
+        "upstream_fuzzer",
+        "--test",
+        "upstream_decodecorpus",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 14.498666917002993
+    },
+    {
+      "label": "all-no-std",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-bitstream,unsafe-byte-cursor,unsafe-dictionary,unsafe-fse,unsafe-fse-encoder,unsafe-history,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-chain,unsafe-match-table,unsafe-optimal-frequencies,unsafe-optimal-matches,unsafe-optimal-paths,unsafe-optimal-short-key,unsafe-reference-chain,unsafe-reference-tree,unsafe-ring-history,unsafe-row-table,unsafe-slice-history,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7090764159802347
+    },
+    {
+      "label": "all-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 17.950580458011245
+    },
+    {
+      "label": "format",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 4.627991874993313
+    }
+  ],
+  "archive": "2026-10-23-caller-output-frame-loop.tar.gz",
+  "archive_sha256": "46b25727e262b556927ddbec2278333eb381a71d591c57929fd135e26df0d560",
+  "qualification": "Focused shared-loop regression only; public caller-owned APIs and complete Module 23 qualification remain pending."
+}

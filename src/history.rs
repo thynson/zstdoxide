@@ -15,6 +15,13 @@ pub(crate) trait SequenceOutput {
     fn copy_match(&mut self, offset: usize, length: usize) -> Result<()>;
 }
 
+/// Frame-local operations shared by owned and caller-owned one-shot output.
+pub(crate) trait FrameOutput: SequenceOutput {
+    fn start_frame(&mut self, window: usize);
+    fn frame_bytes(&self) -> &[u8];
+    fn repeat(&mut self, byte: u8, count: usize) -> Result<()>;
+}
+
 pub(crate) struct History<A: Allocator = Global> {
     output: Vec<u8, A>,
     limit: usize,
@@ -142,6 +149,18 @@ impl<A: Allocator> SequenceOutput for History<A> {
 
     fn copy_match(&mut self, offset: usize, length: usize) -> Result<()> {
         History::copy_match(self, offset, length)
+    }
+}
+
+impl<A: Allocator> FrameOutput for History<A> {
+    fn start_frame(&mut self, window: usize) {
+        History::start_frame(self, window);
+    }
+    fn frame_bytes(&self) -> &[u8] {
+        History::frame_bytes(self)
+    }
+    fn repeat(&mut self, byte: u8, count: usize) -> Result<()> {
+        History::repeat(self, byte, count)
     }
 }
 

@@ -2,7 +2,7 @@
 
 use crate::cursor::ByteCursor;
 use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
-use crate::history::History;
+use crate::history::{FrameOutput, History};
 use crate::huffman::decode_literals_in;
 use crate::sequences::SequenceState;
 use crate::xxhash::checksum;
@@ -140,6 +140,17 @@ pub fn decompress_with_options_in<A: Allocator + Clone>(
     let scratch_allocator = allocator.clone();
     let mut cursor = ByteCursor::new(input);
     let mut history = History::new_in(options.max_output_size, allocator);
+    decode_frames(&mut cursor, &mut history, options, &scratch_allocator)?;
+    Ok(history.into_bytes())
+}
+
+/// Share frame parsing while each wrapper retains its output and scratch owner.
+fn decode_frames<A: Allocator + Clone>(
+    cursor: &mut ByteCursor<'_>,
+    history: &mut impl FrameOutput,
+    options: DecodeOptions,
+    scratch_allocator: &A,
+) -> Result<()> {
     while !cursor.remaining().is_empty() {
         let mut prefix = ByteCursor::new(cursor.remaining());
         let magic = prefix.little_endian(4)? as u32;
@@ -170,7 +181,7 @@ pub fn decompress_with_options_in<A: Allocator + Clone>(
         let mut huffman = None;
         let mut sequences = SequenceState::new_in(scratch_allocator.clone());
         loop {
-            let block = BlockHeader::read(&mut cursor, max_block)?;
+            let block = BlockHeader::read(cursor, max_block)?;
             match block.kind {
                 BlockKind::Raw => history.append(cursor.take(block.size)?)?,
                 BlockKind::Rle => history.repeat(cursor.byte()?, block.size)?,
@@ -183,7 +194,7 @@ pub fn decompress_with_options_in<A: Allocator + Clone>(
                         literal_limit,
                         scratch_allocator.clone(),
                     )?;
-                    sequences.decode(&encoded[consumed..], &literals, &mut history, max_block)?;
+                    sequences.decode(&encoded[consumed..], &literals, history, max_block)?;
                 }
             }
             if block.last {
@@ -201,7 +212,7 @@ pub fn decompress_with_options_in<A: Allocator + Clone>(
             return Err(Error::ChecksumMismatch);
         }
     }
-    Ok(history.into_bytes())
+    Ok(())
 }
 
 #[cfg(test)]
