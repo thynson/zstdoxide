@@ -3641,3 +3641,58 @@ frozen at indices1512/1592; every other prior complete response must remain equa
 Original fresh and sibling-family states remain independently bounded. Public
 admission requires focused Rust, exact predecessor/native interoperability and
 independent controls; full regression/platform/benchmark closure follows.
+
+## Caller-owned one-shot decompression output (Module 23)
+
+`SliceHistory<'a>` owns one exclusive borrow of an initialized destination slice,
+not its allocation. Its private position, frame start, window and effective
+limit satisfy `frame_start <= position <= limit <= output.len()`. Construction
+clamps the requested output limit to destination capacity. Starting a frame
+moves frame start to position, excluding all earlier concatenated-frame bytes.
+Every append/repeat checks the remaining allowance before any write. Match
+validation rejects zero, cross-frame and out-of-window distances before capacity
+checks, matching `History`; even a zero-length match requires a valid offset.
+Forward sequential expansion handles overlap, including bytes produced by the
+same match. Index arithmetic is bounded by the initialized slice and the checked
+end. No output allocation, reserve, ownership conversion or scratch history copy
+is permitted. This corresponds to prefix/destination bounds in pinned v1.5.7
+`ZSTD_decompressFrame` and `ZSTD_decompressBlock_internal`.
+
+The default backend uses safe slice operations. Independent Cargo feature
+`unsafe-slice-history` selects the same checked match wrapper with raw pointer
+reads/writes. The live exclusive slice borrow proves allocation lifetime and
+aliasing; checked distance/end prove every source/destination is in bounds;
+all bytes are initialized and u8 alignment is one. No set_len or uninitialized
+storage is involved. Plain indices/options remain shared value representations
+and need no artificial unsafe operations.
+
+Private `FrameOutput: SequenceOutput` adds `start_frame`, `frame_bytes` and
+`repeat`. A generic one-shot frame loop borrows a sink and scratch allocator;
+`History<A>` keeps ownership of its original `Vec<u8,A>`. Preserve the old
+wrapper's early empty-input rejection, scratch clone order/lifetime and return
+of that vector. The helper clones scratch only at the original SequenceState and
+literal-allocation points. Header limits, raw-payload truncation before append,
+content-size checks and checksums retain their original error ordering.
+This shares the orchestration represented by upstream `ZSTD_decompressMultiFrame`
+and `ZSTD_decompressFrame` without introducing dynamic dispatch or duplicated
+frame parsing. Entropy/literal scratch owners remain independent of destination.
+
+Public names are `decompress_into`, `decompress_into_in`,
+`decompress_into_with_options` and `decompress_into_with_options_in`. Arguments
+are input, mutable output, optional DecodeOptions, optional allocator, in that
+order; result is `Result<usize>`. Default output allowance is output.len(); the
+options variant uses min(output.len(), max_output_size), leaving max_window_size
+independent. The allocator owns only scratch and may be a reference to a
+nonclone allocator. Success returns a valid prefix and preserves its suffix.
+Errors may leave provisional bytes inside the effective allowance, but must
+preserve bytes beyond it. No whole-frame transactional rollback is promised.
+
+Empty encoded input remains UnexpectedEof; actual empty frames and skippable-only
+streams can succeed with empty output. The dictionary-free frame coverage and
+existing dictionary-ID rejection are preserved. Dictionaries, in-place aliasing
+and stable incremental output sessions are separate scopes. Rust shared input
+and exclusive output borrows rule out overlapping input/output in safe callers.
+Native zero-capacity and null-destination cases are distinct oracle checks;
+Rust's API accepts an empty slice rather than a nullable pointer. The focused
+scope, corpus adapter and verification work items are recorded in TODO.md and
+`caller-output-design.md` before implementation.

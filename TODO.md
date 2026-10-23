@@ -105,7 +105,7 @@ Module 22 is complete. The bounded contract and pinned upstream assertions are i
 sessions, dictionaries and in-place decoding remain separate scopes.
 
 - [x] Analyze direct borrowed output, shared frame orchestration, allocator boundaries and matching upstream assertions without claiming implementation.
-- [ ] Record final ownership, invariants, upstream counterparts and API names in `docs/data-structures.md` before implementation.
+- [x] Record final ownership, invariants, upstream counterparts and API names in `docs/data-structures.md` before implementation.
 - [ ] Implement checked borrowed output history and its independent opt-in unsafe backend, including overlap and rejection-before-write tests.
 - [ ] Share the one-shot frame loop without changing existing owned-output, allocator or error-precedence contracts.
 - [ ] Expose caller-owned output APIs with exact destination/options bounds, meaningful malformed-input coverage and scratch allocation failure checks.
