@@ -146,13 +146,6 @@ mod sequence_context;
 mod sequence_encode;
 mod sequence_plan;
 mod sequences;
-#[cfg_attr(
-    not(test),
-    allow(
-        dead_code,
-        reason = "Borrowed output integration follows storage qualification"
-    )
-)]
 mod slice_history;
 mod strategy;
 mod stream;
@@ -195,7 +188,8 @@ mod upstream_sequence_generator_tests;
 mod upstream_sequence_sweep_tests;
 
 pub use decode::{
-    DecodeOptions, decompress, decompress_in, decompress_with_dictionary,
+    DecodeOptions, decompress, decompress_in, decompress_into, decompress_into_in,
+    decompress_into_with_options, decompress_into_with_options_in, decompress_with_dictionary,
     decompress_with_dictionary_in, decompress_with_options, decompress_with_options_in,
 };
 pub use dictionary::{

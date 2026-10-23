@@ -1,0 +1,300 @@
+{
+  "status": "passed",
+  "source": {
+    "Cargo.toml": "1fb28214a4bc2d2ece44db590168f7dcc238cff0c3cab7c24e4ac9cb6d62b22a",
+    "src/lib.rs": "423cd8f8cbdc36ffb24d7046a2e1a9c9a101f5e743240d460b06f92fdbe67fc5",
+    "src/slice_history.rs": "19eac9a30f6cecd2daa258da0d0422dbe5dc5a0bab74abbdd917af92b5d10a4a",
+    "src/history.rs": "07b640adba19ce0fcbf12ef6cb3442818dd608f2348adbe08707a24456b04daf",
+    "src/decode.rs": "c4d34bfa06924efcee0bc33f11da73dce28d6d992361c9bc554a18bd1c04a458",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "tests/caller_output.rs": "b4804e71a1ffad11e9e7c31578986e0cb082c2327b110759b8ee5d9ddbdf9606"
+  },
+  "commands": [
+    {
+      "label": "safe-public",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "caller_output"
+      ],
+      "exit_code": 0,
+      "seconds": 5.697330916009378
+    },
+    {
+      "label": "safe-docs",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--doc"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7130053750006482
+    },
+    {
+      "label": "safe-owned-unit",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "decode::"
+      ],
+      "exit_code": 0,
+      "seconds": 123.29322608298389
+    },
+    {
+      "label": "safe-integration",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "malformed",
+        "--test",
+        "upstream_fuzzer",
+        "--test",
+        "upstream_decodecorpus"
+      ],
+      "exit_code": 0,
+      "seconds": 3.777146125008585
+    },
+    {
+      "label": "safe-no-std",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7931287499959581
+    },
+    {
+      "label": "safe-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 10.72559524999815
+    },
+    {
+      "label": "unsafe-public",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "caller_output",
+        "--features",
+        "unsafe-slice-history"
+      ],
+      "exit_code": 0,
+      "seconds": 5.452780874999007
+    },
+    {
+      "label": "unsafe-docs",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--doc",
+        "--features",
+        "unsafe-slice-history"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6602567080117296
+    },
+    {
+      "label": "unsafe-owned-unit",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "decode::",
+        "--features",
+        "unsafe-slice-history"
+      ],
+      "exit_code": 0,
+      "seconds": 142.14582204198814
+    },
+    {
+      "label": "unsafe-integration",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "malformed",
+        "--test",
+        "upstream_fuzzer",
+        "--test",
+        "upstream_decodecorpus",
+        "--features",
+        "unsafe-slice-history"
+      ],
+      "exit_code": 0,
+      "seconds": 3.404252957989229
+    },
+    {
+      "label": "unsafe-no-std",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-slice-history"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6718234580184799
+    },
+    {
+      "label": "unsafe-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--features",
+        "unsafe-slice-history",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 10.15748954200535
+    },
+    {
+      "label": "all-public",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "caller_output",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.3877629170019645
+    },
+    {
+      "label": "all-docs",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--doc",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 0.706468207994476
+    },
+    {
+      "label": "all-owned-unit",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--lib",
+        "decode::",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 113.75352687499253
+    },
+    {
+      "label": "all-integration",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "malformed",
+        "--test",
+        "upstream_fuzzer",
+        "--test",
+        "upstream_decodecorpus",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 3.356689334003022
+    },
+    {
+      "label": "all-no-std",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--no-default-features",
+        "--features",
+        "unsafe-bitstream,unsafe-byte-cursor,unsafe-dictionary,unsafe-fse,unsafe-fse-encoder,unsafe-history,unsafe-huffman,unsafe-huffman-codebook,unsafe-match-chain,unsafe-match-table,unsafe-optimal-frequencies,unsafe-optimal-matches,unsafe-optimal-paths,unsafe-optimal-short-key,unsafe-reference-chain,unsafe-reference-tree,unsafe-ring-history,unsafe-row-table,unsafe-slice-history,unsafe-training"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6677499169891234
+    },
+    {
+      "label": "all-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--lib",
+        "--tests",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 10.226811417000135
+    },
+    {
+      "label": "format",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.0158206670021173
+    }
+  ],
+  "archive": "2026-10-23-caller-output-public-api.tar.gz",
+  "archive_sha256": "5547cd3ff86a3719e0b546b816c40145f1b4ae1f9d48587b8319ec40999cf72d",
+  "qualification": "Public API focused qualification: safe, isolated unsafe-slice-history, and all features. Seven destination/allocator tests per configuration, documentation including borrow rejection, old decoder and integration regressions, true no_std, strict Clippy and formatting. Complete feature matrix, native destination campaign, foreign qualification and benchmarks remain separate."
+}

@@ -2,9 +2,10 @@
 
 use crate::cursor::ByteCursor;
 use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
-use crate::history::{FrameOutput, History};
+use crate::history::{FrameOutput, History, SequenceOutput};
 use crate::huffman::decode_literals_in;
 use crate::sequences::SequenceState;
+use crate::slice_history::SliceHistory;
 use crate::xxhash::checksum;
 use crate::{
     Decoder, DictionaryHandle, Error, FrameHeader, Result, SharedDictionary, StreamStatus,
@@ -142,6 +143,103 @@ pub fn decompress_with_options_in<A: Allocator + Clone>(
     let mut history = History::new_in(options.max_output_size, allocator);
     decode_frames(&mut cursor, &mut history, options, &scratch_allocator)?;
     Ok(history.into_bytes())
+}
+
+/// Decompress whole frames directly into a caller-owned destination.
+///
+/// Returns the initialized output length; bytes after that prefix are unchanged.
+/// The destination length is the combined output limit for concatenated frames.
+/// The advertised-window limit defaults to 128 MiB, independently of capacity.
+/// Standard and skippable frames and checksums follow [`decompress`]; frames
+/// requiring a dictionary are rejected. Empty input is an incomplete stream,
+/// while an empty frame or skippable-only stream can use an empty destination.
+///
+/// On error, bytes within the output allowance may have been overwritten and
+/// must not be treated as a valid result. No rollback or error progress is
+/// promised. Input and output must not overlap, as enforced by Rust borrows.
+/// Compressed blocks may allocate temporary entropy and literal storage.
+///
+/// ```
+/// use zstdoxide::{compress, decompress_into};
+/// let frame = compress(b"hello")?;
+/// let mut destination = [0xa5; 16];
+/// let written = decompress_into(&frame, &mut destination)?;
+/// assert_eq!(&destination[..written], b"hello");
+/// assert_eq!(&destination[written..], &[0xa5; 11]);
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+///
+/// Safe callers cannot alias compressed input and the writable destination:
+///
+/// ```compile_fail,E0502
+/// let mut bytes = [0_u8; 32];
+/// let input = &bytes[..];
+/// zstdoxide::decompress_into(input, &mut bytes).unwrap();
+/// ```
+pub fn decompress_into(input: &[u8], output: &mut [u8]) -> Result<usize> {
+    decompress_into_with_options(input, output, DecodeOptions::new(output.len()))
+}
+
+/// Decompress into caller-owned storage using the supplied scratch allocator.
+///
+/// The destination is never allocated, resized, adopted or freed by the codec.
+/// All temporary collection requests use clones of this allocator and release
+/// their storage on success or failure. A reference to a non-Clone allocator is
+/// accepted. Cloning retains the allocator's own allocation/panic semantics.
+/// Output, format and error contracts are those of [`decompress_into`].
+pub fn decompress_into_in<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    allocator: A,
+) -> Result<usize> {
+    let options = DecodeOptions::new(output.len());
+    decompress_into_with_options_in(input, output, options, allocator)
+}
+
+/// Decompress directly with explicit output and advertised-window limits.
+///
+/// The effective output allowance is `min(output.len(), options.max_output_size)`.
+/// Bytes beyond that allowance remain unchanged even on error; bytes within it
+/// may contain provisional output. The advertised-window limit is independent.
+/// Other contracts match [`decompress_into`].
+///
+/// ```
+/// use zstdoxide::{compress, decompress_into_with_options, DecodeOptions};
+/// let frame = compress(b"hello")?;
+/// let mut output = [0xa5; 16];
+/// assert_eq!(decompress_into_with_options(&frame, &mut output,
+///     DecodeOptions::new(5))?, 5);
+/// assert_eq!(&output[5..], &[0xa5; 11]);
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+pub fn decompress_into_with_options(
+    input: &[u8],
+    output: &mut [u8],
+    options: DecodeOptions,
+) -> Result<usize> {
+    decompress_into_with_options_in(input, output, options, Global)
+}
+
+/// Decompress directly with explicit limits and a scratch-only allocator.
+///
+/// Combines the bounds and error contract of [`decompress_into_with_options`]
+/// with the scratch ownership contract of [`decompress_into_in`]. Raw and RLE
+/// blocks require no codec payload allocations. Compressed blocks retain their
+/// fallible entropy/literal scratch; no output vector or history copy is made.
+pub fn decompress_into_with_options_in<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    mut options: DecodeOptions,
+    allocator: A,
+) -> Result<usize> {
+    if input.is_empty() {
+        return Err(Error::UnexpectedEof);
+    }
+    options.max_output_size = options.max_output_size.min(output.len());
+    let mut cursor = ByteCursor::new(input);
+    let mut history = SliceHistory::new(output, options.max_output_size);
+    decode_frames(&mut cursor, &mut history, options, &allocator)?;
+    Ok(history.len())
 }
 
 /// Share frame parsing while each wrapper retains its output and scratch owner.

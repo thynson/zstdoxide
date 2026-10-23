@@ -39,6 +39,14 @@ assert_eq!(decompress_with_options(&encoded, options)?, input);
 
 `decompress` requires an explicit combined-output limit and uses a 128 MiB
 advertised-window limit. Use `decompress_with_options` for another window limit.
+`decompress_into(input, &mut destination)` decodes directly into caller-owned
+storage and returns the written prefix length, preserving the unused suffix.
+`decompress_into_with_options` caps output at the smaller of slice length and
+`max_output_size`; the window limit stays independent. On error, bytes inside
+that allowance may contain provisional output, while bytes beyond it stay
+unchanged. Compressed blocks still need temporary entropy/literal allocations.
+These one-shot slice APIs support dictionary-free frames and concatenation;
+stable incremental and in-place decoding are separate contracts.
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
 Allocation failures and corrupt, truncated, or over-limit input return `Error`.
 The named `compress` encoder writes one checksummed single-segment frame, so its advertised window
@@ -146,6 +154,7 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-byte-cursor` | Validated byte ranges |
 | `unsafe-bitstream` | Reverse/forward bit readers and initialized spare-capacity bit writer |
 | `unsafe-history` | Overlapping LZ match expansion |
+| `unsafe-slice-history` | Checked match expansion directly in caller-owned output |
 | `unsafe-ring-history` | Bounded wraparound history reads and stores |
 | `unsafe-fse` | FSE decoding tables |
 | `unsafe-fse-encoder` | Validated inverse FSE encoding tables |
@@ -175,11 +184,14 @@ another backend. Allocation boundaries use fallible reservation. The standard
 `Allocator` is supported by `compress_in`, `compress_with_dictionary_in`,
 `compress_at_level_in`, `compress_with_parameters_in`,
 `decompress_in`, `decompress_with_options_in`,
+`decompress_into_in`, `decompress_into_with_options_in`,
 `decompress_with_dictionary_in`,
 `Decoder::new_in`, `Decoder::with_dictionary_in`, allocator-aware dictionary
 construction, `train_raw_dictionary_in`, `train_dictionary_in`, and
 `finalize_dictionary_in`. Whole-buffer decoding retains the
 original allocator in its returned vector; temporary storage uses fresh clones.
+The slice-output variants use the allocator only for scratch and never adopt
+the caller's destination.
 Borrowing `&allocator` supports non-Clone allocator values. Standard dictionary
 Arc/Rc sharing still uses Global for the counts and inline object; borrowed
 `DictionaryView` values allocate nothing. Custom streaming encoders and decoders accept either
