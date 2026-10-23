@@ -119,20 +119,21 @@ pub fn compress_at_level_in<A: Allocator + Clone>(
 /// keys and three-byte matches for minimum 3, otherwise using four-byte minimum
 /// matches. Optimal uses pinned optLevel0 path/frequency decisions; Ultra uses
 /// coupled optLevel2 fractional prices, match-plus-literal alternatives and thorough
-/// path relaxation. Ultra2 first runs a discarded Ultra pass to seed statistics,
-/// invalidates history by rebasing checked indices, restores original repeat
-/// offsets and encodes a second pass with the retained statistics. All three
+/// path relaxation. Ultra2 first runs a discarded Ultra pass over the first block
+/// to seed statistics, invalidates history by rebasing checked indices, restores
+/// original repeat offsets and encodes that block again with retained statistics.
+/// Later Ultra2 blocks use one retained Ultra pass. All three
 /// use the sufficient-match target and automatic literal compression. Each
-/// uses a single complete block through 16384 bytes. Optimal and Ultra sources of
+/// uses a single complete block through 16384 bytes. Sources of
 /// 16385..=32768 bytes use three or four balanced blocks of at most 8192 bytes.
 /// Search and price history survive raw/RLE blocks; only compressed blocks
-/// publish candidate repeat offsets and entropy. Retained Ultra2, window
-/// expiry and dictionary paths remain excluded.
+/// publish candidate repeat offsets and entropy. Window expiry and dictionary
+/// paths remain excluded.
 /// Lazy uses checked depth-one speculative gains; Lazy2 and BinaryTreeLazy2
 /// use depth-two gains and retain rejected
 /// sampling probes; Greedy stops at its first eligible baseline candidate.
 /// The preceding six non-Optimal strategies cap blocks at the smaller of the
-/// selected window and 128 KiB. Retained Optimal and Ultra use their balanced schedules.
+/// selected window and 128 KiB. Retained Optimal, Ultra and Ultra2 use their balanced schedules.
 ///
 /// Frame flags and independent entropy qualifications match [`compress_at_level`].
 /// Corresponds to applying compression parameters before `ZSTD_compress2` in a
