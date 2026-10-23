@@ -99,46 +99,9 @@ measurements are in `docs/reference-ultra-retained-frame-benchmark.md`.
 The final reconciliation is `docs/evidence/2026-10-22-ultra-retained-closure.json`.
 Retained Ultra2 and complete upstream migration remain separate open work.
 
-## Module 22: bounded retained Ultra2 complete frames
+## Module 23: caller-owned one-shot decompression output
 
-Preserve every existing fresh/retained Optimal and Ultra frame. The additive
-strategy-9 scope is 16385..32768 bytes within one resolved window, with first-block
-bootstrap followed by retained single-pass policy 2. Design and ownership are
-recorded in `docs/data-structures.md` before implementation.
-
-- [x] Analyze first-block bootstrap, checked rebase, retained ownership and the two intended predecessor transitions against pinned upstream.
-- [x] Freeze an additive phase/block transport and independent model, preserving every Module 19 fresh and Module 21 retained observation.
-- [x] Freeze source-only witnesses for seeding, rebase, retained learned prices, later alternatives, short keys, horizons and all publication kinds.
-- [x] Specify and preflight native observer adaptation, complete dependency inventories, sanitizer commands and bounded capture.
-- [x] Capture and independently audit first/later-block states and native frames, including coherent later-phase forgeries and predecessor identities.
-- [x] Project an immutable complete-state fixture and qualify its independent borrowed Rust reader before parser admission.
-- [x] Introduce a dedicated constructor-only retained-Ultra2 scope with old-entry rejection and exact owner contracts.
-- [x] Add the checked first-block-rebase and retained schedule plan, preserving early allocation and complete output bounds.
-- [x] Bind retained Ultra2 search to its checked schedule and qualify every native query, table, frontier and phase boundary.
-- [x] Admit scoped bootstrap/rebase/retained execution without widening fresh Ultra2 or retained Ultra constructors.
-- [x] Qualify every complete state, future-source boundary, phase failure, poison/reset path and allocator identity.
-- [x] Preserve isolated private-frame preflight with cross-profile captures, independent actual-wire replay and pinned native decoding.
-- [x] Integrate retained token collection and shared frame publication with discarded-token isolation and raw/RLE rollback.
-- [x] Qualify actual Rust wire histories by independent phase replay and pinned native decoding.
-- [x] Complete all isolated storage, foreign Miri and concrete no-atomics gates before public admission.
-- [x] Reconcile private frame integration, actual wire and platform source identities before public admission.
-- [x] Freeze additive public recipes declaring exactly the two intended predecessor resource-to-success transitions.
-- [x] Preflight the public retained Ultra2 candidate in isolation while preserving current admission.
-- [x] Qualify the updated public-candidate usage examples in isolated safe/all builds.
-- [x] Preflight candidate new and transition requests with pinned bidirectional native decoding.
-- [x] Qualify strategy-9 public admission, every remaining predecessor response and bidirectional native interoperability.
-- [x] Reconcile retained Ultra2 algorithm documentation with the admitted first-block and later-block behavior.
-- [x] Complete full safe/isolated/all/release regression, all true no_std products, formatting, Clippy, usage, allocator and upstream inventory checks.
-- [x] Bind final public entry points to foreign Miri, concrete no-atomics artifacts and exact native-to-final production sources.
-- [x] Freeze independently decoded complete-frame benchmarks and qualify all backends with clock-free and forgery controls.
-- [x] Qualify the exact 1672-request timing barrier in an additive controller successor.
-- [x] Measure all backends and an independent safe/all repeat after completed CPU barriers, retaining exact executables and samples.
-- [ ] Reconcile the bounded milestone, clear its checklist and decompose the next scope without claiming complete upstream parity.
-
-## Module 23 preparation: caller-owned one-shot decompression output
-
-Implementation begins after Module 22 closes. The bounded contract and pinned
-upstream assertions are in `docs/caller-output-design.md`; stable incremental
+Module 22 is complete. The bounded contract and pinned upstream assertions are in `docs/caller-output-design.md`; stable incremental
 sessions, dictionaries and in-place decoding remain separate scopes.
 
 - [x] Analyze direct borrowed output, shared frame orchestration, allocator boundaries and matching upstream assertions without claiming implementation.

@@ -1127,3 +1127,51 @@ test obligations and 188 unfinished upstream migration units remain open.
 Details: `reference-ultra-retained-public-qualification.md`,
 `reference-ultra-retained-frame-benchmark.md`, and
 `evidence/2026-10-22-ultra-retained-closure.json`.
+
+## Module 22: bounded retained Ultra2 complete (2026-10-23)
+
+Resolved strategy 9 supports known sources through 32768 bytes within one
+window and the documented resource caps. Fresh requests through 16384 bytes
+preserve their original dispatch and frame bytes; larger requests use balanced
+three/four-block schedules. Only the first block performs discarded learning,
+checked rebase and reparsing; later blocks use one retained Ultra-priced pass.
+Default builds remain safe Rust and codec modules support no_std plus alloc.
+
+The final 1672-case public campaign has 1486 successes and 186 resource-limit
+responses. Exactly predecessor indices 1512 and 1592 change to success; the other
+3182 safe/all response byte strings remain identical. All 4132 capture commands
+pass, including 504 bidirectional decodes and 156 malformed requests. Independent
+normal/optimized native audits each pass 26 negative and two positive controls.
+Final public safe/all Miri on i686 and s390x and concrete safe/all thumbv6m
+LLVM IR/ARM objects are retained. These are foreign interpretation and code
+generation, not native foreign execution. A final Rustdoc-only change is bound
+explicitly to the historical executable source, without relabeling old runs.
+
+All 22 full regression products report 1547 passed and 55 ignored tests; all
+21 true no_std products pass. Independent reconciliation checks all 43 commands,
+74 result sections and 73 named groups, including whitespace-bearing doctests.
+Formatting, strict Clippy, usage, allocator and upstream inventory gates pass.
+Disk-exhausted compilation, application interruption and recovery-controller
+errors remain recorded; no incomplete command is counted as passed.
+
+The 26 complete-frame cases agree across 21 clock-free backends, including
+exact frames and allocation ledgers. Normal/optimized controls each reject
+41 forgeries and accept two positives. Actual primary and independently rebuilt
+safe/all measurements retain 598 case rows, 2990 samples and all 23 executables.
+Timed controls each reject 31 forgeries and accept two positives. All/safe
+geometric mean cost ratios are 0.9913 primary and 1.3041 repeat. This variation
+does not establish a stable unsafe speedup. Fixed order, thermal/compiler state
+and unrelated desktop activity limit performance interpretation; safe remains
+the default.
+
+Final reconciliation verifies 24 module archive/report pairs, 129 predecessor
+pairs and 95 production/compiler/allocator/adapter inputs. The completed Module
+22 checklist is cleared; Module 23 retains direct caller-owned one-shot output
+analysis and decomposition before implementation. Dictionaries/prefixes, window
+expiry, numeric streaming, LDM and workers remain separate encoder work. The
+55 ignored obligations and 188 unfinished upstream migration units remain open.
+
+Details: `reference-ultra2-retained-public-qualification.md`,
+`reference-ultra2-retained-full-regression.md`,
+`reference-ultra2-retained-measurements.md`, and
+`evidence/2026-10-23-ultra2-retained-closure.json`.
