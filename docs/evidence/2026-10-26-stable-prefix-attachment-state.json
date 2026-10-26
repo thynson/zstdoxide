@@ -1,0 +1,850 @@
+{
+  "status": "passed",
+  "component": {
+    "status": "passed",
+    "source_sha256": "ece2c80fa52a42bcf5e090dfdada0e6f666aba7b691893a4e071083ffb123453",
+    "design_commit": "d4dcc23",
+    "commands": [
+      {
+        "label": "safe-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "-o",
+          "/private/tmp/module27-attachment/test-safe"
+        ],
+        "exit_code": 0,
+        "seconds": 0.20413174998247996
+      },
+      {
+        "label": "safe-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-safe"
+        ],
+        "exit_code": 0,
+        "seconds": 0.29747354198480025
+      },
+      {
+        "label": "unsafe-bitstream-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-bitstream\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-bitstream"
+        ],
+        "exit_code": 0,
+        "seconds": 0.18289833300514147
+      },
+      {
+        "label": "unsafe-bitstream-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-bitstream"
+        ],
+        "exit_code": 0,
+        "seconds": 0.5133171250054147
+      },
+      {
+        "label": "unsafe-byte-cursor-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-byte-cursor\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-byte-cursor"
+        ],
+        "exit_code": 0,
+        "seconds": 0.20713116700062528
+      },
+      {
+        "label": "unsafe-byte-cursor-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-byte-cursor"
+        ],
+        "exit_code": 0,
+        "seconds": 0.48919570801081136
+      },
+      {
+        "label": "unsafe-dictionary-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-dictionary\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-dictionary"
+        ],
+        "exit_code": 0,
+        "seconds": 0.16737766601727344
+      },
+      {
+        "label": "unsafe-dictionary-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-dictionary"
+        ],
+        "exit_code": 0,
+        "seconds": 0.32826354101416655
+      },
+      {
+        "label": "unsafe-fse-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-fse\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-fse"
+        ],
+        "exit_code": 0,
+        "seconds": 0.18947445799130946
+      },
+      {
+        "label": "unsafe-fse-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-fse"
+        ],
+        "exit_code": 0,
+        "seconds": 0.35491391699179076
+      },
+      {
+        "label": "unsafe-fse-encoder-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-fse-encoder\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-fse-encoder"
+        ],
+        "exit_code": 0,
+        "seconds": 0.1760166249878239
+      },
+      {
+        "label": "unsafe-fse-encoder-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-fse-encoder"
+        ],
+        "exit_code": 0,
+        "seconds": 0.36586241697659716
+      },
+      {
+        "label": "unsafe-history-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-history\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2352197499712929
+      },
+      {
+        "label": "unsafe-history-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2909039579972159
+      },
+      {
+        "label": "unsafe-huffman-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-huffman\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-huffman"
+        ],
+        "exit_code": 0,
+        "seconds": 0.20968212498701178
+      },
+      {
+        "label": "unsafe-huffman-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-huffman"
+        ],
+        "exit_code": 0,
+        "seconds": 0.5111944999953266
+      },
+      {
+        "label": "unsafe-huffman-codebook-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-huffman-codebook\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-huffman-codebook"
+        ],
+        "exit_code": 0,
+        "seconds": 0.18719154098653235
+      },
+      {
+        "label": "unsafe-huffman-codebook-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-huffman-codebook"
+        ],
+        "exit_code": 0,
+        "seconds": 0.34018470798037015
+      },
+      {
+        "label": "unsafe-match-chain-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-match-chain\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-match-chain"
+        ],
+        "exit_code": 0,
+        "seconds": 0.21731366697349586
+      },
+      {
+        "label": "unsafe-match-chain-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-match-chain"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3039950829988811
+      },
+      {
+        "label": "unsafe-match-table-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-match-table\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-match-table"
+        ],
+        "exit_code": 0,
+        "seconds": 0.18667737499345094
+      },
+      {
+        "label": "unsafe-match-table-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-match-table"
+        ],
+        "exit_code": 0,
+        "seconds": 0.7979719589930028
+      },
+      {
+        "label": "unsafe-optimal-frequencies-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-optimal-frequencies\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-optimal-frequencies"
+        ],
+        "exit_code": 0,
+        "seconds": 0.1978948330215644
+      },
+      {
+        "label": "unsafe-optimal-frequencies-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-optimal-frequencies"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2971177920117043
+      },
+      {
+        "label": "unsafe-optimal-matches-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-optimal-matches\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-optimal-matches"
+        ],
+        "exit_code": 0,
+        "seconds": 0.17764870898099616
+      },
+      {
+        "label": "unsafe-optimal-matches-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-optimal-matches"
+        ],
+        "exit_code": 0,
+        "seconds": 0.35327399999368936
+      },
+      {
+        "label": "unsafe-optimal-paths-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-optimal-paths\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-optimal-paths"
+        ],
+        "exit_code": 0,
+        "seconds": 0.1835889159992803
+      },
+      {
+        "label": "unsafe-optimal-paths-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-optimal-paths"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3191008750000037
+      },
+      {
+        "label": "unsafe-optimal-short-key-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-optimal-short-key\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-optimal-short-key"
+        ],
+        "exit_code": 0,
+        "seconds": 0.20568149999598972
+      },
+      {
+        "label": "unsafe-optimal-short-key-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-optimal-short-key"
+        ],
+        "exit_code": 0,
+        "seconds": 0.4508426669926848
+      },
+      {
+        "label": "unsafe-reference-chain-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-reference-chain\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-reference-chain"
+        ],
+        "exit_code": 0,
+        "seconds": 0.20466637500794604
+      },
+      {
+        "label": "unsafe-reference-chain-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-reference-chain"
+        ],
+        "exit_code": 0,
+        "seconds": 0.29184029099997133
+      },
+      {
+        "label": "unsafe-reference-tree-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-reference-tree\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-reference-tree"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2034850420022849
+      },
+      {
+        "label": "unsafe-reference-tree-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-reference-tree"
+        ],
+        "exit_code": 0,
+        "seconds": 0.46492116601439193
+      },
+      {
+        "label": "unsafe-ring-history-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-ring-history\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-ring-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.20491012500133365
+      },
+      {
+        "label": "unsafe-ring-history-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-ring-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.5187419170106295
+      },
+      {
+        "label": "unsafe-row-table-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-row-table\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-row-table"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2150708340050187
+      },
+      {
+        "label": "unsafe-row-table-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-row-table"
+        ],
+        "exit_code": 0,
+        "seconds": 0.39276754201273434
+      },
+      {
+        "label": "unsafe-slice-history-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-slice-history\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-slice-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2204291250091046
+      },
+      {
+        "label": "unsafe-slice-history-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-slice-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2771684580075089
+      },
+      {
+        "label": "unsafe-training-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-training\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-unsafe-training"
+        ],
+        "exit_code": 0,
+        "seconds": 0.19547045798390172
+      },
+      {
+        "label": "unsafe-training-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-unsafe-training"
+        ],
+        "exit_code": 0,
+        "seconds": 0.32408145899535157
+      },
+      {
+        "label": "all-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "-Dwarnings",
+          "-Dunsafe_op_in_unsafe_fn",
+          "-Dclippy::undocumented_unsafe_blocks",
+          "--forbid",
+          "unsafe_code",
+          "--cfg",
+          "feature=\"unsafe-bitstream\"",
+          "--cfg",
+          "feature=\"unsafe-byte-cursor\"",
+          "--cfg",
+          "feature=\"unsafe-dictionary\"",
+          "--cfg",
+          "feature=\"unsafe-fse\"",
+          "--cfg",
+          "feature=\"unsafe-fse-encoder\"",
+          "--cfg",
+          "feature=\"unsafe-history\"",
+          "--cfg",
+          "feature=\"unsafe-huffman\"",
+          "--cfg",
+          "feature=\"unsafe-huffman-codebook\"",
+          "--cfg",
+          "feature=\"unsafe-match-chain\"",
+          "--cfg",
+          "feature=\"unsafe-match-table\"",
+          "--cfg",
+          "feature=\"unsafe-optimal-frequencies\"",
+          "--cfg",
+          "feature=\"unsafe-optimal-matches\"",
+          "--cfg",
+          "feature=\"unsafe-optimal-paths\"",
+          "--cfg",
+          "feature=\"unsafe-optimal-short-key\"",
+          "--cfg",
+          "feature=\"unsafe-reference-chain\"",
+          "--cfg",
+          "feature=\"unsafe-reference-tree\"",
+          "--cfg",
+          "feature=\"unsafe-ring-history\"",
+          "--cfg",
+          "feature=\"unsafe-row-table\"",
+          "--cfg",
+          "feature=\"unsafe-slice-history\"",
+          "--cfg",
+          "feature=\"unsafe-training\"",
+          "-o",
+          "/private/tmp/module27-attachment/test-all"
+        ],
+        "exit_code": 0,
+        "seconds": 0.20321383298141882
+      },
+      {
+        "label": "all-tests",
+        "argv": [
+          "/private/tmp/module27-attachment/test-all"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3322712499939371
+      },
+      {
+        "label": "no-std",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--crate-type=lib",
+          "--emit=llvm-ir,obj",
+          "/private/tmp/module27-attachment/probe.rs",
+          "-Dwarnings",
+          "-o",
+          "/private/tmp/module27-attachment/probe"
+        ],
+        "exit_code": 0,
+        "seconds": 0.06611129100201651
+      },
+      {
+        "label": "format",
+        "argv": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--check",
+          "/private/tmp/module27-attachment/slice_attachment.rs"
+        ],
+        "exit_code": 0,
+        "seconds": 0.04474345900234766
+      }
+    ],
+    "qualification": "Standalone plain ownership record only, not integrated decoding. Real dictionary/output access retains its existing storage features; the same value representation is compiled for safe, each isolated feature and all. No decoder full-matrix or prefix interoperability claim."
+  },
+  "strict": {
+    "status": "passed",
+    "component_evidence_sha256": "9496a6adeced2caf4b77ae19911125c17ff77b4640d0de3b8caa91f1e3f7206e",
+    "source_sha256": "ece2c80fa52a42bcf5e090dfdada0e6f666aba7b691893a4e071083ffb123453",
+    "commands": [
+      {
+        "label": "safe-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--lib",
+          "--tests",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "all-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--lib",
+          "--tests",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "no-std-clean",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--crate-type=lib",
+          "--emit=llvm-ir,obj",
+          "/private/tmp/module27-attachment/probe.rs",
+          "-Dwarnings",
+          "--out-dir",
+          "/private/tmp/module27-attachment/artifacts"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "clippy-format",
+        "argv": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--check",
+          "/private/tmp/module27-attachment/slice_attachment.rs",
+          "/private/tmp/module27-attachment/lib.rs"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "artifacts": {
+      "artifacts/probe.o": "16081f5a7342fa3969a84fff7438f28621b9c2de6712a06cfe57cc585b695480",
+      "artifacts/probe.ll": "11411c6d371fbde2a269ecb51ea1da100edf00b1fcb52183ed229ead603ed937"
+    },
+    "qualification": "Standalone component only. Safe/all strict Clippy and explicit no_std concrete LLVM IR/host object code generation pass. The initial successful rustc command emitted a multi-output filename warning; its unchanged log is preserved, and this additive out-dir invocation is warning-free. Full decoder integration and foreign-platform qualification remain separate."
+  },
+  "archive": "2026-10-26-stable-prefix-attachment-state.tar.gz",
+  "archive_sha256": "69b2867f12d0e405ea1acd34507bb09fb6ed68bbe829ed01dc575601e8991bcf",
+  "omitted_unit_test_binaries": {
+    "test-unsafe-ring-history": {
+      "bytes": 1072184,
+      "sha256": "98ead0d7681252d69090635f00a20a3d4822decedbf9af834b12a253a16c8ae3"
+    },
+    "test-unsafe-slice-history": {
+      "bytes": 1072184,
+      "sha256": "7a846113e9949cc3562e150781d3edf987a0dd4bd4aefa6625090df4a4894a90"
+    },
+    "test-unsafe-match-chain": {
+      "bytes": 1072184,
+      "sha256": "bd6b40e2003d5ed1d982bbe1c26f86b69e43ad44646299d08351bd11594d55ba"
+    },
+    "test-unsafe-reference-chain": {
+      "bytes": 1072184,
+      "sha256": "d0c209fd92eb935b60f44dcef320d9f558bae4219dbc601c722b6fd5268c83f6"
+    },
+    "test-unsafe-optimal-short-key": {
+      "bytes": 1072192,
+      "sha256": "00dadcbc4ae23cf07724ba51b0f60f1b4b983ad66e0da2bc96db58341e98b0c9"
+    },
+    "test-unsafe-bitstream": {
+      "bytes": 1072184,
+      "sha256": "968c0b8efa378488f2d4a7693204c170e442975c0f842252620189d0ca94af88"
+    },
+    "test-unsafe-row-table": {
+      "bytes": 1072184,
+      "sha256": "81d149e28002297049695ac7a21251729d1fb4a1e0371bef7cd9f8c8d656912d"
+    },
+    "test-unsafe-optimal-paths": {
+      "bytes": 1072184,
+      "sha256": "2f44ff1f4229a10c89dbc61749145ed224b2e139d21fe24f518ec2d453337b01"
+    },
+    "test-unsafe-training": {
+      "bytes": 1072184,
+      "sha256": "2ab09a58f0a1bfb1d2f0d716aded10f3231fbcaac12af657a06de6ea92757203"
+    },
+    "test-unsafe-huffman-codebook": {
+      "bytes": 1072192,
+      "sha256": "81070a0225e150894c9bb448170228f864595ac65b1edcba9384b5944353f15f"
+    },
+    "test-unsafe-fse": {
+      "bytes": 1072176,
+      "sha256": "ba27e33c8e4416c419edafcd68e797e635e5200f3c5574e3b156f85dc314f167"
+    },
+    "test-all": {
+      "bytes": 1072168,
+      "sha256": "c00807565cd1fdd404164c0e4aaf82547a6fd47d168691c61641a7b1420bd47e"
+    },
+    "test-unsafe-dictionary": {
+      "bytes": 1072184,
+      "sha256": "cb165659774303c30016f31e260b5e5af91a411d638e46be46dbe479638a47fe"
+    },
+    "test-unsafe-huffman": {
+      "bytes": 1072176,
+      "sha256": "364355697e811506f36832303c6c64893449a0801ea0e07fa9f881a45744fe1d"
+    },
+    "test-unsafe-optimal-frequencies": {
+      "bytes": 1072192,
+      "sha256": "077be7ae8a3d6f7d54259f9e6f64bd8352c50a1a56bf84b71b160700a3cf7805"
+    },
+    "test-unsafe-byte-cursor": {
+      "bytes": 1072184,
+      "sha256": "faa3d67ef2fb2f9d9c842560aa553a9d758e21758191b8ca21a570168912aed6"
+    },
+    "test-unsafe-history": {
+      "bytes": 1072176,
+      "sha256": "d5f8ad60f961810d17ab0f2ae1bc5e3e189b96bb6a937e7382fadebe07a4f97e"
+    },
+    "test-unsafe-optimal-matches": {
+      "bytes": 1072184,
+      "sha256": "62fe6be4b87d4c198e4483726867f03565c931393785c146b6474cffc7a8d011"
+    },
+    "test-unsafe-reference-tree": {
+      "bytes": 1072184,
+      "sha256": "f744c6db5e341645672aa3d3e648f4f64465c9185861e138a258472e3b80183a"
+    },
+    "test-unsafe-fse-encoder": {
+      "bytes": 1072184,
+      "sha256": "7cdc76c64d73329f2b4ba6a8f6d0f17df7375c460d225f725c53d898b91f7e95"
+    },
+    "test-unsafe-match-table": {
+      "bytes": 1072184,
+      "sha256": "e32c3d01cdcc0bf0c951b31d0e05c663e0de8b7cfaa06926fd9a85f9bd91f79d"
+    },
+    "test-safe": {
+      "bytes": 1072168,
+      "sha256": "2067a8cc4cb719874b27c171452ee4a97389537202f84863cd66ee09ecf3dbc1"
+    }
+  },
+  "qualification": "Standalone ownership component, not integrated into SliceDecoder. All22 backend flag selections run three ownership/lifetime tests; safe/all strict Clippy, warning-free no_std host IR/object emission and formatting pass. Plain value operations have one shared safe representation, no artificial unsafe feature. Unit compiler outputs are reproducible from retained source/commands; their hashes are recorded but binaries are omitted. The initial successful no_std command filename warning and the first strict-driver log-name collision are preserved; the latter is not counted as a passing gate. Prefix format/native/full-matrix/timing work remains separate."
+}

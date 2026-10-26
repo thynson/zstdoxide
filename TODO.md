@@ -134,7 +134,7 @@ Design precedes implementation in `docs/stable-prefix-design.md` and
 Module 26 closes.
 
 - [x] Define one-owner attachment states, exact claim/release timing, reset and transactional configuration boundaries.
-- [ ] Implement and independently verify plain attachment ownership transitions without cloning persistent handles.
+- [x] Implement and independently verify plain attachment ownership transitions without cloning persistent handles.
 - [ ] Integrate private prefix claim, frame completion and reset with existing dictionary-free/persistent behavior.
 - [ ] Expose shared/view prefix constructors and boundary replacement with lifetime, allocator and malformed-input qualification.
 - [ ] Independently qualify pinned normal/sanitized stable-prefix outputs and preserve documented lifecycle differences.

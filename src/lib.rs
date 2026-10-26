@@ -146,6 +146,8 @@ mod sequence_context;
 mod sequence_encode;
 mod sequence_plan;
 mod sequences;
+#[cfg(test)]
+mod slice_attachment;
 mod slice_decode;
 mod slice_history;
 mod strategy;
