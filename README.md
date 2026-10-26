@@ -45,7 +45,10 @@ storage and returns the written prefix length, preserving the unused suffix.
 `max_output_size`; the window limit stays independent. On error, bytes inside
 that allowance may contain provisional output, while bytes beyond it stay
 unchanged. Compressed blocks still need temporary entropy/literal allocations.
-These one-shot slice APIs support dictionary-free frames and concatenation.
+The one-shot slice APIs support concatenation; `decompress_into_with_dictionary`
+and `decompress_into_with_dictionary_in` additionally borrow raw/prepared
+dictionaries, including borrowed views and independent scratch allocators.
+Nonzero dictionary IDs must match; omitted IDs still use the selection.
 `SliceDecoder` borrows one fixed destination across temporary input fragments,
 writing directly into its frame-local history. Resubmit unconsumed input suffixes;
 capacity exhaustion returns `ResourceLimit`. Output is provisional until frame
@@ -189,7 +192,7 @@ another backend. Allocation boundaries use fallible reservation. The standard
 `compress_at_level_in`, `compress_with_parameters_in`,
 `decompress_in`, `decompress_with_options_in`,
 `decompress_into_in`, `decompress_into_with_options_in`,
-`decompress_with_dictionary_in`,
+`decompress_with_dictionary_in`, `decompress_into_with_dictionary_in`,
 `Decoder::new_in`, `Decoder::with_dictionary_in`, `SliceDecoder::new_in`, allocator-aware dictionary
 construction, `train_raw_dictionary_in`, `train_dictionary_in`, and
 `finalize_dictionary_in`. Whole-buffer decoding retains the

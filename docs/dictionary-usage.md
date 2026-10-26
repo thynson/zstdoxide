@@ -145,3 +145,41 @@ compression-level-specific entropy optimization, or upstream encoded bytes.
 [Training design](dictionary-training.md) records the algorithm and allocation
 bounds; [upstream mappings](upstream-dictionary-plan.md) distinguish executable
 assertions from the remaining algorithm and parameter work.
+
+
+## Caller-owned one-shot output
+
+`decompress_into_with_dictionary(input, output, &dictionary, options)` writes
+into a fixed caller-owned destination and returns its initialized prefix length.
+`decompress_into_with_dictionary_in` accepts a shared dictionary or borrowed
+view independently of its scratch allocator. Both borrow the selection without
+cloning its handle. They reuse the persistent dictionary for every standard
+frame in a concatenation; skippable frames do not consume it.
+
+```rust
+use zstdoxide::{compress_with_dictionary, decompress_into_with_dictionary,
+                DecodeOptions, Dictionary};
+
+let dictionary = Dictionary::raw(b"hello dictionary")?.into_shared();
+let frame = compress_with_dictionary(b"hello dictionary hello", &dictionary)?;
+let mut output = [0xa5; 32];
+let written = decompress_into_with_dictionary(
+    &frame, &mut output, &dictionary, DecodeOptions::new(22),
+)?;
+assert_eq!(&output[..written], b"hello dictionary hello");
+assert!(output[written..].iter().all(|&b| b == 0xa5));
+# Ok::<(), zstdoxide::Error>(())
+```
+
+The smaller of destination length and max_output_size bounds the entire input;
+the window limit remains independent. Nonzero frame IDs must match, while ID
+zero still uses the selection. Compressed literals and entropy may allocate
+scratch, but the output itself and current-frame history are the caller's slice.
+An error can leave provisional bytes inside the allowance; discard those bytes.
+The unused successful suffix and bytes beyond the allowance stay unchanged.
+
+These APIs support persistent dictionaries, not a one-use prefix. Their bounded
+validation and native differences are recorded in
+[dictionary output qualification](dictionary-output-validation.md); frozen
+allocation and timing observations are in
+[dictionary output measurements](dictionary-output-benchmarks.md).

@@ -113,21 +113,12 @@ Qualification, measured comparisons and remaining limitations are in
 The final receipt is `docs/evidence/2026-10-26-stable-output-closure.json`.
 Complete upstream migration remains open.
 
-## Module 25: dictionary-backed caller-owned one-shot output
-
-Design is recorded before candidate implementation in
-`docs/dictionary-output-design.md` and `docs/data-structures.md`. Keep predecessor
-validation sources frozen; promote this candidate only after Module 24 closes.
-
-- [x] Define dictionary/output ownership, prepared entropy fallback, ID/error contracts and crossing-match invariants before implementation.
-- [x] Implement checked dictionary-aware slice matches with safe and independent unsafe combinations, overlap/window boundaries and rejection-before-write checks.
-- [x] Extend the shared one-shot frame helper with borrowed dictionary metadata and entropy without changing no-dictionary behavior.
-- [x] Expose dictionary destination APIs with borrowed/nonclone allocators, exact bounds, malformed-input and allocation-failure coverage.
-- [x] Independently qualify pinned native raw/prepared fixed destinations and map matching official dictionary assertions conservatively.
-- [x] Extend the exact dictionary fuzz adapter's persistent branches to real direct output and replay the entire pinned corpus with explicit prefix/training qualifications.
-- [x] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics output.
-- [x] Compare identical direct/owned dictionary workloads and allocation ledgers with retained safe/unsafe executables and independent repeat timings.
-- [ ] Reconcile the bounded milestone and decompose dictionary-backed stable sessions without claiming complete upstream parity.
+Module 25 is complete within its bounded dictionary-backed caller-owned one-shot output scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification, measured comparisons and remaining limitations are in
+`docs/dictionary-output-validation.md` and `docs/dictionary-output-benchmarks.md`.
+The final receipt is `docs/evidence/2026-10-26-dictionary-output-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 26: persistent dictionaries in stable borrowed output
 
