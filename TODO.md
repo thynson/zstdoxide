@@ -116,6 +116,22 @@ sessions, dictionaries and in-place decoding remain separate scopes.
 - [ ] Freeze deterministic direct/owned output workloads, compare allocator ledgers and measure safe/unsafe backends with retained executables.
 - [ ] Reconcile this bounded milestone and decompose stable borrowed incremental sessions without claiming complete upstream parity.
 
+## Module 24: stable borrowed incremental decompression output
+
+Design and ownership are recorded before implementation in
+`docs/stable-output-design.md` and `docs/data-structures.md`. Develop the
+candidate separately while Module 23 completes qualification; promote it only
+after that milestone closes. Dictionary-backed sessions remain separate.
+
+- [x] Define the borrowed session API, state ownership, fixed-capacity error semantics and pinned upstream stable-buffer assertions.
+- [ ] Extend checked slice history with session prefix/reset operations and verify unchanged one-shot behavior.
+- [ ] Implement bounded fragmented input orchestration with direct raw/RLE/compressed output, frame boundaries, poisoning and reset.
+- [ ] Expose the stable borrowed session API with lifetime examples, exact progress/limit tests and allocation failure qualification.
+- [ ] Port and independently qualify matching pinned native stable-output assertions, including malformed inputs and real guard checks.
+- [ ] Qualify safe/isolated/all features, true no_std, strict Clippy, full/release regression, foreign Miri and concrete no-atomics output.
+- [ ] Freeze identical fragmentation workloads, allocation ledgers and safe/unsafe timing with retained executables and an independent repeat.
+- [ ] Reconcile bounded session coverage, update usage/progress and decompose dictionary-backed caller-owned output without claiming complete parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

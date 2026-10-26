@@ -3696,3 +3696,61 @@ Native zero-capacity and null-destination cases are distinct oracle checks;
 Rust's API accepts an empty slice rather than a nullable pointer. The focused
 scope, corpus adapter and verification work items are recorded in TODO.md and
 `caller-output-design.md` before implementation.
+
+## Stable borrowed incremental output (Module 24 design)
+
+This design is recorded before implementation. Qualification and publication
+follow Module 23 closure; its pinned validation source remains unchanged while
+an independent candidate is developed. Full contracts and upstream mappings
+are in `stable-output-design.md`.
+
+`SliceDecoder<'output, A = Global>` owns one exclusive output borrow through
+`SliceHistory<'output>`, an allocator, frame/phase records, inline header scratch,
+a bounded encoded-block vector and existing Huffman/sequence owners. It never
+retains an input borrow. It has no ring history or decoded pending-output vector.
+`SliceHistory` remains the sole output-position owner, with unchanged
+`frame_start <= position <= limit <= output.len()` invariants. New private
+read/reset operations expose only written bytes or reset indices without
+mutating destination bytes. The checked `unsafe-slice-history` backend is reused;
+state enums, counters and borrowed-slice descriptors are shared safe value
+records, requiring no artificial unsafe implementation.
+
+The phase enum covers header, block header, raw, RLE-byte, RLE, compressed,
+skippable length/payload, checksum, ended and failed. Header scratch is `[u8;18]`
+with a bounded filled count. Frame metadata records a validated `FrameHeader`,
+maximum block size, last-block bit and remaining payload. All address-bearing
+state consists of slice borrows, indices or owned vectors. A compressed-input
+vector never exceeds the validated encoded block size; complete payloads already
+present in a call can decode directly without this copy. Entropy owners reset
+between frames; input scratch capacity may be reused. All requests are fallible
+and belong to fresh clones of the selected scratch allocator. The caller's
+destination is never resized, adopted or deallocated by the codec.
+
+Raw input appends incrementally, RLE expands directly after receiving its byte,
+and complete compressed payloads execute existing literal/sequence decoders
+against `SliceHistory`. Frame-local output supplies backward references and,
+after the final block, checksum validation. Frame completion excludes old
+history before the next standard frame. Skip payloads are consumed without
+output. Checked input/completed-frame counters and the history's written length
+report progress; failure poisons the context until reset. Format errors may
+leave provisional output within the allowance, never outside it.
+
+Construction clamps output allowance to destination capacity. `process(input)`
+returns `Progress` with `NeedInput` or `FrameFinished`; insufficient fixed output
+is `ResourceLimit`, not a request to replace the borrowed destination. `finish`
+seals a clean boundary after at least one complete frame, while partial/empty
+streams fail. `output()` lends the current prefix through `&self` and rejects
+failed sessions. Output in an unfinished frame remains provisional. `reset`
+retains the same borrow/options and reusable workspace, resets position to zero
+and leaves bytes unchanged. Rust borrowing excludes output mutation, replacement
+and conflicting views while a session or an output view is used.
+
+Pinned upstream counterparts are `ZSTD_DCtx`, `ZSTD_checkOutBuffer`,
+`ZSTD_decompressContinueStream` and `ZSTD_decompressStream` with
+`ZSTD_d_stableOutBuffer`. Pointer/capacity/position consistency becomes a Rust
+lifetime and encapsulation property. The upstream `zstreamtest.c:786-863`
+assertions map to complete and fragmented output, short destination rejection,
+and borrow compile-fail checks. Native workspace sizes and C numeric return
+hints are not Rust ABI promises. Dictionaries, prefixes, stable input,
+overlapping in-place decoding and configurable external workspaces remain
+separate scopes. The existing buffered dictionary-capable `Decoder` is unchanged.
