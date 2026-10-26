@@ -46,7 +46,6 @@ impl<'a> SliceHistory<'a> {
 
     /// Expand one match from immutable dictionary content into current-frame output.
     /// Initial dictionary distances may exceed the advertised frame window.
-    #[cfg(test)]
     pub(crate) fn copy_dictionary_match(
         &mut self,
         dictionary: crate::DictionaryView<'_>,
@@ -185,13 +184,11 @@ impl FrameOutput for SliceHistory<'_> {
 }
 
 /// Borrowed dictionary metadata adds no storage family or unsafe representation.
-#[cfg(test)]
 pub(crate) struct DictionarySliceOutput<'output, 'dictionary> {
     history: SliceHistory<'output>,
     dictionary: crate::DictionaryView<'dictionary>,
 }
 
-#[cfg(test)]
 impl<'output, 'dictionary> DictionarySliceOutput<'output, 'dictionary> {
     pub(crate) fn new(
         output: &'output mut [u8],
@@ -205,7 +202,6 @@ impl<'output, 'dictionary> DictionarySliceOutput<'output, 'dictionary> {
     }
 }
 
-#[cfg(test)]
 impl SequenceOutput for DictionarySliceOutput<'_, '_> {
     fn len(&self) -> usize {
         self.history.len()
@@ -219,7 +215,6 @@ impl SequenceOutput for DictionarySliceOutput<'_, '_> {
     }
 }
 
-#[cfg(test)]
 impl FrameOutput for DictionarySliceOutput<'_, '_> {
     fn start_frame(&mut self, window: usize) {
         self.history.start_frame(window);

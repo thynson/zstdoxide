@@ -190,6 +190,7 @@ mod upstream_sequence_sweep_tests;
 
 pub use decode::{
     DecodeOptions, decompress, decompress_in, decompress_into, decompress_into_in,
+    decompress_into_with_dictionary, decompress_into_with_dictionary_in,
     decompress_into_with_options, decompress_into_with_options_in, decompress_with_dictionary,
     decompress_with_dictionary_in, decompress_with_options, decompress_with_options_in,
 };

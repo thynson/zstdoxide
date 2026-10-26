@@ -244,17 +244,63 @@ pub fn decompress_into_with_options_in<A: Allocator + Clone>(
     Ok(history.len())
 }
 
-#[cfg(test)]
-fn decompress_into_dictionary_candidate<A: Allocator + Clone>(
+/// Decompress directly into caller-owned storage with one persistent dictionary.
+///
+/// Standard, skippable and concatenated frames use the selected raw or prepared
+/// dictionary. Nonzero frame IDs must match; an omitted ID still uses the
+/// dictionary. Content is borrowed and never copied into an output history
+/// allocation. Prepared entropy tables remain immutable borrowed fallback.
+/// Corresponds to upstream `ZSTD_decompress_usingDDict` with a fixed destination.
+///
+/// The effective allowance is `min(output.len(), options.max_output_size)`;
+/// window limits remain independent. Success returns the written prefix length
+/// and preserves the unused suffix. Errors may leave provisional bytes inside
+/// the allowance, but preserve bytes beyond it. Empty input is incomplete. See
+/// [`decompress_into`] for input/output aliasing and scratch allocation contracts.
+/// Prefixes and dictionary-backed incremental slice sessions are separate APIs.
+///
+/// ```
+/// use zstdoxide::{compress_with_dictionary, decompress_into_with_dictionary,
+///                 DecodeOptions, Dictionary};
+/// let dictionary = Dictionary::raw(b"hello dictionary")?.into_shared();
+/// let frame = compress_with_dictionary(b"hello dictionary hello", &dictionary)?;
+/// let mut output = [0xa5; 32];
+/// let count = decompress_into_with_dictionary(&frame, &mut output, &dictionary,
+///                                            DecodeOptions::new(22))?;
+/// assert_eq!(&output[..count], b"hello dictionary hello");
+/// assert!(output[count..].iter().all(|&b| b == 0xa5));
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+pub fn decompress_into_with_dictionary(
     input: &[u8],
     output: &mut [u8],
-    dictionary: DictionaryView<'_>,
+    dictionary: &SharedDictionary,
+    options: DecodeOptions,
+) -> Result<usize> {
+    decompress_into_with_dictionary_in(input, output, dictionary, options, Global)
+}
+
+/// Decode into a borrowed destination with independent dictionary and scratch owners.
+///
+/// Accepts a shared dictionary or borrowed [`DictionaryView`] through the sealed
+/// handle contract. Its allocator may differ from the scratch allocator. The
+/// call borrows the dictionary without cloning its handle or allocator; all
+/// temporary collection requests use fresh clones of `allocator` and release
+/// their storage before returning. A reference to a non-Clone allocator is
+/// accepted. Allocator cloning retains the caller's allocation/panic semantics.
+/// The destination is never allocated, resized, adopted or deallocated.
+/// Bounds and format behavior match [`decompress_into_with_dictionary`].
+pub fn decompress_into_with_dictionary_in<A: Allocator + Clone, D: DictionaryHandle>(
+    input: &[u8],
+    output: &mut [u8],
+    dictionary: &D,
     mut options: DecodeOptions,
     allocator: A,
 ) -> Result<usize> {
     if input.is_empty() {
         return Err(Error::UnexpectedEof);
     }
+    let dictionary = dictionary.view();
     options.max_output_size = options.max_output_size.min(output.len());
     let mut cursor = ByteCursor::new(input);
     let mut history = crate::slice_history::DictionarySliceOutput::new(
@@ -889,10 +935,10 @@ mod dictionary_output_candidate_tests {
             for extra in [0, 17] {
                 let mut output = alloc::vec![0xa5; expected.len() + extra + 2];
                 assert_eq!(
-                    decompress_into_dictionary_candidate(
+                    decompress_into_with_dictionary_in(
                         frame,
                         &mut output[1..expected.len() + extra + 1],
-                        dictionary.view(),
+                        &dictionary.view(),
                         DecodeOptions::new(usize::MAX),
                         Global
                     ),
@@ -904,10 +950,10 @@ mod dictionary_output_candidate_tests {
             }
             let mut short = alloc::vec![0xa5; expected.len()+2];
             assert_eq!(
-                decompress_into_dictionary_candidate(
+                decompress_into_with_dictionary_in(
                     frame,
                     &mut short[1..expected.len()],
-                    dictionary.view(),
+                    &dictionary.view(),
                     DecodeOptions::new(usize::MAX),
                     Global
                 ),
@@ -926,10 +972,10 @@ mod dictionary_output_candidate_tests {
             fixture!("dictionary-out-of-bounds.zst").as_slice(),
         ] {
             assert_eq!(
-                decompress_into_dictionary_candidate(
+                decompress_into_with_dictionary_in(
                     frame,
                     &mut output,
-                    dictionary.view(),
+                    &dictionary.view(),
                     DecodeOptions::new(8192),
                     Global
                 ),
@@ -937,20 +983,20 @@ mod dictionary_output_candidate_tests {
             );
         }
         assert_eq!(
-            decompress_into_dictionary_candidate(
+            decompress_into_with_dictionary_in(
                 fixture!("formatted-id.zst"),
                 &mut output,
-                dictionary.view(),
+                &dictionary.view(),
                 DecodeOptions::new(0),
                 Global
             ),
             Err(Error::DictionaryMismatch)
         );
         assert_eq!(
-            decompress_into_dictionary_candidate(
+            decompress_into_with_dictionary_in(
                 &[],
                 &mut output,
-                dictionary.view(),
+                &dictionary.view(),
                 DecodeOptions::new(0),
                 Global
             ),
