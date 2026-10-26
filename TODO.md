@@ -110,7 +110,7 @@ sessions, dictionaries and in-place decoding remain separate scopes.
 - [x] Share the one-shot frame loop without changing existing owned-output, allocator or error-precedence contracts.
 - [x] Expose caller-owned output APIs with exact destination/options bounds, meaningful malformed-input coverage and scratch allocation failure checks.
 - [x] Qualify pinned native caller destinations and port the matching upstream assertions and complete destination-too-small corpus adapter.
-- [ ] Qualify direct output under every isolated storage feature, true no_std and strict Clippy, plus safe/all full regression and release destination tests.
+- [x] Qualify direct output under every isolated storage feature, true no_std and strict Clippy, plus safe/all full regression and release destination tests.
 - [ ] Complete whole-suite regression under every isolated storage feature and all-feature release.
 - [x] Qualify borrowed compressed history under foreign Miri and concrete no-atomics code generation.
 - [ ] Freeze deterministic direct/owned output workloads, compare allocator ledgers and measure safe/unsafe backends with retained executables.

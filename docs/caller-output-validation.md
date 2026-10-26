@@ -61,9 +61,9 @@ pinned checkout passes, without `--require-complete` or a parity claim.
 
 ## Remaining gates
 
-Independent-feature/full regression, foreign interpretation, concrete no-atomics
-code generation and deterministic allocation/performance comparisons remain
-open until their own evidence is recorded. Stable incremental destination
+Isolated-feature whole-suite regression, all-feature full release and
+deterministic allocation/performance comparisons remain open until their own
+evidence is recorded. Stable incremental destination
 contracts, overlapping in-place decoding and caller-owned dictionary output
 are outside this bounded module.
 
@@ -80,3 +80,24 @@ builds retain LLVM IR with a concrete `caller_output_codegen_probe` definition
 and verified 32-bit little-endian ARM ELF objects. The probe calls the actual
 public options-based direct-output API. The source snapshot changes only the
 probe addition; production source identities remain bound to the working tree.
+
+## Resumed feature and complete safe/all regression
+
+`evidence/2026-10-26-caller-output-feature-matrix.json` binds 71 successful
+commands to the source/test identities and archived logs. The archive contains
+code and text metadata; binary fixture bytes remain at the recorded Git commit,
+with every file hash retained in `complete_source`. Twenty isolated
+unsafe features plus safe/all each passed the three destination integration
+suites, true no_std compilation and strict Clippy: the original 66-command
+prefix. The five additive commands complete safe/all full regression, safe/all
+release destination tests and formatting. Both full suites report 1,563 passed
+and 56 explicitly ignored tests across 77 result groups, including Rustdoc.
+Ignored external/unsupported assertions are not counted as passed coverage.
+
+The original campaign was paused at the user's request during safe full-suite
+compilation on October 23. Its running record, pause receipt and incomplete log
+are preserved unchanged in the archive. New October 26 logs prove completion;
+the interrupted command is neither a failure nor a passing execution. Source
+hashes were checked before and after the additive campaign. Whole suites for
+every isolated feature and the full all-feature release suite remain a separate
+qualification item.
