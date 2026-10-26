@@ -146,6 +146,8 @@ mod sequence_context;
 mod sequence_encode;
 mod sequence_plan;
 mod sequences;
+#[cfg(test)]
+mod slice_decode;
 mod slice_history;
 mod strategy;
 mod stream;
@@ -260,3 +262,7 @@ mod ultra_retained_fixture;
 #[cfg(test)]
 #[path = "../tests/support/ultra2_retained_fixture.rs"]
 mod ultra2_retained_fixture;
+
+#[cfg(test)]
+#[path = "../tests/support/slice_decoder_cases.rs"]
+mod slice_decoder_cases;
