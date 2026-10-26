@@ -19,8 +19,9 @@ pub struct DecodeOptions {
     /// Maximum combined output of all concatenated frames.
     pub max_output_size: usize,
     /// Maximum window advertised by any frame. One-shot decoding retains whole
-    /// output. Streaming retains at most the validated window, bounded further
-    /// by the remaining output allowance.
+    /// output. The buffered `Decoder` retains at most the validated window,
+    /// bounded further by the remaining output allowance. `SliceDecoder` retains
+    /// the complete borrowed output and uses only the current frame as history.
     pub max_window_size: u64,
 }
 

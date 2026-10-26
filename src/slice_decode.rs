@@ -40,6 +40,43 @@ enum Phase {
 /// within the effective allowance; bytes beyond that allowance stay unchanged.
 /// Safe borrowing prevents replacement or mutation of the destination between
 /// calls. Drop the decoder to regain exclusive access to the complete slice.
+///
+/// ```
+/// use zstdoxide::{compress, DecodeOptions, SliceDecoder};
+/// let frame = compress(b"hello")?;
+/// let mut output = [0xa5; 16];
+/// let mut decoder = SliceDecoder::new(&mut output, DecodeOptions::new(5));
+/// for fragment in frame.chunks(3) {
+///     let progress = decoder.process(fragment)?;
+///     assert_eq!(progress.consumed, fragment.len());
+/// }
+/// decoder.finish()?;
+/// assert_eq!(decoder.output()?, b"hello");
+/// drop(decoder);
+/// assert_eq!(&output[5..], &[0xa5; 11]);
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+///
+/// The destination cannot be modified while the session still uses its borrow:
+///
+/// ```compile_fail,E0506
+/// use zstdoxide::{DecodeOptions, SliceDecoder};
+/// let mut output = [0_u8; 32];
+/// let mut decoder = SliceDecoder::new(&mut output, DecodeOptions::new(32));
+/// output[0] = 1;
+/// decoder.process(&[]).unwrap();
+/// ```
+///
+/// A view of written history cannot remain in use across a mutating call:
+///
+/// ```compile_fail,E0502
+/// use zstdoxide::{DecodeOptions, SliceDecoder};
+/// let mut output = [0_u8; 32];
+/// let mut decoder = SliceDecoder::new(&mut output, DecodeOptions::new(32));
+/// let written = decoder.output().unwrap();
+/// decoder.reset();
+/// assert!(written.is_empty());
+/// ```
 pub struct SliceDecoder<'output, A: Allocator = Global> {
     allocator: A,
     options: DecodeOptions,

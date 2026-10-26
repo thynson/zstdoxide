@@ -1,16 +1,15 @@
 //! Stable destination boundaries using independent native compressed fixtures.
 #![forbid(unsafe_code)]
 
-use crate::slice_decode::SliceDecoder;
-use crate::{DecodeOptions, Error, StreamStatus, decompress_with_options};
 use std::alloc::Allocator;
 use std::num::NonZeroU64;
+use zstdoxide::{DecodeOptions, Error, SliceDecoder, StreamStatus, decompress_with_options};
 use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
 
-const HTTP: &[u8] = include_bytes!("../upstream/data/generated/http.zst");
-const HTTP_SOURCE: &[u8] = include_bytes!("../upstream/data/golden-compression/http");
-const MIXED: &[u8] = include_bytes!("../upstream/decodecorpus/mixed-04.zst");
-const MIXED_SOURCE: &[u8] = include_bytes!("../upstream/decodecorpus/mixed-04.raw");
+const HTTP: &[u8] = include_bytes!("upstream/data/generated/http.zst");
+const HTTP_SOURCE: &[u8] = include_bytes!("upstream/data/golden-compression/http");
+const MIXED: &[u8] = include_bytes!("upstream/decodecorpus/mixed-04.zst");
+const MIXED_SOURCE: &[u8] = include_bytes!("upstream/decodecorpus/mixed-04.raw");
 const GUARD: u8 = 0xa5;
 
 fn raw(source: &[u8], known: bool, rle: bool) -> Vec<u8> {
@@ -217,8 +216,8 @@ fn every_truncated_prefix_is_rejected_and_reset_recovers_without_old_history() {
 
 #[test]
 fn mutations_follow_one_shot_success_bytes_and_preserve_error_guards() {
-    let original = include_bytes!("../upstream/decodecorpus/compressed-02.zst");
-    let capacity = include_bytes!("../upstream/decodecorpus/compressed-02.raw").len();
+    let original = include_bytes!("upstream/decodecorpus/compressed-02.zst");
+    let capacity = include_bytes!("upstream/decodecorpus/compressed-02.raw").len();
     for index in 0..original.len() {
         let mut frame = original.to_vec();
         frame[index] ^= 0xff;

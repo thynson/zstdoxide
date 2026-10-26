@@ -18,7 +18,8 @@ pub enum StreamStatus {
 pub struct Progress {
     /// Input prefix accepted by this call; never exceeds the supplied length.
     pub consumed: usize,
-    /// Output prefix initialized by this call; never exceeds the supplied length.
+    /// Bytes written by this call, bounded by the available output allowance.
+    /// Fixed-destination sessions append these bytes to their retained prefix.
     pub produced: usize,
     /// The boundary reached or resource needed to resume.
     pub status: StreamStatus,

@@ -33,13 +33,11 @@ impl<'a> SliceHistory<'a> {
     }
 
     /// All written output, including completed frames, borrowed through this sink.
-    #[cfg(test)]
     pub(crate) fn written(&self) -> &[u8] {
         &self.output[..self.position]
     }
 
     /// Restart the same output borrow without clearing bytes or changing limits.
-    #[cfg(test)]
     pub(crate) fn reset(&mut self) {
         self.position = 0;
         self.frame_start = 0;
