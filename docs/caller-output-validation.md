@@ -61,9 +61,9 @@ pinned checkout passes, without `--require-complete` or a parity claim.
 
 ## Remaining gates
 
-Isolated-feature whole-suite regression, all-feature full release and
-deterministic allocation/performance comparisons remain open until their own
-evidence is recorded. Stable incremental destination
+Whole-suite isolated-feature regression and all-feature full release are
+complete in the additive receipt below. Deterministic allocation/performance
+comparisons remain open until their own evidence is recorded. Stable incremental destination
 contracts, overlapping in-place decoding and caller-owned dictionary output
 are outside this bounded module.
 
@@ -98,6 +98,20 @@ The original campaign was paused at the user's request during safe full-suite
 compilation on October 23. Its running record, pause receipt and incomplete log
 are preserved unchanged in the archive. New October 26 logs prove completion;
 the interrupted command is neither a failure nor a passing execution. Source
-hashes were checked before and after the additive campaign. Whole suites for
-every isolated feature and the full all-feature release suite remain a separate
-qualification item.
+hashes were checked before and after the additive campaign. The separate receipt below completes every isolated feature whole suite and
+the full all-feature release suite.
+
+## Complete isolated-feature and all-feature release regression
+
+`evidence/2026-10-26-caller-output-isolated-full.json` records 21 successful
+complete-suite executions: every one of twenty independent unsafe features and
+the full all-feature release suite. Each reports 1,563 passed and 56
+explicitly ignored tests across 77 result groups, including Rustdoc.
+The previously completed safe/all full suites and all no_std/Clippy checks remain
+in their separate feature-matrix receipt. No interrupted or ignored execution
+is relabelled as a passed test.
+
+Every final source/test/fixture hash agrees with the frozen baseline. The compact
+archive retains code, all logs and commands; omitted binary fixtures are bound
+to their Git baseline and individual hashes. Deterministic timing and the final
+bounded milestone reconciliation remain open.
