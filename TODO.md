@@ -132,7 +132,7 @@ a separate candidate; promote only after Module 25 closes.
 - [x] Expose persistent shared/view session constructors with borrowed allocators, lifetime examples and failure/reset qualification.
 - [x] Independently qualify normal/sanitized native stable dictionary destinations and exact guarded boundary cases.
 - [x] Replay the full pinned dictionary corpus as an explicitly labelled fixed-fragment persistent-session supplement, retaining buffered prefix branches.
-- [ ] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics code generation.
+- [x] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics code generation.
 - [ ] Compare frozen whole/fragmented workloads and allocation ledgers with retained safe/unsafe binaries and an independent timing repeat.
 - [ ] Reconcile bounded session coverage and decompose single-use borrowed prefixes without claiming complete upstream parity.
 
