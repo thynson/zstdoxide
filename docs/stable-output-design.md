@@ -127,3 +127,30 @@ fragment schedules and output fingerprints; compare allocation ledgers and
 measure stable direct versus existing buffered decoding after correctness
 qualification, retaining exact executables and repeat timings. Report limitations
 without claiming complete upstream migration or universal speedups.
+
+## Matching streaming fuzz branch
+
+Pinned `tests/fuzz/stream_decompress.c:68-119` selects stable output with
+`FUZZ_dataProducer_uint32Range(producer, 0, 10) == 5` after reserving the input
+prefix. The older buffered Rust adapter consumes that selector but always
+uses the buffered branch; its historical complete corpus runs do not qualify
+the newly supported stable-output branch.
+
+Add a separate exact-selector adapter without changing the frozen predecessor
+qualification. Stable cases retain one destination of `max(10 * source_size,
+128 KiB)` and do not consume the buffered branch's output-size selectors.
+Input sizes remain zero-inclusive and tail-selected. Stop when the stable
+output fills, as the original target does; malformed-input errors are accepted,
+with poisoning and guard preservation checked. The ordinary buffered branch
+continues to use its own selected output sizes. Record branch counts and every
+input identity; distinguish selector-preserving runs from any forced-stable
+supplemental cases. Do not silently force all original inputs into stable mode.
+
+The test adapter owns initialized destination/guard vectors and only plain
+indices/counters. `SliceDecoder` exclusively borrows the destination region;
+disjoint prefix/suffix guards can be inspected independently and the remainder
+is inspected only after that borrow ends. No raw-pointer or artificial unsafe
+backend is needed in test bookkeeping. Explicit input/window/work limits and
+non-stateful context lifetime remain qualified differences from unrestricted
+native fuzzing. Corpus snapshots remain separately hash-pinned rolling assets,
+not proof of membership in the v1.5.7 source tag.
