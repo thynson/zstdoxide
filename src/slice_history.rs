@@ -184,6 +184,54 @@ impl FrameOutput for SliceHistory<'_> {
     }
 }
 
+/// Borrowed dictionary metadata adds no storage family or unsafe representation.
+#[cfg(test)]
+pub(crate) struct DictionarySliceOutput<'output, 'dictionary> {
+    history: SliceHistory<'output>,
+    dictionary: crate::DictionaryView<'dictionary>,
+}
+
+#[cfg(test)]
+impl<'output, 'dictionary> DictionarySliceOutput<'output, 'dictionary> {
+    pub(crate) fn new(
+        output: &'output mut [u8],
+        limit: usize,
+        dictionary: crate::DictionaryView<'dictionary>,
+    ) -> Self {
+        Self {
+            history: SliceHistory::new(output, limit),
+            dictionary,
+        }
+    }
+}
+
+#[cfg(test)]
+impl SequenceOutput for DictionarySliceOutput<'_, '_> {
+    fn len(&self) -> usize {
+        self.history.len()
+    }
+    fn append(&mut self, bytes: &[u8]) -> Result<()> {
+        self.history.append(bytes)
+    }
+    fn copy_match(&mut self, offset: usize, length: usize) -> Result<()> {
+        self.history
+            .copy_dictionary_match(self.dictionary, offset, length)
+    }
+}
+
+#[cfg(test)]
+impl FrameOutput for DictionarySliceOutput<'_, '_> {
+    fn start_frame(&mut self, window: usize) {
+        self.history.start_frame(window);
+    }
+    fn frame_bytes(&self) -> &[u8] {
+        self.history.frame_bytes()
+    }
+    fn repeat(&mut self, byte: u8, count: usize) -> Result<()> {
+        self.history.repeat(byte, count)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

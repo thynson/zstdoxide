@@ -3,12 +3,13 @@
 use crate::cursor::ByteCursor;
 use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
 use crate::history::{FrameOutput, History, SequenceOutput};
-use crate::huffman::decode_literals_in;
+use crate::huffman::decode_literals_with_dictionary_view_in;
 use crate::sequences::SequenceState;
 use crate::slice_history::SliceHistory;
 use crate::xxhash::checksum;
 use crate::{
-    Decoder, DictionaryHandle, Error, FrameHeader, Result, SharedDictionary, StreamStatus,
+    Decoder, DictionaryHandle, DictionaryView, Error, FrameHeader, Result, SharedDictionary,
+    StreamStatus,
 };
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
@@ -142,7 +143,7 @@ pub fn decompress_with_options_in<A: Allocator + Clone>(
     let scratch_allocator = allocator.clone();
     let mut cursor = ByteCursor::new(input);
     let mut history = History::new_in(options.max_output_size, allocator);
-    decode_frames(&mut cursor, &mut history, options, &scratch_allocator)?;
+    decode_frames(&mut cursor, &mut history, options, &scratch_allocator, None)?;
     Ok(history.into_bytes())
 }
 
@@ -239,7 +240,35 @@ pub fn decompress_into_with_options_in<A: Allocator + Clone>(
     options.max_output_size = options.max_output_size.min(output.len());
     let mut cursor = ByteCursor::new(input);
     let mut history = SliceHistory::new(output, options.max_output_size);
-    decode_frames(&mut cursor, &mut history, options, &allocator)?;
+    decode_frames(&mut cursor, &mut history, options, &allocator, None)?;
+    Ok(history.len())
+}
+
+#[cfg(test)]
+fn decompress_into_dictionary_candidate<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    dictionary: DictionaryView<'_>,
+    mut options: DecodeOptions,
+    allocator: A,
+) -> Result<usize> {
+    if input.is_empty() {
+        return Err(Error::UnexpectedEof);
+    }
+    options.max_output_size = options.max_output_size.min(output.len());
+    let mut cursor = ByteCursor::new(input);
+    let mut history = crate::slice_history::DictionarySliceOutput::new(
+        output,
+        options.max_output_size,
+        dictionary,
+    );
+    decode_frames(
+        &mut cursor,
+        &mut history,
+        options,
+        &allocator,
+        Some(dictionary),
+    )?;
     Ok(history.len())
 }
 
@@ -249,6 +278,7 @@ fn decode_frames<A: Allocator + Clone>(
     history: &mut impl FrameOutput,
     options: DecodeOptions,
     scratch_allocator: &A,
+    dictionary: Option<DictionaryView<'_>>,
 ) -> Result<()> {
     while !cursor.remaining().is_empty() {
         let mut prefix = ByteCursor::new(cursor.remaining());
@@ -262,7 +292,10 @@ fn decode_frames<A: Allocator + Clone>(
         let (header, header_size) = FrameHeader::parse(cursor.remaining())?;
         cursor.take(header_size)?;
         if header.dictionary_id != 0 {
-            return Err(Error::DictionaryRequired);
+            let selected = dictionary.ok_or(Error::DictionaryRequired)?;
+            if selected.id() != header.dictionary_id {
+                return Err(Error::DictionaryMismatch);
+            }
         }
         if header.window_size > options.max_window_size {
             return Err(Error::ResourceLimit);
@@ -279,6 +312,10 @@ fn decode_frames<A: Allocator + Clone>(
         let max_block = window.min(MAX_BLOCK_SIZE);
         let mut huffman = None;
         let mut sequences = SequenceState::new_in(scratch_allocator.clone());
+        let initial = dictionary.and_then(|view| view.entropy());
+        if let Some(entropy) = initial {
+            sequences.reset(entropy.repeat);
+        }
         loop {
             let block = BlockHeader::read(cursor, max_block)?;
             match block.kind {
@@ -287,13 +324,20 @@ fn decode_frames<A: Allocator + Clone>(
                 BlockKind::Compressed => {
                     let encoded = cursor.take(block.size)?;
                     let literal_limit = max_block.min(options.max_output_size - history.len());
-                    let (literals, consumed) = decode_literals_in(
+                    let (literals, consumed) = decode_literals_with_dictionary_view_in(
                         encoded,
                         &mut huffman,
                         literal_limit,
+                        initial.map(|entropy| entropy.huffman),
                         scratch_allocator.clone(),
                     )?;
-                    sequences.decode(&encoded[consumed..], &literals, history, max_block)?;
+                    sequences.decode_with_dictionary_view(
+                        &encoded[consumed..],
+                        &literals,
+                        history,
+                        max_block,
+                        initial,
+                    )?;
                 }
             }
             if block.last {
@@ -759,5 +803,158 @@ mod tests {
         encoded.extend_from_slice(&header.to_le_bytes()[..3]);
         encoded.extend_from_slice(&block);
         assert_eq!(decompress(&encoded, 6).unwrap(), b"abcabc");
+    }
+}
+
+#[cfg(test)]
+mod dictionary_output_candidate_tests {
+    use super::*;
+    use crate::Dictionary;
+    macro_rules! fixture {
+        ($name:literal) => {
+            include_bytes!(concat!("../tests/upstream/dictionaries/", $name))
+        };
+    }
+    #[test]
+    fn prepared_raw_and_crossing_fixtures_match_independent_originals() {
+        let cases: &[(&[u8], &[u8], &[u8])] = &[
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("p0-far-dictionary.zst"),
+                fixture!("p0-far-dictionary.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("p-window-minus-one.zst"),
+                fixture!("p-window-minus-one.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("p-window-equal.zst"),
+                fixture!("p-window-equal.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("dictionary-to-frame-eviction.zst"),
+                fixture!("dictionary-to-frame-eviction.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("output-distance-equals-window.zst"),
+                fixture!("output-distance-equals-window.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("raw-small-window.zst"),
+                fixture!("raw-small-window.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("formatted-id.zst"),
+                fixture!("formatted-id.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("formatted-omitted-id.zst"),
+                fixture!("formatted-omitted-id.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("persistent-concatenation.zst"),
+                fixture!("persistent-concatenation.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("dictionary-treeless-literals.zst"),
+                fixture!("dictionary-treeless-literals.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("dictionary-treeless-four-streams.zst"),
+                fixture!("dictionary-treeless-four-streams.expected"),
+            ),
+            (
+                fixture!("trained.dict"),
+                fixture!("dictionary-repeat-sequences.zst"),
+                fixture!("dictionary-repeat-sequences.expected"),
+            ),
+            (
+                fixture!("duplicate-reps.dict"),
+                fixture!("duplicate-reps-initial.zst"),
+                fixture!("duplicate-reps-initial.expected"),
+            ),
+        ];
+        for &(dictionary, frame, expected) in cases {
+            let dictionary = Dictionary::from_bytes(dictionary).unwrap();
+            for extra in [0, 17] {
+                let mut output = alloc::vec![0xa5; expected.len() + extra + 2];
+                assert_eq!(
+                    decompress_into_dictionary_candidate(
+                        frame,
+                        &mut output[1..expected.len() + extra + 1],
+                        dictionary.view(),
+                        DecodeOptions::new(usize::MAX),
+                        Global
+                    ),
+                    Ok(expected.len())
+                );
+                assert_eq!(&output[1..expected.len() + 1], expected);
+                assert_eq!(output[0], 0xa5);
+                assert!(output[expected.len() + 1..].iter().all(|&b| b == 0xa5));
+            }
+            let mut short = alloc::vec![0xa5; expected.len()+2];
+            assert_eq!(
+                decompress_into_dictionary_candidate(
+                    frame,
+                    &mut short[1..expected.len()],
+                    dictionary.view(),
+                    DecodeOptions::new(usize::MAX),
+                    Global
+                ),
+                Err(Error::ResourceLimit)
+            );
+            assert_eq!(short[0], 0xa5);
+            assert!(short[expected.len()..].iter().all(|&b| b == 0xa5));
+        }
+    }
+    #[test]
+    fn dictionary_expiry_out_of_bounds_and_ids_remain_explicit_errors() {
+        let dictionary = Dictionary::raw(fixture!("boundary-dictionary.raw")).unwrap();
+        let mut output = [0xa5; 8192];
+        for frame in [
+            fixture!("p-window-plus-one.zst").as_slice(),
+            fixture!("dictionary-out-of-bounds.zst").as_slice(),
+        ] {
+            assert_eq!(
+                decompress_into_dictionary_candidate(
+                    frame,
+                    &mut output,
+                    dictionary.view(),
+                    DecodeOptions::new(8192),
+                    Global
+                ),
+                Err(Error::CorruptData)
+            );
+        }
+        assert_eq!(
+            decompress_into_dictionary_candidate(
+                fixture!("formatted-id.zst"),
+                &mut output,
+                dictionary.view(),
+                DecodeOptions::new(0),
+                Global
+            ),
+            Err(Error::DictionaryMismatch)
+        );
+        assert_eq!(
+            decompress_into_dictionary_candidate(
+                &[],
+                &mut output,
+                dictionary.view(),
+                DecodeOptions::new(0),
+                Global
+            ),
+            Err(Error::UnexpectedEof)
+        );
     }
 }
