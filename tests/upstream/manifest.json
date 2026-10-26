@@ -11243,7 +11243,7 @@
           "line_end": 1239,
           "label": "test%3i : ZSTD_decompressStream() with dictionary :",
           "status": "partial",
-          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None). Fixed borrowed output sessions additionally preserve persistent shared/view dictionary selection across fragmented frames and reset. A separate pinned stable-output oracle checks loaded and prepared dictionaries with actual guards at whole/one/seven-byte schedules. Opaque C context initialization/replacement and original generated workloads remain outside this added scope.",
+          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None). Fixed borrowed output sessions additionally preserve persistent shared/view dictionary selection across fragmented frames and reset. A separate pinned stable-output oracle checks loaded and prepared dictionaries with actual guards at whole/one/seven-byte schedules. Opaque C context initialization/replacement and original generated workloads remain outside this added scope. Fixed borrowed sessions additionally support prefix-once ownership and transactional clean-boundary replacement. Native stable prefix oracles and actual destination guards qualify common success/error cases and explicit differences: native streaming consumes its prefix on skippable frames, while Rust retains an unclaimed prefix. C opaque context/reset/workspace equivalence is not asserted.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
             "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
@@ -11251,7 +11251,10 @@
             "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
             "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries",
             "tests/stable_dictionary_output.rs#every_prepared_split_and_reset_preserves_fixed_storage_and_dictionary_selection",
-            "tests/stable_dictionary_output_native.rs#pinned_native_stable_dictionary_destinations_and_guarded_errors"
+            "tests/stable_dictionary_output_native.rs#pinned_native_stable_dictionary_destinations_and_guarded_errors",
+            "tests/stable_prefix_output.rs#every_prepared_split_consumes_one_prefix_and_boundary_replacement_keeps_output",
+            "tests/stable_prefix_output.rs#replacement_rejection_preserves_counters_output_and_original_selection_at_every_phase",
+            "tests/stable_prefix_output_native.rs#pinned_native_stable_prefix_destinations_and_guarded_errors"
           ]
         },
         {
@@ -11261,7 +11264,7 @@
           "line_end": 1268,
           "label": "test%3i : ZSTD_resetDStream() with dictionary :",
           "status": "partial",
-          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None). Fixed borrowed output sessions additionally preserve persistent shared/view dictionary selection across fragmented frames and reset. A separate pinned stable-output oracle checks loaded and prepared dictionaries with actual guards at whole/one/seven-byte schedules. Opaque C context initialization/replacement and original generated workloads remain outside this added scope.",
+          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None). Fixed borrowed output sessions additionally preserve persistent shared/view dictionary selection across fragmented frames and reset. A separate pinned stable-output oracle checks loaded and prepared dictionaries with actual guards at whole/one/seven-byte schedules. Opaque C context initialization/replacement and original generated workloads remain outside this added scope. Fixed borrowed sessions additionally support prefix-once ownership and transactional clean-boundary replacement. Native stable prefix oracles and actual destination guards qualify common success/error cases and explicit differences: native streaming consumes its prefix on skippable frames, while Rust retains an unclaimed prefix. C opaque context/reset/workspace equivalence is not asserted.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
             "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
@@ -11269,7 +11272,10 @@
             "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
             "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries",
             "tests/stable_dictionary_output.rs#every_prepared_split_and_reset_preserves_fixed_storage_and_dictionary_selection",
-            "tests/stable_dictionary_output_native.rs#pinned_native_stable_dictionary_destinations_and_guarded_errors"
+            "tests/stable_dictionary_output_native.rs#pinned_native_stable_dictionary_destinations_and_guarded_errors",
+            "tests/stable_prefix_output.rs#every_prepared_split_consumes_one_prefix_and_boundary_replacement_keeps_output",
+            "tests/stable_prefix_output.rs#replacement_rejection_preserves_counters_output_and_original_selection_at_every_phase",
+            "tests/stable_prefix_output_native.rs#pinned_native_stable_prefix_destinations_and_guarded_errors"
           ]
         },
         {
@@ -11295,10 +11301,13 @@
           "line_end": 1319,
           "label": "test%3i : ZSTD_decompressDCtx() with prefix :",
           "status": "ported",
-          "reason": "A configured formatted/raw prefix restores one frame and is cleared before a dependent second frame; exact C-generated concatenations also verify this lifetime.",
+          "reason": "A configured formatted/raw prefix restores one frame and is cleared before a dependent second frame; exact C-generated concatenations also verify this lifetime. Fixed borrowed sessions additionally support prefix-once ownership and transactional clean-boundary replacement. Native stable prefix oracles and actual destination guards qualify common success/error cases and explicit differences: native streaming consumes its prefix on skippable frames, while Rust retains an unclaimed prefix. C opaque context/reset/workspace equivalence is not asserted.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
-            "tests/upstream_dictionary.rs#prefix_is_consumed_by_one_frame_and_does_not_persist_after_reset"
+            "tests/upstream_dictionary.rs#prefix_is_consumed_by_one_frame_and_does_not_persist_after_reset",
+            "tests/stable_prefix_output.rs#every_prepared_split_consumes_one_prefix_and_boundary_replacement_keeps_output",
+            "tests/stable_prefix_output.rs#replacement_rejection_preserves_counters_output_and_original_selection_at_every_phase",
+            "tests/stable_prefix_output_native.rs#pinned_native_stable_prefix_destinations_and_guarded_errors"
           ]
         },
         {

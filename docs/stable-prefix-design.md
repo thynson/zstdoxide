@@ -76,3 +76,22 @@ ledgers, and retain all safe/unsafe binaries plus independently rebuilt repeat
 results. Prefix preparation and destination allocation stay outside clocks;
 cold context creation, handle clone/drop, scratch and decoding stay inside.
 Reused-session performance is a separate scope.
+
+
+## Observed native lifecycle differences
+
+The pinned `ZSTD_decompressStream` path invokes `ZSTD_getDDict` while consuming
+skippable headers, so its use-once prefix is consumed by a skip. Rust preserves
+a pending prefix across skips. The native stable-output capacity check also
+precedes `ZSTD_getDDict`; a valid header that advertises too much output therefore
+leaves the native prefix available after a session-only reset. Rust claims after
+successful standard-header parsing, before its output allowance check, so reset
+releases that claimed prefix. A later dependent frame requires a new selection.
+
+The separate normal/sanitized native and five-configuration Rust lifecycle
+supplement verifies both differences with real guards and the same fixed
+capacity. Partial or rejected headers preserve a prefix in both APIs; complete
+and empty standard frames consume it. Native capacity replacement across reset
+is an additional native-only observation, not an operation provided by the
+fixed borrowed Rust destination. These results retain the designed Rust contract
+and do not claim opaque C context/reset equivalence.
