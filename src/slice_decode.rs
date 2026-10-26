@@ -26,6 +26,27 @@ enum Phase {
     Failed,
 }
 
+/// Temporary borrowed output coordinates; neither owner is moved or retained.
+#[cfg(test)]
+struct DictionaryOutput<'history, 'output, 'dictionary> {
+    history: &'history mut SliceHistory<'output>,
+    dictionary: crate::DictionaryView<'dictionary>,
+}
+
+#[cfg(test)]
+impl SequenceOutput for DictionaryOutput<'_, '_, '_> {
+    fn len(&self) -> usize {
+        self.history.len()
+    }
+    fn append(&mut self, bytes: &[u8]) -> Result<()> {
+        self.history.append(bytes)
+    }
+    fn copy_match(&mut self, offset: usize, length: usize) -> Result<()> {
+        self.history
+            .copy_dictionary_match(self.dictionary, offset, length)
+    }
+}
+
 /// Incrementally decode into one exclusively borrowed, fixed-capacity destination.
 ///
 /// The slice remains borrowed for the session and supplies all frame-local match
@@ -483,6 +504,63 @@ mod tests {
     use super::*;
 
     const EMPTY: &[u8] = &[0x28, 0xb5, 0x2f, 0xfd, 0x20, 0, 1, 0, 0];
+
+    #[test]
+    fn dictionary_sink_preserves_frame_coordinates_and_forward_crossing() {
+        let dictionary = crate::Dictionary::raw(b"dictionary").unwrap();
+        let mut output = [0xa5; 64];
+        let mut history = SliceHistory::new(&mut output[1..63], 32);
+        history.append(b"old").unwrap();
+        history.start_frame(2);
+        history.append(b"ab").unwrap();
+        let mut logical = b"dictionaryab".to_vec();
+        for _ in 0..12 {
+            logical.push(logical[logical.len() - 6]);
+        }
+        {
+            let mut sink = DictionaryOutput {
+                history: &mut history,
+                dictionary: dictionary.view(),
+            };
+            assert_eq!(sink.len(), 5);
+            sink.copy_match(6, 12).unwrap();
+            assert_eq!(sink.len(), 17);
+        }
+        assert_eq!(history.frame_bytes(), &logical[10..]);
+        history.append(b"!").unwrap();
+        assert_eq!(&output[1..4], b"old");
+        assert_eq!(&output[4..18], &logical[10..]);
+        assert_eq!(output[18], b'!');
+        assert_eq!(output[0], 0xa5);
+        assert!(output[19..].iter().all(|&b| b == 0xa5));
+    }
+
+    #[test]
+    fn dictionary_sink_rejects_capacity_range_and_expired_history_without_writes() {
+        let dictionary = crate::Dictionary::raw(b"dict").unwrap();
+        for (distance, length, window, expected) in [
+            (0, 0, 2, Error::CorruptData),
+            (7, 1, 2, Error::CorruptData),
+            (3, 1, 1, Error::CorruptData),
+            (6, usize::MAX, 2, Error::ResourceLimit),
+        ] {
+            let mut output = [0xa5; 16];
+            let mut history = SliceHistory::new(&mut output[1..15], 8);
+            history.start_frame(window);
+            history.append(b"ab").unwrap();
+            {
+                let mut sink = DictionaryOutput {
+                    history: &mut history,
+                    dictionary: dictionary.view(),
+                };
+                assert_eq!(sink.copy_match(distance, length), Err(expected));
+                assert_eq!(sink.len(), 2);
+            }
+            assert_eq!(history.frame_bytes(), b"ab");
+            assert_eq!(output[0], 0xa5);
+            assert!(output[3..].iter().all(|&b| b == 0xa5));
+        }
+    }
 
     #[test]
     fn exhausted_counters_reject_without_wrapping_or_allowing_continuation() {

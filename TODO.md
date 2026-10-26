@@ -127,7 +127,7 @@ Design and ownership are recorded before implementation in
 a separate candidate; promote only after Module 25 closes.
 
 - [x] Define generic attachment ownership, reset/lifetime behavior and separate dictionary/scratch capacity reporting.
-- [ ] Implement the ephemeral borrowed dictionary sequence sink with safe, independent and combined storage checks.
+- [x] Implement the ephemeral borrowed dictionary sequence sink with safe, independent and combined storage checks.
 - [ ] Integrate private per-frame dictionary IDs, repeat offsets and prepared entropy while preserving dictionary-free sessions.
 - [ ] Expose persistent shared/view session constructors with borrowed allocators, lifetime examples and failure/reset qualification.
 - [ ] Independently qualify normal/sanitized native stable dictionary destinations and exact guarded boundary cases.
