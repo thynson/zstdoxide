@@ -138,7 +138,7 @@ Module 26 closes.
 - [x] Integrate private prefix claim, frame completion and reset with existing dictionary-free/persistent behavior.
 - [x] Expose shared/view prefix constructors and boundary replacement with lifetime, allocator and malformed-input qualification.
 - [x] Independently qualify pinned normal/sanitized stable-prefix outputs and preserve documented lifecycle differences.
-- [ ] Replay all dictionary corpus branches with a labelled fixed-fragment supplement and unchanged tail selectors.
+- [x] Replay all dictionary corpus branches with a labelled fixed-fragment supplement and unchanged tail selectors.
 - [ ] Qualify safe/isolated/all full and release regression, no_std, Clippy, foreign Miri and concrete no-atomics code generation.
 - [ ] Compare frozen whole/fragmented prefix workloads and ledgers using retained safe/unsafe executables and independent repeats.
 - [ ] Reconcile bounded coverage and decompose the next missing caller-output contract without claiming complete parity.

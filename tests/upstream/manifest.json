@@ -4370,7 +4370,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "All12063 pinned rolling dictionary_decompress inputs run under safe/all release with zero skips: 11768 trained dictionaries, 295 empty fallbacks and 20 successful bounded decodes. Original source/training/attachment/capacity selectors are preserved. Prepared/loaded branches use real guarded direct destinations and compare success/bytes with buffered decoding; 1133 prefix selections retain buffered output in the one-shot direct campaign. The independent Rust trainer is not native fastCover and original C context/by-reference/loading API differences remain partial. A separately recorded stable-session supplement replays all12063 files under safe/all, including 10930 persistent prepared/loaded selections at a fixed seven-byte input schedule; successful bytes and success/failure agree across stable/direct/buffered output. Prefix branches remain buffered. This additional schedule consumes no original selector and is not an original native one-shot streaming branch.",
+      "reason": "All12063 pinned rolling dictionary_decompress inputs run under safe/all release with zero skips: 11768 trained dictionaries, 295 empty fallbacks and 20 successful bounded decodes. Original source/training/attachment/capacity selectors are preserved. Prepared/loaded branches use real guarded direct destinations and compare success/bytes with buffered decoding; 1133 prefix selections retain buffered output in the one-shot direct campaign. The independent Rust trainer is not native fastCover and original C context/by-reference/loading API differences remain partial. A separately recorded stable-session supplement replays all12063 files under safe/all, including 10930 persistent prepared/loaded selections at a fixed seven-byte input schedule; successful bytes and success/failure agree across stable/direct/buffered output. Prefix branches remain buffered. This additional schedule consumes no original selector and is not an original native one-shot streaming branch. A separately labelled seven-byte stable prefix supplement now covers all 1,133 prefix selections in the full 12,063-input safe/all corpus, comparing guarded prefix-once output with buffered Rust output. Original tail selectors and training choices remain unchanged; this is not an original one-shot native streaming selector.",
       "rust_tests": [
         "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
         "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
@@ -4380,7 +4380,8 @@
         "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
         "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus",
         "tests/dictionary_output.rs#truncations_mutations_and_concatenation_do_not_cross_output_allowance",
-        "tests/stable_dictionary_output.rs#truncated_and_mutated_frames_preserve_guards_and_match_one_shot_success"
+        "tests/stable_dictionary_output.rs#truncated_and_mutated_frames_preserve_guards_and_match_one_shot_success",
+        "tests/upstream_trained_dictionary_fuzz.rs#fixed_prefix_supplement_preserves_skips_and_rejects_reused_prepared_prefixes"
       ],
       "line_count": 77,
       "cases": [
@@ -4391,7 +4392,7 @@
           "line_end": 77,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "All12063 pinned rolling dictionary_decompress inputs run under safe/all release with zero skips: 11768 trained dictionaries, 295 empty fallbacks and 20 successful bounded decodes. Original source/training/attachment/capacity selectors are preserved. Prepared/loaded branches use real guarded direct destinations and compare success/bytes with buffered decoding; 1133 prefix selections retain buffered output in the one-shot direct campaign. The independent Rust trainer is not native fastCover and original C context/by-reference/loading API differences remain partial. A separately recorded stable-session supplement replays all12063 files under safe/all, including 10930 persistent prepared/loaded selections at a fixed seven-byte input schedule; successful bytes and success/failure agree across stable/direct/buffered output. Prefix branches remain buffered. This additional schedule consumes no original selector and is not an original native one-shot streaming branch.",
+          "reason": "All12063 pinned rolling dictionary_decompress inputs run under safe/all release with zero skips: 11768 trained dictionaries, 295 empty fallbacks and 20 successful bounded decodes. Original source/training/attachment/capacity selectors are preserved. Prepared/loaded branches use real guarded direct destinations and compare success/bytes with buffered decoding; 1133 prefix selections retain buffered output in the one-shot direct campaign. The independent Rust trainer is not native fastCover and original C context/by-reference/loading API differences remain partial. A separately recorded stable-session supplement replays all12063 files under safe/all, including 10930 persistent prepared/loaded selections at a fixed seven-byte input schedule; successful bytes and success/failure agree across stable/direct/buffered output. Prefix branches remain buffered. This additional schedule consumes no original selector and is not an original native one-shot streaming branch. A separately labelled seven-byte stable prefix supplement now covers all 1,133 prefix selections in the full 12,063-input safe/all corpus, comparing guarded prefix-once output with buffered Rust output. Original tail selectors and training choices remain unchanged; this is not an original one-shot native streaming selector.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
             "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
@@ -4401,7 +4402,8 @@
             "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
             "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus",
             "tests/dictionary_output.rs#truncations_mutations_and_concatenation_do_not_cross_output_allowance",
-            "tests/stable_dictionary_output.rs#truncated_and_mutated_frames_preserve_guards_and_match_one_shot_success"
+            "tests/stable_dictionary_output.rs#truncated_and_mutated_frames_preserve_guards_and_match_one_shot_success",
+            "tests/upstream_trained_dictionary_fuzz.rs#fixed_prefix_supplement_preserves_skips_and_rejects_reused_prepared_prefixes"
           ]
         }
       ]

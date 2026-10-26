@@ -438,7 +438,8 @@ fn decode_direct_checked(source: &[u8], dictionary: SharedDictionary, capacity: 
     assert!(storage[..32].iter().all(|&b| b == 0xa5));
     assert!(storage[capacity + 32..].iter().all(|&b| b == 0xa5));
     // Explicit seven-byte supplement: this schedule is not a selector from the
-    // upstream one-shot dictionary_decompress target. Prefix remains buffered.
+    // upstream one-shot dictionary_decompress target. The separate prefix branch
+    // receives its own prefix-once stable supplement below.
     let mut stable_storage = vec![0xa5; capacity + 64];
     let mut decoder = SliceDecoder::with_dictionary(
         &mut stable_storage[32..capacity + 32],
@@ -496,6 +497,85 @@ fn decode_direct_checked(source: &[u8], dictionary: SharedDictionary, capacity: 
     }
 }
 
+/// Prefix-once fixed-fragment supplement; no upstream selector is added.
+fn decode_prefix_checked(source: &[u8], dictionary: SharedDictionary, capacity: usize) -> bool {
+    let buffered = decode_checked(source, dictionary.clone(), true, capacity);
+    let mut stable_storage = vec![0xa5; capacity + 64];
+    let mut decoder = SliceDecoder::with_prefix(
+        &mut stable_storage[32..capacity + 32],
+        DecodeOptions::new(capacity),
+        dictionary.clone(),
+    );
+    let stable = (|| {
+        for fragment in source.chunks(7) {
+            let mut consumed = 0;
+            while consumed < fragment.len() {
+                let p = decoder.process(&fragment[consumed..])?;
+                assert!(p.consumed > 0 || p.produced > 0);
+                assert!(p.consumed <= fragment.len() - consumed);
+                assert!(matches!(
+                    p.status,
+                    StreamStatus::NeedInput | StreamStatus::FrameFinished
+                ));
+                consumed += p.consumed;
+            }
+        }
+        decoder.finish()?;
+        assert_eq!(decoder.total_input(), source.len() as u64);
+        Ok::<usize, Error>(decoder.output()?.len())
+    })();
+    assert_eq!(stable.is_ok(), buffered.is_ok());
+    if let Err(error) = stable {
+        assert_ne!(error, Error::AllocationFailed);
+        assert_ne!(error, Error::InvalidState);
+        assert_eq!(decoder.process(&[]), Err(Error::InvalidState));
+    }
+    drop(decoder);
+    assert!(stable_storage[..32].iter().all(|&b| b == 0xa5));
+    assert!(stable_storage[capacity + 32..].iter().all(|&b| b == 0xa5));
+    if let Ok(written) = stable {
+        assert_eq!(buffered.as_ref().unwrap().len(), written);
+        assert_eq!(
+            &stable_storage[32..written + 32],
+            buffered.as_ref().unwrap().as_slice()
+        );
+        assert!(stable_storage[written + 32..].iter().all(|&b| b == 0xa5));
+    }
+    stable.is_ok()
+}
+
+#[test]
+fn fixed_prefix_supplement_preserves_skips_and_rejects_reused_prepared_prefixes() {
+    let dictionary = Dictionary::from_bytes(include_bytes!("upstream/dictionaries/formatted.dict"))
+        .unwrap()
+        .into_shared();
+    let frame = include_bytes!("upstream/dictionaries/formatted-id.zst");
+    let expected = include_bytes!("upstream/dictionaries/formatted-id.expected");
+    assert!(decode_prefix_checked(
+        frame,
+        dictionary.clone(),
+        expected.len()
+    ));
+    assert!(!decode_prefix_checked(
+        frame,
+        dictionary.clone(),
+        expected.len() - 1
+    ));
+    let skip = [0x50, 0x2a, 0x4d, 0x18, 1, 0, 0, 0, 42];
+    let combined = [skip.as_slice(), frame].concat();
+    assert!(decode_prefix_checked(
+        &combined,
+        dictionary.clone(),
+        expected.len()
+    ));
+    let repeated = [frame.as_slice(), frame.as_slice()].concat();
+    assert!(!decode_prefix_checked(
+        &repeated,
+        dictionary,
+        expected.len() * 2
+    ));
+}
+
 /// `dictionary_decompress.c::LLVMFuzzerTestOneInput`, retaining every selector
 /// before decompression. A prepared dictionary and owned loaded dictionary share
 /// the Rust handle implementation; by-reference loading becomes immutable sharing.
@@ -517,7 +597,7 @@ fn dictionary_decompress(input: &[u8]) -> Outcome {
     let capacity = producer.unsigned_range(0, (10 * size) as u32) as usize;
     let dictionary = load_mode(&trained.dictionary, mode);
     let decoded = if prefix {
-        decode_checked(source, dictionary, true, capacity).is_ok()
+        decode_prefix_checked(source, dictionary, capacity)
     } else {
         decode_direct_checked(source, dictionary, capacity)
     };
