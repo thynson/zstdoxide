@@ -3,11 +3,14 @@
 use crate::cursor::ByteCursor;
 use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
 use crate::history::SequenceOutput;
-use crate::huffman::{HuffmanTable, decode_literals_in};
+use crate::huffman::{HuffmanTable, decode_literals_with_dictionary_view_in};
 use crate::sequences::SequenceState;
 use crate::slice_history::SliceHistory;
 use crate::xxhash::checksum;
-use crate::{DecodeOptions, Error, FrameHeader, Progress, Result, StreamStatus};
+use crate::{
+    DecodeOptions, DictionaryHandle, Error, FrameHeader, Progress, Result, SharedDictionary,
+    StreamStatus,
+};
 use alloc::alloc::{Allocator, Global};
 use alloc::vec::Vec;
 
@@ -27,13 +30,11 @@ enum Phase {
 }
 
 /// Temporary borrowed output coordinates; neither owner is moved or retained.
-#[cfg(test)]
 struct DictionaryOutput<'history, 'output, 'dictionary> {
     history: &'history mut SliceHistory<'output>,
     dictionary: crate::DictionaryView<'dictionary>,
 }
 
-#[cfg(test)]
 impl SequenceOutput for DictionaryOutput<'_, '_, '_> {
     fn len(&self) -> usize {
         self.history.len()
@@ -98,9 +99,10 @@ impl SequenceOutput for DictionaryOutput<'_, '_, '_> {
 /// decoder.reset();
 /// assert!(written.is_empty());
 /// ```
-pub struct SliceDecoder<'output, A: Allocator = Global> {
+pub struct SliceDecoder<'output, A: Allocator = Global, D: DictionaryHandle = SharedDictionary> {
     allocator: A,
     options: DecodeOptions,
+    dictionary: Option<D>,
     history: SliceHistory<'output>,
     phase: Phase,
     scratch: [u8; 18],
@@ -130,10 +132,32 @@ impl<'output, A: Allocator + Clone> SliceDecoder<'output, A> {
     /// Construct scratch owners using the supplied allocator or borrowed owner.
     /// The destination always belongs to the caller. Allocator cloning retains
     /// the allocator implementation's own allocation and panic semantics.
-    pub fn new_in(output: &'output mut [u8], mut options: DecodeOptions, allocator: A) -> Self {
+    pub fn new_in(output: &'output mut [u8], options: DecodeOptions, allocator: A) -> Self {
+        Self::with_attachment(output, options, None, allocator)
+    }
+}
+
+impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A, D> {
+    #[cfg(test)]
+    fn with_dictionary_candidate(
+        output: &'output mut [u8],
+        options: DecodeOptions,
+        dictionary: D,
+        allocator: A,
+    ) -> Self {
+        Self::with_attachment(output, options, Some(dictionary), allocator)
+    }
+
+    fn with_attachment(
+        output: &'output mut [u8],
+        mut options: DecodeOptions,
+        dictionary: Option<D>,
+        allocator: A,
+    ) -> Self {
         options.max_output_size = options.max_output_size.min(output.len());
         Self {
             options,
+            dictionary,
             history: SliceHistory::new(output, options.max_output_size),
             phase: Phase::Header,
             scratch: [0; 18],
@@ -314,8 +338,12 @@ impl<'output, A: Allocator + Clone> SliceDecoder<'output, A> {
                         return Ok(StreamStatus::NeedInput);
                     }
                     let (header, _) = FrameHeader::parse(&self.scratch[..size])?;
+                    let dictionary = self.dictionary.as_ref().map(DictionaryHandle::view);
                     if header.dictionary_id != 0 {
-                        return Err(Error::DictionaryRequired);
+                        let selected = dictionary.ok_or(Error::DictionaryRequired)?;
+                        if selected.id() != header.dictionary_id {
+                            return Err(Error::DictionaryMismatch);
+                        }
                     }
                     if header.window_size > self.options.max_window_size {
                         return Err(Error::ResourceLimit);
@@ -326,6 +354,11 @@ impl<'output, A: Allocator + Clone> SliceDecoder<'output, A> {
                     }
                     let window =
                         usize::try_from(header.window_size).map_err(|_| Error::ResourceLimit)?;
+                    self.sequences.reset(
+                        dictionary
+                            .and_then(|view| view.entropy())
+                            .map_or([1, 4, 8], |entropy| entropy.repeat),
+                    );
                     self.history.start_frame(window);
                     self.max_block = window.min(MAX_BLOCK_SIZE);
                     self.frame = Some(header);
@@ -403,18 +436,35 @@ impl<'output, A: Allocator + Clone> SliceDecoder<'output, A> {
                     let literal_limit = self
                         .max_block
                         .min(self.options.max_output_size - self.history.len());
-                    let (literals, offset) = decode_literals_in(
+                    let dictionary = self.dictionary.as_ref().map(DictionaryHandle::view);
+                    let initial = dictionary.and_then(|view| view.entropy());
+                    let (literals, offset) = decode_literals_with_dictionary_view_in(
                         encoded,
                         &mut self.huffman,
                         literal_limit,
+                        initial.map(|entropy| entropy.huffman),
                         self.allocator.clone(),
                     )?;
-                    self.sequences.decode(
-                        &encoded[offset..],
-                        &literals,
-                        &mut self.history,
-                        self.max_block,
-                    )?;
+                    if let Some(dictionary) = dictionary {
+                        let mut output = DictionaryOutput {
+                            history: &mut self.history,
+                            dictionary,
+                        };
+                        self.sequences.decode_with_dictionary_view(
+                            &encoded[offset..],
+                            &literals,
+                            &mut output,
+                            self.max_block,
+                            initial,
+                        )?;
+                    } else {
+                        self.sequences.decode(
+                            &encoded[offset..],
+                            &literals,
+                            &mut self.history,
+                            self.max_block,
+                        )?;
+                    }
                     self.encoded.clear();
                     if self.end_block()? {
                         return Ok(StreamStatus::FrameFinished);
@@ -560,6 +610,146 @@ mod tests {
             assert_eq!(output[0], 0xa5);
             assert!(output[3..].iter().all(|&b| b == 0xa5));
         }
+    }
+
+    macro_rules! dictionary_fixture {
+        ($name:literal) => {
+            include_bytes!(concat!("../tests/upstream/dictionaries/", $name))
+        };
+    }
+    fn dictionary_fragments<D: DictionaryHandle>(
+        decoder: &mut SliceDecoder<'_, Global, D>,
+        frame: &[u8],
+        chunk: usize,
+    ) -> Result<()> {
+        let mut position = 0;
+        let mut calls = 0;
+        while position < frame.len() {
+            calls += 1;
+            assert!(calls <= 2 * frame.len() + 16);
+            let end = position + chunk.min(frame.len() - position);
+            let p = decoder.process(&frame[position..end])?;
+            assert!(p.consumed <= end - position);
+            assert!(p.consumed > 0 || p.status == StreamStatus::FrameFinished);
+            assert_ne!(p.status, StreamStatus::NeedOutput);
+            position += p.consumed;
+        }
+        decoder.finish()
+    }
+    #[test]
+    fn dictionary_session_candidate_handles_raw_prepared_repeat_and_frame_boundaries() {
+        let cases: &[(&[u8], &[u8], &[u8])] = &[
+            (
+                dictionary_fixture!("boundary-dictionary.raw"),
+                dictionary_fixture!("p0-far-dictionary.zst"),
+                dictionary_fixture!("p0-far-dictionary.expected"),
+            ),
+            (
+                dictionary_fixture!("boundary-dictionary.raw"),
+                dictionary_fixture!("dictionary-to-frame-eviction.zst"),
+                dictionary_fixture!("dictionary-to-frame-eviction.expected"),
+            ),
+            (
+                dictionary_fixture!("formatted.dict"),
+                dictionary_fixture!("formatted-id.zst"),
+                dictionary_fixture!("formatted-id.expected"),
+            ),
+            (
+                dictionary_fixture!("formatted.dict"),
+                dictionary_fixture!("dictionary-treeless-four-streams.zst"),
+                dictionary_fixture!("dictionary-treeless-four-streams.expected"),
+            ),
+            (
+                dictionary_fixture!("trained.dict"),
+                dictionary_fixture!("dictionary-repeat-sequences.zst"),
+                dictionary_fixture!("dictionary-repeat-sequences.expected"),
+            ),
+            (
+                dictionary_fixture!("formatted.dict"),
+                dictionary_fixture!("persistent-concatenation.zst"),
+                dictionary_fixture!("persistent-concatenation.expected"),
+            ),
+        ];
+        for &(dictionary, frame, expected) in cases {
+            let dictionary = crate::Dictionary::from_bytes(dictionary).unwrap();
+            for chunk in [1, 7, frame.len()] {
+                let mut output = alloc::vec![0xa5;expected.len()+18];
+                let mut decoder = SliceDecoder::with_dictionary_candidate(
+                    &mut output[1..expected.len() + 17],
+                    DecodeOptions::new(expected.len()),
+                    dictionary.view(),
+                    Global,
+                );
+                for _ in 0..2 {
+                    dictionary_fragments(&mut decoder, frame, chunk).unwrap();
+                    assert_eq!(decoder.output().unwrap(), expected);
+                    decoder.reset();
+                    assert!(decoder.output().unwrap().is_empty());
+                }
+                drop(decoder);
+                assert_eq!(output[0], 0xa5);
+                assert!(output[expected.len() + 1..].iter().all(|&b| b == 0xa5));
+            }
+            let mut output = alloc::vec![0xa5;expected.len()+2];
+            let mut decoder = SliceDecoder::with_dictionary_candidate(
+                &mut output[1..expected.len()],
+                DecodeOptions::new(usize::MAX),
+                dictionary.view(),
+                Global,
+            );
+            assert_eq!(
+                dictionary_fragments(&mut decoder, frame, 7),
+                Err(Error::ResourceLimit)
+            );
+            assert_eq!(decoder.output(), Err(Error::InvalidState));
+            drop(decoder);
+            assert_eq!(output[0], 0xa5);
+            assert!(output[expected.len()..].iter().all(|&b| b == 0xa5));
+        }
+    }
+    #[test]
+    fn dictionary_session_candidate_checks_ids_and_expiry_and_recovers_on_reset() {
+        let dictionary =
+            crate::Dictionary::raw(dictionary_fixture!("boundary-dictionary.raw")).unwrap();
+        let mut output = [0xa5; 4098];
+        let mut decoder = SliceDecoder::with_dictionary_candidate(
+            &mut output[1..4097],
+            DecodeOptions::new(4096),
+            dictionary.view(),
+            Global,
+        );
+        for (frame, error) in [
+            (
+                dictionary_fixture!("formatted-id.zst").as_slice(),
+                Error::DictionaryMismatch,
+            ),
+            (
+                dictionary_fixture!("p-window-plus-one.zst").as_slice(),
+                Error::CorruptData,
+            ),
+            (
+                dictionary_fixture!("dictionary-out-of-bounds.zst").as_slice(),
+                Error::CorruptData,
+            ),
+        ] {
+            assert_eq!(dictionary_fragments(&mut decoder, frame, 7), Err(error));
+            assert_eq!(decoder.process(&[]), Err(Error::InvalidState));
+            decoder.reset();
+            dictionary_fragments(
+                &mut decoder,
+                dictionary_fixture!("p0-far-dictionary.zst"),
+                1,
+            )
+            .unwrap();
+            assert_eq!(
+                decoder.output().unwrap(),
+                dictionary_fixture!("p0-far-dictionary.expected")
+            );
+            decoder.reset();
+        }
+        drop(decoder);
+        assert_eq!(output[0], 0xa5);
+        assert_eq!(output[4097], 0xa5);
     }
 
     #[test]
