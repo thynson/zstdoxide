@@ -5026,10 +5026,13 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "Tail-driven prefix reservation, zero-inclusive input/output sizing, context reset, checked progress and malformed-input handling run. The complete independently pinned rolling corpus passed safe and all-feature release adapters: 12,462 files/80,339,212 bytes, no skips. Stable-output mode remains absent. Normal inputs use 65,536-byte/1 MiB-output/8 MiB-window caps; external replay uses 2 MiB-input/10 MiB-output/128 MiB-window caps.",
+      "reason": "The original buffered adaptation remains qualified separately. The additive adapter preserves the exact tail-selected stable flag and conditional parameter consumption: all12462 independently hash-pinned rolling inputs (80339212 bytes) replayed under Rust safe/all release and unmodified native normal/ASan/UBSan non-stateful targets. Each Rust run selected620 stable and11842 buffered cases; per-file safe/all outcomes and every native/Rust reserved prefix,capacity,first output/input selector match. Real fixed-output guards and failed-state checks execute. The adapter bounds input at2MiB, window at128MiB and buffered aggregate output at10MiB; stateful context reuse, unlimited native resource behavior and full C parameter/API parity remain partial.",
       "rust_tests": [
         "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics",
-        "tests/upstream_streaming.rs#external_official_streaming_corpus"
+        "tests/upstream_streaming.rs#external_official_streaming_corpus",
+        "tests/stable_stream_fuzz.rs#exact_selector_keeps_fixed_output_and_conditional_tail_positions",
+        "tests/stable_stream_fuzz.rs#arbitrary_inputs_and_stable_truncations_preserve_guards_and_terminate",
+        "tests/stable_stream_fuzz.rs#external_exact_selector_streaming_corpus"
       ],
       "line_count": 119,
       "cases": [
@@ -5040,10 +5043,13 @@
           "line_end": 119,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "Tail-driven prefix reservation, zero-inclusive input/output sizing, context reset, checked progress and malformed-input handling run. The complete independently pinned rolling corpus passed safe and all-feature release adapters: 12,462 files/80,339,212 bytes, no skips. Stable-output mode remains absent. Normal inputs use 65,536-byte/1 MiB-output/8 MiB-window caps; external replay uses 2 MiB-input/10 MiB-output/128 MiB-window caps.",
+          "reason": "The original buffered adaptation remains qualified separately. The additive adapter preserves the exact tail-selected stable flag and conditional parameter consumption: all12462 independently hash-pinned rolling inputs (80339212 bytes) replayed under Rust safe/all release and unmodified native normal/ASan/UBSan non-stateful targets. Each Rust run selected620 stable and11842 buffered cases; per-file safe/all outcomes and every native/Rust reserved prefix,capacity,first output/input selector match. Real fixed-output guards and failed-state checks execute. The adapter bounds input at2MiB, window at128MiB and buffered aggregate output at10MiB; stateful context reuse, unlimited native resource behavior and full C parameter/API parity remain partial.",
           "rust_tests": [
             "tests/upstream_streaming.rs#streaming_fuzz_target_consumes_tail_selected_chunks_without_panics",
-            "tests/upstream_streaming.rs#external_official_streaming_corpus"
+            "tests/upstream_streaming.rs#external_official_streaming_corpus",
+            "tests/stable_stream_fuzz.rs#exact_selector_keeps_fixed_output_and_conditional_tail_positions",
+            "tests/stable_stream_fuzz.rs#arbitrary_inputs_and_stable_truncations_preserve_guards_and_terminate",
+            "tests/stable_stream_fuzz.rs#external_exact_selector_streaming_corpus"
           ]
         }
       ]
