@@ -99,22 +99,12 @@ measurements are in `docs/reference-ultra-retained-frame-benchmark.md`.
 The final reconciliation is `docs/evidence/2026-10-22-ultra-retained-closure.json`.
 Retained Ultra2 and complete upstream migration remain separate open work.
 
-## Module 23: caller-owned one-shot decompression output
-
-Module 22 is complete. The bounded contract and pinned upstream assertions are in `docs/caller-output-design.md`; stable incremental
-sessions, dictionaries and in-place decoding remain separate scopes.
-
-- [x] Analyze direct borrowed output, shared frame orchestration, allocator boundaries and matching upstream assertions without claiming implementation.
-- [x] Record final ownership, invariants, upstream counterparts and API names in `docs/data-structures.md` before implementation.
-- [x] Implement checked borrowed output history and its independent opt-in unsafe backend, including overlap and rejection-before-write tests.
-- [x] Share the one-shot frame loop without changing existing owned-output, allocator or error-precedence contracts.
-- [x] Expose caller-owned output APIs with exact destination/options bounds, meaningful malformed-input coverage and scratch allocation failure checks.
-- [x] Qualify pinned native caller destinations and port the matching upstream assertions and complete destination-too-small corpus adapter.
-- [x] Qualify direct output under every isolated storage feature, true no_std and strict Clippy, plus safe/all full regression and release destination tests.
-- [x] Complete whole-suite regression under every isolated storage feature and all-feature release.
-- [x] Qualify borrowed compressed history under foreign Miri and concrete no-atomics code generation.
-- [x] Freeze deterministic direct/owned output workloads, compare allocator ledgers and measure safe/unsafe backends with retained executables.
-- [ ] Reconcile this bounded milestone and decompose stable borrowed incremental sessions without claiming complete upstream parity.
+Module 23 is complete within its bounded caller-owned one-shot decompression output scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification, measured comparisons and remaining limitations are in
+`docs/caller-output-validation.md` and `docs/caller-output-benchmarks.md`.
+The final receipt is `docs/evidence/2026-10-26-caller-output-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 24: stable borrowed incremental decompression output
 

@@ -4,8 +4,9 @@ The four `decompress_into*` APIs write directly through checked `SliceHistory`.
 They share frame parsing with the existing owned decoder, use no output vector
 or history copy, and keep compressed entropy/literal scratch fallible. The
 contract and exclusions are in `caller-output-design.md` and public Rustdoc.
-Module 23 remains in progress: complete feature/platform regression and measured
-safe/unsafe comparisons are separate gates.
+Module 23 is complete within this bounded dictionary-free one-shot scope.
+Feature/platform regression, measurements and final source reconciliation have
+separate retained receipts.
 
 ## Focused API and ownership checks
 
@@ -59,11 +60,11 @@ sequence-producer branches remain partial; complete corpus execution does not
 make the whole upstream target port complete. The inventory audit against the
 pinned checkout passes, without `--require-complete` or a parity claim.
 
-## Remaining gates
+## Scope boundaries
 
 Whole-suite isolated-feature regression and all-feature full release are
 complete in the additive receipt below. Deterministic allocation/performance
-comparisons remain open until their own evidence is recorded. Stable incremental destination
+comparisons are complete in the separately retained benchmark receipt. Stable incremental destination
 contracts, overlapping in-place decoding and caller-owned dictionary output
 are outside this bounded module.
 
@@ -114,4 +115,27 @@ is relabelled as a passed test.
 Every final source/test/fixture hash agrees with the frozen baseline. The compact
 archive retains code, all logs and commands; omitted binary fixtures are bound
 to their Git baseline and individual hashes. Deterministic timing and the final
-bounded milestone reconciliation remain open.
+bounded milestone reconciliation are complete in the receipts below.
+
+## Complete regression, measurements and reconciliation
+
+`evidence/2026-10-26-caller-output-isolated-full.json`
+records the complete suites: 1,563 passed and 56 explicitly ignored
+tests across 77 result groups in each configuration. All twenty isolated
+unsafe features and safe/all configurations have complete regression, true
+no_std and strict Clippy qualification. Formatting and complete all-feature
+release pass; safe release is qualified by the earlier focused destination run.
+Ignored external or unsupported assertions are not counted as passed tests.
+The original safe/all full suites and no_std/Clippy gates are retained in the
+separate feature-matrix receipt; the additive isolated-full campaign runs twenty
+complete isolated suites and the all-feature complete release suite.
+
+`caller-output-benchmarks.md` reports all 22 primary backends and independently rebuilt
+safe/all repeats on identical deterministic workloads and allocation ledgers.
+Source, fixtures, executables, CPU barriers and raw samples are retained. These
+fixed-order host measurements do not establish a universal unsafe speedup.
+`evidence/2026-10-26-caller-output-closure.json` rehashes this module's evidence and binds
+the integrated production source to final matrix, native/platform, corpus where
+applicable, and measured executable source identities. Previous milestones are
+linked through their closure receipts; historical checks are not relabelled as
+fresh executions. Complete upstream migration remains open.
