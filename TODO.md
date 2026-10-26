@@ -149,6 +149,22 @@ validation sources frozen; promote this candidate only after Module 24 closes.
 - [ ] Compare identical direct/owned dictionary workloads and allocation ledgers with retained safe/unsafe executables and independent repeat timings.
 - [ ] Reconcile the bounded milestone and decompose dictionary-backed stable sessions without claiming complete upstream parity.
 
+## Module 26: persistent dictionaries in stable borrowed output
+
+Design and ownership are recorded before implementation in
+`docs/stable-dictionary-output-design.md` and `docs/data-structures.md`. Develop
+a separate candidate; promote only after Module 25 closes.
+
+- [x] Define generic attachment ownership, reset/lifetime behavior and separate dictionary/scratch capacity reporting.
+- [ ] Implement the ephemeral borrowed dictionary sequence sink with safe, independent and combined storage checks.
+- [ ] Integrate private per-frame dictionary IDs, repeat offsets and prepared entropy while preserving dictionary-free sessions.
+- [ ] Expose persistent shared/view session constructors with borrowed allocators, lifetime examples and failure/reset qualification.
+- [ ] Independently qualify normal/sanitized native stable dictionary destinations and exact guarded boundary cases.
+- [ ] Replay the full pinned dictionary corpus as an explicitly labelled fixed-fragment persistent-session supplement, retaining buffered prefix branches.
+- [ ] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics code generation.
+- [ ] Compare frozen whole/fragmented workloads and allocation ledgers with retained safe/unsafe binaries and an independent timing repeat.
+- [ ] Reconcile bounded session coverage and decompose single-use borrowed prefixes without claiming complete upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

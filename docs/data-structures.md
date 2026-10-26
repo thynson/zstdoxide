@@ -3800,3 +3800,42 @@ and allocation behavior. Upstream counterparts are `ZSTD_decompress_usingDDict`,
 execution; the existing Rust buffered `BlockSink` supplies the established
 window/expiry contract. Prefix and stable-session dictionary support are
 separate future scopes.
+
+## Persistent dictionaries in stable output (Module 26 design)
+
+Record this design before implementation; qualify and promote after Module 25
+closes. `stable-dictionary-output-design.md` defines the API and evidence scope.
+`SliceDecoder<'output,A=Global,D:DictionaryHandle=SharedDictionary>` owns an
+optional persistent attachment alongside its existing scratch and borrowed
+`SliceHistory`. A shared handle retains the immutable dictionary; a view keeps
+an explicit owner borrow. Never store a view into the session's own attachment.
+Normal constructors preserve None and their existing allocation/clone behavior.
+New `with_dictionary`/`with_dictionary_in` constructors consume the supplied
+attachment, keeping its allocator independent from scratch allocator A.
+
+A temporary dictionary sequence sink borrows `&mut SliceHistory` and a view
+computed from the attachment only during a block call. It delegates append/len
+and checked dictionary match expansion. This is a plain safe reference record,
+not a new unsafe storage family. Existing independent dictionary/slice backends
+retain all window, source range, capacity, initialization, alias and overlap
+proofs. The optional attachment uses SharedDictionary's existing Arc/Rc selection;
+auto traits follow D and A. Input fragment borrows are never retained.
+
+At each standard header, validate nonzero IDs against the selection and seed
+repeat offsets from prepared entropy or defaults. ID zero still uses selected
+content. Prepared table views are temporary fallback; owned overrides are
+frame-local. Skips do not consume the attachment. Completion/reset releases
+Huffman/FSE overrides, retains sequence allocator and encoded-input capacity,
+and restores clean history boundaries. Reset retains dictionary selection,
+output borrow and effective limits; no attachment replacement API is admitted.
+
+Keep `retained_capacity()` scratch-only, excluding both output and dictionary.
+New `dictionary_retained_capacity()` reports reachable dictionary payload
+capacity, zero when absent, without claiming unique ownership or including
+shared-control/allocator-internal allocations. Lifetime tests cover output
+views, destination mutation, dictionary view escape and shared-owner drop.
+Native stable-output DDictionaries, actual guarded destinations, exact/short
+capacities and the documented p>window difference require independent checks.
+A fixed seven-byte persistent dictionary corpus replay is a labelled supplement,
+not an original one-shot fuzz target's streaming branch. Prefixes, workspace
+replacement and dictionary-parameter mutation remain separate modules.
