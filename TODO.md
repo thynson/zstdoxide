@@ -181,6 +181,23 @@ Module 26 closes.
 - [ ] Compare frozen whole/fragmented prefix workloads and ledgers using retained safe/unsafe executables and independent repeats.
 - [ ] Reconcile bounded coverage and decompose the next missing caller-output contract without claiming complete parity.
 
+## Module 28: dictionary-free one-shot in-place decompression
+
+Design and ownership are recorded before implementation in
+`docs/in-place-output-design.md` and `docs/data-structures.md`. The input occupies
+the end of one exclusively borrowed buffer. Promote only after Module 27 closes;
+dictionary/prefix in-place and incremental overlap remain separate contracts.
+
+- [x] Analyze pinned margin/block protection, single-buffer ownership, checked overlap and conservative scope before implementation.
+- [ ] Implement an allocation-free checked framing/margin scan with structural versus semantic validation boundaries and pinned native comparisons.
+- [ ] Implement checked resumable slice history and one-buffer raw movement with independent safe/unsafe storage and rejection-before-write invariants.
+- [ ] Integrate a private frame/block loop using disjoint compressed payload/history borrows, actual raw overlap and unread-input fences.
+- [ ] Expose suffix-input in-place APIs with exact options, alias/lifetime documentation, malformed bounds and scratch failure qualification.
+- [ ] Port the original single/two-frame assertions and independently qualify normal/sanitized native shared-buffer layouts and real guards.
+- [ ] Qualify every isolated feature and all features, full/release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics output.
+- [ ] Freeze identical overlapping workloads and allocation ledgers, retain executables and measure safe/unsafe builds with an independent repeat and explicit source-restoration cost.
+- [ ] Reconcile bounded in-place coverage and decompose the next missing contract without claiming complete upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

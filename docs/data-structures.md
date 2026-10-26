@@ -3862,3 +3862,42 @@ existing independent dictionary/slice storage features handle actual byte
 access. Upstream counterparts are ZSTD_DCtx_refPrefix_advanced, ZSTD_getDDict's
 use-once transition and referenced DDict selection. Rust claim/reset and
 configuration boundaries are explicitly bounded, not opaque C context parity.
+
+## Dictionary-free in-place output (Module 28 design)
+
+`in-place-output-design.md` records this prospective module before implementation;
+promote it only after Module 27 closes. One `InPlaceBuffer<'a>` exclusively borrows
+the complete shared source/output allocation. Input is a suffix selected by an
+index; output starts at zero. Positions and ranges replace independently aliased
+Rust input/output references. Validate every cursor addition, source range,
+`frame_start <= output_position <= output_limit <= buffer.len()` and unread-input
+fence before access. A framing-only `FrameLayout` record owns no allocation or
+borrowed payload and remains an ordinary safe value in every backend.
+
+For compressed blocks, split at the validated payload start: output/history is
+the mutable left half, encoded bytes the immutable right half. An ephemeral
+`SliceHistory` resumes validated frame/output indices under that temporary limit;
+all borrows end before advancing input and reborrowing the full allocation. Raw
+blocks use checked overlapping movement within the unique slice, bounded by the
+consumed raw payload end so future input is untouched. RLE copies its byte into
+a value and uses a conservative payload-start write fence. Frame boundaries
+reset history eligibility; checksum validation reads only current-frame output.
+No full input copy, output Vec or cloned history is introduced.
+
+A dedicated `unsafe-in-place-buffer` feature is planned for the overlapping raw
+move, equivalent to safe `copy_within`. It must prove initialized source/dest
+bounds, alignment, unique owner lifetime and permitted overlap before ptr::copy;
+no pointer is stored. Compressed matches retain independent slice-history and
+entropy implementations. Plain coordinates/layout records need no unsafe variant.
+Existing fallible allocator-owned literal/entropy scratch remains separate from
+the caller allocation; borrowed nonclone allocators follow established APIs.
+
+The allocation-free margin scan sums actual frame headers, three bytes per block,
+optional checksums and complete skippable sizes, then adds the largest advertised
+block maximum. Checked arithmetic rejects overflow. It traverses framing without
+claiming payload/checksum validity and does not replace runtime write fences.
+Upstream counterparts are ZSTD_findFrameSizeInfo, ZSTD_decompressionMargin,
+ZSTD_decompressFrame's oBlockEnd protection and ZSTD_copyRawBlock's memmove.
+The original single/two-frame in-place fuzzer assertions, actual overlapping
+native guards, malformed layouts, allocator failures, foreign interpretation,
+no_std and identical safe/unsafe measurements are separate required gates.
