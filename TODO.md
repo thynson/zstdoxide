@@ -120,21 +120,12 @@ Qualification, measured comparisons and remaining limitations are in
 The final receipt is `docs/evidence/2026-10-26-dictionary-output-closure.json`.
 Complete upstream migration remains open.
 
-## Module 26: persistent dictionaries in stable borrowed output
-
-Design and ownership are recorded before implementation in
-`docs/stable-dictionary-output-design.md` and `docs/data-structures.md`. Develop
-a separate candidate; promote only after Module 25 closes.
-
-- [x] Define generic attachment ownership, reset/lifetime behavior and separate dictionary/scratch capacity reporting.
-- [x] Implement the ephemeral borrowed dictionary sequence sink with safe, independent and combined storage checks.
-- [x] Integrate private per-frame dictionary IDs, repeat offsets and prepared entropy while preserving dictionary-free sessions.
-- [x] Expose persistent shared/view session constructors with borrowed allocators, lifetime examples and failure/reset qualification.
-- [x] Independently qualify normal/sanitized native stable dictionary destinations and exact guarded boundary cases.
-- [x] Replay the full pinned dictionary corpus as an explicitly labelled fixed-fragment persistent-session supplement, retaining buffered prefix branches.
-- [x] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics code generation.
-- [x] Compare frozen whole/fragmented workloads and allocation ledgers with retained safe/unsafe binaries and an independent timing repeat.
-- [ ] Reconcile bounded session coverage and decompose single-use borrowed prefixes without claiming complete upstream parity.
+Module 26 is complete within its bounded persistent dictionaries in stable borrowed output scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification, measured comparisons and remaining limitations are in
+`docs/stable-dictionary-output-validation.md` and `docs/stable-dictionary-output-benchmarks.md`.
+The final receipt is `docs/evidence/2026-10-26-stable-dictionary-output-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 27: single-use prefixes in stable borrowed output
 

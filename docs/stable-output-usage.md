@@ -91,3 +91,45 @@ sessions have their own constructor/ownership qualification. Stable input,
 overlapping in-place output and arbitrary C workspace controls remain separate
 contracts. See [qualification](stable-output-validation.md) and
 [measurements](stable-output-benchmarks.md) for the tested boundaries.
+
+
+## Persistent dictionaries with a fixed destination
+
+`SliceDecoder::with_dictionary` consumes a persistent shared dictionary handle;
+`with_dictionary_in` accepts a shared owner or borrowed `DictionaryView` plus an
+independent scratch allocator. The selected dictionary supplies initial entropy
+and repeat offsets for every standard frame, including frames with an omitted
+ID. Nonzero IDs must match. Skips do not consume the selection, and reset retains
+it. The constructor does not clone the supplied handle.
+
+```rust
+use zstdoxide::{compress_with_dictionary, DecodeOptions, Dictionary, SliceDecoder};
+
+let dictionary = Dictionary::raw(b"hello dictionary")?.into_shared();
+let frame = compress_with_dictionary(b"hello dictionary hello", &dictionary)?;
+let mut storage = [0xa5; 32];
+let mut decoder = SliceDecoder::with_dictionary(
+    &mut storage, DecodeOptions::new(22), dictionary,
+);
+for fragment in frame.chunks(3) {
+    assert_eq!(decoder.process(fragment)?.consumed, fragment.len());
+}
+decoder.finish()?;
+assert_eq!(decoder.output()?, b"hello dictionary hello");
+# Ok::<(), zstdoxide::Error>(())
+```
+
+A borrowed view cannot outlive its dictionary owner. Consuming a shared handle
+keeps that owner alive until the session drops. Prepared table payloads are
+borrowed during block calls; working overrides remain frame-local. Dictionary
+and scratch allocators need not have the same type or identity.
+
+`dictionary_retained_capacity()` reports the dictionary payload reachable from
+the selection, zero when absent. It is separate from scratch-only
+`retained_capacity()` and excludes shared-control storage. It does not imply
+that a shared or borrowed payload is uniquely owned by this session.
+
+Prefixes and attachment replacement are outside the Module 26 API. The bounded
+persistent constructor does not expose arbitrary C context reset/parameter
+operations. See [dictionary session qualification](stable-dictionary-output-validation.md)
+and [measurements](stable-dictionary-output-benchmarks.md).

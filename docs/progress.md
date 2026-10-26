@@ -1268,3 +1268,34 @@ contracts stay open.
 
 Details: `dictionary-output-validation.md`, `dictionary-output-benchmarks.md`, and
 `evidence/2026-10-26-dictionary-output-closure.json`.
+
+## Module 26: bounded persistent dictionaries in stable borrowed output complete (2026-10-26)
+
+The scoped API and ownership contract are integrated with default-safe Rust and
+no_std plus alloc. Exact destination/options bounds, malformed inputs, allocator
+failures and independent dictionary/slice storage configurations are qualified
+where applicable. Native helpers remain external test oracles pinned to v1.5.7.
+Foreign Miri and concrete thumbv6m core/alloc code generation are interpretation
+and code-generation evidence, not native foreign hardware execution.
+
+Complete regression reports 1,612 passed and 60 explicitly ignored
+tests across 88 result groups per configuration. Safe, all and twenty
+isolated unsafe backends have qualified regression/no_std/Clippy; formatting and
+release gates are retained in the validation report. External corpus runs have
+separate explicit receipts. Source snapshots and unsuccessful preparatory attempts
+remain distinguishable from final successful runs.
+
+The frozen benchmark compares all 22 primary backends and independently rebuilt
+safe/all repeats with equal output and allocation qualification. All/safe
+geometric mean latency ratios are: primary whole 0.9964; primary fragmented 0.9973; repeat whole 0.9959; repeat fragmented 1.0067. Host timing variation,
+fixed order and unrelated desktop work prevent a universal unsafe-speedup claim.
+
+The final receipt rehashes this module's archives and links the predecessor
+closure while binding integrated production to the final checks and measured
+executables. The completed checklist is cleared; Module 27's design and
+decomposition remain recorded before its implementation is promoted. Complete
+upstream migration, unsupported C workspace/ABI behavior and remaining roadmap
+contracts stay open.
+
+Details: `stable-dictionary-output-validation.md`, `stable-dictionary-output-benchmarks.md`, and
+`evidence/2026-10-26-stable-dictionary-output-closure.json`.
