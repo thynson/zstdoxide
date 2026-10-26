@@ -165,6 +165,22 @@ a separate candidate; promote only after Module 25 closes.
 - [ ] Compare frozen whole/fragmented workloads and allocation ledgers with retained safe/unsafe binaries and an independent timing repeat.
 - [ ] Reconcile bounded session coverage and decompose single-use borrowed prefixes without claiming complete upstream parity.
 
+## Module 27: single-use prefixes in stable borrowed output
+
+Design precedes implementation in `docs/stable-prefix-design.md` and
+`docs/data-structures.md`. Keep predecessors frozen and promote only after
+Module 26 closes.
+
+- [x] Define one-owner attachment states, exact claim/release timing, reset and transactional configuration boundaries.
+- [ ] Implement and independently verify plain attachment ownership transitions without cloning persistent handles.
+- [ ] Integrate private prefix claim, frame completion and reset with existing dictionary-free/persistent behavior.
+- [ ] Expose shared/view prefix constructors and boundary replacement with lifetime, allocator and malformed-input qualification.
+- [ ] Independently qualify pinned normal/sanitized stable-prefix outputs and preserve documented lifecycle differences.
+- [ ] Replay all dictionary corpus branches with a labelled fixed-fragment supplement and unchanged tail selectors.
+- [ ] Qualify safe/isolated/all full and release regression, no_std, Clippy, foreign Miri and concrete no-atomics code generation.
+- [ ] Compare frozen whole/fragmented prefix workloads and ledgers using retained safe/unsafe executables and independent repeats.
+- [ ] Reconcile bounded coverage and decompose the next missing caller-output contract without claiming complete parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

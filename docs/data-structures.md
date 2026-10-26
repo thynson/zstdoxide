@@ -3839,3 +3839,26 @@ capacities and the documented p>window difference require independent checks.
 A fixed seven-byte persistent dictionary corpus replay is a labelled supplement,
 not an original one-shot fuzz target's streaming branch. Prefixes, workspace
 replacement and dictionary-parameter mutation remain separate modules.
+
+## Single-use prefixes in stable output (Module 27 design)
+
+`stable-prefix-design.md` records this design before implementation and limits
+promotion to after Module 26 closure. Replace the optional stable-session
+attachment with private `Attachment<D>`: None, Persistent(D), PendingPrefix(D)
+or ActivePrefix(D). It owns at most one handle/view and never stores a view into
+itself. Claim moves PendingPrefix to ActivePrefix after successful standard
+header parsing, before ID/resource checks. Skips and incomplete/rejected header
+parsing leave it pending. Completion/reset drops active prefixes; reset preserves
+persistent or unclaimed selection. Failure retains active ownership until
+reset/drop. Persistent frames do not introduce handle clones.
+
+Boundary-only set_dictionary/set_prefix replace selection transactionally while
+preserving fixed output, counters and scratch. A clean Header phase with no
+buffered bytes admits changes; every other phase rejects without mutating the
+session. Constructor helpers admit shared owners or borrowed views independently
+of scratch allocator A. Reachable dictionary capacity counts the single
+populated variant, separate from scratch. The enum is a plain safe value record;
+existing independent dictionary/slice storage features handle actual byte
+access. Upstream counterparts are ZSTD_DCtx_refPrefix_advanced, ZSTD_getDDict's
+use-once transition and referenced DDict selection. Rust claim/reset and
+configuration boundaries are explicitly bounded, not opaque C context parity.
