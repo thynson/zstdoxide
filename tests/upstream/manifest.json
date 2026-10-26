@@ -6490,10 +6490,13 @@
           "line_end": 2468,
           "label": "test%3i : frame built with flat dictionary should be decompressible :",
           "status": "partial",
-          "reason": "Raw and shared prepared dictionary decoding restores exact official-oracle fixtures under one-shot and fragmented input/output. The original 551-byte RDG dictionary and CNBuffer workload have not been replayed.",
+          "reason": "Raw and shared prepared dictionary decoding restores exact official-oracle fixtures under one-shot and fragmented input/output. The original 551-byte RDG dictionary and CNBuffer workload have not been replayed. Direct caller-owned dictionary output is additionally qualified against119 independent guarded fixed-destination cases, using both native usingDict/prepared-DDict APIs in normal and ASan/UBSan builds, and shared/borrowed Rust handles under five backend selections. Original C context/workspace and frame-construction parameter gaps remain partial.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
-            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles"
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
+            "src/decode.rs#prepared_raw_and_crossing_fixtures_match_independent_originals",
+            "tests/dictionary_output.rs#public_exact_short_and_options_limits_preserve_destination_identity_and_guards",
+            "tests/dictionary_output_native.rs#pinned_native_dictionary_destinations_and_guarded_errors"
           ]
         },
         {
@@ -6523,10 +6526,13 @@
           "line_end": 2495,
           "label": "test%3i : decompress with DDict :",
           "status": "partial",
-          "reason": "Raw and shared prepared dictionary decoding restores exact official-oracle fixtures under one-shot and fragmented input/output. The original 551-byte RDG dictionary and CNBuffer workload have not been replayed.",
+          "reason": "Raw and shared prepared dictionary decoding restores exact official-oracle fixtures under one-shot and fragmented input/output. The original 551-byte RDG dictionary and CNBuffer workload have not been replayed. Direct caller-owned dictionary output is additionally qualified against119 independent guarded fixed-destination cases, using both native usingDict/prepared-DDict APIs in normal and ASan/UBSan builds, and shared/borrowed Rust handles under five backend selections. Original C context/workspace and frame-construction parameter gaps remain partial.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
-            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles"
+            "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
+            "src/decode.rs#prepared_raw_and_crossing_fixtures_match_independent_originals",
+            "tests/dictionary_output.rs#public_exact_short_and_options_limits_preserve_destination_identity_and_guards",
+            "tests/dictionary_output_native.rs#pinned_native_dictionary_destinations_and_guarded_errors"
           ]
         },
         {
@@ -6726,13 +6732,16 @@
           "line_end": 2787,
           "label": "test%3i : frame built with dictionary should be decompressible :",
           "status": "partial",
-          "reason": "C-generated and Rust-trained dictionaries decode exact one-shot/fragmented content; five full 5-MiB official CNBuffer campaigns match both Rust and independent C decoding. Original level 4/C-specific frame-construction parameters remain unported.",
+          "reason": "C-generated and Rust-trained dictionaries decode exact one-shot/fragmented content; five full 5-MiB official CNBuffer campaigns match both Rust and independent C decoding. Original level 4/C-specific frame-construction parameters remain unported. Direct caller-owned dictionary output is additionally qualified against119 independent guarded fixed-destination cases, using both native usingDict/prepared-DDict APIs in normal and ASan/UBSan builds, and shared/borrowed Rust handles under five backend selections. Original C context/workspace and frame-construction parameter gaps remain partial.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
             "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
             "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
             "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
-            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
+            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source",
+            "src/decode.rs#prepared_raw_and_crossing_fixtures_match_independent_originals",
+            "tests/dictionary_output.rs#public_exact_short_and_options_limits_preserve_destination_identity_and_guards",
+            "tests/dictionary_output_native.rs#pinned_native_dictionary_destinations_and_guarded_errors"
           ]
         },
         {
@@ -6784,13 +6793,16 @@
           "line_end": 2825,
           "label": "test%3i : frame built with dictionary should be decompressible :",
           "status": "partial",
-          "reason": "C-generated and Rust-trained dictionaries decode exact one-shot/fragmented content; five full 5-MiB official CNBuffer campaigns match both Rust and independent C decoding. Original level 4/C-specific frame-construction parameters remain unported.",
+          "reason": "C-generated and Rust-trained dictionaries decode exact one-shot/fragmented content; five full 5-MiB official CNBuffer campaigns match both Rust and independent C decoding. Original level 4/C-specific frame-construction parameters remain unported. Direct caller-owned dictionary output is additionally qualified against119 independent guarded fixed-destination cases, using both native usingDict/prepared-DDict APIs in normal and ASan/UBSan builds, and shared/borrowed Rust handles under five backend selections. Original C context/workspace and frame-construction parameter gaps remain partial.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
             "tests/upstream_dictionary.rs#one_shot_dictionary_helper_matches_streaming_and_preserves_shared_handles",
             "tests/upstream_formatted_training.rs#trained_formatted_content_improves_held_out_messages_and_roundtrips",
             "tests/upstream_formatted_training.rs#official_codec_loads_learned_metadata_and_roundtrips_in_both_directions",
-            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source"
+            "tests/upstream_formatted_training.rs#official_cnbuffer_campaign_trains_and_roundtrips_the_complete_source",
+            "src/decode.rs#prepared_raw_and_crossing_fixtures_match_independent_originals",
+            "tests/dictionary_output.rs#public_exact_short_and_options_limits_preserve_destination_identity_and_guards",
+            "tests/dictionary_output_native.rs#pinned_native_dictionary_destinations_and_guarded_errors"
           ]
         },
         {
@@ -6835,11 +6847,14 @@
           "line_end": 2885,
           "label": "test%3i : frame built without dictID should be decompressible :",
           "status": "partial",
-          "reason": "Omitted-ID dictionary frames, including explicit known/unknown content-size variants, roundtrip exactly; omitted-ID input still fails without selected content. Original advanced encoder strategy/level setup remains unported.",
+          "reason": "Omitted-ID dictionary frames, including explicit known/unknown content-size variants, roundtrip exactly; omitted-ID input still fails without selected content. Original advanced encoder strategy/level setup remains unported. Direct caller-owned dictionary output is additionally qualified against119 independent guarded fixed-destination cases, using both native usingDict/prepared-DDict APIs in normal and ASan/UBSan builds, and shared/borrowed Rust handles under five backend selections. Original C context/workspace and frame-construction parameter gaps remain partial.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#dictionary_frames_cover_known_unknown_size_checksum_and_window_options",
             "tests/upstream_dictionary_encode.rs#omitted_dictionary_id_preserves_match_effectiveness_and_checksum",
-            "tests/upstream_dictionary.rs#official_omitted_id_and_prefix_first_frames_require_content_without_an_id"
+            "tests/upstream_dictionary.rs#official_omitted_id_and_prefix_first_frames_require_content_without_an_id",
+            "src/decode.rs#prepared_raw_and_crossing_fixtures_match_independent_originals",
+            "tests/dictionary_output.rs#public_exact_short_and_options_limits_preserve_destination_identity_and_guards",
+            "tests/dictionary_output_native.rs#pinned_native_dictionary_destinations_and_guarded_errors"
           ]
         },
         {
@@ -6862,11 +6877,14 @@
           "line_end": 2906,
           "label": "test%3i : frame built without dictID should be decompressible :",
           "status": "partial",
-          "reason": "Omitted-ID dictionary frames, including explicit known/unknown content-size variants, roundtrip exactly; omitted-ID input still fails without selected content. Original advanced encoder strategy/level setup remains unported.",
+          "reason": "Omitted-ID dictionary frames, including explicit known/unknown content-size variants, roundtrip exactly; omitted-ID input still fails without selected content. Original advanced encoder strategy/level setup remains unported. Direct caller-owned dictionary output is additionally qualified against119 independent guarded fixed-destination cases, using both native usingDict/prepared-DDict APIs in normal and ASan/UBSan builds, and shared/borrowed Rust handles under five backend selections. Original C context/workspace and frame-construction parameter gaps remain partial.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#dictionary_frames_cover_known_unknown_size_checksum_and_window_options",
             "tests/upstream_dictionary_encode.rs#omitted_dictionary_id_preserves_match_effectiveness_and_checksum",
-            "tests/upstream_dictionary.rs#official_omitted_id_and_prefix_first_frames_require_content_without_an_id"
+            "tests/upstream_dictionary.rs#official_omitted_id_and_prefix_first_frames_require_content_without_an_id",
+            "src/decode.rs#prepared_raw_and_crossing_fixtures_match_independent_originals",
+            "tests/dictionary_output.rs#public_exact_short_and_options_limits_preserve_destination_identity_and_guards",
+            "tests/dictionary_output_native.rs#pinned_native_dictionary_destinations_and_guarded_errors"
           ]
         },
         {
