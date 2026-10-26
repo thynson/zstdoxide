@@ -106,22 +106,12 @@ Qualification, measured comparisons and remaining limitations are in
 The final receipt is `docs/evidence/2026-10-26-caller-output-closure.json`.
 Complete upstream migration remains open.
 
-## Module 24: stable borrowed incremental decompression output
-
-Design and ownership are recorded before implementation in
-`docs/stable-output-design.md` and `docs/data-structures.md`. Develop the
-candidate separately while Module 23 completes qualification; promote it only
-after that milestone closes. Dictionary-backed sessions remain separate.
-
-- [x] Define the borrowed session API, state ownership, precise reset retention, fixed-capacity error semantics and pinned upstream stable-buffer assertions.
-- [x] Extend checked slice history with session prefix/reset operations and verify unchanged one-shot behavior.
-- [x] Implement bounded fragmented input orchestration with direct raw/RLE/compressed output, frame boundaries, poisoning and reset.
-- [x] Expose the stable borrowed session API with lifetime examples, exact progress/limit tests and allocation failure qualification.
-- [x] Port and independently qualify matching pinned native stable-output assertions, including malformed inputs and real guard checks.
-- [x] Preserve the upstream tail-selected stable streaming fuzz branch and replay its entire pinned external corpus with real fixed destinations and guards.
-- [x] Qualify safe/isolated/all features, true no_std, strict Clippy, full/release regression, foreign Miri and concrete no-atomics output.
-- [x] Freeze identical fragmentation workloads, allocation ledgers and safe/unsafe timing with retained executables and an independent repeat.
-- [ ] Reconcile bounded session coverage, update usage/progress and decompose dictionary-backed caller-owned output without claiming complete parity.
+Module 24 is complete within its bounded stable borrowed incremental output scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification, measured comparisons and remaining limitations are in
+`docs/stable-output-validation.md` and `docs/stable-output-benchmarks.md`.
+The final receipt is `docs/evidence/2026-10-26-stable-output-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 25: dictionary-backed caller-owned one-shot output
 

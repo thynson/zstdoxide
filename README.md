@@ -45,8 +45,12 @@ storage and returns the written prefix length, preserving the unused suffix.
 `max_output_size`; the window limit stays independent. On error, bytes inside
 that allowance may contain provisional output, while bytes beyond it stay
 unchanged. Compressed blocks still need temporary entropy/literal allocations.
-These one-shot slice APIs support dictionary-free frames and concatenation;
-stable incremental and in-place decoding are separate contracts.
+These one-shot slice APIs support dictionary-free frames and concatenation.
+`SliceDecoder` borrows one fixed destination across temporary input fragments,
+writing directly into its frame-local history. Resubmit unconsumed input suffixes;
+capacity exhaustion returns `ResourceLimit`. Output is provisional until frame
+validation, and failure requires reset. See [stable output usage](docs/stable-output-usage.md).
+Dictionary-backed stable sessions and overlapping in-place decoding remain separate contracts.
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
 Allocation failures and corrupt, truncated, or over-limit input return `Error`.
 The named `compress` encoder writes one checksummed single-segment frame, so its advertised window
@@ -186,7 +190,7 @@ another backend. Allocation boundaries use fallible reservation. The standard
 `decompress_in`, `decompress_with_options_in`,
 `decompress_into_in`, `decompress_into_with_options_in`,
 `decompress_with_dictionary_in`,
-`Decoder::new_in`, `Decoder::with_dictionary_in`, allocator-aware dictionary
+`Decoder::new_in`, `Decoder::with_dictionary_in`, `SliceDecoder::new_in`, allocator-aware dictionary
 construction, `train_raw_dictionary_in`, `train_dictionary_in`, and
 `finalize_dictionary_in`. Whole-buffer decoding retains the
 original allocator in its returned vector; temporary storage uses fresh clones.
