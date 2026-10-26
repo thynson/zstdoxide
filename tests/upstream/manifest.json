@@ -4370,7 +4370,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "All12063 pinned rolling dictionary_decompress inputs run under safe/all release with zero skips: 11768 trained dictionaries, 295 empty fallbacks and 20 successful bounded decodes. Original source/training/attachment/capacity selectors are preserved. Prepared/loaded branches use real guarded direct destinations and compare success/bytes with buffered decoding; 1133 prefix selections retain buffered output in the one-shot direct campaign. The independent Rust trainer is not native fastCover and original C context/by-reference/loading API differences remain partial.",
+      "reason": "Historical buffered adapter qualification: Exact reserved source,100 training-sample offsets, prepared/loaded/prefix mode and output-limit selectors run through owned shared dictionaries. Successful decoding has bounded progress/output and canaries; malformed source may fail. Safe/all-feature release each replayed 12063 files:11768 trained,295 TrainingFailed empty fallbacks,20 successful decodes and 12043 source rejections; no skips. Training uses the independent Rust algorithm instead of fastCover, and C by-reference/constructor variants share the owned Rust handle. The current persistent prepared/loaded branches additionally use actual guarded direct destinations and compare success/output with the buffered API; prefix branches retain buffered output. Focused independent storage-feature checks pass. Its new full corpus replay has a separate completion receipt; historical counts do not establish this changed branch coverage. A seven-byte fixed-input stable-output persistent-session supplement now compares success and bytes with direct and buffered output. It consumes no new upstream selector and is explicitly not part of the original one-shot target. Prefix branches remain buffered. Full corpus completion is tracked separately; older evidence alone does not qualify the supplement.",
       "rust_tests": [
         "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
         "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
@@ -4379,7 +4379,8 @@
         "tests/upstream_trained_dictionary_fuzz.rs#trained_decompression_covers_prepared_loaded_prefix_modes_and_valid_controls",
         "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
         "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus",
-        "tests/dictionary_output.rs#truncations_mutations_and_concatenation_do_not_cross_output_allowance"
+        "tests/dictionary_output.rs#truncations_mutations_and_concatenation_do_not_cross_output_allowance",
+        "tests/stable_dictionary_output.rs#truncated_and_mutated_frames_preserve_guards_and_match_one_shot_success"
       ],
       "line_count": 77,
       "cases": [
@@ -4390,7 +4391,7 @@
           "line_end": 77,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "All12063 pinned rolling dictionary_decompress inputs run under safe/all release with zero skips: 11768 trained dictionaries, 295 empty fallbacks and 20 successful bounded decodes. Original source/training/attachment/capacity selectors are preserved. Prepared/loaded branches use real guarded direct destinations and compare success/bytes with buffered decoding; 1133 prefix selections retain buffered output in the one-shot direct campaign. The independent Rust trainer is not native fastCover and original C context/by-reference/loading API differences remain partial.",
+          "reason": "Historical buffered adapter qualification: Exact reserved source,100 training-sample offsets, prepared/loaded/prefix mode and output-limit selectors run through owned shared dictionaries. Successful decoding has bounded progress/output and canaries; malformed source may fail. Safe/all-feature release each replayed 12063 files:11768 trained,295 TrainingFailed empty fallbacks,20 successful decodes and 12043 source rejections; no skips. Training uses the independent Rust algorithm instead of fastCover, and C by-reference/constructor variants share the owned Rust handle. The current persistent prepared/loaded branches additionally use actual guarded direct destinations and compare success/output with the buffered API; prefix branches retain buffered output. Focused independent storage-feature checks pass. Its new full corpus replay has a separate completion receipt; historical counts do not establish this changed branch coverage. A seven-byte fixed-input stable-output persistent-session supplement now compares success and bytes with direct and buffered output. It consumes no new upstream selector and is explicitly not part of the original one-shot target. Prefix branches remain buffered. Full corpus completion is tracked separately; older evidence alone does not qualify the supplement.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
             "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
@@ -4399,7 +4400,8 @@
             "tests/upstream_trained_dictionary_fuzz.rs#trained_decompression_covers_prepared_loaded_prefix_modes_and_valid_controls",
             "tests/upstream_trained_dictionary_fuzz.rs#trained_dictionary_targets_accept_deterministic_noise_and_truncated_frames",
             "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus",
-            "tests/dictionary_output.rs#truncations_mutations_and_concatenation_do_not_cross_output_allowance"
+            "tests/dictionary_output.rs#truncations_mutations_and_concatenation_do_not_cross_output_allowance",
+            "tests/stable_dictionary_output.rs#truncated_and_mutated_frames_preserve_guards_and_match_one_shot_success"
           ]
         }
       ]

@@ -22,8 +22,8 @@ use std::ops::Range;
 use std::path::PathBuf;
 use zstdoxide::{
     DecodeOptions, Decoder, Dictionary, DictionaryMode, DictionaryTrainingOptions, Encoder,
-    EncoderOptions, EndDirective, Error, RawTrainingOptions, SharedDictionary, StreamStatus,
-    decompress_into_with_dictionary, train_dictionary,
+    EncoderOptions, EndDirective, Error, RawTrainingOptions, SharedDictionary, SliceDecoder,
+    StreamStatus, decompress_into_with_dictionary, train_dictionary,
 };
 
 const MAX_INPUT: usize = 2 * 1024 * 1024;
@@ -437,6 +437,49 @@ fn decode_direct_checked(source: &[u8], dictionary: SharedDictionary, capacity: 
     );
     assert!(storage[..32].iter().all(|&b| b == 0xa5));
     assert!(storage[capacity + 32..].iter().all(|&b| b == 0xa5));
+    // Explicit seven-byte supplement: this schedule is not a selector from the
+    // upstream one-shot dictionary_decompress target. Prefix remains buffered.
+    let mut stable_storage = vec![0xa5; capacity + 64];
+    let mut decoder = SliceDecoder::with_dictionary(
+        &mut stable_storage[32..capacity + 32],
+        DecodeOptions::new(capacity),
+        dictionary.clone(),
+    );
+    let stable = (|| {
+        for fragment in source.chunks(7) {
+            let mut consumed = 0;
+            while consumed < fragment.len() {
+                let p = decoder.process(&fragment[consumed..])?;
+                assert!(p.consumed > 0 || p.produced > 0);
+                assert!(p.consumed <= fragment.len() - consumed);
+                assert!(matches!(
+                    p.status,
+                    StreamStatus::NeedInput | StreamStatus::FrameFinished
+                ));
+                consumed += p.consumed;
+            }
+        }
+        decoder.finish()?;
+        assert_eq!(decoder.total_input(), source.len() as u64);
+        Ok::<usize, Error>(decoder.output()?.len())
+    })();
+    assert_eq!(stable.is_ok(), direct.is_ok());
+    if let Err(error) = stable {
+        assert_ne!(error, Error::AllocationFailed);
+        assert_ne!(error, Error::InvalidState);
+        assert_eq!(decoder.process(&[]), Err(Error::InvalidState));
+    }
+    drop(decoder);
+    assert!(stable_storage[..32].iter().all(|&b| b == 0xa5));
+    assert!(stable_storage[capacity + 32..].iter().all(|&b| b == 0xa5));
+    if let Ok(written) = stable {
+        assert_eq!(direct, Ok(written));
+        assert_eq!(
+            &stable_storage[32..written + 32],
+            &storage[32..written + 32]
+        );
+        assert!(stable_storage[written + 32..].iter().all(|&b| b == 0xa5));
+    }
     let buffered = decode_checked(source, dictionary, false, capacity);
     assert_eq!(direct.is_ok(), buffered.is_ok());
     match direct {
