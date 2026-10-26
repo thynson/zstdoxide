@@ -3721,8 +3721,9 @@ with a bounded filled count. Frame metadata records a validated `FrameHeader`,
 maximum block size, last-block bit and remaining payload. All address-bearing
 state consists of slice borrows, indices or owned vectors. A compressed-input
 vector never exceeds the validated encoded block size; complete payloads already
-present in a call can decode directly without this copy. Entropy owners reset
-between frames; input scratch capacity may be reused. All requests are fallible
+present in a call can decode directly without this copy. Frame-local Huffman and FSE overrides are released
+between frames and on reset; the sequence allocator remains owned, and encoded
+input scratch capacity may be reused. All requests are fallible
 and belong to fresh clones of the selected scratch allocator. The caller's
 destination is never resized, adopted or deallocated by the codec.
 

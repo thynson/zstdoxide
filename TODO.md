@@ -123,7 +123,7 @@ Design and ownership are recorded before implementation in
 candidate separately while Module 23 completes qualification; promote it only
 after that milestone closes. Dictionary-backed sessions remain separate.
 
-- [x] Define the borrowed session API, state ownership, fixed-capacity error semantics and pinned upstream stable-buffer assertions.
+- [x] Define the borrowed session API, state ownership, precise reset retention, fixed-capacity error semantics and pinned upstream stable-buffer assertions.
 - [ ] Extend checked slice history with session prefix/reset operations and verify unchanged one-shot behavior.
 - [ ] Implement bounded fragmented input orchestration with direct raw/RLE/compressed output, frame boundaries, poisoning and reset.
 - [ ] Expose the stable borrowed session API with lifetime examples, exact progress/limit tests and allocation failure qualification.

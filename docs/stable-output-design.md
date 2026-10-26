@@ -39,8 +39,9 @@ its ability to drain into unrelated short output slices.
 - `total_input()` and `total_output()` report accepted input and physically
   written bytes, including writes made by a failing call. Overflow is rejected.
 - `reset()` restarts at output position zero with the same borrow and effective
-  options, retaining compressed-input and sequence workspace capacity. It does
-  not erase destination bytes. Previously produced bytes are no longer output.
+  options, retaining compressed-input buffer capacity and the sequence allocator.
+  Frame-local Huffman and FSE table overrides are released. It does not erase
+  destination bytes. Previously produced bytes are no longer output.
 - `options()` exposes the effective limits. The output limit is clamped to the
   destination capacity at construction; window limits stay independent.
 - Dropping the session releases scratch owners and returns exclusive access to
