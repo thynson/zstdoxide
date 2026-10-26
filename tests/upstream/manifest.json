@@ -10554,7 +10554,7 @@
       "suite": "core_and_stress",
       "role": "test_suite",
       "status": "partial",
-      "reason": "Bounded contexts cover fragmented progress, checksums, flush/finish, pledges/reset, dictionary/prefix encode/decode and prepared entropy/repeat offsets. Detached source-hint inspection and supported live getter/configuration/reset assertions now have precise qualified mappings. Rust retains explicit Finished reset and its checksum/pledge defaults; live numeric streaming setters and legacy initialization are not implemented; separate whole-buffer no-dictionary APIs now execute admitted Fast profiles. Original broad sequence schedules, remaining level/parameter combinations, stable buffers, C allocation/workspace APIs, workers and magicless modes remain incomplete.",
+      "reason": "Bounded contexts cover fragmented progress, checksums, flush/finish, pledges/reset, dictionary/prefix encode/decode and prepared entropy/repeat offsets. Detached source-hint inspection and supported live getter/configuration/reset assertions now have precise qualified mappings. Rust retains explicit Finished reset and its checksum/pledge defaults; live numeric streaming setters and legacy initialization are not implemented; separate whole-buffer no-dictionary APIs now execute admitted Fast profiles. Original broad sequence schedules, remaining level/parameter combinations, stable input buffers, runtime stable-output mode switching, C allocation/workspace APIs, workers and magicless modes remain incomplete. SliceDecoder now directly borrows stable output across fragmented calls; complete/short destination, poisoning, reset and lifetime constraints have independent native and Rust adapters. C workspace-size ABI and the original RDG setup remain separate.",
       "rust_tests": [
         "tests/upstream_streaming.rs#exact_small_sequence_sections_survive_every_chunk_boundary",
         "tests/upstream_streaming.rs#exact_history_overwrite_regression_survives_output_fragmentation",
@@ -10633,7 +10633,12 @@
         "tests/upstream_dictionary_encode.rs#retained_history_keys_cross_a_short_flush_into_current_input",
         "tests/upstream_dictionary_encode.rs#a_later_block_dictionary_match_crosses_retained_frame_zero_and_current_output",
         "tests/upstream_parameters.rs",
-        "tests/upstream_parameter_lifecycle.rs"
+        "tests/upstream_parameter_lifecycle.rs",
+        "tests/slice_decoder.rs#every_split_retains_exact_progress_and_writes_only_the_output_prefix",
+        "tests/slice_decoder.rs#fixed_capacity_options_and_advertised_windows_are_independent",
+        "tests/slice_decoder.rs#every_complete_and_fragmented_scratch_failure_poisons_then_recovers",
+        "tests/slice_decoder_native.rs#replay_native_stable_destinations",
+        "tests/upstream_decodecorpus.rs#stable_borrowed_sessions_decode_all_generated_frames_with_fragmented_input"
       ],
       "line_count": 3467,
       "cases": [
@@ -10940,9 +10945,15 @@
           "line_start": 798,
           "line_end": 810,
           "label": "test%3i : ZSTD_decompressStream() single pass :",
-          "status": "blocked",
-          "reason": "The original group requires advanced compression/decompression parameter or initialization controls beyond the supported window/checksum/pledge options; its exact assertions are not yet ported.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Direct complete-input decoding and exact output have native and Rust coverage. Rust avoids encoded-payload copying on complete blocks but may allocate entropy/literal scratch; the original C sizeof_DCtx/no-workspace-growth ABI and RDG setup are not Rust contracts.",
+          "rust_tests": [
+            "tests/slice_decoder.rs#every_split_retains_exact_progress_and_writes_only_the_output_prefix",
+            "tests/slice_decoder.rs#fixed_capacity_options_and_advertised_windows_are_independent",
+            "tests/slice_decoder.rs#every_complete_and_fragmented_scratch_failure_poisons_then_recovers",
+            "tests/slice_decoder_native.rs#replay_native_stable_destinations",
+            "tests/upstream_decodecorpus.rs#stable_borrowed_sessions_decode_all_generated_frames_with_fragmented_input"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:811",
@@ -10950,9 +10961,15 @@
           "line_start": 811,
           "line_end": 824,
           "label": "test%3i : ZSTD_decompressStream() stable out buffer :",
-          "status": "blocked",
-          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "One persistent exclusive destination borrow accepts fragmented input and retains direct match history. Native ordinary/sanitized runs and Rust replay qualify fixed buffers and exact bytes; the original random RDG workload, C sizeof_DCtx accounting and runtime mode switch remain separate.",
+          "rust_tests": [
+            "tests/slice_decoder.rs#every_split_retains_exact_progress_and_writes_only_the_output_prefix",
+            "tests/slice_decoder.rs#fixed_capacity_options_and_advertised_windows_are_independent",
+            "tests/slice_decoder.rs#every_complete_and_fragmented_scratch_failure_poisons_then_recovers",
+            "tests/slice_decoder_native.rs#replay_native_stable_destinations",
+            "tests/upstream_decodecorpus.rs#stable_borrowed_sessions_decode_all_generated_frames_with_fragmented_input"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:825",
@@ -10960,9 +10977,15 @@
           "line_start": 825,
           "line_end": 837,
           "label": "test%3i : ZSTD_decompressStream() stable out buffer too small :",
-          "status": "blocked",
-          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Actual one-byte-short and zero destinations reject as native dstSize_tooSmall and Rust ResourceLimit across the qualified fixture/schedule matrix. The original RDG frame setup and C parameter call are not reproduced by the Rust API.",
+          "rust_tests": [
+            "tests/slice_decoder.rs#every_split_retains_exact_progress_and_writes_only_the_output_prefix",
+            "tests/slice_decoder.rs#fixed_capacity_options_and_advertised_windows_are_independent",
+            "tests/slice_decoder.rs#every_complete_and_fragmented_scratch_failure_poisons_then_recovers",
+            "tests/slice_decoder_native.rs#replay_native_stable_destinations",
+            "tests/upstream_decodecorpus.rs#stable_borrowed_sessions_decode_all_generated_frames_with_fragmented_input"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:838",
@@ -10970,9 +10993,11 @@
           "line_start": 838,
           "line_end": 853,
           "label": "test%3i : ZSTD_decompressStream() stable out buffer modified :",
-          "status": "blocked",
-          "reason": "The original group requires stable input/output buffer identity, specialized direct-buffer errors, or related allocation accounting, which the borrowed-slice streaming API does not expose.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "Native changed position/pointer/capacity reject with dstBuffer_wrong. Rust owns the position and exclusive slice borrow, with compile-fail examples preventing conflicting writes/views. No runtime changed-buffer API or equivalent C numeric error is claimed.",
+          "rust_tests": [
+            "src/slice_decode.rs"
+          ]
         },
         {
           "id": "tests/zstreamtest.c:854",

@@ -279,3 +279,44 @@ fn caller_owned_destinations_match_every_generated_frame() {
         }
     }
 }
+
+#[test]
+fn stable_borrowed_sessions_decode_all_generated_frames_with_fragmented_input() {
+    use zstdoxide::{SliceDecoder, StreamStatus};
+    for fixture in FRAMES {
+        for chunk in [1, 17, usize::MAX] {
+            let mut output = vec![0xa5; fixture.original.len() + 16];
+            let mut decoder =
+                SliceDecoder::new(&mut output[8..], DecodeOptions::new(fixture.original.len()));
+            let mut consumed = 0;
+            let mut produced = 0;
+            let mut boundaries = 0;
+            while consumed < fixture.encoded.len() {
+                let end = consumed + chunk.min(fixture.encoded.len() - consumed);
+                let p = decoder
+                    .process(&fixture.encoded[consumed..end])
+                    .unwrap_or_else(|error| panic!("{} chunk {chunk}: {error:?}", fixture.name));
+                assert_eq!(p.consumed, end - consumed);
+                consumed = end;
+                produced += p.produced;
+                if p.status == StreamStatus::FrameFinished {
+                    boundaries += 1;
+                } else {
+                    assert_eq!(p.status, StreamStatus::NeedInput);
+                }
+            }
+            decoder.finish().unwrap();
+            assert_eq!(boundaries, 1);
+            assert_eq!(produced, fixture.original.len());
+            assert_eq!(
+                decoder.output().unwrap(),
+                fixture.original,
+                "{}",
+                fixture.name
+            );
+            drop(decoder);
+            assert_eq!(&output[..8], &[0xa5; 8]);
+            assert_eq!(&output[8 + fixture.original.len()..], &[0xa5; 8]);
+        }
+    }
+}
