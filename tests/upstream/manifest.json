@@ -11204,10 +11204,12 @@
           "line_end": 1138,
           "label": "test%3i : decompress %u bytes with digested dictionary :",
           "status": "partial",
-          "reason": "Shared prepared dictionaries consume complete frames and restore exact contents under one-byte and larger chunks; original large CNBuffer/generated-dictionary workload is replaced by pinned HTTP and C-generated fixtures.",
+          "reason": "Shared prepared dictionaries consume complete frames and restore exact contents under one-byte and larger chunks; original large CNBuffer/generated-dictionary workload is replaced by pinned HTTP and C-generated fixtures. Fixed borrowed output sessions additionally preserve persistent shared/view dictionary selection across fragmented frames and reset. A separate pinned stable-output oracle checks loaded and prepared dictionaries with actual guards at whole/one/seven-byte schedules. Opaque C context initialization/replacement and original generated workloads remain outside this added scope.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
-            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly"
+            "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
+            "tests/stable_dictionary_output.rs#every_prepared_split_and_reset_preserves_fixed_storage_and_dictionary_selection",
+            "tests/stable_dictionary_output_native.rs#pinned_native_stable_dictionary_destinations_and_guarded_errors"
           ]
         },
         {
@@ -11239,13 +11241,15 @@
           "line_end": 1239,
           "label": "test%3i : ZSTD_decompressStream() with dictionary :",
           "status": "partial",
-          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None).",
+          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None). Fixed borrowed output sessions additionally preserve persistent shared/view dictionary selection across fragmented frames and reset. A separate pinned stable-output oracle checks loaded and prepared dictionaries with actual guards at whole/one/seven-byte schedules. Opaque C context initialization/replacement and original generated workloads remain outside this added scope.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
             "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
             "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
             "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
-            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries"
+            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries",
+            "tests/stable_dictionary_output.rs#every_prepared_split_and_reset_preserves_fixed_storage_and_dictionary_selection",
+            "tests/stable_dictionary_output_native.rs#pinned_native_stable_dictionary_destinations_and_guarded_errors"
           ]
         },
         {
@@ -11255,13 +11259,15 @@
           "line_end": 1268,
           "label": "test%3i : ZSTD_resetDStream() with dictionary :",
           "status": "partial",
-          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None).",
+          "reason": "Dictionary loading, prepared reuse, frame persistence, missing/mismatch failure and session reset retention run. Rust resets retain selection; C init/session-and-parameters clearing semantics are adapted through explicit set_dictionary(None). Fixed borrowed output sessions additionally preserve persistent shared/view dictionary selection across fragmented frames and reset. A separate pinned stable-output oracle checks loaded and prepared dictionaries with actual guards at whole/one/seven-byte schedules. Opaque C context initialization/replacement and original generated workloads remain outside this added scope.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#prepared_http_dictionary_decodes_the_official_golden_frame",
             "tests/upstream_dictionary.rs#official_prepared_dictionary_persists_across_an_unsplit_concatenated_input",
             "tests/upstream_dictionary.rs#reset_and_reset_with_options_preserve_the_persistent_dictionary",
             "tests/upstream_dictionary.rs#setting_or_clearing_a_dictionary_replaces_any_pending_prefix",
-            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries"
+            "tests/upstream_dictionary.rs#nonzero_frame_id_distinguishes_missing_and_mismatched_dictionaries",
+            "tests/stable_dictionary_output.rs#every_prepared_split_and_reset_preserves_fixed_storage_and_dictionary_selection",
+            "tests/stable_dictionary_output_native.rs#pinned_native_stable_dictionary_destinations_and_guarded_errors"
           ]
         },
         {

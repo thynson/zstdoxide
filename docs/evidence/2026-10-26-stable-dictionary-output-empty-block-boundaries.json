@@ -1,0 +1,1755 @@
+{
+  "status": "passed",
+  "regression": {
+    "status": "passed",
+    "source_sha256": "39b1576bdce88c95592a4872a2c6ac009c904ad3ce4676a70f29e1d2a8295fb5",
+    "production_source": {
+      "src/greedy_state.rs": "4ba31ec4cc1c60e5d0d81e38e93c114d7dbdc1f4e8e7f3567aafcbcbc27ead05",
+      "src/slice_history.rs": "7b7d7957d971e2301c0b64cb7fcb7095b139f8e3106c598ac35416dc7d64a016",
+      "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+      "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+      "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+      "src/stream.rs": "088a6bbe9a8cef03a081d68d58f7c29232c838e3b7fd25bd60c1b220841c6632",
+      "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+      "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+      "src/slice_decode.rs": "5a350f74f5559cdd8d758d7cc1b228d8b5b5d10d496f0ac9a670d9a570d56e96",
+      "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+      "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+      "src/ultra2_retained_state.rs": "121e6bcfed9297c23f4d3aaeff5168dfaf12cc45e67230c02309a8312c810b64",
+      "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+      "src/tree_source.rs": "e8ff59ed5de930faaca3ff89590ea5c208a13c75c06b9acc3f3665dd7761c4c0",
+      "src/sequence_plan.rs": "0af5935553bb8b0aa931a60355e8bf1b76c62f53e0d17c3fb477e1119e3f0bdf",
+      "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+      "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+      "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+      "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+      "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+      "src/greedy_parse.rs": "0555b480e7c93683cdd29ec863ff8235f983b7bc579a047ef69c883e365211bb",
+      "src/greedy_block.rs": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+      "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+      "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+      "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+      "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+      "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+      "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+      "src/block_entropy.rs": "9a8dbdaf37c75f09aa18199d7a6b6701621267b55e5090bb0847317c4a45e538",
+      "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+      "src/lib.rs": "8515ff5e7e4e2f8c14bfd2cd6945384c29d2601dc6380ec485488a59df58929a",
+      "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+      "src/optimal_short_key.rs": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434",
+      "src/optimal_retained.rs": "137308d223bc5e2182b2e9ff531ab06c0c95b6665a364ec65bacb711eb176cf6",
+      "src/ultra2_retained.rs": "69a889ff4e8e77720e7a55f2e0ce7c79049b813c9f33b1e24b14f8491ec5ed39",
+      "src/optimal_search.rs": "d33fb024fe4f55120417a0e3150ce8758e9cb7079a40521f26d1a2761901f992",
+      "src/ultra2_frame_plan.rs": "f3b704e167db719fcc10b19cc91c292c8fa7ac63927ec7f2c9a9622bb32c21a6",
+      "src/optimal_parse.rs": "99c2a92137115d50194e897df70403f3631127e5b7a7da058e5aee507a2567ab",
+      "src/optimal_path_layout.rs": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5",
+      "src/optimal_price.rs": "d389ec0b49194a65c506c369531ae68a42ec92f6dd06531333ddbc93c018712e",
+      "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+      "src/sequence_context.rs": "cfa51f7f78f2488a67b42e3dce4569f2641895b161fb92f9c69380d44a8fc47b",
+      "src/optimal_state.rs": "72ccaab4558ac4ae8ac691cafd1a0b4753c3281d4e86ed0cefcf602cccdbe8e7",
+      "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+      "src/reference_search.rs": "534f5cfaefbca265d6498f6ec4214aad9a783ce9aca7da6eba6d745f033ff818",
+      "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+      "src/tree_search.rs": "c5fabb7ec63df89887f94d42f86e5bc66aea244543e061bff340d5fe5a7dc2bc",
+      "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+      "src/reference_tree.rs": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f",
+      "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+      "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+      "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+      "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+      "src/tree_layout.rs": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26",
+      "src/greedy_search.rs": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+      "src/history.rs": "07b640adba19ce0fcbf12ef6cb3442818dd608f2348adbe08707a24456b04daf",
+      "src/optimal_retained_plan.rs": "f2d5f8de81be4ccbd30517cae2d45694b341bc27dd26a6b9e01645512bd2fd8c",
+      "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+      "src/optimal_paths.rs": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9",
+      "src/optimal_plan.rs": "e11c456b8ee9cfb4f3195b15f36873e87ed50ce701559760d157f6d36cd70c68",
+      "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+      "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+      "src/ultra2_state.rs": "b7ac2e5b1e61630d8d30e263f9891acd7355c2cfe321c6c4a6d008b0f95eb6eb",
+      "src/ultra2_retained_plan.rs": "ed06ed3543896b2c1d16049c0e77772824afa29261068cabc9285d894c0677b6",
+      "src/optimal_search_layout.rs": "005fe4f977caae25123d207b3d6f431f5234c9da00d3d1eacdf0f15122a903ba",
+      "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+      "src/decode.rs": "d1382c17d61026496cd62faad5c1bbfaee87fd6229dfc1059d336b9e131686db",
+      "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+      "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+      "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+      "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+      "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+      "src/ultra2_plan.rs": "acf639e33dc378275508a85f568a4f61ef074aba97510c4a5dc9fe7b05d9f94f",
+      "src/tree_sort.rs": "6781699dac123560ea5ee288cd22f4cafdfe27016c4788503bd0548982f65379",
+      "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+      "src/optimal_matches.rs": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781",
+      "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+      "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+      "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+      "src/optimal_frequencies.rs": "02815487254d9f621e6d0ce0e14edbe302e94cb5b012884242a790081cd671c4",
+      "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+      "src/greedy_plan.rs": "d5249a555e18abc82bbbcff145921c3d2a002212819987541b9b77359eaec39e",
+      "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+      "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+      "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+      "src/reference_frame_encode.rs": "4ed9ced3dd754b0c7dafcc61c927c05f93b8fb1f337b3f9f563c1645a2a2c202",
+      "src/optimal_retained_state.rs": "efa3aa8506bd085690805bf7a64287a5593af227abd4cb07ff5b91f46fe0c5e7",
+      "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+      "src/reference_encode.rs": "3629af9d2d07ab64a570e5f04b9f97fa60a0651845c63a6dee4158ebe557e810",
+      "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4"
+    },
+    "benchmark_build_sha256": "ec4e09a86b667acf705345937369a38ea0e5c886a194b49baff7ecfbfd072f3b",
+    "commands": [
+      {
+        "label": "safe-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out/libzstdoxide-aadb9c08e77b09c4.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out/libzstdoxide-aadb9c08e77b09c4.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-safe"
+        ],
+        "exit_code": 0,
+        "seconds": 0.6900823750183918
+      },
+      {
+        "label": "safe-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-safe"
+        ],
+        "exit_code": 0,
+        "seconds": 0.32763479099958204
+      },
+      {
+        "label": "unsafe-bitstream-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/df0798ed6ce94540/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/df0798ed6ce94540/out/libzstdoxide-df0798ed6ce94540.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/df0798ed6ce94540/out/libzstdoxide-df0798ed6ce94540.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-bitstream"
+        ],
+        "exit_code": 0,
+        "seconds": 0.9199242499889806
+      },
+      {
+        "label": "unsafe-bitstream-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-bitstream"
+        ],
+        "exit_code": 0,
+        "seconds": 0.34183587500592694
+      },
+      {
+        "label": "unsafe-byte-cursor-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/d1a4dfbdb7b505bd/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/d1a4dfbdb7b505bd/out/libzstdoxide-d1a4dfbdb7b505bd.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/d1a4dfbdb7b505bd/out/libzstdoxide-d1a4dfbdb7b505bd.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-byte-cursor"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2674783750262577
+      },
+      {
+        "label": "unsafe-byte-cursor-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-byte-cursor"
+        ],
+        "exit_code": 0,
+        "seconds": 0.305435167014366
+      },
+      {
+        "label": "unsafe-dictionary-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/3fef29529ea95a62/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/3fef29529ea95a62/out/libzstdoxide-3fef29529ea95a62.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/3fef29529ea95a62/out/libzstdoxide-3fef29529ea95a62.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-dictionary"
+        ],
+        "exit_code": 0,
+        "seconds": 0.26083245800691657
+      },
+      {
+        "label": "unsafe-dictionary-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-dictionary"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3073977919993922
+      },
+      {
+        "label": "unsafe-fse-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/166d583fb3db52e7/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/166d583fb3db52e7/out/libzstdoxide-166d583fb3db52e7.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/166d583fb3db52e7/out/libzstdoxide-166d583fb3db52e7.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-fse"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2508227079815697
+      },
+      {
+        "label": "unsafe-fse-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-fse"
+        ],
+        "exit_code": 0,
+        "seconds": 0.29212500000721775
+      },
+      {
+        "label": "unsafe-fse-encoder-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/ba1b4c4dbc56fad8/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/ba1b4c4dbc56fad8/out/libzstdoxide-ba1b4c4dbc56fad8.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/ba1b4c4dbc56fad8/out/libzstdoxide-ba1b4c4dbc56fad8.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-fse-encoder"
+        ],
+        "exit_code": 0,
+        "seconds": 0.24921733399969526
+      },
+      {
+        "label": "unsafe-fse-encoder-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-fse-encoder"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2970684170140885
+      },
+      {
+        "label": "unsafe-history-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/cacc64b241fffa8c/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/cacc64b241fffa8c/out/libzstdoxide-cacc64b241fffa8c.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/cacc64b241fffa8c/out/libzstdoxide-cacc64b241fffa8c.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.26648299998487346
+      },
+      {
+        "label": "unsafe-history-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3200187500042375
+      },
+      {
+        "label": "unsafe-huffman-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/bcafac951fe99b4f/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/bcafac951fe99b4f/out/libzstdoxide-bcafac951fe99b4f.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/bcafac951fe99b4f/out/libzstdoxide-bcafac951fe99b4f.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-huffman"
+        ],
+        "exit_code": 0,
+        "seconds": 0.23107741700368933
+      },
+      {
+        "label": "unsafe-huffman-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-huffman"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3239504999946803
+      },
+      {
+        "label": "unsafe-huffman-codebook-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/e16d709a2dc9373b/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/e16d709a2dc9373b/out/libzstdoxide-e16d709a2dc9373b.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/e16d709a2dc9373b/out/libzstdoxide-e16d709a2dc9373b.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-huffman-codebook"
+        ],
+        "exit_code": 0,
+        "seconds": 0.21409916700213216
+      },
+      {
+        "label": "unsafe-huffman-codebook-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-huffman-codebook"
+        ],
+        "exit_code": 0,
+        "seconds": 0.33554270901368
+      },
+      {
+        "label": "unsafe-match-chain-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/9fdef3db1bcae01d/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/9fdef3db1bcae01d/out/libzstdoxide-9fdef3db1bcae01d.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/9fdef3db1bcae01d/out/libzstdoxide-9fdef3db1bcae01d.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-match-chain"
+        ],
+        "exit_code": 0,
+        "seconds": 0.21697708300780505
+      },
+      {
+        "label": "unsafe-match-chain-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-match-chain"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3002343749976717
+      },
+      {
+        "label": "unsafe-match-table-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/474861fd9d74d69e/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/474861fd9d74d69e/out/libzstdoxide-474861fd9d74d69e.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/474861fd9d74d69e/out/libzstdoxide-474861fd9d74d69e.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-match-table"
+        ],
+        "exit_code": 0,
+        "seconds": 0.22784104099264368
+      },
+      {
+        "label": "unsafe-match-table-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-match-table"
+        ],
+        "exit_code": 0,
+        "seconds": 0.30587062501581386
+      },
+      {
+        "label": "unsafe-optimal-frequencies-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/3cf50a38bbee8db9/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/3cf50a38bbee8db9/out/libzstdoxide-3cf50a38bbee8db9.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/3cf50a38bbee8db9/out/libzstdoxide-3cf50a38bbee8db9.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-optimal-frequencies"
+        ],
+        "exit_code": 0,
+        "seconds": 0.21114779100753367
+      },
+      {
+        "label": "unsafe-optimal-frequencies-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-optimal-frequencies"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3058139999920968
+      },
+      {
+        "label": "unsafe-optimal-matches-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/58e5b5dbfcb06a1e/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/58e5b5dbfcb06a1e/out/libzstdoxide-58e5b5dbfcb06a1e.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/58e5b5dbfcb06a1e/out/libzstdoxide-58e5b5dbfcb06a1e.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-optimal-matches"
+        ],
+        "exit_code": 0,
+        "seconds": 0.20748849998926744
+      },
+      {
+        "label": "unsafe-optimal-matches-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-optimal-matches"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3067752500064671
+      },
+      {
+        "label": "unsafe-optimal-paths-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aac9d36b2e61ee39/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aac9d36b2e61ee39/out/libzstdoxide-aac9d36b2e61ee39.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aac9d36b2e61ee39/out/libzstdoxide-aac9d36b2e61ee39.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-optimal-paths"
+        ],
+        "exit_code": 0,
+        "seconds": 0.25057787500554696
+      },
+      {
+        "label": "unsafe-optimal-paths-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-optimal-paths"
+        ],
+        "exit_code": 0,
+        "seconds": 0.35022333401138894
+      },
+      {
+        "label": "unsafe-optimal-short-key-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/e246cdc58d1df894/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/e246cdc58d1df894/out/libzstdoxide-e246cdc58d1df894.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/e246cdc58d1df894/out/libzstdoxide-e246cdc58d1df894.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-optimal-short-key"
+        ],
+        "exit_code": 0,
+        "seconds": 0.23510233298293315
+      },
+      {
+        "label": "unsafe-optimal-short-key-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-optimal-short-key"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2992076249793172
+      },
+      {
+        "label": "unsafe-reference-chain-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/dd308b25e28e5e9d/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/dd308b25e28e5e9d/out/libzstdoxide-dd308b25e28e5e9d.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/dd308b25e28e5e9d/out/libzstdoxide-dd308b25e28e5e9d.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-reference-chain"
+        ],
+        "exit_code": 0,
+        "seconds": 0.27580574998864904
+      },
+      {
+        "label": "unsafe-reference-chain-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-reference-chain"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3058055829897057
+      },
+      {
+        "label": "unsafe-reference-tree-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/305f033025456442/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/305f033025456442/out/libzstdoxide-305f033025456442.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/305f033025456442/out/libzstdoxide-305f033025456442.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-reference-tree"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2636213749938179
+      },
+      {
+        "label": "unsafe-reference-tree-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-reference-tree"
+        ],
+        "exit_code": 0,
+        "seconds": 0.35645412499434315
+      },
+      {
+        "label": "unsafe-ring-history-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/586c0683f2d6ecf1/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/586c0683f2d6ecf1/out/libzstdoxide-586c0683f2d6ecf1.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/586c0683f2d6ecf1/out/libzstdoxide-586c0683f2d6ecf1.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-ring-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.24139174999436364
+      },
+      {
+        "label": "unsafe-ring-history-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-ring-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.7118353750265669
+      },
+      {
+        "label": "unsafe-row-table-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/424f7812b635629f/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/424f7812b635629f/out/libzstdoxide-424f7812b635629f.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/424f7812b635629f/out/libzstdoxide-424f7812b635629f.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-row-table"
+        ],
+        "exit_code": 0,
+        "seconds": 0.22982287500053644
+      },
+      {
+        "label": "unsafe-row-table-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-row-table"
+        ],
+        "exit_code": 0,
+        "seconds": 0.29875783299212344
+      },
+      {
+        "label": "unsafe-slice-history-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/72bd4ddaf95617d9/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/72bd4ddaf95617d9/out/libzstdoxide-72bd4ddaf95617d9.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/72bd4ddaf95617d9/out/libzstdoxide-72bd4ddaf95617d9.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-slice-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.23392695799702778
+      },
+      {
+        "label": "unsafe-slice-history-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-slice-history"
+        ],
+        "exit_code": 0,
+        "seconds": 0.28747762498096563
+      },
+      {
+        "label": "unsafe-training-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/0dbff225a048a199/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/0dbff225a048a199/out/libzstdoxide-0dbff225a048a199.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/0dbff225a048a199/out/libzstdoxide-0dbff225a048a199.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-training"
+        ],
+        "exit_code": 0,
+        "seconds": 0.23450987500837073
+      },
+      {
+        "label": "unsafe-training-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-unsafe-training"
+        ],
+        "exit_code": 0,
+        "seconds": 0.309103084000526
+      },
+      {
+        "label": "all-regression-build",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "--test",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty_block_boundaries.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out/libzstdoxide-913f907b3eeebe2d.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out/libzstdoxide-913f907b3eeebe2d.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-all"
+        ],
+        "exit_code": 0,
+        "seconds": 0.24086450002505444
+      },
+      {
+        "label": "all-regression-test",
+        "argv": [
+          "/private/tmp/module26-preparation/empty-block-oracle/regression-all"
+        ],
+        "exit_code": 0,
+        "seconds": 0.3134085419878829
+      },
+      {
+        "label": "safe-regression-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--test",
+          "empty_block_boundaries",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2171978330006823
+      },
+      {
+        "label": "all-regression-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--test",
+          "empty_block_boundaries",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "seconds": 0.14251320899347775
+      },
+      {
+        "label": "regression-format",
+        "argv": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 2.1582506250124425
+      }
+    ],
+    "libraries": {
+      "safe": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out/libzstdoxide-aadb9c08e77b09c4.rlib": "ef435d48cc33ab33d0d8bd40eed095431b2ca5e638bf241f36121f0ef3aa0321",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out/libzstdoxide-aadb9c08e77b09c4.rmeta": "82db7fa13b46dafb73e283b409fd2533c5edf2376f32e03a533f94ba98eee0f6"
+      },
+      "unsafe-bitstream": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/df0798ed6ce94540/out/libzstdoxide-df0798ed6ce94540.rlib": "337c000d63ff556a223b1c99c37c49dde922ef510cd83a18d5659be39a55062b",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/df0798ed6ce94540/out/libzstdoxide-df0798ed6ce94540.rmeta": "62dee45f09ef521863184e2307b1843a68ad84b3e3d41172bbc4f6408abb9252"
+      },
+      "unsafe-byte-cursor": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/d1a4dfbdb7b505bd/out/libzstdoxide-d1a4dfbdb7b505bd.rlib": "4a32a7e216eb1eb3f444019cd9071c1b5b7827181d6f6715b229eb30e82d78e9",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/d1a4dfbdb7b505bd/out/libzstdoxide-d1a4dfbdb7b505bd.rmeta": "24dc25975fa8438cba60e4f8e853182fff4a1ea95b61ddf8f4765b1140fb32b3"
+      },
+      "unsafe-dictionary": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/3fef29529ea95a62/out/libzstdoxide-3fef29529ea95a62.rlib": "8ef1121dcbb81d74c8b041fbfeb3f1745f7317a64b84397477c352404c96dcff",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/3fef29529ea95a62/out/libzstdoxide-3fef29529ea95a62.rmeta": "815501a8f329efe5c95fbe63b07a20bc607dc422934983062f68edb79c76a6c5"
+      },
+      "unsafe-fse": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/166d583fb3db52e7/out/libzstdoxide-166d583fb3db52e7.rlib": "ad2de6177660238e8dca799ea958be902849b716b604b86f86ccacad10b53c41",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/166d583fb3db52e7/out/libzstdoxide-166d583fb3db52e7.rmeta": "a4816772213e437a8f26551a60e1f751dcbc864c5b2aa0c28680242486824b2c"
+      },
+      "unsafe-fse-encoder": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/ba1b4c4dbc56fad8/out/libzstdoxide-ba1b4c4dbc56fad8.rlib": "d77ac5bdd78a2610267e95b891261d5c383002fa0e946220a71001a5c3f7cfa0",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/ba1b4c4dbc56fad8/out/libzstdoxide-ba1b4c4dbc56fad8.rmeta": "553060d3aa1d9239ab3f2cecc28f805f7e5b6c1a293512253a3c933ea0a7daaf"
+      },
+      "unsafe-history": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/cacc64b241fffa8c/out/libzstdoxide-cacc64b241fffa8c.rlib": "46bba965926e69fc97639fc73bb481c505524b4c93a8282a65993a8767ba7814",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/cacc64b241fffa8c/out/libzstdoxide-cacc64b241fffa8c.rmeta": "5d98c3d2fd6730310218b7514ca62c8f6cd54c5d80f657f40e141453810bc007"
+      },
+      "unsafe-huffman": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/bcafac951fe99b4f/out/libzstdoxide-bcafac951fe99b4f.rlib": "2067a55aab844d813ff1ea1135a6505aa9a6432d7836d490678881c55c970896",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/bcafac951fe99b4f/out/libzstdoxide-bcafac951fe99b4f.rmeta": "fd4b6ce0880b42a15678de2af3efcca7485f8950db10beb6ea5dcb669d14f70a"
+      },
+      "unsafe-huffman-codebook": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/e16d709a2dc9373b/out/libzstdoxide-e16d709a2dc9373b.rlib": "03dbbf690712baf32c187562a2da4cafdd98f159764d2104071f2786cc913f31",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/e16d709a2dc9373b/out/libzstdoxide-e16d709a2dc9373b.rmeta": "c2a31256b334d9a8907bd5a025e6f6135df8892011fcfd8dc70fa76e4ad47551"
+      },
+      "unsafe-match-chain": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/9fdef3db1bcae01d/out/libzstdoxide-9fdef3db1bcae01d.rlib": "0f29fea1453d6a5bbe6f353fe14cf07cf74ca9e049c011946923ca2ba26fecb4",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/9fdef3db1bcae01d/out/libzstdoxide-9fdef3db1bcae01d.rmeta": "2c2ef56ee673a3c77dd856d9443b0cb6017172e805c60ba12fcc4c603312f8d0"
+      },
+      "unsafe-match-table": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/474861fd9d74d69e/out/libzstdoxide-474861fd9d74d69e.rlib": "1b47337488169a914fcf29d93c6d641569ee75eb23dcee42c2704d296bc181ad",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/474861fd9d74d69e/out/libzstdoxide-474861fd9d74d69e.rmeta": "b851b689a2a3499b111068c134347acba921b97ba9ec89ad1cee70c5fc0fee53"
+      },
+      "unsafe-optimal-frequencies": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/3cf50a38bbee8db9/out/libzstdoxide-3cf50a38bbee8db9.rlib": "b86236291c4001ec6b2dcf316c4eab13340e8718e1c2d06fc9c752da1d90c1c5",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/3cf50a38bbee8db9/out/libzstdoxide-3cf50a38bbee8db9.rmeta": "a134b5b58e5feb7304a1c2a353f864a1f429f13b130eca8e4ecb9acc53b89189"
+      },
+      "unsafe-optimal-matches": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/58e5b5dbfcb06a1e/out/libzstdoxide-58e5b5dbfcb06a1e.rlib": "f5f16befeeb151a1ed05014054158ac065e62f5d8af11273eeda786bd61e43c9",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/58e5b5dbfcb06a1e/out/libzstdoxide-58e5b5dbfcb06a1e.rmeta": "0a6fee5aff28dd136fae2ff5d8b6e450e875bde94cf90eaa201ec7d9d1210c2f"
+      },
+      "unsafe-optimal-paths": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/aac9d36b2e61ee39/out/libzstdoxide-aac9d36b2e61ee39.rlib": "1e45e510ab20a592dedcd9cdb09391d39a1ab4d2c86fb459e5eb818bb02cac6d",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/aac9d36b2e61ee39/out/libzstdoxide-aac9d36b2e61ee39.rmeta": "cec86301c9024ec93e27f2fa933c5572f9d3ca7b8e6a934070c20eede0827ad4"
+      },
+      "unsafe-optimal-short-key": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/e246cdc58d1df894/out/libzstdoxide-e246cdc58d1df894.rlib": "2b5003cb8459b9ab6d8114a7f5c3a28b1137e7a920c0d21ff1ceef7554f729f6",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/e246cdc58d1df894/out/libzstdoxide-e246cdc58d1df894.rmeta": "ab3bd925a72a79c3c1433e8d57c3b7095e26cc284dc04216f62643d13c5fe79f"
+      },
+      "unsafe-reference-chain": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/dd308b25e28e5e9d/out/libzstdoxide-dd308b25e28e5e9d.rlib": "b846dec524d6c84e03b15a4200d81b19b1de5be0c080f6445afe1ab8805b85e9",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/dd308b25e28e5e9d/out/libzstdoxide-dd308b25e28e5e9d.rmeta": "7a01e9a22fdf07c5517c48c1c9eba1ae39a2955ed780cba4273f356b1a2ee607"
+      },
+      "unsafe-reference-tree": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/305f033025456442/out/libzstdoxide-305f033025456442.rlib": "8be206a8d687748a79b9a90fe5817480c484a306f5c12680f9088698ffc8eabd",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/305f033025456442/out/libzstdoxide-305f033025456442.rmeta": "645d0f8a9fab8cdc21db9e2dc661d2f8b674049ebf1e626f6de2b439ba237362"
+      },
+      "unsafe-ring-history": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/586c0683f2d6ecf1/out/libzstdoxide-586c0683f2d6ecf1.rlib": "9e8814ec0efa9d1a53cd5647d005ef2c8924e1183385ae8979c65bb6367205f9",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/586c0683f2d6ecf1/out/libzstdoxide-586c0683f2d6ecf1.rmeta": "49f5ec8c145eb4d9fe184cbcc4047769a3230bd88d44bf033f497bc3484add10"
+      },
+      "unsafe-row-table": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/424f7812b635629f/out/libzstdoxide-424f7812b635629f.rlib": "1bef1d0c654c2fc358a8b70217c8acbbbc8f17cf8edc820884b33312d670d9ab",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/424f7812b635629f/out/libzstdoxide-424f7812b635629f.rmeta": "12fbbbd717345d6b0e716bd550f9b3a5a9d68d28a59f3500445ebeb1bc66bb30"
+      },
+      "unsafe-slice-history": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/72bd4ddaf95617d9/out/libzstdoxide-72bd4ddaf95617d9.rlib": "fd36df39241bf63d1b4f7a52b839e25880f0603a1bc29e3f16768c0a67454acc",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/72bd4ddaf95617d9/out/libzstdoxide-72bd4ddaf95617d9.rmeta": "8d27b67c190ea60ec31a4c931ad318ff429216858d8cfc5a77e970ba145ca2d5"
+      },
+      "unsafe-training": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/0dbff225a048a199/out/libzstdoxide-0dbff225a048a199.rlib": "ae3611fcab2b028ab30b953d771d19745649142fc09a97acccd1ade69e775911",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/0dbff225a048a199/out/libzstdoxide-0dbff225a048a199.rmeta": "41fdd12fb4104d19cb9d83b96cc9f2d162cc6a5ff6ed9935255102370fb8581e"
+      },
+      "all": {
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out/libzstdoxide-913f907b3eeebe2d.rlib": "62db0fe2a214c3ec20d42cbc673c3c0698262e147783d239062c623911519013",
+        "/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out/libzstdoxide-913f907b3eeebe2d.rmeta": "a3ee0bfe6e2704602dcb0fd96c79433175e4b58c8047e79133a42f0a6831bd7b"
+      }
+    }
+  },
+  "comparison": {
+    "status": "passed",
+    "stream_native_evidence_sha256": "7a2e7d7794a6e5122f0fe0c846b10cdb27a76a0dbb61842ae1fd6fcdc2257428",
+    "oneshot_native_build_sha256": "3ad1763e342db3f9ccb4e8be61fc0026b0f4204c123f73c1a661fd6da7d6bbad",
+    "oneshot_native": [
+      {
+        "backend": "normal",
+        "name": "known-raw-zero",
+        "argv": [
+          "/private/tmp/module25-native/oracle-normal",
+          "/private/tmp/module26-preparation/empty-block-oracle/known-raw-zero.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-normal-known-raw-zero.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 0,
+          "error_code": 0,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "normal",
+        "name": "known-rle-zero",
+        "argv": [
+          "/private/tmp/module25-native/oracle-normal",
+          "/private/tmp/module26-preparation/empty-block-oracle/known-rle-zero.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-normal-known-rle-zero.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 0,
+          "error_code": 0,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "normal",
+        "name": "known-compressed-empty",
+        "argv": [
+          "/private/tmp/module25-native/oracle-normal",
+          "/private/tmp/module26-preparation/empty-block-oracle/known-compressed-empty.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-normal-known-compressed-empty.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 1,
+          "error_code": 72,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "normal",
+        "name": "unknown-compressed-empty",
+        "argv": [
+          "/private/tmp/module25-native/oracle-normal",
+          "/private/tmp/module26-preparation/empty-block-oracle/unknown-compressed-empty.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-normal-unknown-compressed-empty.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 0,
+          "error_code": 0,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "normal",
+        "name": "unknown-compressed-zero-payload",
+        "argv": [
+          "/private/tmp/module25-native/oracle-normal",
+          "/private/tmp/module26-preparation/empty-block-oracle/unknown-compressed-zero-payload.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-normal-unknown-compressed-zero-payload.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 1,
+          "error_code": 20,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "sanitized",
+        "name": "known-raw-zero",
+        "argv": [
+          "/private/tmp/module25-native/oracle-sanitized",
+          "/private/tmp/module26-preparation/empty-block-oracle/known-raw-zero.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-sanitized-known-raw-zero.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 0,
+          "error_code": 0,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "sanitized",
+        "name": "known-rle-zero",
+        "argv": [
+          "/private/tmp/module25-native/oracle-sanitized",
+          "/private/tmp/module26-preparation/empty-block-oracle/known-rle-zero.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-sanitized-known-rle-zero.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 0,
+          "error_code": 0,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "sanitized",
+        "name": "known-compressed-empty",
+        "argv": [
+          "/private/tmp/module25-native/oracle-sanitized",
+          "/private/tmp/module26-preparation/empty-block-oracle/known-compressed-empty.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-sanitized-known-compressed-empty.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 1,
+          "error_code": 72,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "sanitized",
+        "name": "unknown-compressed-empty",
+        "argv": [
+          "/private/tmp/module25-native/oracle-sanitized",
+          "/private/tmp/module26-preparation/empty-block-oracle/unknown-compressed-empty.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-sanitized-unknown-compressed-empty.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 0,
+          "error_code": 0,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      },
+      {
+        "backend": "sanitized",
+        "name": "unknown-compressed-zero-payload",
+        "argv": [
+          "/private/tmp/module25-native/oracle-sanitized",
+          "/private/tmp/module26-preparation/empty-block-oracle/unknown-compressed-zero-payload.zst",
+          "/private/tmp/module26-preparation/empty-block-oracle/empty.dict",
+          "16",
+          "/private/tmp/module26-preparation/empty-block-oracle/oneshot-sanitized-unknown-compressed-zero-payload.raw",
+          "using-dict"
+        ],
+        "result": {
+          "version": 10507,
+          "error": 1,
+          "error_code": 20,
+          "written": 0,
+          "guards": 1,
+          "suffix": 1
+        }
+      }
+    ],
+    "rust": [
+      {
+        "backend": "safe",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "/private/tmp/module26-preparation/empty-block-oracle/probe.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out/libzstdoxide-aadb9c08e77b09c4.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out/libzstdoxide-aadb9c08e77b09c4.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/rust-safe"
+        ],
+        "libraries": {
+          "/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out/libzstdoxide-aadb9c08e77b09c4.rlib": "ef435d48cc33ab33d0d8bd40eed095431b2ca5e638bf241f36121f0ef3aa0321",
+          "/private/tmp/module26-benchmark/target/release/build/zstdoxide/aadb9c08e77b09c4/out/libzstdoxide-aadb9c08e77b09c4.rmeta": "82db7fa13b46dafb73e283b409fd2533c5edf2376f32e03a533f94ba98eee0f6"
+        },
+        "executable_sha256": "ee4049da47023b1c4b93f4033609c0b5714d90bee0ff46e0d3b433ea178edd46",
+        "result_sha256": "ed3ae590b6915bb31654f3e8fdf5ebb3e01f06f424bcedaebf205158e7198515"
+      },
+      {
+        "backend": "all",
+        "argv": [
+          "rustc",
+          "--edition=2024",
+          "/private/tmp/module26-preparation/empty-block-oracle/probe.rs",
+          "-Dwarnings",
+          "-L",
+          "dependency=/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out/libzstdoxide-913f907b3eeebe2d.rlib",
+          "--extern",
+          "zstdoxide=/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out/libzstdoxide-913f907b3eeebe2d.rmeta",
+          "-o",
+          "/private/tmp/module26-preparation/empty-block-oracle/rust-all"
+        ],
+        "libraries": {
+          "/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out/libzstdoxide-913f907b3eeebe2d.rlib": "62db0fe2a214c3ec20d42cbc673c3c0698262e147783d239062c623911519013",
+          "/private/tmp/module26-benchmark/target/release/build/zstdoxide/913f907b3eeebe2d/out/libzstdoxide-913f907b3eeebe2d.rmeta": "a3ee0bfe6e2704602dcb0fd96c79433175e4b58c8047e79133a42f0a6831bd7b"
+        },
+        "executable_sha256": "7a564b7ea44f4dbe3f71d1dac11a3b2c4b34eff473e707f1dc07df2f4c4d84a4",
+        "result_sha256": "ed3ae590b6915bb31654f3e8fdf5ebb3e01f06f424bcedaebf205158e7198515"
+      }
+    ],
+    "probe_sha256": "444ffa8dc8a3c4ed1fb4605b40dc63a1ec4df4f3a52673ede2252ed9c9593935",
+    "production_source": {
+      "src/greedy_state.rs": "4ba31ec4cc1c60e5d0d81e38e93c114d7dbdc1f4e8e7f3567aafcbcbc27ead05",
+      "src/slice_history.rs": "7b7d7957d971e2301c0b64cb7fcb7095b139f8e3106c598ac35416dc7d64a016",
+      "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+      "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+      "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+      "src/stream.rs": "088a6bbe9a8cef03a081d68d58f7c29232c838e3b7fd25bd60c1b220841c6632",
+      "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+      "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+      "src/slice_decode.rs": "5a350f74f5559cdd8d758d7cc1b228d8b5b5d10d496f0ac9a670d9a570d56e96",
+      "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+      "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+      "src/ultra2_retained_state.rs": "121e6bcfed9297c23f4d3aaeff5168dfaf12cc45e67230c02309a8312c810b64",
+      "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+      "src/tree_source.rs": "e8ff59ed5de930faaca3ff89590ea5c208a13c75c06b9acc3f3665dd7761c4c0",
+      "src/sequence_plan.rs": "0af5935553bb8b0aa931a60355e8bf1b76c62f53e0d17c3fb477e1119e3f0bdf",
+      "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+      "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+      "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+      "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+      "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+      "src/greedy_parse.rs": "0555b480e7c93683cdd29ec863ff8235f983b7bc579a047ef69c883e365211bb",
+      "src/greedy_block.rs": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+      "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+      "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+      "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+      "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+      "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+      "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+      "src/block_entropy.rs": "9a8dbdaf37c75f09aa18199d7a6b6701621267b55e5090bb0847317c4a45e538",
+      "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+      "src/lib.rs": "8515ff5e7e4e2f8c14bfd2cd6945384c29d2601dc6380ec485488a59df58929a",
+      "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+      "src/optimal_short_key.rs": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434",
+      "src/optimal_retained.rs": "137308d223bc5e2182b2e9ff531ab06c0c95b6665a364ec65bacb711eb176cf6",
+      "src/ultra2_retained.rs": "69a889ff4e8e77720e7a55f2e0ce7c79049b813c9f33b1e24b14f8491ec5ed39",
+      "src/optimal_search.rs": "d33fb024fe4f55120417a0e3150ce8758e9cb7079a40521f26d1a2761901f992",
+      "src/ultra2_frame_plan.rs": "f3b704e167db719fcc10b19cc91c292c8fa7ac63927ec7f2c9a9622bb32c21a6",
+      "src/optimal_parse.rs": "99c2a92137115d50194e897df70403f3631127e5b7a7da058e5aee507a2567ab",
+      "src/optimal_path_layout.rs": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5",
+      "src/optimal_price.rs": "d389ec0b49194a65c506c369531ae68a42ec92f6dd06531333ddbc93c018712e",
+      "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+      "src/sequence_context.rs": "cfa51f7f78f2488a67b42e3dce4569f2641895b161fb92f9c69380d44a8fc47b",
+      "src/optimal_state.rs": "72ccaab4558ac4ae8ac691cafd1a0b4753c3281d4e86ed0cefcf602cccdbe8e7",
+      "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+      "src/reference_search.rs": "534f5cfaefbca265d6498f6ec4214aad9a783ce9aca7da6eba6d745f033ff818",
+      "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+      "src/tree_search.rs": "c5fabb7ec63df89887f94d42f86e5bc66aea244543e061bff340d5fe5a7dc2bc",
+      "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+      "src/reference_tree.rs": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f",
+      "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+      "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+      "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+      "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+      "src/tree_layout.rs": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26",
+      "src/greedy_search.rs": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+      "src/history.rs": "07b640adba19ce0fcbf12ef6cb3442818dd608f2348adbe08707a24456b04daf",
+      "src/optimal_retained_plan.rs": "f2d5f8de81be4ccbd30517cae2d45694b341bc27dd26a6b9e01645512bd2fd8c",
+      "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+      "src/optimal_paths.rs": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9",
+      "src/optimal_plan.rs": "e11c456b8ee9cfb4f3195b15f36873e87ed50ce701559760d157f6d36cd70c68",
+      "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+      "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+      "src/ultra2_state.rs": "b7ac2e5b1e61630d8d30e263f9891acd7355c2cfe321c6c4a6d008b0f95eb6eb",
+      "src/ultra2_retained_plan.rs": "ed06ed3543896b2c1d16049c0e77772824afa29261068cabc9285d894c0677b6",
+      "src/optimal_search_layout.rs": "005fe4f977caae25123d207b3d6f431f5234c9da00d3d1eacdf0f15122a903ba",
+      "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+      "src/decode.rs": "d1382c17d61026496cd62faad5c1bbfaee87fd6229dfc1059d336b9e131686db",
+      "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+      "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+      "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+      "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+      "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+      "src/ultra2_plan.rs": "acf639e33dc378275508a85f568a4f61ef074aba97510c4a5dc9fe7b05d9f94f",
+      "src/tree_sort.rs": "6781699dac123560ea5ee288cd22f4cafdfe27016c4788503bd0548982f65379",
+      "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+      "src/optimal_matches.rs": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781",
+      "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+      "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+      "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+      "src/optimal_frequencies.rs": "02815487254d9f621e6d0ce0e14edbe302e94cb5b012884242a790081cd671c4",
+      "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+      "src/greedy_plan.rs": "d5249a555e18abc82bbbcff145921c3d2a002212819987541b9b77359eaec39e",
+      "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+      "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+      "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+      "src/reference_frame_encode.rs": "4ed9ced3dd754b0c7dafcc61c927c05f93b8fb1f337b3f9f563c1645a2a2c202",
+      "src/optimal_retained_state.rs": "efa3aa8506bd085690805bf7a64287a5593af227abd4cb07ff5b91f46fe0c5e7",
+      "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+      "src/reference_encode.rs": "3629af9d2d07ab64a570e5f04b9f97fa60a0651845c63a6dee4158ebe557e810",
+      "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4"
+    },
+    "qualification": "Five hand-encoded empty-block boundaries, native one-shot normal/sanitized with empty raw dictionary, previously hash-bound native stable stream, and source-bound Rust safe/all direct/stable at three fragment widths. This targeted supplemental observation does not alter frozen source or substitute for a full matrix. The unsuccessful rlib-only probe attempt is preserved separately."
+  },
+  "files": {
+    "all-regression-clippy.log": {
+      "bytes": 124,
+      "sha256": "09d3bb7d36d43f77eb03201c26aa6e120ae7492bf071d4292a4581e4617e061d"
+    },
+    "regression-unsafe-dictionary": {
+      "bytes": 1204160,
+      "sha256": "b78181370975aec3e925a93fb41f09d312fbb987746153783d897d5cafb5a59e"
+    },
+    "evidence.json": {
+      "bytes": 4028,
+      "sha256": "7a2e7d7794a6e5122f0fe0c846b10cdb27a76a0dbb61842ae1fd6fcdc2257428"
+    },
+    "unsafe-match-chain-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "oneshot-normal-unknown-compressed-empty.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-unsafe-history": {
+      "bytes": 1204168,
+      "sha256": "548708a92ad39a9cd91d6181b98363d50b7bacf17987ad747c08084b8ec150eb"
+    },
+    "unsafe-huffman-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "regression.json": {
+      "bytes": 43638,
+      "sha256": "b2f4c56706517db6feb3c65657bd5d00692964b04bfa7a81bafdac0532846a54"
+    },
+    "unsafe-bitstream-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "safe-rust.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "oneshot-normal-known-rle-zero.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rust-safe": {
+      "bytes": 629432,
+      "sha256": "ee4049da47023b1c4b93f4033609c0b5714d90bee0ff46e0d3b433ea178edd46"
+    },
+    "regression-unsafe-fse": {
+      "bytes": 1204152,
+      "sha256": "c222c0463c64929e9f6ba853af6a54c2d326fa143ab529a308bda4c14074016a"
+    },
+    "all-build-v2.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-all": {
+      "bytes": 1204144,
+      "sha256": "90b2f44073572ae391e436fd2ec94de21dd91f34ca9c4eb37aeabd2c8cc66120"
+    },
+    "regression-unsafe-huffman": {
+      "bytes": 1204152,
+      "sha256": "5a2492af1d7fa69e7cc92d83715de538af267ef53958b4f869ff99c2b0b626f8"
+    },
+    "unsafe-training-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-row-table-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-reference-chain-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-fse-encoder-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-format.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-unsafe-match-chain": {
+      "bytes": 1204016,
+      "sha256": "5bb229348c2b02e01b60a5f48a29100b5f59be15b354870bb5502be2086bf466"
+    },
+    "unsafe-history-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-history-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-match-table-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "regression-unsafe-reference-chain": {
+      "bytes": 1204160,
+      "sha256": "b6e5fd04de320ea2a72dfdc26b36cab1e564a6fec5bb170f906c5a3af3e892f5"
+    },
+    "regression-unsafe-optimal-frequencies": {
+      "bytes": 1204168,
+      "sha256": "00075417d326137e6652084caf68360d5cbc3b4750fd42e7dbf478ccc0fc9f06"
+    },
+    "unsafe-optimal-frequencies-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "oneshot-sanitized-unknown-compressed-empty.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "empty.dict": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "check-regression.py": {
+      "bytes": 2653,
+      "sha256": "3f9ef62fb3e1848d8291aa9dab0eba34d7354c866c08e50609c8f3bfb574781a"
+    },
+    "unsafe-optimal-short-key-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-optimal-paths-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-match-chain-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "regression-unsafe-training": {
+      "bytes": 1204152,
+      "sha256": "2e9a26ac3233ecd001810eddddca95dd64d42a3afa02870d71652d8eabf7cdee"
+    },
+    "oneshot-sanitized-known-compressed-empty.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "oneshot-normal-unknown-compressed-zero-payload.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-unsafe-reference-tree": {
+      "bytes": 1204160,
+      "sha256": "30b3c7598a601718fc96eed6997b81e76ae3b311082e8e8ffbc42a98653d2228"
+    },
+    "unsafe-optimal-short-key-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-optimal-matches-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "empty_block_boundaries.rs": {
+      "bytes": 3783,
+      "sha256": "39b1576bdce88c95592a4872a2c6ac009c904ad3ce4676a70f29e1d2a8295fb5"
+    },
+    "comparison.json": {
+      "bytes": 18435,
+      "sha256": "25397757dad24b5d34772adf6d5c223e2d4b270e3d1522887b0759be83287c47"
+    },
+    "unsafe-slice-history-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "oneshot-normal-known-raw-zero.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "safe-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-unsafe-ring-history": {
+      "bytes": 1204160,
+      "sha256": "02476e211e50b3e6f681759a5647b1acbe4673b2d7d2369c0b7b0b84046ccfa0"
+    },
+    "regression-unsafe-huffman-codebook": {
+      "bytes": 1204160,
+      "sha256": "32d73f2b0ed51b173916358f81f24a051d2186e652d245c0c2dbf996e720e090"
+    },
+    "regression-safe": {
+      "bytes": 1204144,
+      "sha256": "5071610716f3fd327d1c73d76d8d72a5be54b007ff3054628d782985ddb2b6e3"
+    },
+    "unsafe-optimal-matches-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "all-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-row-table-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "known-raw-zero.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-dictionary-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "known-raw-zero.zst": {
+      "bytes": 9,
+      "sha256": "6fb8543883dafcc2ed0934866b8b3f775231f5b0933add08bf502e9e84944cbd"
+    },
+    "regression-unsafe-optimal-matches": {
+      "bytes": 1204160,
+      "sha256": "38a3887bee45a106a005691b42daf8d12330e5e5585ee4cde712c90a6ad5d248"
+    },
+    "all-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-unsafe-optimal-paths": {
+      "bytes": 1204160,
+      "sha256": "18be2957310a8faa199a8bce669bcd7a019edd7f22ff459bbf26cc9215640d97"
+    },
+    "rust-all": {
+      "bytes": 629352,
+      "sha256": "7a564b7ea44f4dbe3f71d1dac11a3b2c4b34eff473e707f1dc07df2f4c4d84a4"
+    },
+    "unsafe-optimal-paths-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-reference-tree-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "regression-unsafe-row-table": {
+      "bytes": 1204152,
+      "sha256": "104d912cafa3b8c0609db1119dd3312e9edf44566b55ebb365479933909c3ce7"
+    },
+    "archive.py": {
+      "bytes": 4201,
+      "sha256": "762c2e5484a79f8f57660769d017451adcd4279167d3524effca8ceda3402e38"
+    },
+    "regression-unsafe-optimal-short-key": {
+      "bytes": 1204160,
+      "sha256": "2392f7c842cc095fd2dcefb236bec1046b0145c0cab312c6cc361443be49d969"
+    },
+    "oneshot-sanitized-known-raw-zero.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-unsafe-bitstream": {
+      "bytes": 1204152,
+      "sha256": "c8e517d810fe0edd1a03706a1874f3ab2addf6d7d9b18e7f4660bd281b9ab8a7"
+    },
+    "regression-unsafe-match-table": {
+      "bytes": 1204160,
+      "sha256": "0024ac51106c901568333fa7db3a36f1cf1bad7e77a2b27b4248b7f054d54cc4"
+    },
+    "regression-unsafe-fse-encoder": {
+      "bytes": 1204160,
+      "sha256": "7c08b330268563c8f6d90ef8c42faf173abd41208ffb343616bfa12c3f65766a"
+    },
+    "oneshot-sanitized-unknown-compressed-zero-payload.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-fse-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "safe-build.log": {
+      "bytes": 353,
+      "sha256": "60fcef19f69082241e5b299f389efff78e29e46e8873a8448e9a60e1235c73e3"
+    },
+    "unsafe-match-table-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "known-compressed-empty.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-byte-cursor-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "all-rust.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "known-rle-zero.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "probe.rs": {
+      "bytes": 1855,
+      "sha256": "444ffa8dc8a3c4ed1fb4605b40dc63a1ec4df4f3a52673ede2252ed9c9593935"
+    },
+    "unsafe-huffman-codebook-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unknown-compressed-zero-payload.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "safe-build-v2.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-byte-cursor-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-fse-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-optimal-frequencies-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-ring-history-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-slice-history-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unknown-compressed-empty.zst": {
+      "bytes": 11,
+      "sha256": "ab5463fa31429bf81ced9f05e99b96b2fe88b1da37235a233f6bc96242332fbc"
+    },
+    "unsafe-dictionary-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-fse-encoder-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-reference-chain-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "safe-regression-test.log": {
+      "bytes": 186,
+      "sha256": "5bd291b371fbf22853ff5e6da63ed38437f08dd8520be17b6d50bed0ae99283a"
+    },
+    "unsafe-bitstream-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "oneshot-normal-known-compressed-empty.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unknown-compressed-empty.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "compare.py": {
+      "bytes": 2913,
+      "sha256": "914cf3a149668770921061c17744354ce2e40c81483e38b022702908047c2755"
+    },
+    "regression-unsafe-byte-cursor": {
+      "bytes": 1204336,
+      "sha256": "d2e4c1841bcee36c4d6c60f67028ecec42ae8244228425fc760ef6185d9e1782"
+    },
+    "oneshot-sanitized-known-rle-zero.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-ring-history-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "safe-regression-clippy.log": {
+      "bytes": 124,
+      "sha256": "a3f1dc1a0f22bbf01e4edc27cc50a606762d82f7887d3f54b72d3ca81c3c23bc"
+    },
+    "unsafe-reference-tree-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-huffman-codebook-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsafe-training-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unknown-compressed-zero-payload.zst": {
+      "bytes": 9,
+      "sha256": "3855ebd2992cb63b116050b23a74b1b168fbff273acc2904e832da7c821e4721"
+    },
+    "all-rust.tsv": {
+      "bytes": 839,
+      "sha256": "ed3ae590b6915bb31654f3e8fdf5ebb3e01f06f424bcedaebf205158e7198515"
+    },
+    "regression-unsafe-slice-history": {
+      "bytes": 1203984,
+      "sha256": "0af89924aa080f1f7d4d4a90d003fbdf4b32a66a756561ebcf274c8d8d245738"
+    },
+    "unsafe-huffman-regression-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "safe-rust.tsv": {
+      "bytes": 839,
+      "sha256": "ed3ae590b6915bb31654f3e8fdf5ebb3e01f06f424bcedaebf205158e7198515"
+    },
+    "known-rle-zero.zst": {
+      "bytes": 10,
+      "sha256": "f5dac958e4adb1667f98c6fd2254f96980ead4510f6fe0d97d92bc6d11463e14"
+    },
+    "known-compressed-empty.zst": {
+      "bytes": 11,
+      "sha256": "65dd66cffe4067c03758480e1be0374c012853fa926f24495522e3e046a1b61d"
+    },
+    "regression-attempt-01/regression.json": {
+      "bytes": 9840,
+      "sha256": "a86fa70256b7f43646a2860080dfc9bc05682616ea01b0f999d634162ffc8287"
+    },
+    "regression-attempt-01/check-regression.py": {
+      "bytes": 2653,
+      "sha256": "514132f6ff86cf3826be270d335d9f28ab8f1a1622b235beee1b48ed63d37855"
+    },
+    "regression-attempt-01/empty_block_boundaries.rs": {
+      "bytes": 3783,
+      "sha256": "39b1576bdce88c95592a4872a2c6ac009c904ad3ce4676a70f29e1d2a8295fb5"
+    },
+    "regression-attempt-01/safe-regression-build.log": {
+      "bytes": 883,
+      "sha256": "f9f30cd276c17bc64440dc335c57ef575069c5bb2652d90a882b40142f315fd3"
+    },
+    "attempt-01/safe-build.log": {
+      "bytes": 353,
+      "sha256": "60fcef19f69082241e5b299f389efff78e29e46e8873a8448e9a60e1235c73e3"
+    },
+    "attempt-01/probe.rs": {
+      "bytes": 1855,
+      "sha256": "444ffa8dc8a3c4ed1fb4605b40dc63a1ec4df4f3a52673ede2252ed9c9593935"
+    },
+    "attempt-01/failure.json": {
+      "bytes": 349,
+      "sha256": "2bed32e2974691084a91089e118f11df603be246ae6c31f3238b104c1a4ff691"
+    }
+  },
+  "omitted_unit_executables": {
+    "regression-unsafe-dictionary": {
+      "bytes": 1204160,
+      "sha256": "b78181370975aec3e925a93fb41f09d312fbb987746153783d897d5cafb5a59e"
+    },
+    "regression-unsafe-history": {
+      "bytes": 1204168,
+      "sha256": "548708a92ad39a9cd91d6181b98363d50b7bacf17987ad747c08084b8ec150eb"
+    },
+    "regression-unsafe-fse": {
+      "bytes": 1204152,
+      "sha256": "c222c0463c64929e9f6ba853af6a54c2d326fa143ab529a308bda4c14074016a"
+    },
+    "regression-all": {
+      "bytes": 1204144,
+      "sha256": "90b2f44073572ae391e436fd2ec94de21dd91f34ca9c4eb37aeabd2c8cc66120"
+    },
+    "regression-unsafe-huffman": {
+      "bytes": 1204152,
+      "sha256": "5a2492af1d7fa69e7cc92d83715de538af267ef53958b4f869ff99c2b0b626f8"
+    },
+    "regression-unsafe-match-chain": {
+      "bytes": 1204016,
+      "sha256": "5bb229348c2b02e01b60a5f48a29100b5f59be15b354870bb5502be2086bf466"
+    },
+    "regression-unsafe-reference-chain": {
+      "bytes": 1204160,
+      "sha256": "b6e5fd04de320ea2a72dfdc26b36cab1e564a6fec5bb170f906c5a3af3e892f5"
+    },
+    "regression-unsafe-optimal-frequencies": {
+      "bytes": 1204168,
+      "sha256": "00075417d326137e6652084caf68360d5cbc3b4750fd42e7dbf478ccc0fc9f06"
+    },
+    "regression-unsafe-training": {
+      "bytes": 1204152,
+      "sha256": "2e9a26ac3233ecd001810eddddca95dd64d42a3afa02870d71652d8eabf7cdee"
+    },
+    "regression-unsafe-reference-tree": {
+      "bytes": 1204160,
+      "sha256": "30b3c7598a601718fc96eed6997b81e76ae3b311082e8e8ffbc42a98653d2228"
+    },
+    "regression-unsafe-ring-history": {
+      "bytes": 1204160,
+      "sha256": "02476e211e50b3e6f681759a5647b1acbe4673b2d7d2369c0b7b0b84046ccfa0"
+    },
+    "regression-unsafe-huffman-codebook": {
+      "bytes": 1204160,
+      "sha256": "32d73f2b0ed51b173916358f81f24a051d2186e652d245c0c2dbf996e720e090"
+    },
+    "regression-safe": {
+      "bytes": 1204144,
+      "sha256": "5071610716f3fd327d1c73d76d8d72a5be54b007ff3054628d782985ddb2b6e3"
+    },
+    "regression-unsafe-optimal-matches": {
+      "bytes": 1204160,
+      "sha256": "38a3887bee45a106a005691b42daf8d12330e5e5585ee4cde712c90a6ad5d248"
+    },
+    "regression-unsafe-optimal-paths": {
+      "bytes": 1204160,
+      "sha256": "18be2957310a8faa199a8bce669bcd7a019edd7f22ff459bbf26cc9215640d97"
+    },
+    "regression-unsafe-row-table": {
+      "bytes": 1204152,
+      "sha256": "104d912cafa3b8c0609db1119dd3312e9edf44566b55ebb365479933909c3ce7"
+    },
+    "regression-unsafe-optimal-short-key": {
+      "bytes": 1204160,
+      "sha256": "2392f7c842cc095fd2dcefb236bec1046b0145c0cab312c6cc361443be49d969"
+    },
+    "regression-unsafe-bitstream": {
+      "bytes": 1204152,
+      "sha256": "c8e517d810fe0edd1a03706a1874f3ab2addf6d7d9b18e7f4660bd281b9ab8a7"
+    },
+    "regression-unsafe-match-table": {
+      "bytes": 1204160,
+      "sha256": "0024ac51106c901568333fa7db3a36f1cf1bad7e77a2b27b4248b7f054d54cc4"
+    },
+    "regression-unsafe-fse-encoder": {
+      "bytes": 1204160,
+      "sha256": "7c08b330268563c8f6d90ef8c42faf173abd41208ffb343616bfa12c3f65766a"
+    },
+    "regression-unsafe-byte-cursor": {
+      "bytes": 1204336,
+      "sha256": "d2e4c1841bcee36c4d6c60f67028ecec42ae8244228425fc760ef6185d9e1782"
+    },
+    "regression-unsafe-slice-history": {
+      "bytes": 1203984,
+      "sha256": "0af89924aa080f1f7d4d4a90d003fbdf4b32a66a756561ebcf274c8d8d245738"
+    }
+  },
+  "archive": "2026-10-26-stable-dictionary-output-empty-block-boundaries.tar.gz",
+  "archive_sha256": "e70faa8f20e4bcc3a00629f26d089deea296b21a3ce1596631b4f5f8eaae71e1",
+  "qualification": "Five hand-encoded empty-block boundaries, with real destination guards, direct and stable output, absent/persistent empty dictionary and whole/one/seven-byte input. All22 retained feature libraries pass the new regression, then safe/all Clippy and full formatting pass. Native stable streaming skips a zero-length compressed block body whereas native one-shot and Rust reject mandatory missing sections. This is a separately qualified supplement and does not inflate the earlier native campaign counts. Initial compiler-selection failure is retained; no production source change."
+}
