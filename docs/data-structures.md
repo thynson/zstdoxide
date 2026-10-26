@@ -3754,3 +3754,48 @@ and borrow compile-fail checks. Native workspace sizes and C numeric return
 hints are not Rust ABI promises. Dictionaries, prefixes, stable input,
 overlapping in-place decoding and configurable external workspaces remain
 separate scopes. The existing buffered dictionary-capable `Decoder` is unchanged.
+
+## Dictionary-backed caller-owned output (Module 25 design)
+
+Design and decomposition precede candidate implementation; promotion follows
+Module 24 closure. `dictionary-output-design.md` records exact API, error and
+qualification scope. Public `decompress_into_with_dictionary` and `_in` borrow
+a destination and a persistent shared/view dictionary only for the call.
+Scratch uses `A: Allocator + Clone`; dictionary storage can use another allocator
+and remains independently borrowed. No destination ownership is adopted.
+
+`DictionarySliceOutput<'output,'dictionary>` owns a checked `SliceHistory` value
+and a copied `DictionaryView`. It is an allocation-free reference/index record,
+with no artificial unsafe backend. `FrameOutput` and `SequenceOutput` delegate
+ordinary operations while dictionary matches use one checked slice operation.
+The slice keeps `frame_start <= position <= limit <= output.len()`. Immutable
+dictionary bytes, content start, ID and prepared entropy retain their existing
+validated owner/view invariants and lifetime. Prepared tables are borrowed
+fallback; fresh frame state resets repeat offsets to dictionary values and
+replaces working tables independently.
+
+At current-frame position p, distance d<=p is a frame match and requires
+0<d<=window. A dictionary match d>p requires p<=window and k=d-p no larger than
+dictionary content. It begins at content.len()-k, copies up to k dictionary
+bytes and then frame positions starting at zero, including earlier writes
+within the same forward match. Validate the complete destination end and initial
+source ranges before writing. Initial dictionary distance may exceed window;
+do not reapply the ordinary frame-only window test when this same match crosses
+into frame output. This preserves the existing documented p>window rejection.
+
+`unsafe-slice-history` selects the checked destination/read loop, while
+`unsafe-dictionary` independently selects validated immutable dictionary reads.
+Default implementations use safe indexing. Every raw-pointer operation must
+prove initialized bounds, u8 alignment, nonzero forward distance, exclusive
+output borrow, shared dictionary lifetime and lack of aliasing. No pointer is
+stored beyond its call. Extreme distances/lengths and all failures validate
+before any match write; zero-length calls still validate offsets.
+
+The generic one-shot frame loop takes an optional immutable dictionary view,
+checks IDs, seeds repeat offsets and calls existing dictionary-view entropy
+entrypoints. Old wrappers pass None, preserving clone order, error ordering
+and allocation behavior. Upstream counterparts are `ZSTD_decompress_usingDDict`,
+`ZSTD_decompressMultiFrame`, `ZSTD_decompressFrame` and dictionary sequence
+execution; the existing Rust buffered `BlockSink` supplies the established
+window/expiry contract. Prefix and stable-session dictionary support are
+separate future scopes.

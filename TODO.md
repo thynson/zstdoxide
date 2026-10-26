@@ -133,6 +133,22 @@ after that milestone closes. Dictionary-backed sessions remain separate.
 - [ ] Freeze identical fragmentation workloads, allocation ledgers and safe/unsafe timing with retained executables and an independent repeat.
 - [ ] Reconcile bounded session coverage, update usage/progress and decompose dictionary-backed caller-owned output without claiming complete parity.
 
+## Module 25: dictionary-backed caller-owned one-shot output
+
+Design is recorded before candidate implementation in
+`docs/dictionary-output-design.md` and `docs/data-structures.md`. Keep predecessor
+validation sources frozen; promote this candidate only after Module 24 closes.
+
+- [x] Define dictionary/output ownership, prepared entropy fallback, ID/error contracts and crossing-match invariants before implementation.
+- [ ] Implement checked dictionary-aware slice matches with safe and independent unsafe combinations, overlap/window boundaries and rejection-before-write checks.
+- [ ] Extend the shared one-shot frame helper with borrowed dictionary metadata and entropy without changing no-dictionary behavior.
+- [ ] Expose dictionary destination APIs with borrowed/nonclone allocators, exact bounds, malformed-input and allocation-failure coverage.
+- [ ] Independently qualify pinned native raw/prepared fixed destinations and map matching official dictionary assertions conservatively.
+- [ ] Extend the exact dictionary fuzz adapter's persistent branches to real direct output and replay the entire pinned corpus with explicit prefix/training qualifications.
+- [ ] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics output.
+- [ ] Compare identical direct/owned dictionary workloads and allocation ledgers with retained safe/unsafe executables and independent repeat timings.
+- [ ] Reconcile the bounded milestone and decompose dictionary-backed stable sessions without claiming complete upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
