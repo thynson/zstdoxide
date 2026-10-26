@@ -125,7 +125,7 @@ validation sources frozen; promote this candidate only after Module 24 closes.
 - [x] Expose dictionary destination APIs with borrowed/nonclone allocators, exact bounds, malformed-input and allocation-failure coverage.
 - [x] Independently qualify pinned native raw/prepared fixed destinations and map matching official dictionary assertions conservatively.
 - [x] Extend the exact dictionary fuzz adapter's persistent branches to real direct output and replay the entire pinned corpus with explicit prefix/training qualifications.
-- [ ] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics output.
+- [x] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics output.
 - [ ] Compare identical direct/owned dictionary workloads and allocation ledgers with retained safe/unsafe executables and independent repeat timings.
 - [ ] Reconcile the bounded milestone and decompose dictionary-backed stable sessions without claiming complete upstream parity.
 
