@@ -56,7 +56,8 @@ impl SequenceOutput for DictionaryOutput<'_, '_, '_> {
 /// fallible input, literal and entropy scratch, but no output vector or history
 /// copy. Standard, skippable and concatenated frames are supported. Normal
 /// constructors have no dictionary; persistent dictionary constructors accept
-/// shared raw/prepared owners or borrowed views. Corresponds to upstream `ZSTD_decompressStream` with
+/// shared raw/prepared owners or borrowed views. Single-use prefix constructors
+/// retain their selection until a standard header claims it. Corresponds to upstream `ZSTD_decompressStream` with
 /// `ZSTD_d_stableOutBuffer`.
 ///
 /// Output is provisional until its frame passes content-size and checksum
@@ -152,6 +153,32 @@ impl<'output> SliceDecoder<'output> {
     ) -> Self {
         Self::with_dictionary_in(output, options, dictionary, Global)
     }
+
+    /// Consume a shared prefix for the next successfully parsed standard header.
+    /// Skippable frames and partial or invalid headers leave it pending. A parsed
+    /// header claims it before ID/limit checks; completion releases it, and reset
+    /// releases a claimed prefix even after failure. Reset preserves an unclaimed
+    /// prefix. See [`Self::with_prefix_in`] for borrowed dictionary views.
+    ///
+    /// ```
+    /// use zstdoxide::{compress_with_dictionary, DecodeOptions, Dictionary, SliceDecoder};
+    /// let prefix = Dictionary::raw(b"hello prefix")?.into_shared();
+    /// let frame = compress_with_dictionary(b"hello prefix hello", &prefix)?;
+    /// let mut output = [0_u8; 18];
+    /// let mut decoder = SliceDecoder::with_prefix(&mut output, DecodeOptions::new(18), prefix);
+    /// assert_eq!(decoder.process(&frame)?.consumed, frame.len());
+    /// decoder.finish()?;
+    /// assert_eq!(decoder.output()?, b"hello prefix hello");
+    /// assert_eq!(decoder.dictionary_retained_capacity(), 0);
+    /// # Ok::<(), zstdoxide::Error>(())
+    /// ```
+    pub fn with_prefix(
+        output: &'output mut [u8],
+        options: DecodeOptions,
+        prefix: SharedDictionary,
+    ) -> Self {
+        Self::with_prefix_in(output, options, prefix, Global)
+    }
 }
 
 impl<'output, A: Allocator + Clone> SliceDecoder<'output, A> {
@@ -169,8 +196,8 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
     /// Prepared entropy is borrowed during block calls. The allocator may be a
     /// reference to a non-Clone owner and is used only for codec scratch.
     /// Input fragments remain temporary and the fixed destination stays borrowed
-    /// until this session is dropped. Prefixes and attachment replacement are
-    /// outside this API. Other progress/error contracts match [`Self::process`].
+    /// until this session is dropped. Boundary replacement follows
+    /// [`Self::set_dictionary`]. Other progress/error contracts match [`Self::process`].
     ///
     /// A dictionary view cannot escape the owner that prepared it:
     ///
@@ -196,6 +223,66 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
             Attachment::Persistent(dictionary),
             allocator,
         )
+    }
+
+    /// Consume a single-use raw/prepared prefix with independent scratch allocation.
+    /// The handle or borrowed view is moved, never cloned when its frame starts.
+    /// Prefix preparation, scratch and output retain separate allocation owners.
+    /// Claim/reset timing is the same as [`SliceDecoder::with_prefix`].
+    ///
+    /// A prefix view cannot outlive the owner that prepared it:
+    ///
+    /// ```compile_fail,E0597
+    /// use std::alloc::Global;
+    /// use zstdoxide::{DecodeOptions, Dictionary, SliceDecoder};
+    /// let mut output = [0_u8; 32];
+    /// let mut decoder = {
+    ///     let prefix = Dictionary::raw(b"content").unwrap();
+    ///     SliceDecoder::with_prefix_in(&mut output, DecodeOptions::new(32), prefix.view(), Global)
+    /// };
+    /// decoder.process(&[]).unwrap();
+    /// ```
+    pub fn with_prefix_in(
+        output: &'output mut [u8],
+        options: DecodeOptions,
+        prefix: D,
+        allocator: A,
+    ) -> Self {
+        Self::with_attachment(
+            output,
+            options,
+            Attachment::PendingPrefix(prefix),
+            allocator,
+        )
+    }
+
+    /// Replace or remove the selection at a clean frame boundary.
+    /// The session must be in its initial/header phase with no buffered header
+    /// bytes; completed or failed sealed sessions require reset first. A successful
+    /// replacement drops the old selection without changing output, counters or
+    /// scratch. Rejection returns `InvalidState` with session state unchanged;
+    /// the passed argument follows ordinary Rust drop behavior.
+    pub fn set_dictionary(&mut self, dictionary: Option<D>) -> Result<()> {
+        self.check_attachment_boundary()?;
+        self.attachment = dictionary.map_or(Attachment::None, Attachment::Persistent);
+        Ok(())
+    }
+
+    /// Select a single-use prefix at a clean frame boundary.
+    /// Replaces any pending prefix or persistent dictionary. Boundary and rejection
+    /// semantics match [`Self::set_dictionary`]; the fixed output borrow remains.
+    pub fn set_prefix(&mut self, prefix: D) -> Result<()> {
+        self.check_attachment_boundary()?;
+        self.attachment = Attachment::PendingPrefix(prefix);
+        Ok(())
+    }
+
+    fn check_attachment_boundary(&self) -> Result<()> {
+        if self.phase == Phase::Header && self.filled == 0 {
+            Ok(())
+        } else {
+            Err(Error::InvalidState)
+        }
     }
 
     fn with_attachment(
@@ -290,7 +377,8 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
         Ok(self.history.written())
     }
 
-    /// Restart the same destination, dictionary selection and limits.
+    /// Restart the same destination and limits. Persistent dictionaries and
+    /// unclaimed prefixes remain selected; claimed prefixes are released.
     /// Retains encoded-input capacity and allocator handles, releasing frame-local
     /// Huffman/FSE overrides. Resets output position without erasing bytes; old
     /// bytes cease to be output or valid match history.
@@ -337,7 +425,8 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
             + self.sequences.retained_capacity()
     }
 
-    /// Dictionary payload capacity reachable through the persistent attachment.
+    /// Dictionary payload capacity reachable through any selected attachment,
+    /// including a pending or claimed prefix.
     /// Returns zero when absent. Shared/borrowed payload is not uniquely owned by
     /// this session; shared control storage and allocator internals are excluded.
     /// This is separate from [`Self::retained_capacity`] and never includes output.

@@ -56,8 +56,10 @@ validation, and failure requires reset. See [stable output usage](docs/stable-ou
 `SliceDecoder::with_dictionary` and `with_dictionary_in` consume a persistent
 shared dictionary or borrowed view. Reset preserves the selection and encoded
 input capacity while releasing frame-local entropy overrides; dictionary payload
-capacity is reported separately from scratch. Stable single-use prefixes and
-overlapping in-place decoding remain separate contracts.
+capacity is reported separately from scratch. `with_prefix` and `with_prefix_in` select a single-use
+prefix; `set_prefix` and `set_dictionary` replace selections at clean frame
+boundaries. Prefix full-matrix qualification remains in progress in `TODO.md`.
+Overlapping in-place decoding remains a separate contract.
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
 Allocation failures and corrupt, truncated, or over-limit input return `Error`.
 The named `compress` encoder writes one checksummed single-segment frame, so its advertised window
@@ -198,7 +200,7 @@ another backend. Allocation boundaries use fallible reservation. The standard
 `decompress_into_in`, `decompress_into_with_options_in`,
 `decompress_with_dictionary_in`, `decompress_into_with_dictionary_in`,
 `Decoder::new_in`, `Decoder::with_dictionary_in`, `SliceDecoder::new_in`,
-`SliceDecoder::with_dictionary_in`, allocator-aware dictionary
+`SliceDecoder::with_dictionary_in`, `SliceDecoder::with_prefix_in`, allocator-aware dictionary
 construction, `train_raw_dictionary_in`, `train_dictionary_in`, and
 `finalize_dictionary_in`. Whole-buffer decoding retains the
 original allocator in its returned vector; temporary storage uses fresh clones.

@@ -120,7 +120,7 @@ assert_eq!(decoder.output()?, b"hello dictionary hello");
 ```
 
 A borrowed view cannot outlive its dictionary owner. Consuming a shared handle
-keeps that owner alive until the session drops. Prepared table payloads are
+keeps that owner alive until replacement or session drop. Prepared table payloads are
 borrowed during block calls; working overrides remain frame-local. Dictionary
 and scratch allocators need not have the same type or identity.
 
@@ -129,7 +129,89 @@ the selection, zero when absent. It is separate from scratch-only
 `retained_capacity()` and excludes shared-control storage. It does not imply
 that a shared or borrowed payload is uniquely owned by this session.
 
-Prefixes and attachment replacement are outside the Module 26 API. The bounded
+The Module 26 checkpoint covers persistent selection; single-use prefixes and
+boundary replacement are described below. The bounded
 persistent constructor does not expose arbitrary C context reset/parameter
 operations. See [dictionary session qualification](stable-dictionary-output-validation.md)
 and [measurements](stable-dictionary-output-benchmarks.md).
+
+
+## Single-use prefixes and boundary replacement
+
+`SliceDecoder::with_prefix` consumes a shared raw/prepared dictionary for one
+standard frame. `with_prefix_in` also accepts a borrowed `DictionaryView` and an
+independent scratch allocator. The destination remains exclusively borrowed for
+the entire session, including across attachment replacement.
+
+```rust
+use zstdoxide::{compress_with_dictionary, DecodeOptions, Dictionary, SliceDecoder};
+
+let prefix = Dictionary::raw(b"hello prefix")?.into_shared();
+let frame = compress_with_dictionary(b"hello prefix hello", &prefix)?;
+let mut output = [0xa5; 36];
+let mut decoder = SliceDecoder::with_prefix(
+    &mut output,
+    DecodeOptions::new(36),
+    prefix.clone(),
+);
+assert_eq!(decoder.process(&frame)?.consumed, frame.len());
+assert_eq!(decoder.dictionary_retained_capacity(), 0);
+
+// A completed frame leaves a clean boundary for an explicit next selection.
+decoder.set_prefix(prefix)?;
+assert_eq!(decoder.process(&frame)?.consumed, frame.len());
+decoder.finish()?;
+assert_eq!(decoder.output()?, b"hello prefix hellohello prefix hello");
+# Ok::<(), zstdoxide::Error>(())
+```
+
+The claim point is successful parsing of a complete standard frame header. It
+precedes dictionary-ID, advertised-window and content-size limit checks. A
+pending prefix therefore survives partial headers, headers rejected during
+parsing and skippable frames. A valid header followed by a dictionary mismatch,
+limit failure, block error, truncation or checksum failure has claimed it.
+Even an empty standard frame consumes the prefix.
+
+| Event | Pending prefix | Claimed prefix | Persistent dictionary |
+| --- | --- | --- | --- |
+| Complete skippable frame | Retained | Not applicable | Retained |
+| Complete standard frame | Claimed, then released | Released | Retained |
+| Reset | Retained | Released | Retained |
+| Session drop | Released | Released | Released |
+
+A failed session denies `output()` access and retains a claimed handle until
+reset or drop. Reset removes all previous output/history positions without
+erasing the destination bytes. It retains encoded-input capacity and allocator
+handles while releasing frame-local entropy overrides. A pending borrowed view
+still requires its original dictionary owner to remain alive; releasing a view
+does not free that caller-owned dictionary.
+
+`set_dictionary(Some(value))` replaces any selection with a persistent one;
+`set_dictionary(None)` removes it. `set_prefix(value)` replaces any selection
+with a pending prefix. These calls succeed only at a clean header boundary with
+no buffered header bytes. Initial sessions, completed standard frames and
+completed skippable frames provide that boundary. `finish()` seals the session,
+so reset is required before reconfiguration after finishing or failure.
+
+The session keeps its concrete attachment type: a shared-handle session accepts
+shared replacements, while a session constructed with `with_prefix_in` and a
+borrowed view accepts views with the required owner lifetime. Removing a
+selection does not change that type or lifetime.
+
+Successful replacement preserves accumulated output, input/output counters,
+limits and scratch. Rejection returns `InvalidState` without changing session
+state; the passed-by-value argument is dropped normally. It cannot replace or
+resize the borrowed output. Prefix/dictionary payload remains separately
+reported by `dictionary_retained_capacity()` rather than scratch capacity.
+
+The pinned native streaming implementation consumes its single-use dictionary
+when it begins a skippable frame. Rust preserves an unclaimed prefix across
+skips, consistently with its buffered decoder. Native and Rust lifecycle rules
+are therefore not interchangeable opaque-context contracts. The qualification
+report retains explicit guarded leading-skip cases and other bounded differences.
+
+A further difference concerns a valid header whose advertised output exceeds the
+allowance. Native stable output checks that capacity before consuming its prefix;
+Rust claims the prefix first. Reset after this Rust error releases the claimed
+selection. When reusing that reset session for a later frame that needs a prefix,
+select it again explicitly. The output capacity and options remain fixed.

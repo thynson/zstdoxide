@@ -136,7 +136,7 @@ Module 26 closes.
 - [x] Define one-owner attachment states, exact claim/release timing, reset and transactional configuration boundaries.
 - [x] Implement and independently verify plain attachment ownership transitions without cloning persistent handles.
 - [x] Integrate private prefix claim, frame completion and reset with existing dictionary-free/persistent behavior.
-- [ ] Expose shared/view prefix constructors and boundary replacement with lifetime, allocator and malformed-input qualification.
+- [x] Expose shared/view prefix constructors and boundary replacement with lifetime, allocator and malformed-input qualification.
 - [ ] Independently qualify pinned normal/sanitized stable-prefix outputs and preserve documented lifecycle differences.
 - [ ] Replay all dictionary corpus branches with a labelled fixed-fragment supplement and unchanged tail selectors.
 - [ ] Qualify safe/isolated/all full and release regression, no_std, Clippy, foreign Miri and concrete no-atomics code generation.
