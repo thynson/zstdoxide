@@ -119,7 +119,7 @@ after that milestone closes. Dictionary-backed sessions remain separate.
 - [x] Expose the stable borrowed session API with lifetime examples, exact progress/limit tests and allocation failure qualification.
 - [x] Port and independently qualify matching pinned native stable-output assertions, including malformed inputs and real guard checks.
 - [x] Preserve the upstream tail-selected stable streaming fuzz branch and replay its entire pinned external corpus with real fixed destinations and guards.
-- [ ] Qualify safe/isolated/all features, true no_std, strict Clippy, full/release regression, foreign Miri and concrete no-atomics output.
+- [x] Qualify safe/isolated/all features, true no_std, strict Clippy, full/release regression, foreign Miri and concrete no-atomics output.
 - [ ] Freeze identical fragmentation workloads, allocation ledgers and safe/unsafe timing with retained executables and an independent repeat.
 - [ ] Reconcile bounded session coverage, update usage/progress and decompose dictionary-backed caller-owned output without claiming complete parity.
 
