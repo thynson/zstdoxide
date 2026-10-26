@@ -120,7 +120,7 @@ after that milestone closes. Dictionary-backed sessions remain separate.
 - [x] Port and independently qualify matching pinned native stable-output assertions, including malformed inputs and real guard checks.
 - [x] Preserve the upstream tail-selected stable streaming fuzz branch and replay its entire pinned external corpus with real fixed destinations and guards.
 - [x] Qualify safe/isolated/all features, true no_std, strict Clippy, full/release regression, foreign Miri and concrete no-atomics output.
-- [ ] Freeze identical fragmentation workloads, allocation ledgers and safe/unsafe timing with retained executables and an independent repeat.
+- [x] Freeze identical fragmentation workloads, allocation ledgers and safe/unsafe timing with retained executables and an independent repeat.
 - [ ] Reconcile bounded session coverage, update usage/progress and decompose dictionary-backed caller-owned output without claiming complete parity.
 
 ## Module 25: dictionary-backed caller-owned one-shot output
