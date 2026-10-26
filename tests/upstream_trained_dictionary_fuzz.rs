@@ -17,13 +17,13 @@ mod fuzz_support;
 
 use fuzz_support::DataProducer;
 use std::fs;
-use std::io::{self, Read};
+use std::io::{self, Read, Write};
 use std::ops::Range;
 use std::path::PathBuf;
 use zstdoxide::{
     DecodeOptions, Decoder, Dictionary, DictionaryMode, DictionaryTrainingOptions, Encoder,
     EncoderOptions, EndDirective, Error, RawTrainingOptions, SharedDictionary, StreamStatus,
-    train_dictionary,
+    decompress_into_with_dictionary, train_dictionary,
 };
 
 const MAX_INPUT: usize = 2 * 1024 * 1024;
@@ -364,6 +364,9 @@ fn selected_mode(producer: &mut DataProducer<'_>) -> DictionaryMode {
 struct Outcome {
     trained: bool,
     decoded: bool,
+    attachment: &'static str,
+    source_size: usize,
+    capacity: usize,
 }
 
 /// Assert the incremental equivalent of a bounded one-shot destination, with a
@@ -421,6 +424,35 @@ fn decode_checked(
     }
 }
 
+/// Exercise the actual fixed destination for persistent dictionaries. Keep the
+/// established buffered contract as an independent orchestration comparison;
+/// malformed error precedence may differ, but success and bytes must agree.
+fn decode_direct_checked(source: &[u8], dictionary: SharedDictionary, capacity: usize) -> bool {
+    let mut storage = vec![0xa5; capacity + 64];
+    let direct = decompress_into_with_dictionary(
+        source,
+        &mut storage[32..capacity + 32],
+        &dictionary,
+        DecodeOptions::new(capacity),
+    );
+    assert!(storage[..32].iter().all(|&b| b == 0xa5));
+    assert!(storage[capacity + 32..].iter().all(|&b| b == 0xa5));
+    let buffered = decode_checked(source, dictionary, false, capacity);
+    assert_eq!(direct.is_ok(), buffered.is_ok());
+    match direct {
+        Ok(written) => {
+            assert_eq!(&storage[32..written + 32], buffered.unwrap());
+            assert!(storage[written + 32..].iter().all(|&b| b == 0xa5));
+            true
+        }
+        Err(error) => {
+            assert_ne!(error, Error::AllocationFailed);
+            assert_ne!(error, Error::InvalidState);
+            false
+        }
+    }
+}
+
 /// `dictionary_decompress.c::LLVMFuzzerTestOneInput`, retaining every selector
 /// before decompression. A prepared dictionary and owned loaded dictionary share
 /// the Rust handle implementation; by-reference loading becomes immutable sharing.
@@ -431,20 +463,27 @@ fn dictionary_decompress(input: &[u8]) -> Outcome {
     let source = &input[..size];
     let samples = select_training_samples(size, &mut producer);
     let trained = train_selected(source, &samples);
-    let (prefix, mode) = if producer.unsigned_range(0, 1) == 0 {
-        (false, DictionaryMode::Auto)
+    let (prefix, mode, attachment) = if producer.unsigned_range(0, 1) == 0 {
+        (false, DictionaryMode::Auto, "prepared")
     } else if producer.unsigned_range(0, 1) == 0 {
         let _load_method = producer.unsigned_range(0, 1);
-        (false, selected_mode(&mut producer))
+        (false, selected_mode(&mut producer), "loaded")
     } else {
-        (true, selected_mode(&mut producer))
+        (true, selected_mode(&mut producer), "prefix")
     };
     let capacity = producer.unsigned_range(0, (10 * size) as u32) as usize;
     let dictionary = load_mode(&trained.dictionary, mode);
-    let decoded = decode_checked(source, dictionary, prefix, capacity).is_ok();
+    let decoded = if prefix {
+        decode_checked(source, dictionary, true, capacity).is_ok()
+    } else {
+        decode_direct_checked(source, dictionary, capacity)
+    };
     Outcome {
         trained: trained.trained,
         decoded,
+        attachment,
+        source_size: size,
+        capacity,
     }
 }
 
@@ -531,6 +570,7 @@ fn dictionary_round_trip(input: &[u8]) -> Outcome {
     Outcome {
         trained: trained.trained,
         decoded: true,
+        ..Outcome::default()
     }
 }
 
@@ -585,6 +625,8 @@ fn trained_decompression_covers_prepared_loaded_prefix_modes_and_valid_controls(
                 selectors.extend_from_slice(&[(2, mode), ((10 * frame.len()) as u32, 5)]);
                 let outcome = dictionary_decompress(&target_case(frame, &selectors));
                 assert!(outcome.trained && outcome.decoded);
+                assert_eq!(outcome.attachment, if prefix { "prefix" } else { "loaded" });
+                assert_eq!(outcome.capacity, 5);
                 selectors.last_mut().unwrap().1 = 4;
                 assert!(!dictionary_decompress(&target_case(frame, &selectors)).decoded);
             }
@@ -710,6 +752,14 @@ fn external_trained_dictionary_file_corpus() {
     assert!(!files.is_empty());
     let mut trained = 0;
     let mut decoded = 0;
+    let mut branches = std::collections::BTreeMap::new();
+    let mut ledger = std::env::var_os("ZSTDOXIDE_DICTIONARY_LEDGER").map(|path| {
+        std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(path)
+            .unwrap()
+    });
     let started = std::time::Instant::now();
     for path in &files {
         eprintln!("{target}: {}", path.display());
@@ -732,6 +782,27 @@ fn external_trained_dictionary_file_corpus() {
         };
         trained += usize::from(outcome.trained);
         decoded += usize::from(outcome.decoded);
+        if target == "decompress" {
+            *branches.entry(outcome.attachment).or_insert(0_usize) += 1;
+            if let Some(ledger) = &mut ledger {
+                writeln!(
+                    ledger,
+                    "{}\t{}\t{}\t{}\t{}\t{}",
+                    path.display(),
+                    outcome.attachment,
+                    outcome.source_size,
+                    outcome.capacity,
+                    u8::from(outcome.trained),
+                    u8::from(outcome.decoded)
+                )
+                .unwrap();
+            }
+        }
+    }
+    if target == "decompress" {
+        eprintln!(
+            "Dictionary destination branches: {branches:?}; prefix cases use the existing buffered API"
+        );
     }
     eprintln!(
         "Replayed {} {target} corpus files: {trained} trained dictionaries, {} TrainingFailed empty fallbacks, {decoded} successful decodes, {} rejected compressed inputs, no files skipped; input cap {MAX_INPUT}, output cap 10*source for decompression, window cap 128 MiB; elapsed {:.3} s",
@@ -888,6 +959,7 @@ fn dictionary_stream_round_trip(input: &[u8]) -> Outcome {
     Outcome {
         trained: trained.trained,
         decoded: true,
+        ..Outcome::default()
     }
 }
 
