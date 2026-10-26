@@ -126,7 +126,7 @@ validation sources frozen; promote this candidate only after Module 24 closes.
 - [x] Independently qualify pinned native raw/prepared fixed destinations and map matching official dictionary assertions conservatively.
 - [x] Extend the exact dictionary fuzz adapter's persistent branches to real direct output and replay the entire pinned corpus with explicit prefix/training qualifications.
 - [x] Qualify safe/isolated/all full and release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics output.
-- [ ] Compare identical direct/owned dictionary workloads and allocation ledgers with retained safe/unsafe executables and independent repeat timings.
+- [x] Compare identical direct/owned dictionary workloads and allocation ledgers with retained safe/unsafe executables and independent repeat timings.
 - [ ] Reconcile the bounded milestone and decompose dictionary-backed stable sessions without claiming complete upstream parity.
 
 ## Module 26: persistent dictionaries in stable borrowed output
