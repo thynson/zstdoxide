@@ -113,7 +113,7 @@ sessions, dictionaries and in-place decoding remain separate scopes.
 - [x] Qualify direct output under every isolated storage feature, true no_std and strict Clippy, plus safe/all full regression and release destination tests.
 - [x] Complete whole-suite regression under every isolated storage feature and all-feature release.
 - [x] Qualify borrowed compressed history under foreign Miri and concrete no-atomics code generation.
-- [ ] Freeze deterministic direct/owned output workloads, compare allocator ledgers and measure safe/unsafe backends with retained executables.
+- [x] Freeze deterministic direct/owned output workloads, compare allocator ledgers and measure safe/unsafe backends with retained executables.
 - [ ] Reconcile this bounded milestone and decompose stable borrowed incremental sessions without claiming complete upstream parity.
 
 ## Module 24: stable borrowed incremental decompression output
