@@ -53,8 +53,9 @@ impl SequenceOutput for DictionaryOutput<'_, '_, '_> {
 /// The slice remains borrowed for the session and supplies all frame-local match
 /// history. Input fragments are not retained. Compressed blocks can allocate
 /// fallible input, literal and entropy scratch, but no output vector or history
-/// copy. Standard, skippable and concatenated frames are supported; dictionary
-/// IDs are rejected. Corresponds to upstream `ZSTD_decompressStream` with
+/// copy. Standard, skippable and concatenated frames are supported. Normal
+/// constructors have no dictionary; persistent dictionary constructors accept
+/// shared raw/prepared owners or borrowed views. Corresponds to upstream `ZSTD_decompressStream` with
 /// `ZSTD_d_stableOutBuffer`.
 ///
 /// Output is provisional until its frame passes content-size and checksum
@@ -126,6 +127,30 @@ impl<'output> SliceDecoder<'output> {
     pub fn new(output: &'output mut [u8], options: DecodeOptions) -> Self {
         Self::new_in(output, options, Global)
     }
+
+    /// Consume one persistent shared dictionary for all standard frames.
+    /// ID zero still uses the selection; nonzero IDs must match. Skippable frames
+    /// do not consume it, and reset preserves it. Dictionary preparation and
+    /// output storage remain independent from this session's scratch owners.
+    ///
+    /// ```
+    /// use zstdoxide::{compress_with_dictionary, DecodeOptions, Dictionary, SliceDecoder};
+    /// let dictionary = Dictionary::raw(b"hello dictionary")?.into_shared();
+    /// let frame = compress_with_dictionary(b"hello dictionary hello", &dictionary)?;
+    /// let mut output = [0xa5; 32];
+    /// let mut decoder = SliceDecoder::with_dictionary(&mut output, DecodeOptions::new(22), dictionary);
+    /// for chunk in frame.chunks(3) { assert_eq!(decoder.process(chunk)?.consumed, chunk.len()); }
+    /// decoder.finish()?;
+    /// assert_eq!(decoder.output()?, b"hello dictionary hello");
+    /// # Ok::<(), zstdoxide::Error>(())
+    /// ```
+    pub fn with_dictionary(
+        output: &'output mut [u8],
+        options: DecodeOptions,
+        dictionary: SharedDictionary,
+    ) -> Self {
+        Self::with_dictionary_in(output, options, dictionary, Global)
+    }
 }
 
 impl<'output, A: Allocator + Clone> SliceDecoder<'output, A> {
@@ -138,8 +163,27 @@ impl<'output, A: Allocator + Clone> SliceDecoder<'output, A> {
 }
 
 impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A, D> {
-    #[cfg(test)]
-    fn with_dictionary_candidate(
+    /// Consume a persistent shared handle or borrowed view with independent scratch allocation.
+    /// The attachment is not cloned; a view cannot outlive its original owner.
+    /// Prepared entropy is borrowed during block calls. The allocator may be a
+    /// reference to a non-Clone owner and is used only for codec scratch.
+    /// Input fragments remain temporary and the fixed destination stays borrowed
+    /// until this session is dropped. Prefixes and attachment replacement are
+    /// outside this API. Other progress/error contracts match [`Self::process`].
+    ///
+    /// A dictionary view cannot escape the owner that prepared it:
+    ///
+    /// ```compile_fail,E0597
+    /// use std::alloc::Global;
+    /// use zstdoxide::{DecodeOptions, Dictionary, SliceDecoder};
+    /// let mut output = [0_u8; 32];
+    /// let mut decoder = {
+    ///     let dictionary = Dictionary::raw(b"content").unwrap();
+    ///     SliceDecoder::with_dictionary_in(&mut output, DecodeOptions::new(32), dictionary.view(), Global)
+    /// };
+    /// decoder.process(&[]).unwrap();
+    /// ```
+    pub fn with_dictionary_in(
         output: &'output mut [u8],
         options: DecodeOptions,
         dictionary: D,
@@ -240,9 +284,10 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
         Ok(self.history.written())
     }
 
-    /// Restart the same destination and limits, retaining reusable scratch.
-    /// Resets output position without erasing bytes; old bytes cease to be output
-    /// or valid match history. Releases frame-local Huffman tables.
+    /// Restart the same destination, dictionary selection and limits.
+    /// Retains encoded-input capacity and allocator handles, releasing frame-local
+    /// Huffman/FSE overrides. Resets output position without erasing bytes; old
+    /// bytes cease to be output or valid match history.
     pub fn reset(&mut self) {
         self.history.reset();
         self.phase = Phase::Header;
@@ -274,7 +319,8 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
         self.history.len() as u64
     }
 
-    /// Codec-owned heap capacity, excluding inline state and the borrowed output.
+    /// Codec-owned scratch capacity, excluding inline state, the borrowed output
+    /// and selected dictionary payload. See [`Self::dictionary_retained_capacity`].
     pub fn retained_capacity(&self) -> usize {
         self.encoded.capacity()
             + self
@@ -282,6 +328,16 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
                 .as_ref()
                 .map_or(0, HuffmanTable::retained_capacity)
             + self.sequences.retained_capacity()
+    }
+
+    /// Dictionary payload capacity reachable through the persistent attachment.
+    /// Returns zero when absent. Shared/borrowed payload is not uniquely owned by
+    /// this session; shared control storage and allocator internals are excluded.
+    /// This is separate from [`Self::retained_capacity`] and never includes output.
+    pub fn dictionary_retained_capacity(&self) -> usize {
+        self.dictionary
+            .as_ref()
+            .map_or(0, |dictionary| dictionary.view().retained_capacity())
     }
 
     fn fill(&mut self, input: &[u8], consumed: &mut usize, target: usize) -> bool {
@@ -674,7 +730,7 @@ mod tests {
             let dictionary = crate::Dictionary::from_bytes(dictionary).unwrap();
             for chunk in [1, 7, frame.len()] {
                 let mut output = alloc::vec![0xa5;expected.len()+18];
-                let mut decoder = SliceDecoder::with_dictionary_candidate(
+                let mut decoder = SliceDecoder::with_dictionary_in(
                     &mut output[1..expected.len() + 17],
                     DecodeOptions::new(expected.len()),
                     dictionary.view(),
@@ -691,7 +747,7 @@ mod tests {
                 assert!(output[expected.len() + 1..].iter().all(|&b| b == 0xa5));
             }
             let mut output = alloc::vec![0xa5;expected.len()+2];
-            let mut decoder = SliceDecoder::with_dictionary_candidate(
+            let mut decoder = SliceDecoder::with_dictionary_in(
                 &mut output[1..expected.len()],
                 DecodeOptions::new(usize::MAX),
                 dictionary.view(),
@@ -712,7 +768,7 @@ mod tests {
         let dictionary =
             crate::Dictionary::raw(dictionary_fixture!("boundary-dictionary.raw")).unwrap();
         let mut output = [0xa5; 4098];
-        let mut decoder = SliceDecoder::with_dictionary_candidate(
+        let mut decoder = SliceDecoder::with_dictionary_in(
             &mut output[1..4097],
             DecodeOptions::new(4096),
             dictionary.view(),
