@@ -44,6 +44,70 @@ impl<'a> SliceHistory<'a> {
         self.window = 0;
     }
 
+    /// Expand one match from immutable dictionary content into current-frame output.
+    /// Initial dictionary distances may exceed the advertised frame window.
+    #[cfg(test)]
+    pub(crate) fn copy_dictionary_match(
+        &mut self,
+        dictionary: crate::DictionaryView<'_>,
+        distance: usize,
+        length: usize,
+    ) -> Result<()> {
+        let position = self.position - self.frame_start;
+        if distance <= position {
+            return self.copy_match(distance, length);
+        }
+        if position > self.window {
+            return Err(Error::CorruptData);
+        }
+        let before_frame = distance - position;
+        let source = dictionary
+            .content()
+            .len()
+            .checked_sub(before_frame)
+            .ok_or(Error::CorruptData)?;
+        let end = self.checked_end(length)?;
+        #[cfg(not(feature = "unsafe-slice-history"))]
+        for index in 0..length {
+            let byte = if index < before_frame {
+                dictionary.content_byte(source + index)?
+            } else {
+                self.output[self.frame_start + index - before_frame]
+            };
+            self.output[self.position + index] = byte;
+        }
+        #[cfg(feature = "unsafe-slice-history")]
+        {
+            let pointer = self.output.as_mut_ptr();
+            // SAFETY: checked_end proves position + length = end <= limit <=
+            // output.len() without overflow. The exclusive initialized u8 slice
+            // remains alive, aligned to one byte and unaliased throughout this
+            // loop; the separately shared dictionary cannot alias it in safe
+            // callers. The dictionary range was validated before any writes:
+            // source + index < content.len() for index < before_frame, and its
+            // accessor independently checks that bound. For the frame portion,
+            // frame_start + index - before_frame is strictly below destination
+            // position + index by distance = position - frame_start +
+            // before_frame > 0. It is at least frame_start and therefore reads
+            // an initialized old prefix byte or an earlier write in this loop.
+            // Each destination is below end. No reference, allocation or length
+            // change occurs; forward iteration preserves overlap. An empty loop
+            // never dereferences the pointer, even for a zero-capacity slice.
+            unsafe {
+                for index in 0..length {
+                    let byte = if index < before_frame {
+                        dictionary.content_byte(source + index)?
+                    } else {
+                        pointer.add(self.frame_start + index - before_frame).read()
+                    };
+                    pointer.add(self.position + index).write(byte);
+                }
+            }
+        }
+        self.position = end;
+        Ok(())
+    }
+
     fn checked_end(&self, count: usize) -> Result<usize> {
         if count > self.limit - self.position {
             return Err(Error::ResourceLimit);
@@ -154,6 +218,104 @@ mod tests {
         assert!(history.written().is_empty());
         assert_eq!(&output[..7], b"zzzzzzz");
         assert_eq!(&output[7..], &[0xa5; 9]);
+    }
+
+    #[test]
+    fn dictionary_matches_cover_every_small_crossing_and_frame_start() {
+        for dictionary_length in 0..=16 {
+            let content: alloc::vec::Vec<_> = (0..dictionary_length as u8).collect();
+            let dictionary = crate::Dictionary::raw(&content).unwrap();
+            for prefix in 0_usize..=16 {
+                for distance in 1..=dictionary_length + prefix {
+                    for length in [0, 1, distance - 1, distance, distance + 1, 65] {
+                        for window in [0, prefix.saturating_sub(1), prefix, 32] {
+                            let mut output = [0xa5; 128];
+                            let mut history = SliceHistory::new(&mut output[1..127], 100);
+                            history.append(b"old").unwrap();
+                            history.start_frame(window);
+                            let frame: alloc::vec::Vec<_> =
+                                (0..prefix).map(|i| 32 + i as u8).collect();
+                            history.append(&frame).unwrap();
+                            let before = history.output.to_vec();
+                            let result =
+                                history.copy_dictionary_match(dictionary.view(), distance, length);
+                            let permitted = if distance <= prefix {
+                                distance <= window
+                            } else {
+                                prefix <= window
+                            };
+                            if permitted {
+                                result.unwrap();
+                                let mut logical = content.clone();
+                                logical.extend_from_slice(&frame);
+                                for _ in 0..length {
+                                    logical.push(logical[logical.len() - distance]);
+                                }
+                                assert_eq!(history.frame_bytes(), &logical[dictionary_length..]);
+                                assert_eq!(&history.output[..3], b"old");
+                            } else {
+                                assert_eq!(result, Err(Error::CorruptData));
+                                assert_eq!(history.output, before.as_slice());
+                            }
+                            let written = history.len();
+                            assert!(output[1 + written..].iter().all(|&b| b == 0xa5));
+                            assert_eq!(output[0], 0xa5);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn invalid_dictionary_matches_and_capacity_fail_before_any_write() {
+        let dictionary = crate::Dictionary::raw(b"dict").unwrap();
+        for (distance, length, window, expected) in [
+            (0, 0, 8, Error::CorruptData),
+            (0, usize::MAX, 8, Error::CorruptData),
+            (7, 0, 8, Error::CorruptData),
+            (usize::MAX, 1, 8, Error::CorruptData),
+            (3, 0, 1, Error::CorruptData),
+            (3, 1, 1, Error::CorruptData),
+            (2, 0, 1, Error::CorruptData),
+            (6, usize::MAX, 2, Error::ResourceLimit),
+            (3, 7, 2, Error::ResourceLimit),
+        ] {
+            let mut output = [0xa5; 16];
+            let mut history = SliceHistory::new(&mut output, 10);
+            history.append(b"old").unwrap();
+            history.start_frame(window);
+            history.append(b"ab").unwrap();
+            let before = history.output.to_vec();
+            assert_eq!(
+                history.copy_dictionary_match(dictionary.view(), distance, length),
+                Err(expected)
+            );
+            assert_eq!(history.output, before.as_slice());
+            assert_eq!(
+                (
+                    history.position,
+                    history.frame_start,
+                    history.window,
+                    history.limit
+                ),
+                (5, 3, window, 10)
+            );
+        }
+        let mut empty = [];
+        let mut history = SliceHistory::new(&mut empty, 0);
+        history.start_frame(0);
+        history
+            .copy_dictionary_match(dictionary.view(), 4, 0)
+            .unwrap();
+        assert_eq!(
+            history.copy_dictionary_match(dictionary.view(), 4, 1),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(
+            history.copy_dictionary_match(dictionary.view(), 5, 0),
+            Err(Error::CorruptData)
+        );
     }
 
     #[test]
