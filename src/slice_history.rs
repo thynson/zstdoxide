@@ -32,6 +32,20 @@ impl<'a> SliceHistory<'a> {
         &self.output[self.frame_start..self.position]
     }
 
+    /// All written output, including completed frames, borrowed through this sink.
+    #[cfg(test)]
+    pub(crate) fn written(&self) -> &[u8] {
+        &self.output[..self.position]
+    }
+
+    /// Restart the same output borrow without clearing bytes or changing limits.
+    #[cfg(test)]
+    pub(crate) fn reset(&mut self) {
+        self.position = 0;
+        self.frame_start = 0;
+        self.window = 0;
+    }
+
     fn checked_end(&self, count: usize) -> Result<usize> {
         if count > self.limit - self.position {
             return Err(Error::ResourceLimit);
@@ -111,6 +125,38 @@ impl FrameOutput for SliceHistory<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn session_reset_preserves_bytes_borrow_and_limit_but_discards_old_history() {
+        let mut output = [0xa5; 16];
+        let mut history = SliceHistory::new(&mut output, 7);
+        let pointer = history.output.as_ptr();
+        history.start_frame(7);
+        history.append(b"abc").unwrap();
+        history.start_frame(4);
+        history.append(b"defg").unwrap();
+        assert_eq!(history.written(), b"abcdefg");
+        assert_eq!(history.frame_bytes(), b"defg");
+        history.reset();
+        assert_eq!(history.output.as_ptr(), pointer);
+        assert_eq!(
+            history.output,
+            b"abcdefg\xa5\xa5\xa5\xa5\xa5\xa5\xa5\xa5\xa5"
+        );
+        assert!(history.written().is_empty());
+        assert!(history.frame_bytes().is_empty());
+        assert_eq!(history.copy_match(1, 1), Err(Error::CorruptData));
+        history.start_frame(1);
+        history.append(b"z").unwrap();
+        history.copy_match(1, 6).unwrap();
+        assert_eq!(history.written(), b"zzzzzzz");
+        assert_eq!(history.append(b"!"), Err(Error::ResourceLimit));
+        history.reset();
+        history.reset();
+        assert!(history.written().is_empty());
+        assert_eq!(&output[..7], b"zzzzzzz");
+        assert_eq!(&output[7..], &[0xa5; 9]);
+    }
 
     #[test]
     fn every_small_offset_and_length_expands_forward_and_preserves_guards() {
