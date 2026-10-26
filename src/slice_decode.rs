@@ -5,6 +5,7 @@ use crate::frame::{BlockHeader, BlockKind, MAX_BLOCK_SIZE};
 use crate::history::SequenceOutput;
 use crate::huffman::{HuffmanTable, decode_literals_with_dictionary_view_in};
 use crate::sequences::SequenceState;
+use crate::slice_attachment::Attachment;
 use crate::slice_history::SliceHistory;
 use crate::xxhash::checksum;
 use crate::{
@@ -103,7 +104,7 @@ impl SequenceOutput for DictionaryOutput<'_, '_, '_> {
 pub struct SliceDecoder<'output, A: Allocator = Global, D: DictionaryHandle = SharedDictionary> {
     allocator: A,
     options: DecodeOptions,
-    dictionary: Option<D>,
+    attachment: Attachment<D>,
     history: SliceHistory<'output>,
     phase: Phase,
     scratch: [u8; 18],
@@ -158,7 +159,7 @@ impl<'output, A: Allocator + Clone> SliceDecoder<'output, A> {
     /// The destination always belongs to the caller. Allocator cloning retains
     /// the allocator implementation's own allocation and panic semantics.
     pub fn new_in(output: &'output mut [u8], options: DecodeOptions, allocator: A) -> Self {
-        Self::with_attachment(output, options, None, allocator)
+        Self::with_attachment(output, options, Attachment::None, allocator)
     }
 }
 
@@ -189,19 +190,24 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
         dictionary: D,
         allocator: A,
     ) -> Self {
-        Self::with_attachment(output, options, Some(dictionary), allocator)
+        Self::with_attachment(
+            output,
+            options,
+            Attachment::Persistent(dictionary),
+            allocator,
+        )
     }
 
     fn with_attachment(
         output: &'output mut [u8],
         mut options: DecodeOptions,
-        dictionary: Option<D>,
+        attachment: Attachment<D>,
         allocator: A,
     ) -> Self {
         options.max_output_size = options.max_output_size.min(output.len());
         Self {
             options,
-            dictionary,
+            attachment,
             history: SliceHistory::new(output, options.max_output_size),
             phase: Phase::Header,
             scratch: [0; 18],
@@ -289,6 +295,7 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
     /// Huffman/FSE overrides. Resets output position without erasing bytes; old
     /// bytes cease to be output or valid match history.
     pub fn reset(&mut self) {
+        self.attachment.release_active();
         self.history.reset();
         self.phase = Phase::Header;
         self.filled = 0;
@@ -335,8 +342,8 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
     /// this session; shared control storage and allocator internals are excluded.
     /// This is separate from [`Self::retained_capacity`] and never includes output.
     pub fn dictionary_retained_capacity(&self) -> usize {
-        self.dictionary
-            .as_ref()
+        self.attachment
+            .retained()
             .map_or(0, |dictionary| dictionary.view().retained_capacity())
     }
 
@@ -394,7 +401,8 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
                         return Ok(StreamStatus::NeedInput);
                     }
                     let (header, _) = FrameHeader::parse(&self.scratch[..size])?;
-                    let dictionary = self.dictionary.as_ref().map(DictionaryHandle::view);
+                    self.attachment.claim();
+                    let dictionary = self.attachment.current().map(DictionaryHandle::view);
                     if header.dictionary_id != 0 {
                         let selected = dictionary.ok_or(Error::DictionaryRequired)?;
                         if selected.id() != header.dictionary_id {
@@ -492,7 +500,7 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
                     let literal_limit = self
                         .max_block
                         .min(self.options.max_output_size - self.history.len());
-                    let dictionary = self.dictionary.as_ref().map(DictionaryHandle::view);
+                    let dictionary = self.attachment.current().map(DictionaryHandle::view);
                     let initial = dictionary.and_then(|view| view.entropy());
                     let (literals, offset) = decode_literals_with_dictionary_view_in(
                         encoded,
@@ -595,6 +603,7 @@ impl<'output, A: Allocator + Clone, D: DictionaryHandle> SliceDecoder<'output, A
             .completed_frames
             .checked_add(1)
             .ok_or(Error::ResourceLimit)?;
+        self.attachment.release_active();
         self.phase = Phase::Header;
         self.filled = 0;
         self.frame = None;
@@ -826,5 +835,123 @@ mod tests {
             StreamStatus::FrameFinished
         );
         decoder.finish().unwrap();
+    }
+    #[test]
+    fn prefix_candidate_claims_once_after_parsing_and_releases_on_completion() {
+        let dictionary = crate::Dictionary::from_bytes(dictionary_fixture!("formatted.dict"))
+            .unwrap()
+            .into_shared();
+        let frame = dictionary_fixture!("formatted-id.zst");
+        let expected = dictionary_fixture!("formatted-id.expected");
+        for chunk in [1, 7, frame.len()] {
+            let weak = SharedDictionary::downgrade(&dictionary);
+            let mut output = alloc::vec![0xa5; expected.len() * 2 + 2];
+            let mut decoder = SliceDecoder::with_attachment(
+                &mut output[1..expected.len() * 2 + 1],
+                DecodeOptions::new(expected.len() * 2),
+                Attachment::PendingPrefix(dictionary.clone()),
+                Global,
+            );
+            let skip = [0x50, 0x2a, 0x4d, 0x18, 1, 0, 0, 0, 42];
+            let progress = decoder.process(&skip).unwrap();
+            assert_eq!(progress.status, StreamStatus::FrameFinished);
+            assert!(matches!(decoder.attachment, Attachment::PendingPrefix(_)));
+            assert!(decoder.dictionary_retained_capacity() > 0);
+            assert!(weak.upgrade().is_some());
+            // Keep the boundary open, so a second frame can prove prefix-once.
+            let mut position = 0;
+            while position < frame.len() {
+                let end = position + chunk.min(frame.len() - position);
+                let p = decoder.process(&frame[position..end]).unwrap();
+                assert!(p.consumed > 0 || p.status == StreamStatus::FrameFinished);
+                position += p.consumed;
+            }
+            assert_eq!(decoder.output().unwrap(), expected);
+            assert_eq!(decoder.dictionary_retained_capacity(), 0);
+            assert!(matches!(decoder.attachment, Attachment::None));
+            assert_eq!(SharedDictionary::strong_count(&dictionary), 1);
+            assert_eq!(decoder.process(frame), Err(Error::DictionaryRequired));
+            assert_eq!(decoder.output(), Err(Error::InvalidState));
+            decoder.reset();
+            assert_eq!(decoder.dictionary_retained_capacity(), 0);
+            drop(decoder);
+            assert_eq!(output[0], 0xa5);
+            assert!(output[expected.len() + 1..].iter().all(|&b| b == 0xa5));
+        }
+    }
+
+    #[test]
+    fn prefix_candidate_reset_distinguishes_unparsed_headers_from_claimed_failures() {
+        let partial = [0x28, 0xb5, 0x2f];
+        let invalid_magic = [0x29];
+        let invalid_header = [0x28, 0xb5, 0x2f, 0xfd, 0x08];
+        let invalid_block = [0x28, 0xb5, 0x2f, 0xfd, 0, 0, 7, 0, 0];
+        let id_header = [0x28, 0xb5, 0x2f, 0xfd, 0x21, 1, 0];
+        let limited_header = [0x28, 0xb5, 0x2f, 0xfd, 0x20, 1];
+        let cases: &[(&[u8], bool, bool)] = &[
+            (&partial, false, false),
+            (&invalid_magic, false, true),
+            (&invalid_header, false, true),
+            (&invalid_block, true, true),
+            (&id_header, true, true),
+            (&limited_header, true, true),
+        ];
+        for &(input, claimed, failed) in cases {
+            let dictionary = crate::Dictionary::raw(b"prefix").unwrap().into_shared();
+            let weak = SharedDictionary::downgrade(&dictionary);
+            let mut output = [0xa5; 8];
+            let mut decoder = SliceDecoder::with_attachment(
+                &mut output,
+                DecodeOptions::new(0),
+                Attachment::PendingPrefix(dictionary),
+                Global,
+            );
+            assert_eq!(decoder.process(input).is_err(), failed);
+            assert_eq!(
+                matches!(decoder.attachment, Attachment::ActivePrefix(_)),
+                claimed
+            );
+            assert!(weak.upgrade().is_some());
+            if failed {
+                assert_eq!(decoder.output(), Err(Error::InvalidState));
+            }
+            decoder.reset();
+            assert_eq!(weak.upgrade().is_none(), claimed);
+            assert_eq!(decoder.dictionary_retained_capacity() > 0, !claimed);
+            assert_eq!(
+                decoder.process(EMPTY).unwrap().status,
+                StreamStatus::FrameFinished
+            );
+            decoder.finish().unwrap();
+            assert!(weak.upgrade().is_none());
+            assert_eq!(decoder.dictionary_retained_capacity(), 0);
+            assert!(decoder.output().unwrap().is_empty());
+            drop(decoder);
+            assert_eq!(output, [0xa5; 8]);
+        }
+    }
+
+    #[test]
+    fn prefix_candidate_borrowed_content_survives_session_but_selection_does_not() {
+        let dictionary =
+            crate::Dictionary::from_bytes(dictionary_fixture!("boundary-dictionary.raw")).unwrap();
+        let frame = dictionary_fixture!("dictionary-to-frame-eviction.zst");
+        let expected = dictionary_fixture!("dictionary-to-frame-eviction.expected");
+        let mut output = alloc::vec![0xa5; expected.len() + 2];
+        let mut decoder = SliceDecoder::with_attachment(
+            &mut output[1..expected.len() + 1],
+            DecodeOptions::new(expected.len()),
+            Attachment::PendingPrefix(dictionary.view()),
+            Global,
+        );
+        dictionary_fragments(&mut decoder, frame, 1).unwrap();
+        assert_eq!(decoder.output().unwrap(), expected);
+        assert_eq!(decoder.dictionary_retained_capacity(), 0);
+        decoder.reset();
+        assert_eq!(decoder.dictionary_retained_capacity(), 0);
+        drop(decoder);
+        assert!(dictionary.view().retained_capacity() > 0);
+        assert_eq!(output[0], 0xa5);
+        assert_eq!(output[expected.len() + 1], 0xa5);
     }
 }

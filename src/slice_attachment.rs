@@ -9,6 +9,8 @@
 pub(crate) enum Attachment<D> {
     None,
     Persistent(D),
+    // Private integration precedes public prefix constructors.
+    #[cfg_attr(not(test), allow(dead_code))]
     PendingPrefix(D),
     ActivePrefix(D),
 }
