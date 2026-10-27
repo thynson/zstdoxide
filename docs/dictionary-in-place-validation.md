@@ -91,3 +91,12 @@ The initial strict Clippy check rejected a platform test tuple type. A named
 test-only alias resolved the warning; all platform checks and the full matrix
 were rerun. The rejected attempt remains archived and earns no final pass credit.
 Evidence: `evidence/2026-10-27-dictionary-in-place-feature-matrix.json`.
+
+## Measured deterministic comparisons
+
+All 23 retained primary backends and independently rebuilt safe/all repeats have
+identical clock-free output/allocation qualification and complete raw timing
+records. Source restoration is separately timed and included in a combined mode.
+Fresh primary/repeat CPU barriers precede sequential measurements. See
+`dictionary-in-place-benchmarks.md`; the host results do not establish a universal
+unsafe speedup. Evidence: `evidence/2026-10-27-dictionary-in-place-benchmarks.json`.

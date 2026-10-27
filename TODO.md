@@ -154,7 +154,7 @@ borrowed persistent selections, not overlapping prefix storage.
 - [x] Qualify real shared-buffer normal/sanitized native layouts and replay the bounded dictionary corpus with explicit differences.
 - [x] Qualify actual dictionary crossings and overlap under foreign Miri and concrete no-atomics code generation.
 - [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [ ] Compare frozen in-place/direct dictionary workloads, source restoration and independent allocation ledgers across retained backends and independent repeats.
+- [x] Compare frozen in-place/direct dictionary workloads, source restoration and independent allocation ledgers across retained backends and independent repeats.
 - [ ] Reconcile bounded dictionary in-place coverage and decompose the next missing contract without claiming complete upstream parity.
 
 ## Module 30: checked frame metadata and decompressed-size bounds
