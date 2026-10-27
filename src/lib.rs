@@ -272,6 +272,7 @@ mod ultra2_retained_fixture;
 pub use slice_decode::SliceDecoder;
 
 pub use in_place_decode::{
-    decompress_in_place, decompress_in_place_in, decompress_in_place_with_options,
+    decompress_in_place, decompress_in_place_in, decompress_in_place_with_dictionary,
+    decompress_in_place_with_dictionary_in, decompress_in_place_with_options,
     decompress_in_place_with_options_in,
 };

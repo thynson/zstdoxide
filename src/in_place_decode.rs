@@ -100,6 +100,107 @@ pub fn decompress_in_place_with_options_in<A: Allocator + Clone>(
     decode_in_place(buffer, input_start, options, allocator)
 }
 
+/// Decompress suffix-encoded frames in place with one persistent dictionary.
+///
+/// The buffer and its input placement follow [`decompress_in_place`]. The selected
+/// raw/prepared dictionary applies to every standard frame; skippable frames keep
+/// the selection. Nonzero dictionary IDs must match, and an omitted ID still uses
+/// the selection. Every frame resets its match history, repeat offsets and entropy
+/// overrides independently. Dictionary bytes do not count against output capacity.
+///
+/// Success preserves the entire unused suffix. Errors can leave provisional
+/// writes inside `min(buffer.len(), options.max_output_size)` but preserve unread
+/// input and bytes beyond that allowance. Window limits remain independent.
+/// Checksums and content sizes are always validated. Dictionary mismatch precedes
+/// frame resource checks; native numeric errors and precedence are not promised.
+/// The call borrows the selected handle without cloning or changing it.
+///
+/// Corresponds to the shared-buffer use of upstream `ZSTD_decompress_usingDDict`.
+/// Single-use prefixes and incremental overlapping sessions remain outside this API.
+///
+/// ```
+/// use zstdoxide::{Dictionary, DecodeOptions, compress_with_dictionary,
+///     decompression_margin, decompress_in_place_with_dictionary};
+/// let dictionary = Dictionary::raw(b"hello dictionary")?.into_shared();
+/// let source = b"hello dictionary hello";
+/// let encoded = compress_with_dictionary(source, &dictionary)?;
+/// let capacity = (source.len() + decompression_margin(&encoded)?).max(encoded.len());
+/// let mut buffer = vec![0xa5; capacity];
+/// let start = capacity - encoded.len();
+/// buffer[start..].copy_from_slice(&encoded);
+/// let size = decompress_in_place_with_dictionary(&mut buffer, start, &dictionary,
+///                                               DecodeOptions::new(source.len()))?;
+/// assert_eq!(&buffer[..size], source);
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+pub fn decompress_in_place_with_dictionary(
+    buffer: &mut [u8],
+    input_start: usize,
+    dictionary: &crate::SharedDictionary,
+    options: DecodeOptions,
+) -> Result<usize> {
+    decompress_in_place_with_dictionary_in(
+        buffer,
+        input_start,
+        dictionary,
+        options,
+        alloc::alloc::Global,
+    )
+}
+
+/// Decode in place with independent dictionary and scratch allocator owners.
+///
+/// Accepts a shared dictionary owner or a borrowed [`DictionaryView`] through the
+/// sealed [`crate::DictionaryHandle`] contract. The dictionary and its allocator
+/// are not cloned; all temporary collections use clones of `allocator` and release
+/// their storage on success or failure. Its type can differ from the dictionary
+/// allocator. A reference to a non-Clone scratch allocator is accepted. Cloning
+/// retains the allocator's own allocation/panic semantics.
+///
+/// There is no copied dictionary/output history, complete input clone, or output
+/// allocation. Raw, RLE and skippable paths make no codec payload allocation merely
+/// because a dictionary is selected. The destination is never adopted or freed.
+/// Other contracts follow [`decompress_in_place_with_dictionary`].
+///
+/// A borrowed selection must remain within its original owner's lifetime:
+///
+/// ```compile_fail,E0597
+/// use zstdoxide::{Dictionary, DecodeOptions, decompress_in_place_with_dictionary_in};
+/// let view = {
+///     let owner = Dictionary::raw(b"dictionary").unwrap();
+///     owner.view()
+/// };
+/// let mut buffer = [0_u8; 32];
+/// let _ = decompress_in_place_with_dictionary_in(&mut buffer, 0, &view,
+///     DecodeOptions::new(32), std::alloc::Global);
+/// ```
+///
+/// A view exposes immutable dictionary content, which cannot be supplied as the
+/// exclusive mutable in-place destination:
+///
+/// ```compile_fail,E0308
+/// use zstdoxide::{Dictionary, DecodeOptions, decompress_in_place_with_dictionary_in};
+/// let owner = Dictionary::raw(b"dictionary").unwrap();
+/// let view = owner.view();
+/// let _ = decompress_in_place_with_dictionary_in(view.content(), 0, &view,
+///     DecodeOptions::new(10), std::alloc::Global);
+/// ```
+pub fn decompress_in_place_with_dictionary_in<A: Allocator + Clone, D: crate::DictionaryHandle>(
+    buffer: &mut [u8],
+    input_start: usize,
+    dictionary: &D,
+    options: DecodeOptions,
+    allocator: A,
+) -> Result<usize> {
+    decode_in_place_with_dictionary_view(
+        buffer,
+        input_start,
+        options,
+        allocator,
+        Some(dictionary.view()),
+    )
+}
+
 /// The private coordinator corresponding to `ZSTD_decompressFrame`.
 /// Metadata borrows end before any writes; compressed payload borrows are
 /// disjoint from resumed history, and raw moves explicitly permit overlap.

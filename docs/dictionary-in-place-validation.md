@@ -17,3 +17,17 @@ and eight loop tests, true no_std and strict Clippy, plus formatting (21 command
 This includes dictionary-free regression, 13 pinned raw/prepared fixture pairs,
 concatenation reset, invalid dictionary offsets/IDs and preserved guards.
 Evidence: `evidence/2026-10-27-dictionary-in-place-engine.json`.
+
+## Public ownership and allocation contracts
+
+The Global shared-handle wrapper and generic allocator/view wrapper each preserve
+caller output ownership. Seven public contract tests, eight loop tests and three
+documentation examples (including two required compile rejections) pass in all
+five focused configurations with no_std, strict Clippy and formatting (26 commands).
+Exact bounds, prepared resets, omitted/mismatched IDs, all HTTP truncations and
+selected mutations, independent allocator types and non-Clone borrowed owners
+are exercised. Every observed scratch failure ordinal releases storage and leaves
+dictionary accounting unchanged. Selected raw/RLE/skippable paths allocate no
+codec payload storage.
+Evidence: `evidence/2026-10-27-dictionary-in-place-public-api.json`.
+Usage: `dictionary-in-place-usage.md`.

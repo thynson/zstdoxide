@@ -150,7 +150,7 @@ borrowed persistent selections, not overlapping prefix storage.
 
 - [x] Record dictionary/history composition, immutable entropy fallback, independent allocator ownership and native contracts before implementation.
 - [x] Implement checked dictionary-history resumption and private frame selection without handle clones or copied dictionary history.
-- [ ] Expose dictionary-backed in-place wrappers with lifetime/alias documentation, exact bounds, frame reset and scratch-failure qualification.
+- [x] Expose dictionary-backed in-place wrappers with lifetime/alias documentation, exact bounds, frame reset and scratch-failure qualification.
 - [ ] Qualify real shared-buffer normal/sanitized native layouts and replay the bounded dictionary corpus with explicit differences.
 - [ ] Qualify actual dictionary crossings and overlap under foreign Miri and concrete no-atomics code generation.
 - [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
