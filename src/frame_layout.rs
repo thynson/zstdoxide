@@ -14,7 +14,7 @@ struct FrameLayout {
     encoded_size: usize,
     overhead: usize,
     block_count: usize,
-    maximum_block_size: usize,
+    header: Option<FrameHeader>,
 }
 
 impl FrameLayout {
@@ -29,7 +29,7 @@ impl FrameLayout {
                 encoded_size: cursor.position(),
                 overhead: cursor.position(),
                 block_count: 0,
-                maximum_block_size: 0,
+                header: None,
             });
         }
         let (header, header_size) = FrameHeader::parse(input)?;
@@ -59,7 +59,13 @@ impl FrameLayout {
                 .checked_add(checksum_size)
                 .ok_or(Error::ResourceLimit)?,
             block_count,
-            maximum_block_size: header.window_size.min(MAX_BLOCK_SIZE as u64) as usize,
+            header: Some(header),
+        })
+    }
+
+    fn maximum_block_size(self) -> usize {
+        self.header.map_or(0, |header| {
+            header.window_size.min(MAX_BLOCK_SIZE as u64) as usize
         })
     }
 
@@ -108,7 +114,7 @@ pub fn decompression_margin(mut input: &[u8]) -> Result<usize> {
     while !input.is_empty() {
         let frame = FrameLayout::read(input)?;
         overhead = frame.add_overhead(overhead)?;
-        maximum_block = maximum_block.max(frame.maximum_block_size);
+        maximum_block = maximum_block.max(frame.maximum_block_size());
         // read() consumed at least a complete frame header and proved its end
         // is within this input. Progress is therefore nonzero and bounded.
         input = &input[frame.encoded_size..];
@@ -154,7 +160,7 @@ mod tests {
                 let layout = FrameLayout::read(&bytes).unwrap();
                 assert_eq!(layout.encoded_size, bytes.len());
                 assert_eq!(layout.block_count, 1);
-                assert_eq!(layout.maximum_block_size, 4);
+                assert_eq!(layout.maximum_block_size(), 4);
             }
         }
     }
@@ -305,7 +311,7 @@ mod tests {
             encoded_size: 9,
             overhead: 6,
             block_count: 1,
-            maximum_block_size: 0,
+            header: None,
         };
         assert_eq!(normal.add_overhead(usize::MAX - 9), Ok(usize::MAX));
         assert_eq!(
@@ -328,5 +334,25 @@ mod tests {
             .add_overhead(0),
             Err(Error::ResourceLimit)
         );
+    }
+
+    #[test]
+    fn complete_layout_retains_standard_header_and_distinguishes_skips() {
+        for descriptor in [0x20, 0x24] {
+            let bytes = frame(descriptor, &[3], &[(0, 3, b"abc")]);
+            let (header, _) = FrameHeader::parse(&bytes).unwrap();
+            let layout = FrameLayout::read(&bytes).unwrap();
+            assert_eq!(layout.header, Some(header));
+            assert_eq!(layout.maximum_block_size(), 3);
+            assert_eq!(layout.encoded_size, bytes.len());
+        }
+        for variant in 0..16 {
+            let bytes = [0x50 + variant, 0x2a, 0x4d, 0x18, 3, 0, 0, 0, 7, 8, 9];
+            let layout = FrameLayout::read(&bytes).unwrap();
+            assert_eq!(layout.header, None);
+            assert_eq!(layout.block_count, 0);
+            assert_eq!(layout.maximum_block_size(), 0);
+            assert_eq!(layout.encoded_size, bytes.len());
+        }
     }
 }
