@@ -171,7 +171,7 @@ after Module 31 closes; this coordinator does not retain decoder scratch.
 - [x] Analyze native call-level prefix consumption, persistent ownership and transient call borrows before implementation; distinguish the existing sealed Clone contract from clone-free transitions.
 - [x] Implement plain checked selection transitions and call claims without handle clones or copied history.
 - [x] Expose one-shot direct/in-place coordinator methods with exact attempt consumption, lifetime/guard and independent allocator qualification.
-- [ ] Qualify persistent/prefix lifecycle schedules using normal/sanitized native contexts and explicit subsequent-call observations.
+- [x] Qualify persistent/prefix lifecycle schedules using normal/sanitized native contexts and explicit subsequent-call observations.
 - [ ] Qualify real ownership transitions and overlapping output under foreign Miri and concrete no-atomics code generation.
 - [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
 - [ ] Compare deterministic coordinator/output workloads with ownership ledgers, restoration/setup accounting and independent repeats after actual CPU barriers.

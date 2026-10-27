@@ -42,3 +42,23 @@ A next-call prefix is consumed before every attempt and covers all frames in tha
 call. Incremental frame-scoped prefixes remain a different contract. Existing
 provisional-output and successful-suffix guarantees are unchanged.
 Evidence: `evidence/2026-10-27-one-shot-selection-public-api.json`.
+
+## Native context lifecycle schedules
+
+External v1.5.7 helpers use actual persistent by-reference DDict selection and
+raw/auto `ZSTD_DCtx_refPrefix_advanced` calls. Normal and ASan/UBSan builds run the
+same 24 scenarios: 81 setup/decode steps in each direct/in-place mode, including
+106 actual decode attempts. Full successful output bytes and true outer/allowance
+guards are retained; normal/sanitized ledgers agree. Scenarios include dependent
+concatenations, separate subsequent calls, replacement/clearing, empty dictionaries,
+errors, skippable-only input and 120 KiB actual raw-buffer overlap.
+
+Five Rust backends replay all 106 attempts and agree on exact result/state ledgers,
+complete successful bytes and the stronger Rust unused-suffix guarantee. Four
+empty-input attempts return native zero success versus Rust UnexpectedEof; both
+consume the pending prefix. Native numeric errors are not equated with typed
+Rust error identities. Helpers do not establish dictionary allocation accounting
+or leak detection; independent Rust ownership ledgers cover those stated Rust
+contracts. macOS sanitizer runs use detect_leaks=0 with bounds/UB checks active.
+These are supplemental schedules, not original upstream assertion upgrades.
+Evidence: `evidence/2026-10-27-one-shot-selection-native.json`.
