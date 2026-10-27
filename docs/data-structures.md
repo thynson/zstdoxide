@@ -3999,3 +3999,24 @@ work delegates to separately selectable storage backends without raw operations.
 Native counterparts are ZSTD_getDDict, ZSTD_decompressDCtx and
 ZSTD_DCtx_refPrefix_advanced. Unlike incremental prefixes, next-call selection is
 consumed even by skippable-only/empty attempts. See `one-shot-selection-design.md`.
+
+## Module 33: bounded frame sink and one-block encoded staging
+
+`FrameSink<'a>` owns one exclusive initialized caller output slice and a position
+bounded by its length. Checked append validates addition/capacity before mutation,
+copies an independent immutable source, then advances position. A failed append
+preserves that append's bytes and position; prior successful appends remain.
+The performance-sensitive copy has safe and opt-in unsafe-frame-sink paths with
+identical runtime bounds and alias/lifetime contracts. No buffer allocation is
+owned, and scalar position needs no artificial unsafe operation.
+
+A fallible allocator-owned Vec stages one encoded block at a time, including its
+header, then is cleared/reused. Header/checksum records are small initialized
+values. Existing BlockEncoder owns independent match, entropy and ring scratch;
+there is no new full-frame output Vec or full-input copy. Each allocator clone
+owns/frees its own storage. The call owns all scratch and returns only the number
+of bytes in caller storage. Counterparts are the destination capacity/position
+and block emission in ZSTD_compressCCtx/ZSTD_compress2; output bytes follow the
+existing Rust Greedy one-shot algorithm, not the native parser. See
+`slice-encode-design.md` for provisional-output and excluded dictionary/reference/
+streaming contracts.

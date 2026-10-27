@@ -214,6 +214,22 @@ after Module 31 closes; this coordinator does not retain decoder scratch.
 - [ ] Compare deterministic coordinator/output workloads with ownership ledgers, restoration/setup accounting and independent repeats after actual CPU barriers.
 - [ ] Reconcile bounded one-shot selection coverage and decompose the next missing contract without claiming native workspace or full upstream parity.
 
+## Module 33: caller-owned one-shot compression output
+
+Ownership, invariants and upstream counterparts are recorded before implementation
+in `docs/slice-encode-design.md` and `docs/data-structures.md`. Promote only after
+Module 32 closes. Initial scope is dictionary-free ordinary Greedy compression.
+
+- [x] Analyze the existing frame/block encoder and bounded output ownership before implementation.
+- [ ] Implement checked bounded frame append with equivalent safe and opt-in unsafe storage paths.
+- [ ] Implement one-block staging and exact ordinary one-shot frame emission into borrowed output.
+- [ ] Expose documented caller-owned compression with capacity, alias, scratch-failure and allocator qualification.
+- [ ] Qualify guarded native interoperability and retained deterministic corpus workloads without claiming byte-identical C output.
+- [ ] Qualify width/endian behavior and concrete no-atomics ARM code generation.
+- [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
+- [ ] Compare allocating and borrowed output with separate destination/staging/workspace accounting and independent repeats after actual CPU barriers.
+- [ ] Reconcile bounded compression output coverage and decompose the next evidenced missing contract.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
