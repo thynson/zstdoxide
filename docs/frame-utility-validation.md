@@ -70,3 +70,19 @@ behavior checks enabled. No dynamic leak-detection pass is claimed. Original-his
 capture exits after the asserted region and leaves process setup owners to exit.
 Evidence: `evidence/2026-10-27-frame-utility-native.json` and
 `evidence/2026-10-27-frame-utility-history.json`.
+
+## Width, endianness and concrete objects
+
+Eight actual strict-provenance Miri runs cover i686/s390x safe/all: each runs two
+numeric-limit unit tests and two real borrowed-write/guard tests. This executes
+the 32-bit header-addition overflow branch without creating invalid giant slices.
+A host core-only preflight, safe/all thumbv6m core-only checks and actual LLVM
+IR/ARM objects also pass, for 13 commands. Instantiated bound/write probe IR has
+no Rust allocator entrypoint. Exact production utility/scan/cursor/frame/error
+modules are copied into the component. Full-codec support remains no_std plus
+alloc; these are interpreter/code-generation results, not foreign hardware runs.
+
+The first component template omitted utility registration and failed before
+Miri test execution. Corrected registration and added host preflight preceded
+all final successful commands; original source/logs remain archived.
+Evidence: `evidence/2026-10-27-frame-utility-platform.json`.

@@ -165,7 +165,7 @@ and borrowed-slice utilities add no context, workspace or streaming-bound promis
 - [x] Implement checked scalar compression bounds and skippable serialization with numeric-limit and original bound assertions.
 - [x] Expose documented utilities and qualify encoder-bound scope, output guards, borrowed aliases and structural roundtrips.
 - [x] Qualify normal/sanitized native arithmetic and real writer layouts, retaining original-assertion provenance and error differences.
-- [ ] Qualify width/endian arithmetic and real writes under foreign Miri and concrete core-only ARM code generation.
+- [x] Qualify width/endian arithmetic and real writes under foreign Miri and concrete core-only ARM code generation.
 - [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
 - [ ] Compare deterministic arithmetic and writing workloads across retained safe/unsafe backends and independent repeats after actual CPU barriers.
 - [ ] Reconcile bounded utility coverage and decompose the next missing contract without claiming complete upstream parity.
