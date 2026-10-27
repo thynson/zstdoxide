@@ -101,3 +101,12 @@ Preflight strict Clippy rejected a native adapter chunk operation. Checked
 as_chunks with an explicit empty remainder fixed that test-only warning; all
 three native replays and preflight passed before the final full matrix.
 Evidence: `evidence/2026-10-27-frame-query-feature-matrix.json`.
+
+## Measured deterministic comparisons
+
+All 23 retained primary backends and independently rebuilt safe/all repeats have
+identical clock-free structural-result qualification and complete raw timing
+records. Each query mode is timed separately with equal batch-loop, dispatch and black-box overhead.
+Fresh primary/repeat CPU barriers precede sequential measurements. See
+`frame-query-benchmarks.md`; the host results do not establish a universal
+unsafe speedup. Evidence: `evidence/2026-10-27-frame-query-benchmarks.json`.
