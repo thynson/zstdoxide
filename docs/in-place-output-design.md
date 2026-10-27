@@ -147,3 +147,16 @@ IR/object generation, true no_std, strict Clippy and full feature/release tests.
 Benchmarks must restore encoded bytes outside the decode clock or explicitly
 report restoration cost, use identical deterministic layouts/backends, retain
 executables and allocator ledgers, and independently repeat safe/all timings.
+
+## Observed native metadata boundary differences
+
+The independently executed margin campaign confirms two differences inherited
+from the existing Rust header representation. Native non-single-segment header
+parsing applies a platform-dependent window-log cap (31 on the measured 64-bit
+host); Rust can structurally parse the full descriptor field. Native margin
+scanning also treats advertised content size `u64::MAX - 1` as its error sentinel;
+Rust preserves that value as ordinary optional metadata. The Rust margin API
+therefore has explicit structural successes for these native rejections. Neither
+success relaxes the actual decoder's configured output/window checks or proves
+that the frame's contents are valid. See `in-place-margin-validation.md` for
+exact cases, counts and the preserved initial comparison failure.

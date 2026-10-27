@@ -75,6 +75,7 @@ mod fast_parse;
 mod fast_plan;
 mod fast_state;
 mod frame;
+mod frame_layout;
 mod fse;
 mod fse_encode;
 mod fse_select;
@@ -205,6 +206,7 @@ pub use dictionary_train::{
 pub use encode::{compress, compress_in, compress_with_dictionary, compress_with_dictionary_in};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
+pub use frame_layout::decompression_margin;
 pub use match_search::MatchSearchOptions;
 pub use parameters::{
     CompressionParameterRequest, RawCompressionParameters, ReferenceFrameParameters,

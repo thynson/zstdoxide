@@ -62,6 +62,10 @@ boundaries. Bounded prefix qualification and lifecycle differences are recorded 
 [the validation report](docs/stable-prefix-output-validation.md).
 Overlapping in-place decoding remains a separate contract.
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
+`decompression_margin` scans standard/skippable frame structure without allocating
+to compute sufficient suffix-input overlap overhead. It does not validate decoded
+contents; actual overlapping in-place decoding remains unfinished. Native metadata
+boundary differences are recorded in [margin qualification](docs/in-place-margin-validation.md).
 Allocation failures and corrupt, truncated, or over-limit input return `Error`.
 The named `compress` encoder writes one checksummed single-segment frame, so its advertised window
 equals its content size; adjust decoder limits for inputs larger than 128 MiB.
