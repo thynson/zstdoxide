@@ -169,7 +169,7 @@ Ownership and call-versus-frame lifecycle are recorded before implementation in
 after Module 31 closes; this coordinator does not retain decoder scratch.
 
 - [x] Analyze native call-level prefix consumption, persistent ownership and transient call borrows before implementation; distinguish the existing sealed Clone contract from clone-free transitions.
-- [ ] Implement plain checked selection transitions and call claims without handle clones or copied history.
+- [x] Implement plain checked selection transitions and call claims without handle clones or copied history.
 - [ ] Expose one-shot direct/in-place coordinator methods with exact attempt consumption, lifetime/guard and independent allocator qualification.
 - [ ] Qualify persistent/prefix lifecycle schedules using normal/sanitized native contexts and explicit subsequent-call observations.
 - [ ] Qualify real ownership transitions and overlapping output under foreign Miri and concrete no-atomics code generation.

@@ -100,6 +100,7 @@ mod huffman_codebook;
 mod huffman_encode;
 mod in_place_buffer;
 mod in_place_decode;
+// Selection transitions are exposed by the next checked coordinator item.
 #[cfg(test)]
 #[path = "../tests/support/lazy_frame_oracle.rs"]
 mod lazy_frame_oracle_fixture;
@@ -114,6 +115,8 @@ mod match_parse;
 mod match_search;
 mod matchchain;
 mod matchfinder;
+#[allow(dead_code)]
+mod one_shot_selection;
 mod optimal_frequencies;
 mod optimal_matches;
 mod optimal_parse;
