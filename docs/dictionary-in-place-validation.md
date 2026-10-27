@@ -79,3 +79,15 @@ A named type alias resolves the warning without changing runtime operations; all
 eight platform commands were rerun on that final test source. Prior receipts and
 failed logs retain their identities.
 Evidence: `evidence/2026-10-27-dictionary-in-place-platform-final.json`.
+
+## Complete feature and release regression
+
+The final frozen candidate passed all 72 commands: safe/all and 21 isolated
+unsafe features each have complete tests, true no_std and strict Clippy; safe/all
+complete release and formatting also pass. Every full/release suite reports
+1,676 passed / 64 ignored across 97 result groups. External adapters retain their
+separate explicit execution receipts; ignored tests are not credited as passes.
+The initial strict Clippy check rejected a platform test tuple type. A named
+test-only alias resolved the warning; all platform checks and the full matrix
+were rerun. The rejected attempt remains archived and earns no final pass credit.
+Evidence: `evidence/2026-10-27-dictionary-in-place-feature-matrix.json`.
