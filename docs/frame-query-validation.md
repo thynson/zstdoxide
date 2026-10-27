@@ -89,3 +89,15 @@ continues to require no_std plus alloc. These are interpreter/code-generation
 results, not execution on foreign hardware.
 Evidence: `evidence/2026-10-27-frame-query-platform.json` and
 `evidence/2026-10-27-frame-query-corpus.json`.
+
+## Complete feature and release regression
+
+The final frozen candidate passed all 72 commands: safe/all and 21 isolated
+unsafe features each have complete tests, true no_std and strict Clippy; safe/all
+complete release and formatting also pass. Every full/release suite reports
+1,690 passed / 67 ignored across 101 result groups. External adapters retain their
+separate explicit execution receipts; ignored tests are not credited as passes.
+Preflight strict Clippy rejected a native adapter chunk operation. Checked
+as_chunks with an explicit empty remainder fixed that test-only warning; all
+three native replays and preflight passed before the final full matrix.
+Evidence: `evidence/2026-10-27-frame-query-feature-matrix.json`.

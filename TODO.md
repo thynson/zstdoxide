@@ -160,7 +160,7 @@ or infer reusable one-shot prefix lifecycle from streaming semantics.
 - [x] Expose first-frame metadata, exact/unknown concatenated size, checked decompression bound and borrowed skippable queries with allocation/lifetime qualification.
 - [x] Reproduce pinned normal/sanitized structural queries and original bounded assertions, retaining explicit overflow/sentinel/unknown differences.
 - [x] Qualify all deterministic frame corpus queries, foreign width/endian interpretation and concrete no-atomics output.
-- [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
+- [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
 - [ ] Compare frozen structural workloads across retained safe/unsafe backends and independent repeats after actual CPU barriers.
 - [ ] Reconcile bounded query coverage and decompose the next missing contract without claiming complete upstream parity.
 
