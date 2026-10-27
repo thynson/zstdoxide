@@ -167,7 +167,7 @@ and borrowed-slice utilities add no context, workspace or streaming-bound promis
 - [x] Qualify normal/sanitized native arithmetic and real writer layouts, retaining original-assertion provenance and error differences.
 - [x] Qualify width/endian arithmetic and real writes under foreign Miri and concrete core-only ARM code generation.
 - [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [ ] Compare deterministic arithmetic and writing workloads across retained safe/unsafe backends and independent repeats after actual CPU barriers.
+- [x] Compare deterministic arithmetic and writing workloads across retained safe/unsafe backends and independent repeats after actual CPU barriers.
 - [ ] Reconcile bounded utility coverage and decompose the next missing contract without claiming complete upstream parity.
 
 ## Module 32: reusable one-shot dictionary and prefix selection

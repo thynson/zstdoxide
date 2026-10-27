@@ -98,3 +98,12 @@ Source-registration and controller bookkeeping rejections remain retained.
 The repaired focused gates require exact test counts; the native extreme-value
 sentinel and writer error-precedence differences are explicit.
 Evidence: `evidence/2026-10-27-frame-utility-feature-matrix.json`.
+
+## Measured deterministic comparisons
+
+All 23 retained primary backends and independently rebuilt safe/all repeats have
+identical clock-free utility-result and guard qualification and complete raw timing
+records. Each arithmetic/writing mode is timed separately with equal batch-loop, dispatch and black-box overhead.
+Fresh primary/repeat CPU barriers precede sequential measurements. See
+`frame-utility-benchmarks.md`; the host results do not establish a universal
+unsafe speedup. Evidence: `evidence/2026-10-27-frame-utility-benchmarks.json`.
