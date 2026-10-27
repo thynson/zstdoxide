@@ -370,3 +370,76 @@ fn every_generated_frame_decodes_in_place_with_exact_margin_and_guarded_limits()
         }
     }
 }
+
+#[test]
+fn every_generated_frame_and_concatenation_has_checked_structural_metadata() {
+    use zstdoxide::{
+        FrameKind, decompressed_size, decompression_bound, frame_compressed_size, frame_info,
+        skippable_payload,
+    };
+    let skip = [0x5b, 0x2a, 0x4d, 0x18, 3, 0, 0, 0, 1, 2, 3];
+    let mut joined = Vec::new();
+    let mut advertised = Some(0_u64);
+    let mut bound = 0_u64;
+    let mut decoded = 0_u64;
+    for fixture in FRAMES {
+        let info = frame_info(fixture.encoded).unwrap();
+        assert_eq!(
+            info.encoded_size(),
+            fixture.encoded.len(),
+            "{}",
+            fixture.name
+        );
+        assert_eq!(
+            frame_compressed_size(fixture.encoded),
+            Ok(fixture.encoded.len())
+        );
+        assert_eq!(info.content_size(), fixture.content_size);
+        assert_eq!(decompressed_size(fixture.encoded), Ok(fixture.content_size));
+        assert!(info.block_count() > 0);
+        let FrameKind::Standard(header) = info.kind() else {
+            panic!("standard fixture required")
+        };
+        assert_eq!(header.window_size, fixture.window_size);
+        assert_eq!(header.has_checksum, fixture.checksum);
+        let current = decompression_bound(fixture.encoded).unwrap();
+        assert_eq!(info.decompression_bound(), Ok(current));
+        assert!(current >= fixture.original.len() as u64, "{}", fixture.name);
+        if let Some(size) = fixture.content_size {
+            assert_eq!(current, size);
+        }
+        advertised = advertised
+            .zip(fixture.content_size)
+            .map(|(a, b)| a.checked_add(b).unwrap());
+        bound = bound.checked_add(current).unwrap();
+        decoded += fixture.original.len() as u64;
+        joined.extend_from_slice(&skip);
+        joined.extend_from_slice(fixture.encoded);
+        let truncated = &fixture.encoded[..fixture.encoded.len() - 1];
+        assert!(frame_info(truncated).is_err());
+        assert!(decompressed_size(truncated).is_err());
+        assert!(decompression_bound(truncated).is_err());
+    }
+    assert_eq!(decompressed_size(&joined), Ok(advertised));
+    assert_eq!(decompression_bound(&joined), Ok(bound));
+    assert!(bound >= decoded);
+    let mut remaining = joined.as_slice();
+    let mut standard = 0;
+    let mut skipped = 0;
+    while !remaining.is_empty() {
+        let info = frame_info(remaining).unwrap();
+        match info.kind() {
+            FrameKind::Standard(_) => standard += 1,
+            FrameKind::Skippable { .. } => {
+                assert_eq!(skippable_payload(remaining), Ok((11, [1, 2, 3].as_slice())));
+                skipped += 1;
+            }
+        }
+        remaining = &remaining[info.encoded_size()..];
+    }
+    assert_eq!(standard, FRAMES.len());
+    assert_eq!(skipped, FRAMES.len());
+    joined.push(0);
+    assert!(decompressed_size(&joined).is_err());
+    assert!(decompression_bound(&joined).is_err());
+}

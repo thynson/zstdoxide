@@ -71,3 +71,21 @@ warning; all three native replays and preflight pass again. Historical rejected
 source/logs remain retained. Production source was unchanged.
 Evidence: `evidence/2026-10-27-frame-query-native.json` and
 `evidence/2026-10-27-frame-query-history.json`.
+
+## Corpus and foreign targets
+
+All deterministic decodecorpus fixtures and their concatenation with skippable
+frames pass structural metadata, size/bound, truncation and malformed-tail checks
+in safe/cursor/all configurations, with Clippy and formatting (five commands).
+Existing decoding corpus assertions remain intact.
+
+Four actual strict-provenance Miri runs cover i686/s390x safe/all builds, including
+the full 32,769-block small-input example whose bound exceeds 4 GiB. Safe/all
+thumbv6m core-only checks and actual LLVM IR/ARM objects also pass (eight commands).
+The component copies the exact production cursor, frame, error and layout modules;
+its production library requires only core, while tests use alloc for fixtures.
+This proves the query component has no allocator dependency. The full codec
+continues to require no_std plus alloc. These are interpreter/code-generation
+results, not execution on foreign hardware.
+Evidence: `evidence/2026-10-27-frame-query-platform.json` and
+`evidence/2026-10-27-frame-query-corpus.json`.
