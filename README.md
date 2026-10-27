@@ -150,6 +150,11 @@ size planning and allocation-free caller-owned skippable output. See
 [frame utility usage](docs/frame-utility-usage.md). Bounded qualification and native differences
 are recorded in [the frame utility report](docs/frame-utility-validation.md).
 
+`OneShotDecoder` owns persistent or next-call dictionary selection for caller-owned
+direct and in-place decoding. A next-call prefix covers every frame in that call
+and is consumed even on errors. See [one-shot selection usage](docs/one-shot-selection-usage.md).
+Module 32 final qualification remains in progress in `TODO.md`.
+
 ## Current support
 
 | Area | Implemented |
