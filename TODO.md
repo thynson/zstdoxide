@@ -230,6 +230,21 @@ Module 32 closes. Initial scope is dictionary-free ordinary Greedy compression.
 - [ ] Compare allocating and borrowed output with separate destination/staging/workspace accounting and independent repeats after actual CPU barriers.
 - [ ] Reconcile bounded compression output coverage and decompose the next evidenced missing contract.
 
+## Module 34: dictionary-backed caller-owned compression
+
+Ownership, invariants and upstream counterparts are recorded before implementation
+in `docs/dictionary-slice-encode-design.md` and `docs/data-structures.md`. Promote
+only after Module 33 closes; preserve independent dictionary/scratch ownership.
+
+- [x] Analyze bounded dictionary frame emission, borrowed views and bound sufficiency before implementation.
+- [ ] Generalize one-block frame emission to immutable dictionary views without shared-handle clones or copied dictionary content.
+- [ ] Expose documented dictionary-backed caller-owned APIs with exact existing output, capacity and independent allocator/failure qualification.
+- [ ] Qualify guarded normal/sanitized native dictionary interoperability and deterministic corpus selections.
+- [ ] Qualify width/endian behavior, borrow lifetimes and concrete no-atomics ARM emission.
+- [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
+- [ ] Compare allocating and borrowed dictionary output with distinct destination/staging/workspace/dictionary ledgers and independent repeats.
+- [ ] Reconcile bounded dictionary compression output and decompose the next evidenced missing contract.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

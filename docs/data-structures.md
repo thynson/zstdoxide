@@ -4020,3 +4020,18 @@ and block emission in ZSTD_compressCCtx/ZSTD_compress2; output bytes follow the
 existing Rust Greedy one-shot algorithm, not the native parser. See
 `slice-encode-design.md` for provisional-output and excluded dictionary/reference/
 streaming contracts.
+
+## Module 34: borrowed dictionary selection for bounded frame output
+
+An optional DictionaryView supplies immutable content/entropy/ID ranges to the
+existing BlockEncoder while FrameSink and a fallible allocator-owned Vec emit one
+block at a time. The view owns no allocation and cannot outlive its dictionary.
+Its plain metadata is shared across safe/unsafe configurations; no handle clone
+or artificial unsafe operation is necessary. Existing search, history, entropy
+and bounded-copy owners keep their independent features. Header ID serialization
+uses the existing initialized record. No input, output or dictionary borrow is
+retained after the call. Dictionary allocation remains independent of scratch;
+each scratch clone frees its own domain. Counterparts are the bounded output and
+dictionary attachment of ZSTD_compress_usingDict/ZSTD_compress_usingCDict. Exact
+Rust output follows compress_with_dictionary, not the native parser. See
+`dictionary-slice-encode-design.md` for capacity and ownership qualification.
