@@ -173,6 +173,7 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-bitstream` | Reverse/forward bit readers and initialized spare-capacity bit writer |
 | `unsafe-history` | Overlapping LZ match expansion |
 | `unsafe-slice-history` | Checked match expansion directly in caller-owned output |
+| `unsafe-in-place-buffer` | Checked overlapping raw-block movement in one caller buffer |
 | `unsafe-ring-history` | Bounded wraparound history reads and stores |
 | `unsafe-fse` | FSE decoding tables |
 | `unsafe-fse-encoder` | Validated inverse FSE encoding tables |

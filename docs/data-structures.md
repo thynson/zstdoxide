@@ -3901,3 +3901,12 @@ ZSTD_decompressFrame's oBlockEnd protection and ZSTD_copyRawBlock's memmove.
 The original single/two-frame in-place fuzzer assertions, actual overlapping
 native guards, malformed layouts, allocator failures, foreign interpretation,
 no_std and identical safe/unsafe measurements are separate required gates.
+
+### Module 28 checked storage implementation
+
+`SliceHistory::resume` validates `frame_start <= position <= limit <= slice.len()`
+without clamping invalid state. `InPlaceBuffer` has private visibility, no retained
+pointers and no allocations. Successful raw/RLE/publication transitions preserve
+`output_position <= input_position`; all rejection branches precede mutation.
+Its new independent feature changes only checked raw overlapping movement.
+The integrated storage tests include real split-borrow history resumption.

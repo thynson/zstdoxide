@@ -23,6 +23,29 @@ impl<'a> SliceHistory<'a> {
         }
     }
 
+    /// Reborrow initialized caller storage using validated frame-local positions.
+    /// The coordinator supplies only previously written output as the prefix;
+    /// this validates coordinates, not the semantic origin of those bytes.
+    #[cfg(test)]
+    pub(crate) fn resume(
+        output: &'a mut [u8],
+        position: usize,
+        frame_start: usize,
+        window: usize,
+        limit: usize,
+    ) -> Result<Self> {
+        if frame_start > position || position > limit || limit > output.len() {
+            return Err(Error::InvalidState);
+        }
+        Ok(Self {
+            output,
+            position,
+            frame_start,
+            window,
+            limit,
+        })
+    }
+
     pub(crate) fn start_frame(&mut self, window: usize) {
         self.frame_start = self.position;
         self.window = window;
@@ -230,6 +253,74 @@ impl FrameOutput for DictionarySliceOutput<'_, '_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn resume_checks_all_coordinates_before_admitting_frame_history() {
+        for capacity in 0..=8 {
+            for position in 0..=9 {
+                for frame_start in 0..=9 {
+                    for limit in 0..=9 {
+                        let mut output = [0xa5; 10];
+                        let result = SliceHistory::resume(
+                            &mut output[1..1 + capacity],
+                            position,
+                            frame_start,
+                            3,
+                            limit,
+                        );
+                        let valid =
+                            frame_start <= position && position <= limit && limit <= capacity;
+                        assert_eq!(result.is_ok(), valid);
+                        if let Ok(mut history) = result {
+                            assert_eq!(history.len(), position);
+                            assert_eq!(history.frame_bytes().len(), position - frame_start);
+                            let before = history.output.to_vec();
+                            assert_eq!(history.copy_match(0, 0), Err(Error::CorruptData));
+                            assert_eq!(history.repeat(0, usize::MAX), Err(Error::ResourceLimit));
+                            assert_eq!(history.output, before);
+                        }
+                        assert_eq!(output, [0xa5; 10]);
+                    }
+                }
+            }
+        }
+        for (position, start, limit) in [
+            (usize::MAX, 0, usize::MAX),
+            (0, usize::MAX, 0),
+            (0, 0, usize::MAX),
+        ] {
+            let mut empty = [];
+            assert!(matches!(
+                SliceHistory::resume(&mut empty, position, start, 0, limit),
+                Err(Error::InvalidState)
+            ));
+        }
+    }
+
+    #[test]
+    fn resumed_history_matches_continuous_writes_and_excludes_prior_frames() {
+        for prefix in 1..=16 {
+            for offset in 1..=prefix {
+                for length in [0, 1, offset, offset + 1, 33] {
+                    let mut continuous = [0xa5; 80];
+                    let mut resumed = continuous;
+                    let prefix_bytes: alloc::vec::Vec<_> = (0..prefix as u8).collect();
+                    let mut history = SliceHistory::new(&mut continuous, 70);
+                    history.append(b"old").unwrap();
+                    history.start_frame(prefix);
+                    history.append(&prefix_bytes).unwrap();
+                    history.copy_match(offset, length).unwrap();
+                    resumed[..3].copy_from_slice(b"old");
+                    resumed[3..3 + prefix].copy_from_slice(&prefix_bytes);
+                    let mut history =
+                        SliceHistory::resume(&mut resumed, 3 + prefix, 3, prefix, 70).unwrap();
+                    assert_eq!(history.copy_match(prefix + 1, 0), Err(Error::CorruptData));
+                    history.copy_match(offset, length).unwrap();
+                    assert_eq!(continuous, resumed);
+                }
+            }
+        }
+    }
 
     #[test]
     fn session_reset_preserves_bytes_borrow_and_limit_but_discards_old_history() {

@@ -19,6 +19,7 @@
         feature = "unsafe-bitstream",
         feature = "unsafe-history",
         feature = "unsafe-slice-history",
+        feature = "unsafe-in-place-buffer",
         feature = "unsafe-ring-history",
         feature = "unsafe-fse",
         feature = "unsafe-fse-encoder",
@@ -96,6 +97,8 @@ mod history;
 mod huffman;
 mod huffman_codebook;
 mod huffman_encode;
+#[cfg(test)]
+mod in_place_buffer;
 #[cfg(test)]
 #[path = "../tests/support/lazy_frame_oracle.rs"]
 mod lazy_frame_oracle_fixture;
