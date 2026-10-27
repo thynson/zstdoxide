@@ -3941,3 +3941,22 @@ scratch allocator types, and preserve all suffix-input/failure bounds. The test
 plan separately qualifies exact native shared-buffer layouts, allocator failure
 ordinals, frame resets and borrowed lifetime/alias boundaries. Single-use prefixes,
 incremental overlap and external workspaces remain outside this module.
+
+### Module 30 frame metadata and structural size queries
+
+Before implementation, `docs/frame-scan-design.md` records the shared checked
+frame traversal, copied header/kind/count values and borrowed skippable payload.
+The private frame layout retains metadata already parsed for the margin scan;
+public query records own no bytes or allocations. Every extent is validated by
+the existing cursor before constructing values or borrowing a payload. Safe and
+unsafe configurations share these plain records; the existing cursor feature
+controls memory access, with no artificial metadata-only unsafe operations.
+
+Concatenated advertised sizes and decompression bounds accumulate in checked u64
+arithmetic, including bounds above 4 GiB on 32-bit hosts. Unknown size is an Option,
+not a reserved integer. Full traversal rejects trailing malformed ranges even
+after unknown sizes, unlike native early-return shortcuts. Structural success
+does not validate block content, checksum truth or actual decoded length.
+The pinned counterparts are ZSTD_findFrameSizeInfo, ZSTD_findFrameCompressedSize,
+ZSTD_findDecompressedSize, ZSTD_decompressBound and skippable frame queries.
+Native sentinel/window-cap/wrapping behavior remains explicitly distinct.

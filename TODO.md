@@ -168,6 +168,22 @@ borrowed persistent selections, not overlapping prefix storage.
 - [ ] Compare frozen in-place/direct dictionary workloads, source restoration and independent allocation ledgers across retained backends and independent repeats.
 - [ ] Reconcile bounded dictionary in-place coverage and decompose the next missing contract without claiming complete upstream parity.
 
+## Module 30: checked frame metadata and decompressed-size bounds
+
+Ownership and structural-versus-semantic contracts are recorded before code in
+`docs/frame-scan-design.md` and `docs/data-structures.md`. Promote only after
+Module 29 closes. Reuse the checked margin traversal; do not add a second parser
+or infer reusable one-shot prefix lifecycle from streaming semantics.
+
+- [x] Analyze checked frame metadata, borrowed skip payloads, native sentinel/early-return behavior and original assertions before implementation.
+- [ ] Refactor the private structural result to retain validated metadata while preserving every existing margin contract.
+- [ ] Expose first-frame metadata, exact/unknown concatenated size, checked decompression bound and borrowed skippable queries with allocation/lifetime qualification.
+- [ ] Reproduce pinned normal/sanitized structural queries and original bounded assertions, retaining explicit overflow/sentinel/unknown differences.
+- [ ] Qualify all deterministic frame corpus queries, foreign width/endian interpretation and concrete no-atomics output.
+- [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
+- [ ] Compare frozen structural workloads across retained safe/unsafe backends and independent repeats after actual CPU barriers.
+- [ ] Reconcile bounded query coverage and decompose the next missing contract without claiming complete upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
