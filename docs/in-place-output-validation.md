@@ -91,3 +91,13 @@ A separately labelled supplement also replays every existing official decodecorp
 frame at exact sufficient margin, verifies full output and unused tails, and checks
 one-byte-short output allowances across five backends. It retains the original
 generator fixtures and metadata unchanged. Evidence: `evidence/2026-10-27-in-place-corpus.json`.
+
+## Foreign interpretation and concrete code generation
+
+The final API executes actual raw overlap, compressed split-borrow history,
+concatenated frame reset, insufficient bounds and both guards under strict-
+provenance Miri on i686 and big-endian s390x in safe/all builds. All four executions
+pass. Safe/all thumbv6m core+alloc builds and instantiated LLVM IR/ARM objects
+also pass; the retained IR contains the actual memmove operation. These eight
+commands prove interpretation/code generation, not native foreign hardware
+execution. Evidence: `evidence/2026-10-27-in-place-platform.json`.
