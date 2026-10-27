@@ -212,6 +212,22 @@ pub(crate) struct DictionarySliceOutput<'output, 'dictionary> {
 }
 
 impl<'output, 'dictionary> DictionarySliceOutput<'output, 'dictionary> {
+    /// Compose validated existing output coordinates with immutable dictionary
+    /// storage. No dictionary handle, allocator, or history bytes are cloned.
+    pub(crate) fn resume(
+        output: &'output mut [u8],
+        position: usize,
+        frame_start: usize,
+        window: usize,
+        limit: usize,
+        dictionary: crate::DictionaryView<'dictionary>,
+    ) -> Result<Self> {
+        Ok(Self {
+            history: SliceHistory::resume(output, position, frame_start, window, limit)?,
+            dictionary,
+        })
+    }
+
     pub(crate) fn new(
         output: &'output mut [u8],
         limit: usize,
@@ -562,5 +578,84 @@ mod tests {
         assert_eq!(history.frame_bytes(), b"x");
         assert_eq!(&output[..8], b"previous");
         assert!(output[19..].iter().all(|&b| b == 0xa5));
+    }
+}
+
+#[cfg(test)]
+mod dictionary_resume_tests {
+    use super::*;
+
+    #[test]
+    fn resumed_dictionary_crossings_match_logical_history_and_preserve_old_frames() {
+        let dictionary = crate::Dictionary::raw(b"dictionary").unwrap();
+        for prefix in 0..=8 {
+            for distance in 1..=dictionary.content().len() + prefix {
+                for length in [0, 1, distance, distance + 1, 17] {
+                    let mut bytes = [0xa5; 80];
+                    bytes[..3].copy_from_slice(b"old");
+                    for (index, byte) in bytes[3..3 + prefix].iter_mut().enumerate() {
+                        *byte = 32 + index as u8;
+                    }
+                    let mut expected = dictionary.content().to_vec();
+                    expected.extend_from_slice(&bytes[3..3 + prefix]);
+                    for _ in 0..length {
+                        expected.push(expected[expected.len() - distance]);
+                    }
+                    let mut output = DictionarySliceOutput::resume(
+                        &mut bytes,
+                        3 + prefix,
+                        3,
+                        16,
+                        64,
+                        dictionary.view(),
+                    )
+                    .unwrap();
+                    output.copy_match(distance, length).unwrap();
+                    assert_eq!(output.len(), 3 + prefix + length);
+                    assert_eq!(
+                        output.frame_bytes(),
+                        &expected[dictionary.content().len()..]
+                    );
+                    assert_eq!(&bytes[..3], b"old");
+                    assert!(bytes[3 + prefix + length..].iter().all(|&b| b == 0xa5));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn invalid_dictionary_resumption_and_window_expiry_reject_before_writes() {
+        let dictionary = crate::Dictionary::raw(b"dictionary").unwrap();
+        for (position, start, limit) in [
+            (1, 2, 8),
+            (9, 0, 8),
+            (0, 0, 17),
+            (usize::MAX, 0, usize::MAX),
+        ] {
+            let mut bytes = [0xa5; 16];
+            assert!(matches!(
+                DictionarySliceOutput::resume(
+                    &mut bytes,
+                    position,
+                    start,
+                    4,
+                    limit,
+                    dictionary.view()
+                ),
+                Err(Error::InvalidState)
+            ));
+            assert_eq!(bytes, [0xa5; 16]);
+        }
+        let mut bytes = [0xa5; 16];
+        bytes[..6].copy_from_slice(b"oldabc");
+        let before = bytes;
+        let mut output =
+            DictionarySliceOutput::resume(&mut bytes, 6, 3, 2, 16, dictionary.view()).unwrap();
+        assert_eq!(output.copy_match(4, 1), Err(Error::CorruptData));
+        assert_eq!(output.copy_match(3, 1), Err(Error::CorruptData));
+        assert_eq!(output.copy_match(0, 0), Err(Error::CorruptData));
+        assert_eq!(output.copy_match(1, usize::MAX), Err(Error::ResourceLimit));
+        assert_eq!(output.len(), 6);
+        assert_eq!(bytes, before);
     }
 }

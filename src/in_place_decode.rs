@@ -6,9 +6,9 @@ use crate::history::SequenceOutput;
 use crate::huffman::decode_literals_with_dictionary_view_in;
 use crate::in_place_buffer::InPlaceBuffer;
 use crate::sequences::SequenceState;
-use crate::slice_history::SliceHistory;
+use crate::slice_history::{DictionarySliceOutput, SliceHistory};
 use crate::xxhash::checksum;
-use crate::{DecodeOptions, Error, FrameHeader, Result};
+use crate::{DecodeOptions, DictionaryView, Error, FrameHeader, Result};
 use core::alloc::Allocator;
 
 /// Decompress suffix-encoded frames within one exclusively borrowed buffer.
@@ -109,6 +109,18 @@ pub(crate) fn decode_in_place<A: Allocator + Clone>(
     options: DecodeOptions,
     allocator: A,
 ) -> Result<usize> {
+    decode_in_place_with_dictionary_view(bytes, input_start, options, allocator, None)
+}
+
+/// A persistent immutable selection supplies fallback state freshly per frame.
+/// Dictionary bytes cannot alias the exclusive source/output borrow in safe Rust.
+pub(crate) fn decode_in_place_with_dictionary_view<A: Allocator + Clone>(
+    bytes: &mut [u8],
+    input_start: usize,
+    options: DecodeOptions,
+    allocator: A,
+    dictionary: Option<DictionaryView<'_>>,
+) -> Result<usize> {
     let mut buffer = InPlaceBuffer::new(bytes, input_start, options.max_output_size)?;
     if buffer.remaining().is_empty() {
         return Err(Error::UnexpectedEof);
@@ -125,7 +137,10 @@ pub(crate) fn decode_in_place<A: Allocator + Clone>(
         }
         let (header, header_size) = FrameHeader::parse(buffer.remaining())?;
         if header.dictionary_id != 0 {
-            return Err(Error::DictionaryRequired);
+            let selected = dictionary.ok_or(Error::DictionaryRequired)?;
+            if selected.id() != header.dictionary_id {
+                return Err(Error::DictionaryMismatch);
+            }
         }
         if header.window_size > options.max_window_size {
             return Err(Error::ResourceLimit);
@@ -143,6 +158,10 @@ pub(crate) fn decode_in_place<A: Allocator + Clone>(
         let max_block = window.min(MAX_BLOCK_SIZE);
         let mut huffman = None;
         let mut sequences = SequenceState::new_in(allocator.clone());
+        let initial = dictionary.and_then(|view| view.entropy());
+        if let Some(entropy) = initial {
+            sequences.reset(entropy.repeat);
+        }
         loop {
             let block = BlockHeader::read(&mut ByteCursor::new(buffer.remaining()), max_block)?;
             buffer.consume(3)?;
@@ -155,24 +174,43 @@ pub(crate) fn decode_in_place<A: Allocator + Clone>(
                     let end = {
                         let (output, encoded) = buffer.compressed_parts(block.size)?;
                         let limit = output.len();
-                        let mut history =
-                            SliceHistory::resume(output, position, frame_start, window, limit)?;
                         let literal_limit = max_block.min(limit - position);
                         let (literals, consumed) = decode_literals_with_dictionary_view_in(
                             encoded,
                             &mut huffman,
                             literal_limit,
-                            None,
+                            initial.map(|entropy| entropy.huffman),
                             allocator.clone(),
                         )?;
-                        sequences.decode_with_dictionary_view(
-                            &encoded[consumed..],
-                            &literals,
-                            &mut history,
-                            max_block,
-                            None,
-                        )?;
-                        history.len()
+                        if let Some(dictionary) = dictionary {
+                            let mut history = DictionarySliceOutput::resume(
+                                output,
+                                position,
+                                frame_start,
+                                window,
+                                limit,
+                                dictionary,
+                            )?;
+                            sequences.decode_with_dictionary_view(
+                                &encoded[consumed..],
+                                &literals,
+                                &mut history,
+                                max_block,
+                                initial,
+                            )?;
+                            history.len()
+                        } else {
+                            let mut history =
+                                SliceHistory::resume(output, position, frame_start, window, limit)?;
+                            sequences.decode_with_dictionary_view(
+                                &encoded[consumed..],
+                                &literals,
+                                &mut history,
+                                max_block,
+                                None,
+                            )?;
+                            history.len()
+                        }
                     };
                     buffer.commit_compressed(block.size, end)?;
                 }
@@ -366,5 +404,154 @@ mod tests {
             Err(Error::ResourceLimit)
         );
         assert_eq!(&bytes[9..], &frame[9..]);
+    }
+}
+
+#[cfg(test)]
+mod dictionary_tests {
+    use super::*;
+    use crate::Dictionary;
+    use alloc::{alloc::Global, vec};
+    macro_rules! fixture {
+        ($name:literal) => {
+            include_bytes!(concat!("../tests/upstream/dictionaries/", $name))
+        };
+    }
+
+    #[test]
+    fn persistent_borrowed_dictionary_decodes_fallback_crossings_and_repeated_frames() {
+        let cases: &[(&[u8], &[u8], &[u8])] = &[
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("p0-far-dictionary.zst"),
+                fixture!("p0-far-dictionary.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("p-window-minus-one.zst"),
+                fixture!("p-window-minus-one.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("p-window-equal.zst"),
+                fixture!("p-window-equal.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("dictionary-to-frame-eviction.zst"),
+                fixture!("dictionary-to-frame-eviction.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("output-distance-equals-window.zst"),
+                fixture!("output-distance-equals-window.expected"),
+            ),
+            (
+                fixture!("boundary-dictionary.raw"),
+                fixture!("raw-small-window.zst"),
+                fixture!("raw-small-window.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("formatted-id.zst"),
+                fixture!("formatted-id.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("formatted-omitted-id.zst"),
+                fixture!("formatted-omitted-id.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("persistent-concatenation.zst"),
+                fixture!("persistent-concatenation.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("dictionary-treeless-literals.zst"),
+                fixture!("dictionary-treeless-literals.expected"),
+            ),
+            (
+                fixture!("formatted.dict"),
+                fixture!("dictionary-treeless-four-streams.zst"),
+                fixture!("dictionary-treeless-four-streams.expected"),
+            ),
+            (
+                fixture!("trained.dict"),
+                fixture!("dictionary-repeat-sequences.zst"),
+                fixture!("dictionary-repeat-sequences.expected"),
+            ),
+            (
+                fixture!("duplicate-reps.dict"),
+                fixture!("duplicate-reps-initial.zst"),
+                fixture!("duplicate-reps-initial.expected"),
+            ),
+        ];
+        for &(dictionary, frame, expected) in cases {
+            let dictionary = Dictionary::from_bytes(dictionary).unwrap();
+            for copies in [1, 2] {
+                let encoded = frame.repeat(copies);
+                let expected = expected.repeat(copies);
+                let capacity = (expected.len() + crate::decompression_margin(&encoded).unwrap())
+                    .max(encoded.len());
+                let start = capacity - encoded.len();
+                let mut bytes = vec![0xa5; capacity + 16];
+                bytes[8 + start..8 + capacity].copy_from_slice(&encoded);
+                let before = bytes.clone();
+                assert_eq!(
+                    decode_in_place_with_dictionary_view(
+                        &mut bytes[8..8 + capacity],
+                        start,
+                        DecodeOptions::new(expected.len()),
+                        Global,
+                        Some(dictionary.view())
+                    ),
+                    Ok(expected.len())
+                );
+                assert_eq!(&bytes[8..8 + expected.len()], expected);
+                assert_eq!(&bytes[..8], &before[..8]);
+                assert_eq!(&bytes[8 + expected.len()..], &before[8 + expected.len()..]);
+            }
+        }
+    }
+
+    #[test]
+    fn invalid_dictionary_distances_and_ids_preserve_unread_bytes_and_allowance() {
+        let dictionary = Dictionary::raw(fixture!("boundary-dictionary.raw")).unwrap();
+        for frame in [
+            fixture!("p-window-plus-one.zst").as_slice(),
+            fixture!("dictionary-out-of-bounds.zst").as_slice(),
+        ] {
+            let capacity = 8192 + frame.len();
+            let start = capacity - frame.len();
+            let mut bytes = vec![0xa5; capacity + 16];
+            bytes[8 + start..8 + capacity].copy_from_slice(frame);
+            let before = bytes.clone();
+            assert_eq!(
+                decode_in_place_with_dictionary_view(
+                    &mut bytes[8..8 + capacity],
+                    start,
+                    DecodeOptions::new(8192),
+                    Global,
+                    Some(dictionary.view())
+                ),
+                Err(Error::CorruptData)
+            );
+            assert_eq!(&bytes[..8], &before[..8]);
+            assert_eq!(&bytes[8 + 8192..], &before[8 + 8192..]);
+        }
+        let frame = fixture!("formatted-id.zst");
+        let mut bytes = frame.to_vec();
+        assert_eq!(
+            decode_in_place_with_dictionary_view(
+                &mut bytes,
+                0,
+                DecodeOptions::new(0),
+                Global,
+                Some(dictionary.view())
+            ),
+            Err(Error::DictionaryMismatch)
+        );
+        assert_eq!(&bytes, frame);
     }
 }
