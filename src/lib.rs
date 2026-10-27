@@ -77,6 +77,9 @@ mod fast_plan;
 mod fast_state;
 mod frame;
 mod frame_layout;
+// Staged utilities are exposed by the next independently checked item.
+#[allow(dead_code)]
+mod frame_utilities;
 mod fse;
 mod fse_encode;
 mod fse_select;
