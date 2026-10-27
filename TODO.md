@@ -148,21 +148,12 @@ and `docs/dictionary-in-place-benchmarks.md`. The final receipt is
 `docs/evidence/2026-10-27-dictionary-in-place-closure.json`.
 Complete upstream migration remains open.
 
-## Module 30: checked frame metadata and decompressed-size bounds
-
-Ownership and structural-versus-semantic contracts are recorded before code in
-`docs/frame-scan-design.md` and `docs/data-structures.md`. Promote only after
-Module 29 closes. Reuse the checked margin traversal; do not add a second parser
-or infer reusable one-shot prefix lifecycle from streaming semantics.
-
-- [x] Analyze checked frame metadata, borrowed skip payloads, native sentinel/early-return behavior and original assertions before implementation.
-- [x] Refactor the private structural result to retain validated metadata while preserving every existing margin contract.
-- [x] Expose first-frame metadata, exact/unknown concatenated size, checked decompression bound and borrowed skippable queries with allocation/lifetime qualification.
-- [x] Reproduce pinned normal/sanitized structural queries and original bounded assertions, retaining explicit overflow/sentinel/unknown differences.
-- [x] Qualify all deterministic frame corpus queries, foreign width/endian interpretation and concrete no-atomics output.
-- [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [x] Compare frozen structural workloads across retained safe/unsafe backends and independent repeats after actual CPU barriers.
-- [ ] Reconcile bounded query coverage and decompose the next missing contract without claiming complete upstream parity.
+Module 30 is complete within its bounded structural frame-query scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification and measurements are in `docs/frame-query-validation.md`
+and `docs/frame-query-benchmarks.md`. The final receipt is
+`docs/evidence/2026-10-27-frame-query-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 31: compression bounds and skippable frame writing
 

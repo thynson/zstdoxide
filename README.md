@@ -142,8 +142,8 @@ ID selection, reset behavior, capacity limits, and training algorithm boundaries
 Checked frame metadata, exact/unknown concatenated sizes, decompression bounds
 and borrowed skippable payload queries are available without decoding. See
 [frame query usage](docs/frame-query-usage.md). Structural success does not prove
-compressed content or checksums valid. Module 30 final qualification remains in
-progress in `TODO.md`.
+compressed content or checksums valid. Bounded qualification and explicit native differences are recorded in
+[the frame query report](docs/frame-query-validation.md).
 
 ## Current support
 

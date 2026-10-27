@@ -1,7 +1,8 @@
 # Checked frame query qualification
 
-Module 30 is in progress. Focused gates below are complete; full feature/release
-regression, measurements and final reconciliation remain separate gates.
+Module 30 is complete within its bounded structural metadata and size-query
+scope. Focused, full feature/release, native/platform, measured and final source
+gates have independently retained successful receipts.
 
 ## Shared structural traversal
 
@@ -110,3 +111,14 @@ records. Each query mode is timed separately with equal batch-loop, dispatch and
 Fresh primary/repeat CPU barriers precede sequential measurements. See
 `frame-query-benchmarks.md`; the host results do not establish a universal
 unsafe speedup. Evidence: `evidence/2026-10-27-frame-query-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+Integrated production and final tests match the frozen full-matrix source. All
+focused and timing archives are rehashed. Earlier staging and rejected helper/test
+attempts retain their identities. Structural success does not validate entropy,
+checksums or size truth. Compression-bound/write-skippable utilities, prefix
+lifecycle, external workspaces, legacy/magicless frames and full upstream parity
+remain outside this milestone. Original group 948 retains its partial status
+for the explicit native error-sentinel comparison described above.
+Evidence: `evidence/2026-10-27-frame-query-closure.json`.

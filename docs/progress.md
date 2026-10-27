@@ -1393,3 +1393,34 @@ Prefix in-place lifecycle, incremental overlap, workspaces and complete upstream
 library/CLI parity remain open. See `dictionary-in-place-validation.md`,
 `dictionary-in-place-benchmarks.md` and
 `evidence/2026-10-27-dictionary-in-place-closure.json`.
+
+## Module 30: checked structural frame queries complete (2026-10-27)
+
+Copied first-frame metadata, encoded extent, exact/unknown concatenated size,
+checked decompression bounds and borrowed skippable payloads share one structural
+traversal. Complete concatenations validate every tail, even after unknown size;
+u64 sizes have no reserved sentinels and arithmetic overflow is explicit. The
+query component builds with core only; the complete codec remains no_std + alloc.
+Structural success does not prove entropy, checksum or advertised-size truth.
+
+All 72 final commands pass: safe/all and 21 isolated full/no_std/Clippy selections,
+safe/all release and formatting. Each full/release suite has 1,690 passes and
+67 ignored across 101 groups. External adapters run explicitly in separate gates.
+Normal/sanitized native helpers query 10,818 inputs; 550 early-unknown, window-cap
+and numeric-sentinel/overflow differences are retained. Exact preceding original
+fuzzer histories back single/multi-frame assertions. Original group 948 retains
+its partial status: its full-capacity query yields an error sentinel, so its
+unsigned comparison does not establish a meaningful upper bound. Useful exact-
+frame-length checks are explicitly supplemental. Foreign width/endian Miri and
+actual core-only ARM artifacts include the small-input above-4-GiB-bound case.
+
+Twenty-three primary backends and independent safe/all repeats have identical
+clock-free query results. Four distinct query modes retain equal batch-loop overhead.
+All/safe nonempty-input median-latency geometric means: primary first-frame 0.9940; primary total-size 0.9852; primary total-bound 0.9843; primary in-place-margin 0.9763; repeat first-frame 1.0263; repeat total-size 1.0853; repeat total-bound 1.0184; repeat in-place-margin 1.0258.
+These fixed-order host measurements establish no universal unsafe speedup.
+
+Closure rehashes every stage archive and matches integrated production/tests.
+The completed checklist is cleared; Module 31 retains its utilities design.
+Compression-bound/write-skippable utilities, reusable prefix lifecycle, workspaces
+and full upstream library/CLI parity remain open. See `frame-query-validation.md`,
+`frame-query-benchmarks.md` and `evidence/2026-10-27-frame-query-closure.json`.
