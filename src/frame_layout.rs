@@ -15,6 +15,7 @@ struct FrameLayout {
     overhead: usize,
     block_count: usize,
     header: Option<FrameHeader>,
+    skippable_variant: u8,
 }
 
 impl FrameLayout {
@@ -30,6 +31,7 @@ impl FrameLayout {
                 overhead: cursor.position(),
                 block_count: 0,
                 header: None,
+                skippable_variant: (magic & 15) as u8,
             });
         }
         let (header, header_size) = FrameHeader::parse(input)?;
@@ -60,6 +62,7 @@ impl FrameLayout {
                 .ok_or(Error::ResourceLimit)?,
             block_count,
             header: Some(header),
+            skippable_variant: 0,
         })
     }
 
@@ -79,6 +82,221 @@ impl FrameLayout {
             .and_then(|value| value.checked_add(blocks))
             .ok_or(Error::ResourceLimit)
     }
+}
+
+/// Copied structural metadata for a standard or skippable frame.
+///
+/// This plain value owns no bytes. A standard header describes advertised
+/// properties, not validated decoded content. Skippable variants are 0 through 15.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum FrameKind {
+    /// An ordinary frame and its parsed header.
+    Standard(FrameHeader),
+    /// A skippable frame's magic variant and declared payload length.
+    Skippable {
+        /// Low four bits of the skippable magic number.
+        variant: u8,
+        /// Payload length, excluding the eight-byte header.
+        payload_size: u32,
+    },
+}
+
+/// Metadata from scanning one complete encoded frame without decompression.
+///
+/// Values are constructed by [`frame_info`]. Private fields preserve the checked
+/// encoded extent and block count. Copies own no input or allocator and share the
+/// same representation in every storage configuration.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct FrameInfo {
+    kind: FrameKind,
+    encoded_size: usize,
+    block_count: usize,
+}
+
+impl FrameInfo {
+    /// Return copied standard-header or skippable metadata.
+    pub fn kind(self) -> FrameKind {
+        self.kind
+    }
+
+    /// Complete encoded extent of the first frame, including any checksum.
+    pub fn encoded_size(self) -> usize {
+        self.encoded_size
+    }
+
+    /// Number of standard block headers; zero for a skippable frame.
+    pub fn block_count(self) -> usize {
+        self.block_count
+    }
+
+    /// Advertised decoded length; skippable frames contribute `Some(0)`.
+    pub fn content_size(self) -> Option<u64> {
+        match self.kind {
+            FrameKind::Standard(header) => header.content_size,
+            FrameKind::Skippable { .. } => Some(0),
+        }
+    }
+
+    /// Structural upper bound for a semantically valid supported frame.
+    ///
+    /// Known advertised sizes are returned directly. Otherwise, multiply block
+    /// count by the maximum permitted block size in u64 arithmetic, even on
+    /// 32-bit hosts. This does not validate compressed contents or size truth.
+    pub fn decompression_bound(self) -> Result<u64> {
+        match self.kind {
+            FrameKind::Standard(header) => match header.content_size {
+                Some(size) => Ok(size),
+                None => u64::try_from(self.block_count)
+                    .map_err(|_| Error::ResourceLimit)?
+                    .checked_mul(header.window_size.min(MAX_BLOCK_SIZE as u64))
+                    .ok_or(Error::ResourceLimit),
+            },
+            FrameKind::Skippable { .. } => Ok(0),
+        }
+    }
+}
+
+/// Scan the first complete standard or skippable frame without allocating.
+///
+/// Trailing bytes are ignored. The returned encoded extent is nonzero and within
+/// `input`. Block headers, payload ranges and checksum presence are checked;
+/// literals, sequences, checksum values and advertised size truth are not.
+/// Structural success does not establish decodability. Legacy and magicless
+/// input are unsupported. Corresponds to upstream `ZSTD_findFrameSizeInfo`.
+///
+/// Header parsing retains this crate's structural window and u64 size contract,
+/// including values native APIs reserve as sentinels. No pointer or input borrow
+/// is retained in the returned metadata.
+///
+/// ```
+/// use zstdoxide::{frame_info, frame_compressed_size, decompressed_size,
+///                 decompression_bound, FrameKind};
+/// let frame = [0x28, 0xb5, 0x2f, 0xfd, 0x20, 3, 25, 0, 0, b'a', b'b', b'c'];
+/// let info = frame_info(&frame)?;
+/// assert!(matches!(info.kind(), FrameKind::Standard(_)));
+/// assert_eq!(info.encoded_size(), 12);
+/// assert_eq!(info.block_count(), 1);
+/// assert_eq!(info.content_size(), Some(3));
+/// assert_eq!(frame_compressed_size(&frame)?, 12);
+/// assert_eq!(decompressed_size(&frame)?, Some(3));
+/// assert_eq!(decompression_bound(&frame)?, 3);
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+pub fn frame_info(input: &[u8]) -> Result<FrameInfo> {
+    let layout = FrameLayout::read(input)?;
+    let kind = match layout.header {
+        Some(header) => FrameKind::Standard(header),
+        None => FrameKind::Skippable {
+            variant: layout.skippable_variant,
+            // A skipped layout was built from a checked u32 payload length.
+            payload_size: u32::try_from(layout.encoded_size - 8)
+                .map_err(|_| Error::ResourceLimit)?,
+        },
+    };
+    Ok(FrameInfo {
+        kind,
+        encoded_size: layout.encoded_size,
+        block_count: layout.block_count,
+    })
+}
+
+/// Return the complete encoded extent of the first frame.
+///
+/// Uses [`frame_info`]'s structural contract, ignoring trailing input. Empty input
+/// is incomplete. Corresponds to upstream `ZSTD_findFrameCompressedSize`.
+pub fn frame_compressed_size(input: &[u8]) -> Result<usize> {
+    Ok(FrameLayout::read(input)?.encoded_size)
+}
+
+/// Sum advertised sizes across an exact concatenation of complete frames.
+///
+/// Returns `Some(total)` when all standard sizes are known, or `None` if any is
+/// unknown. Skippable frames contribute zero; empty input returns `Some(0)`.
+/// The entire input is structurally scanned, even after an unknown size, so
+/// trailing garbage or truncation is rejected. This is intentionally stricter
+/// than the native `ZSTD_findDecompressedSize` early unknown-size return.
+///
+/// Known-size addition is checked even when another size is unknown; overflow is
+/// `ResourceLimit`. All u64 header sizes remain ordinary values rather than
+/// reserved error/unknown sentinels. No payloads or checksum values are validated.
+pub fn decompressed_size(mut input: &[u8]) -> Result<Option<u64>> {
+    let mut total = 0_u64;
+    let mut known = true;
+    while !input.is_empty() {
+        let info = frame_info(input)?;
+        if let Some(size) = info.content_size() {
+            total = total.checked_add(size).ok_or(Error::ResourceLimit)?;
+        } else {
+            known = false;
+        }
+        input = &input[info.encoded_size..];
+    }
+    Ok(known.then_some(total))
+}
+
+/// Compute a checked decompressed-size bound for an exact frame concatenation.
+///
+/// Sums [`FrameInfo::decompression_bound`] with checked u64 arithmetic. Skippable
+/// frames and empty input contribute zero. Overflow is `ResourceLimit`, including
+/// native unsigned-wrap cases. The full input must be structurally complete.
+/// This bound applies only to semantically valid supported frames; it neither
+/// validates compressed payloads nor authorizes allocating an untrusted size.
+/// Corresponds to upstream `ZSTD_decompressBound`, without numeric sentinels.
+pub fn decompression_bound(mut input: &[u8]) -> Result<u64> {
+    let mut total = 0_u64;
+    while !input.is_empty() {
+        let info = frame_info(input)?;
+        total = total
+            .checked_add(info.decompression_bound()?)
+            .ok_or(Error::ResourceLimit)?;
+        input = &input[info.encoded_size..];
+    }
+    Ok(total)
+}
+
+/// Recognize a four-byte skippable marker without validating its header/payload.
+///
+/// Returns false for fewer than four bytes. A true result does not guarantee
+/// [`skippable_payload`] succeeds. Corresponds to upstream `ZSTD_isSkippableFrame`.
+pub fn is_skippable_frame(input: &[u8]) -> bool {
+    ByteCursor::new(input)
+        .little_endian(4)
+        .is_ok_and(|magic| magic & 0xffff_fff0 == 0x184d_2a50)
+}
+
+/// Borrow the first skippable payload and return its 0..15 magic variant.
+///
+/// Requires the complete eight-byte header and payload. Trailing input is ignored.
+/// A non-skippable magic returns `InvalidMagic`; truncation is `UnexpectedEof`.
+/// No payload bytes are copied or allocated, and the borrow cannot outlive input.
+/// Corresponds to the payload/variant result of upstream `ZSTD_readSkippableFrame`.
+///
+/// ```
+/// use zstdoxide::{is_skippable_frame, skippable_payload};
+/// let frame = [0x5f, 0x2a, 0x4d, 0x18, 3, 0, 0, 0, b'a', b'b', b'c'];
+/// assert!(is_skippable_frame(&frame[..4]));
+/// assert!(skippable_payload(&frame[..4]).is_err());
+/// assert_eq!(skippable_payload(&frame)?, (15, b"abc".as_slice()));
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+///
+/// ```compile_fail,E0597
+/// use zstdoxide::skippable_payload;
+/// let payload = {
+///     let input = [0x50, 0x2a, 0x4d, 0x18, 0, 0, 0, 0];
+///     skippable_payload(&input).unwrap().1
+/// };
+/// assert!(payload.is_empty());
+/// ```
+pub fn skippable_payload(input: &[u8]) -> Result<(u8, &[u8])> {
+    let mut cursor = ByteCursor::new(input);
+    let magic = cursor.little_endian(4)?;
+    if magic & 0xffff_fff0 != 0x184d_2a50 {
+        return Err(Error::InvalidMagic);
+    }
+    let size = usize::try_from(cursor.little_endian(4)?).map_err(|_| Error::ResourceLimit)?;
+    let payload = cursor.take(size)?;
+    Ok(((magic & 15) as u8, payload))
 }
 
 /// Compute a sufficient extra capacity for suffix-input in-place decompression.
@@ -312,6 +530,7 @@ mod tests {
             overhead: 6,
             block_count: 1,
             header: None,
+            skippable_variant: 0,
         };
         assert_eq!(normal.add_overhead(usize::MAX - 9), Ok(usize::MAX));
         assert_eq!(

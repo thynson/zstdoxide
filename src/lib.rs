@@ -209,7 +209,10 @@ pub use dictionary_train::{
 pub use encode::{compress, compress_in, compress_with_dictionary, compress_with_dictionary_in};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
-pub use frame_layout::decompression_margin;
+pub use frame_layout::{
+    FrameInfo, FrameKind, decompressed_size, decompression_bound, decompression_margin,
+    frame_compressed_size, frame_info, is_skippable_frame, skippable_payload,
+};
 pub use match_search::MatchSearchOptions;
 pub use parameters::{
     CompressionParameterRequest, RawCompressionParameters, ReferenceFrameParameters,

@@ -157,7 +157,7 @@ or infer reusable one-shot prefix lifecycle from streaming semantics.
 
 - [x] Analyze checked frame metadata, borrowed skip payloads, native sentinel/early-return behavior and original assertions before implementation.
 - [x] Refactor the private structural result to retain validated metadata while preserving every existing margin contract.
-- [ ] Expose first-frame metadata, exact/unknown concatenated size, checked decompression bound and borrowed skippable queries with allocation/lifetime qualification.
+- [x] Expose first-frame metadata, exact/unknown concatenated size, checked decompression bound and borrowed skippable queries with allocation/lifetime qualification.
 - [ ] Reproduce pinned normal/sanitized structural queries and original bounded assertions, retaining explicit overflow/sentinel/unknown differences.
 - [ ] Qualify all deterministic frame corpus queries, foreign width/endian interpretation and concrete no-atomics output.
 - [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
