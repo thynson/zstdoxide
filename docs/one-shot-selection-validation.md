@@ -62,3 +62,30 @@ or leak detection; independent Rust ownership ledgers cover those stated Rust
 contracts. macOS sanitizer runs use detect_leaks=0 with bounds/UB checks active.
 These are supplemental schedules, not original upstream assertion upgrades.
 Evidence: `evidence/2026-10-27-one-shot-selection-native.json`.
+
+## Foreign targets and bounded dictionary corpus
+
+Eight platform commands pass: safe/all Miri on i686 little-endian and s390x
+big-endian, plus safe/all thumbv6m core+alloc checks and concrete ARM IR/object
+emission. The actual coordinator executes prepared/raw ownership transitions,
+concatenations with skippables, subsequent-call consumption, persistent error
+recovery and real 24-byte overlap. The no-atomics probe instantiates in-place
+coordinator decoding and emits the movement path. This proves interpreter and
+code-generation checks, not execution on foreign hardware. The full codec
+requires no_std plus alloc; shared dictionary ownership uses the established
+no-atomics fallback.
+
+The additive dictionary_decompress adapter preserves all original input selectors
+and the existing incremental-prefix outcome ledger. All 12,063 fixed corpus
+members run with safe/all release and no skips. Each additionally compares both
+call-scoped output modes against the stateless persistent dictionary view, with
+exact Result, complete successful bytes, guards and selection state checked.
+Call-scoped prefixes deliberately are not equated to incremental frame prefixes.
+The historical ledger still records 11,768 Rust-trained dictionaries, 295 training
+fallbacks and 20 successful legacy-adapter decodes; that ledger is not a separate
+count of native success or newly coordinated successes. Training remains the
+independent Rust algorithm, not byte-identical native fastCover.
+
+Evidence: `evidence/2026-10-27-one-shot-selection-platform.json` and
+`evidence/2026-10-27-one-shot-selection-corpus.json`. The archived corpus receipt,
+not this prepared report, gates integration of the corpus result.

@@ -601,6 +601,77 @@ fn fixed_prefix_supplement_preserves_skips_and_rejects_reused_prepared_prefixes(
     ));
 }
 
+/// Call-scoped selection supplement. Its prefix covers every frame in one call,
+/// so compare it to a stateless persistent view, independently of the retained
+/// incremental prefix-once-per-frame adapters above. Original selectors stay intact.
+fn decode_call_selection_checked(
+    source: &[u8],
+    dictionary: SharedDictionary,
+    prefix: bool,
+    capacity: usize,
+) {
+    let options = DecodeOptions::new(capacity);
+    let mut baseline = vec![0xa5; capacity + 64];
+    let expected = decompress_into_with_dictionary(
+        source,
+        &mut baseline[32..32 + capacity],
+        &dictionary,
+        options,
+    );
+    for in_place in [false, true] {
+        let extent = if in_place {
+            capacity + source.len() + 128 * 1024
+        } else {
+            capacity
+        };
+        let mut storage = vec![0xa5; extent + 64];
+        let start = if in_place { extent - source.len() } else { 0 };
+        if in_place {
+            storage[32 + start..32 + extent].copy_from_slice(source);
+        }
+        let before = storage.clone();
+        let mut decoder = if prefix {
+            zstdoxide::OneShotDecoder::with_prefix(options, dictionary.clone())
+        } else {
+            zstdoxide::OneShotDecoder::with_dictionary(options, dictionary.clone())
+        };
+        let result = if in_place {
+            decoder.decompress_in_place(&mut storage[32..32 + extent], start)
+        } else {
+            decoder.decompress_into(source, &mut storage[32..32 + capacity])
+        };
+        assert_eq!(result, expected);
+        assert!(!decoder.prefix_pending());
+        assert_eq!(decoder.dictionary().is_some(), !prefix);
+        assert_eq!(&storage[..32], &before[..32]);
+        assert_eq!(&storage[32 + capacity..], &before[32 + capacity..]);
+        if let Ok(written) = result {
+            assert_eq!(&storage[32..32 + written], &baseline[32..32 + written]);
+            assert_eq!(&storage[32 + written..], &before[32 + written..]);
+        } else if let Err(error) = result {
+            assert_ne!(error, Error::AllocationFailed);
+            assert_ne!(error, Error::InvalidState);
+        }
+    }
+}
+
+#[test]
+fn call_scoped_prefix_supplement_reuses_one_selection_across_concatenated_frames() {
+    let dictionary = Dictionary::from_bytes(include_bytes!("upstream/dictionaries/formatted.dict"))
+        .unwrap()
+        .into_shared();
+    let frame = include_bytes!("upstream/dictionaries/formatted-id.zst");
+    let output = include_bytes!("upstream/dictionaries/formatted-id.expected");
+    let repeated = [frame.as_slice(), frame.as_slice()].concat();
+    decode_call_selection_checked(&repeated, dictionary.clone(), true, output.len() * 2);
+    decode_call_selection_checked(&repeated, dictionary.clone(), false, output.len() * 2);
+    assert!(!decode_prefix_checked(
+        &repeated,
+        dictionary,
+        output.len() * 2
+    ));
+}
+
 /// `dictionary_decompress.c::LLVMFuzzerTestOneInput`, retaining every selector
 /// before decompression. A prepared dictionary and owned loaded dictionary share
 /// the Rust handle implementation; by-reference loading becomes immutable sharing.
@@ -621,6 +692,7 @@ fn dictionary_decompress(input: &[u8]) -> Outcome {
     };
     let capacity = producer.unsigned_range(0, (10 * size) as u32) as usize;
     let dictionary = load_mode(&trained.dictionary, mode);
+    decode_call_selection_checked(source, dictionary.clone(), prefix, capacity);
     let decoded = if prefix {
         decode_prefix_checked(source, dictionary, capacity)
     } else {
