@@ -26,7 +26,6 @@ impl<'a> SliceHistory<'a> {
     /// Reborrow initialized caller storage using validated frame-local positions.
     /// The coordinator supplies only previously written output as the prefix;
     /// this validates coordinates, not the semantic origin of those bytes.
-    #[cfg(test)]
     pub(crate) fn resume(
         output: &'a mut [u8],
         position: usize,

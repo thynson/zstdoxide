@@ -11,6 +11,95 @@ use crate::xxhash::checksum;
 use crate::{DecodeOptions, Error, FrameHeader, Result};
 use core::alloc::Allocator;
 
+/// Decompress suffix-encoded frames within one exclusively borrowed buffer.
+///
+/// Input occupies `buffer[input_start..]`; decoded output starts at zero.
+/// Standard, skippable and concatenated frames are supported. Dictionaries,
+/// prefixes and legacy frames are unsupported. Checksums are always verified.
+/// Empty input is incomplete; valid empty or skippable frames can return zero.
+/// The buffer length is the combined output limit and the default advertised
+/// window limit is 128 MiB.
+///
+/// Success returns the written prefix length and leaves every byte after it
+/// unchanged. On error, bytes inside the output allowance can be provisional;
+/// unread encoded bytes and bytes beyond the allowance are preserved. Invalid
+/// `input_start` is rejected before any writes. No rollback or partial progress
+/// is promised. Even when the decoded size fits, insufficient space between
+/// output and an unread compressed/RLE block returns [`Error::ResourceLimit`].
+///
+/// For supported valid frames, placing input at the end of a buffer at least
+/// `decoded_size + decompression_margin(input)?` bytes long is sufficient when
+/// the input also fits. The margin scanner validates framing structure only.
+/// Smaller layouts can succeed, including actual raw-block overlap; decoding
+/// always checks live input boundaries. Unknown content sizes are supported.
+///
+/// No complete input clone, output allocation, or history copy is made.
+/// Compressed blocks can allocate fallible literal and entropy scratch.
+/// Corresponds to the overlapping-buffer use of upstream `ZSTD_decompress`.
+///
+/// ```
+/// use zstdoxide::{compress, decompression_margin, decompress_in_place};
+/// let source = b"in-place output, in-place output";
+/// let frame = compress(source)?;
+/// let capacity = (source.len() + decompression_margin(&frame)?).max(frame.len());
+/// let mut buffer = vec![0xa5; capacity];
+/// let input_start = capacity - frame.len();
+/// buffer[input_start..].copy_from_slice(&frame);
+/// let written = decompress_in_place(&mut buffer, input_start)?;
+/// assert_eq!(&buffer[..written], source);
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+pub fn decompress_in_place(buffer: &mut [u8], input_start: usize) -> Result<usize> {
+    let options = DecodeOptions::new(buffer.len());
+    decompress_in_place_with_options(buffer, input_start, options)
+}
+
+/// Decode in place with caller-selected scratch allocation.
+///
+/// The supplied slice is never allocated, resized, adopted or freed. Temporary
+/// collections use clones of `allocator` and release their storage on success
+/// and failure. A borrowed non-Clone allocator is accepted as `&allocator`.
+/// Ordinary allocator cloning retains its own allocation and panic semantics.
+/// Raw/RLE/skippable paths require no codec payload allocation. All other
+/// contracts follow [`decompress_in_place`].
+pub fn decompress_in_place_in<A: Allocator + Clone>(
+    buffer: &mut [u8],
+    input_start: usize,
+    allocator: A,
+) -> Result<usize> {
+    let options = DecodeOptions::new(buffer.len());
+    decompress_in_place_with_options_in(buffer, input_start, options, allocator)
+}
+
+/// Decode in place with explicit output and advertised-window limits.
+///
+/// The effective output allowance is `min(buffer.len(), options.max_output_size)`.
+/// Bytes beyond it remain unchanged even on error. The window limit is
+/// independent. Output capacity does not replace the unread-input fences.
+/// The ownership, layout and format contracts follow [`decompress_in_place`].
+pub fn decompress_in_place_with_options(
+    buffer: &mut [u8],
+    input_start: usize,
+    options: DecodeOptions,
+) -> Result<usize> {
+    decompress_in_place_with_options_in(buffer, input_start, options, alloc::alloc::Global)
+}
+
+/// Decode in place with explicit limits and a scratch-only allocator.
+///
+/// Combines [`decompress_in_place_with_options`] bounds with
+/// [`decompress_in_place_in`] allocation ownership. One exclusive mutable slice
+/// expresses the shared allocation without independently aliasing Rust borrows.
+/// No borrow of that slice or its input survives this call.
+pub fn decompress_in_place_with_options_in<A: Allocator + Clone>(
+    buffer: &mut [u8],
+    input_start: usize,
+    options: DecodeOptions,
+    allocator: A,
+) -> Result<usize> {
+    decode_in_place(buffer, input_start, options, allocator)
+}
+
 /// The private coordinator corresponding to `ZSTD_decompressFrame`.
 /// Metadata borrows end before any writes; compressed payload borrows are
 /// disjoint from resumed history, and raw moves explicitly permit overlap.

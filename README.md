@@ -60,11 +60,13 @@ capacity is reported separately from scratch. `with_prefix` and `with_prefix_in`
 prefix; `set_prefix` and `set_dictionary` replace selections at clean frame
 boundaries. Bounded prefix qualification and lifecycle differences are recorded in
 [the validation report](docs/stable-prefix-output-validation.md).
-Overlapping in-place decoding remains a separate contract.
+`decompress_in_place` and its options/allocator variants decode suffix-encoded
+frames in one exclusive mutable buffer. See [in-place usage](docs/in-place-output-usage.md).
+The bounded module is undergoing final qualification in `TODO.md`.
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
 `decompression_margin` scans standard/skippable frame structure without allocating
 to compute sufficient suffix-input overlap overhead. It does not validate decoded
-contents; actual overlapping in-place decoding remains unfinished. Native metadata
+contents; actual decoding separately validates payloads, sizes and checksums. Native metadata
 boundary differences are recorded in [margin qualification](docs/in-place-margin-validation.md).
 Allocation failures and corrupt, truncated, or over-limit input return `Error`.
 The named `compress` encoder writes one checksummed single-segment frame, so its advertised window

@@ -42,3 +42,17 @@ The coordinator remains test-gated pending the public API; complete regression
 and independent native same-allocation qualification are separate.
 
 Evidence: `evidence/2026-10-27-in-place-engine.json`.
+
+## Public suffix-input API
+
+Four public entrypoints expose default/options and Global/caller-selected scratch
+allocation. Seven public contract tests, six loop tests and the Rustdoc example
+pass in safe/move/history/combined builds with no_std and strict Clippy.
+Exact margin, buffer identity/capacity, all unused bytes, invalid starting indices,
+window and output limits, malformed mutations/truncations, frame-local history
+and every exercised scratch-allocation failure ordinal are checked. Borrowed
+non-Clone allocator ownership is exercised separately. No complete input/output
+copy is used by the decoder; copies in test setup restore original fixtures.
+
+Evidence: `evidence/2026-10-27-in-place-public-api.json`.
+Usage and limitations: `in-place-output-usage.md`.
