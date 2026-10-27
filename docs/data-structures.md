@@ -3960,3 +3960,22 @@ does not validate block content, checksum truth or actual decoded length.
 The pinned counterparts are ZSTD_findFrameSizeInfo, ZSTD_findFrameCompressedSize,
 ZSTD_findDecompressedSize, ZSTD_decompressBound and skippable frame queries.
 Native sentinel/window-cap/wrapping behavior remains explicitly distinct.
+
+## Module 31: scalar compression bounds and borrowed skippable serialization
+
+`compression_bound` owns only scalar sizes. Native counterparts are v1.5.7
+ZSTD_COMPRESSBOUND/ZSTD_MAX_INPUT_SIZE and ZSTD_compressBound. Width-specific
+admission and checked arithmetic return a typed result; there are no sentinel
+values, allocations or retained references. The same value representation is
+shared across feature configurations, with no artificial unsafe operations.
+
+`write_skippable_frame` temporarily borrows one exclusive output slice and one
+independent immutable payload. Variant, representable u32 length, usize header
+addition and actual capacity are validated before any mutation. Standard slice
+copies serialize fixed little-endian header arrays and payload; errors leave
+all output unchanged and successes preserve the unused suffix. No alias or
+reference is retained. The checked length helper admits numeric-limit tests
+without constructing invalid huge slices. This transient serialization adds no
+owned storage structure or allocator; keep it core-only and forbid unsafe code.
+Native counterpart: ZSTD_writeSkippableFrame. Error precedence is explicit Rust
+policy, not native numeric-code equivalence. See `frame-utilities-design.md`.
