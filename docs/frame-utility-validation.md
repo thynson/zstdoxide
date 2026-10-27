@@ -86,3 +86,15 @@ The first component template omitted utility registration and failed before
 Miri test execution. Corrected registration and added host preflight preceded
 all final successful commands; original source/logs remain archived.
 Evidence: `evidence/2026-10-27-frame-utility-platform.json`.
+
+## Complete feature and release regression
+
+The final frozen candidate passed all 72 commands: safe/all and 21 isolated
+unsafe features each have complete tests, true no_std and strict Clippy; safe/all
+complete release and formatting also pass. Every full/release suite reports
+1,706 passed / 70 ignored across 105 result groups. External adapters retain their
+separate explicit execution receipts; ignored tests are not credited as passes.
+Source-registration and controller bookkeeping rejections remain retained.
+The repaired focused gates require exact test counts; the native extreme-value
+sentinel and writer error-precedence differences are explicit.
+Evidence: `evidence/2026-10-27-frame-utility-feature-matrix.json`.
