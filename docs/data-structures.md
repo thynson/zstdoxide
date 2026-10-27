@@ -3984,7 +3984,9 @@ policy, not native numeric-code equivalence. See `frame-utilities-design.md`.
 
 `OneShotDecoder<D>` owns copied DecodeOptions and exactly one private selection:
 none, persistent D, or next-call D. D implements the sealed DictionaryHandle and
-may be a shared owner or a borrowed immutable view; no Clone bound is needed.
+may be a shared owner or a borrowed immutable view. The existing sealed handle
+contract includes Clone; this coordinator never invokes it. Private selection
+and claim records impose no Clone bound of their own.
 Replacement drops the previous owner. No compressed input, output or scratch
 allocator is retained. Existing one-shot engines own all per-call frame/scratch
 state. The coordinator is not a reusable native scratch workspace.

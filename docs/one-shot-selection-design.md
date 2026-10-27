@@ -28,7 +28,9 @@ semantics are separate and must not be inferred from this small coordinator.
 Add `OneShotDecoder<D = SharedDictionary>` containing copied DecodeOptions and
 one private selection enum: no dictionary, persistent D or next-call D. Exactly
 one selection exists. The generic sealed DictionaryHandle supplies immutable
-DictionaryView; do not require Clone or copy dictionary bytes. Shared owners and
+DictionaryView. Its existing sealed contract includes Clone, but the coordinator
+never invokes handle cloning or copies dictionary bytes. The private selection
+records themselves impose no Clone bound. Shared owners and
 borrowed views retain their established independent allocator/lifetime contracts.
 No input or destination reference is stored in the coordinator.
 
@@ -88,7 +90,7 @@ Exercise real raw/prepared dictionary dependence, two dependent frames in one
 call, intervening skippables, separate subsequent calls, empty/skippable-only/
 malformed input and every failure family above. Test direct and actual shared-
 buffer in-place modes, exact output/tails, independent dictionary/scratch allocators,
-non-Clone borrowed owners and handle-drop accounting. Compile-fail examples prove
+borrowed non-Clone allocator owners and handle-drop accounting. Compile-fail examples prove
 borrowed dictionary lifetime and exclusive output/context access.
 
 Use normal and ASan/UBSan v1.5.7 context helpers with actual DCtx refPrefix/raw/auto
