@@ -134,23 +134,12 @@ Qualification, measured comparisons and remaining limitations are in
 The final receipt is `docs/evidence/2026-10-26-stable-prefix-output-closure.json`.
 Complete upstream migration remains open.
 
-## Module 28: dictionary-free one-shot in-place decompression
-
-Design and ownership are recorded before implementation in
-`docs/in-place-output-design.md` and `docs/data-structures.md`. The input occupies
-the end of one exclusively borrowed buffer. Promote only after Module 27 closes;
-dictionary/prefix in-place and incremental overlap remain separate contracts.
-
-- [x] Analyze pinned margin/block protection, single-buffer ownership, checked overlap and conservative scope before implementation.
-- [x] Implement an allocation-free checked framing/margin scan with structural versus semantic validation boundaries and pinned native comparisons.
-- [x] Implement checked resumable slice history and one-buffer raw movement with independent safe/unsafe storage and rejection-before-write invariants.
-- [x] Integrate a private frame/block loop using disjoint compressed payload/history borrows, actual raw overlap and unread-input fences.
-- [x] Expose suffix-input in-place APIs with exact options, alias/lifetime documentation, malformed bounds and scratch failure qualification.
-- [x] Port the original single/two-frame assertions with exact preceding upstream input history and independently qualify normal/sanitized shared-buffer layouts and real guards.
-- [x] Qualify actual overlap and split-borrow history on foreign Miri and concrete no-atomics output.
-- [x] Qualify every isolated feature and all features, full/release regression, true no_std and strict Clippy.
-- [x] Freeze identical overlapping workloads and allocation ledgers, retain executables and measure safe/unsafe builds with an independent repeat and explicit source-restoration cost.
-- [ ] Reconcile bounded in-place coverage and decompose the next missing contract without claiming complete upstream parity.
+Module 28 is complete within its bounded dictionary-free one-shot in-place scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification, measurements and limitations are in
+`docs/in-place-output-validation.md` and `docs/in-place-output-benchmarks.md`.
+The final receipt is `docs/evidence/2026-10-27-in-place-output-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 29: persistent dictionaries in one-shot in-place output
 

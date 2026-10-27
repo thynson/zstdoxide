@@ -1,8 +1,8 @@
 # Bounded in-place decompression qualification
 
-Module 28 remains in progress. Focused stages below are independently qualified;
-complete feature/release regression, measurements and final reconciliation remain
-separate gates. The implementation remains dictionary-free.
+Module 28 is complete within its bounded dictionary-free suffix-input scope.
+Focused, complete feature/release, native/platform, measured performance and
+final source reconciliation have separately retained successful receipts.
 
 ## Checked storage
 
@@ -142,3 +142,16 @@ records. Source restoration is separately timed and included in a combined mode.
 Fresh primary/repeat CPU barriers precede sequential measurements. See
 `in-place-output-benchmarks.md`; the host results do not establish a universal
 unsafe speedup. Evidence: `evidence/2026-10-27-in-place-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+The closure rehashes all stage archives and binds integrated production to final
+public/native/platform/corpus/full-matrix and measured sources. Historical staging
+snapshots and rejected preparation attempts retain their original identities.
+The original fuzzer assertions use the captured full preceding upstream input
+history as documented in the correction above.
+
+The current API is dictionary-free. Persistent dictionary in-place selection is
+decomposed next; single-use prefixes, incremental overlap, external workspaces,
+legacy/magicless input and complete upstream library/CLI parity remain outside
+this milestone. Evidence: `evidence/2026-10-27-in-place-output-closure.json`.

@@ -62,7 +62,8 @@ boundaries. Bounded prefix qualification and lifecycle differences are recorded 
 [the validation report](docs/stable-prefix-output-validation.md).
 `decompress_in_place` and its options/allocator variants decode suffix-encoded
 frames in one exclusive mutable buffer. See [in-place usage](docs/in-place-output-usage.md).
-The bounded module is undergoing final qualification in `TODO.md`.
+Bounded dictionary-free qualification and layout differences are recorded in
+[the validation report](docs/in-place-output-validation.md).
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
 `decompression_margin` scans standard/skippable frame structure without allocating
 to compute sufficient suffix-input overlap overhead. It does not validate decoded

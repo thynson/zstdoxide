@@ -1330,3 +1330,35 @@ contracts stay open.
 
 Details: `stable-prefix-output-validation.md`, `stable-prefix-output-benchmarks.md`, and
 `evidence/2026-10-26-stable-prefix-output-closure.json`.
+
+## Module 28: bounded dictionary-free in-place decompression complete (2026-10-27)
+
+One exclusive caller buffer holds encoded suffix and decoded prefix. Checked
+raw movement permits actual overlap; compressed payload and output history use
+disjoint borrows. Dynamic unread-input fences, exact output/window options,
+fallible scratch and unchanged success suffix are qualified. The independent
+unsafe-in-place-buffer feature shares the safe public contract. Codec modules
+remain no_std plus alloc.
+
+All 72 final commands pass: safe/all and 21 isolated feature selections each have
+complete regression, true no_std and strict Clippy, plus safe/all full release
+and formatting. Every full/release suite reports 1,661 passed / 63 ignored across
+94 groups. External ignored native adapters are explicitly run separately.
+Normal/sanitized native layouts and the original 5 MiB single/two-frame assertions
+use the pinned oracle, including captured preceding original fuzzer history.
+Foreign Miri and ARM objects are interpretation/code generation evidence.
+
+All 23 retained primary benchmark backends and independent safe/all rebuilds
+have identical allocation/output qualification. Decode, direct, restoration and
+combined modes retain equal per-operation clocks and separate actual CPU barriers.
+All/safe nonempty median-latency geometric mean ratios: primary in-place-decode 0.8041; primary in-place-with-restore 0.8076; repeat in-place-decode 1.0056; repeat in-place-with-restore 0.9985.
+These fixed-order host measurements establish no universal unsafe speedup.
+
+The final receipt rehashes all stage archives, matches final production and test
+identities, and links the preceding milestone. The completed checklist is cleared;
+Module 29's dictionary ownership design and decomposition remain before promotion.
+Persistent dictionary/prefix in-place, incremental overlap, workspace contracts,
+legacy input and complete upstream parity remain separate work.
+
+Details: `in-place-output-validation.md`, `in-place-output-benchmarks.md`, and
+`evidence/2026-10-27-in-place-output-closure.json`.
