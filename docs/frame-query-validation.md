@@ -36,3 +36,38 @@ and a small encoded stream whose logical bound exceeds 4 GiB.
 Initial test-call and lint preparation rejections are retained; they precede
 the passing final focused snapshot and receive no execution credit.
 Evidence: `evidence/2026-10-27-frame-query-public-api.json`.
+
+## Native comparison and original assertions
+
+Pinned v1.5.7 normal and ASan/UBSan helpers query 10,818 actual inputs. Safe,
+byte-cursor and all-feature Rust captures agree and explicitly replay the final
+ignored native adapters. Of these inputs, 10,268 complete query rows agree;
+550 differences are retained and classified from actual input bytes: 519 validate
+malformed tails after native early unknown-size returns, 17 admit structurally
+representable window values above native limits, and 14 distinguish full-u64
+values/checked overflow from native sentinels or wrapping aggregate arithmetic.
+No differing row is silently counted as parity.
+
+The original test_decompressBound input bytes, compression/flushing operations
+and size/bound assertions are reproduced, including 32,769 flushed blocks and
+an above-4-GiB logical bound. The helper reuses its harness buffer/context across
+some examples, so identical native context allocation lifetimes are not claimed.
+A separate instrumented original fuzzer executes the preceding original history
+unchanged and captures single-frame, unknown-size and four-frame-plus-skippable
+inputs. Normal/sanitized payloads agree; three Rust backends verify complete
+output and original exact/tight/truncated assertions on those captured bytes.
+An independent audit matches all 176 compiled upstream C/header/assembly files
+against the pinned tarball, including test data-generation dependencies.
+
+Original group 948 queries the full compressed buffer capacity instead of actual
+frame size. It obtains the native error sentinel, whose unsigned comparison
+passes the original lower-bound assertion. The useful exact-frame-length Rust
+bound is explicitly supplemental. This group remains partial; the error-sentinel
+comparison is not credited as a meaningful bound guarantee.
+
+Preflight Clippy rejected a native adapter constant chunks_exact operation.
+Checked as_chunks with an explicit empty-remainder assertion resolves that
+warning; all three native replays and preflight pass again. Historical rejected
+source/logs remain retained. Production source was unchanged.
+Evidence: `evidence/2026-10-27-frame-query-native.json` and
+`evidence/2026-10-27-frame-query-history.json`.
