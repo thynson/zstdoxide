@@ -59,14 +59,25 @@ Usage and limitations: `in-place-output-usage.md`.
 
 ## Independent pinned native overlap comparison
 
-The external helper uses facebook/zstd v1.5.7 revision
-`f8745da6ff1ad1e7bab384bd1f9d742439278e99` as a test oracle only. It executes
-the original `tests/fuzzer.c:1344-1397` single/two-frame input construction with
-5 MiB RDG input, seed 0/compressibility 0.5, and negative maximum-block-size level.
-Expanded input, the documented sufficient-margin bound, original output capacity
-(including the two-frame case), exact decoded size and full original bytes are
-asserted. Both source and destination point inside one real guarded allocation.
-Source attribution is retained under the repository `LICENSE.zstd`.
+The external helpers use facebook/zstd v1.5.7 revision
+`f8745da6ff1ad1e7bab384bd1f9d742439278e99` as test oracles only. The initial
+capture used a standalone 5 MiB RDG recipe at seed 0/compressibility 0.5, preserving
+the original single/two-frame compression level, layout and assertions. A source
+audit found that this was not the exact input at `tests/fuzzer.c:1344`: preceding
+upstream groups mutate `CNBuffer`. That initial recipe remains a supplement;
+its historical receipt is not rewritten or represented as exact-state evidence.
+
+The separate exact-history receipt below runs the original upstream program
+through every preceding assertion and mutation, inserting only a capture/exit
+immediately before the in-place groups. Normal and ASan/UBSan captures of the
+5 MiB buffer agree exactly and differ from the initial standalone recipe. Both
+native modes and five Rust configurations then execute the original expanded-input,
+margin-bound, single/two-frame capacity, decoded-size and full-byte assertions
+using those exact bytes. Source and destination share one real guarded allocation.
+The two-frame capacity remains the original full CNBuffSize plus margin, not a
+reduced substitute. Source attribution remains under `LICENSE.zstd`; downloaded
+reference code stays outside Git, with hashes and an observation-only patch
+retained for reproduction.
 
 The ordinary and AddressSanitizer/UndefinedBehaviorSanitizer helpers agree on
 1,300 layouts covering valid/malformed raw, RLE, compressed, concatenated and
@@ -101,3 +112,13 @@ pass. Safe/all thumbv6m core+alloc builds and instantiated LLVM IR/ARM objects
 also pass; the retained IR contains the actual memmove operation. These eight
 commands prove interpretation/code generation, not native foreign hardware
 execution. Evidence: `evidence/2026-10-27-in-place-platform.json`.
+
+## Exact upstream input-history reconciliation
+
+`evidence/2026-10-27-in-place-native-exact-history.json` supersedes only the
+original-input-history claim in the earlier native receipt. It preserves the
+failed assumption and all historical supplemental evidence. Four upstream capture
+build/execution commands, two native helper builds, two exact native layout runs,
+and five explicit Rust adapter runs pass. Each Rust run executes both external
+adapter tests: 1,300 preserved supplementary layouts and the exact original
+single/two-frame assertions. No codec or adapter source changed for this correction.
