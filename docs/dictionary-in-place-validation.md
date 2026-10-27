@@ -1,7 +1,8 @@
 # Persistent dictionaries in in-place output qualification
 
-Module 29 is in progress; final feature/release regression, measurements and
-source reconciliation remain separate gates. Focused checks below are complete.
+Module 29 is complete within its bounded persistent dictionary in-place scope.
+Focused, full feature/release, native/platform, measurements and final source
+reconciliation have independently retained successful receipts.
 
 ## Checked history composition and frame selection
 
@@ -100,3 +101,12 @@ records. Source restoration is separately timed and included in a combined mode.
 Fresh primary/repeat CPU barriers precede sequential measurements. See
 `dictionary-in-place-benchmarks.md`; the host results do not establish a universal
 unsafe speedup. Evidence: `evidence/2026-10-27-dictionary-in-place-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+All integrated production and final tests match the frozen full-matrix source.
+Earlier staging and rejected helper/test attempts keep their original identities.
+Raw and prepared persistent dictionaries are supported. Prefix in-place lifecycle,
+incremental overlap, external workspaces, legacy/magicless frames and complete
+upstream parity remain outside this milestone.
+Evidence: `evidence/2026-10-27-dictionary-in-place-closure.json`.

@@ -66,8 +66,8 @@ Bounded dictionary-free qualification and layout differences are recorded in
 [the validation report](docs/in-place-output-validation.md).
 Persistent raw/prepared dictionaries are available through
 `decompress_in_place_with_dictionary` and its independent-allocator variant; see
-[dictionary in-place usage](docs/dictionary-in-place-usage.md). Final qualification
-for this extension remains in progress in `TODO.md`.
+[dictionary in-place usage](docs/dictionary-in-place-usage.md). Its bounded qualification is recorded in
+[the dictionary in-place report](docs/dictionary-in-place-validation.md).
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
 `decompression_margin` scans standard/skippable frame structure without allocating
 to compute sufficient suffix-input overlap overhead. It does not validate decoded

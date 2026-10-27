@@ -141,21 +141,12 @@ Qualification, measurements and limitations are in
 The final receipt is `docs/evidence/2026-10-27-in-place-output-closure.json`.
 Complete upstream migration remains open.
 
-## Module 29: persistent dictionaries in one-shot in-place output
-
-Design and ownership precede implementation in `docs/dictionary-in-place-design.md`
-and `docs/data-structures.md`. Promote only after Module 28 closes. The single
-mutable suffix-input owner remains unchanged; dictionaries are independently
-borrowed persistent selections, not overlapping prefix storage.
-
-- [x] Record dictionary/history composition, immutable entropy fallback, independent allocator ownership and native contracts before implementation.
-- [x] Implement checked dictionary-history resumption and private frame selection without handle clones or copied dictionary history.
-- [x] Expose dictionary-backed in-place wrappers with lifetime/alias documentation, exact bounds, frame reset and scratch-failure qualification.
-- [x] Qualify real shared-buffer normal/sanitized native layouts and replay the bounded dictionary corpus with explicit differences.
-- [x] Qualify actual dictionary crossings and overlap under foreign Miri and concrete no-atomics code generation.
-- [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [x] Compare frozen in-place/direct dictionary workloads, source restoration and independent allocation ledgers across retained backends and independent repeats.
-- [ ] Reconcile bounded dictionary in-place coverage and decompose the next missing contract without claiming complete upstream parity.
+Module 29 is complete within its bounded persistent dictionary in-place scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification and measurements are in `docs/dictionary-in-place-validation.md`
+and `docs/dictionary-in-place-benchmarks.md`. The final receipt is
+`docs/evidence/2026-10-27-dictionary-in-place-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 30: checked frame metadata and decompressed-size bounds
 

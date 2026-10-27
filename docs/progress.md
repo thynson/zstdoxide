@@ -1362,3 +1362,34 @@ legacy input and complete upstream parity remain separate work.
 
 Details: `in-place-output-validation.md`, `in-place-output-benchmarks.md`, and
 `evidence/2026-10-27-in-place-output-closure.json`.
+
+## Module 29: persistent dictionaries in in-place output complete (2026-10-27)
+
+Persistent raw/prepared dictionaries remain immutably borrowed while one exclusive
+caller buffer holds encoded suffix and decoded prefix. Frame selection validates
+IDs, resets repeat offsets and applies immutable entropy fallback without cloned
+handles, copied dictionary history or output allocation. Dictionary and scratch
+allocators remain independent; fallible scratch is released on each failure.
+
+All 72 final commands pass, including safe/all and 21 isolated complete suites,
+true no_std and strict Clippy, safe/all release and formatting. Every full/release
+suite reports 1,676 passed / 64 ignored across 97 groups. Normal/sanitized native
+helpers qualify 1,836 shared-buffer layouts; explicit empty-input/window-expiry
+and unused-suffix differences are retained. All 12,063 pinned dictionary corpus
+files execute in safe/all release with zero skips. Prefix selections remain
+outside this in-place supplement. Four foreign Miri and four core+alloc/actual
+ARM artifact checks pass on the final test source.
+
+All 23 primary and two independent-repeat backends have matching output and
+allocation qualification, with separately timed restoration and combined modes.
+All/safe nonempty median-latency geometric mean ratios: primary in-place-decode 0.9969; primary in-place-with-restore 0.9597; repeat in-place-decode 1.0237; repeat in-place-with-restore 1.0530.
+Fixed-order host measurements establish no universal unsafe speedup.
+
+The closure rehashes focused, matrix and measurement archives and matches final
+integrated production/tests. Rejected helper/test attempts remain historical;
+no unexecuted check or ignored adapter is credited as passing. The completed
+checklist is cleared; Module 30 retains its structural-query decomposition.
+Prefix in-place lifecycle, incremental overlap, workspaces and complete upstream
+library/CLI parity remain open. See `dictionary-in-place-validation.md`,
+`dictionary-in-place-benchmarks.md` and
+`evidence/2026-10-27-dictionary-in-place-closure.json`.
