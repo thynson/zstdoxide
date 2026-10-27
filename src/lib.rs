@@ -100,6 +100,8 @@ mod huffman_encode;
 #[cfg(test)]
 mod in_place_buffer;
 #[cfg(test)]
+mod in_place_decode;
+#[cfg(test)]
 #[path = "../tests/support/lazy_frame_oracle.rs"]
 mod lazy_frame_oracle_fixture;
 #[cfg(test)]

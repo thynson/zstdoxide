@@ -25,3 +25,20 @@ Earlier standalone movement qualification is retained separately in the prior
 session; final integrated platform/full-feature checks remain separate.
 
 Evidence: `evidence/2026-10-27-in-place-storage.json`.
+
+## Private frame coordinator
+
+The frame loop copies metadata into values before writes. Compressed blocks
+resume history in the mutable left split and retain their encoded payload in the
+immutable right split, then publish the actual checked endpoint after borrows
+end. Raw blocks permit overlap; all later encoded bytes remain protected. Frame
+boundaries reset match eligibility, and frame-local output validates content size
+and checksum. Scratch owners retain existing fallible allocation.
+
+Six private-loop tests pass in safe/move/history/combined builds, including real
+raw overlap, RLE/empty boundaries, native entropy fixtures at sufficient margin,
+concatenation/skips, compressed blocks, malformed ranges and insufficient fences.
+The coordinator remains test-gated pending the public API; complete regression
+and independent native same-allocation qualification are separate.
+
+Evidence: `evidence/2026-10-27-in-place-engine.json`.

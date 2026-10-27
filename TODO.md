@@ -144,7 +144,7 @@ dictionary/prefix in-place and incremental overlap remain separate contracts.
 - [x] Analyze pinned margin/block protection, single-buffer ownership, checked overlap and conservative scope before implementation.
 - [x] Implement an allocation-free checked framing/margin scan with structural versus semantic validation boundaries and pinned native comparisons.
 - [x] Implement checked resumable slice history and one-buffer raw movement with independent safe/unsafe storage and rejection-before-write invariants.
-- [ ] Integrate a private frame/block loop using disjoint compressed payload/history borrows, actual raw overlap and unread-input fences.
+- [x] Integrate a private frame/block loop using disjoint compressed payload/history borrows, actual raw overlap and unread-input fences.
 - [ ] Expose suffix-input in-place APIs with exact options, alias/lifetime documentation, malformed bounds and scratch failure qualification.
 - [ ] Port the original single/two-frame assertions and independently qualify normal/sanitized native shared-buffer layouts and real guards.
 - [ ] Qualify every isolated feature and all features, full/release regression, true no_std, strict Clippy, foreign Miri and concrete no-atomics output.
