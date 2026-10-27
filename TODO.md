@@ -199,6 +199,21 @@ and borrowed-slice utilities add no context, workspace or streaming-bound promis
 - [ ] Compare deterministic arithmetic and writing workloads across retained safe/unsafe backends and independent repeats after actual CPU barriers.
 - [ ] Reconcile bounded utility coverage and decompose the next missing contract without claiming complete upstream parity.
 
+## Module 32: reusable one-shot dictionary and prefix selection
+
+Ownership and call-versus-frame lifecycle are recorded before implementation in
+`docs/one-shot-selection-design.md` and `docs/data-structures.md`. Promote only
+after Module 31 closes; this coordinator does not retain decoder scratch.
+
+- [x] Analyze native call-level prefix consumption, persistent ownership and transient call borrows before implementation.
+- [ ] Implement plain checked selection transitions and call claims without handle clones or copied history.
+- [ ] Expose one-shot direct/in-place coordinator methods with exact attempt consumption, lifetime/guard and independent allocator qualification.
+- [ ] Qualify persistent/prefix lifecycle schedules using normal/sanitized native contexts and explicit subsequent-call observations.
+- [ ] Qualify real ownership transitions and overlapping output under foreign Miri and concrete no-atomics code generation.
+- [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
+- [ ] Compare deterministic coordinator/output workloads with ownership ledgers, restoration/setup accounting and independent repeats after actual CPU barriers.
+- [ ] Reconcile bounded one-shot selection coverage and decompose the next missing contract without claiming native workspace or full upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

@@ -3979,3 +3979,21 @@ without constructing invalid huge slices. This transient serialization adds no
 owned storage structure or allocator; keep it core-only and forbid unsafe code.
 Native counterpart: ZSTD_writeSkippableFrame. Error precedence is explicit Rust
 policy, not native numeric-code equivalence. See `frame-utilities-design.md`.
+
+## Module 32: one-shot selection owner and transient call claim
+
+`OneShotDecoder<D>` owns copied DecodeOptions and exactly one private selection:
+none, persistent D, or next-call D. D implements the sealed DictionaryHandle and
+may be a shared owner or a borrowed immutable view; no Clone bound is needed.
+Replacement drops the previous owner. No compressed input, output or scratch
+allocator is retained. Existing one-shot engines own all per-call frame/scratch
+state. The coordinator is not a reusable native scratch workspace.
+
+A transient call record borrows persistent D or owns a removed next-call D.
+The latter is removed before any attempted decode and lives through all frames
+in that call, then drops on success/error/unwind. A failed call cannot reinstall
+it. These plain ownership enums have shared safe/unsafe representations; their
+work delegates to separately selectable storage backends without raw operations.
+Native counterparts are ZSTD_getDDict, ZSTD_decompressDCtx and
+ZSTD_DCtx_refPrefix_advanced. Unlike incremental prefixes, next-call selection is
+consumed even by skippable-only/empty attempts. See `one-shot-selection-design.md`.
