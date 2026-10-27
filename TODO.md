@@ -141,7 +141,7 @@ Module 26 closes.
 - [x] Replay all dictionary corpus branches with a labelled fixed-fragment supplement and unchanged tail selectors.
 - [x] Qualify prefix ownership and matches under foreign Miri and concrete no-atomics code generation.
 - [x] Qualify safe/isolated/all full and release regression, no_std and strict Clippy.
-- [ ] Compare frozen whole/fragmented prefix workloads and ledgers using retained safe/unsafe executables and independent repeats.
+- [x] Compare frozen whole/fragmented prefix workloads and ledgers using retained safe/unsafe executables and independent repeats.
 - [ ] Reconcile bounded coverage and decompose the next missing caller-output contract without claiming complete parity.
 
 ## Module 28: dictionary-free one-shot in-place decompression
