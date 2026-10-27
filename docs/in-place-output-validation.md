@@ -133,3 +133,12 @@ separate explicit execution receipts; ignored tests are not credited as passes.
 The preparation initially rejected an older test snapshot before dispatch; that
 rejection is retained, followed by complete source/test reconciliation.
 Evidence: `evidence/2026-10-27-in-place-feature-matrix.json`.
+
+## Measured deterministic comparisons
+
+All 23 retained primary backends and independently rebuilt safe/all repeats have
+identical clock-free output/allocation qualification and complete raw timing
+records. Source restoration is separately timed and included in a combined mode.
+Fresh primary/repeat CPU barriers precede sequential measurements. See
+`in-place-output-benchmarks.md`; the host results do not establish a universal
+unsafe speedup. Evidence: `evidence/2026-10-27-in-place-benchmarks.json`.
