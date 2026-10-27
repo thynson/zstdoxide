@@ -58,7 +58,8 @@ shared dictionary or borrowed view. Reset preserves the selection and encoded
 input capacity while releasing frame-local entropy overrides; dictionary payload
 capacity is reported separately from scratch. `with_prefix` and `with_prefix_in` select a single-use
 prefix; `set_prefix` and `set_dictionary` replace selections at clean frame
-boundaries. Prefix full-matrix qualification remains in progress in `TODO.md`.
+boundaries. Bounded prefix qualification and lifecycle differences are recorded in
+[the validation report](docs/stable-prefix-output-validation.md).
 Overlapping in-place decoding remains a separate contract.
 `FrameHeader::parse` exposes validated metadata without decoding the frame.
 Allocation failures and corrupt, truncated, or over-limit input return `Error`.

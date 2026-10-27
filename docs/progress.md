@@ -1299,3 +1299,34 @@ contracts stay open.
 
 Details: `stable-dictionary-output-validation.md`, `stable-dictionary-output-benchmarks.md`, and
 `evidence/2026-10-26-stable-dictionary-output-closure.json`.
+
+## Module 27: bounded single-use prefixes in stable borrowed output complete (2026-10-27)
+
+The scoped API and ownership contract are integrated with default-safe Rust and
+no_std plus alloc. Exact destination/options bounds, malformed inputs, allocator
+failures and independent dictionary/slice storage configurations are qualified
+where applicable. Native helpers remain external test oracles pinned to v1.5.7.
+Foreign Miri and concrete thumbv6m core/alloc code generation are interpretation
+and code-generation evidence, not native foreign hardware execution.
+
+Complete regression reports 1,628 passed and 61 explicitly ignored
+tests across 91 result groups per configuration. Safe, all and twenty
+isolated unsafe backends have qualified regression/no_std/Clippy; formatting and
+release gates are retained in the validation report. External corpus runs have
+separate explicit receipts. Source snapshots and unsuccessful preparatory attempts
+remain distinguishable from final successful runs.
+
+The frozen benchmark compares all 22 primary backends and independently rebuilt
+safe/all repeats with equal output and allocation qualification. All/safe
+geometric mean latency ratios are: primary whole 0.9807; primary fragmented 0.9877; repeat whole 0.9846; repeat fragmented 1.0045. Host timing variation,
+fixed order and unrelated desktop work prevent a universal unsafe-speedup claim.
+
+The final receipt rehashes this module's archives and links the predecessor
+closure while binding integrated production to the final checks and measured
+executables. The completed checklist is cleared; Module 28's design and
+decomposition remain recorded before its implementation is promoted. Complete
+upstream migration, unsupported C workspace/ABI behavior and remaining roadmap
+contracts stay open.
+
+Details: `stable-prefix-output-validation.md`, `stable-prefix-output-benchmarks.md`, and
+`evidence/2026-10-26-stable-prefix-output-closure.json`.

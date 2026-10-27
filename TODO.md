@@ -127,22 +127,12 @@ Qualification, measured comparisons and remaining limitations are in
 The final receipt is `docs/evidence/2026-10-26-stable-dictionary-output-closure.json`.
 Complete upstream migration remains open.
 
-## Module 27: single-use prefixes in stable borrowed output
-
-Design precedes implementation in `docs/stable-prefix-design.md` and
-`docs/data-structures.md`. Keep predecessors frozen and promote only after
-Module 26 closes.
-
-- [x] Define one-owner attachment states, exact claim/release timing, reset and transactional configuration boundaries.
-- [x] Implement and independently verify plain attachment ownership transitions without cloning persistent handles.
-- [x] Integrate private prefix claim, frame completion and reset with existing dictionary-free/persistent behavior.
-- [x] Expose shared/view prefix constructors and boundary replacement with lifetime, allocator and malformed-input qualification.
-- [x] Independently qualify pinned normal/sanitized stable-prefix outputs and preserve documented lifecycle differences.
-- [x] Replay all dictionary corpus branches with a labelled fixed-fragment supplement and unchanged tail selectors.
-- [x] Qualify prefix ownership and matches under foreign Miri and concrete no-atomics code generation.
-- [x] Qualify safe/isolated/all full and release regression, no_std and strict Clippy.
-- [x] Compare frozen whole/fragmented prefix workloads and ledgers using retained safe/unsafe executables and independent repeats.
-- [ ] Reconcile bounded coverage and decompose the next missing caller-output contract without claiming complete parity.
+Module 27 is complete within its bounded single-use prefixes in stable borrowed output scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification, measured comparisons and remaining limitations are in
+`docs/stable-prefix-output-validation.md` and `docs/stable-prefix-output-benchmarks.md`.
+The final receipt is `docs/evidence/2026-10-26-stable-prefix-output-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 28: dictionary-free one-shot in-place decompression
 
