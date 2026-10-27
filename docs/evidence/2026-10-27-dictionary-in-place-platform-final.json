@@ -1,0 +1,1177 @@
+{
+  "status": "passed",
+  "stage": "platform",
+  "recorded_utc": "2026-10-27T02:34:43.944034+00:00",
+  "production_source": {
+    "src/greedy_state.rs": "4ba31ec4cc1c60e5d0d81e38e93c114d7dbdc1f4e8e7f3567aafcbcbc27ead05",
+    "src/slice_history.rs": "d7fb6fb45192a5e4de43857729f707e429184c147cd42a5e01f2719e9f5e93ab",
+    "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+    "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+    "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+    "src/stream.rs": "088a6bbe9a8cef03a081d68d58f7c29232c838e3b7fd25bd60c1b220841c6632",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/slice_decode.rs": "e5c520c4317e3718d341dc18efb008aef3175ca0b12e517ba4e2dc0fcc181e13",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/ultra2_retained_state.rs": "121e6bcfed9297c23f4d3aaeff5168dfaf12cc45e67230c02309a8312c810b64",
+    "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+    "src/tree_source.rs": "e8ff59ed5de930faaca3ff89590ea5c208a13c75c06b9acc3f3665dd7761c4c0",
+    "src/sequence_plan.rs": "0af5935553bb8b0aa931a60355e8bf1b76c62f53e0d17c3fb477e1119e3f0bdf",
+    "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/in_place_buffer.rs": "18f3b15df242eedd5085e4dfaf1c8746ddecac2ad6bd5b5f8188019ce8269f1e",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/greedy_parse.rs": "0555b480e7c93683cdd29ec863ff8235f983b7bc579a047ef69c883e365211bb",
+    "src/greedy_block.rs": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+    "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+    "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+    "src/in_place_decode.rs": "26d848204044944a5f6bebfcd5f7be0b3e83cff45516b3e06c438c03131b1566",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+    "src/block_entropy.rs": "9a8dbdaf37c75f09aa18199d7a6b6701621267b55e5090bb0847317c4a45e538",
+    "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+    "src/lib.rs": "ead59cb08ef996f9f458745844207f484bd38e9d3d1feda0235774b75f6a1ede",
+    "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+    "src/optimal_short_key.rs": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434",
+    "src/optimal_retained.rs": "137308d223bc5e2182b2e9ff531ab06c0c95b6665a364ec65bacb711eb176cf6",
+    "src/ultra2_retained.rs": "69a889ff4e8e77720e7a55f2e0ce7c79049b813c9f33b1e24b14f8491ec5ed39",
+    "src/optimal_search.rs": "d33fb024fe4f55120417a0e3150ce8758e9cb7079a40521f26d1a2761901f992",
+    "src/ultra2_frame_plan.rs": "f3b704e167db719fcc10b19cc91c292c8fa7ac63927ec7f2c9a9622bb32c21a6",
+    "src/optimal_parse.rs": "99c2a92137115d50194e897df70403f3631127e5b7a7da058e5aee507a2567ab",
+    "src/optimal_path_layout.rs": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5",
+    "src/optimal_price.rs": "d389ec0b49194a65c506c369531ae68a42ec92f6dd06531333ddbc93c018712e",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/sequence_context.rs": "cfa51f7f78f2488a67b42e3dce4569f2641895b161fb92f9c69380d44a8fc47b",
+    "src/optimal_state.rs": "72ccaab4558ac4ae8ac691cafd1a0b4753c3281d4e86ed0cefcf602cccdbe8e7",
+    "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+    "src/reference_search.rs": "534f5cfaefbca265d6498f6ec4214aad9a783ce9aca7da6eba6d745f033ff818",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/tree_search.rs": "c5fabb7ec63df89887f94d42f86e5bc66aea244543e061bff340d5fe5a7dc2bc",
+    "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+    "src/reference_tree.rs": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f",
+    "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/tree_layout.rs": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26",
+    "src/greedy_search.rs": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+    "src/history.rs": "07b640adba19ce0fcbf12ef6cb3442818dd608f2348adbe08707a24456b04daf",
+    "src/optimal_retained_plan.rs": "f2d5f8de81be4ccbd30517cae2d45694b341bc27dd26a6b9e01645512bd2fd8c",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/optimal_paths.rs": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9",
+    "src/optimal_plan.rs": "e11c456b8ee9cfb4f3195b15f36873e87ed50ce701559760d157f6d36cd70c68",
+    "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/ultra2_state.rs": "b7ac2e5b1e61630d8d30e263f9891acd7355c2cfe321c6c4a6d008b0f95eb6eb",
+    "src/ultra2_retained_plan.rs": "ed06ed3543896b2c1d16049c0e77772824afa29261068cabc9285d894c0677b6",
+    "src/optimal_search_layout.rs": "005fe4f977caae25123d207b3d6f431f5234c9da00d3d1eacdf0f15122a903ba",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/decode.rs": "d1382c17d61026496cd62faad5c1bbfaee87fd6229dfc1059d336b9e131686db",
+    "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "src/ultra2_plan.rs": "acf639e33dc378275508a85f568a4f61ef074aba97510c4a5dc9fe7b05d9f94f",
+    "src/tree_sort.rs": "6781699dac123560ea5ee288cd22f4cafdfe27016c4788503bd0548982f65379",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/optimal_matches.rs": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781",
+    "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+    "src/slice_attachment.rs": "ece2c80fa52a42bcf5e090dfdada0e6f666aba7b691893a4e071083ffb123453",
+    "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+    "src/optimal_frequencies.rs": "02815487254d9f621e6d0ce0e14edbe302e94cb5b012884242a790081cd671c4",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/greedy_plan.rs": "d5249a555e18abc82bbbcff145921c3d2a002212819987541b9b77359eaec39e",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+    "src/reference_frame_encode.rs": "4ed9ced3dd754b0c7dafcc61c927c05f93b8fb1f337b3f9f563c1645a2a2c202",
+    "src/optimal_retained_state.rs": "efa3aa8506bd085690805bf7a64287a5593af227abd4cb07ff5b91f46fe0c5e7",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/reference_encode.rs": "3629af9d2d07ab64a570e5f04b9f97fa60a0651845c63a6dee4158ebe557e810",
+    "src/frame_layout.rs": "ec1687dfc7cec7ad59d06effbfb49716b9b41e0580613b8a8f7e37befdd31556",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4"
+  },
+  "complete_source": {
+    "Cargo.toml": "80403f1c31049101b0b8dff9ee1368e78e54c7360ca0884076047ece76a6c846",
+    "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "tests/dictionary_in_place_output_platform.rs": "0a8e1b1a747f1d77b539d5c76349d2721cffc39eca525dcf733193de4c723a6b",
+    "benches/allocators.rs": "0034e49471d467cbfafb6c57396b8f99ce172a0d78f6b197155bdc7ef53875b6",
+    "benches/search.rs": "08c3109741b578c7c3d4e0ef394c6e0d95310d7e9237d02fc71032f0db002063",
+    "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a",
+    "src/greedy_state.rs": "4ba31ec4cc1c60e5d0d81e38e93c114d7dbdc1f4e8e7f3567aafcbcbc27ead05",
+    "src/slice_history.rs": "d7fb6fb45192a5e4de43857729f707e429184c147cd42a5e01f2719e9f5e93ab",
+    "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+    "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+    "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+    "src/stream.rs": "088a6bbe9a8cef03a081d68d58f7c29232c838e3b7fd25bd60c1b220841c6632",
+    "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+    "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+    "src/slice_decode.rs": "e5c520c4317e3718d341dc18efb008aef3175ca0b12e517ba4e2dc0fcc181e13",
+    "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+    "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+    "src/ultra2_retained_state.rs": "121e6bcfed9297c23f4d3aaeff5168dfaf12cc45e67230c02309a8312c810b64",
+    "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+    "src/tree_source.rs": "e8ff59ed5de930faaca3ff89590ea5c208a13c75c06b9acc3f3665dd7761c4c0",
+    "src/sequence_plan.rs": "0af5935553bb8b0aa931a60355e8bf1b76c62f53e0d17c3fb477e1119e3f0bdf",
+    "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+    "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+    "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+    "src/in_place_buffer.rs": "18f3b15df242eedd5085e4dfaf1c8746ddecac2ad6bd5b5f8188019ce8269f1e",
+    "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+    "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+    "src/greedy_parse.rs": "0555b480e7c93683cdd29ec863ff8235f983b7bc579a047ef69c883e365211bb",
+    "src/greedy_block.rs": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+    "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+    "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+    "src/in_place_decode.rs": "26d848204044944a5f6bebfcd5f7be0b3e83cff45516b3e06c438c03131b1566",
+    "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+    "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+    "src/block_entropy.rs": "9a8dbdaf37c75f09aa18199d7a6b6701621267b55e5090bb0847317c4a45e538",
+    "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+    "src/lib.rs": "ead59cb08ef996f9f458745844207f484bd38e9d3d1feda0235774b75f6a1ede",
+    "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+    "src/optimal_short_key.rs": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434",
+    "src/optimal_retained.rs": "137308d223bc5e2182b2e9ff531ab06c0c95b6665a364ec65bacb711eb176cf6",
+    "src/ultra2_retained.rs": "69a889ff4e8e77720e7a55f2e0ce7c79049b813c9f33b1e24b14f8491ec5ed39",
+    "src/optimal_search.rs": "d33fb024fe4f55120417a0e3150ce8758e9cb7079a40521f26d1a2761901f992",
+    "src/ultra2_frame_plan.rs": "f3b704e167db719fcc10b19cc91c292c8fa7ac63927ec7f2c9a9622bb32c21a6",
+    "src/optimal_parse.rs": "99c2a92137115d50194e897df70403f3631127e5b7a7da058e5aee507a2567ab",
+    "src/optimal_path_layout.rs": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5",
+    "src/optimal_price.rs": "d389ec0b49194a65c506c369531ae68a42ec92f6dd06531333ddbc93c018712e",
+    "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+    "src/sequence_context.rs": "cfa51f7f78f2488a67b42e3dce4569f2641895b161fb92f9c69380d44a8fc47b",
+    "src/optimal_state.rs": "72ccaab4558ac4ae8ac691cafd1a0b4753c3281d4e86ed0cefcf602cccdbe8e7",
+    "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+    "src/reference_search.rs": "534f5cfaefbca265d6498f6ec4214aad9a783ce9aca7da6eba6d745f033ff818",
+    "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+    "src/tree_search.rs": "c5fabb7ec63df89887f94d42f86e5bc66aea244543e061bff340d5fe5a7dc2bc",
+    "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+    "src/reference_tree.rs": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f",
+    "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+    "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+    "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+    "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+    "src/tree_layout.rs": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26",
+    "src/greedy_search.rs": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+    "src/history.rs": "07b640adba19ce0fcbf12ef6cb3442818dd608f2348adbe08707a24456b04daf",
+    "src/optimal_retained_plan.rs": "f2d5f8de81be4ccbd30517cae2d45694b341bc27dd26a6b9e01645512bd2fd8c",
+    "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+    "src/optimal_paths.rs": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9",
+    "src/optimal_plan.rs": "e11c456b8ee9cfb4f3195b15f36873e87ed50ce701559760d157f6d36cd70c68",
+    "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+    "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+    "src/ultra2_state.rs": "b7ac2e5b1e61630d8d30e263f9891acd7355c2cfe321c6c4a6d008b0f95eb6eb",
+    "src/ultra2_retained_plan.rs": "ed06ed3543896b2c1d16049c0e77772824afa29261068cabc9285d894c0677b6",
+    "src/optimal_search_layout.rs": "005fe4f977caae25123d207b3d6f431f5234c9da00d3d1eacdf0f15122a903ba",
+    "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+    "src/decode.rs": "d1382c17d61026496cd62faad5c1bbfaee87fd6229dfc1059d336b9e131686db",
+    "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+    "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+    "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+    "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+    "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+    "src/ultra2_plan.rs": "acf639e33dc378275508a85f568a4f61ef074aba97510c4a5dc9fe7b05d9f94f",
+    "src/tree_sort.rs": "6781699dac123560ea5ee288cd22f4cafdfe27016c4788503bd0548982f65379",
+    "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+    "src/optimal_matches.rs": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781",
+    "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+    "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+    "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+    "src/slice_attachment.rs": "ece2c80fa52a42bcf5e090dfdada0e6f666aba7b691893a4e071083ffb123453",
+    "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+    "src/optimal_frequencies.rs": "02815487254d9f621e6d0ce0e14edbe302e94cb5b012884242a790081cd671c4",
+    "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+    "src/greedy_plan.rs": "d5249a555e18abc82bbbcff145921c3d2a002212819987541b9b77359eaec39e",
+    "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+    "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+    "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+    "src/reference_frame_encode.rs": "4ed9ced3dd754b0c7dafcc61c927c05f93b8fb1f337b3f9f563c1645a2a2c202",
+    "src/optimal_retained_state.rs": "efa3aa8506bd085690805bf7a64287a5593af227abd4cb07ff5b91f46fe0c5e7",
+    "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+    "src/reference_encode.rs": "3629af9d2d07ab64a570e5f04b9f97fa60a0651845c63a6dee4158ebe557e810",
+    "src/frame_layout.rs": "ec1687dfc7cec7ad59d06effbfb49716b9b41e0580613b8a8f7e37befdd31556",
+    "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+    "test-support/allocator/Cargo.toml": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292",
+    "test-support/allocator/Cargo.lock": "6fa35d5b169b38383adf0f2b1e06523ec925ea71be364f3f7fd45039afee125e",
+    "test-support/allocator/README.md": "7a922896a4258b96ce39702be8cae20263a7685cbc23b0a19ae08d21c00121d8",
+    "test-support/allocator/.gitignore": "07d64eb09a56c853b7853a47276799b38d7d6d25a4314b0c1abc10432c214e17",
+    "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+    "tests/upstream/dictionaries/trained.dict": "6dcd94021a6da11ea5d2841af674d05fe7387c1307ca986606677e17db3c99e5",
+    "tests/upstream/dictionaries/trained-sample.expected": "f943a81b7d433dc7324439163d330a7d216a4be507cd6c7648c2b2d07d611ea3",
+    "tests/upstream/dictionaries/duplicate-reps.zst": "6d7bb7ed10b198040b3de5347ede0026146a8fb624d4c796b92d1fba4fdc7871",
+    "tests/upstream/dictionaries/dictionary-to-frame-eviction.zst": "02f0266f04056099e9045b1a1fd46634362d14587a67c66e0ab71c109ba3babb",
+    "tests/upstream/dictionaries/persistent-concatenation.expected": "8770100179d360221aa8283b3800ea34baa6e141d87992db12fb5ef68d4aeff6",
+    "tests/upstream/dictionaries/dictionary-treeless-four-streams.expected": "b21705bd5847822204cd3a3e73c3a70abd83a905c84cc05f8d818d77452760ce",
+    "tests/upstream/dictionaries/prefix-reused-concatenation.expected": "ad2b834f1f7f01339e0b7d21bb8942b7c8b21aa3d833636f727aa5909aecd39e",
+    "tests/upstream/dictionaries/duplicate-reps-initial.zst": "6a59437ca8d618b3d1c8450333325cdad8683017820ae9bb68237c898f5ae9b2",
+    "tests/upstream/dictionaries/dictionary-repeat-sequences.expected": "2c1b72f6cfa8e5c92c6a75e465d7f1424727cd533a0bca4660904f64cb2a75ef",
+    "tests/upstream/dictionaries/dictionary-to-frame-eviction.naive-ring": "2c6bc760a61f62d0210cb8aeb17955bc94d93e680fccf7969ba9896d08942ed3",
+    "tests/upstream/dictionaries/prefix-first.expected": "5857639b1470c9af6098b974973bd1c523cd4fbcfe2e57aeabb3a608f1301050",
+    "tests/upstream/dictionaries/dictionary-repeat-sequences.zst": "bd114a7cfa776fa7d0ce3a1c217e5a4cb9066075f6c7f3013fa789a2c90518fe",
+    "tests/upstream/dictionaries/prefix-reused-concatenation.zst": "7e1c4fe8131617d431bed86bce836b57883e8d393c6d9b420d17311f01cd38f9",
+    "tests/upstream/dictionaries/p0-far-dictionary.zst": "5312be3b16b156a86eda854bf5e2aca914d10323ddf855971cc021d15452d54e",
+    "tests/upstream/dictionaries/prefix-once-concatenation.expected": "ad2b834f1f7f01339e0b7d21bb8942b7c8b21aa3d833636f727aa5909aecd39e",
+    "tests/upstream/dictionaries/raw-small-window.expected": "c1f7ae93af4c1686c882edf61ce40cc06774a3ebdc7581aa19d1966f4ad7a33d",
+    "tests/upstream/dictionaries/dictionary-treeless-literals.zst": "81314e37f639fd33ee0230870de673f0f6f98f3295d38f3217359c9cd6a684af",
+    "tests/upstream/dictionaries/p-window-plus-one.zst": "8eed9e2035b6a602f4ba81b85254940ca22b64ebaeffe55a0c7964c8fb05ed23",
+    "tests/upstream/dictionaries/formatted-id.expected": "c1f7ae93af4c1686c882edf61ce40cc06774a3ebdc7581aa19d1966f4ad7a33d",
+    "tests/upstream/dictionaries/prefix-second.zst": "477210205d835b2981ddc4cb3085f481d20a9a5915a6224a2f3efa95c40a05b6",
+    "tests/upstream/dictionaries/p-window-minus-one.expected": "db27aba562fd02f471783fd9f9300c2870f05805a4fed4120601b62bd1ee8f92",
+    "tests/upstream/dictionaries/duplicate-reps.expected": "49abd65bbf7f7e40c7055093ed2e3fd75f2f602f2c5fcf955c213e3135eb03f7",
+    "tests/upstream/dictionaries/dictionary-treeless-four-streams.zst": "4eb33eae8020f1c128550138abce034a3ca88ad8719307029d1d38d030ccc0a2",
+    "tests/upstream/dictionaries/boundary-dictionary.raw": "cc8d37a77795823801a8649ca0aafe269432d1ee941f345830fe4d2414f99f76",
+    "tests/upstream/dictionaries/p-window-equal.expected": "76e4415f7850c40758f134060961bad6234f329552b24178b4b44fd194b0d2e5",
+    "tests/upstream/dictionaries/raw-small-window.zst": "698f5a0097fa6ed67cd0cc48aef91a906c8d743484624221b055f1c3b668ddc1",
+    "tests/upstream/dictionaries/output-distance-equals-window.expected": "e7c4393759ed0ef4b483d0ac3f26d1b829940212098554631c66c5ba8ee0583e",
+    "tests/upstream/dictionaries/prefix-second.expected": "5857639b1470c9af6098b974973bd1c523cd4fbcfe2e57aeabb3a608f1301050",
+    "tests/upstream/dictionaries/dictionary-treeless-literals.expected": "b21705bd5847822204cd3a3e73c3a70abd83a905c84cc05f8d818d77452760ce",
+    "tests/upstream/dictionaries/prefix-once-concatenation.zst": "b4eced81e7eb1d8ab5af6c9599f5bfbd214df71d3e4f4c77b318053e7c329ded",
+    "tests/upstream/dictionaries/manifest.json": "eb6eda57abc976e0a9086593b37b4d86ba5cdeb2673aa025f554417ae2baa761",
+    "tests/upstream/dictionaries/prefix-first.zst": "4ca1ef0b305f39b4bb8cf58494240efb5472df3a1eb7ee04337a98e505c2069a",
+    "tests/upstream/dictionaries/p-window-plus-one.expected": "86b72cd6bf84c14ac1ec3c89824332aa6d103c5122d185ceea313a72a2af2585",
+    "tests/upstream/dictionaries/dictionary-out-of-bounds.expected": "09fed4d15867a07e1726ef4a231648209a2f53918ea4354ffb8be6d0df0cf52d",
+    "tests/upstream/dictionaries/p0-far-dictionary.expected": "c70406763cd0f149b4caf62c4e1ffdb8c0c3402ac386569e09e701eb2779b6a7",
+    "tests/upstream/dictionaries/formatted-omitted-id.zst": "698f5a0097fa6ed67cd0cc48aef91a906c8d743484624221b055f1c3b668ddc1",
+    "tests/upstream/dictionaries/dictionary-to-frame-eviction.expected": "047dbd3bff210662e32b059eceb4178ccc6e7bf0292b51ba3f20e55382eb8895",
+    "tests/upstream/dictionaries/formatted-id.zst": "ebcc24b8ec1372f65bdcc8a774b7d576e0c0ef48cb4b29746c2053dbb843d45e",
+    "tests/upstream/dictionaries/p-window-minus-one.zst": "23befc9dec2a730795ed6a98538565732e9e6960441a752ed3c2228d5e90cc4d",
+    "tests/upstream/dictionaries/p-window-equal.zst": "2ab39c2f91f86f41b4adef0399abdacfeb262da41db16f88b7aeda56197a0110",
+    "tests/upstream/dictionaries/dictionary-out-of-bounds.zst": "d0229711471f8817661102674cc607160ab0128803ef44f976928d267a8ad2ea",
+    "tests/upstream/dictionaries/formatted.dict": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281",
+    "tests/upstream/dictionaries/training-samples.bin": "ae7e58c2469b8140a1fa25e4d69dc85bb7d3b510b6e28de3db7f82dd54f0e258",
+    "tests/upstream/dictionaries/trained-sample.zst": "2b35f275067c91bc4742b9967a04d1c78efa1b7c0a5fb502f22bf8d1f04abc4f",
+    "tests/upstream/dictionaries/output-distance-equals-window.zst": "2c13e6bf8f7fd044a0b50f480783aca4eff2b0024cf4da26853013c9570a604f",
+    "tests/upstream/dictionaries/duplicate-reps-initial.expected": "42452c6952e89a247f415c78d825abe91d4754fbd93d1671e517dac45106ea18",
+    "tests/upstream/dictionaries/formatted-omitted-id.expected": "c1f7ae93af4c1686c882edf61ce40cc06774a3ebdc7581aa19d1966f4ad7a33d",
+    "tests/upstream/dictionaries/persistent-concatenation.zst": "46916c28f775da7229fad6c586110be3fcb50639bb8e2891e0b75b93297e146e",
+    "tests/upstream/dictionaries/duplicate-reps.dict": "4c91b7e305f7810616a114cfc2a8b96320835928a53787bf96a89f09b711e264"
+  },
+  "records": {
+    "evidence.json": {
+      "status": "passed",
+      "source": {
+        "Cargo.toml": "80403f1c31049101b0b8dff9ee1368e78e54c7360ca0884076047ece76a6c846",
+        "Cargo.lock": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+        "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+        "tests/dictionary_in_place_output_platform.rs": "0a8e1b1a747f1d77b539d5c76349d2721cffc39eca525dcf733193de4c723a6b",
+        "benches/allocators.rs": "0034e49471d467cbfafb6c57396b8f99ce172a0d78f6b197155bdc7ef53875b6",
+        "benches/search.rs": "08c3109741b578c7c3d4e0ef394c6e0d95310d7e9237d02fc71032f0db002063",
+        "benches/backends.rs": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a",
+        "src/greedy_state.rs": "4ba31ec4cc1c60e5d0d81e38e93c114d7dbdc1f4e8e7f3567aafcbcbc27ead05",
+        "src/slice_history.rs": "d7fb6fb45192a5e4de43857729f707e429184c147cd42a5e01f2719e9f5e93ab",
+        "src/reference_frame.rs": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+        "src/strategy.rs": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+        "src/fast_state.rs": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+        "src/stream.rs": "088a6bbe9a8cef03a081d68d58f7c29232c838e3b7fd25bd60c1b220841c6632",
+        "src/huffman.rs": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+        "src/fse.rs": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+        "src/slice_decode.rs": "e5c520c4317e3718d341dc18efb008aef3175ca0b12e517ba4e2dc0fcc181e13",
+        "src/matchchain.rs": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+        "src/sequence_encode.rs": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+        "src/ultra2_retained_state.rs": "121e6bcfed9297c23f4d3aaeff5168dfaf12cc45e67230c02309a8312c810b64",
+        "src/lazy_select.rs": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+        "src/tree_source.rs": "e8ff59ed5de930faaca3ff89590ea5c208a13c75c06b9acc3f3665dd7761c4c0",
+        "src/sequence_plan.rs": "0af5935553bb8b0aa931a60355e8bf1b76c62f53e0d17c3fb477e1119e3f0bdf",
+        "src/fast_parse.rs": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+        "src/entropy_output.rs": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+        "src/constants.rs": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+        "src/in_place_buffer.rs": "18f3b15df242eedd5085e4dfaf1c8746ddecac2ad6bd5b5f8188019ce8269f1e",
+        "src/bitstream.rs": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+        "src/stream_decode.rs": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+        "src/greedy_parse.rs": "0555b480e7c93683cdd29ec863ff8235f983b7bc579a047ef69c883e365211bb",
+        "src/greedy_block.rs": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+        "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+        "src/encode.rs": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+        "src/double_fast_block.rs": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+        "src/double_fast_parse.rs": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+        "src/in_place_decode.rs": "26d848204044944a5f6bebfcd5f7be0b3e83cff45516b3e06c438c03131b1566",
+        "src/heap.rs": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+        "src/greedy_key.rs": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+        "src/block_entropy.rs": "9a8dbdaf37c75f09aa18199d7a6b6701621267b55e5090bb0847317c4a45e538",
+        "src/match_search.rs": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+        "src/lib.rs": "ead59cb08ef996f9f458745844207f484bd38e9d3d1feda0235774b75f6a1ede",
+        "src/fast_plan.rs": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+        "src/optimal_short_key.rs": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434",
+        "src/optimal_retained.rs": "137308d223bc5e2182b2e9ff531ab06c0c95b6665a364ec65bacb711eb176cf6",
+        "src/ultra2_retained.rs": "69a889ff4e8e77720e7a55f2e0ce7c79049b813c9f33b1e24b14f8491ec5ed39",
+        "src/optimal_search.rs": "d33fb024fe4f55120417a0e3150ce8758e9cb7079a40521f26d1a2761901f992",
+        "src/ultra2_frame_plan.rs": "f3b704e167db719fcc10b19cc91c292c8fa7ac63927ec7f2c9a9622bb32c21a6",
+        "src/optimal_parse.rs": "99c2a92137115d50194e897df70403f3631127e5b7a7da058e5aee507a2567ab",
+        "src/optimal_path_layout.rs": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5",
+        "src/optimal_price.rs": "d389ec0b49194a65c506c369531ae68a42ec92f6dd06531333ddbc93c018712e",
+        "src/fse_select.rs": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+        "src/sequence_context.rs": "cfa51f7f78f2488a67b42e3dce4569f2641895b161fb92f9c69380d44a8fc47b",
+        "src/optimal_state.rs": "72ccaab4558ac4ae8ac691cafd1a0b4753c3281d4e86ed0cefcf602cccdbe8e7",
+        "src/double_fast_plan.rs": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+        "src/reference_search.rs": "534f5cfaefbca265d6498f6ec4214aad9a783ce9aca7da6eba6d745f033ff818",
+        "src/sequences.rs": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+        "src/tree_search.rs": "c5fabb7ec63df89887f94d42f86e5bc66aea244543e061bff340d5fe5a7dc2bc",
+        "src/double_fast_state.rs": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+        "src/reference_tree.rs": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f",
+        "src/matchfinder.rs": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+        "src/training.rs": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+        "src/row_table.rs": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+        "src/fse_encode.rs": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+        "src/tree_layout.rs": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26",
+        "src/greedy_search.rs": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+        "src/history.rs": "07b640adba19ce0fcbf12ef6cb3442818dd608f2348adbe08707a24456b04daf",
+        "src/optimal_retained_plan.rs": "f2d5f8de81be4ccbd30517cae2d45694b341bc27dd26a6b9e01645512bd2fd8c",
+        "src/cursor.rs": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+        "src/optimal_paths.rs": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9",
+        "src/optimal_plan.rs": "e11c456b8ee9cfb4f3195b15f36873e87ed50ce701559760d157f6d36cd70c68",
+        "src/literal_encode.rs": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+        "src/huffman_encode.rs": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+        "src/ultra2_state.rs": "b7ac2e5b1e61630d8d30e263f9891acd7355c2cfe321c6c4a6d008b0f95eb6eb",
+        "src/ultra2_retained_plan.rs": "ed06ed3543896b2c1d16049c0e77772824afa29261068cabc9285d894c0677b6",
+        "src/optimal_search_layout.rs": "005fe4f977caae25123d207b3d6f431f5234c9da00d3d1eacdf0f15122a903ba",
+        "src/huffman_codebook.rs": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+        "src/decode.rs": "d1382c17d61026496cd62faad5c1bbfaee87fd6229dfc1059d336b9e131686db",
+        "src/reference_policy.rs": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+        "src/dictionary_train.rs": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+        "src/literal_header.rs": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+        "src/dictionary.rs": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+        "src/xxhash.rs": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+        "src/ultra2_plan.rs": "acf639e33dc378275508a85f568a4f61ef074aba97510c4a5dc9fe7b05d9f94f",
+        "src/tree_sort.rs": "6781699dac123560ea5ee288cd22f4cafdfe27016c4788503bd0548982f65379",
+        "src/frame.rs": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+        "src/optimal_matches.rs": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781",
+        "src/double_fast_tables.rs": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+        "src/stream_encode.rs": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+        "src/match_key.rs": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+        "src/slice_attachment.rs": "ece2c80fa52a42bcf5e090dfdada0e6f666aba7b691893a4e071083ffb123453",
+        "src/match_parse.rs": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+        "src/optimal_frequencies.rs": "02815487254d9f621e6d0ce0e14edbe302e94cb5b012884242a790081cd671c4",
+        "src/parameters.rs": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+        "src/greedy_plan.rs": "d5249a555e18abc82bbbcff145921c3d2a002212819987541b9b77359eaec39e",
+        "src/ring_history.rs": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+        "src/entropy_encode.rs": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+        "src/reference_chain.rs": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+        "src/reference_frame_encode.rs": "4ed9ced3dd754b0c7dafcc61c927c05f93b8fb1f337b3f9f563c1645a2a2c202",
+        "src/optimal_retained_state.rs": "efa3aa8506bd085690805bf7a64287a5593af227abd4cb07ff5b91f46fe0c5e7",
+        "src/bitwriter.rs": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+        "src/reference_encode.rs": "3629af9d2d07ab64a570e5f04b9f97fa60a0651845c63a6dee4158ebe557e810",
+        "src/frame_layout.rs": "ec1687dfc7cec7ad59d06effbfb49716b9b41e0580613b8a8f7e37befdd31556",
+        "src/parameters/presets.rs": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+        "test-support/allocator/Cargo.toml": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292",
+        "test-support/allocator/Cargo.lock": "6fa35d5b169b38383adf0f2b1e06523ec925ea71be364f3f7fd45039afee125e",
+        "test-support/allocator/README.md": "7a922896a4258b96ce39702be8cae20263a7685cbc23b0a19ae08d21c00121d8",
+        "test-support/allocator/.gitignore": "07d64eb09a56c853b7853a47276799b38d7d6d25a4314b0c1abc10432c214e17",
+        "test-support/allocator/src/lib.rs": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+        "tests/upstream/dictionaries/trained.dict": "6dcd94021a6da11ea5d2841af674d05fe7387c1307ca986606677e17db3c99e5",
+        "tests/upstream/dictionaries/trained-sample.expected": "f943a81b7d433dc7324439163d330a7d216a4be507cd6c7648c2b2d07d611ea3",
+        "tests/upstream/dictionaries/duplicate-reps.zst": "6d7bb7ed10b198040b3de5347ede0026146a8fb624d4c796b92d1fba4fdc7871",
+        "tests/upstream/dictionaries/dictionary-to-frame-eviction.zst": "02f0266f04056099e9045b1a1fd46634362d14587a67c66e0ab71c109ba3babb",
+        "tests/upstream/dictionaries/persistent-concatenation.expected": "8770100179d360221aa8283b3800ea34baa6e141d87992db12fb5ef68d4aeff6",
+        "tests/upstream/dictionaries/dictionary-treeless-four-streams.expected": "b21705bd5847822204cd3a3e73c3a70abd83a905c84cc05f8d818d77452760ce",
+        "tests/upstream/dictionaries/prefix-reused-concatenation.expected": "ad2b834f1f7f01339e0b7d21bb8942b7c8b21aa3d833636f727aa5909aecd39e",
+        "tests/upstream/dictionaries/duplicate-reps-initial.zst": "6a59437ca8d618b3d1c8450333325cdad8683017820ae9bb68237c898f5ae9b2",
+        "tests/upstream/dictionaries/dictionary-repeat-sequences.expected": "2c1b72f6cfa8e5c92c6a75e465d7f1424727cd533a0bca4660904f64cb2a75ef",
+        "tests/upstream/dictionaries/dictionary-to-frame-eviction.naive-ring": "2c6bc760a61f62d0210cb8aeb17955bc94d93e680fccf7969ba9896d08942ed3",
+        "tests/upstream/dictionaries/prefix-first.expected": "5857639b1470c9af6098b974973bd1c523cd4fbcfe2e57aeabb3a608f1301050",
+        "tests/upstream/dictionaries/dictionary-repeat-sequences.zst": "bd114a7cfa776fa7d0ce3a1c217e5a4cb9066075f6c7f3013fa789a2c90518fe",
+        "tests/upstream/dictionaries/prefix-reused-concatenation.zst": "7e1c4fe8131617d431bed86bce836b57883e8d393c6d9b420d17311f01cd38f9",
+        "tests/upstream/dictionaries/p0-far-dictionary.zst": "5312be3b16b156a86eda854bf5e2aca914d10323ddf855971cc021d15452d54e",
+        "tests/upstream/dictionaries/prefix-once-concatenation.expected": "ad2b834f1f7f01339e0b7d21bb8942b7c8b21aa3d833636f727aa5909aecd39e",
+        "tests/upstream/dictionaries/raw-small-window.expected": "c1f7ae93af4c1686c882edf61ce40cc06774a3ebdc7581aa19d1966f4ad7a33d",
+        "tests/upstream/dictionaries/dictionary-treeless-literals.zst": "81314e37f639fd33ee0230870de673f0f6f98f3295d38f3217359c9cd6a684af",
+        "tests/upstream/dictionaries/p-window-plus-one.zst": "8eed9e2035b6a602f4ba81b85254940ca22b64ebaeffe55a0c7964c8fb05ed23",
+        "tests/upstream/dictionaries/formatted-id.expected": "c1f7ae93af4c1686c882edf61ce40cc06774a3ebdc7581aa19d1966f4ad7a33d",
+        "tests/upstream/dictionaries/prefix-second.zst": "477210205d835b2981ddc4cb3085f481d20a9a5915a6224a2f3efa95c40a05b6",
+        "tests/upstream/dictionaries/p-window-minus-one.expected": "db27aba562fd02f471783fd9f9300c2870f05805a4fed4120601b62bd1ee8f92",
+        "tests/upstream/dictionaries/duplicate-reps.expected": "49abd65bbf7f7e40c7055093ed2e3fd75f2f602f2c5fcf955c213e3135eb03f7",
+        "tests/upstream/dictionaries/dictionary-treeless-four-streams.zst": "4eb33eae8020f1c128550138abce034a3ca88ad8719307029d1d38d030ccc0a2",
+        "tests/upstream/dictionaries/boundary-dictionary.raw": "cc8d37a77795823801a8649ca0aafe269432d1ee941f345830fe4d2414f99f76",
+        "tests/upstream/dictionaries/p-window-equal.expected": "76e4415f7850c40758f134060961bad6234f329552b24178b4b44fd194b0d2e5",
+        "tests/upstream/dictionaries/raw-small-window.zst": "698f5a0097fa6ed67cd0cc48aef91a906c8d743484624221b055f1c3b668ddc1",
+        "tests/upstream/dictionaries/output-distance-equals-window.expected": "e7c4393759ed0ef4b483d0ac3f26d1b829940212098554631c66c5ba8ee0583e",
+        "tests/upstream/dictionaries/prefix-second.expected": "5857639b1470c9af6098b974973bd1c523cd4fbcfe2e57aeabb3a608f1301050",
+        "tests/upstream/dictionaries/dictionary-treeless-literals.expected": "b21705bd5847822204cd3a3e73c3a70abd83a905c84cc05f8d818d77452760ce",
+        "tests/upstream/dictionaries/prefix-once-concatenation.zst": "b4eced81e7eb1d8ab5af6c9599f5bfbd214df71d3e4f4c77b318053e7c329ded",
+        "tests/upstream/dictionaries/manifest.json": "eb6eda57abc976e0a9086593b37b4d86ba5cdeb2673aa025f554417ae2baa761",
+        "tests/upstream/dictionaries/prefix-first.zst": "4ca1ef0b305f39b4bb8cf58494240efb5472df3a1eb7ee04337a98e505c2069a",
+        "tests/upstream/dictionaries/p-window-plus-one.expected": "86b72cd6bf84c14ac1ec3c89824332aa6d103c5122d185ceea313a72a2af2585",
+        "tests/upstream/dictionaries/dictionary-out-of-bounds.expected": "09fed4d15867a07e1726ef4a231648209a2f53918ea4354ffb8be6d0df0cf52d",
+        "tests/upstream/dictionaries/p0-far-dictionary.expected": "c70406763cd0f149b4caf62c4e1ffdb8c0c3402ac386569e09e701eb2779b6a7",
+        "tests/upstream/dictionaries/formatted-omitted-id.zst": "698f5a0097fa6ed67cd0cc48aef91a906c8d743484624221b055f1c3b668ddc1",
+        "tests/upstream/dictionaries/dictionary-to-frame-eviction.expected": "047dbd3bff210662e32b059eceb4178ccc6e7bf0292b51ba3f20e55382eb8895",
+        "tests/upstream/dictionaries/formatted-id.zst": "ebcc24b8ec1372f65bdcc8a774b7d576e0c0ef48cb4b29746c2053dbb843d45e",
+        "tests/upstream/dictionaries/p-window-minus-one.zst": "23befc9dec2a730795ed6a98538565732e9e6960441a752ed3c2228d5e90cc4d",
+        "tests/upstream/dictionaries/p-window-equal.zst": "2ab39c2f91f86f41b4adef0399abdacfeb262da41db16f88b7aeda56197a0110",
+        "tests/upstream/dictionaries/dictionary-out-of-bounds.zst": "d0229711471f8817661102674cc607160ab0128803ef44f976928d267a8ad2ea",
+        "tests/upstream/dictionaries/formatted.dict": "354d5499788e19c3b2bb4f0f85d1a733c12204c3333f0f22e7f4fb01067b3281",
+        "tests/upstream/dictionaries/training-samples.bin": "ae7e58c2469b8140a1fa25e4d69dc85bb7d3b510b6e28de3db7f82dd54f0e258",
+        "tests/upstream/dictionaries/trained-sample.zst": "2b35f275067c91bc4742b9967a04d1c78efa1b7c0a5fb502f22bf8d1f04abc4f",
+        "tests/upstream/dictionaries/output-distance-equals-window.zst": "2c13e6bf8f7fd044a0b50f480783aca4eff2b0024cf4da26853013c9570a604f",
+        "tests/upstream/dictionaries/duplicate-reps-initial.expected": "42452c6952e89a247f415c78d825abe91d4754fbd93d1671e517dac45106ea18",
+        "tests/upstream/dictionaries/formatted-omitted-id.expected": "c1f7ae93af4c1686c882edf61ce40cc06774a3ebdc7581aa19d1966f4ad7a33d",
+        "tests/upstream/dictionaries/persistent-concatenation.zst": "46916c28f775da7229fad6c586110be3fcb50639bb8e2891e0b75b93297e146e",
+        "tests/upstream/dictionaries/duplicate-reps.dict": "4c91b7e305f7810616a114cfc2a8b96320835928a53787bf96a89f09b711e264"
+      },
+      "commands": [
+        {
+          "label": "s390x-safe",
+          "argv": [
+            "cargo",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "s390x-unknown-linux-gnu",
+            "--test",
+            "dictionary_in_place_output_platform",
+            "dictionary_crossings_frame_resets_overlap_and_guards",
+            "--",
+            "--exact"
+          ],
+          "environment": {
+            "CARGO_TARGET_DIR": "/private/tmp/module29-platform-final/miri-s390x",
+            "MIRI_SYSROOT": "/private/tmp/zstdoxide-ultra-miri-s390x",
+            "MIRIFLAGS": "-Zmiri-strict-provenance"
+          },
+          "exit_code": 0,
+          "seconds": 18.126765416003764
+        },
+        {
+          "label": "s390x-all",
+          "argv": [
+            "cargo",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "s390x-unknown-linux-gnu",
+            "--test",
+            "dictionary_in_place_output_platform",
+            "--all-features",
+            "dictionary_crossings_frame_resets_overlap_and_guards",
+            "--",
+            "--exact"
+          ],
+          "environment": {
+            "CARGO_TARGET_DIR": "/private/tmp/module29-platform-final/miri-s390x",
+            "MIRI_SYSROOT": "/private/tmp/zstdoxide-ultra-miri-s390x",
+            "MIRIFLAGS": "-Zmiri-strict-provenance"
+          },
+          "exit_code": 0,
+          "seconds": 18.62622695902246
+        },
+        {
+          "label": "i686-safe",
+          "argv": [
+            "cargo",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "i686-unknown-linux-gnu",
+            "--test",
+            "dictionary_in_place_output_platform",
+            "dictionary_crossings_frame_resets_overlap_and_guards",
+            "--",
+            "--exact"
+          ],
+          "environment": {
+            "CARGO_TARGET_DIR": "/private/tmp/module29-platform-final/miri-i686",
+            "MIRI_SYSROOT": "/private/tmp/zstdoxide-ultra-miri-i686",
+            "MIRIFLAGS": "-Zmiri-strict-provenance"
+          },
+          "exit_code": 0,
+          "seconds": 18.385978209000314
+        },
+        {
+          "label": "i686-all",
+          "argv": [
+            "cargo",
+            "miri",
+            "test",
+            "--offline",
+            "--locked",
+            "--target",
+            "i686-unknown-linux-gnu",
+            "--test",
+            "dictionary_in_place_output_platform",
+            "--all-features",
+            "dictionary_crossings_frame_resets_overlap_and_guards",
+            "--",
+            "--exact"
+          ],
+          "environment": {
+            "CARGO_TARGET_DIR": "/private/tmp/module29-platform-final/miri-i686",
+            "MIRI_SYSROOT": "/private/tmp/zstdoxide-ultra-miri-i686",
+            "MIRIFLAGS": "-Zmiri-strict-provenance"
+          },
+          "exit_code": 0,
+          "seconds": 18.72587570801261
+        },
+        {
+          "label": "thumb-safe-check",
+          "argv": [
+            "cargo",
+            "check",
+            "--offline",
+            "--locked",
+            "-Zbuild-std=core,alloc",
+            "--target",
+            "thumbv6m-none-eabi",
+            "--no-default-features",
+            "--lib"
+          ],
+          "environment": {
+            "CARGO_TARGET_DIR": "/private/tmp/module29-platform-final/thumb-check"
+          },
+          "exit_code": 0,
+          "seconds": 21.61803383298684
+        },
+        {
+          "label": "thumb-safe-objects",
+          "argv": [
+            "cargo",
+            "rustc",
+            "--release",
+            "--offline",
+            "--locked",
+            "-Zbuild-std=core,alloc",
+            "--target",
+            "thumbv6m-none-eabi",
+            "--no-default-features",
+            "--lib",
+            "--",
+            "--emit=llvm-ir,obj"
+          ],
+          "environment": {
+            "CARGO_TARGET_DIR": "/private/tmp/module29-platform-final/thumb-safe"
+          },
+          "exit_code": 0,
+          "seconds": 51.584057375002885
+        },
+        {
+          "label": "thumb-all-check",
+          "argv": [
+            "cargo",
+            "check",
+            "--offline",
+            "--locked",
+            "-Zbuild-std=core,alloc",
+            "--target",
+            "thumbv6m-none-eabi",
+            "--no-default-features",
+            "--lib",
+            "--features",
+            "unsafe-bitstream,unsafe-byte-cursor,unsafe-dictionary,unsafe-fse,unsafe-fse-encoder,unsafe-history,unsafe-huffman,unsafe-huffman-codebook,unsafe-in-place-buffer,unsafe-match-chain,unsafe-match-table,unsafe-optimal-frequencies,unsafe-optimal-matches,unsafe-optimal-paths,unsafe-optimal-short-key,unsafe-reference-chain,unsafe-reference-tree,unsafe-ring-history,unsafe-row-table,unsafe-slice-history,unsafe-training"
+          ],
+          "environment": {
+            "CARGO_TARGET_DIR": "/private/tmp/module29-platform-final/thumb-check"
+          },
+          "exit_code": 0,
+          "seconds": 3.0600426250020973
+        },
+        {
+          "label": "thumb-all-objects",
+          "argv": [
+            "cargo",
+            "rustc",
+            "--release",
+            "--offline",
+            "--locked",
+            "-Zbuild-std=core,alloc",
+            "--target",
+            "thumbv6m-none-eabi",
+            "--no-default-features",
+            "--lib",
+            "--features",
+            "unsafe-bitstream,unsafe-byte-cursor,unsafe-dictionary,unsafe-fse,unsafe-fse-encoder,unsafe-history,unsafe-huffman,unsafe-huffman-codebook,unsafe-in-place-buffer,unsafe-match-chain,unsafe-match-table,unsafe-optimal-frequencies,unsafe-optimal-matches,unsafe-optimal-paths,unsafe-optimal-short-key,unsafe-reference-chain,unsafe-reference-tree,unsafe-ring-history,unsafe-row-table,unsafe-slice-history,unsafe-training",
+            "--",
+            "--emit=llvm-ir,obj"
+          ],
+          "environment": {
+            "CARGO_TARGET_DIR": "/private/tmp/module29-platform-final/thumb-all"
+          },
+          "exit_code": 0,
+          "seconds": 53.35062854201533
+        }
+      ],
+      "artifacts": {
+        "safe": [
+          {
+            "path": "artifacts/safe-zstdoxide-61fa6cd7e49db496.ll",
+            "sha256": "1418c875c987ead99c75b0322b8a8b9986b4110ae7e7d89227286b7e9ff6fe8e"
+          },
+          {
+            "path": "artifacts/safe-zstdoxide-61fa6cd7e49db496.o",
+            "sha256": "1cd7487ea9339fb2c88d634cc9c8a6154174fc41c4c2e1a82050230881f8a383"
+          }
+        ],
+        "all": [
+          {
+            "path": "artifacts/all-zstdoxide-26ce478709e171aa.ll",
+            "sha256": "51294a2207cebec016be2b105d0f9f7045be58544f005837c6f802a7032ec54a"
+          },
+          {
+            "path": "artifacts/all-zstdoxide-26ce478709e171aa.o",
+            "sha256": "fc80a173be962afbcbfe33751abd9bdafebb006a60bedb5d53ef751c26c018fb"
+          }
+        ]
+      },
+      "qualification": "Four strict-provenance foreign Miri test executions on i686/s390x and two actual thumbv6m core+alloc checks plus concrete LLVM IR/ARM object builds. Interpretation/code generation, not native execution on foreign hardware. Full regression and performance remain separate."
+    }
+  },
+  "receipt_sha256": {
+    "evidence.json": "88c58a8a6b11472202388a70b8623c965b4e6abb9338620c04f3c5aa3d17543c"
+  },
+  "external_fixture_payloads": {},
+  "members": {
+    "campaign/i686-all.log": {
+      "sha256": "1b7e961b65802341a31496da621136c10127bb6bbb59a33aef2e44e307a83061",
+      "bytes": 546
+    },
+    "campaign/evidence.json": {
+      "sha256": "88c58a8a6b11472202388a70b8623c965b4e6abb9338620c04f3c5aa3d17543c",
+      "bytes": 23233
+    },
+    "campaign/s390x-all.log": {
+      "sha256": "dad6393bd365767ab090940f102df3b2f01cbb50baea00627f890203292e48ba",
+      "bytes": 548
+    },
+    "campaign/thumb-all-objects.log": {
+      "sha256": "05e91e55baf9924384141ee54944fb38ad2571767e8e0c2863eb2abd6e5a721b",
+      "bytes": 600
+    },
+    "campaign/thumb-safe-objects.log": {
+      "sha256": "114e2538c8d2125af3870355fa058851451bb615904cb05338f3f30b79d8d63b",
+      "bytes": 600
+    },
+    "campaign/i686-all.json": {
+      "sha256": "5b6a5fd956c13168330d61bbb1add4229df9e257f68d19fe064adbf24cb87223",
+      "bytes": 576
+    },
+    "campaign/thumb-safe-objects.json": {
+      "sha256": "e5c03de003210b7c08d24b485e72473d5561168c678a1ef0ec46c9559a2d2bb8",
+      "bytes": 427
+    },
+    "campaign/check.py": {
+      "sha256": "041b5907ba8865949cede73facafd42f4703df0af19a62bfebcdf82ffc75fa58",
+      "bytes": 4659
+    },
+    "campaign/s390x-all.json": {
+      "sha256": "e6a8a2d0802225cca6ca6d269cb60302eaafa6f60f80faff6c70e8bbc0af4767",
+      "bytes": 580
+    },
+    "campaign/i686-safe.log": {
+      "sha256": "a162dde980a1a6fa6c3c5f3dabe55d8f4054403ca02eda480d43057ac8f340e6",
+      "bytes": 660
+    },
+    "campaign/s390x-safe.log": {
+      "sha256": "8c34ea8c6d6884715e8c47685a11edb33d5a224aea4899e0b3acda764371e449",
+      "bytes": 662
+    },
+    "campaign/dictionary_in_place_output_platform.rs": {
+      "sha256": "0a8e1b1a747f1d77b539d5c76349d2721cffc39eca525dcf733193de4c723a6b",
+      "bytes": 3848
+    },
+    "campaign/i686-safe.json": {
+      "sha256": "3413180a4a2b414940b3164367d6e703affcce1b43fdd98bbecf6eb7a6029fa7",
+      "bytes": 556
+    },
+    "campaign/thumb-safe-check.log": {
+      "sha256": "4d595cf67c02b4df1e0e4f3abcd12458cd1249947b40ce271b8eeaa3b9599bfb",
+      "bytes": 599
+    },
+    "campaign/s390x-safe.json": {
+      "sha256": "eee2ea788ee92e0dd0c83875e18048926f7d0f45bff724a50b869feb9da2bf0e",
+      "bytes": 560
+    },
+    "campaign/thumb-safe-check.json": {
+      "sha256": "c0eeb7f3d4c2f559a340e9ed61a9f05b224a429a74f6677e33cb435334d3ba1d",
+      "bytes": 372
+    },
+    "campaign/thumb-all-objects.json": {
+      "sha256": "55188e7951f99a6a3fcd45b721375e738d92b29cbb753bf1323d52a329be02f2",
+      "bytes": 863
+    },
+    "campaign/thumb-all-check.json": {
+      "sha256": "afa54943cb9bf30edf21447563514a91790e0d124e51954b808bf94e6b0b97c3",
+      "bytes": 811
+    },
+    "campaign/thumb-all-check.log": {
+      "sha256": "984ca0dcd936d1dcb0755a18b129655cf9fef81167438bd87ecbdaa09df202d5",
+      "bytes": 136
+    },
+    "campaign/artifacts/safe-zstdoxide-61fa6cd7e49db496.o": {
+      "sha256": "1cd7487ea9339fb2c88d634cc9c8a6154174fc41c4c2e1a82050230881f8a383",
+      "bytes": 572304
+    },
+    "campaign/artifacts/all-zstdoxide-26ce478709e171aa.o": {
+      "sha256": "fc80a173be962afbcbfe33751abd9bdafebb006a60bedb5d53ef751c26c018fb",
+      "bytes": 571196
+    },
+    "campaign/artifacts/all-zstdoxide-26ce478709e171aa.ll": {
+      "sha256": "51294a2207cebec016be2b105d0f9f7045be58544f005837c6f802a7032ec54a",
+      "bytes": 9552367
+    },
+    "campaign/artifacts/safe-zstdoxide-61fa6cd7e49db496.ll": {
+      "sha256": "1418c875c987ead99c75b0322b8a8b9986b4110ae7e7d89227286b7e9ff6fe8e",
+      "bytes": 9617866
+    },
+    "source/Cargo.toml": {
+      "sha256": "80403f1c31049101b0b8dff9ee1368e78e54c7360ca0884076047ece76a6c846",
+      "bytes": 1216
+    },
+    "source/Cargo.lock": {
+      "sha256": "0b96d5872a3d154c467274e8138844f57a70540d8722685623b81a04a510e57d",
+      "bytes": 266
+    },
+    "source/rust-toolchain.toml": {
+      "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+      "bytes": 118
+    },
+    "source/tests/dictionary_in_place_output_platform.rs": {
+      "sha256": "0a8e1b1a747f1d77b539d5c76349d2721cffc39eca525dcf733193de4c723a6b",
+      "bytes": 3848
+    },
+    "source/benches/allocators.rs": {
+      "sha256": "0034e49471d467cbfafb6c57396b8f99ce172a0d78f6b197155bdc7ef53875b6",
+      "bytes": 28237
+    },
+    "source/benches/search.rs": {
+      "sha256": "08c3109741b578c7c3d4e0ef394c6e0d95310d7e9237d02fc71032f0db002063",
+      "bytes": 22757
+    },
+    "source/benches/backends.rs": {
+      "sha256": "fee81d7db7b9681d2f735e46faa3b35b06cfbed129b31c476209c2b4e8eb377a",
+      "bytes": 43935
+    },
+    "source/src/greedy_state.rs": {
+      "sha256": "4ba31ec4cc1c60e5d0d81e38e93c114d7dbdc1f4e8e7f3567aafcbcbc27ead05",
+      "bytes": 33854
+    },
+    "source/src/slice_history.rs": {
+      "sha256": "d7fb6fb45192a5e4de43857729f707e429184c147cd42a5e01f2719e9f5e93ab",
+      "bytes": 26316
+    },
+    "source/src/reference_frame.rs": {
+      "sha256": "f7c5c155158f137563c7529d7a0b8058260439647da5876cec88be9e9b297090",
+      "bytes": 15387
+    },
+    "source/src/strategy.rs": {
+      "sha256": "f3447e4655ab27bf04516d3197558adb7352d3f8cbabc98d4f7acf6c13b9f626",
+      "bytes": 1584
+    },
+    "source/src/fast_state.rs": {
+      "sha256": "c4d8b1560b9240612fbe6a36c836c4a06a1ccae7fd259739a2216563fdecc8e8",
+      "bytes": 19841
+    },
+    "source/src/stream.rs": {
+      "sha256": "088a6bbe9a8cef03a081d68d58f7c29232c838e3b7fd25bd60c1b220841c6632",
+      "bytes": 1528
+    },
+    "source/src/huffman.rs": {
+      "sha256": "379fdaab2233edcd5c213201099f8892bc118baa444f9a6b20de89c25762d4fc",
+      "bytes": 51802
+    },
+    "source/src/fse.rs": {
+      "sha256": "62e431617f58d9356955d7ef30345453c458c7383cc61747fab286835a391864",
+      "bytes": 40545
+    },
+    "source/src/slice_decode.rs": {
+      "sha256": "e5c520c4317e3718d341dc18efb008aef3175ca0b12e517ba4e2dc0fcc181e13",
+      "bytes": 43637
+    },
+    "source/src/matchchain.rs": {
+      "sha256": "a3e7a2086bdfc3cd7f035209b465bd4524b95ebc41f078f8ceb443964446fa22",
+      "bytes": 50933
+    },
+    "source/src/sequence_encode.rs": {
+      "sha256": "fefd122d7f15591ce96977d591a4ad6f8a1762b61b324a967f1c314674c9fc61",
+      "bytes": 27994
+    },
+    "source/src/ultra2_retained_state.rs": {
+      "sha256": "121e6bcfed9297c23f4d3aaeff5168dfaf12cc45e67230c02309a8312c810b64",
+      "bytes": 8119
+    },
+    "source/src/lazy_select.rs": {
+      "sha256": "f65a28e76106f7d04e1d307ed94ee5e1fc3352b9a2f301ed757b10f31e79d586",
+      "bytes": 7221
+    },
+    "source/src/tree_source.rs": {
+      "sha256": "e8ff59ed5de930faaca3ff89590ea5c208a13c75c06b9acc3f3665dd7761c4c0",
+      "bytes": 4022
+    },
+    "source/src/sequence_plan.rs": {
+      "sha256": "0af5935553bb8b0aa931a60355e8bf1b76c62f53e0d17c3fb477e1119e3f0bdf",
+      "bytes": 18750
+    },
+    "source/src/fast_parse.rs": {
+      "sha256": "cecda6cd14e806d156de9fe98d480632863d86bff02903ddf97614892d64fcf6",
+      "bytes": 33042
+    },
+    "source/src/entropy_output.rs": {
+      "sha256": "3f952da9ad45188ed0a0fdecd11b94fb1eda37b86b2572b7ece53f63f54d6d61",
+      "bytes": 30938
+    },
+    "source/src/constants.rs": {
+      "sha256": "07dda6007018b3c95b6f4148e341ed446e0bcb96dc9590504d783cf9da7fa0c2",
+      "bytes": 1542
+    },
+    "source/src/in_place_buffer.rs": {
+      "sha256": "18f3b15df242eedd5085e4dfaf1c8746ddecac2ad6bd5b5f8188019ce8269f1e",
+      "bytes": 14280
+    },
+    "source/src/bitstream.rs": {
+      "sha256": "efea8b5e033064d2604a47badc08c4bab344c4facd75c6f29a034a13750fe3a6",
+      "bytes": 5025
+    },
+    "source/src/stream_decode.rs": {
+      "sha256": "9fd560cecedb71318cf24a6ef0eb2354b3eec77ed792e819979558562f89da21",
+      "bytes": 59352
+    },
+    "source/src/greedy_parse.rs": {
+      "sha256": "0555b480e7c93683cdd29ec863ff8235f983b7bc579a047ef69c883e365211bb",
+      "bytes": 36023
+    },
+    "source/src/greedy_block.rs": {
+      "sha256": "6ba4d54b3b404960c211ec6b8daf6a1c3137c365d1505f5c1c85e617522e4dbe",
+      "bytes": 14855
+    },
+    "source/src/error.rs": {
+      "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+      "bytes": 2528
+    },
+    "source/src/encode.rs": {
+      "sha256": "7e7110fc2dd6ab2b5dd0af80068c5b091c98466835beec1e926d622ef0ec85ff",
+      "bytes": 158416
+    },
+    "source/src/double_fast_block.rs": {
+      "sha256": "3021d4be99e6ea47e3a0a6ce58945b654d4ec439e83e3591f7297af6b6ccfa3c",
+      "bytes": 14129
+    },
+    "source/src/double_fast_parse.rs": {
+      "sha256": "e7769a0307b388e9f88f559865e04042b631cbc727d2c6a73fa349efdc7ba145",
+      "bytes": 28841
+    },
+    "source/src/in_place_decode.rs": {
+      "sha256": "26d848204044944a5f6bebfcd5f7be0b3e83cff45516b3e06c438c03131b1566",
+      "bytes": 27320
+    },
+    "source/src/heap.rs": {
+      "sha256": "206c0260b025675ac25d93852f934791d4158897965ef95b8034826726d831c8",
+      "bytes": 10052
+    },
+    "source/src/greedy_key.rs": {
+      "sha256": "f5cbdac67e0cb4e11c14353d6a0d202d093747858ec0dcd34b344b6bbc597c3d",
+      "bytes": 12733
+    },
+    "source/src/block_entropy.rs": {
+      "sha256": "9a8dbdaf37c75f09aa18199d7a6b6701621267b55e5090bb0847317c4a45e538",
+      "bytes": 31963
+    },
+    "source/src/match_search.rs": {
+      "sha256": "cc09fc0b28bbc0ff5d31bc491cf679316fe85f96573d86e4c924bdafa9803c34",
+      "bytes": 25330
+    },
+    "source/src/lib.rs": {
+      "sha256": "ead59cb08ef996f9f458745844207f484bd38e9d3d1feda0235774b75f6a1ede",
+      "bytes": 7512
+    },
+    "source/src/fast_plan.rs": {
+      "sha256": "c018aae5545a568cb251cd1a3457a05841469df884f04a8060ba83831f395c7d",
+      "bytes": 23898
+    },
+    "source/src/optimal_short_key.rs": {
+      "sha256": "4f7c3b907a5711b02cc4ba025d04ca9d30c8cd4a5e319df8ebad31def9731434",
+      "bytes": 6378
+    },
+    "source/src/optimal_retained.rs": {
+      "sha256": "137308d223bc5e2182b2e9ff531ab06c0c95b6665a364ec65bacb711eb176cf6",
+      "bytes": 7782
+    },
+    "source/src/ultra2_retained.rs": {
+      "sha256": "69a889ff4e8e77720e7a55f2e0ce7c79049b813c9f33b1e24b14f8491ec5ed39",
+      "bytes": 8566
+    },
+    "source/src/optimal_search.rs": {
+      "sha256": "d33fb024fe4f55120417a0e3150ce8758e9cb7079a40521f26d1a2761901f992",
+      "bytes": 60582
+    },
+    "source/src/ultra2_frame_plan.rs": {
+      "sha256": "f3b704e167db719fcc10b19cc91c292c8fa7ac63927ec7f2c9a9622bb32c21a6",
+      "bytes": 4094
+    },
+    "source/src/optimal_parse.rs": {
+      "sha256": "99c2a92137115d50194e897df70403f3631127e5b7a7da058e5aee507a2567ab",
+      "bytes": 61851
+    },
+    "source/src/optimal_path_layout.rs": {
+      "sha256": "416ed0ec4a5090d394238bc07a6f8d4c200c6267c7e6e9f112ff4780b96bc4f5",
+      "bytes": 13146
+    },
+    "source/src/optimal_price.rs": {
+      "sha256": "d389ec0b49194a65c506c369531ae68a42ec92f6dd06531333ddbc93c018712e",
+      "bytes": 9496
+    },
+    "source/src/fse_select.rs": {
+      "sha256": "0a41f8b03875f303887ed755240c1b504994f446d2496aace55b9db6f17a7fa3",
+      "bytes": 28875
+    },
+    "source/src/sequence_context.rs": {
+      "sha256": "cfa51f7f78f2488a67b42e3dce4569f2641895b161fb92f9c69380d44a8fc47b",
+      "bytes": 65027
+    },
+    "source/src/optimal_state.rs": {
+      "sha256": "72ccaab4558ac4ae8ac691cafd1a0b4753c3281d4e86ed0cefcf602cccdbe8e7",
+      "bytes": 37014
+    },
+    "source/src/double_fast_plan.rs": {
+      "sha256": "e5282d50fd9d547fed930369d737edb781cf90e37626454af1cb01739735d0c0",
+      "bytes": 13378
+    },
+    "source/src/reference_search.rs": {
+      "sha256": "534f5cfaefbca265d6498f6ec4214aad9a783ce9aca7da6eba6d745f033ff818",
+      "bytes": 48584
+    },
+    "source/src/sequences.rs": {
+      "sha256": "7173ffef018cf1baf7867a609f873d89f9bf9343d44ceff6f131608bf1317eeb",
+      "bytes": 25515
+    },
+    "source/src/tree_search.rs": {
+      "sha256": "c5fabb7ec63df89887f94d42f86e5bc66aea244543e061bff340d5fe5a7dc2bc",
+      "bytes": 9112
+    },
+    "source/src/double_fast_state.rs": {
+      "sha256": "cc1305ca59ef08ad8b7809eebcb6849b43fcf9413bd99ea33fdc5ac3e7064b76",
+      "bytes": 25413
+    },
+    "source/src/reference_tree.rs": {
+      "sha256": "77f41fdfad9ad0aa988e3365cdbf167661dfd03c4890e23ae61a6974f555fa8f",
+      "bytes": 19186
+    },
+    "source/src/matchfinder.rs": {
+      "sha256": "88fa2ffd06d4a189d68a911513c7cafc76648e457a8ddbebc4c0daec693fc65b",
+      "bytes": 35737
+    },
+    "source/src/training.rs": {
+      "sha256": "5275bee01f93e8a7bd5cc797abd5683c1e2783b4dcffbf4e01169900d6126f0e",
+      "bytes": 29658
+    },
+    "source/src/row_table.rs": {
+      "sha256": "4e2936921e8753731bdf0298120217815e20bb9f6451bb6e143ee48f4b7007a0",
+      "bytes": 21893
+    },
+    "source/src/fse_encode.rs": {
+      "sha256": "13b0fa47e9f31de5761d871ef53491bdd3f34560b23e22b10f015f4f090e3c68",
+      "bytes": 26973
+    },
+    "source/src/tree_layout.rs": {
+      "sha256": "6413b13b7a89ac989cf2aaf722e1b46b1edb3d50aeff185ac1b998688f9bfd26",
+      "bytes": 11624
+    },
+    "source/src/greedy_search.rs": {
+      "sha256": "b532714a19620023fe030050778b7dc7b0d4b8272220a302347b65d6a786b3db",
+      "bytes": 25891
+    },
+    "source/src/history.rs": {
+      "sha256": "07b640adba19ce0fcbf12ef6cb3442818dd608f2348adbe08707a24456b04daf",
+      "bytes": 14506
+    },
+    "source/src/optimal_retained_plan.rs": {
+      "sha256": "f2d5f8de81be4ccbd30517cae2d45694b341bc27dd26a6b9e01645512bd2fd8c",
+      "bytes": 14188
+    },
+    "source/src/cursor.rs": {
+      "sha256": "0e77378922e9fa910853a1b8f7810f555726442b3869a96535a22d7dce26aa2f",
+      "bytes": 2412
+    },
+    "source/src/optimal_paths.rs": {
+      "sha256": "843794343f039c08c735a25b936095ecc7de398eb630ac650034490e6b4bb6b9",
+      "bytes": 10017
+    },
+    "source/src/optimal_plan.rs": {
+      "sha256": "e11c456b8ee9cfb4f3195b15f36873e87ed50ce701559760d157f6d36cd70c68",
+      "bytes": 13739
+    },
+    "source/src/literal_encode.rs": {
+      "sha256": "30682d468aef2db3df41fe1b9fc774394abbe11f28ba03707f77e9b5465b659f",
+      "bytes": 31055
+    },
+    "source/src/huffman_encode.rs": {
+      "sha256": "c0c794069eb6f7f0cbf44c0e7d24f706456a2e5278ca3b8a90014054a3de4dcf",
+      "bytes": 40632
+    },
+    "source/src/ultra2_state.rs": {
+      "sha256": "b7ac2e5b1e61630d8d30e263f9891acd7355c2cfe321c6c4a6d008b0f95eb6eb",
+      "bytes": 9047
+    },
+    "source/src/ultra2_retained_plan.rs": {
+      "sha256": "ed06ed3543896b2c1d16049c0e77772824afa29261068cabc9285d894c0677b6",
+      "bytes": 17426
+    },
+    "source/src/optimal_search_layout.rs": {
+      "sha256": "005fe4f977caae25123d207b3d6f431f5234c9da00d3d1eacdf0f15122a903ba",
+      "bytes": 15475
+    },
+    "source/src/huffman_codebook.rs": {
+      "sha256": "e7f6c99f99b9ee16236ae3447eca02fe6a0db89c946a6d6ff890bb2d0e32c14b",
+      "bytes": 48091
+    },
+    "source/src/decode.rs": {
+      "sha256": "d1382c17d61026496cd62faad5c1bbfaee87fd6229dfc1059d336b9e131686db",
+      "bytes": 40318
+    },
+    "source/src/reference_policy.rs": {
+      "sha256": "454688c10d0f2d9bdad0dca7bbfdb85028a13a0bcd24b9537336d3cedfec278d",
+      "bytes": 3575
+    },
+    "source/src/dictionary_train.rs": {
+      "sha256": "3b0881aa1b0e8ca47d07413024b19c50373dba980eda68fd2f15d7be3f380be6",
+      "bytes": 25999
+    },
+    "source/src/literal_header.rs": {
+      "sha256": "7fcc1872fa50245ad8e1baf06d760cf802d9d945d7b127958b6c954609979f03",
+      "bytes": 7030
+    },
+    "source/src/dictionary.rs": {
+      "sha256": "44bc63747268efb34b9b814a7b4b35fff77bb311857801a2e45fb3013e66a1e1",
+      "bytes": 37284
+    },
+    "source/src/xxhash.rs": {
+      "sha256": "b9721fbaeb49a9939a7063aa7937aab77b52997d2cb08d777a090b7a549133ed",
+      "bytes": 28427
+    },
+    "source/src/ultra2_plan.rs": {
+      "sha256": "acf639e33dc378275508a85f568a4f61ef074aba97510c4a5dc9fe7b05d9f94f",
+      "bytes": 17332
+    },
+    "source/src/tree_sort.rs": {
+      "sha256": "6781699dac123560ea5ee288cd22f4cafdfe27016c4788503bd0548982f65379",
+      "bytes": 11461
+    },
+    "source/src/frame.rs": {
+      "sha256": "c00848f78e0ddbdc9ad2859db41f727b3a6fef3fdd1d735ae2930c268828ad8e",
+      "bytes": 4396
+    },
+    "source/src/optimal_matches.rs": {
+      "sha256": "c5acfab49367539539e170bc13a9aa149b98af68f713987a2a18b17cea52d781",
+      "bytes": 6556
+    },
+    "source/src/double_fast_tables.rs": {
+      "sha256": "c47f18698896c29adf614c7c5fb1b7e1ee012706cac89b6a2ed403cfd81b1f76",
+      "bytes": 9986
+    },
+    "source/src/stream_encode.rs": {
+      "sha256": "2dce0e577d03aca28796f7b724202a92ac73106c5d57561ca5d625dbc3842d9e",
+      "bytes": 111445
+    },
+    "source/src/match_key.rs": {
+      "sha256": "27064cc056ec7dd1781ea10e254b6009aa6b38bc02d619f1afcab2d1c526a7f1",
+      "bytes": 17033
+    },
+    "source/src/slice_attachment.rs": {
+      "sha256": "ece2c80fa52a42bcf5e090dfdada0e6f666aba7b691893a4e071083ffb123453",
+      "bytes": 5447
+    },
+    "source/src/match_parse.rs": {
+      "sha256": "f1b11b5b6b20da685177b82bf89b5dce35c3d65db25c0740ed90e89bf53a94ac",
+      "bytes": 69729
+    },
+    "source/src/optimal_frequencies.rs": {
+      "sha256": "02815487254d9f621e6d0ce0e14edbe302e94cb5b012884242a790081cd671c4",
+      "bytes": 30605
+    },
+    "source/src/parameters.rs": {
+      "sha256": "7d9ad5d9d3d5568102021f2d5e794f481096e4d93a1c2f9cdd4c264f5d6e92fc",
+      "bytes": 62222
+    },
+    "source/src/greedy_plan.rs": {
+      "sha256": "d5249a555e18abc82bbbcff145921c3d2a002212819987541b9b77359eaec39e",
+      "bytes": 19829
+    },
+    "source/src/ring_history.rs": {
+      "sha256": "6b556457ae741f42aed040039301cff2b835aefbead72c482e9d2eefd2e46cc2",
+      "bytes": 45791
+    },
+    "source/src/entropy_encode.rs": {
+      "sha256": "925ecfde3dbd5e5bac924dff253e12e0b137726fbbc5b338897a312db6c56a53",
+      "bytes": 46189
+    },
+    "source/src/reference_chain.rs": {
+      "sha256": "943e527bacb26f1ca9c3737e294159c60823c31db04a3aa9aeb8880bf1467cfa",
+      "bytes": 20517
+    },
+    "source/src/reference_frame_encode.rs": {
+      "sha256": "4ed9ced3dd754b0c7dafcc61c927c05f93b8fb1f337b3f9f563c1645a2a2c202",
+      "bytes": 41003
+    },
+    "source/src/optimal_retained_state.rs": {
+      "sha256": "efa3aa8506bd085690805bf7a64287a5593af227abd4cb07ff5b91f46fe0c5e7",
+      "bytes": 23967
+    },
+    "source/src/bitwriter.rs": {
+      "sha256": "7fb00fb9203cb290e5fd18e0243b1241aa87c696e1303cccafc28f8543bd194d",
+      "bytes": 10794
+    },
+    "source/src/reference_encode.rs": {
+      "sha256": "3629af9d2d07ab64a570e5f04b9f97fa60a0651845c63a6dee4158ebe557e810",
+      "bytes": 10080
+    },
+    "source/src/frame_layout.rs": {
+      "sha256": "ec1687dfc7cec7ad59d06effbfb49716b9b41e0580613b8a8f7e37befdd31556",
+      "bytes": 12742
+    },
+    "source/src/parameters/presets.rs": {
+      "sha256": "3f85cb7a17581108015b587153f6f2ebe1608ace83aed62fbe952e2a79302cf4",
+      "bytes": 13712
+    },
+    "source/test-support/allocator/Cargo.toml": {
+      "sha256": "b30f009b10f01b1266e8c80a6bff4fbd93e4a1468b3a3e8f5507497e6aee2292",
+      "bytes": 412
+    },
+    "source/test-support/allocator/Cargo.lock": {
+      "sha256": "6fa35d5b169b38383adf0f2b1e06523ec925ea71be364f3f7fd45039afee125e",
+      "bytes": 168
+    },
+    "source/test-support/allocator/README.md": {
+      "sha256": "7a922896a4258b96ce39702be8cae20263a7685cbc23b0a19ae08d21c00121d8",
+      "bytes": 5134
+    },
+    "source/test-support/allocator/src/lib.rs": {
+      "sha256": "41c8b8c7b1508691fac5c43e4a599e2b24a2f6215b6dfb8641e190cb342a8971",
+      "bytes": 49773
+    },
+    "source/tests/upstream/dictionaries/manifest.json": {
+      "sha256": "eb6eda57abc976e0a9086593b37b4d86ba5cdeb2673aa025f554417ae2baa761",
+      "bytes": 90188
+    },
+    "probe/src/lib.rs": {
+      "sha256": "5841596ff78be509dcf91e5480b59d7d16dbc10bbcc7b7c6b2083bbf4839ddf7",
+      "bytes": 7883
+    },
+    "prior-platform-receipt.json": {
+      "sha256": "dac351263cf58a80526c99ce1e03c0da3b3c6653b9cf40d893904be9de7305ef",
+      "bytes": 72156
+    },
+    "LICENSE.zstd": {
+      "sha256": "7055266497633c9025b777c78eb7235af13922117480ed5c674677adc381c9d8",
+      "bytes": 1549
+    },
+    "archive-focused.py": {
+      "sha256": "7d143ffe1c3f75c69abb9e43ff8819eab9131c59bf0ac427debfbd956f1703a1",
+      "bytes": 4560
+    }
+  },
+  "archive": "2026-10-27-dictionary-in-place-platform-final.tar.gz",
+  "archive_sha256": "2dfc0bbd631f93bcc363e28f08f69c89e713903b5d113f9439cd75af9a1388cd",
+  "qualification": "Completed source-bound focused gate; full matrix and measurements remain separate. Recursive source inventory binds unchanged repository fixtures; native supplemental payloads are content-addressed. Prior observation-probe compile rejections remain distinct from corrected successful executions. Foreign evidence is interpretation/code generation, not hardware execution. No native implementation dependency or complete upstream parity is claimed."
+}

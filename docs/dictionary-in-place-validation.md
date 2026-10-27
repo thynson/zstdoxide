@@ -62,3 +62,20 @@ dictionary supplement. All selectors and historical bounded results are retained
 Per-file selector/size/capacity/training/success ledgers match. Independent Rust
 training is not claimed byte-identical to native fastCover.
 Evidence: `evidence/2026-10-27-dictionary-in-place-corpus.json`.
+
+## Foreign interpretation and concrete code generation
+
+Four actual strict-provenance Miri executions cover i686/s390x safe/all builds,
+including dictionary crossings, prepared literals/repeats, frame resets, raw
+overlap and guards. Safe/all thumbv6m core+alloc checks and actual LLVM IR/ARM
+objects also pass, with the overlap operation instantiated. Eight completed
+commands are retained. The original observation probe incorrectly passed an
+owned Dictionary; its rejected compile remains archived. The corrected probe
+uses an immutable view, and already completed Miri/core checks were preserved.
+Production source is unchanged. This is interpretation/code generation evidence,
+not execution on foreign hardware.
+The full matrix initially rejected the test fixture tuple type under strict Clippy.
+A named type alias resolves the warning without changing runtime operations; all
+eight platform commands were rerun on that final test source. Prior receipts and
+failed logs retain their identities.
+Evidence: `evidence/2026-10-27-dictionary-in-place-platform-final.json`.
