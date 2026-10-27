@@ -152,6 +152,22 @@ dictionary/prefix in-place and incremental overlap remain separate contracts.
 - [ ] Freeze identical overlapping workloads and allocation ledgers, retain executables and measure safe/unsafe builds with an independent repeat and explicit source-restoration cost.
 - [ ] Reconcile bounded in-place coverage and decompose the next missing contract without claiming complete upstream parity.
 
+## Module 29: persistent dictionaries in one-shot in-place output
+
+Design and ownership precede implementation in `docs/dictionary-in-place-design.md`
+and `docs/data-structures.md`. Promote only after Module 28 closes. The single
+mutable suffix-input owner remains unchanged; dictionaries are independently
+borrowed persistent selections, not overlapping prefix storage.
+
+- [x] Record dictionary/history composition, immutable entropy fallback, independent allocator ownership and native contracts before implementation.
+- [ ] Implement checked dictionary-history resumption and private frame selection without handle clones or copied dictionary history.
+- [ ] Expose dictionary-backed in-place wrappers with lifetime/alias documentation, exact bounds, frame reset and scratch-failure qualification.
+- [ ] Qualify real shared-buffer normal/sanitized native layouts and replay the bounded dictionary corpus with explicit differences.
+- [ ] Qualify actual dictionary crossings and overlap under foreign Miri and concrete no-atomics code generation.
+- [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
+- [ ] Compare frozen in-place/direct dictionary workloads, source restoration and independent allocation ledgers across retained backends and independent repeats.
+- [ ] Reconcile bounded dictionary in-place coverage and decompose the next missing contract without claiming complete upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related

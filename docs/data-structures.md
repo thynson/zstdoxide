@@ -3910,3 +3910,34 @@ pointers and no allocations. Successful raw/RLE/publication transitions preserve
 `output_position <= input_position`; all rejection branches precede mutation.
 Its new independent feature changes only checked raw overlapping movement.
 The integrated storage tests include real split-borrow history resumption.
+
+## Persistent dictionaries in one-shot in-place output (Module 29 design)
+
+This analysis precedes implementation; `dictionary-in-place-design.md` records
+scope and qualification. Predecessor production and measurement snapshots stay
+frozen, and no dictionary in-place API is promoted before Module 28 closes.
+
+`InPlaceBuffer` keeps its single unique source/output slice and validated indices.
+The selected `DictionaryView` is a separate immutable borrow, with no cloned handle
+or allocator and no copied dictionary/history payload. Rust's borrow checker must
+reject a view into any region of the exclusively borrowed in-place buffer.
+`DictionarySliceOutput::resume` composes checked `SliceHistory` coordinates with
+that view; it is a plain wrapper requiring no artificial unsafe representation.
+Existing dictionary, slice-history and raw-movement features remain independent.
+
+The frame coordinator receives an optional view and checks nonzero IDs before
+frame setup. Every standard frame restarts repeat offsets from prepared fallback
+and resets frame-local output eligibility; skippable frames keep the selection.
+Huffman/FSE fallback stays borrowed and immutable, while overrides and literal
+scratch belong to independently cloned scratch allocators. Compressed payloads
+remain disjoint from resumed writable history until checked publication.
+Dictionary-to-frame matches preserve existing window-expiry rules and never read
+previous-frame output as history. The reference counterparts are pinned v1.5.7
+`ZSTD_decompress_usingDDict`, `ZSTD_decompressMultiFrame`,
+`ZSTD_decompressBegin_usingDDict` and dictionary-aware sequence execution.
+
+Public dictionary wrappers borrow shared/prepared/raw views, accept independent
+scratch allocator types, and preserve all suffix-input/failure bounds. The test
+plan separately qualifies exact native shared-buffer layouts, allocator failure
+ordinals, frame resets and borrowed lifetime/alias boundaries. Single-use prefixes,
+incremental overlap and external workspaces remain outside this module.
