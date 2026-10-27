@@ -320,3 +320,53 @@ fn stable_borrowed_sessions_decode_all_generated_frames_with_fragmented_input() 
         }
     }
 }
+
+#[test]
+fn every_generated_frame_decodes_in_place_with_exact_margin_and_guarded_limits() {
+    use zstdoxide::{decompress_in_place_with_options, decompression_margin};
+    for fixture in FRAMES {
+        let margin = decompression_margin(fixture.encoded).unwrap();
+        let capacity = (fixture.original.len() + margin).max(fixture.encoded.len());
+        let start = capacity - fixture.encoded.len();
+        let mut bytes = vec![0xa5; capacity + 64];
+        bytes[32 + start..32 + capacity].copy_from_slice(fixture.encoded);
+        let before = bytes.clone();
+        assert_eq!(
+            decompress_in_place_with_options(
+                &mut bytes[32..32 + capacity],
+                start,
+                DecodeOptions::new(fixture.original.len()),
+            ),
+            Ok(fixture.original.len()),
+            "{}",
+            fixture.name,
+        );
+        assert_eq!(
+            &bytes[32..32 + fixture.original.len()],
+            fixture.original,
+            "{}",
+            fixture.name
+        );
+        assert_eq!(&bytes[..32], &before[..32]);
+        assert_eq!(
+            &bytes[32 + fixture.original.len()..],
+            &before[32 + fixture.original.len()..]
+        );
+        if !fixture.original.is_empty() {
+            bytes.copy_from_slice(&before);
+            let limit = fixture.original.len() - 1;
+            assert_eq!(
+                decompress_in_place_with_options(
+                    &mut bytes[32..32 + capacity],
+                    start,
+                    DecodeOptions::new(limit)
+                ),
+                Err(Error::ResourceLimit),
+                "{}",
+                fixture.name,
+            );
+            assert_eq!(&bytes[..32], &before[..32]);
+            assert_eq!(&bytes[32 + limit..], &before[32 + limit..]);
+        }
+    }
+}

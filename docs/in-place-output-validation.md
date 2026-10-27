@@ -56,3 +56,38 @@ copy is used by the decoder; copies in test setup restore original fixtures.
 
 Evidence: `evidence/2026-10-27-in-place-public-api.json`.
 Usage and limitations: `in-place-output-usage.md`.
+
+## Independent pinned native overlap comparison
+
+The external helper uses facebook/zstd v1.5.7 revision
+`f8745da6ff1ad1e7bab384bd1f9d742439278e99` as a test oracle only. It executes
+the original `tests/fuzzer.c:1344-1397` single/two-frame input construction with
+5 MiB RDG input, seed 0/compressibility 0.5, and negative maximum-block-size level.
+Expanded input, the documented sufficient-margin bound, original output capacity
+(including the two-frame case), exact decoded size and full original bytes are
+asserted. Both source and destination point inside one real guarded allocation.
+Source attribution is retained under the repository `LICENSE.zstd`.
+
+The ordinary and AddressSanitizer/UndefinedBehaviorSanitizer helpers agree on
+1,300 layouts covering valid/malformed raw, RLE, compressed, concatenated and
+skippable frames, truncations, mutations, tight gaps and output allowances.
+All outer guards and configured output allowances are checked. LeakSanitizer is
+unsupported on this macOS host: its startup rejection is preserved, and the
+actual sanitized run disables only that unsupported facility.
+
+Five Rust capture configurations (safe, move, history, combined and all) agree
+with each other. All 1,291 nonempty native verdicts agree, and every common success
+output matches byte for byte. Nine zero-input layouts intentionally preserve the
+existing Rust `UnexpectedEof` versus native empty-concatenation success difference.
+Native modifies some unused successful destination suffixes (21 observed layouts);
+Rust independently verifies its stronger unchanged-unused-suffix contract.
+
+Both final ignored adapter tests are explicitly executed in all five configurations,
+including the original full-size assertions. An ordinary full suite still reports
+these external adapters as ignored; it does not silently count them as passed.
+Evidence: `evidence/2026-10-27-in-place-native.json`.
+
+A separately labelled supplement also replays every existing official decodecorpus
+frame at exact sufficient margin, verifies full output and unused tails, and checks
+one-byte-short output allowances across five backends. It retains the original
+generator fixtures and metadata unchanged. Evidence: `evidence/2026-10-27-in-place-corpus.json`.
