@@ -31,3 +31,34 @@ dictionary accounting unchanged. Selected raw/RLE/skippable paths allocate no
 codec payload storage.
 Evidence: `evidence/2026-10-27-dictionary-in-place-public-api.json`.
 Usage: `dictionary-in-place-usage.md`.
+
+## Independent native layouts and complete dictionary corpus
+
+A standalone v1.5.7 normal/ASan+UBSan helper supplies a by-reference DDict and
+source/destination pointers into one real guarded allocation. All 1,836 layouts
+agree across the two native builds. Dictionary bytes, outer guard bands and the
+configured output allowance are checked. Five Rust capture backends and the final
+explicitly invoked ignored adapter agree on all Rust results and all common
+success bytes. Sixty-six empty-input layouts preserve UnexpectedEof versus native
+success; three p-window-plus-one layouts preserve strict dictionary expiry after
+frame position exceeds the advertised window. An independent direct-output probe
+confirms the same existing Rust policy and checks native output against the
+pinned expected bytes. Native changed unused successful suffixes in 53 layouts;
+Rust separately verifies its stronger unchanged-success-suffix contract.
+
+An observation helper initially supplied Dictionary where the sealed handle
+contract requires a view/shared owner; the compile rejection is retained and
+earns no execution credit. Corrected observation code uses the existing view.
+No production fix was required. Native helpers remain external oracles, and
+generated layouts are supplements, not newly ported original upstream groups.
+Evidence: `evidence/2026-10-27-dictionary-in-place-native.json`.
+
+All 12,063 hash-pinned dictionary_decompress corpus files run with zero skips in
+safe/all release. Persistent prepared/loaded branches additionally compare suffix-
+input in-place output with direct, stable and buffered paths using real guards.
+Prefix selections retain their existing adapters and remain outside this in-place
+dictionary supplement. All selectors and historical bounded results are retained:
+11,768 trained, 295 explicit TrainingFailed fallbacks and 20 successful decodes.
+Per-file selector/size/capacity/training/success ledgers match. Independent Rust
+training is not claimed byte-identical to native fastCover.
+Evidence: `evidence/2026-10-27-dictionary-in-place-corpus.json`.

@@ -481,6 +481,31 @@ fn decode_direct_checked(source: &[u8], dictionary: SharedDictionary, capacity: 
         );
         assert!(stable_storage[written + 32..].iter().all(|&b| b == 0xa5));
     }
+    // Supplemental suffix-input layout: source length plus one maximum block
+    // bounds structural overhead without trusting malformed framing metadata.
+    // Prefix-once branches keep their separate established adapters.
+    let in_place_capacity = capacity + source.len() + 128 * 1024;
+    let start = in_place_capacity - source.len();
+    let mut in_place = vec![0xa5; in_place_capacity + 64];
+    in_place[32 + start..32 + in_place_capacity].copy_from_slice(source);
+    let before = in_place.clone();
+    let result = zstdoxide::decompress_in_place_with_dictionary(
+        &mut in_place[32..32 + in_place_capacity],
+        start,
+        &dictionary,
+        DecodeOptions::new(capacity),
+    );
+    assert_eq!(result.is_ok(), direct.is_ok());
+    assert_eq!(&in_place[..32], &before[..32]);
+    assert_eq!(&in_place[32 + capacity..], &before[32 + capacity..]);
+    if let Ok(written) = result {
+        assert_eq!(direct, Ok(written));
+        assert_eq!(&in_place[32..32 + written], &storage[32..32 + written]);
+        assert_eq!(&in_place[32 + written..], &before[32 + written..]);
+    } else if let Err(error) = result {
+        assert_ne!(error, Error::AllocationFailed);
+        assert_ne!(error, Error::InvalidState);
+    }
     let buffered = decode_checked(source, dictionary, false, capacity);
     assert_eq!(direct.is_ok(), buffered.is_ok());
     match direct {
