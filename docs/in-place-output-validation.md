@@ -122,3 +122,14 @@ build/execution commands, two native helper builds, two exact native layout runs
 and five explicit Rust adapter runs pass. Each Rust run executes both external
 adapter tests: 1,300 preserved supplementary layouts and the exact original
 single/two-frame assertions. No codec or adapter source changed for this correction.
+
+## Complete feature and release regression
+
+The final frozen candidate passed all 72 commands: safe/all and 21 isolated
+unsafe features each have complete tests, true no_std and strict Clippy; safe/all
+complete release and formatting also pass. Every full/release suite reports
+1,661 passed / 63 ignored across 94 result groups. External adapters retain their
+separate explicit execution receipts; ignored tests are not credited as passes.
+The preparation initially rejected an older test snapshot before dispatch; that
+rejection is retained, followed by complete source/test reconciliation.
+Evidence: `evidence/2026-10-27-in-place-feature-matrix.json`.

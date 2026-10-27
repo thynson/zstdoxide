@@ -148,7 +148,7 @@ dictionary/prefix in-place and incremental overlap remain separate contracts.
 - [x] Expose suffix-input in-place APIs with exact options, alias/lifetime documentation, malformed bounds and scratch failure qualification.
 - [x] Port the original single/two-frame assertions with exact preceding upstream input history and independently qualify normal/sanitized shared-buffer layouts and real guards.
 - [x] Qualify actual overlap and split-borrow history on foreign Miri and concrete no-atomics output.
-- [ ] Qualify every isolated feature and all features, full/release regression, true no_std and strict Clippy.
+- [x] Qualify every isolated feature and all features, full/release regression, true no_std and strict Clippy.
 - [ ] Freeze identical overlapping workloads and allocation ledgers, retain executables and measure safe/unsafe builds with an independent repeat and explicit source-restoration cost.
 - [ ] Reconcile bounded in-place coverage and decompose the next missing contract without claiming complete upstream parity.
 
