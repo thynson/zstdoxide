@@ -40,3 +40,33 @@ missing-registration compilation and the same final label-parser bookkeeping
 rejection remain retained; completed final command/source identities and exact
 test counts were independently verified before recording success.
 Evidence: `evidence/2026-10-27-frame-utility-public-api.json`.
+
+## Native boundaries and exact original writer history
+
+Normal and ASan/UBSan v1.5.7 helpers execute original test_compressBound scalar
+assertions plus 280 supplemental numeric cases and 343 real guarded writer layouts.
+All normal/sanitized rows and destination bytes agree. Three Rust backends replay
+every scalar result and every full destination/guard allocation byte.
+
+One maximal-admitted scalar input yields a raw native formula/function result of
+usize::MAX-2. The C encoded-error convention classifies it as an error; Rust retains
+the typed numeric bound. The initial adapter's assumption that every native error
+had a zero formula failed and is archived. Revised captures retain raw function,
+macro and classified results separately. Production source did not change.
+In 58 layouts both variant and capacity are invalid: native reports capacity first,
+while Rust documents InvalidParameter first. Both reject before mutation. Neither
+difference is credited as identical native error semantics.
+
+The original fuzzer runs unchanged through both 129 KiB and empty skippable
+write/recognize/read assertions, with read-only capture of actual preceding seed,
+payload and output. Normal/sanitized captures agree. Three Rust backends reproduce
+every encoded byte and original read-length/variant/payload assertion. Additional
+guard, metadata and decompression checks are explicitly supplemental. All 176
+external lib/programs/tests C/header/assembly files match the pinned archive.
+
+This macOS ASan runtime rejects leak detection. That rejected launch is preserved;
+all layout operations were rerun with leak detection disabled and bounds/undefined
+behavior checks enabled. No dynamic leak-detection pass is claimed. Original-history
+capture exits after the asserted region and leaves process setup owners to exit.
+Evidence: `evidence/2026-10-27-frame-utility-native.json` and
+`evidence/2026-10-27-frame-utility-history.json`.
