@@ -145,6 +145,11 @@ and borrowed skippable payload queries are available without decoding. See
 compressed content or checksums valid. Bounded qualification and explicit native differences are recorded in
 [the frame query report](docs/frame-query-validation.md).
 
+Checked `compression_bound` and `write_skippable_frame` utilities support one-pass
+size planning and allocation-free caller-owned skippable output. See
+[frame utility usage](docs/frame-utility-usage.md). Module 31 final qualification
+remains in progress in `TODO.md`.
+
 ## Current support
 
 | Area | Implemented |

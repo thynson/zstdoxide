@@ -77,8 +77,6 @@ mod fast_plan;
 mod fast_state;
 mod frame;
 mod frame_layout;
-// Staged utilities are exposed by the next independently checked item.
-#[allow(dead_code)]
 mod frame_utilities;
 mod fse;
 mod fse_encode;
@@ -282,3 +280,5 @@ pub use in_place_decode::{
     decompress_in_place_with_dictionary_in, decompress_in_place_with_options,
     decompress_in_place_with_options_in,
 };
+
+pub use frame_utilities::{compression_bound, write_skippable_frame};

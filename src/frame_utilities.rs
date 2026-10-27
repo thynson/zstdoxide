@@ -12,7 +12,25 @@ use crate::{Error, Result};
 // Repeating 0xff00 bytes on supported 32/64-bit targets, without a truncating cast.
 const MAX_INPUT_SIZE: usize = (usize::MAX / 257) * 256;
 
-pub(crate) fn compression_bound(source_size: usize) -> Result<usize> {
+/// Returns a checked worst-case encoded size for one-pass compression.
+///
+/// Uses the pinned v1.5.7 `ZSTD_compressBound` formula. It covers this crate's
+/// ordinary one-shot compression, dictionary variants and currently admitted
+/// reference one-shot profiles. It excludes arbitrarily flushed streaming
+/// output and concatenations of separately compressed frames. This is neither
+/// a workspace size nor a guarantee that allocation or compression succeeds.
+///
+/// Source sizes at or above the native pointer-width limit return
+/// [`Error::ResourceLimit`]; no zero/error sentinels are reserved. The operation
+/// allocates nothing and checks all arithmetic.
+///
+/// ```
+/// use zstdoxide::{compress, compression_bound};
+/// let input = b"a one-pass compressed frame";
+/// assert!(compress(input)?.len() <= compression_bound(input.len())?);
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+pub fn compression_bound(source_size: usize) -> Result<usize> {
     if source_size >= MAX_INPUT_SIZE {
         return Err(Error::ResourceLimit);
     }
@@ -33,11 +51,35 @@ fn skippable_extent(payload_size: usize) -> Result<(u32, usize)> {
     Ok((field, extent))
 }
 
-pub(crate) fn write_skippable_frame(
-    output: &mut [u8],
-    payload: &[u8],
-    variant: u8,
-) -> Result<usize> {
+/// Writes a skippable frame into caller-owned storage and returns its extent.
+///
+/// `variant` selects one of sixteen magic numbers. The eight-byte header and
+/// exact payload are written; all unused output bytes remain unchanged. The
+/// payload and exclusive output borrow are independent, and neither is retained.
+/// No allocation occurs. Every error leaves the entire output unchanged.
+///
+/// Invalid variants return [`Error::InvalidParameter`] first. Unrepresentable
+/// u32 payload length, extent overflow or insufficient output capacity return
+/// [`Error::ResourceLimit`]. This explicit precedence differs from native
+/// destination-first checks when multiple arguments are invalid.
+///
+/// ```
+/// use zstdoxide::{skippable_payload, write_skippable_frame};
+/// let mut storage = [0xa5; 32];
+/// let written = write_skippable_frame(&mut storage, b"metadata", 2)?;
+/// assert_eq!(skippable_payload(&storage[..written])?, (2, b"metadata".as_slice()));
+/// assert!(storage[written..].iter().all(|&byte| byte == 0xa5));
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+///
+/// Safe borrows prevent overlapping payload and destination storage:
+///
+/// ```compile_fail
+/// use zstdoxide::write_skippable_frame;
+/// let mut bytes = [0_u8; 32];
+/// write_skippable_frame(&mut bytes, &bytes[..8], 0).unwrap();
+/// ```
+pub fn write_skippable_frame(output: &mut [u8], payload: &[u8], variant: u8) -> Result<usize> {
     if variant > 15 {
         return Err(Error::InvalidParameter);
     }

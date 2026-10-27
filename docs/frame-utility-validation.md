@@ -22,3 +22,21 @@ test counts. Its final format-label parser initially raised after all ten comman
 passed; source/log identities and exact counts were independently revalidated and
 the controller corrected. No rejected or zero-test attempt receives pass credit.
 Evidence: `evidence/2026-10-27-frame-utility-core.json`.
+
+## Public contracts and encoder scope
+
+Two public functions expose typed bounds and caller-owned writing without an
+allocator parameter. Six unit, five public and three documentation tests pass
+in safe/cursor/all configurations alongside no_std, strict Clippy and formatting
+(16 commands). The alias compile-fail example proves overlapping immutable payload
+and mutable destination borrows are rejected. Actual ordinary/raw/prepared
+one-shot outputs, admitted reference profiles and small-window raw fallback fit
+the bound and decode exactly. All variants, empty/large payloads, exact/short/extra
+capacity, real guards and standard/skippable concatenations are exercised.
+
+The bound excludes arbitrarily flushed streaming output and multiple independent
+frames. It is neither workspace size nor an allocation-success guarantee. Initial
+missing-registration compilation and the same final label-parser bookkeeping
+rejection remain retained; completed final command/source identities and exact
+test counts were independently verified before recording success.
+Evidence: `evidence/2026-10-27-frame-utility-public-api.json`.
