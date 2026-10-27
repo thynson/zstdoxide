@@ -147,8 +147,8 @@ compressed content or checksums valid. Bounded qualification and explicit native
 
 Checked `compression_bound` and `write_skippable_frame` utilities support one-pass
 size planning and allocation-free caller-owned skippable output. See
-[frame utility usage](docs/frame-utility-usage.md). Module 31 final qualification
-remains in progress in `TODO.md`.
+[frame utility usage](docs/frame-utility-usage.md). Bounded qualification and native differences
+are recorded in [the frame utility report](docs/frame-utility-validation.md).
 
 ## Current support
 

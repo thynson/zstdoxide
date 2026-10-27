@@ -155,20 +155,12 @@ and `docs/frame-query-benchmarks.md`. The final receipt is
 `docs/evidence/2026-10-27-frame-query-closure.json`.
 Complete upstream migration remains open.
 
-## Module 31: compression bounds and skippable frame writing
-
-Design and ownership precede implementation in `docs/frame-utilities-design.md`
-and `docs/data-structures.md`. Promote only after Module 30 closes. These scalar
-and borrowed-slice utilities add no context, workspace or streaming-bound promise.
-
-- [x] Analyze native bounds, width limits, borrowed serialization and rejection-before-write invariants before implementation.
-- [x] Implement checked scalar compression bounds and skippable serialization with numeric-limit and original bound assertions.
-- [x] Expose documented utilities and qualify encoder-bound scope, output guards, borrowed aliases and structural roundtrips.
-- [x] Qualify normal/sanitized native arithmetic and real writer layouts, retaining original-assertion provenance and error differences.
-- [x] Qualify width/endian arithmetic and real writes under foreign Miri and concrete core-only ARM code generation.
-- [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [x] Compare deterministic arithmetic and writing workloads across retained safe/unsafe backends and independent repeats after actual CPU barriers.
-- [ ] Reconcile bounded utility coverage and decompose the next missing contract without claiming complete upstream parity.
+Module 31 is complete within its bounded scalar-bound and skippable-write scope.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification and measurements are in `docs/frame-utility-validation.md`
+and `docs/frame-utility-benchmarks.md`. The final receipt is
+`docs/evidence/2026-10-27-frame-utility-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 32: reusable one-shot dictionary and prefix selection
 

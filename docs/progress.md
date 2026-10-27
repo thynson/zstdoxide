@@ -1424,3 +1424,36 @@ The completed checklist is cleared; Module 31 retains its utilities design.
 Compression-bound/write-skippable utilities, reusable prefix lifecycle, workspaces
 and full upstream library/CLI parity remain open. See `frame-query-validation.md`,
 `frame-query-benchmarks.md` and `evidence/2026-10-27-frame-query-closure.json`.
+
+## Module 31: compression bounds and skippable writing complete (2026-10-27)
+
+Typed checked compression bounds use the pinned one-pass formula and explicit
+pointer-width limits. Borrowed skippable writing validates every fallible argument
+before mutation, writes exact little-endian header/payload bytes and preserves
+unused suffixes. Both utilities allocate nothing; their component builds with
+core only. The full codec remains no_std plus alloc. Ordinary/dictionary/admitted
+reference one-shot encoder bounds are qualified; arbitrary streaming flushes and
+workspace sizing remain excluded.
+
+All 72 final commands pass: safe/all and 21 isolated full/no_std/Clippy selections,
+safe/all release and formatting. Each full/release suite has 1,706 passes and
+70 ignored across 105 groups. Normal/sanitized native helpers cover 280 scalar
+inputs and 343 guarded writer layouts. One maximal numeric bound overlaps native
+error sentinels; 58 doubly-invalid writer cases differ in documented error
+precedence. These differences remain explicit. Exact original 129 KiB/empty
+writer history captures preserve preceding seeds and all encoded/read assertions.
+Eight foreign Miri executions plus host/core-only ARM checks yield 13 platform
+commands. No unsupported macOS leak-detection result is claimed.
+
+Twenty-three primary and independent safe/all repeat executables qualify identical
+utility outcomes and guards. Two separately timed modes retain equal batch-loop
+overhead. All/safe nonempty-payload median-latency geometric means: primary compression-bound 1.5077; primary write-skippable 1.5140; repeat compression-bound 1.0099; repeat write-skippable 1.0088.
+Tiny scalar work includes loop/dispatch overhead; these host measurements establish
+no broad performance or unsafe-speedup guarantee. Underlying utility operations
+share the same safe representation across feature selections.
+
+Closure matches all integrated source/test identities and rehashes stage archives.
+Completed checklist items are cleared; Module 32 retains call-scoped prefix and
+persistent-selection ownership decomposition. Native workspace/reset parity and
+complete upstream migration remain open. See `frame-utility-validation.md`,
+`frame-utility-benchmarks.md` and `evidence/2026-10-27-frame-utility-closure.json`.

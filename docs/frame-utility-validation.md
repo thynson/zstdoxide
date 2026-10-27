@@ -1,7 +1,8 @@
 # Checked frame utility qualification
 
-Module 31 is in progress. Focused gates below are complete; full feature/release
-regression, measurements and final reconciliation remain separate gates.
+Module 31 is complete within its bounded scalar-bound and borrowed skippable
+serialization scope. Focused, full feature/release, native/platform, measurements
+and final source gates have independently retained successful receipts.
 
 ## Scalar bounds and checked serialization
 
@@ -107,3 +108,13 @@ records. Each arithmetic/writing mode is timed separately with equal batch-loop,
 Fresh primary/repeat CPU barriers precede sequential measurements. See
 `frame-utility-benchmarks.md`; the host results do not establish a universal
 unsafe speedup. Evidence: `evidence/2026-10-27-frame-utility-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+Integrated production and final tests match the frozen full-matrix source. Every
+stage archive is rehashed. Initial preparation/controller rejections and the
+native sentinel/error-precedence differences retain their identities. The bound
+covers documented one-pass framing, not arbitrary streaming flushes or workspace
+requirements. Call-scoped prefix ownership, native context/workspace contracts
+and complete upstream library/CLI parity remain separate work.
+Evidence: `evidence/2026-10-27-frame-utility-closure.json`.
