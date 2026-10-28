@@ -4035,3 +4035,19 @@ each scratch clone frees its own domain. Counterparts are the bounded output and
 dictionary attachment of ZSTD_compress_usingDict/ZSTD_compress_usingCDict. Exact
 Rust output follows compress_with_dictionary, not the native parser. See
 `dictionary-slice-encode-design.md` for capacity and ownership qualification.
+
+## Call-scoped dictionary selection for compression (Module 35 design)
+
+OneShotEncoder<D> owns only the existing Selection<D> record. Persistent owners
+are borrowed; next-call prefix owners move into Claimed until an attempted call
+returns or unwinds. The stored selection clears before output admission or
+allocator work. DictionaryView copies borrow immutable content and metadata;
+no handle clone, copied dictionary history or retained input/output/scratch is
+introduced. Existing sealed DictionaryHandle includes Clone, but the coordinator
+does not invoke it. Plain enums share their safe representation across features.
+The underlying bounded emitter retains every existing safe/unsafe storage choice.
+
+Upstream counterparts are pinned ZSTD_CCtx_refCDict, ZSTD_CCtx_refPrefix_advanced,
+ZSTD_compress2 and ZSTD_CCtx_init_compressStream2. Native lazy dictionary setup,
+workspace/parameter/session lifetimes and error precedence are not implied.
+Contracts and evidence requirements: `one-shot-encode-selection-design.md`.

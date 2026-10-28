@@ -191,6 +191,21 @@ only after Module 33 closes; preserve independent dictionary/scratch ownership.
 - [ ] Compare allocating and borrowed dictionary output with distinct destination/staging/workspace/dictionary ledgers and independent repeats.
 - [ ] Reconcile bounded dictionary compression output and decompose the next evidenced missing contract.
 
+## Module 35: reusable one-shot compression dictionary and prefix selection
+
+Ownership and attempt-level consumption are recorded before implementation in
+`docs/one-shot-encode-selection-design.md` and `docs/data-structures.md`. Promote
+implementation only after Module 34 closes; retain no encoder workspace.
+
+- [x] Analyze native prefix initialization, persistent ownership and reuse of plain call-claim records before implementation.
+- [ ] Implement a clone-free compression coordinator over existing selection records and borrowed frame emission.
+- [ ] Expose documented caller-owned methods with exact attempt consumption, output/lifetime guards and independent allocator failure qualification.
+- [ ] Qualify persistent/prefix schedules and subsequent-call behavior against guarded normal/sanitized native controls and deterministic selections.
+- [ ] Qualify ownership transitions and actual encoding under foreign Miri and concrete no-atomics ARM code generation.
+- [ ] Qualify safe, every isolated feature and all features, full/release regression, no_std and strict Clippy.
+- [ ] Compare identical stateless/coordinator workloads with explicit prefix setup, allocation domains and independent repeats after CPU barriers.
+- [ ] Reconcile bounded selection coverage and decompose the next evidenced contract without claiming native workspace or complete upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
