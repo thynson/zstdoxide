@@ -1,8 +1,7 @@
 # Dictionary-backed caller-owned compression validation
 
 Module 34 is in progress. The internal dictionary-view emitter and public caller-
-output wrappers have focused qualification. Platform validation, complete feature/release regression, measurements and
-reconciliation remain open.
+output wrappers have focused qualification. Complete feature/release regression, measurements and reconciliation remain open.
 
 ## Internal immutable selection
 
@@ -68,3 +67,13 @@ retain their prior assertions without claiming a new compression-prefix API.
 No external rolling corpus rerun or native fastCover equivalence is claimed.
 Evidence: `evidence/2026-10-27-dictionary-slice-encode-native.json` and
 `evidence/2026-10-27-dictionary-slice-encode-corpus.json`.
+
+## Foreign interpretation and actual no-atomics code generation
+
+Four strict-provenance i686/s390x Miri runs execute raw/prepared dictionary
+compression in safe/all builds, checking exact bytes, a four-byte dictionary ID,
+known content size, independent decode and short-output guards. Four thumbv6m
+core-plus-alloc check/object commands instantiate the borrowed dictionary view
+entrypoint and encoded-output copying, with retained LLVM IR and ARM ELF objects.
+These are interpreter and code-generation results, not foreign hardware runs.
+Evidence: `evidence/2026-10-27-dictionary-slice-encode-platform.json`.

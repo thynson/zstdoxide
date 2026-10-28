@@ -186,7 +186,7 @@ only after Module 33 closes; preserve independent dictionary/scratch ownership.
 - [x] Generalize one-block frame emission to immutable dictionary views without shared-handle clones or copied dictionary content.
 - [x] Expose documented dictionary-backed caller-owned APIs with exact existing output, capacity and independent allocator/failure qualification.
 - [x] Qualify guarded normal/sanitized native dictionary interoperability and deterministic corpus selections.
-- [ ] Qualify width/endian behavior, borrow lifetimes and concrete no-atomics ARM emission.
+- [x] Qualify width/endian behavior, borrow lifetimes and concrete no-atomics ARM emission.
 - [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
 - [ ] Compare allocating and borrowed dictionary output with distinct destination/staging/workspace/dictionary ledgers and independent repeats.
 - [ ] Reconcile bounded dictionary compression output and decompose the next evidenced missing contract.
