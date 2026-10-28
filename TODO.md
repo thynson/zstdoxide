@@ -175,21 +175,12 @@ measurements and limits are in `docs/slice-encode-validation.md` and
 `docs/slice-encode-benchmarks.md`. Final source reconciliation is in
 `docs/evidence/2026-10-27-slice-encode-closure.json`. Complete upstream parity remains open.
 
-## Module 34: dictionary-backed caller-owned compression
-
-Ownership, invariants and upstream counterparts are recorded before implementation
-in `docs/dictionary-slice-encode-design.md` and `docs/data-structures.md`. Promote
-only after Module 33 closes; preserve independent dictionary/scratch ownership.
-
-- [x] Analyze bounded dictionary frame emission, borrowed views and bound sufficiency before implementation.
-- [x] Reconcile inherited fuzz documentation with completed frame-query and ordinary caller-output APIs without promoting unmapped original branches.
-- [x] Generalize one-block frame emission to immutable dictionary views without shared-handle clones or copied dictionary content.
-- [x] Expose documented dictionary-backed caller-owned APIs with exact existing output, capacity and independent allocator/failure qualification.
-- [x] Qualify guarded normal/sanitized native dictionary interoperability and deterministic corpus selections.
-- [x] Qualify width/endian behavior, borrow lifetimes and concrete no-atomics ARM emission.
-- [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [x] Compare allocating and borrowed dictionary output with distinct destination/staging/workspace/dictionary ledgers and independent repeats.
-- [ ] Reconcile bounded dictionary compression output and decompose the next evidenced missing contract.
+Module 34 is complete within its persistent dictionary caller-owned compression scope.
+Completed items are archived in Git history and `docs/progress.md`; contracts,
+measurements and limits are in `docs/dictionary-slice-encode-validation.md` and
+`docs/dictionary-slice-encode-benchmarks.md`. Final reconciliation is in
+`docs/evidence/2026-10-27-dictionary-slice-encode-closure.json`.
+Complete upstream parity remains open.
 
 ## Module 35: reusable one-shot compression dictionary and prefix selection
 

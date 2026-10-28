@@ -163,7 +163,7 @@ staging. Its completed bounded qualification and limitations are documented in
 
 Dictionary-backed caller-owned compression is available through
 `compress_into_with_dictionary` and `compress_into_with_dictionary_in`. Its
-focused qualification and remaining full-matrix/performance work are recorded in
+completed bounded qualification and remaining scope are recorded in
 [the dictionary output validation report](docs/dictionary-slice-encode-validation.md).
 
 ## Current support

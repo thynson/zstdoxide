@@ -1,7 +1,8 @@
 # Dictionary-backed caller-owned compression validation
 
-Module 34 is in progress. The internal dictionary-view emitter and public caller-
-output wrappers have focused qualification. Complete feature/release regression, measurements and reconciliation remain open.
+Module 34 is complete within its persistent raw/prepared dictionary caller-owned
+output scope. Focused, guarded native/corpus/platform, complete feature/release
+and independent measurement gates have successful source-bound receipts.
 
 ## Internal immutable selection
 
@@ -107,3 +108,16 @@ universal unsafe benefit or eliminate scratch allocations. Immutable dictionary
 construction/release has its own ledger outside both clocks; snapshots remain
 unchanged during compression. See
 `dictionary-slice-encode-benchmarks.md` and `evidence/2026-10-27-dictionary-slice-encode-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+Integrated production and matrix sources match the qualified public/native/
+platform/corpus and measured snapshots. Every stage archive is rehashed; earlier
+internal snapshots retain their distinct identities. No new supplemental native
+or deterministic corpus case promotes an original upstream group by inference.
+
+One-shot prefix/persistent selection is designed and decomposed next. Reference
+levels, streaming variants, native workspace semantics and complete upstream
+library/CLI parity remain open. Short output may retain earlier complete appends;
+all writes remain within the caller slice, and the dictionary is unchanged.
+Evidence: `evidence/2026-10-27-dictionary-slice-encode-closure.json`.

@@ -1552,3 +1552,36 @@ context/advanced-parameter coverage. All source/case statuses and counts remain
 unchanged; the complete pinned inventory audit passes again. This separate
 metadata commit preserves every earlier frozen qualification snapshot. Evidence:
 `evidence/2026-10-27-fuzz-capability-reconciliation.json`.
+
+## Module 34: dictionary-backed caller-owned compression complete (2026-10-27)
+
+compress_into_with_dictionary and its allocator-aware variant emit the exact
+existing allocating dictionary encoder bytes into caller storage. Immutable
+DictionaryView copies avoid shared-handle clones and copied dictionary history;
+dictionary and scratch ownership remain independent. Successful suffixes remain
+unchanged; errors can leave earlier complete appends. Borrowed non-Clone
+allocators and the inherited independent safe/unsafe storage backends retain
+their contracts.
+
+All 75 final commands pass: safe/all/22 isolated full suites, no_std and strict
+Clippy, safe/all release and format. Every full/release suite reports1752 passed
+and75 ignored across114 groups. Separate native helpers cover90 raw/empty/
+prepared/all-ID-width cases and810 actual capacity attempts, retaining every
+successful native output for independent Rust decoding. Deterministic trained
+selection supplements retain48 controlled persistent selections and explicit
+noise ledgers without an external rolling corpus or fastCover equivalence claim.
+Four foreign Miri runs and four concrete core+alloc ARM checks/builds pass.
+
+Thirty-three dictionary/input pairs retain198 allocation/result rows and330
+samples per executable across24 primary backends and independent safe/all
+rebuilds. Dictionary construction is outside both clocks; unchanged snapshots
+prove zero dictionary allocator activity during compression. Output/staging and
+workspace costs remain separate. Borrowed/allocated geometric mean ratios over
+30 nonempty pairs: primary safe borrowed/allocated 0.9997; primary all borrowed/allocated 0.9990; repeat safe borrowed/allocated 0.9918; repeat all borrowed/allocated 0.9857. No universal unsafe speedup or
+absence of scratch allocation is inferred.
+
+Completed tasks are archived in Git history; Module35 call-scoped compression
+selection is designed and decomposed. Complete upstream parity remains open.
+Details: `dictionary-slice-encode-validation.md`,
+`dictionary-slice-encode-benchmarks.md`, and
+`evidence/2026-10-27-dictionary-slice-encode-closure.json`.
