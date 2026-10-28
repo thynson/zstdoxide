@@ -100,3 +100,12 @@ separate explicit execution receipts; ignored tests are not credited as passes.
 Focused preparation and borrowed benchmark baseline rejections remain retained.
 Native empty-input differences and call-versus-frame prefix scope remain explicit.
 Evidence: `evidence/2026-10-27-one-shot-selection-feature-matrix.json`.
+
+## Measured deterministic comparisons
+
+All 23 retained primary backends and independently rebuilt safe/all repeats have
+identical clock-free dictionary/scratch ownership and guard qualification and complete raw timing
+records. Nine coordinator/setup/restoration modes are timed separately with equal per-operation clock overhead.
+Fresh primary/repeat CPU barriers precede sequential measurements. See
+`one-shot-selection-benchmarks.md`; the host results do not establish a universal
+unsafe speedup. Evidence: `evidence/2026-10-27-one-shot-selection-benchmarks.json`.

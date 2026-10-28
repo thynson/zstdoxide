@@ -174,7 +174,7 @@ after Module 31 closes; this coordinator does not retain decoder scratch.
 - [x] Qualify persistent/prefix lifecycle schedules using normal/sanitized native contexts and explicit subsequent-call observations.
 - [x] Qualify real ownership transitions and overlapping output under foreign Miri and concrete no-atomics code generation.
 - [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [ ] Compare deterministic coordinator/output workloads with ownership ledgers, restoration/setup accounting and independent repeats after actual CPU barriers.
+- [x] Compare deterministic coordinator/output workloads with ownership ledgers, restoration/setup accounting and independent repeats after actual CPU barriers.
 - [ ] Reconcile bounded one-shot selection coverage and decompose the next missing contract without claiming native workspace or full upstream parity.
 
 ## Module 33: caller-owned one-shot compression output
