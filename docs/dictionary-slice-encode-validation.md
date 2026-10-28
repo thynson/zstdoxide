@@ -77,3 +77,18 @@ core-plus-alloc check/object commands instantiate the borrowed dictionary view
 entrypoint and encoded-output copying, with retained LLVM IR and ARM ELF objects.
 These are interpreter and code-generation results, not foreign hardware runs.
 Evidence: `evidence/2026-10-27-dictionary-slice-encode-platform.json`.
+
+## Complete feature and release qualification
+
+All 75 commands pass on the final frozen candidate: safe/all and every 22 isolated
+unsafe feature each execute complete tests, true no_std compilation and strict
+Clippy; safe/all release and formatting also pass. Each complete/release suite
+reports 1752 passed and 75 ignored across 114 result groups. Native adapters are
+explicitly executed in their separate focused capture/replay receipts.
+
+The final candidate deliberately combines qualified public/native/platform/corpus
+files and the independently audited post-33 metadata reconciliation. Earlier
+focused snapshots retain their original metadata; none was silently rewritten.
+Integrated production and all matrix source identities are rechecked before this
+item is committed. Whole compression measurements and closure remain open.
+Evidence: `evidence/2026-10-27-dictionary-slice-encode-feature-matrix.json`.
