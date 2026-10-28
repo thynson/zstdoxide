@@ -118,3 +118,16 @@ focused snapshots retain their original metadata; none was silently rewritten.
 Integrated production and all matrix source identities are rechecked before this
 item is committed. Whole compression measurements and closure remain open.
 Evidence: `evidence/2026-10-27-slice-encode-feature-matrix.json`.
+
+## Source-bound compression measurements
+
+All 24 primary feature backends and independently rebuilt safe/all repeats retain
+110 raw timing samples and 44 role-specific allocation/result rows per executable.
+The original allocator separately owns the returned Vec destination or borrowed
+path staging; independent clones own codec workspace. Every owner is released
+through its exact allocation domain. Caller output setup and tracking qualification
+are outside clocks; all Global codec scratch and allocated destination destruction
+are inside. Every complete output and guard agrees before timing. Fresh process
+observations gate each sequential campaign. Fixed-order ratios do not establish a
+universal unsafe benefit or eliminate scratch allocations. See
+`slice-encode-benchmarks.md` and `evidence/2026-10-27-slice-encode-benchmarks.json`.

@@ -183,7 +183,7 @@ Module 32 closes. Initial scope is dictionary-free ordinary Greedy compression.
 - [x] Qualify guarded native interoperability and retained deterministic corpus workloads without claiming byte-identical C output.
 - [x] Qualify width/endian behavior and concrete no-atomics ARM code generation.
 - [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [ ] Compare allocating and borrowed output with separate destination/staging/workspace accounting and independent repeats after actual CPU barriers.
+- [x] Compare allocating and borrowed output with separate destination/staging/workspace accounting and independent repeats after actual CPU barriers.
 - [ ] Reconcile bounded compression output coverage and decompose the next evidenced missing contract.
 
 ## Module 34: dictionary-backed caller-owned compression
