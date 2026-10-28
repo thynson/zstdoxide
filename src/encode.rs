@@ -89,6 +89,60 @@ pub fn compress_into_in<A: Allocator + Clone>(
     compress_frame_into_in(input, output, allocator)
 }
 
+/// Compresses a dictionary-backed frame into caller-owned storage.
+///
+/// Success emits exactly [`compress_with_dictionary`]'s bytes and returns their
+/// length. The unused output suffix is unchanged. [`crate::compression_bound`]
+/// is sufficient, while smaller destinations succeed when the actual frame fits.
+/// A short destination returns [`Error::ResourceLimit`] and may retain earlier
+/// complete appends. No error writes outside the supplied slice; whole-call
+/// atomicity is not promised. The dictionary remains immutable and its shared
+/// handle is not cloned. Input, output and dictionary borrows are independent
+/// and are released before return. This entrypoint uses the existing one-shot
+/// Greedy encoder; it does not expose reference levels or streaming state.
+///
+/// ```
+/// let dictionary = zstdoxide::Dictionary::raw(b"example pattern ").unwrap().into_shared();
+/// let input = b"example pattern example pattern";
+/// let mut output = vec![0xa5; zstdoxide::compression_bound(input.len()).unwrap()];
+/// let size = zstdoxide::compress_into_with_dictionary(input, &mut output, &dictionary).unwrap();
+/// assert_eq!(&output[..size], zstdoxide::compress_with_dictionary(input, &dictionary).unwrap());
+/// assert!(output[size..].iter().all(|&b| b == 0xa5));
+/// ```
+///
+/// ```compile_fail
+/// let dictionary = zstdoxide::Dictionary::raw(b"pattern").unwrap().into_shared();
+/// let mut storage = [0; 64];
+/// zstdoxide::compress_into_with_dictionary(&storage[..16], &mut storage, &dictionary).unwrap();
+/// ```
+pub fn compress_into_with_dictionary(
+    input: &[u8],
+    output: &mut [u8],
+    dictionary: &SharedDictionary,
+) -> Result<usize> {
+    compress_into_with_dictionary_in(input, output, dictionary, Global)
+}
+
+/// Compresses into caller output with independently allocated dictionary and scratch.
+///
+/// Output and error behavior matches [`compress_into_with_dictionary`]. Accepts
+/// a shared dictionary or [`DictionaryView`] through the sealed handle contract;
+/// copying the view neither clones the handle nor copies dictionary content.
+/// The caller destination is never allocated or freed here. One-block staging
+/// and existing search/entropy workspaces use the supplied allocator and its
+/// clones, release all scratch before return, and retain no caller borrows.
+/// Dictionary allocation remains unchanged, including on allocation failure.
+/// Borrowed non-Clone allocators are accepted by reference. Allocator cloning
+/// has the caller's own panic/allocation behavior as in [`compress_into_in`].
+pub fn compress_into_with_dictionary_in<A: Allocator + Clone, D: DictionaryHandle>(
+    input: &[u8],
+    output: &mut [u8],
+    dictionary: &D,
+    allocator: A,
+) -> Result<usize> {
+    compress_frame_into_with_view_in(input, output, Some(dictionary.view()), allocator)
+}
+
 /// Compresses input into a checksummed frame using owned dictionary content.
 ///
 /// A formatted dictionary's nonzero identifier is written using its smallest

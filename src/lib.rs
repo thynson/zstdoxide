@@ -216,8 +216,8 @@ pub use dictionary_train::{
     train_dictionary_in,
 };
 pub use encode::{
-    compress, compress_in, compress_into, compress_into_in, compress_with_dictionary,
-    compress_with_dictionary_in,
+    compress, compress_in, compress_into, compress_into_in, compress_into_with_dictionary,
+    compress_into_with_dictionary_in, compress_with_dictionary, compress_with_dictionary_in,
 };
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
