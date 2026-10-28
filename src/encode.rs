@@ -109,6 +109,39 @@ fn compress_frame_in<A: Allocator + Clone, D: DictionaryHandle>(
     Ok(output)
 }
 
+/// Emit ordinary one-shot framing through one reusable encoded-block staging
+/// vector. Neither the source nor destination borrow escapes this call.
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "public slice API follows engine qualification")
+)]
+pub(crate) fn compress_frame_into_in<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    allocator: A,
+) -> Result<usize> {
+    let header = EncodedFrameHeader::new(input.len(), 0);
+    let mut sink = crate::frame_sink::FrameSink::new(output);
+    sink.append(header.as_bytes())?;
+    let mut encoder = BlockEncoder::<A, SharedDictionary>::new_in(allocator.clone());
+    encoder.start_frame(None, input.len() as u64)?;
+    // BlockEncoder reserves each raw block bound fallibly. Clearing after each
+    // append retains at most one block's encoded capacity, not the whole frame.
+    let mut staging = Vec::new_in(allocator);
+    let blocks = input.len().div_ceil(MAX_BLOCK_SIZE).max(1);
+    if input.is_empty() {
+        encoder.encode(&[], true, &mut staging)?;
+        sink.append(&staging)?;
+    }
+    for (index, block) in input.chunks(MAX_BLOCK_SIZE).enumerate() {
+        staging.clear();
+        encoder.encode(block, index + 1 == blocks, &mut staging)?;
+        sink.append(&staging)?;
+    }
+    sink.append(&(xxhash::checksum(input) as u32).to_le_bytes())?;
+    Ok(sink.len())
+}
+
 /// Reusable frame match history, literal trees, and sequence-table workspace.
 ///
 /// Corresponds to the independently owned block-compression workspace of
@@ -433,32 +466,50 @@ impl<A: Allocator, D: DictionaryHandle> BlockEncoder<A, D> {
     }
 }
 
-/// Writes a single-segment frame header; corresponds to `ZSTD_writeFrameHeader`.
+/// Initialized single-segment header bytes; a value record shared by every
+/// backend. Its used prefix is at most 4 + 1 + 4 + 8 = 17 bytes. No allocation,
+/// pointer ownership, retained borrow or artificial unsafe representation.
+struct EncodedFrameHeader {
+    bytes: [u8; 17],
+    length: usize,
+}
+
+impl EncodedFrameHeader {
+    /// Corresponds to the single-segment layout of `ZSTD_writeFrameHeader`.
+    fn new(content_size: usize, dictionary_id: u32) -> Self {
+        let size = content_size as u64;
+        let (descriptor, value, count) = if size < 256 {
+            (0x24, size, 1)
+        } else if size < 65_792 {
+            (0x64, size - 256, 2)
+        } else if size <= u64::from(u32::MAX) {
+            (0xa4, size, 4)
+        } else {
+            (0xe4, size, 8)
+        };
+        let (dictionary_flag, dictionary_bytes) = dictionary_field(dictionary_id);
+        let mut bytes = [0; 17];
+        bytes[..4].copy_from_slice(&crate::frame::MAGIC.to_le_bytes());
+        bytes[4] = descriptor | dictionary_flag;
+        let size_start = 5 + dictionary_bytes;
+        bytes[5..size_start].copy_from_slice(&dictionary_id.to_le_bytes()[..dictionary_bytes]);
+        let length = size_start + count;
+        bytes[size_start..length].copy_from_slice(&value.to_le_bytes()[..count]);
+        Self { bytes, length }
+    }
+
+    fn as_bytes(&self) -> &[u8] {
+        &self.bytes[..self.length]
+    }
+}
+
 /// The caller reserves the complete header before this infallible append.
 fn write_frame_header<A: Allocator>(
     output: &mut Vec<u8, A>,
     content_size: usize,
     dictionary_id: u32,
 ) {
-    for byte in crate::frame::MAGIC.to_le_bytes() {
-        output.push(byte);
-    }
-    let size = content_size as u64;
-    let (descriptor, value, count) = if size < 256 {
-        (0x24, size, 1)
-    } else if size < 65_792 {
-        (0x64, size - 256, 2)
-    } else if size <= u64::from(u32::MAX) {
-        (0xa4, size, 4)
-    } else {
-        (0xe4, size, 8)
-    };
-    let (dictionary_flag, dictionary_bytes) = dictionary_field(dictionary_id);
-    output.push(descriptor | dictionary_flag);
-    for &byte in &dictionary_id.to_le_bytes()[..dictionary_bytes] {
-        output.push(byte);
-    }
-    for &byte in &value.to_le_bytes()[..count] {
+    for &byte in EncodedFrameHeader::new(content_size, dictionary_id).as_bytes() {
         output.push(byte);
     }
 }
@@ -1010,6 +1061,193 @@ mod tests {
             fail_at: None,
         })
         .unwrap()
+    }
+
+    #[test]
+    fn slice_engine_header_record_preserves_independent_wire_vectors() {
+        for (size, suffix) in [
+            (0, vec![0x24, 0]),
+            (255, vec![0x24, 255]),
+            (256, vec![0x64, 0, 0]),
+            (65_791, vec![0x64, 255, 255]),
+            (65_792, vec![0xa4, 0, 1, 1, 0]),
+            (u32::MAX as usize, vec![0xa4, 255, 255, 255, 255]),
+        ] {
+            let header = EncodedFrameHeader::new(size, 0);
+            assert_eq!(&header.as_bytes()[..4], &[0x28, 0xb5, 0x2f, 0xfd]);
+            assert_eq!(&header.as_bytes()[4..], suffix);
+        }
+        if usize::BITS > 32 {
+            let header = EncodedFrameHeader::new((u64::from(u32::MAX) + 1) as usize, u32::MAX);
+            assert_eq!(
+                header.as_bytes(),
+                &[
+                    0x28, 0xb5, 0x2f, 0xfd, 0xe7, 255, 255, 255, 255, 0, 0, 0, 0, 1, 0, 0, 0
+                ]
+            );
+        }
+    }
+
+    #[test]
+    fn slice_engine_exact_bytes_across_header_and_block_boundaries() {
+        let lengths: &[usize] = if cfg!(miri) {
+            &[0, 1, 5, 6, 32]
+        } else {
+            &[
+                0,
+                1,
+                5,
+                6,
+                255,
+                256,
+                65_791,
+                65_792,
+                MAX_BLOCK_SIZE - 1,
+                MAX_BLOCK_SIZE,
+                MAX_BLOCK_SIZE + 1,
+                MAX_BLOCK_SIZE * 3 + 17,
+            ]
+        };
+        for &length in lengths {
+            for kind in 0..3 {
+                let mut seed = 0x6a09e667u32;
+                let input: Vec<_> = (0..length)
+                    .map(|i| match kind {
+                        0 => 0x5a,
+                        1 => {
+                            b"repeated meaningful phrase with a deterministic distant suffix"
+                                [i % 62]
+                        }
+                        _ => {
+                            seed ^= seed << 13;
+                            seed ^= seed >> 17;
+                            seed ^= seed << 5;
+                            seed as u8
+                        }
+                    })
+                    .collect();
+                let expected = compress(&input).unwrap();
+                for extra in [0, 13] {
+                    let mut output = vec![0xa5; expected.len() + extra + 2];
+                    let size = compress_frame_into_in(
+                        &input,
+                        &mut output[1..1 + expected.len() + extra],
+                        Global,
+                    )
+                    .unwrap();
+                    assert_eq!(size, expected.len());
+                    assert_eq!(&output[1..1 + size], expected);
+                    assert!(
+                        output[..1]
+                            .iter()
+                            .chain(&output[1 + size..])
+                            .all(|&b| b == 0xa5)
+                    );
+                    assert_eq!(
+                        crate::decompress(&output[1..1 + size], length).unwrap(),
+                        input
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn slice_engine_every_short_capacity_is_bounded_and_next_call_recovers() {
+        for input in [
+            &b""[..],
+            &b"abcde"[..],
+            &b"same phrase same phrase same phrase"[..],
+        ] {
+            let expected = compress(input).unwrap();
+            for capacity in 0..expected.len() {
+                let mut output = vec![0xa5; capacity + 2];
+                assert_eq!(
+                    compress_frame_into_in(input, &mut output[1..1 + capacity], Global),
+                    Err(Error::ResourceLimit)
+                );
+                assert_eq!(output[0], 0xa5);
+                assert_eq!(output[capacity + 1], 0xa5);
+                let mut recovered = vec![0; expected.len()];
+                assert_eq!(
+                    compress_frame_into_in(input, &mut recovered, Global),
+                    Ok(expected.len())
+                );
+                assert_eq!(recovered, expected);
+            }
+        }
+    }
+
+    #[test]
+    fn slice_engine_actual_output_can_fit_far_below_compression_bound() {
+        let input = vec![
+            0x33;
+            if cfg!(miri) {
+                16
+            } else {
+                MAX_BLOCK_SIZE * 2 + 7
+            }
+        ];
+        let expected = compress(&input).unwrap();
+        assert!(expected.len() < crate::compression_bound(input.len()).unwrap());
+        let mut output = vec![0; expected.len()];
+        assert_eq!(
+            compress_frame_into_in(&input, &mut output, Global),
+            Ok(expected.len())
+        );
+        assert_eq!(output, expected);
+    }
+
+    #[test]
+    fn slice_engine_all_scratch_failures_release_owners_and_preserve_outer_guards() {
+        for input in [
+            &b""[..],
+            &b"repeatable allocation and entropy pattern repeatable allocation and entropy pattern"
+                [..],
+        ] {
+            let expected = compress(input).unwrap();
+            let owner = block_allocator();
+            let monitor = owner.monitor();
+            let mut output = vec![0xa5; expected.len() + 2];
+            assert_eq!(
+                compress_frame_into_in(input, &mut output[1..1 + expected.len()], owner),
+                Ok(expected.len())
+            );
+            let attempts = monitor.snapshot().attempts;
+            assert!(attempts > 0);
+            monitor.assert_released();
+            for ordinal in 1..=attempts {
+                let owner = block_allocator();
+                let monitor = owner.monitor();
+                monitor.set_fail_at(NonZeroU64::new(ordinal));
+                output.fill(0xa5);
+                assert_eq!(
+                    compress_frame_into_in(input, &mut output[1..1 + expected.len()], owner),
+                    Err(Error::AllocationFailed)
+                );
+                assert_eq!(monitor.snapshot().attempts, ordinal);
+                assert_eq!(monitor.snapshot().failures, 1);
+                monitor.assert_released();
+                assert_eq!(output[0], 0xa5);
+                assert_eq!(output[expected.len() + 1], 0xa5);
+            }
+        }
+    }
+
+    #[test]
+    fn slice_engine_borrowed_nonclone_allocator_releases_all_scratch() {
+        let owner = block_allocator().into_non_clone();
+        let monitor = owner.monitor();
+        let input = b"borrowed allocator borrowed allocator";
+        let expected = compress(input).unwrap();
+        let mut output = vec![0; expected.len()];
+        assert_eq!(
+            compress_frame_into_in(input, &mut output, &owner),
+            Ok(expected.len())
+        );
+        assert_eq!(output, expected);
+        monitor.assert_released();
+        assert_eq!(monitor.snapshot().identities_created, 1);
     }
 
     #[test]

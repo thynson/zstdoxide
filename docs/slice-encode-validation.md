@@ -1,8 +1,8 @@
 # Caller-owned compression output validation
 
-Module 33 is in progress. The bounded output leaf is integrated; frame emission,
-public APIs, native/corpus checks, full-codec regression and measurements remain
-open. No caller-owned compression API is claimed yet.
+Module 33 is in progress. Bounded output and internal one-block frame emission
+are integrated. Public APIs, native/corpus/platform checks, full-codec regression
+and whole compression measurements remain open.
 
 ## Checked frame sink
 
@@ -29,3 +29,23 @@ milestone gates. Separate isolated sink measurements compare safe/unsafe primary
 and independently rebuilt repeats after actual CPU barriers; see
 `frame-sink-benchmarks.md`. These are not full compression measurements. Evidence: `evidence/2026-10-27-frame-sink-component.json` and
 `evidence/2026-10-27-frame-sink-integration.json`.
+
+## One-block frame emission
+
+The internal ordinary encoder shares a fully initialized 17-byte maximum header
+record with the existing allocating path. It stages one encoded block, appends
+that block through FrameSink, clears/reuses staging, and writes the checksum.
+It owns no full-frame output vector. Existing BlockEncoder history, parser and
+entropy operations remain unchanged. The plain header record needs no unsafe
+representation. Allocation failure releases every scratch owner; a later failed
+append can leave the previously completed header/blocks visible.
+
+Thirteen focused safe/sink/all 22 commands pass. Six new units cover independent
+wire vectors, exact existing-compressor output at content-size/block boundaries,
+raw/RLE/compressed patterns, round trips, output guards/tails, every short small
+destination, below-bound exact fits, every observed scratch failure and borrowed
+non-Clone allocator owners. One inherited all-ID/all-size header/allocator unit
+also runs in each configuration, with true no_std, strict Clippy and formatting.
+The initial test used an options value with the older scalar-limit convenience
+API; that compile rejection is retained and not credited as a pass.
+Evidence: `evidence/2026-10-27-slice-encode-engine.json`.
