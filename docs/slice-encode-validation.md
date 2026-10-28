@@ -93,3 +93,13 @@ advanced parameters or persistent-context branch. No complete external rolling
 corpus or original-group promotion is claimed.
 Evidence: `evidence/2026-10-27-slice-encode-native.json` and
 `evidence/2026-10-27-slice-encode-corpus.json`.
+
+## Foreign interpretation and concrete emission
+
+Four strict-provenance Miri runs on i686/s390x in safe/all configurations execute
+actual borrowed compression, exact allocating-output parity, metadata and decode
+for empty/raw/RLE/compressed input, including short-destination guards. Four
+thumbv6m checks/object builds use core plus alloc and instantiate actual
+compression/output copying in retained LLVM IR and ARM objects. These are
+interpreter/code-generation checks, not execution on foreign hardware.
+Evidence: `evidence/2026-10-27-slice-encode-platform.json`.
