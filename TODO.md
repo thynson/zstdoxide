@@ -182,6 +182,7 @@ in `docs/dictionary-slice-encode-design.md` and `docs/data-structures.md`. Promo
 only after Module 33 closes; preserve independent dictionary/scratch ownership.
 
 - [x] Analyze bounded dictionary frame emission, borrowed views and bound sufficiency before implementation.
+- [x] Reconcile inherited fuzz documentation with completed frame-query and ordinary caller-output APIs without promoting unmapped original branches.
 - [ ] Generalize one-block frame emission to immutable dictionary views without shared-handle clones or copied dictionary content.
 - [ ] Expose documented dictionary-backed caller-owned APIs with exact existing output, capacity and independent allocator/failure qualification.
 - [ ] Qualify guarded normal/sanitized native dictionary interoperability and deterministic corpus selections.

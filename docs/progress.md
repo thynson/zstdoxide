@@ -1541,3 +1541,14 @@ designed and decomposed. Dictionaries/reference levels/streaming in this API,
 in-place compression and complete upstream parity remain separate. Details:
 `slice-encode-validation.md`, `slice-encode-benchmarks.md`, and
 `evidence/2026-10-27-slice-encode-closure.json`.
+
+## Fuzz capability wording reconciliation (2026-10-27)
+
+After Module33 source closure, manifest reasons and FUZZ-TARGETS.md distinguish
+implemented frame queries/in-place/caller-owned output from their still-unmapped
+original fuzz branches. The347-input ordinary output supplement is documented
+without promoting random-capacity selectors, reference-level caller output or
+context/advanced-parameter coverage. All source/case statuses and counts remain
+unchanged; the complete pinned inventory audit passes again. This separate
+metadata commit preserves every earlier frozen qualification snapshot. Evidence:
+`evidence/2026-10-27-fuzz-capability-reconciliation.json`.

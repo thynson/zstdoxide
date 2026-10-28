@@ -19,8 +19,7 @@ No unsafe backend is useful for a small test-only parameter record.
 Each adapter borrows its source, owns encoded/decoded storage, and uses explicit
 output/window limits. Successful decode metadata is checked by an independent
 safe test-only frame boundary walker plus the public `FrameHeader::parse`; this
-is not a new production API or a replacement for the absent production frame
-scanner. Deterministic corpus mutations own their bytes. External corpus paths
+remains independent of the production frame-query APIs now available. Deterministic corpus mutations own their bytes. External corpus paths
 are visited in sorted order with explicit per-file, file-count, output, and
 window caps; symbolic links are not followed. Failure reports identify the
 adapter and source case. No caller-owned aliasing/in-place or dictionary API is
@@ -42,11 +41,11 @@ The tail producer lives in `tests/upstream/fuzz_support.rs`.
 
 | Pinned source / line | Rust mapping | Coverage and remaining work |
 | --- | --- | --- |
-| `simple_decompress.c:28` `LLVMFuzzerTestOneInput` | `simple_decompress`, `simple_decompress_deterministic_corpus`, `successful_decode_checks_known_unknown_and_concatenated_sizes` | Exact tail-selected source prefix and inclusive `0..10*prefix` output limit. Errors are allowed; success must be bounded and agree with all declared frame sizes. The independent test-only frame walker supplies the assertion because a production `findDecompressedSize` equivalent is absent. Reusable decoder/reset APIs exist; this one-shot adapter does not exercise the original persistent-context branch. |
-| `decompress_dstSize_tooSmall.c:30` `LLVMFuzzerTestOneInput` | `decompress_destination_too_small`, `too_small_destination_deterministic_corpus` | Exact tail-selected source length and too-small capacity, a real caller-owned destination with prefix/suffix canaries, and the retained explicit-limit assertion. Empty source succeeds; nonempty source returns typed `ResourceLimit`. Level 1 selection and third-party sequence producers remain unsupported. Reusable contexts exist, but their original target branch is not exercised here. |
-| `zstd_frame_info.c:22` `LLVMFuzzerTestOneInput` | `frame_information`, `frame_information_deterministic_corpus` | Public `FrameHeader::parse` takes arbitrary input. Successful header parses are bounded, accept exactly the returned header prefix, and reject its final-byte truncation. The metadata record covers content size, dictionary ID, window and checksum. Production frame boundary/decompressed-size/bound/isFrame helpers and magicless configuration are absent. |
-| `simple_round_trip.c:141` `LLVMFuzzerTestOneInput`; `:52` `roundTripTest` | `simple_round_trip`, `simple_round_trip_deterministic_corpus` | Exact tail-selected source prefix; byte-identical repeated compression and exact decoded length/content. Full byte comparisons strengthen upstream's encoded size/hash equality. Reusable contexts are available but their original target branch is not exercised here. Compression levels, random advanced parameters, smaller one-shot compression destinations, decoder max-block setting and third-party sequence producers remain unsupported. |
-| `simple_round_trip.c:30` `getDecompressionMargin` and in-place roundtrip | No executable substitute | Overlapping caller-owned buffers and decompression-margin APIs do not exist; an owned-output roundtrip does not prove in-place correctness. |
+| `simple_decompress.c:28` `LLVMFuzzerTestOneInput` | `simple_decompress`, `simple_decompress_deterministic_corpus`, `successful_decode_checks_known_unknown_and_concatenated_sizes` | Exact tail-selected source prefix and inclusive `0..10*prefix` output limit. Errors are allowed; success must be bounded and agree with all declared frame sizes. The independent test-only frame walker supplies this assertion; production decompressed-size queries now exist but are not substituted into this original adapter. Reusable decoder/reset APIs exist; this one-shot adapter does not exercise the original persistent-context branch. |
+| `decompress_dstSize_tooSmall.c:30` `LLVMFuzzerTestOneInput` | `decompress_destination_too_small`, `too_small_destination_deterministic_corpus` | Exact tail-selected source length and too-small capacity, a real caller-owned destination with prefix/suffix canaries, and the retained explicit-limit assertion. Empty source succeeds; nonempty source returns typed `ResourceLimit`. This adapter does not exercise the original level-1 selection or third-party sequence-producer branches. Reusable contexts exist, but their original target branch is not exercised here. |
+| `zstd_frame_info.c:22` `LLVMFuzzerTestOneInput` | `frame_information`, `frame_information_deterministic_corpus` | Public `FrameHeader::parse` takes arbitrary input. Successful header parses are bounded, accept exactly the returned header prefix, and reject its final-byte truncation. The metadata record covers content size, dictionary ID, window and checksum. Production frame extent/decompressed-size/bound queries now exist, but their complete original fuzz assertions are not mapped in this header-only adapter. Generic isFrame and magicless configuration remain outside this coverage. |
+| `simple_round_trip.c:141` `LLVMFuzzerTestOneInput`; `:52` `roundTripTest` | `simple_round_trip`, `simple_round_trip_deterministic_corpus` | Exact tail-selected source prefix; byte-identical repeated compression and exact decoded length/content. Full byte comparisons strengthen upstream's encoded size/hash equality. Reusable contexts are available but their original target branch is not exercised here. All347 retained inputs additionally compare ordinary caller-owned output at actual-size-plus-two and actual-size-minus-one with exact bytes and guards. This supplement does not port the original random-capacity selector or reference-level caller output. Random advanced parameters, decoder max-block setting and third-party sequence-producer branches remain unmapped here; separate reference-profile coverage is documented below. |
+| `simple_round_trip.c:30` `getDecompressionMargin` and in-place roundtrip | Original target branch remains unmapped | Decompression-margin and guarded suffix-input in-place APIs now exist and have separate native qualification. This original target's exact selector/parameter/overlap schedule is not ported by the ordinary owned-output or caller-owned compression supplement. |
 | `fuzz_data_producer.c:19,27,29,51,55,66,70,76,80,90` | `DataProducer::{new,unsigned_range,unsigned,signed_range,remaining,rollback,is_empty,contract,reserve_prefix}` | Original scalar semantics with checked slice indices and ordinary Rust drop. No heap allocation is needed for the producer itself. Signed full-width arithmetic is defined using `i64`; rollback also rejects restoration beyond the borrowed allocation. |
 
 All four complete C fuzz targets remain **partial** ports: their executable
@@ -134,3 +133,15 @@ unconsumed. Compressed sizes fit the captured C bound minus the selected
 reduction; owned vectors do not implement the original caller-buffer failure
 contract. Reusable CCtx/DCtx, mutable max-block settings, advanced random
 parameters, external sequences and in-place overlap remain unported.
+
+## Caller-owned compression supplement (2026-10-27)
+
+The original347 deterministic inputs and source-prefix selection are unchanged.
+Each selected source is additionally compressed into actual-size-plus-two caller
+storage and into an actual-size-minus-one destination. Complete success bytes,
+short-output ResourceLimit, outer canaries and the unchanged successful suffix
+are checked. Errors may retain earlier completed appends. This is an ordinary
+Greedy supplement; it does not map the native randomized capacity selector or
+add caller-owned reference-level compression. All four complete fuzz targets
+remain partial. Focused evidence is `../../docs/evidence/2026-10-27-slice-encode-corpus.json`;
+full source closure is `../../docs/evidence/2026-10-27-slice-encode-closure.json`.
