@@ -1496,3 +1496,17 @@ Closure verifies integrated source/test identities and every stage archive. The
 completed checklist is cleared; Module 33 retains caller-owned ordinary compression
 output decomposition. See `one-shot-selection-validation.md`,
 `one-shot-selection-benchmarks.md` and the source-bound closure receipt.
+
+## Original-test inventory reconciliation (2026-10-27)
+
+After Module32 closure, eleven original function/diagnostic anchors for bounded
+queries and exact skippable histories advance to ported. Group948 stays partial
+for its original native error-sentinel-as-bound comparison. Three late skippable
+metadata groups become planned because APIs exist but exact fixtures remain
+unmapped. Dictionary_decompress source/case reasons now record persistent in-place
+and all12063 call-scoped direct/in-place supplements while preserving partial
+native-training/context coverage. The machine manifest and FUZZER table agree.
+The complete pinned audit verifies639 files and615 groups; counts are navigation
+units, not a complete upstream assertion tally. All frozen milestone manifests
+retain their earlier identities; this is a separate metadata-only reconciliation.
+Evidence: `evidence/2026-10-27-query-utility-corpus-inventory.json`.

@@ -4370,7 +4370,7 @@
       "suite": "libfuzzer",
       "role": "fuzz_target",
       "status": "partial",
-      "reason": "All12063 pinned rolling dictionary_decompress inputs run under safe/all release with zero skips: 11768 trained dictionaries, 295 empty fallbacks and 20 successful bounded decodes. Original source/training/attachment/capacity selectors are preserved. Prepared/loaded branches use real guarded direct destinations and compare success/bytes with buffered decoding; 1133 prefix selections retain buffered output in the one-shot direct campaign. The independent Rust trainer is not native fastCover and original C context/by-reference/loading API differences remain partial. A separately recorded stable-session supplement replays all12063 files under safe/all, including 10930 persistent prepared/loaded selections at a fixed seven-byte input schedule; successful bytes and success/failure agree across stable/direct/buffered output. Prefix branches remain buffered. This additional schedule consumes no original selector and is not an original native one-shot streaming branch. A separately labelled seven-byte stable prefix supplement now covers all 1,133 prefix selections in the full 12,063-input safe/all corpus, comparing guarded prefix-once output with buffered Rust output. Original tail selectors and training choices remain unchanged; this is not an original one-shot native streaming selector.",
+      "reason": "All 12,063 pinned rolling dictionary_decompress inputs run under safe/all release without skips. Original source/training/attachment/capacity selectors remain intact: 11,768 Rust-trained dictionaries, 295 empty training fallbacks and 20 successful legacy-adapter decodes. The 10,930 persistent prepared/loaded branches compare guarded direct, in-place, buffered and seven-byte stable output; all 1,133 prefix branches compare buffered and seven-byte frame-scoped stable prefixes. A separate call-scoped supplement runs both direct and in-place coordinators for all 12,063 selected inputs, comparing exact Result, complete successful bytes, guards and selection retention/consumption against a stateless persistent dictionary view. Its prefix covers all frames in one call and is deliberately not equated to frame-scoped prefixes. The historical outcome ledger does not separately count coordinated successes. Rust training is not byte-identical native fastCover, and opaque C context/workspace/loading/parameter contracts remain partial. Fixed fragmentation and suffix layouts are supplemental schedules, not new original selectors. Evidence: docs/evidence/2026-10-27-dictionary-in-place-corpus.json and 2026-10-27-one-shot-selection-corpus.json.",
       "rust_tests": [
         "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
         "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
@@ -4381,7 +4381,8 @@
         "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus",
         "tests/dictionary_output.rs#truncations_mutations_and_concatenation_do_not_cross_output_allowance",
         "tests/stable_dictionary_output.rs#truncated_and_mutated_frames_preserve_guards_and_match_one_shot_success",
-        "tests/upstream_trained_dictionary_fuzz.rs#fixed_prefix_supplement_preserves_skips_and_rejects_reused_prepared_prefixes"
+        "tests/upstream_trained_dictionary_fuzz.rs#fixed_prefix_supplement_preserves_skips_and_rejects_reused_prepared_prefixes",
+        "tests/upstream_trained_dictionary_fuzz.rs#call_scoped_prefix_supplement_reuses_one_selection_across_concatenated_frames"
       ],
       "line_count": 77,
       "cases": [
@@ -4392,7 +4393,7 @@
           "line_end": 77,
           "label": "LLVMFuzzerTestOneInput",
           "status": "partial",
-          "reason": "All12063 pinned rolling dictionary_decompress inputs run under safe/all release with zero skips: 11768 trained dictionaries, 295 empty fallbacks and 20 successful bounded decodes. Original source/training/attachment/capacity selectors are preserved. Prepared/loaded branches use real guarded direct destinations and compare success/bytes with buffered decoding; 1133 prefix selections retain buffered output in the one-shot direct campaign. The independent Rust trainer is not native fastCover and original C context/by-reference/loading API differences remain partial. A separately recorded stable-session supplement replays all12063 files under safe/all, including 10930 persistent prepared/loaded selections at a fixed seven-byte input schedule; successful bytes and success/failure agree across stable/direct/buffered output. Prefix branches remain buffered. This additional schedule consumes no original selector and is not an original native one-shot streaming branch. A separately labelled seven-byte stable prefix supplement now covers all 1,133 prefix selections in the full 12,063-input safe/all corpus, comparing guarded prefix-once output with buffered Rust output. Original tail selectors and training choices remain unchanged; this is not an original one-shot native streaming selector.",
+          "reason": "All 12,063 pinned rolling dictionary_decompress inputs run under safe/all release without skips. Original source/training/attachment/capacity selectors remain intact: 11,768 Rust-trained dictionaries, 295 empty training fallbacks and 20 successful legacy-adapter decodes. The 10,930 persistent prepared/loaded branches compare guarded direct, in-place, buffered and seven-byte stable output; all 1,133 prefix branches compare buffered and seven-byte frame-scoped stable prefixes. A separate call-scoped supplement runs both direct and in-place coordinators for all 12,063 selected inputs, comparing exact Result, complete successful bytes, guards and selection retention/consumption against a stateless persistent dictionary view. Its prefix covers all frames in one call and is deliberately not equated to frame-scoped prefixes. The historical outcome ledger does not separately count coordinated successes. Rust training is not byte-identical native fastCover, and opaque C context/workspace/loading/parameter contracts remain partial. Fixed fragmentation and suffix layouts are supplemental schedules, not new original selectors. Evidence: docs/evidence/2026-10-27-dictionary-in-place-corpus.json and 2026-10-27-one-shot-selection-corpus.json.",
           "rust_tests": [
             "tests/upstream_dictionary.rs#official_raw_prepared_trained_and_duplicate_repeat_frames_decode_exactly",
             "tests/upstream_dictionary.rs#official_prefix_concatenations_consume_the_prefix_exactly_once",
@@ -4403,7 +4404,8 @@
             "tests/upstream_trained_dictionary_fuzz.rs#external_trained_dictionary_file_corpus",
             "tests/dictionary_output.rs#truncations_mutations_and_concatenation_do_not_cross_output_allowance",
             "tests/stable_dictionary_output.rs#truncated_and_mutated_frames_preserve_guards_and_match_one_shot_success",
-            "tests/upstream_trained_dictionary_fuzz.rs#fixed_prefix_supplement_preserves_skips_and_rejects_reused_prepared_prefixes"
+            "tests/upstream_trained_dictionary_fuzz.rs#fixed_prefix_supplement_preserves_skips_and_rejects_reused_prepared_prefixes",
+            "tests/upstream_trained_dictionary_fuzz.rs#call_scoped_prefix_supplement_reuses_one_selection_across_concatenated_frames"
           ]
         }
       ]
@@ -5287,9 +5289,12 @@
           "line_start": 495,
           "line_end": 496,
           "label": "test_compressBound",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound queries are not implemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The original powers 0..29 and MAX_INPUT_SIZE+1 assertions are preserved by typed compression_bound and independent u128 arithmetic, with normal/sanitized native function/macro rows and foreign-width checks. Rust exposes no C macro/error sentinel; the too-large input is ResourceLimit. The separate maximal admitted scalar sentinel collision remains documented. Evidence: docs/evidence/2026-10-27-frame-utility-native.json and frame-utility-platform.json.",
+          "rust_tests": [
+            "src/frame_utilities.rs#original_compress_bound_powers_and_too_large_input",
+            "tests/frame_utilities_native.rs#pinned_compression_bound_scalar_rows_match_typed_results"
+          ]
         },
         {
           "id": "tests/fuzzer.c:497",
@@ -5297,9 +5302,12 @@
           "line_start": 497,
           "line_end": 516,
           "label": "test%3u : compressBound :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The original powers 0..29 and MAX_INPUT_SIZE+1 assertions are preserved by typed compression_bound and independent u128 arithmetic, with normal/sanitized native function/macro rows and foreign-width checks. Rust exposes no C macro/error sentinel; the too-large input is ResourceLimit. The separate maximal admitted scalar sentinel collision remains documented. Evidence: docs/evidence/2026-10-27-frame-utility-native.json and frame-utility-platform.json.",
+          "rust_tests": [
+            "src/frame_utilities.rs#original_compress_bound_powers_and_too_large_input",
+            "tests/frame_utilities_native.rs#pinned_compression_bound_scalar_rows_match_typed_results"
+          ]
         },
         {
           "id": "tests/fuzzer.c:517",
@@ -5307,9 +5315,12 @@
           "line_start": 517,
           "line_end": 518,
           "label": "test_decompressBound",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound queries are not implemented.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "All three original bound assertions are replayed from normal/sanitized v1.5.7 construction: abcd plus NUL known size, streaming empty unknown size, and 32769 flushed two-byte a-plus-NUL inputs producing a bound above 4 GiB. Complete decoded bytes and query results are verified; helper context allocation lifetimes differ and are explicitly reconciled without claiming allocation equivalence. Foreign i686/s390x checks also exercise the actual large block-product bound. Evidence: docs/evidence/2026-10-27-frame-query-native.json and frame-query-platform.json.",
+          "rust_tests": [
+            "tests/frame_queries_native.rs#original_known_empty_stream_and_large_block_product_assertions",
+            "tests/frame_queries.rs#small_encoded_input_has_bound_above_four_gib_without_pointer_width_overflow"
+          ]
         },
         {
           "id": "tests/fuzzer.c:519",
@@ -5317,9 +5328,12 @@
           "line_start": 519,
           "line_end": 569,
           "label": "test%3u : decompressBound :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "All three original bound assertions are replayed from normal/sanitized v1.5.7 construction: abcd plus NUL known size, streaming empty unknown size, and 32769 flushed two-byte a-plus-NUL inputs producing a bound above 4 GiB. Complete decoded bytes and query results are verified; helper context allocation lifetimes differ and are explicitly reconciled without claiming allocation equivalence. Foreign i686/s390x checks also exercise the actual large block-product bound. Evidence: docs/evidence/2026-10-27-frame-query-native.json and frame-query-platform.json.",
+          "rust_tests": [
+            "tests/frame_queries_native.rs#original_known_empty_stream_and_large_block_product_assertions",
+            "tests/frame_queries.rs#small_encoded_input_has_bound_above_four_gib_without_pointer_width_overflow"
+          ]
         },
         {
           "id": "tests/fuzzer.c:570",
@@ -5508,10 +5522,11 @@
           "line_start": 750,
           "line_end": 755,
           "label": "test%3i : ZSTD_findDecompressedSize test :",
-          "status": "partial",
-          "reason": "Single-frame size is covered; a general concatenated-size scanning API is absent.",
+          "status": "ported",
+          "reason": "Exact original five-MiB input and frame are captured after complete preceding pinned fuzzer history in normal/sanitized runs. Rust verifies all decoded bytes, exact decompressed size, tight bound and truncated-size rejection. The Rust API uses Result and Option instead of C sentinels. Evidence: docs/evidence/2026-10-27-frame-query-history.json.",
           "rust_tests": [
-            "tests/upstream_fuzzer.rs#frame_content_size"
+            "tests/upstream_fuzzer.rs#frame_content_size",
+            "tests/frame_queries_history.rs#original_single_and_multiframe_size_assertions_with_exact_input_history"
           ]
         },
         {
@@ -5520,9 +5535,12 @@
           "line_start": 756,
           "line_end": 762,
           "label": "test%3i : tight ZSTD_decompressBound test :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Exact original five-MiB input and frame are captured after complete preceding pinned fuzzer history in normal/sanitized runs. Rust verifies all decoded bytes, exact decompressed size, tight bound and truncated-size rejection. The Rust API uses Result and Option instead of C sentinels. Evidence: docs/evidence/2026-10-27-frame-query-history.json.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#frame_content_size",
+            "tests/frame_queries_history.rs#original_single_and_multiframe_size_assertions_with_exact_input_history"
+          ]
         },
         {
           "id": "tests/fuzzer.c:763",
@@ -5530,9 +5548,12 @@
           "line_start": 763,
           "line_end": 769,
           "label": "test%3i : ZSTD_decompressBound test with invalid srcSize :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "Exact original five-MiB input and frame are captured after complete preceding pinned fuzzer history in normal/sanitized runs. Rust verifies all decoded bytes, exact decompressed size, tight bound and truncated-size rejection. The Rust API uses Result and Option instead of C sentinels. Evidence: docs/evidence/2026-10-27-frame-query-history.json.",
+          "rust_tests": [
+            "tests/upstream_fuzzer.rs#frame_content_size",
+            "tests/frame_queries_history.rs#original_single_and_multiframe_size_assertions_with_exact_input_history"
+          ]
         },
         {
           "id": "tests/fuzzer.c:770",
@@ -5702,9 +5723,11 @@
           "line_start": 948,
           "line_end": 967,
           "label": "test%3i : ZSTD_decompressBound test with content size missing :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
-          "rust_tests": []
+          "status": "partial",
+          "reason": "The original unknown-size frame and full preceding five-MiB fuzzer history are retained. Its original call queries compressedBufferSize=5263360 rather than actual frame length=1692054; native returns the unsigned error sentinel 18446744073709551614, which passes the original numeric >= source-size comparison. Rust has explicit Result errors and does not reproduce sentinel-as-bound success. A separately labeled exact-frame-length query verifies unknown size and a useful valid upper bound with complete decoding. Evidence: docs/evidence/2026-10-27-frame-query-history.json.",
+          "rust_tests": [
+            "tests/frame_queries_history.rs#original_single_and_multiframe_size_assertions_with_exact_input_history"
+          ]
         },
         {
           "id": "tests/fuzzer.c:968",
@@ -6399,9 +6422,11 @@
           "line_start": 2376,
           "line_end": 2380,
           "label": "test%3i : get decompressed size of multiple frames :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The exact original four-frame plus 129-KiB skippable concatenation is captured after full preceding pinned fuzzer history. Three Rust backends preserve the 2.5-MiB output, per-frame sizes/order, skippable zero payload, exact aggregate size and tight bound. Normal/sanitized fixture bytes agree. Evidence: docs/evidence/2026-10-27-frame-query-history.json.",
+          "rust_tests": [
+            "tests/frame_queries_history.rs#original_single_and_multiframe_size_assertions_with_exact_input_history"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2381",
@@ -6409,9 +6434,11 @@
           "line_start": 2381,
           "line_end": 2385,
           "label": "test%3i : get tight decompressed bound of multiple frames :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
-          "rust_tests": []
+          "status": "ported",
+          "reason": "The exact original four-frame plus 129-KiB skippable concatenation is captured after full preceding pinned fuzzer history. Three Rust backends preserve the 2.5-MiB output, per-frame sizes/order, skippable zero payload, exact aggregate size and tight bound. Normal/sanitized fixture bytes agree. Evidence: docs/evidence/2026-10-27-frame-query-history.json.",
+          "rust_tests": [
+            "tests/frame_queries_history.rs#original_single_and_multiframe_size_assertions_with_exact_input_history"
+          ]
         },
         {
           "id": "tests/fuzzer.c:2386",
@@ -6443,10 +6470,11 @@
           "line_start": 2396,
           "line_end": 2419,
           "label": "test%3i : read/write a skippable frame :",
-          "status": "partial",
-          "reason": "All sixteen variants decoded; library write/extract APIs absent.",
+          "status": "ported",
+          "reason": "Exact 129-KiB and empty writer cases preserve the complete preceding fuzzer seed, seed-derived payload and seed%15 variant. Rust writes byte-identical native frames and preserves original marker, payload extent, variant and complete payload assertions through its borrowed extraction API, with real destination guards. C NULL-pointer and copied-reader ABI behavior is represented by safe empty/borrowed slices rather than exposed raw-pointer contracts. Normal/sanitized original history and three Rust replays are retained in docs/evidence/2026-10-27-frame-utility-history.json.",
           "rust_tests": [
-            "tests/upstream_fuzzer.rs#skippable_frames_with_all_magic_variants"
+            "tests/upstream_fuzzer.rs#skippable_frames_with_all_magic_variants",
+            "tests/frame_utilities_history.rs#original_skippable_writes_match_exact_history_and_preserve_reader_assertions"
           ]
         },
         {
@@ -6455,10 +6483,11 @@
           "line_start": 2420,
           "line_end": 2442,
           "label": "test%3i : read/write an empty skippable frame :",
-          "status": "partial",
-          "reason": "All sixteen empty variants decoded; library write/extract APIs absent.",
+          "status": "ported",
+          "reason": "Exact 129-KiB and empty writer cases preserve the complete preceding fuzzer seed, seed-derived payload and seed%15 variant. Rust writes byte-identical native frames and preserves original marker, payload extent, variant and complete payload assertions through its borrowed extraction API, with real destination guards. C NULL-pointer and copied-reader ABI behavior is represented by safe empty/borrowed slices rather than exposed raw-pointer contracts. Normal/sanitized original history and three Rust replays are retained in docs/evidence/2026-10-27-frame-utility-history.json.",
           "rust_tests": [
-            "tests/upstream_fuzzer.rs#skippable_frames_with_all_magic_variants"
+            "tests/upstream_fuzzer.rs#skippable_frames_with_all_magic_variants",
+            "tests/frame_utilities_history.rs#original_skippable_writes_match_exact_history_and_preserve_reader_assertions"
           ]
         },
         {
@@ -7654,8 +7683,8 @@
           "line_start": 4117,
           "line_end": 4120,
           "label": "test%3i : ZSTD_findFrameCompressedSize on skippable frame :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
+          "status": "planned",
+          "reason": "Checked frame metadata, compressed extent and skippable payload queries now exist. Generic all-variant/truncation tests are supplemental; this original late-fuzzer skippable fixture and its complete surrounding header/capacity assertions have not yet been mapped. No original-group execution credit is inferred from API availability.",
           "rust_tests": []
         },
         {
@@ -7664,8 +7693,8 @@
           "line_start": 4121,
           "line_end": 4124,
           "label": "test%3i : ZSTD_getFrameContentSize on skippable frame :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
+          "status": "planned",
+          "reason": "Checked frame metadata, compressed extent and skippable payload queries now exist. Generic all-variant/truncation tests are supplemental; this original late-fuzzer skippable fixture and its complete surrounding header/capacity assertions have not yet been mapped. No original-group execution credit is inferred from API availability.",
           "rust_tests": []
         },
         {
@@ -7674,8 +7703,8 @@
           "line_start": 4125,
           "line_end": 4139,
           "label": "test%3i : ZSTD_getFrameHeader on skippable frame :",
-          "status": "blocked",
-          "reason": "Public compression/decompression bound or frame scanning/skippable metadata API absent.",
+          "status": "planned",
+          "reason": "Checked frame metadata, compressed extent and skippable payload queries now exist. Generic all-variant/truncation tests are supplemental; this original late-fuzzer skippable fixture and its complete surrounding header/capacity assertions have not yet been mapped. No original-group execution credit is inferred from API availability.",
           "rust_tests": []
         },
         {

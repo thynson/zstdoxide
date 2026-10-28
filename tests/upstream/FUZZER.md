@@ -176,8 +176,8 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 
 | Upstream line | Original diagnostic label | Status | Rust test / missing capability |
 | ---: | --- | --- | --- |
-| 497 | compressBound | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
-| 519 | decompressBound | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
+| 497 | compressBound | ported | Original powers 0..29 and too-large input preserved by typed bound and native function/macro checks; see frame-utility-native evidence. |
+| 519 | decompressBound | ported | All three original constructions preserve exact known/empty/32769-flush bounds and decoded bytes; see frame-query-native evidence. |
 | 576 | ZSTD_CCtx_setCParams | partial | `tests/upstream_parameters.rs#concrete_validation_retains_all_fields_and_rejects_original_invalid_values`. The original level-one valid profile and invalid windowLog 99 are checked through concrete value validation. This does not install seven compression fields in a live context: ZSTD_CCtx_setCParams, its allocation/setup path, and bulk context mutation remain unported. |
 | 592 | Check block splitter doesn't oversplit incompressible data (seed %u) | blocked | Block-splitter, superblock, block-size, or btultra2 encoder strategy controls absent. |
 | 670 | ZSTD_getErrorName | not-applicable | C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version. |
@@ -191,9 +191,9 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 730 | decompress skippable frame -8 size | ported | `skippable_frame_minus_eight_size`. Exact malformed eight-byte input; rejects its overflowing declared payload. |
 | 738 | ZSTD_getFrameContentSize test | ported | `frame_content_size`. Declared content-size value via FrameHeader::parse. |
 | 744 | ZSTD_getDecompressedSize test | ported | `frame_content_size`. Deprecated size-query behavior expressed through typed header metadata. |
-| 750 | ZSTD_findDecompressedSize test | partial | `frame_content_size`. Single-frame size is covered; a general concatenated-size scanning API is absent. |
-| 756 | tight ZSTD_decompressBound test | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
-| 763 | ZSTD_decompressBound test with invalid srcSize | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
+| 750 | ZSTD_findDecompressedSize test | ported | Exact original five-MiB frame and preceding history; aggregate size and complete output verified by frame_queries_history. |
+| 756 | tight ZSTD_decompressBound test | ported | Exact original five-MiB frame and preceding history; tight decoded bound verified by frame_queries_history. |
+| 763 | ZSTD_decompressBound test with invalid srcSize | ported | Exact original frame with last byte removed is rejected; preceding history and valid counterpart retained in frame-query-history evidence. |
 | 770 | decompress %u bytes | ported | `basic_compression_and_decompression`. Original 5-MiB one-shot output and length. |
 | 775 | decompress %u bytes with Huffman assembly disabled | partial | `basic_compression_and_decompression`. Byte-correct decoding covered; Rust has no assembly-selection parameter. |
 | 786 | check decompressed result | ported | `basic_compression_and_decompression`. Every decompressed byte compared. |
@@ -208,7 +208,7 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 897 | decompress too large input | ported | `decompress_with_large_trailing_input`. Overlong source rejected; deterministic zero tail replaces uninitialized C capacity. |
 | 903 | decompress into NULL buffer | ported | `decompress_into_zero_output_limit`. An actual empty caller-owned slice and the original explicit zero output limit both reject nonempty output with ResourceLimit. |
 | 909 | decompress with corrupted checksum | partial | `decompress_with_corrupted_checksum`. All four checksum-byte corruptions rejected; forceIgnoreChecksum API absent. |
-| 948 | ZSTD_decompressBound test with content size missing | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
+| 948 | ZSTD_decompressBound test with content size missing | partial | Original call used buffer capacity5263360 rather than frame length1692054 and compared native error sentinel18446744073709551614 as a bound. Keep partial; useful exact-frame query is supplemental. |
 | 968 | check DCtx size is reduced after many oversized calls | blocked | Reusable owned contexts and retained-capacity reporting exist; this original C static-workspace, custom-allocation, automatic-shrink or context-size-estimate contract remains unported. |
 | 1015 | ZSTD_compressCCtx() doesn't use advanced parameters | blocked | The original group first installs magicless output in a reusable CCtx, then checks that ZSTD_compressCCtx at level 1 ignores that advanced setting and emits standard magic. Whole-buffer Fast level 1 exists, but no mutable magicless CCtx setting or legacy-call parameter-clearing path is exposed, so this defining configuration-inheritance assertion remains unported. |
 | 1020 | ZSTD_compress_usingDict() doesn't use advanced parameters | blocked | The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available. |
@@ -274,12 +274,12 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 2305 | Multithreaded ZSTD_compress2() with rsyncable | blocked | Multithreaded compressor and shared thread-pool API absent. |
 | 2318 | setting multithreaded parameters | blocked | Multithreaded compressor and shared thread-pool API absent. |
 | 2345 | compress multiple frames | adapted | `decompress_multiple_frames_with_skippable_frame`. Original segment sizes/order and 129-KiB skip; compression level selection absent. |
-| 2376 | get decompressed size of multiple frames | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
-| 2381 | get tight decompressed bound of multiple frames | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
+| 2376 | get decompressed size of multiple frames | ported | Exact original four-frame/129-KiB-skip concatenation, preceding history and complete2.5-MiB output; exact aggregate size preserved. |
+| 2381 | get tight decompressed bound of multiple frames | ported | Exact original four-frame/129-KiB-skip concatenation and preceding history; tight aggregate bound preserved. |
 | 2386 | decompress multiple frames | ported | `decompress_multiple_frames_with_skippable_frame`. Whole concatenation decoded and combined output limit checked. |
 | 2391 | check decompressed result | ported | `decompress_multiple_frames_with_skippable_frame`. Every byte in the concatenated output compared. |
-| 2396 | read/write a skippable frame | partial | `skippable_frames_with_all_magic_variants`. All sixteen variants decoded; library write/extract APIs absent. |
-| 2420 | read/write an empty skippable frame | partial | `skippable_frames_with_all_magic_variants`. All sixteen empty variants decoded; library write/extract APIs absent. |
+| 2396 | read/write a skippable frame | ported | Exact original seed-derived129-KiB payload/variant; byte-identical writing and borrowed payload/extent/variant assertions, with guards. See frame-utility-history evidence. |
+| 2420 | read/write an empty skippable frame | ported | Exact original seed%15 empty variant; eight-byte frame, marker, empty borrowed payload and variant assertions preserved. C NULL ABI is represented by safe empty slices. |
 | 2443 | copy context too soon | blocked | The original dictionary compression/context-copy, advanced parameter, static workspace or worker branch remains unported; prepared parsing and ordinary dictionary/prefix encoding and decoding are available. |
 | 2448 | load dictionary into context | blocked | This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available. |
 | 2453 | compress with flat dictionary | partial | `tests/upstream_dictionary_encode.rs#raw_and_formatted_dictionary_matches_reduce_size_for_independent_source_bytes`. `tests/upstream_dictionary_encode.rs#official_codec_decodes_raw_prepared_and_omitted_id_dictionary_frames`. `tests/upstream_dictionary_encode.rs#official_codec_decodes_one_shot_dictionary_frames_across_content_size_boundaries`. Raw/formatted shared dictionary compression now creates useful matches with exact Rust and independent C decoding. Original level selection, generated CNBuffer workload and specialized C preparation variants remain unported. |
@@ -377,9 +377,9 @@ Bare Rust function names below refer to `tests/upstream_fuzzer.rs`; qualified
 | 4055 | decompress lots 3-bytes sequence | ported | `many_three_byte_sequences`. Complete triple-corpus output comparison. |
 | 4061 | growing literals buffer | partial | `tests/upstream_fuzzer.rs#growing_literals_buffer`. The original literal profile and complete 1..5-MiB schedule run through allocating calls. Reusable contexts exist, but the original context-reuse branch is not exercised by this adapter. |
 | 4079 | incompressible data and ill suited dictionary | blocked | Raw/formatted training and named-policy dictionary compression exist. The original 1-MiB CNBuffer training followed by full-buffer byte inversion and 500-byte dictionary compression at level 1 remains unported. No-dictionary level-one Fast is now available; dictionary Fast execution and this exact trained-dictionary/source-state campaign remain the gaps. |
-| 4117 | ZSTD_findFrameCompressedSize on skippable frame | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
-| 4121 | ZSTD_getFrameContentSize on skippable frame | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
-| 4125 | ZSTD_getFrameHeader on skippable frame | blocked | Public compression/decompression bound or frame scanning/skippable metadata API absent. |
+| 4117 | ZSTD_findFrameCompressedSize on skippable frame | planned | Query is available; this original late-fuzzer skippable fixture remains unmapped. Generic query tests are supplemental. |
+| 4121 | ZSTD_getFrameContentSize on skippable frame | planned | Query is available; this original late-fuzzer skippable fixture remains unmapped. Generic query tests are supplemental. |
+| 4125 | ZSTD_getFrameHeader on skippable frame | planned | Metadata is available; this original late-fuzzer fixture and complete header/capacity assertions remain unmapped. |
 | 4140 | testing ZSTD error code strings | not-applicable | C numeric error/version/symbol-ABI contract; Rust uses typed Error and Cargo package version. |
 | 4149 | testing ZSTD dictionary sizes | blocked | This original dictionary compression, parameter/attachment strategy, context-copy/static workspace or multi-dictionary-cache branch is not ported; shared prepared parsing and ordinary dictionary/prefix encoding and decoding are available. |
 | 4172 | testing FSE_normalizeCount() PR#1255 | ported | `tests/upstream/entropy.rs#fuzzer_pr1255_unit_counts_normalize_without_division_by_zero`: exact 32 unit counts at log five avoid arithmetic traps and preserve mass/readback. Original C ignores its generic-error return; Rust accepts this distribution under its independent normalization policy. |

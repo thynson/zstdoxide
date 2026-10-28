@@ -176,6 +176,7 @@ in `docs/slice-encode-design.md` and `docs/data-structures.md`. Promote only aft
 Module 32 closes. Initial scope is dictionary-free ordinary Greedy compression.
 
 - [x] Analyze the existing frame/block encoder and bounded output ownership before implementation.
+- [x] Reconcile inherited original query/utility assertions and dictionary corpus metadata after Module 32 source closure.
 - [ ] Implement checked bounded frame append with equivalent safe and opt-in unsafe storage paths.
 - [ ] Implement one-block staging and exact ordinary one-shot frame emission into borrowed output.
 - [ ] Expose documented caller-owned compression with capacity, alias, scratch-failure and allocator qualification.

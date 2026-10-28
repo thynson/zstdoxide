@@ -176,12 +176,41 @@ upstream test that expects successful decoding. The upstream compression
 fuzzer that uses random insufficient output buffers also remains blocked:
 the current allocating encoder has no equivalent caller-buffer API.
 
-Remaining `planned` examples are ordinary file-based sample-program ports.
+Remaining `planned` units include file-based sample-program ports and exact
+late-fuzzer skippable fixtures whose query APIs now exist.
 Remaining `blocked` suites need advanced streaming/context behavior, dictionary
 encoding/training test adapters, compression parameters, legacy, raw-block,
 seekable, threaded, CLI, or external-format interfaces. Their
 paths and reasons remain in the machine-readable inventory so future modules
 can enable actual assertions without losing the upstream correspondence.
+
+## Query, utility and call-scoped corpus reconciliation (2026-10-27)
+
+Eleven named function/diagnostic anchors now have complete bounded Rust
+adaptations for original compression/decompression bounds, known-size single and
+multiple-frame queries, and exact original skippable writes/reads. Native history
+captures preserve preceding generator state and complete payload bytes; standalone
+bound construction records its helper allocation-lifetime difference. These
+anchors are navigation groups, not independent assertion or execution counts.
+
+The unknown-size bound group at fuzzer.c:948 remains partial: native queried full
+buffer capacity rather than encoded frame length, returned an error sentinel and
+then compared it numerically as an upper bound. Rust's useful exact-frame query
+is explicitly supplemental. Late skippable metadata groups4117/4121/4125 remain
+planned, because API availability does not reproduce their original fixtures.
+
+All12,063 dictionary_decompress inputs additionally exercise call-scoped direct
+and in-place selection, with exact Rust Result/output/guard/state comparisons.
+The original selectors and historical ledger remain intact. Call-scoped prefixes
+serve all frames in one call and are not equated to incremental frame prefixes.
+Independent Rust training and native context/workspace differences keep that
+source partial. Safe/all corpus receipts are separate from ignored ordinary runs.
+
+After all source-bound Module30–32 closures, the integrated audit retains639 files,
+418 test-related sources,221 exclusions and615 named groups. Case statuses are
+66 ported,120 partial,411 blocked,3 planned and15 non-applicable. Complete upstream
+migration remains open. See `evidence/2026-10-27-query-utility-corpus-inventory.json`
+for exact before/after metadata, source identities and executed audit.
 
 ## External corpus snapshots
 
