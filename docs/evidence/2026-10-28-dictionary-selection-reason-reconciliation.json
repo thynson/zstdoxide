@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "recorded_utc": "2026-10-28T07:32:00.672863+00:00",
+  "production_baseline_manifest_sha256": "283d78b5257d33c6e3acbd812e06766b12ce9046bbfb45fc9223b67647e23abd",
+  "integrated_manifest_sha256": "7fecae1c80a2d8ede73faff4aa6b39e8887fe71d7128475bb81e506c737ebc6d",
+  "closures": {
+    "frame-utility": "00b91a8f379a7c62d33d2670857e5d25b8b2a96f566b5a591c26f2ad8f13e748",
+    "one-shot-selection": "06bc55345d947acd2acdfa409f2c86bd667fb1594355e23617c2654ca9f21717",
+    "slice-encode": "4142411d1e96b6da664af6e87fc89883ab4eae6b542465910918548eb9927804",
+    "dictionary-slice-encode": "0bd996224a68cf7996d355e27ced4b97445ddb94b48c3712c2f304c12045dea5"
+  },
+  "changes": [
+    {
+      "id": "tests/fuzzer.c:3032",
+      "before": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+      "after": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported."
+    },
+    {
+      "id": "tests/fuzzer.c:3040",
+      "before": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+      "after": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported."
+    },
+    {
+      "id": "tests/fuzzer.c:3050",
+      "before": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+      "after": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported."
+    },
+    {
+      "id": "tests/fuzzer.c:3060",
+      "before": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+      "after": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported."
+    },
+    {
+      "id": "tests/fuzzer.c:3070",
+      "before": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+      "after": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported."
+    },
+    {
+      "id": "tests/fuzzer.c:3078",
+      "before": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+      "after": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported."
+    }
+  ],
+  "case_counts": {
+    "non_applicable": 15,
+    "partial": 120,
+    "blocked": 411,
+    "ported": 66,
+    "planned": 3
+  },
+  "audit_command": [
+    "python3",
+    "scripts/audit_upstream_tests.py",
+    "--upstream",
+    "/private/tmp/module24-preparation/zstd-f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+  ],
+  "audit_log_sha256": "75892600ff571552f720e2aca5b58962b1c80d7c23290b57c3029853d536b561",
+  "archive": "2026-10-28-dictionary-selection-reason-reconciliation.tar.gz",
+  "archive_sha256": "ea354e8f46310dd9557c14401e26c5704df45b324d4fc2a962e443513358afbe",
+  "qualification": "Reason-only manifest corrections applied after every dependent frozen milestone closed. Six dictionary-encode selection reasons now match the executed supplemental native/Rust selection evidence; statuses, mappings, anchors and counts unchanged. The complete pinned audit passes against the integrated root. No new port and no Module35 completion is claimed."
+}

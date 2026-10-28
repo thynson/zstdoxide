@@ -1585,3 +1585,14 @@ selection is designed and decomposed. Complete upstream parity remains open.
 Details: `dictionary-slice-encode-validation.md`,
 `dictionary-slice-encode-benchmarks.md`, and
 `evidence/2026-10-27-dictionary-slice-encode-closure.json`.
+
+## Dictionary-encode selection reason reconciliation (2026-10-28)
+
+After Module34 closure, six pinned fuzzer.c dictionary-encode selection groups
+(3032..3078) carry reasons that state exactly what their original assertions
+check: successful persistent/prefix selection operations and one compression
+call, not compressed-byte identity. Every status, test mapping, frozen anchor
+and count is unchanged; the complete pinned audit passes against the integrated
+root. This is a separate metadata-only reconciliation; no new port and no
+Module35 completion is claimed.
+Evidence: `evidence/2026-10-28-dictionary-selection-reason-reconciliation.json`.

@@ -195,6 +195,7 @@ implementation only after Module 34 closes; retain no encoder workspace.
 - [ ] Qualify ownership transitions and actual encoding under foreign Miri and concrete no-atomics ARM code generation.
 - [ ] Qualify safe, every isolated feature and all features, full/release regression, no_std and strict Clippy.
 - [ ] Compare identical stateless/coordinator workloads with explicit prefix setup, allocation domains and independent repeats after CPU barriers.
+- [x] Reconcile the six dictionary-encode selection reasons with the qualified native selection evidence after Module 34 source closure.
 - [ ] Reconcile bounded selection coverage and decompose the next evidenced contract without claiming native workspace or complete upstream parity.
 
 ## Roadmap

@@ -7056,7 +7056,7 @@
           "line_end": 3039,
           "label": "test%3i : Loading a dictionary clears the prefix :",
           "status": "partial",
-          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#prefix_and_dictionary_configuration_replace_one_another",
             "tests/upstream_dictionary.rs#setting_a_prefix_replaces_the_persistent_dictionary",
@@ -7070,7 +7070,7 @@
           "line_end": 3049,
           "label": "test%3i : Loading a dictionary clears the cdict :",
           "status": "partial",
-          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#prefix_and_dictionary_configuration_replace_one_another",
             "tests/upstream_dictionary.rs#setting_a_prefix_replaces_the_persistent_dictionary",
@@ -7084,7 +7084,7 @@
           "line_end": 3059,
           "label": "test%3i : Loading a cdict clears the prefix :",
           "status": "partial",
-          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#prefix_and_dictionary_configuration_replace_one_another",
             "tests/upstream_dictionary.rs#setting_a_prefix_replaces_the_persistent_dictionary",
@@ -7098,7 +7098,7 @@
           "line_end": 3069,
           "label": "test%3i : Loading a cdict clears the dictionary :",
           "status": "partial",
-          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#prefix_and_dictionary_configuration_replace_one_another",
             "tests/upstream_dictionary.rs#setting_a_prefix_replaces_the_persistent_dictionary",
@@ -7112,7 +7112,7 @@
           "line_end": 3077,
           "label": "test%3i : Loading a prefix clears the dictionary :",
           "status": "partial",
-          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#prefix_and_dictionary_configuration_replace_one_another",
             "tests/upstream_dictionary.rs#setting_a_prefix_replaces_the_persistent_dictionary",
@@ -7126,7 +7126,7 @@
           "line_end": 3087,
           "label": "test%3i : Loading a prefix clears the cdict :",
           "status": "partial",
-          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content. Rust unifies raw/prepared dictionary ownership; original separate C dictionary/CDict APIs and byte-identical encoder comparisons remain unported.",
+          "reason": "Setting a persistent dictionary or one-use prefix replaces the other configuration and selects the expected frame ID/content in supplemental Rust checks. These six pinned C groups assert successful selection operations and one compression call, not compressed-byte identity. Rust unifies raw/prepared ownership; the exact inherited CNBuffer/dictBuffer preparation, current context parameters, and separate native loadDictionary/refCDict/refPrefix API semantics remain unported.",
           "rust_tests": [
             "tests/upstream_dictionary_encode.rs#prefix_and_dictionary_configuration_replace_one_another",
             "tests/upstream_dictionary.rs#setting_a_prefix_replaces_the_persistent_dictionary",
