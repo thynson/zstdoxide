@@ -707,6 +707,68 @@ fn dictionary_decompress(input: &[u8]) -> Outcome {
     }
 }
 
+fn dictionary_caller_output_checked(source: &[u8], dictionary: &SharedDictionary) {
+    let before = dictionary.as_bytes().to_vec();
+    let handles = SharedDictionary::strong_count(dictionary);
+    let expected = zstdoxide::compress_with_dictionary(source, dictionary).unwrap();
+    assert!(expected.len() <= zstdoxide::compression_bound(source.len()).unwrap());
+    let mut output = vec![0xa5; expected.len() + 34];
+    let size = zstdoxide::compress_into_with_dictionary(
+        source,
+        &mut output[16..18 + expected.len()],
+        dictionary,
+    )
+    .unwrap();
+    assert_eq!(size, expected.len());
+    assert_eq!(&output[16..16 + size], expected);
+    assert!(
+        output[..16]
+            .iter()
+            .chain(&output[16 + size..])
+            .all(|&b| b == 0xa5)
+    );
+    assert_eq!(
+        zstdoxide::decompress_with_dictionary(
+            &expected,
+            dictionary,
+            DecodeOptions::new(source.len())
+        )
+        .unwrap(),
+        source
+    );
+    output.fill(0xa5);
+    assert_eq!(
+        zstdoxide::compress_into_with_dictionary(
+            source,
+            &mut output[16..15 + expected.len()],
+            dictionary
+        ),
+        Err(Error::ResourceLimit)
+    );
+    assert!(
+        output[..16]
+            .iter()
+            .chain(&output[15 + expected.len()..])
+            .all(|&b| b == 0xa5)
+    );
+    assert_eq!(dictionary.as_bytes(), before);
+    assert_eq!(SharedDictionary::strong_count(dictionary), handles);
+    let fingerprint = |bytes: &[u8]| {
+        bytes.iter().fold(0xcbf2_9ce4_8422_2325u64, |h, &b| {
+            (h ^ u64::from(b)).wrapping_mul(0x100_0000_01b3)
+        })
+    };
+    println!(
+        "DICT_OUTPUT\t{}\t{}\t{}\t{:016x}\t{:016x}\t{:016x}",
+        source.len(),
+        dictionary.as_bytes().len(),
+        dictionary.id(),
+        fingerprint(source),
+        fingerprint(dictionary.as_bytes()),
+        fingerprint(&expected)
+    );
+}
+
 fn encode_bounded(
     source: &[u8],
     dictionary: SharedDictionary,
@@ -782,6 +844,12 @@ fn dictionary_round_trip(input: &[u8]) -> Outcome {
         selected_mode(&mut producer)
     };
     let dictionary = load_mode(&trained.dictionary, mode);
+    // Supplemental persistent dictionary caller-output checks on the same
+    // trained/loaded selection. Prefix-once and the original reduced streaming
+    // bound remain separate contracts; this uses actual one-shot output sizes.
+    if !prefix {
+        dictionary_caller_output_checked(source, &dictionary);
+    }
     let first = encode_bounded(source, dictionary.clone(), prefix, capacity);
     let second = encode_bounded(source, dictionary.clone(), prefix, capacity);
     assert_eq!(first, second);

@@ -1,8 +1,8 @@
 # Dictionary-backed caller-owned compression validation
 
 Module 34 is in progress. The internal dictionary-view emitter and public caller-
-output wrappers have focused qualification. Native/corpus/platform validation,
-complete feature/release regression, measurements and reconciliation remain open.
+output wrappers have focused qualification. Platform validation, complete feature/release regression, measurements and
+reconciliation remain open.
 
 ## Internal immutable selection
 
@@ -44,3 +44,27 @@ The engine separately retains every-observed-failure qualification. The prepared
 fixture and exact source/evidence are retained with upstream attribution.
 No broader native, platform, full-feature or performance milestone is implied.
 Evidence: `evidence/2026-10-27-dictionary-slice-encode-public-api.json`.
+
+## Guarded native dictionaries and deterministic trained selections
+
+Ninety deterministic raw/empty/prepared dictionary cases include all identifier
+widths and one/multiple-block input. Pinned v1.5.7 normal and ASan/UBSan helpers
+decode every Rust frame using DDict, then use CDict for nine capacities per case.
+All810 attempts check real outer guards and immutable input/dictionary bytes.
+Every successful capacity output is retained and independently decoded by four
+Rust backends, which also sweep Rust actual-size capacities with exact bytes and
+guards. Native compressed-byte identity and capacity/error precedence are not
+Rust contracts. macOS leak detection is unsupported and disabled.
+
+Native successful attempts: 164; successes with writes in the unused destination suffix: 72. These observations are retained, not hidden by Rust's stricter suffix contract.
+
+Two existing deterministic trained-dictionary tests additionally qualify persistent
+caller-owned compression under safe, isolated dictionary and all22 features.
+Original sample/mode/prefix/training-fallback and reduced streaming-bound checks
+remain. The48 controlled persistent selections and recorded deterministic-noise
+selections compare exact existing bytes, full decode, actual-size-plus-two and
+minus-one capacity, guards and immutable dictionary/handle counts. Prefix cases
+retain their prior assertions without claiming a new compression-prefix API.
+No external rolling corpus rerun or native fastCover equivalence is claimed.
+Evidence: `evidence/2026-10-27-dictionary-slice-encode-native.json` and
+`evidence/2026-10-27-dictionary-slice-encode-corpus.json`.

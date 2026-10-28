@@ -185,7 +185,7 @@ only after Module 33 closes; preserve independent dictionary/scratch ownership.
 - [x] Reconcile inherited fuzz documentation with completed frame-query and ordinary caller-output APIs without promoting unmapped original branches.
 - [x] Generalize one-block frame emission to immutable dictionary views without shared-handle clones or copied dictionary content.
 - [x] Expose documented dictionary-backed caller-owned APIs with exact existing output, capacity and independent allocator/failure qualification.
-- [ ] Qualify guarded normal/sanitized native dictionary interoperability and deterministic corpus selections.
+- [x] Qualify guarded normal/sanitized native dictionary interoperability and deterministic corpus selections.
 - [ ] Qualify width/endian behavior, borrow lifetimes and concrete no-atomics ARM emission.
 - [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
 - [ ] Compare allocating and borrowed dictionary output with distinct destination/staging/workspace/dictionary ledgers and independent repeats.
