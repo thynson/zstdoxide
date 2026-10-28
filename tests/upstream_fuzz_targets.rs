@@ -160,6 +160,31 @@ fn simple_round_trip(input: &[u8]) {
     let first = compress(source).expect("first compression must succeed");
     let second = compress(source).expect("second compression must succeed");
     assert_eq!(first, second, "compression must be deterministic");
+    // Supplemental caller-owned output contract on the unchanged upstream
+    // source selection. This is not its random destination-capacity selector.
+    let mut output = vec![0xa5; first.len() + 34];
+    let written = zstdoxide::compress_into(source, &mut output[16..16 + first.len() + 2])
+        .expect("actual encoded length fits below a sufficient bound");
+    assert_eq!(written, first.len());
+    assert_eq!(&output[16..16 + written], first);
+    assert!(
+        output[..16]
+            .iter()
+            .chain(&output[16 + written..])
+            .all(|&b| b == 0xa5)
+    );
+    output.fill(0xa5);
+    assert_eq!(
+        zstdoxide::compress_into(source, &mut output[16..15 + first.len()]),
+        Err(Error::ResourceLimit)
+    );
+    assert!(
+        output[..16]
+            .iter()
+            .chain(&output[15 + first.len()..])
+            .all(|&b| b == 0xa5)
+    );
+
     let decoded =
         decompress_with_options(&first, options(input.len())).expect("roundtrip must decode");
     assert_eq!(decoded.len(), source.len());
@@ -292,7 +317,9 @@ fn frame_information_deterministic_corpus() {
 
 #[test]
 fn simple_round_trip_deterministic_corpus() {
-    for case in deterministic_corpus() {
+    let cases = deterministic_corpus();
+    assert_eq!(cases.len(), 347);
+    for case in cases {
         run_named(&case.name, "simple_round_trip", || {
             simple_round_trip(&case.input)
         });

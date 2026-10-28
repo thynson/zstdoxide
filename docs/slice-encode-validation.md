@@ -68,3 +68,28 @@ formatting. Tests check complete single-frame metadata/output, short-capacity
 guards and immutable input, borrowed allocator failure/recovery, and header
 rejection before any scratch allocation.
 Evidence: `evidence/2026-10-27-slice-encode-public-api.json`.
+
+## Native interoperability and deterministic corpus
+
+Thirty-six fixed inputs span empty/short sizes, content-size field thresholds,
+block boundaries and three-block payloads using RLE, repeated and deterministic
+noise patterns. Safe/all exports preserve identical inputs and exact Rust frame
+bytes. Independent normal and ASan+UBSan v1.5.7 helpers decode all Rust frames and
+produce their own frames. All 324 native bounded-capacity attempts check real
+outer guards, immutable input and complete successful decompression. Each native
+capacity sweep is relative to its own encoded size; native byte/capacity/error
+identity with Rust is not assumed. Native successful rows: 59;
+rows modifying an unused success suffix: 32.
+Rust separately enforces its unchanged success suffix. macOS leak detection is
+unsupported and disabled; no leak-sanitizer claim is made.
+
+Four safe/sink/match/all Rust replays decode all 36 native frames, reproduce every
+Rust frame and check 324 per-backend capacity/result/guard observations.
+Two strict native-adapter Clippy checks pass. All 347 retained deterministic fuzz
+inputs preserve their original tail-selected source and allocating-output/decode
+assertions, adding bounded success/short-output comparisons in safe/sink/all.
+This supplement does not port the native random-capacity selector, unsupported
+advanced parameters or persistent-context branch. No complete external rolling
+corpus or original-group promotion is claimed.
+Evidence: `evidence/2026-10-27-slice-encode-native.json` and
+`evidence/2026-10-27-slice-encode-corpus.json`.
