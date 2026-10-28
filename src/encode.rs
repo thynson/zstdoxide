@@ -162,11 +162,23 @@ pub(crate) fn compress_frame_into_in<A: Allocator + Clone>(
     output: &mut [u8],
     allocator: A,
 ) -> Result<usize> {
-    let header = EncodedFrameHeader::new(input.len(), 0);
+    compress_frame_into_with_view_in(input, output, None, allocator)
+}
+
+/// Borrow prepared dictionary metadata for this one call. The copied view owns
+/// no dictionary allocation and cannot clone an owning/shared handle. All search
+/// seeds, entropy and history retain the existing BlockEncoder contracts.
+pub(crate) fn compress_frame_into_with_view_in<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    dictionary: Option<DictionaryView<'_>>,
+    allocator: A,
+) -> Result<usize> {
+    let header = EncodedFrameHeader::new(input.len(), dictionary.map_or(0, |view| view.id()));
     let mut sink = crate::frame_sink::FrameSink::new(output);
     sink.append(header.as_bytes())?;
-    let mut encoder = BlockEncoder::<A, SharedDictionary>::new_in(allocator.clone());
-    encoder.start_frame(None, input.len() as u64)?;
+    let mut encoder = BlockEncoder::<A, DictionaryView<'_>>::new_in(allocator.clone());
+    encoder.start_frame(dictionary, input.len() as u64)?;
     // BlockEncoder reserves each raw block bound fallibly. Clearing after each
     // append retains at most one block's encoded capacity, not the whole frame.
     let mut staging = Vec::new_in(allocator);
@@ -1103,6 +1115,155 @@ mod tests {
             fail_at: None,
         })
         .unwrap()
+    }
+
+    #[test]
+    fn dictionary_slice_engine_matches_existing_raw_prepared_and_all_id_widths() {
+        let mut dictionaries = vec![Dictionary::raw(b"").unwrap(), allocator_dictionary(false)];
+        for id in [0, 1, 255, 256, 65_535, 65_536, u32::MAX] {
+            let mut bytes = allocator_dictionary(true).as_bytes().to_vec();
+            bytes[4..8].copy_from_slice(&id.to_le_bytes());
+            dictionaries.push(Dictionary::from_bytes(&bytes).unwrap());
+        }
+        for dictionary in dictionaries {
+            let content = dictionary.content();
+            let large: Vec<_> = (0..if cfg!(miri) {
+                32
+            } else {
+                MAX_BLOCK_SIZE * 2 + 17
+            })
+                .map(|i| {
+                    if content.is_empty() {
+                        (i * 7 + 11) as u8
+                    } else {
+                        content[i % content.len()]
+                    }
+                })
+                .collect();
+            for input in [&b""[..], &b"tiny"[..], large.as_slice()] {
+                let expected =
+                    compress_with_dictionary_in(input, &dictionary.view(), Global).unwrap();
+                assert!(expected.len() <= crate::compression_bound(input.len()).unwrap());
+                let mut output = vec![0xa5; expected.len() + 18];
+                assert_eq!(
+                    compress_frame_into_with_view_in(
+                        input,
+                        &mut output[8..8 + expected.len() + 2],
+                        Some(dictionary.view()),
+                        Global
+                    ),
+                    Ok(expected.len())
+                );
+                assert_eq!(&output[8..8 + expected.len()], expected);
+                assert!(
+                    output[..8]
+                        .iter()
+                        .chain(&output[8 + expected.len()..])
+                        .all(|&b| b == 0xa5)
+                );
+                assert_eq!(
+                    crate::FrameHeader::parse(&expected)
+                        .unwrap()
+                        .0
+                        .dictionary_id,
+                    dictionary.id()
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn dictionary_slice_engine_checks_short_capacity_without_mutating_selection() {
+        let dictionary = allocator_dictionary(true).into_shared();
+        let before = dictionary.as_bytes().to_vec();
+        let input = dictionary.content().repeat(2);
+        let expected = compress_with_dictionary(&input, &dictionary).unwrap();
+        for capacity in 0..expected.len() {
+            let mut output = vec![0xa5; capacity + 2];
+            assert_eq!(
+                compress_frame_into_with_view_in(
+                    &input,
+                    &mut output[1..1 + capacity],
+                    Some(dictionary.view()),
+                    Global
+                ),
+                Err(Error::ResourceLimit)
+            );
+            assert_eq!((output[0], output[capacity + 1]), (0xa5, 0xa5));
+            assert_eq!(dictionary.as_bytes(), before);
+            assert_eq!(SharedDictionary::strong_count(&dictionary), 1);
+        }
+        let mut recovered = vec![0; expected.len()];
+        assert_eq!(
+            compress_frame_into_with_view_in(
+                &input,
+                &mut recovered,
+                Some(dictionary.view()),
+                Global
+            ),
+            Ok(expected.len())
+        );
+        assert_eq!(recovered, expected);
+    }
+
+    #[test]
+    fn dictionary_slice_engine_preserves_independent_nonclone_allocator_owners() {
+        let dictionary_owner = block_allocator().into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let scratch_owner = block_allocator().into_non_clone();
+        let scratch_monitor = scratch_owner.monitor();
+        let bytes = allocator_dictionary(true).as_bytes().to_vec();
+        let dictionary = Dictionary::from_bytes_in(&bytes, &dictionary_owner).unwrap();
+        let before = dictionary_monitor.snapshot();
+        let input = dictionary.content().repeat(3);
+        let expected = compress_with_dictionary_in(&input, &dictionary.view(), Global).unwrap();
+        let mut output = vec![0; expected.len()];
+        assert_eq!(
+            compress_frame_into_with_view_in(
+                &input,
+                &mut output,
+                Some(dictionary.view()),
+                &scratch_owner
+            ),
+            Ok(expected.len())
+        );
+        assert_eq!(output, expected);
+        assert_eq!(dictionary_monitor.snapshot(), before);
+        assert_eq!(dictionary.as_bytes(), bytes);
+        scratch_monitor.assert_released();
+        assert_eq!(scratch_monitor.snapshot().identities_created, 1);
+        drop(dictionary);
+        dictionary_monitor.assert_released();
+    }
+
+    #[test]
+    fn dictionary_slice_engine_every_observed_failure_releases_scratch_and_keeps_dictionary() {
+        for prepared in [false, true] {
+            let dictionary_owner = block_allocator();
+            let dictionary_monitor = dictionary_owner.monitor();
+            let bytes = allocator_dictionary(prepared).as_bytes().to_vec();
+            let dictionary = if prepared {
+                Dictionary::from_bytes_in(&bytes, dictionary_owner)
+            } else {
+                Dictionary::raw_in(&bytes, dictionary_owner)
+            }
+            .unwrap();
+            let before = dictionary_monitor.snapshot();
+            for input in [&b""[..], &b"a useful raw dictionary pattern abcdefghijklmnopqrstuvwxyz a useful raw dictionary pattern abcdefghijklmnopqrstuvwxyz"[..]] {
+                let expected = compress_with_dictionary_in(input,&dictionary.view(),Global).unwrap();
+                let mut output=vec![0xa5;expected.len()+2];let owner=block_allocator();let monitor=owner.monitor();
+                assert_eq!(compress_frame_into_with_view_in(input,&mut output[1..1+expected.len()],Some(dictionary.view()),owner),Ok(expected.len()));
+                let attempts=monitor.snapshot().attempts;assert!(attempts>0);monitor.assert_released();
+                for ordinal in 1..=attempts {
+                    let owner=block_allocator();let monitor=owner.monitor();monitor.set_fail_at(NonZeroU64::new(ordinal));output.fill(0xa5);
+                    assert_eq!(compress_frame_into_with_view_in(input,&mut output[1..1+expected.len()],Some(dictionary.view()),owner),Err(Error::AllocationFailed));
+                    assert_eq!(monitor.snapshot().attempts,ordinal);assert_eq!(monitor.snapshot().failures,1);monitor.assert_released();
+                    assert_eq!((output[0],output[expected.len()+1]),(0xa5,0xa5));assert_eq!(dictionary_monitor.snapshot(),before);assert_eq!(dictionary.as_bytes(),bytes);
+                }
+            }
+            drop(dictionary);
+            dictionary_monitor.assert_released();
+        }
     }
 
     #[test]
