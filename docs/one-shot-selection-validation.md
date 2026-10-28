@@ -89,3 +89,14 @@ independent Rust algorithm, not byte-identical native fastCover.
 Evidence: `evidence/2026-10-27-one-shot-selection-platform.json` and
 `evidence/2026-10-27-one-shot-selection-corpus.json`. The archived corpus receipt,
 not this prepared report, gates integration of the corpus result.
+
+## Complete feature and release regression
+
+The final frozen candidate passed all 72 commands: safe/all and 21 isolated
+unsafe features each have complete tests, true no_std and strict Clippy; safe/all
+complete release and formatting also pass. Every full/release suite reports
+1,723 passed / 71 ignored across 108 result groups. External adapters retain their
+separate explicit execution receipts; ignored tests are not credited as passes.
+Focused preparation and borrowed benchmark baseline rejections remain retained.
+Native empty-input differences and call-versus-frame prefix scope remain explicit.
+Evidence: `evidence/2026-10-27-one-shot-selection-feature-matrix.json`.
