@@ -1,8 +1,8 @@
 # Caller-owned compression output validation
 
-Module 33 is in progress. Bounded output and internal one-block frame emission
-are integrated. Public APIs, native/corpus/platform checks, full-codec regression
-and whole compression measurements remain open.
+Module 33 is in progress. Caller-owned ordinary compression APIs and bounded
+one-block frame emission are integrated. Native/corpus/platform, full-codec
+regression and whole compression measurements remain separate gates.
 
 ## Checked frame sink
 
@@ -49,3 +49,22 @@ also runs in each configuration, with true no_std, strict Clippy and formatting.
 The initial test used an options value with the older scalar-limit convenience
 API; that compile rejection is retained and not credited as a pass.
 Evidence: `evidence/2026-10-27-slice-encode-engine.json`.
+
+## Caller-owned public APIs
+
+compress_into and compress_into_in emit exactly the ordinary dictionary-free
+Greedy frame produced by compress. A successful result is the exact written
+length; its unused output suffix remains unchanged. Capacity may be smaller than
+compression_bound if the actual frame fits. ResourceLimit can leave provisional
+header/blocks; no whole-call atomicity is promised. Independent borrows prohibit
+in-place compression. Generic scratch ownership supports borrowed non-Clone
+allocators and releases all owned allocations before return, including failures.
+Dictionary, reference-level and streaming variants remain separate.
+
+Twenty-one focused commands execute four public contracts, six engine units and
+two documentation examples (one compile-fail alias check) under safe, isolated
+sink, isolated match-table and all 22 features, plus true no_std, strict Clippy and
+formatting. Tests check complete single-frame metadata/output, short-capacity
+guards and immutable input, borrowed allocator failure/recovery, and header
+rejection before any scratch allocation.
+Evidence: `evidence/2026-10-27-slice-encode-public-api.json`.

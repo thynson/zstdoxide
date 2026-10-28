@@ -179,7 +179,7 @@ Module 32 closes. Initial scope is dictionary-free ordinary Greedy compression.
 - [x] Reconcile inherited original query/utility assertions and dictionary corpus metadata after Module 32 source closure.
 - [x] Implement checked bounded frame append with equivalent safe and opt-in unsafe storage paths.
 - [x] Implement one-block staging and exact ordinary one-shot frame emission into borrowed output.
-- [ ] Expose documented caller-owned compression with capacity, alias, scratch-failure and allocator qualification.
+- [x] Expose documented caller-owned compression with capacity, alias, scratch-failure and allocator qualification.
 - [ ] Qualify guarded native interoperability and retained deterministic corpus workloads without claiming byte-identical C output.
 - [ ] Qualify width/endian behavior and concrete no-atomics ARM code generation.
 - [ ] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.

@@ -156,6 +156,11 @@ and is consumed even on errors. See [one-shot selection usage](docs/one-shot-sel
 Bounded qualification and native differences are recorded in
 [the one-shot selection report](docs/one-shot-selection-validation.md).
 
+Caller-owned ordinary compression is available through `compress_into` and
+`compress_into_in`, preserving the unused success suffix and using one-block
+staging. Its bounded scope and ongoing final qualification are documented in
+[the validation report](docs/slice-encode-validation.md).
+
 ## Current support
 
 | Area | Implemented |

@@ -215,7 +215,10 @@ pub use dictionary_train::{
     DictionaryTrainingOptions, finalize_dictionary, finalize_dictionary_in, train_dictionary,
     train_dictionary_in,
 };
-pub use encode::{compress, compress_in, compress_with_dictionary, compress_with_dictionary_in};
+pub use encode::{
+    compress, compress_in, compress_into, compress_into_in, compress_with_dictionary,
+    compress_with_dictionary_in,
+};
 pub use error::{Error, Result};
 pub use frame::FrameHeader;
 pub use frame_layout::{

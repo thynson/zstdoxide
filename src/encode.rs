@@ -43,6 +43,52 @@ pub fn compress_in<A: Allocator + Clone>(input: &[u8], allocator: A) -> Result<V
     compress_frame_in::<A, SharedDictionary>(input, None, allocator)
 }
 
+/// Compresses an ordinary dictionary-free frame into caller-owned storage.
+///
+/// Success returns the written length, emits exactly the bytes of [`compress`],
+/// and preserves all output bytes after that length. The actual frame can fit
+/// in less space than [`crate::compression_bound`]. A short destination returns
+/// [`Error::ResourceLimit`]; earlier complete header/block appends may remain.
+/// No error writes outside the supplied slice. Whole-call atomicity is not
+/// promised. Input and output must be independently borrowed; in-place
+/// compression, dictionaries, reference levels and streaming are not supported
+/// by this entrypoint. Scratch allocation remains fallible.
+///
+/// ```
+/// let input = b"example example example";
+/// let mut output = vec![0xa5; zstdoxide::compression_bound(input.len()).unwrap()];
+/// let written = zstdoxide::compress_into(input, &mut output).unwrap();
+/// assert_eq!(&output[..written], zstdoxide::compress(input).unwrap());
+/// assert!(output[written..].iter().all(|&b| b == 0xa5));
+/// ```
+///
+/// ```compile_fail
+/// let mut storage = [0; 64];
+/// zstdoxide::compress_into(&storage[..16], &mut storage).unwrap();
+/// ```
+pub fn compress_into(input: &[u8], output: &mut [u8]) -> Result<usize> {
+    compress_into_in(input, output, Global)
+}
+
+/// Compresses into borrowed output using the supplied allocator for all scratch.
+///
+/// Output behavior matches [`compress_into`]. The caller owns the destination;
+/// this call never allocates or frees it. One vector stages at most one encoded
+/// block, while the existing match/history/entropy workspaces own independent
+/// allocator clones. No complete compressed-frame vector is constructed.
+/// Each scratch allocation is released through its owning allocator before
+/// return, including after [`Error::AllocationFailed`]. Input, output and
+/// allocator borrows are not retained. A non-Clone allocator can be passed by
+/// reference; ordinary allocator cloning has the caller's own panic/allocation
+/// behavior outside fallible codec collection requests.
+pub fn compress_into_in<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    allocator: A,
+) -> Result<usize> {
+    compress_frame_into_in(input, output, allocator)
+}
+
 /// Compresses input into a checksummed frame using owned dictionary content.
 ///
 /// A formatted dictionary's nonzero identifier is written using its smallest
@@ -111,10 +157,6 @@ fn compress_frame_in<A: Allocator + Clone, D: DictionaryHandle>(
 
 /// Emit ordinary one-shot framing through one reusable encoded-block staging
 /// vector. Neither the source nor destination borrow escapes this call.
-#[cfg_attr(
-    not(test),
-    allow(dead_code, reason = "public slice API follows engine qualification")
-)]
 pub(crate) fn compress_frame_into_in<A: Allocator + Clone>(
     input: &[u8],
     output: &mut [u8],
