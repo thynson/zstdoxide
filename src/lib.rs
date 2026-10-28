@@ -20,6 +20,7 @@
         feature = "unsafe-history",
         feature = "unsafe-slice-history",
         feature = "unsafe-in-place-buffer",
+        feature = "unsafe-frame-sink",
         feature = "unsafe-ring-history",
         feature = "unsafe-fse",
         feature = "unsafe-fse-encoder",
@@ -77,6 +78,11 @@ mod fast_plan;
 mod fast_state;
 mod frame;
 mod frame_layout;
+#[allow(
+    dead_code,
+    reason = "private bounded output leaf before encoder integration"
+)]
+mod frame_sink;
 mod frame_utilities;
 mod fse;
 mod fse_encode;

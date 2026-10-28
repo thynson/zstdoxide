@@ -1,0 +1,420 @@
+{
+  "status": "passed",
+  "scope": "isolated-component-only",
+  "recorded_utc": "2026-10-27T03:59:11.219176+00:00",
+  "evidence": {
+    "status": "passed",
+    "source": {
+      "Cargo.toml": "bd1b4b4c1ae4686ee8cec52cd335624a50fb960eaf3ed63f826d5fe9a5e0e8d3",
+      "Cargo.lock": "3505bf76f6fe90035c593a694cc6bedc679942dde35d3934163bb737cd82ae54",
+      "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+      "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+      "src/lib.rs": "60a3aab7db5b441ef8dbd47098df45e7644cdca2ae25f947a1a0101634435188",
+      "src/frame_sink.rs": "bd787b806b804ef8478bd5b068542e676a0a9c3ac70676488bb78882a75d7cb7"
+    },
+    "commands": [
+      {
+        "label": "safe-test",
+        "argv": [
+          "cargo",
+          "test",
+          "--lib",
+          "--offline",
+          "--locked"
+        ],
+        "exit_code": 0,
+        "seconds": 1.7170411669940222,
+        "log_sha256": "b84f8e967136ee4cddb2a8ce4809094c393591b932106a769a18ea3a538d69d3"
+      },
+      {
+        "label": "safe-core",
+        "argv": [
+          "cargo",
+          "check",
+          "--lib",
+          "--offline",
+          "--locked"
+        ],
+        "exit_code": 0,
+        "seconds": 0.4722787919745315,
+        "log_sha256": "099a968f66ef1011543a625fb88f054eefed07eb73746a49ea0ca7012bd84ba6"
+      },
+      {
+        "label": "safe-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--lib",
+          "--tests",
+          "--offline",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "seconds": 0.6897500829945784,
+        "log_sha256": "c056d2643379236ff0b191e4f435cb83f440bb89a29fd3c5631db622a85f809f"
+      },
+      {
+        "label": "unsafe-test",
+        "argv": [
+          "cargo",
+          "test",
+          "--lib",
+          "--offline",
+          "--locked",
+          "--features",
+          "unsafe-frame-sink"
+        ],
+        "exit_code": 0,
+        "seconds": 1.249498457997106,
+        "log_sha256": "1433edcbf9de968f72456b4ff12163e711af8d76744d5d32d19924b6097a3a88"
+      },
+      {
+        "label": "unsafe-core",
+        "argv": [
+          "cargo",
+          "check",
+          "--lib",
+          "--offline",
+          "--locked",
+          "--features",
+          "unsafe-frame-sink"
+        ],
+        "exit_code": 0,
+        "seconds": 0.22022991700214334,
+        "log_sha256": "099a968f66ef1011543a625fb88f054eefed07eb73746a49ea0ca7012bd84ba6"
+      },
+      {
+        "label": "unsafe-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--lib",
+          "--tests",
+          "--offline",
+          "--locked",
+          "--features",
+          "unsafe-frame-sink",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "seconds": 0.5540367499925196,
+        "log_sha256": "3990e2fa9b3a0984a78b06621014a1aa5831bb97806f7c4855c99cf13448dbc7"
+      },
+      {
+        "label": "miri-i686-safe",
+        "argv": [
+          "cargo",
+          "miri",
+          "test",
+          "--offline",
+          "--locked",
+          "--lib",
+          "--target",
+          "i686-unknown-linux-gnu"
+        ],
+        "exit_code": 0,
+        "seconds": 13.41626324999379,
+        "log_sha256": "f9ac0b8259330bb7f6b6d5b7dcf8998312cd529d69e5fc8727654367ede33a5c"
+      },
+      {
+        "label": "miri-i686-unsafe",
+        "argv": [
+          "cargo",
+          "miri",
+          "test",
+          "--offline",
+          "--locked",
+          "--lib",
+          "--target",
+          "i686-unknown-linux-gnu",
+          "--features",
+          "unsafe-frame-sink"
+        ],
+        "exit_code": 0,
+        "seconds": 10.32286945800297,
+        "log_sha256": "0a3f3b5bcdaf73e41166c45cb195c1a24919e410070c4e35bac53364e234512f"
+      },
+      {
+        "label": "miri-s390x-safe",
+        "argv": [
+          "cargo",
+          "miri",
+          "test",
+          "--offline",
+          "--locked",
+          "--lib",
+          "--target",
+          "s390x-unknown-linux-gnu"
+        ],
+        "exit_code": 0,
+        "seconds": 13.314274542004569,
+        "log_sha256": "ac8509db916eeaf4fabd1ddbe30060406bae487b97bad4e5da725f51a7a672b7"
+      },
+      {
+        "label": "miri-s390x-unsafe",
+        "argv": [
+          "cargo",
+          "miri",
+          "test",
+          "--offline",
+          "--locked",
+          "--lib",
+          "--target",
+          "s390x-unknown-linux-gnu",
+          "--features",
+          "unsafe-frame-sink"
+        ],
+        "exit_code": 0,
+        "seconds": 10.534954291011672,
+        "log_sha256": "b6a322d7f53b002fd325e4bd1dbb2e9ebc3c411a0e14fc2ddc2346173c70246d"
+      },
+      {
+        "label": "thumb-safe-check",
+        "argv": [
+          "cargo",
+          "check",
+          "--offline",
+          "--locked",
+          "-Zbuild-std=core",
+          "--target",
+          "thumbv6m-none-eabi",
+          "--no-default-features",
+          "--lib"
+        ],
+        "exit_code": 0,
+        "seconds": 19.243485249986406,
+        "log_sha256": "8a673332be66754762f96422aeb74dad1c8bec9e47c6378fb7f03b546053e401"
+      },
+      {
+        "label": "thumb-safe-objects",
+        "argv": [
+          "cargo",
+          "rustc",
+          "--release",
+          "--offline",
+          "--locked",
+          "-Zbuild-std=core",
+          "--target",
+          "thumbv6m-none-eabi",
+          "--no-default-features",
+          "--lib",
+          "--",
+          "--emit=llvm-ir,obj"
+        ],
+        "exit_code": 0,
+        "seconds": 27.013027583016083,
+        "log_sha256": "0aeec1ed1ac7bf8ef785364955f3198674b016ec8152b7a980ca03294df5c83e"
+      },
+      {
+        "label": "thumb-unsafe-check",
+        "argv": [
+          "cargo",
+          "check",
+          "--offline",
+          "--locked",
+          "-Zbuild-std=core",
+          "--target",
+          "thumbv6m-none-eabi",
+          "--no-default-features",
+          "--lib",
+          "--features",
+          "unsafe-frame-sink"
+        ],
+        "exit_code": 0,
+        "seconds": 0.18450891599059105,
+        "log_sha256": "3693a9e1c4cf17255778ecc53b882e9649601d1ad2f617692ac95bfc602e0f2d"
+      },
+      {
+        "label": "thumb-unsafe-objects",
+        "argv": [
+          "cargo",
+          "rustc",
+          "--release",
+          "--offline",
+          "--locked",
+          "-Zbuild-std=core",
+          "--target",
+          "thumbv6m-none-eabi",
+          "--no-default-features",
+          "--lib",
+          "--features",
+          "unsafe-frame-sink",
+          "--",
+          "--emit=llvm-ir,obj"
+        ],
+        "exit_code": 0,
+        "seconds": 11.623103124991758,
+        "log_sha256": "23acbfd5e2c535b7de0f8f3138a6c6a7fae676dc7c394f750822056dc5268b22"
+      },
+      {
+        "label": "format",
+        "argv": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.07297133299289271,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "probe_sha256": "49bbae3e28162722ceef2dfbb874dbca9c4c8ea3d77055a22f5bbe80acf7ab09",
+    "qualification": "Isolated proposed frame-sink leaf only: safe/unsafe host tests, core-only compilation, strict Clippy, four exact4-test i686/s390x strict-provenance Miri runs, concrete core-only ARM copies and formatting. Source-independent checked numeric helper covers overflow without fabricated huge slices. No complete codec integration, feature matrix, compression framing or benchmark claim. Source module is frozen for subsequent integration."
+  },
+  "source": {
+    "Cargo.toml": "bd1b4b4c1ae4686ee8cec52cd335624a50fb960eaf3ed63f826d5fe9a5e0e8d3",
+    "Cargo.lock": "3505bf76f6fe90035c593a694cc6bedc679942dde35d3934163bb737cd82ae54",
+    "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+    "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+    "src/lib.rs": "60a3aab7db5b441ef8dbd47098df45e7644cdca2ae25f947a1a0101634435188",
+    "src/frame_sink.rs": "bd787b806b804ef8478bd5b068542e676a0a9c3ac70676488bb78882a75d7cb7"
+  },
+  "members": {
+    "evidence.json": {
+      "sha256": "0f88383206735f014e61b4f498e4f0679c24fd3bd85f3e638f1ea5cb6982c684",
+      "bytes": 7086
+    },
+    "thumb-unsafe-objects.log": {
+      "sha256": "23acbfd5e2c535b7de0f8f3138a6c6a7fae676dc7c394f750822056dc5268b22",
+      "bytes": 470
+    },
+    "miri-i686-safe.log": {
+      "sha256": "f9ac0b8259330bb7f6b6d5b7dcf8998312cd529d69e5fc8727654367ede33a5c",
+      "bytes": 858
+    },
+    "thumb-safe-objects.log": {
+      "sha256": "0aeec1ed1ac7bf8ef785364955f3198674b016ec8152b7a980ca03294df5c83e",
+      "bytes": 470
+    },
+    "check.py": {
+      "sha256": "77bc5748e1505177414649e9ec020fbbd18107ae8051f2768a751282dd5d2820",
+      "bytes": 4328
+    },
+    "format.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "unsafe-test.log": {
+      "sha256": "1433edcbf9de968f72456b4ff12163e711af8d76744d5d32d19924b6097a3a88",
+      "bytes": 832
+    },
+    "unsafe-core.log": {
+      "sha256": "099a968f66ef1011543a625fb88f054eefed07eb73746a49ea0ca7012bd84ba6",
+      "bytes": 149
+    },
+    "miri-s390x-safe.log": {
+      "sha256": "ac8509db916eeaf4fabd1ddbe30060406bae487b97bad4e5da725f51a7a672b7",
+      "bytes": 860
+    },
+    "thumb-safe-check.log": {
+      "sha256": "8a673332be66754762f96422aeb74dad1c8bec9e47c6378fb7f03b546053e401",
+      "bytes": 472
+    },
+    "thumb-unsafe-check.log": {
+      "sha256": "3693a9e1c4cf17255778ecc53b882e9649601d1ad2f617692ac95bfc602e0f2d",
+      "bytes": 149
+    },
+    "safe-core.log": {
+      "sha256": "099a968f66ef1011543a625fb88f054eefed07eb73746a49ea0ca7012bd84ba6",
+      "bytes": 149
+    },
+    "unsafe-clippy.log": {
+      "sha256": "3990e2fa9b3a0984a78b06621014a1aa5831bb97806f7c4855c99cf13448dbc7",
+      "bytes": 149
+    },
+    "safe-clippy.log": {
+      "sha256": "c056d2643379236ff0b191e4f435cb83f440bb89a29fd3c5631db622a85f809f",
+      "bytes": 149
+    },
+    "archive.py": {
+      "sha256": "76b6525696ba3d77381bae2941802d7543b88abe58356378418ba8460c05e4c1",
+      "bytes": 1509
+    },
+    "safe-test.log": {
+      "sha256": "b84f8e967136ee4cddb2a8ce4809094c393591b932106a769a18ea3a538d69d3",
+      "bytes": 832
+    },
+    "miri-i686-unsafe.log": {
+      "sha256": "0a3f3b5bcdaf73e41166c45cb195c1a24919e410070c4e35bac53364e234512f",
+      "bytes": 858
+    },
+    "miri-s390x-unsafe.log": {
+      "sha256": "b6a322d7f53b002fd325e4bd1dbb2e9ebc3c411a0e14fc2ddc2346173c70246d",
+      "bytes": 860
+    },
+    "artifacts/safe-zstdoxide_frame_sink_check-fcd3f6088c592a80.o": {
+      "sha256": "cd23560d6a560484df3600a66aaf5d623b004ac2f48cdeaacd97f6d161fcbb51",
+      "bytes": 4108
+    },
+    "artifacts/unsafe-zstdoxide_frame_sink_check-cd663cab48c7d2f1.o": {
+      "sha256": "8162ef564e9dfd4f7bd66cd9b8704da3f6b923e2c5e8448fab926af49f4e7f27",
+      "bytes": 4116
+    },
+    "artifacts/unsafe-zstdoxide_frame_sink_check-cd663cab48c7d2f1.ll": {
+      "sha256": "230d4fc23cc8642d8b105e70c5b1fe9e0beda9348f19d99a159d3c096f642bd7",
+      "bytes": 8309
+    },
+    "artifacts/safe-zstdoxide_frame_sink_check-fcd3f6088c592a80.ll": {
+      "sha256": "81c22bead17625aff7b7aa362ba13957586add607603f4cfb5e2437e35d3031c",
+      "bytes": 8516
+    },
+    "component/Cargo.toml": {
+      "sha256": "bd1b4b4c1ae4686ee8cec52cd335624a50fb960eaf3ed63f826d5fe9a5e0e8d3",
+      "bytes": 239
+    },
+    "component/Cargo.lock": {
+      "sha256": "3505bf76f6fe90035c593a694cc6bedc679942dde35d3934163bb737cd82ae54",
+      "bytes": 170
+    },
+    "component/rust-toolchain.toml": {
+      "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+      "bytes": 118
+    },
+    "probe/Cargo.toml": {
+      "sha256": "bd1b4b4c1ae4686ee8cec52cd335624a50fb960eaf3ed63f826d5fe9a5e0e8d3",
+      "bytes": 239
+    },
+    "probe/Cargo.lock": {
+      "sha256": "3505bf76f6fe90035c593a694cc6bedc679942dde35d3934163bb737cd82ae54",
+      "bytes": 170
+    },
+    "probe/rust-toolchain.toml": {
+      "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+      "bytes": 118
+    },
+    "probe/src/error.rs": {
+      "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+      "bytes": 2528
+    },
+    "probe/src/lib.rs": {
+      "sha256": "49bbae3e28162722ceef2dfbb874dbca9c4c8ea3d77055a22f5bbe80acf7ab09",
+      "bytes": 565
+    },
+    "probe/src/frame_sink.rs": {
+      "sha256": "bd787b806b804ef8478bd5b068542e676a0a9c3ac70676488bb78882a75d7cb7",
+      "bytes": 6475
+    },
+    "component/src/error.rs": {
+      "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+      "bytes": 2528
+    },
+    "component/src/lib.rs": {
+      "sha256": "60a3aab7db5b441ef8dbd47098df45e7644cdca2ae25f947a1a0101634435188",
+      "bytes": 347
+    },
+    "component/src/frame_sink.rs": {
+      "sha256": "bd787b806b804ef8478bd5b068542e676a0a9c3ac70676488bb78882a75d7cb7",
+      "bytes": 6475
+    }
+  },
+  "archive": "2026-10-27-frame-sink-component.tar.gz",
+  "archive_sha256": "a269dd3431659564c65e1ebe123fd82bf57296bb8de59dd5b9b066f9569eab27",
+  "qualification": "Proposed checked frame-sink leaf only. Full codec integration, framing, API, allocation/interoperability/corpus gates, every-feature full/release matrix and safe/unsafe measurements remain unexecuted. Do not mark Module33 complete or promote production before Module32 closure."
+}

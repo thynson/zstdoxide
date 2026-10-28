@@ -1,0 +1,442 @@
+{
+  "status": "passed",
+  "scope": "isolated-component-only",
+  "build": {
+    "status": "qualified-not-timed",
+    "source": {
+      "Cargo.toml": "cc7e58785d7b7c53b1bf5271cc11502a139759ac1db406741bd55e832428a196",
+      "Cargo.lock": "3505bf76f6fe90035c593a694cc6bedc679942dde35d3934163bb737cd82ae54",
+      "rust-toolchain.toml": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+      "benches/frame_sink.rs": "8de1e28eab4595e6cf35e1fd7628b29a4850b9bf6f1265f8389d2dff9d1b4c52",
+      "src/error.rs": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+      "src/lib.rs": "60a3aab7db5b441ef8dbd47098df45e7644cdca2ae25f947a1a0101634435188",
+      "src/frame_sink.rs": "bd787b806b804ef8478bd5b068542e676a0a9c3ac70676488bb78882a75d7cb7"
+    },
+    "component_receipt_sha256": "0f88383206735f014e61b4f498e4f0679c24fd3bd85f3e638f1ea5cb6982c684",
+    "builds": [
+      {
+        "campaign": "primary",
+        "name": "safe",
+        "argv": [
+          "cargo",
+          "bench",
+          "--offline",
+          "--locked",
+          "--bench",
+          "frame_sink",
+          "--no-run",
+          "--message-format=json"
+        ],
+        "seconds": 0.8803534999897238,
+        "executable": "executables/primary-safe",
+        "sha256": "6d138beb7560f20df2ec7ce08749007aa65e536258257312b0465dfff82f3411",
+        "qualification_sha256": "147ca3a78c7bb19843690b3d8d721ecb00352fb63c47ac75c1431c11390757cd"
+      },
+      {
+        "campaign": "primary",
+        "name": "unsafe",
+        "argv": [
+          "cargo",
+          "bench",
+          "--offline",
+          "--locked",
+          "--bench",
+          "frame_sink",
+          "--no-run",
+          "--message-format=json",
+          "--features",
+          "unsafe-frame-sink"
+        ],
+        "seconds": 0.8390932079928461,
+        "executable": "executables/primary-unsafe",
+        "sha256": "08abae5cbc87d0f1c8b82f73a727dec364d4648de96013eba964ac816863948a",
+        "qualification_sha256": "147ca3a78c7bb19843690b3d8d721ecb00352fb63c47ac75c1431c11390757cd"
+      },
+      {
+        "campaign": "repeat",
+        "name": "safe",
+        "argv": [
+          "cargo",
+          "bench",
+          "--offline",
+          "--locked",
+          "--bench",
+          "frame_sink",
+          "--no-run",
+          "--message-format=json"
+        ],
+        "seconds": 0.6235985409875866,
+        "executable": "executables/repeat-safe",
+        "sha256": "6d138beb7560f20df2ec7ce08749007aa65e536258257312b0465dfff82f3411",
+        "qualification_sha256": "147ca3a78c7bb19843690b3d8d721ecb00352fb63c47ac75c1431c11390757cd"
+      },
+      {
+        "campaign": "repeat",
+        "name": "unsafe",
+        "argv": [
+          "cargo",
+          "bench",
+          "--offline",
+          "--locked",
+          "--bench",
+          "frame_sink",
+          "--no-run",
+          "--message-format=json",
+          "--features",
+          "unsafe-frame-sink"
+        ],
+        "seconds": 0.5636333329894114,
+        "executable": "executables/repeat-unsafe",
+        "sha256": "08abae5cbc87d0f1c8b82f73a727dec364d4648de96013eba964ac816863948a",
+        "qualification_sha256": "147ca3a78c7bb19843690b3d8d721ecb00352fb63c47ac75c1431c11390757cd"
+      }
+    ],
+    "commands": [
+      {
+        "label": "safe-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--bench",
+          "frame_sink",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "log_sha256": "2c1688a085cc33e0d4303e11c5600033a44337b38cd44415162207424e0085ab"
+      },
+      {
+        "label": "unsafe-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--bench",
+          "frame_sink",
+          "--features",
+          "unsafe-frame-sink",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "log_sha256": "d399ebf74f0d075e32d5de935be741aa9fa051c89ce674e4cf0852b4fc506f56"
+      },
+      {
+        "label": "format",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "qualification": "Exact isolated leaf only. Safe/unsafe each independently rebuilt in primary/repeat target directories;11 identical result/guard identities. Caller allocation, buffer fill and prefix setup are outside timing. No runtime allocator counters or whole-codec compression claim. Measurements remain unexecuted."
+  },
+  "timing": {
+    "status": "passed",
+    "started_utc": "2026-10-28T03:11:18.354440+00:00",
+    "gates": {
+      "module33-storage/evidence.json": "0f88383206735f014e61b4f498e4f0679c24fd3bd85f3e638f1ea5cb6982c684",
+      "module33-storage/integration.json": "510860d0203dd7cca77cece70c84434055bf203f79ea8604def33484677118ea",
+      "module28-matrix/evidence.json": "3d125d2937f5e59ac0db25c284f02be7f247a593aca09ecf86173e336907af23",
+      "module29-matrix/evidence.json": "04f6054269ebd1084df3bf1966f3c7d24deef2207d10bc0760ae6e0ae9648446",
+      "module30-matrix/evidence.json": "e9411e75b1ee0ca14fd303552ea0fa88ce7f657980e35ec691eef10ca6019dac",
+      "module31-matrix/evidence.json": "6cdd58ac8b209dd98cf918f727864cad93f68aae5625834fdb865af967bcb4ea",
+      "module32-matrix/evidence.json": "deb5da904bc103eba440c792634a549e35bdf4707b6f429f64f37f7036aaf3dd",
+      "module31-benchmark-v2/timed.json": "ac27a8abac4555c87348a446678a56e31796c67b73e093430aa210a29cba4574",
+      "module31-benchmark-v2/repeat/timed.json": "4aab59fe1c93ad3c58eefd1e0186be791453fcdab27eca2fe61d8a042eaf5056",
+      "module32-benchmark/timed.json": "60083421bdaf5fdaac5008aec89184505da32ad48af86bdab398b92f02b41018",
+      "module32-benchmark/repeat/timed.json": "41fd5bd3e80e4cfc8898ea6693fbf954de16018130bec10258a115d26bcb8667"
+    },
+    "build_evidence_sha256": "d4e3fac1c96fea17af898e0d4cd57d7bd151193556302bae848b6acf41b99d2f",
+    "barriers": {
+      "primary": [
+        {
+          "observed_utc": "2026-10-28T03:11:18.510893+00:00",
+          "active_processes": []
+        },
+        {
+          "observed_utc": "2026-10-28T03:11:23.544601+00:00",
+          "active_processes": []
+        }
+      ],
+      "repeat": [
+        {
+          "observed_utc": "2026-10-28T03:11:28.675641+00:00",
+          "active_processes": []
+        },
+        {
+          "observed_utc": "2026-10-28T03:11:33.712866+00:00",
+          "active_processes": []
+        }
+      ]
+    },
+    "runs": [
+      {
+        "campaign": "primary",
+        "backend": "safe",
+        "rows": 55,
+        "sha256": "73ae48f50c5513f23c399195f7be4743bf318ea118f51ae950f0b59d23df6baf",
+        "executable_sha256": "6d138beb7560f20df2ec7ce08749007aa65e536258257312b0465dfff82f3411"
+      },
+      {
+        "campaign": "primary",
+        "backend": "unsafe",
+        "rows": 55,
+        "sha256": "4bf347569a1f0217332256e45dba7827d04362c6d0e7a9e12744280ab855070b",
+        "executable_sha256": "08abae5cbc87d0f1c8b82f73a727dec364d4648de96013eba964ac816863948a"
+      },
+      {
+        "campaign": "repeat",
+        "backend": "safe",
+        "rows": 55,
+        "sha256": "6e9fa87ef05ce11f62ce5cfbd133467812ae656212f1e2b40b0903da00062c5a",
+        "executable_sha256": "6d138beb7560f20df2ec7ce08749007aa65e536258257312b0465dfff82f3411"
+      },
+      {
+        "campaign": "repeat",
+        "backend": "unsafe",
+        "rows": 55,
+        "sha256": "6e8f4be8d5cf875bcd646dcf7c4eb41d55308b8bf130f6e9ab21854b92989b9c",
+        "executable_sha256": "08abae5cbc87d0f1c8b82f73a727dec364d4648de96013eba964ac816863948a"
+      }
+    ],
+    "finished_utc": "2026-10-28T03:11:38.833118+00:00",
+    "summary": [
+      {
+        "campaign": "primary",
+        "unsafe_over_safe": {
+          "after-block": 0.9758202778598877,
+          "after-header": 0.9842886467708827,
+          "block": 0.9900201972199121,
+          "empty": 0.9648189566584053,
+          "empty-after-full": 1.0178111219288701,
+          "header": 0.970157471644092,
+          "one": 1.0095439478797577,
+          "page": 0.9165743816906607,
+          "short": 0.9972666666666666,
+          "short-after-prefix": 1.1476030534351145,
+          "small": 0.9977827050997783
+        },
+        "nonempty_request_geomean": 0.9971668564536598
+      },
+      {
+        "campaign": "repeat",
+        "unsafe_over_safe": {
+          "after-block": 0.7292558445834705,
+          "after-header": 0.4925534991324465,
+          "block": 0.520873953435027,
+          "empty": 0.431325,
+          "empty-after-full": 0.8971746665266254,
+          "header": 0.43587844562223715,
+          "one": 0.451700513824321,
+          "page": 0.5175377891094518,
+          "short": 0.504452292553352,
+          "short-after-prefix": 0.9643989132895631,
+          "small": 0.44143690653243334
+        },
+        "nonempty_request_geomean": 0.5428570671633168
+      }
+    ],
+    "qualification": "Exact isolated sink only,11 deterministic cases/5 samples each. Fresh sink and optional prefix setup, allocation/fill and all assertions outside per-operation clocks; bounds/copy/position publication inside. All55 samples retained per executable. Nine nonempty requested-source cases include two capacity rejections; both zero-length append cases remain separate. Tiny/rejected operations include clock overhead. No global allocator counts, desktop idleness, statistical significance, whole-codec compression performance or universal unsafe benefit claimed."
+  },
+  "members": {
+    "evidence.json": {
+      "sha256": "d4e3fac1c96fea17af898e0d4cd57d7bd151193556302bae848b6acf41b99d2f",
+      "bytes": 4229
+    },
+    "build.py": {
+      "sha256": "5af7b91b22535d06ed19e1fbb2c18afccf37318e348fb0bcb34860e22ef7c1e8",
+      "bytes": 3473
+    },
+    "measure.py": {
+      "sha256": "16fe88abec5ef9848fffd8145a4ed54980683b482261567445aa7a14e32865bb",
+      "bytes": 4798
+    },
+    "repeat-safe-qualify.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "repeat-safe-timed.tsv": {
+      "sha256": "6e9fa87ef05ce11f62ce5cfbd133467812ae656212f1e2b40b0903da00062c5a",
+      "bytes": 1580
+    },
+    "repeat-unsafe-qualify.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "primary-safe-qualify.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "primary-unsafe-qualify.tsv": {
+      "sha256": "147ca3a78c7bb19843690b3d8d721ecb00352fb63c47ac75c1431c11390757cd",
+      "bytes": 541
+    },
+    "format.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "repeat-safe-build.log": {
+      "sha256": "c33464ab6081944d88e461cf998874801d00cc1ae4c9d8a618b590d52c8ac3cc",
+      "bytes": 148
+    },
+    "primary-unsafe-build.jsonl": {
+      "sha256": "a4703c7c26f5e7339917c28a112f66b9c8b3453b6eedb48a837217787ee44190",
+      "bytes": 1808
+    },
+    "repeat-safe-timed.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "primary-safe-timed.tsv": {
+      "sha256": "73ae48f50c5513f23c399195f7be4743bf318ea118f51ae950f0b59d23df6baf",
+      "bytes": 1580
+    },
+    "timed.json": {
+      "sha256": "59dd45310748dcdda0b72d633d39279d50eb019e00f7c0e99d82ef3e7d1c33fa",
+      "bytes": 4723
+    },
+    "repeat-unsafe-qualify.tsv": {
+      "sha256": "147ca3a78c7bb19843690b3d8d721ecb00352fb63c47ac75c1431c11390757cd",
+      "bytes": 541
+    },
+    "primary-unsafe-build.log": {
+      "sha256": "efb755c19a94b4be9fd440d183b8e4794defbaed25eeaa237438ef53bd7a0174",
+      "bytes": 148
+    },
+    "primary-unsafe-qualify.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "unsafe-clippy.log": {
+      "sha256": "d399ebf74f0d075e32d5de935be741aa9fa051c89ce674e4cf0852b4fc506f56",
+      "bytes": 160
+    },
+    "safe-clippy.log": {
+      "sha256": "2c1688a085cc33e0d4303e11c5600033a44337b38cd44415162207424e0085ab",
+      "bytes": 160
+    },
+    "repeat-safe-build.jsonl": {
+      "sha256": "bcc6f86d4238bcb6b806fa63626aaac93b32f722258d340033f045c611d928f1",
+      "bytes": 1766
+    },
+    "repeat-unsafe-timed.tsv": {
+      "sha256": "6e8f4be8d5cf875bcd646dcf7c4eb41d55308b8bf130f6e9ab21854b92989b9c",
+      "bytes": 1580
+    },
+    "primary-safe-qualify.tsv": {
+      "sha256": "147ca3a78c7bb19843690b3d8d721ecb00352fb63c47ac75c1431c11390757cd",
+      "bytes": 541
+    },
+    "primary-safe-timed.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "primary-safe-build.log": {
+      "sha256": "c33464ab6081944d88e461cf998874801d00cc1ae4c9d8a618b590d52c8ac3cc",
+      "bytes": 148
+    },
+    "repeat-unsafe-build.jsonl": {
+      "sha256": "08b1d9c6616624421da8346b1e048988a36cea932bd5e7c453fd507f56deef18",
+      "bytes": 1804
+    },
+    "repeat-unsafe-timed.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "primary-unsafe-timed.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "repeat-unsafe-build.log": {
+      "sha256": "524460601d70d20c286496141c689a2a9a4238b709dca5c6573185794f8b0d98",
+      "bytes": 148
+    },
+    "prepare.py": {
+      "sha256": "21d81130a0aeec863fea6cb4f8af31e6afb03a6a77616f4fd2836aadfa0afd7f",
+      "bytes": 3341
+    },
+    "primary-safe-build.jsonl": {
+      "sha256": "835bfb9f9f4deb067d30af4dd2d665be5ae2ed048f8096a399ad80f4125d7385",
+      "bytes": 1770
+    },
+    "primary-unsafe-timed.tsv": {
+      "sha256": "4bf347569a1f0217332256e45dba7827d04362c6d0e7a9e12744280ab855070b",
+      "bytes": 1580
+    },
+    "repeat-safe-qualify.tsv": {
+      "sha256": "147ca3a78c7bb19843690b3d8d721ecb00352fb63c47ac75c1431c11390757cd",
+      "bytes": 541
+    },
+    "executables/primary-unsafe": {
+      "sha256": "08abae5cbc87d0f1c8b82f73a727dec364d4648de96013eba964ac816863948a",
+      "bytes": 456464
+    },
+    "executables/repeat-safe": {
+      "sha256": "6d138beb7560f20df2ec7ce08749007aa65e536258257312b0465dfff82f3411",
+      "bytes": 456448
+    },
+    "executables/primary-safe": {
+      "sha256": "6d138beb7560f20df2ec7ce08749007aa65e536258257312b0465dfff82f3411",
+      "bytes": 456448
+    },
+    "executables/repeat-unsafe": {
+      "sha256": "08abae5cbc87d0f1c8b82f73a727dec364d4648de96013eba964ac816863948a",
+      "bytes": 456464
+    },
+    "source/Cargo.toml": {
+      "sha256": "cc7e58785d7b7c53b1bf5271cc11502a139759ac1db406741bd55e832428a196",
+      "bytes": 282
+    },
+    "source/Cargo.lock": {
+      "sha256": "3505bf76f6fe90035c593a694cc6bedc679942dde35d3934163bb737cd82ae54",
+      "bytes": 170
+    },
+    "source/rust-toolchain.toml": {
+      "sha256": "6acc4e81d027b11c80e6afbb51dc90c191fdb1f42b586a3433fd33d856f2df20",
+      "bytes": 118
+    },
+    "initial-bench-test-context-rejection/evidence.json": {
+      "sha256": "71cc6401c3e7130e09072290f504c6b77b0cc9970366bd93ed6a0ef81d06b76f",
+      "bytes": 1188
+    },
+    "initial-bench-test-context-rejection/rejection.json": {
+      "sha256": "b8369db8b43acf8df53efa9b2994a83cb0ad5f62c10c8f07e8e16371f390ccce",
+      "bytes": 370
+    },
+    "initial-bench-test-context-rejection/frame_sink.rs": {
+      "sha256": "29c2ebedfae33111bef4b2e9b19019b467f4e0ed682ff231e851190f90c76c79",
+      "bytes": 3418
+    },
+    "initial-bench-test-context-rejection/safe-clippy.log": {
+      "sha256": "9cfcc6d7578c728242fa189085e1001df96c59cb52dc386857dc244960ed8689",
+      "bytes": 785
+    },
+    "source/benches/frame_sink.rs": {
+      "sha256": "8de1e28eab4595e6cf35e1fd7628b29a4850b9bf6f1265f8389d2dff9d1b4c52",
+      "bytes": 3634
+    },
+    "source/src/error.rs": {
+      "sha256": "76b11468b9cdbb12dd0c082480c3853162c42c5a5f714138fc9d605ef3078d54",
+      "bytes": 2528
+    },
+    "source/src/lib.rs": {
+      "sha256": "60a3aab7db5b441ef8dbd47098df45e7644cdca2ae25f947a1a0101634435188",
+      "bytes": 347
+    },
+    "source/src/frame_sink.rs": {
+      "sha256": "bd787b806b804ef8478bd5b068542e676a0a9c3ac70676488bb78882a75d7cb7",
+      "bytes": 6475
+    },
+    "archive-benchmark.py": {
+      "sha256": "2a84b6669ff97cac8f4ee0c0546013c3da5fae7f54b6c0609fca33b79a74edf9",
+      "bytes": 3587
+    }
+  },
+  "archive": "2026-10-27-frame-sink-benchmarks.tar.gz",
+  "archive_sha256": "4f352a41ab7f2d576a08559f403345320c2b39fce707d202058c5413b936239c",
+  "qualification": "Exact isolated sink only,11 deterministic cases/5 samples each. Fresh sink and optional prefix setup, allocation/fill and all assertions outside per-operation clocks; bounds/copy/position publication inside. All55 samples retained per executable. Nine nonempty requested-source cases include two capacity rejections; both zero-length append cases remain separate. Tiny/rejected operations include clock overhead. No global allocator counts, desktop idleness, statistical significance, whole-codec compression performance or universal unsafe benefit claimed."
+}

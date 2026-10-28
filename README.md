@@ -198,6 +198,7 @@ implementation for exactly one data structure family, preserving its checked API
 | `unsafe-history` | Overlapping LZ match expansion |
 | `unsafe-slice-history` | Checked match expansion directly in caller-owned output |
 | `unsafe-in-place-buffer` | Checked overlapping raw-block movement in one caller buffer |
+| `unsafe-frame-sink` | Checked append to caller-owned encoded storage; private compression foundation |
 | `unsafe-ring-history` | Bounded wraparound history reads and stores |
 | `unsafe-fse` | FSE decoding tables |
 | `unsafe-fse-encoder` | Validated inverse FSE encoding tables |
