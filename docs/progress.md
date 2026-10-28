@@ -1457,3 +1457,42 @@ Completed checklist items are cleared; Module 32 retains call-scoped prefix and
 persistent-selection ownership decomposition. Native workspace/reset parity and
 complete upstream migration remain open. See `frame-utility-validation.md`,
 `frame-utility-benchmarks.md` and `evidence/2026-10-27-frame-utility-closure.json`.
+
+## Module 32: reusable one-shot selection complete (2026-10-27)
+
+OneShotDecoder owns copied options and persistent or next-call dictionary
+selection. Next-call ownership is removed before preflight/decoding/allocation,
+retained through every frame in that call, then dropped on return or unwinding.
+Persistent selection survives calls/errors. Input/output/scratch are never retained;
+no native workspace/reset/parameter equivalence is claimed. Existing sealed
+DictionaryHandle includes Clone, but transitions never invoke it. Private records
+support non-Clone values; public borrowed views support independent non-Clone
+allocator owners through references.
+
+All 72 final commands pass: safe/all and 21 isolated full/no_std/Clippy selections,
+safe/all release and formatting. Each full/release suite has 1,723 passes and
+71 ignored across 108 groups. Normal/sanitized native contexts execute 24 lifecycle
+scenarios with 81 setup/decode steps per output mode and 106 actual attempts.
+Five Rust backends agree on results/selection state and full successful bytes.
+Four empty-input attempts retain native zero success versus Rust UnexpectedEof,
+with prefix consumption on both. These schedules are supplemental, not upgraded
+original assertion groups.
+
+All 12,063 dictionary_decompress corpus members additionally exercise call-scoped
+direct/in-place selection in safe/all release with exact Result, output and guard
+comparisons. Incremental prefix semantics and its historical success ledger remain
+separate. Eight platform commands cover i686/s390x Miri and concrete no-atomics
+core+alloc ARM emission; no foreign-hardware execution is claimed.
+
+Twenty-three primary and independent safe/all repeat executables have identical
+132-row dictionary/scratch ownership ledgers and complete 495-row timing samples.
+Nine modes expose stateless/persistent/prefix paths and setup/restoration costs.
+All use borrowed views. All/safe nonempty median-latency geometric means: primary persistent-direct 0.5751; primary prefix-direct 0.5500; primary persistent-in-place 0.6008; primary prefix-in-place 0.6361; repeat persistent-direct 0.9742; repeat prefix-direct 0.9683; repeat persistent-in-place 0.9992; repeat prefix-in-place 0.9828.
+Fixed-order host observations do not establish universal unsafe benefit or native
+workspace reuse. Initial borrowed-baseline compile and strict harness lint
+rejections remain preserved; repaired source was fully rebuilt and qualified.
+
+Closure verifies integrated source/test identities and every stage archive. The
+completed checklist is cleared; Module 33 retains caller-owned ordinary compression
+output decomposition. See `one-shot-selection-validation.md`,
+`one-shot-selection-benchmarks.md` and the source-bound closure receipt.

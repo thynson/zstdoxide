@@ -153,7 +153,8 @@ are recorded in [the frame utility report](docs/frame-utility-validation.md).
 `OneShotDecoder` owns persistent or next-call dictionary selection for caller-owned
 direct and in-place decoding. A next-call prefix covers every frame in that call
 and is consumed even on errors. See [one-shot selection usage](docs/one-shot-selection-usage.md).
-Module 32 final qualification remains in progress in `TODO.md`.
+Bounded qualification and native differences are recorded in
+[the one-shot selection report](docs/one-shot-selection-validation.md).
 
 ## Current support
 

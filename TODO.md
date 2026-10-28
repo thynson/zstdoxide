@@ -162,20 +162,12 @@ and `docs/frame-utility-benchmarks.md`. The final receipt is
 `docs/evidence/2026-10-27-frame-utility-closure.json`.
 Complete upstream migration remains open.
 
-## Module 32: reusable one-shot dictionary and prefix selection
-
-Ownership and call-versus-frame lifecycle are recorded before implementation in
-`docs/one-shot-selection-design.md` and `docs/data-structures.md`. Promote only
-after Module 31 closes; this coordinator does not retain decoder scratch.
-
-- [x] Analyze native call-level prefix consumption, persistent ownership and transient call borrows before implementation; distinguish the existing sealed Clone contract from clone-free transitions.
-- [x] Implement plain checked selection transitions and call claims without handle clones or copied history.
-- [x] Expose one-shot direct/in-place coordinator methods with exact attempt consumption, lifetime/guard and independent allocator qualification.
-- [x] Qualify persistent/prefix lifecycle schedules using normal/sanitized native contexts and explicit subsequent-call observations.
-- [x] Qualify real ownership transitions and overlapping output under foreign Miri and concrete no-atomics code generation.
-- [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [x] Compare deterministic coordinator/output workloads with ownership ledgers, restoration/setup accounting and independent repeats after actual CPU barriers.
-- [ ] Reconcile bounded one-shot selection coverage and decompose the next missing contract without claiming native workspace or full upstream parity.
+Module 32 is complete within its bounded call-scoped selection contract.
+Completed work items are archived in Git history and `docs/progress.md`.
+Qualification and measurements are in `docs/one-shot-selection-validation.md`
+and `docs/one-shot-selection-benchmarks.md`. The final receipt is
+`docs/evidence/2026-10-27-one-shot-selection-closure.json`.
+Complete upstream migration remains open.
 
 ## Module 33: caller-owned one-shot compression output
 

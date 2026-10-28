@@ -1,7 +1,8 @@
 # One-shot dictionary selection validation
 
-Module 32 is in progress. Focused gates below are complete; full feature/release
-regression, measurements and final reconciliation remain separate gates.
+Module 32 is complete within its bounded call-scoped selection contract.
+Focused/native/corpus/platform, full feature/release, measurement and final
+source gates have independently retained successful receipts.
 
 ## Selection ownership
 
@@ -109,3 +110,12 @@ records. Nine coordinator/setup/restoration modes are timed separately with equa
 Fresh primary/repeat CPU barriers precede sequential measurements. See
 `one-shot-selection-benchmarks.md`; the host results do not establish a universal
 unsafe speedup. Evidence: `evidence/2026-10-27-one-shot-selection-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+Integrated production and final tests match the frozen matrix source; each stage
+archive is rehashed. A prefix is consumed before each attempt and serves all frames
+in that call; persistent selection survives errors. Native empty-input acceptance
+remains explicitly different. Scratch is fresh per call. This does not promise
+native context workspace/reset/parameter equivalence or complete upstream parity.
+Evidence: `evidence/2026-10-27-one-shot-selection-closure.json`.
