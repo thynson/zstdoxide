@@ -158,7 +158,7 @@ Bounded qualification and native differences are recorded in
 
 Caller-owned ordinary compression is available through `compress_into` and
 `compress_into_in`, preserving the unused success suffix and using one-block
-staging. Its bounded scope and ongoing final qualification are documented in
+staging. Its completed bounded qualification and limitations are documented in
 [the validation report](docs/slice-encode-validation.md).
 
 ## Current support

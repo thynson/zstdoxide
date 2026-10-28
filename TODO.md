@@ -169,22 +169,11 @@ and `docs/one-shot-selection-benchmarks.md`. The final receipt is
 `docs/evidence/2026-10-27-one-shot-selection-closure.json`.
 Complete upstream migration remains open.
 
-## Module 33: caller-owned one-shot compression output
-
-Ownership, invariants and upstream counterparts are recorded before implementation
-in `docs/slice-encode-design.md` and `docs/data-structures.md`. Promote only after
-Module 32 closes. Initial scope is dictionary-free ordinary Greedy compression.
-
-- [x] Analyze the existing frame/block encoder and bounded output ownership before implementation.
-- [x] Reconcile inherited original query/utility assertions and dictionary corpus metadata after Module 32 source closure.
-- [x] Implement checked bounded frame append with equivalent safe and opt-in unsafe storage paths.
-- [x] Implement one-block staging and exact ordinary one-shot frame emission into borrowed output.
-- [x] Expose documented caller-owned compression with capacity, alias, scratch-failure and allocator qualification.
-- [x] Qualify guarded native interoperability and retained deterministic corpus workloads without claiming byte-identical C output.
-- [x] Qualify width/endian behavior and concrete no-atomics ARM code generation.
-- [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [x] Compare allocating and borrowed output with separate destination/staging/workspace accounting and independent repeats after actual CPU barriers.
-- [ ] Reconcile bounded compression output coverage and decompose the next evidenced missing contract.
+Module 33 is complete within its ordinary dictionary-free caller-owned output scope.
+Completed items are archived in Git history and `docs/progress.md`; contracts,
+measurements and limits are in `docs/slice-encode-validation.md` and
+`docs/slice-encode-benchmarks.md`. Final source reconciliation is in
+`docs/evidence/2026-10-27-slice-encode-closure.json`. Complete upstream parity remains open.
 
 ## Module 34: dictionary-backed caller-owned compression
 

@@ -1,8 +1,8 @@
 # Caller-owned compression output validation
 
-Module 33 is in progress. Caller-owned ordinary compression APIs and bounded
-one-block frame emission are integrated. Native/corpus/platform, full-codec
-regression and whole compression measurements remain separate gates.
+Module 33 is complete within its ordinary dictionary-free caller-owned output
+scope. Focused, native/corpus/platform, complete feature/release and both isolated
+leaf/whole compression measurement gates have successful source-bound receipts.
 
 ## Checked frame sink
 
@@ -131,3 +131,16 @@ are inside. Every complete output and guard agrees before timing. Fresh process
 observations gate each sequential campaign. Fixed-order ratios do not establish a
 universal unsafe benefit or eliminate scratch allocations. See
 `slice-encode-benchmarks.md` and `evidence/2026-10-27-slice-encode-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+Integrated production matches final public/native/platform/corpus/full-matrix and
+measured sources; all stage archives are rehashed. The metadata-only original
+query/utility reconciliation is separate from this compression supplement, and
+no newly generated native case is labeled an original upstream assertion.
+
+Dictionary-backed caller output is decomposed next. Reference levels, streaming,
+in-place compression, external native workspace compatibility and complete
+upstream library/CLI parity remain outside this bounded milestone. Errors may
+leave provisional earlier output; every write remains within the caller slice.
+Evidence: `evidence/2026-10-27-slice-encode-closure.json`.

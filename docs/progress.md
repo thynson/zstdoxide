@@ -1510,3 +1510,34 @@ The complete pinned audit verifies639 files and615 groups; counts are navigation
 units, not a complete upstream assertion tally. All frozen milestone manifests
 retain their earlier identities; this is a separate metadata-only reconciliation.
 Evidence: `evidence/2026-10-27-query-utility-corpus-inventory.json`.
+
+## Module 33: ordinary caller-owned compression complete (2026-10-27)
+
+compress_into and compress_into_in produce the exact ordinary Greedy frame bytes
+of compress using caller storage, one-block staging and existing independent
+match/history/entropy workspaces. A checked FrameSink preserves a failed append
+and the unused success suffix; the whole call can leave earlier provisional
+header/blocks on error. Its independent unsafe-frame-sink feature retains the
+safe contract. Initialized header metadata has a shared safe value representation.
+Borrowed non-Clone allocator owners are supported and every scratch allocation
+is released through its exact owner.
+
+All 75 final commands pass: safe/all/22 isolated complete suites, true no_std and
+strict Clippy, safe/all release and formatting. Each complete/release suite has
+1740 passed/73 ignored across 111 groups. Separate explicit native adapters cover
+36 deterministic bidirectional frame cases and324 native capacity attempts;
+347 retained fuzz inputs add exact-size output and short-destination guards.
+Four foreign Miri runs and four concrete core+alloc ARM checks/builds pass.
+
+Isolated safe/unsafe sink primary/repeat measurements and whole compression
+24-backend plus independently rebuilt safe/all repeats preserve every result,
+role-specific allocation ledger and timing sample after actual process barriers.
+Whole-frame borrowed/allocated nonempty median-latency geometric mean ratios: primary safe borrowed/allocated 0.9737; primary all borrowed/allocated 0.8808; repeat safe borrowed/allocated 1.0338; repeat all borrowed/allocated 0.8596.
+No universal unsafe benefit, no-scratch claim or native compressed-byte equality
+is inferred.
+
+The completed checklist is cleared; Module 34 dictionary-backed caller output is
+designed and decomposed. Dictionaries/reference levels/streaming in this API,
+in-place compression and complete upstream parity remain separate. Details:
+`slice-encode-validation.md`, `slice-encode-benchmarks.md`, and
+`evidence/2026-10-27-slice-encode-closure.json`.
