@@ -188,7 +188,7 @@ only after Module 33 closes; preserve independent dictionary/scratch ownership.
 - [x] Qualify guarded normal/sanitized native dictionary interoperability and deterministic corpus selections.
 - [x] Qualify width/endian behavior, borrow lifetimes and concrete no-atomics ARM emission.
 - [x] Qualify safe, every isolated feature and all features, complete/release regression, true no_std and strict Clippy.
-- [ ] Compare allocating and borrowed dictionary output with distinct destination/staging/workspace/dictionary ledgers and independent repeats.
+- [x] Compare allocating and borrowed dictionary output with distinct destination/staging/workspace/dictionary ledgers and independent repeats.
 - [ ] Reconcile bounded dictionary compression output and decompose the next evidenced missing contract.
 
 ## Module 35: reusable one-shot compression dictionary and prefix selection
