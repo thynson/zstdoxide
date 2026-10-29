@@ -74,3 +74,22 @@ checks and object emissions (safe and all features) retain LLVM IR and objects
 for the selection paths. Foreign validation checks ownership transitions and
 actual encoding only; native context workspace semantics are not claimed.
 Evidence: `evidence/2026-10-28-one-shot-encode-platform.json`.
+
+## Complete feature and release qualification
+
+All 75 commands pass on the final frozen candidate: safe/all and every 22
+isolated unsafe feature each execute complete tests, true no_std compilation and
+strict Clippy; safe/all release and formatting also pass. Each complete/release
+suite reports 1766 passed and 76 ignored across 117 result groups. The campaign
+was interrupted once at a user work-window boundary after a fully successful
+prefix and resumed under a new authorization; no partial command is credited and
+the interrupted log is retained. Native adapters are explicitly executed in
+their separate focused capture/replay receipts.
+
+The final candidate combines the qualified public production delta, retained
+module34 native/platform adapters, the module35 native/platform tests and the
+merged trained-dictionary adapter. Integrated production and all matrix source
+identities are rechecked before this item is committed, with the authorized
+post32 FUZZER.md and reason-reconciliation manifest.json results retained over
+the campaign inputs. Measurements and closure remain open.
+Evidence: `evidence/2026-10-29-one-shot-encode-feature-matrix.json`.
