@@ -4054,18 +4054,23 @@ Contracts and evidence requirements: `one-shot-encode-selection-design.md`.
 
 ## Parameterized dictionary-backed one-shot compression (Module 36 design)
 
-A combined attempt owns no new state: a resolved parameter record (plain copied
-window/hash/chain/search logs, min_match, target_length and reference
-strategy) and an immutable DictionaryView enter each caller-owned call exactly
-like the stateless dictionary view does today. Dictionary preparation stays
-preconstructed; only indices seed the selected bounded profile's storage under
-the existing per-call seed contract. Frame flags follow the existing
+A combined attempt owns no new state between calls: a resolved parameter
+record (plain copied window/hash/chain/search logs, min_match, target_length
+and reference strategy) and an immutable DictionaryView enter each
+caller-owned call exactly like the stateless dictionary view does today.
+Inside one call the in-window dictionary suffix is staged contiguously before
+the input in per-call scratch; the existing profile parsers run over the
+combined borrow unchanged, so match extension crosses the dictionary boundary
+contiguously, the existing candidate floor realizes ZSTD_checkDictValidity
+window expiry, and combined-space positions yield decoder-correct offsets by
+construction. This replaces per-profile dictionary-aware parser forks and
+copies at most the resolved window; it is per-call scratch released before
+return, not retained workspace. Frame flags follow the existing
 parameterized-profile family (known content size, no checksum) plus the
 dictionary ID field the dictionary paths already emit; modules 33–35 keep
-their exact ordinary checksummed bytes. The resolved window expires dictionary
-content as ZSTD_checkDictValidity does, within each profile's existing window
-and table caps. No options record, workspace or live context is retained
-between calls; coordinator selection semantics are unchanged.
+their exact ordinary checksummed bytes. No options record, workspace or live
+context is retained between calls; coordinator selection semantics are
+unchanged.
 
 Upstream counterparts are pinned ZSTD_compress_advanced_internal and
 ZSTD_compress2 combining ZSTD_getCParamsFromCCtxParams resolution with a

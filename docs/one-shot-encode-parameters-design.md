@@ -26,14 +26,23 @@ CCtx parameter lifecycle, reset directives, LDM, workers and session semantics
 remain out of scope; do not infer identical workspace reuse or error
 precedence.
 
-The combined emitter owns no new state: a resolved record (plain copied
+The combined emitter owns no new state between calls: a resolved record (plain copied
 scalars) and an immutable `DictionaryView` enter each call exactly like the
-stateless dictionary view does today. Dictionary preparation stays
-preconstructed; only indices seed the selected profile's storage, rebuilt per
-call or per workspace exactly as the existing dictionary seed contract
-requires. Frame flags follow the existing parameterized-profile family (known
-content size, no checksum) plus the dictionary ID field the dictionary paths
-already emit; the ordinary checksummed Greedy bytes of modules 33–35 remain the
+stateless dictionary view does today. Inside one call, the in-window suffix of
+dictionary content is staged contiguously before the input in per-call
+scratch, and the existing profile parsers run over that combined borrow
+unchanged: match extension crosses the dictionary boundary contiguously, the
+existing candidate floor provides exactly `ZSTD_checkDictValidity`'s window
+expiry, and combined-space positions produce decoder-correct offsets by
+construction. This preceding-content staging matches the raw-dictionary
+refPrefix semantics the decoder already applies; it avoids forking every
+profile parser into a dictionary-aware variant and copies at most the resolved
+window of dictionary bytes instead of seeding each storage family. It is
+per-call scratch released before return, not retained workspace, and it
+replaces the earlier seed-based wording of this design for that reason.
+Frame flags follow the existing parameterized-profile family (known content
+size, no checksum) plus the dictionary ID field the dictionary paths already
+emit; the ordinary checksummed Greedy bytes of modules 33–35 remain the
 default-path contract and are not redefined. Caller-owned destination,
 one-block staging, independent scratch domains, attempt-exact prefix
 consumption and persistent selection all keep their existing contracts; the
