@@ -121,6 +121,9 @@ mod match_search;
 mod matchchain;
 mod matchfinder;
 mod one_shot_decode;
+// Private coordinator is exposed only by the subsequent qualified API item.
+#[allow(dead_code)]
+mod one_shot_encode;
 mod one_shot_selection;
 mod optimal_frequencies;
 mod optimal_matches;

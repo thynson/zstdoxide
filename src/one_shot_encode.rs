@@ -1,0 +1,231 @@
+//! Attempt-scoped dictionary ownership over the bounded one-shot encoder.
+#![forbid(unsafe_code)]
+
+use crate::one_shot_selection::Selection;
+use crate::{DictionaryHandle, DictionaryView, Result, SharedDictionary};
+use alloc::alloc::{Allocator, Global};
+
+/// Owns persistent or next-attempt dictionary selection without encoder workspace.
+pub struct OneShotEncoder<D = SharedDictionary> {
+    selection: Selection<D>,
+}
+
+impl OneShotEncoder<SharedDictionary> {
+    /// Creates a shared-owner coordinator without a dictionary.
+    pub fn new() -> Self {
+        Self::without_dictionary()
+    }
+}
+
+impl Default for OneShotEncoder<SharedDictionary> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<D: DictionaryHandle> OneShotEncoder<D> {
+    /// Creates an empty coordinator whose later selections have handle type D.
+    pub fn without_dictionary() -> Self {
+        Self {
+            selection: Selection::None,
+        }
+    }
+    /// Takes persistent ownership of a shared handle or borrowed dictionary view.
+    pub fn with_dictionary(dictionary: D) -> Self {
+        Self {
+            selection: Selection::Persistent(dictionary),
+        }
+    }
+    /// Takes ownership of a selection for exactly the next attempted call.
+    pub fn with_prefix(prefix: D) -> Self {
+        Self {
+            selection: Selection::Prefix(prefix),
+        }
+    }
+    /// Replaces selection with a persistent owner, or clears it with None.
+    pub fn set_dictionary(&mut self, dictionary: Option<D>) {
+        self.selection = dictionary.map_or(Selection::None, Selection::Persistent);
+    }
+    /// Replaces selection with a next-call owner, or clears it with None.
+    pub fn set_prefix(&mut self, prefix: Option<D>) {
+        self.selection = prefix.map_or(Selection::None, Selection::Prefix);
+    }
+    /// Borrows immutable metadata/content of the retained selection.
+    pub fn dictionary(&self) -> Option<DictionaryView<'_>> {
+        self.selection.retained().map(DictionaryHandle::view)
+    }
+    /// Whether the next attempt consumes the retained selection.
+    pub fn prefix_pending(&self) -> bool {
+        self.selection.prefix_pending()
+    }
+    /// Compresses one frame with Global scratch into independent caller storage.
+    pub fn compress_into(&mut self, input: &[u8], output: &mut [u8]) -> Result<usize> {
+        self.compress_into_in(input, output, Global)
+    }
+    /// Compresses with fresh scratch independent of dictionary ownership.
+    ///
+    /// The prefix is removed before output admission or any allocator operation.
+    /// A claimed owner stays alive until the attempt returns or unwinds. No
+    /// dictionary handle is cloned and no caller borrow survives the attempt.
+    pub fn compress_into_in<A: Allocator + Clone>(
+        &mut self,
+        input: &[u8],
+        output: &mut [u8],
+        allocator: A,
+    ) -> Result<usize> {
+        let call = self.selection.claim();
+        match call.retained() {
+            Some(dictionary) => {
+                crate::compress_into_with_dictionary_in(input, output, dictionary, allocator)
+            }
+            None => crate::compress_into_in(input, output, allocator),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{Dictionary, Error, compress, compress_with_dictionary_in, compression_bound};
+    use alloc::vec;
+    use core::num::NonZeroU64;
+    use zstdoxide_test_allocator::{AllocatorConfig, TrackingAllocator};
+    const PREPARED: &[u8] = include_bytes!("../tests/upstream/dictionaries/formatted.dict");
+
+    #[test]
+    fn persistent_selection_survives_repeated_calls_and_short_output_without_handle_clones() {
+        let dictionary = Dictionary::from_bytes(PREPARED).unwrap().into_shared();
+        let mut encoder = OneShotEncoder::with_dictionary(dictionary.clone());
+        let input = b"dictionary dictionary pattern dictionary pattern";
+        let expected = compress_with_dictionary_in(input, &dictionary.view(), Global).unwrap();
+        let mut output = vec![0xa5; expected.len() + 2];
+        for _ in 0..3 {
+            assert_eq!(
+                encoder.compress_into(input, &mut []),
+                Err(Error::ResourceLimit)
+            );
+            assert!(!encoder.prefix_pending());
+            assert_eq!(encoder.dictionary().unwrap().as_bytes(), PREPARED);
+            assert_eq!(
+                encoder.compress_into(input, &mut output[1..1 + expected.len()]),
+                Ok(expected.len())
+            );
+            assert_eq!(&output[1..1 + expected.len()], expected);
+            assert_eq!((output[0], output[expected.len() + 1]), (0xa5, 0xa5));
+            assert_eq!(SharedDictionary::strong_count(&dictionary), 2);
+        }
+        encoder.set_dictionary(None);
+        assert_eq!(SharedDictionary::strong_count(&dictionary), 1);
+    }
+
+    #[test]
+    fn prefix_is_consumed_by_empty_success_and_capacity_failure_before_scratch() {
+        let dictionary = Dictionary::from_bytes(PREPARED).unwrap();
+        let expected = compress_with_dictionary_in(b"", &dictionary.view(), Global).unwrap();
+        let mut encoder = OneShotEncoder::with_prefix(dictionary.view());
+        let mut output = vec![0xa5; expected.len() + 2];
+        assert_eq!(
+            encoder.compress_into(b"", &mut output[1..1 + expected.len()]),
+            Ok(expected.len())
+        );
+        assert_eq!(&output[1..1 + expected.len()], expected);
+        assert!(encoder.dictionary().is_none());
+        assert!(!encoder.prefix_pending());
+        encoder.set_prefix(Some(dictionary.view()));
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        assert_eq!(
+            encoder.compress_into_in(b"", &mut [], owner),
+            Err(Error::ResourceLimit)
+        );
+        assert_eq!(monitor.snapshot().attempts, 0);
+        monitor.assert_released();
+        assert!(encoder.dictionary().is_none());
+        assert!(!encoder.prefix_pending());
+        let ordinary = compress(b"").unwrap();
+        output.fill(0xa5);
+        assert_eq!(
+            encoder.compress_into(b"", &mut output[1..]),
+            Ok(ordinary.len())
+        );
+        assert_eq!(&output[1..1 + ordinary.len()], ordinary);
+        assert!(output[1 + ordinary.len()..].iter().all(|&b| b == 0xa5));
+    }
+
+    #[test]
+    fn replacement_and_clearing_drop_exact_owners_without_retaining_caller_storage() {
+        let a = Dictionary::raw(b"first raw prefix").unwrap().into_shared();
+        let b = Dictionary::from_bytes(PREPARED).unwrap().into_shared();
+        let mut encoder = OneShotEncoder::with_prefix(a.clone());
+        assert_eq!(SharedDictionary::strong_count(&a), 2);
+        encoder.set_dictionary(Some(b.clone()));
+        assert_eq!(SharedDictionary::strong_count(&a), 1);
+        assert_eq!(SharedDictionary::strong_count(&b), 2);
+        assert!(!encoder.prefix_pending());
+        encoder.set_prefix(Some(a.clone()));
+        assert_eq!(SharedDictionary::strong_count(&b), 1);
+        assert!(encoder.prefix_pending());
+        encoder.set_prefix(None);
+        assert_eq!(SharedDictionary::strong_count(&a), 1);
+        assert!(encoder.dictionary().is_none());
+        let input = b"fresh output after clearing";
+        let expected = compress(input).unwrap();
+        let mut output = vec![0; compression_bound(input.len()).unwrap()];
+        assert_eq!(
+            encoder.compress_into(input, &mut output),
+            Ok(expected.len())
+        );
+        assert_eq!(&output[..expected.len()], expected);
+    }
+
+    #[test]
+    fn every_observed_scratch_failure_consumes_prefix_and_keeps_independent_dictionary_owner() {
+        let dictionary_owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let dictionary_monitor = dictionary_owner.monitor();
+        let dictionary = Dictionary::from_bytes_in(PREPARED, &dictionary_owner).unwrap();
+        let before = dictionary_monitor.snapshot();
+        let input = b"dictionary dictionary useful pattern dictionary useful pattern";
+        let expected = compress_with_dictionary_in(input, &dictionary.view(), Global).unwrap();
+        let mut encoder = OneShotEncoder::with_prefix(dictionary.view());
+        let mut output = vec![0xa5; expected.len() + 2];
+        let owner = TrackingAllocator::new(AllocatorConfig::default())
+            .unwrap()
+            .into_non_clone();
+        let monitor = owner.monitor();
+        assert_eq!(
+            encoder.compress_into_in(input, &mut output[1..1 + expected.len()], &owner),
+            Ok(expected.len())
+        );
+        let attempts = monitor.snapshot().attempts;
+        assert!(attempts > 0);
+        monitor.assert_released();
+        assert_eq!(dictionary_monitor.snapshot(), before);
+        for ordinal in 1..=attempts {
+            encoder.set_prefix(Some(dictionary.view()));
+            let owner = TrackingAllocator::new(AllocatorConfig::default())
+                .unwrap()
+                .into_non_clone();
+            let monitor = owner.monitor();
+            monitor.set_fail_at(NonZeroU64::new(ordinal));
+            output.fill(0xa5);
+            assert_eq!(
+                encoder.compress_into_in(input, &mut output[1..1 + expected.len()], &owner),
+                Err(Error::AllocationFailed)
+            );
+            assert!(!encoder.prefix_pending());
+            assert!(encoder.dictionary().is_none());
+            assert_eq!(monitor.snapshot().attempts, ordinal);
+            assert_eq!(monitor.snapshot().failures, 1);
+            assert_eq!(monitor.snapshot().identities_created, 1);
+            monitor.assert_released();
+            assert_eq!((output[0], output[expected.len() + 1]), (0xa5, 0xa5));
+            assert_eq!(dictionary_monitor.snapshot(), before);
+            assert_eq!(dictionary.as_bytes(), PREPARED);
+        }
+        encoder.set_dictionary(None);
+        drop(dictionary);
+        dictionary_monitor.assert_released();
+    }
+}

@@ -1,7 +1,7 @@
 //! Call-level dictionary ownership, independent of incremental frame prefixes.
 //!
 //! Plain ownership records share one safe representation across backends.
-//! Corresponds to the selection lifetime in pinned v1.5.7 `ZSTD_getDDict`.
+//! Corresponds to pinned v1.5.7 `ZSTD_getDDict` and compression prefix claims.
 #![forbid(unsafe_code)]
 
 pub(crate) enum Selection<D> {
@@ -39,7 +39,7 @@ impl<D> Selection<D> {
         matches!(self, Self::Prefix(_))
     }
 
-    /// Remove next-call ownership before any decoder or allocator operation.
+    /// Remove next-call ownership before any codec or allocator operation.
     /// The returned record keeps that owner alive until the attempt ends.
     pub(crate) fn claim(&mut self) -> Claimed<'_, D> {
         if self.prefix_pending() {
