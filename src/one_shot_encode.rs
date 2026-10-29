@@ -5,7 +5,53 @@ use crate::one_shot_selection::Selection;
 use crate::{DictionaryHandle, DictionaryView, Result, SharedDictionary};
 use alloc::alloc::{Allocator, Global};
 
-/// Owns persistent or next-attempt dictionary selection without encoder workspace.
+/// Owns persistent or next-attempt dictionary selection for caller-owned output.
+///
+/// A prefix is consumed before every compression attempt, including empty input,
+/// short output, allocation errors and caller allocator unwinding. Persistent
+/// selection survives calls and errors until explicitly replaced or cleared.
+/// Raw versus formatted interpretation is fixed by dictionary preparation.
+/// No handle is cloned, and no input, output or scratch is retained between calls.
+/// Borrowed views retain the dictionary owner's lifetime and allocation domain.
+///
+/// Calls use the ordinary Greedy encoder with known content size and checksum.
+/// This type exposes no reference levels, streaming, workspace reuse or native
+/// context reset/parameter semantics. Frame bytes and provisional-output behavior
+/// match [`crate::compress_into`] or [`crate::compress_into_with_dictionary_in`].
+///
+/// ```
+/// use zstdoxide::{Dictionary, OneShotEncoder, compress, compression_bound};
+/// let dictionary = Dictionary::raw(b"example pattern example pattern")?.into_shared();
+/// let input = b"example pattern example pattern";
+/// let mut encoder = OneShotEncoder::with_prefix(dictionary.view());
+/// let mut output = vec![0xa5; compression_bound(input.len())?];
+/// let size = encoder.compress_into(input, &mut output)?;
+/// assert!(!encoder.prefix_pending());
+/// assert!(encoder.dictionary().is_none());
+/// assert_eq!(&output[..size], zstdoxide::compress_with_dictionary(input, &dictionary)?);
+/// let next = encoder.compress_into(input, &mut output)?;
+/// assert_eq!(&output[..next], compress(input)?);
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+///
+/// A borrowed selection cannot outlive its dictionary owner:
+///
+/// ```compile_fail
+/// use zstdoxide::{Dictionary, OneShotEncoder};
+/// let mut encoder = {
+///     let dictionary = Dictionary::raw(b"prefix").unwrap();
+///     OneShotEncoder::with_prefix(dictionary.view())
+/// };
+/// let _ = encoder.compress_into(b"prefix", &mut [0_u8; 64]);
+/// ```
+///
+/// Input and destination must have independent borrows:
+///
+/// ```compile_fail
+/// let mut encoder = zstdoxide::OneShotEncoder::new();
+/// let mut storage = [0_u8; 64];
+/// let _ = encoder.compress_into(&storage[..16], &mut storage);
+/// ```
 pub struct OneShotEncoder<D = SharedDictionary> {
     selection: Selection<D>,
 }
@@ -37,6 +83,9 @@ impl<D: DictionaryHandle> OneShotEncoder<D> {
         }
     }
     /// Takes ownership of a selection for exactly the next attempted call.
+    ///
+    /// A raw handle remains raw content; a formatted handle keeps its identifier
+    /// and prepared entropy. No implicit reinterpretation as raw prefix occurs.
     pub fn with_prefix(prefix: D) -> Self {
         Self {
             selection: Selection::Prefix(prefix),
@@ -59,6 +108,12 @@ impl<D: DictionaryHandle> OneShotEncoder<D> {
         self.selection.prefix_pending()
     }
     /// Compresses one frame with Global scratch into independent caller storage.
+    ///
+    /// Success returns the written length and preserves the remaining output.
+    /// A short destination returns [`crate::Error::ResourceLimit`]; earlier whole
+    /// appends may remain. Allocation can fail and whole-call atomicity is not
+    /// promised. All writes stay within the supplied slice. Prefix consumption
+    /// follows [`Self`] even when no bytes are written.
     pub fn compress_into(&mut self, input: &[u8], output: &mut [u8]) -> Result<usize> {
         self.compress_into_in(input, output, Global)
     }
@@ -67,6 +122,11 @@ impl<D: DictionaryHandle> OneShotEncoder<D> {
     /// The prefix is removed before output admission or any allocator operation.
     /// A claimed owner stays alive until the attempt returns or unwinds. No
     /// dictionary handle is cloned and no caller borrow survives the attempt.
+    /// The caller owns output; one-block staging and existing search/entropy
+    /// scratch use the supplied allocator and its clones and release before
+    /// return. A non-Clone allocator can be passed by reference. Ordinary Clone
+    /// retains the caller's own allocation/panic behavior. This coordinator
+    /// itself adds no allocation or clone beyond the underlying frame engine.
     pub fn compress_into_in<A: Allocator + Clone>(
         &mut self,
         input: &[u8],

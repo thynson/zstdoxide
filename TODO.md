@@ -190,7 +190,7 @@ implementation only after Module 34 closes; retain no encoder workspace.
 
 - [x] Analyze native prefix initialization, persistent ownership and reuse of plain call-claim records before implementation.
 - [x] Implement a clone-free compression coordinator over existing selection records and borrowed frame emission.
-- [ ] Expose documented caller-owned methods with exact attempt consumption, output/lifetime guards and independent allocator failure qualification.
+- [x] Expose documented caller-owned methods with exact attempt consumption, output/lifetime guards and independent allocator failure qualification.
 - [ ] Qualify persistent/prefix schedules and subsequent-call behavior against guarded normal/sanitized native controls and deterministic selections.
 - [ ] Qualify ownership transitions and actual encoding under foreign Miri and concrete no-atomics ARM code generation.
 - [ ] Qualify safe, every isolated feature and all features, full/release regression, no_std and strict Clippy.

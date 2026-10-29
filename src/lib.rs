@@ -121,8 +121,6 @@ mod match_search;
 mod matchchain;
 mod matchfinder;
 mod one_shot_decode;
-// Private coordinator is exposed only by the subsequent qualified API item.
-#[allow(dead_code)]
 mod one_shot_encode;
 mod one_shot_selection;
 mod optimal_frequencies;
@@ -298,3 +296,4 @@ pub use in_place_decode::{
 pub use frame_utilities::{compression_bound, write_skippable_frame};
 
 pub use one_shot_decode::OneShotDecoder;
+pub use one_shot_encode::OneShotEncoder;
