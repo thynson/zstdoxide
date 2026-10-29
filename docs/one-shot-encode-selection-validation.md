@@ -93,3 +93,20 @@ identities are rechecked before this item is committed, with the authorized
 post32 FUZZER.md and reason-reconciliation manifest.json results retained over
 the campaign inputs. Measurements and closure remain open.
 Evidence: `evidence/2026-10-29-one-shot-encode-feature-matrix.json`.
+
+## Stateless/coordinator selection measurements
+
+All 24 primary feature backends and independently rebuilt safe/all repeats
+retain 675 timing samples and 297 role-specific qualification rows per
+executable. The stateless baseline, persistent coordinator and both prefix
+rearm placements borrow the same immutable view and write the same caller
+destination. Per-attempt compression clocks include all Global scratch
+allocation/release; rearming is excluded or included exactly as labeled, and
+every attempt starts selected and ends consumed or persistent. Dictionary
+construction/release, byte/guard validation and role-routed ledgers stay
+outside clocks, with unchanged dictionary snapshots during every selected call.
+Setup-only arm/observe/clear batch observations include loop and black-box
+overhead and are not a directly subtractable estimate. Fixed-order ratios do
+not establish a universal unsafe benefit or eliminate scratch allocations. See
+`one-shot-encode-benchmarks.md` and
+`evidence/2026-10-29-one-shot-encode-benchmarks.json`.
