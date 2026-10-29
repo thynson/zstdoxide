@@ -1,8 +1,8 @@
 # One-shot encode selection validation
 
 Module 35 is in progress. The internal coordinator and public caller-owned
-methods have focused qualification. Platform validation, complete feature/release regression, measurements and
-reconciliation remain open.
+methods have focused qualification. Complete feature/release regression, measurements and reconciliation remain
+open.
 
 ## Internal clone-free coordinator
 
@@ -63,3 +63,14 @@ and reduced-bound assertions are unchanged; no external rolling corpus rerun or
 fastCover equivalence is claimed.
 Evidence: `evidence/2026-10-27-one-shot-encode-native.json` and
 `evidence/2026-10-28-one-shot-encode-corpus.json`.
+
+## Foreign Miri and concrete no-atomics ARM emission
+
+Four strict-provenance i686 and s390x Miri runs execute actual raw/prepared
+selection attempts: empty/success/short outcomes, prefix consumption, persistent
+recovery, exact stateless bytes, dictionary identifier endian layout, known
+content size, independent decode and guards. Four concrete thumbv6m no-atomics
+checks and object emissions (safe and all features) retain LLVM IR and objects
+for the selection paths. Foreign validation checks ownership transitions and
+actual encoding only; native context workspace semantics are not claimed.
+Evidence: `evidence/2026-10-28-one-shot-encode-platform.json`.
