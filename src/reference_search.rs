@@ -55,11 +55,23 @@ pub(crate) enum ReferenceSearchPlan {
 
 impl ReferenceSearchPlan {
     pub(crate) fn new(request: &CompressionParameterRequest, source_len: usize) -> Result<Self> {
+        Self::new_with_dictionary(request, source_len, 0)
+    }
+
+    /// Resolve with the pinned reference's dictionary-size tier input, as
+    /// `ZSTD_getCParamsFromCCtxParams` does for an attached dictionary. The
+    /// staged content reach stays bounded by the resolved window at emission;
+    /// this resolution only adjusts preset selection and table sizing.
+    pub(crate) fn new_with_dictionary(
+        request: &CompressionParameterRequest,
+        source_len: usize,
+        dictionary_size: usize,
+    ) -> Result<Self> {
         let source_size = u64::try_from(source_len).map_err(|_| Error::ResourceLimit)?;
         if source_size == u64::MAX {
             return Err(Error::InvalidParameter);
         }
-        let parameters = request.resolve(SourceSize::Known(source_size), 0)?;
+        let parameters = request.resolve(SourceSize::Known(source_size), dictionary_size)?;
         match parameters.strategy() {
             ReferenceStrategy::Fast => {
                 FastExecutionPlan::from_resolved_parameters(parameters, source_len).map(Self::Fast)
@@ -207,15 +219,40 @@ pub(crate) enum ReferenceSearchState<'a, A: Allocator> {
 }
 
 impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
-    /// Borrow the factory, cloning exactly once per selected child owner. Fast
-    /// retains table/literal/sequence clone order; DoubleFast adds its separate
-    /// short table before the two scratch vectors. Greedy retains its selected
-    /// two table owners in the same order. No inactive owner is created.
+    /// Borrow the factory, cloning exactly once per selected child owner in
+    /// each family's established order, over a dictionary-free source.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "zero-prefix convenience constructor for tests")
+    )]
     pub(crate) fn new(source: &'a [u8], plan: ReferenceSearchPlan, factory: &A) -> Result<Self> {
-        if source.len() != plan.source_len() {
+        Self::new_with_prefix(source, 0, plan, factory)
+    }
+
+    /// Bind a combined borrow whose first `prefix_len` bytes precede the frame.
+    /// A zero prefix is the ordinary dictionary-free binding. Combined staging
+    /// is admitted for the Fast profile first; every other profile keeps its
+    /// dictionary-free contract until its own stage extends this dispatch, and
+    /// a nonzero prefix for it is an explicit unsupported feature rather than
+    /// a silent dictionary drop. The factory is borrowed, cloning exactly once
+    /// per selected child owner in each family's established order.
+    pub(crate) fn new_with_prefix(
+        source: &'a [u8],
+        prefix_len: usize,
+        plan: ReferenceSearchPlan,
+        factory: &A,
+    ) -> Result<Self> {
+        if source
+            .len()
+            .checked_sub(prefix_len)
+            .is_none_or(|frame_len| frame_len != plan.source_len())
+        {
             return Err(Error::InvalidParameter);
         }
         plan.validate_retained_policy()?;
+        if prefix_len > 0 && !matches!(plan, ReferenceSearchPlan::Fast(_)) {
+            return Err(Error::UnsupportedFeature);
+        }
         let ultra = matches!(plan, ReferenceSearchPlan::Ultra(_));
         let retained_ultra = matches!(plan, ReferenceSearchPlan::RetainedUltra(_));
         if matches!(
@@ -394,8 +431,8 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                 let table = MatchTable::with_layout_in(plan.layout(), factory.clone())?;
                 let literals = Vec::new_in(factory.clone());
                 let sequences = Vec::new_in(factory.clone());
-                Ok(Self::Fast(FastMatchState::from_parts(
-                    source, plan, table, literals, sequences,
+                Ok(Self::Fast(FastMatchState::from_parts_with_prefix(
+                    source, plan, table, literals, sequences, prefix_len,
                 )?))
             }
             ReferenceSearchPlan::DoubleFast(plan) => {

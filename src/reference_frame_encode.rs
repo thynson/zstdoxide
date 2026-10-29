@@ -7,6 +7,7 @@ use core::alloc::Allocator;
 #[cfg(test)]
 use crate::CompressionParameterRequest;
 use crate::block_entropy::BlockEntropyEncoder;
+use crate::dictionary::DictionaryView;
 #[cfg(test)]
 use crate::fast_plan::FastExecutionPlan;
 use crate::frame::{BlockKind, MAX_BLOCK_SIZE};
@@ -89,6 +90,83 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
     Ok(output)
 }
 
+/// Encode using a pre-admitted plan with an immutable dictionary view.
+///
+/// The in-window suffix of dictionary content is staged contiguously before
+/// the input in per-call scratch, and the existing profile parsers run over
+/// that combined borrow unchanged: match extension crosses the staged boundary
+/// contiguously, the existing candidate floor bounds every emitted offset by
+/// the resolved window (`ZSTD_checkDictValidity` semantics), and combined-space
+/// positions produce decoder-correct offsets by construction. Frame flags
+/// follow the parameterized family (known size, no checksum) plus the
+/// dictionary ID field. The staging copy is released before return; no
+/// workspace survives the call. Dictionary-aware profile admission is staged:
+/// a nonzero prefix currently admits only the Fast profile, and every other
+/// profile returns [`crate::Error::UnsupportedFeature`] instead of silently
+/// dropping the dictionary.
+#[cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "public parameterized dictionary exposure is the next module36 item"
+    )
+)]
+pub(crate) fn compress_reference_with_dictionary_in<A: Allocator + Clone>(
+    input: &[u8],
+    dictionary: DictionaryView<'_>,
+    plan: ReferenceSearchPlan,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    if input.len() != plan.source_len() {
+        return Err(Error::InvalidParameter);
+    }
+    let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
+    let header = ReferenceFrameHeader::with_dictionary_id(&settings, dictionary.id());
+    let (_, dictionary_bytes) = crate::encode::dictionary_field(dictionary.id());
+    let bound = plan
+        .frame_bound()?
+        .checked_add(dictionary_bytes)
+        .ok_or(Error::ResourceLimit)?;
+    let mut output = Vec::new_in(allocator);
+    output
+        .try_reserve_exact(bound)
+        .map_err(|_| Error::AllocationFailed)?;
+    for &byte in header.as_bytes() {
+        output.push(byte);
+    }
+    if input.is_empty() {
+        // The complete bound already includes this sole final empty raw block.
+        for byte in [1, 0, 0] {
+            output.push(byte);
+        }
+        return Ok(output);
+    }
+    let content = dictionary.content();
+    let staged = content.len().min(settings.window_size());
+    let mut combined = Vec::new_in(output.allocator().clone());
+    combined
+        .try_reserve_exact(
+            staged
+                .checked_add(input.len())
+                .ok_or(Error::ResourceLimit)?,
+        )
+        .map_err(|_| Error::AllocationFailed)?;
+    combined.extend_from_slice(&content[content.len() - staged..]);
+    combined.extend_from_slice(input);
+    let mut workspace = ReferenceEncoderWorkspace::new_with_prefix(
+        &combined,
+        staged,
+        plan,
+        output.allocator().clone(),
+    )?;
+    while workspace.emitted < input.len() {
+        let length = plan.next_block_len(workspace.emitted)?;
+        let last = length == input.len() - workspace.emitted;
+        workspace.emit_next(length, last, &mut output)?;
+    }
+    Ok(output)
+}
+
 /// One borrowed source and its existing search/entropy owners.
 ///
 /// Search advances before emission. `emitted` advances only after an entire
@@ -96,6 +174,7 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
 /// Entropy owns committed repeats; retained search checks a copied snapshot.
 struct ReferenceEncoderWorkspace<'a, A: Allocator> {
     source: &'a [u8],
+    prefix_len: usize,
     plan: ReferenceSearchPlan,
     search: ReferenceSearchState<'a, A>,
     entropy: BlockEntropyEncoder<A>,
@@ -106,10 +185,26 @@ struct ReferenceEncoderWorkspace<'a, A: Allocator> {
 
 impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
     fn new(source: &'a [u8], plan: ReferenceSearchPlan, factory: A) -> Result<Self> {
-        if source.len() != plan.source_len() {
+        Self::new_with_prefix(source, 0, plan, factory)
+    }
+
+    /// Bind a combined borrow whose first `prefix_len` bytes precede the frame.
+    /// `emitted` and every block schedule stay frame-relative; only the block
+    /// slices and search positions shift by the staged prefix.
+    fn new_with_prefix(
+        source: &'a [u8],
+        prefix_len: usize,
+        plan: ReferenceSearchPlan,
+        factory: A,
+    ) -> Result<Self> {
+        if source
+            .len()
+            .checked_sub(prefix_len)
+            .is_none_or(|frame_len| frame_len != plan.source_len())
+        {
             return Err(Error::InvalidParameter);
         }
-        let search = ReferenceSearchState::new(source, plan, &factory)?;
+        let search = ReferenceSearchState::new_with_prefix(source, prefix_len, plan, &factory)?;
         let literal_encoder = LiteralEncoder::new_in(factory.clone());
         let sequence_encoder = SequenceEncoder::new_in(factory.clone());
         let payload = Vec::new_in(factory);
@@ -118,6 +213,7 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         entropy.start_frame(None, None)?;
         Ok(Self {
             source,
+            prefix_len,
             plan,
             search,
             entropy,
@@ -143,11 +239,11 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         let end = self
             .emitted
             .checked_add(length)
-            .filter(|&end| end <= self.source.len())
+            .filter(|&end| end <= self.plan.source_len())
             .ok_or(Error::InvalidParameter)?;
         if length == 0
             || length > self.plan.block_limit()
-            || last != (end == self.source.len())
+            || last != (end == self.plan.source_len())
             || (self.plan.is_retained() && length != self.plan.next_block_len(self.emitted)?)
             || (matches!(
                 self.plan,
@@ -174,7 +270,17 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         last: bool,
         output: &mut Vec<u8, O>,
     ) -> Result<()> {
-        let block = &self.source[self.emitted..end];
+        let length = end - self.emitted;
+        let start = self
+            .prefix_len
+            .checked_add(self.emitted)
+            .filter(|&start| start <= self.source.len())
+            .ok_or(Error::InvalidParameter)?;
+        let stop = start
+            .checked_add(length)
+            .filter(|&stop| stop <= self.source.len())
+            .ok_or(Error::InvalidParameter)?;
+        let block = &self.source[start..stop];
         let initial_repeat = self.entropy.sequence_encoder.committed_repeats();
         let parsed = self.search.parse_next(block.len(), initial_repeat)?;
         let worthwhile = if parsed {
@@ -330,6 +436,182 @@ mod tests {
                 state as u8
             })
             .collect()
+    }
+
+    fn combined_pattern(length: usize) -> Vec<u8> {
+        (0..length)
+            .map(|i| b"combined dictionary staging reaches across the boundary"[i % 55])
+            .collect()
+    }
+
+    #[test]
+    fn combined_fast_dictionary_roundtrip_reaches_and_shrinks() {
+        // Deterministic noise cannot match itself, so every improvement must
+        // come from reaching into the staged dictionary region.
+        let pattern = noise(0xfeed_beef, 1024);
+        let input = [
+            noise(0x1a2b_3c4d, 256),
+            pattern.clone(),
+            noise(0x9876_5432, 256),
+        ]
+        .concat();
+        let dictionary = crate::Dictionary::raw(&pattern).unwrap();
+        let view = dictionary.view();
+        let request = request(11);
+        let plan =
+            ReferenceSearchPlan::new_with_dictionary(&request, input.len(), pattern.len()).unwrap();
+        let frame = compress_reference_with_dictionary_in(&input, view, plan, Global).unwrap();
+        let plain = crate::compress_with_parameters(&input, &request).unwrap();
+        assert_ne!(frame, plain);
+        assert!(frame.len() < plain.len());
+        let decoded = crate::decompress_with_dictionary_in(
+            &frame,
+            &view,
+            crate::DecodeOptions::new(input.len()),
+            Global,
+        )
+        .unwrap();
+        assert_eq!(decoded, input);
+        assert_eq!(crate::decompress(&plain, input.len()).unwrap(), input);
+    }
+
+    #[test]
+    fn combined_fast_empty_edges_match_dictionary_free_bytes() {
+        let request = request(11);
+        let dictionary = crate::Dictionary::raw(&combined_pattern(64)).unwrap();
+        let view = dictionary.view();
+        let plan = ReferenceSearchPlan::new_with_dictionary(&request, 0, 64).unwrap();
+        let empty = compress_reference_with_dictionary_in(b"", view, plan, Global).unwrap();
+        assert_eq!(
+            empty,
+            crate::compress_with_parameters(b"", &request).unwrap()
+        );
+        assert_eq!(
+            crate::decompress_with_dictionary_in(
+                &empty,
+                &view,
+                crate::DecodeOptions::new(0),
+                Global,
+            )
+            .unwrap(),
+            b""
+        );
+        // An empty dictionary stages no prefix and emits the exact plain bytes.
+        let empty_dictionary = crate::Dictionary::raw(b"").unwrap();
+        let input = noise(0x1111_2222, 700);
+        let plan = ReferenceSearchPlan::new_with_dictionary(&request, input.len(), 0).unwrap();
+        let frame =
+            compress_reference_with_dictionary_in(&input, empty_dictionary.view(), plan, Global)
+                .unwrap();
+        assert_eq!(
+            frame,
+            crate::compress_with_parameters(&input, &request).unwrap()
+        );
+        // A dictionary smaller than the key width can stage no key and still
+        // decodes through the ordinary dictionary path.
+        let tiny = crate::Dictionary::raw(b"abc").unwrap();
+        let plan = ReferenceSearchPlan::new_with_dictionary(&request, input.len(), 3).unwrap();
+        let staged =
+            compress_reference_with_dictionary_in(&input, tiny.view(), plan, Global).unwrap();
+        assert_eq!(
+            crate::decompress_with_dictionary_in(
+                &staged,
+                &tiny.view(),
+                crate::DecodeOptions::new(input.len()),
+                Global,
+            )
+            .unwrap(),
+            input
+        );
+    }
+
+    #[test]
+    fn combined_fast_stages_only_the_in_window_dictionary_suffix() {
+        // Window 2^11 stages only the dictionary's last 2048 bytes: a far
+        // pattern outside that suffix is unreachable, and a dictionary
+        // truncated to exactly the suffix emits identical frame bytes under
+        // the same pre-admitted plan.
+        let far = combined_pattern(1024);
+        let tail = noise(0xabcd_ef01, 3072);
+        let full = crate::Dictionary::raw(&[far, tail].concat()).unwrap();
+        let suffix = crate::Dictionary::raw(&full.as_bytes()[2048..]).unwrap();
+        let input = noise(0x1234_5678, 512);
+        let request = request(11);
+        let plan_a = ReferenceSearchPlan::new_with_dictionary(&request, input.len(), 4096).unwrap();
+        let frame_a =
+            compress_reference_with_dictionary_in(&input, full.view(), plan_a, Global).unwrap();
+        let plan_b = ReferenceSearchPlan::new_with_dictionary(&request, input.len(), 4096).unwrap();
+        let frame_b =
+            compress_reference_with_dictionary_in(&input, suffix.view(), plan_b, Global).unwrap();
+        assert_eq!(frame_a, frame_b);
+        assert_eq!(
+            crate::decompress_with_dictionary_in(
+                &frame_a,
+                &full.view(),
+                crate::DecodeOptions::new(input.len()),
+                Global,
+            )
+            .unwrap(),
+            input
+        );
+        // The far pattern as input cannot reach its out-of-window copy.
+        let pattern_input = combined_pattern(1024);
+        let plan_c =
+            ReferenceSearchPlan::new_with_dictionary(&request, pattern_input.len(), 4096).unwrap();
+        let frame_c =
+            compress_reference_with_dictionary_in(&pattern_input, full.view(), plan_c, Global)
+                .unwrap();
+        let plan_d =
+            ReferenceSearchPlan::new_with_dictionary(&request, pattern_input.len(), 4096).unwrap();
+        let frame_d =
+            compress_reference_with_dictionary_in(&pattern_input, suffix.view(), plan_d, Global)
+                .unwrap();
+        assert_eq!(frame_c, frame_d);
+    }
+
+    #[test]
+    fn combined_staging_rejects_unstaged_profiles_without_dropping_dictionaries() {
+        let input = noise(0x0f0f_0f0f, 600);
+        let dictionary = crate::Dictionary::raw(&combined_pattern(512)).unwrap();
+        for level in [3, 5, 9] {
+            let request = CompressionParameterRequest::with_level(level);
+            let plan =
+                ReferenceSearchPlan::new_with_dictionary(&request, input.len(), 512).unwrap();
+            let result =
+                compress_reference_with_dictionary_in(&input, dictionary.view(), plan, Global);
+            assert_eq!(
+                result.unwrap_err(),
+                crate::Error::UnsupportedFeature,
+                "level {level}"
+            );
+        }
+    }
+
+    #[test]
+    fn combined_fast_emits_prepared_dictionary_ids_and_roundtrips() {
+        const PREPARED: &[u8] = include_bytes!("../tests/upstream/dictionaries/formatted.dict");
+        let dictionary = crate::Dictionary::from_bytes(PREPARED).unwrap();
+        let view = dictionary.view();
+        assert_ne!(view.id(), 0);
+        let shared: Vec<u8> = view.content()[..1024].to_vec();
+        let input = [noise(0x7777_8888, 128), shared].concat();
+        let request = request(11);
+        let plan =
+            ReferenceSearchPlan::new_with_dictionary(&request, input.len(), view.content().len())
+                .unwrap();
+        let frame = compress_reference_with_dictionary_in(&input, view, plan, Global).unwrap();
+        let decoded = crate::decompress_with_dictionary_in(
+            &frame,
+            &view,
+            crate::DecodeOptions::new(input.len()),
+            Global,
+        )
+        .unwrap();
+        assert_eq!(decoded, input);
+        // The decoder matches the emitted identifier against this dictionary,
+        // so a different content owner with the same identifier mismatch is
+        // out of scope here; byte-level header checks live in frame tests.
+        assert!(frame.len() > 4);
     }
 
     fn kinds(frame: &[u8]) -> Vec<(BlockKind, usize)> {

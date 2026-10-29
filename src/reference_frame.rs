@@ -5,6 +5,7 @@
 
 #![forbid(unsafe_code)]
 
+use crate::encode::dictionary_field;
 use crate::frame::{MAGIC, MAX_BLOCK_SIZE};
 use crate::{Error, Result};
 
@@ -58,11 +59,12 @@ impl ReferenceFrameSettings {
     }
 }
 
-/// Initialized standard frame prefix with known size, no dictionary/checksum.
-/// At most fourteen bytes: magic, descriptor, optional window and eight-byte size.
+/// Initialized standard frame prefix with known size, no checksum.
+/// At most eighteen bytes: magic, descriptor, optional window, optional
+/// dictionary ID and eight-byte size.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) struct ReferenceFrameHeader {
-    bytes: [u8; 14],
+    bytes: [u8; 18],
     length: usize,
 }
 
@@ -72,6 +74,17 @@ impl ReferenceFrameHeader {
     /// The reference promotes 0xffffffff to an eight-byte field, although that
     /// value fits the format's four-byte representation used by the named API.
     pub(crate) fn new(settings: &ReferenceFrameSettings) -> Self {
+        Self::with_dictionary_id(settings, 0)
+    }
+
+    /// Same truthful metadata plus the dictionary ID field of
+    /// `ZSTD_writeFrameHeader`, placed between the optional window byte and
+    /// the content size. A zero ID emits no field, preserving the exact
+    /// dictionary-free header bytes.
+    pub(crate) fn with_dictionary_id(
+        settings: &ReferenceFrameSettings,
+        dictionary_id: u32,
+    ) -> Self {
         let size = settings.source_size();
         let single_segment = settings.source_len() <= settings.window_size();
         let (size_flag, size_value, size_bytes) = match size {
@@ -80,9 +93,10 @@ impl ReferenceFrameHeader {
             65_792..=0xffff_fffe => (2, size, 4),
             _ => (3, size, 8),
         };
-        let mut bytes = [0; 14];
+        let (dictionary_flag, dictionary_bytes) = dictionary_field(dictionary_id);
+        let mut bytes = [0; 18];
         bytes[..4].copy_from_slice(&MAGIC.to_le_bytes());
-        bytes[4] = (size_flag << 6) | (u8::from(single_segment) << 5);
+        bytes[4] = (size_flag << 6) | (u8::from(single_segment) << 5) | dictionary_flag;
         let mut length = 5;
         if !single_segment {
             // Checked logs are 10..=21, so the exponent fits the descriptor
@@ -90,9 +104,14 @@ impl ReferenceFrameHeader {
             bytes[length] = (settings.window_log() - 10) << 3;
             length += 1;
         }
+        if dictionary_bytes != 0 {
+            bytes[length..length + dictionary_bytes]
+                .copy_from_slice(&dictionary_id.to_le_bytes()[..dictionary_bytes]);
+            length += dictionary_bytes;
+        }
         // Size <256 is necessarily single-segment because the minimum window
         // is 1024. Thus its one-byte field is present; all other flags explicitly
-        // carry the selected size. The maximum extent is 6+8=14 bytes.
+        // carry the selected size. The maximum extent is 6+4+8=18 bytes.
         bytes[length..length + size_bytes].copy_from_slice(&size_value.to_le_bytes()[..size_bytes]);
         length += size_bytes;
         Self { bytes, length }

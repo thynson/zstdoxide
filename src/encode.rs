@@ -622,7 +622,9 @@ fn write_frame_header<A: Allocator>(
     }
 }
 
-fn dictionary_field(dictionary_id: u32) -> (u8, usize) {
+/// The dictionary ID descriptor flag and field width shared by the checksummed
+/// and parameterized frame headers. A zero ID emits no field.
+pub(crate) fn dictionary_field(dictionary_id: u32) -> (u8, usize) {
     match dictionary_id {
         0 => (0, 0),
         1..=255 => (1, 1),

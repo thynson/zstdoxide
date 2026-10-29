@@ -30,17 +30,55 @@ pub(crate) struct FastMatchState<'a, A: Allocator> {
 impl<'a, A: Allocator> FastMatchState<'a, A> {
     /// Bind complete owners to one source, invalidating earlier sampled indices.
     /// Does not clone an allocator, allocate, or borrow temporary source storage.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "zero-prefix convenience constructor for tests")
+    )]
     pub(crate) fn from_parts(
+        source: &'a [u8],
+        plan: FastExecutionPlan,
+        table: MatchTable<A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        Self::from_parts_with_prefix(source, plan, table, literals, sequences, 0)
+    }
+
+    /// Bind owners to a combined borrow whose first `prefix_len` bytes precede
+    /// the frame. Parsing starts at the prefix boundary, so candidates may
+    /// reach back into the staged region while the existing window floor
+    /// bounds every emitted offset. This is the combined dictionary contract;
+    /// the geometry check accepts exactly the staged prefix length.
+    pub(crate) fn from_parts_with_prefix(
         source: &'a [u8],
         plan: FastExecutionPlan,
         mut table: MatchTable<A>,
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
+        prefix_len: usize,
     ) -> Result<Self> {
-        if source.len() != plan.source_len() || table.layout() != plan.layout() {
+        if source
+            .len()
+            .checked_sub(prefix_len)
+            .is_none_or(|frame_len| frame_len != plan.source_len())
+            || table.layout() != plan.layout()
+        {
             return Err(Error::InvalidParameter);
         }
         table.reset();
+        let layout = plan.layout();
+        if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
+            // Seed every staged key position so candidates can point into the
+            // dictionary region; parsing never inserts those positions itself.
+            // Later positions win each slot, and the parser's window floor
+            // still bounds every candidate it accepts.
+            for position in 0..=last {
+                let key = layout
+                    .read_key(&source[position..])
+                    .ok_or(Error::InvalidState)?;
+                table.replace(key, position)?;
+            }
+        }
         literals.clear();
         sequences.clear();
         Ok(Self {
@@ -49,7 +87,7 @@ impl<'a, A: Allocator> FastMatchState<'a, A> {
             table,
             literals,
             sequences,
-            position: 0,
+            position: prefix_len,
             prefix_floor: 0,
             failed: false,
         })
