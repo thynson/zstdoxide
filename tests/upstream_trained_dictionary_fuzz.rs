@@ -769,6 +769,142 @@ fn dictionary_caller_output_checked(source: &[u8], dictionary: &SharedDictionary
     );
 }
 
+/// Supplemental call-scoped compression checks, independent of the original
+/// reduced streaming bound and parameter-selector limitations below.
+fn encode_call_selection_checked(source: &[u8], dictionary: &SharedDictionary, prefix: bool) {
+    let source_before = source.to_vec();
+    let dictionary_before = dictionary.as_bytes().to_vec();
+    let handles = SharedDictionary::strong_count(dictionary);
+    let view = dictionary.view();
+    let selected =
+        zstdoxide::compress_with_dictionary_in(source, &view, std::alloc::Global).unwrap();
+    let plain = zstdoxide::compress(source).unwrap();
+    let empty_selected =
+        zstdoxide::compress_with_dictionary_in(b"", &view, std::alloc::Global).unwrap();
+    let mut encoder = if prefix {
+        zstdoxide::OneShotEncoder::with_prefix(view)
+    } else {
+        zstdoxide::OneShotEncoder::with_dictionary(view)
+    };
+    let capacity = zstdoxide::compression_bound(source.len())
+        .unwrap()
+        .max(empty_selected.len());
+    assert!(selected.len() <= capacity && plain.len() <= capacity);
+    let mut output = vec![0xa5; capacity + 34];
+    let mut success = |encoder: &mut zstdoxide::OneShotEncoder<_>,
+                       input: &[u8],
+                       expected: &[u8],
+                       selected: bool| {
+        output.fill(0xa5);
+        let size = encoder
+            .compress_into(input, &mut output[16..18 + expected.len()])
+            .unwrap();
+        assert_eq!(size, expected.len());
+        assert_eq!(&output[16..16 + size], expected);
+        assert!(
+            output[..16]
+                .iter()
+                .chain(&output[16 + size..])
+                .all(|&b| b == 0xa5)
+        );
+        let decoded = if selected {
+            zstdoxide::decompress_with_dictionary(
+                expected,
+                dictionary,
+                DecodeOptions::new(input.len()),
+            )
+            .unwrap()
+        } else {
+            zstdoxide::decompress(expected, input.len()).unwrap()
+        };
+        assert_eq!(decoded, input);
+    };
+    success(&mut encoder, source, &selected, true);
+    assert!(!encoder.prefix_pending());
+    assert_eq!(encoder.dictionary().is_some(), !prefix);
+    let next = if prefix { &plain } else { &selected };
+    success(&mut encoder, source, next, !prefix);
+    if prefix {
+        encoder.set_prefix(Some(view));
+    } else {
+        encoder.set_dictionary(Some(view));
+    }
+    // End the closure's exclusive output borrow before checking provisional writes.
+    let short_capacity = selected.len() - 1;
+    output.fill(0xa5);
+    assert_eq!(
+        encoder.compress_into(source, &mut output[16..16 + short_capacity]),
+        Err(Error::ResourceLimit)
+    );
+    assert!(
+        output[..16]
+            .iter()
+            .chain(&output[16 + short_capacity..])
+            .all(|&b| b == 0xa5)
+    );
+    assert!(!encoder.prefix_pending());
+    assert_eq!(encoder.dictionary().is_some(), !prefix);
+    // Separate destinations make the recovery checks independent of provisional data.
+    for (input, expected, selected, action) in [
+        (source, next.as_slice(), !prefix, 0),
+        (source, plain.as_slice(), false, 1),
+        (&b""[..], empty_selected.as_slice(), true, 2),
+        (source, plain.as_slice(), false, 0),
+    ] {
+        if action == 1 {
+            encoder.set_dictionary(None);
+        }
+        if action == 2 {
+            encoder.set_prefix(Some(view));
+        }
+        output.fill(0xa5);
+        let size = encoder
+            .compress_into(input, &mut output[16..18 + expected.len()])
+            .unwrap();
+        assert_eq!(size, expected.len());
+        assert_eq!(&output[16..16 + size], expected);
+        assert!(
+            output[..16]
+                .iter()
+                .chain(&output[16 + size..])
+                .all(|&b| b == 0xa5)
+        );
+        let decoded = if selected {
+            zstdoxide::decompress_with_dictionary(
+                expected,
+                dictionary,
+                DecodeOptions::new(input.len()),
+            )
+            .unwrap()
+        } else {
+            zstdoxide::decompress(expected, input.len()).unwrap()
+        };
+        assert_eq!(decoded, input);
+        assert!(!encoder.prefix_pending());
+        assert_eq!(encoder.dictionary().is_some(), action == 0 && selected);
+    }
+    assert_eq!(source, source_before);
+    assert_eq!(dictionary.as_bytes(), dictionary_before);
+    assert_eq!(SharedDictionary::strong_count(dictionary), handles);
+    let fingerprint = |bytes: &[u8]| {
+        bytes.iter().fold(0xcbf2_9ce4_8422_2325u64, |h, &b| {
+            (h ^ u64::from(b)).wrapping_mul(0x100_0000_01b3)
+        })
+    };
+    println!(
+        "ENCODE_SELECTION\t{}\t{}\t{}\t{}\t{:016x}\t{:016x}\t{:016x}\t{:016x}\t{:016x}",
+        if prefix { "prefix" } else { "persistent" },
+        source.len(),
+        dictionary.as_bytes().len(),
+        dictionary.id(),
+        fingerprint(source),
+        fingerprint(dictionary.as_bytes()),
+        fingerprint(&selected),
+        fingerprint(&plain),
+        fingerprint(&empty_selected)
+    );
+}
+
 fn encode_bounded(
     source: &[u8],
     dictionary: SharedDictionary,
@@ -850,6 +986,7 @@ fn dictionary_round_trip(input: &[u8]) -> Outcome {
     if !prefix {
         dictionary_caller_output_checked(source, &dictionary);
     }
+    encode_call_selection_checked(source, &dictionary, prefix);
     let first = encode_bounded(source, dictionary.clone(), prefix, capacity);
     let second = encode_bounded(source, dictionary.clone(), prefix, capacity);
     assert_eq!(first, second);
