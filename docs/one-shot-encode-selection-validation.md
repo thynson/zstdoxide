@@ -1,8 +1,9 @@
 # One-shot encode selection validation
 
-Module 35 is in progress. The internal coordinator and public caller-owned
-methods have focused qualification. Complete feature/release regression, measurements and reconciliation remain
-open.
+Module 35 is complete within its call-scoped dictionary/prefix selection
+scope for caller-owned one-shot compression. Focused, guarded native/corpus,
+platform, complete feature/release and independent measurement gates have
+successful source-bound receipts.
 
 ## Internal clone-free coordinator
 
@@ -110,3 +111,20 @@ overhead and are not a directly subtractable estimate. Fixed-order ratios do
 not establish a universal unsafe benefit or eliminate scratch allocations. See
 `one-shot-encode-benchmarks.md` and
 `evidence/2026-10-29-one-shot-encode-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+Integrated production and matrix sources match the qualified public/native/
+platform/corpus and measured snapshots; every stage archive is rehashed. The
+repository retains the authorized post32 FUZZER.md and reason-reconciliation
+manifest.json results over the pre-apply campaign inputs, with both sides
+verified rather than silently overwritten. Earlier internal snapshots retain
+their distinct identities. No new supplemental native or deterministic corpus
+case promotes an original upstream group by inference.
+
+Parameterized dictionary-backed one-shot compression is designed and decomposed
+next. Reference levels with LDM, streaming variants, native workspace/reset
+semantics, threading and complete upstream library/CLI parity remain open.
+Short output may retain earlier complete appends; all writes remain within the
+caller slice, and the dictionary is unchanged.
+Evidence: `evidence/2026-10-29-one-shot-encode-closure.json`.

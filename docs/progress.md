@@ -1596,3 +1596,39 @@ and count is unchanged; the complete pinned audit passes against the integrated
 root. This is a separate metadata-only reconciliation; no new port and no
 Module35 completion is claimed.
 Evidence: `evidence/2026-10-28-dictionary-selection-reason-reconciliation.json`.
+
+## Module 35: reusable one-shot compression dictionary and prefix selection complete (2026-10-29)
+
+OneShotEncoder wraps the existing plain Selection/Claimed ownership records
+over any dictionary handle type. Persistent selection is borrowed per call; a
+pending prefix is claimed by exclusive replacement before output admission or
+allocator work and lives until the attempt returns or unwinds. No handle is
+cloned, no dictionary content is copied and no workspace is retained; borrowed
+views cannot outlive their owner. compress_into/compress_into_in reuse the
+module34 caller-owned emitter and the ordinary Greedy path byte-for-byte.
+
+All 75 final commands pass: safe/all/22 isolated full suites, no_std and strict
+Clippy, safe/all release and format. Every complete/release suite reports 1766
+passed and 76 ignored across 117 groups; one interrupted-at-deadline partial
+command was never credited and its log is retained. Twenty-seven typed native
+schedules retain 87 native rows, 42 successes and 6 capacity errors with 12
+fresh controls and zero unexplained subsequent differences; ASan leak
+detection stays uncredited on this runtime. The merged trained adapter keeps
+both module34 and module35 helpers with byte-identical ledgers across four
+feature selections. Four foreign Miri runs and four concrete thumbv6m
+no-atomics checks/builds pass.
+
+Thirty-three dictionary/input pairs retain 297 allocation/result rows and 675
+samples per executable across 24 primary backends and independent safe/all
+rebuilds: stateless baseline, persistent coordinator, prefix rearming outside
+and inside the compression clock, plus setup-only arm/observe/clear batches
+that include loop and black-box overhead and are not subtractable. Geometric
+mean ratios over 30 nonempty pairs: primary safe persistent/stateless vs safe 1.0047; primary safe prefix-outside/stateless vs safe 1.0010; primary safe prefix-inside/stateless vs safe 1.0299; primary safe prefix-inside/prefix-outside vs safe 1.0289; primary all stateless/stateless vs safe 1.0233; primary all persistent/persistent vs safe 1.0215; primary all prefix-outside/prefix-outside vs safe 1.0161; primary all prefix-inside/prefix-inside vs safe 0.9936; primary all persistent/stateless vs all 1.0029; primary all prefix-outside/stateless vs all 0.9939; primary all prefix-inside/stateless vs all 1.0000; primary all prefix-inside/prefix-outside vs all 1.0061; repeat safe persistent/stateless vs safe 1.0075; repeat safe prefix-outside/stateless vs safe 1.0025; repeat safe prefix-inside/stateless vs safe 1.0004; repeat safe prefix-inside/prefix-outside vs safe 0.9979; repeat all stateless/stateless vs safe 1.0049; repeat all persistent/persistent vs safe 0.9993; repeat all prefix-outside/prefix-outside vs safe 1.0028; repeat all prefix-inside/prefix-inside vs safe 1.0094; repeat all persistent/stateless vs all 1.0019; repeat all prefix-outside/stateless vs all 1.0004; repeat all prefix-inside/stateless vs all 1.0049; repeat all prefix-inside/prefix-outside vs all 1.0045. No
+universal unsafe speedup or absence of scratch allocation is inferred.
+
+Completed tasks are archived in Git history. The next module combines the
+qualified reference parameter profiles with immutable dictionary selection in
+caller-owned one-shot output; see
+`docs/one-shot-encode-parameters-design.md`. Reference levels with LDM,
+threading, native workspace semantics and complete upstream migration remain
+open.

@@ -166,6 +166,13 @@ Dictionary-backed caller-owned compression is available through
 completed bounded qualification and remaining scope are recorded in
 [the dictionary output validation report](docs/dictionary-slice-encode-validation.md).
 
+Reusable call-scoped selection is available through `OneShotEncoder`: a
+persistent dictionary selection survives calls and errors, while
+`with_prefix`/`set_prefix` arm exactly the next attempted call, including
+empty input, short output and allocation failure. Its completed bounded
+qualification and remaining scope are recorded in
+[the selection validation report](docs/one-shot-encode-selection-validation.md).
+
 ## Current support
 
 | Area | Implemented |
