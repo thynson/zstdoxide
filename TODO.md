@@ -198,6 +198,24 @@ implementation only after Module 34 closes; retain no encoder workspace.
 - [x] Reconcile the six dictionary-encode selection reasons with the qualified native selection evidence after Module 34 source closure.
 - [ ] Reconcile bounded selection coverage and decompose the next evidenced contract without claiming native workspace or complete upstream parity.
 
+## Module 36: parameterized dictionary-backed one-shot compression
+
+The qualified reference parameter profiles and immutable dictionary selection
+must combine in caller-owned one-shot output. Ownership, frame flags and
+window expiry are recorded before implementation in
+`docs/one-shot-encode-parameters-design.md` and `docs/data-structures.md`.
+Promote implementation only after Module 35 closes; retain no parameter
+record, workspace or live context between calls.
+
+- [x] Analyze pinned parameter-with-dictionary application, per-profile seed mapping and dictionary window expiry before implementation.
+- [ ] Implement per-call combined resolved-parameter and immutable-view emission over the existing bounded profiles without retaining workspace.
+- [ ] Expose documented parameterized dictionary and coordinator compression with exact output/lifetime guards and independent allocator failure qualification.
+- [ ] Qualify parameterized dictionary schedules, unsupported-strategy rejection and window expiry against guarded native controls and deterministic selections.
+- [ ] Qualify combined parameter and dictionary application under concrete no-atomics ARM code generation, running foreign Miri only if unsafe code is added or modified.
+- [ ] Qualify safe, every isolated feature and all features, full/release regression, no_std and strict Clippy.
+- [ ] Compare identical parameterized stateless/coordinator workloads with explicit setup, allocation domains and independent repeats after CPU barriers.
+- [ ] Reconcile bounded parameterized-dictionary coverage and decompose the next evidenced contract without claiming native workspace, LDM or complete upstream parity.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
