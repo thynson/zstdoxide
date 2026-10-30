@@ -2,7 +2,9 @@
 #![forbid(unsafe_code)]
 
 use crate::one_shot_selection::Selection;
-use crate::{DictionaryHandle, DictionaryView, Result, SharedDictionary};
+use crate::{
+    CompressionParameterRequest, DictionaryHandle, DictionaryView, Result, SharedDictionary,
+};
 use alloc::alloc::{Allocator, Global};
 
 /// Owns persistent or next-attempt dictionary selection for caller-owned output.
@@ -139,6 +141,60 @@ impl<D: DictionaryHandle> OneShotEncoder<D> {
                 crate::compress_into_with_dictionary_in(input, output, dictionary, allocator)
             }
             None => crate::compress_into_in(input, output, allocator),
+        }
+    }
+
+    /// Compresses one parameterized frame into caller storage.
+    ///
+    /// The per-call request is resolved against the actual source length and,
+    /// when a selection is retained, the dictionary's matchable content length.
+    /// A retained dictionary uses the exact combined-staging, entropy-seed and
+    /// scoring subset of [`crate::compress_with_parameters_and_dictionary`];
+    /// no selection uses [`crate::compress_with_parameters`]. Frame flags are
+    /// the parameterized family's known size without checksum, not the ordinary
+    /// checksummed coordinator frame of [`Self::compress_into`]. The request is
+    /// not stored, so later calls may pass a different request or use the
+    /// ordinary method again.
+    ///
+    /// A pending prefix is claimed before request resolution, output admission
+    /// or allocator work, so a resolution or unsupported-profile error still
+    /// consumes it exactly like every other attempted call. Persistent
+    /// selection survives successful, short-output and failed attempts. Success
+    /// returns the exact written length; a short destination returns
+    /// [`crate::Error::ResourceLimit`] after earlier whole appends. Bytes outside
+    /// the supplied slice are never changed.
+    pub fn compress_into_with_parameters(
+        &mut self,
+        input: &[u8],
+        request: &CompressionParameterRequest,
+        output: &mut [u8],
+    ) -> Result<usize> {
+        self.compress_into_with_parameters_in(input, request, output, Global)
+    }
+
+    /// Compresses a parameterized frame with fresh scratch independent of the
+    /// dictionary owner.
+    ///
+    /// Behavior and lifetime guards match [`Self::compress_into_with_parameters`].
+    /// The claimed owner stays alive until the attempt returns or unwinds, no
+    /// handle is cloned, and no caller borrow survives the attempt. Scratch uses
+    /// independent clones of the supplied allocator and is released before
+    /// return; a borrowed non-Clone allocator is accepted by reference.
+    pub fn compress_into_with_parameters_in<A: Allocator + Clone>(
+        &mut self,
+        input: &[u8],
+        request: &CompressionParameterRequest,
+        output: &mut [u8],
+        allocator: A,
+    ) -> Result<usize> {
+        let call = self.selection.claim();
+        match call.retained() {
+            Some(dictionary) => crate::compress_into_with_parameters_and_dictionary_in(
+                input, output, request, dictionary, allocator,
+            ),
+            None => crate::reference_encode::compress_into_with_parameters_in(
+                input, output, request, allocator,
+            ),
         }
     }
 }

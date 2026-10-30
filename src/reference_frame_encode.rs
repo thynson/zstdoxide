@@ -11,6 +11,7 @@ use crate::dictionary::{DictionaryEntropyView, DictionaryView};
 #[cfg(test)]
 use crate::fast_plan::FastExecutionPlan;
 use crate::frame::{BlockKind, MAX_BLOCK_SIZE};
+use crate::frame_sink::FrameSink;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::optimal_retained::Publication;
@@ -18,6 +19,60 @@ use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
 use crate::reference_search::{ReferenceSearchPlan, ReferenceSearchState};
 use crate::sequence_context::SequenceEncoder;
 use crate::{Error, Result};
+
+/// Append-only destination for one encoded reference frame.
+///
+/// The owned-vector implementation reports allocation failure through
+/// [`Error::AllocationFailed`]; the caller-owned sink reports a short
+/// destination through [`Error::ResourceLimit`]. Every append either publishes
+/// all bytes or leaves the destination unchanged, so a rejected block never
+/// exposes a partial header.
+pub(crate) trait ReferenceOutput {
+    fn append(&mut self, bytes: &[u8]) -> Result<()>;
+    fn append_block(&mut self, header: [u8; 3], payload: &[u8]) -> Result<()>;
+}
+
+impl<A: Allocator> ReferenceOutput for Vec<u8, A> {
+    fn append(&mut self, bytes: &[u8]) -> Result<()> {
+        self.try_reserve_exact(bytes.len())
+            .map_err(|_| Error::AllocationFailed)?;
+        self.extend_from_slice(bytes);
+        Ok(())
+    }
+
+    fn append_block(&mut self, header: [u8; 3], payload: &[u8]) -> Result<()> {
+        let additional = header
+            .len()
+            .checked_add(payload.len())
+            .ok_or(Error::ResourceLimit)?;
+        self.try_reserve_exact(additional)
+            .map_err(|_| Error::AllocationFailed)?;
+        self.extend_from_slice(&header);
+        self.extend_from_slice(payload);
+        Ok(())
+    }
+}
+
+impl ReferenceOutput for FrameSink<'_> {
+    fn append(&mut self, bytes: &[u8]) -> Result<()> {
+        FrameSink::append(self, bytes)
+    }
+
+    fn append_block(&mut self, header: [u8; 3], payload: &[u8]) -> Result<()> {
+        // Check the complete extent before the first write so a short
+        // destination never exposes a partial block header.
+        let total = header
+            .len()
+            .checked_add(payload.len())
+            .ok_or(Error::ResourceLimit)?;
+        if total > self.remaining() {
+            return Err(Error::ResourceLimit);
+        }
+        self.append(&header)?;
+        self.append(payload)?;
+        Ok(())
+    }
+}
 
 #[cfg(test)]
 #[path = "../tests/support/double_fast_frame_encode.rs"]
@@ -72,23 +127,56 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
     output
         .try_reserve_exact(bound)
         .map_err(|_| Error::AllocationFailed)?;
-    for &byte in ReferenceFrameHeader::new(&settings).as_bytes() {
-        output.push(byte);
-    }
     if input.is_empty() {
         // The complete bound already includes this sole final empty raw block.
-        for byte in [1, 0, 0] {
-            output.push(byte);
-        }
+        ReferenceOutput::append(&mut output, ReferenceFrameHeader::new(&settings).as_bytes())?;
+        ReferenceOutput::append(&mut output, &[1, 0, 0])?;
         return Ok(output);
     }
-    let mut workspace = ReferenceEncoderWorkspace::new(input, plan, output.allocator().clone())?;
+    let scratch = output.allocator().clone();
+    compress_reference_to(input, plan, &mut output, scratch)?;
+    Ok(output)
+}
+
+/// Encode one admitted frame into caller-owned storage.
+///
+/// Header and complete blocks are appended atomically. A short destination
+/// returns [`Error::ResourceLimit`] after earlier whole appends, and bytes
+/// outside the supplied slice are never touched. Scratch uses the supplied
+/// allocator and is released before return.
+pub(crate) fn compress_reference_into_in<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    plan: ReferenceSearchPlan,
+    allocator: A,
+) -> Result<usize> {
+    let mut sink = FrameSink::new(output);
+    compress_reference_to(input, plan, &mut sink, allocator)?;
+    Ok(sink.len())
+}
+
+fn compress_reference_to<A: Allocator + Clone, O: ReferenceOutput>(
+    input: &[u8],
+    plan: ReferenceSearchPlan,
+    output: &mut O,
+    allocator: A,
+) -> Result<()> {
+    if input.len() != plan.source_len() {
+        return Err(Error::InvalidParameter);
+    }
+    let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
+    output.append(ReferenceFrameHeader::new(&settings).as_bytes())?;
+    if input.is_empty() {
+        output.append(&[1, 0, 0])?;
+        return Ok(());
+    }
+    let mut workspace = ReferenceEncoderWorkspace::new(input, plan, allocator)?;
     while workspace.emitted < input.len() {
         let length = plan.next_block_len(workspace.emitted)?;
         let last = length == input.len() - workspace.emitted;
-        workspace.emit_next(length, last, &mut output)?;
+        workspace.emit_next(length, last, output)?;
     }
-    Ok(output)
+    Ok(())
 }
 
 /// Encode using a pre-admitted plan with an immutable dictionary view.
@@ -128,14 +216,10 @@ pub(crate) fn compress_reference_with_dictionary_in<A: Allocator + Clone>(
         return Err(Error::InvalidParameter);
     }
     let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
-    let header = ReferenceFrameHeader::with_dictionary_id(&settings, dictionary.id());
-    let entropy = dictionary.entropy();
-    // Prepared dictionaries allow twelve-bit codes. The codebook copies plain
-    // values, retaining no source-table borrow, and construction allocates no
-    // heap storage; an invalid prepared tree fails before output admission.
-    let literal_table = entropy
-        .map(|entropy| HuffmanCodebook::from_lengths(&entropy.huffman.code_lengths(), 12))
-        .transpose()?;
+    let staged = dictionary.content().len().min(settings.window_size());
+    if staged > 0 && !plan.admits_dictionary_staging() {
+        return Err(Error::UnsupportedFeature);
+    }
     let (_, dictionary_bytes) = crate::encode::dictionary_field(dictionary.id());
     let bound = plan
         .frame_bound()?
@@ -145,19 +229,72 @@ pub(crate) fn compress_reference_with_dictionary_in<A: Allocator + Clone>(
     output
         .try_reserve_exact(bound)
         .map_err(|_| Error::AllocationFailed)?;
-    for &byte in header.as_bytes() {
-        output.push(byte);
-    }
     if input.is_empty() {
         // The complete bound already includes this sole final empty raw block.
-        for byte in [1, 0, 0] {
-            output.push(byte);
-        }
+        let header = ReferenceFrameHeader::with_dictionary_id(&settings, dictionary.id());
+        ReferenceOutput::append(&mut output, header.as_bytes())?;
+        ReferenceOutput::append(&mut output, &[1, 0, 0])?;
         return Ok(output);
     }
+    let scratch = output.allocator().clone();
+    compress_reference_with_dictionary_to(input, dictionary, plan, &mut output, scratch)?;
+    Ok(output)
+}
+
+/// Encode one admitted dictionary frame into caller-owned storage.
+///
+/// Admission and prepared-table errors precede the first output byte. Complete
+/// header/block appends are atomic; a short destination returns
+/// [`Error::ResourceLimit`] after earlier whole appends and never mutates bytes
+/// outside the supplied slice.
+pub(crate) fn compress_reference_with_dictionary_into_in<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    dictionary: DictionaryView<'_>,
+    plan: ReferenceSearchPlan,
+    allocator: A,
+) -> Result<usize> {
+    let mut sink = FrameSink::new(output);
+    compress_reference_with_dictionary_to(input, dictionary, plan, &mut sink, allocator)?;
+    Ok(sink.len())
+}
+
+fn compress_reference_with_dictionary_to<A: Allocator + Clone, O: ReferenceOutput>(
+    input: &[u8],
+    dictionary: DictionaryView<'_>,
+    plan: ReferenceSearchPlan,
+    output: &mut O,
+    allocator: A,
+) -> Result<()> {
+    if input.len() != plan.source_len() {
+        return Err(Error::InvalidParameter);
+    }
+    let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
     let content = dictionary.content();
     let staged = content.len().min(settings.window_size());
-    let mut combined = Vec::new_in(output.allocator().clone());
+    if staged > 0 && !plan.admits_dictionary_staging() {
+        // Supported dictionary subset: reject unsupported profiles before the
+        // first output byte instead of silently dropping the dictionary.
+        return Err(Error::UnsupportedFeature);
+    }
+    let header = ReferenceFrameHeader::with_dictionary_id(&settings, dictionary.id());
+    let entropy = dictionary.entropy();
+    // Prepared dictionaries allow twelve-bit codes. The codebook copies plain
+    // values, retaining no source-table borrow, and construction allocates no
+    // heap storage; an invalid prepared tree fails before output admission.
+    let literal_table = entropy
+        .map(|entropy| HuffmanCodebook::from_lengths(&entropy.huffman.code_lengths(), 12))
+        .transpose()?;
+    let (_, dictionary_bytes) = crate::encode::dictionary_field(dictionary.id());
+    plan.frame_bound()?
+        .checked_add(dictionary_bytes)
+        .ok_or(Error::ResourceLimit)?;
+    output.append(header.as_bytes())?;
+    if input.is_empty() {
+        output.append(&[1, 0, 0])?;
+        return Ok(());
+    }
+    let mut combined = Vec::new_in(allocator.clone());
     combined
         .try_reserve_exact(
             staged
@@ -171,16 +308,16 @@ pub(crate) fn compress_reference_with_dictionary_in<A: Allocator + Clone>(
         &combined,
         staged,
         plan,
-        output.allocator().clone(),
+        allocator,
         entropy,
         literal_table,
     )?;
     while workspace.emitted < input.len() {
         let length = plan.next_block_len(workspace.emitted)?;
         let last = length == input.len() - workspace.emitted;
-        workspace.emit_next(length, last, &mut output)?;
+        workspace.emit_next(length, last, output)?;
     }
-    Ok(output)
+    Ok(())
 }
 
 /// One borrowed source and its existing search/entropy owners.
@@ -249,11 +386,11 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
     /// Invalid scheduling leaves the workspace usable. All failures after
     /// preflight poison it, since search/scratch mutations cannot be rolled back.
     /// Corresponds to the no-dictionary block loop in `ZSTD_compress_frameChunk`.
-    fn emit_next<O: Allocator>(
+    fn emit_next<O: ReferenceOutput>(
         &mut self,
         length: usize,
         last: bool,
-        output: &mut Vec<u8, O>,
+        output: &mut O,
     ) -> Result<()> {
         if self.failed || self.finished {
             return Err(Error::InvalidState);
@@ -286,11 +423,11 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         Ok(())
     }
 
-    fn emit_checked<O: Allocator>(
+    fn emit_checked<O: ReferenceOutput>(
         &mut self,
         end: usize,
         last: bool,
-        output: &mut Vec<u8, O>,
+        output: &mut O,
     ) -> Result<()> {
         let length = end - self.emitted;
         let start = self
@@ -395,8 +532,8 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
 }
 
 /// Reserve the complete selected block before changing any output byte.
-fn append_block<O: Allocator>(
-    output: &mut Vec<u8, O>,
+fn append_block<O: ReferenceOutput>(
+    output: &mut O,
     regenerated_size: usize,
     kind: BlockKind,
     payload: &[u8],
@@ -417,17 +554,9 @@ fn append_block<O: Allocator>(
     let value = (u32::try_from(size).map_err(|_| Error::ResourceLimit)? << 3)
         | (tag << 1)
         | u32::from(last);
-    let additional = payload.len().checked_add(3).ok_or(Error::ResourceLimit)?;
-    output
-        .try_reserve_exact(additional)
-        .map_err(|_| Error::AllocationFailed)?;
-    for byte in &value.to_le_bytes()[..3] {
-        output.push(*byte);
-    }
-    for &byte in payload {
-        output.push(byte);
-    }
-    Ok(())
+    let mut header = [0_u8; 3];
+    header.copy_from_slice(&value.to_le_bytes()[..3]);
+    output.append_block(header, payload)
 }
 
 #[cfg(test)]

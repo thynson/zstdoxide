@@ -232,7 +232,11 @@ pub use parameters::{
     ReferenceStrategy, ResolvedCompressionParameters, SourceSize, inspect_compression_level,
 };
 pub use reference_encode::{
-    compress_at_level, compress_at_level_in, compress_with_parameters, compress_with_parameters_in,
+    compress_at_level, compress_at_level_in, compress_into_with_parameters,
+    compress_into_with_parameters_and_dictionary, compress_into_with_parameters_and_dictionary_in,
+    compress_into_with_parameters_in, compress_with_parameters,
+    compress_with_parameters_and_dictionary, compress_with_parameters_and_dictionary_in,
+    compress_with_parameters_in,
 };
 pub use strategy::CompressionStrategy;
 pub use stream::{EndDirective, Progress, StreamStatus};

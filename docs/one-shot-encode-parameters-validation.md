@@ -1,12 +1,12 @@
 # Parameterized dictionary-backed one-shot compression validation
 
-Module 36 is in progress. Only the internal combined-staging engine, its
-DoubleFast extension, the Greedy chain-and-row family extension, the
-BinaryTreeLazy2 tree-family extension with the explicit optimal-family
-rejection, and prepared formatted-dictionary entropy reuse are qualified and
-integrated. Public parameterized dictionary APIs, native/corpus/platform
-validation, the complete feature/release regression, measurements and
-reconciliation remain open.
+Module 36 is in progress. The internal combined-staging engine, its DoubleFast
+extension, the Greedy chain-and-row family extension, the BinaryTreeLazy2
+tree-family extension with the explicit optimal-family rejection, prepared
+formatted-dictionary entropy reuse, and the public allocating, caller-owned and
+coordinator parameterized dictionary calls are qualified and integrated.
+Native/corpus/platform validation, the complete feature/release regression,
+measurements and reconciliation remain open.
 
 ## Internal combined staging for the Fast profile
 
@@ -131,3 +131,32 @@ formatted fixture, exact shrink against the same raw dictionary content, and
 that a literal block containing a symbol absent from the prepared tree never
 emits a treeless header.
 Evidence: `evidence/2026-10-30-one-shot-encode-parameters-entropy.json`.
+
+## Public allocating, caller-owned and coordinator calls
+
+`compress_with_parameters_and_dictionary(_in)` resolves a request against the
+source and the dictionary's matchable content length, then emits the admitted
+combined-staging profile. `compress_into_with_parameters(_in)` and
+`compress_into_with_parameters_and_dictionary(_in)` write complete headers and
+blocks atomically into caller storage and return the exact written length;
+short output reports `ResourceLimit` after earlier whole appends without
+touching guard bytes. `OneShotEncoder::compress_into_with_parameters(_in)` keeps
+requests call-scoped, claims pending prefixes before resolution, preserves
+persistent selection across success and failure, and clones no handle. A
+nonzero dictionary that resolves to Optimal/Ultra/Ultra2 is rejected with
+`UnsupportedFeature` before the first output byte instead of dropping the
+dictionary; empty and raw attachments preserve the dictionary-free
+parameterized bytes.
+
+Twenty-three focused commands pass: the complete library suite, true no_std
+compilation, strict Clippy and the public integration suite under safe, the
+isolated frame-sink, huffman-codebook and dictionary backends, and all
+features, plus safe/all doctests and formatting. Every library suite reports
+1124 passed and 25 ignored across 1 result groups. Six public
+integration tests cover exact caller-owned byte equality and guards, formatted
+and raw dictionary frames with header flags, unsupported-profile rejection
+before writes, coordinator persistence and prefix consumption, and every
+observed allocation failure for allocating and caller-owned entry points with
+independent owner release. Doctests establish dictionary-view and input/output
+non-overlap; the usage guide records the supported subset and limits.
+Evidence: `evidence/2026-10-30-one-shot-encode-parameters-public-api.json`.

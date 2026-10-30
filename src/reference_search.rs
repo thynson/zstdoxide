@@ -172,6 +172,13 @@ impl ReferenceSearchPlan {
             Self::RetainedOptimal(_) | Self::RetainedUltra(_) | Self::RetainedUltra2(_)
         )
     }
+
+    /// Supported combined-staging subset: the hash-table profiles and the
+    /// complete Greedy family. Optimal-family plans reject a nonzero staged
+    /// prefix instead of silently dropping the dictionary.
+    pub(crate) fn admits_dictionary_staging(self) -> bool {
+        matches!(self, Self::Fast(_) | Self::DoubleFast(_) | Self::Greedy(_))
+    }
     pub(crate) fn validate_retained_policy(self) -> Result<()> {
         let (plan, expected) = match self {
             Self::RetainedOptimal(plan) => (plan, crate::optimal_price::PricePolicy::Optimal),
@@ -250,14 +257,7 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
             return Err(Error::InvalidParameter);
         }
         plan.validate_retained_policy()?;
-        if prefix_len > 0
-            && !matches!(
-                plan,
-                ReferenceSearchPlan::Fast(_)
-                    | ReferenceSearchPlan::DoubleFast(_)
-                    | ReferenceSearchPlan::Greedy(_)
-            )
-        {
+        if prefix_len > 0 && !plan.admits_dictionary_staging() {
             // Supported dictionary staging subset: the hash-table profiles and
             // the complete Greedy family. Every optimal-family profile (fresh
             // and retained Optimal/Ultra/Ultra2) is explicitly rejected under

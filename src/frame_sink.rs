@@ -32,6 +32,11 @@ impl<'a> FrameSink<'a> {
         self.position
     }
 
+    /// Unwritten suffix length. `position <= output.len()` is invariant.
+    pub(crate) fn remaining(&self) -> usize {
+        self.output.len() - self.position
+    }
+
     pub(crate) fn written(&self) -> &[u8] {
         &self.output[..self.position]
     }

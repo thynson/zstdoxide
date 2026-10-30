@@ -3,9 +3,12 @@
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
-use crate::reference_frame_encode::compress_reference_in;
+use crate::reference_frame_encode::{
+    compress_reference_in, compress_reference_into_in, compress_reference_with_dictionary_in,
+    compress_reference_with_dictionary_into_in,
+};
 use crate::reference_search::ReferenceSearchPlan;
-use crate::{CompressionParameterRequest, Result};
+use crate::{CompressionParameterRequest, DictionaryHandle, Result};
 
 /// Compress one known-size frame using an admitted reference level.
 ///
@@ -172,4 +175,176 @@ pub fn compress_with_parameters_in<A: Allocator + Clone>(
 ) -> Result<Vec<u8, A>> {
     let plan = ReferenceSearchPlan::new(request, input.len())?;
     compress_reference_in(input, plan, allocator)
+}
+
+/// Compress one known-size parameterized frame into caller-owned storage.
+///
+/// The frame bytes equal [`compress_with_parameters`] for the same input and
+/// request. Complete header and block appends are atomic. A source that does
+/// not fit the selected profile, an unsupported request or a checked size
+/// failure is reported before the first output byte. A destination shorter
+/// than the emitted frame returns [`crate::Error::ResourceLimit`] after any
+/// earlier whole appends; no byte outside the supplied slice is changed.
+/// Scratch uses independent clones of the supplied allocator and is released
+/// before return. Success returns the exact written length; the output borrow
+/// does not survive the call.
+///
+/// ```compile_fail
+/// let mut storage = [0_u8; 64];
+/// let request = zstdoxide::CompressionParameterRequest::with_level(1);
+/// let _ = zstdoxide::compress_into_with_parameters(&storage[..16], &mut storage, &request);
+/// ```
+pub fn compress_into_with_parameters(
+    input: &[u8],
+    output: &mut [u8],
+    request: &CompressionParameterRequest,
+) -> Result<usize> {
+    compress_into_with_parameters_in(input, output, request, Global)
+}
+
+/// Write a parameterized frame into caller-owned storage using `allocator`.
+///
+/// Admission, byte identity and output-guard behavior match
+/// [`compress_into_with_parameters`]. The caller destination is neither
+/// allocated nor freed here. All scratch owners retain fresh clones of the
+/// supplied allocator, including a borrowed non-Clone allocator, and release
+/// before return. Ordinary allocator cloning retains the caller's own
+/// allocation/panic behavior.
+pub fn compress_into_with_parameters_in<A: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    request: &CompressionParameterRequest,
+    allocator: A,
+) -> Result<usize> {
+    let plan = ReferenceSearchPlan::new(request, input.len())?;
+    compress_reference_into_in(input, output, plan, allocator)
+}
+
+/// Compress one parameterized frame with an immutable dictionary attachment.
+///
+/// Resolves `request` against the actual source length and the dictionary's
+/// matchable content length, matching the pinned CDict content-size tier, then
+/// runs the same admitted reference profile as [`compress_with_parameters`]
+/// over a per-call combined borrow: only the dictionary suffix that fits the
+/// resolved window can provide matches, so dictionary content beyond that
+/// window expires exactly as `ZSTD_checkDictValidity` requires. A formatted
+/// dictionary's validated entropy seeds the first block; its nonzero identifier
+/// is written in the frame header. Raw dictionaries supply content without
+/// prepared entropy.
+///
+/// The supported dictionary subset is the Fast, DoubleFast, Greedy, Lazy,
+/// Lazy2 and BinaryTreeLazy2 families. Optimal, Ultra and Ultra2 requests - and
+/// their retained source tiers - return [`crate::Error::UnsupportedFeature`]
+/// for nonzero dictionary content instead of silently dropping the dictionary.
+/// Profile/resource caps and source-size tiers are otherwise identical to
+/// [`compress_with_parameters`].
+///
+/// The result owns only its output allocation. It borrows neither input,
+/// request nor dictionary, and a borrowed [`crate::DictionaryView`] can be the
+/// attachment. Resolution and prepared-table errors surface before output
+/// admission; each scratch owner is released through its exact allocator.
+/// Corresponds to the supported one-shot subset of combining resolved
+/// `ZSTD_compress2` parameters with an attached CDict, without claiming native
+/// workspace reuse or complete parameter/context parity.
+///
+/// ```
+/// use zstdoxide::{
+///     CompressionParameterRequest, DecodeOptions, Dictionary,
+///     compress_with_parameters_and_dictionary, decompress_with_dictionary,
+/// };
+/// let dictionary = Dictionary::raw(b"shared reference dictionary content")?.into_shared();
+/// let input = b"shared reference dictionary content";
+/// let frame = compress_with_parameters_and_dictionary(
+///     input,
+///     &CompressionParameterRequest::with_level(4),
+///     &dictionary,
+/// )?;
+/// assert_eq!(
+///     decompress_with_dictionary(&frame, &dictionary, DecodeOptions::new(input.len()))?,
+///     input
+/// );
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+///
+/// A borrowed view cannot outlive its dictionary owner:
+///
+/// ```compile_fail
+/// use zstdoxide::{CompressionParameterRequest, Dictionary, compress_with_parameters_and_dictionary};
+/// let view = {
+///     let dictionary = Dictionary::raw(b"prefix").unwrap();
+///     dictionary.view()
+/// };
+/// let _ = compress_with_parameters_and_dictionary(
+///     b"input",
+///     &CompressionParameterRequest::with_level(1),
+///     &view,
+/// );
+/// ```
+pub fn compress_with_parameters_and_dictionary<D: DictionaryHandle>(
+    input: &[u8],
+    request: &CompressionParameterRequest,
+    dictionary: &D,
+) -> Result<Vec<u8>> {
+    compress_with_parameters_and_dictionary_in(input, request, dictionary, Global)
+}
+
+/// Allocate a parameterized dictionary frame in `A`.
+///
+/// Behavior, admission and supported strategies match
+/// [`compress_with_parameters_and_dictionary`]. The result retains the
+/// supplied allocator value; every scratch owner uses a fresh clone and is
+/// released before return. Input, request and dictionary borrows never escape.
+/// Failure releases partial output and scratch, and leaves the dictionary
+/// owner unchanged.
+pub fn compress_with_parameters_and_dictionary_in<A: Allocator + Clone, D: DictionaryHandle>(
+    input: &[u8],
+    request: &CompressionParameterRequest,
+    dictionary: &D,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    let view = dictionary.view();
+    let plan =
+        ReferenceSearchPlan::new_with_dictionary(request, input.len(), view.content().len())?;
+    compress_reference_with_dictionary_in(input, view, plan, allocator)
+}
+
+/// Compress one parameterized dictionary frame into caller-owned storage.
+///
+/// Uses the exact parameters, dictionary staging, entropy seed and frame flags
+/// of [`compress_with_parameters_and_dictionary`]. Request resolution,
+/// dictionary-profile rejection and prepared-table failures occur before the
+/// first output byte. Complete header and block appends are atomic; a short
+/// destination returns [`crate::Error::ResourceLimit`] after earlier whole
+/// appends and never changes bytes outside the supplied slice. Success returns
+/// the exact written length.
+pub fn compress_into_with_parameters_and_dictionary<D: DictionaryHandle>(
+    input: &[u8],
+    output: &mut [u8],
+    request: &CompressionParameterRequest,
+    dictionary: &D,
+) -> Result<usize> {
+    compress_into_with_parameters_and_dictionary_in(input, output, request, dictionary, Global)
+}
+
+/// Write a parameterized dictionary frame into caller storage using `A`.
+///
+/// Byte identity and output-guard behavior match
+/// [`compress_into_with_parameters_and_dictionary`]. The caller destination is
+/// never allocated or freed here. Dictionary ownership remains with the
+/// attachment, and every scratch owner receives an independent allocator clone
+/// that is released before return, including for borrowed non-Clone allocators.
+pub fn compress_into_with_parameters_and_dictionary_in<
+    A: Allocator + Clone,
+    D: DictionaryHandle,
+>(
+    input: &[u8],
+    output: &mut [u8],
+    request: &CompressionParameterRequest,
+    dictionary: &D,
+    allocator: A,
+) -> Result<usize> {
+    let view = dictionary.view();
+    let plan =
+        ReferenceSearchPlan::new_with_dictionary(request, input.len(), view.content().len())?;
+    compress_reference_with_dictionary_into_in(input, output, view, plan, allocator)
 }
