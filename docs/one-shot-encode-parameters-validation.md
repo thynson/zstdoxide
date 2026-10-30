@@ -1,12 +1,12 @@
 # Parameterized dictionary-backed one-shot compression validation
 
 Module 36 is in progress. Only the internal combined-staging engine, its
-DoubleFast extension, the Greedy chain-and-row family extension and the
+DoubleFast extension, the Greedy chain-and-row family extension, the
 BinaryTreeLazy2 tree-family extension with the explicit optimal-family
-rejection are qualified and integrated. Public parameterized dictionary APIs,
-prepared dictionary entropy reuse, native/corpus/platform validation, the
-complete feature/release regression, measurements and reconciliation remain
-open.
+rejection, and prepared formatted-dictionary entropy reuse are qualified and
+integrated. Public parameterized dictionary APIs, native/corpus/platform
+validation, the complete feature/release regression, measurements and
+reconciliation remain open.
 
 ## Internal combined staging for the Fast profile
 
@@ -107,3 +107,27 @@ level 9, and the explicit rejection of the retained Optimal/Ultra/Ultra2
 plans on capped-table requests; the fresh optimal-family rejection test keeps
 covering levels 12/14/17.
 Evidence: `evidence/2026-10-30-one-shot-encode-parameters-tree.json`.
+
+## Prepared formatted-dictionary entropy reuse
+
+A formatted dictionary's validated literal codebook, sequence tables and
+repeat triple seed the first emitted block through the existing transactional
+entropy owner, matching `ZSTD_loadCEntropy` filling `blockState.prevCBlock`
+before the first block. Covered literals may therefore use a treeless header
+and covered sequences may repeat the prepared tables; a block containing a
+symbol absent from the prepared tree still selects a fresh tree, and raw or
+empty dictionaries keep their exact existing bytes. The seed is borrowed only
+during workspace construction and copies no dictionary ownership into the
+frame.
+
+Sixteen focused commands pass: the complete library suite, true no_std
+compilation and strict Clippy under safe, the isolated huffman-codebook,
+FSE-encoder and dictionary backends the new path exercises, and all features,
+plus formatting. Every full suite reports 1124 passed
+and 25 ignored across
+1 result groups. Two new unit tests prove treeless literal and repeat
+sequence reuse across the Fast, Greedy and BinaryTreeLazy2 tiers with the
+formatted fixture, exact shrink against the same raw dictionary content, and
+that a literal block containing a symbol absent from the prepared tree never
+emits a treeless header.
+Evidence: `evidence/2026-10-30-one-shot-encode-parameters-entropy.json`.

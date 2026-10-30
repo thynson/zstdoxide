@@ -4065,7 +4065,12 @@ contiguously, the existing candidate floor realizes ZSTD_checkDictValidity
 window expiry, and combined-space positions yield decoder-correct offsets by
 construction. This replaces per-profile dictionary-aware parser forks and
 copies at most the resolved window; it is per-call scratch released before
-return, not retained workspace. Frame flags follow the existing
+return, not retained workspace. A formatted dictionary's validated entropy is
+borrowed only during workspace construction: the literal codebook is an inline
+copy and the sequence tables are rebuilt into the workspace's own allocator
+domain, together with the dictionary repeat triple. That copied seed is the
+first block's previous state, matching `ZSTD_loadCEntropy`, so no dictionary
+borrow or table ownership survives the call. Frame flags follow the existing
 parameterized-profile family (known content size, no checksum) plus the
 dictionary ID field the dictionary paths already emit; modules 33–35 keep
 their exact ordinary checksummed bytes. No options record, workspace or live

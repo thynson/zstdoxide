@@ -204,7 +204,7 @@ record, workspace or live context between calls.
 - [x] Extend combined dictionary emission to DoubleFast.
 - [x] Extend combined dictionary emission to the Greedy/Lazy/Lazy2 chain and row family.
 - [x] Extend combined dictionary emission to BinaryTreeLazy2, and extend or explicitly reject it for retained Optimal/Ultra/Ultra2 under the supported-subset clause.
-- [ ] Reuse prepared dictionary entropy for emitted blocks where the existing dictionary contract applies.
+- [x] Reuse prepared dictionary entropy for emitted blocks where the existing dictionary contract applies.
 - [ ] Expose documented parameterized dictionary and coordinator compression with exact output/lifetime guards and independent allocator failure qualification.
 - [ ] Qualify parameterized dictionary schedules, unsupported-strategy rejection and window expiry against guarded native controls and deterministic selections.
 - [ ] Qualify combined parameter and dictionary application under concrete no-atomics ARM code generation, running foreign Miri only if unsafe code is added or modified.

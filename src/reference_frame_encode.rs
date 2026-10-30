@@ -7,10 +7,11 @@ use core::alloc::Allocator;
 #[cfg(test)]
 use crate::CompressionParameterRequest;
 use crate::block_entropy::BlockEntropyEncoder;
-use crate::dictionary::DictionaryView;
+use crate::dictionary::{DictionaryEntropyView, DictionaryView};
 #[cfg(test)]
 use crate::fast_plan::FastExecutionPlan;
 use crate::frame::{BlockKind, MAX_BLOCK_SIZE};
+use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::optimal_retained::Publication;
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
@@ -99,13 +100,17 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
 /// the resolved window (`ZSTD_checkDictValidity` semantics), and combined-space
 /// positions produce decoder-correct offsets by construction. Frame flags
 /// follow the parameterized family (known size, no checksum) plus the
-/// dictionary ID field. The staging copy is released before return; no
-/// workspace survives the call. Dictionary-aware profile admission is staged:
-/// a nonzero prefix currently admits the Fast and DoubleFast profiles and the
-/// complete Greedy family (chain, row and tree), and every optimal-family
-/// profile is explicitly rejected with [`crate::Error::UnsupportedFeature`]
-/// under the supported-subset clause instead of silently dropping the
-/// dictionary.
+/// dictionary ID field. A formatted dictionary's validated entropy also seeds
+/// the frame: its literal codebook and sequence tables/repeats become the first
+/// block's previous state, exactly as `ZSTD_loadCEntropy` fills
+/// `blockState.prevCBlock` before the first block, so covered literals may be
+/// treeless and covered sequences may repeat the prepared tables. The staging
+/// copy is released before return; no workspace survives the call.
+/// Dictionary-aware profile admission is staged: a nonzero prefix currently
+/// admits the Fast and DoubleFast profiles and the complete Greedy family
+/// (chain, row and tree), and every optimal-family profile is explicitly
+/// rejected with [`crate::Error::UnsupportedFeature`] under the
+/// supported-subset clause instead of silently dropping the dictionary.
 #[cfg_attr(
     not(test),
     allow(
@@ -124,6 +129,13 @@ pub(crate) fn compress_reference_with_dictionary_in<A: Allocator + Clone>(
     }
     let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
     let header = ReferenceFrameHeader::with_dictionary_id(&settings, dictionary.id());
+    let entropy = dictionary.entropy();
+    // Prepared dictionaries allow twelve-bit codes. The codebook copies plain
+    // values, retaining no source-table borrow, and construction allocates no
+    // heap storage; an invalid prepared tree fails before output admission.
+    let literal_table = entropy
+        .map(|entropy| HuffmanCodebook::from_lengths(&entropy.huffman.code_lengths(), 12))
+        .transpose()?;
     let (_, dictionary_bytes) = crate::encode::dictionary_field(dictionary.id());
     let bound = plan
         .frame_bound()?
@@ -155,11 +167,13 @@ pub(crate) fn compress_reference_with_dictionary_in<A: Allocator + Clone>(
         .map_err(|_| Error::AllocationFailed)?;
     combined.extend_from_slice(&content[content.len() - staged..]);
     combined.extend_from_slice(input);
-    let mut workspace = ReferenceEncoderWorkspace::new_with_prefix(
+    let mut workspace = ReferenceEncoderWorkspace::new_with_prefix_and_entropy(
         &combined,
         staged,
         plan,
         output.allocator().clone(),
+        entropy,
+        literal_table,
     )?;
     while workspace.emitted < input.len() {
         let length = plan.next_block_len(workspace.emitted)?;
@@ -187,17 +201,23 @@ struct ReferenceEncoderWorkspace<'a, A: Allocator> {
 
 impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
     fn new(source: &'a [u8], plan: ReferenceSearchPlan, factory: A) -> Result<Self> {
-        Self::new_with_prefix(source, 0, plan, factory)
+        Self::new_with_prefix_and_entropy(source, 0, plan, factory, None, None)
     }
 
-    /// Bind a combined borrow whose first `prefix_len` bytes precede the frame.
-    /// `emitted` and every block schedule stay frame-relative; only the block
-    /// slices and search positions shift by the staged prefix.
-    fn new_with_prefix(
+    /// Bind a combined borrow and an optional prepared entropy seed.
+    ///
+    /// A formatted dictionary supplies the first block's previous literal tree
+    /// and the sequence tables/repeat triple, mirroring `ZSTD_loadCEntropy`.
+    /// The seed is borrowed only for setup and copies no dictionary ownership
+    /// into the workspace; `emitted` and all block schedules remain
+    /// frame-relative.
+    fn new_with_prefix_and_entropy(
         source: &'a [u8],
         prefix_len: usize,
         plan: ReferenceSearchPlan,
         factory: A,
+        dictionary_entropy: Option<DictionaryEntropyView<'_>>,
+        literal_table: Option<HuffmanCodebook>,
     ) -> Result<Self> {
         if source
             .len()
@@ -212,7 +232,7 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         let payload = Vec::new_in(factory);
         let mut entropy =
             BlockEntropyEncoder::from_parts(literal_encoder, sequence_encoder, payload);
-        entropy.start_frame(None, None)?;
+        entropy.start_frame(dictionary_entropy, literal_table)?;
         Ok(Self {
             source,
             prefix_len,
@@ -786,6 +806,172 @@ mod tests {
         // so a different content owner with the same identifier mismatch is
         // out of scope here; byte-level header checks live in frame tests.
         assert!(frame.len() > 4);
+    }
+
+    /// Borrow the first compressed block payload after its three-byte header.
+    fn first_compressed_block(frame: &[u8]) -> &[u8] {
+        let (_, used) = FrameHeader::parse(frame).unwrap();
+        let mut cursor = ByteCursor::new(&frame[used..]);
+        let header = BlockHeader::read(&mut cursor, MAX_BLOCK_SIZE).unwrap();
+        assert_eq!(header.kind, BlockKind::Compressed);
+        let start = used + cursor.position();
+        &frame[start..start + header.size]
+    }
+
+    /// Read the first literal-section kind and, for a nonempty sequence
+    /// section, its two-bit mode byte in LL/OF/ML channel order.
+    fn first_literal_kind_and_sequence_modes(payload: &[u8]) -> (u32, Option<u8>) {
+        let value = u32::from_le_bytes([payload[0], payload[1], payload[2], payload[3]]);
+        let kind = value & 3;
+        let literal_bytes = match kind {
+            0 | 1 => {
+                let header = if value & 4 == 0 {
+                    1
+                } else if value & 8 == 0 {
+                    2
+                } else {
+                    3
+                };
+                let regenerated = if header == 1 {
+                    (value >> 3) as usize
+                } else {
+                    (value >> 4) as usize
+                };
+                header + if kind == 1 { 1 } else { regenerated }
+            }
+            2 | 3 => {
+                let format = ((value >> 2) & 3) as usize;
+                let bits = [10, 14, 18][format];
+                let header = [3, 4, 5][format];
+                let compressed = ((value >> (4 + bits)) & ((1 << bits) - 1)) as usize;
+                header + compressed
+            }
+            _ => unreachable!(),
+        };
+        let count = payload[literal_bytes];
+        let count_bytes = match count {
+            0..=127 => 1,
+            128..=254 => 2,
+            _ => 3,
+        };
+        let modes = payload[literal_bytes + count_bytes];
+        (kind, (count != 0).then_some(modes))
+    }
+
+    fn mode_repeats(mode: u8) -> bool {
+        mode == 3
+    }
+
+    #[test]
+    fn formatted_dictionary_entropy_seeds_the_first_block_across_profiles() {
+        const PREPARED: &[u8] = include_bytes!("../tests/upstream/dictionaries/formatted.dict");
+        const INPUT: &[u8] =
+            include_bytes!("../tests/upstream/dictionaries/dictionary-treeless-literals.expected");
+        let dictionary = crate::Dictionary::from_bytes(PREPARED).unwrap();
+        let view = dictionary.view();
+        let raw = crate::Dictionary::raw(view.content()).unwrap();
+        // Levels 1, 4 and 9 select Fast, Greedy and BinaryTreeLazy2 on this
+        // tier, so the exact prepared entropy seed reaches all admitted
+        // combined-staging families.
+        for level in [1, 4, 9] {
+            let request = CompressionParameterRequest::with_level(level);
+            let plan =
+                ReferenceSearchPlan::new_with_dictionary(&request, INPUT.len(), PREPARED.len())
+                    .unwrap();
+            let frame = compress_reference_with_dictionary_in(INPUT, view, plan, Global).unwrap();
+            let payload = first_compressed_block(&frame);
+            let (literal_kind, modes) = first_literal_kind_and_sequence_modes(payload);
+            // Only a seeded previous tree can produce a treeless header (3) in
+            // the first block; a fresh frame requires kind 2 or raw literals.
+            assert_eq!(literal_kind, 3, "level {level}");
+            let modes = modes.expect("first block carries sequences");
+            assert!(
+                mode_repeats((modes >> 6) & 3)
+                    || mode_repeats((modes >> 4) & 3)
+                    || mode_repeats((modes >> 2) & 3),
+                "level {level}: modes {modes:02x}"
+            );
+            assert_eq!(
+                crate::decompress_with_dictionary_in(
+                    &frame,
+                    &view,
+                    crate::DecodeOptions::new(INPUT.len()),
+                    Global,
+                )
+                .unwrap(),
+                INPUT
+            );
+            assert_eq!(
+                compress_reference_with_dictionary_in(INPUT, view, plan, Global).unwrap(),
+                frame
+            );
+            // The same content as a raw dictionary owns no prepared entropy:
+            // no treeless literals, no repeat modes, and a larger frame.
+            let raw_plan =
+                ReferenceSearchPlan::new_with_dictionary(&request, INPUT.len(), PREPARED.len())
+                    .unwrap();
+            let raw_frame =
+                compress_reference_with_dictionary_in(INPUT, raw.view(), raw_plan, Global).unwrap();
+            let raw_payload = first_compressed_block(&raw_frame);
+            let (raw_kind, raw_modes) = first_literal_kind_and_sequence_modes(raw_payload);
+            assert_ne!(raw_kind, 3, "level {level}");
+            let raw_modes = raw_modes.expect("first block carries sequences");
+            assert!(
+                !mode_repeats((raw_modes >> 6) & 3)
+                    && !mode_repeats((raw_modes >> 4) & 3)
+                    && !mode_repeats((raw_modes >> 2) & 3),
+                "level {level}: modes {raw_modes:02x}"
+            );
+            assert!(frame.len() < raw_frame.len(), "level {level}");
+            assert_eq!(
+                crate::decompress_with_dictionary_in(
+                    &raw_frame,
+                    &raw.view(),
+                    crate::DecodeOptions::new(INPUT.len()),
+                    Global,
+                )
+                .unwrap(),
+                INPUT
+            );
+        }
+    }
+
+    #[test]
+    fn prepared_entropy_never_forces_uncovered_treeless_literals() {
+        // This prepared Huffman tree lacks fourteen symbols; a literal block
+        // containing one must build a new tree instead of repeating the
+        // dictionary's incomplete table.
+        const PREPARED: &[u8] =
+            include_bytes!("../tests/upstream/data/golden-dictionaries/http-dict-missing-symbols");
+        const TEXT: &[u8] =
+            include_bytes!("../tests/upstream/dictionaries/dictionary-treeless-literals.expected");
+        let dictionary = crate::Dictionary::from_bytes(PREPARED).unwrap();
+        let view = dictionary.view();
+        assert_eq!(view.entropy().unwrap().huffman.code_lengths()[0xc0], 0);
+        let mut input = [TEXT; 4].concat();
+        for byte in input.iter_mut().step_by(37) {
+            *byte = 0xc0;
+        }
+        for level in [1, 4] {
+            let request = CompressionParameterRequest::with_level(level);
+            let plan =
+                ReferenceSearchPlan::new_with_dictionary(&request, input.len(), PREPARED.len())
+                    .unwrap();
+            let frame = compress_reference_with_dictionary_in(&input, view, plan, Global).unwrap();
+            let payload = first_compressed_block(&frame);
+            let (literal_kind, _) = first_literal_kind_and_sequence_modes(payload);
+            assert_ne!(literal_kind, 3, "level {level}");
+            assert_eq!(
+                crate::decompress_with_dictionary_in(
+                    &frame,
+                    &view,
+                    crate::DecodeOptions::new(input.len()),
+                    Global,
+                )
+                .unwrap(),
+                input
+            );
+        }
     }
 
     fn kinds(frame: &[u8]) -> Vec<(BlockKind, usize)> {
