@@ -207,7 +207,7 @@ record, workspace or live context between calls.
 - [x] Reuse prepared dictionary entropy for emitted blocks where the existing dictionary contract applies.
 - [x] Expose documented parameterized dictionary and coordinator compression with exact output/lifetime guards and independent allocator failure qualification.
 - [x] Qualify parameterized dictionary schedules, unsupported-strategy rejection and window expiry against guarded native controls and deterministic selections.
-- [ ] Qualify combined parameter and dictionary application under concrete no-atomics ARM code generation, running foreign Miri only if unsafe code is added or modified.
+- [x] Qualify combined parameter and dictionary application under concrete no-atomics ARM code generation, running foreign Miri only if unsafe code is added or modified.
 - [ ] Qualify safe, every isolated feature and all features, full/release regression, no_std and strict Clippy.
 - [ ] Compare identical parameterized stateless/coordinator workloads with explicit setup, allocation domains and independent repeats after CPU barriers.
 - [ ] Reconcile bounded parameterized-dictionary coverage and decompose the next evidenced contract without claiming native workspace, LDM or complete upstream parity.

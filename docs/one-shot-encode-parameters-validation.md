@@ -5,8 +5,8 @@ extension, the Greedy chain-and-row family extension, the BinaryTreeLazy2
 tree-family extension with the explicit optimal-family rejection, prepared
 formatted-dictionary entropy reuse, and the public allocating, caller-owned and
 coordinator parameterized dictionary calls are qualified and integrated.
-Corpus/platform validation, the complete feature/release regression,
-measurements and reconciliation remain open.
+Corpus validation, the complete feature/release regression, measurements and
+reconciliation remain open.
 
 ## Internal combined staging for the Fast profile
 
@@ -179,3 +179,18 @@ covered by the focused unit campaign rather than a native byte-equality claim.
 Ten commands pass: Rust input export, normal and sanitized oracle builds and
 captures, safe and all-feature replays and strict Clippy, and formatting.
 Evidence: `evidence/2026-10-30-one-shot-encode-parameters-native.json`.
+
+## Concrete no-atomics ARM emission
+
+The parameterized dictionary allocating, caller-owned and coordinator paths run
+on the host under safe and all features with exact guards and prefix
+consumption. Concrete `thumbv6m-none-eabi` library checks and release LLVM IR /
+object emission pass for both safe and every opt-in storage backend together;
+the retained artifacts include the emitted modules. Foreign Miri was not run
+because this module added and modified no unsafe code, per the standing
+direction. Native byte identity and complete foreign-platform behavior are not
+claimed.
+
+Nine focused commands pass: two host test suites, two strict Clippy checks,
+two concrete atomic-free checks, two IR/object emissions and formatting.
+Evidence: `evidence/2026-10-30-one-shot-encode-parameters-platform.json`.
