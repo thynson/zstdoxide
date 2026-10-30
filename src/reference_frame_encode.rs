@@ -102,8 +102,9 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
 /// dictionary ID field. The staging copy is released before return; no
 /// workspace survives the call. Dictionary-aware profile admission is staged:
 /// a nonzero prefix currently admits the Fast and DoubleFast profiles and the
-/// Greedy/Lazy/Lazy2 chain and row families, and every other profile returns
-/// [`crate::Error::UnsupportedFeature`] instead of silently dropping the
+/// complete Greedy family (chain, row and tree), and every optimal-family
+/// profile is explicitly rejected with [`crate::Error::UnsupportedFeature`]
+/// under the supported-subset clause instead of silently dropping the
 /// dictionary.
 #[cfg_attr(
     not(test),
@@ -574,9 +575,10 @@ mod tests {
     fn combined_staging_rejects_unstaged_profiles_without_dropping_dictionaries() {
         let input = noise(0x0f0f_0f0f, 600);
         let dictionary = crate::Dictionary::raw(&combined_pattern(512)).unwrap();
-        // Level 11 selects the tree family, 12/14/17 the optimal/ultra/ultra2
-        // families; none of these stages a dictionary yet.
-        for level in [11, 12, 14, 17] {
+        // Levels 12/14/17 select the optimal/ultra/ultra2 families; the
+        // supported-subset clause rejects their dictionary staging
+        // explicitly instead of dropping the dictionary.
+        for level in [12, 14, 17] {
             let request = CompressionParameterRequest::with_level(level);
             let plan =
                 ReferenceSearchPlan::new_with_dictionary(&request, input.len(), 512).unwrap();
@@ -586,6 +588,42 @@ mod tests {
                 result.unwrap_err(),
                 crate::Error::UnsupportedFeature,
                 "level {level}"
+            );
+        }
+    }
+
+    #[test]
+    fn combined_staging_rejects_retained_optimal_families_under_supported_subset() {
+        // Inputs past the retained threshold select the retained
+        // Optimal/Ultra/Ultra2 plans; the supported-subset clause rejects
+        // their dictionary staging exactly like the fresh variants. The
+        // rejection precedes any parsing, so oversized inputs stay cheap.
+        let input = noise(0x1e1e_1e1e, 20_000);
+        let dictionary = crate::Dictionary::raw(&combined_pattern(512)).unwrap();
+        // The retained plans admit only capped tables, so the requests pin
+        // the same logs the retained optimal tests use; the source size
+        // selects the retained variants of all three strategies.
+        for strategy in [
+            ReferenceStrategy::Optimal,
+            ReferenceStrategy::Ultra,
+            ReferenceStrategy::Ultra2,
+        ] {
+            let mut request = CompressionParameterRequest::with_level(11);
+            request.set_strategy(Some(strategy));
+            request.set_window_log(16).unwrap();
+            request.set_hash_log(12).unwrap();
+            request.set_chain_log(12).unwrap();
+            request.set_search_log(6).unwrap();
+            request.set_min_match(3).unwrap();
+            request.set_target_length(1).unwrap();
+            let plan =
+                ReferenceSearchPlan::new_with_dictionary(&request, input.len(), 512).unwrap();
+            let result =
+                compress_reference_with_dictionary_in(&input, dictionary.view(), plan, Global);
+            assert_eq!(
+                result.unwrap_err(),
+                crate::Error::UnsupportedFeature,
+                "strategy {strategy:?}"
             );
         }
     }
@@ -656,6 +694,39 @@ mod tests {
             assert_eq!(decoded, input);
             assert_eq!(crate::decompress(&plain, input.len()).unwrap(), input);
         }
+    }
+
+    #[test]
+    fn combined_tree_family_dictionary_roundtrip_reaches_and_shrinks() {
+        // Level 9 selects BinaryTreeLazy2. The tree needs no seeding: its
+        // first query back-fills the staged region through the
+        // unsorted-insert frontier, and deterministic noise content cannot
+        // match itself, so every improvement must come from that region.
+        let pattern = noise(0x7ee_5eed, 1024);
+        let input = [
+            noise(0x0bad_c0de, 256),
+            pattern.clone(),
+            noise(0x600d_f00d, 256),
+        ]
+        .concat();
+        let dictionary = crate::Dictionary::raw(&pattern).unwrap();
+        let view = dictionary.view();
+        let request = CompressionParameterRequest::with_level(9);
+        let plan =
+            ReferenceSearchPlan::new_with_dictionary(&request, input.len(), pattern.len()).unwrap();
+        let frame = compress_reference_with_dictionary_in(&input, view, plan, Global).unwrap();
+        let plain = crate::compress_with_parameters(&input, &request).unwrap();
+        assert_ne!(frame, plain);
+        assert!(frame.len() < plain.len());
+        let decoded = crate::decompress_with_dictionary_in(
+            &frame,
+            &view,
+            crate::DecodeOptions::new(input.len()),
+            Global,
+        )
+        .unwrap();
+        assert_eq!(decoded, input);
+        assert_eq!(crate::decompress(&plain, input.len()).unwrap(), input);
     }
 
     #[test]

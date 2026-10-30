@@ -1,10 +1,12 @@
 # Parameterized dictionary-backed one-shot compression validation
 
 Module 36 is in progress. Only the internal combined-staging engine, its
-DoubleFast extension and the Greedy chain-and-row family extension are
-qualified and integrated. Public parameterized dictionary APIs, the remaining
-profile families, native/corpus/platform validation, the complete
-feature/release regression, measurements and reconciliation remain open.
+DoubleFast extension, the Greedy chain-and-row family extension and the
+BinaryTreeLazy2 tree-family extension with the explicit optimal-family
+rejection are qualified and integrated. Public parameterized dictionary APIs,
+prepared dictionary entropy reuse, native/corpus/platform validation, the
+complete feature/release regression, measurements and reconciliation remain
+open.
 
 ## Internal combined staging for the Fast profile
 
@@ -81,3 +83,27 @@ dictionary-free emission and roundtrip decoding with deterministic noise; the
 unsupported-profile rejection test moved to the tree and optimal-family
 levels.
 Evidence: `evidence/2026-10-30-one-shot-encode-parameters-family.json`.
+
+## Combined staging extension to BinaryTreeLazy2 and explicit optimal rejection
+
+The tree family needs no seeding pass: `GreedyMatchState::
+from_parts_with_prefix` keeps its sampling frontier at the combined-buffer
+start, so the first tree query back-fills the whole staged region through the
+unsorted-insert frontier exactly as the plain path back-fills its bounded gap.
+A nonzero prefix now admits the complete Greedy family (chain, row and tree)
+beside Fast and DoubleFast. Under the design's supported-subset clause every
+optimal-family profile - fresh and retained Optimal, Ultra and Ultra2 - is
+explicitly rejected with `UnsupportedFeature` instead of silently dropping the
+dictionary.
+
+Thirteen focused commands pass: the complete library suite, true no_std
+compilation and strict Clippy under safe, the isolated match-table and
+dictionary backends the combined path exercises, and all features, plus
+formatting. Every full suite reports 1122 passed
+and 25 ignored across
+1 result groups. Two new unit tests cover tree-family dictionary reach,
+output shrink against the dictionary-free emission and roundtrip decoding at
+level 9, and the explicit rejection of the retained Optimal/Ultra/Ultra2
+plans on capped-table requests; the fresh optimal-family rejection test keeps
+covering levels 12/14/17.
+Evidence: `evidence/2026-10-30-one-shot-encode-parameters-tree.json`.

@@ -9,7 +9,7 @@ use crate::double_fast_state::DoubleFastMatchState;
 use crate::double_fast_tables::DoubleFastTables;
 use crate::fast_plan::FastExecutionPlan;
 use crate::fast_state::FastMatchState;
-use crate::greedy_plan::{GreedyExecutionPlan, GreedyTablePlan};
+use crate::greedy_plan::GreedyExecutionPlan;
 use crate::greedy_state::{GreedyMatchState, GreedyTables};
 use crate::matchfinder::MatchTable;
 use crate::optimal_frequencies::OptimalFrequencies;
@@ -250,20 +250,20 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
             return Err(Error::InvalidParameter);
         }
         plan.validate_retained_policy()?;
-        if prefix_len > 0 {
-            // The tree family of the Greedy plan (BinaryTreeLazy2) keeps
-            // rejecting combined staging until its own stage; the chain and
-            // row families are seeded like the hash-table profiles.
-            let staged = match plan {
-                ReferenceSearchPlan::Fast(_) | ReferenceSearchPlan::DoubleFast(_) => true,
-                ReferenceSearchPlan::Greedy(plan) => {
-                    !matches!(plan.tables(), GreedyTablePlan::Tree { .. })
-                }
-                _ => false,
-            };
-            if !staged {
-                return Err(Error::UnsupportedFeature);
-            }
+        if prefix_len > 0
+            && !matches!(
+                plan,
+                ReferenceSearchPlan::Fast(_)
+                    | ReferenceSearchPlan::DoubleFast(_)
+                    | ReferenceSearchPlan::Greedy(_)
+            )
+        {
+            // Supported dictionary staging subset: the hash-table profiles and
+            // the complete Greedy family. Every optimal-family profile (fresh
+            // and retained Optimal/Ultra/Ultra2) is explicitly rejected under
+            // the design's supported-subset clause instead of silently
+            // dropping the dictionary.
+            return Err(Error::UnsupportedFeature);
         }
         let ultra = matches!(plan, ReferenceSearchPlan::Ultra(_));
         let retained_ultra = matches!(plan, ReferenceSearchPlan::RetainedUltra(_));

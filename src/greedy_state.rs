@@ -57,15 +57,24 @@ impl<A: Allocator> GreedyTables<A> {
     /// positions itself. Only called with a staged prefix: the plain
     /// zero-prefix path never seeds and keeps every family's fresh behavior.
     /// Ascending insertion satisfies both owners' newest-first contracts, and
-    /// the parser's window floor still bounds every candidate it accepts. The
-    /// tree family takes its own later stage and rejects combined staging
-    /// here. This is the shared combined dictionary staging contract of the
-    /// Fast and DoubleFast profiles.
-    pub(crate) fn seed_prefix(&mut self, source: &[u8], prefix_len: usize) -> Result<()> {
+    /// the parser's window floor still bounds every candidate it accepts.
+    /// Returns the parse sampling frontier: the prefix boundary for the
+    /// seeded chain and row owners, or the combined-buffer start for the tree
+    /// family, which needs no seeding because its first query back-fills the
+    /// whole staged region through the unsorted-insert frontier. This is the
+    /// shared combined dictionary staging contract of the Fast and DoubleFast
+    /// profiles.
+    pub(crate) fn seed_prefix(&mut self, source: &[u8], prefix_len: usize) -> Result<usize> {
         match self {
-            Self::Tree(_) => Err(Error::UnsupportedFeature),
-            Self::Chain(table) => seed_chain(table, source, prefix_len),
-            Self::Row(table) => seed_row(table, source, prefix_len),
+            Self::Tree(_) => Ok(0),
+            Self::Chain(table) => {
+                seed_chain(table, source, prefix_len)?;
+                Ok(prefix_len)
+            }
+            Self::Row(table) => {
+                seed_row(table, source, prefix_len)?;
+                Ok(prefix_len)
+            }
         }
     }
     #[cfg(test)]
@@ -157,10 +166,10 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
 
     /// Bind owners to a combined borrow whose first `prefix_len` bytes precede
     /// the frame. Every staged key position is seeded into the selected chain
-    /// or row owner, parsing starts at the prefix boundary with its sampling
-    /// frontier there (upstream sets `nextToUpdate` to the loaded dictionary
-    /// end), and the existing window floor bounds every emitted offset. The
-    /// tree family rejects combined staging until its own stage.
+    /// or row owner (the tree family instead back-fills through its
+    /// unsorted-insert frontier), parsing starts at the prefix boundary with
+    /// its sampling frontier at the owner-appropriate point, and the existing
+    /// window floor bounds every emitted offset.
     pub(crate) fn from_parts_with_prefix(
         source: &'a [u8],
         plan: GreedyExecutionPlan,
@@ -178,9 +187,11 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
             return Err(Error::InvalidParameter);
         }
         tables.reset();
-        if prefix_len > 0 {
-            tables.seed_prefix(source, prefix_len)?;
-        }
+        let next = if prefix_len > 0 {
+            tables.seed_prefix(source, prefix_len)?
+        } else {
+            0
+        };
         literals.clear();
         sequences.clear();
         Ok(Self {
@@ -192,7 +203,7 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
             position: prefix_len,
             prefix_floor: 0,
             progress: GreedyProgress {
-                next: prefix_len,
+                next,
                 salt_entropy: 0,
                 skipping: false,
             },
