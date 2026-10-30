@@ -5,7 +5,7 @@ extension, the Greedy chain-and-row family extension, the BinaryTreeLazy2
 tree-family extension with the explicit optimal-family rejection, prepared
 formatted-dictionary entropy reuse, and the public allocating, caller-owned and
 coordinator parameterized dictionary calls are qualified and integrated.
-Native/corpus/platform validation, the complete feature/release regression,
+Corpus/platform validation, the complete feature/release regression,
 measurements and reconciliation remain open.
 
 ## Internal combined staging for the Fast profile
@@ -160,3 +160,22 @@ observed allocation failure for allocating and caller-owned entry points with
 independent owner release. Doctests establish dictionary-view and input/output
 non-overlap; the usage guide records the supported subset and limits.
 Evidence: `evidence/2026-10-30-one-shot-encode-parameters-public-api.json`.
+
+## Guarded native parameterized schedules
+
+Twenty typed parameterized dictionary cases run against normal and sanitized
+builds of the pinned v1.5.7 library: Fast, DoubleFast, Greedy, Lazy, Lazy2 and
+BinaryTreeLazy2 with raw and prepared attachments, empty input, prepared
+entropy, window-bounded inputs, multiblock sources, and five fresh/retained
+Optimal/Ultra/Ultra2 profiles that Rust rejects before writing. Every native row
+uses independent 16-byte destination guards; both builds produce the same
+twenty rows and twenty native frames. Rust frames decode natively and native
+frames decode in Rust for every case, and each observable dictionary control
+differs from its fresh no-dictionary control. Native compressed-byte,
+capacity-precedence and workspace identity are not Rust contracts; the
+window-bounded cases establish interoperation and Rust-side suffix expiry is
+covered by the focused unit campaign rather than a native byte-equality claim.
+
+Ten commands pass: Rust input export, normal and sanitized oracle builds and
+captures, safe and all-feature replays and strict Clippy, and formatting.
+Evidence: `evidence/2026-10-30-one-shot-encode-parameters-native.json`.
