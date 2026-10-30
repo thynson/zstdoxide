@@ -49,7 +49,6 @@ impl GreedyKeyLayout {
     pub(crate) const fn hash_log(self) -> u8 {
         self.hash_log
     }
-    #[cfg(test)]
     pub(crate) const fn key_bytes(self) -> u8 {
         self.width
     }

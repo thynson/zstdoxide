@@ -1,10 +1,10 @@
 # Parameterized dictionary-backed one-shot compression validation
 
-Module 36 is in progress. Only the internal combined-staging engine and its
-DoubleFast extension are qualified and integrated. Public parameterized
-dictionary APIs, the remaining profile families, native/corpus/platform
-validation, the complete feature/release regression, measurements and
-reconciliation remain open.
+Module 36 is in progress. Only the internal combined-staging engine, its
+DoubleFast extension and the Greedy chain-and-row family extension are
+qualified and integrated. Public parameterized dictionary APIs, the remaining
+profile families, native/corpus/platform validation, the complete
+feature/release regression, measurements and reconciliation remain open.
 
 ## Internal combined staging for the Fast profile
 
@@ -55,3 +55,29 @@ output shrink against the dictionary-free emission and roundtrip decoding with
 deterministic noise through level 0; the unsupported-profile rejection test
 moved to levels that still reject.
 Evidence: `evidence/2026-10-30-one-shot-encode-parameters-double-fast.json`.
+
+## Combined staging extension to the Greedy chain and row families
+
+`GreedyTables::seed_prefix` seeds every staged key position into the selected
+chain or row owner - the chain through one insert per position, mirroring
+upstream dictionary loading, the row under the same fresh salt the parser
+searches with so seeded tags match every later lookup - and
+`GreedyMatchState::from_parts_with_prefix` binds the prefix-relative geometry:
+parsing starts at the prefix boundary with its sampling frontier there
+(upstream sets `nextToUpdate` to the loaded dictionary end), and the existing
+window floor bounds every emitted offset. A nonzero prefix now admits the
+Greedy, Lazy and Lazy2 chain and row families beside Fast and DoubleFast; the
+tree family (BinaryTreeLazy2) and every optimal-family profile still reject
+combined staging with `UnsupportedFeature` until their own stages.
+
+Thirteen focused commands pass: the complete library suite, true no_std
+compilation and strict Clippy under safe, the isolated match-table and
+dictionary backends the combined path exercises, and all features, plus
+formatting. Every full suite reports 1120 passed
+and 25 ignored across
+1 result groups. Two new unit tests prove chain-family
+(Greedy/Lazy/Lazy2) and row-family dictionary reach, output shrink against the
+dictionary-free emission and roundtrip decoding with deterministic noise; the
+unsupported-profile rejection test moved to the tree and optimal-family
+levels.
+Evidence: `evidence/2026-10-30-one-shot-encode-parameters-family.json`.

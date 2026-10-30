@@ -202,7 +202,7 @@ record, workspace or live context between calls.
 - [x] Implement dictionary-aware plan resolution, in-window combined staging and dictionary-ID frame headers for the parameterized emission path.
 - [x] Implement combined dictionary emission for the Fast profile with window-bounded cross-boundary matches.
 - [x] Extend combined dictionary emission to DoubleFast.
-- [ ] Extend combined dictionary emission to the Greedy/Lazy/Lazy2 chain and row family.
+- [x] Extend combined dictionary emission to the Greedy/Lazy/Lazy2 chain and row family.
 - [ ] Extend combined dictionary emission to BinaryTreeLazy2, and extend or explicitly reject it for retained Optimal/Ultra/Ultra2 under the supported-subset clause.
 - [ ] Reuse prepared dictionary entropy for emitted blocks where the existing dictionary contract applies.
 - [ ] Expose documented parameterized dictionary and coordinator compression with exact output/lifetime guards and independent allocator failure qualification.

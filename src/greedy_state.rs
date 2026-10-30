@@ -51,6 +51,23 @@ impl<A: Allocator> GreedyTables<A> {
             Self::Row(table) => table.reset(),
         }
     }
+
+    /// Seed every staged key position of a combined borrow so candidates can
+    /// point into the dictionary region; parsing never inserts those
+    /// positions itself. Only called with a staged prefix: the plain
+    /// zero-prefix path never seeds and keeps every family's fresh behavior.
+    /// Ascending insertion satisfies both owners' newest-first contracts, and
+    /// the parser's window floor still bounds every candidate it accepts. The
+    /// tree family takes its own later stage and rejects combined staging
+    /// here. This is the shared combined dictionary staging contract of the
+    /// Fast and DoubleFast profiles.
+    pub(crate) fn seed_prefix(&mut self, source: &[u8], prefix_len: usize) -> Result<()> {
+        match self {
+            Self::Tree(_) => Err(Error::UnsupportedFeature),
+            Self::Chain(table) => seed_chain(table, source, prefix_len),
+            Self::Row(table) => seed_row(table, source, prefix_len),
+        }
+    }
     #[cfg(test)]
     pub(crate) fn retained_capacity(&self) -> usize {
         match self {
@@ -59,6 +76,48 @@ impl<A: Allocator> GreedyTables<A> {
             Self::Row(table) => table.retained_capacity(),
         }
     }
+}
+
+/// Seed the chain owner with every staged key position of the combined
+/// borrow, mirroring upstream dictionary loading through one insert per
+/// position. Later positions win each bucket; the parser's window floor
+/// bounds what it accepts from these candidates.
+fn seed_chain<A: Allocator>(
+    table: &mut ReferenceChain<A, A>,
+    source: &[u8],
+    prefix_len: usize,
+) -> Result<()> {
+    let layout = table.key_layout();
+    if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
+        for position in 0..=last {
+            let key = layout
+                .read_key(&source[position..])
+                .ok_or(Error::InvalidState)?;
+            table.insert(key, position)?;
+        }
+    }
+    Ok(())
+}
+
+/// Seed the row owner with every staged key position under the same fresh
+/// salt the parser searches with, so seeded tags match every later lookup.
+/// Ascending insertion satisfies each row's newest-first cycle, mirroring
+/// upstream row dictionary loading.
+fn seed_row<A: Allocator>(table: &mut RowTable<A>, source: &[u8], prefix_len: usize) -> Result<()> {
+    let layout = table.layout();
+    let key_layout = layout.key_layout();
+    if let Some(last) = prefix_len.checked_sub(usize::from(key_layout.key_bytes())) {
+        for position in 0..=last {
+            let key = key_layout
+                .read_key(&source[position..])
+                .ok_or(Error::InvalidState)?;
+            table.insert(
+                layout.key(key, crate::greedy_key::FRESH_ROW_SALT)?,
+                position,
+            )?;
+        }
+    }
+    Ok(())
 }
 
 /// Sampling persists independently of candidate entropy/repeat publication.
@@ -80,19 +139,48 @@ pub(crate) struct GreedyMatchState<'a, A: Allocator> {
 }
 
 impl<'a, A: Allocator> GreedyMatchState<'a, A> {
-    /// Bind supplied owners to a source without allocation or allocator cloning.
-    /// Reject mismatched geometry before resetting any logical owner contents.
+    /// Bind complete owners to one source, invalidating earlier sampled indices.
+    /// Does not clone an allocator, allocate, or borrow temporary source storage.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "zero-prefix convenience constructor for tests")
+    )]
     pub(crate) fn from_parts(
+        source: &'a [u8],
+        plan: GreedyExecutionPlan,
+        tables: GreedyTables<A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        Self::from_parts_with_prefix(source, plan, tables, literals, sequences, 0)
+    }
+
+    /// Bind owners to a combined borrow whose first `prefix_len` bytes precede
+    /// the frame. Every staged key position is seeded into the selected chain
+    /// or row owner, parsing starts at the prefix boundary with its sampling
+    /// frontier there (upstream sets `nextToUpdate` to the loaded dictionary
+    /// end), and the existing window floor bounds every emitted offset. The
+    /// tree family rejects combined staging until its own stage.
+    pub(crate) fn from_parts_with_prefix(
         source: &'a [u8],
         plan: GreedyExecutionPlan,
         mut tables: GreedyTables<A>,
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
+        prefix_len: usize,
     ) -> Result<Self> {
-        if source.len() != plan.source_len() || !tables.matches(plan.tables()) {
+        if source
+            .len()
+            .checked_sub(prefix_len)
+            .is_none_or(|frame_len| frame_len != plan.source_len())
+            || !tables.matches(plan.tables())
+        {
             return Err(Error::InvalidParameter);
         }
         tables.reset();
+        if prefix_len > 0 {
+            tables.seed_prefix(source, prefix_len)?;
+        }
         literals.clear();
         sequences.clear();
         Ok(Self {
@@ -101,10 +189,10 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
             tables,
             literals,
             sequences,
-            position: 0,
+            position: prefix_len,
             prefix_floor: 0,
             progress: GreedyProgress {
-                next: 0,
+                next: prefix_len,
                 salt_entropy: 0,
                 skipping: false,
             },

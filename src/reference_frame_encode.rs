@@ -101,9 +101,10 @@ pub(crate) fn compress_reference_in<A: Allocator + Clone>(
 /// follow the parameterized family (known size, no checksum) plus the
 /// dictionary ID field. The staging copy is released before return; no
 /// workspace survives the call. Dictionary-aware profile admission is staged:
-/// a nonzero prefix currently admits the Fast and DoubleFast profiles, and
-/// every other profile returns [`crate::Error::UnsupportedFeature`] instead of
-/// silently dropping the dictionary.
+/// a nonzero prefix currently admits the Fast and DoubleFast profiles and the
+/// Greedy/Lazy/Lazy2 chain and row families, and every other profile returns
+/// [`crate::Error::UnsupportedFeature`] instead of silently dropping the
+/// dictionary.
 #[cfg_attr(
     not(test),
     allow(
@@ -573,7 +574,9 @@ mod tests {
     fn combined_staging_rejects_unstaged_profiles_without_dropping_dictionaries() {
         let input = noise(0x0f0f_0f0f, 600);
         let dictionary = crate::Dictionary::raw(&combined_pattern(512)).unwrap();
-        for level in [5, 9, 11] {
+        // Level 11 selects the tree family, 12/14/17 the optimal/ultra/ultra2
+        // families; none of these stages a dictionary yet.
+        for level in [11, 12, 14, 17] {
             let request = CompressionParameterRequest::with_level(level);
             let plan =
                 ReferenceSearchPlan::new_with_dictionary(&request, input.len(), 512).unwrap();
@@ -602,6 +605,74 @@ mod tests {
         let dictionary = crate::Dictionary::raw(&pattern).unwrap();
         let view = dictionary.view();
         let request = CompressionParameterRequest::with_level(0);
+        let plan =
+            ReferenceSearchPlan::new_with_dictionary(&request, input.len(), pattern.len()).unwrap();
+        let frame = compress_reference_with_dictionary_in(&input, view, plan, Global).unwrap();
+        let plain = crate::compress_with_parameters(&input, &request).unwrap();
+        assert_ne!(frame, plain);
+        assert!(frame.len() < plain.len());
+        let decoded = crate::decompress_with_dictionary_in(
+            &frame,
+            &view,
+            crate::DecodeOptions::new(input.len()),
+            Global,
+        )
+        .unwrap();
+        assert_eq!(decoded, input);
+        assert_eq!(crate::decompress(&plain, input.len()).unwrap(), input);
+    }
+
+    #[test]
+    fn combined_greedy_chain_family_dictionary_roundtrip_reaches_and_shrinks() {
+        // Levels 4, 5 and 6 select the Greedy, Lazy and Lazy2 strategies on
+        // this tier, all under the chain family. Deterministic noise content
+        // cannot match itself, so every improvement must come from the staged
+        // dictionary region through the seeded chain.
+        let pattern = noise(0x5eed_1eaf, 1024);
+        let input = [
+            noise(0x2468_ace0, 256),
+            pattern.clone(),
+            noise(0x1357_9bdf, 256),
+        ]
+        .concat();
+        let dictionary = crate::Dictionary::raw(&pattern).unwrap();
+        let view = dictionary.view();
+        for level in [4, 5, 6] {
+            let request = CompressionParameterRequest::with_level(level);
+            let plan =
+                ReferenceSearchPlan::new_with_dictionary(&request, input.len(), pattern.len())
+                    .unwrap();
+            let frame = compress_reference_with_dictionary_in(&input, view, plan, Global).unwrap();
+            let plain = crate::compress_with_parameters(&input, &request).unwrap();
+            assert_ne!(frame, plain);
+            assert!(frame.len() < plain.len());
+            let decoded = crate::decompress_with_dictionary_in(
+                &frame,
+                &view,
+                crate::DecodeOptions::new(input.len()),
+                Global,
+            )
+            .unwrap();
+            assert_eq!(decoded, input);
+            assert_eq!(crate::decompress(&plain, input.len()).unwrap(), input);
+        }
+    }
+
+    #[test]
+    fn combined_lazy_row_family_dictionary_roundtrip_reaches_and_shrinks() {
+        // A window override past the chain cutoff selects the row family;
+        // seeded rows under the fresh salt must offer the same reach.
+        let pattern = noise(0xd15e_a5e5, 1024);
+        let input = [
+            noise(0x0fed_cba9, 256),
+            pattern.clone(),
+            noise(0x8642_0000, 256),
+        ]
+        .concat();
+        let dictionary = crate::Dictionary::raw(&pattern).unwrap();
+        let view = dictionary.view();
+        let mut request = CompressionParameterRequest::with_level(5);
+        request.set_window_log(15).unwrap();
         let plan =
             ReferenceSearchPlan::new_with_dictionary(&request, input.len(), pattern.len()).unwrap();
         let frame = compress_reference_with_dictionary_in(&input, view, plan, Global).unwrap();
