@@ -1,9 +1,10 @@
 # Parameterized dictionary-backed one-shot compression validation
 
-Module 36 is in progress. Only the internal combined-staging engine is
-qualified and integrated. Public parameterized dictionary APIs, the remaining
-profile families, native/corpus/platform validation, the complete
-feature/release regression, measurements and reconciliation remain open.
+Module 36 is in progress. Only the internal combined-staging engine and its
+DoubleFast extension are qualified and integrated. Public parameterized
+dictionary APIs, the remaining profile families, native/corpus/platform
+validation, the complete feature/release regression, measurements and
+reconciliation remain open.
 
 ## Internal combined staging for the Fast profile
 
@@ -30,3 +31,27 @@ for empty and empty-dictionary edges, staged-suffix window expiry, explicit
 unsupported-feature rejection for the unstaged profiles, and prepared
 dictionary identifier emission with roundtrip decoding.
 Evidence: `evidence/2026-10-29-one-shot-encode-parameters-engine.json`.
+
+## Combined staging extension to the DoubleFast profile
+
+`DoubleFastTables::seed_prefix` seeds both the long and the short hash table
+with every staged key position of the combined borrow, and
+`DoubleFastMatchState::from_parts_with_prefix` binds the prefix-relative
+geometry: the source-length check accounts for the staged suffix, parsing
+starts at the prefix boundary, and the existing candidate floor keeps every
+emitted offset within the resolved window. Either seeded table can therefore
+offer dictionary candidates while the existing parser still runs unchanged
+over the combined borrow. A nonzero prefix now admits the Fast and DoubleFast
+profiles; every other profile still rejects combined staging with
+`UnsupportedFeature` instead of silently dropping the dictionary.
+
+Thirteen focused commands pass: the complete library suite, true no_std
+compilation and strict Clippy under safe, the isolated match-table and
+dictionary backends the combined path exercises, and all features, plus
+formatting. Every full suite reports 1118 passed
+and 25 ignored across
+1 result groups. One new unit test proves DoubleFast dictionary reach,
+output shrink against the dictionary-free emission and roundtrip decoding with
+deterministic noise through level 0; the unsupported-profile rejection test
+moved to levels that still reject.
+Evidence: `evidence/2026-10-30-one-shot-encode-parameters-double-fast.json`.

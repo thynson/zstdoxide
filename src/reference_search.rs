@@ -250,7 +250,12 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
             return Err(Error::InvalidParameter);
         }
         plan.validate_retained_policy()?;
-        if prefix_len > 0 && !matches!(plan, ReferenceSearchPlan::Fast(_)) {
+        if prefix_len > 0
+            && !matches!(
+                plan,
+                ReferenceSearchPlan::Fast(_) | ReferenceSearchPlan::DoubleFast(_)
+            )
+        {
             return Err(Error::UnsupportedFeature);
         }
         let ultra = matches!(plan, ReferenceSearchPlan::Ultra(_));
@@ -444,9 +449,11 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                 )?;
                 let literals = Vec::new_in(factory.clone());
                 let sequences = Vec::new_in(factory.clone());
-                Ok(Self::DoubleFast(DoubleFastMatchState::from_parts(
-                    source, plan, tables, literals, sequences,
-                )?))
+                Ok(Self::DoubleFast(
+                    DoubleFastMatchState::from_parts_with_prefix(
+                        source, plan, tables, literals, sequences, prefix_len,
+                    )?,
+                ))
             }
             ReferenceSearchPlan::Greedy(plan) => {
                 let tables = GreedyTables::new_in(plan.tables(), factory.clone(), factory.clone())?;

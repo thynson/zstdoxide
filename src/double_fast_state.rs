@@ -37,19 +37,42 @@ pub(crate) struct DoubleFastMatchState<'a, A: Allocator> {
 impl<'a, A: Allocator> DoubleFastMatchState<'a, A> {
     /// Bind complete owners to one source, invalidating earlier sampled indices.
     /// Does not clone an allocator, allocate, or borrow temporary source storage.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "zero-prefix convenience constructor for tests")
+    )]
     pub(crate) fn from_parts(
+        source: &'a [u8],
+        plan: DoubleFastExecutionPlan,
+        tables: DoubleFastTables<A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+    ) -> Result<Self> {
+        Self::from_parts_with_prefix(source, plan, tables, literals, sequences, 0)
+    }
+
+    /// Bind owners to a combined borrow whose first `prefix_len` bytes precede
+    /// the frame. Both tables are seeded with every staged key position;
+    /// parsing starts at the prefix boundary and the existing window floor
+    /// bounds every emitted offset. This is the combined dictionary contract.
+    pub(crate) fn from_parts_with_prefix(
         source: &'a [u8],
         plan: DoubleFastExecutionPlan,
         mut tables: DoubleFastTables<A>,
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
+        prefix_len: usize,
     ) -> Result<Self> {
-        if source.len() != plan.source_len()
+        if source
+            .len()
+            .checked_sub(prefix_len)
+            .is_none_or(|frame_len| frame_len != plan.source_len())
             || tables.layouts() != (plan.long_layout(), plan.short_layout())
         {
             return Err(Error::InvalidParameter);
         }
         tables.reset();
+        tables.seed_prefix(source, prefix_len)?;
         literals.clear();
         sequences.clear();
         Ok(Self {
@@ -58,7 +81,7 @@ impl<'a, A: Allocator> DoubleFastMatchState<'a, A> {
             tables,
             literals,
             sequences,
-            position: 0,
+            position: prefix_len,
             prefix_floor: 0,
             failed: false,
         })

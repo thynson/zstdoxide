@@ -61,6 +61,16 @@ impl<L: Allocator, S: Allocator> DoubleFastTables<L, S> {
         self.short.reset();
     }
 
+    /// Seed every staged key position of both tables so candidates can point
+    /// into the dictionary region; parsing never inserts those positions
+    /// itself. Later positions win each slot, and the parser's window floor
+    /// still bounds every candidate it accepts. This is the combined
+    /// dictionary staging contract shared with the Fast profile.
+    pub(crate) fn seed_prefix(&mut self, source: &[u8], prefix_len: usize) -> Result<()> {
+        seed_table(&mut self.long, source, prefix_len)?;
+        seed_table(&mut self.short, source, prefix_len)
+    }
+
     pub(crate) fn layouts(&self) -> (SearchKeyLayout, SearchKeyLayout) {
         (self.long.layout(), self.short.layout())
     }
@@ -69,6 +79,26 @@ impl<L: Allocator, S: Allocator> DoubleFastTables<L, S> {
     pub(crate) fn retained_capacity(&self) -> usize {
         self.long.retained_capacity() + self.short.retained_capacity()
     }
+}
+
+/// Seed one table with every staged key position of the combined borrow.
+/// Later positions win each slot; the parser's window floor bounds what it
+/// accepts from these candidates.
+fn seed_table<A: Allocator>(
+    table: &mut MatchTable<A>,
+    source: &[u8],
+    prefix_len: usize,
+) -> Result<()> {
+    let layout = table.layout();
+    if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
+        for position in 0..=last {
+            let key = layout
+                .read_key(&source[position..])
+                .ok_or(Error::InvalidState)?;
+            table.replace(key, position)?;
+        }
+    }
+    Ok(())
 }
 
 #[cfg(test)]

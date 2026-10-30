@@ -201,7 +201,8 @@ record, workspace or live context between calls.
 - [x] Analyze pinned parameter-with-dictionary application, per-profile seed mapping and dictionary window expiry before implementation.
 - [x] Implement dictionary-aware plan resolution, in-window combined staging and dictionary-ID frame headers for the parameterized emission path.
 - [x] Implement combined dictionary emission for the Fast profile with window-bounded cross-boundary matches.
-- [ ] Extend combined dictionary emission to DoubleFast and the Greedy/Lazy/Lazy2 chain and row family.
+- [x] Extend combined dictionary emission to DoubleFast.
+- [ ] Extend combined dictionary emission to the Greedy/Lazy/Lazy2 chain and row family.
 - [ ] Extend combined dictionary emission to BinaryTreeLazy2, and extend or explicitly reject it for retained Optimal/Ultra/Ultra2 under the supported-subset clause.
 - [ ] Reuse prepared dictionary entropy for emitted blocks where the existing dictionary contract applies.
 - [ ] Expose documented parameterized dictionary and coordinator compression with exact output/lifetime guards and independent allocator failure qualification.
