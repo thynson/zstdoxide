@@ -203,3 +203,51 @@ families and measures the resulting geometry instead of asserting byte identity:
   construction. `first_block_seed` exposes the pair the frame workspace consumes;
   consuming it in an emitting workspace, the Greedy and tree families, and the
   public surface remain later items.
+
+## Dictionary chain and row search order (item 4 analysis)
+
+The pinned lazy/row finders answer the merge-order question for the next two
+families: neither merges candidates by position. `ZSTD_HcFindBestMatch`
+(`zstd_lazy.c:667-782`) first runs the context chain through
+`ZSTD_insertAndFindFirstIndex_internal` and exhausts it or its
+`1 << searchLog` attempts. Only while `nbAttempts > 0` does it enter the
+`ZSTD_dictMatchState` branch (`:738-770`): that branch starts from the
+dictionary's hash head, follows the dictionary chain with
+`dmsMinChain = dmsSize > dmsChainSize ? dmsSize - dmsChainSize : 0`, and maps
+each dictionary index into context space by
+`dmsIndexDelta = dictLimit - dmsSize`, emitting
+`curr - (matchIndex + dmsIndexDelta)`. `ZSTD_RowFindBestMatch`
+(`zstd_lazy.c:1141-1330`) uses the same order: the context row collects at most
+`nbAttempts` tagged candidates, then the dictionary row (`:1286-1320`) collects
+its tagged candidates with the same remaining budget and translates positions
+by the same delta. The attempt counter is shared and decremented per collected
+candidate, not per family. The dictionary owner is read-only in both branches;
+`dms->hashTable`, `chainTable` and the row tables are never written.
+
+In our geometry a call stages exactly the compiled `loaded_len` suffix, so
+`dictLimit == dmsSize == loaded_len` and `dmsIndexDelta` is zero. Compiled
+candidates already index the combined borrow, exactly as in the Fast and
+DoubleFast path, and the per-call window floor still bounds every accepted
+candidate. The remaining design decisions are:
+
+- Add allocation-free `ChainView<'a>` (borrowed heads and links, the checked
+  key layout and chain log) and `RowView<'a>` (borrowed positions and tags plus
+  the row layout). They expose only candidate reads, so no allocator parameter
+  enters the parser and compiled cells cannot be reset or inserted.
+- `GreedySearch::Chain` carries an optional `ChainView` and
+  `GreedySearch::Row` an optional `RowView`. `find_chain` and `find_row` run the
+  context candidates first and then the compiled candidates with the remaining
+  budget, applying the same `current`, floor, byte and window checks to both.
+- The chain order should coincide with combined staging except where a cyclic
+  slot was overwritten by a different key during seeding versus context
+  sampling. A row is a separate insertion ring in each owner, so sequential
+  context-then-compiled order is not the same candidate order as one seeded
+  ring. Both families therefore keep byte equality with combined staging as a
+  measured comparison (item "compare compiled-state frames") rather than a
+  contract.
+- Lazy/Lazy2 lookahead queries reuse the same finder, so the compiled stream
+  participates per query exactly like the context stream. Repeat offsets stay
+  parser-owned and unchanged; the pinned `isDMS` repcode branch
+  (`zstd_lazy.c:1537-1600`) is a native two-segment detail with no Rust analogue
+  because our combined borrow is contiguous. Dedicated dictionary search, row
+  tag-width variants and binary-tree consultation stay outside this analysis.

@@ -4122,10 +4122,24 @@ built once during construction with no allocation. The codebook is the exact
 call, so a compiled frame seeds its first block without repeating canonical code
 assignment. Raw and empty dictionaries compile no entropy.
 
+The chain and row families need candidate views that are not hash-keyed cells.
+`ChainView<'a>` will borrow the compiled chain's heads and links with the checked
+key layout and chain log, and `RowView<'a>` will borrow the compiled row's
+positions, tags and layout. Both expose only the existing bounded candidate
+traversal, so no allocator parameter enters the parser and no write path reaches
+compiled tables. The planned search order is the pinned one: context candidates
+first with their attempt budget, then compiled candidates with the remaining
+budget, using the same floor and byte checks. Staged geometry keeps the pinned
+`dmsIndexDelta` at zero. A row is an insertion ring per owner, so sequential
+context-then-compiled order is not one seeded ring and remains a measured
+per-family comparison.
+
 Upstream counterparts are pinned `ZSTD_CDict`, `ZSTD_createCDict_advanced2`,
 `ZSTD_initCDict_internal`, `ZSTD_loadDictionaryContent`, `ZSTD_CCtx_refCDict`
 and `ZSTD_compress_usingCDict_advanced`. The loaded suffix and `loadedDictEnd`
 provide window expiry; `nextToUpdate` provides the sampling frontier; the
-`dictMatchState` attach mode provides the read-only second candidate source.
-Native CCtx lifecycle, dedicated dictionary search, LDM and workers are not
-implied. Contracts and evidence requirements: `prepared-dictionary-design.md`.
+`dictMatchState` attach mode provides the read-only second candidate source and
+the context-then-dictionary order of `ZSTD_HcFindBestMatch` and
+`ZSTD_RowFindBestMatch`. Native CCtx lifecycle, dedicated dictionary search,
+LDM and workers are not implied. Contracts and evidence requirements:
+`prepared-dictionary-design.md`.
