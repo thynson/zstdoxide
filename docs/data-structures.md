@@ -4083,3 +4083,23 @@ referenced CDict, plus dictionary loading in ZSTD_compressBegin_internal.
 Native CCtx parameter lifecycle, reset directives, LDM, workers and arbitrary
 frame settings are not implied. Contracts and evidence requirements:
 `one-shot-encode-parameters-design.md`.
+
+## Reusable compiled dictionary state (Module 37 design)
+
+`CompiledDictionary<'a, A>` owns the resolved scalar profile, per-profile seed
+tables, prepared formatted-dictionary entropy, the dictionary ID and a borrow of
+immutable dictionary content. The state is built once from a `DictionaryView`
+and a `CompressionParameterRequest`; it retains no source, destination, frame,
+attempt or live encoder state. Tables use the same allocator-owned family as the
+per-call parsers and keep their independent opt-in unsafe features; plain
+records share their safe representation. Construction validates admission and
+reserves every table before publication; failure releases the partial state
+through its exact allocator domain. Sharing uses `Arc<CompiledDictionary>`
+without cloning tables or content.
+
+Upstream counterparts are pinned `ZSTD_CDict`, `ZSTD_createCDict_advanced2`,
+`ZSTD_initCDict_internal`, `ZSTD_loadDictionaryContent`, `ZSTD_CCtx_refCDict`
+and `ZSTD_compress_usingCDict_advanced`. The loaded suffix and `loadedDictEnd`
+provide window expiry; `nextToUpdate` provides the sampling frontier. Native
+CCtx lifecycle, dedicated dictionary search, LDM and workers are not implied.
+Contracts and evidence requirements: `prepared-dictionary-design.md`.

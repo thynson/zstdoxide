@@ -212,6 +212,24 @@ record, workspace or live context between calls.
 - [x] Compare identical parameterized stateless/coordinator workloads with explicit setup, allocation domains and independent repeats after CPU barriers.
 - [ ] Reconcile bounded parameterized-dictionary coverage and decompose the next evidenced contract without claiming native workspace, LDM or complete upstream parity.
 
+## Module 37: reusable prepared-dictionary compression state
+
+An immutable compiled dictionary owns match-finder seed tables, prepared entropy
+and a resolved profile while borrowing dictionary content. Design and ownership
+are recorded before implementation in `docs/prepared-dictionary-design.md` and
+`docs/data-structures.md`.
+
+- [ ] Analyze pinned CDict table loading, sampling frontier, loaded-end expiry and by-reference/by-copy ownership before implementation.
+- [ ] Implement immutable compiled-dictionary ownership, admission, dictionary-ID/entropy reuse and explicit optimal-family rejection.
+- [ ] Implement compiled Fast and DoubleFast one-shot emission with exact byte comparison against combined staging.
+- [ ] Extend compiled emission to the Greedy/Lazy/Lazy2 chain and row families.
+- [ ] Extend compiled emission to BinaryTreeLazy2 and retained-plan rejection boundaries.
+- [ ] Expose public compiled-dictionary one-shot and coordinator APIs with guards and allocator-failure qualification.
+- [ ] Qualify guarded native schedules, window expiry, unsupported-profile rejection and concrete atomic-free ARM code generation.
+- [ ] Qualify safe, every isolated feature/all features, release, no_std and strict Clippy.
+- [ ] Compare compiled-state and per-call-staging workloads with independent repeats after CPU barriers.
+- [ ] Reconcile bounded compiled-dictionary coverage and decompose the next evidenced contract.
+
 ## Roadmap
 
 Execution order requested on 2026-10-08: finish Module 6, migrate its related
