@@ -189,28 +189,14 @@ and `docs/one-shot-encode-benchmarks.md`. Final reconciliation is in
 `docs/evidence/2026-10-29-one-shot-encode-closure.json`.
 Complete upstream parity remains open.
 
-## Module 36: parameterized dictionary-backed one-shot compression
+Module 36 is complete within its bounded combined parameterized dictionary
+one-shot scope. Completed items are archived in Git history and
+`docs/progress.md`; contracts, measurements and limits are in
+`docs/one-shot-encode-parameters-validation.md` and
+`docs/one-shot-encode-parameters-benchmarks.md`. Final reconciliation is in
+`docs/evidence/2026-11-02-one-shot-encode-parameters-closure.json`.
+Complete upstream parity remains open.
 
-The qualified reference parameter profiles and immutable dictionary selection
-must combine in caller-owned one-shot output. Ownership, frame flags and
-window expiry are recorded before implementation in
-`docs/one-shot-encode-parameters-design.md` and `docs/data-structures.md`.
-Promote implementation only after Module 35 closes; retain no parameter
-record, workspace or live context between calls.
-
-- [x] Analyze pinned parameter-with-dictionary application, per-profile seed mapping and dictionary window expiry before implementation.
-- [x] Implement dictionary-aware plan resolution, in-window combined staging and dictionary-ID frame headers for the parameterized emission path.
-- [x] Implement combined dictionary emission for the Fast profile with window-bounded cross-boundary matches.
-- [x] Extend combined dictionary emission to DoubleFast.
-- [x] Extend combined dictionary emission to the Greedy/Lazy/Lazy2 chain and row family.
-- [x] Extend combined dictionary emission to BinaryTreeLazy2, and extend or explicitly reject it for retained Optimal/Ultra/Ultra2 under the supported-subset clause.
-- [x] Reuse prepared dictionary entropy for emitted blocks where the existing dictionary contract applies.
-- [x] Expose documented parameterized dictionary and coordinator compression with exact output/lifetime guards and independent allocator failure qualification.
-- [x] Qualify parameterized dictionary schedules, unsupported-strategy rejection and window expiry against guarded native controls and deterministic selections.
-- [x] Qualify combined parameter and dictionary application under concrete no-atomics ARM code generation, running foreign Miri only if unsafe code is added or modified.
-- [x] Qualify safe, every isolated feature and all features, full/release regression, no_std and strict Clippy.
-- [x] Compare identical parameterized stateless/coordinator workloads with explicit setup, allocation domains and independent repeats after CPU barriers.
-- [ ] Reconcile bounded parameterized-dictionary coverage and decompose the next evidenced contract without claiming native workspace, LDM or complete upstream parity.
 
 ## Module 37: reusable prepared-dictionary compression state
 

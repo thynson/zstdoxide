@@ -1632,3 +1632,41 @@ caller-owned one-shot output; see
 `docs/one-shot-encode-parameters-design.md`. Reference levels with LDM,
 threading, native workspace semantics and complete upstream migration remain
 open.
+
+## Module 36: parameterized dictionary-backed one-shot compression complete (2026-11-02)
+
+Resolved reference profiles combine with immutable dictionary views inside one
+call. The in-window dictionary suffix is staged contiguously before the input,
+the existing Fast/DoubleFast/Greedy-family/tree parsers run over the combined
+borrow, and the existing candidate floor realizes dictionary window expiry.
+Formatted-dictionary entropy seeds the first emitted block; the dictionary ID
+is serialized between the optional window byte and the content size. Every
+fresh and retained Optimal/Ultra/Ultra2 profile rejects nonzero dictionary
+content with `UnsupportedFeature` instead of dropping it. Empty and raw
+attachments preserve dictionary-free parameterized bytes. Allocating,
+caller-owned and coordinator entry points retain their exact guards, prefix
+consumption and allocator-failure release; no options record, workspace or live
+context survives a call.
+
+All 75 final commands pass: safe/all/22 isolated full suites, no_std and strict
+Clippy, safe/all release and format. Every complete/release suite reports
+120 result groups, 1789 passed and 77 ignored with zero
+failures. Twenty typed native parameterized cases run against normal and
+sanitized pinned builds with independent destination guards and bidirectional
+decoding; five optimal-family profiles reject before writes. Concrete
+thumbv6m-none-eabi library checks and release IR/object emission pass for safe
+and all features; foreign Miri was not run because this module added or
+modified no unsafe code, per the standing direction.
+
+Forty-eight case/level pairs across seven inputs and three dictionary kinds
+retain 576 identical qualification rows and 1455 samples per executable across
+24 primary backends and independent safe/all rebuilds. Stateless and
+coordinator rows produce identical bytes and ledgers; dictionary and scratch
+domains stay separate. Primary safe coordinator/stateless geometric-mean
+ratios: primary safe all-nonempty 1.0025; primary safe empty-dictionary 1.0022; primary safe raw-dictionary 0.9988; primary safe prepared-dictionary 1.0065. No universal profile benefit, absence of scratch allocation,
+native byte identity or complete codec replacement is inferred.
+
+Completed tasks are archived in Git history. A reusable compiled-dictionary
+state is designed and decomposed next; see
+`docs/prepared-dictionary-design.md`. Native workspace reuse, parameter
+lifecycle, LDM, workers, streaming and complete upstream parity remain open.

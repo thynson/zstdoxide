@@ -1,11 +1,14 @@
 # Parameterized dictionary-backed one-shot compression validation
 
-Module 36 is in progress. The internal combined-staging engine, its DoubleFast
-extension, the Greedy chain-and-row family extension, the BinaryTreeLazy2
-tree-family extension with the explicit optimal-family rejection, prepared
-formatted-dictionary entropy reuse, and the public allocating, caller-owned and
-coordinator parameterized dictionary calls are qualified and integrated.
-Corpus validation and reconciliation remain open.
+Module 36 is complete within its combined parameterized dictionary-backed
+one-shot scope. In-window dictionary staging, the Fast, DoubleFast, Greedy
+chain-and-row and BinaryTreeLazy2 extensions, prepared formatted-dictionary
+entropy reuse, explicit optimal-family rejection, and the public allocating,
+caller-owned and coordinator calls have successful source-bound receipts.
+Guarded native schedules, concrete atomic-free ARM emission, the complete
+feature/release matrix and independent measurements are retained. No separate
+broad corpus campaign was run; deterministic unit rows and guarded native
+schedules cover the bounded subset.
 
 ## Internal combined staging for the Fast profile
 
@@ -218,3 +221,24 @@ coordinator/stateless geometric-mean ratios and setup-only batch observations
 are recorded in `one-shot-encode-parameters-benchmarks.md`; no universal
 profile benefit or absence of scratch allocation is claimed.
 Evidence: `evidence/2026-11-02-one-shot-encode-parameters-benchmarks.json`.
+
+## Final reconciliation and remaining scope
+
+Integrated production and matrix sources match the qualified public/native/
+platform and measured snapshots; every stage archive is rehashed. Earlier
+engine, DoubleFast, family, tree and entropy receipts retain their distinct
+stage identities rather than being presented as final-source evidence.
+
+The supported subset is exact: Fast, DoubleFast, Greedy, Lazy, Lazy2 and
+BinaryTreeLazy2 use in-window combined staging with the resolved candidate
+floor for dictionary expiry; every fresh or retained Optimal/Ultra/Ultra2
+profile rejects nonzero dictionary content with `UnsupportedFeature`. Empty and
+raw attachments preserve the dictionary-free parameterized bytes, prepared
+entropy seeds only the first block, and the dictionary ID is serialized in the
+frame header. No options record, workspace or live context survives a call.
+
+Native workspace reuse, CDict creation costs, parameter lifecycle, dedicated
+dictionary search, long-distance matching, workers, streaming and complete
+upstream parity remain open. A reusable compiled-dictionary state is designed
+and decomposed next; see `prepared-dictionary-design.md`.
+Evidence: `evidence/2026-11-02-one-shot-encode-parameters-closure.json`.

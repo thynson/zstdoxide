@@ -173,6 +173,16 @@ empty input, short output and allocation failure. Its completed bounded
 qualification and remaining scope are recorded in
 [the selection validation report](docs/one-shot-encode-selection-validation.md).
 
+Parameterized dictionary-backed calls are available through
+`compress_with_parameters_and_dictionary`, its caller-owned variants and
+`OneShotEncoder::compress_into_with_parameters`. A resolved reference profile
+and an immutable dictionary view combine in one call over Fast, DoubleFast,
+Greedy, Lazy, Lazy2 or BinaryTreeLazy2; Optimal/Ultra/Ultra2 reject nonzero
+dictionary content explicitly. In-window dictionary content, prepared entropy
+and the dictionary ID follow the existing dictionary contract. See
+[parameterized dictionary usage](docs/one-shot-encode-parameters-usage.md) and
+[the validation report](docs/one-shot-encode-parameters-validation.md).
+
 ## Current support
 
 | Area | Implemented |
@@ -182,7 +192,7 @@ qualification and remaining scope are recorded in
 | Literals | Raw, RLE, direct/FSE Huffman weights, one/four streams, treeless reuse |
 | Sequences | Predefined, RLE, FSE-compressed and repeated tables; extra bits; all repeat-offset rules; overlapping matches |
 | Compression | Greedy, bounded Chain, and one-byte Lazy matching over dictionary content and up to 1 MiB of configured retained output (128 KiB by default), raw/RLE or new/reused Huffman literals, adaptive/reused/RLE/predefined sequence tables, forward repeat-offset planning, raw/RLE fallback |
-| Reference Fast, DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 | Known-size, no-dictionary one-shot level/request execution; sampled hash, chain, row or deferred binary-tree tables, explicit repeat intent, Fast-only negative-level acceleration/raw literal policy, strict gain and transactional block selection; independent entropy output |
+| Reference Fast, DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 | Known-size one-shot level/request execution, dictionary-free or with an in-window borrowed raw/formatted dictionary (Optimal/Ultra/Ultra2 reject nonzero dictionaries); sampled hash, chain, row or deferred binary-tree tables, explicit repeat intent, Fast-only negative-level acceleration/raw literal policy, strict gain and transactional block selection; independent entropy output |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
 | Parameter inspection | Pinned reference presets, scalar bounds, raw adjustment, explicit request overrides, source hints and checked source/dictionary size arithmetic; independent of live numeric execution |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
