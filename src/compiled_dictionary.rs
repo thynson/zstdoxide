@@ -1,13 +1,14 @@
 //! Immutable compiled dictionary state over seeded reference tables.
 //!
 //! One state owns the resolved scalar profile, per-profile seed tables over the
-//! loaded dictionary suffix, and a borrow of immutable dictionary content.
-//! Construction validates admission before the first allocation and seeds every
-//! table exactly once; the tables stay immutable during calls and hold
-//! content-relative positions over the loaded suffix, so a later call consults
-//! them as a second read-only candidate source beside its own per-call tables.
-//! This leaf checkpoint stops at ownership: emission consultation, prepared
-//! entropy wiring and the public surface follow in later items.
+//! loaded dictionary suffix, prepared formatted-dictionary entropy, and a borrow
+//! of immutable dictionary content. Construction validates admission before the
+//! first allocation and seeds every table exactly once; the tables stay
+//! immutable during calls and hold content-relative positions over the loaded
+//! suffix. A call stages exactly that suffix before its input, so a compiled
+//! table is consulted as a second read-only candidate source beside the call's
+//! own mutable table without any position translation. Public emission and the
+//! remaining strategy families follow in later items.
 //!
 //! Upstream counterparts are pinned `ZSTD_CDict` ownership and loading:
 //! `ZSTD_createCDict_advanced2` resolves once with an unknown source size and
@@ -18,12 +19,14 @@
 //! dictionary search, reset directives and parameter lifecycle are not implied.
 #![forbid(unsafe_code)]
 
+use crate::dictionary::DictionaryEntropyView;
 use crate::double_fast_plan::DoubleFastExecutionPlan;
 use crate::double_fast_tables::DoubleFastTables;
 use crate::fast_plan::FastExecutionPlan;
 use crate::greedy_plan::GreedyExecutionPlan;
 use crate::greedy_state::GreedyTables;
-use crate::matchfinder::MatchTable;
+use crate::huffman_codebook::HuffmanCodebook;
+use crate::matchfinder::{MatchTable, StagedMatchView};
 use crate::{
     CompressionParameterRequest, DictionaryView, Error, ReferenceStrategy,
     ResolvedCompressionParameters, Result, SourceSize,
@@ -37,15 +40,23 @@ use alloc::alloc::Allocator;
 /// suffix, never the frame input.
 #[cfg_attr(
     not(test),
-    allow(
-        dead_code,
-        reason = "emission consultation follows this leaf checkpoint"
-    )
+    allow(dead_code, reason = "public compiled-dictionary emission follows")
 )]
 pub(crate) enum CompiledTables<A: Allocator> {
     Fast(MatchTable<A>),
     DoubleFast(DoubleFastTables<A, A>),
     Greedy(GreedyTables<A>),
+}
+
+/// Prepared entropy borrowed from a formatted dictionary, plus the first
+/// block's literal encoding table derived once at construction.
+///
+/// The view borrows the dictionary owner like `ZSTD_CDict`'s by-reference
+/// content; the codebook is plain inline values and allocates nothing. Raw
+/// dictionaries compile no entropy at all.
+struct CompiledEntropy<'a> {
+    view: DictionaryEntropyView<'a>,
+    literal_table: HuffmanCodebook,
 }
 
 /// An immutable compiled dictionary: one resolved profile, one seeded table
@@ -57,24 +68,19 @@ pub(crate) enum CompiledTables<A: Allocator> {
 /// construction returns.
 #[cfg_attr(
     not(test),
-    allow(
-        dead_code,
-        reason = "emission consultation follows this leaf checkpoint"
-    )
+    allow(dead_code, reason = "public compiled-dictionary emission follows")
 )]
 pub(crate) struct CompiledDictionary<'a, A: Allocator = alloc::alloc::Global> {
     view: DictionaryView<'a>,
     parameters: ResolvedCompressionParameters,
     loaded_len: usize,
     tables: CompiledTables<A>,
+    entropy: Option<CompiledEntropy<'a>>,
 }
 
 #[cfg_attr(
     not(test),
-    allow(
-        dead_code,
-        reason = "emission consultation follows this leaf checkpoint"
-    )
+    allow(dead_code, reason = "public compiled-dictionary emission follows")
 )]
 impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     /// Compile one dictionary view for one request.
@@ -110,6 +116,17 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
             _ => return Err(Error::UnsupportedFeature),
         }
         let content = view.content();
+        // A formatted dictionary's prepared entropy is borrowed, and its
+        // first-block literal encoding table is built once here. Both steps
+        // allocate nothing and precede the first table request, so a malformed
+        // prepared tree fails without leaving an owner to release.
+        let entropy = match view.entropy() {
+            Some(entropy) => Some(CompiledEntropy {
+                view: entropy,
+                literal_table: HuffmanCodebook::from_lengths(&entropy.huffman.code_lengths(), 12)?,
+            }),
+            None => None,
+        };
         let window = 1_usize
             .checked_shl(u32::from(parameters.window_log()))
             .ok_or(Error::ResourceLimit)?;
@@ -174,6 +191,7 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
             parameters,
             loaded_len,
             tables,
+            entropy,
         })
     }
 
@@ -196,13 +214,71 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     pub(crate) fn dictionary_id(&self) -> u32 {
         self.view.id()
     }
+
+    /// The prepared sequence/offset entropy a formatted dictionary seeded the
+    /// frame with, or `None` for raw and empty dictionaries.
+    ///
+    /// This is the exact view `ZSTD_loadCEntropy` fills `blockState.prevCBlock`
+    /// with: the first emitted block may reuse these tables and repeats.
+    pub(crate) fn entropy(&self) -> Option<DictionaryEntropyView<'a>> {
+        self.entropy.as_ref().map(|entropy| entropy.view)
+    }
+
+    /// The exact first-block seed a compiled frame installs: prepared sequence
+    /// entropy plus the literal codebook the combined path rebuilds per call.
+    ///
+    /// The codebook is copied from plain inline values; no dictionary allocation
+    /// is cloned. Raw and empty dictionaries return `None`, so the first block
+    /// starts frame-fresh exactly as in the dictionary-free path.
+    pub(crate) fn first_block_seed(&self) -> Option<(DictionaryEntropyView<'a>, HuffmanCodebook)> {
+        self.entropy
+            .as_ref()
+            .map(|entropy| (entropy.view, entropy.literal_table.clone()))
+    }
+
+    /// The immutable Fast candidate source for a call that stages exactly
+    /// [`Self::loaded_len`] suffix bytes before its input.
+    ///
+    /// Positions are content-relative over that suffix, which coincides with
+    /// the staged region, so the call consults them without translation and
+    /// the parser's own window floor still bounds every accepted candidate.
+    /// The returned handle carries the staged length, so a state constructor
+    /// rejects a call that staged a different suffix instead of reading
+    /// positions under foreign geometry.
+    pub(crate) fn fast_candidates(&self) -> Result<StagedMatchView<'_>> {
+        match &self.tables {
+            CompiledTables::Fast(table) => Ok(StagedMatchView::new(table.view(), self.loaded_len)),
+            _ => Err(Error::InvalidState),
+        }
+    }
+
+    /// The immutable DoubleFast long/short candidate pair under the same
+    /// staged-suffix geometry as [`Self::fast_candidates`].
+    pub(crate) fn double_fast_candidates(
+        &self,
+    ) -> Result<(StagedMatchView<'_>, StagedMatchView<'_>)> {
+        match &self.tables {
+            CompiledTables::DoubleFast(tables) => {
+                let (long, short) = tables.view();
+                let staged_len = self.loaded_len;
+                Ok((
+                    StagedMatchView::new(long, staged_len),
+                    StagedMatchView::new(short, staged_len),
+                ))
+            }
+            _ => Err(Error::InvalidState),
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::Dictionary;
+    use crate::double_fast_state::DoubleFastMatchState;
+    use crate::fast_state::FastMatchState;
     use alloc::alloc::Global;
+    use alloc::vec;
     use alloc::vec::Vec;
     use zstdoxide_test_allocator::{
         AllocationMonitor, AllocationSnapshot, AllocatorConfig, TrackingAllocator,
@@ -365,6 +441,287 @@ mod tests {
             // must never stay empty after seeding a nonzero suffix.
             assert_ne!(bucket, usize::MAX, "position {position}");
         }
+        drop(compiled);
+        monitor.assert_released();
+    }
+
+    /// Combined-space position of each sequence's match start: `literal_length`
+    /// and `match_length` are frame-relative, so a distance greater than that
+    /// position proves the candidate came from the staged dictionary region.
+    fn dictionary_hits(sequences: &[crate::sequence_context::SequenceWithOffset]) -> usize {
+        let mut position = 0usize;
+        let mut hits = 0;
+        for record in sequences {
+            position += record.sequence.literal_length as usize;
+            if record.sequence.distance as usize > position {
+                hits += 1;
+            }
+            position += record.sequence.match_length as usize;
+        }
+        hits
+    }
+
+    fn staged_with(content: &[u8], staged: usize, input: &[u8]) -> Vec<u8> {
+        let mut combined = Vec::new();
+        combined.extend_from_slice(&content[content.len() - staged..]);
+        combined.extend_from_slice(input);
+        combined
+    }
+
+    fn fast_consultation_case(level: i32) {
+        let content = pattern(0x0d15_ea2b, 4096);
+        let input = content[content.len() - 1024..].to_vec();
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let (allocator, monitor) = monitored();
+        let compiled = compile(dictionary.view(), level, allocator).unwrap();
+        assert_eq!(
+            compiled.parameters().strategy(),
+            ReferenceStrategy::Fast,
+            "level {level}"
+        );
+        let staged = compiled.loaded_len();
+        assert!(staged >= input.len(), "level {level}");
+        let compiled_positions = compiled
+            .fast_candidates()
+            .unwrap()
+            .view()
+            .test_positions()
+            .to_vec();
+        let combined = staged_with(&content, staged, &input);
+        let plan = FastExecutionPlan::from_resolved_parameters(compiled.parameters(), input.len())
+            .unwrap();
+        let mut reference = FastMatchState::from_parts_with_prefix(
+            &combined,
+            plan,
+            MatchTable::with_layout_in(plan.layout(), Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+        )
+        .unwrap();
+        let mut consulted = FastMatchState::from_parts_with_compiled_prefix(
+            &combined,
+            plan,
+            MatchTable::with_layout_in(plan.layout(), Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+            Some(compiled.fast_candidates().unwrap()),
+        )
+        .unwrap();
+        let mut repeats = [1, 4, 8];
+        let mut emitted = 0;
+        let mut hits = 0;
+        while emitted < input.len() {
+            let length = (input.len() - emitted).min(plan.block_limit());
+            let expected = reference.parse_next(length, repeats).unwrap();
+            let actual = consulted.parse_next(length, repeats).unwrap();
+            assert_eq!(actual, expected, "block at {emitted}");
+            assert_eq!(consulted.literals(), reference.literals());
+            assert_eq!(consulted.sequences(), reference.sequences());
+            hits += dictionary_hits(consulted.sequences());
+            if let Some(result) = actual {
+                repeats = result.wire_repeats;
+            }
+            emitted += length;
+        }
+        assert!(hits > 0, "no dictionary candidate reached the parser");
+        // The compiled source is unchanged and the per-call table holds only
+        // input samples: consultation never copies or mutates compiled cells.
+        assert_eq!(
+            compiled.fast_candidates().unwrap().view().test_positions(),
+            compiled_positions
+        );
+        assert!(
+            consulted
+                .test_sampled_positions()
+                .iter()
+                .all(|&position| position == usize::MAX || position >= staged)
+        );
+        drop(consulted);
+        drop(reference);
+        drop(compiled);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn fast_consultation_matches_combined_staging_and_uses_dictionary_candidates() {
+        for level in [1, 2] {
+            fast_consultation_case(level);
+        }
+    }
+
+    fn double_fast_consultation_case(level: i32) {
+        let content = pattern(0x51ed_2c4f, 4096);
+        let input = content[content.len() - 1024..].to_vec();
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let (allocator, monitor) = monitored();
+        let compiled = compile(dictionary.view(), level, allocator).unwrap();
+        assert_eq!(
+            compiled.parameters().strategy(),
+            ReferenceStrategy::DoubleFast,
+            "level {level}"
+        );
+        let staged = compiled.loaded_len();
+        assert!(staged >= input.len(), "level {level}");
+        let (compiled_long, compiled_short) = compiled.double_fast_candidates().unwrap();
+        let compiled_long = compiled_long.view().test_positions().to_vec();
+        let compiled_short = compiled_short.view().test_positions().to_vec();
+        let combined = staged_with(&content, staged, &input);
+        let plan =
+            DoubleFastExecutionPlan::from_resolved_parameters(compiled.parameters(), input.len())
+                .unwrap();
+        let mut reference = DoubleFastMatchState::from_parts_with_prefix(
+            &combined,
+            plan,
+            DoubleFastTables::new_in(plan.long_layout(), plan.short_layout(), Global, Global)
+                .unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+        )
+        .unwrap();
+        let mut consulted = DoubleFastMatchState::from_parts_with_compiled_prefix(
+            &combined,
+            plan,
+            DoubleFastTables::new_in(plan.long_layout(), plan.short_layout(), Global, Global)
+                .unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+            Some(compiled.double_fast_candidates().unwrap()),
+        )
+        .unwrap();
+        let mut repeats = [1, 4, 8];
+        let mut emitted = 0;
+        let mut hits = 0;
+        while emitted < input.len() {
+            let length = (input.len() - emitted).min(plan.block_limit());
+            let expected = reference.parse_next(length, repeats).unwrap();
+            let actual = consulted.parse_next(length, repeats).unwrap();
+            assert_eq!(actual, expected, "block at {emitted}");
+            assert_eq!(consulted.literals(), reference.literals());
+            assert_eq!(consulted.sequences(), reference.sequences());
+            hits += dictionary_hits(consulted.sequences());
+            if let Some(result) = actual {
+                repeats = result.wire_repeats;
+            }
+            emitted += length;
+        }
+        assert!(hits > 0, "no dictionary candidate reached the parser");
+        let (long, short) = compiled.double_fast_candidates().unwrap();
+        assert_eq!(long.view().test_positions(), compiled_long);
+        assert_eq!(short.view().test_positions(), compiled_short);
+        let (long, short) = consulted.test_sampled_positions();
+        for positions in [long, short] {
+            assert!(
+                positions
+                    .iter()
+                    .all(|&position| position == usize::MAX || position >= staged)
+            );
+        }
+        drop(consulted);
+        drop(reference);
+        drop(compiled);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn double_fast_consultation_matches_combined_staging_and_uses_both_tables() {
+        // Level 3 is the only default DoubleFast profile in this resolver;
+        // level 4 already resolves to Greedy.
+        double_fast_consultation_case(3);
+    }
+
+    #[test]
+    fn candidate_accessors_reject_the_other_profile_and_mismatched_layouts() {
+        let dictionary = Dictionary::from_bytes(PREPARED).unwrap();
+        let (allocator, _) = monitored();
+        let fast = compile(dictionary.view(), 1, allocator).unwrap();
+        assert_eq!(fast.parameters().strategy(), ReferenceStrategy::Fast);
+        assert!(matches!(
+            fast.double_fast_candidates(),
+            Err(Error::InvalidState)
+        ));
+        let (allocator, _) = monitored();
+        let double_fast = compile(dictionary.view(), 3, allocator).unwrap();
+        assert_eq!(
+            double_fast.parameters().strategy(),
+            ReferenceStrategy::DoubleFast
+        );
+        assert!(matches!(
+            double_fast.fast_candidates(),
+            Err(Error::InvalidState)
+        ));
+        // A plan resolved with a different hash log has a different layout;
+        // the state constructor rejects the compiled view before resetting its
+        // own table or reading a single candidate.
+        let mut other = CompressionParameterRequest::with_level(1);
+        other.set_hash_log(9).unwrap();
+        let parameters = other
+            .resolve(SourceSize::Unknown, dictionary.view().content().len())
+            .unwrap();
+        let input = b"compiled layout rejection";
+        let plan = FastExecutionPlan::from_resolved_parameters(parameters, input.len()).unwrap();
+        let table = MatchTable::with_layout_in(plan.layout(), Global).unwrap();
+        let outcome = FastMatchState::from_parts_with_compiled_prefix(
+            input,
+            plan,
+            table,
+            Vec::new(),
+            Vec::new(),
+            0,
+            Some(fast.fast_candidates().unwrap()),
+        );
+        assert!(matches!(outcome, Err(Error::InvalidParameter)));
+        // The same layout with the correct staged length is admitted, proving
+        // the rejection above came from the staging geometry, not the layout.
+        let plan =
+            FastExecutionPlan::from_resolved_parameters(fast.parameters(), input.len()).unwrap();
+        let table = MatchTable::with_layout_in(plan.layout(), Global).unwrap();
+        let mut staged_source = vec![0_u8; fast.loaded_len()];
+        staged_source.extend_from_slice(input);
+        let accepted = FastMatchState::from_parts_with_compiled_prefix(
+            &staged_source,
+            plan,
+            table,
+            Vec::new(),
+            Vec::new(),
+            fast.loaded_len(),
+            Some(fast.fast_candidates().unwrap()),
+        );
+        assert!(accepted.is_ok());
+    }
+
+    #[test]
+    fn prepared_entropy_and_its_literal_table_are_compiled_once_for_formatted_only() {
+        let dictionary = Dictionary::from_bytes(PREPARED).unwrap();
+        let view = dictionary.view();
+        let source_entropy = view.entropy().unwrap();
+        let (allocator, monitor) = monitored();
+        let compiled = compile(view, 1, allocator).unwrap();
+        let compiled_entropy = compiled.entropy().unwrap();
+        assert_eq!(
+            compiled_entropy.huffman.code_lengths(),
+            source_entropy.huffman.code_lengths()
+        );
+        assert_eq!(compiled_entropy.repeat, source_entropy.repeat);
+        let expected =
+            HuffmanCodebook::from_lengths(&source_entropy.huffman.code_lengths(), 12).unwrap();
+        let (seed_entropy, seed_codebook) = compiled.first_block_seed().unwrap();
+        assert_eq!(seed_entropy.repeat, source_entropy.repeat);
+        assert_eq!(
+            seed_codebook, expected,
+            "the compiled literal table must be the exact first-block seed"
+        );
+        drop(compiled);
+        monitor.assert_released();
+        // Raw dictionaries compile no prepared entropy and no literal table.
+        let raw = Dictionary::raw(&pattern(0x7a3c_11d5, 2048)).unwrap();
+        let (allocator, monitor) = monitored();
+        let compiled = compile(raw.view(), 1, allocator).unwrap();
+        assert!(compiled.entropy().is_none());
+        assert!(compiled.first_block_seed().is_none());
         drop(compiled);
         monitor.assert_released();
     }

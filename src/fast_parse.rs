@@ -11,7 +11,7 @@ use core::{alloc::Allocator, ops::Range};
 use crate::frame::MAX_BLOCK_SIZE;
 use crate::match_key::MatchKey;
 use crate::match_search::SearchKeyLayout;
-use crate::matchfinder::MatchTable;
+use crate::matchfinder::{MatchTable, MatchTableView};
 use crate::sequence_context::{LogicalSequence, SequenceWithOffset};
 use crate::sequence_plan::OffsetIntent;
 use crate::{Error, Result};
@@ -144,9 +144,33 @@ fn advance(position: usize, amount: usize) -> Result<usize> {
 }
 
 /// Preserve cached reads and delayed writes across both positions of each pair.
+///
+/// The per-call table is the only writer. When it holds no entry for a key, the
+/// optional read-only dictionary view supplies the candidate: this reproduces a
+/// merged table that was seeded with dictionary positions and then overwritten
+/// by call sampling, because a later per-call store always wins.
+fn probe<A: Allocator>(
+    table: &MatchTable<A>,
+    dictionary: Option<MatchTableView<'_>>,
+    key: MatchKey,
+) -> Result<Option<usize>> {
+    match table.lookup(key)? {
+        Some(position) => Ok(Some(position)),
+        None => match dictionary {
+            Some(view) => view.lookup(key),
+            None => Ok(None),
+        },
+    }
+}
+
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one read-only compiled source joins the existing cursor tuple"
+)]
 fn search<A: Allocator>(
     block: &FastBlock<'_>,
     table: &mut MatchTable<A>,
+    dictionary: Option<MatchTableView<'_>>,
     position: usize,
     anchor: usize,
     repeat: usize,
@@ -164,7 +188,7 @@ fn search<A: Allocator>(
     }
     let mut first_key = block.key(first)?;
     let mut second_key = block.key(second)?;
-    let mut candidate = table.lookup(first_key)?;
+    let mut candidate = probe(table, dictionary, first_key)?;
     loop {
         let repeated = block.repeated_match(next_first, repeat);
         table.store(first_key, first)?;
@@ -197,7 +221,7 @@ fn search<A: Allocator>(
             }));
         }
 
-        candidate = table.lookup(second_key)?;
+        candidate = probe(table, dictionary, second_key)?;
         first_key = second_key;
         second_key = block.key(next_first)?;
         first = second;
@@ -217,7 +241,7 @@ fn search<A: Allocator>(
             }));
         }
 
-        candidate = table.lookup(second_key)?;
+        candidate = probe(table, dictionary, second_key)?;
         first_key = second_key;
         second_key = block.key(next_first)?;
         first = second;
@@ -295,6 +319,10 @@ impl<L: Allocator, S: Allocator> ParseOutput<'_, L, S> {
 /// and table. Later private/table errors may leave partial scratch and samples;
 /// discard the failed parse and reset before supplying a different source.
 /// All literals, including the final suffix, are returned in `literals`.
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "dictionary-free convenience wrapper for tests")
+)]
 pub(crate) fn parse_block<A: Allocator, L: Allocator, S: Allocator>(
     block: FastBlock<'_>,
     table: &mut MatchTable<A>,
@@ -302,7 +330,27 @@ pub(crate) fn parse_block<A: Allocator, L: Allocator, S: Allocator>(
     literals: &mut Vec<u8, L>,
     sequences: &mut Vec<SequenceWithOffset, S>,
 ) -> Result<FastParseResult> {
-    if table.layout() != block.layout {
+    parse_block_with_dictionary(block, table, None, initial_repeats, literals, sequences)
+}
+
+/// Parse with an optional read-only dictionary candidate source.
+///
+/// The per-call table receives every sample; the dictionary view is consulted
+/// only when that table has no entry for the key. Candidates are combined-space
+/// positions in the caller's staged borrow, exactly like seeded positions, so
+/// the existing byte, offset and window checks bound them unchanged. Both
+/// layouts are validated before any reservation.
+pub(crate) fn parse_block_with_dictionary<A: Allocator, L: Allocator, S: Allocator>(
+    block: FastBlock<'_>,
+    table: &mut MatchTable<A>,
+    dictionary: Option<MatchTableView<'_>>,
+    initial_repeats: [u32; 3],
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<SequenceWithOffset, S>,
+) -> Result<FastParseResult> {
+    if table.layout() != block.layout
+        || dictionary.is_some_and(|view| view.layout() != block.layout)
+    {
         return Err(Error::InvalidParameter);
     }
     if initial_repeats.contains(&0) {
@@ -360,6 +408,7 @@ pub(crate) fn parse_block<A: Allocator, L: Allocator, S: Allocator>(
         while let Some(mut found) = search(
             &block,
             table,
+            dictionary,
             position,
             output.anchor,
             first_repeat,

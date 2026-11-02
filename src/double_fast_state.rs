@@ -9,9 +9,10 @@ use alloc::vec::Vec;
 use core::alloc::Allocator;
 
 use crate::double_fast_block::DoubleFastBlock;
-use crate::double_fast_parse::{DoubleFastParseResult, parse_block};
+use crate::double_fast_parse::{DoubleFastParseResult, parse_block_with_dictionary};
 use crate::double_fast_plan::DoubleFastExecutionPlan;
 use crate::double_fast_tables::DoubleFastTables;
+use crate::matchfinder::StagedMatchView;
 use crate::sequence_context::SequenceWithOffset;
 use crate::{Error, Result};
 
@@ -27,6 +28,7 @@ pub(crate) struct DoubleFastMatchState<'a, A: Allocator> {
     source: &'a [u8],
     plan: DoubleFastExecutionPlan,
     tables: DoubleFastTables<A>,
+    dictionary: Option<(StagedMatchView<'a>, StagedMatchView<'a>)>,
     literals: Vec<u8, A>,
     sequences: Vec<SequenceWithOffset, A>,
     position: usize,
@@ -58,27 +60,58 @@ impl<'a, A: Allocator> DoubleFastMatchState<'a, A> {
     pub(crate) fn from_parts_with_prefix(
         source: &'a [u8],
         plan: DoubleFastExecutionPlan,
+        tables: DoubleFastTables<A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+        prefix_len: usize,
+    ) -> Result<Self> {
+        Self::from_parts_with_compiled_prefix(
+            source, plan, tables, literals, sequences, prefix_len, None,
+        )
+    }
+
+    /// Bind owners to a combined borrow whose staged prefix equals a compiled
+    /// dictionary's loaded suffix.
+    ///
+    /// Both per-call tables start empty and receive every sample; a compiled
+    /// entry is used only from an empty per-call slot, so a later call store
+    /// wins exactly as in a seeded merged table. A missing compiled owner keeps
+    /// the seeding path. Layouts and the staged length must match before either
+    /// table is reset.
+    pub(crate) fn from_parts_with_compiled_prefix(
+        source: &'a [u8],
+        plan: DoubleFastExecutionPlan,
         mut tables: DoubleFastTables<A>,
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
         prefix_len: usize,
+        dictionary: Option<(StagedMatchView<'a>, StagedMatchView<'a>)>,
     ) -> Result<Self> {
         if source
             .len()
             .checked_sub(prefix_len)
             .is_none_or(|frame_len| frame_len != plan.source_len())
             || tables.layouts() != (plan.long_layout(), plan.short_layout())
+            || dictionary.is_some_and(|(long, short)| {
+                (long.view().layout(), short.view().layout())
+                    != (plan.long_layout(), plan.short_layout())
+                    || long.staged_len() != prefix_len
+                    || short.staged_len() != prefix_len
+            })
         {
             return Err(Error::InvalidParameter);
         }
         tables.reset();
-        tables.seed_prefix(source, prefix_len)?;
+        if dictionary.is_none() {
+            tables.seed_prefix(source, prefix_len)?;
+        }
         literals.clear();
         sequences.clear();
         Ok(Self {
             source,
             plan,
             tables,
+            dictionary,
             literals,
             sequences,
             position: prefix_len,
@@ -129,9 +162,11 @@ impl<'a, A: Allocator> DoubleFastMatchState<'a, A> {
                 self.plan.short_layout(),
                 self.plan.window_size(),
             )?;
-            match parse_block(
+            match parse_block_with_dictionary(
                 block,
                 &mut self.tables,
+                self.dictionary
+                    .map(|(long, short)| (long.view(), short.view())),
                 committed_repeats,
                 &mut self.literals,
                 &mut self.sequences,
@@ -162,6 +197,15 @@ impl<'a, A: Allocator> DoubleFastMatchState<'a, A> {
         self.tables.retained_capacity()
             + self.literals.capacity()
             + self.sequences.capacity() * core::mem::size_of::<SequenceWithOffset>()
+    }
+
+    /// Per-call sampled cells; neither compiled table receives a sample.
+    #[cfg(test)]
+    pub(crate) fn test_sampled_positions(&self) -> (&[usize], &[usize]) {
+        (
+            self.tables.long.test_positions(),
+            self.tables.short.test_positions(),
+        )
     }
 }
 

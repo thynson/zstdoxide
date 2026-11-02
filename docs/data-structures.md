@@ -4100,10 +4100,27 @@ without cloning tables or content.
 The [reuse geometry refinement](prepared-dictionary-analysis.md#reuse-geometry-refinement)
 fixes table positions as content-relative and the tables as immutable during
 calls: input sampling mutates only per-call tables, and dictionary candidates
-are translated at use by the staging delta with a floor at that delta. A
-compiled state is therefore borrowable while calls run, and the single merged
-candidate table of Module 36 is replaced by a second read-only candidate
-source per family.
+are consulted as a second read-only source. A call stages exactly the compiled
+`loaded_len` suffix before its input, so content-relative and combined-space
+positions coincide and no translation delta is applied; the per-call window
+floor still bounds every accepted candidate. `MatchTableView<'a>` is the
+allocation-free borrow of one sampled cell array plus its checked layout; it
+offers only `layout` and `lookup`, so compiled cells cannot be reset, stored or
+reconfigured. `StagedMatchView<'a>` adds the exact staged-prefix length those
+positions require, and a per-call state rejects a different prefix instead of
+reading candidates under foreign geometry. Fast holds one staged view,
+DoubleFast holds a long/short pair. The
+per-call table is the only writer, and a merged read returns the per-call entry
+when present and the compiled entry otherwise, which reproduces a table seeded
+with dictionary positions and then overwritten by call sampling. This keeps
+per-call input sampling separate without copying or reseeding compiled tables.
+
+A formatted dictionary also contributes `CompiledEntropy<'a>`: the borrowed
+`DictionaryEntropyView` and the first-block literal `HuffmanCodebook`, both
+built once during construction with no allocation. The codebook is the exact
+`HUF_readCTable`-style twelve-bit table the combined-staging path rebuilds per
+call, so a compiled frame seeds its first block without repeating canonical code
+assignment. Raw and empty dictionaries compile no entropy.
 
 Upstream counterparts are pinned `ZSTD_CDict`, `ZSTD_createCDict_advanced2`,
 `ZSTD_initCDict_internal`, `ZSTD_loadDictionaryContent`, `ZSTD_CCtx_refCDict`

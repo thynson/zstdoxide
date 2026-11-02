@@ -76,14 +76,19 @@ the first emitted block and only for formatted dictionaries, matching Module 36.
 The [reuse geometry refinement](prepared-dictionary-analysis.md#reuse-geometry-refinement)
 fixes the internal shape: compiled tables stay immutable during calls, hold
 content-relative positions, and are consulted as a second read-only candidate
-source beside per-call tables that alone receive input sampling, with every
-dictionary candidate translated by the staging delta and bounded by a floor at
-that delta. Because two candidate streams do not reproduce Module 36's single
-merged table, exact byte equality with the combined-staging path is a measured
-per-family comparison recorded in the evidence rather than a contract. Raw and
-empty dictionaries never build compiled tables and keep the exact
-dictionary-free parameterized bytes; the compiled profile must never silently
-substitute a strategy or drop a dictionary.
+source beside per-call tables that alone receive input sampling. A call stages
+exactly the compiled `loaded_len` suffix before its input, so the staging delta
+is zero and positions already coincide; a future call that stages less must
+translate by the delta and floor every candidate at it. The merged read takes a
+nonempty per-call entry first and the compiled entry otherwise, which reproduces
+a table seeded with dictionary positions and then overwritten by call sampling.
+Byte equality with Module 36's combined-staging path is still a measured
+per-family comparison recorded in the evidence rather than a general contract,
+because candidate streams, sampling and compilation order remain separate
+mechanisms even where a deterministic pair matches exactly. Raw and empty
+dictionaries never build compiled tables and keep the exact dictionary-free
+parameterized bytes; the compiled profile must never silently substitute a
+strategy or drop a dictionary.
 
 ## Qualification before promotion
 

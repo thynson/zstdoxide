@@ -12,7 +12,7 @@ use alloc::alloc::Global;
 use core::alloc::{Allocator, Layout};
 
 use crate::match_search::SearchKeyLayout;
-use crate::matchfinder::MatchTable;
+use crate::matchfinder::{MatchTable, MatchTableView};
 use crate::{Error, Result};
 
 /// Complete owners of the long and short hash tables, with independent layouts
@@ -73,6 +73,18 @@ impl<L: Allocator, S: Allocator> DoubleFastTables<L, S> {
 
     pub(crate) fn layouts(&self) -> (SearchKeyLayout, SearchKeyLayout) {
         (self.long.layout(), self.short.layout())
+    }
+
+    /// Borrow both sampled arrays without allocating or gaining a write path.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "compiled DoubleFast consultation is test-only so far"
+        )
+    )]
+    pub(crate) fn view(&self) -> (MatchTableView<'_>, MatchTableView<'_>) {
+        (self.long.view(), self.short.view())
     }
 
     /// Payload capacity only; excludes this inline pair and borrowed source.

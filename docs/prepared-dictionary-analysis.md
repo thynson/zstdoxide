@@ -166,3 +166,40 @@ frontiers carry over per family.
   `DictionaryHandle` selection without cloning tables.
 - Allocation-failure ordering for construction when tables and entropy are
   reserved in one domain but validated in stages.
+
+## Fast and DoubleFast consultation (item 3)
+
+The item-3 implementation fixes the candidate-merge question for the two hash
+families and measures the resulting geometry instead of asserting byte identity:
+
+- A call stages exactly the compiled `loaded_len` suffix before its input, so
+  compiled positions are already combined-space positions and the translation
+  delta is zero. The delta and its floor stay unimplemented until a call can
+  stage less than the compiled suffix; the state constructor rejects a layout
+  mismatch before resetting its table, and the parser still verifies every
+  candidate's bytes, offset, block bounds and window.
+- `MatchTableView<'a>` is the immutable borrow of one sampled array plus its
+  checked layout; `MatchTable::view` and `DoubleFastTables::view` produce it and
+  expose no write path. `StagedMatchView<'a>` pairs that view with the exact
+  staged-prefix length its positions index; Fast carries one and DoubleFast a
+  long/short pair in their per-call states, and both constructors reject a call
+  whose prefix length differs from the compiled suffix.
+- The merged read is "per-call entry when present, compiled entry otherwise".
+  Because the per-call table starts empty and every sample is stored there, this
+  reproduces a table seeded with dictionary positions and then overwritten by
+  call sampling: a later store always wins. Per-call input sampling therefore
+  stays separate and mutates only per-call cells.
+- Unit tests compare every block of a compiled-consultation state against
+  `from_parts_with_prefix` on the identical combined borrow for Fast and
+  DoubleFast. They also prove that at least one emitted sequence had a candidate
+  before the frame start (a dictionary hit), that compiled cells were unchanged
+  after the call, and that every nonempty per-call cell indexes the frame
+  region. These are measured comparisons for these deterministic pairs, not a
+  general equality contract.
+- A formatted dictionary's prepared entropy is borrowed as
+  `DictionaryEntropyView` and its twelve-bit first-block literal codebook is
+  built once at construction. The combined path rebuilds that codebook per call;
+  the test compares the compiled table with the exact combined-path
+  construction. `first_block_seed` exposes the pair the frame workspace consumes;
+  consuming it in an emitting workspace, the Greedy and tree families, and the
+  public surface remain later items.

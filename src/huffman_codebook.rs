@@ -23,7 +23,7 @@ pub(crate) struct Codeword {
 }
 
 /// A complete canonical prefix code with explicit absent-symbol entries.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct HuffmanCodebook {
     entries: [Codeword; SYMBOLS],
     table_log: u8,

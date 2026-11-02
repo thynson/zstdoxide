@@ -141,22 +141,19 @@ impl<A: Allocator> MatchTable<A> {
         allow(dead_code, reason = "Fast parser integration follows")
     )]
     pub(crate) fn lookup(&self, key: impl Into<MatchKey>) -> Result<Option<usize>> {
-        let index = self.layout.bucket(key.into())?;
-        if index >= self.positions.len() {
-            return Err(Error::CorruptData);
+        lookup_sampled(&self.positions, self.layout, key.into())
+    }
+
+    /// Borrow the sampled positions without taking ownership or allocating.
+    ///
+    /// The view keeps the checked layout and the live initialized entries. It
+    /// is the read-only candidate source a compiled dictionary offers to a call;
+    /// no mutation, reset or reconfiguration is reachable through it.
+    pub(crate) fn view(&self) -> MatchTableView<'_> {
+        MatchTableView {
+            positions: &self.positions,
+            layout: self.layout,
         }
-        #[cfg(not(feature = "unsafe-match-table"))]
-        let position = self.positions[index];
-        #[cfg(feature = "unsafe-match-table")]
-        let position = {
-            // SAFETY: The runtime check proves index is within the initialized
-            // Vec<usize> length, not just its capacity. The retained allocator
-            // owns valid aligned storage of initialized usize values. The shared
-            // self borrow excludes mutation/reallocation for this read, and the
-            // temporary reference cannot escape: only its Copy value is returned.
-            unsafe { *self.positions.get_unchecked(index) }
-        };
-        Ok((position != EMPTY).then_some(position))
     }
 
     /// Store a sampled position without observing the previous collision.
@@ -222,9 +219,124 @@ impl<A: Allocator> MatchTable<A> {
     }
 }
 
+/// Checked candidate read shared by owned tables and their immutable views.
+///
+/// The runtime length check is the only admission the access needs: `index` is
+/// derived from the checked layout's bucket function and compared with the live
+/// initialized length, so spare capacity is never read. `positions` contains
+/// only initialized `usize` values for the whole borrow.
+fn lookup_sampled(
+    positions: &[usize],
+    layout: SearchKeyLayout,
+    key: MatchKey,
+) -> Result<Option<usize>> {
+    let index = layout.bucket(key)?;
+    if index >= positions.len() {
+        return Err(Error::CorruptData);
+    }
+    #[cfg(not(feature = "unsafe-match-table"))]
+    let position = positions[index];
+    #[cfg(feature = "unsafe-match-table")]
+    let position = {
+        // SAFETY: The runtime check proves index is within the initialized
+        // slice length. The owning table keeps valid aligned initialized usize
+        // storage for the whole shared borrow; this read cannot outlive it, the
+        // temporary reference cannot escape, and only its Copy value is returned.
+        unsafe { *positions.get_unchecked(index) }
+    };
+    Ok((position != EMPTY).then_some(position))
+}
+
+/// An immutable borrow of sampled candidates owned by another table.
+///
+/// A compiled dictionary keeps its tables immutable across calls, so a call
+/// consults this view beside its own mutable hash table. Greedy positions and
+/// links stay out of this type; it carries only checked cell reads.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct MatchTableView<'a> {
+    positions: &'a [usize],
+    layout: SearchKeyLayout,
+}
+
+impl MatchTableView<'_> {
+    /// The layout the borrowed entries were sampled under.
+    pub(crate) const fn layout(&self) -> SearchKeyLayout {
+        self.layout
+    }
+
+    /// Read one candidate; the owner's cells are never modified.
+    pub(crate) fn lookup(&self, key: impl Into<MatchKey>) -> Result<Option<usize>> {
+        lookup_sampled(self.positions, self.layout, key.into())
+    }
+
+    /// Inspect the borrowed cells for frozen equality checks only.
+    #[cfg(test)]
+    pub(crate) const fn test_positions(&self) -> &[usize] {
+        self.positions
+    }
+}
+
+/// A candidate view whose positions index a staged prefix of the call source.
+///
+/// The staged length is the prefix length those positions require, so a state
+/// constructor can reject a call that staged a different amount instead of
+/// reading positions under foreign geometry. It adds one copied `usize` to the
+/// view and no write path.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct StagedMatchView<'a> {
+    view: MatchTableView<'a>,
+    staged_len: usize,
+}
+
+impl<'a> StagedMatchView<'a> {
+    /// Pair an immutable cell view with the prefix length its positions index.
+    pub(crate) const fn new(view: MatchTableView<'a>, staged_len: usize) -> Self {
+        Self { view, staged_len }
+    }
+
+    /// The read-only cell view a parser consults.
+    pub(crate) const fn view(&self) -> MatchTableView<'a> {
+        self.view
+    }
+
+    /// The exact staged prefix length the positions require.
+    pub(crate) const fn staged_len(&self) -> usize {
+        self.staged_len
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn read_only_view_observes_entries_without_gaining_mutation() {
+        let layout = SearchKeyLayout::for_fast(6, 4).unwrap();
+        let mut table = MatchTable::with_layout_in(layout, Global).unwrap();
+        table.store(*b"abcd", 3).unwrap();
+        table.store(*b"wxyz", 8).unwrap();
+        let view = table.view();
+        assert_eq!(view.layout(), layout);
+        assert_eq!(view.test_positions(), table.test_positions());
+        assert_eq!(view.lookup(*b"abcd"), Ok(Some(3)));
+        assert_eq!(view.lookup(*b"wxyz"), Ok(Some(8)));
+        let wrong = SearchKeyLayout::for_fast(6, 5)
+            .unwrap()
+            .read_key(b"abcde")
+            .unwrap();
+        assert_eq!(view.lookup(wrong), Err(Error::InvalidParameter));
+        let _ = view;
+        // The view has no write path; only the owner changes entries, and a
+        // later view observes exactly the owner's current cells.
+        table.store(*b"abcd", 21).unwrap();
+        table.store(*b"wxyz", usize::MAX).unwrap();
+        let view = table.view();
+        assert_eq!(view.lookup(*b"abcd"), Ok(Some(21)));
+        assert_eq!(view.lookup(*b"wxyz"), Ok(None));
+        let _ = view;
+        table.reset();
+        assert_eq!(table.view().lookup(*b"abcd"), Ok(None));
+    }
 
     #[test]
     fn sampled_reads_preserve_delayed_store_collision_order() {

@@ -15,6 +15,7 @@ use core::alloc::Allocator;
 use crate::double_fast_block::{DoubleFastBlock, DoubleFastCursor};
 use crate::double_fast_tables::DoubleFastTables;
 use crate::match_key::MatchKey;
+use crate::matchfinder::MatchTableView;
 use crate::sequence_context::{LogicalSequence, SequenceWithOffset};
 use crate::sequence_plan::OffsetIntent;
 use crate::{Error, Result};
@@ -125,11 +126,46 @@ fn explicit(
     found
 }
 
+/// One immutable compiled long/short candidate pair.
+pub(crate) type DictionaryCandidates<'a> = (MatchTableView<'a>, MatchTableView<'a>);
+
+/// The per-call table is the only writer. A read-only compiled entry is used
+/// only when the per-call slot is empty, reproducing the seeded merged table
+/// whose entries a later call sample overwrites.
+fn probe_long<L: Allocator, S: Allocator>(
+    tables: &DoubleFastTables<L, S>,
+    dictionary: Option<DictionaryCandidates<'_>>,
+    key: MatchKey,
+) -> Result<Option<usize>> {
+    match tables.long.lookup(key)? {
+        Some(position) => Ok(Some(position)),
+        None => match dictionary {
+            Some((long, _)) => long.lookup(key),
+            None => Ok(None),
+        },
+    }
+}
+
+fn probe_short<L: Allocator, S: Allocator>(
+    tables: &DoubleFastTables<L, S>,
+    dictionary: Option<DictionaryCandidates<'_>>,
+    key: MatchKey,
+) -> Result<Option<usize>> {
+    match tables.short.lookup(key)? {
+        Some(position) => Ok(Some(position)),
+        None => match dictionary {
+            Some((_, short)) => short.lookup(key),
+            None => Ok(None),
+        },
+    }
+}
+
 /// Retain the current long candidate across table stores and the next probe.
 /// A later long lookup must see the current store when its bucket collides.
 fn search<L: Allocator, S: Allocator>(
     block: &DoubleFastBlock<'_>,
     tables: &mut DoubleFastTables<L, S>,
+    dictionary: Option<DictionaryCandidates<'_>>,
     position: usize,
     anchor: usize,
     repeat: usize,
@@ -138,11 +174,11 @@ fn search<L: Allocator, S: Allocator>(
         return Ok(None);
     };
     let mut long_key = block.long_key(cursor.current())?;
-    let mut long_candidate = tables.long.lookup(long_key)?;
+    let mut long_candidate = probe_long(tables, dictionary, long_key)?;
     loop {
         let current = cursor.current();
         let short_key = block.short_key(current)?;
-        let short_candidate = tables.short.lookup(short_key)?;
+        let short_candidate = probe_short(tables, dictionary, short_key)?;
         tables.short.store(short_key, current)?;
         tables.long.store(long_key, current)?;
 
@@ -172,7 +208,7 @@ fn search<L: Allocator, S: Allocator>(
             store_deferred(tables, cursor, next_key)?;
             return Ok(Some(found));
         }
-        let next_candidate = tables.long.lookup(next_key)?;
+        let next_candidate = probe_long(tables, dictionary, next_key)?;
         if let Some(previous) = candidate(block, current, short_candidate, 4, false) {
             let mut position = current;
             let mut previous = previous;
@@ -278,7 +314,31 @@ pub(crate) fn parse_block<A: Allocator, B: Allocator, L: Allocator, S: Allocator
     literals: &mut Vec<u8, L>,
     sequences: &mut Vec<SequenceWithOffset, S>,
 ) -> Result<DoubleFastParseResult> {
-    if tables.layouts() != block.layouts() {
+    parse_block_with_dictionary(block, tables, None, initial_repeats, literals, sequences)
+}
+
+/// Parse with an optional immutable compiled long/short candidate pair.
+///
+/// Both per-call tables still receive every sample; compiled entries are read
+/// only from an empty per-call slot. Candidates are combined-space positions in
+/// the caller's staged borrow and pass the same byte, offset and window checks.
+pub(crate) fn parse_block_with_dictionary<
+    A: Allocator,
+    B: Allocator,
+    L: Allocator,
+    S: Allocator,
+>(
+    block: DoubleFastBlock<'_>,
+    tables: &mut DoubleFastTables<A, B>,
+    dictionary: Option<DictionaryCandidates<'_>>,
+    initial_repeats: [u32; 3],
+    literals: &mut Vec<u8, L>,
+    sequences: &mut Vec<SequenceWithOffset, S>,
+) -> Result<DoubleFastParseResult> {
+    if tables.layouts() != block.layouts()
+        || dictionary
+            .is_some_and(|(long, short)| (long.layout(), short.layout()) != block.layouts())
+    {
         return Err(Error::InvalidParameter);
     }
     if initial_repeats.contains(&0) {
@@ -319,7 +379,14 @@ pub(crate) fn parse_block<A: Allocator, B: Allocator, L: Allocator, S: Allocator
     } else {
         0
     };
-    while let Some(found) = search(&block, tables, position, output.anchor, first_repeat)? {
+    while let Some(found) = search(
+        &block,
+        tables,
+        dictionary,
+        position,
+        output.anchor,
+        first_repeat,
+    )? {
         if found.intent == OffsetIntent::Explicit {
             second_repeat = first_repeat;
             first_repeat = found.position - found.previous;

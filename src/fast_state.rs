@@ -4,9 +4,9 @@
 use alloc::vec::Vec;
 use core::alloc::Allocator;
 
-use crate::fast_parse::{FastBlock, FastParseResult, parse_block};
+use crate::fast_parse::{FastBlock, FastParseResult, parse_block_with_dictionary};
 use crate::fast_plan::FastExecutionPlan;
-use crate::matchfinder::MatchTable;
+use crate::matchfinder::{MatchTable, StagedMatchView};
 use crate::sequence_context::SequenceWithOffset;
 use crate::{Error, Result};
 
@@ -20,6 +20,7 @@ pub(crate) struct FastMatchState<'a, A: Allocator> {
     source: &'a [u8],
     plan: FastExecutionPlan,
     table: MatchTable<A>,
+    dictionary: Option<StagedMatchView<'a>>,
     literals: Vec<u8, A>,
     sequences: Vec<SequenceWithOffset, A>,
     position: usize,
@@ -52,31 +53,60 @@ impl<'a, A: Allocator> FastMatchState<'a, A> {
     pub(crate) fn from_parts_with_prefix(
         source: &'a [u8],
         plan: FastExecutionPlan,
+        table: MatchTable<A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+        prefix_len: usize,
+    ) -> Result<Self> {
+        Self::from_parts_with_compiled_prefix(
+            source, plan, table, literals, sequences, prefix_len, None,
+        )
+    }
+
+    /// Bind owners to a combined borrow whose staged prefix equals a compiled
+    /// dictionary's loaded suffix.
+    ///
+    /// The per-call table starts empty and receives every input sample; the
+    /// compiled view supplies a candidate only when that table has no entry, so
+    /// a per-call store always wins exactly as a seeded merged table would. The
+    /// view's positions index the staged prefix, which is why the caller must
+    /// stage exactly that suffix: the constructor rejects a layout mismatch or a
+    /// different staged length before resetting the table, and the parser still
+    /// verifies every candidate's bytes, offset and window.
+    pub(crate) fn from_parts_with_compiled_prefix(
+        source: &'a [u8],
+        plan: FastExecutionPlan,
         mut table: MatchTable<A>,
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
         prefix_len: usize,
+        dictionary: Option<StagedMatchView<'a>>,
     ) -> Result<Self> {
         if source
             .len()
             .checked_sub(prefix_len)
             .is_none_or(|frame_len| frame_len != plan.source_len())
             || table.layout() != plan.layout()
+            || dictionary.is_some_and(|candidate| {
+                candidate.view().layout() != plan.layout() || candidate.staged_len() != prefix_len
+            })
         {
             return Err(Error::InvalidParameter);
         }
         table.reset();
-        let layout = plan.layout();
-        if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
-            // Seed every staged key position so candidates can point into the
-            // dictionary region; parsing never inserts those positions itself.
-            // Later positions win each slot, and the parser's window floor
-            // still bounds every candidate it accepts.
-            for position in 0..=last {
-                let key = layout
-                    .read_key(&source[position..])
-                    .ok_or(Error::InvalidState)?;
-                table.replace(key, position)?;
+        if dictionary.is_none() {
+            let layout = plan.layout();
+            if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
+                // Seed every staged key position so candidates can point into
+                // the dictionary region; parsing never inserts those positions
+                // itself. Later positions win each slot, and the parser's window
+                // floor still bounds every candidate it accepts.
+                for position in 0..=last {
+                    let key = layout
+                        .read_key(&source[position..])
+                        .ok_or(Error::InvalidState)?;
+                    table.replace(key, position)?;
+                }
             }
         }
         literals.clear();
@@ -85,6 +115,7 @@ impl<'a, A: Allocator> FastMatchState<'a, A> {
             source,
             plan,
             table,
+            dictionary,
             literals,
             sequences,
             position: prefix_len,
@@ -135,9 +166,10 @@ impl<'a, A: Allocator> FastMatchState<'a, A> {
                 self.plan.window_size(),
                 self.plan.initial_step(),
             )?;
-            match parse_block(
+            match parse_block_with_dictionary(
                 block,
                 &mut self.table,
+                self.dictionary.map(|candidate| candidate.view()),
                 committed_repeats,
                 &mut self.literals,
                 &mut self.sequences,
@@ -168,6 +200,12 @@ impl<'a, A: Allocator> FastMatchState<'a, A> {
         self.table.retained_capacity()
             + self.literals.capacity()
             + self.sequences.capacity() * core::mem::size_of::<SequenceWithOffset>()
+    }
+
+    /// Per-call sampled cells; dictionary candidates never appear here.
+    #[cfg(test)]
+    pub(crate) fn test_sampled_positions(&self) -> &[usize] {
+        self.table.test_positions()
     }
 }
 
