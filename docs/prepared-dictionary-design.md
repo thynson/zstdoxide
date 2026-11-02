@@ -81,8 +81,9 @@ silently replacing the existing bytes.
 
 ## Qualification before promotion
 
-Analyze the pinned table loading, sampling frontier, loaded-end expiry and
-by-reference versus by-copy ownership before implementation. Check every
+The pinned loading pipeline, sampling frontier, loaded-end expiry and
+by-reference versus by-copy ownership are analyzed first in
+[the compiled-dictionary analysis](prepared-dictionary-analysis.md). Check every
 admitted strategy at minimum, default and maximum boundary levels with empty,
 raw and formatted dictionaries: exact output comparison to the existing
 combined-staging bytes, unchanged dictionary content, guards/suffixes,

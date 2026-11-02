@@ -1,0 +1,128 @@
+# Compiled-dictionary loading analysis
+
+Module 37 item 1 records what the pinned reference owns in a compiled
+dictionary, how that state is built and attached, and which Rust counterparts
+already exist. Every claim below points at the pinned sources; no Rust
+implementation is proposed beyond the ownership decisions this analysis fixes.
+The pinned revision is facebook/zstd v1.5.7
+`f8745da6ff1ad1e7bab384bd1f9d742439278e99`, inspected in the external checkout
+`/private/tmp/module24-preparation/zstd-git` (a fresh pinned fetch; the
+original study checkout's Git metadata was pruned).
+
+## What a native CDict owns
+
+`struct ZSTD_CDict_s` (`zstd_compress.c:80-97`) owns the dictionary content
+pointer and size plus the content type the CDict was created with, an entropy
+workspace, one `ZSTD_cwksp` workspace, one complete `ZSTD_MatchState_t`, one
+`ZSTD_compressedBlockState_t` (the prepared previous-block entropy), the custom
+allocator record, the dictionary ID, the compression level sentinel and the
+resolved row-match-finder switch. Creation reserves one workspace for all of it
+(`ZSTD_createCDict_advanced_internal`, `zstd_compress.c:5605-5641`), so the
+tables and the entropy state are one allocation domain with one lifetime.
+
+## Creation pipeline
+
+`ZSTD_createCDict_advanced2` (`zstd_compress.c:5660-5707`) resolves parameters
+through `ZSTD_getCParamsFromCCtxParams` in `ZSTD_cpm_createCDict` mode, which
+applies dictionary-size-tiered presets and the tagged-indices caps:
+Fast/DoubleFast hash logs are capped at `32 - ZSTD_SHORT_CACHE_TAG_BITS` when
+the CDict indices are tagged (`zstd_compress.c:1575-1580`,
+`ZSTD_CDictIndicesAreTagged` at `:299-302`, tag width in
+`zstd_compress_internal.h:1482`), and row hash logs at
+`32 - ZSTD_ROW_HASH_TAG_BITS` (`zstd_compress.c:1600`). The row-match-finder
+switch is resolved once at creation (`ZSTD_resolveRowMatchFinderMode`) and
+frozen in the CDict. Dedicated dictionary search exists but stays outside this
+module.
+
+`ZSTD_initCDict_internal` (`zstd_compress.c:5551-5604`) first resets the
+owned match state for CDict use (`ZSTD_resetTarget_CDict`), then loads the
+dictionary once through `ZSTD_compress_insertDictionary` with
+`ZSTD_tfp_forCDict` and stores the resulting ID.
+
+## Loading pipeline
+
+`ZSTD_compress_insertDictionary` dispatches by content type. A formatted
+dictionary runs `ZSTD_loadZstdDictionary`/`ZSTD_loadCEntropy`
+(`zstd_compress.c:5061-5215`): the literal CTable is read with
+`HUF_repeat_check` promoted to `HUF_repeat_valid` only when every symbol has a
+nonzero weight and all 256 symbols are present; the three FSE tables are built
+into the owned previous-block state; the repeat triple is read and validated
+nonzero and at most the content size; and the offset table's repeat mode
+requires every offset up to content size + 128 KiB to be representable. The
+content is then loaded into the match state.
+
+`ZSTD_loadDictionaryContent` (`zstd_compress.c:4898-4990`) applies three
+ordered caps before any table fill: dictionary indices may reach at most
+`ZSTD_CURRENT_MAX - ZSTD_WINDOW_START_INDEX`; tagged short-cache indices
+truncate the dictionary to `(1 << (32 - 8)) - ZSTD_WINDOW_START_INDEX`; and the
+table-indexable range caps at `1 << min(max(hashLog + 3, chainLog + 1), 31)`.
+Only the surviving suffix is loaded. It sets `nextToUpdate` to the loaded start
+(the sampling frontier) and `loadedDictEnd` to the loaded end (the expiry
+anchor), runs `ZSTD_overflowCorrectIfNeeded`, and fills exactly the selected
+finder: `ZSTD_fillHashTable`, `ZSTD_fillDoubleHashTable`, chain insert, row
+fill with the context salt, or binary-tree fill. Loading may be skipped
+entirely for content at or below `HASH_READ_SIZE`.
+
+## Attach and use pipeline
+
+`ZSTD_compressBegin_internal` (`zstd_compress.c:5238-5285`) never uses both a
+raw dictionary and a CDict. A CDict with nonzero content is reused as prepared
+state only when the pledged source is unknown, below 128 KiB
+(`ZSTD_USE_CDICT_PARAMS_SRCSIZE_CUTOFF`, `:5232`), or below six times the
+dictionary content (`ZSTD_USE_CDICT_PARAMS_DICTSIZE_MULTIPLIER`, `:5233`);
+then `ZSTD_resetCCtx_usingCDict` attaches or copies the prepared match state
+and entropy. Otherwise the CCtx is reset for its own parameters and the same
+`ZSTD_compress_insertDictionary` runs again with `ZSTD_tfp_forCCtx` — the
+native library re-loads per call in that regime. `ZSTD_checkDictValidity`
+(`zstd_compress.c:4629`) later expires loaded content against the resolved
+window as blocks advance.
+
+## Rust counterparts already in place
+
+Module 36 resolves the same scalar profile against the source and the
+dictionary's matchable content length, stages the in-window dictionary suffix
+before the input, seeds the selected per-call tables from that staged region
+(`GreedyTables::seed_prefix`, `DoubleFastTables::seed_prefix`, the Fast
+owner's seeding and the tree's unsorted-insert back-fill), bounds every
+candidate with the resolved-window floor, reuses prepared formatted-dictionary
+entropy as the first block's previous state, and serializes the dictionary ID.
+The row owner seeds under the same fresh salt every later lookup uses
+(`FRESH_ROW_SALT`), which is the Rust counterpart of the native row salt and
+short-cache tags: tags written at construction must be readable at search time
+by construction, not by a shared mutable salt. Admission rejects every
+Optimal/Ultra/Ultra2 profile for nonzero dictionary content.
+
+## Ownership decisions fixed by this analysis
+
+A `CompiledDictionary<'a, A>` borrows immutable dictionary content for `'a`
+(the `ZSTD_dlm_byRef` shape) and owns everything else in allocator `A`: the
+resolved scalar profile, the per-profile seed tables from the existing
+per-call table families, prepared entropy only for formatted dictionaries, the
+dictionary ID and the loaded-suffix boundary. Construction validates admission
+and reserves every table before publication; failure releases the partial
+state. `Arc<CompiledDictionary>` shares without cloning tables or content. The
+compiled profile is fixed at construction; a later call whose request resolves
+to a different profile must be rejected explicitly rather than silently
+reusing mismatched tables or re-forking the profile. Window expiry keeps the
+Module 36 candidate-floor rule against the compiled loaded end; the native
+cutoffs at `zstd_compress.c:5232-5233` are a native reuse-policy boundary and
+not a Rust contract.
+
+The first implementation target stays exact byte equality with the Module 36
+combined-staging path for the admitted profiles on deterministic
+dictionary/source pairs: seeding tables with the same positions the staged
+scan would visit must not change emitted candidates. Where equality cannot be
+established for a family, that family stays on the existing per-call path and
+the difference is measured, never silently shipped.
+
+## Open questions for the implementation items
+
+- Whether input-only parsing with prefix-relative geometry reproduces the
+  combined-borrow parser's candidates for the chain, row and tree families, or
+  whether those families must keep a bounded combined borrow per call.
+- The public error surface when a call's request resolves away from the
+  compiled profile, versus a documented per-call fallback.
+- Coordinator selection semantics for compiled handles beside the existing
+  `DictionaryHandle` selection without cloning tables.
+- Allocation-failure ordering for construction when tables and entropy are
+  reserved in one domain but validated in stages.

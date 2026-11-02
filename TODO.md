@@ -205,7 +205,7 @@ and a resolved profile while borrowing dictionary content. Design and ownership
 are recorded before implementation in `docs/prepared-dictionary-design.md` and
 `docs/data-structures.md`.
 
-- [ ] Analyze pinned CDict table loading, sampling frontier, loaded-end expiry and by-reference/by-copy ownership before implementation.
+- [x] Analyze pinned CDict table loading, sampling frontier, loaded-end expiry and by-reference/by-copy ownership before implementation.
 - [ ] Implement immutable compiled-dictionary ownership, admission, dictionary-ID/entropy reuse and explicit optimal-family rejection.
 - [ ] Implement compiled Fast and DoubleFast one-shot emission with exact byte comparison against combined staging.
 - [ ] Extend compiled emission to the Greedy/Lazy/Lazy2 chain and row families.
