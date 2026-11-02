@@ -73,11 +73,17 @@ window expiry uses the constructed profile's resolved window and the loaded
 suffix boundary, not the caller's later request. Prepared entropy seeds only
 the first emitted block and only for formatted dictionaries, matching Module 36.
 
-The first bounded implementation target is exact byte equality with the Module
-36 combined-staging path for the admitted profiles on deterministic
-dictionary/source pairs. If loading tables changes match candidates, that
-difference is measured and documented in a separately named profile rather than
-silently replacing the existing bytes.
+The [reuse geometry refinement](prepared-dictionary-analysis.md#reuse-geometry-refinement)
+fixes the internal shape: compiled tables stay immutable during calls, hold
+content-relative positions, and are consulted as a second read-only candidate
+source beside per-call tables that alone receive input sampling, with every
+dictionary candidate translated by the staging delta and bounded by a floor at
+that delta. Because two candidate streams do not reproduce Module 36's single
+merged table, exact byte equality with the combined-staging path is a measured
+per-family comparison recorded in the evidence rather than a contract. Raw and
+empty dictionaries never build compiled tables and keep the exact
+dictionary-free parameterized bytes; the compiled profile must never silently
+substitute a strategy or drop a dictionary.
 
 ## Qualification before promotion
 

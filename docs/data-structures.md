@@ -4097,9 +4097,18 @@ reserves every table before publication; failure releases the partial state
 through its exact allocator domain. Sharing uses `Arc<CompiledDictionary>`
 without cloning tables or content.
 
+The [reuse geometry refinement](prepared-dictionary-analysis.md#reuse-geometry-refinement)
+fixes table positions as content-relative and the tables as immutable during
+calls: input sampling mutates only per-call tables, and dictionary candidates
+are translated at use by the staging delta with a floor at that delta. A
+compiled state is therefore borrowable while calls run, and the single merged
+candidate table of Module 36 is replaced by a second read-only candidate
+source per family.
+
 Upstream counterparts are pinned `ZSTD_CDict`, `ZSTD_createCDict_advanced2`,
 `ZSTD_initCDict_internal`, `ZSTD_loadDictionaryContent`, `ZSTD_CCtx_refCDict`
 and `ZSTD_compress_usingCDict_advanced`. The loaded suffix and `loadedDictEnd`
-provide window expiry; `nextToUpdate` provides the sampling frontier. Native
-CCtx lifecycle, dedicated dictionary search, LDM and workers are not implied.
-Contracts and evidence requirements: `prepared-dictionary-design.md`.
+provide window expiry; `nextToUpdate` provides the sampling frontier; the
+`dictMatchState` attach mode provides the read-only second candidate source.
+Native CCtx lifecycle, dedicated dictionary search, LDM and workers are not
+implied. Contracts and evidence requirements: `prepared-dictionary-design.md`.

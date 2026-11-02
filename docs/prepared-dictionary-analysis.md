@@ -115,11 +115,51 @@ scan would visit must not change emitted candidates. Where equality cannot be
 established for a family, that family stays on the existing per-call path and
 the difference is measured, never silently shipped.
 
+## Reuse geometry refinement
+
+Module 36 resets and re-seeds per-call tables from the staged suffix on every
+call (`fast_state.rs` `from_parts_with_prefix` resets and seeds;
+`GreedyTables::seed_prefix` seeds chain and row owners; the tree back-fills at
+its first query). That per-call table work is exactly what a compiled state
+removes, and the pinned library has two reuse modes for it: attach, where
+`ms->dictMatchState` points at the read-only CDict match state
+(`zstd_compress.c:2364`) and every strategy grows dedicated
+`dictMatchState` search variants (`zstd_compress.c:3094-3095`,
+`zstd_lazy.c:173`), with tagged Fast/DoubleFast indices keeping shared entries
+out of context writes; and copy, where the CDict tables are duplicated into the
+context workspace. Neither mode promises byte identity with re-loading the same
+dictionary per call.
+
+The Rust tables store absolute positions in the borrowed slice and parsers
+read candidates through that slice (`seed_chain`/`seed_row` insert `position`;
+`parse_next` reads `self.source[position..]`). A compiled table seeded over
+dictionary content therefore holds content-relative positions while the
+call-time combined borrow contains only the in-window suffix. Three reuse
+shapes exist: translate every dictionary candidate position at use by
+`delta = content_len - staged_len` with a floor at `delta`; stage `delta`
+leading bytes so content positions coincide with combined positions (an
+unbounded copy, rejected); or consult the compiled tables as a second read-only
+candidate source beside per-call tables that alone receive input sampling —
+the `dictMatchState` shape.
+
+Decision: the compiled tables stay immutable during calls and dictionary
+candidates are translated at use as a second read-only candidate source; input
+sampling mutates only per-call tables. A compiled state can therefore be
+borrowed immutably and shared, and per-call scratch (staging, literals,
+sequences, per-call tables) stays per-call. The single-table candidate merge of
+Module 36 is not reproduced by two candidate streams, so byte equality with the
+combined-staging path is a measured comparison per family rather than a
+contract; raw and empty dictionaries never build compiled tables and keep the
+exact dictionary-free parameterized bytes. A translated dictionary candidate at
+content position `p` is usable only when `p >= delta` (its bytes are staged)
+and the resolved window bounds hold; the tree frontier and chain/row sampling
+frontiers carry over per family.
+
 ## Open questions for the implementation items
 
-- Whether input-only parsing with prefix-relative geometry reproduces the
-  combined-borrow parser's candidates for the chain, row and tree families, or
-  whether those families must keep a bounded combined borrow per call.
+- The per-family candidate merge order for the second read-only source and
+  which of Fast, DoubleFast, chain, row and tree need dedicated search variants
+  versus shared translated probes.
 - The public error surface when a call's request resolves away from the
   compiled profile, versus a documented per-call fallback.
 - Coordinator selection semantics for compiled handles beside the existing
