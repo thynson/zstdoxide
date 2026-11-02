@@ -209,7 +209,7 @@ record, workspace or live context between calls.
 - [x] Qualify parameterized dictionary schedules, unsupported-strategy rejection and window expiry against guarded native controls and deterministic selections.
 - [x] Qualify combined parameter and dictionary application under concrete no-atomics ARM code generation, running foreign Miri only if unsafe code is added or modified.
 - [x] Qualify safe, every isolated feature and all features, full/release regression, no_std and strict Clippy.
-- [ ] Compare identical parameterized stateless/coordinator workloads with explicit setup, allocation domains and independent repeats after CPU barriers.
+- [x] Compare identical parameterized stateless/coordinator workloads with explicit setup, allocation domains and independent repeats after CPU barriers.
 - [ ] Reconcile bounded parameterized-dictionary coverage and decompose the next evidenced contract without claiming native workspace, LDM or complete upstream parity.
 
 ## Roadmap

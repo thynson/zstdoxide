@@ -5,7 +5,7 @@ extension, the Greedy chain-and-row family extension, the BinaryTreeLazy2
 tree-family extension with the explicit optimal-family rejection, prepared
 formatted-dictionary entropy reuse, and the public allocating, caller-owned and
 coordinator parameterized dictionary calls are qualified and integrated.
-Corpus validation, measurements and reconciliation remain open.
+Corpus validation and reconciliation remain open.
 
 ## Internal combined staging for the Fast profile
 
@@ -204,3 +204,17 @@ suites, and formatting runs once. Every complete/release suite reports the same
 with zero failures. Ignored tests are not credited, and no implementation
 change or performance claim is made by this matrix item.
 Evidence: `evidence/2026-11-02-one-shot-encode-parameters-feature-matrix.json`.
+
+## Stateless and coordinator measurements
+
+Forty-eight fixed case/level pairs combine the three immutable dictionary kinds
+with seven inputs and cover all six admitted combined-staging profiles. Both
+configurations resolve the same request against the same source and borrowed
+view, write the same caller destination prepared outside clocks and produce
+identical bytes; their tracked dictionary/scratch ledgers are identical across
+every pair. Each of 24 primary executables and independently rebuilt safe/all
+repeats retains 1455 samples, and each records 576 qualification rows. The
+coordinator/stateless geometric-mean ratios and setup-only batch observations
+are recorded in `one-shot-encode-parameters-benchmarks.md`; no universal
+profile benefit or absence of scratch allocation is claimed.
+Evidence: `evidence/2026-11-02-one-shot-encode-parameters-benchmarks.json`.
