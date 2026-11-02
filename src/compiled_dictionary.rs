@@ -28,6 +28,7 @@ use crate::greedy_state::GreedyTables;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::matchfinder::{MatchTable, StagedMatchView};
 use crate::reference_chain::StagedChainView;
+use crate::row_table::StagedRowView;
 use crate::{
     CompressionParameterRequest, DictionaryView, Error, ReferenceStrategy,
     ResolvedCompressionParameters, Result, SourceSize,
@@ -284,6 +285,20 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
             _ => Err(Error::InvalidState),
         }
     }
+
+    /// The immutable row candidate source under the same staged-suffix geometry
+    /// as [`Self::fast_candidates`].
+    ///
+    /// Only a compiled row profile has one; chain and tree families reject the
+    /// request instead of substituting a different finder.
+    pub(crate) fn greedy_row_candidates(&self) -> Result<StagedRowView<'_>> {
+        match &self.tables {
+            CompiledTables::Greedy(GreedyTables::Row(row)) => {
+                Ok(StagedRowView::new(row.view(), self.loaded_len))
+            }
+            _ => Err(Error::InvalidState),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -292,7 +307,7 @@ mod tests {
     use crate::Dictionary;
     use crate::double_fast_state::DoubleFastMatchState;
     use crate::fast_state::FastMatchState;
-    use crate::greedy_state::GreedyMatchState;
+    use crate::greedy_state::{GreedyCandidates, GreedyMatchState};
     use alloc::alloc::Global;
     use alloc::vec;
     use alloc::vec::Vec;
@@ -752,7 +767,7 @@ mod tests {
             Vec::new(),
             Vec::new(),
             staged,
-            Some(candidate),
+            Some(GreedyCandidates::Chain(candidate)),
         )
         .unwrap();
         let mut repeats = [1, 4, 8];
@@ -793,6 +808,119 @@ mod tests {
         for level in [4, 5, 7] {
             greedy_chain_consultation_case(level);
         }
+    }
+
+    fn greedy_row_consultation_case(level: i32) {
+        // A 32 KiB dictionary tiers these levels to window log 17, where the
+        // lazy family selects the row finder.
+        let content = pattern(0x7e11_5a3d, 32 * 1024);
+        let input = content[content.len() - 1024..].to_vec();
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let (allocator, monitor) = monitored();
+        let compiled = compile(dictionary.view(), level, allocator).unwrap();
+        assert!(
+            matches!(
+                compiled.parameters().strategy(),
+                ReferenceStrategy::Greedy | ReferenceStrategy::Lazy | ReferenceStrategy::Lazy2
+            ),
+            "level {level} is not an admitted lazy-family profile"
+        );
+        assert!(compiled.parameters().window_log() > 14, "level {level}");
+        let staged = compiled.loaded_len();
+        assert_eq!(staged, content.len());
+        let candidate = compiled.greedy_row_candidates().unwrap();
+        assert_eq!(candidate.staged_len(), staged);
+        let compiled_maps = {
+            let (positions, tags) = candidate.view().test_maps();
+            (positions.to_vec(), tags.to_vec())
+        };
+        let combined = staged_with(&content, staged, &input);
+        let plan = GreedyExecutionPlan::from_family_parameters(compiled.parameters(), input.len())
+            .unwrap();
+        let mut reference = GreedyMatchState::from_parts_with_prefix(
+            &combined,
+            plan,
+            GreedyTables::new_in(plan.tables(), Global, Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+        )
+        .unwrap();
+        let mut consulted = GreedyMatchState::from_parts_with_compiled_prefix(
+            &combined,
+            plan,
+            GreedyTables::new_in(plan.tables(), Global, Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+            Some(GreedyCandidates::Row(candidate)),
+        )
+        .unwrap();
+        let mut repeats = [1, 4, 8];
+        let mut emitted = 0;
+        let mut hits = 0;
+        while emitted < input.len() {
+            let length = (input.len() - emitted).min(plan.block_limit());
+            let expected = reference.parse_next(length, repeats).unwrap();
+            let actual = consulted.parse_next(length, repeats).unwrap();
+            // Separate row rings can reorder candidates relative to one seeded
+            // ring, so equality is measured for this deterministic pair rather
+            // than asserted as a general contract.
+            assert_eq!(actual, expected, "level {level} block at {emitted}");
+            assert_eq!(consulted.literals(), reference.literals());
+            assert_eq!(consulted.sequences(), reference.sequences());
+            hits += dictionary_hits(consulted.sequences());
+            if let Some(result) = actual {
+                repeats = result.wire_repeats;
+            }
+            emitted += length;
+        }
+        assert!(hits > 0, "level {level}: no compiled row candidate used");
+        let (positions, tags) = compiled.greedy_row_candidates().unwrap().view().test_maps();
+        assert_eq!(
+            (positions, tags),
+            (&compiled_maps.0[..], &compiled_maps.1[..])
+        );
+        drop(consulted);
+        drop(reference);
+        drop(compiled);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn greedy_row_consultation_matches_combined_staging_and_stays_read_only() {
+        // Levels 5, 6 and 7 cover Greedy, Lazy and Lazy2 over the row finder.
+        for level in [5, 6, 7] {
+            greedy_row_consultation_case(level);
+        }
+    }
+
+    #[test]
+    fn greedy_row_candidates_reject_other_profiles_and_the_chain_finder() {
+        let dictionary = Dictionary::from_bytes(PREPARED).unwrap();
+        let (allocator, _) = monitored();
+        let fast = compile(dictionary.view(), 1, allocator).unwrap();
+        assert!(matches!(
+            fast.greedy_row_candidates(),
+            Err(Error::InvalidState)
+        ));
+        // A window log at or below 14 selects the chain finder for Greedy, so no
+        // compiled row exists and the request is rejected explicitly.
+        let (allocator, _) = monitored();
+        let chain = compile_chain_13(dictionary.view(), allocator).unwrap();
+        assert!(matches!(
+            chain.greedy_row_candidates(),
+            Err(Error::InvalidState)
+        ));
+    }
+
+    fn compile_chain_13<'a, A: Allocator + Clone>(
+        view: DictionaryView<'a>,
+        allocator: A,
+    ) -> Result<CompiledDictionary<'a, A>> {
+        let mut request = CompressionParameterRequest::with_level(5);
+        request.set_window_log(13).unwrap();
+        CompiledDictionary::new(view, &request, allocator)
     }
 
     #[test]

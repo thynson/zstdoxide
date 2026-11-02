@@ -5,7 +5,7 @@
 
 use crate::greedy_block::{GreedyBlock, LazyQuery};
 use crate::reference_chain::{ReferenceChain, ReferenceChainView};
-use crate::row_table::RowTable;
+use crate::row_table::{RowTable, RowTableView};
 use crate::{Error, Result};
 use core::alloc::Allocator;
 
@@ -167,9 +167,14 @@ fn find_chain_inclusive<H: Allocator, L: Allocator>(
 /// order without a cache or speculative reads past the logical block end.
 /// Invalid scalar arguments reject before writes; corruption after pending
 /// updates requires the caller to poison the retained context.
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one read-only compiled row joins the existing cursor tuple"
+)]
 pub(crate) fn find_row<P: Allocator, T: Allocator>(
     block: GreedyBlock<'_>,
     table: &mut RowTable<P, T>,
+    dictionary: Option<RowTableView<'_>>,
     next: &mut usize,
     current: usize,
     salt: u64,
@@ -179,26 +184,47 @@ pub(crate) fn find_row<P: Allocator, T: Allocator>(
     if block.search_from(current, current)?.is_none() {
         return Err(Error::InvalidParameter);
     }
-    find_row_inclusive(block, table, next, current, salt, entropy, skipping)
+    find_row_inclusive(
+        block, table, dictionary, next, current, salt, entropy, skipping,
+    )
 }
 
 /// Speculative probes include the tail limit. Revalidate against this block
 /// before any sampling write, even if the coordinate came from another block.
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one read-only compiled row joins the existing cursor tuple"
+)]
 pub(crate) fn find_row_lookahead<P: Allocator, T: Allocator>(
     block: GreedyBlock<'_>,
     table: &mut RowTable<P, T>,
+    dictionary: Option<RowTableView<'_>>,
     next: &mut usize,
     query: LazyQuery,
     salt: u64,
     entropy: &mut u32,
     skipping: bool,
 ) -> Result<Option<GreedyMatch>> {
-    find_row_inclusive(block, table, next, query.current(), salt, entropy, skipping)
+    find_row_inclusive(
+        block,
+        table,
+        dictionary,
+        next,
+        query.current(),
+        salt,
+        entropy,
+        skipping,
+    )
 }
 
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one read-only compiled row joins the existing cursor tuple"
+)]
 fn find_row_inclusive<P: Allocator, T: Allocator>(
     block: GreedyBlock<'_>,
     table: &mut RowTable<P, T>,
+    dictionary: Option<RowTableView<'_>>,
     next: &mut usize,
     current: usize,
     salt: u64,
@@ -208,6 +234,7 @@ fn find_row_inclusive<P: Allocator, T: Allocator>(
     let layout = table.layout();
     if !block.row_search()
         || layout.key_layout() != block.key_layout()
+        || dictionary.is_some_and(|view| view.layout() != layout)
         || *next > current
         || !block.cleanup_allowed(current)?
     {
@@ -232,16 +259,38 @@ fn find_row_inclusive<P: Allocator, T: Allocator>(
     *next = current;
     *entropy = entropy.wrapping_add(key.hash());
     let candidates = table.candidates(key, current, floor)?;
+    let budget = layout.attempts();
     table.insert(key, current)?;
     *next = following;
 
+    let end = block.range().end;
     let mut best = None;
     let mut length = 3;
     for &previous in candidates.as_slice() {
         if let Some(found) = longer_match(block, current, previous, length)? {
             length = found.length;
             best = Some(found);
-            if length == block.range().end - current {
+            if length == end - current {
+                return Ok(best);
+            }
+        }
+    }
+    // The pinned dictionary branch collects its row only while the shared
+    // per-query budget remains, and its candidates are evaluated after the
+    // context row. Separate row rings keep this a measured comparison.
+    let Some(dictionary) = dictionary else {
+        return Ok(best);
+    };
+    let remaining = budget - candidates.as_slice().len();
+    if remaining == 0 {
+        return Ok(best);
+    }
+    let compiled = dictionary.candidates_limited(key, current, floor, remaining)?;
+    for &previous in compiled.as_slice() {
+        if let Some(found) = longer_match(block, current, previous, length)? {
+            length = found.length;
+            best = Some(found);
+            if length == end - current {
                 break;
             }
         }
@@ -364,15 +413,33 @@ mod tests {
                     RowTable::new_in(RowLayout::new(key, 4).unwrap(), Global, Global).unwrap();
                 let mut entropy = 19;
                 assert_eq!(
-                    find_row(block, &mut table, &mut next, limit, 7, &mut entropy, false),
+                    find_row(
+                        block,
+                        &mut table,
+                        None,
+                        &mut next,
+                        limit,
+                        7,
+                        &mut entropy,
+                        false
+                    ),
                     Err(Error::InvalidParameter)
                 );
                 assert_eq!(next, 32);
                 assert_eq!(entropy, 19);
                 assert!(
-                    find_row_lookahead(block, &mut table, &mut next, query, 7, &mut entropy, false)
-                        .unwrap()
-                        .is_some()
+                    find_row_lookahead(
+                        block,
+                        &mut table,
+                        None,
+                        &mut next,
+                        query,
+                        7,
+                        &mut entropy,
+                        false
+                    )
+                    .unwrap()
+                    .is_some()
                 );
                 let before = (
                     table.test_maps().0.to_vec(),
@@ -384,6 +451,7 @@ mod tests {
                     find_row_lookahead(
                         block,
                         &mut table,
+                        None,
                         &mut next,
                         outside,
                         7,
@@ -442,6 +510,7 @@ mod tests {
                     find_row(
                         source,
                         &mut table,
+                        None,
                         &mut next,
                         probe.current(),
                         case.initial_salt,
@@ -492,6 +561,7 @@ mod tests {
                 find_row(
                     block(case),
                     &mut table,
+                    None,
                     &mut next,
                     case.initial_current,
                     case.initial_salt,
@@ -533,6 +603,7 @@ mod tests {
                 find_row(
                     block(case),
                     &mut table,
+                    None,
                     &mut next,
                     case.prefix,
                     case.initial_salt,
@@ -580,7 +651,16 @@ mod tests {
             let mut next = initial;
             let mut entropy = 99;
             assert_eq!(
-                find_row(block, &mut table, &mut next, query, 7, &mut entropy, false),
+                find_row(
+                    block,
+                    &mut table,
+                    None,
+                    &mut next,
+                    query,
+                    7,
+                    &mut entropy,
+                    false
+                ),
                 Err(Error::InvalidParameter)
             );
             assert_eq!(next, initial);

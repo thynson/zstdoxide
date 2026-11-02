@@ -277,3 +277,23 @@ parser, that the compiled head/link arrays are unchanged afterwards, and that
 Fast or a row-family Greedy profile rejects the chain accessor. These are
 measured comparisons for deterministic pairs; no general byte-identity contract
 is claimed.
+
+## Row consultation (item 7)
+
+`RowCells<'a>` now holds the borrowed positions and tags plus the checked row
+layout; the owner, `RowTableView<'a>` and `StagedRowView<'a>` share it, so the
+`unsafe-row-table` reads have one implementation and no new unsafe operation.
+The existing collection gained an explicit limit: the owner passes its layout
+attempt cap, and the compiled view receives only the budget the per-call row left
+unused. `GreedySearch::Row` carries the optional view into direct and lookahead
+probes; `find_row_inclusive` evaluates the per-call snapshot first, then collects
+the compiled row with the remaining budget and evaluates those candidates after
+it, matching the pinned `dictMatchState` order.
+
+Tests compile Greedy (5), Lazy (6) and Lazy2 (7) with a 32 KiB dictionary, which
+tiers to window log 17 and selects the row finder. Every block matches
+`from_parts_with_prefix` on the same combined borrow for these deterministic
+pairs; the test also asserts a compiled row candidate reached the parser and that
+the compiled position/tag arrays are unchanged. The chain accessor and the row
+accessor reject each other's profiles and Fast. Because each owner has its own
+insertion ring, these are measured comparisons, not a general equality contract.

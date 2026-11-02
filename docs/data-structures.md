@@ -4125,14 +4125,16 @@ assignment. Raw and empty dictionaries compile no entropy.
 The chain and row families need candidate views that are not hash-keyed cells.
 `ReferenceChainView<'a>` borrows the compiled chain's heads and links with the
 checked key layout and chain log, reusing one `ChainCells` traversal for owner,
-view and candidates. `StagedChainView<'a>` adds the exact staged-prefix length;
-`GreedyMatchState` rejects a mismatched or non-chain candidate before resetting
-its owners. The search order is the pinned one: per-call chain candidates first
-with their attempt budget, then compiled candidates with the remaining budget,
-using the same floor and byte checks. Staged geometry keeps the pinned
-`dmsIndexDelta` at zero. A row is an insertion ring per owner, so the planned
-`RowView<'a>` consultation remains a measured per-family comparison rather than
-one seeded ring.
+view and candidates; `StagedChainView<'a>` adds the staged-prefix length.
+`RowTableView<'a>` borrows the compiled row's positions and tags with the checked
+row layout through one `RowCells` traversal, and `StagedRowView<'a>` adds the
+staged-prefix length. `GreedyMatchState` rejects a mismatched family, layout or
+staged length before resetting its owners. The search order is the pinned one:
+per-call candidates first with their attempt budget, then compiled candidates
+with the remaining budget, using the same floor and byte checks. Staged geometry
+keeps the pinned `dmsIndexDelta` at zero. A row is an insertion ring per owner,
+so row consultation remains a measured per-family comparison rather than one
+seeded ring.
 
 Upstream counterparts are pinned `ZSTD_CDict`, `ZSTD_createCDict_advanced2`,
 `ZSTD_initCDict_internal`, `ZSTD_loadDictionaryContent`, `ZSTD_CCtx_refCDict`

@@ -13,7 +13,7 @@ use crate::greedy_search::{
 use crate::lazy_select::{LazyCandidate, LazyDepth, LazyGain};
 use crate::reference_chain::{ReferenceChain, ReferenceChainView};
 use crate::reference_tree::ReferenceTree;
-use crate::row_table::RowTable;
+use crate::row_table::{RowTable, RowTableView};
 use crate::sequence_context::{LogicalSequence, SequenceWithOffset};
 use crate::sequence_plan::OffsetIntent;
 use crate::tree_source::TreeSource;
@@ -33,6 +33,7 @@ pub(crate) enum GreedySearch<'a, A: Allocator, B: Allocator> {
     },
     Row {
         table: &'a mut RowTable<A, B>,
+        dictionary: Option<RowTableView<'a>>,
         salt: u64,
     },
 }
@@ -62,8 +63,12 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
                     && table.layout().key() == block.key_layout()
                     && (1..=256).contains(attempts)
             }
-            Self::Row { table, .. } => {
-                block.row_search() && table.layout().key_layout() == block.key_layout()
+            Self::Row {
+                table, dictionary, ..
+            } => {
+                block.row_search()
+                    && table.layout().key_layout() == block.key_layout()
+                    && dictionary.is_none_or(|view| view.layout() == table.layout())
             }
         };
         if !matches || next > block.range().start {
@@ -100,9 +105,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
                 *attempts,
                 progress.skipping,
             ),
-            Self::Row { table, salt } => find_row(
+            Self::Row {
+                table,
+                dictionary,
+                salt,
+            } => find_row(
                 block,
                 table,
+                *dictionary,
                 &mut progress.next,
                 current,
                 *salt,
@@ -139,9 +149,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
                 *attempts,
                 progress.skipping,
             ),
-            Self::Row { table, salt } => find_row_lookahead(
+            Self::Row {
+                table,
+                dictionary,
+                salt,
+            } => find_row_lookahead(
                 block,
                 table,
+                *dictionary,
                 &mut progress.next,
                 query,
                 *salt,
@@ -611,6 +626,7 @@ mod tests {
                     block,
                     GreedySearch::Row {
                         table: &mut table,
+                        dictionary: None,
                         salt: case.initial_salt,
                     },
                     &mut progress,
@@ -740,6 +756,7 @@ mod tests {
                         block,
                         GreedySearch::Row {
                             table: &mut table,
+                            dictionary: None,
                             salt: case.initial_salt,
                         },
                         &mut progress,
@@ -860,6 +877,7 @@ mod tests {
                             block,
                             GreedySearch::Row {
                                 table: &mut table,
+                                dictionary: None,
                                 salt: 7,
                             },
                             &mut progress,

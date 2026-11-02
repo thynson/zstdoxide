@@ -11,6 +11,139 @@ use crate::{Error, Result};
 
 const EMPTY: usize = usize::MAX;
 
+/// Borrowed row cells shared by an owner and its immutable view.
+///
+/// The slices are the initialized position and tag arrays; the layout fixes row
+/// starts, widths and attempt caps. No path in this type writes.
+#[derive(Clone, Copy, Debug)]
+struct RowCells<'a> {
+    positions: &'a [usize],
+    tags: &'a [u8],
+    layout: RowLayout,
+}
+
+impl<'a> RowCells<'a> {
+    /// Check both initialized extents, including the complete row, before
+    /// reading its head. A valid geometry alone never authorizes an access.
+    fn checked_row(&self, key: RowKey) -> Result<(usize, usize)> {
+        if key.layout() != self.layout {
+            return Err(Error::InvalidParameter);
+        }
+        let base = key.row_start();
+        let end = base
+            .checked_add(self.layout.row_len())
+            .ok_or(Error::CorruptData)?;
+        if end > self.positions.len() || end > self.tags.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-row-table"))]
+        let (head, reserved) = (usize::from(self.tags[base]), self.positions[base]);
+        #[cfg(feature = "unsafe-row-table")]
+        let (head, reserved) = {
+            // SAFETY: The runtime checks prove base + row_len <= both live
+            // initialized lengths; row_len is a nonzero 16/32/64. Thus base is
+            // in both slices. They contain valid naturally aligned initialized
+            // u8/usize storage owned elsewhere and live for this shared borrow.
+            // Both references are immediately copied and cannot escape.
+            unsafe {
+                (
+                    usize::from(*self.tags.get_unchecked(base)),
+                    *self.positions.get_unchecked(base),
+                )
+            }
+        };
+        if head >= self.layout.row_len() || reserved != EMPTY {
+            return Err(Error::CorruptData);
+        }
+        if head != 0 {
+            #[cfg(not(feature = "unsafe-row-table"))]
+            let newest = self.positions[base + head];
+            #[cfg(feature = "unsafe-row-table")]
+            let newest = {
+                // SAFETY: The preceding runtime checks established head <
+                // row_len and the full row's initialized extent, so base+head
+                // cannot overflow and is below positions.len(). The slice
+                // contains aligned initialized usize values and stays live for
+                // the shared borrow; the temporary reference is only copied.
+                unsafe { *self.positions.get_unchecked(base + head) }
+            };
+            if newest == EMPTY {
+                return Err(Error::CorruptData);
+            }
+        }
+        Ok((base, head))
+    }
+
+    /// Collect equal-tag candidates in head-relative cyclic order, up to the
+    /// smaller of the layout cap and `limit`. Skip reserved cell zero; an
+    /// invalid/expired candidate stops collection and a future candidate
+    /// rejects the state.
+    fn candidates(
+        &self,
+        key: RowKey,
+        current: usize,
+        floor: usize,
+        limit: usize,
+    ) -> Result<CandidateSnapshot> {
+        if floor > current {
+            return Err(Error::InvalidParameter);
+        }
+        let (base, head) = self.checked_row(key)?;
+        let width = self.layout.row_len();
+        let budget = limit.min(self.layout.attempts());
+        let mut result = CandidateSnapshot {
+            values: [EMPTY; 64],
+            length: 0,
+        };
+        if budget == 0 {
+            return Ok(result);
+        }
+        for step in 0..width {
+            let relative = (head + step) & (width - 1);
+            if relative == 0 {
+                continue;
+            }
+            #[cfg(not(feature = "unsafe-row-table"))]
+            let (tag, position) = (self.tags[base + relative], self.positions[base + relative]);
+            #[cfg(feature = "unsafe-row-table")]
+            let (tag, position) = {
+                // SAFETY: checked_row verified this entire row against both
+                // initialized slice lengths at runtime. Masking bounds relative
+                // below width, and base+width was checked without overflow. The
+                // slices retain aligned initialized u8/usize cells and stay
+                // live for this shared borrow. Both short-lived references are
+                // copied; no reference or source pointer escapes these reads.
+                unsafe {
+                    (
+                        *self.tags.get_unchecked(base + relative),
+                        *self.positions.get_unchecked(base + relative),
+                    )
+                }
+            };
+            if tag != key.tag() {
+                continue;
+            }
+            if position == EMPTY {
+                break;
+            }
+            if position >= current {
+                return Err(Error::CorruptData);
+            }
+            if position < floor {
+                break;
+            }
+            // The layout and limit caps are both at most 64, so this local slot
+            // is available.
+            result.values[result.length] = position;
+            result.length += 1;
+            if result.length == budget {
+                break;
+            }
+        }
+        Ok(result)
+    }
+}
+
 /// Two complete Vec owners; no SIMD alignment, raw allocation or allocator
 /// cloning is required. Position cells start invalid, tag/head bytes start zero.
 /// Corresponds to `hashTable`/`tagTable` in `ZSTD_RowFindBestMatch`.
@@ -75,57 +208,27 @@ impl<P: Allocator, T: Allocator> RowTable<P, T> {
         self.tags.fill(0);
     }
 
+    fn cells(&self) -> RowCells<'_> {
+        RowCells {
+            positions: &self.positions,
+            tags: &self.tags,
+            layout: self.layout,
+        }
+    }
+
+    /// Borrow the sampled positions and tags without allocating or gaining a
+    /// write path. A compiled dictionary keeps this view alive while calls
+    /// sample their own row table.
+    pub(crate) fn view(&self) -> RowTableView<'_> {
+        RowTableView {
+            cells: self.cells(),
+        }
+    }
+
     /// Check both initialized owner extents, including the complete row, before
     /// reading its head. A valid geometry alone never authorizes an owner access.
     fn checked_row(&self, key: RowKey) -> Result<(usize, usize)> {
-        if key.layout() != self.layout {
-            return Err(Error::InvalidParameter);
-        }
-        let base = key.row_start();
-        let end = base
-            .checked_add(self.layout.row_len())
-            .ok_or(Error::CorruptData)?;
-        if end > self.positions.len() || end > self.tags.len() {
-            return Err(Error::CorruptData);
-        }
-        #[cfg(not(feature = "unsafe-row-table"))]
-        let (head, reserved) = (usize::from(self.tags[base]), self.positions[base]);
-        #[cfg(feature = "unsafe-row-table")]
-        let (head, reserved) = {
-            // SAFETY: The runtime checks prove base + row_len <= both live
-            // initialized lengths; row_len is a nonzero 16/32/64. Thus base is
-            // in both owners. Vec retains valid naturally aligned initialized
-            // u8/usize storage. Shared self prevents mutation/reallocation and
-            // keeps both allocations live. Both references are immediately
-            // copied and cannot escape their owner borrow.
-            unsafe {
-                (
-                    usize::from(*self.tags.get_unchecked(base)),
-                    *self.positions.get_unchecked(base),
-                )
-            }
-        };
-        if head >= self.layout.row_len() || reserved != EMPTY {
-            return Err(Error::CorruptData);
-        }
-        if head != 0 {
-            #[cfg(not(feature = "unsafe-row-table"))]
-            let newest = self.positions[base + head];
-            #[cfg(feature = "unsafe-row-table")]
-            let newest = {
-                // SAFETY: The preceding runtime checks established head <
-                // row_len and the full row's initialized extent, so base+head
-                // cannot overflow and is below positions.len(). The Vec owns
-                // aligned initialized usize values. Shared self retains the
-                // allocation and excludes writes/reallocation; the temporary
-                // reference is only copied, with no escaping alias.
-                unsafe { *self.positions.get_unchecked(base + head) }
-            };
-            if newest == EMPTY {
-                return Err(Error::CorruptData);
-            }
-        }
-        Ok((base, head))
+        self.cells().checked_row(key)
     }
 
     /// Collect equal-tag candidates in head-relative cyclic order before the
@@ -139,59 +242,8 @@ impl<P: Allocator, T: Allocator> RowTable<P, T> {
         current: usize,
         floor: usize,
     ) -> Result<CandidateSnapshot> {
-        if floor > current {
-            return Err(Error::InvalidParameter);
-        }
-        let (base, head) = self.checked_row(key)?;
-        let width = self.layout.row_len();
-        let mut result = CandidateSnapshot {
-            values: [EMPTY; 64],
-            length: 0,
-        };
-        for step in 0..width {
-            let relative = (head + step) & (width - 1);
-            if relative == 0 {
-                continue;
-            }
-            #[cfg(not(feature = "unsafe-row-table"))]
-            let (tag, position) = (self.tags[base + relative], self.positions[base + relative]);
-            #[cfg(feature = "unsafe-row-table")]
-            let (tag, position) = {
-                // SAFETY: checked_row verified this entire row against both
-                // initialized owner lengths at runtime. Masking bounds relative
-                // below width, and base+width was checked without overflow. The
-                // Vec owners retain aligned initialized u8/usize cells. Shared
-                // self prevents changes to either length/allocation or values
-                // throughout this loop. Both short-lived references are copied;
-                // no reference or source pointer escapes these reads.
-                unsafe {
-                    (
-                        *self.tags.get_unchecked(base + relative),
-                        *self.positions.get_unchecked(base + relative),
-                    )
-                }
-            };
-            if tag != key.tag() {
-                continue;
-            }
-            if position == EMPTY {
-                break;
-            }
-            if position >= current {
-                return Err(Error::CorruptData);
-            }
-            if position < floor {
-                break;
-            }
-            // RowLayout caps attempts at 64. The previous iteration stopped
-            // exactly at that cap, so this initialized local slot is available.
-            result.values[result.length] = position;
-            result.length += 1;
-            if result.length == self.layout.attempts() {
-                break;
-            }
-        }
-        Ok(result)
+        self.cells()
+            .candidates(key, current, floor, self.layout.attempts())
     }
 
     /// Insert one position at the preceding usable slot, cycling through
@@ -257,6 +309,68 @@ impl<P: Allocator, T: Allocator> RowTable<P, T> {
     }
 }
 
+/// An immutable borrow of a compiled row's positions and tags.
+///
+/// The view offers the same checked candidate collection as the owner and no
+/// insert, reset or reconfiguration, so a call can consult a compiled row while
+/// its own row receives sampling. Positions are staged-prefix indices.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct RowTableView<'a> {
+    cells: RowCells<'a>,
+}
+
+impl<'a> RowTableView<'a> {
+    /// The checked row layout the borrowed cells were sampled under.
+    pub(crate) const fn layout(&self) -> RowLayout {
+        self.cells.layout
+    }
+
+    /// Collect at most `limit` candidates, for a shared per-query budget.
+    pub(crate) fn candidates_limited(
+        &self,
+        key: RowKey,
+        current: usize,
+        floor: usize,
+        limit: usize,
+    ) -> Result<CandidateSnapshot> {
+        self.cells.candidates(key, current, floor, limit)
+    }
+
+    /// Inspect the borrowed cells for frozen equality checks only.
+    #[cfg(test)]
+    pub(crate) const fn test_maps(&self) -> (&'a [usize], &'a [u8]) {
+        (self.cells.positions, self.cells.tags)
+    }
+}
+
+/// A row view paired with the staged-prefix length its positions index.
+///
+/// A call must stage exactly this many suffix bytes before its input for the
+/// positions to index the same bytes, so per-call states reject a different
+/// staged length before consulting any candidate.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct StagedRowView<'a> {
+    view: RowTableView<'a>,
+    staged_len: usize,
+}
+
+impl<'a> StagedRowView<'a> {
+    /// Pair an immutable row view with the prefix length it indexes.
+    pub(crate) const fn new(view: RowTableView<'a>, staged_len: usize) -> Self {
+        Self { view, staged_len }
+    }
+
+    /// The read-only row traversal a parser consults.
+    pub(crate) const fn view(&self) -> RowTableView<'a> {
+        self.view
+    }
+
+    /// The exact staged prefix length the positions require.
+    pub(crate) const fn staged_len(&self) -> usize {
+        self.staged_len
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -314,6 +428,44 @@ mod tests {
                 assert_eq!(table.layout(), layout);
             }
         }
+    }
+
+    #[test]
+    fn read_only_view_limits_candidates_without_changing_the_owner() {
+        let layout = layout(4);
+        let key = key(layout);
+        let mut table = RowTable::new_in(layout, Global, Global).unwrap();
+        for position in [0, 7, 14, 21] {
+            table.insert(key, position).unwrap();
+        }
+        let before = (table.test_maps().0.to_vec(), table.test_maps().1.to_vec());
+        let view = table.view();
+        assert_eq!(view.layout(), layout);
+        assert_eq!(view.test_maps().0, &before.0[..]);
+        assert!(
+            view.candidates_limited(key, 28, 0, 0)
+                .unwrap()
+                .as_slice()
+                .is_empty()
+        );
+        assert_eq!(
+            view.candidates_limited(key, 28, 0, 2).unwrap().as_slice(),
+            [21, 14]
+        );
+        assert_eq!(
+            view.candidates_limited(key, 28, 15, 4).unwrap().as_slice(),
+            [21]
+        );
+        let _ = view;
+        // A later view observes the owner's cells; the view has no write path.
+        table.insert(key, 28).unwrap();
+        let view = table.view();
+        assert_eq!(
+            view.candidates_limited(key, 35, 0, 1).unwrap().as_slice(),
+            [28]
+        );
+        let _ = view;
+        assert_eq!(table.test_maps().0.len(), before.0.len());
     }
 
     #[test]

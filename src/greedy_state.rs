@@ -9,7 +9,7 @@ use crate::greedy_parse::{GreedyParseResult, GreedyProgress, GreedySearch, parse
 use crate::greedy_plan::{GreedyExecutionPlan, GreedyTablePlan};
 use crate::reference_chain::{ReferenceChain, StagedChainView};
 use crate::reference_tree::ReferenceTree;
-use crate::row_table::RowTable;
+use crate::row_table::{RowTable, StagedRowView};
 use crate::sequence_context::SequenceWithOffset;
 use crate::{Error, Result};
 
@@ -135,11 +135,25 @@ fn seed_row<A: Allocator>(table: &mut RowTable<A>, source: &[u8], prefix_len: us
 /// caller supplies committed repeats, including after raw/RLE fallback. A parse
 /// error poisons this owner so partially updated tables can never be reused.
 /// Corresponds to the no-dictionary match/window part of `ZSTD_CCtx`.
+/// A read-only compiled candidate source for the selected Greedy family.
+///
+/// A chain profile carries a compiled chain; a row profile carries a compiled
+/// row. The variant must match the per-call owner family.
+#[derive(Clone, Copy, Debug)]
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "public compiled-dictionary emission follows")
+)]
+pub(crate) enum GreedyCandidates<'a> {
+    Chain(StagedChainView<'a>),
+    Row(StagedRowView<'a>),
+}
+
 pub(crate) struct GreedyMatchState<'a, A: Allocator> {
     source: &'a [u8],
     plan: GreedyExecutionPlan,
     tables: GreedyTables<A>,
-    dictionary: Option<StagedChainView<'a>>,
+    dictionary: Option<GreedyCandidates<'a>>,
     literals: Vec<u8, A>,
     sequences: Vec<SequenceWithOffset, A>,
     position: usize,
@@ -190,9 +204,9 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
     /// The per-call chain starts empty and receives every sample; the compiled
     /// chain is consulted only after the per-call chain and only with the
     /// remaining attempt budget, matching the pinned `dictMatchState` order.
-    /// A missing compiled owner keeps the seeding path. Only a chain owner may
-    /// carry a compiled chain view; layouts and the staged length must match
-    /// before either owner is reset.
+    /// A missing compiled owner keeps the seeding path. A chain owner may carry
+    /// only a compiled chain and a row owner only a compiled row; layouts and
+    /// the staged length must match before either owner is reset.
     pub(crate) fn from_parts_with_compiled_prefix(
         source: &'a [u8],
         plan: GreedyExecutionPlan,
@@ -200,12 +214,15 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
         prefix_len: usize,
-        dictionary: Option<StagedChainView<'a>>,
+        dictionary: Option<GreedyCandidates<'a>>,
     ) -> Result<Self> {
-        let chain_matches = match (&tables, dictionary) {
-            (GreedyTables::Chain(_), Some(candidate)) => {
+        let candidate_matches = match (&tables, dictionary) {
+            (GreedyTables::Chain(table), Some(GreedyCandidates::Chain(candidate))) => {
                 candidate.staged_len() == prefix_len
-                    && candidate.view().key_layout() == plan.tables().key_layout()
+                    && candidate.view().key_layout() == table.key_layout()
+            }
+            (GreedyTables::Row(table), Some(GreedyCandidates::Row(candidate))) => {
+                candidate.staged_len() == prefix_len && candidate.view().layout() == table.layout()
             }
             (GreedyTables::Chain(_) | GreedyTables::Row(_) | GreedyTables::Tree(_), None) => true,
             _ => false,
@@ -215,7 +232,7 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
             .checked_sub(prefix_len)
             .is_none_or(|frame_len| frame_len != plan.source_len())
             || !tables.matches(plan.tables())
-            || !chain_matches
+            || !candidate_matches
         {
             return Err(Error::InvalidParameter);
         }
@@ -223,8 +240,8 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
         let next = if prefix_len == 0 {
             0
         } else if dictionary.is_some() {
-            // Compiled chain positions already index the staged prefix, so the
-            // sampling frontier starts exactly at the prefix boundary.
+            // Compiled chain/row positions already index the staged prefix, so
+            // the sampling frontier starts exactly at the prefix boundary.
             prefix_len
         } else {
             tables.seed_prefix(source, prefix_len)?
@@ -304,11 +321,18 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
                 },
                 GreedyTables::Chain(table) => GreedySearch::Chain {
                     table,
-                    dictionary: self.dictionary.map(|candidate| candidate.view()),
+                    dictionary: match self.dictionary {
+                        Some(GreedyCandidates::Chain(candidate)) => Some(candidate.view()),
+                        _ => None,
+                    },
                     attempts: self.plan.tables().attempts(),
                 },
                 GreedyTables::Row(table) => GreedySearch::Row {
                     table,
+                    dictionary: match self.dictionary {
+                        Some(GreedyCandidates::Row(candidate)) => Some(candidate.view()),
+                        _ => None,
+                    },
                     salt: crate::greedy_key::FRESH_ROW_SALT,
                 },
             };
