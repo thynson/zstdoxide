@@ -4,7 +4,7 @@
 #![forbid(unsafe_code)]
 
 use crate::greedy_block::{GreedyBlock, LazyQuery};
-use crate::reference_chain::ReferenceChain;
+use crate::reference_chain::{ReferenceChain, ReferenceChainView};
 use crate::row_table::RowTable;
 use crate::{Error, Result};
 use core::alloc::Allocator;
@@ -57,11 +57,14 @@ pub(crate) fn longer_match(
 /// Insert pending source positions and search the unsalted cyclic chain.
 /// Corresponds to `ZSTD_insertAndFindFirstIndex_internal` and
 /// `ZSTD_HcFindBestMatch`, no-dictionary branch (facebook/zstd v1.5.7).
+/// An optional compiled view is searched after the per-call chain with the
+/// remaining attempt budget, matching the pinned `dictMatchState` order.
 /// Invalid scalar arguments reject before writes. A later corruption error may
 /// retain partial sampling writes; the owning parser must poison that context.
 pub(crate) fn find_chain<H: Allocator, L: Allocator>(
     block: GreedyBlock<'_>,
     table: &mut ReferenceChain<H, L>,
+    dictionary: Option<ReferenceChainView<'_>>,
     next: &mut usize,
     current: usize,
     attempts: usize,
@@ -70,7 +73,7 @@ pub(crate) fn find_chain<H: Allocator, L: Allocator>(
     if block.search_from(current, current)?.is_none() {
         return Err(Error::InvalidParameter);
     }
-    find_chain_inclusive(block, table, next, current, attempts, skipping)
+    find_chain_inclusive(block, table, dictionary, next, current, attempts, skipping)
 }
 
 /// Speculative probes include the tail limit. Revalidate against this block
@@ -78,17 +81,27 @@ pub(crate) fn find_chain<H: Allocator, L: Allocator>(
 pub(crate) fn find_chain_lookahead<H: Allocator, L: Allocator>(
     block: GreedyBlock<'_>,
     table: &mut ReferenceChain<H, L>,
+    dictionary: Option<ReferenceChainView<'_>>,
     next: &mut usize,
     query: LazyQuery,
     attempts: usize,
     skipping: bool,
 ) -> Result<Option<GreedyMatch>> {
-    find_chain_inclusive(block, table, next, query.current(), attempts, skipping)
+    find_chain_inclusive(
+        block,
+        table,
+        dictionary,
+        next,
+        query.current(),
+        attempts,
+        skipping,
+    )
 }
 
 fn find_chain_inclusive<H: Allocator, L: Allocator>(
     block: GreedyBlock<'_>,
     table: &mut ReferenceChain<H, L>,
+    dictionary: Option<ReferenceChainView<'_>>,
     next: &mut usize,
     current: usize,
     attempts: usize,
@@ -96,6 +109,7 @@ fn find_chain_inclusive<H: Allocator, L: Allocator>(
 ) -> Result<Option<GreedyMatch>> {
     if block.row_search()
         || table.key_layout() != block.key_layout()
+        || dictionary.is_some_and(|view| view.key_layout() != block.key_layout())
         || !(1..=256).contains(&attempts)
         || *next > current
         || !block.cleanup_allowed(current)?
@@ -111,14 +125,35 @@ fn find_chain_inclusive<H: Allocator, L: Allocator>(
         }
     }
     *next = current;
+    let end = block.range().end;
     let mut best = None;
     let mut length = 3;
+    let mut used = 0;
     for previous in table.candidates(key, current, floor, attempts)? {
+        used += 1;
         if let Some(found) = longer_match(block, current, previous?, length)? {
             length = found.length;
             best = Some(found);
             // Stop before following another cyclic link or reading best+1.
-            if length == block.range().end - current {
+            if length == end - current {
+                return Ok(best);
+            }
+        }
+    }
+    // The pinned dictionary branch runs only while the shared budget remains
+    // and starts from the dictionary head, not from a position-sorted merge.
+    let Some(dictionary) = dictionary else {
+        return Ok(best);
+    };
+    let remaining = attempts - used;
+    if remaining == 0 {
+        return Ok(best);
+    }
+    for previous in dictionary.candidates(key, current, floor, remaining)? {
+        if let Some(found) = longer_match(block, current, previous?, length)? {
+            length = found.length;
+            best = Some(found);
+            if length == end - current {
                 break;
             }
         }
@@ -362,12 +397,12 @@ mod tests {
             } else {
                 let mut table = ReferenceChain::new_in(key, 6, Global, Global).unwrap();
                 assert_eq!(
-                    find_chain(block, &mut table, &mut next, limit, 4, false),
+                    find_chain(block, &mut table, None, &mut next, limit, 4, false),
                     Err(Error::InvalidParameter)
                 );
                 assert_eq!(next, 32);
                 assert!(
-                    find_chain_lookahead(block, &mut table, &mut next, query, 4, false)
+                    find_chain_lookahead(block, &mut table, None, &mut next, query, 4, false)
                         .unwrap()
                         .is_some()
                 );
@@ -377,7 +412,7 @@ mod tests {
                     next,
                 );
                 assert_eq!(
-                    find_chain_lookahead(block, &mut table, &mut next, outside, 4, false),
+                    find_chain_lookahead(block, &mut table, None, &mut next, outside, 4, false),
                     Err(Error::InvalidParameter)
                 );
                 assert_eq!(table.test_maps(), (&before.0[..], &before.1[..]));
@@ -573,6 +608,7 @@ mod tests {
                     find_chain(
                         source,
                         &mut table,
+                        None,
                         &mut next,
                         probe.current(),
                         1 << case.search_log,
@@ -618,6 +654,7 @@ mod tests {
                 find_chain(
                     block(case),
                     &mut table,
+                    None,
                     &mut next,
                     case.initial_current,
                     1 << case.search_log,
@@ -665,7 +702,7 @@ mod tests {
             let block = GreedyBlock::new(&source, 32..128, 0, layout, 1024, row).unwrap();
             let mut next = initial;
             assert_eq!(
-                find_chain(block, &mut table, &mut next, query, attempts, false),
+                find_chain(block, &mut table, None, &mut next, query, attempts, false),
                 Err(Error::InvalidParameter)
             );
             assert_eq!(next, initial);
@@ -689,7 +726,7 @@ mod tests {
         for (attempts, previous, length) in [(1, 32, 7), (2, 32, 7), (3, 0, 16)] {
             let mut next = 48;
             assert_eq!(
-                find_chain(block, &mut table, &mut next, 48, attempts, false).unwrap(),
+                find_chain(block, &mut table, None, &mut next, 48, attempts, false).unwrap(),
                 Some(GreedyMatch { previous, length })
             );
         }

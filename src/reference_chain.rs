@@ -13,6 +13,90 @@ use crate::{Error, Result};
 
 const EMPTY: usize = usize::MAX;
 
+/// Borrowed chain cells shared by an owner and its immutable view.
+///
+/// The slices are the initialized head and link arrays; the checked key layout
+/// and chain log fix every bucket, slot and cutoff. No path in this type writes.
+#[derive(Clone, Copy, Debug)]
+struct ChainCells<'a> {
+    heads: &'a [usize],
+    links: &'a [usize],
+    key: GreedyKeyLayout,
+    chain_log: u8,
+}
+
+impl<'a> ChainCells<'a> {
+    fn chain_size(&self) -> usize {
+        1 << self.chain_log
+    }
+
+    fn slot(&self, position: usize) -> usize {
+        let mask = self.chain_size() - 1;
+        // (logical + ZSTD_WINDOW_START_INDEX) modulo 2^chain_log. Masking
+        // before addition preserves near-usize-limit indices without overflow.
+        ((position & mask) + 2) & mask
+    }
+
+    fn head(&self, key: GreedyKey) -> Result<usize> {
+        let bucket = self.key.bucket(key)?;
+        if bucket >= self.heads.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-reference-chain"))]
+        let value = self.heads[bucket];
+        #[cfg(feature = "unsafe-reference-chain")]
+        let value = {
+            // SAFETY: The runtime check proves bucket is below the initialized
+            // slice length, not its capacity. The owner's exact allocator keeps
+            // the aligned, initialized usize cells live for the whole shared
+            // borrow, and this view cannot outlive that owner. The temporary
+            // reference is copied and cannot escape.
+            unsafe { *self.heads.get_unchecked(bucket) }
+        };
+        Ok(value)
+    }
+
+    fn predecessor(&self, position: usize) -> Result<usize> {
+        let slot = self.slot(position);
+        if slot >= self.links.len() {
+            return Err(Error::CorruptData);
+        }
+        #[cfg(not(feature = "unsafe-reference-chain"))]
+        let value = self.links[slot];
+        #[cfg(feature = "unsafe-reference-chain")]
+        let value = {
+            // SAFETY: slot < links.len() is checked at runtime independently of
+            // the position or stored links. The owner's exact allocator keeps
+            // aligned, initialized usize cells live for the whole shared borrow,
+            // and this view cannot outlive that owner. Only a copied value
+            // escapes this temporary reference; no source pointer is formed.
+            unsafe { *self.links.get_unchecked(slot) }
+        };
+        Ok(value)
+    }
+
+    fn candidates(
+        &self,
+        key: GreedyKey,
+        current: usize,
+        floor: usize,
+        attempts: usize,
+    ) -> Result<ChainCandidates<'a>> {
+        if floor > current || !(1..=256).contains(&attempts) {
+            return Err(Error::InvalidParameter);
+        }
+        Ok(ChainCandidates {
+            cells: *self,
+            head: self.head(key)?,
+            previous: None,
+            current,
+            floor,
+            remaining: attempts,
+            done: false,
+        })
+    }
+}
+
 /// Complete independent head/link owners with exact allocator values. All
 /// cells are initialized indices or EMPTY; logical source position zero is valid.
 /// Corresponds to `hashTable` and `chainTable` in `ZSTD_HcFindBestMatch`.
@@ -87,42 +171,22 @@ impl<H: Allocator, L: Allocator> ReferenceChain<H, L> {
         ((position & mask) + 2) & mask
     }
 
-    fn head(&self, key: GreedyKey) -> Result<usize> {
-        let bucket = self.key.bucket(key)?;
-        if bucket >= self.heads.len() {
-            return Err(Error::CorruptData);
+    fn cells(&self) -> ChainCells<'_> {
+        ChainCells {
+            heads: &self.heads,
+            links: &self.links,
+            key: self.key,
+            chain_log: self.chain_log,
         }
-        #[cfg(not(feature = "unsafe-reference-chain"))]
-        let value = self.heads[bucket];
-        #[cfg(feature = "unsafe-reference-chain")]
-        let value = {
-            // SAFETY: The runtime check proves bucket is below initialized
-            // length, not capacity. Vec owns valid, aligned, initialized usize
-            // cells through its exact allocator. The shared self borrow excludes
-            // mutation/reallocation for this access. The reference is immediately
-            // copied and cannot escape or outlive the owner borrow.
-            unsafe { *self.heads.get_unchecked(bucket) }
-        };
-        Ok(value)
     }
 
-    fn predecessor(&self, position: usize) -> Result<usize> {
-        let slot = self.slot(position);
-        if slot >= self.links.len() {
-            return Err(Error::CorruptData);
+    /// Borrow the sampled heads and links without allocating or gaining a write
+    /// path. A compiled dictionary keeps this view alive while calls sample
+    /// their own chain.
+    pub(crate) fn view(&self) -> ReferenceChainView<'_> {
+        ReferenceChainView {
+            cells: self.cells(),
         }
-        #[cfg(not(feature = "unsafe-reference-chain"))]
-        let value = self.links[slot];
-        #[cfg(feature = "unsafe-reference-chain")]
-        let value = {
-            // SAFETY: slot < links.len() is checked at runtime independently of
-            // the position or stored links. Vec's exact allocator owns aligned,
-            // valid initialized usize cells. Shared self keeps storage live and
-            // excludes writes/reallocation; only a copied value escapes this
-            // temporary reference. No source pointer is formed from that value.
-            unsafe { *self.links.get_unchecked(slot) }
-        };
-        Ok(value)
     }
 
     /// Append one sampled source index, preserving the replaced head in the
@@ -185,19 +249,8 @@ impl<H: Allocator, L: Allocator> ReferenceChain<H, L> {
         current: usize,
         floor: usize,
         attempts: usize,
-    ) -> Result<ChainCandidates<'_, H, L>> {
-        if floor > current || !(1..=256).contains(&attempts) {
-            return Err(Error::InvalidParameter);
-        }
-        Ok(ChainCandidates {
-            chain: self,
-            head: self.head(key)?,
-            previous: None,
-            current,
-            floor,
-            remaining: attempts,
-            done: false,
-        })
+    ) -> Result<ChainCandidates<'_>> {
+        self.cells().candidates(key, current, floor, attempts)
     }
 
     #[cfg(test)]
@@ -206,11 +259,11 @@ impl<H: Allocator, L: Allocator> ReferenceChain<H, L> {
     }
 }
 
-/// A bounded traversal holding one table borrow and copied source indices.
+/// A bounded traversal holding one borrowed cell set and copied source indices.
 /// It yields collisions only. The parser must independently check each candidate
 /// against the source extent before comparing bytes. No source reference escapes.
-pub(crate) struct ChainCandidates<'a, H: Allocator, L: Allocator> {
-    chain: &'a ReferenceChain<H, L>,
+pub(crate) struct ChainCandidates<'a> {
+    cells: ChainCells<'a>,
     head: usize,
     previous: Option<usize>,
     current: usize,
@@ -219,7 +272,7 @@ pub(crate) struct ChainCandidates<'a, H: Allocator, L: Allocator> {
     done: bool,
 }
 
-impl<H: Allocator, L: Allocator> Iterator for ChainCandidates<'_, H, L> {
+impl Iterator for ChainCandidates<'_> {
     type Item = Result<usize>;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -233,10 +286,10 @@ impl<H: Allocator, L: Allocator> Iterator for ChainCandidates<'_, H, L> {
             // A previous yield established previous < current. This distance
             // test exactly translates C's raw-index minChain cutoff, including
             // logical zero when current is still smaller than the ring size.
-            if self.current - previous >= self.chain.chain_size() {
+            if self.current - previous >= self.cells.chain_size() {
                 return None;
             }
-            match self.chain.predecessor(previous) {
+            match self.cells.predecessor(previous) {
                 Ok(EMPTY) => return None,
                 Ok(next) if next >= previous => return Some(Err(Error::CorruptData)),
                 Ok(next) => next,
@@ -258,6 +311,68 @@ impl<H: Allocator, L: Allocator> Iterator for ChainCandidates<'_, H, L> {
         self.previous = Some(candidate);
         self.done = false;
         Some(Ok(candidate))
+    }
+}
+
+/// An immutable borrow of a compiled chain's heads and links.
+///
+/// The view offers the same bounded traversal as the owner and no insert, reset
+/// or reconfiguration, so a call can consult a compiled chain while its own
+/// chain receives sampling. Positions are staged-prefix indices.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct ReferenceChainView<'a> {
+    cells: ChainCells<'a>,
+}
+
+impl<'a> ReferenceChainView<'a> {
+    /// The checked key layout the borrowed cells were sampled under.
+    pub(crate) const fn key_layout(&self) -> GreedyKeyLayout {
+        self.cells.key
+    }
+
+    /// Start the same bounded traversal the owner offers; cells stay read-only.
+    pub(crate) fn candidates(
+        &self,
+        key: GreedyKey,
+        current: usize,
+        floor: usize,
+        attempts: usize,
+    ) -> Result<ChainCandidates<'a>> {
+        self.cells.candidates(key, current, floor, attempts)
+    }
+
+    /// Inspect the borrowed cells for frozen equality checks only.
+    #[cfg(test)]
+    pub(crate) const fn test_maps(&self) -> (&'a [usize], &'a [usize]) {
+        (self.cells.heads, self.cells.links)
+    }
+}
+
+/// A chain view paired with the staged-prefix length its positions index.
+///
+/// A call must stage exactly this many suffix bytes before its input for the
+/// positions to index the same bytes, so per-call states reject a different
+/// staged length before consulting any candidate.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct StagedChainView<'a> {
+    view: ReferenceChainView<'a>,
+    staged_len: usize,
+}
+
+impl<'a> StagedChainView<'a> {
+    /// Pair an immutable chain view with the prefix length it indexes.
+    pub(crate) const fn new(view: ReferenceChainView<'a>, staged_len: usize) -> Self {
+        Self { view, staged_len }
+    }
+
+    /// The read-only chain traversal a parser consults.
+    pub(crate) const fn view(&self) -> ReferenceChainView<'a> {
+        self.view
+    }
+
+    /// The exact staged prefix length the positions require.
+    pub(crate) const fn staged_len(&self) -> usize {
+        self.staged_len
     }
 }
 

@@ -7,7 +7,7 @@ use core::alloc::Allocator;
 use crate::greedy_block::GreedyBlock;
 use crate::greedy_parse::{GreedyParseResult, GreedyProgress, GreedySearch, parse_with_depth};
 use crate::greedy_plan::{GreedyExecutionPlan, GreedyTablePlan};
-use crate::reference_chain::ReferenceChain;
+use crate::reference_chain::{ReferenceChain, StagedChainView};
 use crate::reference_tree::ReferenceTree;
 use crate::row_table::RowTable;
 use crate::sequence_context::SequenceWithOffset;
@@ -139,6 +139,7 @@ pub(crate) struct GreedyMatchState<'a, A: Allocator> {
     source: &'a [u8],
     plan: GreedyExecutionPlan,
     tables: GreedyTables<A>,
+    dictionary: Option<StagedChainView<'a>>,
     literals: Vec<u8, A>,
     sequences: Vec<SequenceWithOffset, A>,
     position: usize,
@@ -173,24 +174,60 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
     pub(crate) fn from_parts_with_prefix(
         source: &'a [u8],
         plan: GreedyExecutionPlan,
+        tables: GreedyTables<A>,
+        literals: Vec<u8, A>,
+        sequences: Vec<SequenceWithOffset, A>,
+        prefix_len: usize,
+    ) -> Result<Self> {
+        Self::from_parts_with_compiled_prefix(
+            source, plan, tables, literals, sequences, prefix_len, None,
+        )
+    }
+
+    /// Bind owners to a combined borrow whose staged prefix equals a compiled
+    /// dictionary's loaded suffix.
+    ///
+    /// The per-call chain starts empty and receives every sample; the compiled
+    /// chain is consulted only after the per-call chain and only with the
+    /// remaining attempt budget, matching the pinned `dictMatchState` order.
+    /// A missing compiled owner keeps the seeding path. Only a chain owner may
+    /// carry a compiled chain view; layouts and the staged length must match
+    /// before either owner is reset.
+    pub(crate) fn from_parts_with_compiled_prefix(
+        source: &'a [u8],
+        plan: GreedyExecutionPlan,
         mut tables: GreedyTables<A>,
         mut literals: Vec<u8, A>,
         mut sequences: Vec<SequenceWithOffset, A>,
         prefix_len: usize,
+        dictionary: Option<StagedChainView<'a>>,
     ) -> Result<Self> {
+        let chain_matches = match (&tables, dictionary) {
+            (GreedyTables::Chain(_), Some(candidate)) => {
+                candidate.staged_len() == prefix_len
+                    && candidate.view().key_layout() == plan.tables().key_layout()
+            }
+            (GreedyTables::Chain(_) | GreedyTables::Row(_) | GreedyTables::Tree(_), None) => true,
+            _ => false,
+        };
         if source
             .len()
             .checked_sub(prefix_len)
             .is_none_or(|frame_len| frame_len != plan.source_len())
             || !tables.matches(plan.tables())
+            || !chain_matches
         {
             return Err(Error::InvalidParameter);
         }
         tables.reset();
-        let next = if prefix_len > 0 {
-            tables.seed_prefix(source, prefix_len)?
-        } else {
+        let next = if prefix_len == 0 {
             0
+        } else if dictionary.is_some() {
+            // Compiled chain positions already index the staged prefix, so the
+            // sampling frontier starts exactly at the prefix boundary.
+            prefix_len
+        } else {
+            tables.seed_prefix(source, prefix_len)?
         };
         literals.clear();
         sequences.clear();
@@ -198,6 +235,7 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
             source,
             plan,
             tables,
+            dictionary,
             literals,
             sequences,
             position: prefix_len,
@@ -266,6 +304,7 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
                 },
                 GreedyTables::Chain(table) => GreedySearch::Chain {
                     table,
+                    dictionary: self.dictionary.map(|candidate| candidate.view()),
                     attempts: self.plan.tables().attempts(),
                 },
                 GreedyTables::Row(table) => GreedySearch::Row {

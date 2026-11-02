@@ -208,7 +208,7 @@ families and measures the resulting geometry instead of asserting byte identity:
   consuming it in an emitting workspace, the Greedy and tree families, and the
   public surface remain later items.
 
-## Dictionary chain and row search order (item 4 analysis)
+## Dictionary chain and row search order (analysis)
 
 The pinned lazy/row finders answer the merge-order question for the next two
 families: neither merges candidates by position. `ZSTD_HcFindBestMatch`
@@ -255,3 +255,25 @@ candidate. The remaining design decisions are:
   (`zstd_lazy.c:1537-1600`) is a native two-segment detail with no Rust analogue
   because our combined borrow is contiguous. Dedicated dictionary search, row
   tag-width variants and binary-tree consultation stay outside this analysis.
+
+## Chain consultation (item 6)
+
+The chain implementation follows that order. `ChainCells<'a>` holds the borrowed
+heads and links plus the checked key layout and chain log; the owner, the
+read-only `ReferenceChainView<'a>` and `ChainCandidates` share it, so the
+`unsafe-reference-chain` access has one implementation and no new unsafe
+operation. `StagedChainView<'a>` adds the staged-prefix length and is rejected by
+`GreedyMatchState` for a mismatched length, a mismatched key layout or a non-chain
+owner. `GreedySearch::Chain` carries the optional view into both the direct and
+lookahead probes; `find_chain_inclusive` runs the per-call chain first, counts
+consumed candidates, and only then starts the compiled chain with the remaining
+attempt budget. A compiled candidate still passes the same `current`, floor,
+byte and window checks as a per-call one.
+
+Tests compile Greedy, Lazy and Lazy2 at window log 13, which selects the chain
+finder, and compare every block against `from_parts_with_prefix` on the same
+combined borrow. They also assert at least one compiled candidate reached the
+parser, that the compiled head/link arrays are unchanged afterwards, and that
+Fast or a row-family Greedy profile rejects the chain accessor. These are
+measured comparisons for deterministic pairs; no general byte-identity contract
+is claimed.

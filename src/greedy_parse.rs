@@ -11,7 +11,7 @@ use crate::greedy_search::{
     GreedyMatch, find_chain, find_chain_lookahead, find_row, find_row_lookahead, longer_match,
 };
 use crate::lazy_select::{LazyCandidate, LazyDepth, LazyGain};
-use crate::reference_chain::ReferenceChain;
+use crate::reference_chain::{ReferenceChain, ReferenceChainView};
 use crate::reference_tree::ReferenceTree;
 use crate::row_table::RowTable;
 use crate::sequence_context::{LogicalSequence, SequenceWithOffset};
@@ -28,6 +28,7 @@ pub(crate) enum GreedySearch<'a, A: Allocator, B: Allocator> {
     },
     Chain {
         table: &'a mut ReferenceChain<A, B>,
+        dictionary: Option<ReferenceChainView<'a>>,
         attempts: usize,
     },
     Row {
@@ -46,9 +47,14 @@ pub(crate) struct GreedyProgress {
 impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
     fn validate(&self, block: GreedyBlock<'_>, next: usize) -> Result<()> {
         let matches = match self {
-            Self::Chain { table, attempts } => {
+            Self::Chain {
+                table,
+                dictionary,
+                attempts,
+            } => {
                 !block.row_search()
                     && table.key_layout() == block.key_layout()
+                    && dictionary.is_none_or(|view| view.key_layout() == block.key_layout())
                     && (1..=256).contains(attempts)
             }
             Self::Tree { table, attempts } => {
@@ -81,9 +87,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
                 *attempts,
             )
             .map(|m| m.filter(|m| m.length >= 4)),
-            Self::Chain { table, attempts } => find_chain(
+            Self::Chain {
+                table,
+                dictionary,
+                attempts,
+            } => find_chain(
                 block,
                 table,
+                *dictionary,
                 &mut progress.next,
                 current,
                 *attempts,
@@ -115,9 +126,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
                 *attempts,
             )
             .map(|m| m.filter(|m| m.length >= 4)),
-            Self::Chain { table, attempts } => find_chain_lookahead(
+            Self::Chain {
+                table,
+                dictionary,
+                attempts,
+            } => find_chain_lookahead(
                 block,
                 table,
+                *dictionary,
                 &mut progress.next,
                 query,
                 *attempts,
@@ -626,6 +642,7 @@ mod tests {
                     block,
                     GreedySearch::Chain {
                         table: &mut table,
+                        dictionary: None,
                         attempts: 1 << case.search_log,
                     },
                     &mut progress,
@@ -757,6 +774,7 @@ mod tests {
                         block,
                         GreedySearch::Chain {
                             table: &mut table,
+                            dictionary: None,
                             attempts: 1 << case.search_log,
                         },
                         &mut progress,
@@ -865,6 +883,7 @@ mod tests {
                             block,
                             GreedySearch::Chain {
                                 table: &mut table,
+                                dictionary: None,
                                 attempts: 4,
                             },
                             &mut progress,
@@ -931,6 +950,7 @@ mod tests {
                         block,
                         GreedySearch::Chain {
                             table: &mut table,
+                            dictionary: None,
                             attempts
                         },
                         &mut progress,

@@ -27,6 +27,7 @@ use crate::greedy_plan::GreedyExecutionPlan;
 use crate::greedy_state::GreedyTables;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::matchfinder::{MatchTable, StagedMatchView};
+use crate::reference_chain::StagedChainView;
 use crate::{
     CompressionParameterRequest, DictionaryView, Error, ReferenceStrategy,
     ResolvedCompressionParameters, Result, SourceSize,
@@ -269,6 +270,20 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
             _ => Err(Error::InvalidState),
         }
     }
+
+    /// The immutable chain candidate source under the same staged-suffix
+    /// geometry as [`Self::fast_candidates`].
+    ///
+    /// Only a compiled chain profile has one; row and tree families reject the
+    /// request instead of substituting a different finder.
+    pub(crate) fn greedy_chain_candidates(&self) -> Result<StagedChainView<'_>> {
+        match &self.tables {
+            CompiledTables::Greedy(GreedyTables::Chain(chain)) => {
+                Ok(StagedChainView::new(chain.view(), self.loaded_len))
+            }
+            _ => Err(Error::InvalidState),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -277,6 +292,7 @@ mod tests {
     use crate::Dictionary;
     use crate::double_fast_state::DoubleFastMatchState;
     use crate::fast_state::FastMatchState;
+    use crate::greedy_state::GreedyMatchState;
     use alloc::alloc::Global;
     use alloc::vec;
     use alloc::vec::Vec;
@@ -690,6 +706,119 @@ mod tests {
     fn double_fast_consultation_covers_multiple_blocks_and_a_capped_window() {
         double_fast_consultation_case(3, Some(12), 32 * 1024, 1 << 12, 3, false);
         double_fast_consultation_case(3, Some(12), 32 * 1024, 1024, 1, true);
+    }
+
+    fn greedy_chain_consultation_case(level: i32) {
+        let content = pattern(0xc0ff_ee11, 4096);
+        let input = content[content.len() - 1024..].to_vec();
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let (allocator, monitor) = monitored();
+        let mut request = CompressionParameterRequest::with_level(level);
+        // A window at or below 14 selects the chain finder, so this profile is
+        // a compiled chain even though the default 64 KiB-frame tiers use rows.
+        request.set_window_log(13).unwrap();
+        let compiled = CompiledDictionary::new(dictionary.view(), &request, allocator).unwrap();
+        assert!(
+            matches!(
+                compiled.parameters().strategy(),
+                ReferenceStrategy::Greedy | ReferenceStrategy::Lazy | ReferenceStrategy::Lazy2
+            ),
+            "level {level} is not an admitted lazy-family profile"
+        );
+        let staged = compiled.loaded_len();
+        assert_eq!(staged, content.len());
+        let candidate = compiled.greedy_chain_candidates().unwrap();
+        assert_eq!(candidate.staged_len(), staged);
+        let compiled_maps = {
+            let (heads, links) = candidate.view().test_maps();
+            (heads.to_vec(), links.to_vec())
+        };
+        let combined = staged_with(&content, staged, &input);
+        let plan = GreedyExecutionPlan::from_family_parameters(compiled.parameters(), input.len())
+            .unwrap();
+        let mut reference = GreedyMatchState::from_parts_with_prefix(
+            &combined,
+            plan,
+            GreedyTables::new_in(plan.tables(), Global, Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+        )
+        .unwrap();
+        let mut consulted = GreedyMatchState::from_parts_with_compiled_prefix(
+            &combined,
+            plan,
+            GreedyTables::new_in(plan.tables(), Global, Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+            Some(candidate),
+        )
+        .unwrap();
+        let mut repeats = [1, 4, 8];
+        let mut emitted = 0;
+        let mut hits = 0;
+        while emitted < input.len() {
+            let length = (input.len() - emitted).min(plan.block_limit());
+            let expected = reference.parse_next(length, repeats).unwrap();
+            let actual = consulted.parse_next(length, repeats).unwrap();
+            assert_eq!(actual, expected, "level {level} block at {emitted}");
+            assert_eq!(consulted.literals(), reference.literals());
+            assert_eq!(consulted.sequences(), reference.sequences());
+            hits += dictionary_hits(consulted.sequences());
+            if let Some(result) = actual {
+                repeats = result.wire_repeats;
+            }
+            emitted += length;
+        }
+        assert!(hits > 0, "level {level}: no compiled chain candidate used");
+        // Consultation never writes the compiled chain: both arrays are
+        // identical after every block.
+        let (heads, links) = compiled
+            .greedy_chain_candidates()
+            .unwrap()
+            .view()
+            .test_maps();
+        assert_eq!((heads, links), (&compiled_maps.0[..], &compiled_maps.1[..]));
+        drop(consulted);
+        drop(reference);
+        drop(compiled);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn greedy_chain_consultation_matches_combined_staging_and_stays_read_only() {
+        // A small dictionary tiers these levels to Greedy (4), Lazy (5) and
+        // Lazy2 (7); all three use the same chain finder at window log 13.
+        for level in [4, 5, 7] {
+            greedy_chain_consultation_case(level);
+        }
+    }
+
+    #[test]
+    fn greedy_chain_candidates_reject_other_profiles_and_the_row_finder() {
+        let dictionary = Dictionary::from_bytes(PREPARED).unwrap();
+        let (allocator, _) = monitored();
+        let fast = compile(dictionary.view(), 1, allocator).unwrap();
+        assert!(matches!(
+            fast.greedy_chain_candidates(),
+            Err(Error::InvalidState)
+        ));
+        // A 32 KiB dictionary tiers level 5 to window log 17, where the Greedy
+        // family selects the row finder; no compiled chain exists and the
+        // request is rejected explicitly.
+        let row_content = pattern(0x32ad_5c71, 32 * 1024);
+        let row_dictionary = Dictionary::raw(&row_content).unwrap();
+        let (allocator, monitor) = monitored();
+        let row = compile(row_dictionary.view(), 5, allocator).unwrap();
+        assert_eq!(row.parameters().strategy(), ReferenceStrategy::Greedy);
+        assert!(row.parameters().window_log() > 14);
+        assert!(matches!(
+            row.greedy_chain_candidates(),
+            Err(Error::InvalidState)
+        ));
+        drop(row);
+        monitor.assert_released();
     }
 
     #[test]
