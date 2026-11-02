@@ -5,8 +5,7 @@ extension, the Greedy chain-and-row family extension, the BinaryTreeLazy2
 tree-family extension with the explicit optimal-family rejection, prepared
 formatted-dictionary entropy reuse, and the public allocating, caller-owned and
 coordinator parameterized dictionary calls are qualified and integrated.
-Corpus validation, the complete feature/release regression, measurements and
-reconciliation remain open.
+Corpus validation, measurements and reconciliation remain open.
 
 ## Internal combined staging for the Fast profile
 
@@ -194,3 +193,14 @@ claimed.
 Nine focused commands pass: two host test suites, two strict Clippy checks,
 two concrete atomic-free checks, two IR/object emissions and formatting.
 Evidence: `evidence/2026-10-30-one-shot-encode-parameters-platform.json`.
+
+## Complete feature/release matrix
+
+The frozen module36 candidate runs all 75 commands: safe and all features plus
+every isolated opt-in backend execute the complete test suite, true `no_std`
+compilation and strict Clippy; safe and all features also run complete release
+suites, and formatting runs once. Every complete/release suite reports the same
+120 result groups, 1789 passed and 77 ignored
+with zero failures. Ignored tests are not credited, and no implementation
+change or performance claim is made by this matrix item.
+Evidence: `evidence/2026-11-02-one-shot-encode-parameters-feature-matrix.json`.
