@@ -468,19 +468,31 @@ mod tests {
         combined
     }
 
-    fn fast_consultation_case(level: i32) {
-        let content = pattern(0x0d15_ea2b, 4096);
-        let input = content[content.len() - 1024..].to_vec();
+    fn fast_consultation_case(
+        level: i32,
+        window_log: Option<u8>,
+        content_len: usize,
+        input_len: usize,
+        repeats: usize,
+        expect_hits: bool,
+    ) {
+        let content = pattern(0x0d15_ea2b, content_len);
         let dictionary = Dictionary::raw(&content).unwrap();
         let (allocator, monitor) = monitored();
-        let compiled = compile(dictionary.view(), level, allocator).unwrap();
+        let mut request = CompressionParameterRequest::with_level(level);
+        if let Some(window_log) = window_log {
+            request.set_window_log(window_log).unwrap();
+        }
+        let compiled = CompiledDictionary::new(dictionary.view(), &request, allocator).unwrap();
         assert_eq!(
             compiled.parameters().strategy(),
             ReferenceStrategy::Fast,
             "level {level}"
         );
         let staged = compiled.loaded_len();
-        assert!(staged >= input.len(), "level {level}");
+        assert!(staged >= input_len, "level {level}");
+        let suffix = &content[content.len() - staged..];
+        let input = suffix[staged - input_len..].repeat(repeats);
         let compiled_positions = compiled
             .fast_candidates()
             .unwrap()
@@ -525,7 +537,15 @@ mod tests {
             }
             emitted += length;
         }
-        assert!(hits > 0, "no dictionary candidate reached the parser");
+        assert_eq!(
+            hits > 0,
+            expect_hits,
+            "dictionary-candidate expectation: staged {staged}, input {}, window {}, block limit {}, sequences {:?}",
+            input.len(),
+            plan.window_size(),
+            plan.block_limit(),
+            consulted.sequences(),
+        );
         // The compiled source is unchanged and the per-call table holds only
         // input samples: consultation never copies or mutates compiled cells.
         assert_eq!(
@@ -547,23 +567,48 @@ mod tests {
     #[test]
     fn fast_consultation_matches_combined_staging_and_uses_dictionary_candidates() {
         for level in [1, 2] {
-            fast_consultation_case(level);
+            fast_consultation_case(level, None, 4096, 1024, 1, true);
         }
     }
 
-    fn double_fast_consultation_case(level: i32) {
-        let content = pattern(0x51ed_2c4f, 4096);
-        let input = content[content.len() - 1024..].to_vec();
+    #[test]
+    fn fast_consultation_covers_multiple_blocks_and_a_capped_window() {
+        // An explicit window smaller than the dictionary content caps the loaded
+        // suffix; three repeated copies of it need three blocks, so the window
+        // floor and the sampling frontier advance across block boundaries. A
+        // first block that fills the window pushes the floor to the prefix, so
+        // this geometry cannot reach a dictionary candidate.
+        fast_consultation_case(1, Some(13), 32 * 1024, 1 << 13, 3, false);
+        // A short first block leaves part of the capped suffix inside the
+        // window floor, so the staged candidates are reachable after all.
+        fast_consultation_case(1, Some(13), 32 * 1024, 1024, 1, true);
+    }
+
+    fn double_fast_consultation_case(
+        level: i32,
+        window_log: Option<u8>,
+        content_len: usize,
+        input_len: usize,
+        repeats: usize,
+        expect_hits: bool,
+    ) {
+        let content = pattern(0x51ed_2c4f, content_len);
         let dictionary = Dictionary::raw(&content).unwrap();
         let (allocator, monitor) = monitored();
-        let compiled = compile(dictionary.view(), level, allocator).unwrap();
+        let mut request = CompressionParameterRequest::with_level(level);
+        if let Some(window_log) = window_log {
+            request.set_window_log(window_log).unwrap();
+        }
+        let compiled = CompiledDictionary::new(dictionary.view(), &request, allocator).unwrap();
         assert_eq!(
             compiled.parameters().strategy(),
             ReferenceStrategy::DoubleFast,
             "level {level}"
         );
         let staged = compiled.loaded_len();
-        assert!(staged >= input.len(), "level {level}");
+        assert!(staged >= input_len, "level {level}");
+        let suffix = &content[content.len() - staged..];
+        let input = suffix[staged - input_len..].repeat(repeats);
         let (compiled_long, compiled_short) = compiled.double_fast_candidates().unwrap();
         let compiled_long = compiled_long.view().test_positions().to_vec();
         let compiled_short = compiled_short.view().test_positions().to_vec();
@@ -608,7 +653,15 @@ mod tests {
             }
             emitted += length;
         }
-        assert!(hits > 0, "no dictionary candidate reached the parser");
+        assert_eq!(
+            hits > 0,
+            expect_hits,
+            "double-fast dictionary-candidate expectation: staged {staged}, input {}, window {}, block limit {}, sequences {:?}",
+            input.len(),
+            plan.window_size(),
+            plan.block_limit(),
+            consulted.sequences(),
+        );
         let (long, short) = compiled.double_fast_candidates().unwrap();
         assert_eq!(long.view().test_positions(), compiled_long);
         assert_eq!(short.view().test_positions(), compiled_short);
@@ -630,7 +683,13 @@ mod tests {
     fn double_fast_consultation_matches_combined_staging_and_uses_both_tables() {
         // Level 3 is the only default DoubleFast profile in this resolver;
         // level 4 already resolves to Greedy.
-        double_fast_consultation_case(3);
+        double_fast_consultation_case(3, None, 4096, 1024, 1, true);
+    }
+
+    #[test]
+    fn double_fast_consultation_covers_multiple_blocks_and_a_capped_window() {
+        double_fast_consultation_case(3, Some(12), 32 * 1024, 1 << 12, 3, false);
+        double_fast_consultation_case(3, Some(12), 32 * 1024, 1024, 1, true);
     }
 
     #[test]

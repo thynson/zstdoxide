@@ -195,7 +195,11 @@ families and measures the resulting geometry instead of asserting byte identity:
   before the frame start (a dictionary hit), that compiled cells were unchanged
   after the call, and that every nonempty per-call cell indexes the frame
   region. These are measured comparisons for these deterministic pairs, not a
-  general equality contract.
+  general equality contract. A further case caps the loaded suffix with an
+  explicit window and runs three blocks: when the first block fills the parallel
+  block limit, the block-end window floor reaches the prefix and no dictionary
+  candidate is admissible, while a shorter first block leaves part of the capped
+  suffix inside the floor and does reach those candidates.
 - A formatted dictionary's prepared entropy is borrowed as
   `DictionaryEntropyView` and its twelve-bit first-block literal codebook is
   built once at construction. The combined path rebuilds that codebook per call;

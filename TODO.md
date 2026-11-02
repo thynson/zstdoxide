@@ -209,6 +209,7 @@ the reuse geometry are recorded before implementation in
 - [x] Analyze pinned CDict table loading, sampling frontier, loaded-end expiry and by-reference/by-copy ownership before implementation.
 - [x] Implement immutable compiled-dictionary ownership with content-relative seeded tables, admission, dictionary identifier and explicit optimal-family rejection.
 - [x] Implement translated read-only dictionary-candidate consultation for Fast and DoubleFast with per-call input sampling kept separate and prepared-entropy first-block seeding wired through the compiled path.
+- [x] Extend compiled Fast/DoubleFast consultation coverage across multiple blocks and a window-capped dictionary.
 - [x] Analyze pinned dictionary chain/row search order, shared attempt budgets and index deltas before implementation.
 - [ ] Extend translated consultation to the Greedy/Lazy/Lazy2 chain family.
 - [ ] Extend translated consultation to the row family.
