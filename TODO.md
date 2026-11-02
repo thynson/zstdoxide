@@ -207,7 +207,7 @@ the reuse geometry are recorded before implementation in
 `docs/prepared-dictionary-analysis.md`.
 
 - [x] Analyze pinned CDict table loading, sampling frontier, loaded-end expiry and by-reference/by-copy ownership before implementation.
-- [ ] Implement immutable compiled-dictionary ownership with content-relative seeded tables, admission, dictionary-ID/entropy reuse and explicit optimal-family rejection.
+- [x] Implement immutable compiled-dictionary ownership with content-relative seeded tables, admission, dictionary-ID/entropy reuse and explicit optimal-family rejection.
 - [ ] Implement translated read-only dictionary-candidate consultation for Fast and DoubleFast with per-call input sampling kept separate.
 - [ ] Extend translated consultation to the Greedy/Lazy/Lazy2 chain and row families.
 - [ ] Extend translated consultation to BinaryTreeLazy2 and retained-plan rejection boundaries.

@@ -46,6 +46,7 @@ extern crate alloc;
 mod bitstream;
 mod bitwriter;
 mod block_entropy;
+mod compiled_dictionary;
 mod constants;
 mod cursor;
 mod decode;
