@@ -72,6 +72,18 @@ impl ReferenceSearchPlan {
             return Err(Error::InvalidParameter);
         }
         let parameters = request.resolve(SourceSize::Known(source_size), dictionary_size)?;
+        Self::from_resolved(parameters, source_len)
+    }
+
+    /// Build a plan from an already-resolved profile instead of a request, as
+    /// a compiled dictionary does: the profile is fixed once and every later
+    /// call must reuse it rather than resolve a different one. Admission,
+    /// caps and geometry match `new_with_dictionary` for the same resolved
+    /// record and source length.
+    pub(crate) fn from_resolved(
+        parameters: ResolvedCompressionParameters,
+        source_len: usize,
+    ) -> Result<Self> {
         match parameters.strategy() {
             ReferenceStrategy::Fast => {
                 FastExecutionPlan::from_resolved_parameters(parameters, source_len).map(Self::Fast)
@@ -621,6 +633,63 @@ mod tests {
                 .unwrap(),
             ),
         ]
+    }
+
+    #[test]
+    fn resolved_profile_rebuilds_every_dispatch_branch_of_the_request_plan() {
+        // A compiled dictionary fixes one resolved profile at construction and
+        // every later call must rebuild its plan from that exact record.
+        // Levels 1/3/4/6/9/11 dispatch Fast, DoubleFast, Greedy, Lazy, Lazy2,
+        // BinaryTreeLazy2 and the Optimal family beside fresh and retained
+        // optimal schedules; each resolved record must rebuild a plan with the
+        // same profile, source length, block limit and block schedule as the
+        // request-driven constructor for every checked source size.
+        for level in [1, 3, 4, 6, 9, 11] {
+            for size in [0usize, 100, 16_384, 16_385, 65_536] {
+                let request = CompressionParameterRequest::with_level(level);
+                let expected = match ReferenceSearchPlan::new(&request, size) {
+                    Ok(plan) => plan,
+                    Err(error) => {
+                        assert_eq!(
+                            ReferenceSearchPlan::from_resolved(
+                                request
+                                    .resolve(SourceSize::Known(u64::try_from(size).unwrap()), 0)
+                                    .unwrap(),
+                                size
+                            )
+                            .map(|plan| (
+                                plan.parameters(),
+                                plan.source_len(),
+                                plan.block_limit()
+                            )),
+                            Err(error),
+                            "level {level} size {size}"
+                        );
+                        continue;
+                    }
+                };
+                let resolved = request
+                    .resolve(SourceSize::Known(u64::try_from(size).unwrap()), 0)
+                    .unwrap();
+                let plan = ReferenceSearchPlan::from_resolved(resolved, size)
+                    .unwrap_or_else(|error| panic!("level {level} size {size}: {error:?}"));
+                assert_eq!(plan.parameters(), expected.parameters());
+                assert_eq!(plan.source_len(), expected.source_len());
+                assert_eq!(plan.block_limit(), expected.block_limit());
+                let mut emitted = 0;
+                loop {
+                    assert_eq!(
+                        plan.next_block_len(emitted),
+                        expected.next_block_len(emitted),
+                        "level {level} size {size} emitted {emitted}"
+                    );
+                    match plan.next_block_len(emitted) {
+                        Ok(next) => emitted += next,
+                        Err(_) => break,
+                    }
+                }
+            }
+        }
     }
 
     #[test]
