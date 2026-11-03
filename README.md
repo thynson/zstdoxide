@@ -191,6 +191,7 @@ request against the actual source and dictionary sizes and reject any profile
 difference before writing. Fast, DoubleFast, chain, row and BinaryTreeLazy2
 consult the immutable tables read-only beside per-call sampling; formatted
 entropy seeds the first block. See
+[compiled dictionary usage](docs/prepared-dictionary-usage.md),
 [the validation report](docs/prepared-dictionary-validation.md) and
 [the compiled-frame comparison](docs/prepared-dictionary-analysis.md#compiled-frame-comparison-item-9).
 
