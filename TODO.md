@@ -217,7 +217,7 @@ parity remain open.
 
 Decompose before implementation; do not start until this checklist is reviewed.
 
-- [ ] Analyze pinned CDict attach/reset in `ZSTD_compressStream2`, prefix
+- [x] Analyze pinned CDict attach/reset in `ZSTD_compressStream2`, prefix
   lifecycle and window expiry across frame boundaries.
 - [ ] Extend the streaming encoder with an immutable compiled selection and
   fixed-profile admission without per-frame table seeding.
