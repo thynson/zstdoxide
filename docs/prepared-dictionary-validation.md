@@ -53,5 +53,27 @@ The compiled frame comparison against Module 36 combined staging is frozen in
 DoubleFast, chain, row and the formatted entropy seed match exactly, while the
 tree family records its measured differences explicitly.
 
-Remaining Module 37 items are guarded native schedules, the full feature and
-release matrix, timing with CPU barriers, and final reconciliation.
+## Guarded native schedules
+
+Thirteen typed compiled-dictionary cases run against normal and sanitized
+pinned v1.5.7 CDict controls: Fast, DoubleFast, chain and BinaryTreeLazy2,
+raw and formatted attachments, empty/no-match and multi-block inputs, a
+window-capped raw dictionary, and unsupported Optimal/Ultra2 construction.
+Both builds produce identical thirteen rows and frames; Rust frames decode
+natively, native frames decode in Rust, every observable native dictionary
+control differs from its fresh no-dictionary control, and the window-capped
+Rust case equals the dictionary-free parameterized bytes (native window
+adjustment differs and is not claimed as byte identity). Eleven supported and
+two rejected rows are retained, with independent destination guards.
+Evidence: `evidence/2026-11-03-compiled-dictionary-native-platform.json`.
+
+## Concrete no-atomics ARM emission
+
+Compiled allocating, caller-owned and coordinator paths run on the host under
+safe and all features. Library checks and release LLVM IR/object emission pass
+for `thumbv6m-none-eabi` with safe and every opt-in storage backend together;
+the IR and object artifacts are retained. Foreign Miri was not run because this
+item added or modified no unsafe code, per the standing direction.
+
+Remaining Module 37 items are the full feature and release matrix, timing with
+CPU barriers, and final reconciliation.
