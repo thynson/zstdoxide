@@ -4136,12 +4136,29 @@ keeps the pinned `dmsIndexDelta` at zero. A row is an insertion ring per owner,
 so row consultation remains a measured per-family comparison rather than one
 seeded ring.
 
+The binary-tree family needs a fully sorted compiled tree because its read-only
+consultation cannot resolve an unsorted mark. `TreeCells<'a>` shares checked
+head and edge reads between the owner, `ReferenceTreeView<'a>` and
+`StagedTreeView<'a>`; the view exposes only layout, head and edge reads, and the
+staged view adds the prefix length its positions require. Construction runs the
+`load_sorted_prefix` counterpart of `ZSTD_updateTree`/`ZSTD_insertBt1`:
+ascending positions, a window floor computed from the fill target, a per-fill
+attempt cap and the forward skip over repetitive patterns; positions within one
+eight-byte query footprint of the loaded end are never inserted.
+`GreedySearch::Tree` carries the optional view into direct and lookahead
+probes; the search counts context candidates, then consults the compiled tree
+only with the remaining shared budget after the context traversal. A compiled
+candidate must strictly improve the carried context best, and an improving
+full-block context match suppresses the descent. The per-call tree keeps its
+first-query lazy back-fill.
+
 Upstream counterparts are pinned `ZSTD_CDict`, `ZSTD_createCDict_advanced2`,
 `ZSTD_initCDict_internal`, `ZSTD_loadDictionaryContent`, `ZSTD_CCtx_refCDict`
 and `ZSTD_compress_usingCDict_advanced`. The loaded suffix and `loadedDictEnd`
 provide window expiry; `nextToUpdate` provides the sampling frontier; the
 `dictMatchState` attach mode provides the read-only second candidate source and
-the context-then-dictionary order of `ZSTD_HcFindBestMatch` and
-`ZSTD_RowFindBestMatch`. Native CCtx lifecycle, dedicated dictionary search,
-LDM and workers are not implied. Contracts and evidence requirements:
+the context-then-dictionary order of `ZSTD_HcFindBestMatch`,
+`ZSTD_RowFindBestMatch` and `ZSTD_DUBT_findBetterDictMatch`. Native CCtx
+lifecycle, native dedicated-dictionary workspace sharing, LDM and workers are
+not implied. Contracts and evidence requirements:
 `prepared-dictionary-design.md`.

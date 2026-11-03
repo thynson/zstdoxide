@@ -28,6 +28,7 @@ use crate::greedy_state::GreedyTables;
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::matchfinder::{MatchTable, StagedMatchView};
 use crate::reference_chain::StagedChainView;
+use crate::reference_tree::StagedTreeView;
 use crate::row_table::StagedRowView;
 use crate::{
     CompressionParameterRequest, DictionaryView, Error, ReferenceStrategy,
@@ -181,10 +182,21 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
                     _ => unreachable!("admission checked every rejected strategy"),
                 };
                 let mut tables = GreedyTables::new_in(plan.tables(), allocator.clone(), allocator)?;
-                // Chain and row owners seed every suffix key position; the tree
-                // family needs no seeding pass and keeps its first-query
-                // back-fill contract at consultation time.
-                tables.seed_prefix(suffix, loaded_len)?;
+                // Chain and row owners seed every suffix key position. The tree
+                // family instead takes the pinned dictionary-side load: a fully
+                // sorted prefix tree, because its consultation is a read-only
+                // descent that cannot resolve an unsorted mark.
+                if let GreedyTables::Tree(tree) = &mut tables {
+                    crate::tree_sort::load_sorted_prefix(
+                        tree,
+                        suffix,
+                        loaded_len,
+                        plan.window_size(),
+                        plan.tables().attempts(),
+                    )?;
+                } else {
+                    tables.seed_prefix(suffix, loaded_len)?;
+                }
                 CompiledTables::Greedy(tables)
             }
         };
@@ -295,6 +307,22 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
         match &self.tables {
             CompiledTables::Greedy(GreedyTables::Row(row)) => {
                 Ok(StagedRowView::new(row.view(), self.loaded_len))
+            }
+            _ => Err(Error::InvalidState),
+        }
+    }
+
+    /// The immutable fully sorted tree candidate source under the same
+    /// staged-suffix geometry as [`Self::fast_candidates`].
+    ///
+    /// Only a compiled BinaryTreeLazy2 profile has one; chain, row, Fast and
+    /// DoubleFast families reject the request instead of substituting a
+    /// different finder. Its edges were fully sorted at construction, so the
+    /// consultation descent never resolves an unsorted mark.
+    pub(crate) fn greedy_tree_candidates(&self) -> Result<StagedTreeView<'_>> {
+        match &self.tables {
+            CompiledTables::Greedy(GreedyTables::Tree(tree)) => {
+                Ok(StagedTreeView::new(tree.view(), self.loaded_len))
             }
             _ => Err(Error::InvalidState),
         }
@@ -893,6 +921,172 @@ mod tests {
         for level in [5, 6, 7] {
             greedy_row_consultation_case(level);
         }
+    }
+
+    fn greedy_tree_consultation_case(level: i32) {
+        let content = pattern(0x51ce_517e, 4096);
+        let input = content[content.len() - 1024..].to_vec();
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let (allocator, monitor) = monitored();
+        let compiled = compile(dictionary.view(), level, allocator).unwrap();
+        assert_eq!(
+            compiled.parameters().strategy(),
+            ReferenceStrategy::BinaryTreeLazy2,
+            "level {level} is not a compiled tree profile"
+        );
+        let staged = compiled.loaded_len();
+        assert_eq!(staged, content.len());
+        let candidate = compiled.greedy_tree_candidates().unwrap();
+        assert_eq!(candidate.staged_len(), staged);
+        let compiled_maps = {
+            let (heads, edges) = candidate.view().test_maps();
+            (heads.to_vec(), edges.to_vec())
+        };
+        assert!(
+            compiled_maps.0.iter().any(|&h| h != usize::MAX),
+            "the sorted prefix load must seed heads"
+        );
+        let combined = staged_with(&content, staged, &input);
+        let plan =
+            GreedyExecutionPlan::from_tree_parameters(compiled.parameters(), input.len()).unwrap();
+        let mut consulted = GreedyMatchState::from_parts_with_compiled_prefix(
+            &combined,
+            plan,
+            GreedyTables::new_in(plan.tables(), Global, Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            staged,
+            Some(GreedyCandidates::Tree(candidate)),
+        )
+        .unwrap();
+        let mut repeats = [1, 4, 8];
+        let mut emitted = 0;
+        let mut hits = 0;
+        while emitted < input.len() {
+            let length = (input.len() - emitted).min(plan.block_limit());
+            let actual = consulted.parse_next(length, repeats).unwrap();
+            assert!(actual.is_some(), "level {level} block at {emitted}");
+            hits += dictionary_hits(consulted.sequences());
+            if let Some(result) = actual {
+                repeats = result.wire_repeats;
+            }
+            emitted += length;
+        }
+        // The compiled tree is the only dictionary candidate source for the
+        // first query (the per-call tree starts empty at the prefix boundary),
+        // so a dictionary hit proves a compiled candidate reached the parser.
+        assert!(hits > 0, "level {level}: no compiled tree candidate used");
+        // Consultation never writes the compiled tree: both arrays are
+        // identical after every block.
+        let (heads, edges) = compiled
+            .greedy_tree_candidates()
+            .unwrap()
+            .view()
+            .test_maps();
+        assert_eq!((heads, edges), (&compiled_maps.0[..], &compiled_maps.1[..]));
+        drop(consulted);
+        drop(compiled);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn greedy_tree_consultation_uses_compiled_candidates_and_stays_read_only() {
+        // Level 9 tiers a 4 KiB raw dictionary to BinaryTreeLazy2 with
+        // search log 5. Level 10 resolves search log 9, past the tree plan's
+        // search cap, and the constructor rejects that record instead of
+        // substituting a finder.
+        greedy_tree_consultation_case(9);
+    }
+
+    #[test]
+    fn greedy_tree_candidates_reject_other_profiles_and_mismatched_geometry() {
+        let dictionary = Dictionary::from_bytes(PREPARED).unwrap();
+        let (allocator, _) = monitored();
+        let fast = compile(dictionary.view(), 1, allocator).unwrap();
+        assert!(matches!(
+            fast.greedy_tree_candidates(),
+            Err(Error::InvalidState)
+        ));
+        // A window log at or below 14 selects the chain finder for level 5, so
+        // no compiled tree exists and the request is rejected explicitly.
+        let (allocator, _) = monitored();
+        let chain = compile_chain_13(dictionary.view(), allocator).unwrap();
+        assert!(matches!(
+            chain.greedy_tree_candidates(),
+            Err(Error::InvalidState)
+        ));
+        // A 32 KiB dictionary tiers level 5 to the row finder; no compiled
+        // tree exists either.
+        let row_content = pattern(0x9d3e_77af, 32 * 1024);
+        let row_dictionary = Dictionary::raw(&row_content).unwrap();
+        let (allocator, monitor) = monitored();
+        let row = compile(row_dictionary.view(), 5, allocator).unwrap();
+        assert!(row.parameters().window_log() > 14);
+        assert!(matches!(
+            row.greedy_tree_candidates(),
+            Err(Error::InvalidState)
+        ));
+        drop(row);
+        monitor.assert_released();
+        // A plan resolved with a different chain log has a different layout;
+        // the state constructor rejects the compiled view before resetting its
+        // own table or reading a single candidate.
+        let tree_content = pattern(0x6ba8_291d, 4096);
+        let tree_dictionary = Dictionary::raw(&tree_content).unwrap();
+        let (allocator, _) = monitored();
+        let tree = compile(tree_dictionary.view(), 9, allocator).unwrap();
+        let candidate = tree.greedy_tree_candidates().unwrap();
+        let mut other = CompressionParameterRequest::with_level(9);
+        other.set_chain_log(10).unwrap();
+        let parameters = other
+            .resolve(SourceSize::Unknown, tree_dictionary.view().content().len())
+            .unwrap();
+        let input = b"tree layout rejection";
+        let plan = GreedyExecutionPlan::from_tree_parameters(parameters, input.len()).unwrap();
+        let outcome = GreedyMatchState::from_parts_with_compiled_prefix(
+            input,
+            plan,
+            GreedyTables::new_in(plan.tables(), Global, Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            0,
+            Some(GreedyCandidates::Tree(candidate)),
+        );
+        assert!(matches!(outcome, Err(Error::InvalidParameter)));
+        // A wrong staged length is rejected under the correct layout before
+        // any reset, and the exact staged length is admitted.
+        let plan = GreedyExecutionPlan::from_tree_parameters(
+            tree.parameters(),
+            tree_content.len() - tree.loaded_len() + input.len(),
+        )
+        .unwrap();
+        let wrong = GreedyMatchState::from_parts_with_compiled_prefix(
+            input,
+            plan,
+            GreedyTables::new_in(plan.tables(), Global, Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            0,
+            Some(GreedyCandidates::Tree(candidate)),
+        );
+        assert!(matches!(wrong, Err(Error::InvalidParameter)));
+        let mut staged_source = tree_content[..tree.loaded_len()].to_vec();
+        staged_source.extend_from_slice(input);
+        let plan = GreedyExecutionPlan::from_tree_parameters(
+            tree.parameters(),
+            staged_source.len() - tree.loaded_len(),
+        )
+        .unwrap();
+        let accepted = GreedyMatchState::from_parts_with_compiled_prefix(
+            &staged_source,
+            plan,
+            GreedyTables::new_in(plan.tables(), Global, Global).unwrap(),
+            Vec::new(),
+            Vec::new(),
+            tree.loaded_len(),
+            Some(GreedyCandidates::Tree(candidate)),
+        );
+        assert!(accepted.is_ok());
     }
 
     #[test]

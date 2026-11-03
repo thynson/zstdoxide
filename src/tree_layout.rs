@@ -215,6 +215,36 @@ impl TreeProbe {
         }
         Ok(position + 2 > self.node_floor_raw)
     }
+    /// Construction probe for the sorted prefix load.
+    ///
+    /// The pinned insertion computes its window floor from the fill target
+    /// ("we only need positions that will be in the window at the end of the
+    /// tree update", `ZSTD_insertBt1`), not from the inserted position, while
+    /// the node floor stays per position. Every other structural check and
+    /// both raw biases match `Self::new`, keeping one floor definition for
+    /// search and construction.
+    pub(crate) fn for_fill(
+        current: usize,
+        source_end: usize,
+        fill_target: usize,
+        window_size: usize,
+        layout: TreeLayout,
+    ) -> Result<Self> {
+        if !(1024..=2_097_152).contains(&window_size)
+            || !window_size.is_power_of_two()
+            || current.checked_add(8).is_none_or(|end| end > source_end)
+            || source_end.checked_add(2).is_none()
+        {
+            return Err(Error::InvalidParameter);
+        }
+        let raw = current + 2; // The checked eight-byte footprint proves this addition.
+        Ok(Self {
+            current,
+            source_end,
+            window_floor_raw: (fill_target + 2).saturating_sub(window_size).max(2),
+            node_floor_raw: raw.saturating_sub(layout.nodes() - 1),
+        })
+    }
 }
 
 #[cfg(test)]

@@ -12,7 +12,7 @@ use crate::greedy_search::{
 };
 use crate::lazy_select::{LazyCandidate, LazyDepth, LazyGain};
 use crate::reference_chain::{ReferenceChain, ReferenceChainView};
-use crate::reference_tree::ReferenceTree;
+use crate::reference_tree::{ReferenceTree, ReferenceTreeView};
 use crate::row_table::{RowTable, RowTableView};
 use crate::sequence_context::{LogicalSequence, SequenceWithOffset};
 use crate::sequence_plan::OffsetIntent;
@@ -24,6 +24,7 @@ use crate::{Error, Result};
 pub(crate) enum GreedySearch<'a, A: Allocator, B: Allocator> {
     Tree {
         table: &'a mut ReferenceTree<A, B>,
+        dictionary: Option<ReferenceTreeView<'a>>,
         attempts: usize,
     },
     Chain {
@@ -58,9 +59,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
                     && dictionary.is_none_or(|view| view.key_layout() == block.key_layout())
                     && (1..=256).contains(attempts)
             }
-            Self::Tree { table, attempts } => {
+            Self::Tree {
+                table,
+                dictionary,
+                attempts,
+            } => {
                 !block.row_search()
                     && table.layout().key() == block.key_layout()
+                    && dictionary.is_none_or(|view| view.layout().key() == block.key_layout())
                     && (1..=256).contains(attempts)
             }
             Self::Row {
@@ -84,9 +90,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
         current: usize,
     ) -> Result<Option<GreedyMatch>> {
         match self {
-            Self::Tree { table, attempts } => crate::tree_search::find(
+            Self::Tree {
+                table,
+                dictionary,
+                attempts,
+            } => crate::tree_search::find(
                 TreeSource::from_block(block)?,
                 table,
+                *dictionary,
                 &mut progress.next,
                 current,
                 *attempts,
@@ -128,9 +139,14 @@ impl<A: Allocator, B: Allocator> GreedySearch<'_, A, B> {
         query: LazyQuery,
     ) -> Result<Option<GreedyMatch>> {
         match self {
-            Self::Tree { table, attempts } => crate::tree_search::find(
+            Self::Tree {
+                table,
+                dictionary,
+                attempts,
+            } => crate::tree_search::find(
                 TreeSource::from_block(block)?,
                 table,
+                *dictionary,
                 &mut progress.next,
                 query.current(),
                 *attempts,

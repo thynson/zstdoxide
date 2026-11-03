@@ -375,3 +375,43 @@ The remaining decisions for the implementation item are:
   plans as `new_with_dictionary`, and both frame paths must keep rejecting a
   nonzero staged prefix for every optimal-family plan with
   `UnsupportedFeature` before any allocation.
+
+## Binary-tree consultation (item 8)
+
+`TreeCells<'a>` now owns the checked head and edge reads shared by
+`ReferenceTree<H, N>`, `ReferenceTreeView<'a>` and `StagedTreeView<'a>`, so the
+`unsafe-reference-tree` access has one implementation and no new unsafe
+operation. The immutable view exposes only `layout`, `head` and `edge`; the
+staged view adds the prefix length its positions require. `GreedySearch::Tree`
+carries the optional view into direct and lookahead probes, and
+`GreedyMatchState::from_parts_with_compiled_prefix` rejects a mismatched
+family, layout or staged length before resetting its owners.
+
+Compiled tree construction runs `tree_sort::load_sorted_prefix` instead of the
+per-call seed. It mirrors the pinned dictionary-side `ZSTD_updateTree` /
+`ZSTD_insertBt1` load: ascending positions, window floors computed from the fill
+target, the per-fill attempt cap, and the forward skip over repetitive patterns;
+positions within one eight-byte query footprint of the loaded end are omitted.
+The per-call tree keeps its first-query back-fill and its sampling frontier at
+the combined-buffer start.
+
+The consultation order follows `ZSTD_DUBT_findBestMatch` and
+`ZSTD_DUBT_findBetterDictMatch`: the context traversal runs first and counts
+the candidates it consumed, a context match filling the block suppresses the
+dictionary branch, and the compiled descent receives only the remaining shared
+budget. It starts at the compiled head, follows compiled edges strictly
+read-only, applies the same current/floor/byte/window checks, accepts only a
+strictly better match under the gain rule, and ends when a compiled candidate
+fills the block without improving the context best.
+
+Tests cover an empty context tree reaching a compiled candidate, shared budget
+accounting, strictly-longer context ties, full-block suppression with a
+deliberately corrupt compiled edge, foreign layout rejection before writes,
+compiled-level admission at level 9 (level 10 resolves search log 9, past the
+tree plan's cap, and the constructor rejects that record), read-only compiled
+maps, and rejection of other profile families and mismatched geometry. A
+separate boundary test rebuilds retained Optimal/Ultra/Ultra2 plans from
+resolved records and asserts that a nonzero staged prefix still returns
+`UnsupportedFeature` before parser work. Byte equality with combined staging
+remains the measured per-family comparison of the next item; the eager sorted
+load can select a different tree shape even for deterministic pairs.

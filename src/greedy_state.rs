@@ -8,7 +8,7 @@ use crate::greedy_block::GreedyBlock;
 use crate::greedy_parse::{GreedyParseResult, GreedyProgress, GreedySearch, parse_with_depth};
 use crate::greedy_plan::{GreedyExecutionPlan, GreedyTablePlan};
 use crate::reference_chain::{ReferenceChain, StagedChainView};
-use crate::reference_tree::ReferenceTree;
+use crate::reference_tree::{ReferenceTree, StagedTreeView};
 use crate::row_table::{RowTable, StagedRowView};
 use crate::sequence_context::SequenceWithOffset;
 use crate::{Error, Result};
@@ -137,14 +137,16 @@ fn seed_row<A: Allocator>(table: &mut RowTable<A>, source: &[u8], prefix_len: us
 /// Corresponds to the no-dictionary match/window part of `ZSTD_CCtx`.
 /// A read-only compiled candidate source for the selected Greedy family.
 ///
-/// A chain profile carries a compiled chain; a row profile carries a compiled
-/// row. The variant must match the per-call owner family.
+/// A chain profile carries a compiled chain, a row profile a compiled row,
+/// and a tree profile a compiled fully sorted tree. The variant must match
+/// the per-call owner family.
 #[derive(Clone, Copy, Debug)]
 #[cfg_attr(
     not(test),
     allow(dead_code, reason = "public compiled-dictionary emission follows")
 )]
 pub(crate) enum GreedyCandidates<'a> {
+    Tree(StagedTreeView<'a>),
     Chain(StagedChainView<'a>),
     Row(StagedRowView<'a>),
 }
@@ -201,12 +203,14 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
     /// Bind owners to a combined borrow whose staged prefix equals a compiled
     /// dictionary's loaded suffix.
     ///
-    /// The per-call chain starts empty and receives every sample; the compiled
-    /// chain is consulted only after the per-call chain and only with the
-    /// remaining attempt budget, matching the pinned `dictMatchState` order.
-    /// A missing compiled owner keeps the seeding path. A chain owner may carry
-    /// only a compiled chain and a row owner only a compiled row; layouts and
-    /// the staged length must match before either owner is reset.
+    /// The per-call chain/row starts empty and receives every sample; the
+    /// compiled owner is consulted only after the per-call candidates and only
+    /// with the remaining attempt budget, matching the pinned `dictMatchState`
+    /// order. The tree family keeps its per-call first-query back-fill from
+    /// the combined-buffer start and consults the compiled tree read-only.
+    /// A missing compiled owner keeps the seeding path. Each owner may carry
+    /// only its own compiled family; layout and the staged length must match
+    /// before either owner is reset.
     pub(crate) fn from_parts_with_compiled_prefix(
         source: &'a [u8],
         plan: GreedyExecutionPlan,
@@ -217,6 +221,9 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
         dictionary: Option<GreedyCandidates<'a>>,
     ) -> Result<Self> {
         let candidate_matches = match (&tables, dictionary) {
+            (GreedyTables::Tree(table), Some(GreedyCandidates::Tree(candidate))) => {
+                candidate.staged_len() == prefix_len && candidate.view().layout() == table.layout()
+            }
             (GreedyTables::Chain(table), Some(GreedyCandidates::Chain(candidate))) => {
                 candidate.staged_len() == prefix_len
                     && candidate.view().key_layout() == table.key_layout()
@@ -239,12 +246,20 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
         tables.reset();
         let next = if prefix_len == 0 {
             0
-        } else if dictionary.is_some() {
-            // Compiled chain/row positions already index the staged prefix, so
-            // the sampling frontier starts exactly at the prefix boundary.
-            prefix_len
         } else {
-            tables.seed_prefix(source, prefix_len)?
+            match dictionary {
+                // Every compiled family keeps the sampling frontier at the
+                // prefix boundary: staged positions live only in the compiled
+                // owner (the pinned context `nextToUpdate` starts at
+                // `dictLimit`), and the per-call tree back-fills from here
+                // instead of re-inserting the whole staged region.
+                Some(
+                    GreedyCandidates::Chain(_)
+                    | GreedyCandidates::Row(_)
+                    | GreedyCandidates::Tree(_),
+                ) => prefix_len,
+                None => tables.seed_prefix(source, prefix_len)?,
+            }
         };
         literals.clear();
         sequences.clear();
@@ -317,6 +332,10 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
             let search = match &mut self.tables {
                 GreedyTables::Tree(table) => GreedySearch::Tree {
                     table,
+                    dictionary: match self.dictionary {
+                        Some(GreedyCandidates::Tree(candidate)) => Some(candidate.view()),
+                        _ => None,
+                    },
                     attempts: self.plan.tables().attempts(),
                 },
                 GreedyTables::Chain(table) => GreedySearch::Chain {

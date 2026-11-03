@@ -15,6 +15,36 @@ use crate::{Error, Result};
 use alloc::{alloc::Global, vec::Vec};
 use core::alloc::Allocator;
 
+/// Borrowed tree cells shared by an owner and its immutable view.
+///
+/// The slices are the initialized head and edge arrays; the checked layout
+/// fixes every bucket, slot and cyclic floor. No path in this type writes.
+#[derive(Clone, Copy, Debug)]
+struct TreeCells<'a> {
+    heads: &'a [usize],
+    edges: &'a [usize],
+    layout: TreeLayout,
+}
+
+impl TreeCells<'_> {
+    fn head(&self, key: GreedyKey) -> Result<TreeLink> {
+        let value = TreeLink::from_stored(read_cell(self.heads, self.layout.key().bucket(key)?)?);
+        if value == TreeLink::Unsorted {
+            return Err(Error::CorruptData);
+        }
+        Ok(value)
+    }
+    fn edge(&self, edge: TreeEdge) -> Result<TreeLink> {
+        let TreeEdge::Node { side, .. } = edge else {
+            return Err(Error::InvalidParameter);
+        };
+        let index = self.layout.cell(edge)?.ok_or(Error::CorruptData)?;
+        let value = TreeLink::from_stored(read_cell(self.edges, index)?);
+        value.for_side(side)?;
+        Ok(value)
+    }
+}
+
 pub(crate) struct ReferenceTree<H: Allocator = Global, N: Allocator = H> {
     heads: Vec<usize, H>,
     edges: Vec<usize, N>,
@@ -89,12 +119,15 @@ impl<H: Allocator, N: Allocator> ReferenceTree<H, N> {
         self.heads.fill(usize::MAX);
         self.edges.fill(usize::MAX);
     }
-    pub(crate) fn head(&self, key: GreedyKey) -> Result<TreeLink> {
-        let value = TreeLink::from_stored(read_cell(&self.heads, self.layout.key().bucket(key)?)?);
-        if value == TreeLink::Unsorted {
-            return Err(Error::CorruptData);
+    fn cells(&self) -> TreeCells<'_> {
+        TreeCells {
+            heads: &self.heads,
+            edges: &self.edges,
+            layout: self.layout,
         }
-        Ok(value)
+    }
+    pub(crate) fn head(&self, key: GreedyKey) -> Result<TreeLink> {
+        self.cells().head(key)
     }
     fn preceding_head(&self, key: GreedyKey, position: usize) -> Result<(usize, TreeLink)> {
         TreeLink::position(position)?;
@@ -138,13 +171,15 @@ impl<H: Allocator, N: Allocator> ReferenceTree<H, N> {
         write_cell(&mut self.edges, larger, marker)
     }
     pub(crate) fn edge(&self, edge: TreeEdge) -> Result<TreeLink> {
-        let TreeEdge::Node { side, .. } = edge else {
-            return Err(Error::InvalidParameter);
-        };
-        let index = self.layout.cell(edge)?.ok_or(Error::CorruptData)?;
-        let value = TreeLink::from_stored(read_cell(&self.edges, index)?);
-        value.for_side(side)?;
-        Ok(value)
+        self.cells().edge(edge)
+    }
+    /// Borrow the immutable heads and edges without allocating or gaining a
+    /// write path. A compiled dictionary keeps this view alive while calls
+    /// sample and sort their own tree.
+    pub(crate) fn view(&self) -> ReferenceTreeView<'_> {
+        ReferenceTreeView {
+            cells: self.cells(),
+        }
     }
     pub(crate) fn set_edge(&mut self, edge: TreeEdge, value: TreeLink) -> Result<()> {
         let stored = match edge {
@@ -160,6 +195,68 @@ impl<H: Allocator, N: Allocator> ReferenceTree<H, N> {
     #[cfg(test)]
     pub(crate) fn test_maps(&self) -> (&[usize], &[usize]) {
         (&self.heads, &self.edges)
+    }
+}
+
+/// An immutable borrow of a compiled tree's heads and edges.
+///
+/// The view offers the same checked head and edge reads as the owner and no
+/// insert, replace, edge write, reset or reconfiguration, so a call can
+/// consult a fully sorted compiled tree while its own tree receives sampling
+/// and lazy sorting. Positions index the staged prefix.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct ReferenceTreeView<'a> {
+    cells: TreeCells<'a>,
+}
+
+impl<'a> ReferenceTreeView<'a> {
+    /// The checked layout the borrowed cells were built under.
+    pub(crate) const fn layout(&self) -> TreeLayout {
+        self.cells.layout
+    }
+
+    /// The same checked head read the owner offers; cells stay read-only.
+    pub(crate) fn head(&self, key: GreedyKey) -> Result<TreeLink> {
+        self.cells.head(key)
+    }
+
+    /// The same checked edge read the owner offers; cells stay read-only.
+    pub(crate) fn edge(&self, edge: TreeEdge) -> Result<TreeLink> {
+        self.cells.edge(edge)
+    }
+
+    /// Inspect the borrowed cells for frozen equality checks only.
+    #[cfg(test)]
+    pub(crate) const fn test_maps(&self) -> (&'a [usize], &'a [usize]) {
+        (self.cells.heads, self.cells.edges)
+    }
+}
+
+/// A tree view paired with the staged-prefix length its positions index.
+///
+/// A call must stage exactly this many suffix bytes before its input for the
+/// positions to index the same bytes, so per-call states reject a different
+/// staged length before consulting any candidate.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct StagedTreeView<'a> {
+    view: ReferenceTreeView<'a>,
+    staged_len: usize,
+}
+
+impl<'a> StagedTreeView<'a> {
+    /// Pair an immutable tree view with the prefix length it indexes.
+    pub(crate) const fn new(view: ReferenceTreeView<'a>, staged_len: usize) -> Self {
+        Self { view, staged_len }
+    }
+
+    /// The read-only tree a parser consults.
+    pub(crate) const fn view(&self) -> ReferenceTreeView<'a> {
+        self.view
+    }
+
+    /// The exact staged prefix length the positions require.
+    pub(crate) const fn staged_len(&self) -> usize {
+        self.staged_len
     }
 }
 
@@ -350,6 +447,59 @@ mod tests {
         ));
         drop(owner);
         assert_eq!(monitor.snapshot().owners_dropped, 1);
+    }
+
+    #[test]
+    fn view_reads_match_the_owner_and_expose_no_write_path() {
+        let mut t = tree();
+        t.insert_unsorted(key(), 10).unwrap();
+        t.set_edge(
+            layout().edge(10, TreeSide::Larger).unwrap(),
+            TreeLink::Unsorted,
+        )
+        .unwrap();
+        let view = t.view();
+        assert_eq!(view.layout(), layout());
+        assert_eq!(view.head(key()), Ok(TreeLink::Position(10)));
+        assert_eq!(
+            view.edge(layout().edge(10, TreeSide::Larger).unwrap()),
+            Ok(TreeLink::Unsorted)
+        );
+        assert_eq!(
+            view.edge(layout().edge(10, TreeSide::Smaller).unwrap()),
+            Ok(TreeLink::Empty)
+        );
+        assert_eq!(view.edge(TreeEdge::Discard), Err(Error::InvalidParameter));
+        assert_eq!(view.test_maps(), t.test_maps());
+        let other = GreedyKeyLayout::new(6, 5)
+            .unwrap()
+            .read_key(b"abcde")
+            .unwrap();
+        assert_eq!(view.head(other), Err(Error::InvalidParameter));
+        // Owner writes stay the only write path; a fresh view re-derives from
+        // the same borrowed cells.
+        t.set_edge(
+            layout().edge(10, TreeSide::Smaller).unwrap(),
+            TreeLink::Position(4),
+        )
+        .unwrap();
+        let view = t.view();
+        assert_eq!(
+            view.edge(layout().edge(10, TreeSide::Smaller).unwrap()),
+            Ok(TreeLink::Position(4))
+        );
+        assert_eq!(view.head(key()), Ok(TreeLink::Position(10)));
+    }
+
+    #[test]
+    fn staged_tree_view_carries_and_reports_its_prefix_length() {
+        let mut t = tree();
+        t.insert_unsorted(key(), 3).unwrap();
+        let view = t.view();
+        let staged = StagedTreeView::new(view, 64);
+        assert_eq!(staged.staged_len(), 64);
+        assert_eq!(staged.view().layout(), layout());
+        assert_eq!(staged.view().head(key()), Ok(TreeLink::Position(3)));
     }
 
     #[cfg(feature = "std")]

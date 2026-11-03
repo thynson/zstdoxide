@@ -636,6 +636,76 @@ mod tests {
     }
 
     #[test]
+    fn resolved_optimal_family_plans_keep_rejecting_a_nonzero_staged_prefix() {
+        // A compiled call builds its plan through `from_resolved`; every
+        // fresh and retained optimal-family plan must keep rejecting a
+        // nonzero staged prefix with `UnsupportedFeature` before any
+        // allocation, exactly like the request-driven constructor's frame
+        // paths. Retained plans only exist for sources of 16385..=32768
+        // under the qualified retained geometry (window <= 16, hash and
+        // chain <= 12, search <= 6).
+        for strategy in [
+            crate::ReferenceStrategy::Optimal,
+            crate::ReferenceStrategy::Ultra,
+            crate::ReferenceStrategy::Ultra2,
+        ] {
+            let mut request = CompressionParameterRequest::with_level(13);
+            request.set_strategy(Some(strategy));
+            request.set_window_log(16).unwrap();
+            request.set_hash_log(12).unwrap();
+            request.set_chain_log(12).unwrap();
+            request.set_search_log(6).unwrap();
+            let retained_parameters = request.resolve(SourceSize::Known(20_000), 0).unwrap();
+            assert_eq!(retained_parameters.strategy(), strategy);
+            let retained = ReferenceSearchPlan::from_resolved(retained_parameters, 20_000).unwrap();
+            assert!(retained.is_retained(), "{strategy:?}");
+            assert!(!retained.admits_dictionary_staging(), "{strategy:?}");
+            let fresh_parameters = request.resolve(SourceSize::Known(16_384), 0).unwrap();
+            assert_eq!(fresh_parameters.strategy(), strategy);
+            let fresh = ReferenceSearchPlan::from_resolved(fresh_parameters, 16_384).unwrap();
+            assert!(!fresh.is_retained(), "{strategy:?}");
+            assert!(!fresh.admits_dictionary_staging(), "{strategy:?}");
+            // A staged prefix of dictionary bytes in front of the frame must
+            // reject before any owner is allocated, and the same plan binds a
+            // zero prefix (the ordinary dictionary-free path).
+            let mut combined = alloc::vec![b'd'; 64];
+            combined.extend_from_slice(&alloc::vec![b'x'; 20_000]);
+            let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+            let monitor = owner.monitor();
+            assert!(
+                matches!(
+                    ReferenceSearchState::new_with_prefix(&combined, 64, retained, &owner),
+                    Err(Error::UnsupportedFeature)
+                ),
+                "{strategy:?}"
+            );
+            assert_eq!(monitor.snapshot().attempts, 0);
+            let frame = &combined[64..];
+            assert!(
+                ReferenceSearchState::new_with_prefix(frame, 0, retained, &owner).is_ok(),
+                "{strategy:?}"
+            );
+            assert!(
+                matches!(
+                    ReferenceSearchState::new_with_prefix(
+                        &combined[..16_384 + 64],
+                        64,
+                        fresh,
+                        &owner
+                    ),
+                    Err(Error::UnsupportedFeature)
+                ),
+                "{strategy:?}"
+            );
+            assert!(
+                ReferenceSearchState::new_with_prefix(&combined[64..16_384 + 64], 0, fresh, &owner)
+                    .is_ok(),
+                "{strategy:?}"
+            );
+        }
+    }
+
+    #[test]
     fn resolved_profile_rebuilds_every_dispatch_branch_of_the_request_plan() {
         // A compiled dictionary fixes one resolved profile at construction and
         // every later call must rebuild its plan from that exact record.
@@ -689,6 +759,41 @@ mod tests {
                     }
                 }
             }
+        }
+    }
+
+    #[test]
+    fn retained_plans_from_resolved_records_reject_nonzero_staged_prefixes() {
+        // The frame paths rebuild retained plans from an explicit resolved
+        // record when a compiled dictionary supplies one profile. The
+        // supported-subset boundary must still reject a nonzero staged prefix
+        // for every retained optimal-family plan before any parser works.
+        for strategy in [
+            crate::ReferenceStrategy::Optimal,
+            crate::ReferenceStrategy::Ultra,
+            crate::ReferenceStrategy::Ultra2,
+        ] {
+            let source_len = 20_000;
+            let mut request = CompressionParameterRequest::with_level(11);
+            request.set_strategy(Some(strategy));
+            request.set_window_log(16).unwrap();
+            request.set_hash_log(12).unwrap();
+            request.set_chain_log(12).unwrap();
+            request.set_search_log(6).unwrap();
+            request.set_min_match(3).unwrap();
+            request.set_target_length(1).unwrap();
+            let resolved = request
+                .resolve(SourceSize::Known(source_len as u64), 0)
+                .unwrap();
+            let plan = ReferenceSearchPlan::from_resolved(resolved, source_len).unwrap();
+            assert!(plan.is_retained(), "{strategy:?}");
+            assert!(!plan.admits_dictionary_staging(), "{strategy:?}");
+            let staged = alloc::vec![0_u8; source_len + 512];
+            assert_eq!(
+                ReferenceSearchState::new_with_prefix(&staged, 512, plan, &Global).err(),
+                Some(Error::UnsupportedFeature),
+                "{strategy:?}"
+            );
         }
     }
 

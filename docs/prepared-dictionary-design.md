@@ -90,6 +90,16 @@ dictionaries never build compiled tables and keep the exact dictionary-free
 parameterized bytes; the compiled profile must never silently substitute a
 strategy or drop a dictionary.
 
+The binary-tree family adds one construction-side shape: its compiled owner is
+an eagerly fully sorted tree (the
+[`ZSTD_updateTree`/`ZSTD_insertBt1` load](prepared-dictionary-analysis.md#dictionary-binary-tree-search-order-analysis)
+with the target-based window floor and the forward skip), because a read-only
+consultation cannot resolve an unsorted mark. Every compiled family keeps its
+sampling frontier at the prefix boundary; only the per-call tree back-fills
+input positions lazily. Retained optimal-family plans keep rejecting a nonzero
+staged prefix under both plan constructors, so a compiled call can never reach
+a retained schedule with dictionary staging.
+
 ## Qualification before promotion
 
 The pinned loading pipeline, sampling frontier, loaded-end expiry and

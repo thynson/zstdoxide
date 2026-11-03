@@ -213,7 +213,7 @@ the reuse geometry are recorded before implementation in
 - [x] Analyze pinned dictionary chain/row search order, shared attempt budgets and index deltas before implementation.
 - [x] Extend translated consultation to the Greedy/Lazy/Lazy2 chain family.
 - [x] Extend translated consultation to the row family.
-- [ ] Extend translated consultation to BinaryTreeLazy2 and retained-plan rejection boundaries.
+- [x] Extend translated consultation to BinaryTreeLazy2 and retained-plan rejection boundaries.
 - [ ] Compare compiled-state frames against the Module 36 combined-staging path per family and record every byte difference explicitly.
 - [ ] Expose public compiled-dictionary one-shot and coordinator APIs with guards and allocator-failure qualification.
 - [ ] Qualify guarded native schedules, window expiry, unsupported-profile rejection and concrete atomic-free ARM code generation.
