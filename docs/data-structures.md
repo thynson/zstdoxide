@@ -4162,6 +4162,16 @@ for the frozen deterministic comparison; the eagerly sorted tree is the
 measured per-family exception recorded in
 [the analysis](prepared-dictionary-analysis.md#compiled-frame-comparison-item-9).
 
+The public surface wraps that path without adding state:
+`CompiledDictionary<'a, A>` is constructed once from a borrowed
+`DictionaryView` and owns every table in `A`; `compress_with_compiled(_in)`
+and `compress_into_with_compiled(_in)` resolve each call's request against the
+actual source length, require the exact compiled seven-field profile and emit
+through the shared compiled frame path; `CompiledOneShotEncoder<'a, A>` only
+moves the compiled state behind a coordinator, retaining no request, source,
+destination or workspace. `compiled_call_plan` is the single fixed-profile
+gate every entry shares.
+
 Upstream counterparts are pinned `ZSTD_CDict`, `ZSTD_createCDict_advanced2`,
 `ZSTD_initCDict_internal`, `ZSTD_loadDictionaryContent`, `ZSTD_CCtx_refCDict`
 and `ZSTD_compress_usingCDict_advanced`. The loaded suffix and `loadedDictEnd`

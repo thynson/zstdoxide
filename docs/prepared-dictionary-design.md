@@ -124,3 +124,17 @@ Native `ZSTD_CCtx` parameter lifecycle, reset directives, dedicated dictionary
 search, long-distance matching, workers, streaming and complete upstream
 parity remain out of scope. A compiled dictionary is not a live compressed
 context and retains no input, output, frame or attempt state.
+
+## Implemented public surface
+
+`CompiledDictionary<'a, A>` is public; `new` takes a borrowed `DictionaryView`
+and a request and fixes the resolved profile. `compress_with_compiled(_in)`
+returns owned output and `compress_into_with_compiled(_in)` writes caller-owned
+output with atomic whole-block appends and guard preservation.
+`CompiledOneShotEncoder` owns one compiled state and reuses it across
+caller-owned calls. Every call re-resolves its request against the actual source
+length and the dictionary content length and rejects any profile difference with
+`InvalidParameter` before output admission. Empty-content construction remains
+rejected; callers use the module36 parameterized path for that edge. The public
+surface stores no request, workspace, source, destination or frame between
+calls.

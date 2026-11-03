@@ -340,6 +340,56 @@ pub(crate) fn compress_reference_with_compiled_in<A: Allocator + Clone, B: Alloc
     plan: ReferenceSearchPlan,
     allocator: A,
 ) -> Result<Vec<u8, A>> {
+    let (_, dictionary_bytes) = crate::encode::dictionary_field(compiled.dictionary_id());
+    let bound = plan
+        .frame_bound()?
+        .checked_add(dictionary_bytes)
+        .ok_or(Error::ResourceLimit)?;
+    let mut output = Vec::new_in(allocator);
+    output
+        .try_reserve_exact(bound)
+        .map_err(|_| Error::AllocationFailed)?;
+    let scratch = output.allocator().clone();
+    compress_reference_with_compiled_to(input, compiled, plan, &mut output, scratch)?;
+    Ok(output)
+}
+
+/// Encode one compiled dictionary frame into caller-owned storage.
+///
+/// Admission and candidate-family errors precede the first output byte.
+/// Complete header and block appends are atomic; a short destination returns
+/// [`Error::ResourceLimit`] after earlier whole appends and never mutates bytes
+/// outside the supplied slice.
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "public compiled-dictionary emission follows")
+)]
+pub(crate) fn compress_reference_with_compiled_into_in<
+    A: Allocator + Clone,
+    B: Allocator + Clone,
+>(
+    input: &[u8],
+    output: &mut [u8],
+    compiled: &CompiledDictionary<'_, B>,
+    plan: ReferenceSearchPlan,
+    allocator: A,
+) -> Result<usize> {
+    let mut sink = FrameSink::new(output);
+    compress_reference_with_compiled_to(input, compiled, plan, &mut sink, allocator)?;
+    Ok(sink.len())
+}
+
+fn compress_reference_with_compiled_to<
+    A: Allocator + Clone,
+    B: Allocator + Clone,
+    O: ReferenceOutput,
+>(
+    input: &[u8],
+    compiled: &CompiledDictionary<'_, B>,
+    plan: ReferenceSearchPlan,
+    output: &mut O,
+    allocator: A,
+) -> Result<()> {
     if input.len() != plan.source_len() {
         return Err(Error::InvalidParameter);
     }
@@ -359,21 +409,15 @@ pub(crate) fn compress_reference_with_compiled_in<A: Allocator + Clone, B: Alloc
     let header = ReferenceFrameHeader::with_dictionary_id(&settings, compiled.dictionary_id());
     let seed = compiled.first_block_seed();
     let (_, dictionary_bytes) = crate::encode::dictionary_field(compiled.dictionary_id());
-    let bound = plan
-        .frame_bound()?
+    plan.frame_bound()?
         .checked_add(dictionary_bytes)
         .ok_or(Error::ResourceLimit)?;
-    let mut output = Vec::new_in(allocator);
-    output
-        .try_reserve_exact(bound)
-        .map_err(|_| Error::AllocationFailed)?;
+    output.append(header.as_bytes())?;
     if input.is_empty() {
-        ReferenceOutput::append(&mut output, header.as_bytes())?;
-        ReferenceOutput::append(&mut output, &[1, 0, 0])?;
-        return Ok(output);
+        output.append(&[1, 0, 0])?;
+        return Ok(());
     }
-    let scratch = output.allocator().clone();
-    let mut combined = Vec::new_in(scratch.clone());
+    let mut combined = Vec::new_in(allocator.clone());
     combined
         .try_reserve_exact(
             staged
@@ -384,16 +428,14 @@ pub(crate) fn compress_reference_with_compiled_in<A: Allocator + Clone, B: Alloc
     combined.extend_from_slice(&content[content.len() - staged..]);
     combined.extend_from_slice(input);
     let mut workspace = ReferenceEncoderWorkspace::new_with_prefix_compiled(
-        &combined, staged, plan, scratch, seed, candidates,
+        &combined, staged, plan, allocator, seed, candidates,
     )?;
-    let mut sink = output;
-    ReferenceOutput::append(&mut sink, header.as_bytes())?;
     while workspace.emitted < input.len() {
         let length = plan.next_block_len(workspace.emitted)?;
         let last = length == input.len() - workspace.emitted;
-        workspace.emit_next(length, last, &mut sink)?;
+        workspace.emit_next(length, last, output)?;
     }
-    Ok(sink)
+    Ok(())
 }
 
 /// One borrowed source and its existing search/entropy owners.

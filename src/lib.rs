@@ -204,6 +204,10 @@ mod upstream_sequence_generator_tests;
 #[path = "../tests/upstream/sequence_sweep.rs"]
 mod upstream_sequence_sweep_tests;
 
+pub use compiled_dictionary::{
+    CompiledDictionary, CompiledOneShotEncoder, compress_into_with_compiled,
+    compress_into_with_compiled_in, compress_with_compiled, compress_with_compiled_in,
+};
 pub use decode::{
     DecodeOptions, decompress, decompress_in, decompress_into, decompress_into_in,
     decompress_into_with_dictionary, decompress_into_with_dictionary_in,

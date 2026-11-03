@@ -28,14 +28,15 @@ use crate::greedy_state::{GreedyCandidates, GreedyTables};
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::matchfinder::{MatchTable, StagedMatchView};
 use crate::reference_chain::StagedChainView;
-use crate::reference_search::CompiledCandidates;
+use crate::reference_search::{CompiledCandidates, ReferenceSearchPlan};
 use crate::reference_tree::StagedTreeView;
 use crate::row_table::StagedRowView;
 use crate::{
     CompressionParameterRequest, DictionaryView, Error, ReferenceStrategy,
     ResolvedCompressionParameters, Result, SourceSize,
 };
-use alloc::alloc::Allocator;
+use alloc::alloc::{Allocator, Global};
+use alloc::vec::Vec;
 
 /// The seeded table owners of one compiled profile.
 ///
@@ -74,7 +75,7 @@ struct CompiledEntropy<'a> {
     not(test),
     allow(dead_code, reason = "public compiled-dictionary emission follows")
 )]
-pub(crate) struct CompiledDictionary<'a, A: Allocator = alloc::alloc::Global> {
+pub struct CompiledDictionary<'a, A: Allocator = alloc::alloc::Global> {
     view: DictionaryView<'a>,
     parameters: ResolvedCompressionParameters,
     loaded_len: usize,
@@ -82,21 +83,23 @@ pub(crate) struct CompiledDictionary<'a, A: Allocator = alloc::alloc::Global> {
     entropy: Option<CompiledEntropy<'a>>,
 }
 
-#[cfg_attr(
-    not(test),
-    allow(dead_code, reason = "public compiled-dictionary emission follows")
-)]
 impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     /// Compile one dictionary view for one request.
     ///
     /// The profile is resolved exactly once with an unknown source size and the
     /// dictionary's matchable content length, mirroring native CDict creation.
-    /// The loaded suffix caps at the resolved window; its length fixes the
-    /// content-relative table positions. Admission rejects Optimal, Ultra and
-    /// Ultra2 with [`Error::UnsupportedFeature`] before the first allocation
-    /// instead of dropping the dictionary or substituting a strategy.
-    /// Resolution errors also precede every allocation.
-    pub(crate) fn new(
+    /// Set [`CompressionParameterRequest::set_source_hint`] to the intended
+    /// maximum source size when later calls must resolve to this same profile;
+    /// every public call resolves again with its actual source length and
+    /// rejects a different profile with [`Error::InvalidParameter`] rather than
+    /// consulting mismatched tables. The loaded suffix caps at the resolved
+    /// window; its length fixes the content-relative table positions. Admission
+    /// rejects Optimal, Ultra and Ultra2 with [`Error::UnsupportedFeature`]
+    /// before the first allocation instead of dropping the dictionary or
+    /// substituting a strategy. Resolution errors and empty content also
+    /// precede allocation. The state borrows `view` for `'a` and owns every
+    /// table in `allocator`; dropping it releases those owners exactly once.
+    pub fn new(
         view: DictionaryView<'a>,
         request: &CompressionParameterRequest,
         allocator: A,
@@ -211,23 +214,31 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     }
 
     /// The resolved profile every later call must reuse.
-    pub(crate) const fn parameters(&self) -> ResolvedCompressionParameters {
+    pub const fn parameters(&self) -> ResolvedCompressionParameters {
         self.parameters
     }
 
     /// The loaded suffix length that fixes content-relative table positions.
-    pub(crate) const fn loaded_len(&self) -> usize {
+    pub const fn loaded_len(&self) -> usize {
         self.loaded_len
     }
 
     /// Borrow the immutable dictionary content the state was compiled from.
-    pub(crate) fn content(&self) -> &'a [u8] {
+    pub fn content(&self) -> &'a [u8] {
         self.view.content()
     }
 
     /// The dictionary identifier serialized into frames that use this state.
-    pub(crate) fn dictionary_id(&self) -> u32 {
+    pub fn dictionary_id(&self) -> u32 {
         self.view.id()
+    }
+
+    /// The borrowed immutable dictionary view the state was compiled from.
+    ///
+    /// The view cannot outlive the dictionary owner, and the compiled state
+    /// itself already holds this same borrow.
+    pub const fn view(&self) -> DictionaryView<'a> {
+        self.view
     }
 
     /// The prepared sequence/offset entropy a formatted dictionary seeded the
@@ -235,6 +246,13 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     ///
     /// This is the exact view `ZSTD_loadCEntropy` fills `blockState.prevCBlock`
     /// with: the first emitted block may reuse these tables and repeats.
+    #[cfg_attr(
+        not(test),
+        allow(
+            dead_code,
+            reason = "internal entropy accessor retained for focused tests"
+        )
+    )]
     pub(crate) fn entropy(&self) -> Option<DictionaryEntropyView<'a>> {
         self.entropy.as_ref().map(|entropy| entropy.view)
     }
@@ -260,6 +278,10 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     /// The returned handle carries the staged length, so a state constructor
     /// rejects a call that staged a different suffix instead of reading
     /// positions under foreign geometry.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "individual accessor retained for focused tests")
+    )]
     pub(crate) fn fast_candidates(&self) -> Result<StagedMatchView<'_>> {
         match &self.tables {
             CompiledTables::Fast(table) => Ok(StagedMatchView::new(table.view(), self.loaded_len)),
@@ -269,6 +291,10 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
 
     /// The immutable DoubleFast long/short candidate pair under the same
     /// staged-suffix geometry as [`Self::fast_candidates`].
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "individual accessor retained for focused tests")
+    )]
     pub(crate) fn double_fast_candidates(
         &self,
     ) -> Result<(StagedMatchView<'_>, StagedMatchView<'_>)> {
@@ -290,6 +316,10 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     ///
     /// Only a compiled chain profile has one; row and tree families reject the
     /// request instead of substituting a different finder.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "individual accessor retained for focused tests")
+    )]
     pub(crate) fn greedy_chain_candidates(&self) -> Result<StagedChainView<'_>> {
         match &self.tables {
             CompiledTables::Greedy(GreedyTables::Chain(chain)) => {
@@ -304,6 +334,10 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     ///
     /// Only a compiled row profile has one; chain and tree families reject the
     /// request instead of substituting a different finder.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "individual accessor retained for focused tests")
+    )]
     pub(crate) fn greedy_row_candidates(&self) -> Result<StagedRowView<'_>> {
         match &self.tables {
             CompiledTables::Greedy(GreedyTables::Row(row)) => {
@@ -320,6 +354,10 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
     /// DoubleFast families reject the request instead of substituting a
     /// different finder. Its edges were fully sorted at construction, so the
     /// consultation descent never resolves an unsorted mark.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "individual accessor retained for focused tests")
+    )]
     pub(crate) fn greedy_tree_candidates(&self) -> Result<StagedTreeView<'_>> {
         match &self.tables {
             CompiledTables::Greedy(GreedyTables::Tree(tree)) => {
@@ -357,6 +395,212 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
                 GreedyCandidates::Tree(StagedTreeView::new(tree.view(), self.loaded_len)),
             )),
         }
+    }
+}
+
+/// Resolve one compiled call and require the fixed compiled profile.
+///
+/// The request is resolved against the actual source length and the
+/// dictionary's matchable content length. A compiled state can only serve the
+/// profile it was built with, so any differing window, table, parser or
+/// strategy field is rejected before output admission instead of using
+/// mismatched tables.
+fn compiled_call_plan<B: Allocator + Clone>(
+    input: &[u8],
+    request: &CompressionParameterRequest,
+    compiled: &CompiledDictionary<'_, B>,
+) -> Result<ReferenceSearchPlan> {
+    let source_len = u64::try_from(input.len()).map_err(|_| Error::ResourceLimit)?;
+    let resolved = request.resolve(SourceSize::Known(source_len), compiled.content().len())?;
+    if resolved != compiled.parameters() {
+        return Err(Error::InvalidParameter);
+    }
+    ReferenceSearchPlan::from_resolved(compiled.parameters(), input.len())
+}
+
+/// Compress one frame through a compiled dictionary, returning owned output.
+///
+/// `request` is resolved against the actual source length and the dictionary's
+/// matchable content length. It must resolve to the exact profile fixed when
+/// `compiled` was built; a different profile returns [`Error::InvalidParameter`]
+/// before any output allocation instead of consulting mismatched tables. The
+/// supported families and resource caps are those of
+/// [`crate::compress_with_parameters`], with Optimal/Ultra/Ultra2 rejected by
+/// construction.
+///
+/// The in-window compiled suffix is staged before the input, compiled
+/// candidates are consulted without a per-call seeding pass, and a formatted
+/// dictionary's prepared entropy seeds the first block. Frame flags are the
+/// parameterized family's known size without checksum plus the compiled
+/// identifier. The returned vector borrows neither input, request nor
+/// dictionary. No compiled table is cloned, copied or mutated.
+///
+/// ```
+/// use zstdoxide::{
+///     CompiledDictionary, CompressionParameterRequest, DecodeOptions, Dictionary,
+///     compress_with_compiled, decompress_with_dictionary_in,
+/// };
+/// let dictionary = Dictionary::raw(b"shared compiled dictionary content")?;
+/// let input = b"shared compiled dictionary content";
+/// let mut request = CompressionParameterRequest::with_level(1);
+/// request.set_source_hint(u32::try_from(input.len()).unwrap())?;
+/// let compiled =
+///     CompiledDictionary::new(dictionary.view(), &request, std::alloc::Global)?;
+/// let frame = compress_with_compiled(input, &request, &compiled)?;
+/// assert_eq!(
+///     decompress_with_dictionary_in(
+///         &frame,
+///         &compiled.view(),
+///         DecodeOptions::new(input.len()),
+///         std::alloc::Global,
+///     )?,
+///     input
+/// );
+/// # Ok::<(), zstdoxide::Error>(())
+/// ```
+///
+/// A compiled state cannot outlive its dictionary view:
+///
+/// ```compile_fail
+/// use zstdoxide::{CompiledDictionary, CompressionParameterRequest, Dictionary};
+/// let compiled = {
+///     let dictionary = Dictionary::raw(b"prefix").unwrap();
+///     let request = CompressionParameterRequest::with_level(1);
+///     CompiledDictionary::new(dictionary.view(), &request, std::alloc::Global).unwrap()
+/// };
+/// let _ = compiled.content();
+/// ```
+pub fn compress_with_compiled<B: Allocator + Clone>(
+    input: &[u8],
+    request: &CompressionParameterRequest,
+    compiled: &CompiledDictionary<'_, B>,
+) -> Result<Vec<u8>> {
+    compress_with_compiled_in(input, request, compiled, Global)
+}
+
+/// Allocate a compiled dictionary frame and scratch in `A`.
+///
+/// Admission, frame behavior and the fixed-profile requirement match
+/// [`compress_with_compiled`]. Every scratch owner receives a fresh clone of
+/// the supplied allocator and is released before return; the compiled state's
+/// independent allocator domain is untouched. A borrowed non-Clone allocator is
+/// accepted by reference.
+pub fn compress_with_compiled_in<A: Allocator + Clone, B: Allocator + Clone>(
+    input: &[u8],
+    request: &CompressionParameterRequest,
+    compiled: &CompiledDictionary<'_, B>,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    let plan = compiled_call_plan(input, request, compiled)?;
+    crate::reference_frame_encode::compress_reference_with_compiled_in(
+        input, compiled, plan, allocator,
+    )
+}
+
+/// Compress one compiled dictionary frame into caller-owned storage.
+///
+/// Profile admission and candidate-family checks precede the first output byte.
+/// Complete header and block appends are atomic; a short destination returns
+/// [`Error::ResourceLimit`] after earlier whole appends and never changes bytes
+/// outside the supplied slice. Success returns the exact written length.
+///
+/// Input and output must have independent borrows:
+///
+/// ```compile_fail
+/// use zstdoxide::{CompiledDictionary, CompressionParameterRequest, Dictionary};
+/// let dictionary = Dictionary::raw(b"prefix").unwrap();
+/// let request = CompressionParameterRequest::with_level(1);
+/// let compiled =
+///     CompiledDictionary::new(dictionary.view(), &request, std::alloc::Global).unwrap();
+/// let mut storage = [0_u8; 128];
+/// let _ = zstdoxide::compress_into_with_compiled(
+///     &storage[..16],
+///     &mut storage,
+///     &request,
+///     &compiled,
+/// );
+/// ```
+pub fn compress_into_with_compiled<B: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    request: &CompressionParameterRequest,
+    compiled: &CompiledDictionary<'_, B>,
+) -> Result<usize> {
+    compress_into_with_compiled_in(input, output, request, compiled, Global)
+}
+
+/// Write a compiled dictionary frame into caller storage using `A`.
+///
+/// Byte identity and output guards match [`compress_into_with_compiled`]. The
+/// caller destination is never allocated or freed here; every scratch owner
+/// uses an independent clone of `allocator` and is released before return.
+pub fn compress_into_with_compiled_in<A: Allocator + Clone, B: Allocator + Clone>(
+    input: &[u8],
+    output: &mut [u8],
+    request: &CompressionParameterRequest,
+    compiled: &CompiledDictionary<'_, B>,
+    allocator: A,
+) -> Result<usize> {
+    let plan = compiled_call_plan(input, request, compiled)?;
+    crate::reference_frame_encode::compress_reference_with_compiled_into_in(
+        input, output, compiled, plan, allocator,
+    )
+}
+
+/// Reusable coordinator over one immutable compiled dictionary.
+///
+/// The coordinator owns the compiled state and no request, source,
+/// destination, frame or workspace. Every call resolves its request against
+/// the actual source length and must match the compiled profile, then emits
+/// through the same path as [`compress_with_compiled`]. Repeated calls reuse
+/// the compiled tables and prepared entropy; no per-call seeding pass is
+/// performed and no compiled table is mutated.
+pub struct CompiledOneShotEncoder<'a, A: Allocator + Clone = Global> {
+    compiled: CompiledDictionary<'a, A>,
+}
+
+impl<'a, A: Allocator + Clone> CompiledOneShotEncoder<'a, A> {
+    /// Take ownership of a compiled dictionary state.
+    pub const fn new(compiled: CompiledDictionary<'a, A>) -> Self {
+        Self { compiled }
+    }
+
+    /// Borrow the compiled state's immutable dictionary view.
+    pub const fn dictionary(&self) -> DictionaryView<'a> {
+        self.compiled.view()
+    }
+
+    /// The fixed profile every call must resolve to.
+    pub const fn parameters(&self) -> ResolvedCompressionParameters {
+        self.compiled.parameters()
+    }
+
+    /// Compress one frame into caller storage with Global scratch.
+    ///
+    /// Behavior, guards and the fixed-profile rule match
+    /// [`compress_into_with_compiled`].
+    pub fn compress_into(
+        &self,
+        input: &[u8],
+        request: &CompressionParameterRequest,
+        output: &mut [u8],
+    ) -> Result<usize> {
+        self.compress_into_in(input, request, output, Global)
+    }
+
+    /// Compress one frame into caller storage with independent scratch.
+    ///
+    /// No compiled state, handle or caller borrow survives the attempt. The
+    /// scratch allocator's clones are released before return, including on
+    /// failure; a borrowed non-Clone allocator is accepted by reference.
+    pub fn compress_into_in<B: Allocator + Clone>(
+        &self,
+        input: &[u8],
+        request: &CompressionParameterRequest,
+        output: &mut [u8],
+        allocator: B,
+    ) -> Result<usize> {
+        compress_into_with_compiled_in(input, output, request, &self.compiled, allocator)
     }
 }
 
