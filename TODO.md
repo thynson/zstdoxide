@@ -218,7 +218,7 @@ the reuse geometry are recorded before implementation in
 - [x] Expose public compiled-dictionary one-shot and coordinator APIs with guards and allocator-failure qualification.
 - [x] Qualify guarded native schedules, window expiry, unsupported-profile rejection and concrete atomic-free ARM code generation.
 - [x] Qualify safe, every isolated feature/all features, release, no_std and strict Clippy.
-- [ ] Compare compiled-state and per-call-staging workloads with independent repeats after CPU barriers.
+- [x] Compare compiled-state and per-call-staging workloads with independent repeats after CPU barriers.
 - [ ] Reconcile bounded compiled-dictionary coverage and decompose the next evidenced contract.
 
 ## Roadmap
