@@ -63,16 +63,19 @@ impl<'a, A: Allocator> FastMatchState<'a, A> {
         )
     }
 
-    /// Bind owners to a combined borrow whose staged prefix equals a compiled
+    /// Bind owners to a combined borrow whose prefix starts with a compiled
     /// dictionary's loaded suffix.
     ///
-    /// The per-call table starts empty and receives every input sample; the
-    /// compiled view supplies a candidate only when that table has no entry, so
-    /// a per-call store always wins exactly as a seeded merged table would. The
-    /// view's positions index the staged prefix, which is why the caller must
-    /// stage exactly that suffix: the constructor rejects a layout mismatch or a
-    /// different staged length before resetting the table, and the parser still
-    /// verifies every candidate's bytes, offset and window.
+    /// `prefix_len` may exceed the compiled suffix length. The extra range
+    /// `[compiled.staged_len(), prefix_len)` is contiguous frame history that
+    /// precedes this block; it is seeded into the per-call table so cross-block
+    /// candidates remain reachable. The compiled suffix itself is never copied:
+    /// its view supplies a candidate only when the per-call table has no entry,
+    /// so a per-call store always wins exactly as a seeded merged table would.
+    /// The caller must stage the compiled suffix exactly at the start: the
+    /// constructor rejects a layout mismatch or a shorter staged prefix before
+    /// resetting the table, and the parser still verifies every candidate's
+    /// bytes, offset and window.
     pub(crate) fn from_parts_with_compiled_prefix(
         source: &'a [u8],
         plan: FastExecutionPlan,
@@ -88,25 +91,25 @@ impl<'a, A: Allocator> FastMatchState<'a, A> {
             .is_none_or(|frame_len| frame_len != plan.source_len())
             || table.layout() != plan.layout()
             || dictionary.is_some_and(|candidate| {
-                candidate.view().layout() != plan.layout() || candidate.staged_len() != prefix_len
+                candidate.view().layout() != plan.layout() || candidate.staged_len() > prefix_len
             })
         {
             return Err(Error::InvalidParameter);
         }
         table.reset();
-        if dictionary.is_none() {
-            let layout = plan.layout();
-            if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
-                // Seed every staged key position so candidates can point into
-                // the dictionary region; parsing never inserts those positions
-                // itself. Later positions win each slot, and the parser's window
-                // floor still bounds every candidate it accepts.
-                for position in 0..=last {
-                    let key = layout
-                        .read_key(&source[position..])
-                        .ok_or(Error::InvalidState)?;
-                    table.replace(key, position)?;
-                }
+        let seed_start = dictionary.map_or(0, |candidate| candidate.staged_len());
+        let layout = plan.layout();
+        if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
+            // Seed every staged history key position so candidates can point
+            // into the retained region; parsing never inserts those positions
+            // itself. Later positions win each slot, and the parser's window
+            // floor still bounds every candidate it accepts. The compiled
+            // suffix is skipped because its read-only view already holds it.
+            for position in seed_start..=last {
+                let key = layout
+                    .read_key(&source[position..])
+                    .ok_or(Error::InvalidState)?;
+                table.replace(key, position)?;
             }
         }
         literals.clear();

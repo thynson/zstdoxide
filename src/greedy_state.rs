@@ -65,15 +65,22 @@ impl<A: Allocator> GreedyTables<A> {
     /// shared combined dictionary staging contract of the Fast and DoubleFast
     /// profiles.
     pub(crate) fn seed_prefix(&mut self, source: &[u8], prefix_len: usize) -> Result<usize> {
+        self.seed_range(source, 0, prefix_len)
+    }
+
+    /// Seed only `start..end`. The tree family keeps its lazy back-fill and
+    /// reports the combined-buffer start; chain and row insert the retained
+    /// history range in ascending order and report the parse frontier.
+    pub(crate) fn seed_range(&mut self, source: &[u8], start: usize, end: usize) -> Result<usize> {
         match self {
             Self::Tree(_) => Ok(0),
             Self::Chain(table) => {
-                seed_chain(table, source, prefix_len)?;
-                Ok(prefix_len)
+                seed_chain_range(table, source, start, end)?;
+                Ok(end)
             }
             Self::Row(table) => {
-                seed_row(table, source, prefix_len)?;
-                Ok(prefix_len)
+                seed_row_range(table, source, start, end)?;
+                Ok(end)
             }
         }
     }
@@ -91,14 +98,17 @@ impl<A: Allocator> GreedyTables<A> {
 /// borrow, mirroring upstream dictionary loading through one insert per
 /// position. Later positions win each bucket; the parser's window floor
 /// bounds what it accepts from these candidates.
-fn seed_chain<A: Allocator>(
+fn seed_chain_range<A: Allocator>(
     table: &mut ReferenceChain<A, A>,
     source: &[u8],
-    prefix_len: usize,
+    start: usize,
+    end: usize,
 ) -> Result<()> {
     let layout = table.key_layout();
-    if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
-        for position in 0..=last {
+    if let Some(last) = end.checked_sub(usize::from(layout.key_bytes()))
+        && start <= last
+    {
+        for position in start..=last {
             let key = layout
                 .read_key(&source[position..])
                 .ok_or(Error::InvalidState)?;
@@ -112,11 +122,18 @@ fn seed_chain<A: Allocator>(
 /// salt the parser searches with, so seeded tags match every later lookup.
 /// Ascending insertion satisfies each row's newest-first cycle, mirroring
 /// upstream row dictionary loading.
-fn seed_row<A: Allocator>(table: &mut RowTable<A>, source: &[u8], prefix_len: usize) -> Result<()> {
+fn seed_row_range<A: Allocator>(
+    table: &mut RowTable<A>,
+    source: &[u8],
+    start: usize,
+    end: usize,
+) -> Result<()> {
     let layout = table.layout();
     let key_layout = layout.key_layout();
-    if let Some(last) = prefix_len.checked_sub(usize::from(key_layout.key_bytes())) {
-        for position in 0..=last {
+    if let Some(last) = end.checked_sub(usize::from(key_layout.key_bytes()))
+        && start <= last
+    {
+        for position in start..=last {
             let key = key_layout
                 .read_key(&source[position..])
                 .ok_or(Error::InvalidState)?;
@@ -149,6 +166,17 @@ pub(crate) enum GreedyCandidates<'a> {
     Tree(StagedTreeView<'a>),
     Chain(StagedChainView<'a>),
     Row(StagedRowView<'a>),
+}
+
+impl GreedyCandidates<'_> {
+    /// The staged dictionary suffix length these positions index.
+    pub(crate) const fn staged_len(&self) -> usize {
+        match self {
+            Self::Tree(view) => view.staged_len(),
+            Self::Chain(view) => view.staged_len(),
+            Self::Row(view) => view.staged_len(),
+        }
+    }
 }
 
 pub(crate) struct GreedyMatchState<'a, A: Allocator> {
@@ -222,14 +250,14 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
     ) -> Result<Self> {
         let candidate_matches = match (&tables, dictionary) {
             (GreedyTables::Tree(table), Some(GreedyCandidates::Tree(candidate))) => {
-                candidate.staged_len() == prefix_len && candidate.view().layout() == table.layout()
+                candidate.staged_len() <= prefix_len && candidate.view().layout() == table.layout()
             }
             (GreedyTables::Chain(table), Some(GreedyCandidates::Chain(candidate))) => {
-                candidate.staged_len() == prefix_len
+                candidate.staged_len() <= prefix_len
                     && candidate.view().key_layout() == table.key_layout()
             }
             (GreedyTables::Row(table), Some(GreedyCandidates::Row(candidate))) => {
-                candidate.staged_len() == prefix_len && candidate.view().layout() == table.layout()
+                candidate.staged_len() <= prefix_len && candidate.view().layout() == table.layout()
             }
             (GreedyTables::Chain(_) | GreedyTables::Row(_) | GreedyTables::Tree(_), None) => true,
             _ => false,
@@ -248,17 +276,23 @@ impl<'a, A: Allocator> GreedyMatchState<'a, A> {
             0
         } else {
             match dictionary {
-                // Every compiled family keeps the sampling frontier at the
-                // prefix boundary: staged positions live only in the compiled
-                // owner (the pinned context `nextToUpdate` starts at
-                // `dictLimit`), and the per-call tree back-fills from here
-                // instead of re-inserting the whole staged region.
-                Some(
-                    GreedyCandidates::Chain(_)
-                    | GreedyCandidates::Row(_)
-                    | GreedyCandidates::Tree(_),
-                ) => prefix_len,
-                None => tables.seed_prefix(source, prefix_len)?,
+                // Compiled families keep the sampling frontier at the parse
+                // start. Retained frame history between the compiled suffix and
+                // the block is seeded into the per-call chain/row so matches
+                // can cross block boundaries. The tree keeps its lazy back-fill
+                // from the combined-buffer start whenever that history exists.
+                Some(GreedyCandidates::Chain(_) | GreedyCandidates::Row(_))
+                    if dictionary.map_or(0, |candidate| candidate.staged_len()) == prefix_len =>
+                {
+                    prefix_len
+                }
+                Some(GreedyCandidates::Chain(_) | GreedyCandidates::Row(_)) => tables.seed_range(
+                    source,
+                    dictionary.map_or(0, |candidate| candidate.staged_len()),
+                    prefix_len,
+                )?,
+                Some(GreedyCandidates::Tree(_)) => 0,
+                None => tables.seed_range(source, 0, prefix_len)?,
             }
         };
         literals.clear();

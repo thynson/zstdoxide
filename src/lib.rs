@@ -47,6 +47,7 @@ mod bitstream;
 mod bitwriter;
 mod block_entropy;
 mod compiled_dictionary;
+mod compiled_stream;
 mod constants;
 mod cursor;
 mod decode;
@@ -208,6 +209,7 @@ pub use compiled_dictionary::{
     CompiledDictionary, CompiledOneShotEncoder, compress_into_with_compiled,
     compress_into_with_compiled_in, compress_with_compiled, compress_with_compiled_in,
 };
+pub use compiled_stream::{CompiledStreamEncoder, CompiledStreamOptions};
 pub use decode::{
     DecodeOptions, decompress, decompress_in, decompress_into, decompress_into_in,
     decompress_into_with_dictionary, decompress_into_with_dictionary_in,

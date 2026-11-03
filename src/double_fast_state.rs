@@ -70,14 +70,16 @@ impl<'a, A: Allocator> DoubleFastMatchState<'a, A> {
         )
     }
 
-    /// Bind owners to a combined borrow whose staged prefix equals a compiled
+    /// Bind owners to a combined borrow whose prefix starts with a compiled
     /// dictionary's loaded suffix.
     ///
-    /// Both per-call tables start empty and receive every sample; a compiled
-    /// entry is used only from an empty per-call slot, so a later call store
-    /// wins exactly as in a seeded merged table. A missing compiled owner keeps
-    /// the seeding path. Layouts and the staged length must match before either
-    /// table is reset.
+    /// `prefix_len` may exceed the compiled suffix length; the extra range is
+    /// contiguous frame history that is seeded into both per-call tables so
+    /// cross-block candidates remain reachable. The compiled suffix is never
+    /// copied: a compiled entry is used only from an empty per-call slot, so a
+    /// later call store wins exactly as in a seeded merged table. A missing
+    /// compiled owner keeps the full seeding path. Layouts and the staged
+    /// length must be compatible before either table is reset.
     pub(crate) fn from_parts_with_compiled_prefix(
         source: &'a [u8],
         plan: DoubleFastExecutionPlan,
@@ -95,16 +97,16 @@ impl<'a, A: Allocator> DoubleFastMatchState<'a, A> {
             || dictionary.is_some_and(|(long, short)| {
                 (long.view().layout(), short.view().layout())
                     != (plan.long_layout(), plan.short_layout())
-                    || long.staged_len() != prefix_len
-                    || short.staged_len() != prefix_len
+                    || long.staged_len() > prefix_len
+                    || short.staged_len() > prefix_len
+                    || long.staged_len() != short.staged_len()
             })
         {
             return Err(Error::InvalidParameter);
         }
         tables.reset();
-        if dictionary.is_none() {
-            tables.seed_prefix(source, prefix_len)?;
-        }
+        let seed_start = dictionary.map_or(0, |(long, _)| long.staged_len());
+        tables.seed_range(source, seed_start, prefix_len)?;
         literals.clear();
         sequences.clear();
         Ok(Self {

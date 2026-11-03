@@ -223,10 +223,10 @@ Decompose before implementation; do not start until this checklist is reviewed.
   reference streaming block/frame engine: choose the reference block engine
   behind a new coordinator, documented in
   `docs/compiled-streaming-design.md`.
-- [ ] Extend streaming with an immutable compiled selection and fixed-profile
+- [x] Extend streaming with an immutable compiled selection and fixed-profile
   admission without per-frame table seeding, using retained contiguous frame
   history for exact block distances.
-- [ ] Expose caller-owned streaming construction and reset with exact
+- [x] Expose caller-owned streaming construction and reset with exact
   output/lifetime guards and allocator-failure qualification.
 - [ ] Qualify guarded native streaming schedules, frame boundaries and
   unsupported-profile rejection.

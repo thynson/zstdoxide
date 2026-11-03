@@ -67,8 +67,15 @@ impl<L: Allocator, S: Allocator> DoubleFastTables<L, S> {
     /// still bounds every candidate it accepts. This is the combined
     /// dictionary staging contract shared with the Fast profile.
     pub(crate) fn seed_prefix(&mut self, source: &[u8], prefix_len: usize) -> Result<()> {
-        seed_table(&mut self.long, source, prefix_len)?;
-        seed_table(&mut self.short, source, prefix_len)
+        self.seed_range(source, 0, prefix_len)
+    }
+
+    /// Seed only the positions of `start..end`, leaving the compiled suffix to
+    /// its read-only owner. Ascending insertion preserves the newest-wins slot
+    /// contract for retained frame history.
+    pub(crate) fn seed_range(&mut self, source: &[u8], start: usize, end: usize) -> Result<()> {
+        seed_table_range(&mut self.long, source, start, end)?;
+        seed_table_range(&mut self.short, source, start, end)
     }
 
     pub(crate) fn layouts(&self) -> (SearchKeyLayout, SearchKeyLayout) {
@@ -93,17 +100,20 @@ impl<L: Allocator, S: Allocator> DoubleFastTables<L, S> {
     }
 }
 
-/// Seed one table with every staged key position of the combined borrow.
-/// Later positions win each slot; the parser's window floor bounds what it
-/// accepts from these candidates.
-fn seed_table<A: Allocator>(
+/// Seed one table with every key position of `start..end` in the combined
+/// borrow. Later positions win each slot; the parser's window floor bounds what
+/// it accepts from these candidates.
+fn seed_table_range<A: Allocator>(
     table: &mut MatchTable<A>,
     source: &[u8],
-    prefix_len: usize,
+    start: usize,
+    end: usize,
 ) -> Result<()> {
     let layout = table.layout();
-    if let Some(last) = prefix_len.checked_sub(usize::from(layout.key_bytes())) {
-        for position in 0..=last {
+    if let Some(last) = end.checked_sub(usize::from(layout.key_bytes()))
+        && start <= last
+    {
+        for position in start..=last {
             let key = layout
                 .read_key(&source[position..])
                 .ok_or(Error::InvalidState)?;
