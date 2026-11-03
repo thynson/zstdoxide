@@ -102,6 +102,19 @@ the artifacts are retained. Safe and all-feature host Clippy with `-D warnings`
 and `cargo fmt --check` pass. No Miri ran because this module added no unsafe
 code, per the standing direction.
 
+## Complete feature and release regression
+
+All 75 commands pass on the frozen Module38 source: safe/all and every one of
+the 22 isolated unsafe features run the complete test suite, true no_std
+compilation and strict Clippy; safe/all release and formatting also pass. Every
+complete/release suite reports 125 result groups, 1848 passed and 79 ignored
+with zero failures; ignored tests are not credited. The benchmark harness is
+retained only in its own campaign archive and is not part of this matrix.
+Evidence: `evidence/2026-11-03-compiled-streaming-feature-matrix.json`.
+One earlier matrix attempt stopped at `unsafe-dictionary-full` because the
+host disk filled during Rust's post-link object copy; the rerun on the same
+source completed all 75 commands after campaign workspaces were removed.
+
 ## Streaming timing
 
 Eighteen deterministic case/level pairs cover Fast, DoubleFast, chain, the tree
