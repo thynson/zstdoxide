@@ -87,3 +87,21 @@ Evidence: `evidence/2026-11-03-compiled-dictionary-feature-matrix.json`.
 
 Remaining Module 37 items are timing with CPU barriers and final
 reconciliation.
+
+## Final reconciliation and remaining scope
+
+The bounded Module 37 contract is complete: immutable compiled ownership,
+read-only Fast/DoubleFast/chain/row/tree consultation, prepared entropy,
+caller-owned/allocating/coordinator calls with fixed-profile guards, guarded
+native schedules, atomic-free ARM emission, the full feature/release matrix and
+caller-owned timing all have successful source-bound receipts. The final source
+identity and receipt hashes are recorded in
+`evidence/2026-11-03-compiled-dictionary-closure.json`. The upstream inventory
+audit against the pinned checkout remains an inventory and intentionally does
+not claim complete test migration.
+
+Native CCtx workspace sharing and parameter lifecycle, LDM, workers,
+long-distance matching, streaming compiled-dictionary reuse, shared-handle
+lifetime APIs, tutorial coverage and CLI parity remain outside this bounded
+scope. Module 38 proposes streaming compiled-dictionary reuse; it is not
+started here.

@@ -1670,3 +1670,47 @@ Completed tasks are archived in Git history. A reusable compiled-dictionary
 state is designed and decomposed next; see
 `docs/prepared-dictionary-design.md`. Native workspace reuse, parameter
 lifecycle, LDM, workers, streaming and complete upstream parity remain open.
+
+## Module 37: reusable prepared-dictionary compression state complete (2026-11-03)
+
+An immutable `CompiledDictionary<'a, A>` resolves one reference profile against
+an unknown source and the dictionary's matchable content, rejects empty content
+and Optimal/Ultra/Ultra2 before allocation, loads the in-window content suffix
+and seeds the selected finder once. Fast and DoubleFast keep per-call sampling
+separate from immutable hash cells; chain and row candidates are consulted
+after per-call candidates with the remaining shared attempt budget; the binary
+tree is eagerly fully sorted at construction and read through a checked view.
+Formatted entropy and the first-block literal table are prepared once. A
+retained-plan boundary test confirms `UnsupportedFeature` for every nonzero
+staged prefix rebuilt from resolved retained records.
+
+Compiled frames stage exactly the loaded suffix and consult immutable candidates
+without a seeding pass. Frozen comparisons against Module 36 combined staging
+match exactly for Fast, DoubleFast, chain, row and the formatted entropy seed;
+the tree family records its measured size/first-difference/difference counts
+explicitly. Public allocating, caller-owned and `CompiledOneShotEncoder` calls
+re-resolve each request against the actual source and reject a different
+seven-field profile before output admission; caller-owned frames keep atomic
+block appends and guard bytes, and every observed allocation failure releases
+its owners.
+
+Thirteen guarded native CDict cases run against normal and sanitized pinned
+v1.5.7 builds with bidirectional decoding, observable dictionary controls and
+window-capped inputs; eleven supported and two rejected profiles are retained.
+Concrete `thumbv6m-none-eabi` checks and release IR/object emission pass for safe
+and every opt-in backend together; foreign Miri was not run because no unsafe
+code was added. All 75 feature/release matrix commands pass: safe/all and every
+22 isolated feature run complete tests, true no_std and strict Clippy, with
+safe/all release and formatting; every suite reports 123 result groups, 1832
+passed and 78 ignored with zero failures.
+
+Eighteen caller-owned workloads compare compiled state against per-call
+staging with two rounds of forty samples after CPU barriers and two independent
+runs per configuration; qualification ledgers are byte-identical across all
+four runs. Primary safe compiled/staging geometric-mean ratio is 1.4373
+(all-feature configuration repeats 1.4287/1.4286), so the compiled path avoids
+per-call seeding cost on these workloads; no universal, tree-shape, allocation
+or native workspace benefit is claimed. Completed tasks are archived in Git
+history. Complete upstream parity, native CCtx workspace semantics, LDM,
+workers, streaming compiled-dictionary reuse and benchmark of shared compiled
+handles remain open.

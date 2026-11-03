@@ -198,28 +198,38 @@ one-shot scope. Completed items are archived in Git history and
 Complete upstream parity remains open.
 
 
-## Module 37: reusable prepared-dictionary compression state
+## Module 37: reusable prepared-dictionary compression state (complete)
 
-An immutable compiled dictionary owns match-finder seed tables, prepared entropy
-and a resolved profile while borrowing dictionary content. Design, ownership and
-the reuse geometry are recorded before implementation in
-`docs/prepared-dictionary-design.md`, `docs/data-structures.md` and
-`docs/prepared-dictionary-analysis.md`.
+Completed within its bounded one-shot compiled-dictionary scope. An immutable
+state owns one resolved profile, content-relative seed tables, optional prepared
+entropy and a borrowed dictionary view; Fast, DoubleFast, chain, row and a
+fully sorted binary tree are consulted read-only beside per-call sampling.
+Caller-owned, allocating and coordinator APIs enforce a fixed seven-field
+profile, guards and allocator-failure release. Native/sanitized CDict schedules,
+concrete atomic-free ARM emission, the 75-command feature/release matrix and
+caller-owned timing are recorded in
+`docs/prepared-dictionary-validation.md`,
+`docs/prepared-dictionary-benchmarks.md` and the 2026-11-03 receipts. Native
+CCtx workspace semantics, LDM, workers, streaming reuse and complete upstream
+parity remain open.
 
-- [x] Analyze pinned CDict table loading, sampling frontier, loaded-end expiry and by-reference/by-copy ownership before implementation.
-- [x] Implement immutable compiled-dictionary ownership with content-relative seeded tables, admission, dictionary identifier and explicit optimal-family rejection.
-- [x] Implement translated read-only dictionary-candidate consultation for Fast and DoubleFast with per-call input sampling kept separate and prepared-entropy first-block seeding wired through the compiled path.
-- [x] Extend compiled Fast/DoubleFast consultation coverage across multiple blocks and a window-capped dictionary.
-- [x] Analyze pinned dictionary chain/row search order, shared attempt budgets and index deltas before implementation.
-- [x] Extend translated consultation to the Greedy/Lazy/Lazy2 chain family.
-- [x] Extend translated consultation to the row family.
-- [x] Extend translated consultation to BinaryTreeLazy2 and retained-plan rejection boundaries.
-- [x] Compare compiled-state frames against the Module 36 combined-staging path per family and record every byte difference explicitly.
-- [x] Expose public compiled-dictionary one-shot and coordinator APIs with guards and allocator-failure qualification.
-- [x] Qualify guarded native schedules, window expiry, unsupported-profile rejection and concrete atomic-free ARM code generation.
-- [x] Qualify safe, every isolated feature/all features, release, no_std and strict Clippy.
-- [x] Compare compiled-state and per-call-staging workloads with independent repeats after CPU barriers.
-- [ ] Reconcile bounded compiled-dictionary coverage and decompose the next evidenced contract.
+## Module 38: compiled dictionary reuse in streaming frames (next)
+
+Decompose before implementation; do not start until this checklist is reviewed.
+
+- [ ] Analyze pinned CDict attach/reset in `ZSTD_compressStream2`, prefix
+  lifecycle and window expiry across frame boundaries.
+- [ ] Extend the streaming encoder with an immutable compiled selection and
+  fixed-profile admission without per-frame table seeding.
+- [ ] Expose caller-owned streaming construction and reset with exact
+  output/lifetime guards and allocator-failure qualification.
+- [ ] Qualify guarded native streaming schedules, frame boundaries and
+  unsupported-profile rejection.
+- [ ] Qualify concrete atomic-free ARM emission, every isolated feature/all
+  features, release, no_std and strict Clippy.
+- [ ] Compare compiled and per-frame-staging streaming workloads after CPU
+  barriers with independent repeats.
+- [ ] Reconcile bounded streaming coverage and decompose the next contract.
 
 ## Roadmap
 
