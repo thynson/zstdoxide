@@ -219,8 +219,10 @@ Decompose before implementation; do not start until this checklist is reviewed.
 
 - [x] Analyze pinned CDict attach/reset in `ZSTD_compressStream2`, prefix
   lifecycle and window expiry across frame boundaries.
-- [ ] Extend the streaming encoder with an immutable compiled selection and
-  fixed-profile admission without per-frame table seeding.
+- [ ] Decide between a bounded compiled Greedy streaming coordinator and a new
+  reference streaming block/frame engine, then extend streaming with an
+  immutable compiled selection and fixed-profile admission without per-frame
+  table seeding.
 - [ ] Expose caller-owned streaming construction and reset with exact
   output/lifetime guards and allocator-failure qualification.
 - [ ] Qualify guarded native streaming schedules, frame boundaries and

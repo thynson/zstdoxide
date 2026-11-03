@@ -35,9 +35,23 @@ initialization (`:6357`).
 
 The existing `Encoder<A, D>` owns a persistent dictionary handle and an optional
 one-frame prefix. Its `reset` preserves selection and `reset_parameters` clears
-it, matching the upstream session/parameter reset split. Its frame engine builds
-per-frame search tables and seeds dictionary content through the ordinary
-Greedy path.
+it, matching the upstream session/parameter reset split. Its frame engine is the
+named-policy `BlockEncoder`/Greedy workspace, not the reference plan dispatcher:
+it seeds its own hash/chain tables through the ordinary Greedy path and cannot
+consume a compiled Fast, DoubleFast, chain/row/tree candidate view. A coordinator
+that merely wraps `Encoder` is therefore sufficient only for a bounded compiled
+Greedy family. Fast, DoubleFast and BinaryTreeLazy2 streaming requires a new
+reference block/frame engine or a substantial extension of `BlockEncoder`; that
+choice is the first implementation decision and must not be hidden inside a
+wrapper.
+
+If the bounded choice is the ordinary Greedy family, the coordinator can own the
+existing `Encoder<A>` with no persistent dictionary plus a borrowed
+`CompiledDictionary<'a, B>`, and the block workspace can consult the compiled
+chain/row view after its per-call candidates. A broader reference streaming
+engine would instead adapt the one-shot reference frame loop to incremental
+input/output, frame flags and the same transactional block publication. Both
+choices share the lifecycle below; neither is implemented here.
 
 Compiled reuse needs a borrowed immutable state, not another owned dictionary
 handle: the compiled tables live for the whole stream and must never be reset,
@@ -45,9 +59,9 @@ reseeded or mutated by a frame. The current `Encoder<A, D>` type has no lifetime
 parameter for such a borrow. A separate coordinator is the smallest shape that
 does not infect the existing generic API:
 
-- `CompiledStreamEncoder<'a, A>` owns the existing `Encoder<A>` with no
-  persistent dictionary plus a borrowed `CompiledDictionary<'a, B>` and a
-  frame-level state machine.
+- `CompiledStreamEncoder<'a, A>` owns a streaming engine with no persistent
+  dictionary plus a borrowed `CompiledDictionary<'a, B>` and a frame-level
+  state machine.
 - Construction validates the compiled profile before any frame. It borrows the
   compiled state; no table, entropy view or dictionary allocation is cloned.
 - `compress`/`finish` delegate input/output and progress to the existing
