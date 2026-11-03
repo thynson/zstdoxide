@@ -7,6 +7,7 @@ use core::alloc::Allocator;
 #[cfg(test)]
 use crate::CompressionParameterRequest;
 use crate::block_entropy::BlockEntropyEncoder;
+use crate::compiled_dictionary::CompiledDictionary;
 use crate::dictionary::{DictionaryEntropyView, DictionaryView};
 #[cfg(test)]
 use crate::fast_plan::FastExecutionPlan;
@@ -16,7 +17,7 @@ use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::optimal_retained::Publication;
 use crate::reference_frame::{ReferenceFrameHeader, ReferenceFrameSettings};
-use crate::reference_search::{ReferenceSearchPlan, ReferenceSearchState};
+use crate::reference_search::{CompiledCandidates, ReferenceSearchPlan, ReferenceSearchState};
 use crate::sequence_context::SequenceEncoder;
 use crate::{Error, Result};
 
@@ -320,6 +321,81 @@ fn compress_reference_with_dictionary_to<A: Allocator + Clone, O: ReferenceOutpu
     Ok(())
 }
 
+/// Encode using a compiled dictionary's immutable tables and prepared entropy.
+///
+/// The call stages exactly the compiled loaded suffix before its input, then
+/// binds the per-call search owners to the compiled candidate views instead of
+/// seeding them. The frame header carries the compiled identifier and the
+/// first block receives the compiled entropy seed. The compiled profile fixes
+/// window/layout and must match the candidate family; no compiled table is
+/// cloned, copied or mutated. The staging copy and per-call owners are released
+/// before return.
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "public compiled-dictionary emission follows")
+)]
+pub(crate) fn compress_reference_with_compiled_in<A: Allocator + Clone, B: Allocator + Clone>(
+    input: &[u8],
+    compiled: &CompiledDictionary<'_, B>,
+    plan: ReferenceSearchPlan,
+    allocator: A,
+) -> Result<Vec<u8, A>> {
+    if input.len() != plan.source_len() {
+        return Err(Error::InvalidParameter);
+    }
+    let settings = ReferenceFrameSettings::new(plan.source_len(), plan.parameters().window_log())?;
+    let content = compiled.content();
+    let staged = compiled.loaded_len();
+    if staged == 0 || staged > content.len() || staged > settings.window_size() {
+        return Err(Error::InvalidParameter);
+    }
+    if !plan.admits_dictionary_staging() {
+        return Err(Error::UnsupportedFeature);
+    }
+    let candidates = compiled.search_candidates()?;
+    if !candidates.matches(plan) {
+        return Err(Error::InvalidParameter);
+    }
+    let header = ReferenceFrameHeader::with_dictionary_id(&settings, compiled.dictionary_id());
+    let seed = compiled.first_block_seed();
+    let (_, dictionary_bytes) = crate::encode::dictionary_field(compiled.dictionary_id());
+    let bound = plan
+        .frame_bound()?
+        .checked_add(dictionary_bytes)
+        .ok_or(Error::ResourceLimit)?;
+    let mut output = Vec::new_in(allocator);
+    output
+        .try_reserve_exact(bound)
+        .map_err(|_| Error::AllocationFailed)?;
+    if input.is_empty() {
+        ReferenceOutput::append(&mut output, header.as_bytes())?;
+        ReferenceOutput::append(&mut output, &[1, 0, 0])?;
+        return Ok(output);
+    }
+    let scratch = output.allocator().clone();
+    let mut combined = Vec::new_in(scratch.clone());
+    combined
+        .try_reserve_exact(
+            staged
+                .checked_add(input.len())
+                .ok_or(Error::ResourceLimit)?,
+        )
+        .map_err(|_| Error::AllocationFailed)?;
+    combined.extend_from_slice(&content[content.len() - staged..]);
+    combined.extend_from_slice(input);
+    let mut workspace = ReferenceEncoderWorkspace::new_with_prefix_compiled(
+        &combined, staged, plan, scratch, seed, candidates,
+    )?;
+    let mut sink = output;
+    ReferenceOutput::append(&mut sink, header.as_bytes())?;
+    while workspace.emitted < input.len() {
+        let length = plan.next_block_len(workspace.emitted)?;
+        let last = length == input.len() - workspace.emitted;
+        workspace.emit_next(length, last, &mut sink)?;
+    }
+    Ok(sink)
+}
+
 /// One borrowed source and its existing search/entropy owners.
 ///
 /// Search advances before emission. `emitted` advances only after an entire
@@ -369,6 +445,45 @@ impl<'a, A: Allocator + Clone> ReferenceEncoderWorkspace<'a, A> {
         let payload = Vec::new_in(factory);
         let mut entropy =
             BlockEntropyEncoder::from_parts(literal_encoder, sequence_encoder, payload);
+        entropy.start_frame(dictionary_entropy, literal_table)?;
+        Ok(Self {
+            source,
+            prefix_len,
+            plan,
+            search,
+            entropy,
+            emitted: 0,
+            failed: false,
+            finished: false,
+        })
+    }
+
+    /// Bind per-call owners to compiled candidate views without a seeding pass.
+    ///
+    /// The compiled candidate length must equal the staged prefix; the search
+    /// constructor validates family, layout and staged geometry before any
+    /// owner is reset. The compiled entropy seed is installed through the same
+    /// transactional start_frame path as combined staging.
+    fn new_with_prefix_compiled(
+        source: &'a [u8],
+        prefix_len: usize,
+        plan: ReferenceSearchPlan,
+        factory: A,
+        seed: Option<(DictionaryEntropyView<'_>, HuffmanCodebook)>,
+        candidates: CompiledCandidates<'a>,
+    ) -> Result<Self> {
+        let search = ReferenceSearchState::new_with_compiled(
+            source, prefix_len, plan, &factory, candidates,
+        )?;
+        let literal_encoder = LiteralEncoder::new_in(factory.clone());
+        let sequence_encoder = SequenceEncoder::new_in(factory.clone());
+        let payload = Vec::new_in(factory);
+        let mut entropy =
+            BlockEntropyEncoder::from_parts(literal_encoder, sequence_encoder, payload);
+        let (dictionary_entropy, literal_table) = match seed {
+            Some((entropy, table)) => (Some(entropy), Some(table)),
+            None => (None, None),
+        };
         entropy.start_frame(dictionary_entropy, literal_table)?;
         Ok(Self {
             source,

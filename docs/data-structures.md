@@ -4152,6 +4152,16 @@ candidate must strictly improve the carried context best, and an improving
 full-block context match suppresses the descent. The per-call tree keeps its
 first-query lazy back-fill.
 
+A compiled frame stages exactly the compiled `loaded_len` suffix, binds the
+per-call owners to the compiled candidate views without a per-call seeding
+pass, installs the compiled first-block entropy seed and writes the compiled
+identifier. The frame profile is rebuilt from the compiled resolved record, and
+the compiled candidate family must match that plan before any output byte.
+Fast, DoubleFast, chain and row frames are byte-identical to combined staging
+for the frozen deterministic comparison; the eagerly sorted tree is the
+measured per-family exception recorded in
+[the analysis](prepared-dictionary-analysis.md#compiled-frame-comparison-item-9).
+
 Upstream counterparts are pinned `ZSTD_CDict`, `ZSTD_createCDict_advanced2`,
 `ZSTD_initCDict_internal`, `ZSTD_loadDictionaryContent`, `ZSTD_CCtx_refCDict`
 and `ZSTD_compress_usingCDict_advanced`. The loaded suffix and `loadedDictEnd`

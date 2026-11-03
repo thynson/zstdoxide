@@ -10,8 +10,8 @@ use crate::double_fast_tables::DoubleFastTables;
 use crate::fast_plan::FastExecutionPlan;
 use crate::fast_state::FastMatchState;
 use crate::greedy_plan::GreedyExecutionPlan;
-use crate::greedy_state::{GreedyMatchState, GreedyTables};
-use crate::matchfinder::MatchTable;
+use crate::greedy_state::{GreedyCandidates, GreedyMatchState, GreedyTables};
+use crate::matchfinder::{MatchTable, StagedMatchView};
 use crate::optimal_frequencies::OptimalFrequencies;
 use crate::optimal_matches::OptimalMatches;
 use crate::optimal_parse::OptimalParser;
@@ -216,6 +216,30 @@ impl ReferenceSearchPlan {
             )?;
             crate::reference_frame::ReferenceFrameHeader::raw_frame_bound(&settings)
         }
+    }
+}
+
+/// Read-only compiled candidate sources for one admitted family.
+///
+/// The variants carry staged-prefix positions and reject a call that stages a
+/// different suffix. A plan must always match its compiled family; the
+/// compiled frame path validates that pairing before writing output.
+#[derive(Clone, Copy, Debug)]
+pub(crate) enum CompiledCandidates<'a> {
+    Fast(StagedMatchView<'a>),
+    DoubleFast(StagedMatchView<'a>, StagedMatchView<'a>),
+    Greedy(GreedyCandidates<'a>),
+}
+
+impl CompiledCandidates<'_> {
+    /// Whether these candidates belong to the selected plan's family.
+    pub(crate) fn matches(self, plan: ReferenceSearchPlan) -> bool {
+        matches!(
+            (plan, self),
+            (ReferenceSearchPlan::Fast(_), Self::Fast(_))
+                | (ReferenceSearchPlan::DoubleFast(_), Self::DoubleFast(_, _))
+                | (ReferenceSearchPlan::Greedy(_), Self::Greedy(_))
+        )
     }
 }
 
@@ -482,6 +506,88 @@ impl<'a, A: Allocator + Clone> ReferenceSearchState<'a, A> {
                     source, plan, tables, literals, sequences, prefix_len,
                 )?))
             }
+        }
+    }
+
+    /// Bind per-call owners to compiled candidate sources.
+    ///
+    /// The combined borrow must stage exactly the compiled suffix length, the
+    /// plan must belong to the candidate family, and every layout must match
+    /// before any owner is reset. Unlike [`Self::new_with_prefix`], no table
+    /// seeding pass runs: the compiled owners already hold the loaded suffix.
+    pub(crate) fn new_with_compiled(
+        source: &'a [u8],
+        prefix_len: usize,
+        plan: ReferenceSearchPlan,
+        factory: &A,
+        candidates: CompiledCandidates<'a>,
+    ) -> Result<Self> {
+        if source
+            .len()
+            .checked_sub(prefix_len)
+            .is_none_or(|frame_len| frame_len != plan.source_len())
+            || prefix_len == 0
+            || !plan.admits_dictionary_staging()
+            || !candidates.matches(plan)
+        {
+            return Err(Error::InvalidParameter);
+        }
+        match (plan, candidates) {
+            (ReferenceSearchPlan::Fast(plan), CompiledCandidates::Fast(dictionary)) => {
+                let table = MatchTable::with_layout_in(plan.layout(), factory.clone())?;
+                let literals = Vec::new_in(factory.clone());
+                let sequences = Vec::new_in(factory.clone());
+                Ok(Self::Fast(FastMatchState::from_parts_with_compiled_prefix(
+                    source,
+                    plan,
+                    table,
+                    literals,
+                    sequences,
+                    prefix_len,
+                    Some(dictionary),
+                )?))
+            }
+            (
+                ReferenceSearchPlan::DoubleFast(plan),
+                CompiledCandidates::DoubleFast(long, short),
+            ) => {
+                let tables = DoubleFastTables::new_in(
+                    plan.long_layout(),
+                    plan.short_layout(),
+                    factory.clone(),
+                    factory.clone(),
+                )?;
+                let literals = Vec::new_in(factory.clone());
+                let sequences = Vec::new_in(factory.clone());
+                Ok(Self::DoubleFast(
+                    DoubleFastMatchState::from_parts_with_compiled_prefix(
+                        source,
+                        plan,
+                        tables,
+                        literals,
+                        sequences,
+                        prefix_len,
+                        Some((long, short)),
+                    )?,
+                ))
+            }
+            (ReferenceSearchPlan::Greedy(plan), CompiledCandidates::Greedy(dictionary)) => {
+                let tables = GreedyTables::new_in(plan.tables(), factory.clone(), factory.clone())?;
+                let literals = Vec::new_in(factory.clone());
+                let sequences = Vec::new_in(factory.clone());
+                Ok(Self::Greedy(
+                    GreedyMatchState::from_parts_with_compiled_prefix(
+                        source,
+                        plan,
+                        tables,
+                        literals,
+                        sequences,
+                        prefix_len,
+                        Some(dictionary),
+                    )?,
+                ))
+            }
+            _ => Err(Error::InvalidParameter),
         }
     }
 }

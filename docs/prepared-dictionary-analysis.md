@@ -415,3 +415,35 @@ resolved records and asserts that a nonzero staged prefix still returns
 `UnsupportedFeature` before parser work. Byte equality with combined staging
 remains the measured per-family comparison of the next item; the eager sorted
 load can select a different tree shape even for deterministic pairs.
+
+## Compiled-frame comparison (item 9)
+
+`reference_frame_encode::compress_reference_with_compiled_in` emits one frame
+from a compiled state: it stages exactly the compiled `loaded_len` suffix, binds
+the per-call owners to the compiled candidate views without a seeding pass,
+installs the compiled first-block entropy seed and writes the compiled
+identifier. The frame profile is rebuilt with `ReferenceSearchPlan::from_resolved`
+from the compiled record.
+
+The comparison test compiles raw dictionaries for Fast (level 1), DoubleFast
+(level 3), chain Greedy (level 4), a 32 KiB row profile (level 5) and
+BinaryTreeLazy2 (level 9), plus a formatted-dictionary Fast case. For each
+family it compares four deterministic inputs: a dictionary prefix, an
+interleaved mixture, pure noise, and the dictionary content repeated. Fast,
+DoubleFast, chain, row and the formatted entropy seed produce byte-identical
+frames to combined staging; both frames decode. The tree family is the measured
+exception because its construction-side eager sorted load can select a
+different shape from the per-call lazy back-fill. The frozen tree comparison
+records `(compiled bytes, combined bytes, first differing index, differing
+positions)`:
+
+| input | compiled | combined | first | differences |
+| --- | --- | --- | --- | --- |
+| dictionary prefix | 18 | 2058 | 7 | 2050 |
+| interleaved | 4122 | 6154 | 7 | 6126 |
+| pure noise | 4106 | 4106 | none | 0 |
+| repeated dictionary | 19 | 19 | none | 0 |
+
+The total frozen tree difference count is 8176 positions. These are measured
+outputs, not a general byte-identity or size contract; both frames decode and
+the compiled path's allocation failures release every owner.

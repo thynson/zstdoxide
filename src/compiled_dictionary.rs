@@ -24,10 +24,11 @@ use crate::double_fast_plan::DoubleFastExecutionPlan;
 use crate::double_fast_tables::DoubleFastTables;
 use crate::fast_plan::FastExecutionPlan;
 use crate::greedy_plan::GreedyExecutionPlan;
-use crate::greedy_state::GreedyTables;
+use crate::greedy_state::{GreedyCandidates, GreedyTables};
 use crate::huffman_codebook::HuffmanCodebook;
 use crate::matchfinder::{MatchTable, StagedMatchView};
 use crate::reference_chain::StagedChainView;
+use crate::reference_search::CompiledCandidates;
 use crate::reference_tree::StagedTreeView;
 use crate::row_table::StagedRowView;
 use crate::{
@@ -327,6 +328,36 @@ impl<'a, A: Allocator + Clone> CompiledDictionary<'a, A> {
             _ => Err(Error::InvalidState),
         }
     }
+
+    /// The read-only candidate source for the compiled family.
+    ///
+    /// Every variant carries the loaded suffix length, so a frame constructor
+    /// rejects a candidate from another family or a different staged geometry.
+    /// No table is cloned, copied or mutated.
+    pub(crate) fn search_candidates(&self) -> Result<CompiledCandidates<'_>> {
+        match &self.tables {
+            CompiledTables::Fast(table) => Ok(CompiledCandidates::Fast(StagedMatchView::new(
+                table.view(),
+                self.loaded_len,
+            ))),
+            CompiledTables::DoubleFast(tables) => {
+                let (long, short) = tables.view();
+                Ok(CompiledCandidates::DoubleFast(
+                    StagedMatchView::new(long, self.loaded_len),
+                    StagedMatchView::new(short, self.loaded_len),
+                ))
+            }
+            CompiledTables::Greedy(GreedyTables::Chain(chain)) => Ok(CompiledCandidates::Greedy(
+                GreedyCandidates::Chain(StagedChainView::new(chain.view(), self.loaded_len)),
+            )),
+            CompiledTables::Greedy(GreedyTables::Row(row)) => Ok(CompiledCandidates::Greedy(
+                GreedyCandidates::Row(StagedRowView::new(row.view(), self.loaded_len)),
+            )),
+            CompiledTables::Greedy(GreedyTables::Tree(tree)) => Ok(CompiledCandidates::Greedy(
+                GreedyCandidates::Tree(StagedTreeView::new(tree.view(), self.loaded_len)),
+            )),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -336,6 +367,7 @@ mod tests {
     use crate::double_fast_state::DoubleFastMatchState;
     use crate::fast_state::FastMatchState;
     use crate::greedy_state::{GreedyCandidates, GreedyMatchState};
+    use crate::reference_search::ReferenceSearchPlan;
     use alloc::alloc::Global;
     use alloc::vec;
     use alloc::vec::Vec;
@@ -1234,5 +1266,221 @@ mod tests {
         assert!(compiled.first_block_seed().is_none());
         drop(compiled);
         monitor.assert_released();
+    }
+
+    fn compare_compiled_frame(
+        label: &str,
+        level: i32,
+        content: &[u8],
+        input: &[u8],
+    ) -> (usize, usize, Option<usize>, usize) {
+        let dictionary = Dictionary::raw(content).unwrap();
+        let view = dictionary.view();
+        let mut request = CompressionParameterRequest::with_level(level);
+        request
+            .set_source_hint(u32::try_from(input.len()).unwrap())
+            .unwrap();
+        let (allocator, monitor) = monitored();
+        let compiled = CompiledDictionary::new(view, &request, allocator).unwrap();
+        let compiled_plan =
+            ReferenceSearchPlan::from_resolved(compiled.parameters(), input.len()).unwrap();
+        let combined_plan =
+            ReferenceSearchPlan::new_with_dictionary(&request, input.len(), content.len()).unwrap();
+        assert_eq!(
+            compiled_plan.parameters(),
+            combined_plan.parameters(),
+            "{label}"
+        );
+        eprintln!(
+            "PARAM {label} window {} loaded {} content {} input {}",
+            compiled.parameters().window_log(),
+            compiled.loaded_len(),
+            content.len(),
+            input.len()
+        );
+        let compiled_frame = crate::reference_frame_encode::compress_reference_with_compiled_in(
+            input,
+            &compiled,
+            compiled_plan,
+            Global,
+        )
+        .unwrap();
+        let combined_frame = crate::reference_frame_encode::compress_reference_with_dictionary_in(
+            input,
+            view,
+            combined_plan,
+            Global,
+        )
+        .unwrap();
+        for frame in [&compiled_frame, &combined_frame] {
+            assert_eq!(
+                crate::decompress_with_dictionary_in(
+                    frame,
+                    &view,
+                    crate::DecodeOptions::new(input.len()),
+                    Global,
+                )
+                .unwrap(),
+                input,
+                "{label}"
+            );
+        }
+        drop(compiled);
+        monitor.assert_released();
+        let first = compiled_frame
+            .iter()
+            .zip(&combined_frame)
+            .position(|(a, b)| a != b);
+        let differences = compiled_frame
+            .iter()
+            .zip(&combined_frame)
+            .filter(|(a, b)| a != b)
+            .count()
+            + compiled_frame.len().abs_diff(combined_frame.len());
+        (
+            compiled_frame.len(),
+            combined_frame.len(),
+            first,
+            differences,
+        )
+    }
+
+    #[test]
+    fn compiled_frames_match_combined_staging_per_family() {
+        let formatted = Dictionary::from_bytes(PREPARED).unwrap();
+        let formatted_content = formatted.view().content().to_vec();
+        let cases = vec![
+            ("fast", 1, pattern(0x1234_5678, 4096)),
+            ("double-fast", 3, pattern(0x2345_6789, 4096)),
+            ("chain", 4, pattern(0x3456_789a, 4096)),
+            ("row", 5, pattern(0x9d3e_77af, 32 * 1024)),
+            ("tree", 9, pattern(0x5678_9abc, 4096)),
+        ];
+        // Frozen per-family byte comparison. The tree cases are the measured
+        // per-family difference: the eager sorted compiled load can select a
+        // different shape than the per-call lazy back-fill. Every other family
+        // is expected to reproduce the combined-staging bytes exactly.
+        const TREE_DIFFERENCES: [(usize, usize, Option<usize>, usize); 4] = [
+            (18, 2058, Some(7), 2050),
+            (4122, 6154, Some(7), 6126),
+            (4106, 4106, None, 0),
+            (19, 19, None, 3 - 3),
+        ];
+        let mut total_differences = 0;
+        for (label, level, content) in cases {
+            let noise = pattern(0x0f0f_0f0f ^ u32::try_from(content.len()).unwrap(), 4096);
+            let inputs = [
+                content[..content.len() / 2].to_vec(),
+                [
+                    &content[..content.len() / 4],
+                    &noise,
+                    &content[content.len() / 4..content.len() / 2],
+                ]
+                .concat(),
+                noise,
+                [content.as_slice(), content.as_slice()].concat(),
+            ];
+            for (index, input) in inputs.iter().enumerate() {
+                let outcome =
+                    compare_compiled_frame(&format!("{label}-{index}"), level, &content, input);
+                total_differences += outcome.3;
+                if label == "tree" {
+                    assert_eq!(
+                        outcome, TREE_DIFFERENCES[index],
+                        "tree-{index} frozen comparison"
+                    );
+                } else {
+                    assert_eq!(outcome.3, 0, "{label}-{index}");
+                }
+            }
+        }
+        assert_eq!(total_differences, 8176, "frozen total tree differences");
+        // The formatted-dictionary entropy seed is also compared exactly.
+        let input =
+            include_bytes!("../tests/upstream/dictionaries/dictionary-treeless-literals.expected")
+                .to_vec();
+        let mut request = CompressionParameterRequest::with_level(1);
+        request
+            .set_source_hint(u32::try_from(input.len()).unwrap())
+            .unwrap();
+        let (allocator, monitor) = monitored();
+        let compiled = CompiledDictionary::new(formatted.view(), &request, allocator).unwrap();
+        let compiled_plan =
+            ReferenceSearchPlan::from_resolved(compiled.parameters(), input.len()).unwrap();
+        let combined_plan = ReferenceSearchPlan::new_with_dictionary(
+            &request,
+            input.len(),
+            formatted_content.len(),
+        )
+        .unwrap();
+        let compiled_frame = crate::reference_frame_encode::compress_reference_with_compiled_in(
+            &input,
+            &compiled,
+            compiled_plan,
+            Global,
+        )
+        .unwrap();
+        let combined_frame = crate::reference_frame_encode::compress_reference_with_dictionary_in(
+            &input,
+            formatted.view(),
+            combined_plan,
+            Global,
+        )
+        .unwrap();
+        assert_eq!(compiled_frame, combined_frame, "formatted entropy seed");
+        assert_eq!(
+            crate::decompress_with_dictionary_in(
+                &compiled_frame,
+                &formatted.view(),
+                crate::DecodeOptions::new(input.len()),
+                Global,
+            )
+            .unwrap(),
+            input
+        );
+        drop(compiled);
+        monitor.assert_released();
+    }
+
+    #[test]
+    fn compiled_frame_every_allocation_failure_releases_its_owners() {
+        let content = pattern(0x1357_9bdf, 4096);
+        let input = content[..2048].to_vec();
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let mut request = CompressionParameterRequest::with_level(9);
+        request
+            .set_source_hint(u32::try_from(input.len()).unwrap())
+            .unwrap();
+        let compiled = CompiledDictionary::new(dictionary.view(), &request, Global).unwrap();
+        let plan = ReferenceSearchPlan::from_resolved(compiled.parameters(), input.len()).unwrap();
+        let owner = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = owner.monitor();
+        let frame = crate::reference_frame_encode::compress_reference_with_compiled_in(
+            &input, &compiled, plan, owner,
+        )
+        .unwrap();
+        let attempts = monitor.snapshot().attempts;
+        assert!(attempts >= 5);
+        drop(frame);
+        monitor.assert_released();
+        for fail_at in 1..=attempts {
+            let owner = TrackingAllocator::new(AllocatorConfig {
+                fail_at: core::num::NonZeroU64::new(fail_at),
+                ..AllocatorConfig::default()
+            })
+            .unwrap();
+            let monitor = owner.monitor();
+            assert_eq!(
+                crate::reference_frame_encode::compress_reference_with_compiled_in(
+                    &input, &compiled, plan, owner,
+                ),
+                Err(Error::AllocationFailed),
+                "failure {fail_at}"
+            );
+            monitor.assert_released();
+            let snapshot = monitor.snapshot();
+            assert_eq!(snapshot.owners_dropped, snapshot.identities_created);
+        }
+        drop(compiled);
     }
 }
