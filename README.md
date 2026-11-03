@@ -190,8 +190,12 @@ match-finder tables over the in-window dictionary suffix; calls re-resolve their
 request against the actual source and dictionary sizes and reject any profile
 difference before writing. Fast, DoubleFast, chain, row and BinaryTreeLazy2
 consult the immutable tables read-only beside per-call sampling; formatted
-entropy seeds the first block. See
-[compiled dictionary usage](docs/prepared-dictionary-usage.md),
+entropy seeds the first block. `CompiledStreamEncoder` adds engineered streaming
+over the same immutable state: each sealed block re-binds a reference parser over
+the compiled suffix, retained contiguous frame history and the new block, so
+cross-block and compiled distances stay exact without reseeding compiled tables.
+See [compiled dictionary usage](docs/prepared-dictionary-usage.md),
+[the streaming design](docs/compiled-streaming-design.md),
 [the validation report](docs/prepared-dictionary-validation.md) and
 [the compiled-frame comparison](docs/prepared-dictionary-analysis.md#compiled-frame-comparison-item-9).
 
@@ -207,6 +211,7 @@ entropy seeds the first block. See
 | Reference Fast, DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 | Known-size one-shot level/request execution, dictionary-free or with an in-window borrowed raw/formatted dictionary (Optimal/Ultra/Ultra2 reject nonzero dictionaries); sampled hash, chain, row or deferred binary-tree tables, explicit repeat intent, Fast-only negative-level acceleration/raw literal policy, strict gain and transactional block selection; independent entropy output |
 | Compiled dictionaries | Immutable resolved profile and read-only seed tables over the in-window suffix; Fast/DoubleFast/chain/row/fully-sorted-tree consultation with per-call sampling and shared attempt budgets; prepared first-block entropy; allocating, caller-owned and coordinator APIs with fixed-profile guards |
 | Streaming | Caller-owned input/output slices, bounded window/block storage, incremental checksums, Continue/Flush/Finish, source pledges, reusable contexts, precise frame boundaries |
+| Streaming compiled dictionaries | Borrowed immutable compiled state, per-block reference parsing over the compiled suffix plus retained contiguous history, cross-block repeats, session reset, fixed-profile admission, frame flags and dictionary identifiers |
 | Parameter inspection | Pinned reference presets, scalar bounds, raw adjustment, explicit request overrides, source hints and checked source/dictionary size arithmetic; independent of live numeric execution |
 | Dictionaries | Raw/auto/formatted preparation, shared immutable entropy, IDs, omitted-ID selection, dictionary-to-frame matches, persistent dictionaries and single-use prefixes |
 | Training | Bounded deterministic raw content selection, learned full-alphabet Huffman metadata, predefined sequence priors, custom or automatic IDs, formatted finalization |

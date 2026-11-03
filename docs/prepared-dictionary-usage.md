@@ -92,6 +92,61 @@ The coordinator owns the compiled state and no request, source, destination or
 workspace. Repeated calls reuse the same tables and prepared entropy. Passing a
 request that resolves to a different profile fails without changing the state.
 
+## Streaming reuse
+
+```rust
+use zstdoxide::{
+    CompiledDictionary, CompiledStreamEncoder, CompressionParameterRequest, DecodeOptions,
+    Dictionary, EndDirective, StreamStatus, decompress_with_dictionary_in,
+};
+
+# fn main() -> zstdoxide::Result<()> {
+let dictionary = Dictionary::raw(b"shared reference dictionary content")?;
+let input = b"shared reference dictionary content";
+let mut request = CompressionParameterRequest::with_level(1);
+request.set_source_hint(u32::try_from(input.len()).unwrap())?;
+let compiled =
+    CompiledDictionary::new(dictionary.view(), &request, std::alloc::Global)?;
+let mut encoder = CompiledStreamEncoder::new(compiled)?;
+let mut frame = Vec::new();
+let mut output = [0_u8; 32];
+let mut progress = encoder.process(input, &mut output, EndDirective::Finish)?;
+frame.extend_from_slice(&output[..progress.produced]);
+while progress.status != StreamStatus::FrameFinished {
+    progress = encoder.process(&[], &mut output, EndDirective::Finish)?;
+    frame.extend_from_slice(&output[..progress.produced]);
+}
+assert_eq!(
+    decompress_with_dictionary_in(
+        &frame,
+        &dictionary.view(),
+        DecodeOptions::new(input.len()),
+        std::alloc::Global,
+    )?,
+    input
+);
+# Ok(())
+# }
+```
+
+`process` follows the same `Continue`/`Flush`/`Finish` resubmission rules as
+`Encoder`: resubmit the unconsumed suffix, retry with more output space after
+`NeedOutput`, and keep the same directive while a flush or finish is latched.
+The compiled window and seven-field profile are fixed; frame options select only
+the checksum, an optional pledge and the content-size/dictionary-ID flags.
+`reset` keeps the compiled selection and clears the one-frame pledge;
+`reset_with_options` also replaces the frame flags. The next frame installs the
+compiled first-block entropy seed again. A processing error poisons the stream
+until reset.
+
+Block history is retained contiguously for at most the resolved window, so
+cross-block matches and repeat offsets keep their wire distances and compiled
+candidates become unreachable exactly when the decoder's window would reject
+them. Compiled tables are never reseeded, copied or mutated per block. The
+per-block parser owners are released when the block seals; only history and
+entropy cross a block boundary. This is a bounded Rust streaming contract, not
+native CCtx workspace reuse.
+
 ## Supported profiles and limits
 
 Fast, DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 compile. Only the
@@ -104,6 +159,8 @@ sorted tree records measured differences and is not a byte-identity contract.
 
 Compiled tables are read-only during calls. Per-call sampling, scratch buffers
 and output remain in the call's allocator domain; the compiled state's allocator
-domain is independent and survives until the state is dropped. Native CCtx
-workspace reuse, LDM, workers, streaming and CLI parity are outside this
-bounded API.
+domain is independent and survives until the state is dropped. The streaming
+coordinator uses its own workspace allocator and rejects a compiled window
+outside the supported reference frame range. Native CCtx workspace reuse, LDM,
+workers, prefix replacement, parameter resets that clear a compiled selection
+and CLI parity are outside this bounded API.
