@@ -262,6 +262,40 @@ fn oversized_pledge_and_directive_reuse_are_rejected_before_writes() {
 }
 
 #[test]
+fn omitted_content_size_and_dictionary_id_flags_keep_dictionary_use() {
+    let content = pattern(0x0a0b_0c0d, 4096);
+    let dictionary = Dictionary::raw(&content).unwrap();
+    let input = &content[..2048];
+    let request = request(4, input);
+    let compiled =
+        CompiledDictionary::new(dictionary.view(), &request, std::alloc::Global).unwrap();
+    let mut encoder = CompiledStreamEncoder::with_options(
+        compiled,
+        CompiledStreamOptions {
+            checksum: false,
+            pledged_size: Some(input.len() as u64),
+            include_content_size: false,
+            include_dictionary_id: false,
+        },
+    )
+    .unwrap();
+    let frame = pump(&mut encoder, input, 512, 9);
+    let header = FrameHeader::parse(&frame).unwrap().0;
+    assert_eq!(header.content_size, None);
+    assert_eq!(header.dictionary_id, 0);
+    assert_eq!(
+        decompress_with_dictionary_in(
+            &frame,
+            &dictionary.view(),
+            DecodeOptions::new(input.len()),
+            std::alloc::Global,
+        )
+        .unwrap(),
+        input
+    );
+}
+
+#[test]
 fn stream_workspace_allocator_failure_releases_every_owner() {
     let content = pattern(0x2468_ace0, 4096);
     let dictionary = Dictionary::raw(&content).unwrap();
