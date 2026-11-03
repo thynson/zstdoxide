@@ -1714,3 +1714,46 @@ or native workspace benefit is claimed. Completed tasks are archived in Git
 history. Complete upstream parity, native CCtx workspace semantics, LDM,
 workers, streaming compiled-dictionary reuse and benchmark of shared compiled
 handles remain open.
+
+## Module 38: compiled dictionary reuse in streaming frames complete (2026-11-03)
+
+`CompiledStreamEncoder<'a, A, B>` borrows one immutable compiled dictionary and
+owns the streaming workspace. Every sealed block re-binds a reference parser
+over `compiled loaded suffix | retained contiguous frame history | block`; Fast,
+DoubleFast, chain and row owners seed only the history range, while the Greedy
+tree keeps its lazy back-fill. Compiled tables are never reseeded, copied or
+mutated. Retained history is exactly the last `min(frame_position, window)`
+bytes, so local distances equal decoder distances while the window is intact
+and compiled candidates become unreachable exactly when the window floor would
+reject them. Committed entropy and wire repeats cross block boundaries; raw/RLE
+fallback discards only the candidate. Session reset keeps the compiled
+selection, `reset_with_options` replaces frame flags, and every new frame
+reinstalls the compiled first-block entropy seed.
+
+Nine focused unit tests and seven public integration tests cover all six
+admitted families, multi-block inputs beyond and below window wrap, checksums,
+pledges, omitted frame flags, empty/tiny frames, Flush/Finish resumption,
+directive/poison boundaries, allocator release and a parser-level history
+binding comparison. Single-block and below-wrap multi-block streaming bodies
+match the one-shot compiled body byte for byte; beyond wrap only correctness is
+claimed. Twelve typed native schedules run against normal and sanitized pinned
+v1.5.7 `ZSTD_CCtx_refCDict` + `ZSTD_compressStream2` controls with one- to
+eleven-byte output windows, a multi-block source and a two-frame CDict-retaining
+boundary; support is ten schedules, with Optimal/Ultra2 rejected by Rust
+construction and exercised natively only. Every Rust frame decodes natively and
+every native frame decodes in Rust. Concrete `thumbv6m-none-eabi` safe/all
+checks, release IR/object emission, strict Clippy and formatting pass; no Miri
+ran because no unsafe code was added.
+
+All 75 feature/release commands pass on the frozen source: safe/all and every
+22 isolated unsafe feature run complete tests, true no_std and strict Clippy,
+with safe/all release and formatting. Every suite reports 125 result groups,
+1848 passed and 79 ignored with zero failures. Eighteen streaming workloads
+compare compiled reuse against per-frame table staging with two rounds of forty
+samples after CPU barriers and two independent runs per configuration; all four
+ledgers are byte-identical across 11,520 samples. Primary safe staging/compiled
+geometric-mean ratio is 2.0064 (all-feature repeats 2.0633/2.0901), with one
+multi-block Fast case at 0.941, so no universal benefit is claimed. Completed
+tasks are archived in Git history. Prefix replacement, parameter resets that
+clear a selection, native attach/load workspace reuse, LDM, workers, shared
+compiled handles and complete upstream parity remain open.

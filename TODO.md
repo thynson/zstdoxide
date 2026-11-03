@@ -213,28 +213,47 @@ caller-owned timing are recorded in
 CCtx workspace semantics, LDM, workers, streaming reuse and complete upstream
 parity remain open.
 
-## Module 38: compiled dictionary reuse in streaming frames (next)
+## Module 38: compiled dictionary reuse in streaming frames (complete)
+
+Completed within its bounded reference-streaming scope. `CompiledStreamEncoder`
+borrows one immutable compiled dictionary and re-binds a reference parser for
+every sealed block over `compiled suffix | retained contiguous history | block`.
+Fast, DoubleFast, chain and row owners seed only the retained history; the tree
+keeps its lazy back-fill. Compiled tables are never reseeded, copied or mutated.
+Session reset keeps the selection, `reset_with_options` replaces frame flags,
+and a completed frame reinstalls the compiled first-block entropy seed.
+Caller-owned `process` follows the existing Continue/Flush/Finish contract;
+pledge, directive, poison and allocator-failure guards are qualified. Twelve
+guarded native streaming schedules, including a two-frame boundary and
+native-only Optimal/Ultra2 controls, and concrete `thumbv6m-none-eabi`
+safe/all checks are recorded in
+`docs/compiled-streaming-validation.md`,
+`docs/compiled-streaming-benchmarks.md` and the 2026-11-03 receipts. The 75
+command feature/release matrix reports 125 result groups, 1848 passed and 79
+ignored. Native CCtx workspace reuse, prefix replacement, parameter resets that
+clear a compiled selection, LDM, workers and complete upstream parity remain
+open.
+
+## Module 39: streaming selection lifecycle and frame-flag parameters (next)
 
 Decompose before implementation; do not start until this checklist is reviewed.
 
-- [x] Analyze pinned CDict attach/reset in `ZSTD_compressStream2`, prefix
-  lifecycle and window expiry across frame boundaries.
-- [x] Decide between a bounded compiled Greedy streaming coordinator and a new
-  reference streaming block/frame engine: choose the reference block engine
-  behind a new coordinator, documented in
-  `docs/compiled-streaming-design.md`.
-- [x] Extend streaming with an immutable compiled selection and fixed-profile
-  admission without per-frame table seeding, using retained contiguous frame
-  history for exact block distances.
-- [x] Expose caller-owned streaming construction and reset with exact
-  output/lifetime guards and allocator-failure qualification.
-- [ ] Qualify guarded native streaming schedules, frame boundaries and
-  unsupported-profile rejection.
-- [ ] Qualify concrete atomic-free ARM emission, every isolated feature/all
-  features, release, no_std and strict Clippy.
-- [ ] Compare compiled and per-frame-staging streaming workloads after CPU
-  barriers with independent repeats.
-- [ ] Reconcile bounded streaming coverage and decompose the next contract.
+- [ ] Analyze pinned one-frame prefix versus CDict replacement, parameter-only
+  reset and pledged-source window updates in streaming frames.
+- [ ] Design a selection owner that can hold either a compiled dictionary or a
+  one-frame prefix without cloning compiled tables or shortening lifetimes.
+- [ ] Add one-frame prefix selection and mutual clearing at frame
+  initialization, with fixed-profile revalidation for compiled frames.
+- [ ] Add a parameter-reset contract for frame flags and selection removal with
+  exact error boundaries and no per-frame table seeding.
+- [ ] Qualify guarded native replacement/reset schedules and unsupported
+  combinations.
+- [ ] Qualify atomic-free ARM, every isolated feature/all features, release,
+  no_std and strict Clippy.
+- [ ] Compare selection-reset and replacement workloads after CPU barriers with
+  independent repeats.
+- [ ] Reconcile bounded streaming selection coverage and decompose the next
+  contract.
 
 ## Roadmap
 
