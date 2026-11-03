@@ -4182,3 +4182,30 @@ the context-then-dictionary order of `ZSTD_HcFindBestMatch`,
 lifecycle, native dedicated-dictionary workspace sharing, LDM and workers are
 not implied. Contracts and evidence requirements:
 `prepared-dictionary-design.md`.
+
+## Streaming compiled-dictionary coordinator
+
+`CompiledStreamEncoder<'a, A>` borrows one `CompiledDictionary<'a, A>` for the
+whole stream and owns no clone of its tables, content or entropy. Its frame
+state is `block: Vec<u8, A>` (at most the resolved block limit), `pending:
+Vec<u8, A>` with a drained position, `history: Vec<u8, A>` holding exactly the
+last `min(frame_position, window)` source bytes contiguously, `frame_position:
+u64`, one `XxHash64`, one `BlockEntropyEncoder<A>` and the same phase/latch
+records as `Encoder`.
+
+Every seal builds `suffix(loaded_len) | history(history_len) | block` in a
+per-block buffer and re-binds a `ReferenceSearchState` with
+`prefix_len = loaded_len + history_len`. The compiled candidate views are
+read-only and keep suffix-relative positions; the per-call Fast/DoubleFast or
+chain/row owners receive a seeding pass over only the history range, so call
+sampling still wins and no compiled position is copied. The Greedy tree keeps
+its lazy back-fill from the combined-buffer start when history is present.
+Because the history is a contiguous suffix of the frame and the compiled suffix
+stays first, every retained candidate distance equals its frame distance; once
+the window wraps, local compiled distances exceed the window and the ordinary
+window floor rejects them. The parser owners are dropped when the block seals;
+only history and entropy cross a block boundary. Entropy commits only for a
+compressed block and carries wire repeats across blocks. The frame header is
+the non-single-segment streaming form with the compiled window log, optional
+pledge, optional checksum and compiled identifier. Slice-lifetime, profile and
+history invariants are recorded in `compiled-streaming-design.md`.
