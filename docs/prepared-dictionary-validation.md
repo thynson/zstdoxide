@@ -75,5 +75,15 @@ for `thumbv6m-none-eabi` with safe and every opt-in storage backend together;
 the IR and object artifacts are retained. Foreign Miri was not run because this
 item added or modified no unsafe code, per the standing direction.
 
-Remaining Module 37 items are the full feature and release matrix, timing with
-CPU barriers, and final reconciliation.
+## Complete feature and release regression
+
+All 75 commands pass on the frozen Module37 source: safe/all and every one of
+the 22 isolated unsafe features run the complete test suite, true no_std
+compilation and strict Clippy; safe/all release and formatting also pass. Each
+complete/release suite reports 123 result groups, 1832 passed and 78 ignored
+with zero failures; ignored tests are not credited. The benchmark harness is
+retained only in its own campaign archive and is not part of this matrix.
+Evidence: `evidence/2026-11-03-compiled-dictionary-feature-matrix.json`.
+
+Remaining Module 37 items are timing with CPU barriers and final
+reconciliation.
