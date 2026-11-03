@@ -297,3 +297,81 @@ pairs; the test also asserts a compiled row candidate reached the parser and tha
 the compiled position/tag arrays are unchanged. The chain accessor and the row
 accessor reject each other's profiles and Fast. Because each owner has its own
 insertion ring, these are measured comparisons, not a general equality contract.
+
+## Dictionary binary-tree search order (analysis)
+
+The pinned binary-tree finder differs from the chain and row finders in one
+structural respect: the dictionary's tree is not a lazily sorted copy of the
+context geometry but an eagerly fully sorted tree, and the dictionary search is
+a separate read-only descent that can only strictly improve the context result.
+
+Dictionary loading is eager and fully sorted. `ZSTD_loadDictionaryContent`
+handles `ZSTD_btlazy2` (with `ZSTD_btopt`/`btultra`/`btultra2`) under the
+comment "we want the dictionary table fully sorted"
+(`zstd_compress.c:5019-5028`) and fills the dictionary's own match state with
+`ZSTD_updateTree(ms, iend-HASH_READ_SIZE, iend)` (`zstd_opt.c:583-588`). Each
+insertion runs `ZSTD_insertBt1` (`zstd_opt.c:442-545`), which sorts the new
+position immediately into the dictionary tree, uses a window floor computed
+from the fill target ("we only need positions that will be in the window at
+the end of the tree update"), caps each traversal at `1 << searchLog`
+comparisons, and returns a forward skip over repetitive patterns (up to 192
+extra positions once a match exceeds 384 bytes), so the update visits fewer
+positions than a chain/row fill. Positions within eight bytes of the loaded
+end are never inserted (`target = iend - HASH_READ_SIZE`).
+
+The context tree keeps the lazy contract. Per query `ZSTD_updateDUBT` writes
+unsorted marks (`zstd_lazy.c:29-65`), and `ZSTD_DUBT_findBestMatch`
+(`zstd_lazy.c:281-380`) walks the unsorted chain, batch-sorts it through
+`ZSTD_insertDUBT1` (`:106-153`), then descends with path-compressed edge
+writes. On an improving full-block match under `ZSTD_dictMatchState` it sets
+`nbCompares = 0` so the dictionary search is skipped entirely
+(`:349-353`). Only while `nbCompares` remains does the dictionary branch run
+(`:369-373`): `ZSTD_DUBT_findBetterDictMatch` (`:155-254`)
+
+- starts from the dictionary's own hash head (`dms->hashTable`, `:161-165`)
+  and follows the dictionary's own tree edges (`dms->chainTable`) strictly
+  read-only;
+- maps dictionary indices into context space by
+  `dictIndexDelta = ms->window.lowLimit - dictHighLimit` (`:176`) and bounds
+  the walk by the dictionary's own window low and `btLow` (`:174-180`);
+- shares the remaining `nbCompares` with the context traversal;
+- accepts only strictly better matches under the same gain rule evaluated
+  against the carried-in context best, so a tie keeps the context match
+  (`:213-219`), and breaks on an improving full-block match (`:221-225`).
+
+`ms->nextToUpdate` is advanced only after both traversals (`:375`). The
+dictionary traversal performs no path compression and no sorting, which is
+exactly why the dictionary tree must be fully sorted at load: a read-only
+descent has no way to resolve an unsorted mark. In our geometry a call stages
+exactly the compiled `loaded_len` suffix, so `dictIndexDelta` is zero and the
+compiled candidates already index the combined borrow; the per-call window
+floor still bounds every accepted candidate.
+
+The remaining decisions for the implementation item are:
+
+- `TreeCells<'a>` (borrowed heads and edges plus the checked layout) is shared
+  by the owner, a read-only `ReferenceTreeView<'a>` and the existing checked
+  reads, so the `unsafe-reference-tree` access keeps one implementation; the
+  view exposes head and edge reads only. `StagedTreeView<'a>` adds the staged
+  prefix length and the state constructor rejects a mismatched family, layout
+  or staged length before resetting.
+- Construction of a compiled tree owner runs the sorted prefix load (the
+  `ZSTD_updateTree`/`ZSTD_insertBt1` counterpart) instead of the per-call
+  back-fill, because a read-only consultation requires fully sorted edges.
+  The per-call tree keeps its first-query back-fill contract with its sampling
+  frontier at the combined-buffer start.
+- `GreedySearch::Tree` carries the optional view into direct and lookahead
+  probes; the search counts the context candidates it compared and consults
+  the compiled tree only with the remaining budget, after the context
+  traversal, applying the same floor, byte, ordering and window checks. An
+  improving full-block context match suppresses the compiled traversal, and a
+  compiled candidate that fills the block without improving the maximal
+  context best ends the walk because no later candidate can strictly improve.
+- Byte equality with combined staging stays a measured per-family comparison:
+  the eager fully-sorted load and the forward skip select a different tree
+  shape than the per-call lazy back-fill even where a deterministic pair
+  coincides. The retained-plan rejection boundary is a Rust contract, not a
+  pinned one: `ReferenceSearchPlan::from_resolved` produces the same retained
+  plans as `new_with_dictionary`, and both frame paths must keep rejecting a
+  nonzero staged prefix for every optimal-family plan with
+  `UnsupportedFeature` before any allocation.
