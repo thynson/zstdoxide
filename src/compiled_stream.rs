@@ -925,6 +925,56 @@ mod tests {
     }
 
     #[test]
+    fn compiled_plus_history_binding_matches_full_prefix_seeding_for_hash_and_chain_families() {
+        // The streaming parser stages the compiled suffix, then retained
+        // history, then the block. For hash and chain/row families, binding the
+        // per-call owners with a compiled view over the suffix plus history
+        // seeding produces the same candidate stream as seeding the entire
+        // prefix from scratch. The eagerly sorted compiled tree is excluded:
+        // it can add candidates that the lazy per-call tree back-fill has not
+        // inserted yet, which is a measured family property rather than a
+        // history-binding difference.
+        let content = pattern(0x3141_5926, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let history = content[2048..3072].to_vec();
+        let block = content[1024..1536].to_vec();
+        for level in [1, 3, 4, 5, 7] {
+            let compiled = compiled(&dictionary, level, Global);
+            let loaded = compiled.loaded_len();
+            let mut combined = Vec::new();
+            combined.extend_from_slice(&content[content.len() - loaded..]);
+            combined.extend_from_slice(&history);
+            combined.extend_from_slice(&block);
+            let plan =
+                ReferenceSearchPlan::from_resolved(compiled.parameters(), block.len()).unwrap();
+            let mut consulted = ReferenceSearchState::new_with_compiled(
+                &combined,
+                loaded + history.len(),
+                plan,
+                &Global,
+                compiled.search_candidates().unwrap(),
+            )
+            .unwrap();
+            let mut reference = ReferenceSearchState::new_with_prefix(
+                &combined,
+                loaded + history.len(),
+                plan,
+                &Global,
+            )
+            .unwrap();
+            let actual = consulted.parse_next(block.len(), [1, 4, 8]).unwrap();
+            let expected = reference.parse_next(block.len(), [1, 4, 8]).unwrap();
+            assert_eq!(actual, expected, "level {level}");
+            assert_eq!(consulted.literals(), reference.literals(), "level {level}");
+            assert_eq!(
+                consulted.sequences(),
+                reference.sequences(),
+                "level {level}"
+            );
+        }
+    }
+
+    #[test]
     fn multi_block_body_matches_one_shot_below_window_wrap() {
         use crate::compress_with_compiled;
 
