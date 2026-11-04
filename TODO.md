@@ -252,7 +252,7 @@ Decompose before implementation; do not start until this checklist is reviewed.
   combinations.
 - [ ] Qualify atomic-free ARM, every isolated feature/all features, release,
   no_std and strict Clippy.
-- [ ] Compare selection-reset and replacement workloads after CPU barriers with
+- [x] Compare selection-reset and replacement workloads after CPU barriers with
   independent repeats.
 - [ ] Reconcile bounded streaming selection coverage and decompose the next
   contract.

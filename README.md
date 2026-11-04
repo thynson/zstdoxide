@@ -194,8 +194,14 @@ entropy seeds the first block. `CompiledStreamEncoder` adds engineered streaming
 over the same immutable state: each sealed block re-binds a reference parser over
 the compiled suffix, retained contiguous frame history and the new block, so
 cross-block and compiled distances stay exact without reseeding compiled tables.
+The selection lifecycle mirrors upstream references: `set_prefix` swaps the
+compiled state for a borrowed one-frame prefix and returns it intact, frame
+initialization claims that prefix exactly once, `set_compiled` restores a
+same-profile state, and parameter-only resets remove the selection while frames
+continue dictionary-free under the fixed profile.
 See [compiled dictionary usage](docs/prepared-dictionary-usage.md),
 [the streaming design](docs/compiled-streaming-design.md),
+[the selection lifecycle design](docs/streaming-selection-design.md),
 [the validation report](docs/prepared-dictionary-validation.md) and
 [the compiled-frame comparison](docs/prepared-dictionary-analysis.md#compiled-frame-comparison-item-9).
 
