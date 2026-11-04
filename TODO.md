@@ -234,29 +234,55 @@ ignored. Native CCtx workspace reuse, prefix replacement, parameter resets that
 clear a compiled selection, LDM, workers and complete upstream parity remain
 open.
 
-## Module 39: streaming selection lifecycle and frame-flag parameters (next)
+## Module 39: streaming selection lifecycle and frame-flag parameters (complete)
+
+Completed within its bounded streaming selection scope. `CompiledStreamEncoder`
+owns exactly one selection: an owned `CompiledDictionary` or a borrowed
+one-frame `DictionaryView` prefix, mutually exclusive and moved by value so
+compiled tables are never cloned. `set_prefix` and `set_compiled` replace the
+selection at a clean boundary and return the displaced compiled state intact;
+an empty prefix detaches it; frame initialization claims a pending prefix
+exactly once, installs the active selection's entropy seed and identifier, and
+releases the claim at frame completion. `set_compiled` requires the
+construction profile, and every compiled frame revalidates that fixed profile
+instead of re-resolving parameters. `reset_parameters` restores default frame
+flags and removes the selection at a clean boundary or completed frame while
+returning the compiled value; `reset_all` accepts every phase; frames after
+removal continue dictionary-free under the fixed profile; no table is ever
+reseeded. Twenty unit tests and eight public integration tests cover
+replacement, detach, claim-once, profile enforcement, prefix families and
+window wrap, formatted-prefix seeding, body equality with the one-shot
+parameterized dictionary frame, reset boundaries and allocator release. Twelve
+guarded native lifecycle schedules, including mid-frame stage errors and
+native-only Optimal/Ultra2 controls, plus the 79-command matrix and the
+11,520-sample timing campaign are recorded in
+`docs/streaming-selection-validation.md`, `docs/evidence/2026-11-04-*` and the
+2026-11-04 receipts. Prefix-only construction, pledged-source window
+adjustment, native attach/load workspace reuse, LDM, workers and complete
+upstream parity remain open.
+
+## Module 40: dictionary-free reference streaming frames (next)
 
 Decompose before implementation; do not start until this checklist is reviewed.
 
-- [x] Analyze pinned one-frame prefix versus CDict replacement, parameter-only
-  reset and pledged-source window updates in streaming frames.
-  (`docs/streaming-selection-analysis.md`)
-- [x] Design a selection owner that can hold either a compiled dictionary or a
-  one-frame prefix without cloning compiled tables or shortening lifetimes.
-  (`docs/streaming-selection-design.md`)
-- [x] Add one-frame prefix selection and mutual clearing at frame
-  initialization, with fixed-profile revalidation for compiled frames.
-- [x] Add a parameter-reset contract for frame flags and selection removal with
-  exact error boundaries and no per-frame table seeding.
-- [x] Qualify guarded native replacement/reset schedules and unsupported
-  combinations.
-- [x] Qualify atomic-free ARM, every isolated feature/all features, release,
+- [ ] Analyze pinned dictionary-free streaming frame initialization, per-frame
+  cParams re-resolution from the pledged source size, and window descriptor
+  selection without a dictionary.
+- [ ] Design a streaming coordinator constructed from a compression parameter
+  request without compiled tables, with per-frame plan rebuilds from the
+  resolved record and a pledged-source window contract.
+- [ ] Implement dictionary-free streaming frames across the six admitted
+  reference families with the existing Continue/Flush/Finish, pledge and poison
+  contracts.
+- [ ] Implement prefix-only construction and pledged window descriptor updates
+  that the compiled coordinator deferred.
+- [ ] Qualify guarded native dictionary-free streaming schedules, including
+  pledged-size and window-descriptor interop.
+- [ ] Qualify atomic-free ARM, every isolated feature/all features, release,
   no_std and strict Clippy.
-  (`docs/evidence/2026-11-04-streaming-selection-feature-matrix.json`)
-- [x] Compare selection-reset and replacement workloads after CPU barriers with
-  independent repeats.
-- [ ] Reconcile bounded streaming selection coverage and decompose the next
-  contract.
+- [ ] Compare dictionary-free streaming workloads after CPU barriers with
+  independent repeats against the named-policy encoder.
+- [ ] Reconcile bounded streaming coverage and decompose the next contract.
 
 ## Roadmap
 

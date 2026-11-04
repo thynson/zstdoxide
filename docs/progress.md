@@ -1757,3 +1757,49 @@ multi-block Fast case at 0.941, so no universal benefit is claimed. Completed
 tasks are archived in Git history. Prefix replacement, parameter resets that
 clear a selection, native attach/load workspace reuse, LDM, workers, shared
 compiled handles and complete upstream parity remain open.
+
+## Module 39: streaming selection lifecycle and frame-flag parameters (complete)
+
+Completed within its bounded streaming selection scope. `CompiledStreamEncoder`
+owns one selection: an owned `CompiledDictionary<'a, B>` or a borrowed
+one-frame `DictionaryView<'a>` prefix, mutually exclusive and moved by value so
+compiled tables are never cloned. `set_prefix` and `set_compiled` replace the
+selection at a clean boundary and return the displaced compiled state intact;
+an empty prefix detaches it like the upstream empty reference call; frame
+initialization claims a pending prefix exactly once, installs the active
+selection's entropy seed and identifier, and releases the claim at frame
+completion. `set_compiled` requires the construction profile, and compiled
+frames revalidate that fixed profile at every frame initialization instead of
+re-resolving parameters. `reset_parameters` mirrors `ZSTD_reset_parameters` at
+a clean boundary or a completed frame, restoring default frame flags, removing
+the selection and returning the compiled value; `reset_all` accepts every
+phase; frames after removal continue dictionary-free under the fixed profile;
+no table is reseeded on any path.
+
+Twenty focused unit tests and eight public integration tests cover replacement
+with intact state, detach, claim-once semantics, boundary refusals, profile
+mismatch rejection, prefix frames across all six admitted families with window
+wrap, formatted-prefix identifier and entropy seeding, body equality with the
+one-shot parameterized dictionary frame, reset boundaries and defaults,
+reset-all recovery and allocator release across transitions. Twelve typed
+native lifecycle schedules run identical sequences against normal and
+sanitized pinned v1.5.7 controls with mid-frame reference and parameter-reset
+stage errors; Optimal/Ultra2 prefix controls stay native-only with Rust
+construction rejected. Every Rust frame decodes natively and every native
+frame decodes in Rust with the attachment that produced it.
+
+All 79 feature/release commands pass on the frozen source: safe/all and every
+22 isolated unsafe feature run complete tests, true no_std and strict Clippy,
+with safe/all release, concrete thumbv6m safe/all checks with release
+IR/objects, and formatting. Every suite reports 127 result groups, 1867 passed
+and 80 ignored with zero failures. Eighteen streaming workloads compare
+session-reset reuse against per-frame prefix replacement with two rounds of
+forty samples after CPU barriers and two independent runs per configuration;
+all four ledgers are byte-identical across 11,520 samples. Primary safe
+replacement/session geometric-mean ratio is 1.4078 (repeats and all-feature
+runs 1.4354/1.4208/1.4629): the replacement cycle costs more because prefix
+frames seed per-call tables every block. No universal benefit is claimed. No
+Miri ran because no unsafe code was added. Completed tasks are archived in Git
+history. Prefix-only construction, pledged-source window adjustment, native
+attach/load workspace reuse, LDM, workers and complete upstream parity remain
+open.
