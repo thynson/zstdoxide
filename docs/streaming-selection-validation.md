@@ -134,3 +134,28 @@ workloads, which is expected: the replacement role additionally seeds the
 prefix into per-call tables every block. No universal, tree-shape, allocation or
 native workspace claim follows. Raw samples and the complete per-case table are
 in `evidence/2026-11-04-streaming-selection-benchmarks.json`.
+
+## Concrete atomic-free ARM and static checks
+
+`cargo check -Zbuild-std=core,alloc --target thumbv6m-none-eabi
+--no-default-features` passes for safe and for all 22 opt-in unsafe features
+together. Release LLVM IR and object emission pass for both configurations and
+the artifacts are retained. Safe and all-feature host Clippy with `-D warnings`
+and `cargo fmt --check` pass. No Miri ran because this module added no unsafe
+code, per the standing direction.
+
+## Complete feature and release regression
+
+All 79 commands pass on the frozen Module39 source: safe/all and every one of
+the 22 isolated unsafe features run the complete test suite, true no_std
+compilation and strict Clippy; safe/all release, concrete thumbv6m checks with
+release IR/objects, and formatting also pass. Every complete/release suite
+reports 127 result groups, 1867 passed and 80 ignored with zero failures;
+ignored tests are not credited. Evidence:
+`evidence/2026-11-04-streaming-selection-feature-matrix.json`.
+
+## Remaining scope
+
+Prefix-only construction, pledged-source window adjustment, native
+attach-versus-load workspace reuse, LDM, workers and complete upstream parity
+remain open. Native byte/workspace identity is not claimed.

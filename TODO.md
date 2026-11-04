@@ -250,8 +250,9 @@ Decompose before implementation; do not start until this checklist is reviewed.
   exact error boundaries and no per-frame table seeding.
 - [x] Qualify guarded native replacement/reset schedules and unsupported
   combinations.
-- [ ] Qualify atomic-free ARM, every isolated feature/all features, release,
+- [x] Qualify atomic-free ARM, every isolated feature/all features, release,
   no_std and strict Clippy.
+  (`docs/evidence/2026-11-04-streaming-selection-feature-matrix.json`)
 - [x] Compare selection-reset and replacement workloads after CPU barriers with
   independent repeats.
 - [ ] Reconcile bounded streaming selection coverage and decompose the next
