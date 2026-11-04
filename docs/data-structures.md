@@ -4209,3 +4209,22 @@ compressed block and carries wire repeats across blocks. The frame header is
 the non-single-segment streaming form with the compiled window log, optional
 pledge, optional checksum and compiled identifier. Slice-lifetime, profile and
 history invariants are recorded in `compiled-streaming-design.md`.
+
+Module 39 adds the selection owner to that coordinator. `compiled:
+Option<CompiledDictionary<'a, B>>`, `prefix: Option<DictionaryView<'a>>` and
+`active_prefix: Option<DictionaryView<'a>>` replace the single owned field.
+The invariant keeps `compiled` and `prefix` mutually exclusive; the pending
+prefix moves to `active_prefix` at frame initialization and never survives a
+frame boundary, while the compiled selection survives every frame. Selection
+replacement moves the compiled state by value back to the caller — no table,
+entropy or content clone exists on any path — and a replacement state must
+match the construction profile, which keeps window, block limit and per-frame
+plans fixed. Prefix blocks stage the last `min(prefix.len(), window)` bytes
+ahead of the history and seed per-call tables over the staged suffix plus
+history through `ReferenceSearchState::new_with_prefix`; no-selection blocks
+stage only the history. The frame header carries the active selection's
+nonzero ID, and a formatted prefix's entropy seeds the first block like the
+compiled seed. `CompiledDictionary` ownership, upstream counterparts
+(`ZSTD_CCtx_refCDict`, `ZSTD_CCtx_refPrefix_advanced`, the reset directives
+and `ZSTD_CCtx_init_compressStream2` single usage) and the recorded
+pledged-window deviation are specified in `streaming-selection-design.md`.

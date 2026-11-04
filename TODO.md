@@ -241,8 +241,9 @@ Decompose before implementation; do not start until this checklist is reviewed.
 - [x] Analyze pinned one-frame prefix versus CDict replacement, parameter-only
   reset and pledged-source window updates in streaming frames.
   (`docs/streaming-selection-analysis.md`)
-- [ ] Design a selection owner that can hold either a compiled dictionary or a
+- [x] Design a selection owner that can hold either a compiled dictionary or a
   one-frame prefix without cloning compiled tables or shortening lifetimes.
+  (`docs/streaming-selection-design.md`)
 - [ ] Add one-frame prefix selection and mutual clearing at frame
   initialization, with fixed-profile revalidation for compiled frames.
 - [ ] Add a parameter-reset contract for frame flags and selection removal with
