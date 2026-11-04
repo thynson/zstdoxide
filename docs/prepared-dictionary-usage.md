@@ -139,6 +139,18 @@ the checksum, an optional pledge and the content-size/dictionary-ID flags.
 compiled first-block entropy seed again. A processing error poisons the stream
 until reset.
 
+The selection itself follows the upstream reference lifecycle. `set_prefix`
+replaces the compiled state with a borrowed one-frame prefix and returns the
+displaced compiled value intact; the next frame initialization claims that
+prefix exactly once, the frame header carries a formatted prefix's identifier
+and its prepared entropy seeds the first block, and every later frame runs
+dictionary-free until a new selection is chosen. `set_compiled` restores a
+compiled selection whose parameters equal the construction profile and clears
+a pending prefix. Only a clean boundary (before the first `process` of a
+frame) accepts selection changes; `selection()` reports the active view.
+Empty prefixes detach the selection like the upstream empty
+`ZSTD_CCtx_refPrefix_advanced` call.
+
 Block history is retained contiguously for at most the resolved window, so
 cross-block matches and repeat offsets keep their wire distances and compiled
 candidates become unreachable exactly when the decoder's window would reject

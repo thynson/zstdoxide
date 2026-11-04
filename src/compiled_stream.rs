@@ -1,16 +1,22 @@
-//! Incremental compiled-dictionary frames over the reference block engine.
+//! Incremental frames over one streaming dictionary selection.
 //!
-//! One borrowed [`CompiledDictionary`](crate::CompiledDictionary) supplies the
-//! immutable candidates and first-block entropy for every frame. The stream
-//! retains at most one input block, one combined staging buffer bounded by the
-//! resolved window plus one block, the last window bytes of frame history, and
-//! pending output. Every sealed block re-binds a reference search state over
-//! `compiled suffix | retained history | block`, so compiled positions keep
-//! their suffix-relative meaning and retained history remains offset-exact.
+//! The coordinator holds either one owned [`CompiledDictionary`](crate::CompiledDictionary)
+//! — whose immutable candidates and first-block entropy seed every frame — or
+//! a borrowed one-frame [`DictionaryView`] prefix that the next frame
+//! initialization claims exactly once, mirroring `ZSTD_CCtx_refCDict`,
+//! `ZSTD_CCtx_refPrefix_advanced` and the single-usage prefix of
+//! `ZSTD_CCtx_init_compressStream2`. The stream retains at most one input
+//! block, one combined staging buffer bounded by the resolved window plus one
+//! block, the last window bytes of frame history, and pending output. Every
+//! sealed block re-binds a reference search state over the staged selection
+//! suffix, the retained history and the block, so staged positions keep their
+//! suffix-relative meaning and retained history remains offset-exact.
 //!
-//! Upstream counterparts are the CDict attach and per-frame initialization of
-//! `ZSTD_CCtx_refCDict` and `ZSTD_compressStream2`; native attach-versus-load
-//! workspace reuse, parameter resets and prefix replacement are not implied.
+//! The seven-field profile, window and block geometry are fixed by the
+//! compiled construction state and survive every selection change; each
+//! compiled frame revalidates them instead of re-resolving parameters. Native
+//! attach-versus-load workspace reuse, pledged-source window re-resolution and
+//! byte identity with native prefix frames are not implied.
 #![forbid(unsafe_code)]
 
 use alloc::alloc::{Allocator, Global};
@@ -20,6 +26,7 @@ use core::fmt;
 use crate::block_entropy::BlockEntropyEncoder;
 use crate::compiled_dictionary::CompiledDictionary;
 use crate::frame::{MAGIC, MAX_BLOCK_SIZE};
+use crate::huffman_codebook::HuffmanCodebook;
 use crate::literal_encode::LiteralEncoder;
 use crate::reference_policy::raw_literals;
 use crate::reference_search::{ReferenceSearchPlan, ReferenceSearchState};
@@ -75,16 +82,23 @@ struct LatchedDirective {
     remaining: usize,
 }
 
-/// A reusable incremental encoder over one immutable compiled dictionary.
+/// A reusable incremental encoder over one streaming dictionary selection.
 ///
-/// The compiled state is borrowed for the whole stream and is never cloned,
-/// reseeded or mutated. Each sealed block builds a per-block parser over the
-/// compiled suffix, the retained frame history and the block; those parser
-/// owners are released when the block ends. Input and output slices expire at
-/// the end of each call. Allocation is fallible and bounded by the resolved
-/// window and one block.
+/// Construction takes one immutable compiled dictionary, which fixes the
+/// profile, window and block geometry for the coordinator's whole life. The
+/// selection itself can be replaced by a compiled state with the same profile
+/// or by a borrowed one-frame prefix; compiled tables are never cloned,
+/// reseeded or mutated, and a prefix is claimed by exactly one frame. Each
+/// sealed block builds a per-block parser over the staged selection suffix,
+/// the retained frame history and the block; those parser owners are released
+/// when the block ends. Input and output slices expire at the end of each
+/// call. Allocation is fallible and bounded by the resolved window and one
+/// block.
 pub struct CompiledStreamEncoder<'a, A: Allocator + Clone = Global, B: Allocator + Clone = Global> {
-    compiled: CompiledDictionary<'a, B>,
+    compiled: Option<CompiledDictionary<'a, B>>,
+    prefix: Option<DictionaryView<'a>>,
+    active_prefix: Option<DictionaryView<'a>>,
+    profile: ResolvedCompressionParameters,
     options: CompiledStreamOptions,
     block: Vec<u8, A>,
     combined: Vec<u8, A>,
@@ -132,29 +146,34 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         Self::with_options_in(compiled, CompiledStreamOptions::default(), allocator)
     }
 
-    /// Validate options and create a fresh frame.
+    /// Validate frame options and create a fresh frame.
     ///
     /// Only scalar frame flags are validated. The strategy, window, tables and
     /// entropy remain the compiled profile's. A profile whose window cannot be
     /// described by the supported reference frame header is rejected with
-    /// [`Error::UnsupportedFeature`] before the first allocation.
+    /// [`Error::UnsupportedFeature`] before the first allocation. The compiled
+    /// state becomes the initial selection and its parameters are the fixed
+    /// profile of the coordinator.
     pub fn with_options_in(
         compiled: CompiledDictionary<'a, B>,
         options: CompiledStreamOptions,
         allocator: A,
     ) -> Result<Self> {
-        let parameters = compiled.parameters();
+        let profile = compiled.parameters();
         let window_size = 1_usize
-            .checked_shl(u32::from(parameters.window_log()))
+            .checked_shl(u32::from(profile.window_log()))
             .ok_or(Error::ResourceLimit)?;
         // The per-block plan builds `ReferenceFrameSettings`; reject a profile
         // outside that bounded window range before any owner is created.
-        if !(10..=21).contains(&parameters.window_log()) {
+        if !(10..=21).contains(&profile.window_log()) {
             return Err(Error::UnsupportedFeature);
         }
         let block_limit = window_size.min(MAX_BLOCK_SIZE);
         Ok(Self {
-            compiled,
+            compiled: Some(compiled),
+            prefix: None,
+            active_prefix: None,
+            profile,
             options,
             block: Vec::new_in(allocator.clone()),
             combined: Vec::new_in(allocator.clone()),
@@ -179,14 +198,31 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         })
     }
 
-    /// Borrow the immutable compiled dictionary view.
-    pub const fn dictionary(&self) -> DictionaryView<'a> {
-        self.compiled.view()
+    /// Borrow the selected dictionary view.
+    ///
+    /// This is the compiled view while a compiled dictionary is selected, the
+    /// pending prefix before the next frame claims it, the active prefix while
+    /// its frame is running, and `None` after the prefix frame completed or a
+    /// selection was removed.
+    pub const fn selection(&self) -> Option<DictionaryView<'a>> {
+        if let Some(prefix) = self.active_prefix {
+            Some(prefix)
+        } else if let Some(prefix) = self.prefix {
+            Some(prefix)
+        } else {
+            match &self.compiled {
+                Some(compiled) => Some(compiled.view()),
+                None => None,
+            }
+        }
     }
 
     /// The fixed profile every frame of this stream uses.
+    ///
+    /// Selection changes cannot move it; a replacement compiled state must
+    /// carry exactly these parameters.
     pub const fn parameters(&self) -> ResolvedCompressionParameters {
-        self.compiled.parameters()
+        self.profile
     }
 
     /// Current frame settings.
@@ -204,7 +240,7 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         self.total_output
     }
 
-    /// Reachable workspace capacity, excluding inline state and the compiled
+    /// Reachable workspace capacity, excluding inline state and the selected
     /// dictionary's own tables and content borrow.
     pub fn retained_capacity(&self) -> usize {
         self.block.capacity()
@@ -214,13 +250,74 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
             + self.entropy.retained_capacity()
     }
 
-    /// Start another frame while retaining compiled selection, frame options
-    /// and workspace allocations.
+    /// Whether another selection or frame option may be configured now.
     ///
-    /// The per-frame source pledge is cleared and the next frame installs the
-    /// compiled first-block entropy seed again. This also recovers a context
-    /// poisoned by a processing error. Corresponds to session-only
-    /// `ZSTD_CCtx_reset`, with the compiled borrow still selected.
+    /// Only a session that never started a header is a clean boundary, the
+    /// same rule `Encoder` applies. A finished stream returns to it through
+    /// [`Self::reset`].
+    fn check_configuration_boundary(&self) -> Result<()> {
+        if self.phase == Phase::Active && !self.header_started {
+            Ok(())
+        } else {
+            Err(Error::InvalidState)
+        }
+    }
+
+    /// Select `compiled` as the persistent dictionary, replacing the current
+    /// selection.
+    ///
+    /// A pending prefix is discarded and the previously selected compiled
+    /// state is returned to the caller intact — tables move by value, nothing
+    /// is cloned or dropped implicitly. The new state must carry exactly the
+    /// construction profile, otherwise [`Error::InvalidParameter`] precedes
+    /// every mutation. Only a clean configuration boundary accepts selection
+    /// changes. Corresponds to `ZSTD_CCtx_refCDict`, whose referenced CDict
+    /// also replaces every other attachment.
+    pub fn set_compiled(
+        &mut self,
+        compiled: CompiledDictionary<'a, B>,
+    ) -> Result<Option<CompiledDictionary<'a, B>>> {
+        self.check_configuration_boundary()?;
+        if compiled.parameters() != self.profile {
+            return Err(Error::InvalidParameter);
+        }
+        self.prefix = None;
+        Ok(self.compiled.replace(compiled))
+    }
+
+    /// Select a prefix for the next frame, replacing the current selection.
+    ///
+    /// The first process call that starts a header claims this view for that
+    /// frame; later frames run without a selection until a new one is chosen.
+    /// The previously selected compiled state is returned to the caller
+    /// intact. An empty prefix detaches the selection, exactly like the
+    /// upstream empty `ZSTD_CCtx_refPrefix_advanced` call. Only a clean
+    /// configuration boundary accepts selection changes. Corresponds to
+    /// `ZSTD_CCtx_refPrefix_advanced` with the view's own content kind deciding
+    /// identifier and entropy contribution.
+    pub fn set_prefix(
+        &mut self,
+        prefix: DictionaryView<'a>,
+    ) -> Result<Option<CompiledDictionary<'a, B>>> {
+        self.check_configuration_boundary()?;
+        if prefix.content().is_empty() {
+            self.prefix = None;
+            return Ok(self.compiled.take());
+        }
+        let previous = self.compiled.take();
+        self.prefix = Some(prefix);
+        Ok(previous)
+    }
+
+    /// Start another frame while retaining the selection, frame options and
+    /// workspace allocations.
+    ///
+    /// The per-frame source pledge is cleared, the active prefix of a
+    /// completed frame is released and the next frame installs the selection's
+    /// first-block entropy seed again. An unclaimed prefix stays pending and
+    /// is consumed by the next frame, like the upstream session-only reset
+    /// keeping `prefixDict`. This also recovers a context poisoned by a
+    /// processing error. Corresponds to session-only `ZSTD_CCtx_reset`.
     pub fn reset(&mut self) {
         self.options.pledged_size = None;
         self.clear_frame();
@@ -228,9 +325,9 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
 
     /// Reset the session and install new frame options.
     ///
-    /// The compiled selection and every workspace allocation are retained. The
-    /// new options describe the next frame only; the compiled profile, window
-    /// and table geometry cannot be changed.
+    /// The selection, any unclaimed prefix and every workspace allocation are
+    /// retained. The new options describe the next frame only; the fixed
+    /// profile, window and table geometry cannot be changed.
     pub fn reset_with_options(&mut self, options: CompiledStreamOptions) -> Result<()> {
         self.options = options;
         self.clear_frame();
@@ -251,6 +348,7 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         self.header_started = false;
         self.phase = Phase::Active;
         self.latched = None;
+        self.active_prefix = None;
     }
 
     /// Accept a source prefix and write an encoded output prefix.
@@ -371,6 +469,9 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
             if self.phase == Phase::Finishing {
                 self.phase = Phase::Finished;
                 self.latched = None;
+                // The claimed prefix served its one frame; a completed frame
+                // leaves no selection, matching `Encoder`'s released handle.
+                self.active_prefix = None;
                 return Ok(Progress {
                     consumed,
                     produced,
@@ -411,14 +512,47 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         }
     }
 
-    /// Writes the non-single-segment form of `ZSTD_writeFrameHeader` and
-    /// installs the compiled first-block entropy seed.
+    /// Claims the pending prefix, revalidates the fixed profile and writes the
+    /// non-single-segment form of `ZSTD_writeFrameHeader`.
+    ///
+    /// The prefix claim is the upstream single usage at frame initialization:
+    /// a pending view moves to the active slot and serves exactly this frame.
+    /// A compiled selection is revalidated against its construction gate —
+    /// supported window range, loaded suffix within the window and the content
+    /// borrow — before any header byte. The active selection's first-block
+    /// entropy seed is installed the same way for compiled and formatted
+    /// prefix frames.
     fn start_header(&mut self) -> Result<()> {
+        if let Some(prefix) = self.prefix.take() {
+            self.active_prefix = Some(prefix);
+        }
+        if let Some(compiled) = &self.compiled {
+            let parameters = compiled.parameters();
+            if !(10..=21).contains(&parameters.window_log()) {
+                return Err(Error::UnsupportedFeature);
+            }
+            let loaded = compiled.loaded_len();
+            if loaded == 0 || loaded > compiled.content().len() || loaded > self.window_size {
+                return Err(Error::InvalidParameter);
+            }
+        }
+        let seed = if let Some(prefix) = self.active_prefix {
+            prefix
+                .entropy()
+                .map(|view| {
+                    HuffmanCodebook::from_lengths(&view.huffman.code_lengths(), 12)
+                        .map(|table| (view, table))
+                })
+                .transpose()?
+        } else if let Some(compiled) = &self.compiled {
+            compiled.first_block_seed()
+        } else {
+            None
+        };
         self.pending
             .try_reserve_exact(18)
             .map_err(|_| Error::AllocationFailed)?;
-        let parameters = self.compiled.parameters();
-        let seed = self.compiled.first_block_seed();
+        let parameters = self.profile;
         let (entropy, literal_table) = match seed {
             Some((entropy, table)) => (Some(entropy), Some(table)),
             None => (None, None),
@@ -428,7 +562,13 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
             self.pending.push(byte);
         }
         let dictionary_id = if self.options.include_dictionary_id {
-            self.compiled.dictionary_id()
+            if let Some(prefix) = self.active_prefix {
+                prefix.id()
+            } else if let Some(compiled) = &self.compiled {
+                compiled.dictionary_id()
+            } else {
+                0
+            }
         } else {
             0
         };
@@ -468,6 +608,12 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
     /// capacity. A failure therefore appends nothing for this block, and the
     /// caller poisons the stream because parser/entropy scratch may already
     /// have advanced.
+    ///
+    /// The parser binds by selection: a compiled dictionary stages its loaded
+    /// suffix and consults the compiled candidates without a seeding pass; a
+    /// claimed prefix stages its last in-window bytes and seeds the per-call
+    /// tables over the staged suffix plus history, exactly like the upstream
+    /// per-frame prefix load; an empty selection stages only the history.
     fn seal_block(&mut self, last: bool) -> Result<()> {
         if last
             && self
@@ -492,16 +638,45 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
             self.phase = Phase::Finishing;
             return Ok(());
         }
-        let plan = ReferenceSearchPlan::from_resolved(self.compiled.parameters(), block_len)?;
-        let candidates = self.compiled.search_candidates()?;
-        let loaded = self.compiled.loaded_len();
+        let plan = ReferenceSearchPlan::from_resolved(self.profile, block_len)?;
         let history_len = usize::try_from(self.frame_position)
             .map_err(|_| Error::ResourceLimit)?
             .min(self.window_size);
         if self.history.len() != history_len {
             return Err(Error::InvalidState);
         }
-        let combined_len = loaded
+        // Bind the selection staging before any output byte. A compiled
+        // dictionary and a claimed prefix are mutually exclusive, and every
+        // slice below either carries the `'a` content borrow or a disjoint
+        // field borrow, so the combined staging mutation cannot alias them.
+        let active_prefix = self.active_prefix;
+        let (staged, staged_bytes, candidates) = if let Some(compiled) = self.compiled.as_ref() {
+            let loaded = compiled.loaded_len();
+            let content: &'a [u8] = compiled.content();
+            if loaded == 0
+                || loaded > content.len()
+                || loaded > self.window_size
+                || !plan.admits_dictionary_staging()
+            {
+                return Err(Error::InvalidParameter);
+            }
+            let candidates = compiled.search_candidates()?;
+            (
+                loaded,
+                Some(&content[content.len() - loaded..]),
+                Some(candidates),
+            )
+        } else if let Some(prefix) = active_prefix {
+            let content: &'a [u8] = prefix.content();
+            let staged = content.len().min(self.window_size);
+            if staged > 0 && !plan.admits_dictionary_staging() {
+                return Err(Error::UnsupportedFeature);
+            }
+            (staged, Some(&content[content.len() - staged..]), None)
+        } else {
+            (0, None, None)
+        };
+        let combined_len = staged
             .checked_add(history_len)
             .and_then(|value| value.checked_add(block_len))
             .ok_or(Error::ResourceLimit)?;
@@ -509,27 +684,29 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         self.combined
             .try_reserve_exact(combined_len)
             .map_err(|_| Error::AllocationFailed)?;
-        let content = self.compiled.content();
-        if loaded == 0
-            || loaded > content.len()
-            || loaded > self.window_size
-            || !plan.admits_dictionary_staging()
-        {
-            return Err(Error::InvalidParameter);
+        if let Some(bytes) = staged_bytes {
+            self.combined.extend_from_slice(bytes);
         }
-        self.combined
-            .extend_from_slice(&content[content.len() - loaded..]);
         self.combined.extend_from_slice(&self.history);
         self.combined.extend_from_slice(&self.block);
 
         let initial_repeat = self.entropy.sequence_encoder.committed_repeats();
-        let mut search = ReferenceSearchState::new_with_compiled(
-            &self.combined,
-            loaded + history_len,
-            plan,
-            &self.allocator,
-            candidates,
-        )?;
+        let mut search = if let Some(candidates) = candidates {
+            ReferenceSearchState::new_with_compiled(
+                &self.combined,
+                staged + history_len,
+                plan,
+                &self.allocator,
+                candidates,
+            )?
+        } else {
+            ReferenceSearchState::new_with_prefix(
+                &self.combined,
+                staged + history_len,
+                plan,
+                &self.allocator,
+            )?
+        };
         let parsed = search.parse_next(block_len, initial_repeat)?;
         let worthwhile = if parsed {
             self.entropy.prepare_reference(
@@ -537,7 +714,7 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
                 search.sequences(),
                 initial_repeat,
                 block_len,
-                raw_literals(self.compiled.parameters()),
+                raw_literals(self.profile),
             )?
         } else {
             false
@@ -625,6 +802,15 @@ impl<A: Allocator + Clone, B: Allocator + Clone> fmt::Debug for CompiledStreamEn
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("CompiledStreamEncoder")
             .field("options", &self.options)
+            .field(
+                "selection",
+                &match (&self.compiled, self.prefix, self.active_prefix) {
+                    (Some(_), _, _) => "compiled",
+                    (_, Some(_), _) => "pending prefix",
+                    (_, _, Some(_)) => "active prefix",
+                    (None, None, None) => "none",
+                },
+            )
             .field("phase", &self.phase)
             .field("total_input", &self.total_input)
             .field("total_output", &self.total_output)
@@ -665,6 +851,12 @@ mod tests {
             allocator,
         )
         .unwrap()
+    }
+
+    /// Compare selections by content slices; `DictionaryView` carries no
+    /// structural equality and every selection shares the same `'a` borrow.
+    fn selection_content<'a>(encoder: &CompiledStreamEncoder<'a, Global>) -> Option<&'a [u8]> {
+        encoder.selection().map(|view| view.content())
     }
 
     /// Feed `input` in `chunk`-sized pieces with a small caller output buffer,
@@ -1043,6 +1235,405 @@ mod tests {
             let monitor = allocator.monitor();
             let mut encoder = CompiledStreamEncoder::new_in(compiled, allocator.clone()).unwrap();
             let mut output = [0_u8; 128];
+            let _ = encoder.process(&content, &mut output, EndDirective::Finish);
+            drop(encoder);
+            drop(allocator);
+            monitor.assert_released();
+        }
+    }
+
+    #[test]
+    fn prefix_selection_replaces_the_compiled_state_and_claims_for_one_frame() {
+        let content = pattern(0x5eed_c0de, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let compiled = compiled(&dictionary, 4, Global);
+        let mut encoder = CompiledStreamEncoder::new_in(compiled, Global).unwrap();
+        let mut compiled_frames = Vec::new();
+        for _ in 0..2 {
+            compiled_frames.push(stream(&mut encoder, &content[..2000], 700, 13));
+            encoder.reset();
+        }
+        assert_eq!(compiled_frames[0], compiled_frames[1]);
+        assert_eq!(
+            selection_content(&encoder),
+            Some(dictionary.view().content())
+        );
+
+        // A raw prefix replaces the compiled selection and returns it intact.
+        let prefix_owner = Dictionary::raw(&content[..1024]).unwrap();
+        let displaced = encoder.set_prefix(prefix_owner.view()).unwrap();
+        assert!(displaced.is_some());
+        assert_eq!(
+            selection_content(&encoder),
+            Some(prefix_owner.view().content())
+        );
+        let prefix_frame = stream(&mut encoder, &content[..2000], 700, 13);
+        let (header, _) = FrameHeader::parse(&prefix_frame).unwrap();
+        // A raw prefix contributes no identifier.
+        assert_eq!(header.dictionary_id, 0);
+        assert_eq!(header.window_size, 1 << encoder.parameters().window_log());
+        assert_eq!(
+            decompress_with_dictionary_in(
+                &prefix_frame,
+                &prefix_owner.view(),
+                DecodeOptions::new(2000),
+                Global,
+            )
+            .unwrap(),
+            &content[..2000]
+        );
+        // The claimed prefix served exactly one frame: the completed frame
+        // leaves no selection, and the next frame decodes dictionary-free.
+        assert_eq!(selection_content(&encoder), None);
+        encoder.reset();
+        assert_eq!(selection_content(&encoder), None);
+        let plain_frame = stream(&mut encoder, b"plain tail content", 9, 7);
+        let (plain_header, _) = FrameHeader::parse(&plain_frame).unwrap();
+        assert_eq!(plain_header.dictionary_id, 0);
+        assert_eq!(
+            crate::decompress_in(&plain_frame, 18, Global).unwrap(),
+            b"plain tail content"
+        );
+
+        // The displaced compiled state still produces its original frames.
+        let mut restored = CompiledStreamEncoder::new_in(displaced.unwrap(), Global).unwrap();
+        assert_eq!(
+            stream(&mut restored, &content[..2000], 700, 13),
+            compiled_frames[0]
+        );
+    }
+
+    #[test]
+    fn selection_changes_reject_every_non_clean_boundary() {
+        let content = pattern(0x0d15_ea5e, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let replacement = compiled(&dictionary, 4, Global);
+        let prefix_owner = Dictionary::raw(&content[..512]).unwrap();
+        let mut encoder =
+            CompiledStreamEncoder::new_in(compiled(&dictionary, 1, Global), Global).unwrap();
+        let mut output = [0_u8; 128];
+        // Mid-frame: part of the input staged, header started.
+        encoder
+            .process(&content[..40], &mut output, EndDirective::Continue)
+            .unwrap();
+        assert_eq!(
+            selection_content(&encoder),
+            Some(dictionary.view().content())
+        );
+        assert!(matches!(
+            encoder.set_prefix(prefix_owner.view()),
+            Err(Error::InvalidState)
+        ));
+        assert!(matches!(
+            encoder.set_compiled(replacement),
+            Err(Error::InvalidState)
+        ));
+        assert_eq!(
+            selection_content(&encoder),
+            Some(dictionary.view().content())
+        );
+        assert!(
+            encoder
+                .reset_with_options(CompiledStreamOptions::default())
+                .is_ok()
+        );
+        // Finishing and failed phases are refused without mutation.
+        encoder
+            .process(&content[..40], &mut [0_u8; 128], EndDirective::Finish)
+            .unwrap();
+        loop {
+            match encoder.process(&[], &mut [0_u8; 128], EndDirective::Finish) {
+                Ok(progress) if progress.status == StreamStatus::FrameFinished => break,
+                Ok(_) => {}
+                Err(error) => panic!("finish failed: {error:?}"),
+            }
+        }
+        assert!(matches!(
+            encoder.set_prefix(prefix_owner.view()),
+            Err(Error::InvalidState)
+        ));
+        // The compiled selection survives frame completion until reset.
+        assert_eq!(
+            selection_content(&encoder),
+            Some(dictionary.view().content())
+        );
+        encoder.reset();
+        assert_eq!(
+            selection_content(&encoder),
+            Some(dictionary.view().content())
+        );
+        // A poisoned context refuses configuration like any active frame.
+        let mut pledged = CompiledStreamEncoder::with_options_in(
+            compiled(&dictionary, 1, Global),
+            CompiledStreamOptions {
+                pledged_size: Some(3),
+                ..CompiledStreamOptions::default()
+            },
+            Global,
+        )
+        .unwrap();
+        assert_eq!(
+            pledged.process(&content[..9], &mut output, EndDirective::Finish),
+            Err(Error::ContentSizeMismatch)
+        );
+        assert!(matches!(
+            pledged.set_prefix(prefix_owner.view()),
+            Err(Error::InvalidState)
+        ));
+        pledged.reset();
+        assert_eq!(
+            selection_content(&pledged),
+            Some(dictionary.view().content())
+        );
+    }
+
+    #[test]
+    fn set_compiled_requires_the_construction_profile_and_clears_prefix() {
+        let content = pattern(0x3c0d_e5ed, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let mut request = CompressionParameterRequest::with_level(4);
+        request.set_window_log(15).unwrap();
+        let pinned = CompiledDictionary::new(dictionary.view(), &request, Global).unwrap();
+        let other_level = compiled(&dictionary, 9, Global);
+        let mut encoder = CompiledStreamEncoder::new_in(pinned, Global).unwrap();
+        // A different profile is rejected before any mutation.
+        assert!(matches!(
+            encoder.set_compiled(other_level),
+            Err(Error::InvalidParameter)
+        ));
+        assert_eq!(
+            selection_content(&encoder),
+            Some(dictionary.view().content())
+        );
+        // The same profile replaces the selection and clears a pending prefix.
+        let prefix_owner = Dictionary::raw(&content[..512]).unwrap();
+        assert!(encoder.set_prefix(prefix_owner.view()).unwrap().is_some());
+        let twin = CompiledDictionary::new(dictionary.view(), &request, Global).unwrap();
+        // Only the pending prefix was selected, so the replacement returns no
+        // compiled state while clearing it.
+        let previous = encoder.set_compiled(twin).unwrap();
+        assert!(previous.is_none());
+        assert!(encoder.prefix.is_none());
+        assert_eq!(
+            selection_content(&encoder),
+            Some(dictionary.view().content())
+        );
+        // The replacement produces identical frames to the construction state.
+        let baseline = stream(&mut encoder, &content[..1500], 500, 31);
+        let mut reference = CompiledStreamEncoder::with_options_in(
+            CompiledDictionary::new(dictionary.view(), &request, Global).unwrap(),
+            CompiledStreamOptions::default(),
+            Global,
+        )
+        .unwrap();
+        assert_eq!(stream(&mut reference, &content[..1500], 500, 31), baseline);
+    }
+
+    #[test]
+    fn empty_prefix_detaches_the_selection_like_the_upstream_empty_reference() {
+        let content = pattern(0xd2a7_1eaf, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let mut encoder =
+            CompiledStreamEncoder::new_in(compiled(&dictionary, 3, Global), Global).unwrap();
+        let empty = Dictionary::raw(b"").unwrap();
+        let previous = encoder.set_prefix(empty.view()).unwrap();
+        assert!(previous.is_some());
+        assert_eq!(selection_content(&encoder), None);
+        // Frames continue dictionary-free under the fixed profile.
+        let frame = stream(&mut encoder, &content[..600], 200, 17);
+        let (header, _) = FrameHeader::parse(&frame).unwrap();
+        assert_eq!(header.dictionary_id, 0);
+        assert_eq!(
+            crate::decompress_in(&frame, 600, Global).unwrap(),
+            &content[..600]
+        );
+        // A second empty prefix after reset is accepted and returns no
+        // compiled state.
+        encoder.reset();
+        assert!(encoder.set_prefix(empty.view()).unwrap().is_none());
+        assert_eq!(selection_content(&encoder), None);
+    }
+
+    #[test]
+    fn session_reset_keeps_an_unclaimed_prefix_pending() {
+        let content = pattern(0xcafe_babe, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let prefix_owner = Dictionary::raw(&content[2048..]).unwrap();
+        let mut encoder =
+            CompiledStreamEncoder::new_in(compiled(&dictionary, 4, Global), Global).unwrap();
+        assert!(encoder.set_prefix(prefix_owner.view()).unwrap().is_some());
+        encoder.reset();
+        // The unclaimed prefix survives the session reset and seeds the next
+        // frame exactly once.
+        assert_eq!(
+            selection_content(&encoder),
+            Some(prefix_owner.view().content())
+        );
+        let frame = stream(&mut encoder, &content[..1000], 400, 23);
+        assert_eq!(
+            decompress_with_dictionary_in(
+                &frame,
+                &prefix_owner.view(),
+                DecodeOptions::new(1000),
+                Global,
+            )
+            .unwrap(),
+            &content[..1000]
+        );
+        assert_eq!(selection_content(&encoder), None);
+        // reset_with_options also keeps the selection contract.
+        encoder.reset();
+        assert!(encoder.set_prefix(prefix_owner.view()).unwrap().is_none());
+        encoder
+            .reset_with_options(CompiledStreamOptions {
+                checksum: true,
+                ..CompiledStreamOptions::default()
+            })
+            .unwrap();
+        assert_eq!(
+            selection_content(&encoder),
+            Some(prefix_owner.view().content())
+        );
+    }
+
+    #[test]
+    fn prefix_frames_roundtrip_across_all_admitted_families_and_wrap_the_window() {
+        let content = pattern(0x51ee_d1ce, 8192);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        // The prefix is larger than the level-10 window of level 1, so the
+        // staged suffix caps at the resolved window like an oversized upstream
+        // prefix truncating to its table suffix.
+        let prefix_owner = Dictionary::raw(&content[..4096]).unwrap();
+        for level in [1, 3, 4, 5, 7, 9] {
+            let mut encoder =
+                CompiledStreamEncoder::new_in(compiled(&dictionary, level, Global), Global)
+                    .unwrap();
+            encoder.set_prefix(prefix_owner.view()).unwrap().unwrap();
+            // Dictionary repeats plus a cross-boundary run force candidates
+            // into the staged prefix, the retained history and the block.
+            let mut input = Vec::new();
+            for _ in 0..9 {
+                input.extend_from_slice(&content[0..600]);
+                input.extend_from_slice(&content[3000..3600]);
+                input.extend_from_slice(b"prefix-block-boundary");
+            }
+            let frame = stream(&mut encoder, &input, 331, 19);
+            let (header, _) = FrameHeader::parse(&frame).unwrap();
+            assert_eq!(header.dictionary_id, 0, "level {level}");
+            assert_eq!(
+                decompress_with_dictionary_in(
+                    &frame,
+                    &prefix_owner.view(),
+                    DecodeOptions::new(input.len()),
+                    Global,
+                )
+                .unwrap(),
+                input,
+                "level {level}"
+            );
+            assert_eq!(selection_content(&encoder), None, "level {level}");
+        }
+    }
+
+    #[test]
+    fn formatted_prefix_writes_identifier_and_seeds_the_first_block() {
+        let prepared = Dictionary::from_bytes(include_bytes!(
+            "../tests/upstream/dictionaries/formatted.dict"
+        ))
+        .unwrap();
+        let text =
+            include_bytes!("../tests/upstream/dictionaries/dictionary-treeless-literals.expected");
+        let dictionary = Dictionary::raw(&pattern(0xf072_e47e, 4096)).unwrap();
+        let mut encoder =
+            CompiledStreamEncoder::new_in(compiled(&dictionary, 5, Global), Global).unwrap();
+        encoder.set_prefix(prepared.view()).unwrap().unwrap();
+        let frame = stream(&mut encoder, text, 250, 29);
+        let (header, _) = FrameHeader::parse(&frame).unwrap();
+        // A formatted prefix contributes its identifier and prepared entropy
+        // seed to exactly its one frame.
+        assert_eq!(header.dictionary_id, prepared.view().id());
+        assert_eq!(
+            decompress_with_dictionary_in(
+                &frame,
+                &prepared.view(),
+                DecodeOptions::new(text.len()),
+                Global,
+            )
+            .unwrap(),
+            text
+        );
+        // The next frame is dictionary-free and carries no identifier.
+        encoder.reset();
+        let plain = stream(&mut encoder, b"tail without selection", 11, 9);
+        let (plain_header, _) = FrameHeader::parse(&plain).unwrap();
+        assert_eq!(plain_header.dictionary_id, 0);
+        assert_eq!(
+            crate::decompress_in(&plain, 22, Global).unwrap(),
+            b"tail without selection"
+        );
+    }
+
+    #[test]
+    fn prefix_single_block_body_matches_the_one_shot_parameterized_dictionary_frame() {
+        use crate::compress_with_parameters_and_dictionary;
+
+        let content = pattern(0x7071_50ef, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let input = &content[512..3000];
+        for level in [1, 3, 4, 5, 7, 9] {
+            let mut request = CompressionParameterRequest::with_level(level);
+            request
+                .set_source_hint(u32::try_from(input.len()).unwrap())
+                .unwrap();
+            let compiled = CompiledDictionary::new(dictionary.view(), &request, Global).unwrap();
+            let prefix_owner = Dictionary::raw(&content[..1024]).unwrap();
+            let mut encoder = CompiledStreamEncoder::with_options_in(
+                compiled,
+                CompiledStreamOptions {
+                    pledged_size: Some(input.len() as u64),
+                    ..CompiledStreamOptions::default()
+                },
+                Global,
+            )
+            .unwrap();
+            encoder.set_prefix(prefix_owner.view()).unwrap().unwrap();
+            let streamed = stream(&mut encoder, input, input.len(), 64);
+            let one_shot =
+                compress_with_parameters_and_dictionary(input, &request, &prefix_owner.view())
+                    .unwrap();
+            let streamed_header = FrameHeader::parse(&streamed).unwrap();
+            let one_shot_header = FrameHeader::parse(&one_shot).unwrap();
+            // One short block staged `suffix | block` in both paths under the
+            // same resolved profile; only the streaming header differs.
+            assert_eq!(
+                &streamed[streamed_header.1..],
+                &one_shot[one_shot_header.1..],
+                "level {level}"
+            );
+            assert_eq!(
+                one_shot_header.0.dictionary_id,
+                streamed_header.0.dictionary_id
+            );
+        }
+    }
+
+    #[test]
+    fn selection_transition_allocator_failure_releases_every_owner() {
+        let content = pattern(0x7e1e_c710, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let prefix_owner = Dictionary::raw(&content[..512]).unwrap();
+        for fail_after in 0..12 {
+            let compiled = compiled(&dictionary, 1, Global);
+            let allocator = TrackingAllocator::new(AllocatorConfig {
+                fail_at: core::num::NonZeroU64::new(fail_after as u64),
+                ..AllocatorConfig::default()
+            })
+            .unwrap();
+            let monitor = allocator.monitor();
+            let mut encoder = CompiledStreamEncoder::new_in(compiled, allocator.clone()).unwrap();
+            encoder.set_prefix(prefix_owner.view()).unwrap().unwrap();
+            let mut output = [0_u8; 128];
+            let _ = encoder.process(&content, &mut output, EndDirective::Finish);
             let _ = encoder.process(&content, &mut output, EndDirective::Finish);
             drop(encoder);
             drop(allocator);

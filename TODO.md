@@ -244,7 +244,7 @@ Decompose before implementation; do not start until this checklist is reviewed.
 - [x] Design a selection owner that can hold either a compiled dictionary or a
   one-frame prefix without cloning compiled tables or shortening lifetimes.
   (`docs/streaming-selection-design.md`)
-- [ ] Add one-frame prefix selection and mutual clearing at frame
+- [x] Add one-frame prefix selection and mutual clearing at frame
   initialization, with fixed-profile revalidation for compiled frames.
 - [ ] Add a parameter-reset contract for frame flags and selection removal with
   exact error boundaries and no per-frame table seeding.
