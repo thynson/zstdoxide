@@ -246,7 +246,7 @@ Decompose before implementation; do not start until this checklist is reviewed.
   (`docs/streaming-selection-design.md`)
 - [x] Add one-frame prefix selection and mutual clearing at frame
   initialization, with fixed-profile revalidation for compiled frames.
-- [ ] Add a parameter-reset contract for frame flags and selection removal with
+- [x] Add a parameter-reset contract for frame flags and selection removal with
   exact error boundaries and no per-frame table seeding.
 - [ ] Qualify guarded native replacement/reset schedules and unsupported
   combinations.

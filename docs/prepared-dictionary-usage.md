@@ -151,6 +151,15 @@ frame) accepts selection changes; `selection()` reports the active view.
 Empty prefixes detach the selection like the upstream empty
 `ZSTD_CCtx_refPrefix_advanced` call.
 
+`reset_parameters` corresponds to `ZSTD_reset_parameters`: at a clean boundary
+or after a completed frame it restores default frame options, removes the
+selection and returns the compiled value for reuse; an active, finishing or
+failed session is refused with `Error::InvalidState` without mutation, and no
+table is ever reseeded. `reset_all` is the `ZSTD_reset_session_and_parameters`
+form: every phase — including a poisoned one — recovers to a fresh session
+with default options and no selection. Frames after a removal continue
+dictionary-free under the fixed profile.
+
 Block history is retained contiguously for at most the resolved window, so
 cross-block matches and repeat offsets keep their wire distances and compiled
 candidates become unreachable exactly when the decoder's window would reject

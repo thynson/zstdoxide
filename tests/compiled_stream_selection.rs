@@ -328,6 +328,54 @@ fn oversized_prefix_stages_only_its_window_suffix() {
 }
 
 #[test]
+fn parameter_reset_removes_the_selection_and_the_state_stays_reusable() {
+    let content = pattern(0x9a2e_71c0, 8192);
+    let dictionary = Dictionary::raw(&content).unwrap();
+    let mut input = Vec::new();
+    for _ in 0..8 {
+        input.extend_from_slice(&content[0..800]);
+        input.extend_from_slice(b"parameter reset continuation");
+    }
+    let shared = request(4, &input);
+    let compiled = CompiledDictionary::new(dictionary.view(), &shared, std::alloc::Global).unwrap();
+    let mut encoder = CompiledStreamEncoder::with_options(
+        compiled,
+        CompiledStreamOptions {
+            checksum: true,
+            ..CompiledStreamOptions::default()
+        },
+    )
+    .unwrap();
+    let baseline = pump(&mut encoder, &input, 701, 19);
+    encoder.reset();
+
+    // Completed frame: the parameter reset returns the compiled state and
+    // restores default flags.
+    let state = encoder.reset_parameters().unwrap().unwrap();
+    assert_eq!(state.parameters(), encoder.parameters());
+    assert!(encoder.selection().is_none());
+    assert_eq!(encoder.options(), CompiledStreamOptions::default());
+    // Frames continue dictionary-free under the fixed profile.
+    let plain = pump(&mut encoder, b"dictionary-free after reset", 9, 5);
+    assert_eq!(FrameHeader::parse(&plain).unwrap().0.dictionary_id, 0);
+    assert_eq!(
+        zstdoxide::decompress(plain.as_slice(), 27).unwrap(),
+        b"dictionary-free after reset"
+    );
+
+    // The returned compiled state reproduces the baseline bytes exactly.
+    let mut restored = CompiledStreamEncoder::with_options(
+        state,
+        CompiledStreamOptions {
+            checksum: true,
+            ..CompiledStreamOptions::default()
+        },
+    )
+    .unwrap();
+    assert_eq!(pump(&mut restored, &input, 701, 19), baseline);
+}
+
+#[test]
 fn empty_prefix_detaches_and_the_stream_continues_dictionary_free() {
     let content = pattern(0xd37a_1e55, 4096);
     let dictionary = Dictionary::raw(&content).unwrap();

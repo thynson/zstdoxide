@@ -334,6 +334,45 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         Ok(())
     }
 
+    /// Restore default frame options and remove the selection.
+    ///
+    /// Corresponds to the supported role of `ZSTD_reset_parameters`. Only a
+    /// clean configuration boundary or a completed frame accepts this
+    /// operation; an active, finishing or failed session returns
+    /// [`Error::InvalidState`] without any mutation. The previously selected
+    /// compiled state is returned to the caller so its tables stay reusable.
+    ///
+    /// Defaults are Rust's [`CompiledStreamOptions::default`]. C's
+    /// parameter-only reset additionally restores default requested
+    /// parameters; this coordinator keeps its construction profile because its
+    /// geometry is fixed for workspace reuse. A pending or active prefix view
+    /// is dropped, which does not shorten the context type's lifetime. No
+    /// table is reseeded by or after this call.
+    pub fn reset_parameters(&mut self) -> Result<Option<CompiledDictionary<'a, B>>> {
+        if self.phase != Phase::Finished {
+            self.check_configuration_boundary()?;
+        }
+        self.options = CompiledStreamOptions::default();
+        self.prefix = None;
+        Ok(self.compiled.take())
+    }
+
+    /// Discard the session, restore default frame options, and remove the
+    /// selection.
+    ///
+    /// Corresponds to `ZSTD_reset_session_and_parameters`. This accepts every
+    /// phase, including processing failures, and returns a ready context with
+    /// zero counters and no pending source, output, or directive. The
+    /// previously selected compiled state is returned to the caller; a
+    /// dropped prefix view does not shorten the context type's lifetime.
+    pub fn reset_all(&mut self) -> Option<CompiledDictionary<'a, B>> {
+        self.options = CompiledStreamOptions::default();
+        self.prefix = None;
+        let previous = self.compiled.take();
+        self.clear_frame();
+        previous
+    }
+
     fn clear_frame(&mut self) {
         self.block.clear();
         self.combined.clear();
@@ -1639,5 +1678,165 @@ mod tests {
             drop(allocator);
             monitor.assert_released();
         }
+    }
+
+    #[test]
+    fn parameter_reset_boundaries_and_restored_defaults() {
+        let content = pattern(0x9a2e_71c0, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let prefix_owner = Dictionary::raw(&content[..512]).unwrap();
+        let custom = CompiledStreamOptions {
+            checksum: true,
+            pledged_size: Some(10),
+            include_content_size: false,
+            include_dictionary_id: false,
+        };
+        // Clean Active boundary: the selected prefix is dropped and defaults
+        // replace the custom flags. The compiled state had already been
+        // returned by `set_prefix`, so no compiled value comes back.
+        let mut encoder = CompiledStreamEncoder::with_options_in(
+            compiled(&dictionary, 1, Global),
+            custom,
+            Global,
+        )
+        .unwrap();
+        let compiled_state = encoder.set_prefix(prefix_owner.view()).unwrap().unwrap();
+        assert_eq!(compiled_state.parameters(), encoder.parameters());
+        assert!(encoder.reset_parameters().unwrap().is_none());
+        assert_eq!(selection_content(&encoder), None);
+        assert_eq!(encoder.options(), CompiledStreamOptions::default());
+        assert_eq!(encoder.total_input(), 0);
+
+        // Finished accepts the reset and keeps the finished phase.
+        let mut encoder = CompiledStreamEncoder::with_options_in(
+            compiled(&dictionary, 4, Global),
+            CompiledStreamOptions {
+                checksum: true,
+                ..CompiledStreamOptions::default()
+            },
+            Global,
+        )
+        .unwrap();
+        let frame = stream(&mut encoder, &content[..600], 250, 41);
+        let progress = encoder
+            .process(&[], &mut [0_u8; 128], EndDirective::Finish)
+            .unwrap();
+        assert_eq!(progress.status, StreamStatus::FrameFinished);
+        let previous = encoder.reset_parameters().unwrap();
+        assert!(previous.is_some());
+        assert_eq!(previous.unwrap().parameters(), encoder.parameters());
+        assert_eq!(encoder.options(), CompiledStreamOptions::default());
+        assert_eq!(encoder.total_input(), 600);
+        assert!(matches!(
+            encoder.process(&frame, &mut [0_u8; 128], EndDirective::Continue),
+            Err(Error::InvalidState)
+        ));
+
+        // Mid-frame: refused without any mutation.
+        let mid_frame_options = CompiledStreamOptions {
+            checksum: true,
+            ..CompiledStreamOptions::default()
+        };
+        let mut encoder = CompiledStreamEncoder::with_options_in(
+            compiled(&dictionary, 1, Global),
+            mid_frame_options,
+            Global,
+        )
+        .unwrap();
+        encoder
+            .process(&content[..40], &mut [0_u8; 128], EndDirective::Continue)
+            .unwrap();
+        assert!(matches!(
+            encoder.reset_parameters(),
+            Err(Error::InvalidState)
+        ));
+        assert!(encoder.selection().is_some());
+        assert_eq!(encoder.options(), mid_frame_options);
+
+        // Finishing with pending output: refused without mutation.
+        let mut encoder = CompiledStreamEncoder::with_options_in(
+            compiled(&dictionary, 1, Global),
+            CompiledStreamOptions {
+                checksum: true,
+                ..CompiledStreamOptions::default()
+            },
+            Global,
+        )
+        .unwrap();
+        encoder
+            .process(&content[..40], &mut [0_u8; 1], EndDirective::Finish)
+            .unwrap();
+        assert!(matches!(
+            encoder.reset_parameters(),
+            Err(Error::InvalidState)
+        ));
+        assert!(encoder.selection().is_some());
+
+        // A failed session refuses recovery through the parameter reset.
+        let mut encoder = CompiledStreamEncoder::with_options_in(
+            compiled(&dictionary, 1, Global),
+            CompiledStreamOptions {
+                pledged_size: Some(3),
+                ..CompiledStreamOptions::default()
+            },
+            Global,
+        )
+        .unwrap();
+        assert_eq!(
+            encoder.process(&content[..9], &mut [0_u8; 128], EndDirective::Finish),
+            Err(Error::ContentSizeMismatch)
+        );
+        assert!(matches!(
+            encoder.reset_parameters(),
+            Err(Error::InvalidState)
+        ));
+        assert!(encoder.selection().is_some());
+    }
+
+    #[test]
+    fn reset_all_recovers_every_phase_and_returns_the_compiled_state() {
+        let content = pattern(0x7e70_a115, 4096);
+        let dictionary = Dictionary::raw(&content).unwrap();
+        let prefix_owner = Dictionary::raw(&content[1024..2048]).unwrap();
+        let baseline_compiled = compiled(&dictionary, 2, Global);
+        // Baseline bytes from the same compiled state for the reuse check.
+        let mut baseline = CompiledStreamEncoder::new_in(baseline_compiled, Global).unwrap();
+        let expected = stream(&mut baseline, &content[..500], 200, 23);
+        drop(baseline);
+
+        let mut encoder = CompiledStreamEncoder::with_options_in(
+            compiled(&dictionary, 2, Global),
+            CompiledStreamOptions {
+                pledged_size: Some(3),
+                checksum: true,
+                ..CompiledStreamOptions::default()
+            },
+            Global,
+        )
+        .unwrap();
+        // The prefix displaced the compiled state before the failure, so the
+        // reset returns no compiled value while dropping the prefix.
+        let compiled_state = encoder.set_prefix(prefix_owner.view()).unwrap().unwrap();
+        assert_eq!(
+            encoder.process(&content[..9], &mut [0_u8; 128], EndDirective::Finish),
+            Err(Error::ContentSizeMismatch)
+        );
+        // The failed session recovers, loses the prefix and the selection.
+        let previous = encoder.reset_all();
+        assert!(previous.is_none());
+        assert_eq!(selection_content(&encoder), None);
+        assert_eq!(encoder.options(), CompiledStreamOptions::default());
+        assert_eq!(encoder.total_input(), 0);
+        assert_eq!(encoder.total_output(), 0);
+        // The recovered stream continues dictionary-free.
+        let frame = stream(&mut encoder, &content[..500], 200, 23);
+        assert_eq!(FrameHeader::parse(&frame).unwrap().0.dictionary_id, 0);
+        assert_eq!(
+            crate::decompress_in(&frame, 500, Global).unwrap(),
+            &content[..500]
+        );
+        // The displaced compiled state reproduces the baseline bytes exactly.
+        let mut restored = CompiledStreamEncoder::new_in(compiled_state, Global).unwrap();
+        assert_eq!(stream(&mut restored, &content[..500], 200, 23), expected);
     }
 }
