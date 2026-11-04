@@ -248,7 +248,7 @@ Decompose before implementation; do not start until this checklist is reviewed.
   initialization, with fixed-profile revalidation for compiled frames.
 - [x] Add a parameter-reset contract for frame flags and selection removal with
   exact error boundaries and no per-frame table seeding.
-- [ ] Qualify guarded native replacement/reset schedules and unsupported
+- [x] Qualify guarded native replacement/reset schedules and unsupported
   combinations.
 - [ ] Qualify atomic-free ARM, every isolated feature/all features, release,
   no_std and strict Clippy.

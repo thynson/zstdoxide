@@ -1,0 +1,12 @@
+select-cdict-then-prefix-raw	ok	2102	3	raw-a,raw-a,none	1	1
+select-cdict-then-prefix-prepared	ok	607	3	prepared-a,prepared-a,none	1	1
+select-prefix-then-cdict-tree	ok	34	2	raw-a,raw-a	1	1
+select-prefix-twice-then-cdict	ok	712	4	prepared-a,prepared-a,prepared-a,prepared-a	1	1
+select-empty-prefix-detaches	ok	1050	2	raw-a,none	1	1
+select-parameter-reset-dict-free	ok	2085	2	raw-a,none	1	1
+select-session-reset-reuses-cdict	ok	36	2	raw-a,raw-a	1	1
+select-prefix-error-midstream	ok	34	2	raw-a,raw-a	1	1
+select-parameter-error-midstream	ok	356	2	prepared-a,prepared-a	1	1
+select-session-and-parameters-reset	ok	1052	2	raw-a,none	1	1
+select-optimal-prefix	ok	178	1	prepared-a	-1	1
+select-ultra2-prefix	ok	178	1	prepared-a	-1	1
