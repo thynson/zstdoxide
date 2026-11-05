@@ -298,7 +298,7 @@ parameter lifecycle, LDM, workers and complete upstream migration remain open.
   explicit pledge, prefix and completed-frame observation semantics.
 - [x] Qualify guarded native parameter/reset schedules and allocator failures.
 - [ ] Qualify atomic-free ARM, isolated/all features, release, no_std and Clippy.
-- [ ] Compare parameter replacement/reset workloads on identical safe/all
+- [x] Compare parameter replacement/reset workloads on identical safe/all
   deterministic inputs with independent timing repeats.
 - [ ] Reconcile the bounded lifecycle coverage and decompose the next contract.
 

@@ -62,9 +62,16 @@ archive record command lists, source hashes, output-object hashes and logs.
 These checks do not replace full isolated-feature suites or full release
 suites. No Miri ran because only safe code changed.
 
+## Lifecycle timing
+
+The separate comparison records 15,360 samples across four lifecycle modes,
+alternating admitted requests, two text sizes and safe/all independent repeats.
+All outputs and ledgers match the fresh warmed reference exactly. See
+`reference-streaming-parameters-benchmarks.md` for the complete-frame timing
+protocol, measured ratios and limits; no universal unsafe speedup is inferred.
+
 ## Remaining module gates
 
 Full isolated-feature and release suites, complete platform/static checks,
-and deterministic independent-repeat lifecycle timing must be reconciled
-before Module 41 closes. Intermediate or focused checks do not satisfy a full
+must be reconciled before Module 41 closes. Intermediate or focused checks do not satisfy a full
 suite obligation; ignored tests are never counted as passed automatically.
