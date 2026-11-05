@@ -280,7 +280,7 @@ Analysis and design reviewed before implementation; qualify each item independen
   pledged-size and window-descriptor interop.
 - [x] Qualify atomic-free ARM, every isolated feature/all features, release,
   no_std and strict Clippy.
-- [ ] Compare dictionary-free streaming workloads after CPU barriers with
+- [x] Compare dictionary-free streaming workloads after CPU barriers with
   independent repeats against the named-policy encoder.
 - [x] Verify automatic request-tier family switches across reused frames against frozen native presets.
 - [x] Document request-backed construction, size knowledge, prefix lifetime and reset usage.

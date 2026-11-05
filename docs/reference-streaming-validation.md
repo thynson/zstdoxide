@@ -112,8 +112,10 @@ The source manifest and object hashes are retained in
 archive contains the controller and every raw log. No Miri ran because this
 module added or changed no unsafe code, following the standing directive.
 
-The separate timing comparison remains an independent gate until its receipt
-is reconciled. Full matrix success alone is not a performance claim.
+The independent timing comparison is recorded in
+`reference-streaming-benchmarks.md` and its 2026-11-05 receipt: 18 workloads,
+11,520 samples and byte-identical safe/all repeat ledgers. It compares distinct
+reference and named policies and makes no universal speedup claim.
 
 ## Bounded scope
 
