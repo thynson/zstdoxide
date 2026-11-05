@@ -261,30 +261,46 @@ native-only Optimal/Ultra2 controls, plus the 79-command matrix and the
 adjustment, native attach/load workspace reuse, LDM, workers and complete
 upstream parity remain open.
 
-## Module 40: dictionary-free reference streaming frames (in progress)
+## Module 40: dictionary-free reference streaming frames (complete)
 
-Analysis and design reviewed before implementation; qualify each item independently.
+Completed within its bounded request-backed streaming scope.
+`ReferenceStreamEncoder` constructs without compiled tables and resolves its
+request at each frame initialization from an explicit pledge or unknown size
+and an optional one-frame prefix's matchable content length. The six admitted
+reference families share the existing block engine, with per-frame geometry,
+per-block plans, caller-owned Continue/Flush/Finish pumping and allocator
+failure recovery. Direct raw/formatted prefix construction needs no compiled
+identity; claims are single-use. Non-single-segment headers carry the resolved
+window, optional pledge, dictionary ID and checksum. Existing compiled owners
+retain their fixed profile.
 
-- [x] Analyze pinned dictionary-free streaming frame initialization, per-frame
-  cParams re-resolution from the pledged source size, and window descriptor
-  selection without a dictionary.
-- [x] Design a streaming coordinator constructed from a compression parameter
-  request without compiled tables, with per-frame plan rebuilds from the
-  resolved record and a pledged-source window contract.
-- [x] Implement dictionary-free streaming frames across the six admitted
-  reference families with the existing Continue/Flush/Finish, pledge and poison
-  contracts.
-- [x] Implement prefix-only construction and pledged window descriptor updates
-  that the compiled coordinator deferred.
-- [x] Qualify guarded native dictionary-free streaming schedules, including
-  pledged-size and window-descriptor interop.
-- [x] Qualify atomic-free ARM, every isolated feature/all features, release,
-  no_std and strict Clippy.
-- [x] Compare dictionary-free streaming workloads after CPU barriers with
-  independent repeats against the named-policy encoder.
-- [x] Verify automatic request-tier family switches across reused frames against frozen native presets.
-- [x] Document request-backed construction, size knowledge, prefix lifetime and reset usage.
-- [ ] Reconcile bounded streaming coverage and decompose the next contract.
+Eleven public tests, the 72-frame normal/sanitized native campaign, a safe/all
+six-frame automatic family-switch supplement, all 79 feature/release/platform
+commands and 11,520 timing samples are recorded in
+`docs/reference-streaming-validation.md`,
+`docs/reference-streaming-benchmarks.md` and the 2026-11-05 receipts. Every
+full/release suite reports 129 result groups, 1,878 passed and 81 ignored.
+The initial release build's temporary disk exhaustion was recovered by removing
+completed debug build cache and verifying all prior receipts before resuming;
+no failed attempt is counted as a pass. No Miri ran because no unsafe code
+changed. Native workspace identity, Optimal/Ultra/Ultra2 streaming, mutable
+parameter lifecycle, LDM, workers and complete upstream migration remain open.
+
+## Module 41: request-backed streaming parameter lifecycle (next)
+
+- [ ] Analyze pinned bulk-request replacement, frame flag/pledge stage gates,
+  requested/applied separation, and the three native reset scopes.
+- [ ] Design clean-boundary request/options replacement and parameter-only/all
+  resets, including prefix ownership, allocation and initialized-profile rules.
+- [ ] Implement transactional request and frame-option replacement while
+  preserving the compiled coordinator's fixed-profile contract.
+- [ ] Implement default-request parameter resets and reset-all recovery with
+  explicit pledge, prefix and completed-frame observation semantics.
+- [ ] Qualify guarded native parameter/reset schedules and allocator failures.
+- [ ] Qualify atomic-free ARM, isolated/all features, release, no_std and Clippy.
+- [ ] Compare parameter replacement/reset workloads on identical safe/all
+  deterministic inputs with independent timing repeats.
+- [ ] Reconcile the bounded lifecycle coverage and decompose the next contract.
 
 ## Roadmap
 

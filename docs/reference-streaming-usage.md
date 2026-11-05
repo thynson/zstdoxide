@@ -62,7 +62,10 @@ the next process call performs admission before writing any header bytes.
 A profile admitted for a tiny known source can become unsupported after a
 reset to unknown size. Such a processing failure poisons the session until
 reset. The engine never reports the previous frame's geometry as a new frame's
-parameters.
+parameters. Workspace capacities are retained even when a later frame resolves
+a smaller window; `retained_capacity()` can therefore reflect an earlier,
+larger frame. Live combined staging contains at most one window of prefix,
+one window of retained history, and one block.
 
 Headers deliberately use the legal non-single-segment representation, even
 for tiny known sizes. Their window descriptor tracks the resolved profile.
@@ -87,7 +90,8 @@ that pending or active view. A subsequent frame resolves with dictionary size
 zero unless another prefix was selected. After completion, explicitly reset
 before selecting a new prefix or starting another frame.
 
-The prefix's lifetime is borrowed from its owner. Retained history and the
+The prefix's lifetime is borrowed from its owner; clearing the runtime selection
+does not shorten the encoder type's borrow lifetime. Retained history and the
 prefix suffix are staged within the resolved window, and per-block parser
 tables are rebuilt. Prefix buffers are never owned or mutated by the encoder.
 The compiled-stream selection APIs and fixed-profile contract remain separate.

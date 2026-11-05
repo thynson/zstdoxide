@@ -1803,3 +1803,38 @@ Miri ran because no unsafe code was added. Completed tasks are archived in Git
 history. Prefix-only construction, pledged-source window adjustment, native
 attach/load workspace reuse, LDM, workers and complete upstream parity remain
 open.
+
+## Module 40: dictionary-free reference streaming frames (complete)
+
+Completed within its bounded request-backed streaming scope.
+`ReferenceStreamEncoder` constructs without compiled tables and resolves its
+request at each frame initialization from an explicit pledge or unknown size
+and an optional one-frame prefix's matchable content length. The six admitted
+reference families share the existing block engine, with per-frame geometry,
+per-block plans, caller-owned Continue/Flush/Finish pumping and allocator
+failure recovery. Direct raw/formatted prefix construction needs no compiled
+identity; claims are single-use. Non-single-segment headers carry the resolved
+window, optional pledge, dictionary ID and checksum. Existing compiled owners
+retain their fixed profile.
+
+Eleven public tests, the 72-frame normal/sanitized native campaign, a safe/all
+six-frame automatic family-switch supplement, all 79 feature/release/platform
+commands and 11,520 timing samples are recorded in
+`docs/reference-streaming-validation.md`,
+`docs/reference-streaming-benchmarks.md` and the 2026-11-05 receipts. Every
+full/release suite reports 129 result groups, 1,878 passed and 81 ignored.
+The initial release build's temporary disk exhaustion was recovered by removing
+completed debug build cache and verifying all prior receipts before resuming;
+no failed attempt is counted as a pass. No Miri ran because no unsafe code
+changed. Native workspace identity, Optimal/Ultra/Ultra2 streaming, mutable
+parameter lifecycle, LDM, workers and complete upstream migration remain open.
+
+The source-level analysis, ownership design, implementation items, native
+qualification, usage and supplemental profile-switch checks were committed
+separately. Timing compares distinct reference and named policies under the
+same source/window/flags, with byte-identical safe/all repeat ledgers; the
+report retains all medians and avoids universal speedup claims. The final
+source reconciliation is
+`docs/evidence/2026-11-05-reference-streaming-closure.json`. Completed checklist
+items are archived in Git history; Module 41 decomposes clean-boundary request
+replacement and parameter-reset lifecycle before its implementation.
