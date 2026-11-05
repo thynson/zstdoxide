@@ -694,3 +694,226 @@ fn replacement_stage_errors_precede_admission_and_do_not_poison() {
         monitor.assert_released();
     }
 }
+
+#[test]
+fn parameter_reset_preserves_completed_observation_and_rejects_active_stages() {
+    use zstdoxide::Dictionary;
+    let raw = Dictionary::raw(b"parameter reset raw prefix").unwrap();
+    let formatted =
+        Dictionary::from_bytes(include_bytes!("upstream/dictionaries/formatted.dict")).unwrap();
+    for dictionary in [&raw, &formatted] {
+        for stage in 0..5 {
+            let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+            let monitor = allocator.monitor();
+            let req = request(ReferenceStrategy::Lazy2);
+            let options = CompiledStreamOptions {
+                checksum: true,
+                pledged_size: Some(3),
+                include_content_size: false,
+                include_dictionary_id: false,
+            };
+            let mut encoder =
+                ReferenceStreamEncoder::with_prefix_in(req, options, dictionary.view(), allocator)
+                    .unwrap();
+            match stage {
+                0 => {}
+                1 => {
+                    encoder
+                        .process(b"a", &mut [], EndDirective::Continue)
+                        .unwrap();
+                }
+                2 => {
+                    encoder
+                        .process(b"abc", &mut [], EndDirective::Finish)
+                        .unwrap();
+                }
+                3 => {
+                    pump(&mut encoder, b"abc", 1, 1);
+                }
+                _ => {
+                    assert_eq!(
+                        encoder.process(b"a", &mut [], EndDirective::Finish),
+                        Err(Error::ContentSizeMismatch)
+                    );
+                }
+            }
+            let counters = (encoder.total_input(), encoder.total_output());
+            let profile = encoder.parameters();
+            let capacity = encoder.retained_capacity();
+            let selection = encoder.selection().map(|v| v.content().to_vec());
+            let before = monitor.snapshot();
+            if stage == 0 || stage == 3 {
+                encoder.reset_parameters().unwrap();
+                assert_eq!(encoder.request(), CompressionParameterRequest::default());
+                assert_eq!(encoder.options(), CompiledStreamOptions::default());
+                assert!(encoder.selection().is_none());
+            } else {
+                assert_eq!(encoder.reset_parameters(), Err(Error::InvalidState));
+                assert_eq!(encoder.request(), req);
+                assert_eq!(encoder.options(), options);
+                assert_eq!(encoder.selection().map(|v| v.content().to_vec()), selection);
+            }
+            assert_eq!(encoder.parameters(), profile);
+            assert_eq!((encoder.total_input(), encoder.total_output()), counters);
+            assert_eq!(encoder.retained_capacity(), capacity);
+            assert_eq!(monitor.snapshot(), before);
+            if stage == 3 {
+                assert_eq!(
+                    encoder
+                        .process(&[], &mut [], EndDirective::Finish)
+                        .unwrap()
+                        .status,
+                    StreamStatus::FrameFinished
+                );
+                assert_eq!(encoder.set_request(req), Err(Error::InvalidState));
+                encoder.reset();
+                assert_eq!(encoder.parameters(), None);
+            }
+            if stage == 0 || stage == 3 {
+                // Defaults are requested values, not admission of every source
+                // geometry. Supply a supported known size before processing.
+                let next = CompiledStreamOptions {
+                    pledged_size: Some(3),
+                    ..Default::default()
+                };
+                encoder.set_options(next).unwrap();
+                let frame = pump(&mut encoder, b"xyz", 1, 1);
+                let mut fresh = ReferenceStreamEncoder::with_options(
+                    CompressionParameterRequest::default(),
+                    next,
+                )
+                .unwrap();
+                assert_eq!(frame, pump(&mut fresh, b"xyz", 1, 1));
+                assert_eq!(decompress(&frame, 3).unwrap(), b"xyz");
+            } else if stage == 1 {
+                assert_eq!(
+                    encoder
+                        .process(b"bc", &mut [0; 128], EndDirective::Finish)
+                        .unwrap()
+                        .status,
+                    StreamStatus::FrameFinished
+                );
+            } else if stage == 2 {
+                assert_eq!(
+                    encoder
+                        .process(&[], &mut [0; 128], EndDirective::Finish)
+                        .unwrap()
+                        .status,
+                    StreamStatus::FrameFinished
+                );
+            } else {
+                assert_eq!(
+                    encoder.process(&[], &mut [], EndDirective::Finish),
+                    Err(Error::InvalidState)
+                );
+            }
+            drop(encoder);
+            monitor.assert_released();
+        }
+    }
+}
+
+#[test]
+fn reset_all_recovers_every_phase_and_removes_prefix_without_allocating() {
+    use zstdoxide::Dictionary;
+    let raw = Dictionary::raw(b"reset all raw prefix").unwrap();
+    let formatted =
+        Dictionary::from_bytes(include_bytes!("upstream/dictionaries/formatted.dict")).unwrap();
+    for dictionary in [&raw, &formatted] {
+        for stage in 0..5 {
+            let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+            let monitor = allocator.monitor();
+            let mut encoder = ReferenceStreamEncoder::with_prefix_in(
+                request(ReferenceStrategy::BinaryTreeLazy2),
+                CompiledStreamOptions {
+                    checksum: true,
+                    pledged_size: Some(3),
+                    ..Default::default()
+                },
+                dictionary.view(),
+                allocator,
+            )
+            .unwrap();
+            match stage {
+                0 => {}
+                1 => {
+                    encoder
+                        .process(b"a", &mut [], EndDirective::Continue)
+                        .unwrap();
+                }
+                2 => {
+                    encoder
+                        .process(b"abc", &mut [], EndDirective::Finish)
+                        .unwrap();
+                }
+                3 => {
+                    pump(&mut encoder, b"abc", 1, 1);
+                }
+                _ => {
+                    assert_eq!(
+                        encoder.process(b"a", &mut [], EndDirective::Finish),
+                        Err(Error::ContentSizeMismatch)
+                    );
+                }
+            }
+            let capacity = encoder.retained_capacity();
+            let before = monitor.snapshot();
+            encoder.reset_all();
+            assert_eq!(encoder.request(), CompressionParameterRequest::default());
+            assert_eq!(encoder.options(), CompiledStreamOptions::default());
+            assert_eq!(encoder.parameters(), None);
+            assert!(encoder.selection().is_none());
+            assert_eq!((encoder.total_input(), encoder.total_output()), (0, 0));
+            assert_eq!(encoder.retained_capacity(), capacity);
+            assert_eq!(monitor.snapshot(), before);
+            encoder
+                .set_request(request(ReferenceStrategy::DoubleFast))
+                .unwrap();
+            let frame = pump(&mut encoder, b"after reset all", 2, 1);
+            assert_eq!(decompress(&frame, 15).unwrap(), b"after reset all");
+            drop(encoder);
+            monitor.assert_released();
+        }
+    }
+}
+
+#[test]
+fn default_reset_followed_by_allocation_failure_recovers_and_releases() {
+    let allocator = TrackingAllocator::new(AllocatorConfig {
+        fail_at: std::num::NonZeroU64::new(1),
+        ..Default::default()
+    })
+    .unwrap();
+    let monitor = allocator.monitor();
+    let mut encoder =
+        ReferenceStreamEncoder::new_in(request(ReferenceStrategy::Fast), allocator).unwrap();
+    encoder.reset_parameters().unwrap();
+    encoder
+        .set_options(CompiledStreamOptions {
+            pledged_size: Some(3),
+            ..Default::default()
+        })
+        .unwrap();
+    assert_eq!(monitor.snapshot().attempts, 0);
+    assert_eq!(
+        encoder.process(b"abc", &mut [0; 128], EndDirective::Finish),
+        Err(Error::AllocationFailed)
+    );
+    assert_eq!(encoder.reset_parameters(), Err(Error::InvalidState));
+    let attempts = monitor.snapshot().attempts;
+    encoder.reset_all();
+    assert_eq!(monitor.snapshot().attempts, attempts);
+    monitor.clear_failure();
+    encoder
+        .set_options(CompiledStreamOptions {
+            pledged_size: Some(3),
+            ..Default::default()
+        })
+        .unwrap();
+    assert_eq!(
+        decompress(&pump(&mut encoder, b"abc", 1, 1), 3).unwrap(),
+        b"abc"
+    );
+    drop(encoder);
+    monitor.assert_released();
+}

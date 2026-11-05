@@ -294,7 +294,7 @@ parameter lifecycle, LDM, workers and complete upstream migration remain open.
   resets, including prefix ownership, allocation and initialized-profile rules.
 - [x] Implement transactional request and frame-option replacement while
   preserving the compiled coordinator's fixed-profile contract.
-- [ ] Implement default-request parameter resets and reset-all recovery with
+- [x] Implement default-request parameter resets and reset-all recovery with
   explicit pledge, prefix and completed-frame observation semantics.
 - [ ] Qualify guarded native parameter/reset schedules and allocator failures.
 - [ ] Qualify atomic-free ARM, isolated/all features, release, no_std and Clippy.

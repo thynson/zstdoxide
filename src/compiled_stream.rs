@@ -281,6 +281,24 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         Ok(())
     }
 
+    /// Restore request-mode defaults without discarding a completed frame.
+    pub(crate) fn reset_request_parameters(&mut self) -> Result<()> {
+        if self.request.is_none() {
+            return Err(Error::InvalidState);
+        }
+        self.reset_parameters()?;
+        self.request = Some(CompressionParameterRequest::default());
+        Ok(())
+    }
+
+    /// Reset the private request-backed engine, preserving its ownership mode.
+    pub(crate) fn reset_request_all(&mut self) {
+        if let Some(request) = &mut self.request {
+            *request = CompressionParameterRequest::default();
+        }
+        self.reset_all();
+    }
+
     /// Borrow the selected dictionary view.
     ///
     /// This is the compiled view while a compiled dictionary is selected, the

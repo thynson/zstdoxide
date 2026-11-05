@@ -1,0 +1,32 @@
+{
+  "status": "focused-checks-complete-module-unqualified",
+  "scope": "Module 41 reset implementation item. Full feature/native lifecycle/timing qualification remains pending. WIP checkpoint resets to f8a8954 before continuing next session.",
+  "source": {
+    "src/compiled_stream.rs": "80f918b7a1db0160d3e9db398450634f9384285e56eef4451042226ed2e17ed0",
+    "src/reference_stream.rs": "5ee6d83f4f255008022422dd44692afc12eb46c2c2de5553b6c8c809564463a0",
+    "tests/reference_stream.rs": "99d50af3b7dfdedaf286ec5766bf9a64973e1908db80f92a873d6696a79ab3ce"
+  },
+  "logs": {
+    "module41-resets-test.log": "8de0ff7e734b7076ee72c0b4e8c52b5b50a8003432631c707d2cd96cda4b36d8",
+    "module41-resets-all.log": "34cd2ada1312542a996a38370d1aa693635dffc4ab73b3dd13af437748268d74",
+    "module41-resets-clippy.log": "f816a727f9afdc1a1963daa9523067ff7f547c387ada4dce1c6802287ce4938c",
+    "module41-resets-no-std.log": "ea7d38e9b30c1cb084966d5293356635681e455fe550d28d3c85f4c03bda0ab2"
+  },
+  "checks": [
+    "cargo fmt --all -- --check",
+    "cargo test --offline --locked --test reference_stream (17 passed)",
+    "cargo test --offline --locked --all-features --test reference_stream --test compiled_stream --test compiled_stream_selection",
+    "cargo clippy --offline --locked --lib --test reference_stream --all-features -- -D warnings",
+    "cargo check --offline --locked --lib --no-default-features"
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/private/tmp/module41-target",
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0"
+  },
+  "archive": {
+    "path": "docs/evidence/2026-11-05-reference-streaming-resets-focused.tar.gz",
+    "sha256": "e315c374679a62c89e4ab53adae9f289e0659f44423c82f0ec097f1fe057c3bc"
+  }
+}

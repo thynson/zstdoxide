@@ -146,8 +146,8 @@ impl<'a, A: Allocator + Clone> ReferenceStreamEncoder<'a, A> {
 
     /// Initialized frame parameters, or `None` before its header starts.
     ///
-    /// Reset clears this observation. It never reports the previous frame's
-    /// profile as the next frame's parameters.
+    /// Session reset clears this observation. Parameter-only reset preserves
+    /// a completed frame's historical profile until session reset.
     pub const fn parameters(&self) -> Option<ResolvedCompressionParameters> {
         self.engine.initialized_parameters()
     }
@@ -187,6 +187,34 @@ impl<'a, A: Allocator + Clone> ReferenceStreamEncoder<'a, A> {
     /// poisons that session, just like other processing failures.
     pub fn reset_with_options(&mut self, options: CompiledStreamOptions) -> Result<()> {
         self.engine.reset_with_options(options)
+    }
+
+    /// Restore default request/options and remove the prefix without allocation.
+    ///
+    /// Only a clean boundary or a completed frame accepts this operation.
+    /// Active, finishing and failed sessions return InvalidState unchanged.
+    /// A completed frame keeps its counters, initialized parameters and
+    /// Finished state; reset its session before encoding again. Workspace
+    /// capacity and allocator owners are retained.
+    ///
+    /// Rust defaults clear the pledge. Native parameter-only reset can retain
+    /// a fresh pledge stored outside its requested parameters. Clearing a
+    /// prefix does not shorten this owner's borrow lifetime. Defaults are stored
+    /// without profile admission; a later process call still validates them.
+    pub fn reset_parameters(&mut self) -> Result<()> {
+        self.engine.reset_request_parameters()?;
+        self.request = CompressionParameterRequest::default();
+        Ok(())
+    }
+
+    /// Discard the session and prefix and restore default requested settings.
+    ///
+    /// This recovers every phase, including processing failure, with zero
+    /// counters and no initialized parameters. Allocator owners and reusable
+    /// capacity are retained; no allocation or table seeding occurs here.
+    pub fn reset_all(&mut self) {
+        self.engine.reset_request_all();
+        self.request = CompressionParameterRequest::default();
     }
 
     /// Accept a source prefix and deliver an encoded output prefix.

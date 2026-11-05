@@ -71,6 +71,18 @@ a smaller window; `retained_capacity()` can therefore reflect an earlier,
 larger frame. Live combined staging contains at most one window of prefix,
 one window of retained history, and one block.
 
+`reset_parameters()` restores default requested settings and frame options,
+including clearing the pledge, and removes the prefix. It accepts an unstarted
+session or a completed frame; active, finishing and failed sessions reject it
+without mutation. A completed frame retains its counters, historical applied
+parameters and Finished state until a session reset. This differs from native
+parameter-only reset, which can retain a fresh pledge outside its parameter
+record. `reset_all()` accepts every phase, clears counters/frame observation
+and prefixes, and restores defaults. Both retain workspace and allocate nothing.
+Restoring requested defaults does not pre-admit every source geometry; choose
+a supported pledge or request before encoding if those defaults exceed the
+bounded plan for unknown size.
+
 Headers deliberately use the legal non-single-segment representation, even
 for tiny known sizes. Their window descriptor tracks the resolved profile.
 The pinned native encoder can instead use a single segment whose window is
