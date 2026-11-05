@@ -45,6 +45,23 @@ See `evidence/2026-11-05-reference-streaming-parameters-native.json` and its
 archive for source hashes, commands, guards, frame artifacts and raw logs.
 This campaign does not complete the repository's upstream test migration.
 
+## Intermediate feature and platform regression
+
+All 81 planned intermediate commands pass on the frozen final source.
+Safe/all and all 22 isolated features run the 32 focused streaming/selection
+public tests, true host no_std, and strict library/all-test Clippy. Safe/all
+release configurations run those same 32 targeted tests. Safe/all atomic-free
+ARM checks and concrete release LLVM IR/object emission pass. Formatting and
+the complete safe/all suites also pass: each full suite reports 130 result
+groups, 1,884 passed, 82 ignored and zero failures. The new native ignored
+adapter is qualified separately, not credited from its skipped ordinary run.
+
+All-feature no_std explicitly lists the 22 unsafe flags with defaults disabled;
+`--all-features` would otherwise also enable std. The intermediate receipt and
+archive record command lists, source hashes, output-object hashes and logs.
+These checks do not replace full isolated-feature suites or full release
+suites. No Miri ran because only safe code changed.
+
 ## Remaining module gates
 
 Full isolated-feature and release suites, complete platform/static checks,
