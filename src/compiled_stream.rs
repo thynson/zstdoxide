@@ -261,6 +261,26 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         }
     }
 
+    /// Validate request-mode configuration before publishing either scalar.
+    pub(crate) fn replace_request_configuration(
+        &mut self,
+        request: CompressionParameterRequest,
+        options: CompiledStreamOptions,
+    ) -> Result<()> {
+        self.check_configuration_boundary()?;
+        if self.request.is_none() {
+            return Err(Error::InvalidState);
+        }
+        Self::resolve_request(
+            request,
+            options,
+            self.prefix.map_or(0, |view| view.content().len()),
+        )?;
+        self.request = Some(request);
+        self.options = options;
+        Ok(())
+    }
+
     /// Borrow the selected dictionary view.
     ///
     /// This is the compiled view while a compiled dictionary is selected, the

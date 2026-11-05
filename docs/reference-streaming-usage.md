@@ -48,8 +48,12 @@ parser and staging allocation uses that allocator and can fail explicitly.
 
 ## Size knowledge and reset
 
-The request is immutable for the owner's lifetime. At the first process call
-of each frame it resolves against the explicit `pledged_size`, or Unknown,
+The request can be replaced with `set_request` before a fresh session starts
+its header. `set_options` replaces flags and pledge at that same boundary.
+Both eagerly admit the candidate profile using the pending prefix; rejection
+leaves state unchanged and does not poison the session. Neither allocates or
+publishes initialized parameters. After completion, reset the session before
+using either setter. At the first process call of each frame the request resolves against the explicit `pledged_size`, or Unknown,
 and the current prefix's matchable content length. `parameters()` returns
 None before this initialization and the applied record afterward. A source
 hint affects geometry only; it does not promise a byte count or create a

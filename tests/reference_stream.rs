@@ -479,3 +479,218 @@ fn formatted_prefix_entropy_and_identifier_are_scoped_to_one_frame() {
         assert_eq!(decompress(&frame, source.len()).unwrap(), source);
     }
 }
+
+#[test]
+fn replacement_is_transactional_and_preserves_pending_prefix_without_allocation() {
+    use zstdoxide::{DecodeOptions, Dictionary, decompress_with_dictionary_in};
+    let dictionary = Dictionary::raw(b"request replacement prefix contents").unwrap();
+    let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+    let monitor = allocator.monitor();
+    let original = request(ReferenceStrategy::Fast);
+    let mut encoder = ReferenceStreamEncoder::with_prefix_in(
+        original,
+        Default::default(),
+        dictionary.view(),
+        allocator,
+    )
+    .unwrap();
+    for strategy in [ReferenceStrategy::Optimal, ReferenceStrategy::Ultra2] {
+        assert!(encoder.set_request(request(strategy)).is_err());
+        assert_eq!(encoder.request(), original);
+        assert_eq!(encoder.options(), CompiledStreamOptions::default());
+        assert_eq!(encoder.parameters(), None);
+        assert_eq!(encoder.total_input(), 0);
+        assert_eq!(encoder.total_output(), 0);
+        assert_eq!(
+            encoder.selection().unwrap().content(),
+            dictionary.view().content()
+        );
+    }
+    assert_eq!(
+        encoder.set_options(CompiledStreamOptions {
+            pledged_size: Some(u64::MAX),
+            ..Default::default()
+        }),
+        Err(Error::InvalidParameter)
+    );
+    assert_eq!(encoder.options(), CompiledStreamOptions::default());
+    let source = b"replacement prefix contents";
+    let options = CompiledStreamOptions {
+        pledged_size: Some(source.len() as u64),
+        checksum: true,
+        include_content_size: false,
+        ..Default::default()
+    };
+    encoder.set_options(options).unwrap();
+    let replacement = request(ReferenceStrategy::Lazy2);
+    encoder.set_request(replacement).unwrap();
+    assert_eq!(encoder.request(), replacement);
+    assert_eq!(encoder.options(), options);
+    assert_eq!(encoder.parameters(), None);
+    assert_eq!(monitor.snapshot().attempts, 0);
+    let frame = pump(&mut encoder, source, 3, 1);
+    let header = FrameHeader::parse(&frame).unwrap().0;
+    assert_eq!(header.content_size, None);
+    assert!(header.has_checksum);
+    assert_eq!(
+        encoder.parameters(),
+        Some(
+            replacement
+                .resolve(
+                    SourceSize::Known(source.len() as u64),
+                    dictionary.view().content().len()
+                )
+                .unwrap()
+        )
+    );
+    assert_eq!(
+        decompress_with_dictionary_in(
+            &frame,
+            &dictionary.view(),
+            DecodeOptions::new(source.len()),
+            std::alloc::Global
+        )
+        .unwrap(),
+        source
+    );
+    drop(encoder);
+    monitor.assert_released();
+}
+
+#[test]
+fn replacement_rejects_new_geometry_without_poisoning_and_changes_reused_frames() {
+    let mut wide = request(ReferenceStrategy::Fast);
+    wide.set_window_log(21).unwrap();
+    let options = CompiledStreamOptions {
+        pledged_size: Some(1),
+        ..Default::default()
+    };
+    let mut encoder = ReferenceStreamEncoder::with_options(wide, options).unwrap();
+    assert!(
+        encoder
+            .set_options(CompiledStreamOptions::default())
+            .is_err()
+    );
+    assert_eq!(encoder.request(), wide);
+    assert_eq!(encoder.options(), options);
+    assert_eq!(encoder.parameters(), None);
+    assert_eq!(
+        decompress(&pump(&mut encoder, b"x", 1, 1), 1).unwrap(),
+        b"x"
+    );
+    for (strategy, length) in [
+        (ReferenceStrategy::DoubleFast, 513),
+        (ReferenceStrategy::Greedy, 4097),
+        (ReferenceStrategy::BinaryTreeLazy2, 1025),
+    ] {
+        encoder.reset();
+        // Repair the retained wide request before replacing its unknown pledge.
+        let candidate = request(strategy);
+        encoder.set_request(candidate).unwrap();
+        let options = CompiledStreamOptions {
+            pledged_size: Some(length as u64),
+            checksum: true,
+            ..Default::default()
+        };
+        encoder.set_options(options).unwrap();
+        let source = vec![b'r'; length];
+        let frame = pump(&mut encoder, &source, 47, 1);
+        let mut fresh = ReferenceStreamEncoder::with_options(candidate, options).unwrap();
+        assert_eq!(frame, pump(&mut fresh, &source, 47, 1));
+        assert_eq!(decompress(&frame, length).unwrap(), source);
+        assert_eq!(encoder.parameters().unwrap().strategy(), strategy);
+    }
+}
+
+#[test]
+fn replacement_stage_errors_precede_admission_and_do_not_poison() {
+    for stage in 0..4 {
+        let allocator = TrackingAllocator::new(AllocatorConfig::default()).unwrap();
+        let monitor = allocator.monitor();
+        let req = request(ReferenceStrategy::Fast);
+        let mut encoder = ReferenceStreamEncoder::new_in(req, allocator).unwrap();
+        match stage {
+            0 => {
+                encoder
+                    .process(b"a", &mut [], EndDirective::Continue)
+                    .unwrap();
+            }
+            1 => {
+                encoder
+                    .process(b"a", &mut [], EndDirective::Finish)
+                    .unwrap();
+            }
+            2 => {
+                pump(&mut encoder, b"a", 1, 1);
+            }
+            _ => {
+                encoder
+                    .set_options(CompiledStreamOptions {
+                        pledged_size: Some(2),
+                        ..Default::default()
+                    })
+                    .unwrap();
+                assert_eq!(
+                    encoder.process(b"a", &mut [], EndDirective::Finish),
+                    Err(Error::ContentSizeMismatch)
+                );
+            }
+        }
+        let before = (
+            encoder.request(),
+            encoder.options(),
+            encoder.parameters(),
+            encoder.total_input(),
+            encoder.total_output(),
+            encoder.retained_capacity(),
+        );
+        let allocations = monitor.snapshot();
+        assert_eq!(
+            encoder.set_request(request(ReferenceStrategy::Ultra2)),
+            Err(Error::InvalidState)
+        );
+        assert_eq!(
+            encoder.set_options(CompiledStreamOptions {
+                pledged_size: Some(u64::MAX),
+                ..Default::default()
+            }),
+            Err(Error::InvalidState)
+        );
+        assert_eq!(
+            before,
+            (
+                encoder.request(),
+                encoder.options(),
+                encoder.parameters(),
+                encoder.total_input(),
+                encoder.total_output(),
+                encoder.retained_capacity()
+            )
+        );
+        assert_eq!(monitor.snapshot(), allocations);
+        if stage < 2 {
+            assert_eq!(
+                encoder
+                    .process(&[], &mut [0; 128], EndDirective::Finish)
+                    .unwrap()
+                    .status,
+                StreamStatus::FrameFinished
+            );
+        } else if stage == 2 {
+            assert_eq!(
+                encoder
+                    .process(&[], &mut [], EndDirective::Finish)
+                    .unwrap()
+                    .status,
+                StreamStatus::FrameFinished
+            );
+        } else {
+            assert_eq!(
+                encoder.process(&[], &mut [], EndDirective::Finish),
+                Err(Error::InvalidState)
+            );
+        }
+        drop(encoder);
+        monitor.assert_released();
+    }
+}

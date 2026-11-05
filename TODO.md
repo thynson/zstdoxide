@@ -286,13 +286,13 @@ no failed attempt is counted as a pass. No Miri ran because no unsafe code
 changed. Native workspace identity, Optimal/Ultra/Ultra2 streaming, mutable
 parameter lifecycle, LDM, workers and complete upstream migration remain open.
 
-## Module 41: request-backed streaming parameter lifecycle (next)
+## Module 41: request-backed streaming parameter lifecycle (in progress)
 
 - [x] Analyze pinned bulk-request replacement, frame flag/pledge stage gates,
   requested/applied separation, and the three native reset scopes.
 - [x] Design clean-boundary request/options replacement and parameter-only/all
   resets, including prefix ownership, allocation and initialized-profile rules.
-- [ ] Implement transactional request and frame-option replacement while
+- [x] Implement transactional request and frame-option replacement while
   preserving the compiled coordinator's fixed-profile contract.
 - [ ] Implement default-request parameter resets and reset-all recovery with
   explicit pledge, prefix and completed-frame observation semantics.

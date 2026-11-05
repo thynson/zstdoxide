@@ -11,7 +11,7 @@ use crate::{
 
 /// An incremental reference encoder that needs no compiled dictionary.
 ///
-/// Each frame resolves the construction request from its explicit source
+/// Each frame resolves the current request from its explicit source
 /// pledge, or an unknown source size, before writing its header. Fast,
 /// DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 are supported within the
 /// existing reference plan bounds. Optimal, Ultra, Ultra2, LDM and workers are
@@ -112,9 +112,36 @@ impl<'a, A: Allocator + Clone> ReferenceStreamEncoder<'a, A> {
         })
     }
 
-    /// The immutable request resolved at each frame initialization.
+    /// The requested settings resolved at each frame initialization.
     pub const fn request(&self) -> CompressionParameterRequest {
         self.request
+    }
+
+    /// Replace the request before any header starts in a fresh session.
+    ///
+    /// Admission uses the current pledge and pending prefix content length.
+    /// Unlike native bulk replacement, this eagerly rejects unsupported
+    /// profiles. Boundary and admission errors leave all state unchanged and
+    /// do not poison the session. This allocates nothing; frame initialization
+    /// resolves the request again. Call reset before replacing a finished
+    /// frame's request.
+    pub fn set_request(&mut self, request: CompressionParameterRequest) -> Result<()> {
+        self.engine
+            .replace_request_configuration(request, self.engine.options())?;
+        // The private engine validated before mutation. No fallible operation
+        // separates these two equal request copies.
+        self.request = request;
+        Ok(())
+    }
+
+    /// Replace frame flags and pledge at a clean boundary without allocation.
+    ///
+    /// The candidate profile is admitted using the current request and pending
+    /// prefix. Errors are transactional and do not poison the session. This
+    /// does not discard a session; use reset_with_options to do so.
+    pub fn set_options(&mut self, options: CompiledStreamOptions) -> Result<()> {
+        self.engine
+            .replace_request_configuration(self.request, options)
     }
 
     /// Initialized frame parameters, or `None` before its header starts.

@@ -72,3 +72,6 @@ cross-decode frames and inspect window/content-size fields rather than demand
 byte identity. The isolated-feature/all-feature, release, no_std, Clippy and
 atomic-free ARM matrix and independent safe/all timing repeats remain separate
 gates. No new unsafe code is planned, so the standing directive skips Miri.
+
+Module 41 extends the originally immutable request with transactional boundary
+setters; see `reference-streaming-parameters-design.md` for that later contract.

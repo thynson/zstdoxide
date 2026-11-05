@@ -1,0 +1,35 @@
+{
+  "status": "focused-checks-complete-module-unqualified",
+  "scope": "Module 41 transactional setters only; full matrix/native lifecycle/timing gates remain open. WIP checkpoint resets to f8a8954 in the next session before continuing.",
+  "source": {
+    "src/compiled_stream.rs": "2a1fdd90e18f41a9a6d79f9b5f79f8fce97b34e68cb7b23679c1976d098fa3ac",
+    "src/reference_stream.rs": "3d2cb753c95505718359b3fbc454aa5a64bdd7c43d435aa013cb81c14283db07",
+    "tests/reference_stream.rs": "c4975443d1555052252476e83fc38454055c98eab57676aa56af5fdb4495b2e0"
+  },
+  "logs": {
+    "module41-setters-test.log": "c74097d79ed5e54ba65dcdb1b1fea9499b35be250df2ba858ed701f7a54b175d",
+    "module41-setters-all.log": "5a43051b71983a48e2bc456b68d18c4120f842d433136e820a77db0e0ff5aeea",
+    "module41-setters-clippy.log": "943453322e1e5d3ca8602a0603c1945760a68162b819cc43650de004b751beeb",
+    "module41-setters-no-std.log": "5209e64092d38745bc1875a708297843b07e902597c15ddbc693b2a3844626e0",
+    "module41-setters-compiled.log": "bd389fff185e1c30b9460aae6382f202f08c0166fa604bd1d010e6ce9a9641ee"
+  },
+  "checks": [
+    "cargo fmt --all -- --check",
+    "cargo test --offline --locked --test reference_stream (14 passed)",
+    "cargo test --offline --locked --all-features --test reference_stream (14 passed)",
+    "cargo clippy --offline --locked --lib --test reference_stream --all-features -- -D warnings",
+    "cargo check --offline --locked --lib --no-default-features",
+    "cargo test --offline --locked --test compiled_stream --test compiled_stream_selection"
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/private/tmp/module41-target",
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0"
+  },
+  "archive": {
+    "path": "docs/evidence/2026-11-05-reference-streaming-setters-focused.tar.gz",
+    "sha256": "c131a692686b8fbb5caef15a8ea4403fc00a71886698d73042c5c7700349186a"
+  },
+  "initial_attempt": "A test used FrameHeader.checksum instead of has_checksum; compilation rejected it. Corrected before all recorded passing checks."
+}
