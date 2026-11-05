@@ -4249,3 +4249,31 @@ request, options and resolved parameters are scalar records shared by safe
 and unsafe builds; artificial unchecked operations are neither needed nor
 permitted. See `docs/reference-streaming-design.md` for state, header,
 allocation, unsupported-profile and validation contracts.
+
+## Module 41: request-backed streaming parameter lifecycle
+
+The public request-backed wrapper and its private shared engine retain equal
+copies of a `CompressionParameterRequest`. Native counterparts are requested
+versus applied `ZSTD_CCtx` fields, bulk replacement at
+`zstd_compress.c:1178-1189`, and the reset scopes at `:1367-1383` (pinned v1.5.7).
+Every constructor establishes equality; request-mode-only configuration helpers
+perform boundary and candidate admission checks before mutation, then update
+both plain copies without a fallible operation between writes. The wrapper
+exposes no mutable engine borrow. Fixed compiled-mode owners remain unchanged.
+
+The initialized profile records the running/completed frame, independently of
+requested settings for the next one. Clean-boundary configuration does not
+publish an initialized profile; parameter-only reset of a completed frame
+preserves its historical profile and counters. Session reset clears frame
+state and the initialized observation; subsequent process re-resolves from
+request, pledge and pending prefix content length.
+
+Pending prefixes are borrowed metadata retained across request replacement and
+unstarted session reset, and removed by parameter resets. A claimed prefix is
+released when its frame is discarded or completed. Workspace vectors and
+entropy retain exact allocator owners and capacities; setters/resets allocate
+nothing and seed no table. Requests, flags, phases and profile values share
+one safe/unsafe representation; existing per-block table owners keep their
+independent opt-in unsafe implementations. See
+`docs/reference-streaming-parameters-design.md` for transactional boundaries,
+pledge differences, default restoration and recovery invariants.

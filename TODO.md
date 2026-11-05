@@ -290,7 +290,7 @@ parameter lifecycle, LDM, workers and complete upstream migration remain open.
 
 - [x] Analyze pinned bulk-request replacement, frame flag/pledge stage gates,
   requested/applied separation, and the three native reset scopes.
-- [ ] Design clean-boundary request/options replacement and parameter-only/all
+- [x] Design clean-boundary request/options replacement and parameter-only/all
   resets, including prefix ownership, allocation and initialized-profile rules.
 - [ ] Implement transactional request and frame-option replacement while
   preserving the compiled coordinator's fixed-profile contract.
