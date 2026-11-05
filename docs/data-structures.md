@@ -4228,3 +4228,24 @@ compiled seed. `CompiledDictionary` ownership, upstream counterparts
 (`ZSTD_CCtx_refCDict`, `ZSTD_CCtx_refPrefix_advanced`, the reset directives
 and `ZSTD_CCtx_init_compressStream2` single usage) and the recorded
 pledged-window deviation are specified in `streaming-selection-design.md`.
+
+## Module 40: request-backed reference streaming
+
+`ReferenceStreamEncoder<'a, A>` owns the existing compiled-stream engine with
+no compiled selection and a copied optional `CompressionParameterRequest` in
+the engine. This is the Rust counterpart of requested versus applied cParams
+in `ZSTD_CCtx_init_compressStream2` (v1.5.7 `zstd_compress.c:6349-6438`). A
+request-backed frame resolves its own profile from pledge and prefix content
+length before publishing its header; compiled-backed owners keep their fixed
+profile. No live frame changes geometry. The wrapper exposes no compiled
+selection mutation and no mutable access to its engine.
+
+Workspace vectors and entropy remain allocator-owned, fallibly grown and
+retained across reset. Prefix views borrow caller storage and move from pending
+to active exactly once per frame. History indices remain frame-relative via
+bounded contiguous staging; every per-block parser uses the initialized
+profile and the existing independently feature-selected table owners. The
+request, options and resolved parameters are scalar records shared by safe
+and unsafe builds; artificial unchecked operations are neither needed nor
+permitted. See `docs/reference-streaming-design.md` for state, header,
+allocation, unsupported-profile and validation contracts.

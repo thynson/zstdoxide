@@ -263,12 +263,12 @@ upstream parity remain open.
 
 ## Module 40: dictionary-free reference streaming frames (next)
 
-Decompose before implementation; do not start until this checklist is reviewed.
+Analysis and design reviewed before implementation; qualify each item independently.
 
 - [x] Analyze pinned dictionary-free streaming frame initialization, per-frame
   cParams re-resolution from the pledged source size, and window descriptor
   selection without a dictionary.
-- [ ] Design a streaming coordinator constructed from a compression parameter
+- [x] Design a streaming coordinator constructed from a compression parameter
   request without compiled tables, with per-frame plan rebuilds from the
   resolved record and a pledged-source window contract.
 - [ ] Implement dictionary-free streaming frames across the six admitted
