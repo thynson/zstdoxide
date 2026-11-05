@@ -278,7 +278,7 @@ Analysis and design reviewed before implementation; qualify each item independen
   that the compiled coordinator deferred.
 - [x] Qualify guarded native dictionary-free streaming schedules, including
   pledged-size and window-descriptor interop.
-- [ ] Qualify atomic-free ARM, every isolated feature/all features, release,
+- [x] Qualify atomic-free ARM, every isolated feature/all features, release,
   no_std and strict Clippy.
 - [ ] Compare dictionary-free streaming workloads after CPU barriers with
   independent repeats against the named-policy encoder.

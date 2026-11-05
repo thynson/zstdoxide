@@ -86,12 +86,34 @@ receipt in `evidence/2026-11-05-reference-streaming-native.json`. The ignored
 native test is run explicitly by this campaign; ignored ordinary-suite tests
 are never credited as passes.
 
-## Remaining qualification gates
+## Full feature, release and platform matrix
 
-The complete isolated-feature/all-feature, release, no_std, strict Clippy and
-atomic-free ARM matrix is running on a frozen source snapshot. The timing
-comparison with the named-policy encoder remains pending. No complete Module
-40 milestone or performance claim is made by this intermediate report.
+All 79 commands pass on the frozen final codec/test source: safe/all and each
+of 22 isolated unsafe features run complete tests, host no_std and strict
+Clippy; safe/all release suites, safe/all atomic-free ARM checks and release
+LLVM IR/object emission, and formatting also pass. Every full/release suite
+reports 129 result groups, 1,878 passed and 81 ignored, with zero failures.
+The native campaign runs its ignored adapter explicitly; other ignored tests
+remain uncredited.
+
+For all-feature host no_std, the command explicitly enables all 22 unsafe
+features while disabling defaults. Using `--all-features` there would also
+enable `std`; this campaign avoids that ambiguity. Atomic-free
+`thumbv6m-none-eabi` uses the same explicit feature list with
+`-Zbuild-std=core,alloc`, including concrete release IR and object output.
+The first safe-release attempt exhausted temporary disk space during
+compilation/linking. Its failure log is preserved separately. After removing
+the completed debug build cache, the controller verified all 72 prior log
+hashes and the immutable source, then reran release and the remaining gates.
+Only successful final attempts count toward the 79-command result.
+
+The source manifest and object hashes are retained in
+`evidence/2026-11-05-reference-streaming-feature-matrix.json`; the matching
+archive contains the controller and every raw log. No Miri ran because this
+module added or changed no unsafe code, following the standing directive.
+
+The separate timing comparison remains an independent gate until its receipt
+is reconciled. Full matrix success alone is not a performance claim.
 
 ## Bounded scope
 
