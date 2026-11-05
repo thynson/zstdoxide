@@ -265,7 +265,7 @@ upstream parity remain open.
 
 Decompose before implementation; do not start until this checklist is reviewed.
 
-- [ ] Analyze pinned dictionary-free streaming frame initialization, per-frame
+- [x] Analyze pinned dictionary-free streaming frame initialization, per-frame
   cParams re-resolution from the pledged source size, and window descriptor
   selection without a dictionary.
 - [ ] Design a streaming coordinator constructed from a compression parameter
