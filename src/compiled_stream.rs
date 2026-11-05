@@ -33,8 +33,8 @@ use crate::reference_search::{ReferenceSearchPlan, ReferenceSearchState};
 use crate::sequence_context::SequenceEncoder;
 use crate::xxhash::XxHash64;
 use crate::{
-    DictionaryView, EndDirective, Error, Progress, ResolvedCompressionParameters, Result,
-    StreamStatus,
+    CompressionParameterRequest, DictionaryView, EndDirective, Error, Progress,
+    ResolvedCompressionParameters, Result, SourceSize, StreamStatus,
 };
 
 /// Frame settings for a [`CompiledStreamEncoder`].
@@ -99,6 +99,7 @@ pub struct CompiledStreamEncoder<'a, A: Allocator + Clone = Global, B: Allocator
     prefix: Option<DictionaryView<'a>>,
     active_prefix: Option<DictionaryView<'a>>,
     profile: ResolvedCompressionParameters,
+    request: Option<CompressionParameterRequest>,
     options: CompiledStreamOptions,
     block: Vec<u8, A>,
     combined: Vec<u8, A>,
@@ -159,7 +160,22 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         options: CompiledStreamOptions,
         allocator: A,
     ) -> Result<Self> {
-        let profile = compiled.parameters();
+        Self::from_profile(
+            compiled.parameters(),
+            Some(compiled),
+            None,
+            options,
+            allocator,
+        )
+    }
+
+    fn from_profile(
+        profile: ResolvedCompressionParameters,
+        compiled: Option<CompiledDictionary<'a, B>>,
+        request: Option<CompressionParameterRequest>,
+        options: CompiledStreamOptions,
+        allocator: A,
+    ) -> Result<Self> {
         let window_size = 1_usize
             .checked_shl(u32::from(profile.window_log()))
             .ok_or(Error::ResourceLimit)?;
@@ -170,10 +186,11 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
         }
         let block_limit = window_size.min(MAX_BLOCK_SIZE);
         Ok(Self {
-            compiled: Some(compiled),
+            compiled,
             prefix: None,
             active_prefix: None,
             profile,
+            request,
             options,
             block: Vec::new_in(allocator.clone()),
             combined: Vec::new_in(allocator.clone()),
@@ -196,6 +213,44 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
             latched: None,
             allocator,
         })
+    }
+
+    /// Validate a request without allocating or manufacturing compiled tables.
+    pub(crate) fn from_request(
+        request: CompressionParameterRequest,
+        options: CompiledStreamOptions,
+        allocator: A,
+    ) -> Result<Self> {
+        let profile = Self::resolve_request(request, options, 0)?;
+        Self::from_profile(profile, None, Some(request), options, allocator)
+    }
+
+    fn resolve_request(
+        request: CompressionParameterRequest,
+        options: CompiledStreamOptions,
+        prefix_size: usize,
+    ) -> Result<ResolvedCompressionParameters> {
+        let source = options
+            .pledged_size
+            .map_or(SourceSize::Unknown, SourceSize::Known);
+        let profile = request.resolve(source, prefix_size)?;
+        if !(10..=21).contains(&profile.window_log()) {
+            return Err(Error::UnsupportedFeature);
+        }
+        let block_limit = (1_usize << profile.window_log()).min(MAX_BLOCK_SIZE);
+        let plan = ReferenceSearchPlan::from_resolved(profile, block_limit)?;
+        if !plan.admits_dictionary_staging() {
+            return Err(Error::UnsupportedFeature);
+        }
+        Ok(profile)
+    }
+
+    pub(crate) const fn initialized_parameters(&self) -> Option<ResolvedCompressionParameters> {
+        if self.header_started {
+            Some(self.profile)
+        } else {
+            None
+        }
     }
 
     /// Borrow the selected dictionary view.
@@ -562,6 +617,15 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
     /// entropy seed is installed the same way for compiled and formatted
     /// prefix frames.
     fn start_header(&mut self) -> Result<()> {
+        if let Some(request) = self.request {
+            let prefix_size = self.prefix.map_or(0, |prefix| prefix.content().len());
+            let profile = Self::resolve_request(request, self.options, prefix_size)?;
+            // Admission precedes mutation; reset cleared all frame positions,
+            // so retained vector capacity never carries old geometry or bytes.
+            self.profile = profile;
+            self.window_size = 1_usize << profile.window_log();
+            self.block_limit = self.window_size.min(MAX_BLOCK_SIZE);
+        }
         if let Some(prefix) = self.prefix.take() {
             self.active_prefix = Some(prefix);
         }

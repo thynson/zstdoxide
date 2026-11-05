@@ -155,6 +155,7 @@ mod reference_frame;
 mod reference_frame_encode;
 mod reference_policy;
 mod reference_search;
+mod reference_stream;
 mod reference_tree;
 mod ring_history;
 mod row_table;
@@ -245,6 +246,7 @@ pub use reference_encode::{
     compress_with_parameters_and_dictionary, compress_with_parameters_and_dictionary_in,
     compress_with_parameters_in,
 };
+pub use reference_stream::ReferenceStreamEncoder;
 pub use strategy::CompressionStrategy;
 pub use stream::{EndDirective, Progress, StreamStatus};
 pub use stream_decode::Decoder;

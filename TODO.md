@@ -271,7 +271,7 @@ Analysis and design reviewed before implementation; qualify each item independen
 - [x] Design a streaming coordinator constructed from a compression parameter
   request without compiled tables, with per-frame plan rebuilds from the
   resolved record and a pledged-source window contract.
-- [ ] Implement dictionary-free streaming frames across the six admitted
+- [x] Implement dictionary-free streaming frames across the six admitted
   reference families with the existing Continue/Flush/Finish, pledge and poison
   contracts.
 - [ ] Implement prefix-only construction and pledged window descriptor updates
