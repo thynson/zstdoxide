@@ -70,8 +70,18 @@ All outputs and ledgers match the fresh warmed reference exactly. See
 `reference-streaming-parameters-benchmarks.md` for the complete-frame timing
 protocol, measured ratios and limits; no universal unsafe speedup is inferred.
 
+## Additional full suites
+
+Completed full release suites: `safe-full-release`, `all-full-release`.
+Completed full isolated-feature suites: none.
+Every credited suite reports 130 groups, 1,884 passed, 82 ignored and zero
+failures. The additional-suites receipt records any incomplete attempt and
+the remaining feature list. Time-bound termination is not counted as a pass.
+
 ## Remaining module gates
 
-Full isolated-feature and release suites, complete platform/static checks,
-must be reconciled before Module 41 closes. Intermediate or focused checks do not satisfy a full
-suite obligation; ignored tests are never counted as passed automatically.
+22 full isolated-feature suites remain.
+The module remains open until every required suite has passed on the same
+source and the receipts are reconciled. Completed focused/platform/native/
+timing checks do not substitute for an unrun full suite. No implementation
+milestone or full upstream replacement is claimed.
