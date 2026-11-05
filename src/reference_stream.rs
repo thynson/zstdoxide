@@ -5,8 +5,8 @@ use alloc::alloc::{Allocator, Global};
 use core::fmt;
 
 use crate::{
-    CompiledStreamEncoder, CompiledStreamOptions, CompressionParameterRequest, EndDirective,
-    Progress, ResolvedCompressionParameters, Result,
+    CompiledStreamEncoder, CompiledStreamOptions, CompressionParameterRequest, DictionaryView,
+    EndDirective, Progress, ResolvedCompressionParameters, Result,
 };
 
 /// An incremental reference encoder that needs no compiled dictionary.
@@ -41,7 +41,56 @@ impl<'a> ReferenceStreamEncoder<'a> {
     }
 }
 
+impl<'a> ReferenceStreamEncoder<'a> {
+    /// Create a frame with a borrowed one-frame prefix, without compiled tables.
+    ///
+    /// The prefix's matchable content length participates in initial admission.
+    /// An empty prefix is treated as no selection. Prepared dictionary views
+    /// also contribute their identifier and first-block entropy.
+    pub fn with_prefix(
+        request: CompressionParameterRequest,
+        options: CompiledStreamOptions,
+        prefix: DictionaryView<'a>,
+    ) -> Result<Self> {
+        Self::with_prefix_in(request, options, prefix, Global)
+    }
+}
+
 impl<'a, A: Allocator + Clone> ReferenceStreamEncoder<'a, A> {
+    /// Create a prefix-backed frame with the caller's workspace allocator.
+    ///
+    /// No prefix bytes or compiled tables are owned or copied at construction.
+    /// Each block stages only the suffix within the resolved window.
+    pub fn with_prefix_in(
+        request: CompressionParameterRequest,
+        options: CompiledStreamOptions,
+        prefix: DictionaryView<'a>,
+        allocator: A,
+    ) -> Result<Self> {
+        Ok(Self {
+            engine: CompiledStreamEncoder::from_request(request, options, Some(prefix), allocator)?,
+            request,
+        })
+    }
+
+    /// Replace the pending prefix at a clean boundary before any header starts.
+    ///
+    /// An empty prefix detaches the selection. The next frame claims the view
+    /// exactly once and resolves its profile using its content length. Profile
+    /// admission is deferred until process; boundary errors leave state intact.
+    pub fn set_prefix(&mut self, prefix: DictionaryView<'a>) -> Result<()> {
+        self.engine.set_prefix(prefix)?;
+        Ok(())
+    }
+
+    /// Borrow the pending or active one-frame prefix, if any.
+    ///
+    /// Completion or reset of a started frame releases its claimed prefix;
+    /// resetting an unstarted frame retains the pending prefix.
+    pub const fn selection(&self) -> Option<DictionaryView<'a>> {
+        self.engine.selection()
+    }
+
     /// Create a default frame using the caller's workspace allocator.
     pub fn new_in(request: CompressionParameterRequest, allocator: A) -> Result<Self> {
         Self::with_options_in(request, CompiledStreamOptions::default(), allocator)
@@ -58,7 +107,7 @@ impl<'a, A: Allocator + Clone> ReferenceStreamEncoder<'a, A> {
         allocator: A,
     ) -> Result<Self> {
         Ok(Self {
-            engine: CompiledStreamEncoder::from_request(request, options, allocator)?,
+            engine: CompiledStreamEncoder::from_request(request, options, None, allocator)?,
             request,
         })
     }

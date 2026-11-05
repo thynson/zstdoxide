@@ -337,3 +337,145 @@ fn every_workspace_allocation_failure_releases_and_recovers() {
         monitor.assert_released();
     }
 }
+
+#[test]
+fn prefix_only_construction_resolves_window_then_consumes_prefix_once() {
+    use zstdoxide::{DecodeOptions, Dictionary, decompress_with_dictionary_in};
+    let content: Vec<u8> = (0..8192).map(|i| ((i * 97 + i / 43) % 251) as u8).collect();
+    let dictionary = Dictionary::raw(&content).unwrap();
+    let source = &content[6000..6513];
+    for strategy in [
+        ReferenceStrategy::Fast,
+        ReferenceStrategy::DoubleFast,
+        ReferenceStrategy::Greedy,
+        ReferenceStrategy::Lazy,
+        ReferenceStrategy::Lazy2,
+        ReferenceStrategy::BinaryTreeLazy2,
+    ] {
+        let req = request(strategy);
+        let options = CompiledStreamOptions {
+            pledged_size: Some(source.len() as u64),
+            ..Default::default()
+        };
+        let mut encoder =
+            ReferenceStreamEncoder::with_prefix(req, options, dictionary.view()).unwrap();
+        assert!(encoder.selection().is_some());
+        let frame = pump(&mut encoder, source, 57, 3);
+        let expected = req
+            .resolve(SourceSize::Known(source.len() as u64), content.len())
+            .unwrap();
+        assert_eq!(encoder.parameters(), Some(expected));
+        assert_eq!(
+            FrameHeader::parse(&frame).unwrap().0.window_size,
+            1 << expected.window_log()
+        );
+        assert_eq!(
+            decompress_with_dictionary_in(
+                &frame,
+                &dictionary.view(),
+                DecodeOptions::new(source.len()),
+                std::alloc::Global
+            )
+            .unwrap(),
+            source
+        );
+        assert!(encoder.selection().is_none());
+        encoder.reset_with_options(options).unwrap();
+        let frame = pump(&mut encoder, source, 57, 3);
+        assert_eq!(
+            encoder.parameters(),
+            Some(
+                req.resolve(SourceSize::Known(source.len() as u64), 0)
+                    .unwrap()
+            )
+        );
+        assert_eq!(FrameHeader::parse(&frame).unwrap().0.window_size, 1024);
+        assert_eq!(decompress(&frame, source.len()).unwrap(), source);
+    }
+}
+
+#[test]
+fn prefix_replacement_detach_and_pending_reset_obey_boundaries() {
+    use zstdoxide::Dictionary;
+    let first = Dictionary::raw(b"first prefix").unwrap();
+    let second = Dictionary::raw(b"second prefix").unwrap();
+    let empty = Dictionary::raw(&[]).unwrap();
+    let mut encoder = ReferenceStreamEncoder::with_prefix(
+        request(ReferenceStrategy::Fast),
+        Default::default(),
+        first.view(),
+    )
+    .unwrap();
+    encoder.reset();
+    assert_eq!(
+        encoder.selection().unwrap().content(),
+        first.view().content()
+    );
+    encoder.set_prefix(second.view()).unwrap();
+    assert_eq!(
+        encoder.selection().unwrap().content(),
+        second.view().content()
+    );
+    encoder.set_prefix(empty.view()).unwrap();
+    assert!(encoder.selection().is_none());
+    encoder.set_prefix(first.view()).unwrap();
+    encoder
+        .process(b"some", &mut [], EndDirective::Continue)
+        .unwrap();
+    assert_eq!(encoder.set_prefix(second.view()), Err(Error::InvalidState));
+    assert_eq!(
+        encoder.selection().unwrap().content(),
+        first.view().content()
+    );
+    encoder.reset();
+    assert!(encoder.selection().is_none());
+    assert_eq!(
+        decompress(&pump(&mut encoder, b"fresh", 3, 2), 5).unwrap(),
+        b"fresh"
+    );
+}
+
+#[test]
+fn formatted_prefix_entropy_and_identifier_are_scoped_to_one_frame() {
+    use zstdoxide::{DecodeOptions, Dictionary, decompress_with_dictionary_in};
+    let dictionary =
+        Dictionary::from_bytes(include_bytes!("upstream/dictionaries/formatted.dict")).unwrap();
+    let source = include_bytes!("upstream/dictionaries/dictionary-treeless-literals.expected");
+    let req = request(ReferenceStrategy::Greedy);
+    for include_dictionary_id in [false, true] {
+        let mut encoder = ReferenceStreamEncoder::with_prefix(
+            req,
+            CompiledStreamOptions {
+                pledged_size: Some(source.len() as u64),
+                checksum: true,
+                include_dictionary_id,
+                ..Default::default()
+            },
+            dictionary.view(),
+        )
+        .unwrap();
+        let frame = pump(&mut encoder, source, 117, 2);
+        assert_eq!(
+            FrameHeader::parse(&frame).unwrap().0.dictionary_id,
+            if include_dictionary_id {
+                dictionary.view().id()
+            } else {
+                0
+            }
+        );
+        assert_eq!(
+            decompress_with_dictionary_in(
+                &frame,
+                &dictionary.view(),
+                DecodeOptions::new(source.len()),
+                std::alloc::Global
+            )
+            .unwrap(),
+            source
+        );
+        encoder.reset();
+        let frame = pump(&mut encoder, source, 117, 2);
+        assert_eq!(FrameHeader::parse(&frame).unwrap().0.dictionary_id, 0);
+        assert_eq!(decompress(&frame, source.len()).unwrap(), source);
+    }
+}

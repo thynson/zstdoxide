@@ -274,7 +274,7 @@ Analysis and design reviewed before implementation; qualify each item independen
 - [x] Implement dictionary-free streaming frames across the six admitted
   reference families with the existing Continue/Flush/Finish, pledge and poison
   contracts.
-- [ ] Implement prefix-only construction and pledged window descriptor updates
+- [x] Implement prefix-only construction and pledged window descriptor updates
   that the compiled coordinator deferred.
 - [ ] Qualify guarded native dictionary-free streaming schedules, including
   pledged-size and window-descriptor interop.

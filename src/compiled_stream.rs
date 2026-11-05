@@ -219,10 +219,18 @@ impl<'a, A: Allocator + Clone, B: Allocator + Clone> CompiledStreamEncoder<'a, A
     pub(crate) fn from_request(
         request: CompressionParameterRequest,
         options: CompiledStreamOptions,
+        prefix: Option<DictionaryView<'a>>,
         allocator: A,
     ) -> Result<Self> {
-        let profile = Self::resolve_request(request, options, 0)?;
-        Self::from_profile(profile, None, Some(request), options, allocator)
+        let prefix = prefix.filter(|view| !view.content().is_empty());
+        let profile = Self::resolve_request(
+            request,
+            options,
+            prefix.map_or(0, |view| view.content().len()),
+        )?;
+        let mut engine = Self::from_profile(profile, None, Some(request), options, allocator)?;
+        engine.prefix = prefix;
+        Ok(engine)
     }
 
     fn resolve_request(
