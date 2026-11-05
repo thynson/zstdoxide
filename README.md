@@ -205,6 +205,15 @@ See [compiled dictionary usage](docs/prepared-dictionary-usage.md),
 [the validation report](docs/prepared-dictionary-validation.md) and
 [the compiled-frame comparison](docs/prepared-dictionary-analysis.md#compiled-frame-comparison-item-9).
 
+`ReferenceStreamEncoder` constructs reference streaming frames directly from a
+compression parameter request, with no compiled dictionary. Each frame resolves
+its profile from the explicit pledge and optional one-frame prefix before
+writing its window descriptor. Six reference families are admitted; reset can
+shrink or grow the next frame's geometry within their existing bounds.
+`with_prefix` also supports direct raw or formatted prefix construction.
+See [request-backed streaming usage](docs/reference-streaming-usage.md) and
+[its design](docs/reference-streaming-design.md).
+
 ## Current support
 
 | Area | Implemented |

@@ -282,6 +282,7 @@ Analysis and design reviewed before implementation; qualify each item independen
   no_std and strict Clippy.
 - [ ] Compare dictionary-free streaming workloads after CPU barriers with
   independent repeats against the named-policy encoder.
+- [x] Document request-backed construction, size knowledge, prefix lifetime and reset usage.
 - [ ] Reconcile bounded streaming coverage and decompose the next contract.
 
 ## Roadmap
