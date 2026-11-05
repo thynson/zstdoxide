@@ -288,7 +288,7 @@ parameter lifecycle, LDM, workers and complete upstream migration remain open.
 
 ## Module 41: request-backed streaming parameter lifecycle (next)
 
-- [ ] Analyze pinned bulk-request replacement, frame flag/pledge stage gates,
+- [x] Analyze pinned bulk-request replacement, frame flag/pledge stage gates,
   requested/applied separation, and the three native reset scopes.
 - [ ] Design clean-boundary request/options replacement and parameter-only/all
   resets, including prefix ownership, allocation and initialized-profile rules.
