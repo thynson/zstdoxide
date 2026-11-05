@@ -276,7 +276,7 @@ Analysis and design reviewed before implementation; qualify each item independen
   contracts.
 - [x] Implement prefix-only construction and pledged window descriptor updates
   that the compiled coordinator deferred.
-- [ ] Qualify guarded native dictionary-free streaming schedules, including
+- [x] Qualify guarded native dictionary-free streaming schedules, including
   pledged-size and window-descriptor interop.
 - [ ] Qualify atomic-free ARM, every isolated feature/all features, release,
   no_std and strict Clippy.

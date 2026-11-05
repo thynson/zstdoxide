@@ -1,0 +1,88 @@
+# Request-backed reference streaming validation
+
+Module 40 implements a bounded request-backed owner over the existing
+reference streaming state machine. See [analysis](reference-streaming-analysis.md),
+[design](reference-streaming-design.md) and [usage](reference-streaming-usage.md).
+The pinned test oracle is facebook/zstd v1.5.7 at
+`f8745da6ff1ad1e7bab384bd1f9d742439278e99`; it is never linked into the Rust codec.
+
+## Public and focused checks
+
+Eleven public tests in `tests/reference_stream.rs` cover:
+
+- Six explicit families over multiple blocks and beyond the retained window,
+  with known and unknown sizes, checksum and caller output guards.
+- Reset-time profile changes at source sizes 0, 1, 255, 256, 1024, 1025,
+  65,791, 65,792 and 131,073; content-size emission enabled/disabled;
+  unknown-size reset and initialized-parameter introspection.
+- A source hint that reduces the window without becoming an exact pledge.
+- Flush, zero output capacity, one-byte output, Finish idempotence, directive
+  errors, pledge mismatch, poisoning and reset recovery.
+- Unsupported profiles rejected without allocation and deferred admission
+  failure before header output after an initially admitted small pledge.
+- Every allocation ordinal of a successful reference Greedy frame rejected
+  in turn, with exact allocation error, poison, reset, deterministic recovery
+  bytes and complete allocator release.
+- Direct prefix-only construction for all six families, one-frame consumption,
+  prefix-free re-resolution on the next frame, replacement/detach and pending
+  versus claimed prefix reset boundaries.
+- Formatted-prefix entropy, optional dictionary ID, checksum and a later frame
+  decoded without a dictionary.
+
+Focused existing compiled-stream integration suites also pass after factoring
+the shared constructor. Initial focused Clippy, formatting and host no_std
+checks pass. The full module gates are recorded separately below; focused
+results alone do not complete a milestone.
+
+## Guarded pinned-native schedules
+
+`tests/reference_stream_native.rs` exports Rust frames and replays the
+external oracle's output. Six explicitly requested families each run six
+scenarios, with a second session after each first frame: 72 frames total.
+
+| First frame scenario | Pledge | Prefix | Next session |
+| --- | --- | --- | --- |
+| Empty input | known zero | none | known 1,302-byte source |
+| 513 bytes | known, visible | none | known 1,302-byte source |
+| Repeated text across a content-size width boundary | known, hidden | none | known 1,302-byte source |
+| 163,840 bytes across blocks/window | unknown | none | known 1,302-byte source |
+| 513-byte slice from raw content | known, visible | raw | no prefix, known 1,302-byte source |
+| Prepared-dictionary text | known, visible | formatted | no prefix, known 1,302-byte source |
+
+Both implementations initialize with an empty Continue so native's initial
+Finish auto-pledge does not change the test's size semantics. Each side uses
+317-byte input fragments and 17-byte output windows with destination guards.
+The normal and ASan/UBSan native programs produce identical 72 rows and frame
+files. Both programs decode every Rust and native frame using its actual
+attachment and verify destination guards. Rust safe/all builds decode all
+72 native frames with exact source equality and content-size/checksum checks.
+For dictionary-free native frames, the oracle verifies the window against the
+Rust resolved window or the native single-segment source-size window.
+Formatted-prefix profile identity and native frame-byte equality are not
+claimed. Sanitizer leak detection is disabled in this host campaign; allocator
+release is checked separately by Rust tests.
+
+The external helper, scripts, source manifests, raw logs and frame files are
+retained in `evidence/2026-11-05-reference-streaming-native.tar.gz`, with the
+receipt in `evidence/2026-11-05-reference-streaming-native.json`. The ignored
+native test is run explicitly by this campaign; ignored ordinary-suite tests
+are never credited as passes.
+
+## Remaining qualification gates
+
+The complete isolated-feature/all-feature, release, no_std, strict Clippy and
+atomic-free ARM matrix is running on a frozen source snapshot. The timing
+comparison with the named-policy encoder remains pending. No complete Module
+40 milestone or performance claim is made by this intermediate report.
+
+## Bounded scope
+
+Only Fast, DoubleFast, Greedy, Lazy, Lazy2 and BinaryTreeLazy2 are admitted,
+subject to their existing table/window bounds. Reference requests are fixed
+for the owner's lifetime; geometry is resolved per frame, not per block.
+Initial Finish does not infer a pledge. Headers use a legal window descriptor
+rather than native's optional single-segment optimization. Prefix parameters
+use matchable content length and conservative window-capped suffix staging.
+Optimal/Ultra/Ultra2 streaming, mutable requests and parameter-only resets,
+native CCtx workspace attachment/loading reuse, LDM, workers and complete
+upstream test migration remain open.
