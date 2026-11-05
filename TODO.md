@@ -261,7 +261,7 @@ native-only Optimal/Ultra2 controls, plus the 79-command matrix and the
 adjustment, native attach/load workspace reuse, LDM, workers and complete
 upstream parity remain open.
 
-## Module 40: dictionary-free reference streaming frames (next)
+## Module 40: dictionary-free reference streaming frames (in progress)
 
 Analysis and design reviewed before implementation; qualify each item independently.
 
@@ -282,6 +282,7 @@ Analysis and design reviewed before implementation; qualify each item independen
   no_std and strict Clippy.
 - [ ] Compare dictionary-free streaming workloads after CPU barriers with
   independent repeats against the named-policy encoder.
+- [x] Verify automatic request-tier family switches across reused frames against frozen native presets.
 - [x] Document request-backed construction, size knowledge, prefix lifetime and reset usage.
 - [ ] Reconcile bounded streaming coverage and decompose the next contract.
 

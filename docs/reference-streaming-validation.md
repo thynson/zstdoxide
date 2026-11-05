@@ -34,6 +34,24 @@ the shared constructor. Initial focused Clippy, formatting and host no_std
 checks pass. The full module gates are recorded separately below; focused
 results alone do not complete a milestone.
 
+## Automatic family changes across reused frames
+
+A supplementary safe/all harness holds a single level-four request while
+resetting between known sizes 0, 16,384, 65,536, 200,000, an unknown-size
+4,096-byte input, and known size 513. Expected Greedy/DoubleFast family codes
+come from the independently captured pinned `tests/upstream/parameters/presets.tsv`,
+not the resolver under test. Every reused frame selects the expected family,
+is byte-identical to a fresh-context frame under the same options, and decodes
+to its exact source. This checks that prior parser geometry and entropy do not
+leak across an automatic family change. The safe/all six-row observations are
+identical; focused Clippy and formatting pass after the recorded harness-only
+lint correction. This external harness is supplementary to the 11 repository
+integration tests, not part of their default-suite count and not additional
+native frame interoperability evidence.
+
+Receipt and reproducible harness/logs:
+`evidence/2026-11-05-reference-streaming-profile-switch.json` and its archive.
+
 ## Guarded pinned-native schedules
 
 `tests/reference_stream_native.rs` exports Rust frames and replays the
